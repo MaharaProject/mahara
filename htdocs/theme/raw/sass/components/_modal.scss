@@ -48,6 +48,11 @@ $width-sm: 90%;
         .list-group.flush {
             margin: -15px;
         }
+        .matrix {
+            .list-group {
+                margin: 0 -15px;
+            }
+        }
         &.blockinstance-content {
             padding: 0 15px;
         }
@@ -150,6 +155,9 @@ $width-sm: 90%;
         color: #fff;
          h4, a {
             color: #fff;
+        }
+        &.modal-section {
+            margin: 10px -15px;
         }
         .close {
            @include box-shadow(-2px 0px 2px rgba(0,0,0,0.3));

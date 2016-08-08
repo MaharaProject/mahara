@@ -194,6 +194,10 @@ jQuery(function($) {
                     editmatrix_update(params);
                 }
                 tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                feedbacktextarea = $("#addfeedbackmatrix textarea");
+                if (feedbacktextarea.length) {
+                    tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
+                }
                 dock.hide();
             });
             cancelbutton = newpagemodal.find('.submitcancel.cancel');
@@ -206,10 +210,20 @@ jQuery(function($) {
                     editmatrix_update(params);
                 }
                 tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                feedbacktextarea = $("#addfeedbackmatrix textarea");
+                if (feedbacktextarea.length) {
+                    tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
+                }
                 dock.hide();
             });
             tinyMCE.idCounter=0;
-            tinyMCE.execCommand('mceAddEditor', false, "instconf_text");
+            if ($("#instconf_text").length) {
+                tinyMCE.execCommand('mceAddEditor', false, "instconf_text");
+            }
+            if ($("#addfeedbackmatrix").length) {
+                textareaid = $("#addfeedbackmatrix textarea").attr('id');
+                tinyMCE.execCommand('mceAddEditor', false, textareaid);
+            }
             // Only allow the point selected to be active in the 'Standard' dropdown
             $("#instconf_smartevidence option:not(:selected)").prop('disabled', true);
             $("#instconf_smartevidence").select2();
@@ -223,7 +237,7 @@ jQuery(function($) {
             $("#instconf_smartevidence").on('change', function() {
                 show_se_desc($(this).val());
             });
-
+            // When we are saving the annotation block config form
             $('#instconf').on('submit', function(se) {
                 se.preventDefault();
                 var sdata = $("#instconf :input").serializeArray();
@@ -243,8 +257,47 @@ jQuery(function($) {
                 values['option'] = params.option;
                 values['action'] = 'update';
                 editmatrix_update(values);
+                dock.hide();
+            });
+            // When we are saving the annotation feedback form - changing the evidence status
+            $('#annotationfeedback').on('submit', function(se) {
+                se.preventDefault();
+                var sdata = $("#annotationfeedback :input").serializeArray();
+                var values = {};
+                sdata.forEach(function(item, index) {
+                    values[item.name] = item.value;
+                });
+                values['framework'] = params.framework;
+                values['view'] = params.view;
+                values['option'] = params.option;
+                values['action'] = 'evidence';
+                editmatrix_update(values);
                 tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
                 dock.hide();
+            });
+            // When we are saving the annotation feedback form - adding new feedback
+            $('#addfeedbackmatrix').on('submit', function(se) {
+                se.preventDefault();
+                var sdata = $("#addfeedbackmatrix :input").serializeArray();
+                var values = {};
+                sdata.forEach(function(item, index) {
+                    values[item.name] = item.value;
+                });
+
+                textareaid = $("#addfeedbackmatrix textarea").attr('id');
+                if (values['message'].length == 0) {
+                    // add error message
+                    $("#" + textareaid).parent().append('<div class="errmsg"><span>' +
+                        get_string_ajax('annotationfeedbackempty', 'artefact.annotation') +
+                        '</span></div>');
+                }
+                else {
+                    values['framework'] = params.framework;
+                    values['view'] = params.view;
+                    values['option'] = params.option;
+                    values['action'] = 'feedback';
+                    editmatrix_update(values);
+                }
             });
         });
     });
@@ -257,6 +310,14 @@ jQuery(function($) {
                   .attr('class', results.data.class)
                   .data('option', results.data.option)
                   .data('view', results.data.view).empty();
+            }
+            if (results.data.tablerows) {
+                if ($("#matrixfeedbacklist").has(".annotationfeedbacktable").length == 0) {
+                    $("#matrixfeedbacklist").html('<ul class="annotationfeedbacktable list-group list-group-lite list-unstyled"></div>');
+                }
+                $("#matrixfeedbacklist .annotationfeedbacktable").html(results.data.tablerows);
+                textareaid = $("#addfeedbackmatrix textarea").attr('id');
+                tinyMCE.get(textareaid).setContent('');
             }
         });
     }

@@ -31,6 +31,7 @@ $action     = param_alphanum('action', 'form');
 $evidence = get_record('framework_evidence', 'framework', $framework, 'element', $option, 'view', $view);
 
 if ($action == 'update') {
+    // When we click a dot on the matrix and add an annotation
     require_once(get_config('docroot') . 'blocktype/lib.php');
     $title = param_alphanumext('title', 'Annotation');
     $text = param_variable('text', '');
@@ -42,6 +43,7 @@ if ($action == 'update') {
     $values = array('title' => $title,
                     'text' => $text,
                     'tags' => $tags,
+                    'allowfeedback' => $allowfeedback,
                     'retractable' => $retractable,
                     'retractedonload' => 0,
                     );
@@ -55,6 +57,7 @@ if ($action == 'update') {
     $bi->set('configdata', $values);
     $bi->set('title', $title);
     $bi->commit();
+
     if ($evidence) {
         $id = Framework::save_evidence($evidence->id, null, null, null, $bi->get('id'));
         $message = get_string('matrixpointupdated', 'module.framework');
@@ -65,6 +68,46 @@ if ($action == 'update') {
     }
 
     $class = 'icon icon-circle-o danger';
+    $data = (object) array('id' => $id,
+                           'class' => $class,
+                           'view' => $view,
+                           'option' => $option
+                           );
+    json_reply(false, array('message' => $message, 'data' => $data));
+}
+else if ($action == 'evidence') {
+    global $USER;
+    // When we click on one of the begun/ready/completed symbols and submit that form
+    if (!$evidence->id) {
+        // problem need to return error
+    }
+
+    $begun = $ready = $completed = 0;
+    $reviewer = null;
+    $assessment = param_alpha('assessment', 'begun');
+    switch ($assessment) {
+        case 'completed':
+            $begun = $ready = $completed = 1;
+            $reviewer = $USER->get('id');
+            break;
+        case 'ready':
+            $begun = $ready = 1;
+            break;
+        default:
+            $begun = 1;
+    }
+    $id = Framework::save_evidence($evidence->id, null, null, null, $evidence->annotation, $assessment, $USER->get('id'));
+    $message = get_string('matrixpointupdated', 'module.framework');
+
+    if ($completed) {
+        $class = 'icon icon-circle success';
+    }
+    else if ($ready) {
+        $class = 'icon icon-adjust warning';
+    }
+    else {
+        $class = 'icon icon-circle-o danger';
+    }
 
     $data = (object) array('id' => $id,
                            'class' => $class,
@@ -73,7 +116,20 @@ if ($action == 'update') {
                            );
     json_reply(false, array('message' => $message, 'data' => $data));
 }
-if ($action == 'delete') {
+else if ($action == 'feedback') {
+    $annotationid = param_integer('annotationid');
+    $annotation = new ArtefactTypeAnnotation((int) $annotationid);
+    $blockid = param_integer('blockid');
+    $message = param_variable('message');
+    $ispublic = param_boolean('ispublic');
+    require_once(get_config('libroot') . 'view.php');
+    $view = new View($view);
+    $newlist = ArtefactTypeAnnotationfeedback::save_matrix_feedback($annotation, $view, $blockid, $message, $ispublic);
+    $message = get_string('annotationfeedbacksubmitted', 'artefact.annotation');
+    $data = (object) array('id' => $evidence->id, 'tablerows' => $newlist);
+    json_reply(false, array('message' => $message, 'data' => $data));
+}
+else if ($action == 'delete') {
     // Clean up partial annotation block instance
     require_once(get_config('docroot') . 'blocktype/lib.php');
     $blockid = param_integer('blockconfig', 0);
@@ -100,7 +156,13 @@ else {
         'partialcomplete' => $states['partialcomplete'],
         'completed' => $states['completed'],
     );
-    $form = Framework::annotation_config_form($params);
+    if ($evidence && !empty($params->begun)) {
+        // There is an annotation in play
+        $form = Framework::annotation_feedback_form($params);
+    }
+    else {
+        $form = Framework::annotation_config_form($params);
+    }
     $data = (object) array('form' => $form);
     json_reply(false, (object) array('message' => $message, 'data' => $data));
 }

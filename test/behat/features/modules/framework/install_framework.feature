@@ -79,3 +79,15 @@ Scenario: Installing framework module and activating for an institution
  | Annotation | My three cents |
  And I set the select2 value "1.1 one point one" for "instconf_smartevidence"
  And I press "Save"
+
+ # Re-click a matrix point to add some feedback
+ And I choose "Collections" in "Portfolio"
+ And I follow "CollA"
+ And I click on the matrix point "3,5"
+ And I wait "1" seconds
+ And I set the following fields to these values:
+ | Feedback | This is annotation feedback |
+ And I press "Place feedback"
+ # And change assessment status
+ And I select "Partially meets the standard" from "Assessment"
+ And I press "Save"

@@ -383,10 +383,10 @@ class Framework {
      */
     public static function get_state_array($state) {
         return array(
-            'begun' => ((int) $state === Self::EVIDENCE_BEGUN),
-            'incomplete' => ((int) $state === Self::EVIDENCE_INCOMPLETE),
-            'partialcomplete' => ((int) $state === Self::EVIDENCE_PARTIALCOMPLETE),
-            'completed' => ((int) $state === Self::EVIDENCE_COMPLETED),
+            'begun' => ((int) $state === Self::EVIDENCE_BEGUN ? 1 : 0),
+            'incomplete' => ((int) $state === Self::EVIDENCE_INCOMPLETE ? 1 : 0),
+            'partialcomplete' => ((int) $state === Self::EVIDENCE_PARTIALCOMPLETE ? 1 : 0),
+            'completed' => ((int) $state === Self::EVIDENCE_COMPLETED ? 1 : 0),
         );
     }
 
@@ -424,7 +424,8 @@ class Framework {
     }
 
     /**
-     * Get the evidence state for the framework
+     * Add/update an annotation block on a view via the framework matrix page.
+     * This hooks into using the annotation block's config form.
      *
      * @param int $annotationid
      *
@@ -514,6 +515,7 @@ class Framework {
             if (!empty($element)) {
                 $fordb['element'] = $element;
             }
+            $fordb['reviewer'] = ($completed === 1) ? $reviewer : null;
             update_record('framework_evidence', (object) $fordb, (object) array('id' => $id));
         }
         else {
@@ -568,6 +570,77 @@ class Framework {
                 return false;
             }
         }
+    }
+
+    /**
+     * Add/update an annotation status form on the framework matrix page.
+     * This uses a feedback style config form with some extra bits.
+     */
+    public function annotation_feedback_form($data) {
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        $annotation = new BlockInstance($data->annotation);
+        $configdata = $annotation->get('configdata');
+        if (empty($configdata['artefactid'])) {
+            return false;
+        }
+
+        safe_require('artefact', 'file');
+        $artefactid = $configdata['artefactid'];
+        $artefact = $annotation->get_artefact_instance($artefactid);
+        $view = $annotation->get_view();
+        $text = $artefact->get('description');
+        $collection = $view->get('collection');
+        $evidence = get_record('framework_evidence', 'annotation', $annotation->get('id'));
+
+        if (!is_object($collection) || !$collection->get('framework')) {
+            return false;
+        }
+
+        $form = array(
+            'name' => 'annotationfeedback',
+            'jsform' => true,
+            'renderer' => 'div',
+            'plugintype' => 'module',
+            'pluginname' => 'framework',
+            'jssuccesscallback' => 'updateAnnotation',
+            'elements'   => array(
+                'annotation' => array(
+                    'type' => 'html',
+                    'title' => get_string('studentannotation', 'module.framework'),
+                    'value' => $text,
+                ),
+                'assessment' => array(
+                    'type' => 'select',
+                    'title' => get_string('assessment', 'module.framework'),
+                    'options' => array(
+                        '0' => get_string('begun','module.framework'),
+                        '1' => get_string('incomplete','module.framework'),
+                        '2' => get_string('partialcomplete','module.framework'),
+                        '3' => get_string('completed','module.framework'),
+                    ),
+                    'defaultvalue' => $evidence->state,
+                    'width' => '280px',
+                    'class' => 'top-line',
+                ),
+                'submitcancel' => array(
+                    'type' => 'submitcancel',
+                    'class' => 'btn-default',
+                    'value' => array(get_string('save'), get_string('cancel')),
+                    'goto' => get_string('docroot') . 'module/framework/matrix.php?id=' . $collection->get('id'),
+                ),
+            ),
+        );
+        $content = pieform($form);
+        list($feedbackcount, $annotationfeedback) = ArtefactTypeAnnotationfeedback::get_annotation_feedback_for_matrix($artefact, $view, $annotation->get('id'));
+        $content .= $annotationfeedback;
+
+        $return = array(
+            'content' => $content,
+            'js' => 'function updateAnnotation(form, data) { formSuccess(form, data); }',
+            'css' => '',
+            'title' => $annotation->get_title(),
+        );
+        return $return;
     }
 }
 
