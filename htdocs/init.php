@@ -311,6 +311,9 @@ if (!get_config('productionmode')) {
     $CFG->developermode       = DEVMODE_DEBUGJS | DEVMODE_DEBUGCSS | DEVMODE_UNPACKEDJS;
     $CFG->perftofoot          = true;
     $CFG->nocache             = true;
+    if ($CFG->log_backtrace_print_args === null) {
+        $CFG->log_backtrace_print_args = true;
+    }
 }
 
 if (get_config('installed')) {
