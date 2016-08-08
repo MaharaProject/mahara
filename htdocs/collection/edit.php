@@ -109,6 +109,7 @@ $form = pieform(array(
     'name' => 'edit',
     'plugintype' => 'core',
     'pluginname' => 'collection',
+    'validatecallback' => 'validate',
     'successcallback' => 'submit',
     'elements' => $elements,
 ));
@@ -121,9 +122,32 @@ $smarty->assign('headingclass', 'page-header');
 $smarty->assign_by_ref('form', $form);
 $smarty->display('collection/edit.tpl');
 
+function validate(Pieform $form, $values) {
+    $rendered = $form->get_property('elements');
+    if (isset($rendered['framework'])) {
+        if (!empty($rendered['framework']['defaultvalue']) && $rendered['framework']['defaultvalue'] != $values['framework']) {
+            // Make sure that if the user is changing the framework that there isn't annotations paired to the old framework
+            $views = get_records_sql_array("SELECT v.id, v.title FROM {view} v
+                                            JOIN {collection_view} cv ON cv.view = v.id
+                                            JOIN {framework_evidence} fe ON fe.view = cv.view
+                                            WHERE cv.collection = ?", array($rendered['id']['value']));
+            if (!empty($views)) {
+                $errorstr = get_string('changeframeworkproblems', 'module.framework');
+                foreach ($views as $view) {
+                    $errorstr .= " '" . $view->title . "'";
+                }
+                $form->set_error('framework', $errorstr);
+            }
+        }
+    }
+}
+
 function submit(Pieform $form, $values) {
     global $SESSION, $new, $copy, $urlparams;
     $values['navigation'] = (int) $values['navigation'];
+    if (empty($values['framework'])) {
+        $values['framework'] = null;
+    }
     $collection = Collection::save($values);
     if (!$new) {
         $SESSION->add_ok_msg(get_string('collectionsaved', 'collection'));

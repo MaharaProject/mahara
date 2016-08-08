@@ -30,31 +30,21 @@ safe_require('artefact', 'comment');
 $collectionid = param_integer('id');
 $collection = new Collection($collectionid);
 $owner = $collection->get('owner');
-$institution = $collection->get('institution');
-if (!$collection->has_framework()) {
-    $errorstr = get_string('accessdenied', 'error');
-    throw new AccessDeniedException($errorstr);
-}
-
-if ($owner) {
-    // Find what institution they belong to
-    // Use first one if they belong to multiple
-    $user = new User();
-    $user->find_by_id($owner);
-    $institutions = array_keys($user->get('institutions'));
-    $institution = (!empty($institutions)) ? $institutions[0] : 'mahara';
-}
-$institution = new Institution($institution);
-// Check that smart evidence is enabled for the institution
-if (!$institution->allowinstitutionsmartevidence) {
-    $errorstr = get_string('accessdeniedsmartevidencenotallowed', 'module.framework', $institution->displayname);
-    throw new AccessDeniedException($errorstr);
-}
-
 $views = $collection->get('views');
+if (empty($views)) {
+    $errorstr = get_string('accessdeniednoviews', 'module.framework');
+    throw new AccessDeniedException($errorstr);
+}
+
 // Get the first view from the collection
 $firstview = $views['views'][0];
 $view = new View($firstview->id);
+
+if (!$collection->has_framework()) {
+    // We can't show the matrix page so redirect them to the first page of the collection instead
+    redirect($view->get_url());
+}
+
 if (!can_view_view($view->get('id'))) {
     $errorstr = get_string('accessdenied', 'error');
     throw new AccessDeniedException($errorstr);

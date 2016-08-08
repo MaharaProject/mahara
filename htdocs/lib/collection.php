@@ -474,6 +474,20 @@ class Collection {
                 'defaultvalue' => 1,
             ),
         );
+        if ($frameworks = $this->can_have_framework()) {
+            $options = array('' => get_string('noframeworkselected', 'module.framework'));
+            foreach ($frameworks as $framework) {
+                $options[$framework->id] = $framework->name;
+            }
+            $elements['framework'] = array(
+                'type' => 'select',
+                'title' => get_string('Framework', 'module.framework'),
+                'options' => $options,
+                'defaultvalue' => $this->framework,
+                'width' => '280px',
+                'description' => get_string('frameworkdesc', 'module.framework'),
+            );
+        }
 
         // populate the fields with the existing values if any
         if (!empty($this->id)) {
@@ -555,15 +569,54 @@ class Collection {
     }
 
     /**
-     * Check that a collection has a framework
+     * Check that a collection can have a framework
      * - The collection is not owned by a group
+     * - The framework plugin is active
+     * - The institution has 'SmartEvidence' turned on
+     * - There frameworks available for the institution
+     *
+     * @return mixed  array of available frameworks or false
+     */
+    public function can_have_framework() {
+        if (!empty($this->group)) {
+            return false;
+        }
+
+        safe_require('module', 'framework');
+        if (!PluginModuleFramework::is_active()) {
+            return false;
+        }
+
+        if ($this->institution) {
+            $institution = $this->institution;
+        }
+        else {
+            $user = new User();
+            $user->find_by_id($this->owner);
+            $institutions = array_keys($user->get('institutions'));
+            $institution = (!empty($institutions)) ? $institutions[0] : 'mahara';
+        }
+        $institution = new Institution($institution);
+        // Check that smart evidence is enabled for the institution
+        if (!$institution->allowinstitutionsmartevidence) {
+            return false;
+        }
+        safe_require('module','framework');
+        $frameworks = Framework::get_frameworks($institution->name, true);
+
+        return $frameworks;
+    }
+
+    /**
+     * Check that a collection has a framework
+     * - The collection can have a framework
      * - It has a framework id
      * - It has views in the collection
      *
      * @return boolean
      */
     public function has_framework() {
-        if (!empty($this->group)) {
+        if (!$this->can_have_framework()) {
             return false;
         }
         if (empty($this->framework)) {

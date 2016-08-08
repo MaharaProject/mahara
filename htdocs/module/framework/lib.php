@@ -391,11 +391,44 @@ class Framework {
     }
 
     /**
+     * Get available frameworks based on institution
+     *
+     * @param string  $institution  If set to 'any' all results returned
+     * @param boolean $shared       Return frameworks that can be viewed by all institutions
+     *
+     * @return frameworks
+     */
+    public function get_frameworks($institution = 'any', $shared = false) {
+        global $USER;
+
+        if ($USER->get('admin')) {
+            $institution = 'any'; // make sure site admin can get full list regardless
+        }
+
+        $sql = "SELECT * FROM {framework}";
+        $values = array();
+        if ($institution != 'any') {
+            // Only get the frameworks available to this institution
+            $placeholders = '?';
+            $values[] = $institution;
+            if ($shared) {
+                // Include frameworks with institution set to 'all'
+                $placeholders .= ',?';
+                $values[] = 'all';
+            }
+            $sql .= " WHERE institution IN (" . $placeholders . ")";
+        }
+        $sql .= " ORDER BY name";
+        $frameworks = get_records_sql_array($sql, $values);
+        return $frameworks;
+    }
+
+    /**
      * Get the evidence state for the framework
      *
      * @param int $userid
      *
-     * @return outcomes
+     * @return evidence(s)
      */
     public function get_evidence() {
         $outcomes = get_records_array('framework_evidence', 'framework', $this->id);
