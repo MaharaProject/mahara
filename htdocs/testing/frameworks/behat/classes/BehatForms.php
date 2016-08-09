@@ -412,6 +412,27 @@ class BehatForms extends BehatBase {
     }
 
     /**
+     * Checks if a field is present
+     *
+     * @When /^I should not see the field "(?P<fieldlabel>(?:[^"]|\\")*)"$/
+     *
+     * @param string $fieldlabel the label of the field
+     * @throws ExpectationException
+     */
+    public function field_not_found($fieldlabel) {
+        $fieldlocator = $this->unescapeDoubleQuotes($fieldlabel);
+        try {
+            $field = BehatFieldManager::get_form_field_from_label($fieldlocator, $this);
+            // Field exists so we need to thow exception
+            throw new ExpectationException(
+                "The '" . $fieldlabel . "' field exists, expected to be absent", $this->getSession());
+        }
+        catch (ElementNotFoundException $fieldexception) {
+            // field doesn't exist so all is good
+        }
+    }
+
+    /**
      * Generic field setter.
      *
      * Internal API method, a generic *I set "VALUE" to "FIELD" field*

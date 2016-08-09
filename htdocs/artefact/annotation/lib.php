@@ -1251,24 +1251,28 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             if (is_object($collection) && $collection->get('framework')) {
                 foreach ($view->get_artefact_metadata() as $metadata) {
                     if ($metadata->id === $annotation->get('id')) {
+                        safe_require('module', 'framework');
+
                         $evidence = get_record('framework_evidence', 'annotation', $metadata->block);
                         $defaultval = $evidence->state;
-                        $form['elements']['assessment'] = array(
-                            'type' => 'select',
-                            'title' => get_string('assessment', 'module.framework'),
-                            'options' => array(
-                                '0' => get_string('begun','module.framework'),
-                                '1' => get_string('incomplete','module.framework'),
-                                '2' => get_string('partialcomplete','module.framework'),
-                                '3' => get_string('completed','module.framework'),
-                            ),
-                            'defaultvalue' => $defaultval,
-                            'width' => '280px',
-                        );
-                        $form['elements']['evidence'] = array(
-                            'type' => 'hidden',
-                            'value' => $evidence->id,
-                        );
+
+                        if ($options = Framework::allow_assessment($view->get('owner'), true, $evidence->framework)) {
+                            if (!array_key_exists($defaultval, $options)) {
+                                $defaultval = null;
+                            }
+                            $form['elements']['assessment'] = array(
+                                'type' => 'select',
+                                'title' => get_string('assessment', 'module.framework'),
+                                'options' => $options,
+                                'defaultvalue' => $defaultval,
+                                'width' => '280px',
+                            );
+
+                            $form['elements']['evidence'] = array(
+                                'type' => 'hidden',
+                                'value' => $evidence->id,
+                            );
+                        }
                     }
                 }
             }

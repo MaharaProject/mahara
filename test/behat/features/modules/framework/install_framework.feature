@@ -89,5 +89,5 @@ Scenario: Installing framework module and activating for an institution
  | Feedback | This is annotation feedback |
  And I press "Place feedback"
  # And change assessment status
- And I select "Partially meets the standard" from "Assessment"
+ And I should not see the field "Assessment"
  And I press "Save"

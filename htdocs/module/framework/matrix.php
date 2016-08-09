@@ -166,7 +166,7 @@ jQuery(function($) {
     });
 
     var cellx = celly = 0;
-    $('#tablematrix td.mid span').on('click', function(e) {
+    $('#tablematrix td.mid span:not(.disabled)').on('click', function(e) {
         e.preventDefault();
         cellx = $(this).closest('td').index();
         celly = $(this).closest('tr').index();
@@ -273,6 +273,10 @@ jQuery(function($) {
                 values['action'] = 'evidence';
                 editmatrix_update(values);
                 tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                feedbacktextarea = $("#addfeedbackmatrix textarea");
+                if (feedbacktextarea.length) {
+                    tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
+                }
                 dock.hide();
             });
             // When we are saving the annotation feedback form - adding new feedback
@@ -344,6 +348,7 @@ $smarty->assign('description', $framework->get('description'));
 $smarty->assign('standards', $standards['standards']);
 $smarty->assign('evidence', $evidencematrix);
 $smarty->assign('completed', $completed);
+$smarty->assign('canaddannotation', Framework::allow_annotation($view->get('id')));
 $smarty->assign('standardscount', $standards['count']);
 $smarty->assign('framework', $collection->get('framework'));
 $smarty->assign('views', $views['views']);

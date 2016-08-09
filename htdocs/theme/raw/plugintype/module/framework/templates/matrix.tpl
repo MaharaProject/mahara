@@ -42,15 +42,15 @@
             {foreach from=$views key=vk item=view}
             <td class="mid"><span data-view="{$view->id}" data-option="{$option->id}"
                 {if $evidence[$framework][$option->id][$view->id].completed}
-                class="icon icon-circle completed">
+                class="icon icon-circle completed" title="{str tag='completed' section='module.framework'}">
                 {elseif $evidence[$framework][$option->id][$view->id].partialcomplete}
-                class="icon icon-adjust partial">
+                class="icon icon-adjust partial" title="{str tag='partialcomplete' section='module.framework'}">
                 {elseif $evidence[$framework][$option->id][$view->id].incomplete}
-                class="icon icon-circle-o incomplete">
+                class="icon icon-circle-o incomplete" title="{str tag='incomplete' section='module.framework'}">
                 {elseif $evidence[$framework][$option->id][$view->id].begun}
-                class="icon icon-circle-o begun">
+                class="icon icon-circle-o begun" title="{str tag='begun' section='module.framework'}">
                 {else}
-                >&bull;
+                class="dot{if !$canaddannotation} disabled{/if}">&bull;
                 {/if}
                 </span>
             </td>

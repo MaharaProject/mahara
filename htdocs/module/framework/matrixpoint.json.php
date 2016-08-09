@@ -33,7 +33,7 @@ $evidence = get_record('framework_evidence', 'framework', $framework, 'element',
 if ($action == 'update') {
     // When we click a dot on the matrix and add an annotation
     require_once(get_config('docroot') . 'blocktype/lib.php');
-    $title = param_alphanumext('title', 'Annotation');
+    $title = param_variable('title', 'Annotation');
     $text = param_variable('text', '');
     $allowfeedback = param_boolean('allowfeedback');
     $retractable = param_integer('retractable', 0);
@@ -67,7 +67,7 @@ if ($action == 'update') {
         $message = get_string('matrixpointinserted', 'module.framework');
     }
 
-    $class = 'icon icon-circle-o danger';
+    $class = 'icon icon-circle-o begun';
     $data = (object) array('id' => $id,
                            'class' => $class,
                            'view' => $view,
@@ -77,36 +77,30 @@ if ($action == 'update') {
 }
 else if ($action == 'evidence') {
     global $USER;
-    // When we click on one of the begun/ready/completed symbols and submit that form
+    // When we click on one of the begun/incomplete/partialcomplete/completed symbols and submit that form
     if (!$evidence->id) {
         // problem need to return error
     }
 
-    $begun = $ready = $completed = 0;
     $reviewer = null;
-    $assessment = param_alpha('assessment', 'begun');
-    switch ($assessment) {
-        case 'completed':
-            $begun = $ready = $completed = 1;
-            $reviewer = $USER->get('id');
-            break;
-        case 'ready':
-            $begun = $ready = 1;
-            break;
-        default:
-            $begun = 1;
+    $assessment = param_alphanum('assessment', 0);
+    if (Framework::EVIDENCE_COMPLETED === (int) $assessment) {
+        $reviewer = $USER->get('id');
     }
     $id = Framework::save_evidence($evidence->id, null, null, null, $evidence->annotation, $assessment, $USER->get('id'));
     $message = get_string('matrixpointupdated', 'module.framework');
 
-    if ($completed) {
-        $class = 'icon icon-circle success';
+    if (Framework::EVIDENCE_COMPLETED === (int) $assessment) {
+        $class = 'icon icon-circle completed';
     }
-    else if ($ready) {
-        $class = 'icon icon-adjust warning';
+    else if (Framework::EVIDENCE_PARTIALCOMPLETE === (int) $assessment) {
+        $class = 'icon icon-adjust partial';
+    }
+    else if (Framework::EVIDENCE_INCOMPLETE === (int) $assessment) {
+        $class = 'icon icon-circle-o incomplete';
     }
     else {
-        $class = 'icon icon-circle-o danger';
+        $class = 'icon icon-circle-o begun';
     }
 
     $data = (object) array('id' => $id,
@@ -156,7 +150,7 @@ else {
         'partialcomplete' => $states['partialcomplete'],
         'completed' => $states['completed'],
     );
-    if ($evidence && !empty($params->begun)) {
+    if ($evidence) {
         // There is an annotation in play
         $form = Framework::annotation_feedback_form($params);
     }

@@ -447,6 +447,9 @@ class Framework {
     public static function annotation_config_form($data) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         if (empty($data->annotation)) {
+            // Get the title for the option
+            $title = get_field('framework_standard_element', 'shortname', 'id', $data->option);
+
             // Find out how many blocks already exist for the view.
             $maxorder = get_field_sql(
                 'SELECT MAX("order") FROM {block_instance} WHERE "view"=? AND "row"=? AND "column"=?',
@@ -455,7 +458,7 @@ class Framework {
             // Create the block at the end of the cell.
             $annotation = new BlockInstance(0, array(
                 'blocktype'  => 'annotation',
-                'title'      => get_string('Annotation', 'artefact.annotation'),
+                'title'      => (get_string('Annotation', 'artefact.annotation') . ': ' . $title),
                 'view'       => $data->view,
                 'row'        => 1,
                 'column'     => 1,
@@ -515,7 +518,7 @@ class Framework {
             if (!empty($element)) {
                 $fordb['element'] = $element;
             }
-            $fordb['reviewer'] = ($completed === 1) ? $reviewer : null;
+            $fordb['reviewer'] = ((int) $state === Self::EVIDENCE_COMPLETED) ? $reviewer : null;
             update_record('framework_evidence', (object) $fordb, (object) array('id' => $id));
         }
         else {
@@ -577,6 +580,8 @@ class Framework {
      * This uses a feedback style config form with some extra bits.
      */
     public function annotation_feedback_form($data) {
+        global $USER;
+
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $annotation = new BlockInstance($data->annotation);
         $configdata = $annotation->get('configdata');
@@ -591,9 +596,34 @@ class Framework {
         $text = $artefact->get('description');
         $collection = $view->get('collection');
         $evidence = get_record('framework_evidence', 'annotation', $annotation->get('id'));
+        $defaultval = $evidence->state;
 
         if (!is_object($collection) || !$collection->get('framework')) {
             return false;
+        }
+
+        $options = self::allow_assessment($view->get('owner'), true, $evidence->framework);
+        if (!$options) {
+            $choices = Self::get_choices();
+            $assessment = array(
+                'type' => 'html',
+                'title' => get_string('assessment', 'module.framework'),
+                'value' => $choices[$defaultval],
+                'class' => 'top-line',
+            );
+        }
+        else {
+            if (!array_key_exists($defaultval, $options)) {
+                $defaultval = null;
+            }
+            $assessment = array(
+                'type' => 'select',
+                'title' => get_string('assessment', 'module.framework'),
+                'options' => $options,
+                'defaultvalue' => $defaultval,
+                'width' => '280px',
+                'class' => 'top-line',
+            );
         }
 
         $form = array(
@@ -606,30 +636,25 @@ class Framework {
             'elements'   => array(
                 'annotation' => array(
                     'type' => 'html',
-                    'title' => get_string('studentannotation', 'module.framework'),
                     'value' => $text,
-                ),
-                'assessment' => array(
-                    'type' => 'select',
-                    'title' => get_string('assessment', 'module.framework'),
-                    'options' => array(
-                        '0' => get_string('begun','module.framework'),
-                        '1' => get_string('incomplete','module.framework'),
-                        '2' => get_string('partialcomplete','module.framework'),
-                        '3' => get_string('completed','module.framework'),
-                    ),
-                    'defaultvalue' => $evidence->state,
-                    'width' => '280px',
-                    'class' => 'top-line',
-                ),
-                'submitcancel' => array(
-                    'type' => 'submitcancel',
-                    'class' => 'btn-default',
-                    'value' => array(get_string('save'), get_string('cancel')),
-                    'goto' => get_string('docroot') . 'module/framework/matrix.php?id=' . $collection->get('id'),
                 ),
             ),
         );
+        if ($options || (!$options && $view->get('owner') == $USER->get('id'))) {
+            $form['elements']['annotationdiv'] = array(
+                'type' => 'html',
+                'value' => '<div class="modal-header modal-section">' . get_string("assessment", "module.framework") . '</div>',
+            );
+            $form['elements']['assessment'] = $assessment;
+        }
+        if ($options) {
+            $form['elements']['submitcancel'] = array(
+                'type' => 'submitcancel',
+                'class' => 'btn-default',
+                'value' => array(get_string('save'), get_string('cancel')),
+                'goto' => get_string('docroot') . 'module/framework/matrix.php?id=' . $collection->get('id'),
+            );
+        }
         $content = pieform($form);
         list($feedbackcount, $annotationfeedback) = ArtefactTypeAnnotationfeedback::get_annotation_feedback_for_matrix($artefact, $view, $annotation->get('id'));
         $content .= $annotationfeedback;
@@ -641,6 +666,107 @@ class Framework {
             'title' => $annotation->get_title(),
         );
         return $return;
+    }
+
+    /**
+     * Check to see if a user can add an annotation via the matrix page. Currently only view owner
+     *
+     * @param string $viewid    The view the matrix point is associated with
+     *
+     * @return bool
+     */
+    public static function allow_annotation($viewid) {
+        global $USER;
+
+        if (empty($viewid) || !is_numeric($viewid)) {
+            return false;
+        }
+
+        require_once(get_config('libroot') . 'view.php');
+        $view = new View($viewid);
+        $collection = $view->get('collection');
+        if (!is_object($collection)) {
+            return false;
+        }
+        $framework = $collection->get('framework');
+        if (empty($framework)) {
+            return false;
+        }
+
+        $userid = $USER->get('id');
+        if ($USER->get('id') == $view->get('owner')) {
+            // Is owner
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check to see if a user can set the assessment status for a piece of evidence.
+     * If $options is set to true return the valid options for a select dropdown
+     *
+     * @param string $ownerid   The owner of the smart evidence annotation
+     * @param bool   $options   Whether to return the valid options (on true) or just true/false
+     * @param string $framework ID of the framework
+     *
+     * @return mixed either bool or array for select dropdown
+     */
+    public static function allow_assessment($ownerid, $options = false, $framework = null) {
+        global $USER;
+
+        if (empty($ownerid) || !is_numeric($ownerid)) {
+            return false;
+        }
+
+        $owner = new User();
+        $owner->find_by_id($ownerid);
+        $ownerinstitutions = array_keys($owner->get('institutions'));
+        $institution = (!empty($ownerinstitutions)) ? $ownerinstitutions[0] : 'mahara';
+        $isowner = ($owner->get('id') === $USER->get('id'));
+        $isadminofowner = $selfcomplete = false;
+
+        if ($USER->get('admin') || $USER->get('staff')) {
+            $isadminofowner = true;
+        }
+        else if ($institution != 'mahara' && ($USER->is_institutional_admin($institution) || $USER->is_institutional_staff($institution))) {
+            $isadminofowner = true;
+        }
+
+        require_once(get_config('libroot') . 'institution.php');
+        $institution = new Institution($institution);
+        // Check that smart evidence self assessment is enabled for the framework
+        if ($framework) {
+            $framework = new Framework($framework);
+            if ($framework->selfassess) {
+                $selfcomplete = true;
+            }
+        }
+
+        if ($isowner || $isadminofowner) {
+            if ($options) {
+                $reply = Self::get_choices();
+                if (($isowner && $selfcomplete === false) ||
+                    ($isadminofowner && $selfcomplete === true)) {
+                    unset($reply[1]);
+                    unset($reply[2]);
+                    unset($reply[3]);
+                }
+                return $reply;
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function get_choices() {
+        return array(
+            Self::EVIDENCE_BEGUN => get_string('begun','module.framework'),
+            Self::EVIDENCE_INCOMPLETE => get_string('incomplete','module.framework'),
+            Self::EVIDENCE_PARTIALCOMPLETE => get_string('partialcomplete','module.framework'),
+            Self::EVIDENCE_COMPLETED => get_string('completed','module.framework'),
+        );
     }
 }
 

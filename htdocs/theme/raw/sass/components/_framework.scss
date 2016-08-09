@@ -30,6 +30,12 @@
                 &.completed {
                     color: $brand-success;
                 }
+                &.dot {
+                    padding: 5px 10px;
+                    &.disabled {
+                        cursor: not-allowed;
+                    }
+                }
             }
         }
 
