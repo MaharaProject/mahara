@@ -76,11 +76,18 @@ class EmbeddedImage {
                 $foundmatch = preg_match_all($searchpattern, $imgsrc, $matches);
                 if ($foundmatch) {
                     foreach ($matches[1] as $imgid) {
-                        $file = artefact_instance_from_id($imgid);
-                        if (!($file instanceof ArtefactTypeImage)
+                        try {
+                            $file = artefact_instance_from_id($imgid);
+                        }
+                        catch (ArtefactNotFoundException $e) {
+                            continue;
+                        }
+
+                        if (
+                            !($file instanceof ArtefactTypeImage)
                             || !$user->can_publish_artefact($file)
-                           ) {
-                            return $fieldvalue;
+                        ) {
+                            continue;
                         }
                         else {
                             $publicimages[] = $imgid;
