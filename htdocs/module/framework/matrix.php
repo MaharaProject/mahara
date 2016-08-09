@@ -51,13 +51,13 @@ if (!can_view_view($view->get('id'))) {
     $errorstr = get_string('accessdenied', 'error');
     throw new AccessDeniedException($errorstr);
 }
-
-$framework = new Framework($collection->get('framework'));
+$frameworkid = $collection->get('framework');
+$framework = new Framework($frameworkid);
 $standards = $framework->standards();
 
 define('TITLE', $collection->get('name'));
 
-$javascript = array('js/collection-navigation.js');
+$javascript = array('js/collection-navigation.js', 'tinymce');
 
 // Set up theme
 $viewtheme = $view->get('theme');
@@ -164,6 +164,89 @@ jQuery(function($) {
             carousel_matrix();
         }
     });
+
+    var cellx = celly = 0;
+    $('#tablematrix td.mid span').on('click', function(e) {
+        e.preventDefault();
+        cellx = $(this).closest('td').index();
+        celly = $(this).closest('tr').index();
+        var params = {};
+        params.framework = $frameworkid;
+        params.view = $(this).data("view");
+        params.option = $(this).data("option");
+        sendjsonrequest('matrixpoint.json.php', params, 'POST', function(data) {
+
+            dock.show($('#configureblock'), true, false);
+            var newpagemodal = $('#configureblock');
+            newpagemodal.find('.blockinstance-header').html(data.data.form.title);
+            newpagemodal.find('.blockinstance-content').html(data.data.form.content);
+
+            deletebutton = newpagemodal.find('.deletebutton');
+            // Lock focus to the newly opened dialog
+            deletebutton.focus();
+            deletebutton.on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                if (data.data.form.isnew) {
+                    // need to delete empty annotation on cancel
+                    params.action = 'delete';
+                    params.blockconfig = $('#instconf_blockconfig').val();
+                    editmatrix_update(params);
+                }
+                tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                dock.hide();
+            });
+            cancelbutton = newpagemodal.find('.submitcancel.cancel');
+            cancelbutton.on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                if (data.data.form.isnew) {
+                    params.action = 'delete';
+                    params.blockconfig = $('#instconf_blockconfig').val();
+                    editmatrix_update(params);
+                }
+                tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                dock.hide();
+            });
+            tinyMCE.idCounter=0;
+            tinyMCE.execCommand('mceAddEditor', false, "instconf_text");
+
+            $('#instconf').on('submit', function(se) {
+                se.preventDefault();
+                var sdata = $("#instconf :input").serializeArray();
+                var values = {};
+                var tags = new Array();
+                sdata.forEach(function(item, index) {
+                    if (item.name == 'tags[]') {
+                        tags.push(item.value);
+                    }
+                    else {
+                        values[item.name] = item.value;
+                    }
+                });
+                values['tags'] = tags.join();
+                values['framework'] = params.framework;
+                values['view'] = params.view;
+                values['option'] = params.option;
+                values['action'] = 'update';
+                editmatrix_update(values);
+                tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                dock.hide();
+            });
+        });
+    });
+
+    function editmatrix_update(data) {
+        params = data;
+        sendjsonrequest('matrixpoint.json.php', params, 'POST', function(results) {
+            if (results.data.class) {
+                $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span')
+                  .attr('class', results.data.class)
+                  .data('option', results.data.option)
+                  .data('view', results.data.view).empty();
+            }
+        });
+    }
     // Setup
     carousel_matrix();
 
@@ -191,6 +274,5 @@ $smarty->assign('standardscount', $standards['count']);
 $smarty->assign('framework', $collection->get('framework'));
 $smarty->assign('views', $views['views']);
 $smarty->assign('viewcount', $views['count']);
-$smarty->assign('totalcompleted', array_sum($completed));
 
 $smarty->display('module:framework:matrix.tpl');

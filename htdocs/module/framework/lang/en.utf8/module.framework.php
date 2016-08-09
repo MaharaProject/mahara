@@ -21,3 +21,5 @@ $string['errorbadmatrixname'] = 'Unable to find the matrix file';
 $string['changeframeworkproblems'] = 'You cannot change the framework. The following pages have evidence connected with them:';
 $string['accessdeniednoviews'] = 'You need to add some pages to your collection.';
 $string['noframeworkselected'] = 'None';
+$string['matrixpointupdated'] = "SmartEvidence updated";
+$string['matrixpointinserted'] = "SmartEvidence added";

@@ -193,7 +193,7 @@ class Framework {
         $standards = get_column('framework_standard', 'id', 'framework', $this->id);
 
         db_begin();
-
+        delete_records('framework_evidence', 'framework', $this->id);
         delete_records_sql('DELETE FROM {framework_standard_element} WHERE standard IN (' . join(',', array_map('intval', $standards)) . ')');
         delete_records('framework_standard', 'framework', $this->id);
         delete_records('framework', 'id', $this->id);
@@ -435,6 +435,84 @@ class Framework {
         return $outcomes;
     }
 
+    public static function annotation_config_form($data) {
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        if (empty($data->annotation)) {
+            // Find out how many blocks already exist for the view.
+            $maxorder = get_field_sql(
+                'SELECT MAX("order") FROM {block_instance} WHERE "view"=? AND "row"=? AND "column"=?',
+                array($data->view, 1, 1)
+            );
+            // Create the block at the end of the cell.
+            $annotation = new BlockInstance(0, array(
+                'blocktype'  => 'annotation',
+                'title'      => get_string('Annotation', 'artefact.annotation'),
+                'view'       => $data->view,
+                'row'        => 1,
+                'column'     => 1,
+                'order'      => $maxorder + 1,
+            ));
+            $annotation->commit();
+            $new = true;
+        }
+        else {
+            $annotation = new BlockInstance($data->annotation);
+            $new = false;
+        }
+        $title = $annotation->get_title();
+        list($content, $js, $css) = array_values($annotation->build_configure_form($new));
+
+        $return = array(
+            'content' => $content,
+            'js' => $js,
+            'css' => $css,
+            'title' => $title,
+            'isnew' => $new
+        );
+        return $return;
+    }
+
+    /**
+     * Save evidence
+     * @param string $id          Framework_evidence id
+     * @param string $framework   Framework id                  }
+     * @param string $element     Framework_standard_element id }  A unique grouping
+     * @param string $view        View id                       }
+     * @param string $annotation  Annotation block id (not artefact id)
+     * @param string $state       Either 'begun', 'ready', 'completed'
+     * @param string $reviewer    The user marking the evidence as completed
+     */
+    public static function save_evidence($id = null, $framework = null, $element = null, $view = null, $annotation = null, $state = Self::EVIDENCE_BEGUN, $reviewer = null) {
+        // need to check we have at least one indicator of uniqueness
+        $uniqueness = false;
+        if (!empty($id)) {
+            $uniqueness = true;
+        }
+        else if (!empty($framework) && !empty($element) && !empty($view)) {
+            $uniqueness = true;
+        }
+
+        if (!$uniqueness) {
+            throw new SQLException('No unique identifier supplied');
+        }
+
+        $fordb = array('mtime' => db_format_timestamp(time()),
+                       'annotation' => $annotation,
+                       'state' => $state);
+        if ($id) {
+            // update row
+            update_record('framework_evidence', (object) $fordb, (object) array('id' => $id));
+        }
+        else {
+            // insert
+            $fordb['view'] = $view;
+            $fordb['element'] = $element;
+            $fordb['framework'] = $framework;
+            $fordb['ctime'] = db_format_timestamp(time());
+            $id = insert_record('framework_evidence', (object) $fordb, 'id', true);
+        }
+        return $id;
+    }
 }
 
 class FrameworkNotFoundException extends NotFoundException {}

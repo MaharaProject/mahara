@@ -59,3 +59,12 @@ Scenario: Installing framework module and activating for an institution
  Then I should see "PageF"
  And I press "Prev" in the "table#tablematrix" "css_element"
  Then I should not see "PageF"
+
+ # Click on a matrix point to add an annotation
+ And I click on the matrix point "3,5"
+ And I wait "1" seconds
+ And I set the following fields to these values:
+ | Annotation | My two cents |
+ And I press "Save"
+ And I go to portfolio page "PageB"
+ Then I should see "Annotation"

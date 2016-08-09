@@ -40,27 +40,41 @@
             <td class="code"><div>{$option->shortname} <span class="hidden matrixtooltip">{$option->name}<br>{$option->description}</span></div></td>
             <td>{if $completed[$option->id]}{$completed[$option->id]}{else}0{/if}</td>
             {foreach from=$views key=vk item=view}
-            <td class="mid">{if $evidence[$framework][$option->id][$view->id].completed}
-                <span class="icon icon-circle completed"></span>
+            <td class="mid"><span data-view="{$view->id}" data-option="{$option->id}"
+                {if $evidence[$framework][$option->id][$view->id].completed}
+                class="icon icon-circle completed">
                 {elseif $evidence[$framework][$option->id][$view->id].partialcomplete}
-                <span class="icon icon-adjust partial"></span>
+                class="icon icon-adjust partial">
                 {elseif $evidence[$framework][$option->id][$view->id].incomplete}
-                <span class="icon icon-circle-o incomplete"></span>
+                class="icon icon-circle-o incomplete">
                 {elseif $evidence[$framework][$option->id][$view->id].begun}
-                <span class="icon icon-circle-o begun"></span>
+                class="icon icon-circle-o begun">
                 {else}
-                <span>&bull;</span>
+                >&bull;
                 {/if}
+                </span>
             </td>
             {/foreach}
         </tr>
         {/foreach}
     {/if}
   {/foreach}
-  <tr>
-    <td>{str tag="taskscompleted" section="module.framework"}</td>
-    <td>{$totalcompleted}</td>
-    <td colspan="{$viewcount}">&nbsp;</td>
-  </tr>
 </table>
+
+<div role="dialog" id="configureblock" class="modal modal-shown modal-docked-right modal-docked closed blockinstance configure">
+    <div class="modal-dialog modal-lg">
+        <div data-height=".modal-body" class="modal-content">
+            <div class="modal-header">
+                <button name="close_configuration" class="deletebutton close">
+                    <span class="times">×</span>
+                    <span class="sr-only">Close configuration</span>
+                </button>
+                <h4 class="modal-title blockinstance-header text-inline"></h4>
+                <span aria-hidden="true" role="presentation" class="icon icon-cogs icon-2x pull-right"></span>
+            </div>
+            <div class="modal-body blockinstance-content">
+            </div>
+        </div>
+    </div>
+</div>
 {include file="footer.tpl"}

@@ -427,6 +427,34 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Click a matrix point by being given a column,row pair
+     *
+     * @When I click on the matrix point :matrix_point
+     * @param string $matrix_point a column,row value
+     * @throws ElementNotFoundException
+     * @throws ExpectationException
+     */
+    public function i_click_matrix_point($matrix_point) {
+        // Check that we have a valid matrix point
+        $point = explode(',', $matrix_point);
+        if (empty($point[0]) || empty($point[1]) ||
+            !is_numeric($point[0]) || !is_numeric($point[1])) {
+            throw new ExpectationException('"' . $matrix_point . '" is not valid. Needs to be like "3,5"', $this->getSession());
+        }
+
+        // The table container.
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'Unable to find the point "(' . $matrix_point . ')" in a table with class "tablematrix"');
+        $xpath = "//table[(contains(concat(' ', normalize-space(@class), ' '), ' tablematrix '))]" .
+                 "/tbody/tr[" . $point[1] . "]/td[" . $point[0] . "]";
+        $pointnode = $this->find('xpath', $xpath, $exception);
+
+        // For some reasons, the Mink function click() and check() do not work
+        // Using jQuery as a workaround
+        $jscode = "jQuery(\".tablematrix tr:eq('" . $point[1] . "') td:eq('" . $point[0] . "') span\").click();";
+        $this->getSession()->executeScript($jscode);
+    }
+
+    /**
      * Click on the delete button inside a list/table row containing the specified text.
      *
      * @When /^I delete the "(?P<row_text_string>(?:[^"]|\\")*)" row$/
