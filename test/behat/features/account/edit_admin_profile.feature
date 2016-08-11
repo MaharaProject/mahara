@@ -1,11 +1,11 @@
 @javascript @core @core_account @core_content
 Feature: Editing a profile page
-   In order to edit a profile page
+   In order to edit a profile
    As an admin I need to go to Content
-   So I can edit the admin profile page
+   So I can edit the admin profile and picture
 
 Scenario: Editing admin profile page (Bug: 1426983)
-    # Log in as users
+    # Log in
     Given I log in as "admin" with password "Kupuhipa1"
     # Updating Profile
     When I follow "Content"
@@ -73,3 +73,23 @@ Scenario: Editing admin profile page (Bug: 1426983)
     # Verifying changes has been made navigating to dashboard page to checked
     Then I follow "Dashboard"
     And I should see "Admin User"
+
+Scenario: Editing admin profile picture (Bug: 1578000)
+    # Log in
+    Given I log in as "admin" with password "Kupuhipa1"
+    # Add new profile picture
+    When I choose "Profile pictures" in "Content"
+    And I attach the file "Image2.png" to "Profile picture"
+    And I fill in the following:
+    | Image title | New avatar |
+    And I press "Upload"
+    Then I should see "Your profile picture has been uploaded to your 'images' folder."
+    # Update profile picture
+    And I select the radio "Set default for \"New avatar\""
+    And I press "Set default"
+    Then I should see "Default profile picture set successfully"
+    # Delete the new profile picture
+    And I fill in the following:
+    | Mark "New avatar" for deletion | 1 |
+    And I press "Delete"
+    Then I should see "Profile picture deleted"

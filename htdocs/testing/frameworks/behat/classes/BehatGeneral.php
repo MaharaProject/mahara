@@ -1020,23 +1020,6 @@ class BehatGeneral extends BehatBase {
         }
     }
 
-
-/**
- * Tick the radio button
- * https://github.com/Kunstmaan/KunstmaanBehatBundle/blob/master/Features/Context/SubContext/RadioButtonSubContext.php
- *
- * @When /^I select the radio "(?P<text>(?:[^"]|\\")*)"$/
- * @param string $labeltext The label
- */
-    public function i_check_radio($labeltext) {
-        $radioButton = $this->getSession()->getPage()->findField($labeltext);
-        if (null === $radioButton) {
-            throw new ElementNotFoundException($this->getSession(), 'form field', 'id|name|label|value', $labeltext);
-        }
-        $this->getSession()->getDriver()->click($radioButton->getXPath());
-
-    }
-
 /**
  * Display the editting page
  *

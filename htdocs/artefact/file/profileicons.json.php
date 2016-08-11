@@ -25,6 +25,13 @@ $result = get_records_sql_array('SELECT a.id, a.title, a.note, (u.profileicon = 
     GROUP BY a.id, a.title, a.note, isdefault
     ORDER BY a.id', array($USER->get('id')));
 
+if ($result) {
+    foreach ($result as $r) {
+        $r->default_str = get_string('setdefaultfor', 'artefact.file', ($r->title ? $r->title : $r->note));
+        $r->delete_str = get_string('markfordeletionspecific', 'artefact.file', ($r->title ? $r->title : $r->note));
+    }
+}
+
 $lastrow = array(
     'id'        => 0,
     'isdefault' => 't',
