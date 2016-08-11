@@ -671,9 +671,6 @@ class PluginAuthSaml extends PluginAuth {
         if (!get_config('usersuniquebyusername') && !$values['remoteuser']) {
             $form->set_error('remoteuser', get_string('errorremoteuser', 'auth.saml'));
         }
-        if ($values['weautocreateusers'] && $values['remoteuser']) {
-            $form->set_error('weautocreateusers', get_string('errorbadcombo', 'auth.saml'));
-        }
 
         if (!empty($values['institutionidp'])) {
             try {
@@ -712,17 +709,17 @@ class PluginAuthSaml extends PluginAuth {
             }
         }
 
-        // Autocreation cannot be enabled unless no institutions have registration enabled.
-        // This seems like a weird rule, but consider the following:
-        // - weautocreateusers = 1 requires remoteuser = 0 (from the test immediately above this one)
-        // - remoteuser = 0 requires usersuniquebyusername = 1 (from the test above that)
-        // - usersuniquebyusername = 1 requires registerallowed = 0 on all institutions
-        //   (for security reasons - see the comments in the request_user_authorise function above).
-        // So weautocreateusers = 1 requires registerallowed = 0 on all institutions, and we might
-        // as well display an error to that effect right away, without forcing the user to enable
-        // usersuniquebyusername.
-        if (($institutions = get_column('institution', 'name', 'registerallowed', '1')) && ($values['weautocreateusers'])) {
-            $form->set_error('weautocreateusers', get_string('errorregistrationenabledwithautocreate', 'auth.saml'));
+        // If we're using Mahara usernames (usr.username) instead of remote usernames
+        // (auth_remote_user.remoteusername), then autocreation cannot be enabled if any
+        // institutions have registration enabled.
+        //
+        // This is because a user self-registering with another institution might pick
+        // a username that matches the username from this SAML service, allowing them
+        // to highjack someone else's account.
+        //
+        // (see the comments in the request_user_authorise function above).
+        if ((!$values['remoteuser']) && ($values['weautocreateusers']) && ($institutions = get_column('institution', 'name', 'registerallowed', '1'))) {
+            $form->set_error('weautocreateusers', get_string('errorregistrationenabledwithautocreate1', 'auth.saml'));
         }
         $dup = get_records_sql_array('SELECT COUNT(instance) AS instance FROM {auth_instance_config}
                                           WHERE ((field = \'institutionattribute\' AND value = ?) OR
