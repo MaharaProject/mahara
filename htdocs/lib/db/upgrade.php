@@ -4752,5 +4752,16 @@ function xmldb_core_upgrade($oldversion=0) {
         ini_set('max_execution_time', $cur_max_execution_time);
     }
 
+    if ($oldversion < 2016110500) {
+        log_debug('Consolidate dataroot file quarantine area');
+        foreach ($languages = array_keys(get_languages()) as $language) {
+            $langstr = get_string_from_language($language, 'quarantinedirname', 'mahara');
+            if ($langstr != 'quarantine' && substr($langstr, 0, 2) != '[[') {
+                require_once(get_config('docroot') . 'lib/file.php');
+                rmdirr(get_config('dataroot') . $langstr);
+            }
+        }
+    }
+
     return $status;
 }
