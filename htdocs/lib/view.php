@@ -769,7 +769,15 @@ class View {
      */
     public function get_artefact_instances() {
         $this->artefact_instances = array();
-        if ($instances = $this->get_artefact_metadata()) {
+
+        $sql = 'SELECT a.*, i.name, i.plugin, va.block
+                FROM {view_artefact} va
+                JOIN {artefact} a ON va.artefact = a.id
+                JOIN {artefact_installed_type} i ON a.artefacttype = i.name
+                WHERE va.view = ?';
+        $this->artefact_metadata = get_records_sql_array($sql, array($this->id));
+
+        if ($instances = $this->artefact_metadata) {
             foreach ($instances as $instance) {
                 safe_require('artefact', $instance->plugin);
                 $classname = generate_artefact_class_name($instance->artefacttype);
@@ -778,43 +786,6 @@ class View {
             }
         }
         return $this->artefact_instances;
-    }
-
-    public function get_artefact_metadata() {
-        $sql = 'SELECT a.*, i.name, i.plugin, va.block
-                FROM {view_artefact} va
-                JOIN {artefact} a ON va.artefact = a.id
-                JOIN {artefact_installed_type} i ON a.artefacttype = i.name
-                WHERE va.view = ?';
-        $this->artefact_metadata = get_records_sql_array($sql, array($this->id));
-        return $this->artefact_metadata;
-    }
-
-    public function find_artefact_children($artefact, $allchildren, &$refs) {
-
-        $children = array();
-        if ($allchildren) {
-            foreach ($allchildren as $child) {
-                if ($child->parent != $artefact->id) {
-                    continue;
-                }
-                $children[$child->id] = array();
-                $children[$child->id]['artefact'] = $child;
-                $refs[$child->id] = $child;
-                $children[$child->id]['children'] = $this->find_artefact_children($child,
-                                                            $allchildren, $refs);
-            }
-        }
-
-        return $children;
-    }
-
-
-    public function has_artefacts() {
-        if ($this->get_artefact_metadata()) {
-            return true;
-        }
-        return false;
     }
 
     public function get_owner_object() {
@@ -967,27 +938,6 @@ class View {
         return $data;
     }
 
-    /* Attempt to sort two access records in the same order as the
-       query in get_access_records */
-    public static function cmp_accesslist($a, $b) {
-        if (($c = empty($a->accesstype) - empty($b->accesstype))
-            || ($c = strcmp($b->accesstype, $a->accesstype))
-            || ($c = $a->group - $b->group)
-            || ($c = !empty($a->role) - !empty($b->role))
-            || ($c = strcmp($a->role, $b->role))
-            || ($c = !empty($a->institution) - !empty($b->institution))
-            || ($c = strcmp($a->institution, $b->institution))
-            || ($c = $a->usr - $b->usr)
-            || ($c = !empty($a->startdate) - !empty($b->startdate))
-            || ($c = strcmp($a->startdate, $b->startdate))
-            || ($c = !empty($a->stopdate) - !empty($b->stopdate))
-            || ($c = strcmp($a->stopdate, $b->stopdate))
-            || ($c = $a->allowcomments - $b->allowcomments)) {
-            return $c;
-        }
-        return $a->approvecomments - $b->approvecomments;
-    }
-
     public static function update_view_access($config, $viewids) {
 
         db_begin();
@@ -1003,7 +953,27 @@ class View {
         // Sort the full access list in the same order as the list
         // returned by get_access, so that views with the same set of
         // access records get grouped together
-        usort($fullaccesslist, array('self', 'cmp_accesslist'));
+        usort(
+            $fullaccesslist,
+            static function ($a, $b) {
+                if (($c = empty($a->accesstype) - empty($b->accesstype))
+                    || ($c = strcmp($b->accesstype, $a->accesstype))
+                    || ($c = $a->group - $b->group)
+                    || ($c = !empty($a->role) - !empty($b->role))
+                    || ($c = strcmp($a->role, $b->role))
+                    || ($c = !empty($a->institution) - !empty($b->institution))
+                    || ($c = strcmp($a->institution, $b->institution))
+                    || ($c = $a->usr - $b->usr)
+                    || ($c = !empty($a->startdate) - !empty($b->startdate))
+                    || ($c = strcmp($a->startdate, $b->startdate))
+                    || ($c = !empty($a->stopdate) - !empty($b->stopdate))
+                    || ($c = strcmp($a->stopdate, $b->stopdate))
+                    || ($c = $a->allowcomments - $b->allowcomments)) {
+                    return $c;
+                }
+                return $a->approvecomments - $b->approvecomments;
+            }
+        );
 
         // Hash the config object so later on we can easily find
         // all the views with the same config/access rights
@@ -1850,7 +1820,7 @@ class View {
             );
 
             if (!defined('JSON')) {
-                $message = $this->get_viewcontrol_ok_string($action);
+                $message = get_string('success.' . $action, 'view');
             }
             $success = true;
         }
@@ -1860,7 +1830,7 @@ class View {
             if (defined('JSON')) {
                 throw $e;
             }
-            $message = $this->get_viewcontrol_err_string($action) . ': ' . $e->getMessage();
+            $message = get_string('err.' . $action, 'view');
         }
         if (!defined('JSON')) {
             // set stuff in the session and redirect
@@ -1991,25 +1961,6 @@ class View {
     }
 
     // ******** functions to do with the view creation ui ************** //
-
-    /**
-     * small wrapper around get_string to return a success string
-     * for the given view control function
-     * @param string $functionname the functionname that was called
-     */
-    public function get_viewcontrol_ok_string($functionname) {
-        return get_string('success.' . $functionname, 'view');
-    }
-
-    /**
-     * small wrapper around get_string to return an error string
-     * for the given view control function
-     * @param string $functionname the functionname that was called
-     */
-    public function get_viewcontrol_err_string($functionname) {
-        return get_string('err.' . $functionname, 'view');
-    }
-
 
     /**
      * Build_rows - for each row build_columms
@@ -3849,23 +3800,6 @@ class View {
     }
 
 
-    public function get_user_views($userid=null) {
-        if (is_null($userid)) {
-            global $USER;
-            $userid = $USER->get('id');
-        }
-        if ($views = get_records_sql_assoc(
-            "SELECT v.*
-            FROM {view} v
-            WHERE v.owner = ?
-            AND v.type NOT IN ('profile', 'dashboard')
-            ORDER BY v.title, v.id
-            ", array($userid))) {
-            return $views;
-        }
-        return array();
-    }
-
     public function get_site_template_views() {
         $views = get_records_sql_array(
             "SELECT v.*
@@ -4623,77 +4557,6 @@ class View {
         }
 
         return $result;
-    }
-
-
-    /**
-     * Search view owners.
-     */
-    public static function search_view_owners($query=null, $template=null, $limit=null, $offset=0) {
-        if ($template) {
-            $tsql = ' AND v.template = 1';
-        }
-        else if ($template === false) {
-            $tsql = ' AND v.template = 0';
-        }
-        else {
-            $tsql = '';
-        }
-
-        if ($query) {
-            $ph = array($query);
-            $qsql = ' WHERE display ' . db_ilike() . " '%' || ? || '%' ";
-        }
-        else {
-            $ph = array();
-            $qsql = '';
-        }
-
-        if (is_mysql()) {
-            $uid = 'u.id';
-            $gid = 'g.id';
-        }
-        else {
-            $uid = 'CAST (u.id AS TEXT)';
-            $gid = 'CAST (g.id AS TEXT)';
-        }
-
-        $sql = "
-                SELECT
-                    'user' AS ownertype,
-                    CASE WHEN u.preferredname IS NULL OR u.preferredname = '' THEN u.firstname || ' ' || u.lastname
-                    ELSE u.preferredname END AS display,
-                    $uid, COUNT(v.id)
-                FROM {usr} u INNER JOIN {view} v ON (v.owner = u.id AND v.type = 'portfolio')
-                WHERE u.deleted = 0 $tsql
-                GROUP BY ownertype, display, u.id
-            UNION
-                SELECT 'group' AS ownertype, g.name AS display, $gid, COUNT(v.id)
-                FROM {group} g INNER JOIN {view} v ON (g.id = v.group)
-                WHERE g.deleted = 0 $tsql
-                GROUP BY ownertype, display, g.id
-            UNION
-                SELECT 'institution' AS ownertype, i.displayname AS display, i.name AS id, COUNT(v.id)
-                FROM {institution} i INNER JOIN {view} v ON (i.name = v.institution)
-                WHERE TRUE $tsql
-                GROUP BY ownertype, display, i.name ORDER BY display";
-
-        $count = count_records_sql("SELECT COUNT(*) FROM ($sql) q $qsql", $ph);
-        $data = get_records_sql_array("SELECT * FROM ($sql) q $qsql ORDER BY ownertype != 'institution', id != 'mahara', ownertype", $ph, $offset, $limit);
-
-        foreach ($data as &$r) {
-            if ($r->ownertype == 'institution' && $r->id == 'mahara') {
-                $r->display = get_config('sitename');
-            }
-        }
-
-        return array(
-            'data'  => array_values($data),
-            'count' => $count,
-            'limit' => $limit,
-            'offset' => $offset,
-        );
-
     }
 
 
