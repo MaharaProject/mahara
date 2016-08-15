@@ -1009,6 +1009,16 @@ $string['errorupdatinginstitutionusers'] = 'An error occurred when updating inst
 $string['revokeinvitations'] = 'Revoke invitations';
 $string['invitedusers'] = 'Invited users';
 $string['userstobeuninvited'] = 'Users to be uninvited';
+$string['moveuserstoadd'] = 'Turn selected member requests into members';
+$string['moveusersfromadd'] = 'Turn selected members into member requests';
+$string['moveuserstoinvite'] = 'Turn selected non-members into invited';
+$string['moveusersfrominvite'] = 'Turn selected invited into non-members';
+$string['moveuserstoinviteinstitution'] = 'Turn selected old %s users into invited';
+$string['moveusersfrominviteinstitution'] = 'Turn selected invited users into old %s users';
+$string['movememberstoremove'] = 'Turn selected members into removed members';
+$string['movemembersfromremove'] = 'Turn selected removed members into members';
+$string['moveuserstouninvited'] = 'Turn selected invited users into uninvited';
+$string['moveusersfromuninvited'] = 'Turn selected uninvited users into invited';
 
 $string['institutionusersupdated_addUserAsMember'] = 'Users added';
 $string['institutionusersupdated_declineRequestFromUser'] = 'Requests declined';

@@ -15,6 +15,7 @@ Feature: Mahara user permissions in institutions
       | username | password | email | firstname | lastname | institution | authname | role |
       | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
       | userB | Kupuhipa2 | test02@example.com | Son | Nguyen | instone | internal | admin |
+      | userC | Kupuhipa3 | test03@example.com | New | User | mahara | internal | member |
 
     And the following "pages" exist:
       | title | description| ownertype | ownername |
@@ -52,3 +53,15 @@ Feature: Mahara user permissions in institutions
     And I follow "Share page"
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should contain "Institution Two"
+    And I log out
+
+    # Add new member to institution via Institution -> Member's page
+    Given I log in as "admin" with password "Kupuhipa1"
+    And I follow "Administration"
+    And I choose "Members" in "Institutions"
+    And I select "People who have not requested institution membership yet" from "Users to display:"
+    And I wait until the page is ready
+    And I select "userC" from "Non-members"
+    And I press "Turn selected non-members into invited"
+    And I press "Add members"
+    And I should see "Users added"

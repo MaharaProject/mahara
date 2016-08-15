@@ -330,7 +330,7 @@ function sendjsonrequest(url, data, method, successcallback, errorcallback, quie
     request.done(function(data) {
         var error = data.error;
 
-        if (typeof(data.message) === 'object') {
+        if (typeof(data.message) === 'object' && data.message !== null) {
             data = data.message;
         }
 
