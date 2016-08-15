@@ -1,6 +1,8 @@
 <?php
 /**
- * @version V5.19  23-Apr-2014  (c) 2000-2014 John Lim (jlim#natsoft.com). All rights reserved.
+ * @version   v5.20.5  10-Aug-2016
+ * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
+ * @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
  * Released under both BSD license and Lesser GPL library license.
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
@@ -44,8 +46,6 @@ function ADODB_Error_PEAR($dbms, $fn, $errno, $errmsg, $p1=false, $p2=false)
 global $ADODB_Last_PEAR_Error;
 
 	if (error_reporting() == 0) return; // obey @ protocol
-	$p1 = is_array($p1) ? recursive_implode($p1) : $p1;
-	$p2 = is_array($p2) ? recursive_implode($p2) : $p2;
 	switch($fn) {
 	case 'EXECUTE':
 		$sql = $p1;
