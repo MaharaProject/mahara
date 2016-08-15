@@ -4365,13 +4365,33 @@ function xmldb_core_upgrade($oldversion=0) {
             foreach ($results as $r) {
                 $updates[$r->view][$r->row][$r->column][] = array('order' => $r->order, 'id' => $r->id);
             }
+
+            // There's a uniqueness constraint on the block_instance.order column, which gets in the way
+            // when re-ordering them.
+            //
+            // If there are no negative values for block_instance.order (there shouldn't be) then we
+            // can temporarily move the orders into negative numbers to get them "out of the way" while
+            // re-ordering things.
+            //
+            // If there are negative sortorders, however, then we will just drop and re-create the index.
+            $dropkey = record_exists_select('block_instance', '"order" < 0');
+            if ($dropkey) {
+                // Now recreating index again.
+                $table = new XMLDBTable('block_instance');
+                $constraint = new XMLDBKey('viewrowcolumnorderuk');
+                $constraint->setAttributes(XMLDB_KEY_UNIQUE, array('view', 'row', 'column', 'order'));
+                drop_key($table, $constraint);
+            }
+
             // Now deal with the results
             foreach ($updates as $view => $grid) {
                 foreach ($grid as $row => $columns) {
                     foreach ($columns as $column => $blocks) {
-                        foreach ($blocks as $key => $block) {
-                            // First move them out of the way to avoid uniqueness clash
-                            execute_sql('UPDATE {block_instance} SET "order" = ? WHERE id = ?', array(($block['order'] * -1), $block['id']));
+                        if (!$dropkey) {
+                            foreach ($blocks as $key => $block) {
+                                // First move them out of the way to avoid uniqueness clash
+                                execute_sql('UPDATE {block_instance} SET "order" = ? WHERE id = ?', array(($block['order'] * -1), $block['id']));
+                            }
                         }
                         foreach ($blocks as $key => $block) {
                             // Then update them with true order
@@ -4380,6 +4400,10 @@ function xmldb_core_upgrade($oldversion=0) {
                     }
                 }
                 set_time_limit(30);
+            }
+
+            if ($dropkey) {
+                add_key($table, $constraint);
             }
         }
     }
