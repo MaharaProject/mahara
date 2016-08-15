@@ -11,4 +11,4 @@ Modifications:
 - Check for valid columns in adodb postgres64 driver MetaIndexes fn (b87d9961020a8d52a2eaf709a9197520b3c6b65b)
 - add __wakeup to connection object (417077459037550239fe9b09bd20b50d4c19b57f)
 - Deleted many files we're not using, including tests, docs, other drivers, other error langs
-
+- Modified session variable setting from $_SESSION to $SESSION->set/get due to sessions now normally being closed.
