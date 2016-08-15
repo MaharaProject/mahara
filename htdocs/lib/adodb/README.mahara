@@ -15,3 +15,4 @@ Modifications:
 - Bug 1619036: Fix a bug when determine if an array is associative (606317195f8f3a8cdf9bc448c537b8c3708d75d7)
 - Removing the obsolete adodb-mysql.inc.php (2f19a42ddd6af732e40b1aae9359ee80e28f9111)
 - escaping names when showing table / index in adodb-mysqli.inc.php(08939ca25acddff39b132e4bd823668b98447947)
+- The lastest version comes with a Load balancer class and a tuning class which we don't use yet so they are not put in.
