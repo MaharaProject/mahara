@@ -2,7 +2,7 @@ adodb
 -----
 
 Website: http://adodb.sourceforge.net/
-Version: 5.19
+Version: 5.20.5
 
 Modifications:
 
@@ -12,3 +12,4 @@ Modifications:
 - add __wakeup to connection object (417077459037550239fe9b09bd20b50d4c19b57f)
 - Deleted many files we're not using, including tests, docs, other drivers, other error langs
 - Modified session variable setting from $_SESSION to $SESSION->set/get due to sessions now normally being closed.
+- Moved the define ADODB_ASSOC_CASE_* calls as they are needed by ADONewConnection

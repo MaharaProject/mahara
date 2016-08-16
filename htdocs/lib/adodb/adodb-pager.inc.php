@@ -1,7 +1,9 @@
 <?php
 
 /*
-	V5.19  23-Apr-2014  (c) 2000-2014 John Lim (jlim#natsoft.com). All rights reserved.
+	@version   v5.20.5  10-Aug-2016
+	@copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
+	@copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
 	  Released under both BSD license and Lesser GPL library license.
 	  Whenever there is any discrepancy between the two licenses,
 	  the BSD license will take precedence.
@@ -55,9 +57,9 @@ class ADODB_Pager {
 	//		if you have multiple on 1 page.
 	//		$id should be only be [a-z0-9]*
 	//
-	function ADODB_Pager(&$db,$sql,$id = 'adodb', $showPageLinks = false)
+	function __construct(&$db,$sql,$id = 'adodb', $showPageLinks = false)
 	{
-	global $PHP_SELF;
+	global $PHP_SELF, $SESSION;
 
 		$curr_page = $id.'_curr_page';
 		if (!empty($PHP_SELF)) $PHP_SELF = htmlspecialchars($_SERVER['PHP_SELF']); // htmlspecialchars() to prevent XSS attacks
@@ -70,11 +72,11 @@ class ADODB_Pager {
 		$next_page = $id.'_next_page';
 
 		if (isset($_GET[$next_page])) {
-            $SESSION->set($curr_page, (integer) $_GET[$next_page]);
+			$SESSION->set($curr_page, (integer) $_GET[$next_page]);
 		}
-        if (empty($SESSION->get($curr_page))) $SESSION->set($curr_page, 1); ## at first page
+		if (empty($SESSION->get($curr_page))) $SESSION->set($curr_page, 1); ## at first page
 
-            $this->curr_page = $SESSION->get($curr_page);
+		$this->curr_page = $SESSION->get($curr_page);
 
 	}
 
