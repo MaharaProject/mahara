@@ -356,7 +356,7 @@ function group_create($data) {
 
     if (!empty($data['shortname'])) {
         // make sure it is unique and is correct length
-        $shortname = group_generate_shortname($data['name']);
+        $shortname = group_generate_shortname($data['shortname']);
         // If we want to retain the supplied shortname we need to make sure it can be done
         if (!empty($data['retainshortname'])) {
             if ($shortname != $data['shortname']) {
