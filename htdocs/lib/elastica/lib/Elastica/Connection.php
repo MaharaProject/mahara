@@ -1,35 +1,39 @@
 <?php
-
 namespace Elastica;
 
 use Elastica\Exception\InvalidException;
 use Elastica\Transport\AbstractTransport;
 
 /**
- * Elastica connection instance to an elasticasearch node
+ * Elastica connection instance to an elasticasearch node.
  *
- * @category Xodoa
- * @package  Elastica
  * @author   Nicolas Ruflin <spam@ruflin.com>
  */
 class Connection extends Param
 {
     /**
-     * Default elastic search port
+     * Default elastic search port.
      */
     const DEFAULT_PORT = 9200;
 
     /**
-     * Default host
+     * Default host.
      */
     const DEFAULT_HOST = 'localhost';
 
     /**
-     * Default transport
+     * Default transport.
      *
      * @var string
      */
     const DEFAULT_TRANSPORT = 'Http';
+
+    /**
+     * Default compression.
+     *
+     * @var string
+     */
+    const DEFAULT_COMPRESSION = false;
 
     /**
      * Number of seconds after a timeout occurs for every request
@@ -38,7 +42,14 @@ class Connection extends Param
     const TIMEOUT = 300;
 
     /**
-     * Creates a new connection object. A connection is enabled by default
+     * Number of seconds after a connection timeout occurs for every request during the connection phase.
+     *
+     * @see Connection::setConnectTimeout();
+     */
+    const CONNECT_TIMEOUT = 0;
+
+    /**
+     * Creates a new connection object. A connection is enabled by default.
      *
      * @param array $params OPTIONAL Connection params: host, port, transport, timeout. All are optional
      */
@@ -62,7 +73,8 @@ class Connection extends Param
     }
 
     /**
-     * @param  int   $port
+     * @param int $port
+     *
      * @return $this
      */
     public function setPort($port)
@@ -79,7 +91,8 @@ class Connection extends Param
     }
 
     /**
-     * @param  string $host
+     * @param string $host
+     *
      * @return $this
      */
     public function setHost($host)
@@ -100,7 +113,9 @@ class Connection extends Param
      * empty string to disable proxy and proxy string to set actual http proxy.
      *
      * @see http://curl.haxx.se/libcurl/c/curl_easy_setopt.html#CURLOPTPROXY
-     * @param  string|null $proxy
+     *
+     * @param string|null $proxy
+     *
      * @return $this
      */
     public function setProxy($proxy)
@@ -117,12 +132,31 @@ class Connection extends Param
     }
 
     /**
-     * @param  string|array $transport
+     * @param string|array $transport
+     *
      * @return $this
      */
     public function setTransport($transport)
     {
         return $this->setParam('transport', $transport);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCompression()
+    {
+        return (bool) $this->hasParam('compression') ? $this->getParam('compression') : self::DEFAULT_COMPRESSION;
+    }
+
+    /**
+     * @param bool $compression
+     *
+     * @return $this
+     */
+    public function setCompression($compression = null)
+    {
+        return $this->setParam('compression', $compression);
     }
 
     /**
@@ -134,7 +168,8 @@ class Connection extends Param
     }
 
     /**
-     * @param  string $path
+     * @param string $path
+     *
      * @return $this
      */
     public function setPath($path)
@@ -143,7 +178,8 @@ class Connection extends Param
     }
 
     /**
-     * @param  int   $timeout Timeout in seconds
+     * @param int $timeout Timeout in seconds
+     *
      * @return $this
      */
     public function setTimeout($timeout)
@@ -160,9 +196,35 @@ class Connection extends Param
     }
 
     /**
-     * Enables a connection
+     * Number of seconds after a connection timeout occurs for every request during the connection phase.
+     * Use a small value if you need a fast fail in case of dead, unresponsive or unreachable servers (~5 sec).
      *
-     * @param  bool  $enabled OPTIONAL (default = true)
+     * Set to zero to switch to the default built-in connection timeout (300 seconds in curl).
+     *
+     * @see http://curl.haxx.se/libcurl/c/CURLOPT_CONNECTTIMEOUT.html
+     *
+     * @param int $timeout Connect timeout in seconds
+     *
+     * @return $this
+     */
+    public function setConnectTimeout($timeout)
+    {
+        return $this->setParam('connectTimeout', $timeout);
+    }
+
+    /**
+     * @return int Connection timeout in seconds
+     */
+    public function getConnectTimeout()
+    {
+        return (int) $this->hasParam('connectTimeout') ? $this->getParam('connectTimeout') : self::CONNECT_TIMEOUT;
+    }
+
+    /**
+     * Enables a connection.
+     *
+     * @param bool $enabled OPTIONAL (default = true)
+     *
      * @return $this
      */
     public function setEnabled($enabled = true)
@@ -179,7 +241,7 @@ class Connection extends Param
     }
 
     /**
-     * Returns an instance of the transport type
+     * Returns an instance of the transport type.
      *
      * @throws \Elastica\Exception\InvalidException If invalid transport type
      *
@@ -201,7 +263,8 @@ class Connection extends Param
     }
 
     /**
-     * @param  array $config
+     * @param array $config
+     *
      * @return $this
      */
     public function setConfig(array $config)
@@ -210,8 +273,9 @@ class Connection extends Param
     }
 
     /**
-     * @param  string $key
-     * @param  mixed  $value
+     * @param string $key
+     * @param mixed  $value
+     *
      * @return $this
      */
     public function addConfig($key, $value)
@@ -222,7 +286,8 @@ class Connection extends Param
     }
 
     /**
-     * @param  string $key
+     * @param string $key
+     *
      * @return bool
      */
     public function hasConfig($key)
@@ -234,11 +299,12 @@ class Connection extends Param
 
     /**
      * Returns a specific config key or the whole
-     * config array if not set
+     * config array if not set.
+     *
+     * @param string $key Config key
      *
      * @throws \Elastica\Exception\InvalidException
      *
-     * @param  string       $key Config key
      * @return array|string Config value
      */
     public function getConfig($key = '')
@@ -256,19 +322,20 @@ class Connection extends Param
     }
 
     /**
+     * @param \Elastica\Connection|array $params Params to create a connection
+     *
      * @throws Exception\InvalidException
      *
-     * @param  \Elastica\Connection|array $params Params to create a connection
      * @return self
      */
     public static function create($params = array())
     {
         $connection = null;
 
-        if ($params instanceof Connection) {
+        if ($params instanceof self) {
             $connection = $params;
         } elseif (is_array($params)) {
-            $connection = new Connection($params);
+            $connection = new self($params);
         } else {
             throw new InvalidException('Invalid data type');
         }

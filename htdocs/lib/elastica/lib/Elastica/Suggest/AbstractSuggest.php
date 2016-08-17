@@ -1,14 +1,14 @@
 <?php
-
 namespace Elastica\Suggest;
 
+use Elastica\Exception\InvalidException;
+use Elastica\NameableInterface;
 use Elastica\Param;
 
 /**
- * Class AbstractSuggestion
- * @package Elastica\Suggest
+ * Class AbstractSuggestion.
  */
-abstract class AbstractSuggest extends Param
+abstract class AbstractSuggest extends Param implements NameableInterface
 {
     /**
      * @var string the name of this suggestion
@@ -26,13 +26,15 @@ abstract class AbstractSuggest extends Param
      */
     public function __construct($name, $field)
     {
-        $this->_name = $name;
+        $this->setName($name);
         $this->setField($field);
     }
 
     /**
-     * Suggest text must be set either globally or per suggestion
-     * @param  string $text
+     * Suggest text must be set either globally or per suggestion.
+     *
+     * @param string $text
+     *
      * @return $this
      */
     public function setText($text)
@@ -43,34 +45,58 @@ abstract class AbstractSuggest extends Param
     }
 
     /**
-     * @param  string $field
+     * @param string $field
+     *
      * @return $this
      */
     public function setField($field)
     {
-        return $this->setParam("field", $field);
+        return $this->setParam('field', $field);
     }
 
     /**
-     * @param  int   $size
+     * @param int $size
+     *
      * @return $this
      */
     public function setSize($size)
     {
-        return $this->setParam("size", $size);
+        return $this->setParam('size', $size);
     }
 
     /**
-     * @param  int   $size maximum number of suggestions to be retrieved from each shard
+     * @param int $size maximum number of suggestions to be retrieved from each shard
+     *
      * @return $this
      */
     public function setShardSize($size)
     {
-        return $this->setParam("shard_size", $size);
+        return $this->setParam('shard_size', $size);
     }
 
     /**
-     * Retrieve the name of this suggestion
+     * Sets the name of the suggest. It is automatically set by
+     * the constructor.
+     *
+     * @param string $name The name of the facet.
+     *
+     * @throws \Elastica\Exception\InvalidException If name is empty
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        if (empty($name)) {
+            throw new InvalidException('Suggest name has to be set');
+        }
+        $this->_name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the name of this suggestion.
+     *
      * @return string
      */
     public function getName()
