@@ -31,6 +31,7 @@ Scenario: Find users in your institution and outside your institution
     # Searching outside my own institution, I should find all users
     When I select "Everyone" from "Filter"
     And I set the field "Search" to "smith"
+    And I scroll to the id "main-nav"
     And I press "search_submit"
     # I should find everyone
     Then I should see "Jen Smith"

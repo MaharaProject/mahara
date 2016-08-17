@@ -243,8 +243,10 @@ abstract class PluginSearch extends Plugin implements IPluginSearch {
                                 'hiddenlabel'    => true,
                         ),
                         'submit' => array(
-                                'type' => 'submit',
-                                'value' => get_string('go'),
+                            'type' => 'button',
+                            'class' => 'btn-primary input-group-btn',
+                            'usebuttontag' => true,
+                            'value' => '<span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('go') . '</span>',
                         )
                 )
         ));
