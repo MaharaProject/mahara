@@ -2,13 +2,9 @@ HTMLPurifier in Mahara
 ======================
 
 Website: http://www.htmlpurifier.org/
-Version: 4.7.0
+Version: 4.8.0
 
 This library is used by clean_html, to strip malicious HTML from user-generated
 content.
 
 Changes:
-
-  * Add the configuration directive Filter.ExtractStyleBlocks.PreserveCSS to allow the comments while cleaning CSS
-  * Add more legal color formats such as rgba, hsl, and hsla
-  * Altered SafeIframe.php so that an HTTPS site will rewrite HTTP iframes to protocol-relative
