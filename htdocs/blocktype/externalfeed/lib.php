@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-require_once('XML/Feed/Parser.php');
+require_once('feedreader.php');
 
 class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
 
@@ -258,7 +258,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
                 self::parse_feed($values['url'], $values['insecuresslmode'], $values['authuser'], $authpassword);
                 return;
             }
-            catch (XML_Feed_Parser_Exception $e) {
+            catch (MaharaException $e) {
 
                 // Pad the response time to hinder timing side channel attacks
                 list($usec, $sec) = explode(" ", microtime());
@@ -335,7 +335,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
                 unset($data);
                 $data = self::parse_feed($feed->url, $feed->insecuresslmode, $feed->authuser, $feed->authpassword);
             }
-            catch (XML_Feed_Parser_Exception $e) {
+            catch (MaharaException $e) {
                 // The feed must have changed in such a way as to become
                 // invalid since it was added. We ignore this case in the hope
                 // the feed will become valid some time later
@@ -353,7 +353,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
                     $data->lastupdate = db_format_timestamp(time());
                     update_record('blocktype_externalfeed_data', $data);
                 }
-                catch (XML_Feed_Parser_Exception $e) {
+                catch (MaharaException $e) {
                     // We tried to add the newly parsed data
                 }
             }
@@ -388,7 +388,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
      * @param bool $insecuresslmode Skip certificate checking
      * @param string $authuser HTTP basic auth username to use
      * @param string $authpassword HTTP basic auth password to use
-     * @throws XML_Feed_Parser_Exception
+     * @throws MaharaException
      */
     public static function parse_feed($source, $insecuresslmode=false, $authuser='', $authpassword='') {
 
@@ -420,17 +420,17 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
         $result = mahara_http_request($config, true);
 
         if ($result->error) {
-            throw new XML_Feed_Parser_Exception($result->error);
+            throw new MaharaException('Feed url returned error', $result->error);
         }
 
         if (empty($result->data)) {
-            throw new XML_Feed_Parser_Exception('Feed url returned no data');
+            throw new MaharaException('Feed url returned no data');
         }
 
         try {
-            $feed = new XML_Feed_Parser($result->data, false, true, false);
+            $reader = new FeedReader($result->data);
         }
-        catch (XML_Feed_Parser_Exception $e) {
+        catch (MaharaException $e) {
             $cache[$source] = $e;
             throw $e;
             // Don't catch other exceptions, they're an indication something
@@ -438,49 +438,52 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
         }
 
         $data = new StdClass;
-        $data->title = $feed->title;
+        $data->title = $reader->get_channel_title();
         $data->url = $source;
         $data->authuser = $authuser;
         $data->authpassword = $authpassword;
         $data->insecuresslmode = (int)$insecuresslmode;
-        $data->link = $feed->link;
-        $data->description = $feed->description;
+        $data->link = $reader->get_channel_link();
+        $data->description = $reader->get_channel_description();
 
-        // Work out the icon for the feed depending on whether it's RSS or ATOM
-        $data->image = $feed->image;
-        if (!$data->image) {
-            // ATOM feed. These are simple strings
-            $data->image = $feed->logo ? $feed->logo : null;
-        }
+        $data->image = $reader->get_channel_image();
 
         $data->content = array();
-        foreach ($feed as $count => $item) {
-            if ($count == 20) {
+        for ($i = 0; $i < $reader->get_count_items(); $i++) {
+            if ($i == 20) {
                 break;
             }
-            $description = $item->content ? $item->content : ($item->description ? $item->description : ($item->summary ? $item->summary : null));
-            if (!$item->title) {
-                if (!empty($description)) {
-                    $item->title = substr($description, 0, 60);
-                }
-                else if ($item->link) {
-                    $item->title = $item->link;
-                }
-                else {
-                    $item->title = get_string('notitle', 'view');
-                }
+            $description = $reader->get_item_content($i);
+            if (empty($description)) {
+                $description = $reader->get_item_description($i);
             }
-            if (!$pubdate = $item->pubDate) {
-                if (!$pubdate = $item->date) {
-                    if (!$pubdate = $item->published) {
-                        $pubdate = $item->updated;
-                    };
-                }
+            if (empty($description)) {
+                $description = $reader->get_item_summary($i);
+            }
+            $title = $reader->get_item_title($i);
+            if (empty($title)) {
+                $title = substr($description, 0, 60);
+            }
+            if (empty($title)) {
+                $title = $reader->get_item_link($i);
+            }
+            if (empty($title)) {
+                $title = get_string('notitle', 'view');
+            }
+            $pubdate = $reader->get_item_pubdate($i);
+            if (empty($pubdate)) {
+                $pubdate = $reader->get_item_date($i);
+            }
+            if (empty($pubdate)) {
+                $pubdate = $reader->get_item_published($i);
+            }
+            if (empty($pubdate)) {
+                $pubdate = $reader->get_item_updated($i);
             }
 
             $data->content[] = (object)array(
-                'title'       => $item->title,
-                'link'        => $item->link,
+                'title'       => $title,
+                'link'        => $reader->get_item_link($i),
                 'description' => $description,
                 'pubdate'     => $pubdate,
             );
@@ -594,7 +597,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
                                     );
                 $values = self::instance_config_save($urloptions);
             }
-            catch (XML_Feed_Parser_Exception $e) {
+            catch (MaharaException $e) {
                 log_info("Note: was unable to parse RSS feed for new blockinstance. URL was {$config['config']['url']}");
                 $values = array();
             }
