@@ -1,34 +1,29 @@
 <?php
-
 namespace Elastica\Query;
 
 use Elastica\Exception\InvalidException;
 
 /**
- * DisMax query
+ * DisMax query.
  *
- * @category Xodoa
- * @package Elastica
  * @author Hung Tran <oohnoitz@gmail.com>
+ *
  * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-dis-max-query.html
  */
 class DisMax extends AbstractQuery
 {
     /**
-     * Adds a query to the current object
+     * Adds a query to the current object.
+     *
+     * @param \Elastica\Query\AbstractQuery|array $args Query
      *
      * @throws \Elastica\Exception\InvalidException If not valid query
      *
-     * @param  \Elastica\Query\AbstractQuery|array $args Query
      * @return $this
      */
     public function addQuery($args)
     {
-        if ($args instanceof AbstractQuery) {
-            $args = $args->toArray();
-        }
-
-        if (!is_array($args)) {
+        if (!is_array($args) && !($args instanceof AbstractQuery)) {
             throw new InvalidException('Invalid parameter. Has to be array or instance of Elastica\Query\AbstractQuery');
         }
 
@@ -36,9 +31,10 @@ class DisMax extends AbstractQuery
     }
 
     /**
-     * Set boost
+     * Set boost.
      *
-     * @param  float $boost
+     * @param float $boost
+     *
      * @return $this
      */
     public function setBoost($boost)
@@ -51,7 +47,8 @@ class DisMax extends AbstractQuery
      *
      * If not set, defaults to 0.0
      *
-     * @param  float $tieBreaker
+     * @param float $tieBreaker
+     *
      * @return $this
      */
     public function setTieBreaker($tieBreaker = 0.0)

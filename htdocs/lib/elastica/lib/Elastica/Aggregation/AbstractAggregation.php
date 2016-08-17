@@ -1,11 +1,11 @@
 <?php
-
 namespace Elastica\Aggregation;
 
 use Elastica\Exception\InvalidException;
+use Elastica\NameableInterface;
 use Elastica\Param;
 
-abstract class AbstractAggregation extends Param
+abstract class AbstractAggregation extends Param implements NameableInterface
 {
     /**
      * @var string The name of this aggregation
@@ -26,8 +26,11 @@ abstract class AbstractAggregation extends Param
     }
 
     /**
-     * Set the name of this aggregation
+     * Set the name of this aggregation.
+     *
      * @param string $name
+     *
+     * @return $this
      */
     public function setName($name)
     {
@@ -37,7 +40,8 @@ abstract class AbstractAggregation extends Param
     }
 
     /**
-     * Retrieve the name of this aggregation
+     * Retrieve the name of this aggregation.
+     *
      * @return string
      */
     public function getName()
@@ -46,7 +50,8 @@ abstract class AbstractAggregation extends Param
     }
 
     /**
-     * Retrieve all subaggregations belonging to this aggregation
+     * Retrieve all subaggregations belonging to this aggregation.
+     *
      * @return array
      */
     public function getAggs()
@@ -55,10 +60,12 @@ abstract class AbstractAggregation extends Param
     }
 
     /**
-     * Add a sub-aggregation
+     * Add a sub-aggregation.
+     *
+     * @param AbstractAggregation $aggregation
+     *
      * @throws \Elastica\Exception\InvalidException
      *
-     * @param  AbstractAggregation $aggregation
      * @return $this
      */
     public function addAggregation(AbstractAggregation $aggregation)
@@ -67,7 +74,7 @@ abstract class AbstractAggregation extends Param
             throw new InvalidException('Global aggregators can only be placed as top level aggregators');
         }
 
-        $this->_aggs[$aggregation->getName()] = $aggregation->toArray();
+        $this->_aggs[] = $aggregation;
 
         return $this;
     }
@@ -78,12 +85,13 @@ abstract class AbstractAggregation extends Param
     public function toArray()
     {
         $array = parent::toArray();
+
         if (array_key_exists('global_aggregation', $array)) {
             // compensate for class name GlobalAggregation
             $array = array('global' => new \stdClass());
         }
         if (sizeof($this->_aggs)) {
-            $array['aggs'] = $this->_aggs;
+            $array['aggs'] = $this->_convertArrayable($this->_aggs);
         }
 
         return $array;

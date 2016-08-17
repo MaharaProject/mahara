@@ -1,23 +1,20 @@
 <?php
-
 namespace Elastica\Rescore;
 
 use Elastica\Query as BaseQuery;
 
 /**
- * Query Rescore
+ * Query Rescore.
  *
- * @category Xodoa
- * @package Elastica
  * @author Jason Hu <mjhu91@gmail.com>
+ *
  * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-rescore.html
  */
 class Query extends AbstractRescore
 {
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param string|\Elastica\Query\AbstractQuery $rescoreQuery
      * @param string|\Elastica\Query\AbstractQuery $query
      */
     public function __construct($query = null)
@@ -28,7 +25,7 @@ class Query extends AbstractRescore
 
     /**
      * Override default implementation so params are in the format
-     * expected by elasticsearch
+     * expected by elasticsearch.
      *
      * @return array Rescore array
      */
@@ -40,30 +37,37 @@ class Query extends AbstractRescore
             $data = array_merge($data, $this->_rawParams);
         }
 
-        return $data;
+        $array = $this->_convertArrayable($data);
+
+        if (isset($array['query']['rescore_query']['query'])) {
+            $array['query']['rescore_query'] = $array['query']['rescore_query']['query'];
+        }
+
+        return $array;
     }
 
     /**
-     * Sets rescoreQuery object
+     * Sets rescoreQuery object.
      *
-     * @param  string|\Elastica\Query|\Elastica\Query\AbstractQuery $query
+     * @param string|\Elastica\Query|\Elastica\Query\AbstractQuery $rescoreQuery
+     *
      * @return $this
      */
     public function setRescoreQuery($rescoreQuery)
     {
-        $query = BaseQuery::create($rescoreQuery);
-        $data = $query->toArray();
+        $rescoreQuery = BaseQuery::create($rescoreQuery);
 
         $query = $this->getParam('query');
-        $query['rescore_query'] = $data['query'];
+        $query['rescore_query'] = $rescoreQuery;
 
         return $this->setParam('query', $query);
     }
 
     /**
-     * Sets query_weight
+     * Sets query_weight.
      *
-     * @param  float $weight
+     * @param float $weight
+     *
      * @return $this
      */
     public function setQueryWeight($weight)
@@ -75,9 +79,10 @@ class Query extends AbstractRescore
     }
 
     /**
-     * Sets rescore_query_weight
+     * Sets rescore_query_weight.
      *
-     * @param  float $size
+     * @param float $weight
+     *
      * @return $this
      */
     public function setRescoreQueryWeight($weight)

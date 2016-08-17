@@ -1,19 +1,17 @@
 <?php
-
 namespace Elastica\Filter;
 
 /**
- * Returns parent documents having child docs matching the query
+ * Returns parent documents having child docs matching the query.
  *
- * @category Xodoa
- * @package Elastica
  * @author Fabian Vogler <fabian@equivalence.ch>
+ *
  * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-has-child-filter.html
  */
 class HasChild extends AbstractFilter
 {
     /**
-     * Construct HasChild filter
+     * Construct HasChild filter.
      *
      * @param string|\Elastica\Query|\Elastica\Filter\AbstractFilter $query Query string or a Elastica\Query object or a filter
      * @param string|\Elastica\Type                                  $type  Child document type
@@ -29,34 +27,34 @@ class HasChild extends AbstractFilter
     }
 
     /**
-     * Sets query object
+     * Sets query object.
      *
-     * @param  string|\Elastica\Query|\Elastica\Query\AbstractQuery $query
+     * @param string|\Elastica\Query|\Elastica\Query\AbstractQuery $query
+     *
      * @return $this
      */
     public function setQuery($query)
     {
-        $query = \Elastica\Query::create($query);
-        $data = $query->toArray();
-
-        return $this->setParam('query', $data['query']);
+        return $this->setParam('query', \Elastica\Query::create($query));
     }
 
     /**
-     * Sets the filter object
+     * Sets the filter object.
      *
-     * @param  \Elastica\Filter\AbstractFilter $filter
+     * @param \Elastica\Filter\AbstractFilter $filter
+     *
      * @return $this
      */
     public function setFilter($filter)
     {
-        return $this->setParam('filter', $filter->toArray());
+        return $this->setParam('filter', $filter);
     }
 
     /**
-     * Set type of the child document
+     * Set type of the child document.
      *
-     * @param  string|\Elastica\Type $type Child document type
+     * @param string|\Elastica\Type $type Child document type
+     *
      * @return $this
      */
     public function setType($type)
@@ -69,8 +67,10 @@ class HasChild extends AbstractFilter
     }
 
     /**
-     * Set minimum number of children are required to match for the parent doc to be considered a match
-     * @param  int   $count
+     * Set minimum number of children are required to match for the parent doc to be considered a match.
+     *
+     * @param int $count
+     *
      * @return $this
      */
     public function setMinimumChildrenCount($count)
@@ -79,12 +79,30 @@ class HasChild extends AbstractFilter
     }
 
     /**
-     * Set maximum number of children are required to match for the parent doc to be considered a match
-     * @param  int   $count
+     * Set maximum number of children are required to match for the parent doc to be considered a match.
+     *
+     * @param int $count
+     *
      * @return $this
      */
     public function setMaximumChildrenCount($count)
     {
         return $this->setParam('max_children', (int) $count);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        $array = parent::toArray();
+
+        $baseName = $this->_getBaseName();
+
+        if (isset($array[$baseName]['query'])) {
+            $array[$baseName]['query'] = $array[$baseName]['query']['query'];
+        }
+
+        return $array;
     }
 }

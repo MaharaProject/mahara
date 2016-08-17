@@ -2,12 +2,13 @@ Elastica in Mahara
 ======================
 
 Website: http://elastica.io
-Version: 2.0.0
+Version: 2.3.1
 
 This library is used for for interfacing with an elasticsearch server.
+
+Dependencies:
+ * Elasticsearch 1.7.3
 
 Changes:
 
  * Removed build & test files not needed for Mahara.
- * Added an option to do include the Elasticsearch Index in the URL for bulk addDocument calls
- 

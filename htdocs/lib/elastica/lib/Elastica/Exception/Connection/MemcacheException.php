@@ -1,15 +1,14 @@
 <?php
-
 namespace Elastica\Exception\Connection;
 
 use Elastica\Exception\ConnectionException;
 
 /**
- * Transport exception
+ * Transport exception.
  *
- * @category Xodoa
- * @package Elastica
  * @author Igor Denisenko <im.denisenko@yahoo.com>
+ *
+ * @deprecated Will be removed with elasticsearch 2.0
  */
 class MemcacheException extends ConnectionException
 {
