@@ -8,7 +8,7 @@
         border-top-width: 1px;
     }
 
-    .col-width-100 &,
+    .col-width-100 .bt-comment &,
     .viewfooter &,
     .modal-docked.active & {
         @media (min-width: $screen-md-min) {
@@ -42,6 +42,7 @@
                     display: none;
                 }
                 .collapse {
+                    opacity: 1;
                     display: block;
                     visibility: visible;
                 }
@@ -52,6 +53,19 @@
                 .attachmessage {
                     display: block;
                     padding-top: 15px;
+                }
+            }
+        }
+    }
+    // Set opacity and visibility comment attachment inside modal docked
+    .modal-docked & {
+        @media (min-width: $screen-md-min) {
+            .comment-attachment {
+                .collapse {
+                    transition: opacity 0s 0.2s;
+                    opacity: 0;
+                    display: block;
+                    visibility: hidden;
                 }
             }
         }
