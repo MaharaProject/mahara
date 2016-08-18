@@ -35,7 +35,9 @@ Scenario: Installing framework module and activating for an institution
  # Make sure we have a matrix config form
  And I scroll to the base of id "module.framework"
  And I follow "Configuration for module smartevidence"
- Then I should see "Name of matrix file"
+ And I attach the file "example.matrix" to "Matrix file"
+ And I press "Save"
+ Then I should see "Settings saved"
 
  # Activate smartevidence in an institution
  And I choose "Institutions" in "Institutions"
