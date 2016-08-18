@@ -2,7 +2,7 @@ PDF.js in Mahara
 ==================
 
 Website: http://mozilla.github.io/pdf.js/getting_started/#download
-Version: 1.0.1040
+Version: 1.4.20
 License: Apache License 2.0
 
 PDF.js is used in the Mahara to provide a javascript library for 
@@ -14,15 +14,21 @@ Build Instructions:
 2. Clone the pdf.js git repo ( https://github.com/mozilla/pdf.js/ )
 3. Navigate into the repo, and run "node make generic"
 4. Copy the contents of build/generic into this directory.
-5. You may also need to alter the path to pdf.js and other files.
+5. Minify build/pdf.js and build/pdf.worker.min.js (see next section for details)
+6. Make sure you can open and see a PDF via browser
+    {WWWROOT}/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html
+
+Minify instructions:
+1. Install uglifyjs if you don't have: npm install uglify-js
+2. cd htdocs/artefact/file/blocktype/pdf/js/pdfjs/build/
+3. Run uglifyjs pdf.js -o pdf.min.js
+    and uglifyjs pdf.worker.js -o pdf.worker.min.js
+   Remove the files pdf.js and pdf.worker.js
+4. Change the path of pdf.js to pdf.min.js
+    In htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html
+5. Change the path of pdf.worker.js to pdf.worker.min.js
+    In htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.js
 
 Changes:
 
 * Minify js files for faster loading
-* Change location of sample PDF file
-* Hide the "open file" button in the toolbar
-* viewer.css additions to support viewing by non-JS users
-* viewer.css tweak to get the bottom of the display to show
-* viewer.css tweak to avoid horizontal scrollbar on default 3-column page layout
-* Change viewer.js to get the PDF file from a JS variable instead of a URL query parameter
-* Change viewer.js to use absolute URLs to JS libraries
