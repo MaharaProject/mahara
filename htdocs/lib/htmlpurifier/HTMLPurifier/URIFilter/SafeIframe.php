@@ -61,17 +61,7 @@ class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter
             return false;
         }
         // actually check the whitelists
-        if (!preg_match($this->regexp, $uri->toString())) {        
-            return false;
-        }
-
-        // Make sure that if we're an HTTPS site, the iframe is also HTTPS
-        if (is_https() && $uri->scheme == 'http') {
-            // Convert it to a protocol-relative URL
-            $uri->scheme = null;
-        }
-
-        return $uri;
+        return preg_match($this->regexp, $uri->toString());
     }
 }
 
