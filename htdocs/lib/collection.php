@@ -275,6 +275,7 @@ class Collection {
         else {
             $data->owner = $userid;
         }
+        $data->framework = $colltemplate->get('framework');
 
         $collection = self::save($data);
 

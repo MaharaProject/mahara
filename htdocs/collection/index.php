@@ -96,6 +96,11 @@ foreach ($data->data as $value) {
     if (!empty($views)) {
         $value->views = $views['views'];
     }
+    if ($collection->get('framework')) {
+        safe_require('module', 'framework');
+        $framework = new Framework($collection->get('framework'));
+        $value->frameworkname = $framework->get('name');
+    }
 }
 
 $pagination = build_pagination(array(

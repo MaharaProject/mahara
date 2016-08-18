@@ -7,7 +7,11 @@
 <h1 id="viewh1" class="page-header">
     <span class="section-heading">{$name}</span>
 </h1>
-<p>{$description}</p>
+<div class="with-heading text-small">
+    {include file=author.tpl}
+</div>
+
+<p>{$description|clean_html|safe}</p>
 <p>{str tag="addpages" section="module.framework"}</p>
 <table class="fullwidth table tablematrix" id="tablematrix">
   <tr>
@@ -32,13 +36,15 @@
   </tr>
   {foreach from=$standards key=sk item=standard}
     <tr class="standard">
-        <td colspan="{$viewcount + 2}" title="{$standard->description}">{$standard->shortname} {$standard->name}</td>
+        <td colspan="{$viewcount + 2}">
+            <div>{$standard->name} <span class="hidden matrixtooltip">{$standard->shortname}<br>{$standard->description|clean_html|safe}</span></div>
+        </td>
     </tr>
     {if $standard->options}
         {foreach from=$standard->options key=ok item=option}
         <tr{if $option->parent} class="sub"{/if}>
-            <td class="code"><div>{$option->shortname} <span class="hidden matrixtooltip">{$option->name}<br>{$option->description}</span></div></td>
-            <td>{if $completed[$option->id]}{$completed[$option->id]}{else}0{/if}</td>
+            <td class="code"><div>{$option->shortname} <span class="hidden matrixtooltip">{$option->name}<br>{$option->description|clean_html|safe}</span></div></td>
+            <td class="completedcount">{if $completed[$option->id]}{$completed[$option->id]}{else}0{/if}</td>
             {foreach from=$views key=vk item=view}
             <td class="mid"><span data-view="{$view->id}" data-option="{$option->id}"
                 {if $evidence[$framework][$option->id][$view->id].completed}

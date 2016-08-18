@@ -57,6 +57,7 @@ Scenario: Installing framework module and activating for an institution
  # Testing the collection navigation and matrix carousel
  And I follow "CollA"
  And I should see "You are on page 1/9"
+ And I should see "by Admin User (admin)"
  And I press "Next" in the "table#tablematrix" "css_element"
  Then I should see "PageF"
  And I press "Prev" in the "table#tablematrix" "css_element"

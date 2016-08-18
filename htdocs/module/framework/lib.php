@@ -277,6 +277,7 @@ class Framework {
                     $sfordb->{$v} = isset($standard->{$v}) ? $standard->{$v} : null;
                 }
                 if (!empty($standard->id)) {
+                    $sfordb->id = $standard->id;
                     update_record('framework_standard', $sfordb, 'id');
                 }
                 else {
@@ -296,6 +297,7 @@ class Framework {
                                 $sofordb->{$ov} = isset($option->{$ov}) ? $option->{$ov} : null;
                             }
                             if (!empty($option->id)) {
+                                $sofordb->id = $option->id;
                                 $prevoption = $option->id;
                                 update_record('framework_standard', $sofordb, 'id');
                             }
@@ -441,10 +443,6 @@ class Framework {
     public function get_frameworks($institution = 'any', $shared = false) {
         global $USER;
 
-        if ($USER->get('admin')) {
-            $institution = 'any'; // make sure site admin can get full list regardless
-        }
-
         $sql = "SELECT * FROM {framework}";
         $values = array();
         if ($institution != 'any') {
@@ -467,21 +465,25 @@ class Framework {
      * Add/update an annotation block on a view via the framework matrix page.
      * This hooks into using the annotation block's config form.
      *
+     * @param int $collectionid
      * @param int $annotationid
      *
      * @return evidence(s)
      */
-    public function get_evidence($annotationid = false) {
-        $evidence = get_records_array('framework_evidence', 'framework', $this->id);
-        if (!empty($annotationid) && $evidence) {
-            foreach ($evidence as $e) {
-                if ($e->annotation === $annotationid) {
-                    return $e;
+    public function get_evidence($collectionid, $annotationid = false) {
+        if ($viewids = get_column('collection_view', 'view', 'collection', $collectionid)) {
+            $evidence = get_records_sql_array('SELECT * FROM {framework_evidence} WHERE framework = ? AND view IN (' . join(',', $viewids) . ')', array($this->id));
+            if (!empty($annotationid) && $evidence) {
+                foreach ($evidence as $e) {
+                    if ($e->annotation === $annotationid) {
+                        return $e;
+                    }
                 }
+                return false;
             }
-            return false;
+            return $evidence;
         }
-        return $evidence;
+        return false;
     }
 
     public static function annotation_config_form($data) {

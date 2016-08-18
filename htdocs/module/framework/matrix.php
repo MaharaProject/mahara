@@ -101,7 +101,7 @@ if ($collection) {
     }
 }
 
-$evidence = $framework->get_evidence();
+$evidence = $framework->get_evidence($collection->get('id'));
 if (!$evidence) {
     $evidence = array();
 }
@@ -256,6 +256,7 @@ jQuery(function($) {
                 values['view'] = params.view;
                 values['option'] = params.option;
                 values['action'] = 'update';
+                tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
                 editmatrix_update(values);
                 dock.hide();
             });
@@ -314,6 +315,8 @@ jQuery(function($) {
                   .attr('class', results.data.class)
                   .data('option', results.data.option)
                   .data('view', results.data.view).empty();
+                var completed = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount').text(), 10);
+                $('#tablematrix tr:eq(' + celly + ') td.completedcount').text(completed + results.data.completed);
             }
             if (results.data.tablerows) {
                 if ($("#matrixfeedbacklist").has(".annotationfeedbacktable").length == 0) {
@@ -328,7 +331,8 @@ jQuery(function($) {
     // Setup
     carousel_matrix();
 
-    $('.code div').hover(
+    // show / hide tooltips for standard elements
+    $('td.code div, tr.standard div').hover(
         function() {
             $(this).find('span').removeClass('hidden');
         },
@@ -353,5 +357,18 @@ $smarty->assign('standardscount', $standards['count']);
 $smarty->assign('framework', $collection->get('framework'));
 $smarty->assign('views', $views['views']);
 $smarty->assign('viewcount', $views['count']);
+if ($view->is_anonymous()) {
+    $smarty->assign('PAGEAUTHOR', get_string('anonymoususer'));
+    $smarty->assign('author', get_string('anonymoususer'));
+    if ($view->is_staff_or_admin_for_page()) {
+        $smarty->assign('realauthor', $view->display_author());
+    }
+    $smarty->assign('anonymous', TRUE);
+}
+else {
+    $smarty->assign('PAGEAUTHOR', $view->formatted_owner());
+    $smarty->assign('author', $view->display_author());
+    $smarty->assign('anonymous', FALSE);
+}
 
 $smarty->display('module:framework:matrix.tpl');

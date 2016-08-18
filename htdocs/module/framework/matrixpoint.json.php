@@ -27,7 +27,7 @@ $framework  = param_integer('framework');
 $option     = param_integer('option');
 $view       = param_integer('view');
 $action     = param_alphanum('action', 'form');
-
+form_validate(param_variable('sesskey', null));
 $evidence = get_record('framework_evidence', 'framework', $framework, 'element', $option, 'view', $view);
 
 if ($action == 'update') {
@@ -71,6 +71,7 @@ if ($action == 'update') {
     $data = (object) array('id' => $id,
                            'class' => $class,
                            'view' => $view,
+                           'completed' => 0,
                            'option' => $option
                            );
     json_reply(false, array('message' => $message, 'data' => $data));
@@ -81,17 +82,25 @@ else if ($action == 'evidence') {
     if (!$evidence->id) {
         // problem need to return error
     }
-
+    $oldstate = $evidence->state;
     $reviewer = null;
     $assessment = param_alphanum('assessment', 0);
     if (Framework::EVIDENCE_COMPLETED === (int) $assessment) {
         $reviewer = $USER->get('id');
     }
+
     $id = Framework::save_evidence($evidence->id, null, null, null, $evidence->annotation, $assessment, $USER->get('id'));
     $message = get_string('matrixpointupdated', 'module.framework');
 
+    $completed = 0;
+    // If we are changing from completed to not completed
+    if ((Framework::EVIDENCE_COMPLETED === (int) $oldstate) && (Framework::EVIDENCE_COMPLETED !== (int) $assessment)) {
+        $completed = -1;
+    }
+
     if (Framework::EVIDENCE_COMPLETED === (int) $assessment) {
         $class = 'icon icon-circle completed';
+        $completed = 1;
     }
     else if (Framework::EVIDENCE_PARTIALCOMPLETE === (int) $assessment) {
         $class = 'icon icon-adjust partial';
@@ -106,6 +115,7 @@ else if ($action == 'evidence') {
     $data = (object) array('id' => $id,
                            'class' => $class,
                            'view' => $view,
+                           'completed' => $completed,
                            'option' => $option
                            );
     json_reply(false, array('message' => $message, 'data' => $data));

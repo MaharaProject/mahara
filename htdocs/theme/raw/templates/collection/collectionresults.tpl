@@ -14,6 +14,9 @@
                         <div class="detail">
                             <span class="lead text-small">{str tag=Views section=view}:</span>
                             {if $collection->views}
+                                {if $collection->framework}
+                                    <a href="{$collection->fullurl}">{$collection->frameworkname}</a>,
+                                {/if}
                                 {foreach from=$collection->views item=view name=cviews}
                                     <a href="{$view->fullurl}" class="inner-link">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}
                                 {/foreach}

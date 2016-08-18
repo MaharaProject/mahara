@@ -240,17 +240,17 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             safe_require('module', 'framework');
             $framework = new Framework($collection->get('framework'));
             $standards = $framework->standards();
-            $evidence = $framework->get_evidence($instance->get('id'));
+            $evidence = $framework->get_evidence($collection->get('id'), $instance->get('id'));
             $selectoptions = array();
             $selectdesciptions = array();
             foreach ($standards['standards'] as $standard) {
                 if (isset($standard->options)) {
                     $selectoptions[$standard->id] = array(
-                        'label' => $standard->shortname . ' ' . $standard->name,
+                        'label' => $standard->name,
                         'options' => array(),
                     );
                     foreach ($standard->options as $option) {
-                        $selectoptions[$standard->id]['options'][$option->id] = $option->shortname . ' ' . $option->name;
+                        $selectoptions[$standard->id]['options'][$option->id] = $option->name;
                         $selectdescriptions[$option->id] = $option->description;
                     }
                 }

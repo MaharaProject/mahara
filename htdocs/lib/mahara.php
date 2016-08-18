@@ -1616,7 +1616,7 @@ function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
         // ORDER MATTERS! artefact has to be before blocktype
-        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype', 'interaction', 'grouptype', 'import', 'export', 'module');
+        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'module', 'blocktype', 'interaction', 'grouptype', 'import', 'export');
     }
     return $pluginstocheck;
 }

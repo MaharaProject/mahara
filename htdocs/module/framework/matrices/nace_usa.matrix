@@ -1,0 +1,68 @@
+{"framework":
+    {"institution":"all",
+     "name":"Career Readiness",
+     "description":"NACE (National Association of Colleges and Employers) in the U.S.A. identified seven competencies associated with career readiness. Source: http://www.naceweb.org/knowledge/career-readiness-competencies.aspx",
+     "selfassess":false,
+     "standards":
+      [
+        {
+         "shortname":"Career Readiness",
+         "name":"Career Readiness Competencies",
+         "description":"Career readiness is the attainment and demonstration of requisite competencies that broadly prepare college graduates for a successful transition into the workplace.",
+         "priority":1,
+         "standardelement":
+          [
+          {
+           "shortname":"Critical Thinking",
+           "name":"Critical Thinking/Problem Solving",
+           "description":"Exercise sound reasoning to analyze issues, make decisions, and overcome problems. The individual is able to obtain, interpret, and use knowledge, facts, and data in this process, and may demonstrate originality and inventiveness.",
+           "priority":1,
+           "parent":false
+          },
+          {
+           "shortname":"Communication",
+           "name":"Oral/Written Communications",
+           "description":"Articulate thoughts and ideas clearly and effectively in written and oral forms to persons inside and outside of the organization. The individual has public speaking skills; is able to express ideas to others; and can write/edit memos, letters, and complex technical reports clearly and effectively.",
+           "priority":2,
+           "parent":false
+          },
+          {
+           "shortname":"Teamwork",
+           "name":"Teamwork/Collaboration",
+           "description":"Build collaborative relationships with colleagues and customers representing diverse cultures, races, ages, genders, religions, lifestyles, and viewpoints. The individual is able to work within a team structure, and can negotiate and manage conflict.",
+           "priority":3,
+           "parent":false
+          },
+          {
+           "shortname":"Info Tech",
+           "name":"Information Technology Application",
+           "description":"Select and use appropriate technology to accomplish a given task. The individual is also able to apply computing skills to solve problems.",
+           "priority":4,
+           "parent":false
+          },
+          {
+           "shortname":"Leadership",
+           "name":"Leadership",
+           "description":"Leverage the strengths of others to achieve common goals, and use interpersonal skills to coach and develop others. The individual is able to assess and manage his/her emotions and those of others; use empathetic skills to guide and motivate; and organize, prioritize, and delegate work.",
+           "priority":5,
+           "parent":false
+          },
+          {
+           "shortname":"Professionalism",
+           "name":"Professionalism/Work Ethics",
+           "description":"Demonstrate personal accountability and effective work habits, e.g., punctuality, working productively with others, and time workload management, and understand the impact of non-verbal communication on professional work image. The individual demonstrates integrity and ethical behavior, acts responsibly with the interests of the larger community in mind, and is able to learn from his/her mistakes.",
+           "priority":6,
+           "parent":false
+          },
+          {
+           "shortname":"Career Management",
+           "name":"Career Management",
+           "description":"Identify and articulate one's skills, strengths, knowledge, and experiences relevant to the position desired and career goals, and identify areas necessary for professional growth. The individual is able to navigate and explore job options, understands and can take the steps necessary to pursue opportunities, and understands how to self-advocate for opportunities in the workplace.",
+           "priority":3,
+           "parent":false
+          }
+        ]
+      }
+    ]
+  }
+}
