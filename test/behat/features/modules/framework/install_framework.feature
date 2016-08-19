@@ -39,6 +39,10 @@ Scenario: Installing framework module and activating for an institution
  And I press "Save"
  Then I should see "Settings saved"
 
+ # Check that we have new framework
+ And I choose "SmartEvidence frameworks" in "Extensions"
+ Then I should see "SmartEvidence example"
+
  # Activate smartevidence in an institution
  And I choose "Institutions" in "Institutions"
  And I click on "Edit" in "No Institution" row

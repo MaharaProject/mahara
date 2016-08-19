@@ -149,6 +149,28 @@ class PluginModuleFramework extends PluginModule {
     public static function save_config_options(Pieform $form, $values) {
         self::add_matrix_to_db($values['matrix']['tmp_name']);
     }
+
+    public static function admin_menu_items() {
+
+        if (!is_plugin_active('framework', 'module')) {
+            return array();
+        }
+
+        $map = array(
+            'configextensions/frameworks' => array(
+                'path'   => 'configextensions/frameworks',
+                'url'    => 'module/framework/frameworks.php',
+                'title'  => get_string('Frameworks', 'module.framework'),
+                'weight' => 50,
+            ),
+        );
+
+        if (defined('MENUITEM') && isset($map[MENUITEM])) {
+            $map[MENUITEM]['selected'] = true;
+        }
+
+        return $map;
+    }
 }
 
 /**
@@ -161,6 +183,7 @@ class Framework {
     private $institution;
     private $description;
     private $selfassess;
+    private $active = 1; // active by default
     private $standards;
 
     const EVIDENCE_BEGUN = 0;
@@ -193,7 +216,7 @@ class Framework {
                     $value = array('standards' => $value,
                                    'count' => count($value));
                 }
-                if ($field == 'selfassess') {
+                if ($field == 'selfassess' || $field == 'active') {
                     $value = (int) $value;
                 }
                 $this->{$field} = $value;
@@ -409,7 +432,7 @@ class Framework {
 
         if (!empty($data)) {
             foreach ($data as $c) {
-                $ids[] = $c->id;
+                $ids[] = $c->get('id');
             }
         }
 
@@ -809,6 +832,61 @@ class Framework {
             Self::EVIDENCE_PARTIALCOMPLETE => get_string('partialcomplete','module.framework'),
             Self::EVIDENCE_COMPLETED => get_string('completed','module.framework'),
         );
+    }
+
+    public static function list_frameworks() {
+        $frameworks = Self::get_frameworks('any');
+        if ($frameworks) {
+            foreach ($frameworks as $framework) {
+                $framework->activationswitch = pieform(
+                    array(
+                        'name' => 'framework' . $framework->id,
+                        'successcallback' => 'framework_update_submit',
+                        'renderer' => 'div',
+                        'class' => 'form-inline pull-left framework',
+                        'jsform' => false,
+                        'checkdirtychange' => false,
+                        'elements' => array(
+                            'plugintype' => array('type' => 'hidden', 'value' => 'module'),
+                            'pluginname' => array('type' => 'hidden', 'value' => 'framework'),
+                            'id' => array('type' => 'hidden', 'value' => $framework->id),
+                            'enabled' => array(
+                                'type' => 'switchbox',
+                                'value' => $framework->active,
+                            ),
+                        ),
+                    )
+                );
+                $fk = new Framework($framework->id);
+                $framework->collections = count($fk->get_collectionids());
+                $framework->delete = false;
+                if (empty($framework->collections)) {
+                    $framework->delete = pieform(
+                        array(
+                            'name' => 'framework_delete_' . $framework->id,
+                            'successcallback' => 'framework_delete_submit',
+                            'renderer' => 'div',
+                            'class' => 'form-inline form-as-button pull-right framework',
+                            'elements' => array(
+                                'submit' => array(
+                                    'type'         => 'button',
+                                    'class'        => 'btn-default btn-sm',
+                                    'usebuttontag' => true,
+                                    'value'        => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
+                                    'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
+                                ),
+                                'framework'  => array(
+                                    'type'         => 'hidden',
+                                    'value'        => $framework->id,
+                                )
+                            ),
+                        )
+                    );
+                }
+            }
+            return $frameworks;
+        }
+        return false;
     }
 }
 

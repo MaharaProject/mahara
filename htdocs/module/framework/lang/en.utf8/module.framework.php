@@ -12,9 +12,13 @@
 defined('INTERNAL') || die();
 
 $string['Framework'] = 'SmartEvidence framework';
+$string['Frameworks'] = 'SmartEvidence frameworks';
+$string['frameworks'] = 'Installed frameworks';
 $string['frameworkdesc'] = 'Choose the competency framework that you want to associate with your portfolio.';
+$string['frameworksdesc'] = 'List of frameworks that are installed in the system. Inactive frameworks are not able to be chosen for collections unless the collection is already associated with the framework when it was active.';
 $string['taskscompleted'] = 'Tasks completed';
 $string['addpages'] = 'Add more pages to this collection if you want them to show up here in the SmartEvidence map.';
+$string['addframework'] = 'Add framework';
 $string['matrixfile'] = 'Matrix file';
 $string['matrixfiledesc'] = 'The .matrix file containing the JSON encoded matrix framework';
 $string['notvalidmatrixfile'] = 'Not a valid matrix file';
@@ -36,3 +40,4 @@ $string['begun'] = 'Ready for assessment';
 $string['incomplete'] = 'Doesn\'t meet the standard';
 $string['partialcomplete'] = 'Partially meets the standard';
 $string['completed'] = 'Meets the standard';
+$string['usedincollections'] = 'Used in collections';

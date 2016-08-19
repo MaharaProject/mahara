@@ -606,7 +606,13 @@ class Collection {
         }
         safe_require('module','framework');
         $frameworks = Framework::get_frameworks($institution->name, true);
-
+        // Inactive frameworks are only allowed if they were added to
+        // collection when they were active.
+        foreach ($frameworks as $key => $framework) {
+            if (empty($framework->active) && $framework->id != $this->framework) {
+                unset ($frameworks[$key]);
+            }
+        }
         return $frameworks;
     }
 
