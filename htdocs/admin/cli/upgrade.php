@@ -47,4 +47,9 @@ ensure_upgrade_sanity();
 
 // Actually perform the upgrade
 log_info(get_string('cliupgradingmahara', 'admin'));
-upgrade_mahara($upgrades);
+foreach ($upgrades as $name => $data) {
+    // Check to make sure the plugin hasn't already been update out-of-sequence
+    if ($name != 'settings' && $newdata = check_upgrades($name)) {
+        upgrade_mahara(array($name => $newdata));
+    }
+}
