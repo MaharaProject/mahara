@@ -246,10 +246,10 @@ jQuery(function($) {
     // show / hide tooltips for standard elements
     $('td.code div, tr.standard div').hover(
         function() {
-            $(this).find('span').removeClass('hidden');
+            $(this).find('.popover').removeClass('hidden');
         },
         function() {
-            $(this).find('span').addClass('hidden');
+            $(this).find('.popover').addClass('hidden');
         }
     );
 });

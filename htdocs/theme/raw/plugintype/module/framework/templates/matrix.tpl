@@ -14,7 +14,7 @@
 <p>{$description|clean_html|safe}</p>
 <p>{str tag="addpages" section="module.framework"}</p>
 <table class="fullwidth table tablematrix" id="tablematrix">
-  <tr>
+  <tr class="table-pager">
     <td colspan="2">&nbsp;</td>
     <td colspan="{$viewcount}" class="special">
         <button class="btn btn-default" id="prev">
@@ -22,12 +22,12 @@
             Prev
         </button>
         <button class="btn btn-default next" id="next">
-            <span class="icon left icon-chevron-right" aria-hidden="true" role="presentation"></span>
             Next
+            <span class="icon right icon-chevron-right" aria-hidden="true" role="presentation"></span>
         </button>
     </td>
   </tr>
-  <tr>
+  <tr class="pages">
     <th>&nbsp;</th>
     <th>&nbsp;</th>
     {foreach from=$views key=vk item=view}
@@ -37,20 +37,38 @@
   {foreach from=$standards key=sk item=standard}
     <tr class="standard">
         <td colspan="{$viewcount + 2}">
-            <div>{$standard->name} <span class="hidden matrixtooltip">{$standard->shortname}<br>{$standard->description|clean_html|safe}</span></div>
+            <div class="shortname-container">
+                {$standard->name}
+                <div class="matrixtooltip popover hidden">
+                    <h3 class="popover-title">{$standard->shortname}</h3>
+                    <div class="popover-content">
+                        {$standard->description|clean_html|safe}
+                    </div>
+                </div>
+            </div>
         </td>
     </tr>
     {if $standard->options}
         {foreach from=$standard->options key=ok item=option}
         <tr{if $option->parent} class="sub"{/if}>
-            <td class="code"><div>{$option->shortname} <span class="hidden matrixtooltip">{$option->name}<br>{$option->description|clean_html|safe}</span></div></td>
+            <td class="code">
+                <div class="shortname-container">
+                    {$option->shortname}
+                    <div class="matrixtooltip popover hidden">
+                        <h3 class="popover-title">{$option->name}</h3>
+                        <div class="popover-content">
+                            {$option->description|clean_html|safe}
+                        </div>
+                    </div>
+                </div>
+            </td>
             <td class="completedcount">{if $completed[$option->id]}{$completed[$option->id]}{else}0{/if}</td>
             {foreach from=$views key=vk item=view}
             <td class="mid"><span data-view="{$view->id}" data-option="{$option->id}"
                 {if $evidence[$framework][$option->id][$view->id].state}
                 class="{$evidence[$framework][$option->id][$view->id].classes}" title="{$evidence[$framework][$option->id][$view->id].title}">
                 {else}
-                class="dot{if !$canaddannotation} disabled{/if}">&bull;
+                class="icon icon-circle dot {if !$canaddannotation}disabled{/if}">
                 {/if}
                 </span>
             </td>

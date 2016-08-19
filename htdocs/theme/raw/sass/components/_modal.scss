@@ -157,7 +157,7 @@ $width-sm: 90%;
             color: #fff;
         }
         &.modal-section {
-            margin: 10px -15px;
+            margin: 0 0 10px 0;
         }
         .close {
            @include box-shadow(-2px 0px 2px rgba(0,0,0,0.3));

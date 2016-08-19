@@ -516,7 +516,7 @@ class Framework {
             ),
             'completed' => array(
                 'state' => (int) $state === self::EVIDENCE_COMPLETED ? 1 : 0,
-                'classes' => 'icon icon-circle completed',
+                'classes' => 'icon icon-check-circle completed',
             ),
         );
         if ($current) {
