@@ -8,3 +8,7 @@ This library is used by clean_html, to strip malicious HTML from user-generated
 content.
 
 Changes:
+
+  * Add the configuration directive Filter.ExtractStyleBlocks.PreserveCSS to allow the comments while cleaning CSS
+  * Add more legal color formats such as rgba, hsl, and hsla
+  * Altered SafeIframe.php so that an HTTPS site will rewrite HTTP iframes to protocol-relative
