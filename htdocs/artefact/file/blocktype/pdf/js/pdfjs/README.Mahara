@@ -17,6 +17,9 @@ Build Instructions:
 5. Minify build/pdf.js and build/pdf.worker.min.js (see next section for details)
 6. Make sure you can open and see a PDF via browser
     {WWWROOT}/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html
+7. Update the template file htdocs/theme/raw/plugintype/artefact/file/blocktype/pdf/templates/pdf.tpl
+    based on htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html
+    and htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.js
 
 Minify instructions:
 1. Install uglifyjs if you don't have: npm install uglify-js
@@ -32,3 +35,5 @@ Minify instructions:
 Changes:
 
 * Minify js files for faster loading
+* Use absolute paths in viewer.js
+* Open fileurl if defined

@@ -25,7 +25,7 @@
 
 'use strict';
 
-var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
+var DEFAULT_URL = wwwroot + '/artefact/file/blocktype/pdf/js/pdfjs/web/sample.pdf';
 var DEFAULT_SCALE_DELTA = 1.1;
 var MIN_SCALE = 0.25;
 var MAX_SCALE = 10.0;
@@ -35,9 +35,9 @@ var PAGE_NUMBER_LOADING_INDICATOR = 'visiblePageIsLoading';
 var DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000;
 
 function configure(PDFJS) {
-  PDFJS.imageResourcesPath = './images/';
-  PDFJS.workerSrc = '../build/pdf.worker.min.js';
-  PDFJS.cMapUrl = '../web/cmaps/';
+  PDFJS.imageResourcesPath = wwwroot + '/artefact/file/blocktype/pdf/js/pdfjs/web/images/';
+  PDFJS.workerSrc = wwwroot + '/artefact/file/blocktype/pdf/js/pdfjs/build/pdf.worker.min.js';
+  PDFJS.cMapUrl = wwwroot + '/artefact/file/blocktype/pdf/js/pdfjs/web/cmaps/';
   PDFJS.cMapPacked = true;
 }
 
@@ -7188,7 +7188,7 @@ function webViewerLoad(evt) {
 function webViewerInitialized() {
   var queryString = document.location.search.substring(1);
   var params = parseQueryString(queryString);
-  var file = 'file' in params ? params.file : DEFAULT_URL;
+  var file = fileurl ? fileurl : 'file' in params ? params.file : DEFAULT_URL;
   validateFileURL(file);
 
   var fileInput = document.createElement('input');
