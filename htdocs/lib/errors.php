@@ -523,17 +523,16 @@ function error ($code, $message, $file, $line, $vars) {
  * @access private
  */
 function exception ($e) {
-    global $USER;
-    if ($USER) {
-        if (!($e instanceof MaharaException) || get_class($e) == 'MaharaException') {
-            log_warn("An exception was thrown of class " . get_class($e) . ". \nTHIS IS BAD "
-                     . "and should be changed to something extending MaharaException,\n"
-                     . "unless the exception is from a third party library.\n"
-                     . "Original trace follows", true, false);
-            log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
-            $e = new SystemException($e->getMessage());
-            $e->set_log_off();
-        }
+    $classname = get_class($e);
+    if (!($e instanceof MaharaException)) {
+        $e = new SystemException("[{$classname}]: " . $e->getMessage(), $e->getCode());
+    }
+    else if ($classname == 'MaharaException') {
+        // Mahara coding practice says not to use MaharaException directly, but for more
+        // graceful error handling we have chosen not to make it abstract. Instead, make
+        // it print like a SystemException.
+        /* @var MaharaException $e */
+        $e = new SystemException($e->getMessage(), $e->getCode());
     }
 
     // Display the message and die
@@ -541,19 +540,15 @@ function exception ($e) {
 }
 
 
-interface MaharaThrowable {
-
-    public function render_exception();
-
-}
-
-// Standard exceptions  - top level exception class.
-// all exceptions should extend one of these three.
 
 /**
- * Very top of the tree for exceptions in Mahara.
- * Nothing should extend this directly.
- * Contains a few helper functions for all exceptions.
+ * Generic Mahara exception. Use a more specific exception class where possible, because
+ * this one doesn't print its message very gracefully. "SystemException" is a good
+ * generic one.
+ *
+ * I'd make this an abstract class... except that inexperienced devs are likely to
+ * attempt to instantiate it anyway, and if they do so, PHP will throw a fatal error
+ * that won't become apparent until the rare occasion when an exception actually happens.
  */
 class MaharaException extends Exception {
 
@@ -655,7 +650,9 @@ class MaharaException extends Exception {
             catch (Exception $e) {
                 // If an exception is thrown in smarty(), ignore it
                 // and print the message out the ugly way
-                log_warn("Exception thrown by smarty call while handling exception");
+                log_debug("Exception thrown by smarty call while handling exception:\n".
+                        '[' . get_class($e) . ']: ' . $e->getMessage(), true, false
+                );
             }
         }
 
@@ -713,11 +710,13 @@ EOF;
 
 
 
+// Standard exceptions  - top level exception class.
+// all exceptions should extend one of these three.
 
 /**
  * SystemException - this is basically a bug in the system.
  */
-class SystemException extends MaharaException implements MaharaThrowable {
+class SystemException extends MaharaException {
 
     public function __construct($message, $code=0) {
         parent::__construct($message, $code);
@@ -740,7 +739,7 @@ class SystemException extends MaharaException implements MaharaThrowable {
  * ConfigException - something is misconfigured that's causing a problem.
  * Generally these will be the fault of admins
  */
-class ConfigException extends MaharaException  implements MaharaThrowable {
+class ConfigException extends MaharaException {
 
     public function render_exception () {
         return $this->get_string('message') . "\n\n" . $this->getMessage();
@@ -758,7 +757,7 @@ class ConfigException extends MaharaException  implements MaharaThrowable {
 /**
  * UserException - the user has done something they shouldn't (or tried to)
  */
-class UserException extends MaharaException implements MaharaThrowable {
+class UserException extends MaharaException {
 
     protected $log = false;
 
