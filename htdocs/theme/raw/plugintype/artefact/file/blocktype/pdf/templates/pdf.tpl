@@ -1,9 +1,32 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
+<!--
+Copyright 2012 Mozilla Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Adobe CMap resources are covered by their own copyright but the same license:
+
+    Copyright 1990-2015 Adobe Systems Incorporated.
+
+See https://github.com/adobe-type-tools/cmap-resources
+-->
 <html dir="ltr" mozdisallowselectionprint moznomarginboxes>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="google" content="notranslate">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <title>PDF viewer</title>
 
     <link rel="stylesheet" href="js/pdfjs/web/viewer.css"/>
@@ -17,7 +40,9 @@
         window.onload = function() {
             document.body.className = 'js';
             document.body.style.display = 'block';
-            document.getElementById('nojsdownload').style.display = 'none';
+            if (document.getElementById('nojsdownload')) {
+                document.getElementById('nojsdownload').style.display = 'none';
+            }
         }
     </script>
 
@@ -30,8 +55,7 @@
 
   </head>
 
-  <body class="no-js loadingInProgress" tabindex="1">
-    <div id="nojsdownload" class="no-js"><a href="{$url|safe}">{$title}</a></div>
+  <body tabindex="1" class="loadingInProgress">
     <div id="outerContainer">
 
       <div id="sidebarContainer">
@@ -71,10 +95,11 @@
               <span data-l10n-id="find_next_label">Next</span>
             </button>
           </div>
-          <input type="checkbox" id="findHighlightAll" class="toolbarField">
-          <label for="findHighlightAll" class="toolbarLabel" tabindex="94" data-l10n-id="find_highlight">Highlight all</label>
-          <input type="checkbox" id="findMatchCase" class="toolbarField">
-          <label for="findMatchCase" class="toolbarLabel" tabindex="95" data-l10n-id="find_match_case_label">Match case</label>
+          <input type="checkbox" id="findHighlightAll" class="toolbarField" tabindex="94">
+          <label for="findHighlightAll" class="toolbarLabel" data-l10n-id="find_highlight">Highlight all</label>
+          <input type="checkbox" id="findMatchCase" class="toolbarField" tabindex="95">
+          <label for="findMatchCase" class="toolbarLabel" data-l10n-id="find_match_case_label">Match case</label>
+          <span id="findResultsCount" class="toolbarLabel hidden"></span>
           <span id="findMsg" class="toolbarLabel"></span>
         </div>  <!-- findbar -->
 
@@ -123,7 +148,7 @@
             <button id="toggleHandTool" class="secondaryToolbarButton handTool" title="Enable hand tool" tabindex="60" data-l10n-id="hand_tool_enable">
               <span data-l10n-id="hand_tool_enable_label">Enable hand tool</span>
             </button>
-            
+
             <div class="horizontalToolbarSeparator"></div>
 
             <button id="documentProperties" class="secondaryToolbarButton documentProperties" title="Document Properties…" tabindex="61" data-l10n-id="document_properties">
@@ -172,16 +197,15 @@
                 <button id="download" class="toolbarButton download hiddenMediumView" title="Download" tabindex="34" data-l10n-id="download">
                   <span data-l10n-id="download_label">Download</span>
                 </button>
-                <!-- <div class="toolbarButtonSpacer"></div> -->
                 <a href="#" id="viewBookmark" class="toolbarButton bookmark hiddenSmallView" title="Current view (copy or open in new window)" tabindex="35" data-l10n-id="bookmark">
                   <span data-l10n-id="bookmark_label">Current View</span>
                 </a>
 
                 <div class="verticalToolbarSeparator hiddenSmallView"></div>
-                
+
                 <button id="secondaryToolbarToggle" class="toolbarButton" title="Tools" tabindex="36" data-l10n-id="tools">
                   <span data-l10n-id="tools_label">Tools</span>
-                </button> 
+                </button>
               </div>
               <div class="outerCenter">
                 <div class="innerCenter" id="toolbarViewerMiddle">
@@ -265,7 +289,8 @@
               <p id="passwordText" data-l10n-id="password_label">Enter the password to open this PDF file:</p>
             </div>
             <div class="row">
-              <input type="password" id="password" class="toolbarField" />
+              <!-- The type="password" attribute is set via script, to prevent warnings in Firefox for all http:// documents. -->
+              <input id="password" class="toolbarField" />
             </div>
             <div class="buttonRow">
               <button id="passwordCancel" class="overlayButton"><span data-l10n-id="password_cancel">Cancel</span></button>
@@ -322,75 +347,86 @@
 
     </div> <!-- outerContainer -->
     <div id="printContainer"></div>
-    <div id="mozPrintCallback-shim" hidden>
-      <style scoped>
-    #mozPrintCallback-shim {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      z-index: 9999999;
+<div id="mozPrintCallback-shim" hidden>
+  <style>
+@media print {
+  #printContainer div {
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+}
+  </style>
+  <style scoped>
+#mozPrintCallback-shim {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 9999999;
 
-      display: block;
-      text-align: center;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-    #mozPrintCallback-shim[hidden] {
-      display: none;
-    }
-    @media print {
-      #mozPrintCallback-shim {
-        display: none;
-      }
-    }
+  display: block;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+#mozPrintCallback-shim[hidden] {
+  display: none;
+}
+@media print {
+  #mozPrintCallback-shim {
+    display: none;
+  }
+}
 
-    #mozPrintCallback-shim .mozPrintCallback-dialog-box {
-      display: inline-block;
-      margin: -50px auto 0;
-      position: relative;
-      top: 45%;
-      left: 0;
-      min-width: 220px;
-      max-width: 400px;
+#mozPrintCallback-shim .mozPrintCallback-dialog-box {
+  display: inline-block;
+  margin: -50px auto 0;
+  position: relative;
+  top: 45%;
+  left: 0;
+  min-width: 220px;
+  max-width: 400px;
 
-      padding: 9px;
+  padding: 9px;
 
-      border: 1px solid hsla(0, 0%, 0%, .5);
-      border-radius: 2px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  border: 1px solid hsla(0, 0%, 0%, .5);
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 
-      background-color: #474747;
+  background-color: #474747;
 
-      color: hsl(0, 0%, 85%);
-      font-size: 16px;
-      line-height: 20px;
-    }
-    #mozPrintCallback-shim .progress-row {
-      clear: both;
-      padding: 1em 0;
-    }
-    #mozPrintCallback-shim progress {
-      width: 100%;
-    }
-    #mozPrintCallback-shim .relative-progress {
-      clear: both;
-      float: right;
-    }
-    #mozPrintCallback-shim .progress-actions {
-      clear: both;
-    }
-      </style>
-      <div class="mozPrintCallback-dialog-box">
-        <!-- TODO: Localise the following strings -->
-        Preparing document for printing...
-        <div class="progress-row">
-          <progress value="0" max="100"></progress>
-          <span class="relative-progress">0%</span>
-        </div>
-        <div class="progress-actions">
-          <input type="button" value="Cancel" class="mozPrintCallback-cancel">
+  color: hsl(0, 0%, 85%);
+  font-size: 16px;
+  line-height: 20px;
+}
+#mozPrintCallback-shim .progress-row {
+  clear: both;
+  padding: 1em 0;
+}
+#mozPrintCallback-shim progress {
+  width: 100%;
+}
+#mozPrintCallback-shim .relative-progress {
+  clear: both;
+  float: right;
+}
+#mozPrintCallback-shim .progress-actions {
+  clear: both;
+}
+  </style>
+  <div class="mozPrintCallback-dialog-box">
+    <!-- TODO: Localise the following strings -->
+    Preparing document for printing...
+    <div class="progress-row">
+      <progress value="0" max="100"></progress>
+      <span class="relative-progress">0%</span>
+    </div>
+    <div class="progress-actions">
+      <input type="button" value="Cancel" class="mozPrintCallback-cancel">
     </div>
   </div>
- </div>
-</body>
+</div>
+
+  </body>
+</html>
+
