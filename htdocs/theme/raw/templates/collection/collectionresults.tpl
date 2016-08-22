@@ -14,7 +14,7 @@
                         <div class="detail">
                             <span class="lead text-small">{str tag=Views section=view}:</span>
                             {if $collection->views}
-                                {if $collection->framework}
+                                {if $collection->frameworkname}
                                     <a href="{$collection->fullurl}">{$collection->frameworkname}</a>,
                                 {/if}
                                 {foreach from=$collection->views item=view name=cviews}

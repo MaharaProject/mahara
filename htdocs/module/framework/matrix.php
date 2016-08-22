@@ -226,6 +226,9 @@ jQuery(function($) {
             }
             // Only allow the point selected to be active in the 'Standard' dropdown
             $("#instconf_smartevidence option:not(:selected)").prop('disabled', true);
+            // block title will be overwritten with framework choice so make it disabled
+            $("#instconf_title").attr('disabled', true);
+            // Set up evidence choices and show/hide related descriptions
             $("#instconf_smartevidence").select2();
 
             function show_se_desc(id) {
@@ -313,6 +316,7 @@ jQuery(function($) {
             if (results.data.class) {
                 $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span')
                   .attr('class', results.data.class)
+                  .attr('title', results.data.title)
                   .data('option', results.data.option)
                   .data('view', results.data.view).empty();
                 var completed = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount').text(), 10);

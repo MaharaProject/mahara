@@ -160,7 +160,7 @@ class PluginModuleFramework extends PluginModule {
             'configextensions/frameworks' => array(
                 'path'   => 'configextensions/frameworks',
                 'url'    => 'module/framework/frameworks.php',
-                'title'  => get_string('Frameworks', 'module.framework'),
+                'title'  => get_string('frameworknav', 'module.framework'),
                 'weight' => 50,
             ),
         );
@@ -184,6 +184,7 @@ class Framework {
     private $description;
     private $selfassess;
     private $active = 1; // active by default
+    private $choices;
     private $standards;
 
     const EVIDENCE_BEGUN = 0;
@@ -237,6 +238,10 @@ class Framework {
         if ($field == 'collections') {
             return $this->collections();
         }
+        if ($field == 'choices') {
+            $this->choices = Self::get_choices($this->id);
+            return $this->choices;
+        }
         return $this->{$field};
     }
 
@@ -257,6 +262,7 @@ class Framework {
 
         db_begin();
         delete_records('framework_evidence', 'framework', $this->id);
+        delete_records('framework_choices', 'framework', $this->id);
         delete_records_sql('DELETE FROM {framework_standard_element} WHERE standard IN (' . join(',', array_map('intval', $standards)) . ')');
         delete_records('framework_standard', 'framework', $this->id);
         delete_records('framework', 'id', $this->id);
@@ -287,6 +293,43 @@ class Framework {
             $id = insert_record('framework', $fordb, 'id', true);
             if ($id) {
                 $this->set('id', $id);
+            }
+        }
+        // update choices
+        if (isset($this->choices) && is_array($this->choices)) {
+            foreach ($this->choices as $k => $choice) {
+                $keystr = key((array) $choice);
+                switch ($keystr) {
+                 case 'begun':
+                 case '0':
+                    $key = Self::EVIDENCE_BEGUN;
+                    break;
+                 case 'incomplete':
+                 case '1':
+                    $key = Self::EVIDENCE_INCOMPLETE;
+                    break;
+                 case 'partialcomplete':
+                 case '2':
+                    $key = Self::EVIDENCE_PARTIALCOMPLETE;
+                    break;
+                 case 'completed':
+                 case '3':
+                    $key = Self::EVIDENCE_COMPLETED;
+                    break;
+                 default:
+                    $key = $k;
+                }
+                $cfordb = new StdClass;
+                $cfordb->framework = $this->id;
+                $cfordb->choice = isset($choice->{$keystr}) ? $choice->{$keystr} : '';
+                $cfordb->type = $key;
+                if ($choiceid = get_field('framework_choices', 'id', 'framework', $this->id, 'type', $key)) {
+                    $cfordb->id = $choiceid;
+                    update_record('framework_choices', $cfordb, 'id');
+                }
+                else {
+                    insert_record('framework_choices', $cfordb, 'id', true);
+                }
             }
         }
         // update standards
@@ -669,7 +712,7 @@ class Framework {
 
         $options = self::allow_assessment($view->get('owner'), true, $evidence->framework);
         if (!$options) {
-            $choices = Self::get_choices();
+            $choices = Self::get_choices($collection->get('framework'));
             $assessment = array(
                 'type' => 'html',
                 'title' => get_string('assessment', 'module.framework'),
@@ -791,25 +834,29 @@ class Framework {
         $isadminofowner = $selfcomplete = false;
 
         if ($USER->get('admin') || $USER->get('staff')) {
-            $isadminofowner = true;
+            if ($USER->get('id') != $owner->get('id')) {
+                $isadminofowner = true;
+            }
         }
         else if ($institution != 'mahara' && ($USER->is_institutional_admin($institution) || $USER->is_institutional_staff($institution))) {
-            $isadminofowner = true;
+            if ($USER->get('id') != $owner->get('id')) {
+                $isadminofowner = true;
+            }
         }
 
         require_once(get_config('libroot') . 'institution.php');
         $institution = new Institution($institution);
         // Check that smart evidence self assessment is enabled for the framework
         if ($framework) {
-            $framework = new Framework($framework);
-            if ($framework->selfassess) {
+            $fmk = new Framework($framework);
+            if ($fmk->selfassess) {
                 $selfcomplete = true;
             }
         }
 
         if ($isowner || $isadminofowner) {
             if ($options) {
-                $reply = Self::get_choices();
+                $reply = Self::get_choices($framework);
                 if (($isowner && $selfcomplete === false) ||
                     ($isadminofowner && $selfcomplete === true)) {
                     unset($reply[1]);
@@ -825,13 +872,27 @@ class Framework {
         return false;
     }
 
-    public static function get_choices() {
-        return array(
-            Self::EVIDENCE_BEGUN => get_string('begun','module.framework'),
-            Self::EVIDENCE_INCOMPLETE => get_string('incomplete','module.framework'),
-            Self::EVIDENCE_PARTIALCOMPLETE => get_string('partialcomplete','module.framework'),
-            Self::EVIDENCE_COMPLETED => get_string('completed','module.framework'),
-        );
+    public static function get_choices($id) {
+        if ($records = get_records_array('framework_choices', 'framework', $id)) {
+            $map = array();
+            foreach ($records as $record) {
+                $map[$record->type] = $record->choice;
+            }
+            return array(
+                Self::EVIDENCE_BEGUN => $map[Self::EVIDENCE_BEGUN],
+                Self::EVIDENCE_INCOMPLETE => $map[Self::EVIDENCE_INCOMPLETE],
+                Self::EVIDENCE_PARTIALCOMPLETE => $map[Self::EVIDENCE_PARTIALCOMPLETE],
+                Self::EVIDENCE_COMPLETED => $map[Self::EVIDENCE_COMPLETED],
+            );
+        }
+        else {
+            return array(
+                Self::EVIDENCE_BEGUN => get_string('begun','module.framework'),
+                Self::EVIDENCE_INCOMPLETE => get_string('incomplete','module.framework'),
+                Self::EVIDENCE_PARTIALCOMPLETE => get_string('partialcomplete','module.framework'),
+                Self::EVIDENCE_COMPLETED => get_string('completed','module.framework'),
+            );
+        }
     }
 
     public static function list_frameworks() {

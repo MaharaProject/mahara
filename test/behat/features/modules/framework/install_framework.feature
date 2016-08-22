@@ -7,7 +7,11 @@ So I can benefit from the recording/marking of SmartEvidence in a
 Mahara institution
 
 Background:
-Given the following "pages" exist:
+  Given the following "users" exist:
+    | username | password | email | firstname | lastname | institution | authname | role |
+    | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | admin |
+
+  And the following "pages" exist:
     | title | description| ownertype | ownername |
     | PageA | This is page A | user | admin |
     | PageB | This is page B | user | admin |
@@ -18,10 +22,13 @@ Given the following "pages" exist:
     | PageG | This is page G | user | admin |
     | PageH | This is page H | user | admin |
 
-And the following "collections" exist:
+  And the following "collections" exist:
     | title | description| ownertype | ownername | pages |
     | CollA | This is collection A | user | admin | PageA, PageB, PageC, PageD, PageE, PageF, PageG, PageH |
 
+  And the following "permissions" exist:
+    | title | accesstype |
+    | CollA | public |
 
 Scenario: Installing framework module and activating for an institution
  Given I log in as "admin" with password "Kupuhipa1"
@@ -40,7 +47,7 @@ Scenario: Installing framework module and activating for an institution
  Then I should see "Settings saved"
 
  # Check that we have new framework
- And I choose "SmartEvidence frameworks" in "Extensions"
+ And I choose "SmartEvidence" in "Extensions"
  Then I should see "SmartEvidence example"
 
  # Activate smartevidence in an institution
@@ -54,7 +61,7 @@ Scenario: Installing framework module and activating for an institution
  And I follow "Return to site"
  And I choose "Collections" in "Portfolio"
  And I follow "Edit title and description"
- And I select "SmartEvidence" from "SmartEvidence framework"
+ And I select "SmartEvidence example" from "SmartEvidence framework"
  And I press "Save"
  Then I should see "Collection saved successfully."
 
@@ -79,12 +86,12 @@ Scenario: Installing framework module and activating for an institution
  # Add another compentency annotation block
  And I follow "Edit"
  And I expand "General" node
- And I wait "2" seconds
+ And I wait "1" seconds
  And I follow "Annotation"
  And I press "Add"
  And I set the following fields to these values:
  | Annotation | My three cents |
- And I set the select2 value "1.1 one point one" for "instconf_smartevidence"
+ And I set the select2 value "one point one" for "instconf_smartevidence"
  And I press "Save"
 
  # Re-click a matrix point to add some feedback
@@ -98,3 +105,14 @@ Scenario: Installing framework module and activating for an institution
  # And change assessment status
  And I should not see the field "Assessment"
  And I press "Save"
+ And I log out
+
+ # Try as another admin
+ Given  I log in as "userA" with password "Kupuhipa1"
+ And I wait "1" seconds
+ And I follow "CollA"
+ And I click on the matrix point "3,5"
+ And I wait "1" seconds
+ And I select "Partially meets the standard" from "Assessment"
+ And I press "Save"
+ Then I should see "SmartEvidence updated"

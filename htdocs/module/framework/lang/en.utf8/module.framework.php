@@ -12,7 +12,7 @@
 defined('INTERNAL') || die();
 
 $string['Framework'] = 'SmartEvidence framework';
-$string['Frameworks'] = 'SmartEvidence frameworks';
+$string['frameworknav'] = 'SmartEvidence';
 $string['frameworks'] = 'Installed frameworks';
 $string['frameworkdesc'] = 'Choose the competency framework that you want to associate with your portfolio.';
 $string['frameworksdesc'] = 'List of frameworks that are installed in the system. Inactive frameworks are not able to be chosen for collections unless the collection is already associated with the framework when it was active.';

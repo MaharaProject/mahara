@@ -33,7 +33,10 @@ $evidence = get_record('framework_evidence', 'framework', $framework, 'element',
 if ($action == 'update') {
     // When we click a dot on the matrix and add an annotation
     require_once(get_config('docroot') . 'blocktype/lib.php');
-    $title = param_variable('title', 'Annotation');
+    $shortname = get_field_sql("SELECT fse.shortname FROM {framework_standard_element} fse
+                                JOIN {framework_standard} fs ON fs.id = fse.standard
+                                WHERE fs.framework = ? and fse.id = ?", array($framework, $option));
+    $title = get_string('Annotation', 'artefact.annotation') . ': ' . $shortname;
     $text = param_variable('text', '');
     $allowfeedback = param_boolean('allowfeedback');
     $retractable = param_integer('retractable', 0);
@@ -68,11 +71,13 @@ if ($action == 'update') {
     }
 
     $class = 'icon icon-circle-o begun';
+    $choices = Framework::get_choices($framework);
     $data = (object) array('id' => $id,
                            'class' => $class,
                            'view' => $view,
                            'completed' => 0,
-                           'option' => $option
+                           'option' => $option,
+                           'title' => $choices[0]
                            );
     json_reply(false, array('message' => $message, 'data' => $data));
 }
@@ -85,7 +90,8 @@ else if ($action == 'evidence') {
     $oldstate = $evidence->state;
     $reviewer = null;
     $assessment = param_alphanum('assessment', 0);
-    if (Framework::EVIDENCE_COMPLETED === (int) $assessment) {
+    $assessment = (int) $assessment;
+    if (Framework::EVIDENCE_COMPLETED === $assessment) {
         $reviewer = $USER->get('id');
     }
 
@@ -94,29 +100,30 @@ else if ($action == 'evidence') {
 
     $completed = 0;
     // If we are changing from completed to not completed
-    if ((Framework::EVIDENCE_COMPLETED === (int) $oldstate) && (Framework::EVIDENCE_COMPLETED !== (int) $assessment)) {
+    if ((Framework::EVIDENCE_COMPLETED === (int) $oldstate) && (Framework::EVIDENCE_COMPLETED !== $assessment)) {
         $completed = -1;
     }
 
-    if (Framework::EVIDENCE_COMPLETED === (int) $assessment) {
+    if (Framework::EVIDENCE_COMPLETED === $assessment) {
         $class = 'icon icon-circle completed';
         $completed = 1;
     }
-    else if (Framework::EVIDENCE_PARTIALCOMPLETE === (int) $assessment) {
+    else if (Framework::EVIDENCE_PARTIALCOMPLETE === $assessment) {
         $class = 'icon icon-adjust partial';
     }
-    else if (Framework::EVIDENCE_INCOMPLETE === (int) $assessment) {
+    else if (Framework::EVIDENCE_INCOMPLETE === $assessment) {
         $class = 'icon icon-circle-o incomplete';
     }
     else {
         $class = 'icon icon-circle-o begun';
     }
-
+    $choices = Framework::get_choices($framework);
     $data = (object) array('id' => $id,
                            'class' => $class,
                            'view' => $view,
                            'completed' => $completed,
-                           'option' => $option
+                           'option' => $option,
+                           'title' => $choices[$assessment]
                            );
     json_reply(false, array('message' => $message, 'data' => $data));
 }

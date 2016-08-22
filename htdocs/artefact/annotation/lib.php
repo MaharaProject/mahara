@@ -948,6 +948,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $options->annotation = $annotationartefact->get('id');
         $options->block = $blockid;
         $options->export = 1;
+        $options->sort = 'latest';
         $annotationfeedback = ArtefactTypeAnnotationfeedback::get_annotation_feedback($options);
         $annotationfeedbackcount = isset($annotationfeedback->count) ? $annotationfeedback->count : 0;
 

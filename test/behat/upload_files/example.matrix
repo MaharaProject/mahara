@@ -2,7 +2,7 @@
     {"institution":"all",
      "name":"SmartEvidence example",
      "description":"This is the example SmartEvidence matrix",
-     "selfassess":true,
+     "selfassess": false,
      "standards":
       [
         {

@@ -96,8 +96,8 @@ foreach ($data->data as $value) {
     if (!empty($views)) {
         $value->views = $views['views'];
     }
-    if ($collection->get('framework')) {
-        safe_require('module', 'framework');
+    safe_require('module', 'framework');
+    if (PluginModuleFramework::is_active() && $collection->get('framework')) {
         $framework = new Framework($collection->get('framework'));
         $value->frameworkname = $framework->get('name');
     }
