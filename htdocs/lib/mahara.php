@@ -4281,7 +4281,8 @@ function is_https() {
 }
 
 function sanitize_email($value) {
-    if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+    require_once('phpmailer/class.phpmailer.php');
+    if (!PHPMailer::validateAddress($value)) {
         return '';
     }
     return $value;
