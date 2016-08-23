@@ -39,7 +39,7 @@
                 <td class="owner">-</td>
                 {/if}
                 <td class="action-list-copy">
-                    <div class="btn-group">
+                    <div class="btn-group btn-group-top">
                     {$row.form|safe}
                     </div>
                 </td>
@@ -53,4 +53,3 @@
         {str tag="nocopyableviewsfound" section=view}
     </div>
 {/if}
-

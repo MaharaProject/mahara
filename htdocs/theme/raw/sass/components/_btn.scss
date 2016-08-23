@@ -153,6 +153,9 @@ td.btn-group {
 
 td.action-list-copy {
     min-width: 195px;
+    .btn-group-top {
+        margin-top: -8px;
+    }
 }
 
 // Often the same template is used to render buttons at the top of the page and
