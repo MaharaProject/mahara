@@ -1417,35 +1417,55 @@ class BlockInstance {
     }
 
     /**
-     * Deletes artefacts from the blockinstances given in $records.
-     * $records should be an array of stdclass objects, each containing
-     * a blockid, an artefactid, and the block's configdata
+     * Removes specified artefacts from every block instance that has
+     * any of them selected. (The block instances remain in place, but
+     * with that artefact no longer selected.)
+     *
+     * @param array $artefactids
      */
-    public static function bulk_delete_artefacts($records) {
+    public static function bulk_remove_artefacts($artefactids) {
+
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $paramstr = substr(str_repeat('?, ', count($artefactids)), 0, -2);
+        $records = get_records_sql_array("
+            SELECT va.block, va.artefact, bi.configdata
+            FROM {view_artefact} va JOIN {block_instance} bi ON va.block = bi.id
+            WHERE va.artefact IN ($paramstr)", $artefactids);
+
         if (empty($records)) {
             return;
         }
+
+        // Collate the SQL results so we have a list of blocks, where
+        // each block has its current configdata, and a list of artefacts
+        // to remove
         $blocklist = array();
         foreach ($records as $record) {
-            if (isset($blocklist[$record->block])) {
-                $blocklist[$record->block]->artefacts[] = $record->artefact;
-            }
-            else {
+            // Initialize an array record for this block
+            if (!isset($blocklist[$record->block])) {
                 $blocklist[$record->block] = (object) array(
-                    'artefacts' => array($record->artefact),
+                    'artefactstoremove' => array(),
                     'configdata' => unserialize($record->configdata),
                 );
             }
+
+            $blocklist[$record->block]->artefactstoremove[] = $record->artefact;
         }
+
+        // Go through the collated block list, and remove the specified
+        // artefacts from each one's configdata
         foreach ($blocklist as $blockid => $blockdata) {
             $change = false;
             if (isset($blockdata->configdata['artefactid'])) {
-                if ($change = $blockdata->configdata['artefactid'] == $blockdata->artefacts[0]) {
+                if ($change = $blockdata->configdata['artefactid'] == $blockdata->artefactstoremove[0]) {
                     $blockdata->configdata['artefactid'] = null;
                 }
             }
             else if (isset($blockdata->configdata['artefactids'])) {
-                $blockdata->configdata['artefactids'] = array_values(array_diff($blockdata->configdata['artefactids'], $blockdata->artefacts));
+                $blockdata->configdata['artefactids'] = array_values(array_diff($blockdata->configdata['artefactids'], $blockdata->artefactstoremove));
                 $change = true;
             }
             if ($change) {

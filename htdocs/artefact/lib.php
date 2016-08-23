@@ -821,13 +821,9 @@ abstract class ArtefactType implements IArtefactType {
         delete_records_select('artefact_attachment', "artefact IN $idstr");
 
         // Make sure that the artefacts are removed from any view blockinstances
-        if ($records = get_records_sql_array("
-            SELECT va.block, va.artefact, bi.configdata
-            FROM {view_artefact} va JOIN {block_instance} bi ON va.block = bi.id
-            WHERE va.artefact IN $idstr", array())) {
-            require_once(get_config('docroot') . 'blocktype/lib.php');
-            BlockInstance::bulk_delete_artefacts($records);
-        }
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        BlockInstance::bulk_remove_artefacts($artefactids);
+
         delete_records_select('view_artefact', "artefact IN $idstr");
         delete_records_select('artefact_tag', "artefact IN $idstr");
         delete_records_select('artefact_access_role', "artefact IN $idstr");
