@@ -15,6 +15,7 @@
     <tr>
         <th>{str tag="name"}</th>
         <th>{str tag="usedincollections" section="module.framework"}</th>
+        <th>{str tag="selfassess" section="module.framework"}</th>
         <th>{str tag="active"}</th>
     </tr>
 </thead>
@@ -23,6 +24,7 @@
     <tr>
         <td>{$item->name}</td>
         <td>{$item->collections}</td>
+        <td>{$item->selfassess}</td>
         <td class="buttonscell framework">{$item->activationswitch|safe}
         <script type="application/javascript">
             jQuery('#framework{$item->id}_enabled').on('change', function() {

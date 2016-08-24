@@ -3,7 +3,7 @@
      "name":"Practising Teacher Criteria",
      "description":"<p>The Practising Teacher Criteria describe the criteria for quality teaching that are to be met by all fully certificated teachers in Aotearoa New Zealand.</p><p>The Practising Teacher Criteria recognise that teaching is a highly complex activity, drawing on repertoires of knowledge, practices, professional attributes and values to facilitate academic, social and cultural learning for diverse education settings. The criteria and indicators should be viewed as interdependent and overlapping. <i>Source: http://educationcouncil.org.nz/content/registered-teacher-criteria-1</i></p>",
      "selfassess":false,
-     "choices":
+     "evidencestatuses":
       [
         {"begun":"Ready for assessment"},
         {"incomplete":"Doesn't meet the criterium"},

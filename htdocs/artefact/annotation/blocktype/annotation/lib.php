@@ -236,7 +236,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             $elements['text']['value'] = $text;
         }
         $collection = $view->get('collection');
-        if (is_object($collection) && $collection->get('framework')) {
+        if (is_object($collection) && $collection->has_framework()) {
             safe_require('module', 'framework');
             $framework = new Framework($collection->get('framework'));
             $standards = $framework->standards();
@@ -391,6 +391,17 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
 
     public static function default_copy_type() {
         return 'full';
+    }
+
+    public static function has_feedback_allowed($id) {
+        return (bool) get_field_sql("
+            SELECT a.allowcomments FROM {artefact} a
+            JOIN {view_artefact} va ON va.artefact = a.id
+            JOIN {view} v ON v.id = va.view
+            JOIN {block_instance} bi ON bi.id = va.block
+            WHERE a.artefacttype = 'annotation'
+            AND bi.blocktype = 'annotation'
+            AND bi.id = ?", array($id));
     }
 
     public static function get_instance_javascript(BlockInstance $bi) {

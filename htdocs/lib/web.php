@@ -324,7 +324,7 @@ tinyMCE.init({
         });
         ed.on('LoadContent', function(e) {
             // Hide all the 2nd/3rd row menu buttons
-            jQuery('.mce-toolbar.mce-first').siblings().toggleClass('hidden');
+            jQuery('.mce-toolbar.mce-first').siblings().addClass('hidden');
             // The tinymce fullscreen mode does not work properly in a transformed container div
             // such as div.vertcentre
             // and IE doesn't like a preset z-index

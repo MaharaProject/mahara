@@ -72,11 +72,11 @@
             <KEY NAME="namepluginuk" TYPE="unique" FIELDS="framework, element, view" />
         </KEYS>
     </TABLE>
-    <TABLE NAME="framework_choices">
+    <TABLE NAME="framework_evidence_statuses">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
             <FIELD NAME="framework" TYPE="int" LENGTH="10" NOTNULL="true" />
-            <FIELD NAME="choice" TYPE="char" LENGTH="255" NOTNULL="true" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
             <FIELD NAME="type" TYPE="int" LENGTH="1" NOTNULL="true" />
         </FIELDS>
         <KEYS>

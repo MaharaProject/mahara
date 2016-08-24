@@ -3,7 +3,7 @@
      "name":"Career Readiness",
      "description":"NACE (National Association of Colleges and Employers) in the U.S.A. identified seven competencies associated with career readiness. Source: http://www.naceweb.org/knowledge/career-readiness-competencies.aspx",
      "selfassess":false,
-     "choices":
+     "evidencestatuses":
       [
         {"begun":"Ready for assessment"},
         {"incomplete":"Doesn't meet the criterium"},

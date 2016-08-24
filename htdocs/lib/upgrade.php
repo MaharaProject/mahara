@@ -238,7 +238,7 @@ function check_upgrades($name=null) {
             $classname = generate_class_name($plugintype, $pluginname);
             safe_require($plugintype, $pluginname);
             // Check if there is a displayname
-            $plugininfo->displayname = method_exists($classname, 'get_plugin_name') ? call_static_method($classname, 'get_plugin_name') : null;
+            $plugininfo->displayname = call_static_method($classname, 'get_plugin_display_name');
 
             try {
                 $classname::sanity_check();
@@ -284,7 +284,7 @@ function check_upgrades($name=null) {
             $classname = generate_class_name($plugintype, $pluginname);
             safe_require($plugintype, $pluginname);
             // Check if there is a displayname
-            $plugininfo->displayname = method_exists($classname, 'get_plugin_name') ? call_static_method($classname, 'get_plugin_name') : null;
+            $plugininfo->displayname = call_static_method($classname, 'get_plugin_display_name');
             try {
                 $classname::sanity_check();
             }
@@ -1418,7 +1418,7 @@ function set_antispam_defaults() {
 function activate_plugin_form($plugintype, $plugin) {
     // Check if there is a displayname
     $classname = generate_class_name($plugintype, $plugin->name);
-    $plugin->displayname = method_exists($classname, 'get_plugin_name') ? call_static_method($classname, 'get_plugin_name') : null;
+    $plugin->displayname = call_static_method($classname, 'get_plugin_display_name');
 
     return pieform(array(
         'name'            => 'activate_' . $plugintype . '_' . $plugin->name,

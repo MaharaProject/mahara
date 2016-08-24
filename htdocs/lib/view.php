@@ -5984,7 +5984,10 @@ class View {
                         $collections[$cid]['ownerurl'] = $v['ownerurl'];
                     }
                     if (!empty($r['framework'])) {
-                        $collections[$cid]['url'] = get_config('wwwroot') . 'module/framework/matrix.php?id=' . $cid;
+                        require_once('collection.php');
+                        $coll = new StdClass();
+                        $coll->id = $cid;
+                        $collections[$cid]['url'] = Collection::get_framework_url($coll);
                     }
                 }
                 $collections[$cid]['views'][$vid] = $v;

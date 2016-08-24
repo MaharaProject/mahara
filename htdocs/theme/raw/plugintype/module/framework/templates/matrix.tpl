@@ -47,14 +47,8 @@
             <td class="completedcount">{if $completed[$option->id]}{$completed[$option->id]}{else}0{/if}</td>
             {foreach from=$views key=vk item=view}
             <td class="mid"><span data-view="{$view->id}" data-option="{$option->id}"
-                {if $evidence[$framework][$option->id][$view->id].completed}
-                class="icon icon-circle completed" title="{str tag='completed' section='module.framework'}">
-                {elseif $evidence[$framework][$option->id][$view->id].partialcomplete}
-                class="icon icon-adjust partial" title="{str tag='partialcomplete' section='module.framework'}">
-                {elseif $evidence[$framework][$option->id][$view->id].incomplete}
-                class="icon icon-circle-o incomplete" title="{str tag='incomplete' section='module.framework'}">
-                {elseif $evidence[$framework][$option->id][$view->id].begun}
-                class="icon icon-circle-o begun" title="{str tag='begun' section='module.framework'}">
+                {if $evidence[$framework][$option->id][$view->id].state}
+                class="{$evidence[$framework][$option->id][$view->id].classes}" title="{$evidence[$framework][$option->id][$view->id].title}">
                 {else}
                 class="dot{if !$canaddannotation} disabled{/if}">&bull;
                 {/if}

@@ -33,14 +33,14 @@ class PluginModuleFramework extends PluginModule {
      *
      * @return string ShortName of the plugin
      */
-    public static function get_plugin_name() {
+    public static function get_plugin_display_name() {
         return 'smartevidence';
     }
 
     public static function postinst($prevversion) {
         if ($prevversion < 2016071400) {
             // Add foreign key to the collection.framework table on install
-            log_debug('Add a fireign key on collection.framework to framework.id');
+            log_debug('Add a foreign key on collection.framework to framework.id');
             $table = new XMLDBTable('collection');
             $field = new XMLDBField('framework');
             if (field_exists($table, $field)) {
@@ -49,11 +49,15 @@ class PluginModuleFramework extends PluginModule {
                 add_key($table, $key);
             }
             // Add in any smart evidence framework data to the framework tables
-            // based on any existing .matrix files in the matricies directory
+            // based on any existing .matrix files in the matrices directory
             $matricesdir = get_config('docroot') . 'module/framework/matrices/';
             $files = glob($matricesdir . '*.matrix');
             foreach ($files as $file) {
                 self::add_matrix_to_db($file);
+            }
+            // Activate annotation blocktype as it is used with smart evidence
+            if (!is_plugin_active('annotation', 'blocktype')) {
+                 set_field('blocktype_installed', 'active', 1, 'name', 'annotation');
             }
             require_once('file.php');
             if (!@rmdirr($matricesdir)) {
@@ -98,7 +102,6 @@ class PluginModuleFramework extends PluginModule {
             return false;
         }
         else {
-            safe_require('module', 'framework');
             $framework = new Framework(null, $ok['content']->framework);
             $framework->commit();
         }
@@ -132,12 +135,10 @@ class PluginModuleFramework extends PluginModule {
         if ($error = $um->preprocess_file()) {
             $form->set_error('matrix', $error);
         }
-        if (!$um->optionalandnotsupplied) {
-            $reqext = ".matrix";
-            $fileext = substr($values['matrix']['name'], (-1 * strlen($reqext)));
-            if ($fileext !== $reqext) {
-                $form->set_error('matrix', get_string('notvalidmatrixfile', 'module.framework'));
-            }
+        $reqext = ".matrix";
+        $fileext = substr($values['matrix']['name'], (-1 * strlen($reqext)));
+        if ($fileext !== $reqext) {
+            $form->set_error('matrix', get_string('notvalidmatrixfile', 'module.framework'));
         }
 
         $matrixfile = self::matrix_is_valid_json($um->file['tmp_name']);
@@ -184,7 +185,7 @@ class Framework {
     private $description;
     private $selfassess;
     private $active = 1; // active by default
-    private $choices;
+    private $evidencestatuses;
     private $standards;
 
     const EVIDENCE_BEGUN = 0;
@@ -238,9 +239,9 @@ class Framework {
         if ($field == 'collections') {
             return $this->collections();
         }
-        if ($field == 'choices') {
-            $this->choices = Self::get_choices($this->id);
-            return $this->choices;
+        if ($field == 'evidencestatuses') {
+            $this->evidencestatuses = self::get_evidence_statuses($this->id);
+            return $this->evidencestatuses;
         }
         return $this->{$field};
     }
@@ -258,11 +259,16 @@ class Framework {
      * Deletes a Framework
      */
     public function delete() {
+        // Unable to delete if there are collections using this framework
+        if ($this->is_in_collections()) {
+            throw new MaharaException('Unable to delete framework - currently used in collections');
+        }
+
         $standards = get_column('framework_standard', 'id', 'framework', $this->id);
 
         db_begin();
         delete_records('framework_evidence', 'framework', $this->id);
-        delete_records('framework_choices', 'framework', $this->id);
+        delete_records('framework_evidence_statuses', 'framework', $this->id);
         delete_records_sql('DELETE FROM {framework_standard_element} WHERE standard IN (' . join(',', array_map('intval', $standards)) . ')');
         delete_records('framework_standard', 'framework', $this->id);
         delete_records('framework', 'id', $this->id);
@@ -295,40 +301,40 @@ class Framework {
                 $this->set('id', $id);
             }
         }
-        // update choices
-        if (isset($this->choices) && is_array($this->choices)) {
-            foreach ($this->choices as $k => $choice) {
+        // update evidence statuses
+        if (isset($this->evidencestatuses) && is_array($this->evidencestatuses)) {
+            foreach ($this->evidencestatuses as $k => $choice) {
                 $keystr = key((array) $choice);
                 switch ($keystr) {
                  case 'begun':
                  case '0':
-                    $key = Self::EVIDENCE_BEGUN;
+                    $key = self::EVIDENCE_BEGUN;
                     break;
                  case 'incomplete':
                  case '1':
-                    $key = Self::EVIDENCE_INCOMPLETE;
+                    $key = self::EVIDENCE_INCOMPLETE;
                     break;
                  case 'partialcomplete':
                  case '2':
-                    $key = Self::EVIDENCE_PARTIALCOMPLETE;
+                    $key = self::EVIDENCE_PARTIALCOMPLETE;
                     break;
                  case 'completed':
                  case '3':
-                    $key = Self::EVIDENCE_COMPLETED;
+                    $key = self::EVIDENCE_COMPLETED;
                     break;
                  default:
                     $key = $k;
                 }
                 $cfordb = new StdClass;
                 $cfordb->framework = $this->id;
-                $cfordb->choice = isset($choice->{$keystr}) ? $choice->{$keystr} : '';
+                $cfordb->name = isset($choice->{$keystr}) ? $choice->{$keystr} : '';
                 $cfordb->type = $key;
-                if ($choiceid = get_field('framework_choices', 'id', 'framework', $this->id, 'type', $key)) {
+                if ($choiceid = get_field('framework_evidence_statuses', 'id', 'framework', $this->id, 'type', $key)) {
                     $cfordb->id = $choiceid;
-                    update_record('framework_choices', $cfordb, 'id');
+                    update_record('framework_evidence_statuses', $cfordb, 'id');
                 }
                 else {
-                    insert_record('framework_choices', $cfordb, 'id', true);
+                    insert_record('framework_evidence_statuses', $cfordb, 'id', true);
                 }
             }
         }
@@ -437,7 +443,10 @@ class Framework {
      *
      * @return boolean
      */
-    public function in_collections() {
+    public function is_in_collections() {
+        if (!isset($this->collections)) {
+            $this->collections();
+        }
         if (empty($this->collections)) {
             return false;
         }
@@ -484,18 +493,40 @@ class Framework {
 
     /**
      * Return the current state as part of array of all states
+     * Includes the state classes that render the circles/colours
      *
      * @param string $state Current state
+     * @param bool  $current  return only the current state item rather than full array
      *
      * @return array All states with current active
      */
-    public static function get_state_array($state) {
-        return array(
-            'begun' => ((int) $state === Self::EVIDENCE_BEGUN ? 1 : 0),
-            'incomplete' => ((int) $state === Self::EVIDENCE_INCOMPLETE ? 1 : 0),
-            'partialcomplete' => ((int) $state === Self::EVIDENCE_PARTIALCOMPLETE ? 1 : 0),
-            'completed' => ((int) $state === Self::EVIDENCE_COMPLETED ? 1 : 0),
+    public static function get_state_array($state, $current = false) {
+        $states = array(
+            'begun' => array(
+                'state' => (int) $state === self::EVIDENCE_BEGUN ? 1 : 0,
+                'classes' => 'icon icon-circle-o begun',
+            ),
+            'incomplete' => array(
+                'state' => (int) $state === self::EVIDENCE_INCOMPLETE ? 1 : 0,
+                'classes' => 'icon icon-circle-o incomplete',
+            ),
+            'partialcomplete' => array(
+                'state' => (int) $state === self::EVIDENCE_PARTIALCOMPLETE ? 1 : 0,
+                'classes' => 'icon icon-adjust partial',
+            ),
+            'completed' => array(
+                'state' => (int) $state === self::EVIDENCE_COMPLETED ? 1 : 0,
+                'classes' => 'icon icon-circle completed',
+            ),
         );
+        if ($current) {
+            foreach ($states as $state) {
+                if ($state['state'] === 1) {
+                    return $state;
+                }
+            }
+        }
+        return $states;
     }
 
     /**
@@ -522,19 +553,18 @@ class Framework {
             }
             $sql .= " WHERE institution IN (" . $placeholders . ")";
         }
-        $sql .= " ORDER BY name";
+        $sql .= " ORDER BY name, id";
         $frameworks = get_records_sql_array($sql, $values);
         return $frameworks;
     }
 
     /**
-     * Add/update an annotation block on a view via the framework matrix page.
-     * This hooks into using the annotation block's config form.
+     * Get evidence for a collection.
      *
-     * @param int $collectionid
-     * @param int $annotationid
+     * @param int $collectionid The id of the collection we are wanting evidence for
+     * @param int $annotationid Optional return only the evidence for a single block
      *
-     * @return evidence(s)
+     * @return mixed array / false Depending if evidence is found
      */
     public function get_evidence($collectionid, $annotationid = false) {
         if ($viewids = get_column('collection_view', 'view', 'collection', $collectionid)) {
@@ -552,6 +582,15 @@ class Framework {
         return false;
     }
 
+    /**
+     * Add/update an annotation block on a view via the framework matrix page.
+     * This hooks into using the annotation block's config form.
+     *
+     * @param object $data Data for populating the annotation config form
+     *                     and building an annotation block instance
+     *
+     * @return array Info for the config form
+     */
     public static function annotation_config_form($data) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         if (empty($data->annotation)) {
@@ -604,7 +643,7 @@ class Framework {
      * @param string $state       See constants in this class
      * @param string $reviewer    The user marking the evidence as completed
      */
-    public static function save_evidence($id = null, $framework = null, $element = null, $view = null, $annotation = null, $state = Self::EVIDENCE_BEGUN, $reviewer = null) {
+    public static function save_evidence($id = null, $framework = null, $element = null, $view = null, $annotation = null, $state = self::EVIDENCE_BEGUN, $reviewer = null) {
         // need to check we have at least one indicator of uniqueness
         $uniqueness = false;
         if (!empty($id)) {
@@ -615,7 +654,7 @@ class Framework {
         }
 
         if (!$uniqueness) {
-            throw new SQLException('No unique identifier supplied');
+            throw new ParamOutOfRangeException('No unique identifier supplied');
         }
 
         $fordb = array('mtime' => db_format_timestamp(time()),
@@ -626,7 +665,7 @@ class Framework {
             if (!empty($element)) {
                 $fordb['element'] = $element;
             }
-            $fordb['reviewer'] = ((int) $state === Self::EVIDENCE_COMPLETED) ? $reviewer : null;
+            $fordb['reviewer'] = ((int) $state === self::EVIDENCE_COMPLETED) ? $reviewer : null;
             update_record('framework_evidence', (object) $fordb, (object) array('id' => $id));
         }
         else {
@@ -710,9 +749,10 @@ class Framework {
             return false;
         }
 
-        $options = self::allow_assessment($view->get('owner'), true, $evidence->framework);
+        $options = self::get_my_assessment_options_for_user($view->get('owner'), $evidence->framework);
         if (!$options) {
-            $choices = Self::get_choices($collection->get('framework'));
+            // not allowed to set the assessment so we just show the current state as html
+            $choices = self::get_evidence_statuses($collection->get('framework'));
             $assessment = array(
                 'type' => 'html',
                 'title' => get_string('assessment', 'module.framework'),
@@ -722,16 +762,26 @@ class Framework {
         }
         else {
             if (!array_key_exists($defaultval, $options)) {
-                $defaultval = null;
+                // not allowed to set the assessment to current state so show current state as html
+                $choices = self::get_evidence_statuses($collection->get('framework'));
+                $assessment = array(
+                    'type' => 'html',
+                    'title' => get_string('assessment', 'module.framework'),
+                    'value' => $choices[$defaultval],
+                    'class' => 'top-line',
+                );
             }
-            $assessment = array(
-                'type' => 'select',
-                'title' => get_string('assessment', 'module.framework'),
-                'options' => $options,
-                'defaultvalue' => $defaultval,
-                'width' => '280px',
-                'class' => 'top-line',
-            );
+            else {
+                // Show the select box with current state selected
+                $assessment = array(
+                    'type' => 'select',
+                    'title' => get_string('assessment', 'module.framework'),
+                    'options' => $options,
+                    'defaultvalue' => $defaultval,
+                    'width' => '280px',
+                    'class' => 'top-line',
+                );
+            }
         }
 
         $form = array(
@@ -755,12 +805,13 @@ class Framework {
             );
             $form['elements']['assessment'] = $assessment;
         }
+        $frameworkurl = $collection->collection_nav_framework_option();
         if ($options) {
             $form['elements']['submitcancel'] = array(
                 'type' => 'submitcancel',
                 'class' => 'btn-default',
                 'value' => array(get_string('save'), get_string('cancel')),
-                'goto' => get_string('docroot') . 'module/framework/matrix.php?id=' . $collection->get('id'),
+                'goto' => $frameworkurl->fullurl,
             );
         }
         $content = pieform($form);
@@ -783,7 +834,7 @@ class Framework {
      *
      * @return bool
      */
-    public static function allow_annotation($viewid) {
+    public static function can_annotate_view($viewid) {
         global $USER;
 
         if (empty($viewid) || !is_numeric($viewid)) {
@@ -811,15 +862,25 @@ class Framework {
 
     /**
      * Check to see if a user can set the assessment status for a piece of evidence.
-     * If $options is set to true return the valid options for a select dropdown
      *
      * @param string $ownerid   The owner of the smart evidence annotation
-     * @param bool   $options   Whether to return the valid options (on true) or just true/false
      * @param string $framework ID of the framework
      *
-     * @return mixed either bool or array for select dropdown
+     * @return bool
      */
-    public static function allow_assessment($ownerid, $options = false, $framework = null) {
+    public static function can_assess_user($ownerid, $framework = null) {
+        return (boolean) static::get_my_assessment_options_for_user($ownerid, $framework);
+    }
+
+    /**
+     * Get assessment status options for a piece of evidence.
+     *
+     * @param string $ownerid   The owner of the smart evidence annotation
+     * @param string $framework ID of the framework
+
+     * @return array Options for select dropdown
+     */
+    public static function get_my_assessment_options_for_user($ownerid, $framework = null) {
         global $USER;
 
         if (empty($ownerid) || !is_numeric($ownerid)) {
@@ -855,99 +916,41 @@ class Framework {
         }
 
         if ($isowner || $isadminofowner) {
-            if ($options) {
-                $reply = Self::get_choices($framework);
-                if (($isowner && $selfcomplete === false) ||
-                    ($isadminofowner && $selfcomplete === true)) {
-                    unset($reply[1]);
-                    unset($reply[2]);
-                    unset($reply[3]);
-                }
-                return $reply;
+            $reply = self::get_evidence_statuses($framework);
+            if (($isowner && $selfcomplete === false) ||
+                ($isadminofowner && $selfcomplete === true)) {
+                unset($reply[1]);
+                unset($reply[2]);
+                unset($reply[3]);
             }
-            else {
-                return true;
-            }
+            return $reply;
         }
         return false;
     }
 
-    public static function get_choices($id) {
-        if ($records = get_records_array('framework_choices', 'framework', $id)) {
+    /**
+     * Get array of all status options with evidence state integer as key
+     * The array either contains provided evidence status in db (via the .matrix file
+     * in the 'evidencestatuses' array) or uses the default strings if none provided.
+     *
+     * @param string $id The id of the framework
+     *
+     * @return array  Array containing the status names for all the statuses
+     */
+    public static function get_evidence_statuses($id) {
+        $statuses = array(
+            self::EVIDENCE_BEGUN => get_string('begun','module.framework'),
+            self::EVIDENCE_INCOMPLETE => get_string('incomplete','module.framework'),
+            self::EVIDENCE_PARTIALCOMPLETE => get_string('partialcomplete','module.framework'),
+            self::EVIDENCE_COMPLETED => get_string('completed','module.framework')
+        );
+        if ($records = get_records_array('framework_evidence_statuses', 'framework', $id)) {
             $map = array();
             foreach ($records as $record) {
-                $map[$record->type] = $record->choice;
+                $statuses[$record->type] = $record->name;
             }
-            return array(
-                Self::EVIDENCE_BEGUN => $map[Self::EVIDENCE_BEGUN],
-                Self::EVIDENCE_INCOMPLETE => $map[Self::EVIDENCE_INCOMPLETE],
-                Self::EVIDENCE_PARTIALCOMPLETE => $map[Self::EVIDENCE_PARTIALCOMPLETE],
-                Self::EVIDENCE_COMPLETED => $map[Self::EVIDENCE_COMPLETED],
-            );
         }
-        else {
-            return array(
-                Self::EVIDENCE_BEGUN => get_string('begun','module.framework'),
-                Self::EVIDENCE_INCOMPLETE => get_string('incomplete','module.framework'),
-                Self::EVIDENCE_PARTIALCOMPLETE => get_string('partialcomplete','module.framework'),
-                Self::EVIDENCE_COMPLETED => get_string('completed','module.framework'),
-            );
-        }
-    }
-
-    public static function list_frameworks() {
-        $frameworks = Self::get_frameworks('any');
-        if ($frameworks) {
-            foreach ($frameworks as $framework) {
-                $framework->activationswitch = pieform(
-                    array(
-                        'name' => 'framework' . $framework->id,
-                        'successcallback' => 'framework_update_submit',
-                        'renderer' => 'div',
-                        'class' => 'form-inline pull-left framework',
-                        'jsform' => false,
-                        'checkdirtychange' => false,
-                        'elements' => array(
-                            'plugintype' => array('type' => 'hidden', 'value' => 'module'),
-                            'pluginname' => array('type' => 'hidden', 'value' => 'framework'),
-                            'id' => array('type' => 'hidden', 'value' => $framework->id),
-                            'enabled' => array(
-                                'type' => 'switchbox',
-                                'value' => $framework->active,
-                            ),
-                        ),
-                    )
-                );
-                $fk = new Framework($framework->id);
-                $framework->collections = count($fk->get_collectionids());
-                $framework->delete = false;
-                if (empty($framework->collections)) {
-                    $framework->delete = pieform(
-                        array(
-                            'name' => 'framework_delete_' . $framework->id,
-                            'successcallback' => 'framework_delete_submit',
-                            'renderer' => 'div',
-                            'class' => 'form-inline form-as-button pull-right framework',
-                            'elements' => array(
-                                'submit' => array(
-                                    'type'         => 'button',
-                                    'class'        => 'btn-default btn-sm',
-                                    'usebuttontag' => true,
-                                    'value'        => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
-                                    'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
-                                ),
-                                'framework'  => array(
-                                    'type'         => 'hidden',
-                                    'value'        => $framework->id,
-                                )
-                            ),
-                        )
-                    );
-                }
-            }
-            return $frameworks;
-        }
-        return false;
+        return $statuses;
     }
 }
 

@@ -382,7 +382,7 @@ class Collection {
         }
 
         self::add_submission_info($data);
-        self::framework_url($data);
+        self::add_framework_urls($data);
 
         $result = (object) array(
             'count'  => $count,
@@ -477,7 +477,7 @@ class Collection {
                 'defaultvalue' => 1,
             ),
         );
-        if ($frameworks = $this->can_have_framework()) {
+        if ($frameworks = $this->get_available_frameworks()) {
             $options = array('' => get_string('noframeworkselected', 'module.framework'));
             foreach ($frameworks as $framework) {
                 $options[$framework->id] = $framework->name;
@@ -578,15 +578,14 @@ class Collection {
      * - The institution has 'SmartEvidence' turned on
      * - There frameworks available for the institution
      *
-     * @return mixed  array of available frameworks or false
+     * @return bool
      */
     public function can_have_framework() {
         if (!empty($this->group)) {
             return false;
         }
 
-        safe_require('module', 'framework');
-        if (!PluginModuleFramework::is_active()) {
+        if (!is_plugin_active('framework', 'module')) {
             return false;
         }
 
@@ -604,16 +603,45 @@ class Collection {
         if (!$institution->allowinstitutionsmartevidence) {
             return false;
         }
-        safe_require('module','framework');
-        $frameworks = Framework::get_frameworks($institution->name, true);
-        // Inactive frameworks are only allowed if they were added to
-        // collection when they were active.
-        foreach ($frameworks as $key => $framework) {
-            if (empty($framework->active) && $framework->id != $this->framework) {
-                unset ($frameworks[$key]);
-            }
+        return true;
+    }
+
+    /**
+     * Get available frameworks
+     *
+     * @return array Available frameworks
+     */
+    public function get_available_frameworks() {
+        if (!$this->can_have_framework()) {
+            return array();
         }
-        return $frameworks;
+
+        if ($this->institution) {
+            $institution = $this->institution;
+        }
+        else {
+            $user = new User();
+            $user->find_by_id($this->owner);
+            $institutions = array_keys($user->get('institutions'));
+            $institution = (!empty($institutions)) ? $institutions[0] : 'mahara';
+        }
+        $institution = new Institution($institution);
+        // Check that smart evidence is enabled for the institution
+        if (!$institution->allowinstitutionsmartevidence) {
+            return false;
+        }
+
+        if ($frameworks = Framework::get_frameworks($institution->name, true)) {
+            // Inactive frameworks are only allowed if they were added to
+            // collection when they were active.
+            foreach ($frameworks as $key => $framework) {
+                if (empty($framework->active) && $framework->id != $this->framework) {
+                    unset ($frameworks[$key]);
+                }
+            }
+            return $frameworks;
+        }
+        return array();
     }
 
     /**
@@ -634,7 +662,7 @@ class Collection {
         if (!$this->views()) {
             return false;
         }
-        if (!PluginModuleFramework::is_active()) {
+        if (!is_plugin_active('framework', 'module')) {
             return false;
         }
         return true;
@@ -649,32 +677,44 @@ class Collection {
         $option = new StdClass;
         $option->framework = $this->framework;
         $option->id = $this->id;
-        $option->title = get_string('smartevidence', 'collection');
+        $option->title = get_field('framework', 'name', 'id', $this->framework);
         $option->framework = true;
 
-        self::framework_url($option);
+        $option->fullurl = self::get_framework_url($option);
 
         return $option;
     }
 
     /**
-     * Making the framework url
+     * Adding the framework frameworkurl / fullurl to collections
      *
-     * @param mixed  $data    Object / array of objects
+     * @param array  $data    Array of objects
      *
-     * @return $data or $url
+     * @return $data
      */
-    public static function framework_url(&$data) {
+    public static function add_framework_urls(&$data) {
         if (is_array($data)) {
             foreach ($data as $k => $r) {
-                $r->frameworkurl = 'module/framework/matrix.php?id=' . $r->id;
-                $r->fullurl = get_config('wwwroot') . $r->frameworkurl;
+                $r->frameworkurl = self::get_framework_url($r, false);
+                $r->fullurl = self::get_framework_url($r, true);
             }
         }
-        else if (is_object($data)) {
-            $data->frameworkurl = 'module/framework/matrix.php?id=' . $data->id;
-            $data->fullurl = get_config('wwwroot') . $data->frameworkurl;
+    }
+
+    /**
+     * Making the framework url
+     *
+     * @param object $data    Either a collection or standard object
+     * @param bool   $fullurl Return full url rather than relative one
+     *
+     * @return $url
+     */
+    public static function get_framework_url($data, $fullurl = true) {
+        $url = 'module/framework/matrix.php?id=' . $data->id;
+        if ($fullurl) {
+            return get_config('wwwroot') . $url;
         }
+        return $url;
     }
 
     /**
@@ -901,7 +941,12 @@ class Collection {
         $views = $this->views();
         if (!empty($views)) {
             if ($this->framework) {
-                $this->framework_url($this);
+                if ($full) {
+                    $this->fullurl = Collection::get_framework_url($this);
+                }
+                else {
+                    $this->frameworkurl = Collection::get_framework_url($this, false);
+                }
                 return $this->frameworkurl;
             }
 

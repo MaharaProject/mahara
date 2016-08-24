@@ -262,7 +262,6 @@ if ($institution || $add) {
     $sitename = get_config('sitename');
 
     safe_require('artefact', 'internal');
-    safe_require('module', 'framework');
     $elements = array(
         'add' => array(
             'type'   => 'hidden',
@@ -529,8 +528,8 @@ if ($institution || $add) {
         'type'         => 'switchbox',
         'title'        => get_string('allowinstitutionsmartevidence', 'admin'),
         'description'  => get_string('allowinstitutionsmartevidencedescription','admin'),
-        'defaultvalue' => PluginModuleFramework::is_active() && $data->allowinstitutionsmartevidence,
-        'disabled'     => PluginModuleFramework::is_active() == false,
+        'defaultvalue' => is_plugin_active('framework', 'module') && $data->allowinstitutionsmartevidence,
+        'disabled'     => is_plugin_active('framework', 'module') == false,
         'help'         => true,
     );
     $elements['lockedfields'] = array(
@@ -706,8 +705,7 @@ function institution_validate(Pieform $form, $values) {
     if (!empty($values['lang']) && $values['lang'] != 'sitedefault' && !array_key_exists($values['lang'], get_languages())) {
         $form->set_error('lang', get_string('institutionlanginvalid', 'admin'));
     }
-    safe_require('module', 'framework');
-    if (!PluginModuleFramework::is_active() && (!empty($values['allowinstitutionsmartevidence']))) {
+    if (!is_plugin_active('framework', 'module') && (!empty($values['allowinstitutionsmartevidence']))) {
         $form->set_error('allowinstitutionsmartevidence', get_string('institutionsmartevidencenotallowed', 'admin'));
     }
 

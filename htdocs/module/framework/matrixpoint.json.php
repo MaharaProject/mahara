@@ -25,10 +25,10 @@ if (!is_plugin_active('annotation','blocktype')) {
 
 $framework  = param_integer('framework');
 $option     = param_integer('option');
-$view       = param_integer('view');
+$viewid       = param_integer('view');
 $action     = param_alphanum('action', 'form');
 form_validate(param_variable('sesskey', null));
-$evidence = get_record('framework_evidence', 'framework', $framework, 'element', $option, 'view', $view);
+$evidence = get_record('framework_evidence', 'framework', $framework, 'element', $option, 'view', $viewid);
 
 if ($action == 'update') {
     // When we click a dot on the matrix and add an annotation
@@ -37,7 +37,7 @@ if ($action == 'update') {
                                 JOIN {framework_standard} fs ON fs.id = fse.standard
                                 WHERE fs.framework = ? and fse.id = ?", array($framework, $option));
     $title = get_string('Annotation', 'artefact.annotation') . ': ' . $shortname;
-    $text = param_variable('text', '');
+    $text = clean_html(param_variable('text', ''));
     $allowfeedback = param_boolean('allowfeedback');
     $retractable = param_integer('retractable', 0);
     $blockid = param_integer('blockconfig', 0);
@@ -51,6 +51,11 @@ if ($action == 'update') {
                     'retractedonload' => 0,
                     );
     $bi = new BlockInstance($blockid);
+    $view = $bi->get_view();
+    if (!$USER->can_edit_view($view)) {
+        json_reply(true, get_string('accessdenied', 'error'));
+        exit;
+    }
 
     $values = call_static_method(generate_class_name('blocktype', $bi->get('blocktype')), 'instance_config_save', $values, $bi);
     $title = (isset($values['title'])) ? $values['title'] : '';
@@ -66,15 +71,15 @@ if ($action == 'update') {
         $message = get_string('matrixpointupdated', 'module.framework');
     }
     else {
-        $id = Framework::save_evidence(null, $framework, $option, $view, $bi->get('id'));
+        $id = Framework::save_evidence(null, $framework, $option, $view->get('id'), $bi->get('id'));
         $message = get_string('matrixpointinserted', 'module.framework');
     }
 
     $class = 'icon icon-circle-o begun';
-    $choices = Framework::get_choices($framework);
+    $choices = Framework::get_evidence_statuses($framework);
     $data = (object) array('id' => $id,
                            'class' => $class,
-                           'view' => $view,
+                           'view' => $view->get('id'),
                            'completed' => 0,
                            'option' => $option,
                            'title' => $choices[0]
@@ -86,7 +91,16 @@ else if ($action == 'evidence') {
     // When we click on one of the begun/incomplete/partialcomplete/completed symbols and submit that form
     if (!$evidence->id) {
         // problem need to return error
+        json_reply(true, get_string('accessdenied', 'error'));
+        exit;
     }
+    require_once('view.php');
+    $view = new View($evidence->view);
+    if (!Framework::can_assess_user($view->get('owner'), $evidence->framework)) {
+        json_reply(true, get_string('accessdenied', 'error'));
+        exit;
+    }
+
     $oldstate = $evidence->state;
     $reviewer = null;
     $assessment = param_alphanum('assessment', 0);
@@ -99,28 +113,19 @@ else if ($action == 'evidence') {
     $message = get_string('matrixpointupdated', 'module.framework');
 
     $completed = 0;
-    // If we are changing from completed to not completed
+    // If we are changing to/from completed we need to change $completed to adjust the count on screen
     if ((Framework::EVIDENCE_COMPLETED === (int) $oldstate) && (Framework::EVIDENCE_COMPLETED !== $assessment)) {
         $completed = -1;
     }
-
-    if (Framework::EVIDENCE_COMPLETED === $assessment) {
-        $class = 'icon icon-circle completed';
+    else if (Framework::EVIDENCE_COMPLETED === $assessment) {
         $completed = 1;
     }
-    else if (Framework::EVIDENCE_PARTIALCOMPLETE === $assessment) {
-        $class = 'icon icon-adjust partial';
-    }
-    else if (Framework::EVIDENCE_INCOMPLETE === $assessment) {
-        $class = 'icon icon-circle-o incomplete';
-    }
-    else {
-        $class = 'icon icon-circle-o begun';
-    }
-    $choices = Framework::get_choices($framework);
+    $currentstate = Framework::get_state_array($assessment, true);
+    $class = $currentstate['classes'];
+    $choices = Framework::get_evidence_statuses($framework);
     $data = (object) array('id' => $id,
                            'class' => $class,
-                           'view' => $view,
+                           'view' => $view->get('id'),
                            'completed' => $completed,
                            'option' => $option,
                            'title' => $choices[$assessment]
@@ -131,10 +136,14 @@ else if ($action == 'feedback') {
     $annotationid = param_integer('annotationid');
     $annotation = new ArtefactTypeAnnotation((int) $annotationid);
     $blockid = param_integer('blockid');
+    $bi = new BlockInstance($blockid);
     $message = param_variable('message');
     $ispublic = param_boolean('ispublic');
-    require_once(get_config('libroot') . 'view.php');
-    $view = new View($view);
+    $view = $bi->get_view();
+    if (!can_view_view($view->get('id')) || !PluginBlocktypeAnnotation::has_feedback_allowed($bi->get('id'))) {
+        json_reply(true, get_string('accessdenied', 'error'));
+        exit;
+    }
     $newlist = ArtefactTypeAnnotationfeedback::save_matrix_feedback($annotation, $view, $blockid, $message, $ispublic);
     $message = get_string('annotationfeedbacksubmitted', 'artefact.annotation');
     $data = (object) array('id' => $evidence->id, 'tablerows' => $newlist);
@@ -145,28 +154,38 @@ else if ($action == 'delete') {
     require_once(get_config('docroot') . 'blocktype/lib.php');
     $blockid = param_integer('blockconfig', 0);
     $bi = new BlockInstance($blockid);
+    $view = $bi->get_view();
+    if (!$USER->can_edit_view($view)) {
+        json_reply(true, get_string('accessdenied', 'error'));
+        exit;
+    }
     $bi->delete();
     $data = (object) array('class' => false,
-                           'view' => $view,
+                           'view' => $view->get('id'),
                            'option' => $option
                            );
     json_reply(false, array('message' => '', 'data' => $data));
 }
 else {
+    if (!can_view_view($viewid)) {
+        json_reply(true, get_string('accessdenied', 'error'));
+        exit;
+    }
     $message = null;
     $state = ($evidence) ? $evidence->state : -1;
     $states = Framework::get_state_array($state);
     $params = (object) array(
         'framework' => $framework,
         'option' => $option,
-        'view' => $view,
+        'view' => $viewid,
         'id' => ($evidence) ? $evidence->id : null,
         'annotation' => ($evidence) ? $evidence->annotation : null,
-        'begun' => $states['begun'],
-        'incomplete' => $states['incomplete'],
-        'partialcomplete' => $states['partialcomplete'],
-        'completed' => $states['completed'],
+        'begun' => $states['begun']['state'],
+        'incomplete' => $states['incomplete']['state'],
+        'partialcomplete' => $states['partialcomplete']['state'],
+        'completed' => $states['completed']['state'],
     );
+
     if ($evidence) {
         // There is an annotation in play
         $form = Framework::annotation_feedback_form($params);

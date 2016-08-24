@@ -962,7 +962,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $smarty->assign('annotationfeedback', $annotationfeedback);
 
         if ($annotationartefact->get('allowcomments')) {
-            $form = ArtefactTypeAnnotationfeedback::add_annotation_feedback_form(false, $annotationartefact->get('approvecomments'), $annotationartefact, $view, null, $blockid);
+            $form = ArtefactTypeAnnotationfeedback::add_annotation_feedback_form($annotationartefact, $view, null, $blockid, false, $annotationartefact->get('approvecomments'));
             // Replace the submit/cancel with just a submit button
             $submit = array(
                 'type'  => 'submit',
@@ -1036,6 +1036,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
 
         $annotationfeedback->commit();
 
+        db_commit();
+
         if (isset($data->requestpublic) && $data->requestpublic === 'author' && $data->owner) {
             $arg = $author ? display_name($USER, null, true) : $data->authorname;
             $moderatemsg = (object) array(
@@ -1074,8 +1076,6 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             activity_occurred('maharamessage', $moderatemsg);
         }
 
-        db_commit();
-
         list($count, $newlist) = self::get_annotation_feedback_for_matrix($annotationartefact, $view, $blockid, true);
         return $newlist->tablerows;
     }
@@ -1111,7 +1111,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             // Return the rendered form.
             $smarty = smarty_core();
             if ($annotationartefact->get('allowcomments') && !$editing) {
-                $addannotationfeedbackform = pieform(ArtefactTypeAnnotationfeedback::add_annotation_feedback_form(false, $annotationartefact->get('approvecomments'), $annotationartefact, $view, null, $blockid));
+                $addannotationfeedbackform = pieform(ArtefactTypeAnnotationfeedback::add_annotation_feedback_form($annotationartefact, $view, null, $blockid, false, $annotationartefact->get('approvecomments')));
                 $smarty->assign('addannotationfeedbackform', $addannotationfeedbackform);
             }
             else {
@@ -1203,14 +1203,15 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
     /**
      * Create a form so the user can enter feedback for an annotation that is linked to
      * a view or an artefact.
-     * @param boolean $defaultprivate set the private setting. Default is false.
-     * @param boolean $moderate if moderating feedback. Default is false.
      * @param object $annotation the annotation artefact object.
      * @param object $view the view object that the annotation is linked to.
      * @param object $artefact the artefact object that the annotation is linked to.
+     * @param string $blockid the id of the block instance
+     * @param boolean $defaultprivate set the private setting. Default is false.
+     * @param boolean $moderate if moderating feedback. Default is false.
      * @return multitype:string multitype:NULL string
      */
-    public static function add_annotation_feedback_form($defaultprivate=false, $moderate=false, $annotation, $view, $artefact, $blockid) {
+    public static function add_annotation_feedback_form($annotation, $view, $artefact, $blockid, $defaultprivate=false, $moderate=false) {
         global $USER;
         $form = array(
             'name'              => 'add_annotation_feedback_form_' . $blockid,
@@ -1247,37 +1248,38 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             'cols'  => 80,
             'rules' => array('maxlength' => 8192),
         );
-        if (isset($view)) {
-            $collection = $view->get('collection');
-            if (is_object($collection) && $collection->get('framework')) {
-                foreach ($view->get_artefact_metadata() as $metadata) {
-                    if ($metadata->id === $annotation->get('id')) {
-                        safe_require('module', 'framework');
 
-                        $evidence = get_record('framework_evidence', 'annotation', $metadata->block);
-                        $defaultval = $evidence->state;
+        $collection = $view->get('collection');
+        if (is_object($collection) && $collection->has_framework()) {
+            $view->get_artefact_instances(); // populate the artefact_metadata
+            foreach ($view->get('artefact_metadata') as $metadata) {
+                if ($metadata->id === $annotation->get('id')) {
+                    safe_require('module', 'framework');
 
-                        if ($options = Framework::allow_assessment($view->get('owner'), true, $evidence->framework)) {
-                            if (!array_key_exists($defaultval, $options)) {
-                                $defaultval = null;
-                            }
-                            $form['elements']['assessment'] = array(
-                                'type' => 'select',
-                                'title' => get_string('assessment', 'module.framework'),
-                                'options' => $options,
-                                'defaultvalue' => $defaultval,
-                                'width' => '280px',
-                            );
+                    $evidence = get_record('framework_evidence', 'annotation', $metadata->block);
+                    $defaultval = $evidence->state;
 
-                            $form['elements']['evidence'] = array(
-                                'type' => 'hidden',
-                                'value' => $evidence->id,
-                            );
+                    if ($options = Framework::get_my_assessment_options_for_user($view->get('owner'), $evidence->framework)) {
+                        if (!array_key_exists($defaultval, $options)) {
+                            $defaultval = null;
                         }
+                        $form['elements']['assessment'] = array(
+                            'type' => 'select',
+                            'title' => get_string('assessment', 'module.framework'),
+                            'options' => $options,
+                            'defaultvalue' => $defaultval,
+                            'width' => '280px',
+                        );
+
+                        $form['elements']['evidence'] = array(
+                            'type' => 'hidden',
+                            'value' => $evidence->id,
+                        );
                     }
                 }
             }
         }
+
         $form['elements']['ispublic'] = array(
             'type'  => 'switchbox',
             'title' => get_string('makepublic', 'artefact.annotation'),

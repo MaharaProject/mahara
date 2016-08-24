@@ -22,11 +22,11 @@ function xmldb_module_framework_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2016082200) {
-        log_debug('Adding "framework_choices" table');
-        $table = new XMLDBTable('framework_choices');
+        log_debug('Adding "framework_evidence_statuses" table');
+        $table = new XMLDBTable('framework_evidence_statuses');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->addFieldInfo('framework', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
-        $table->addFieldInfo('choice', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
         $table->addFieldInfo('type', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         create_table($table);

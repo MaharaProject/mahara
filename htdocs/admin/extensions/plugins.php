@@ -47,8 +47,8 @@ foreach (array_keys($plugins) as $plugin) {
                 $plugins[$plugin]['installed'][$key] = array(
                     'active' => $i->active,
                     'disableable' => call_static_method($classname, 'can_be_disabled'),
-                    'deprecated' => method_exists($classname, 'is_deprecated') ? call_static_method($classname, 'is_deprecated') : 0,
-                    'name' => method_exists($classname, 'get_plugin_name') ? call_static_method($classname, 'get_plugin_name') : null,
+                    'deprecated' => call_static_method($classname, 'is_deprecated'),
+                    'name' => call_static_method($classname, 'get_plugin_display_name'),
                 );
                 if ($plugins[$plugin]['installed'][$key]['disableable'] || !$i->active) {
                     $plugins[$plugin]['installed'][$key]['activateform'] = activate_plugin_form($plugin, $i);
@@ -102,10 +102,8 @@ foreach (array_keys($plugins) as $plugin) {
                     validate_plugin($plugin, $dir);
                     $classname = generate_class_name($plugin, $dir);
                     $classname::sanity_check();
-                    if (method_exists($classname, 'get_plugin_name')) {
-                        $name = call_static_method($classname, 'get_plugin_name');
-                        $plugins[$plugin]['notinstalled'][$dir]['name'] = $name;
-                    }
+                    $name = call_static_method($classname, 'get_plugin_display_name');
+                    $plugins[$plugin]['notinstalled'][$dir]['name'] = $name;
                 }
                 catch (InstallationException $e) {
                     $plugins[$plugin]['notinstalled'][$dir]['notinstallable'] = $e->GetMessage();

@@ -1616,6 +1616,7 @@ function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
         // ORDER MATTERS! artefact has to be before blocktype
+        // And so does module because module.framework has blocks as foreign keys in DB
         $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'module', 'blocktype', 'interaction', 'grouptype', 'import', 'export');
     }
     return $pluginstocheck;
@@ -2354,6 +2355,22 @@ abstract class Plugin implements IPlugin {
      */
     public static function accountprefs_submit(Pieform $form, $values) {
         return;
+    }
+
+    /**
+     * Is plugin deprecated - going to be obsolete / removed
+     * @return bool
+     */
+    public static function is_deprecated() {
+        return false;
+    }
+
+    /**
+     * Fetch plugin's display name rather than plugin name that is based on dir name.
+     * @return $tring or null
+     */
+    public static function get_plugin_display_name() {
+        return null;
     }
 }
 
@@ -4731,6 +4748,8 @@ function pieform($data) {
 /**
  * Wrapper for setting up Pieform headdata.
  * When there is no pieforms on the page but pieforms are called via ajax
+ * HACK: The ideal would be to refactor Pieforms so that Javascript dependencies can be loaded
+ *       dynamically when we load up a form via AJAX
  *
  * @param array $elements A Piefrom element array if one needs to set element specific headdata js files
  */
