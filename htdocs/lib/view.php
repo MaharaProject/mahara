@@ -1365,6 +1365,7 @@ class View {
 
         $unique = array();
         foreach ($access as &$a) {
+            unset($a->id);
             unset($a->view);
             $k = serialize($a);
             if (!isset($unique[$k])) {

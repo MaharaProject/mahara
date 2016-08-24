@@ -39,3 +39,22 @@ Scenario: Creating a collection AND adding pages
     And I wait "1" seconds
     And "Testing page 1" "link" should appear before "Testing page 2" "link"
     And "Testing page 2" "link" should appear before "Testing page 3" "link"
+
+    # Sharing the collection then adding in a new page
+    And I choose "Shared by me" in "Portfolio"
+    And I follow "Edit access"
+    And I select "Registered users" from "accesslist[0][searchtype]"
+    And I press "Save"
+    And I choose "Pages" in "Portfolio"
+    And I press "Create page"
+    And I set the following fields to these values:
+    | Page title | New page |
+    | Page description | testing |
+    And I press "Save"
+    And I choose "Collections" in "Portfolio"
+    And I follow "Manage pages"
+    And I follow "All"
+    And I wait "1" seconds
+    And I press "Add pages"
+    And I follow "Done"
+    Then I should see "New page"
