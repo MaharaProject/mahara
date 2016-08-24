@@ -1479,7 +1479,7 @@ function get_tables_from_xmldb() {
  * Return all columns of a table in current db
  *
  * @param string $tablename not including the dbprefix
- * @return array of ADOFieldObject
+ * @return array of ADOFieldObject, with name as array key
  */
 function get_columns($tablename) {
 
