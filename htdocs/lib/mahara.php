@@ -207,6 +207,7 @@ function ensure_upgrade_sanity() {
 
 /**
  * Upgrade/Install the specified mahara components
+ * (Only used by the CLI installer & upgrader)
  *
  * @param array $upgrades The list of components to install or upgrade
  * @return void
