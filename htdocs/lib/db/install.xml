@@ -1047,6 +1047,7 @@
                 <FIELD NAME="existingitemids" TYPE="text" LENGTH="big" NOTNULL="false" />
                 <FIELD NAME="artefactmapping" TYPE="text" LENGTH="big" NOTNULL="false" />
                 <FIELD NAME="decision" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
