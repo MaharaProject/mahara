@@ -145,6 +145,9 @@ class Pieform {/*{{{*/
      */
     private $submitted_by_dropzone = false;
 
+    private $has_required_fields = false;
+    private $all_required_field_labels_hidden = false;
+
     private $submitvalue = 'submit';
 
     /*}}}*/
@@ -777,6 +780,13 @@ class Pieform {/*{{{*/
                 $result = $this->get_form_tag() . "\n";
             }
 
+            if ($this->has_required_fields) {
+                $result .= '<div class="form-group requiredmarkerdesc';
+                if ($this->all_required_field_labels_hidden) {
+                    $result .= ' hidden';
+                }
+                $result .= '">' . get_string('requiredfields', 'pieforms', $this->get_property('requiredmarker')) . '</div>';
+            }
             $this->include_plugin('renderer',  $this->data['renderer']);
 
             // Form header
@@ -1204,6 +1214,10 @@ EOF;
             }
         }
 
+        if (!empty($element['rules']['required'])) {
+            $result .= ' aria-required="true"';
+        }
+
         return $result;
     }/*}}}*/
 
@@ -1493,7 +1507,14 @@ EOF;
             $title = self::hsc($element['title']);
 
             if ($this->get_property('requiredmarker') && !empty($element['rules']['required'])) {
-                $requiredmarker = ' <span class="requiredmarker">*</span>';
+                $requiredmarker = ' <span class="requiredmarker">' . $this->get_property('requiredmarker') . '</span>';
+                $this->has_required_fields = true;
+                if (!empty($element['hiddenlabel'])) {
+                    $this->all_required_field_labels_hidden = true;
+                }
+                else {
+                    $this->all_required_field_labels_hidden = false;
+                }
             }
             else {
                 $requiredmarker = '';

@@ -77,3 +77,5 @@ $string['switchbox.on'] = 'On';
 $string['switchbox.off'] = 'Off';
 $string['switchbox.yes'] = 'Yes';
 $string['switchbox.no'] = 'No';
+
+$string['requiredfields'] = "Fields marked by '%s' are required.";
