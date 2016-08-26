@@ -477,8 +477,8 @@ function insert_messages($placement='messages') {
  * Delete all sessions belonging to a given user except for the current one
  */
 function remove_user_sessions($userid) {
-    global $sessionpath, $USER, $SESSION;
-
+    global $USER, $SESSION;
+    $sessionpath = get_config('sessionpath');
     $sessionids = get_column('usr_session', 'session', 'usr', (int) $userid);
 
     if (empty($sessionids)) {
@@ -545,8 +545,8 @@ function remove_user_sessions($userid) {
  * Delete all session files except for the current one
  */
 function remove_all_sessions() {
-    global $sessionpath, $USER;
-
+    global $USER;
+    $sessionpath = get_config('sessionpath');
     $sid = $USER->get('sessionid');
 
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($sessionpath));
