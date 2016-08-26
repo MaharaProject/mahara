@@ -56,8 +56,8 @@
                         , {$item->date}
                         </span>
                     </span>
+                    <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
                  </span>
-                <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
             </a>
         </h4>
         <div id="notification-{$item->id}" class="collapse">

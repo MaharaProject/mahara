@@ -9,7 +9,7 @@
 
     <div id="notifications" class="notification-parent" data-requesturl="indexin.json.php">
 
-        <div class="btn-group pull-left bulk-actions" role="group">
+        <div class="btn-group bulk-actions" role="group">
             <label class="btn btn-default" for="selectall">
                 <input type="checkbox" name="selectall" id="selectall" data-togglecheckbox="tocheck">
                 <span class="sr-only">{str section='activity' tag='selectall'}</span>
@@ -33,7 +33,7 @@
                 </a>
             </div>
         </div>
-        <form method="post" class="form-inline form-select-filter pieform form-as-button pull-right">
+        <form method="post" class="form-inline form-select-filter pieform form-as-button">
             <div class="form-group">
                 <label class="sr-only" for="notifications_type">{str section='activity' tag='type'}:</label>
                 <div class="input-group select-group">
