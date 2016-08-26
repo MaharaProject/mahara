@@ -438,7 +438,7 @@ function send_content_intent($username) {
         throw $e;
     }
 
-    $queue = PluginImport::create_new_queue($user->id, null, $REMOTEWWWROOT, 0);
+    $queue = PluginImport::create_new_queue($user->id, $REMOTEWWWROOT, 0);
 
     return array(
         'sendtype' => (($queue->queue) ? 'queue' : 'immediate'),
@@ -1387,16 +1387,18 @@ class OpenSslRepo {
             // Decryption failed... let's try our archived keys
             $openssl_history = $this->get_history();
             foreach($openssl_history as $keyset) {
-                $keyresource = openssl_pkey_get_private($keyset['keypair_PEM']);
-                $isOpen      = openssl_open($data, $payload, $key, $keyresource);
-                if ($isOpen) {
-                    // It's an older code, sir, but it checks out
-                    if ($oldkeyok) {
-                        return $payload;
-                    }
-                    else {
-                        // We notify the remote host that the key has changed
-                        throw new CryptException($this->keypair['certificate'], 7025);
+                if (isset($keyset['keypair_PEM'])) {
+                    $keyresource = openssl_pkey_get_private($keyset['keypair_PEM']);
+                    $isOpen      = openssl_open($data, $payload, $key, $keyresource);
+                    if ($isOpen) {
+                        // It's an older code, sir, but it checks out
+                        if ($oldkeyok) {
+                            return $payload;
+                        }
+                        else {
+                            // We notify the remote host that the key has changed
+                            throw new CryptException($this->keypair['certificate'], 7025);
+                        }
                     }
                 }
             }
