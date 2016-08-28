@@ -746,7 +746,7 @@ $string['spamtrap'] = 'Spam trap';
 $string['formerror'] = 'There was an error processing your submission. Please try again.';
 $string['formerroremail'] = 'Contact us at %s if you continue to have problems.';
 $string['blacklisteddomaininurl'] = 'A URL in this field contains the blacklisted domain %s.';
-$string['newuserscantpostlinksorimages'] = 'Sorry, newly registered users aren\'t allowed to post links. Please reword your post to remove any links or URLs and try again.';
+$string['newuserscantpostlinksorimages1'] = 'Sorry, anonymous or newly registered users aren\'t allowed to post links. Please reword your post to remove any links or URLs and try again.';
 
 $string['notinstallable'] = 'Not installable';
 $string['installedplugins'] = 'Installed plugins';

@@ -91,9 +91,11 @@ function is_probationary_user($user = null) {
     }
 
     // We actually store new user points in reverse. When your account is created, you get $newuserthreshold points, and
-    // we decrease those when you do something good, and when it hits 0 you're no longer a new user.
-    $userspoints = get_field('usr', 'probation', 'id', $user->get('id'));
-    if ($userspoints > 0) {
+    // we decrease those when you do something good, and when it hits 0 you're no longer a new user
+    // we also want to treat anonymous users as always in probation.
+    $userid = $user->get('id');
+    $userspoints = get_field('usr', 'probation', 'id', $userid);
+    if (empty($userid) || $userspoints > 0) {
         return true;
     }
     else {

@@ -1715,7 +1715,7 @@ function add_annotation_feedback_form_validate(Pieform $form, $values) {
 
     $result = probation_validate_content($values['message']);
     if ($result !== true) {
-        $form->set_error('message', get_string('newuserscantpostlinksorimages'));
+        $form->set_error('message', get_string('newuserscantpostlinksorimages1'));
     }
 }
 
