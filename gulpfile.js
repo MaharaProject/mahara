@@ -7,7 +7,7 @@ require('es6-promise').polyfill();
 // Include Our Plugins
 var sass = require('gulp-sass');
 var path = require('path');
-var minifyCSS = require('gulp-minify-css');
+var cleanCSS = require('gulp-clean-css');
 var autoprefixer = require('gulp-autoprefixer');
 var bless = require('gulp-bless');
 var es = require('event-stream');
@@ -36,7 +36,7 @@ gulp.task('css', 'Compile SASS into CSS', function () {
               browsers: ['last 4 version'],
               cascade: false
             }))
-            .pipe(gulpif(argv.production !== 'false', minifyCSS()))
+            .pipe(gulpif(argv.production !== 'false', cleanCSS()))
             .pipe(gulpif(argv.production !== 'false', bless()))
             .pipe(gulp.dest('style/', {cwd: themepath}));
     });
