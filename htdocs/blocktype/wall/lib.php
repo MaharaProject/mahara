@@ -219,7 +219,7 @@ EOF;
         require_once(get_config('libroot') . 'antispam.php');
         $result = probation_validate_content($values['text']);
         if ($result !== true) {
-            $form->set_error('text', get_string('newuserscantpostlinksorimages'));
+            $form->set_error('text', get_string('newuserscantpostlinksorimages1'));
         }
     }
 

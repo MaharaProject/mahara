@@ -124,7 +124,13 @@
                     </a>{/if}
                     {/if}
                 </p>
-                <p>{$item->message|safe}</p>
+                <p>
+                {if ($item->fromusr != 0)}
+                    {$item->message|safe|clean_html}
+                {else}
+                    {$item->message|safe}
+                {/if}
+                </p>
                 {if $item->url}
                 <a class="action" href="{$WWWROOT}{$item->url}">
                     {if $item->urltext}
