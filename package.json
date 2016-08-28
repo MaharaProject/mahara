@@ -1,11 +1,11 @@
 {
   "name": "mahara-themes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Compiles SASS files into CSS for all Mahara themes",
   "main": "gulpfile.js",
   "dependencies": {
     "gulp": "^3.9.0",
-    "gulp-minify-css": "^1.1.6",
+    "gulp-clean-css": "^2.0.6",
     "gulp-sass": "^2.0.1",
     "gulp-help": "^1.6.1",
     "path": "^0.11.14",
