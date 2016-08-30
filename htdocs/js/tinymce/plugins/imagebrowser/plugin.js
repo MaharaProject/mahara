@@ -34,11 +34,14 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         var selected = null;
         if (imgElm.nodeName == 'IMG' && !imgElm.getAttribute('data-mce-object') && !imgElm.getAttribute('data-mce-placeholder')) {
             // existing values
-            var urlquerystr = dom.getAttrib(imgElm, 'src').match(/\?.+/)[0];
-            var urlparts = urlquerystr.split('&');
-            for (var x in urlparts) {
-                if (urlparts[x].match('file=')) {
-                    selected = urlparts[x].split('=')[1];
+            var urlquerystr = dom.getAttrib(imgElm, 'src').match(/\?.+/);
+            if (urlquerystr) {
+                urlquerystr = urlquerystr[0];
+                var urlparts = urlquerystr.split('&');
+                for (var x in urlparts) {
+                    if (urlparts[x].match('file=')) {
+                        selected = urlparts[x].split('=')[1];
+                    }
                 }
             }
             data = {
