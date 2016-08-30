@@ -28,6 +28,7 @@ Scenario: Adding tags to files (Bug 1426983)
    And I set the following fields to these values:
    | Title *  | Journal one  |
    | Entry | This is a test |
+   And I scroll to the base of id "editpost_tags_container"
    And I fill in select2 input "editpost_tags" with "journal" and select "journal"
    And I scroll to the base of id "editpost_tags_container"
    And I fill in select2 input "editpost_tags" with "test" and select "test"
