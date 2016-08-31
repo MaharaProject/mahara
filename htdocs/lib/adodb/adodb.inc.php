@@ -3480,7 +3480,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 		}
 
 		// Determine whether the array is associative or 0-based numeric
-		$numIndex = array_keys($this->fields) == range(0, count($this->fields) - 1);
+		$numIndex = is_array($this->fields) && array_key_exists(0, $this->fields);
 
 		$results = array();
 
