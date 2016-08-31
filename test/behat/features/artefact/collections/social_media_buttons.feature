@@ -32,8 +32,9 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I follow "Social media"
  And I adjust the config form
  And I press "Add"
+ # too many things on the page with string 'Social media' so hitting actual one via it's id
  And I set the following fields to these values:
- | artefactids_14 | 1 |  # too many things on the page with string 'Social media' so hitting actual one via it's id
+ | artefactids_14 | 1 |
  And I follow "Display settings"
  And the field "buttons with icons and text" matches value "1"
  And I press "Save"
