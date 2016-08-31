@@ -104,6 +104,10 @@ $string['nannotationfeedback'] = array(
     '1 feedback',
     '%s feedback',
 );
+$string['progress_annotation'] = array(
+    'Give 1 feedback on an annotation',
+    'Give %s feedbacks on annotations',
+);
 $string['duplicatedannotation'] = 'Duplicated annotation';
 $string['existingannotation'] = 'Existing feedback';
 $string['duplicatedannotationfeedback'] = 'Duplicated annotation';
