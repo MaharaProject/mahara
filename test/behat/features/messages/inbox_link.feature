@@ -29,7 +29,6 @@ Scenario: Clicking on the Inbox link on the right menu (Bug 1427019)
    # Log in as users
    Given I log in as "userA" with password "Kupuhipa1"
    # Navigating to the Inbox via the 'more' link in the Inbox block
-   And I wait "1" seconds
    And I follow "More"
    # Verifying that you do not see a page full of error messages
    And I should not see "Call stack"

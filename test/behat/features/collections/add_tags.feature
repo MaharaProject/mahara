@@ -71,14 +71,12 @@ Scenario: Adding tags to files (Bug 1426983)
    And I press "Save"
    # Creating a Note with a tag
    And I expand "General" node
-   And I wait "1" seconds
    And I follow "Note" in the "div#general" "css_element"
    And I press "Add"
    And I fill in select2 input "instconf_tags" with "box" and select "box"
    And I fill in select2 input "instconf_tags" with "test" and select "test"
    And I press "Save"
    And I go to "/view/index.php"
-   And I wait "1" seconds
    Then I follow "Tags"
    # Verifying tags are saved
    And I should see "Note"

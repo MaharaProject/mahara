@@ -135,7 +135,6 @@ These list must take into account the sort option choosen in the block config (B
     And I should not see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
     #And I follow "Next page" in the "div#groupviews_pagination" "css_element"
     And I jump to next page of the list "groupviews_pagination"
-    And I wait "2" seconds
     And I should see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
     And I should see "Page Group Z_08" in the "ul#groupviewlist" "css_element"
     And I should not see "Page Group Z_05" in the "ul#groupviewlist" "css_element"
@@ -227,7 +226,7 @@ These list must take into account the sort option choosen in the block config (B
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Collection userA_06" panel menu
     And I click on "Edit" in "Collection userA_06" panel menu
-    And I set the field "Collection description" to "This is the collection 06 (updated)"
+    And I fill in "Collection description" with "This is the collection 06 (updated)"
     And I press "Save"
     # Check if it is now in the first page of the list of shared collections
     And I choose "Groups" from main menu

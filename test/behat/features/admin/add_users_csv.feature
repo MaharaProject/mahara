@@ -23,7 +23,5 @@ Scenario: Create users by csv (Bug 1426983)
     And I follow "kevin01"
     And I follow "Suspend or delete this user"
     And I scroll to the id "delete"
-    # Wait for the dialog to appear
-    And I wait "1" seconds
     And I press and confirm "Delete user"
     And I should see "User deleted successfully"

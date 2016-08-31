@@ -20,7 +20,6 @@ Given the following "users" exist:
     And I click on "Edit" in "Page 1" panel menu
     # Configuring the block
     And I expand "General" node
-    And I wait "1" seconds
     And I follow "Note" in the "div#general" "css_element"
     And I press "Add"
     And I fill in the following:
@@ -40,7 +39,6 @@ Scenario: Adding and deleting a Note block (Bug 1424512)
 Scenario: Adding an attachment to a note
     # Attaching a file to the note
     And I follow "Attachments" in the "div#instconf_artefactfieldset_container" "css_element"
-    And I wait "1" seconds
     And I attach the file "Image2.png" to "userfile[]"
     And I should see "Upload of Image2.png complete"
     And I press "Save"

@@ -19,9 +19,7 @@ Scenario: Create Image block
     And I click on "Page 1" panel menu
     And I click on "Edit" in "Page 1" panel menu
     And I follow "Image"
-    And I wait "1" seconds
     And I press "Add"
-    And I wait "1" seconds
     Then I should see "Image: Configure"
     And I set the field "Block title" to "Image Block 1"
     And I follow "Image"
@@ -29,7 +27,6 @@ Scenario: Create Image block
     Then I should see "Image - Image1.jpg"
     And I set the field "Show description" to "1"
     And I press "Save"
-    And I wait "2" seconds
     And I scroll to the top
     And I follow "Display page"
     And I should see "Image1.jpg"

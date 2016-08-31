@@ -26,7 +26,6 @@ Scenario: Creating an institution (selenium test)
 
     # Moving authentication option
     And I press "Edit" in the "table#adminstitutionslist" "css_element"
-    And I wait "1" seconds
     And I scroll to the base of id "dummySelect"
     And I follow "Move up"
 

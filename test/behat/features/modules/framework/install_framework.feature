@@ -74,7 +74,6 @@ Scenario: Installing framework module and activating for an institution
 
  # Click on a matrix point to add an annotation
  And I click on the matrix point "3,4"
- And I wait "1" seconds
  And I fill in "My two cents" in editor "Annotation"
  And I press "Save"
  And I go to portfolio page "PageB"
@@ -83,7 +82,6 @@ Scenario: Installing framework module and activating for an institution
  # Add another compentency annotation block
  And I follow "Edit"
  And I expand "General" node
- And I wait "1" seconds
  And I follow "Annotation"
  And I press "Add"
  And I fill in "My three cents" in editor "Annotation"
@@ -94,7 +92,6 @@ Scenario: Installing framework module and activating for an institution
  And I choose "Pages and collections" in "Portfolio" from main menu
  And I click the panel "CollA"
  And I click on the matrix point "3,4"
- And I wait "1" seconds
  And I fill in "This is annotation feedback" in editor "Feedback"
  And I press "Place feedback"
  # And change assessment status
@@ -104,10 +101,8 @@ Scenario: Installing framework module and activating for an institution
 
  # Try as another admin
  Given  I log in as "userA" with password "Kupuhipa1"
- And I wait "1" seconds
  And I follow "CollA"
  And I click on the matrix point "3,4"
- And I wait "1" seconds
  And I select "Partially meets the standard" from "Assessment"
  And I press "Save"
  Then I should see "SmartEvidence updated"

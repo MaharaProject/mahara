@@ -23,7 +23,6 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   | Entry | This is journal entry one |
   And I scroll to the base of id "editpost_tags_container"
   And I fill in select2 input "editpost_tags" with "blog" and select "blog"
-  And I fill in select2 input "editpost_tags" with "entry" and select "entry"
   And I fill in select2 input "editpost_tags" with "one" and select "one"
   And I press "Save entry"
   And I follow "New entry"
@@ -32,7 +31,6 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   | Entry | This is journal entry two |
   And I scroll to the base of id "editpost_tags_container"
   And I fill in select2 input "editpost_tags" with "blog" and select "blog"
-  And I fill in select2 input "editpost_tags" with "entry" and select "entry"
   And I fill in select2 input "editpost_tags" with "two" and select "two"
   And I press "Save entry"
 
@@ -41,15 +39,11 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I click on "Page 01" panel menu
   And I click on "Edit" in "Page 01" panel menu
   And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
-  And I wait "1" seconds
   And I follow "Tagged journal entries" in the "div#blog" "css_element"
   And I press "Add"
   And I fill in select2 input "instconf_tagselect" with "blog" and select "blog"
-  And I wait "1" seconds
   And I fill in select2 input "instconf_tagselect" with "one" and select "one"
-  And I wait "1" seconds
   And I fill in select2 input "instconf_tagselect" with "-two" and select "two"
-  And I wait "1" seconds
   And I select "Others will get a copy of the block configuration" from "Block copy permission"
   And I press "Save"
   And I scroll to the id "main-nav"
@@ -80,8 +74,6 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I press "Save entry"
   And I go to the homepage
   And I scroll to the id "view"
-  # allow the ajax to load
-  And I wait "1" seconds
   And I follow "Page 01"
   And I scroll to the base of id "copyview-button"
   And I follow "Copy"

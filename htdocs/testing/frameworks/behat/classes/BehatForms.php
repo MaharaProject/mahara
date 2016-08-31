@@ -111,9 +111,11 @@ class BehatForms extends BehatBase {
         $page = $this->getSession()->getPage();
         foreach(preg_split('/,\s*/', $textValues) as $value) {
             $option = $page->find('xpath', '//select[@id="' . $field . '"]//option[text()="' . $value . '"]');
-            $value = $option->getAttribute('value');
-            $value = json_encode($value);
-            $this->getSession()->executeScript("jQuery('#{$field} option[value=" . $value . "]').remove();");
+            if ($option) {
+                $value = $option->getAttribute('value');
+                $value = json_encode($value);
+                $this->getSession()->executeScript("jQuery('#{$field} option[value=" . $value . "]').remove();");
+            }
         }
         $this->getSession()->executeScript("jQuery('#{$field}').trigger('change');");
     }

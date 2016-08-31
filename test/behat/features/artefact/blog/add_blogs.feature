@@ -38,7 +38,6 @@ Feature: Mahara users can create their blogs
   And I click on "Page" in the dialog
   And I press "Save"
   And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
-  And I wait "1" seconds
   And I follow "Tagged journal entries"
   And I press "Add"
   And I fill in select2 input "instconf_tagselect" with "blogentry" and select "blogentry"

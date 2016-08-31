@@ -18,25 +18,21 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Save"
     # Adding media block
     And I expand "Media" node
-    And I wait "1" seconds
     And I follow "File(s) to download"
     And I press "Add"
     And I press "Save"
     # Adding Journal block
     And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
-    And I wait "1" seconds
     And I follow "Recent journal entries"
     And I press "Add"
     And I press "Save"
     # Adding profile info block
     And I expand "Personal info" node
-    And I wait "1" seconds
     And I follow "Profile information"
     And I press "Add"
     And I press "Save"
     # Adding external media block - but cancel out
     And I expand "External" node in the "div#content-editor-foldable" "css_element"
-    And I wait "1" seconds
     And I follow "External media"
     And I press "Add"
     And I press "Remove"

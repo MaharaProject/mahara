@@ -74,7 +74,6 @@ Scenario: Making sure that the max items per page drop down limits to correct am
   And I select "atoz" from "orderby"
   And I scroll to the base of id "searchviews_submit"
   And I press "searchviews_submit"
-  And I wait "2" seconds
   And I click on "A's Page 01" panel menu
   And I click on "Edit" in "A's Page 01" panel menu
   And I follow "Share page"
@@ -90,18 +89,14 @@ Scenario: Making sure that the max items per page drop down limits to correct am
   And I press "search_submit"
   Then I should see "Results per page:"
   And I select "1" from "limit"
-  And I wait until the page is ready
   And I should see "A's Page 01"
   And I should not see "A's Page 02"
   And I select "10" from "limit"
-  And I wait until the page is ready
   And I should see "A's Page 10"
   And I should not see "A's Page 11"
   And I select "20" from "limit"
-  And I wait until the page is ready
   And I should see "A's Page 20"
   And I should not see "A's Page 21"
   And I select "50" from "limit"
-  And I wait until the page is ready
   And I should see "A's Page 50"
   And I should not see "A's Page 51"

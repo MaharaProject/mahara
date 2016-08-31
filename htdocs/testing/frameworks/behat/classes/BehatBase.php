@@ -58,10 +58,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
     /**
      * The JS code to check that the page is ready.
      */
-    const PAGE_READY_JS = '(isRequestStillProcessing === false) &&
-            (isPageRendering === false) &&
-            (document.readyState === "complete") &&
-            (jQuery(".collapsing").length === 0)';
+    const PAGE_READY_JS = 'window.isMaharaPageReady()';
 
     /**
      * @var Escaper

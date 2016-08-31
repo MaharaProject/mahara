@@ -6,10 +6,10 @@ So admin can view the message in their inbox
 
 Scenario: Checking that admin user can view messages in their mail sent from Contact us page
  Given I follow "contact us"
- And I set the field "Name" to "Dean"
- And I set the field "Email" to "deans@catalyst.net.nz"
- And I set the field "Subject" to "Whats wrong"
- And I set the field "Message" to "hello world"
+ And I fill in "Name" with "Dean"
+ And I fill in "Email" with "deans@catalyst.net.nz"
+ And I fill in "Subject" with "Whats wrong"
+ And I fill in "Message" with "hello world"
  # to avoid 5-second spam trap on contact.php
  And I wait "5" seconds
  When I click on "Send message"

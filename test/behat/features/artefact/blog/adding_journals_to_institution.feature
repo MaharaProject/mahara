@@ -17,14 +17,14 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   When I choose "Journals" in "Configure site" from administration menu
   And I follow "Create journal"
   And I should see "New site journal:"
+  And I fill in "Title" with "Site Journal 1"
   And I set the following fields to these values:
-  | Title | Site Journal 1 |
   | Description | The first mahara institution journal |
   And I click on "Create journal"
   Then I should see "Site journal 1"
   And I follow "Create journal"
+  And I fill in "Title" with "Site Journal 2"
   And I set the following fields to these values:
-  | Title | Site Journal 2 |
   | Description | The second mahara institution journal |
   And I click on "Create journal"
   Then I should see "Site journal 2"
@@ -33,14 +33,14 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   When I choose "Journals" in "Institutions" from administration menu
   And I follow "Create journal"
   And I should see "New \"Institution One\" journal:"
+  And I fill in "Title" with "Institution One Journal 1"
   And I set the following fields to these values:
-  | Title | Institution One Journal 1 |
   | Description | The Institution One journal |
   And I click on "Create journal"
   Then I should see "Institution One Journal 1"
   And I follow "Create journal"
+  And I fill in "Title" with "Institution One Journal 2"
   And I set the following fields to these values:
-  | Title | Institution One Journal 2 |
   | Description | Another Institution One journal |
   And I click on "Create journal"
   Then I should see "Institution One Journal 2"
@@ -50,8 +50,8 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   And I should not see "Institution One Journal 1"
   And I follow "Create journal"
   And I should see "New \"Institution Two\" journal:"
+  And I fill in "Title" with "Institution Two Journal 1"
   And I set the following fields to these values:
-  | Title | Institution Two Journal 1 |
   | Description | The Institution Two journal |
   And I click on "Create journal"
   Then I should see "Institution Two Journal 1"
@@ -59,21 +59,19 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   # Try adding some journal entries to the journal
   And I follow "New entry"
   And I should see "New journal entry in journal \"Institution Two Journal 1\""
+  And I fill in "Title *" with "Journal entry 1"
   And I set the following fields to these values:
-  | Title * | Journal entry 1 |
   | Entry * | The contents of this entry |
   And I click on "Save entry"
   Then I should see "Journal entry saved"
   And I follow "New entry"
+  And I fill in "Title *" with "Journal entry 2"
   And I set the following fields to these values:
-  | Title * | Journal entry 2 |
   | Entry * | The contents of this entry |
   And I click on "Add a file"
-  And I wait "1" seconds
   And I attach the file "Image1.jpg" to "File"
-  Then I should see "Image1.jpg" in the "table#editpost_filebrowser_selectlist" element
+  Then I should see "Upload of Image1.jpg complete"
   When I close the dialog
-  And I wait "1" seconds
   And I press "Save entry"
   Then I should see "Journal entry 1"
   And I should see "Journal entry 2"
@@ -91,8 +89,8 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   | Description | Contents of site journal 1 |
   And I press "Create journal"
   And I follow "New entry"
+  And I fill in "Title *" with "Spongebob"
   And I set the following fields to these values:
-  | Title * | Spongebob |
   | Entry * | *)_4442)&@*#&^%%!+_()**&gha~gsd |
   And I press "Save entry"
   And I should see "Journal entry saved"
@@ -106,14 +104,11 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   | Page description | hsdfhjkl78695t 8677y8 |
   And I press "Save"
   # Adding journal block to the page
-  And I wait until the page is ready
   # Need to access the adding "Journal" block more directly than normal now that "Journals" is a menu item also
   And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
-  And I wait "1" seconds
   And I follow "Journal" in the "div#blog" "css_element"
   And I press "Add"
-  #And I select the radio "Site journal 1"
-  And I set the field "Site journal 1" to "1"
+  And I select the radio "Site journal 1"
   And I select "Others will get their own copy of your journal" from "Block copy permission"
   And I press "Save"
   And I scroll to the id "main-nav"
@@ -126,7 +121,7 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I press "Save"
   # Needs to add new user now to see if they get copy of page
   And I choose "Add user" in "Users" from administration menu
-  And I set the following fields to these values:
+  And I fill in the following:
   | First name * | Pete |
   | Last name * | Mc |
   | Email * | test01@example.com |

@@ -27,8 +27,8 @@ Scenario: Creating a Journal entry
  # Navigating to switchbox in Journal block
  And I choose "Journals" in "Content" from main menu
  And I follow "New entry"
+ And I fill in "Title *" with "Story of my life"
  And I set the following fields to these values:
- | Title * | Story of my life |
  | Allow comments | 0 |
  | Entry | Preventing bugs from appearing :D |
  And I scroll to the base of id "editpost_tags_container"
@@ -39,8 +39,8 @@ Scenario: Creating a Journal entry
  And I press "Save entry"
 
  And I follow "New entry"
+ And I fill in "Title *" with "Story of my life, part 2"
  And I set the following fields to these values:
- | Title * | Story of my life, part 2 |
  | Allow comments | 0 |
  | Entry | Testing tags |
  And I scroll to the base of id "editpost_tags_container"
@@ -50,8 +50,8 @@ Scenario: Creating a Journal entry
  And I press "Save entry"
 
  And I follow "New entry"
+ And I fill in "Title *" with "Story of my life, part 3"
  And I set the following fields to these values:
- | Title * | Story of my life, part 3 |
  | Allow comments | 0 |
  | Entry | Testing tags some more |
  And I scroll to the base of id "editpost_tags_container"
@@ -65,12 +65,11 @@ Scenario: Creating a Journal entry
  And I follow "Groupies"
  And I follow "Journals" in the "div.arrow-bar" "css_element"
  And I follow "Create journal"
- And I set the following fields to these values:
- | Title * | My group journal |
+ And I fill in "Title *" with "My group journal"
  And I press "Create journal"
  And I follow "New entry"
+ And I fill in "Title *" with "My group entry one"
  And I set the following fields to these values:
- | Title * | My group entry one |
  | Entry | I love my mum |
  And I press "Save entry"
 
@@ -85,7 +84,6 @@ Scenario: Creating a Journal entry
  And I fill in select2 input "instconf_tagselect" with "one" and select "one"
  And I scroll to the base of id "instconf_tagselect_container"
  And I fill in select2 input "instconf_tagselect" with "two" and select "two"
- And I wait "1" seconds
  And I press "Save"
  And I scroll to the base of id "column-container"
  And I configure the block "Tagged journal entries"

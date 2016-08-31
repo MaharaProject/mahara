@@ -54,7 +54,6 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    Then I log in as "Bob" with password "Kupuhipa1"
    # Confirming all messages has been received
    And I am on homepage
-   And I wait "1" seconds
    And I should see "Hi there"
    And I choose "mail" from user menu by id
    And I should see "Hi there"

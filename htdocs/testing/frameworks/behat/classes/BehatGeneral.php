@@ -1008,7 +1008,7 @@ class BehatGeneral extends BehatBase {
         foreach(plugin_types() as $plugintype) {
             set_field($plugintype . '_cron', 'nextrun', null);
         }
-        $this->getSession()->visit($this->locate_path('/lib/cron.php?urlsecret=' . urlencode(get_config('urlsecret'))));
+        $this->getSession()->visit($this->locate_path('/lib/cron.php?behattrigger=1&urlsecret=' . urlencode(get_config('urlsecret'))));
     }
 
     /**

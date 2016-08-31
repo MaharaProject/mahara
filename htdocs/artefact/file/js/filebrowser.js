@@ -44,6 +44,7 @@ var FileBrowser = (function($) {
     };
 
     this.submitform = function () {
+        window.isRequestProcessing = true;
         // for some reason tinymce throws error when use native submit..
         // introducing custom event and catching it in pieform solves the problem...
         // TODO: fileuploader should be refactored in a nicer way

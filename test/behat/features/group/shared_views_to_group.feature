@@ -48,14 +48,14 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page 01" row
     And I select "Group Z" from "accesslist[0][searchtype]"
-    And I set the field "accesslist[0][startdate]" to "2015/06/15 03:00"
+    And I fill in "accesslist[0][startdate]" with "2015/06/15 03:00"
     And I press "Save"
     # Edit access for Page 02
     And I choose "Shared by me" in "Portfolio" from main menu
     And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page 02" row
     And I select "Group Z" from "accesslist[0][searchtype]"
-    And I set the field "accesslist[0][stopdate]" to "2015/04/15 02:50"
+    And I fill in "accesslist[0][stopdate]" with "2015/04/15 02:50"
     And I press "Save"
     And I should see "The end date for 'group' access cannot be in the past."
     And I press "Cancel"
@@ -78,7 +78,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I click on "Edit access" in "Collection 01" row
     And I set the select2 value "Collection 01" for "editaccess_collections"
     And I select "Group Z" from "accesslist[0][searchtype]"
-    And I set the field "accesslist[0][startdate]" to "2015/06/15 03:00"
+    And I fill in "accesslist[0][startdate]" with "2015/06/15 03:00"
     And I press "Save"
     # Edit access for Collection 03
     And I choose "Shared by me" in "Portfolio" from main menu

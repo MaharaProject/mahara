@@ -19,14 +19,11 @@ Scenario: Create Text block
     And I click on "Page 1" panel menu
     And I click on "Edit" in "Page 1" panel menu
     And I follow "Text"
-    And I wait "1" seconds
     And I press "Add"
-    And I wait "1" seconds
     Then I should see "Text: Configure"
     And I set the field "Block title" to "Text Block 1"
     And I set the field "Block content" to "Here is a new block."
     And I press "Save"
-    And I wait "2" seconds
     Then I should see "Here is a new block" in the "div#column-container" element
     And I should see "Text block 1" in the "div#column-container" element
     And I scroll to the top

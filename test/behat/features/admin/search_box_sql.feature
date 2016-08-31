@@ -7,7 +7,6 @@ So I can check the field doesn't error
 
 Scenario: sql injection attempt on search field
   Given I log in as "admin" with password "Kupuhipa1"
-  And I wait "1" seconds
   When I set the following fields to these values:
    | Search users | 'or 1=1;-- |
   And I press "Go"

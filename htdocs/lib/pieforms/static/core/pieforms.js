@@ -133,6 +133,7 @@ var PieformManager = (function($) {
 }(jQuery));
 
 PieformManager = new PieformManager();
+
 /**
  * Handles the javascript side of pieforms - submitting the form via a hidden
  * iframe and dealing with the result
@@ -189,6 +190,8 @@ var Pieform = (function($) {
                     window.location = data.location;
                     return;
                 }
+                // The pieform is rendering
+                window.isPieformRendering = true;
 
                 if (typeof(data.replaceHTML) == 'string') {
                     PieformManager.signal('onreply', self.data.name);
@@ -264,6 +267,9 @@ var Pieform = (function($) {
                     && self.data.postSubmitCallback != '') {
                     window[self.data.postSubmitCallback]($('#' + self.data.name)[0], self.clickedButton, e);
                 }
+
+            // The pieform rendering is done.
+            window.isPieformRendering = false;
             }
         };
 

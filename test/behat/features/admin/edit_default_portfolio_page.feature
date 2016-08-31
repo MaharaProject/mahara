@@ -21,7 +21,6 @@ I can create a new page from the site default portfolio page
     # Add a text block
     And I follow "Text"
     And I press "Add"
-    And I wait "1" seconds
     And I set the following fields to these values:
      | Block title | Sample text block |
      | Block content | <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p> |

@@ -21,7 +21,6 @@ Scenario:
     And I click on "Edit" in "Page 1" panel menu
     # Configuring the block
     And I expand "Media" node
-    And I wait "1" seconds
     And I follow "PDF" in the "div#fileimagevideo" "css_element"
     And I press "Add"
     And I fill in the following:

@@ -21,7 +21,6 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I follow "Copy"
   And I follow "User Col 01"
-  And I wait "1" seconds
   And I should see "User Col 01 by admin"
   And I press "Close"
   Then I should not see "User Col 01 by admin"
@@ -31,9 +30,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I click on "As Page 02" panel menu
   And I click on "Edit" in "As Page 02" panel menu
   And I follow "Text"
-  And I wait "1" seconds
   And I press "Add"
-  And I wait "1" seconds
   Then I should see "Text: Configure"
   And I set the field "Block title" to "Text Block 1"
   And I set the field "Block content" to "Here is a new block."
@@ -52,7 +49,6 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I click on "User Col 01" panel menu
   And I click on "Manage" in "User Col 01" panel menu
   And I check "As Page 02"
-  And I wait "1" seconds
   And I press "Add pages"
   And I should see "1 page added to collection"
   And I follow "Done"
@@ -67,7 +63,6 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   #Veryfying if the page that has block been copied to collection
   And I click on "User Col 01 v.2"
   And I press "Next page"
-  And I wait "1" seconds
   And I press "Next page"
   Then I should see "Text Block 1"
   And I should see "Here is a new block."
