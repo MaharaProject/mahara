@@ -238,9 +238,8 @@ function profileform_validate(Pieform $form, $values) {
     }
 
     if (isset($values['email']['unsent']) && is_array($values['email']['validated'])) {
-        require_once('phpmailer/class.phpmailer.php');
         foreach ($values['email']['unsent'] as $email) {
-            if (!PHPMailer::ValidateAddress($email)) {
+            if (!sanitize_email($email)) {
                 $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal') . ': ' . hsc($email));
                 break;
             }
