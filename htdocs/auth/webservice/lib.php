@@ -188,7 +188,7 @@ class PluginAuthWebservice extends PluginAuth {
 
             // activate webservices
             foreach (array('soap', 'xmlrpc', 'rest', 'oauth') as $proto) {
-                set_config('webservice_' . $proto.'_enabled', 1);
+                set_config('webservice_provider_' . $proto.'_enabled', 1);
             }
         }
     }

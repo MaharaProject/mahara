@@ -15,7 +15,7 @@ Scenario: Turning master switch on
  And I follow "Administration"
  And I choose "Configuration" in "Web services"
  # Turning the master switch on
- And I enable the switch "Use web services:"
+ And I enable the switch "Accept incoming web service requests:"
  When I go to "/webservice/testclient.php"
  And I should not see "The web service authentication plugin is disabled"
  And I log out

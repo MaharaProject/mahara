@@ -2058,7 +2058,7 @@ abstract class Plugin implements IPlugin {
         global $USER;
 
         // is the web service connection switch enabled?
-        if (!get_config('webservice_connections_enabled')) {
+        if (!get_config('webservice_requester_enabled')) {
             log_debug('get_webservice_connections: disabled');
             return array();
         }
@@ -4269,7 +4269,8 @@ function is_https() {
 }
 
 function sanitize_email($value) {
-    if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+    require_once('phpmailer/class.phpmailer.php');
+    if (!PHPMailer::validateAddress($value)) {
         return '';
     }
     return $value;

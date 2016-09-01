@@ -706,16 +706,17 @@ class external_multiple_structure extends external_description {
  */
 class external_function_parameters extends external_single_structure {
 }
+
 /**
  * Is protocol enabled?
  * @param string $protocol name of WS protocol
  * @return bool
  */
 function webservice_protocol_is_enabled($protocol) {
-    if (!get_config('webservice_enabled')) {
+    if (!get_config('webservice_provider_enabled')) {
         return false;
     }
-    return get_config('webservice_'.$protocol.'_enabled');
+    return get_config('webservice_provider_'.$protocol.'_enabled');
 }
 
 //=== WS classes ===

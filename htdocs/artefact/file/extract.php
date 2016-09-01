@@ -58,12 +58,9 @@ if (!empty($folderid)) {
         throw new AccessDeniedException(get_string('cannotextractfileinfoldersubmitted', 'artefact.file'));
     }
 }
-try {
-    $zipinfo = $file->read_archive();
-}
-catch (SystemException $e) {
-    $message = get_string('invalidarchive', 'artefact.file');
-}
+
+// Read the archive information, throw an ArchiveException if error
+$zipinfo = $file->read_archive();
 
 if ($zipinfo) {
     $quotaallowed = false;
@@ -147,7 +144,12 @@ function unzip_artefact_submit(Pieform $form, $values) {
     $from = files_page($file);
 
     if (count($zipinfo->names) > 10) {
-        $SESSION->set('unzip', array('file' => $file->get('id'), 'from' => $from, 'artefacts' => count($zipinfo->names), 'zipinfo' => $zipinfo));
+        $SESSION->set('unzip', array('file' => $file->get('id'),
+                                     'from' => $from,
+                                     'artefacts' => count($zipinfo->names),
+                                     'zipinfo' => $zipinfo
+                                    )
+                     );
         $smarty = smarty();
         $smarty->display('artefact:file:extract-progress.tpl');
         exit;

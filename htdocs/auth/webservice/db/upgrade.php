@@ -462,6 +462,27 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016071400) {
+        log_debug('Updating DB names of webservice config fields');
+
+        $configstochange = array(
+            'webservice_enabled' => 'webservice_provider_enabled',
+            'webservice_soap_enabled' => 'webservice_provider_soap_enabled',
+            'webservice_xmlrpc_enabled' => 'webservice_provider_xmlrpc_enabled',
+            'webservice_rest_enabled' => 'webservice_provider_rest_enabled',
+            'webservice_oauth_enabled' => 'webservice_provider_oauth_enabled',
+            'webservice_connections_enabled' => 'webservice_requester_enabled'
+        );
+        foreach ($configstochange as $old => $new) {
+
+            set_config(
+                $new,
+                get_config($old)
+            );
+            delete_records('config', 'field', $old);
+        }
+    }
+
     // sweep for webservice updates everytime
     $status = external_reload_webservices();
 
