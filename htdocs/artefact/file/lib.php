@@ -2428,9 +2428,10 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 class ArtefactTypeArchive extends ArtefactTypeFile {
 
     protected $archivetype;
-    protected $handle;
+    protected $handle = null;   // Handle for the temporary archive file
     protected $info;
     protected $data = array();
+    protected $temparchivepathlength = 0;  // The length of the phar path to the temporary archive
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -2451,50 +2452,46 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
 
         $type = $descriptions[$validtypes[$data->filetype]->description];
 
+        // Add tmp extension
+        $path = self::copy_to_temp($path);
+        if ($path === false) {
+            return false;
+        }
+        try {
+            $archive_obj = new PharData($path);
+        }
+        catch (UnexpectedValueException $e) {
+            $path = self::delete_from_temp($path);
+            return false;
+        }
+
+        $is_valid = false;
         if (is_null($type)) {
-            if (self::is_zip($path)) {
+            if ($archive_obj->isFileFormat(Phar::ZIP)) {
                 $data->filetype = 'application/zip';
                 $data->archivetype = 'zip';
-                return true;
+                $is_valid = true;
             }
-            if ($data->filetype = self::is_tar($path)) {
+            if ($archive_obj->isFileFormat(Phar::TAR)) {
+                switch ($archive_obj->isCompressed()) {
+                    case Phar::GZ: $data->filetype = 'application/x-gzip';
+                    case Phar::BZ2: $data->filetype = 'application/x-bzip2';
+                    default: $data->filetype = 'application/x-tar';
+                }
                 $data->archivetype = 'tar';
-                return true;
+                $is_valid = true;
             }
         }
-        else if ($type == 'zip' && self::is_zip($path) || $type == 'tar' && self::is_tar($path)) {
+        else if ($type == 'zip' && ($archive_obj->isFileFormat(Phar::ZIP))
+                || $type == 'tar' && ($archive_obj->isFileFormat(Phar::TAR))) {
             $data->archivetype = $type;
-            return true;
+            $is_valid = true;
         }
-        return false;
-    }
 
-    public static function is_zip($path) {
-        if (function_exists('zip_read')) {
-            $zip = zip_open($path);
-            if (is_resource($zip)) {
-                zip_close($zip);
-                return true;
-            }
-        }
-        return false;
-    }
+        // Remove the temporary after validate the archive file
+        self::delete_from_temp($path);
 
-    public static function is_tar($path) {
-        require_once('Archive/Tar.php');
-        if (!$tar = new Archive_Tar($path)) {
-            return false;
-        }
-        $list = $tar->listContent();
-        if (empty($list)) {
-            return false;
-        }
-        switch ($tar->_compress_type) {
-        case 'gz': return 'application/x-gzip';
-        case 'bz2': return 'application/x-bzip2';
-        case 'none': return 'application/x-tar';
-        }
-        return false;
+        return $is_valid;
     }
 
     public static function archive_file_descriptions() {
@@ -2519,19 +2516,45 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
         return false;
     }
 
-    public function open_archive() {
-        if ($this->archivetype == 'zip') {
-            $this->handle = zip_open($this->get_path());
-            if (!is_resource($this->handle)) {
-                $this->handle = null;
-                throw new NotFoundException();
-            }
+    /**
+     * Copy the archive file to the system temporary directory
+     * and add .tmp to a file name and return the new filename
+     * This is a workaround for read and extract a zip/tar file using PharData
+     *
+     * THIS FUNCTION MUST BE PAIRED WITH delete_from_temp()
+     *
+     * @param String $path: path to the archive file
+     * @return String new path
+     * @throws SystemException if can not copy
+     */
+    public static function copy_to_temp($path) {
+        $tempdir = get_config('dataroot') . 'artefact/file/temp';
+        check_dir_exists($tempdir);
+        $name = tempnam($tempdir, '');
+        unlink($name);
+        $name .= '.tmp';
+        if (file_exists($path)
+            && copy($path, $name)) {
+            return $name;
         }
-        else if ($this->archivetype == 'tar') {
-            require_once('Archive/Tar.php');
-            if (!$this->handle = new Archive_Tar($this->get_path())) {
-                throw new NotFoundException();
-            }
+        else {
+            throw new SystemException(get_string('cannotcopytemparchive', 'artefact/file', $path, $name));
+        }
+    }
+
+    /**
+     * Delete the temporary archive
+     * @param String $path: path to the temporary file
+     * @return void
+     * @throws SystemException if can not delete
+     */
+    public static function delete_from_temp($path) {
+        if (file_exists($path)
+            && unlink($path)) {
+            return;
+        }
+        else {
+            throw new SystemException(get_string('cannotdeletetemparchive', 'artefact/file', $path));
         }
     }
 
@@ -2539,67 +2562,91 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
         $this->info = $zipinfo;
     }
 
-    private function read_entry($name, $isfolder, $size) {
-        $path = explode('/', $name);
-        if ($isfolder) {
-            array_pop($path);
+    /**
+     * Recursively read the content of an archive
+     * and update $this->info
+     *
+     * @param string $dir
+     *      = null : read the content of $this->handle
+     * @throws ArchiveException
+     */
+    private function read_archive_folder($dir=null) {
+        if ($this->temparchivepathlength === 0) {
+            throw new ArchiveException(get_string('invalidtemparchivepathlength', 'artefact.file'));
         }
+        try {
+            if (!isset($dir) && !empty($this->handle)) {
+                $a = $this->handle;
+            }
+            else if (isset($dir)) {
+                $a = new PharData($dir, RecursiveDirectoryIterator::KEY_AS_PATHNAME);
+            }
+            else {
+                throw new Exception(get_string('invalidarchivehandle', 'artefact.file'));
+            }
+            foreach ($a as $i) {
+                $name = substr($i->getPathName(), $this->temparchivepathlength + 1);
+                if ($i->isDir()) {
+                    $this->info->foldernames[$name] = 1;
+                    $this->info->names[] = $name;
+                    $this->info->folders++;
 
-        $folder = '';
-        for ($i = 0; $i < count($path) - 1; $i++) {
-            $folder .= $path[$i] . '/';
-            if (!isset($this->foldernames[$folder])) {
-                $this->foldernames[$folder] = 1;
-                $this->info->names[] = $folder;
-                $this->info->folders++;
+                    $this->read_archive_folder($i->getPathName());
+                }
+                else {
+                    $this->info->names[] = $name;
+                    $this->info->files++;
+                    $this->info->totalsize += $i->getCompressedSize();
+                }
             }
         }
-
-        if (!$isfolder) {
-            $this->info->names[] = $name;
-            $this->info->files++;
-            $this->info->totalsize += $size;
+        catch (Exception $e) {
+            throw new ArchiveException(get_string('cannotreadarchivecontent', 'artefact.file') . $e->getMessage());
         }
     }
 
-    public function read_archive() {
-        if (!$this->handle) {
-            $this->open_archive();
+    /**
+     * Read the archive content from a temporary archive file
+     * and update $this->info
+     *
+     * @param Bool $keeptemphandle = true: the temporary file and handle
+     *                                      will NOT be deleted for later use
+     * @return Object archive info
+     * @throws ArchiveException
+     */
+    public function read_archive($keeptemphandle=false) {
+        // In mahara all physical file is stored without extension.
+        // For some reasons, PharData can not properly read a file without extension
+        // We create a temporary file with an extension 'tmp' from the original archive
+        // We will delete the file after read/extract actions
+        $tmparchivepath = self::copy_to_temp($this->get_path());
+        try {
+            $this->handle = new PharData($tmparchivepath, RecursiveDirectoryIterator::KEY_AS_PATHNAME);
+            $this->temparchivepathlength = strlen('phar://' . $tmparchivepath);
         }
-        if ($this->info) {
-            return $this->info;
+        catch (UnexpectedValueException $e) {
+            self::delete_from_temp($tmparchivepath);
+            throw new ArchiveException(get_string('cannotopenarchive', 'artefact.file', $tmparchivepath));
         }
-        $this->info = (object) array(
-            'files'     => 0,
-            'folders'   => 0,
-            'totalsize' => 0,
-            'names'     => array(),
-        );
+        if (empty($this->info)) {
+            $this->info = (object) array(
+                'files'     => 0,
+                'folders'   => 0,
+                'totalsize' => 0,
+                'names'     => array(),
+                'foldernames' => array()
+            );
 
-        $this->foldernames = array();
+            $this->read_archive_folder();
+        }
 
-        if ($this->archivetype == 'zip') {
-            while ($entry = zip_read($this->handle)) {
-                $name = zip_entry_name($entry);
-                $isfolder = substr($name, -1) == '/';
-                $size = $isfolder ? 0 : zip_entry_filesize($entry);
-                $this->read_entry($name, $isfolder, $size);
-            }
+        if (!$keeptemphandle) {
+            // Delete the temporary file
+            self::delete_from_temp($tmparchivepath);
+            $this->handle = null;
+            $this->temparchivepathlength = 0;
         }
-        else if ($this->archivetype == 'tar') {
-            $list = $this->handle->listContent();
-            if (empty($list)) {
-                throw new SystemException("Unknown archive type");
-            }
-            foreach ($list as $entry) {
-                $isfolder = substr($entry['filename'], -1) == '/';
-                $size = $isfolder ? 0 : $entry['size'];
-                $this->read_entry($entry['filename'], $isfolder, $size);
-            }
-        }
-        else {
-            throw new SystemException("Unknown archive type");
-        }
+
         $this->info->displaysize = ArtefactTypeFile::short_size($this->info->totalsize);
         return $this->info;
     }
@@ -2641,13 +2688,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
     public function create_folder($folder) {
         $newfolder = new ArtefactTypeFolder(0, $this->data['template']);
         $newfolder->commit();
-        if ($this->archivetype == 'zip') {
-            $folderindex = ($folder == '.' ? ($this->data['template']->title . '/') : ($folder . $this->data['template']->title . '/'));
-        }
-        else {
-            $folderindex = ($folder == '.' ? '' : ($folder . '/')) . $this->data['template']->title;
-        }
-        $this->data['folderids'][$folderindex] = $newfolder->get('id');
+        $this->data['folderids'][$folder] = $newfolder->get('id');
         $this->data['folderscreated']++;
     }
 
@@ -2669,90 +2710,53 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
         $tempdir = get_config('dataroot') . 'artefact/file/temp';
         check_dir_exists($tempdir);
 
-        if ($this->archivetype == 'tar') {
+        $this->read_archive($keeptemphandle=true);
 
-            $this->read_archive();
-
-            // Untar everything into a temp directory first
-            $tempsubdir = tempnam($tempdir, '');
-            unlink($tempsubdir);
-            mkdir($tempsubdir, get_config('directorypermissions'));
-            if (!$this->handle->extract($tempsubdir)) {
-                throw new SystemException("Unable to extract archive into $tempsubdir");
-            }
-
-            $i = 0;
-            foreach ($this->info->names as $name) {
-                $folder = dirname($name);
-                $this->data['template']->parent = $this->data['folderids'][$folder];
-                $this->data['template']->title = basename($name);
-
-                // set the file extension for later use (eg by flowplayer)
-                $this->data['template']->extension = pathinfo($this->data['template']->title, PATHINFO_EXTENSION);
-                $this->data['template']->oldextension = $this->data['template']->extension;
-
-                if (substr($name, -1) == '/') {
-                    $this->create_folder($folder);
-                }
-                else {
-                    ArtefactTypeFile::save_file($tempsubdir . '/' . $name, $this->data['template'], $quotauser, true);
-                    $this->data['filescreated']++;
-                }
-                if ($progresscallback && ++$i % 5 == 0) {
-                    call_user_func($progresscallback, $i);
-                }
-            }
-
-        } else if ($this->archivetype == 'zip') {
-
-            $this->open_archive();
-
-            $tempfile = tempnam($tempdir, '');
-            $i = 0;
-
-            while ($entry = zip_read($this->handle)) {
-                $name = zip_entry_name($entry);
-                $folder = dirname($name);
-
-                // Create parent folders if necessary
-                if (!isset($this->data['folderids'][$folder])) {
-                    $parent = '.';
-                    $child = '';
-                    $path = explode('/', $folder);
-                    for ($i = 0; $i < count($path); $i++) {
-                        $child .= $path[$i] . '/';
-                        if (!isset($this->data['folderids'][$child])) {
-                            $this->data['template']->parent = $this->data['folderids'][$parent];
-                            $this->data['template']->title = $path[$i];
-
-                            $this->create_folder($parent);
-                        }
-                        $parent = $child;
-                    }
-                }
-
-                $this->data['template']->parent = $this->data['folderids'][($folder == '.' ? '.' : ($folder . '/'))];
-                $this->data['template']->title = basename($name);
-
-                // set the file extension for later use (eg by flowplayer)
-                $this->data['template']->extension = pathinfo($this->data['template']->title, PATHINFO_EXTENSION);
-                $this->data['template']->oldextension = $this->data['template']->extension;
-
-                if (substr($name, -1) != '/') {
-                    $h = fopen($tempfile, 'w');
-                    $size = zip_entry_filesize($entry);
-                    $contents = zip_entry_read($entry, $size);
-                    fwrite($h, $contents);
-                    fclose($h);
-
-                    ArtefactTypeFile::save_file($tempfile, $this->data['template'], $quotauser, true);
-                    $this->data['filescreated']++;
-                }
-                if ($progresscallback && ++$i % 5 == 0) {
-                    call_user_func($progresscallback, $i);
-                }
+        // This is a workaround to extract correctly files in an archive using PharData
+        foreach ($this->info->names as $name) {
+            if (empty($this->info->foldernames[$name])) {
+                file_get_contents($this->handle[$name], null, null, 0, 0);
             }
         }
+
+        // Untar everything into a temp directory first
+        $tempsubdir = tempnam($tempdir, '');
+        unlink($tempsubdir);
+        mkdir($tempsubdir, get_config('directorypermissions'));
+        if (!$this->handle->extractTo($tempsubdir)) {
+            throw new ArchiveException(get_string('cannotextractarchive', 'artefact.file', $tempsubdir));
+        }
+
+        if (!$keeptemphandle) {
+            // Delete the temporary file
+            self::delete_from_temp($tmparchivepath);
+            $this->handle = null;
+            $this->temparchivepathlength = 0;
+        }
+
+        // Store extracted folders and files into mahara
+        $i = 0;
+        foreach ($this->info->names as $name) {
+            $this->data['template']->parent = $this->data['folderids'][dirname($name)];
+            $this->data['template']->title = basename($name);
+
+            // set the file extension for later use (eg by flowplayer)
+            $this->data['template']->extension = pathinfo($this->data['template']->title, PATHINFO_EXTENSION);
+            $this->data['template']->oldextension = $this->data['template']->extension;
+
+            if (!empty($this->info->foldernames[$name])) {
+                $this->create_folder($name);
+            }
+            else {
+                ArtefactTypeFile::save_file($tempsubdir . '/' . $name, $this->data['template'], $quotauser, true);
+                $this->data['filescreated']++;
+            }
+
+            if ($progresscallback && ++$i % 5 == 0) {
+                call_user_func($progresscallback, $i);
+            }
+        }
+
         return $this->data;
     }
 
