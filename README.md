@@ -6,9 +6,7 @@ web application that allows users to record and share evidence of lifelong learn
 For more information about Mahara and ePortfolios, see the Mahara user manual's
 introduction chapter:
 
-// TODO: Update the link closer to the release date.
-
- * http://manual.mahara.org/en/15.04/intro/introduction.html#what-is-mahara
+ * http://manual.mahara.org/en/16.10/intro/introduction.html#what-is-mahara
 
 # SUPPORT
 
@@ -35,7 +33,7 @@ The basic installation instructions are:
 
 # UPGRADING
 
-Mahara 16.10 supports direct upgrades from previous Mahara versions 1.6.0 and later.
+Mahara 16.10 supports direct upgrades from previous Mahara versions 1.8.0 and later.
 To upgrade an existing Mahara installation, follow the instructions here:
 
  * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara
@@ -88,6 +86,7 @@ The following PHP extensions are also required:
  * bz2 (optional)
  * imagick (optional)
  * openssl and xmlrpc (optional; for networking support)
+ * memcache (optional; for SAML auth plugin)
  * zlib (optional)
  * adodb (optional; improves performance)
  * enchant or pspell (optional; for TinyMCE spellcheck button)
@@ -104,11 +103,10 @@ You can still use Mahara on older browsers, but may not have all functionality
 available.
 
 For Mahara 16.10, the supported browser versions are:
-// TODO: Review list of browsers closer to the release date.
- * Firefox - 44.0
- * Chrome - 48.0
- * Safari - 9.0
- * Opera - 32.0
+ * Firefox - 48.0
+ * Chrome - 51.0
+ * Safari - 9.1
+ * Opera - 39.0
  * IE - 11 and Edge
  * Safari for iOS
  * Chrome for Android
