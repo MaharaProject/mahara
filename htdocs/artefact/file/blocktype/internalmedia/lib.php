@@ -598,7 +598,7 @@ class MaharaMediaPlayer_html5audio extends MaharaMediaPlayer {
             height="'.self::VIDEOJS_CONTROL_HEIGHT.'"
         >
             <source src="' . $url . '" type="' . $mimetype . '"/>
-            ' . get_string('browsercannotplay', 'blocktype.internalmedia') . '
+            ' . get_string('browsercannotplay1', 'blocktype.internalmedia') . '
         </audio>';
     }
 
@@ -652,7 +652,7 @@ class MaharaMediaPlayer_html5video extends MaharaMediaPlayer {
             height="' . $height . '"
         >
             <source src="' . $url . '" type="' . $mimetype . '"/>
-            ' . get_string('browsercannotplay', 'blocktype.internalmedia') . '
+            ' . get_string('browsercannotplay1', 'blocktype.internalmedia') . '
         </video>';
     }
 

@@ -31,20 +31,20 @@ defined('INTERNAL') || die();
 $string['title'] = 'Open Badges';
 $string['description'] = 'Display your Open Badges';
 
-$string['issuerdetails'] = 'Issuer Details';
+$string['issuerdetails'] = 'Issuer details';
 
-$string['badgedetails'] = 'Badge Details';
+$string['badgedetails'] = 'Badge details';
 
-$string['issuancedetails'] = 'Issuance Details';
+$string['issuancedetails'] = 'Issuance details';
 
 $string['name'] = 'Name';
 
 $string['url'] = 'URL';
 
-$string['organization'] = 'Organization';
+$string['organization'] = 'Organisation';
 
 $string['evidence'] = 'Evidence';
-$string['issuedon'] = 'Issued On';
+$string['issuedon'] = 'Issued on';
 $string['expires'] = 'Expires';
 
 $string['desc'] = 'Description';
@@ -55,11 +55,11 @@ $string['nbadges'] = array('1 badge', '%s badges');
 
 $string['nobackpack'] = 'No Backpack found.<br> Please add your <a href="%s">Backpack</a> email address to your <a href="%s">profile</a>.';
 
-$string['nobadgegroups'] = 'No public badge collections/badges found.';
+$string['nobadgegroups'] = 'No public badge collections / badges found.';
 
 $string['nobackpackidin'] = 'Your email is not found in the service %s.';
 
-$string['nobadgegroupsin'] = 'No public badge collections/badges found in the service: %s.';
+$string['nobadgegroupsin'] = 'No public badge collections / badges found in the service: %s.';
 
 $string['confighelp'] = 'Select the badge collections to show in this block.<br/>Visit the following services to manage your collections and badges:<br/>%s';
 
@@ -70,7 +70,7 @@ $string['title_passport'] = 'Open Badge Passport';
 
 $string['fetchingbadges'] = 'Fetching entries. This may take a while.';
 
-$string['missingbadgesources'] = 'Missing sources setting. Please add to your config.php file, eg:<br><br>$cfg->openbadgedisplayer_source = \'{"backpack":"https://backpack.openbadges.org/"}\'';
+$string['missingbadgesources'] = 'Missing sources setting. Please add to your config.php file, e.g.<br><br>$cfg->openbadgedisplayer_source = \'{"backpack":"https://backpack.openbadges.org/"}\'';
 
 $string['selectall'] = 'Select all';
 $string['selectnone'] = 'Select none';

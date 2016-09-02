@@ -402,16 +402,16 @@ class PluginAuthSaml extends PluginAuth {
             'makereallysure' => array(
                 'type'         => 'html',
                 'value'        => "<script>jQuery('document').ready(function() {     jQuery('#pluginconfig_save').on('click', function() {
-                return confirm('" . get_string('reallyreallysure', 'auth.saml') . "');
+                return confirm('" . get_string('reallyreallysure1', 'auth.saml') . "');
             });});</script>",
             ),
             'certificate' => array(
                                 'type' => 'fieldset',
-                                'legend' => get_string('certificate', 'auth.saml'),
+                                'legend' => get_string('certificate1', 'auth.saml'),
                                 'elements' =>  array(
                                                 'protos_help' =>  array(
                                                 'type' => 'html',
-                                                'value' => '<div><p>' . get_string('manage_certificate', 'auth.saml', get_config('wwwroot') . 'auth/saml/sp/metadata.php?output=xhtml') . '</p></div>',
+                                                'value' => '<div><p>' . get_string('manage_certificate1', 'auth.saml', get_config('wwwroot') . 'auth/saml/sp/metadata.php?output=xhtml') . '</p></div>',
                                                 ),
 
                                                 'pubkey' => array(
@@ -669,7 +669,7 @@ class PluginAuthSaml extends PluginAuth {
 
         // only allow remoteuser to be unset if usersuniquebyusername is NOT set
         if (!get_config('usersuniquebyusername') && !$values['remoteuser']) {
-            $form->set_error('remoteuser', get_string('errorremoteuser', 'auth.saml'));
+            $form->set_error('remoteuser', get_string('errorremoteuser1', 'auth.saml'));
         }
 
         if (!empty($values['institutionidp'])) {
@@ -700,7 +700,7 @@ class PluginAuthSaml extends PluginAuth {
                 $i = 'Unknown';
                 if (is_array($institutions)) {
                     $i = $institutions[0]->institution;
-                    $form->set_error('institutionidp', get_string('errorduplicateidp', 'auth.saml', $entityid, $i));
+                    $form->set_error('institutionidp', get_string('errorduplicateidp1', 'auth.saml', $entityid, $i));
                 }
 
             }

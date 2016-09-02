@@ -20,4 +20,4 @@ $string['flashanimation'] = 'Flash animation';
 $string['typeremoved'] = 'This block points to a media type that has been disallowed by the administrator';
 $string['configdesc1'] = 'Configure which file types users can embed into this block. If you turn off a filetype that has already been used in a block, it will not be rendered any more';
 
-$string['browsercannotplay'] = 'Your web browser cannot play this media.';
+$string['browsercannotplay1'] = 'Your web browser cannot play this media file.';
