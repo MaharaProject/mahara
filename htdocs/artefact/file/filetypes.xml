@@ -157,7 +157,37 @@
         </mimetypes>
     </filetype>
     <filetype>
-        <description>mp4_video</description>
+        <description>mp4</description>
+        <mimetypes>
+            <mimetype>video/mp4</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>m4a</description>
+        <mimetypes>
+            <mimetype>video/mp4</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>m4p</description>
+        <mimetypes>
+            <mimetype>video/mp4</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>m4b</description>
+        <mimetypes>
+            <mimetype>video/mp4</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>m4r</description>
+        <mimetypes>
+            <mimetype>video/mp4</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>m4v</description>
         <mimetypes>
             <mimetype>video/mp4</mimetype>
         </mimetypes>
@@ -213,12 +243,6 @@
         <mimetypes>
             <mimetype>audio/mp3</mimetype>
             <mimetype>audio/mpeg</mimetype>
-        </mimetypes>
-    </filetype>
-    <filetype>
-        <description>mp4_audio</description>
-        <mimetypes>
-            <mimetype>audio/mp4</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
@@ -535,6 +559,12 @@
         </mimetypes>
     </filetype>
     <filetype>
+        <description>ogg</description>
+        <mimetypes>
+            <mimetype>audio/ogg</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
         <description>pct</description>
         <mimetypes>
             <mimetype>image/pict</mimetype>
@@ -760,6 +790,18 @@
         <description>xml</description>
         <mimetypes>
             <mimetype>application/xml</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>3gp</description>
+        <mimetypes>
+            <mimetype>audio/3gpp</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>3gp</description>
+        <mimetypes>
+            <mimetype>video/3gpp</mimetype>
         </mimetypes>
     </filetype>
 

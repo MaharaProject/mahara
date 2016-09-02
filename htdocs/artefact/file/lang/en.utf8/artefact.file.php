@@ -215,8 +215,7 @@ $string['js'] = 'Javascript file';
 $string['latex'] = 'LaTeX document';
 $string['m3u'] = 'M3U audio file';
 $string['mp3'] = 'MP3 audio file';
-$string['mp4_audio'] = 'MP4 audio file';
-$string['mp4_video'] = 'MP4 video file';
+$string['mp4'] = 'MP4 media file';
 $string['mpeg'] = 'MPEG movie';
 $string['odb'] = 'OpenOffice / LibreOffice Base database file';
 $string['odc'] = 'OpenOffice / LibreOffice Calc file';
@@ -231,6 +230,7 @@ $string['oth'] = 'OpenOffice / LibreOffice web document';
 $string['ott'] = 'OpenOffice / LibreOffice template document';
 $string['oga'] = 'OGA audio file';
 $string['ogv'] = 'OGV video file';
+$string['ogg'] = 'OGG Vorbis audio file';
 $string['pdf'] = 'PDF document';
 $string['png'] = 'PNG image';
 $string['ppt'] = 'MS PowerPoint document';
@@ -255,6 +255,8 @@ $string['mpg'] = 'MPG movie';
 $string['ram'] = 'RAM RealPlayer movie';
 $string['rpm'] = 'RPM RealPlayer movie';
 $string['rm'] = 'RM RealPlayer movie';
+$string['webm'] = 'WEBM video file';
+$string['3gp'] = '3GPP media file';
 
 
 // Profile icons

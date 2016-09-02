@@ -40,7 +40,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
     public static function postinst($oldversion) {
         if ($oldversion == 0) {
-            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv', 'mp3', 'mp4_video')));
+            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv', 'mp3', 'mp4')));
         }
     }
 
@@ -258,9 +258,12 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
             'wmv'       => 'wmp',
             'mpeg'      => 'qt',
             'avi'       => 'wmp',
-            'mp4_video' => 'html5video',
+            'mp4'       => 'html5video',
             'oga'       => 'html5audio',
+            'ogg'       => 'html5audio',
             'ogv'       => 'html5video',
+            'webm'      => 'html5video',
+            '3gp'       => 'html5video',
             /* commenting out for now
             'ram'   => 'real_player',
             'rm'    => 'real_player',

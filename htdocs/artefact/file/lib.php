@@ -2805,9 +2805,11 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
                 'wmv'       => 'wmv',
                 'quicktime' => 'quicktime',
                 'sgi_movie' => 'sgi_movie',
-                'mp4_video' => 'mp4_video',
                 'asf'       => 'wmv',
                 'ogv'       => 'ogv',
+                'mp4'       => 'mp4',
+                '3gp'       => '3gp',
+                'webm'      => 'webm',
             );
         }
         return $descriptions;
@@ -2855,7 +2857,6 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
         if (is_null($descriptions)) {
             $descriptions = array(
                 'mp3',
-                'mp4_audio',
                 'mp4',
                 'wav',
                 'ra',
@@ -2864,6 +2865,7 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
                 'm3u',
                 'asf',
                 'oga',
+                'ogg',
             );
         }
         return $descriptions;
