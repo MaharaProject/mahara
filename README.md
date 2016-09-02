@@ -6,7 +6,7 @@ web application that allows users to record and share evidence of lifelong learn
 For more information about Mahara and ePortfolios, see the Mahara user manual's
 introduction chapter:
 
- * http://manual.mahara.org/en/16.10/intro/introduction.html#what-is-mahara
+ * http://manual.mahara.org/en/17.04/intro/introduction.html#what-is-mahara
 
 # SUPPORT
 
@@ -33,7 +33,7 @@ The basic installation instructions are:
 
 # UPGRADING
 
-Mahara 16.10 supports direct upgrades from previous Mahara versions 1.8.0 and later.
+Mahara 17.04 supports direct upgrades from previous Mahara versions 1.9.0 and later.
 To upgrade an existing Mahara installation, follow the instructions here:
 
  * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara
@@ -46,7 +46,7 @@ scripts. See:
 
 # SYSTEM REQUIREMENTS
 
-Here are the system requirements needed to run Mahara 16.10.
+Here are the system requirements needed to run Mahara 17.04.
 
 ### OS
 
@@ -102,7 +102,8 @@ three most recent versions that are officially supported by Microsoft.
 You can still use Mahara on older browsers, but may not have all functionality
 available.
 
-For Mahara 16.10, the supported browser versions are:
+For Mahara 17.04, the supported browser versions are:
+// TODO: Review list of browsers closer to the release date.
  * Firefox - 48.0
  * Chrome - 51.0
  * Safari - 9.1
