@@ -818,7 +818,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             if ($item->deletedby) {
                 $item->deletedmessage = $deletedmessage[$item->deletedby];
             }
-            else if (($candelete || $item->isauthor) && !$is_export_preview && !$isadminfeedback) {
+            else if (($candelete || $item->isauthor) && !$is_export_preview &&
+                     (!$isadminfeedback || ($isadminfeedback && ($data->owner === $item->author)))) {
                 // If the auther was admin/staff and not the owner of the annotation,
                 // the feedback can't be deleted.
                 $item->deleteform = pieform(self::delete_annotation_feedback_form($data->annotation, $data->view, $data->artefact, $data->block, $item->id));
@@ -1377,6 +1378,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             'renderer'          => 'oneline',
             'plugintype'        => 'artefact',
             'pluginname'        => 'annotation',
+            'class' => 'form-as-button pull-left delete-comment btn-group-item',
             'jsform'            => true,
             'successcallback'   => 'delete_annotation_feedback_submit',
             'jssuccesscallback' => 'modifyAnnotationFeedbackSuccess',
@@ -1389,7 +1391,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 'submit'  => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-default',
+                    'class' => 'btn-default btn-sm',
                     'value' => '<span class="icon icon-trash text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('reallydeletethisannotationfeedback', 'artefact.annotation'),
