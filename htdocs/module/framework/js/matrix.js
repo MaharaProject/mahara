@@ -146,6 +146,9 @@ jQuery(function($) {
                     if (item.name == 'tags[]') {
                         tags.push(item.value);
                     }
+                    else if (item.name == 'text') {
+                        values[item.name] = tinyMCE.get('instconf_text').getContent();
+                    }
                     else {
                         values[item.name] = item.value;
                     }
