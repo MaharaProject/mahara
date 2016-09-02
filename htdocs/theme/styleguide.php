@@ -72,11 +72,60 @@ $inlinecss = <<<EOT
         position: fixed;
         bottom: 40px;
     }
+    .dot {
+        color: #9d9d9d;
+        font-size: 0.8em;
+    }
+    .begun {
+        color: #5b9aa9;
+    }
+    .incomplete {
+        color: #d9534f;
+    }
+    .partial {
+        color: #f0ad4e;
+    }
+    .completed {
+        color: #426600;
+    }
 }
 </style>
 EOT;
 
 $smarty = smarty();
+
+// Add a custom preprocessor to this page, to copy each sample code section, so we can have
+// a Dwoo-rendered example of it followed by the unrendered sample of the code. We have to do this
+// with a preprocessor rather than a custom Dwoo block like {codesample}...{/codesample},
+// because the Dwoo Block API doesn't expose the uncompiled content of the block.
+//
+// Dwoo requires us to do add a preprocessor in a rather roundabout way, not by modifying the
+// compiler directly, but by overriding the compilerFactory; the function that provides the compiler.
+$smarty->setDefaultCompilerFactory(
+    'file',
+    // The "use" keyword is a PHP closure, which says to use the $smarty variable from
+    // the page's scope, inside this anonymous function.
+    function () use ($smarty) {
+
+        // To inherit the normal Mahara Dwoo behavior, we'll retrieve the normal compiler,
+        // and just add the preprocessor to it.
+        $compiler = $smarty->compilerFactory();
+        $compiler->addPreProcessor(
+            function ($compiler, $input) {
+                // Sample code is surrounded in markdown ``` delimiters.
+                return preg_replace(
+                    '/```(.*?)```/s',
+                    '$1' . "\n"
+                    . '```{literal}$1{/literal}```',
+                    $input
+                );
+            },
+            false
+        );
+        return $compiler;
+    }
+);
+
 $smarty->assign('description', get_string('styleguide_description'));
 $smarty->assign('copy', get_string('copy'));
 $smarty->assign('scrollup', get_string('scroll_to_top'));

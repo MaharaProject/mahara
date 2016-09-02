@@ -17,6 +17,9 @@ Description of element, this can include any markdown formatting, multiple parag
 ```
 </section>
 
+(A Dwoo precompiler in styleguide.php copies the backtick sections to
+display the rendered example, and unrendered example code, for each one.)
+
 *}
 
 <section data-markdown data-category="buttons">
@@ -66,9 +69,9 @@ This pair of buttons is used for deleting or editing an item.
 ```
 <div id="delete_submit_container" class=" default submitcancel form-group">
     <button type="submit" class="btn-default submitcancel submit btn" name="submit" tabindex="0">
-        Yes
+        {str tag='yes'}
     </button>
-    <input type="submit" class="btn-default submitcancel cancel" name="cancel_submit" tabindex="0" value="No">
+    <input type="submit" class="btn-default submitcancel cancel" name="cancel_submit" tabindex="0" value="{str tag='no'}">
 </div>
 ```
 </section>
@@ -291,25 +294,25 @@ This style of tabs is used for third-level navigation in areas where each page w
             <li class=" current-tab active">
                 <a class=" current-tab" href="#">
                     Tab 1
-                    <span class="accessible-hidden sr-only">(tab selected)</span>
+                    <span class="accessible-hidden sr-only">({str tag=tab} {str tag=selected})</span>
                 </a>
             </li>
             <li class=" current-tab">
                 <a class=" current-tab" href="#">
                     Tab 2
-                    <span class="accessible-hidden sr-only">(tab)</span>
+                    <span class="accessible-hidden sr-only">({str tag=tab})</span>
                 </a>
             </li>
             <li class=" current-tab ">
                 <a class=" current-tab" href="#">
                     Tab 3
-                    <span class="accessible-hidden sr-only">(tab)</span>
+                    <span class="accessible-hidden sr-only">({str tag=tab})</span>
                 </a>
             </li>
             <li class=" current-tab">
                 <a class=" current-tab" href="#">
                     Tab 4
-                    <span class="accessible-hidden sr-only">(tab)</span>
+                    <span class="accessible-hidden sr-only">({str tag=tab})</span>
                 </a>
             </li>
         </ul>
@@ -343,10 +346,10 @@ A delete panel.
     <h2 class="panel-heading">{str tag=delete}</h2>
     <div class="panel-body">
         <p><strong>{str tag=Title}</strong></p>
-        <p>Are you really sure you wish to delete this?</p>
+        <p>{str tag=deleteinstitutionconfirm section=admin}</p>
         <div class=" default submitcancel form-group">
-            <button type="submit" class="btn-default submitcancel submit btn" tabindex="0">Yes</button>
-            <input type="submit" class="btn-default submitcancel cancel" tabindex="0" value="No">
+            <button type="submit" class="btn-default submitcancel submit btn" tabindex="0">{str tag='yes'}</button>
+            <input type="submit" class="btn-default submitcancel cancel" tabindex="0" value="{str tag='no'}">
         </div>
 
     </div>
@@ -368,7 +371,7 @@ A side panel is used in the sideblock area, e.g. on the dashboard for "Online us
         <ul class="list-group">
             <li class="list-group-item list-unstyled list-group-item-link">
                 <a>
-                    Side panel
+                    Side panel link
                 </a>
             </li>
 
@@ -480,33 +483,30 @@ This type of drop-down panel is used in blocks, for example the "Inbox" block.
 This is the general layout of blocks. An example of this being used is the 'Latest changes I can view' block on the dashboard.
 ```
 <div class="bt-newviews panel panel-secondary clearfix">
-    <h3 class="title panel-heading js-heading">
-        Block
-    </h3>
+    <h3 class="title panel-heading js-heading">Block</h3>
     <div class="block">
         <div class="list-group">
             <div class="list-group-item">
-            <h4 class="list-group-item-heading text-inline">
-                <a href="">Page 1</a>
-            </h4>
-            <span class="text-small text-midtone"></span>
+                <h4 class="list-group-item-heading text-inline">
+                    <a href="">Page 1</a>
+                </h4>
+                <span class="text-small text-midtone"></span>
                 <div class="groupuserdate text-small">
                     <a href="" class="text-link">Admin User (admin)</a>
-                <span class="postedon text-midtone">
-                    - Created 31 March 2016
-                </span>
+                    <span class="postedon text-midtone"> -
+                        {str tag=Created} 31 March 2016 </span>
+                </div>
             </div>
-        </div>
-        <div class="list-group-item">
-            <h4 class="list-group-item-heading text-inline">
-                <a href="">Page 2</a>
-            </h4>
-            <span class="text-small text-midtone"></span>
-            <div class="groupuserdate text-small">
-                <a href="" class="text-link">Admin User (admin)</a>
-                <span class="postedon text-midtone">
-                    - Updated 31 March 2016
-                </span>
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading text-inline">
+                    <a href="">Page 2</a>
+                </h4>
+                <span class="text-small text-midtone"></span>
+                <div class="groupuserdate text-small">
+                    <a href="" class="text-link">Admin User (admin)</a>
+                    <span class="postedon text-midtone"> -
+                        {str tag=Updated} 31 March 2016 </span>
+                </div>
             </div>
         </div>
     </div>
@@ -527,7 +527,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
         <span class="icon right icon-chevron-right" role="presentation" aria-hidden="true"></span>
     </button>
 
-    <h2>Collection: Collection 1</h2>
+    <h2>{str tag=Collection section=collection}: Collection 1</h2>
 
     <p class="navlabel">{str tag=navtopage section=collection}</p>
     <nav class="custom-dropdown dropdown">
@@ -558,9 +558,7 @@ This is used to indicate that you should make the recommended change.
 ```
 <div class="admin-warning alert alert-warning">
     <h3>Warning</h3>
-    <ul>
-        <li>This is a warning alert.</li>
-    </ul>
+    <span class="icon icon-lg icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span> This is a warning alert.
 </div>
 ```
 </section>
@@ -571,9 +569,7 @@ Used to show that there is an error, which must be fixed before you can continue
 ```
 <div class="alert alert-danger">
     <h3>Danger</h3>
-    <ul>
-        <li>This is a danger alert.</li>
-    </ul>
+    <span class="icon icon-lg icon-times text-danger left" role="presentation" aria-hidden="true"></span>This is a danger alert.
 </div>
 ```
 </section>
@@ -584,9 +580,7 @@ Used to show that an action was successful.
 ```
 <div class="alert alert-success">
     <h3>Success</h3>
-    <ul>
-        <li>This is a success alert.</li>
-    </ul>
+    <span class="icon icon-lg icon-check text-success left" role="presentation" aria-hidden="true"></span> This is a success alert.
 </div>
 ```
 </section>
@@ -597,9 +591,7 @@ Used to show information about Mahara. Usually, this is only shown to administra
 ```
 <div class="alert alert-info">
     <h3>Info</h3>
-    <ul>
-     <li>This is a info alert.</li>
-    </ul>
+    <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span> This is a info alert.
 </div>
 ```
 </section>
@@ -618,11 +610,11 @@ A slide-out modal. This is used to show a block's configuration for example.
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="deletebutton close" data-dismiss="modal-docked" aria-label="Close">
+                <button class="deletebutton close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
                   <span class="times">×</span>
-                  <span class="sr-only">Close</span>
+                  <span class="sr-only">{str tag=Close}</span>
                 </button>
-                <h4 class="modal-title blockinstance-header  text-inline modal-docks-title" >Modal heading</h4>
+                <h4 class="modal-title blockinstance-header text-inline modal-docks-title">Modal heading</h4>
             </div>
             <div class="modal-body">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pretium, magna in tempor accumsan, augue lacus pretium urna, fringilla malesuada orci eros iaculis dui. Donec blandit urna sed condimentum ullamcorper. Vestibulum commodo hendrerit suscipit. Etiam eget fermentum risus. Etiam faucibus elit at tortor molestie rutrum at nec ex. Mauris id elit sed neque rhoncus iaculis. Maecenas id dui turpis.
@@ -654,8 +646,7 @@ This is a normal table, e.g. found in a forum.
                 </h3>
 
                 <div class="forumpath text-small text-midtone">
-                    <a href="" class="topicgroup text-muted">{str tag=info section=auth.webservice}</a> /
-                    <a href="" class="topicforum  text-midtone">More info</a>
+                    Some description information <a href="" class="topicforum  text-midtone">Description link</a>
                 </div>
             </td>
             <td>
@@ -696,11 +687,11 @@ A striped table is most frequently found in the administration area where tables
             <td>Item 1 stuff</td>
             <td class="right">
                 <div class="btn-group">
-                    <a class="btn btn-default btn-sm" title="Manage" href="">
-                        <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanage section=admin} "Item 1"</span>
+                    <a class="btn btn-default btn-sm" title="{str tag=groupmanage section=admin}" href="">
+                        <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 1'}</span>
                     </a>
-                    <a class="btn btn-default btn-sm" title="Delete" href="">
-                        <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str tag=groupdelete section=admin} "Item 1"</span>
+                    <a class="btn btn-default btn-sm" title="{str tag=delete}" href="">
+                        <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 1'}</span>
                     </a>
                 </div>
             </td>
@@ -714,11 +705,11 @@ A striped table is most frequently found in the administration area where tables
             <td>Item 2 stuff</td>
             <td class="right">
                 <div class="btn-group">
-                    <a class="btn btn-default btn-sm" title="Manage" href="">
-                        <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanage section=admin} "Item 2"</span>
+                    <a class="btn btn-default btn-sm" title="{str tag=groupmanage section=admin}" href="">
+                        <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 2'}</span>
                     </a>
-                    <a class="btn btn-default btn-sm" title="Delete" href="">
-                        <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str tag=groupdelete section=admin} "Item 2"</span>
+                    <a class="btn btn-default btn-sm" title="{str tag=delete}" href="">
+                        <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 2'}</span>
                     </a>
                 </div>
             </td>
@@ -727,7 +718,6 @@ A striped table is most frequently found in the administration area where tables
 </table>
 ```
 </section>
-
 
 <section data-markdown data-category="drop-downs">
 ### Basic drop-down menu
@@ -802,18 +792,18 @@ jQuery(document).ready(function() {
 
 <section data-markdown data-category="profile-pictures">
 ### Profile side panel
-The profile picture size that is used on side panels. The xample is the profile side panel on the dashboard. Note: The URL shown in the example would need to be replaced by the dynamic code to generate the profile icon.
+The profile picture size that is used on side panels. The example is the profile side panel on the dashboard.
 ```
 <div class="col-md-3 sidebar">
     <div id="sb-profile" class="sideblock-1 user-panel">
         <div class="panel panel-default">
             <h3 class="panel-heading profile-block">
-                <a href="" class="username">Side panel</a>
-                <a href="" title="Edit profile picture" class="user-icon">
-                    <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag="editprofileicon" section="artefact.file"}">
+                <a href="" class="username">Side panel</a> <a href="" title="{str tag=editprofileicon section=artefact.file}" class="user-icon">
+                    <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag=editprofileicon section=artefact.file}">
                 </a>
             </h3>
-        <div class="list-group">
+            <div class="list-group"></div>
+        </div>
     </div>
 </div>
 ```
@@ -821,11 +811,11 @@ The profile picture size that is used on side panels. The xample is the profile 
 
 <section data-markdown data-category="profile-pictures">
 ### Small profile picture
-This size of profile picture is used mainly on comment blocks. Note: The URL shown in the example would need to be replaced by the dynamic code to generate the profile icon.
+This size of profile picture is used mainly on comment blocks.
 ```
 <a href="">
     <span class="user-icon">
-        <img src="{profile_icon_url user=$sbdata.id maxheight=20 maxwidth=20}" alt="{str tag="editprofileicon" section="artefact.file"}" class="profile-icon-container">
+        <img src="{profile_icon_url user=$sbdata.id maxheight=20 maxwidth=20}" alt="{str tag=editprofileicon section=artefact.file}" class="profile-icon-container">
     </span>
 </a>
 ```
@@ -835,10 +825,13 @@ This size of profile picture is used mainly on comment blocks. Note: The URL sho
 ### Friends list
 This size and style of profile picture is used in the friends list.
 ```
-<a href="" class="item user-icon metadata user-icon-larger d0">
-    <img src="{profile_icon_url user=$sbdata.id maxheight=100 maxwidth=100}" alt="John Smith's profile picture">
-    <p class="member-name">John Smith</p>
-</a>
+<div class="user-thumbnails">
+    <a href="" class="item user-icon metadata user-icon-larger {cycle values='d0,d1'}">
+        <img src="{profile_icon_url user=$sbdata.id maxheight=100 maxwidth=100}" alt="{str tag=profileimagetext section=mahara arg1='John Smith'}">
+        <p class="member-name">John Smith</p>
+    </a>
+</div>
+
 ```
 </section>
 
@@ -904,7 +897,7 @@ Used as italic or strong text.
 Used as a description for an item. Note: the div is only there to apply the form group class.
 ```
 <div class="form-group">
-    <span class="description">Description</span>
+    <span class="description">Description text</span>
 </div>
 ```
 </section>
@@ -1031,10 +1024,34 @@ Used to signify a successful action.
 </section>
 
 <section data-markdown data-category="icons">
-### Circle cross
-Used to signify removable columns on a table.
+### Circle check
+Used to signify SmartEvidence has been assessed as completed.
 ```
-<i class="icon icon-times-circle" role="presentation"></i>
+<i class="icon icon-check-circle completed" role="presentation"></i>
+```
+</section>
+
+<section data-markdown data-category="icons">
+### Circle cross
+Used to signify either removable columns on view or SmartEvidence item has been assessed as incomplete.
+```
+<i class="icon icon-times-circle incomplete" role="presentation"></i>
+```
+</section>
+
+<section data-markdown data-category="icons">
+### Circle half open
+Used to signify SmartEvidence item has been assessed as partially complete.
+```
+<i class="icon icon-adjust partial" role="presentation"></i>
+```
+</section>
+
+<section data-markdown data-category="icons">
+### Circle open
+Used to signify SmartEvidence has begun on the SmartEvidence martix table.
+```
+<i class="icon icon-circle-o begun" role="presentation"></i>
 ```
 </section>
 
@@ -1399,6 +1416,14 @@ Used on "Edit" buttons.
 </section>
 
 <section data-markdown data-category="icons">
+### Plug
+Used to show webservices 'connection manager' connections.
+```
+<i class="icon icon-plug" role="presentation"></i>
+```
+</section>
+
+<section data-markdown data-category="icons">
 ### Plus
 Used on "Add new" buttons. The class "text-success" makes the icon green.
 ```
@@ -1668,13 +1693,9 @@ Used as icon for a system notification.
 
         elem.innerHTML = html;
 
-        // add in the example code using jQuery
-        var codeElem = $j(elem).find('code');
-        var code = $j.parseHTML(codeElem.text());
-        codeElem.parent().before(code);
-        codeElem.attr('id', 'code-block-' + i);
-
         // add copy button
+        var codeElem = $j(elem).find('code');
+        codeElem.attr('id', 'code-block-' + i);
         codeElem.before('<button class="copy" role="presentation" data-clipboard-target="#code-block-' + i + '" title="{$copy}"><i class="icon icon-files-o"></i></button>');
 
         // add the category to the sections index
@@ -1740,11 +1761,9 @@ Used as icon for a system notification.
           $j(window).scrollTop(0);
       });
 
+
     }());
 
 </script>
-
-
-
 
 {include file="footer.tpl"}
