@@ -36,10 +36,6 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return false;  // true; // need to do more work on aretfact/artefact.php before this can be switched on.
     }
 
-    public static function override_instance_title(BlockInstance $instance) {
-        return get_string('Annotation', 'artefact.annotation');
-    }
-
     public static function allowed_in_view(View $view) {
         // Annotations don't make sense in groups?
         return $view->get('group') == null;
@@ -239,10 +235,58 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             // The annotation is displayed as html, need to populate its value.
             $elements['text']['value'] = $text;
         }
+        $collection = $view->get('collection');
+        if (is_object($collection) && $collection->has_framework()) {
+            safe_require('module', 'framework');
+            $framework = new Framework($collection->get('framework'));
+            $standards = $framework->standards();
+            $evidence = $framework->get_evidence($collection->get('id'), $instance->get('id'));
+            $selectoptions = array();
+            $selectdesciptions = array();
+            foreach ($standards['standards'] as $standard) {
+                if (isset($standard->options)) {
+                    $selectoptions[$standard->id] = array(
+                        'label' => $standard->name,
+                        'options' => array(),
+                    );
+                    foreach ($standard->options as $option) {
+                        $selectoptions[$standard->id]['options'][$option->id] = $option->name;
+                        $selectdescriptions[$option->id] = $option->description;
+                    }
+                }
+            }
+
+            $elements['smartevidence'] = array(
+                'type' => 'select',
+                'title' => get_string('standard', 'module.framework'),
+                'optgroups' => $selectoptions,
+                'isSelect2' => true,
+                'width' => '280px',
+                'class' => 'last', // to remove base border
+                'defaultvalue' => (($evidence) ? $evidence->element : null),
+            );
+            array_walk($selectdescriptions, function (&$a, $b) {
+                $a = '<div class="hidden" id="option_' . $b . '">' . $a . '</div>';
+            });
+            $elements['smartevidencedesc'] = array(
+                'type' => 'html',
+                'class' => 'htmldescription',
+                'value' => implode("\n", $selectdescriptions),
+                'description' => get_string('standarddesc', 'module.framework'), // have desc for 'smartevidence' here so html falls between them
+            );
+            if (isset($instance->option) && !empty($instance->option)) {
+                // Need to add a readonly SmartEvidence field
+                $elements['smartevidence']['defaultvalue'] = $instance->option;
+            }
+        }
         return $elements;
     }
 
     public static function delete_instance(BlockInstance $instance) {
+        // If annotation is evidence for SmartEvidence framework we need to delete that as well
+        if (is_plugin_active('framework', 'module')) {
+            delete_records('framework_evidence', 'annotation', $instance->get('id'));
+        }
         $configdata = $instance->get('configdata');
         if (!empty($configdata)) {
             $artefactid = $configdata['artefactid'];
@@ -251,6 +295,29 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
                 safe_require('artefact', 'annotation');
                 $annotation = new ArtefactTypeAnnotation($artefactid);
                 $annotation->delete();
+            }
+        }
+    }
+
+    public static function instance_config_validate(Pieform $form, $values) {
+
+        if (!empty($values['smartevidence'])) {
+            // Check that the new smartevidence standard we are changing to is not alreay covered by another annotation block
+            $block = $form->get_element('blockconfig');
+            $view = $form->get_element('id');
+            require_once('view.php');
+            $view = new View($view['value']);
+            $collection = $view->get('collection');
+            if (is_object($collection) && $collection->get('framework')) {
+                $annotationid = get_field('framework_evidence', 'annotation',
+                                           'view', $view->get('id'),
+                                           'framework', $collection->get('framework'),
+                                           'element', $values['smartevidence']);
+                if ($annotationid && $annotationid != $block['value']) {
+                    $result['message'] = get_string('annotationclash', 'module.framework');
+                    $form->set_error('smartevidence', $result['message']);
+                    $form->reply(PIEFORM_ERR, $result);
+                }
             }
         }
     }
@@ -270,7 +337,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         // The title will always be Annotation.
         $title = get_string('Annotation', 'artefact.annotation');
         $data['title'] = $title;
-        $values['title'] = $title;
+        $values['title'] = !empty($values['title']) ? $values['title'] : $title;
         if (empty($configdata['artefactid'])) {
             // This is a new annotation.
             $artefact = new ArtefactTypeAnnotation(0, $data);
@@ -300,10 +367,17 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         $values['artefactid'] = $artefact->get('id');
         $instance->save_artefact_instance($artefact);
 
+        if (is_plugin_active('framework', 'module') && !empty($values['smartevidence'])) {
+            safe_require('module', 'framework');
+            $title = get_field('framework_standard_element', 'shortname', 'id', $values['smartevidence']);
+            $values['title'] = get_string('Annotation', 'artefact.annotation') . ': ' . $title;
+            $result = Framework::save_evidence_in_block($instance->get('id'), $values['smartevidence']);
+        }
         unset($values['text']);
         unset($values['allowfeedback']);
         unset($values['annotationreadonlymsg']);
-
+        unset($values['smartevidence']);
+        unset($values['smartevidencedesc']);
         // Pass back a list of any other blocks that need to be rendered
         // due to this change.
         $values['_redrawblocks'] = array_unique(get_column(
@@ -317,6 +391,17 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
 
     public static function default_copy_type() {
         return 'full';
+    }
+
+    public static function has_feedback_allowed($id) {
+        return (bool) get_field_sql("
+            SELECT a.allowcomments FROM {artefact} a
+            JOIN {view_artefact} va ON va.artefact = a.id
+            JOIN {view} v ON v.id = va.view
+            JOIN {block_instance} bi ON bi.id = va.block
+            WHERE a.artefacttype = 'annotation'
+            AND bi.blocktype = 'annotation'
+            AND bi.id = ?", array($id));
     }
 
     public static function get_instance_javascript(BlockInstance $bi) {
@@ -337,5 +422,29 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         if ($fromversion == 0) {
             set_field('blocktype_installed', 'active', 0, 'artefactplugin', 'annotation');
         }
+    }
+
+    public static function get_instance_config_javascript(BlockInstance $instance) {
+        return <<<EOF
+        jQuery(function($) {
+            if ($("#instconf_smartevidence").length) {
+                // block title will be overwritten with framework choice so make it disabled
+                $("#instconf_title").attr('disabled', true);
+
+                // Set up evidence choices and show/hide related descriptions
+                $("#instconf_smartevidence").select2();
+                function show_se_desc(id) {
+                    $("#instconf_smartevidencedesc_container div:not(.description)").addClass('hidden');
+                    $("#option_" + id).removeClass('hidden');
+                }
+
+                show_se_desc($("#instconf_smartevidence").val());
+                $("#instconf_smartevidence").on('change', function() {
+                    show_se_desc($(this).val());
+                });
+            }
+        });
+
+EOF;
     }
 }

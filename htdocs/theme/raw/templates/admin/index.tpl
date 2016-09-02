@@ -28,7 +28,7 @@
             {foreach from=$upgrades key=key item=upgrade}
                 {if $key != 'settings' && $upgrade->upgrade}
                 <tr>
-                    <td><strong>{$key}</strong></td>
+                    <td><strong>{if $upgrade->displayname}{$upgrade->displayname}{else}{$key}{/if}</strong></td>
                     <td>{$upgrade->fromrelease} ({$upgrade->from})</td>
                     <td>{$upgrade->torelease} ({$upgrade->to})</td>
                 </tr>
@@ -57,7 +57,7 @@
             <tbody>
                 {foreach from=$upgrades['settings']['newinstalls'] key=key item=upgrade}
                 <tr>
-                    <td><strong>{$key}</strong></td>
+                    <td><strong>{if $upgrade->displayname}{$upgrade->displayname}{else}{$key}{/if}</strong></td>
                     <td>{$upgrade->fromrelease}</td>
                     <td>{$upgrade->torelease} ({$upgrade->to})</td>
                 </tr>

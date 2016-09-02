@@ -4688,5 +4688,15 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016090200) {
+        log_debug('Add a "framework" field to the collection table');
+        $table = new XMLDBTable('collection');
+        $field = new XMLDBField('framework');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+    }
+
     return $status;
 }

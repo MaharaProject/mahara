@@ -1,0 +1,120 @@
+.tablematrix {
+    position: relative;
+
+    tr.standard {
+        background: darken($table-bg-accent, 2%) !important;
+    }
+
+    tr.table-pager,
+    tr.pages {
+        background-color: $body-bg;
+    }
+    th.viewtab {
+        text-align: center;
+        max-width: 70px;
+    }
+
+    td {
+        &.mid {
+            text-align: center;
+            vertical-align: middle;
+            .icon {
+                display: block;
+                font-size: 1.2em;
+                cursor: pointer;
+                &.begun {
+                    color: #5b9aa9;
+                }
+                &.incomplete {
+                    color: $brand-danger;
+                }
+                &.partial {
+                    color: $brand-warning;
+                }
+                &.completed {
+                    color: $brand-success;
+                }
+                &.dot {
+                    font-size: 0.8em;
+                    color: lighten($gray-light, 15%);
+                }
+                &.dot.disabled {
+                    font-size: 1em;
+                    color: lighten($gray-light, 15%);
+                    cursor: $cursor-disabled;
+                    // Override dot icon with minus icon
+                    &:before {
+                        content: "\f068";
+                    }
+                }
+            }
+        }
+
+        &.code {
+            width: 20%;
+        }
+
+        &.special {
+            border-top: 0;
+        }
+
+        .btn.next {
+            float: right;
+        }
+    }
+
+    // Additional styles extending popover
+    .matrixtooltip {
+        @extend .text-small;
+        display: inline-block !important;
+        min-width: 180px;
+        left: auto;
+        top: auto;
+        .popover-title {
+            font-size: 14px;
+        }
+        .popover-content {
+            ol,
+            ul {
+                padding-left: 15px;
+            }
+        }
+    }
+
+    // Styles for cell hover crosshair
+    // Make tbody display table to clip the crosshair
+    // Set tablematrix postition relative so that tooltip does not get cropped.
+    tbody {
+        overflow: hidden;
+        display: table;
+        align-content: stretch;
+        width: 100%;
+        .mid {
+            position: relative;
+
+            &:hover .dot {
+                color: $gray-light;
+            }
+
+            &:hover:before,
+            &:hover:after {
+                content: "";
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                z-index: -1;
+                background-color: rgba(0,0,0,.05);
+            }
+
+            &:hover:before {
+                top: -99999px;
+                left: 0;
+            }
+
+            &:hover:after {
+                top: 0;
+                left: -99999px;
+            }
+        }
+    }
+}

@@ -1,7 +1,7 @@
         {foreach from=$collections item=collection}
             <div class="list-group-item {cycle values='r0,r1'} {if $collection->submitinfo}list-group-item-warning{/if}">
                 {if $collection->views[0]->view}
-                   <a href="{$collection->views[0]->fullurl}" class="outer-link"><span class="sr-only">{$collection->name}</span></a>
+                   <a href="{if $collection->frameworkname}{$collection->fullurl}{else}{$collection->views[0]->fullurl}{/if}" class="outer-link"><span class="sr-only">{$collection->name}</span></a>
                 {/if}
                  <div class="row">
                     <div class="col-md-9">
@@ -14,6 +14,9 @@
                         <div class="detail">
                             <span class="lead text-small">{str tag=Views section=view}:</span>
                             {if $collection->views}
+                                {if $collection->frameworkname}
+                                    <a href="{$collection->fullurl}">{$collection->frameworkname}</a>,
+                                {/if}
                                 {foreach from=$collection->views item=view name=cviews}
                                     <a href="{$view->fullurl}" class="inner-link">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}
                                 {/foreach}

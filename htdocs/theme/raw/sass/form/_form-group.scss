@@ -307,6 +307,9 @@
         h4 {
             margin: 0;
         }
+        &.htmldescription {
+            border-bottom: 1px solid #f0f0f0;
+        }
     }
     &.double {
         .description {
@@ -542,6 +545,10 @@
                 margin:0;
             }
         }
+    }
+
+    &.top-line {
+        border-top: 1px solid #f0f0f0;
     }
 }
 

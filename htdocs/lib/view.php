@@ -4323,7 +4323,7 @@ class View {
         }
         $select .= '
                 v.owner, v.ownerformat, v.group, v.institution, v.template, v.mtime, v.ctime,
-                c.id as collid, c.name, v.type, v.urlid, v.submittedtime, v.submittedgroup, v.submittedhost
+                c.id as collid, c.name, c.framework, v.type, v.urlid, v.submittedtime, v.submittedgroup, v.submittedhost
         ';
 
         $viewdata = get_records_sql_assoc(
@@ -5897,7 +5897,7 @@ class View {
             SELECT v.id, v.type, v.title, v.ownerformat, v.startdate, v.stopdate, v.template,
                 v.owner, v.group, v.institution, v.urlid, v.submittedgroup, v.submittedhost, " .
                 db_format_tsfield('v.submittedtime', 'submittedtime') . ", v.submittedstatus,
-                c.id AS cid, c.name AS cname,
+                c.id AS cid, c.name AS cname, c.framework,
                 c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost, " .
                 db_format_tsfield('c.submittedtime', 'csubmittime') . ", c.submittedstatus AS csubmitstatus
             FROM {view} v
@@ -5982,6 +5982,12 @@ class View {
                     if (isset($r['user'])) {
                         $collections[$cid]['ownername'] = $v['ownername'];
                         $collections[$cid]['ownerurl'] = $v['ownerurl'];
+                    }
+                    if (!empty($r['framework'])) {
+                        require_once('collection.php');
+                        $coll = new StdClass();
+                        $coll->id = $cid;
+                        $collections[$cid]['url'] = Collection::get_framework_url($coll);
                     }
                 }
                 $collections[$cid]['views'][$vid] = $v;

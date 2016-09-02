@@ -96,6 +96,10 @@ foreach ($data->data as $value) {
     if (!empty($views)) {
         $value->views = $views['views'];
     }
+    if (is_plugin_active('framework', 'module') && $collection->has_framework()) {
+        $framework = new Framework($collection->get('framework'));
+        $value->frameworkname = $framework->get('name');
+    }
 }
 
 $pagination = build_pagination(array(
@@ -132,7 +136,6 @@ if (!empty($institutionname) && ($institutionname != 'mahara')) {
 }
 
 setpageicon($smarty, $pageIcon);
-
 $smarty->assign('canedit', $canedit);
 $smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('collections', $data->data);
