@@ -106,7 +106,7 @@ $form['elements']['group'] = array('type' => 'hidden', 'value' => ($groupid) ? $
 
 $form = pieform($form);
 
-$smarty =& smarty();
+$smarty = smarty();
 $smarty->assign_by_ref('form', $form);
 $smarty->display('form.tpl');
 exit;
