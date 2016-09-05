@@ -24,6 +24,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  | Entry | I love my mum |
  | Draft | 1 |
  | Allow comments | 0 |
+ And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "mildred" and select "mildred"
  And I press "Save entry"
  Then I should see "Journal entry saved"
@@ -40,6 +41,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  | Entry | I love my dad |
  | Draft | 0 |
  | Allow comments | 0 |
+ And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "george" and select "george"
  And I press "Save entry"
  Then I should see "Journal entry saved"
