@@ -177,7 +177,11 @@ function formSuccess(form, data) {
     if (config.mathjax) {
         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     }
-    displayMessage(data.message, 'ok', true);
+    var hideprevmsg = true;
+    if (data.hasOwnProperty('hideprevmsg')) {
+        hideprevmsg = data.hideprevmsg;
+    }
+    displayMessage(data.message, 'ok', hideprevmsg);
     scrollTo(0, 0);
 }
 
