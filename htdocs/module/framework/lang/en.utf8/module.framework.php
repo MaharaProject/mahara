@@ -27,7 +27,13 @@ $string['invalidjson'] = 'This is not a valid .matrix file: Unable to parse the 
 $string['jsonmissingvars'] = 'This is not a valid .matrix file: Missing "framework" and / or "framework name".';
 $string['manuallyremovematrices'] = 'Unable to remove install directory "%s". Please remove it manually.';
 $string['changeframeworkproblems'] = 'You cannot change the framework. The following pages have evidence connected to this framework:';
-$string['accessdeniednoframework'] = 'This collection cannot show the SmartEvidence page. This can be due to any of the following reasons: The SmartEvidence plugin is not installed / active; the institution you belong to disallowed SmartEvidence; this collection does not have a SmartEvidence framework set; there aren\'t any pages in this collection.';
+$string['accessdeniednoframework'] = 'This collection cannot show the SmartEvidence page. This can be due to any of the following reasons:
+<ul><li>The SmartEvidence plugin is not installed / active</li>
+<li>The institution you belong to disallowed SmartEvidence</li>
+<li>This collection does not have a SmartEvidence framework set</li>
+<li>There aren\'t any pages in this collection</li>
+</ul>';
+$string['firstviewlink'] = 'Please navigate to the <a href="%s">first page</a> of the collection.';
 $string['noframeworkselected'] = 'None';
 $string['matrixpointupdated'] = "SmartEvidence updated";
 $string['matrixpointinserted'] = "SmartEvidence added";
@@ -45,3 +51,4 @@ $string['usedincollections'] = 'Used in collections';
 $string['selfassess'] = 'Self-assess';
 $string['uploadframeworkdesc'] = 'Upload a JSON encoded .matrix file. See <a href="https://git.mahara.org/mahara/mahara/blob/master/test/behat/upload_files/example.matrix">Mahara git repository</a> for an example of the markup.';
 $string['savematrix'] = 'Upload matrix';
+$string['frameworkmissing'] = 'Framework not found';

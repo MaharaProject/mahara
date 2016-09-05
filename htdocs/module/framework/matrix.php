@@ -32,8 +32,23 @@ pieform_setup_headdata();
 $collectionid = param_integer('id');
 $collection = new Collection($collectionid);
 if (!$collection->has_framework()) {
-    // We can't show the matrix page so show them an error with a link
-    // to the first page of the collection instead.
+    if ($collection->get('framework') > 0) {
+        // The collection does have a framework associated but we are not allowed
+        // to see the matrix page so show an error page with link to first page of collection.
+        $smarty = smarty();
+        $smarty->assign('maintitle', $collection->get('name'));
+        $smarty->assign('owner', $collection->get('owner'));
+        $smarty->assign('PAGEHEADING', null);
+        $smarty->assign('name', get_string('frameworkmissing', 'module.framework'));
+        $smarty->assign('error', get_string('accessdeniednoframework', 'module.framework'));
+        if ($collection->get('navigation')) {
+            $views = $collection->get('views');
+            $smarty->assign('firstviewlink', get_string('firstviewlink', 'module.framework', $views['views'][0]->fullurl));
+        }
+        $smarty->display('module:framework:noviewmatrix.tpl');
+        exit;
+    }
+    // No framework involved.
     throw new AccessDeniedException(get_string('accessdeniednoframework', 'module.framework'));
 }
 $owner = $collection->get('owner');
