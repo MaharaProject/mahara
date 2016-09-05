@@ -45,17 +45,16 @@ function updateWYSIWYGText() {
 
 function updateSiteDefault(changed) {
     changedCheckbox = (changed) ? true : false;
-    var editor = getFirstElementByTagAndClassName('td', null, $('editsitepage_pagetext_container'));
-    editor.style.padding = '0px';
+    var editor = jQuery('#editsitepage_pagetext_container .mce-tinymce');
     if ($('editsitepage_pageusedefault').checked == true) {
         tinyMCE.activeEditor.getBody().setAttribute('contenteditable', false);
         $('changecheckboxdiv').style.display = 'block';
         $('changecheckboxdiv').style.zIndex = '1';
         $('changecheckboxdiv').style.position = 'absolute';
-        $('changecheckboxdiv').style.width = editor.offsetWidth + 'px';
-        $('changecheckboxdiv').style.height = editor.offsetHeight + 'px';
-        $('changecheckboxdiv').style.top = elementPosition(editor).y + 'px';
-        $('changecheckboxdiv').style.left = elementPosition(editor).x + 'px';
+        $('changecheckboxdiv').style.width = editor.outerWidth() + 'px';
+        $('changecheckboxdiv').style.height = editor.outerHeight() + 'px';
+        $('changecheckboxdiv').style.top = editor.offset().top + 'px';
+        $('changecheckboxdiv').style.left = editor.offset().left + 'px';
     }
     else {
         tinyMCE.activeEditor.getBody().setAttribute('contenteditable', true);
@@ -72,7 +71,7 @@ function connectElements() {
         connect('editsitepage_pageusedefault', 'onchange', updateSiteDefault);
     }
     // create hidden div to place over tinymce to 'show' when it is disabled from editing
-    appendChildNodes($('editsitepage'), DIV({'id':'changecheckboxdiv','style':'display:none;background-color: rgba(200,200,200,0.5)'}, ''));
+    appendChildNodes(document.body, DIV({'id':'changecheckboxdiv','style':'display:none;background-color: rgba(200,200,200,0.5)'}, ''));
 }
 
 function contentSaved(form, data) {
@@ -84,7 +83,11 @@ function contentSaved(form, data) {
         // body element.
         oldPageContent = tinyMCE.activeEditor.getContent();
     }
+    // For the 'sitedefault' overlay to be positioned correctly we
+    // need to stop old messages from disappearing after page load
+    data.hideprevmsg = false;
     formSuccess(form, data);
+    updateSiteDefault(false);
 }
 
 addLoadEvent(function() {
