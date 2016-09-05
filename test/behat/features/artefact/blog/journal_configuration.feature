@@ -50,6 +50,7 @@ Scenario: Creating a Journal entry
  | Title * | Story of my life |
  | Allow comments | 0 |
  | Entry | Preventing bugs from appearing :D |
+ And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "one" and select "one"
  And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "test" and select "test"
@@ -61,6 +62,7 @@ Scenario: Creating a Journal entry
  | Title * | Story of my life, part 2 |
  | Allow comments | 0 |
  | Entry | Testing tags |
+ And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "two" and select "two"
  And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "test" and select "test"
@@ -71,6 +73,7 @@ Scenario: Creating a Journal entry
  | Title * | Story of my life, part 3 |
  | Allow comments | 0 |
  | Entry | Testing tags some more |
+ And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "three" and select "three"
  And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "test" and select "test"
@@ -97,8 +100,9 @@ Scenario: Creating a Journal entry
  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
  And I follow "Tagged journal entries" in the "div#blog" "css_element"
  And I press "Add"
+ And I scroll to the base of id "instconf_tagselect_container"
  And I fill in select2 input "instconf_tagselect" with "one" and select "one"
- And I wait "1" seconds
+ And I scroll to the base of id "instconf_tagselect_container"
  And I fill in select2 input "instconf_tagselect" with "two" and select "two"
  And I wait "1" seconds
  And I press "Save"
