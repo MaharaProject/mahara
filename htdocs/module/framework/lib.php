@@ -339,12 +339,13 @@ class Framework {
             }
         }
         // update standards
-        $standardsvars = array('shortname','name','description','priority');
+        $standardsvars = array('shortname','name','description');
         if (isset($this->standards) && is_array($this->standards)) {
-            foreach ($this->standards['standards'] as $standard) {
+            foreach ($this->standards['standards'] as $key => $standard) {
                 $sfordb = new StdClass;
                 $sfordb->framework = $this->id;
                 $sfordb->mtime = db_format_timestamp(time());
+                $sfordb->priority = $key;
                 foreach ($standardsvars as $v) {
                     $sfordb->{$v} = isset($standard->{$v}) ? $standard->{$v} : null;
                 }
@@ -360,23 +361,38 @@ class Framework {
                         $standard->options = $standard->standardelement;
                     }
                     if ($sid && isset($standard->options) && is_array($standard->options)) {
-                        $prevoption = 0;
+                        $uniqueids = array();
+                        $priority = 0;
                         foreach ($standard->options as $option) {
+                            $priority++;
                             $sofordb = new StdClass;
                             $sofordb->standard = $sid;
                             $sofordb->mtime = db_format_timestamp(time());
                             foreach ($standardsvars as $ov) {
                                 $sofordb->{$ov} = isset($option->{$ov}) ? $option->{$ov} : null;
                             }
+                            // set priority based on the order the array is passed in
+                            $sofordb->priority = $priority;
                             if (!empty($option->id)) {
                                 $sofordb->id = $option->id;
-                                $prevoption = $option->id;
+                                if (!empty($option->elementid)) {
+                                    $uniqueids[$option->id] = $option->elementid;
+                                }
+                                if (($index = array_search($option->parentelementid, $uniqueids)) !== false) {
+                                    $option->parentelementid = $index;
+                                }
                                 update_record('framework_standard', $sofordb, 'id');
                             }
                             else {
                                 $sofordb->ctime = db_format_timestamp(time());
-                                $sofordb->parent = ($option->parent && $prevoption) ? $prevoption : null;
-                                $prevoption = insert_record('framework_standard_element', $sofordb, 'id', true);
+                                if (isset($option->parentelementid) && ($index = array_search($option->parentelementid, $uniqueids)) !== false) {
+                                    $option->parentelementid = $index;
+                                }
+                                $sofordb->parent = !empty($option->parentelementid) ? $option->parentelementid : null;
+                                $inserted = insert_record('framework_standard_element', $sofordb, 'id', true);
+                                if (!empty($option->elementid)) {
+                                    $uniqueids[$inserted] = $option->elementid;
+                                }
                             }
                         }
                     }
@@ -407,21 +423,44 @@ class Framework {
             if (!empty($result)) {
                 if ($options) {
                     // get all options relating to the standards
-                    $sql = "SELECT id, standard, shortname, name, description, priority, parent, ctime, mtime
-                             FROM {framework_standard_element}
+                    $sql = "SELECT id, standard, shortname, name, description, priority, parent, ctime, mtime,
+                             CASE WHEN fse.id > 0 THEN (
+                                SELECT COUNT(parent) FROM {framework_standard_element}
+                                WHERE parent = fse.id
+                             ) END AS children
+                             FROM {framework_standard_element} fse
                              WHERE standard IN (" . join(',', array_map('intval', array_keys($result))) . ")
-                             ORDER BY priority, shortname, name, ctime";
+                             ORDER BY standard, priority, shortname, name, ctime";
 
                     $optresult = get_records_sql_assoc($sql, array());
+                    $indents = array();
                     if ($optresult) {
+                        $currentlevel = 0;
                         foreach ($optresult as $opt) {
                             if (!isset($result[$opt->standard]->options)) {
                                 $result[$opt->standard]->options = array();
                             }
                             $result[$opt->standard]->options[] = $opt;
+                            $opt->level = 0;
+                            if ($opt->children) {
+                                $indents[$opt->id] = $opt->children;
+                                $currentlevel ++;
+                            }
+                            if (isset($indents[$opt->parent]) && $indents[$opt->parent] > 0) {
+                                $opt->level = $currentlevel;
+                                if (!empty($opt->children) && !empty($opt->parent)) {
+                                    $opt->level --;
+                                }
+                                $indents[$opt->parent] --;
+                                if ($indents[$opt->parent] === 0) {
+                                    unset($indents[$opt->parent]);
+                                    $currentlevel --;
+                                }
+                            }
                         }
                     }
                 }
+
                 $standards = array(
                     'standards' => array_values($result),
                     'count'     => count($result),

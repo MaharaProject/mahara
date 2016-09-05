@@ -38,9 +38,9 @@
     <tr class="standard">
         <td colspan="{$viewcount + 2}">
             <div class="shortname-container">
-                {$standard->name}
+                <h3>{$standard->name}</h3>
                 <div class="matrixtooltip popover hidden">
-                    <h3 class="popover-title">{$standard->shortname}</h3>
+                    <h3 class="popover-title">{$standard->name}</h3>
                     <div class="popover-content">
                         {$standard->description|clean_html|safe}
                     </div>
@@ -50,10 +50,33 @@
     </tr>
     {if $standard->options}
         {foreach from=$standard->options key=ok item=option}
-        <tr{if $option->parent} class="sub"{/if}>
+        {if $option->children}
+        <tr class="matrixlevel{$option->level}">
+            <td colspan="{$viewcount + 2}" class="code">
+                <div class="shortname-container">
+                    {for name=foo from=0 to=$option->level step=1}
+                        {if $dwoo.for.foo.index != $option->level}
+                        <span class="matrixindent"></span>
+                        {/if}
+                    {/for} {$option->name}
+                    <div class="matrixtooltip popover hidden">
+                        <h3 class="popover-title">{$option->name}</h3>
+                        <div class="popover-content">
+                            {$option->description|clean_html|safe}
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {else}
+        <tr class="matrixlevel{$option->level}">
             <td class="code">
                 <div class="shortname-container">
-                    {$option->shortname}
+                    {for name=foo2 from=0 to=$option->level step=1}
+                        {if $dwoo.for.foo2.index != $option->level}
+                        <span class="matrixindent"></span>
+                        {/if}
+                    {/for}{$option->shortname}
                     <div class="matrixtooltip popover hidden">
                         <h3 class="popover-title">{$option->name}</h3>
                         <div class="popover-content">
@@ -74,6 +97,7 @@
             </td>
             {/foreach}
         </tr>
+        {/if}
         {/foreach}
     {/if}
   {/foreach}
