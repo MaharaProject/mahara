@@ -48,7 +48,7 @@ Scenario: Installing framework module and activating for an institution
 
  # Check that we have new framework
  And I choose "SmartEvidence" in "Extensions"
- Then I should see "SmartEvidence example"
+ Then I should see "Title of your framework"
 
  # Activate smartevidence in an institution
  And I choose "Institutions" in "Institutions"
@@ -61,7 +61,7 @@ Scenario: Installing framework module and activating for an institution
  And I follow "Return to site"
  And I choose "Collections" in "Portfolio"
  And I follow "Edit title and description"
- And I select "SmartEvidence example" from "SmartEvidence framework"
+ And I select "Title of your framework" from "SmartEvidence framework"
  And I press "Save"
  Then I should see "Collection saved successfully."
 
