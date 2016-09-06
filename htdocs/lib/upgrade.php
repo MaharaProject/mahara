@@ -1367,7 +1367,7 @@ function update_safe_iframe_regex() {
         // what they're doing, and need something fancy, can always
         // override this in config.php.
         foreach ($prefixes as $key => $r) {
-            if (!preg_match('/^[a-zA-Z0-9\/\._-]+$/', $r)) {
+            if (!preg_match('/^[\?a-zA-Z0-9\/\._-]+$/', $r)) {
                 throw new SystemException('Invalid site passed to update_safe_iframe_regex');
             }
             if (substr($r, -1) == '/') {
