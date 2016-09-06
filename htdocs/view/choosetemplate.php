@@ -72,9 +72,9 @@ $sort[] = array('column' => 'title',
                 'desc' => 0,
                 );
 if ($searchcollection) {
-    array_unshift($sort, array('column' => 'collection',
+    array_unshift($sort, array('column' => 'name',
                                'desc' => 0,
-                               'tablealias' => 'cv'
+                               'tablealias' => 'c'
                                ));
     $views->collection = $searchcollection;
 }
