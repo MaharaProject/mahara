@@ -685,11 +685,11 @@ EOF;
     }
     $smarty->assign('FOOTERMENU', footer_menu());
 
-    $smarty->assign_by_ref('USER', $USER);
+    $smarty->assign('USER', $USER);
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign('CC_ENABLED', get_config('cookieconsent_enabled'));
     $javascript_array = append_version_number($javascript_array);
-    $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
+    $smarty->assign('JAVASCRIPT', $javascript_array);
     $smarty->assign('RELEASE', get_config('release'));
     $smarty->assign('SERIES', get_config('series'));
     $smarty->assign('CACHEVERSION', get_config('cacheversion', 0));
@@ -855,7 +855,7 @@ EOF;
     if (is_array($HEADDATA) && !empty($HEADDATA)) {
         $headers = array_merge($HEADDATA, $headers);
     }
-    $smarty->assign_by_ref('HEADERS', $headers);
+    $smarty->assign('HEADERS', $headers);
 
     if ($USER->get('parentuser')) {
         $smarty->assign('USERMASQUERADING', true);

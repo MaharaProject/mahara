@@ -848,8 +848,8 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             $resumegroups[] = $resumegroup;
         }
         $smarty = smarty_core();
-        $smarty->assign_by_ref('displaydecisions', $importer->get('displaydecisions'));
-        $smarty->assign_by_ref('resumegroups', $resumegroups);
+        $smarty->assign('displaydecisions', $importer->get('displaydecisions'));
+        $smarty->assign('resumegroups', $resumegroups);
         return $smarty->fetch('artefact:resume:import/resumefields.tpl');
     }
 

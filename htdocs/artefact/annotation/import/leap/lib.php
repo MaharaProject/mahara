@@ -556,8 +556,8 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
             }
         }
         $smarty = smarty_core();
-        $smarty->assign_by_ref('displaydecisions', $importer->get('displaydecisions'));
-        $smarty->assign_by_ref('entryannotations', $entryannotations);
+        $smarty->assign('displaydecisions', $importer->get('displaydecisions'));
+        $smarty->assign('entryannotations', $entryannotations);
         return $smarty->fetch('artefact:annotation:import/annotations.tpl');
     }
 }

@@ -335,8 +335,8 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
             }
         }
         $smarty = smarty_core();
-        $smarty->assign_by_ref('displaydecisions', $importer->get('displaydecisions'));
-        $smarty->assign_by_ref('entryplans', $entryplans);
+        $smarty->assign('displaydecisions', $importer->get('displaydecisions'));
+        $smarty->assign('entryplans', $entryplans);
         return $smarty->fetch('artefact:plans:import/plans.tpl');
     }
 }

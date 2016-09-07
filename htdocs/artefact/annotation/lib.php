@@ -903,7 +903,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             (isset($data->block) ? '&block=' . $data->block : '');
 
         $smarty = smarty_core();
-        $smarty->assign_by_ref('data', $data->data);
+        $smarty->assign('data', $data->data);
         $smarty->assign('canedit', $data->canedit);
         $smarty->assign('viewid', $data->view);
         $smarty->assign('position', $data->position);

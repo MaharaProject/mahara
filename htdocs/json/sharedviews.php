@@ -78,7 +78,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty_core();
-$smarty->assign_by_ref('views', $data->data);
+$smarty->assign('views', $data->data);
 $data->tablerows = $smarty->fetch('view/sharedviewrows.tpl');
 $data->pagination = $pagination['html'];
 $data->pagination_js = $pagination['javascript'];

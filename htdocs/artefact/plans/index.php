@@ -39,7 +39,7 @@ addLoadEvent(function () {
 EOF;
 
 $smarty = smarty(array('paginator'));
-$smarty->assign_by_ref('plans', $plans);
+$smarty->assign('plans', $plans);
 $smarty->assign('strnoplansaddone',
     get_string('noplansaddone', 'artefact.plans',
     '<a href="' . get_config('wwwroot') . 'artefact/plans/new.php">', '</a>'));

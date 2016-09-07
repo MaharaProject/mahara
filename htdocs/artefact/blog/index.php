@@ -91,7 +91,7 @@ if (empty($blogs->institution) && empty($blogs->group)) {
 ArtefactTypeBlog::build_blog_list_html($blogs);
 
 $smarty = smarty(array('paginator'));
-$smarty->assign_by_ref('blogs', $blogs);
+$smarty->assign('blogs', $blogs);
 $smarty->assign('institutionname', $institutionname);
 $smarty->assign('group', $groupid);
 $js = '';
