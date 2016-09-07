@@ -13,7 +13,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     | First name | test first name |
     | Last name | test last name |
     And I press "Save profile"
-    And I follow "Portfolio"
+    And I choose "Pages" in "Portfolio"
     # Creating a page
     And I press "Create page"
     And I set the field "Page title" to "test page name 1"
@@ -37,11 +37,11 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I follow "Done"
     And I hover "Delete collection" "link"
     And I go to the homepage
-    And I go to "Export"
+    And I choose "Export" in "Portfolio"
     And I move backward one page
     And I wait "3" seconds
     And I move forward one page
-    And I follow "Content"
+    And I choose "Profile" in "Content"
     And the "First name" field should not contain "Jinelle"
     And the "First name" field should contain "test first name"
 

@@ -298,6 +298,21 @@ function suspend_submit(Pieform $form, $values) {
     redirect('/admin/users/suspended.php');
 }
 
+function delete_validate(Pieform $form, $values) {
+    global $SESSION, $USER;
+    $users = $values['users'];
+    // Not allowed to bulk delete yourself
+    if (is_array($users) && in_array($USER->get('id'), $users)) {
+        $form->set_error(null, get_string('unabletodeleteself', 'admin'));
+    }
+    // Not allowed to remove all site admins
+    $siteadmins = count_records_sql("SELECT COUNT(admin) FROM {usr}
+                           WHERE id NOT IN (" . join(',', array_map('db_quote', $users)) . ") AND admin = 1", array());
+    if (!$siteadmins) {
+        $form->set_error(null, get_string('unabletodeletealladmins', 'admin'));
+    }
+}
+
 function delete_submit(Pieform $form, $values) {
     global $users, $editable, $SESSION;
 
