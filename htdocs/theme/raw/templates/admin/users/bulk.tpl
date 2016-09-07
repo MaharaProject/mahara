@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <div class="panel panel-default">
-    <div id="edit-users" class="panel-body admin-edit-users">
+    <div id="edit-users" class="panel-body admin-edit-users bulk jstabs">
         <p class="lead">{str tag=editselectedusersdescription1 section=admin}</p>
         <ul class="nav nav-tabs" role="tablist">
             <li id="suspend-user-tab" class="active" role="presentation" aria-hidden="true">
