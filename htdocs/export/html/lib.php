@@ -388,8 +388,8 @@ class PluginExportHtml extends PluginExport {
             if (isset($this->viewcollection[$viewid])
                 && ($this->viewexportmode == PluginExport::EXPORT_LIST_OF_COLLECTIONS
                     || $this->viewexportmode == PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS)) {
-                $smarty->assign_by_ref('collectionname', $this->collections[$this->viewcollection[$viewid]]->get('name'));
-                $smarty->assign_by_ref('collectionmenu', $this->collection_menu($this->viewcollection[$viewid]));
+                $smarty->assign('collectionname', $this->collections[$this->viewcollection[$viewid]]->get('name'));
+                $smarty->assign('collectionmenu', $this->collection_menu($this->viewcollection[$viewid]));
                 $smarty->assign('viewid', $viewid);
             }
 

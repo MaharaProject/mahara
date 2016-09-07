@@ -210,8 +210,8 @@ else if (!$USER->get_account_preference('multipleblogs')) {
     }
 }
 
-$smarty->assign_by_ref('blog', $blog);
-$smarty->assign_by_ref('posts', $posts);
+$smarty->assign('blog', $blog);
+$smarty->assign('posts', $posts);
 $smarty->display('artefact:blog:view.tpl');
 exit;
 

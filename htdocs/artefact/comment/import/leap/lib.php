@@ -348,8 +348,8 @@ class LeapImportComment extends LeapImportArtefactPlugin {
             }
         }
         $smarty = smarty_core();
-        $smarty->assign_by_ref('displaydecisions', $importer->get('displaydecisions'));
-        $smarty->assign_by_ref('entrycomments', $entrycomments);
+        $smarty->assign('displaydecisions', $importer->get('displaydecisions'));
+        $smarty->assign('entrycomments', $entrycomments);
         return $smarty->fetch('artefact:comment:import/comments.tpl');
     }
 }

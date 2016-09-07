@@ -1693,7 +1693,7 @@ class View {
         $blocktypes = PluginBlockType::get_blocktypes_for_category($category, $this);
 
         $smarty = smarty_core();
-        $smarty->assign_by_ref('blocktypes', $blocktypes);
+        $smarty->assign('blocktypes', $blocktypes);
         $smarty->assign('javascript', $javascript);
         return $smarty->fetch('view/blocktypelist.tpl');
     }
@@ -5503,7 +5503,7 @@ class View {
         $params['limit'] = $search->limit;
 
         $smarty = smarty_core();
-        $smarty->assign_by_ref('results', $results->data);
+        $smarty->assign('results', $results->data);
         $search->html = $smarty->fetch('view/templatesearchresults.tpl');
         $search->count = $results->count;
 

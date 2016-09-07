@@ -157,7 +157,7 @@ $smarty = smarty(array(), array(), array(), array(
     ),
 ));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign_by_ref('form', $form);
+$smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $artefact->get('title'));
 $smarty->assign('pagedescriptionhtml', $othernotesmsg);
 $smarty->display('form.tpl');

@@ -1738,7 +1738,7 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
 
     $results['cdata'] = array_chunk($results['data'], 2);
     $results['roles'] = group_get_role_info($group);
-    $smarty->assign_by_ref('results', $results);
+    $smarty->assign('results', $results);
     $smarty->assign('searchurl', $searchurl);
     $smarty->assign('pagebaseurl', $searchurl);
     $smarty->assign('caneditroles', group_user_access($group) == 'admin');

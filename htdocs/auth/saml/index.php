@@ -363,7 +363,7 @@ function auth_saml_disco_screen($list, $preferred) {
     }
 
     $smarty = smarty_core();
-    $smarty->assign_by_ref('results', $idps);
+    $smarty->assign('results', $idps);
     $smarty->assign('cols', $cols);
     $smarty->assign('pagedescriptionhtml', get_string('selectidp', 'auth.saml'));
     $idps = $smarty->fetch('auth:saml:idptable.tpl');

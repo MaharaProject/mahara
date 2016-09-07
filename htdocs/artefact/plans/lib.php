@@ -126,7 +126,7 @@ class ArtefactTypePlan extends ArtefactType {
      */
     public static function build_plans_list_html(&$plans) {
         $smarty = smarty_core();
-        $smarty->assign_by_ref('plans', $plans);
+        $smarty->assign('plans', $plans);
         $plans['tablerows'] = $smarty->fetch('artefact:plans:planslist.tpl');
         $pagination = build_pagination(array(
             'id' => 'planlist_pagination',
@@ -289,7 +289,7 @@ class ArtefactTypePlan extends ArtefactType {
         ArtefactTypeTask::render_tasks($tasks, $template, $options, $pagination);
 
         $smarty = smarty_core();
-        $smarty->assign_by_ref('tasks', $tasks);
+        $smarty->assign('tasks', $tasks);
         if (isset($options['viewid'])) {
             $smarty->assign('artefacttitle', '<a href="' . $baseurl . '">' . hsc($this->get('title')) . '</a>');
         }
@@ -626,7 +626,7 @@ class ArtefactTypeTask extends ArtefactType {
      */
     public function build_tasks_list_html(&$tasks) {
         $smarty = smarty_core();
-        $smarty->assign_by_ref('tasks', $tasks);
+        $smarty->assign('tasks', $tasks);
         $tasks['tablerows'] = $smarty->fetch('artefact:plans:taskslist.tpl');
         $pagination = build_pagination(array(
             'id' => 'tasklist_pagination',
@@ -659,8 +659,8 @@ class ArtefactTypeTask extends ArtefactType {
     public function render_tasks(&$tasks, $template, $options, $pagination) {
 
         $smarty = smarty_core();
-        $smarty->assign_by_ref('tasks', $tasks);
-        $smarty->assign_by_ref('options', $options);
+        $smarty->assign('tasks', $tasks);
+        $smarty->assign('options', $options);
         $tasks['tablerows'] = $smarty->fetch($template);
 
         if ($tasks['limit'] && $pagination) {

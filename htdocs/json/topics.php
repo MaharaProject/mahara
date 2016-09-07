@@ -33,7 +33,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty_core();
-$smarty->assign_by_ref('topics', $data['data']);
+$smarty->assign('topics', $data['data']);
 $data['tablerows'] = $smarty->fetch('group/topicrows.tpl');
 $data['pagination'] = $pagination['html'];
 $data['pagination_js'] = $pagination['javascript'];

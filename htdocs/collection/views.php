@@ -164,8 +164,8 @@ $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('baseurl', $baseurl);
 $smarty->assign('displayurl', get_config('wwwroot') . 'collection/views.php?id=' . $id);
 $smarty->assign('removeurl', get_config('wwwroot') . 'collection/deleteview.php?id=' . $id);
-$smarty->assign_by_ref('views', $views);
-$smarty->assign_by_ref('viewsform', $viewsform);
+$smarty->assign('views', $views);
+$smarty->assign('viewsform', $viewsform);
 $smarty->display('collection/views.tpl');
 
 function addviews_validate(Pieform $form, $values) {

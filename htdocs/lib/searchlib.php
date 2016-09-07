@@ -502,8 +502,8 @@ function build_admin_user_search_results($search, $offset, $limit) {
     }
 
     $smarty = smarty_core();
-    $smarty->assign_by_ref('results', $results);
-    $smarty->assign_by_ref('institutions', $institutions);
+    $smarty->assign('results', $results);
+    $smarty->assign('institutions', $institutions);
     $smarty->assign('USER', $USER);
     $smarty->assign('limit', $limit);
     $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));
@@ -675,7 +675,7 @@ function build_admin_export_queue_results($search, $offset, $limit) {
     );
 
     $smarty = smarty_core();
-    $smarty->assign_by_ref('results', $results);
+    $smarty->assign('results', $results);
     $smarty->assign('USER', $USER);
     $smarty->assign('limit', $limit);
     $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));
@@ -800,7 +800,7 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
     );
 
     $smarty = smarty_core();
-    $smarty->assign_by_ref('results', $results);
+    $smarty->assign('results', $results);
     $smarty->assign('USER', $USER);
     $smarty->assign('limit', $limit);
     $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));

@@ -64,7 +64,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign_by_ref('view', $view);
+$smarty->assign('view', $view);
 $smarty->assign('form', $form);
 $smarty->assign('collectionnote', $collectionnote);
 $smarty->display('view/delete.tpl');

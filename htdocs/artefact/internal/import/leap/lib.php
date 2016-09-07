@@ -1180,8 +1180,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             $profilegroups[] = $profilegroup;
         }
         $smarty = smarty_core();
-        $smarty->assign_by_ref('displaydecisions', $importer->get('displaydecisions'));
-        $smarty->assign_by_ref('profilegroups', $profilegroups);
+        $smarty->assign('displaydecisions', $importer->get('displaydecisions'));
+        $smarty->assign('profilegroups', $profilegroups);
         return $smarty->fetch('artefact:internal:import/profilefields.tpl');
     }
 

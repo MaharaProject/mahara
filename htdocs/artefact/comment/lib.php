@@ -868,7 +868,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
 
         $smarty = smarty_core();
-        $smarty->assign_by_ref('data', $data->data);
+        $smarty->assign('data', $data->data);
         $smarty->assign('canedit', $data->canedit);
         $smarty->assign('position', $data->position);
         $smarty->assign('viewid', $data->view);

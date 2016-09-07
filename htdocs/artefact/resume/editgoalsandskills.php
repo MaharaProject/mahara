@@ -140,7 +140,7 @@ $smarty = smarty(array(), array(), array(), array(
 ));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
-$smarty->assign_by_ref('artefactform', $form);
+$smarty->assign('artefactform', $form);
 $smarty->assign('artefacttype', $type);
 $smarty->display('artefact:resume:editgoalsandskills.tpl');
 

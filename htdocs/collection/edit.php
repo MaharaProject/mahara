@@ -119,7 +119,7 @@ setpageicon($smarty, 'icon-folder-open');
 
 $smarty->assign('headingclass', 'page-header');
 
-$smarty->assign_by_ref('form', $form);
+$smarty->assign('form', $form);
 $smarty->display('collection/edit.tpl');
 
 function collectionedit_validate(Pieform $form, $values) {

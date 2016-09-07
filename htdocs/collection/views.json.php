@@ -147,7 +147,7 @@ if ($views) {
 
 
 $smarty = smarty_core();
-$smarty->assign_by_ref('views', $views);
+$smarty->assign('views', $views);
 $smarty->assign('displayurl', get_config('wwwroot') . 'collection/views.php?id=' . $id);
 $html = $smarty->fetch('collection/views.json.tpl');
 

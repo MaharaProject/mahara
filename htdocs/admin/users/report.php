@@ -121,8 +121,8 @@ $userids = array_keys($users);
 
 if ($selected == 'users') {
     $smarty = smarty_core();
-    $smarty->assign_by_ref('users', $users);
-    $smarty->assign_by_ref('USER', $USER);
+    $smarty->assign('users', $users);
+    $smarty->assign('USER', $USER);
     $userlisthtml = $smarty->fetch('admin/users/userlist.tpl');
 
     if ($USER->get('admin') || $USER->is_institutional_admin()) {
@@ -152,8 +152,8 @@ else if ($selected == 'accesslist') {
         $users[$v['owner']]->views[$k] = $v;
     }
     $smarty = smarty_core();
-    $smarty->assign_by_ref('users', $users);
-    $smarty->assign_by_ref('USER', $USER);
+    $smarty->assign('users', $users);
+    $smarty->assign('USER', $USER);
     $userlisthtml = $smarty->fetch('admin/users/accesslists.tpl');
 }
 else if ($selected == 'loginaslog') {
@@ -184,8 +184,8 @@ else if ($selected == 'loginaslog') {
       $note = false;
     }
     $smarty = smarty_core();
-    $smarty->assign_by_ref('log', $log);
-    $smarty->assign_by_ref('USER', $USER);
+    $smarty->assign('log', $log);
+    $smarty->assign('USER', $USER);
     $smarty->assign('note', $note);
     $userlisthtml = $smarty->fetch('admin/users/loginaslog.tpl');
 }
@@ -196,4 +196,3 @@ $smarty->assign('users', $users);
 $smarty->assign('userlisthtml', $userlisthtml);
 $smarty->assign('csv', isset($csv));
 $smarty->display('admin/users/report.tpl');
-
