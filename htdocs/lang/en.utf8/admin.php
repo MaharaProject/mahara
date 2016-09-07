@@ -1147,6 +1147,8 @@ $string['selectedusers'] = 'Selected users';
 $string['remoteuser'] = 'Remote username';
 $string['userreports'] = 'User reports';
 $string['userreportsdescription'] = 'View or download information about the users you selected on the search page.';
+$string['unabletodeleteself'] = 'Unable to bulk delete yourself';
+$string['unabletodeletealladmins'] = 'Not allowed to bulk delete all the site admins';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';
