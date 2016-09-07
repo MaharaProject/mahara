@@ -155,6 +155,9 @@ class PluginArtefactAnnotation extends PluginArtefact {
     public static function progressbar_link($artefacttype) {
         switch ($artefacttype) {
             case 'annotation':
+                return 'view/index.php';
+                break;
+            case 'annotationfeedback':
                 return 'view/sharedviews.php';
                 break;
         }
@@ -164,6 +167,14 @@ class PluginArtefactAnnotation extends PluginArtefact {
         return array(
             (object)array(
                 'name' => 'annotation',
+                'title' => get_string('placeannotation', 'artefact.annotation'),
+                'plugin' => 'annotation',
+                'active' => true,
+                'iscountable' => true,
+                'is_metaartefact' => true,
+            ),
+            (object)array(
+                'name' => 'annotationfeedback',
                 'title' => get_string('placeannotationfeedback', 'artefact.annotation'),
                 'plugin' => 'annotation',
                 'active' => true,
@@ -183,10 +194,16 @@ class PluginArtefactAnnotation extends PluginArtefact {
                 $sql = "SELECT COUNT(*) AS completed
                         FROM {artefact}
                         WHERE artefacttype='annotation'
+                        AND owner = ?";
+                $meta->completed = count_records_sql($sql, array($USER->get('id')));
+                break;
+            case 'annotationfeedback':
+                $sql = "SELECT COUNT(*) AS completed
+                        FROM {artefact}
+                        WHERE artefacttype='annotationfeedback'
                         AND owner <> ?
                         AND author = ?";
-                $count = get_records_sql_array($sql, array($USER->get('id'), $USER->get('id')));
-                $meta->completed = $count[0]->completed;
+                $meta->completed = count_records_sql($sql, array($USER->get('id'), $USER->get('id')));
                 break;
             default:
                 return false;

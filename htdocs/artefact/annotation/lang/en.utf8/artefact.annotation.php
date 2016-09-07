@@ -38,6 +38,7 @@ $string['commentremovedbyauthor'] = 'Feedback removed by the author';
 $string['commentremovedbyowner'] = 'Feedback removed by the owner';
 $string['commentremovedbyadmin'] = 'Feedback removed by an administrator';
 $string['editannotationfeedback'] = 'Edit feedback';
+$string['placeannotation'] = 'Add annotation';
 $string['placeannotationfeedback'] = 'Place feedback';
 
 $string['annotationfeedbacksubmitted'] = 'Feedback submitted.';
@@ -105,8 +106,12 @@ $string['nannotationfeedback'] = array(
     '%s feedback',
 );
 $string['progress_annotation'] = array(
-    'Give 1 feedback on an annotation',
-    'Give %s feedbacks on annotations',
+    'Add 1 annotation to a page',
+    'Add %s annotations to pages',
+);
+$string['progress_annotationfeedback'] = array(
+    "Give 1 feedback to another user's annotation",
+    "Give %s feedbacks to other users' annotations",
 );
 $string['duplicatedannotation'] = 'Duplicated annotation';
 $string['existingannotation'] = 'Existing feedback';
