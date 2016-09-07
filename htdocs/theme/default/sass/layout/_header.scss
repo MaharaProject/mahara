@@ -51,3 +51,12 @@
         }
     }
 }
+.header-search-form {
+    .text {
+        border-radius: 3px 0 0 3px;
+    }
+    .input-group-btn {
+        border-radius: 0 3px 3px 0;
+        float: right;
+    }
+}
