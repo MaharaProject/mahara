@@ -87,6 +87,20 @@ class PluginModuleFramework extends PluginModule {
                 }
                 else {
                     $ok['content'] = $content;
+                    if (isset($content->framework->standardelements)) {
+                        // new style .matrix file so we need to alter the array to fit what we want
+                        foreach ($content->framework->standards as $key => $standard) {
+                            foreach ($content->framework->standardelements as $k => $element) {
+                                if ($standard->standardid === $element->standardid) {
+                                    if (!isset($content->framework->standards[$key]->standardelement)) {
+                                        $content->framework->standards[$key]->standardelement = array();
+                                    }
+                                    $content->framework->standards[$key]->standardelement[] = $element;
+                                }
+                            }
+                        }
+                        unset($content->framework->standardelements);
+                    }
                 }
             }
         }

@@ -75,10 +75,9 @@ Scenario: Installing framework module and activating for an institution
  Then I should not see "PageF"
 
  # Click on a matrix point to add an annotation
- And I click on the matrix point "3,5"
+ And I click on the matrix point "3,4"
  And I wait "1" seconds
- And I set the following fields to these values:
- | Annotation | My two cents |
+ And I fill in "My two cents" in editor "Annotation"
  And I press "Save"
  And I go to portfolio page "PageB"
  Then I should see "Annotation"
@@ -89,18 +88,16 @@ Scenario: Installing framework module and activating for an institution
  And I wait "1" seconds
  And I follow "Annotation"
  And I press "Add"
- And I set the following fields to these values:
- | Annotation | My three cents |
- And I set the select2 value "one point one" for "instconf_smartevidence"
+ And I fill in "My three cents" in editor "Annotation"
+ And I set the select2 value "1.1 - Sub level of the standard" for "instconf_smartevidence"
  And I press "Save"
 
  # Re-click a matrix point to add some feedback
  And I choose "Collections" in "Portfolio"
  And I follow "CollA"
- And I click on the matrix point "3,5"
+ And I click on the matrix point "3,4"
  And I wait "1" seconds
- And I set the following fields to these values:
- | Feedback | This is annotation feedback |
+ And I fill in "This is annotation feedback" in editor "Feedback"
  And I press "Place feedback"
  # And change assessment status
  And I should not see the field "Assessment"
@@ -111,7 +108,7 @@ Scenario: Installing framework module and activating for an institution
  Given  I log in as "userA" with password "Kupuhipa1"
  And I wait "1" seconds
  And I follow "CollA"
- And I click on the matrix point "3,5"
+ And I click on the matrix point "3,4"
  And I wait "1" seconds
  And I select "Partially meets the standard" from "Assessment"
  And I press "Save"

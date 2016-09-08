@@ -97,7 +97,6 @@
          "name":"1.4 - Sub level of the standard",
          "description":"Description of the standard. This description appears when you hover over the standard on the SmartEvidence page and is also displayed when selecting the standard in the Annotations block.",
          "standardid":1,
-         "standardid":1,
          "elementid": "1.4"
        },
        {
@@ -214,7 +213,6 @@
          "name":"4.2 - Sub level of the standard",
          "description":"Description of the standard. This description appears when you hover over the standard on the SmartEvidence page and is also displayed when selecting the standard in the Annotations block.",
          "standardid":4,
-         "standardid":4,
          "elementid": "4.2"
        },
        {
@@ -235,6 +233,7 @@
          "shortname":"4.4.1",
          "name":"4.4.1 - Yet another sub level of the standard",
          "description":"Description of the standard. This description appears when you hover over the standard on the SmartEvidence page and is also displayed when selecting the standard in the Annotations block.",
+         "standardid":4,
          "parentelementid": "4.4",
          "elementid":"4.4.1"
        },
