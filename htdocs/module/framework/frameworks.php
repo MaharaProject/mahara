@@ -82,7 +82,7 @@ if ($frameworks) {
 
 function framework_update_submit(Pieform $form, $values) {
     global $SESSION;
-    // Should not normall get here as the form has no submit button and is updated via ajax/frameworks.json.php
+    // Should not normally get here as the form has no submit button and is updated via ajax/frameworks.json.php
     // but in case one does
     if (!is_plugin_active('framework', 'module')) {
         $SESSION->add_error_msg(get_string('needtoactivate', 'module.framework'));
