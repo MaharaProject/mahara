@@ -4343,5 +4343,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2015092932) {
+        log_debug('Removing any watchlist items for root user as they are not needed');
+        delete_records('usr_watchlist_view', 'usr', 0);
+    }
+
     return $status;
 }
