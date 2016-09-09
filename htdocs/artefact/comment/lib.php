@@ -1784,10 +1784,10 @@ function add_feedback_form_submit(Pieform $form, $values) {
     );
 
     // We want to add the user placing the comment to the watchlist so they
-    // can get notified about future comments to the page.
+    // can get notified about future comments to the page, unless they are anonymous.
     // @TODO Add a site/institution preference to override this.
     $updatelink = false;
-    if (!get_field('usr_watchlist_view', 'ctime', 'usr', $author, 'view', $view->get('id')) && ($author != $owner)) {
+    if (!$anonymous && !get_field('usr_watchlist_view', 'ctime', 'usr', $author, 'view', $view->get('id')) && ($author != $owner)) {
         insert_record('usr_watchlist_view', (object) array('usr' => $author,
                                                            'view' => $view->get('id'),
                                                            'ctime' => db_format_timestamp(time())));
