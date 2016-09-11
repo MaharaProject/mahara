@@ -5391,6 +5391,7 @@ class View {
      * @return string updated description
      */
     private function copy_description(View $template, array &$artefactcopies) {
+        safe_require('artefact', 'file');
         $new_description = $template->get('description');
         if (!empty($new_description)
             && strpos($new_description, 'artefact/file/download.php?file=') !== false) {
@@ -6036,6 +6037,7 @@ class View {
      */
     public static function get_accesslists($owner=null, $group=null, $institution=null) {
         require_once('institution.php');
+        require_once('group.php');
 
         if (!is_null($owner) && !is_array($owner) && $owner > 0) {
             $ownerobj = new User();

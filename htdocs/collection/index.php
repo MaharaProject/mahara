@@ -32,6 +32,7 @@ if (!empty($groupid)) {
     define('MENUITEM', 'groups/collections');
     define('GROUP', $groupid);
     define('SUBSECTIONHEADING', get_string('Collections', 'collection'));
+    require_once('group.php');
     $group = group_current_group();
     // Check if user can edit group collections <-> user can edit group views
     $role = group_user_access($group->id);
