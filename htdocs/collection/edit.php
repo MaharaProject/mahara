@@ -48,6 +48,7 @@ if ($collection->is_submitted()) {
 
 $urlparams = array();
 if (!empty($groupid)) {
+    require_once('group.php');
     define('MENUITEM', 'groups/collections');
     define('GROUP', $groupid);
     $group = group_current_group();

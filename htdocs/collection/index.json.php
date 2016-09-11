@@ -26,6 +26,7 @@ $institutionname = param_alphanum('institution', false);
 $urlparams = array();
 
 if (!empty($groupid)) {
+    require_once('group.php');
     $group = group_current_group();
     // Check if user can edit group collections <-> user can edit group views
     $role = group_user_access($group->id);
