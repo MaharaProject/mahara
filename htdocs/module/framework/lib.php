@@ -610,19 +610,25 @@ class Framework {
             // Get the title for the option
             $title = get_field('framework_standard_element', 'shortname', 'id', $data->option);
 
-            // Find out how many blocks already exist for the view.
+            // Find out which is the last lefthand 'cell' on the page
+            $lastrow = get_field('view', 'numrows', 'id', $data->view);
+            if ($lastrow === false) {
+                throw new MaharaException('An error occurred. A valid view should not have an empty "numrows" column');
+            }
+            // Find out how many blocks already exist for this 'cell'.
             $maxorder = get_field_sql(
                 'SELECT MAX("order") FROM {block_instance} WHERE "view"=? AND "row"=? AND "column"=?',
-                array($data->view, 1, 1)
+                array($data->view, $lastrow, 1)
             );
-            // Create the block at the end of the cell.
+
+            // Create the block at the end of the 'cell'.
             $annotation = new BlockInstance(0, array(
                 'blocktype'  => 'annotation',
                 'title'      => (get_string('Annotation', 'artefact.annotation') . ': ' . $title),
                 'view'       => $data->view,
-                'row'        => 1,
+                'row'        => $lastrow,
                 'column'     => 1,
-                'order'      => $maxorder + 1,
+                'order'      => (int)$maxorder + 1,
             ));
             $annotation->commit();
             $new = true;
