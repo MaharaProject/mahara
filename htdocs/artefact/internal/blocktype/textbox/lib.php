@@ -348,7 +348,7 @@ EOF;
             'otherblocksmsg' => array(
                 'type' => 'html',
                 'class' => 'message info' . (($otherblockcount && !$readonly) ? '' : ' hidden'),
-                'value' => '<p class="alert alert-info">' . $otherblocksmsg
+                'value' => '<p class="alert alert-warning">' . $otherblocksmsg
                     . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a></p>',
                 'help' => true,
             ),
@@ -356,7 +356,7 @@ EOF;
             'readonlymsg' => array(
                 'type' => 'html',
                 'class' => 'message info' . ($readonly ? '' : ' hidden'),
-                'value' => '<p class="alert alert-info">' . get_string('readonlymessage', 'blocktype.internal/textbox')
+                'value' => '<p class="alert alert-warning">' . get_string('readonlymessage', 'blocktype.internal/textbox')
                     . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a></p>',
                 'help' => true,
             ),
