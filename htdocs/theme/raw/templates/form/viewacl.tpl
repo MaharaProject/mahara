@@ -56,7 +56,7 @@
 
                     <optgroup label="{%={{jstr tag=general section=view}}%}" id="potentialpresetitemssharewith">
                         {% for (var i=0; i<o.shareoptions.general.length; i++) { %}
-                            <option value="{%=o.shareoptions.general[i].id%}"{% if (o.presets.type == o.shareoptions.general[i].id) { %} selected{% } %}>{%=o.shareoptions.general[i].name%}</option>
+                            <option value="{%=o.shareoptions.general[i].id%}"{% if (o.presets.type == o.shareoptions.general[i].id) { %} selected{% } %} {% if (o.shareoptions.general[i].locked) { %} disabled{% } %}>{%=o.shareoptions.general[i].name%}</option>
                         {% } %}
                     </optgroup>
 
@@ -387,7 +387,8 @@ jQuery(function($) {
                 results.general[i] = {
                     'id':  item.id,
                     'name': item.name,
-                    'selected': item.preset
+                    'selected': item.preset,
+                    'locked': item.locked
                 };
             }
 
