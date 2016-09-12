@@ -276,8 +276,13 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
                 $tagomitstr .= ($viewownerdisplay) ? '"' . $tag . '"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . $tag . '&sort=name&type=text">' . $tag . '</a>"';
             }
         }
-        $blockheading = get_string('blockheadingtags', 'blocktype.blog/taggedposts', count($tagsin), $tagstr);
-        $blockheading .= (!empty($tagomitstr)) ? get_string('blockheadingtagsomit', 'blocktype.blog/taggedposts', count($tagsout), $tagomitstr) : '';
+        if (empty($tagsin)) {
+            $blockheading = get_string('blockheadingtagsomitonly', 'blocktype.blog/taggedposts', count($tagsout), $tagomitstr);
+        }
+        else {
+            $blockheading = get_string('blockheadingtags', 'blocktype.blog/taggedposts', count($tagsin), $tagstr);
+            $blockheading .= (!empty($tagomitstr)) ? get_string('blockheadingtagsomitboth', 'blocktype.blog/taggedposts', count($tagsout), $tagomitstr) : '';
+        }
         $blockheading .= ($viewownerdisplay) ? ' ' . get_string('by', 'artefact.blog') . ' <a href="' . profile_url($viewownerdisplay) . '">' . display_name($viewownerdisplay) . '</a>' : '';
         $smarty->assign('full', $full);
         $smarty->assign('results', $results);
