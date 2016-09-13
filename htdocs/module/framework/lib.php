@@ -508,7 +508,7 @@ class Framework {
             ),
             'incomplete' => array(
                 'state' => (int) $state === self::EVIDENCE_INCOMPLETE ? 1 : 0,
-                'classes' => 'icon icon-circle-o incomplete',
+                'classes' => 'icon icon-times-circle incomplete',
             ),
             'partialcomplete' => array(
                 'state' => (int) $state === self::EVIDENCE_PARTIALCOMPLETE ? 1 : 0,
