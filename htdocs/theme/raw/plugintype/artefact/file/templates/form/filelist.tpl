@@ -111,7 +111,7 @@
                 {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}
                     <button type="submit" class="btn btn-xs btn-default" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" title="{str tag=select}">
                         <span class="icon icon-check icon-lg" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">{str tag=select}</span>
+                        <span class="sr-only">{str tag=selectspecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
                     </button>
                 {/if}
                 {if $editmeta}
@@ -121,7 +121,11 @@
                         {if !isset($file->can_edit) || $file->can_edit !== 0}
                         <button name="{$prefix}_edit[{$file->id}]" class="btn btn-default btn-xs" title="{str tag=edit}">
                             <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">{$edittext|escape:html|safe}</span>
+                            {if $file->artefacttype == 'folder'}
+                                <span class="sr-only">{str tag=editfolderspecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
+                            {else}
+                                <span class="sr-only">{str tag=editfilespecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
+                            {/if}
                         </button>
                         {/if}
                     {/if}
