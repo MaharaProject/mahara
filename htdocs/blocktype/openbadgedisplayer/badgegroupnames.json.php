@@ -34,6 +34,6 @@ json_reply(false, array(
     'hosttitle' => $hosttitle,
     'uid' => $uid,
     'badgegroups' => isset($uid) ? PluginBlocktypeOpenbadgedisplayer::get_badgegroupnames($host, $uid) : null,
-    'nobackpackmsg' => get_string('nobackpackidin', 'blocktype.openbadgedisplayer', $hosttitle),
-    'nobadgegroupsmsg' => get_string('nobadgegroupsin', 'blocktype.openbadgedisplayer', $hosttitle)
+    'nobackpackmsg' => get_string('nobackpackidin1', 'blocktype.openbadgedisplayer', $email, $hosttitle),
+    'nobadgegroupsmsg' => get_string('nobadgegroupsin1', 'blocktype.openbadgedisplayer', $hosttitle, $email)
 ));
