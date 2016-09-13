@@ -4698,5 +4698,15 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016090500) {
+      log_debug('Add iframe url in iframe_source table for glogster educational new url pattern');
+      delete_records('iframe_source', 'prefix', 'edu.glogster.com/glog/');
+      delete_records('iframe_source', 'prefix', 'edu.glogster.com//glog/');
+      if (!get_field('iframe_source', 'prefix', 'prefix', 'edu.glogster.com//?glog/')) {
+          insert_record('iframe_source', (object) array('prefix' => 'edu.glogster.com//?glog/', 'name' => 'Glogster'));
+      }
+      update_safe_iframe_regex();
+    }
+
     return $status;
 }
