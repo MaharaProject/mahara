@@ -131,6 +131,7 @@ class PluginSearchElasticsearch extends PluginSearch {
                 'autofocus'           => false,
                 'validate'            => false,
                 'presubmitcallback'   => '',
+                'class'               => 'header-search-form',
                 'elements'            => array(
                         'query' => array(
                                 'type'           => 'text',
