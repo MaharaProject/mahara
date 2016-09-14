@@ -1275,24 +1275,27 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                     safe_require('module', 'framework');
 
                     $evidence = get_record('framework_evidence', 'annotation', $metadata->block);
-                    $defaultval = $evidence->state;
+                    if (!empty($evidence)) {
+                        // we are dealing with an annotation added since smartevidence was added
+                        $defaultval = $evidence->state;
 
-                    if ($options = Framework::get_my_assessment_options_for_user($view->get('owner'), $evidence->framework)) {
-                        if (!array_key_exists($defaultval, $options)) {
-                            $defaultval = null;
+                        if ($options = Framework::get_my_assessment_options_for_user($view->get('owner'), $evidence->framework)) {
+                            if (!array_key_exists($defaultval, $options)) {
+                                $defaultval = null;
+                            }
+                            $form['elements']['assessment'] = array(
+                                'type' => 'select',
+                                'title' => get_string('assessment', 'module.framework'),
+                                'options' => $options,
+                                'defaultvalue' => $defaultval,
+                                'width' => '280px',
+                            );
+
+                            $form['elements']['evidence'] = array(
+                                'type' => 'hidden',
+                                'value' => $evidence->id,
+                            );
                         }
-                        $form['elements']['assessment'] = array(
-                            'type' => 'select',
-                            'title' => get_string('assessment', 'module.framework'),
-                            'options' => $options,
-                            'defaultvalue' => $defaultval,
-                            'width' => '280px',
-                        );
-
-                        $form['elements']['evidence'] = array(
-                            'type' => 'hidden',
-                            'value' => $evidence->id,
-                        );
                     }
                 }
             }
