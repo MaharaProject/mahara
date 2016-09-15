@@ -34,6 +34,10 @@
 
 {if $configerror}
     <span class="text-midtone">{str tag='configerror' section='blocktype.blog/taggedposts'}</span>
+{elseif $badnotag && $badtag}
+    <span class="text-midtone">{str tag='notagsboth' section='blocktype.blog/taggedposts' arg1=$badtag arg2=$badnotag}</span>
+{elseif $badnotag}
+    <span class="text-midtone">{str tag='notagsomit' section='blocktype.blog/taggedposts' arg1=$badnotag}</span>
 {elseif $badtag}
     <span class="text-midtone">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</span>
 {elseif $full}
