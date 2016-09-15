@@ -34,7 +34,7 @@ else {
     $form = ArtefactTypePlan::get_form();
 }
 
-$smarty =& smarty();
+$smarty = smarty();
 $smarty->assign_by_ref('form', $form);
 $smarty->assign_by_ref('PAGEHEADING', hsc(TITLE));
 $smarty->display('artefact:plans:new.tpl');
