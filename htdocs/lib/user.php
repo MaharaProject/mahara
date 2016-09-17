@@ -2920,15 +2920,8 @@ function remote_avatar($email, $size, $notfound) {
         $baseurl = get_config('remoteavatarbaseurl');
     }
     // Check if it is a valid avatar
-    $result = mahara_http_request(
-            array(
-                    CURLOPT_URL => "{$baseurl}{$md5sum}.jpg?d=404",
-                    CURLOPT_HEADER => true,
-                    CURLOPT_NOBODY => true,
-            ),
-            true
-    );
-    if (!$result || $result->error || $result->info['http_code'] == 404) {
+    $isvalid = is_valid_url("{$baseurl}{$md5sum}.jpg?d=404");
+    if (!$isvalid) {
         $SESSION->set('remoteavatar', array_merge($avatars, array($md5sum => 'notfound')));
         return $notfound;
     }
