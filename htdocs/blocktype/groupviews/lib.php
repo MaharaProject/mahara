@@ -319,6 +319,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
 
             // For group members, display a list of views that others have
             // shared to the group
+            $hidesubmitted = group_user_can_assess_submitted_views($group->id, $USER->get('id'));
             if (empty($configdata['showsharedviews'])) {
                 $data['sharedviews'] = (object) array(
                     'data'   => array(),
@@ -333,7 +334,8 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                         0,
                         $group->id,
                         ($configdata['showsharedviews'] == 2 ? false : true),
-                        $sortsharedviewsby
+                        $sortsharedviewsby,
+                        $hidesubmitted
                 );
                 foreach ($data['sharedviews']->data as &$view) {
                     if (!$editing && isset($view['template']) && $view['template']) {
@@ -356,7 +358,8 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                         0,
                         $group->id,
                         ($configdata['showsharedcollections'] == 2 ? false : true),
-                        $sortsharedcollectionsby
+                        $sortsharedcollectionsby,
+                        $hidesubmitted
                 );
             }
             if (!empty($configdata['showsubmitted'])
