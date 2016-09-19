@@ -99,7 +99,9 @@
             }
         }
         .html {
-            @include clearfix;
+            &:not(.heading) {
+                @include clearfix;
+            }
         }
     }
 
