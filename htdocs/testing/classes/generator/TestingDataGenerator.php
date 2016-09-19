@@ -327,13 +327,18 @@ EOD;
                 $members[$ids[0]->id] = 'member';
             }
         }
-        if (!empty($record['staff'])) {
+        if (!empty($record['staff']) && !empty($record['grouptype'])) {
             foreach (explode(',', $record['staff']) as $membername) {
                 $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($membername))));
                 if (!$ids || count($ids) > 1) {
                     throw new SystemException("Invalid group staff '" . $membername . "'. The username does not exist or duplicated");
                 }
-                $members[$ids[0]->id] = 'staff';
+                if ($record['grouptype'] == 'course') {
+                    $members[$ids[0]->id] = 'tutor';
+                }
+                else {
+                    $members[$ids[0]->id] = 'admin';
+                }
             }
         }
         if (!empty($record['admins'])) {

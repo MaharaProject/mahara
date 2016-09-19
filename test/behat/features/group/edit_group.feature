@@ -46,7 +46,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
      | userB | Kupuhipa1 | test02@example.com | Pete | Mc | mahara | internal | member |
  And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-     | group 01 | userB | This is group 01 | standard | ON | ON | all | ON | ON | admin, userA | admin |
+     | group 01 | userB | This is group 01 | course | ON | ON | all | ON | ON | admin, userA | admin |
   And I follow "Logout"
  # Logging back in as a user
  And I log in as "userB" with password "Kupuhipa1"
@@ -59,7 +59,6 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  Then I press "Save group"
  # Checking for regression errors
  And I should not see "Invalid argument supplied for foreach()"
- And I should not see "[WAR]"
  And I should see "Group saved successfully"
  And I follow "Logout"
  # Logging in as Admin
