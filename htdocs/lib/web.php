@@ -1348,6 +1348,7 @@ function jsstrings() {
                 'toggletoolbarson',
                 'toggletoolbarsoff',
                 'imagexofy',
+                'remove',
             ),
             'pieforms' => array(
                 'element.calendar.opendatepicker',
