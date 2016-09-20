@@ -290,6 +290,15 @@ if ($institution || $add) {
             'help'   => true,
         ),
     );
+    if (!$add) {
+        $elements['shortname'] = array(
+                'type' => 'select',
+                'title' => get_string('institutionshortname', 'admin'),
+                'defaultvalue' => $data->name,
+                'description' => get_string('institutionshortnamedescription', 'admin'),
+                'options' => array($data->name => $data->name),
+        );
+    }
     if ($USER->get('admin') && $institution != 'mahara') {
        $elements['expiry'] = array(
             'type'         => 'date',

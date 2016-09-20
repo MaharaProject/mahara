@@ -92,6 +92,7 @@
             <thead>
             <tr>
                 <th>{str tag="institution"}</th>
+                <th>{str tag="Shortname" section="admin"}</th>
                 <th>{str tag="Members" section="admin"}</th>
                 <th>{str tag="Maximum" section="admin"}</th>
                 <th>{str tag="Staff" section="admin"}</th>
