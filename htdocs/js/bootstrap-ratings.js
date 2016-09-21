@@ -36,11 +36,11 @@
             });
 
             // Add 'no rating' glyph
-            this.append('<span data-value="0" class="ratingicon icon ' + settings.offglyph + '" style="' + style + '" aria-hidden="true"></span>');
+            this.append('<span title="' + get_string('removerating', 'artefact.comment') + '" tabindex="0" data-value="0" class="ratingicon icon ' + settings.offglyph + '" style="' + style + '" aria-hidden="true"></span>');
 
             // Loop through the glyphs
             for (var i = 0; i < settings.limit; i++) {
-                this.append('<span data-value="' + (i+1) + '" class="ratingicon icon ' + settings.glyph + '" style="' + style + '" aria-hidden="true"></span>');
+                this.append('<span  title="' + get_string('ratingoption', 'artefact.comment', i+1, settings.limit) + '" tabindex="0" data-value="' + (i+1) + '" class="ratingicon icon ' + settings.glyph + '" style="' + style + '" aria-hidden="true"></span>');
             }
 
             // Paint the glyphs
