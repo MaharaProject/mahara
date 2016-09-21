@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div class="btn-group btn-group-top only-button">
-    <a class="btn btn-default btn-group-item pull-left" href="{$wwwroot}admin/extensions/pluginconfig.php?plugintype=module&pluginname=framework">
+    <a class="btn btn-default btn-group-item pull-left" href="{$wwwroot}module/framework/frameworks.php?upload=1">
         <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
         <span class="btn-title">{str tag="addframework" section="module.framework"}</span>
     </a>

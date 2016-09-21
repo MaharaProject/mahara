@@ -40,14 +40,12 @@ Scenario: Installing framework module and activating for an institution
  And I press "Show" in the "form#activate_blocktype_annotation" "css_element"
 
  # Make sure we have a matrix config form
- And I scroll to the base of id "module.framework"
- And I follow "Configuration for module smartevidence"
+ And I choose "SmartEvidence" in "Extensions"
+ And I follow "Add framework"
  And I attach the file "example.matrix" to "Matrix file"
- And I press "Save"
- Then I should see "Settings saved"
+ And I press "Upload matrix"
 
  # Check that we have new framework
- And I choose "SmartEvidence" in "Extensions"
  Then I should see "Title of your framework"
 
  # Activate smartevidence in an institution
