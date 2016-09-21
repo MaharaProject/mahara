@@ -83,7 +83,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
 
         // some stuff gets overridden by user specific stuff
         if (empty($user->method)) {
-            $user->method = call_static_method(get_class($this), 'default_notification_method');
+            $user->method = $this->default_notification_method();
         }
         if (empty($user->lang) || $user->lang == 'default') {
             $user->lang = get_config('lang');
@@ -193,6 +193,17 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
      */
     public function get_type() {
         return 'usermessage';
+    }
+
+    /**
+     * get the default notification_method
+     *
+     * @param int $usrid
+     * @return string
+     */
+    function default_notification_method() {
+        $method = get_field('activity_type', 'defaultmethod', 'name', $this->get_type());
+        return $method;
     }
 
     /**
