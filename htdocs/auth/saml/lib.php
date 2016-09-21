@@ -300,7 +300,7 @@ class PluginAuthSaml extends PluginAuth {
     private static function create_certificates($numberofdays = 3650) {
         global $CFG;
         // Get the details of the first site admin and use it for setting up the certificate
-        $userid = get_record_sql('SELECT id FROM usr WHERE admin = 1 AND deleted = 0 ORDER BY id LIMIT 1', array());
+        $userid = get_record_sql('SELECT id FROM {usr} WHERE admin = 1 AND deleted = 0 ORDER BY id LIMIT 1', array());
         $id = $userid->id;
         $user = new User;
         $user->find_by_id($id);
