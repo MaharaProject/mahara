@@ -225,11 +225,11 @@ function saveitem(itemid) {
     var name = $('name'+itemid).value;
     var linkedto = $('linkedto'+itemid).value;
     if (name == '') {
-        displayMessage(get_string('namedfieldempty',{$getstring['name']}),'error');
+        displayMessage(get_string('namedfieldempty', 'mahara', {$getstring['name']}), 'error');
         return false;
     }
     if (linkedto == '') {
-        displayMessage(get_string('namedfieldempty',{$getstring['linkedto']}),'error');
+        displayMessage(get_string('namedfieldempty', ' mahara', {$getstring['linkedto']}), 'error');
         return false;
     }
 

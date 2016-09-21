@@ -32,7 +32,11 @@ function get_string(name) {
         }
         str = str[index];
     }
-    var i = 0;
+    // Strings should have their 'section' set for easier debugging.
+    // So we need to ignore args[1] when replacing '%s' for args
+    // @TODO: get the javascript strings to respect 'section' so that
+    // strings with same key but different section can be used without clashes.
+    var i = 1;
     return str.replace(/%((%)|s|d)/g, function (m) { return m[2] || args[i++]; });
 }
 
