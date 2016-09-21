@@ -61,7 +61,7 @@ function checkTextareaMaxLength(elementName, isWysiwyg, maxlength) {
     if (isElementDefined(maxlength)) {
 
         var triggerLimit = parseInt(maxlength) + 1;
-        var errorMessage = get_string('rule.maxlength.maxlength', maxlength);
+        var errorMessage = get_string('rule.maxlength.maxlength', 'pieform', maxlength);
 
         if (usingParent == true) {
             var errorElementsInContainer = textareaContainer.parent().find('.' + errorClass);

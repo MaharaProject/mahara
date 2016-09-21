@@ -324,7 +324,7 @@
             }
         });
 
-        addblockdialog.find('h4.modal-title').text(get_string('addblock', element.text()));
+        addblockdialog.find('h4.modal-title').text(get_string('addblock', 'view', element.text()));
         computeColumnInputs(addblockdialog);
         addblockdialog.find('.block-inner').removeClass('hidden');
         addblockdialog.find('.cell-chooser input:first').prop('checked', true);
@@ -414,7 +414,7 @@
             selectbox = $('#addblock_position');
 
         element.find('.column-content .blockinstance .blockinstance-header').each(function() {
-            options.push(get_string('blockorderafter', $(this).html()));
+            options.push(get_string('blockorderafter', 'view', $(this).html()));
         });
 
 
@@ -713,7 +713,7 @@
                 label = $('<label>').addClass('cell').attr('for', 'cellchooser_' + value).attr('style', $(cols[j]).attr('style'));
 
                 label.append(radio)
-                    .append($('<span>').addClass('pseudolabel mll').html(get_string('cellposition', i + 1, j + 1)));
+                    .append($('<span>').addClass('pseudolabel mll').html(get_string('cellposition', 'view', i + 1, j + 1)));
 
                 row.append(label);
 
