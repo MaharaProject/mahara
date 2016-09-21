@@ -428,6 +428,7 @@ class BehatGeneral extends BehatBase {
 
     /**
      * Click a matrix point by being given a column,row pair
+     * NOTE: column and row start from number '0' so the first cell in a table is (0,0)
      *
      * @When I click on the matrix point :matrix_point
      * @param string $matrix_point a column,row value

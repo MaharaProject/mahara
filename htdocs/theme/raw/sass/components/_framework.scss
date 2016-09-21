@@ -1,8 +1,10 @@
 .tablematrix {
     position: relative;
 
-    tr.standard {
-        background: darken($table-bg-accent, 2%) !important;
+    tr {
+        &.standard {
+            background: darken($table-bg-accent, 2%) !important;
+        }
     }
 
     tr.table-pager,
@@ -116,5 +118,9 @@
                 left: -99999px;
             }
         }
+    }
+    span.matrixindent {
+        display: inline-block;
+        width: 5px;
     }
 }
