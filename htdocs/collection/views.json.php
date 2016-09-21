@@ -99,6 +99,14 @@ if (!empty($direction)) {
             if ($collectiondifferent) {
                 $differentarray = array_merge($differentarray, $viewids);
             }
+            // Check if the collection has a secret url token for any of the existing views
+            $hassecreturl = false;
+            if (!empty(array_merge($differentarray, $viewids))) {
+                if (count_records_sql("SELECT token FROM {view_access} WHERE view IN (" . join(',', array_merge($differentarray, $viewids)) . ") AND (token IS NOT NULL AND token !='')")) {
+                    $hassecreturl = true;
+                }
+            }
+
             if ($different && !empty($differentarray)) {
                 $alertstr = get_string('viewsaddedaccesschanged', 'collection');
                 foreach ($differentarray as $viewid) {
@@ -106,12 +114,14 @@ if (!empty($direction)) {
                     $alertstr .= " " . json_encode($changedview->get('title')) . ",";
                 }
                 $alertstr = substr($alertstr, 0, -1) . '.';
+                $alertstr .= ($hassecreturl) ? ' ' . get_string('viewaddedsecreturl', 'collection') : '';
                 $message = get_string('viewsaddedtocollection1', 'collection', 1) . ' ' . $alertstr;
                 $messagestatus = 'warning';
             }
             else {
-                $message = get_string('viewsaddedtocollection1', 'collection', 1);
-                $messagestatus = 'ok';
+                $alertstr = ($hassecreturl) ? get_string('viewaddedsecreturl', 'collection') : '';
+                $message = get_string('viewsaddedtocollection1', 'collection', 1) . ' ' . $alertstr;
+                $messagestatus = ($hassecreturl) ? 'warning' : 'ok';
             }
         }
     }
