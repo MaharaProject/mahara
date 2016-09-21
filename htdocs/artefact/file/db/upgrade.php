@@ -446,7 +446,7 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         log_debug('Drop the old primary key constraint and add new id column from/to the table artefact_file_mime_types');
         if (is_postgres()) {
             execute_sql('ALTER TABLE {artefact_file_mime_types}
-                            DROP CONSTRAINT IF EXISTS artefilemimetype_mim_pk,
+                            DROP CONSTRAINT IF EXISTS {artefilemimetype_mim_pk},
                             ADD COLUMN id SERIAL PRIMARY KEY');
         }
         else if (is_mysql()) {
