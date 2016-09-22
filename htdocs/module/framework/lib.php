@@ -107,7 +107,7 @@ class PluginModuleFramework extends PluginModule {
         return $ok;
     }
 
-    private function add_matrix_to_db($filename) {
+    public function add_matrix_to_db($filename) {
         if (substr_count($filename, '/') == 0) {
             $filename = get_config('docroot') . 'module/framework/matrices/' . $filename;
         }
@@ -122,47 +122,7 @@ class PluginModuleFramework extends PluginModule {
     }
 
     public static function has_config() {
-        return true;
-    }
-
-    public static function get_config_options() {
-        $elements = array(
-            'matrix' => array(
-                'type' => 'file',
-                'title' => get_string('matrixfile', 'module.framework'),
-                'description' => get_string('matrixfiledesc', 'module.framework'),
-                'accept' => '.matrix',
-                'rules' => array(
-                    'required' => true
-                )
-            ),
-        );
-
-        return array(
-            'elements' => $elements,
-        );
-    }
-
-    public static function validate_config_options(Pieform $form, $values) {
-        require_once('uploadmanager.php');
-        $um = new upload_manager('matrix');
-        if ($error = $um->preprocess_file()) {
-            $form->set_error('matrix', $error);
-        }
-        $reqext = ".matrix";
-        $fileext = substr($values['matrix']['name'], (-1 * strlen($reqext)));
-        if ($fileext !== $reqext) {
-            $form->set_error('matrix', get_string('notvalidmatrixfile', 'module.framework'));
-        }
-
-        $matrixfile = self::matrix_is_valid_json($um->file['tmp_name']);
-        if ($matrixfile['error']) {
-            $form->set_error('matrix', $matrixfile['message']);
-        }
-    }
-
-    public static function save_config_options(Pieform $form, $values) {
-        self::add_matrix_to_db($values['matrix']['tmp_name']);
+        return false;
     }
 
     public static function admin_menu_items() {
@@ -1008,3 +968,61 @@ class Framework {
 }
 
 class FrameworkNotFoundException extends NotFoundException {}
+
+/**
+ * The functions for verifying/saving the matrix upload
+ */
+function upload_matrix_form() {
+
+    $elements = array(
+        'matrix' => array(
+            'type' => 'file',
+            'title' => get_string('matrixfile', 'module.framework'),
+            'description' => get_string('matrixfiledesc', 'module.framework'),
+            'accept' => '.matrix',
+            'rules' => array(
+               'required' => true
+            )
+        ),
+        'submit' => array(
+            'type' => 'submitcancel',
+            'class' => 'btn-primary',
+            'value' => array(get_string('savematrix','module.framework'), get_string('cancel')),
+            'goto' => get_config('wwwroot') . 'module/framework/frameworks.php',
+        )
+    );
+
+    $form = array(
+        'name' => 'matrixupload',
+        'plugintype' => 'module',
+        'pluginname' => 'framework',
+        'validatecallback' => 'validate_matrixupload',
+        'successcallback' => 'matrixupload_submit',
+        'elements' => $elements,
+    );
+
+    return pieform($form);
+}
+
+function validate_matrixupload(Pieform $form, $values) {
+    require_once('uploadmanager.php');
+    $um = new upload_manager('matrix');
+    if ($error = $um->preprocess_file()) {
+        $form->set_error('matrix', $error);
+    }
+    $reqext = ".matrix";
+    $fileext = substr($values['matrix']['name'], (-strlen($reqext)));
+    if ($fileext !== $reqext) {
+        $form->set_error('matrix', get_string('notvalidmatrixfile', 'module.framework'));
+    }
+
+    $matrixfile = PluginModuleFramework::matrix_is_valid_json($um->file['tmp_name']);
+    if ($matrixfile['error']) {
+        $form->set_error('matrix', $matrixfile['message']);
+    }
+}
+
+function matrixupload_submit(Pieform $form, $values) {
+    PluginModuleFramework::add_matrix_to_db($values['matrix']['tmp_name']);
+    redirect(get_config('wwwroot') . 'module/framework/frameworks.php');
+}

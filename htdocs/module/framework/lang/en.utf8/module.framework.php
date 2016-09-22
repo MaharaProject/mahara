@@ -43,3 +43,5 @@ $string['partialcomplete'] = 'Partially meets the standard';
 $string['completed'] = 'Meets the standard';
 $string['usedincollections'] = 'Used in collections';
 $string['selfassess'] = 'Self-assess';
+$string['uploadframeworkdesc'] = 'Upload a JSON encoded .matrix file. See <a href="https://git.mahara.org/mahara/mahara/blob/master/test/behat/upload_files/example.matrix">Mahara git repository</a> for an example of the markup.';
+$string['savematrix'] = 'Upload matrix';

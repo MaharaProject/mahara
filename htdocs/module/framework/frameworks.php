@@ -20,6 +20,19 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 define('TITLE', get_string('Framework', 'module.framework'));
 safe_require('module', 'framework');
+$upload = param_boolean('upload');
+
+if ($upload) {
+    define('SUBSECTIONHEADING', get_string('upload'));
+    $form = upload_matrix_form();
+    $smarty = smarty();
+    setpageicon($smarty, 'icon-th');
+    $smarty->assign('wwwroot', get_config('wwwroot'));
+    $smarty->assign('form', $form);
+    $smarty->display('module:framework:uploadframework.tpl');
+    exit;
+}
+
 $frameworks = Framework::get_frameworks('any');
 if ($frameworks) {
     foreach ($frameworks as $framework) {
