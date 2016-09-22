@@ -128,7 +128,7 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Tim"
     And I should see "Group Z"
     And I scroll to the base of id "groups"
-    And I follow "Group Z"
+    And I follow "Group Z" in the "div#groups" "css_element"
     # Group pages
     And I should see "Page Group Z_01" in the "ul#groupviewlist" "css_element"
     And I should see "Page Group Z_05" in the "ul#groupviewlist" "css_element"
