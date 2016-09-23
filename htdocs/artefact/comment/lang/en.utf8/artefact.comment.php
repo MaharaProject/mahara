@@ -122,3 +122,5 @@ $string['heart'] = 'Heart';
 $string['thumbsup'] = 'Thumbs up';
 $string['ok'] = 'Tick';
 $string['ratingexample'] = 'Generated example';
+$string['removerating'] = 'Clear ratings';
+$string['ratingoption'] = "Set rating %s out of %s";

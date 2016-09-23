@@ -84,9 +84,18 @@ function pieform_element_ratings(Pieform $form, $element) {
  * @return array         An array of HTML elements to go in the <head>
  */
 function pieform_element_ratings_get_headdata($element) {
+    $headdata = array();
+
+    $strings = array('artefact.comment' => array('removerating', 'ratingoption'));
+    $jsstrings = '';
+    foreach ($strings as $section => $sectionstrings) {
+        foreach ($sectionstrings as $s) {
+            $jsstrings .= "strings.$s=" . json_encode(get_raw_string($s, $section)) . ';';
+        }
+    }
+    $headdata[] = '<script type="application/javascript">' . $jsstrings . '</script>';
+
     $libfile = get_config('wwwroot')  . 'js/bootstrap-ratings.js';
-    $result = array(
-        '<script type="application/javascript" src="' . $libfile . '"></script>'
-    );
-    return $result;
+    $headdata[] = '<script type="application/javascript" src="' . $libfile . '"></script>';
+    return $headdata;
 }
