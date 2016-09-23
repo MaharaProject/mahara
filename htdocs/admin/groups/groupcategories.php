@@ -207,7 +207,7 @@ function saveitem(itemid) {
     var f = $('form');
     var name = $('name'+itemid).value;
     if (name == '') {
-        displayMessage(get_string('namedfieldempty',{$getstring['name']}),'error');
+        displayMessage(get_string('namedfieldempty', 'mahara', {$getstring['name']}), 'error');
         return false;
     }
 

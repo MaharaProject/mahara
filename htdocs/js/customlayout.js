@@ -10,7 +10,7 @@
             var currentncols = $('#customrow_' + numrows).find('#selectnumcolsrow_' + numrows).val();
             var currentcollayout = $('#customrow_' + numrows).find('#selectcollayoutrow_' + numrows).val();
 
-            newrow.find('.customrowtitle').html('<strong>' + get_string('rownr', numrows + 1) + '</strong>');
+            newrow.find('.customrowtitle').html('<strong>' + get_string('rownr', 'view', numrows + 1) + '</strong>');
             newrow.attr('id', 'customrow_' + (numrows + 1));
 
             newid = 'selectnumcolsrow_' + (numrows + 1);
@@ -47,7 +47,7 @@
         $('#viewlayout_customlayoutnumrows').val(numrows - 1);
         var inc = 1;
         $('#customrows .customrow').each(function() {
-            $(this).find('.customrowtitle').html('<strong>' + get_string('rownr', inc) + '</strong>');
+            $(this).find('.customrowtitle').html('<strong>' + get_string('rownr', 'view', inc) + '</strong>');
             $(this).attr('id', 'customrow_' + inc);
             $(this).find('.selectnumcols').attr('id', 'selectnumcolsrow_' + inc);
             $(this).find('input').attr('class', 'removecustomrow_' + inc);
@@ -118,7 +118,7 @@
                 else {
                     // make a row for it
                     var rowtitlediv = $('<h3>').attr('class', 'title');
-                    rowtitlediv.html('<strong>' + get_string('nrrows', numrows) + '</strong>');
+                    rowtitlediv.html('<strong>' + get_string('nrrows', 'view', numrows) + '</strong>');
                     var rowcontainer = $('<div>').attr({
                         'id': 'viewlayout_advancedlayoutselect_row' + numrows,
                         'class': 'fr'

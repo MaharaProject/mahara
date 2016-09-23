@@ -100,7 +100,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         self.nextupload++;
         var message = makeMessage(DIV(null,
             SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
-            get_string('uploadingfiletofolder',e.name,self.foldername)
+            get_string('uploadingfiletofolder','artefact.file',e.name,self.foldername)
             ), 'info');
         setNodeAttribute(message, 'id', 'uploadstatusline' + self.nextupload);
         appendChildNodes(self.id + '_upload_messages', message);
@@ -116,7 +116,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 var localname = $(self.id + '_userfile').files[i].name;
                 var message = makeMessage(DIV(null,
                     SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
-                    get_string('uploadingfiletofolder',localname,self.foldername)
+                    get_string('uploadingfiletofolder','artefact.file',localname,self.foldername)
                     ), 'ok');
                 setNodeAttribute(message, 'id', 'uploadstatusline' + self.nextupload);
                 appendChildNodes(self.id + '_upload_messages', message);
@@ -174,7 +174,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 message = get_string('nametoolong');
             }
             else if (self.fileexists(name)) {
-                message = get_string('filewithnameexists', name);
+                message = get_string('filewithnameexists', 'artefact.file', name);
             }
         }
         if (message) {
@@ -200,7 +200,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 message = get_string('nametoolong');
             }
             else if (self.fileexists(name, this.name.replace(/.*_update\[(\d+)\]$/, '$1'))) {
-                message = get_string('filewithnameexists', name);
+                message = get_string('filewithnameexists', 'artefact.file', name);
             }
         }
         if (message) {
@@ -408,7 +408,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                             if (self.filedata[id].childcount > 0) {
                                 warn += get_string('foldernotempty') + ' ';
                                 if (self.filedata[id].profileiconcount > 0) {
-                                    warn += get_string('foldercontainsprofileicons', self.filedata[id].profileiconcount) + ' ';
+                                    warn += get_string('foldercontainsprofileicons', 'artefact.file', self.filedata[id].profileiconcount) + ' ';
                                 }
                                 warn += get_string('confirmdeletefolderandcontents');
                             }
@@ -421,7 +421,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                                 warn += get_string('defaultprofileicon') + ' ';
                             }
                             if (self.filedata[id].attachcount > 0) {
-                                warn += get_string('fileattachedtoportfolioitems', self.filedata[id].attachcount) + ' ';
+                                warn += get_string('fileattachedtoportfolioitems', 'artefact.file', self.filedata[id].attachcount) + ' ';
                             }
                             if (self.filedata[id].viewcount > 0) {
                                 warn += get_string('fileappearsinviews') + ' ';
@@ -533,7 +533,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             if (elemid != moveid) {
                 var displaytitle = title.find('.display-title').html();
                 if (typeof displaytitle !== 'undefined') {
-                    var link = $j('<a>').attr('href', '#').html(get_string('moveto', displaytitle));
+                    var link = $j('<a>').attr('href', '#').html(get_string('moveto', 'artefact.file', displaytitle));
                     link.on('click keydown', function(e) {
                         if ((e.type === 'click' || e.keyCode === 32) && !e.isDefaultPrevented()) {
                             self.setfocus = 'changefolder:' + elemid;
