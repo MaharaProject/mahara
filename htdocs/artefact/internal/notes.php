@@ -203,7 +203,7 @@ jQuery(function($) {
 $smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign_by_ref('data', $data);
+$smarty->assign('data', $data);
 $html = $smarty->fetch('artefact:internal:noteresults.tpl');
 $smarty->assign('datarows', $html);
 $smarty->assign('pagination', $pagination['html']);

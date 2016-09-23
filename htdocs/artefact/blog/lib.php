@@ -337,7 +337,7 @@ class ArtefactTypeBlog extends ArtefactType {
         $smarty->assign('owner', $this->get('owner'));
         $smarty->assign('tags', $this->get('tags'));
 
-        $smarty->assign_by_ref('posts', $posts);
+        $smarty->assign('posts', $posts);
 
         return array('html' => $smarty->fetch('artefact:blog:blog.tpl'), 'javascript' => '');
     }
@@ -401,7 +401,7 @@ class ArtefactTypeBlog extends ArtefactType {
 
     public static function build_blog_list_html(&$blogs) {
         $smarty = smarty_core();
-        $smarty->assign_by_ref('blogs', $blogs);
+        $smarty->assign('blogs', $blogs);
         $blogs->tablerows = $smarty->fetch('artefact:blog:bloglist.tpl');
         $pagination = build_pagination(array(
             'id' => 'bloglist_pagination',

@@ -211,7 +211,7 @@ class webservice_rest_server extends webservice_base_server {
             }
             else if ($this->format == 'atom') {
                 $smarty = smarty_core();
-                $smarty->assign_by_ref('results', $validatedvalues);
+                $smarty->assign('results', $validatedvalues);
                 $smarty->assign('entries', $validatedvalues['entries']);
                 $smarty->assign('USER', $USER);
                 $smarty->assign('functionname', $this->functionname);

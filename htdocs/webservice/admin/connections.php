@@ -170,9 +170,9 @@ function webservice_connection_classes($institution) {
     $smarty = smarty_core();
     $smarty->left_delimiter = '{{';
     $smarty->right_delimiter = '}}';
-    // $smarty->assign_by_ref('authtypes', $authtypes);
-    $smarty->assign_by_ref('instancelist', $connection_instances);
-    $smarty->assign_by_ref('connections', $connections);
+    // $smarty->assign('authtypes', $authtypes);
+    $smarty->assign('instancelist', $connection_instances);
+    $smarty->assign('connections', $connections);
     $smarty->assign('institution', $institution);
     $smarty->assign('instancestring', $instancestring);
     $smarty->assign('sesskey', $USER->get('sesskey'));

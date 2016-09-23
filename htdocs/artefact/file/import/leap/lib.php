@@ -168,8 +168,8 @@ class LeapImportFile extends LeapImportArtefactPlugin {
             }
         }
         $smarty = smarty_core();
-        $smarty->assign_by_ref('displaydecisions', $importer->get('displaydecisions'));
-        $smarty->assign_by_ref('entryfiles', $entryfiles);
+        $smarty->assign('displaydecisions', $importer->get('displaydecisions'));
+        $smarty->assign('entryfiles', $entryfiles);
         return $smarty->fetch('artefact:file:import/files.tpl');
     }
 

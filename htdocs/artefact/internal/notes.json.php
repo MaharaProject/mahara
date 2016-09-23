@@ -193,7 +193,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty_core();
-$smarty->assign_by_ref('data', $data);
+$smarty->assign('data', $data);
 $html = $smarty->fetch('artefact:internal:noteresults.tpl');
 
 function deletenote_form($id, $notedata) {

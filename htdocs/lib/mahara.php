@@ -4255,7 +4255,7 @@ function build_portfolio_search_html(&$data) {
     );
 
     $smarty = smarty_core();
-    $smarty->assign_by_ref('data', $data->data);
+    $smarty->assign('data', $data->data);
     $smarty->assign('owner', $data->owner->id);
     $data->tablerows = $smarty->fetch('portfoliosearchresults.tpl');
     $pagination = build_pagination(array(

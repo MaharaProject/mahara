@@ -392,8 +392,8 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             }
         }
         $smarty = smarty_core();
-        $smarty->assign_by_ref('displaydecisions', $importer->get('displaydecisions'));
-        $smarty->assign_by_ref('entryblogs', $entryblogs);
+        $smarty->assign('displaydecisions', $importer->get('displaydecisions'));
+        $smarty->assign('entryblogs', $entryblogs);
         return $smarty->fetch('artefact:blog:import/blogs.tpl');
     }
 

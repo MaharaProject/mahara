@@ -111,8 +111,8 @@ if (!$institutionname && !$groupid) {
     }
 }
 
-$smarty->assign_by_ref('editform', $form);
-$smarty->assign_by_ref('blog', $blog);
+$smarty->assign('editform', $form);
+$smarty->assign('blog', $blog);
 $smarty->display('artefact:blog:settings.tpl');
 exit;
 

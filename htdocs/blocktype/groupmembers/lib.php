@@ -72,7 +72,7 @@ class PluginBlocktypeGroupMembers extends MaharaCoreBlocktype {
 
         if ($groupmembers['count']) {
             $smarty = smarty_core();
-            $smarty->assign_by_ref('groupmembers', $groupmembers['data']);
+            $smarty->assign('groupmembers', $groupmembers['data']);
             $groupmembers['tablerows'] = $smarty->fetch('blocktype:groupmembers:row.tpl');
         } else {
             $groupmembers = false;

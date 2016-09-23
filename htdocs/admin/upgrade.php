@@ -210,7 +210,7 @@ uksort($upgrades, 'sort_upgrades');
 $js .= "\n" . 'var todo = ' . json_encode(array_keys($upgrades)) . ";\n";
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
-$smarty->assign_by_ref('upgrades', $upgrades);
+$smarty->assign('upgrades', $upgrades);
 if (isset($upgrades['core'])) {
     $smarty->assign('releaseargs', array($upgrades['core']->torelease, $upgrades['core']->to));
 }
