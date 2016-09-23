@@ -314,6 +314,48 @@ class View {
         // set only for existing views - _create provides default value
         if (empty($this->columnsperrow)) {
             $this->columnsperrow = get_records_assoc('view_rows_columns', 'view', $this->get('id'), 'row', 'row, columns');
+            if (empty($this->columnsperrow)) {
+                // if we are missing the info for some reason we will give the page it's layout back
+                // this can happen in MySQL when many users are copying the same page
+                if ($this->layout) {
+                    if ($rowscols = get_records_sql_array("
+                        SELECT vlrc.row, vlc.columns
+                        FROM {view_layout_rows_columns} vlrc
+                        JOIN {view_layout_columns} vlc ON vlc.id = vlrc.columns
+                        WHERE viewlayout = ?", array($this->layout))) {
+                            $default = array();
+                            foreach ($rowscols as $row) {
+                                insert_record('view_rows_columns', (object) array(
+                                    'view' => $this->get('id'),
+                                    'row' => $row->row, 'columns' => $row->columns));
+                                $default[$row->row] = $row;
+                            }
+                    }
+                }
+                else if ($rowscols = get_records_sql_array("
+                    SELECT vrc.row, vrc.columns
+                    FROM {view} v
+                    JOIN {view_rows_columns} vrc ON vrc.view = v.id
+                    WHERE v.template = ?
+                    AND v.type = ?", array(self::SITE_TEMPLATE, $this->type))) {
+                        // Layout not specified so use the view type default layout
+                        $default = array();
+                        foreach ($rowscols as $row) {
+                            insert_record('view_rows_columns', (object) array(
+                                'view' => $this->get('id'),
+                                'row' => $row->row, 'columns' => $row->columns));
+                            $default[$row->row] = $row;
+                        }
+                }
+                else {
+                    // Layout not known so make it 1 row / 3 cols
+                    insert_record('view_rows_columns', (object) array(
+                        'view' => $this->get('id'),
+                        'row' => 1, 'columns' => 3));
+                    $default = self::default_columnsperrow();
+                }
+                $this->columnsperrow = $default;
+            }
         }
     }
 
