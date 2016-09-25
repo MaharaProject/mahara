@@ -131,3 +131,10 @@ function addAnnotationFeedbackSuccess(form, data) {
     $(formname + '_' + messageid).value = '';
     formSuccess(form, data);
 }
+
+function addAnnotationFeedbackError(form, data) {
+    id = form.id;
+    id = id.replace(/^add_/, '').replace(/_form/,'');
+    jQuery('#' + id).removeClass('closed').addClass('active');
+    formError(form, data);
+}
