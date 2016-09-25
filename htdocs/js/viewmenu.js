@@ -19,6 +19,9 @@ function addFeedbackError(form, data) {
         jQuery('.mce-toolbar.mce-first').siblings().toggleClass('hidden');
         mce.focus();
     }
+    if (jQuery('#feedback-form').hasClass('modal-docked')) {
+        jQuery('#feedback-form').removeClass('closed').addClass('active');
+    }
     formError(form, data);
 }
 
