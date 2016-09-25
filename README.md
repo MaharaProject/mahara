@@ -128,7 +128,7 @@ Documentation on integrating Mahara with Moodle can be found in the
 ------------------
 # Copyright notice
 
-Copyright (C) 2006-2015 Catalyst IT and others; see:
+Copyright (C) 2006-2017 Catalyst IT and others; see:
 https://wiki.mahara.org/wiki/Contributors
 
 This program is free software: you can redistribute it and/or modify
