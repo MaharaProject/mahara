@@ -8,7 +8,7 @@ introduction chapter:
 
 // TODO: Update the link closer to the release date.
 
- * http://manual.mahara.org/en/15.04/intro/introduction.html#what-is-mahara
+ * http://manual.mahara.org/en/16.04/intro/introduction.html#what-is-mahara
 
 # SUPPORT
 
