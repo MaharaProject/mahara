@@ -1241,6 +1241,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             'autofocus'         => false,
             'elements'          => array(),
             'jssuccesscallback' => 'addAnnotationFeedbackSuccess',
+            'jserrorcallback'   => 'addAnnotationFeedbackError',
             'successcallback'   => 'add_annotation_feedback_form_submit',
             'validatecallback'  => 'add_annotation_feedback_form_validate',
         );
@@ -1729,7 +1730,15 @@ function add_annotation_feedback_form_validate(Pieform $form, $values) {
         $form->set_error('message', get_string('accessdenied', 'error'));
     }
 
-    if (empty($values['message'])) {
+    $elements = $form->get_property('elements');
+    $assessmentchanged = false;
+    if (isset($elements['assessment']) && isset($elements['assessment']['defaultvalue'])) {
+        if ((int) $values['assessment'] !== (int) $elements['assessment']['defaultvalue']) {
+            $assessmentchanged = true;
+        }
+    }
+    // Only error on feedback if we are not changing assessment
+    if (empty($values['message']) && !$assessmentchanged) {
         $form->set_error('message', get_string('annotationfeedbackempty', 'artefact.annotation'));
     }
 
