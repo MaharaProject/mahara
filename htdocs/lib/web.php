@@ -4706,3 +4706,29 @@ function display_icon($type, $id = false) {
     $html .= '> </span>';
     return $html;
 }
+
+/**
+ * Is the supplied URL valid
+ * That is, can this Mahara reach/resolve the URL at the time
+ * of checking. Useful if you are checking a url field in a form.
+ *
+ * Caution: Probably not want to use this function in a large loop situation.
+ *
+ * @param string    $url    The URL to check
+ *
+ * @return bool
+ */
+function is_valid_url($url) {
+    $result = mahara_http_request(
+        array(
+            CURLOPT_URL => $url,
+            CURLOPT_HEADER => true,
+            CURLOPT_NOBODY => true,
+        ),
+        true
+    );
+    if (!$result || $result->error || $result->info['http_code'] == 404) {
+        return false;
+    }
+    return true;
+}

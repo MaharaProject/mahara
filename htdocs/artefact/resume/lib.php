@@ -1264,6 +1264,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 'title' => get_string('startdate', 'artefact.resume'),
                 'size' => 20,
                 'help' => true,
+                'helpformname' => 'addemploymenthistory',
             ),
             'enddate' => array(
                 'type' => 'text',
@@ -1581,6 +1582,7 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                 'title' => get_string('date', 'artefact.resume'),
                 'size' => 20,
                 'help' => true,
+                'helpformname' => 'addcertification',
             ),
             'title' => array(
                 'type' => 'text',
@@ -1694,6 +1696,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                 ),
                 'title' => get_string('date', 'artefact.resume'),
                 'help' => true,
+                'helpformname' => 'addbook',
                 'size' => 20,
             ),
             'title' => array(
@@ -1730,6 +1733,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                 'title' => get_string('bookurl', 'artefact.resume'),
                 'size' => 70,
                 'help' => true,
+                'helpformname' => 'addbook',
             ),
         );
     }
@@ -1821,6 +1825,7 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
                 'help' => true,
+                'helpformname' => 'addmembership',
                 'size' => 20,
             ),
             'enddate' => array(
@@ -1991,20 +1996,21 @@ class ArtefactTypePersonalskill extends ArtefactTypeResumeGoalAndSkill { }
 class ArtefactTypeAcademicskill extends ArtefactTypeResumeGoalAndSkill { }
 class ArtefactTypeWorkskill extends ArtefactTypeResumeGoalAndSkill { }
 
-
-function book_validate(Pieform $form, $values) {
-    // Check if string enter by user is valid URL
-    if (array_key_exists('url', $values) && !empty($values['url'])) {
-        if (filter_var($values['url'], FILTER_VALIDATE_URL) === false) {
-            $form->set_error('url', get_string('notvalidurl', 'artefact.resume'));
+function editcomposite_validate(Pieform $form, $values) {
+    $elements = $form->get_property('elements');
+    if (!empty($elements['compositetype']['value'])) {
+        $compositetype = $elements['compositetype']['value'];
+        if (function_exists('add' . $compositetype . '_validate')) {
+            call_user_func('add' . $compositetype . '_validate', $form, $values);
         }
     }
 }
 
 function addbook_validate(Pieform $form, $values) {
-    // Check if string enter by user is valid URL
+    // Check if string entered by user is a valid URL and reachable from here
     if (array_key_exists('url', $values) && !empty($values['url'])) {
-        if (filter_var($values['url'], FILTER_VALIDATE_URL) === false) {
+        $isvalid = is_valid_url($values['url']);
+        if (!$isvalid) {
             $form->set_error('url', get_string('notvalidurl', 'artefact.resume'));
         }
     }
