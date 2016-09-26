@@ -281,6 +281,18 @@ function ensure_internal_plugins_exist() {
     }
 }
 
+/**
+ * Check to see whether a language string is present in the
+ * lang files.
+ *
+ * @param string $identifier
+ * @param string $section
+ * @return boolean
+ */
+function string_exists($identifier, $section = 'mahara') {
+    return get_string($identifier, $section) !== '[[' . $identifier . '/' . $section . ']]';
+}
+
 function get_string($identifier, $section='mahara') {
 
     $variables = func_get_args();

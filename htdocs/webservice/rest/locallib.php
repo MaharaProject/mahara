@@ -252,7 +252,14 @@ class webservice_rest_server extends webservice_base_server {
     protected function send_error($ex=null) {
         $this->send_headers($this->format);
         if ($this->format == 'json') {
-            echo json_encode(array('exception' => get_class($ex), 'errorcode' => (isset($ex->errorcode) ? $ex->errorcode : $ex->getCode()), 'message' => $ex->getMessage(), 'debuginfo' => (isset($ex->debuginfo) ? $ex->debuginfo : ''))) . "\n";
+            $classname = get_class($ex);
+            if (!($ex instanceof MaharaException)) {
+                $ex = new SystemException("[{$classname}]: " . $ex->getMessage(), $ex->getCode());
+            }
+            echo json_encode(
+                $ex->render_json_exception(),
+                JSON_PRETTY_PRINT
+            );
         }
         else {
             $xml = '<?xml version="1.0" encoding="UTF-8" ?>' . "\n";
