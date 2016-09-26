@@ -985,24 +985,23 @@ abstract class webservice_server implements webservice_server_interface {
             }
             return $user;
         }
-        else if ($tokentype == EXTERNAL_TOKEN_PERMANENT || $tokentype == EXTERNAL_TOKEN_USER) {
-            $token = get_record('external_tokens', 'token', $this->token);
-            // trap personal tokens with no valid until time set
-            if ($token && $token->tokentype == EXTERNAL_TOKEN_USER && $token->validuntil == 0 && ((strtotime($token->ctime) - time()) > EXTERNAL_TOKEN_USER_EXPIRES)) {
-                delete_records('external_tokens', 'token', $this->token);
-                throw new WebserviceAccessException(get_string('invalidtimedtoken', 'auth.webservice'));
-            }
-        }
-        else {
-            $token = get_record('external_tokens', 'token', $this->token, 'tokentype', $tokentype);
-        }
+
+
+        $token = get_record('external_tokens', 'token', $this->token);
         if (!$token) {
             // log failed login attempts
             throw new WebserviceAccessException(get_string('invalidtoken', 'auth.webservice'));
         }
-        // tidy up the uath method - this could be user token or session token
+
+        // tidy up the auth method - this could be user token or session token
         if ($token->tokentype != EXTERNAL_TOKEN_PERMANENT) {
-            $this->auth = 'OTHER';
+            if ($token->tokentype === EXTERNAL_TOKEN_USER) {
+                // TODO: These should probably be constants, not strings...
+                $this->auth = 'TOKEN_USER';
+            }
+            else {
+                $this->auth = 'OTHER';
+            }
         }
 
         /**
@@ -1070,6 +1069,99 @@ abstract class webservice_server implements webservice_server_interface {
             $settings->$functioname($value);
         }
 
+    }
+
+    /**
+     * Gets information about services the authenticated user is allowed
+     * to access.
+     * @param string $serviceid (Optional) Only look at this service
+     * @param string $functionname (Optional) Services must contain this function
+     * @throws WebserviceInvalidParameterException
+     */
+    protected function get_allowed_services($serviceid = false, $functionname = false) {
+        global $USER;
+
+        if ($functionname) {
+            $fncond1 = 'AND sf.functionname = ?';
+            $fncond2 = 'AND sf.functionname = ?';
+        }
+        else {
+            $fncond1 = '';
+            $fncond2 = '';
+        }
+
+        if ($serviceid) {
+            $wscond1 = 'AND s.id = ? ';
+            $wscond2 = 'AND s.id = ? ';
+        }
+        else {
+            $wscond1 = '';
+            $wscond2 = '';
+        }
+
+        if ($this->auth === 'TOKEN_USER') {
+            $tokencond = 'AND s.tokenusers = 1';
+        }
+        else {
+            $tokencond = '';
+        }
+
+        // now let's verify access control
+        // Allow access only if:
+        // - restrictedusers = 0
+        // - OR
+        //   - restrictedusers = 1
+        //   - AND user is on the list for the service
+        //   - AND user's listing hasn't expired
+        //   - AND user's IP matches any restrictions for their listing
+        $sql = "
+            SELECT s.*, NULL AS iprestriction
+            FROM
+                {external_services} s
+                INNER JOIN {external_services_functions} sf ON
+                    sf.externalserviceid = s.id
+                    AND s.restrictedusers = 0
+                    $fncond1
+            WHERE
+                s.enabled = 1
+                $tokencond
+                $wscond1
+        UNION
+            SELECT s.*, su.iprestriction
+            FROM
+                {external_services} s
+                INNER JOIN {external_services_functions} sf ON
+                    sf.externalserviceid = s.id
+                    AND s.restrictedusers = 1
+                    $fncond2
+                INNER JOIN {external_services_users} su ON
+                    su.externalserviceid = s.id
+                    AND su.userid = ?
+            WHERE
+                s.enabled = 1
+                AND (su.validuntil IS NULL OR su.validuntil < ?)
+                $tokencond
+                $wscond2
+";
+        $params = array();
+        $fncond1 && $params[] = $functionname;
+        $wscond1 && $params[]= $serviceid;
+        $fncond2 && $params[]= $functionname;
+        $params[]= $USER->get('id');
+        $params[]= time();
+        $wscond2 && $params[]= $serviceid;
+        $rs = get_records_sql_array($sql, $params);
+
+        $remoteaddr = getremoteaddr();
+        $serviceids = array();
+        foreach ($rs as $service) {
+            if ($service->iprestriction && !address_in_subnet($remoteaddr, $service->iprestriction)) {
+                // wrong request source ip, sorry
+                continue;
+            }
+            $serviceids[] = $service->id;
+        }
+        return $serviceids;
     }
 }
 
@@ -1256,64 +1348,7 @@ abstract class webservice_zend_server extends webservice_server {
     protected function init_service_class() {
         global $USER;
 
-        // first ofall get a complete list of services user is allowed to access
-        if ($this->restricted_serviceid) {
-            $wscond1 = 'AND s.id = ? ';
-            $wscond2 = 'AND s.id = ? ';
-        }
-        else {
-            $wscond1 = '';
-            $wscond2 = '';
-        }
-
-        // now make sure the function is listed in at least one service user is allowed to use
-        // allow access only if:
-        //  1/ entry in the external_services_users table if required
-        //  2/ validuntil not reached
-        //  3/ has capability if specified in service desc
-        //  4/ iprestriction
-
-        $sql = "SELECT s.*, NULL AS iprestriction
-                  FROM {external_services} s
-                  JOIN {external_services_functions} sf ON (sf.externalserviceid = s.id AND s.restrictedusers = ?)
-                 WHERE s.enabled = ? $wscond1
-
-                 UNION
-
-                SELECT s.*, su.iprestriction
-                  FROM {external_services} s
-                  JOIN {external_services_functions} sf ON (sf.externalserviceid = s.id AND s.restrictedusers = ?)
-                  JOIN {external_services_users} su ON (su.externalserviceid = s.id AND su.userid = ?)
-                 WHERE s.enabled = ? AND su.validuntil IS NULL OR su.validuntil < ? $wscond2";
-
-        $params = array(0, 1);
-        $wscond1 && $params[]= $this->restricted_serviceid;
-        $params[]= 1;
-        $params[]= $USER->get('id');
-        $params[]= 1;
-        $params[]= time();
-        $wscond2 && $params[]= $this->restricted_serviceid;
-
-        $serviceids = array();
-        $rs = get_recordset_sql($sql, $params);
-
-        // now make sure user may access at least one service
-        $remoteaddr = getremoteaddr();
-        $allowed = false;
-        foreach ($rs as $service) {
-            // FIXME - had to cast to object
-            $service = (object)$service;
-            if (isset($serviceids[$service->id])) {
-                continue;
-            }
-            if ($service->iprestriction and !address_in_subnet($remoteaddr, $service->iprestriction)) {
-                // wrong request source ip, sorry
-                continue;
-            }
-            $serviceids[$service->id] = $service->id;
-        }
-        $rs->close();
-
+        $serviceids = $this->get_allowed_services($this->restricted_serviceid);
         $this->load_services($serviceids);
     }
 
@@ -1824,74 +1859,22 @@ abstract class webservice_base_server extends webservice_server {
         global $USER;
 
         if (empty($this->functionname)) {
-            throw new WebserviceInvalidParameterException(get_string('missingfuncname', 'webserivce'));
+            throw new WebserviceInvalidParameterException(get_string('missingfuncname', 'webservice'));
         }
 
         // function must exist
         $function = webservice_function_info($this->functionname);
         if (!$function) {
-            throw new WebserviceAccessException(get_string('accessextfunctionnotconf', 'auth.webservice'));
+            throw new WebserviceInvalidParameterException(get_string('accessextfunctionnotconf', 'auth.webservice'));
         }
 
-        // first ofall get a complete list of services user is allowed to access
-        if ($this->restricted_serviceid) {
-            $wscond1 = 'AND s.id = ? ';
-            $wscond2 = 'AND s.id = ? ';
-        }
-        else {
-            $wscond1 = '';
-            $wscond2 = '';
-        }
-
-        // now let's verify access control
-
-        // now make sure the function is listed in at least one service user is allowed to use
-        // allow access only if:
-        //  1/ entry in the external_services_users table if required
-        //  2/ validuntil not reached
-        //  3/ has capability if specified in service desc
-        //  4/ iprestriction
-
-        $sql = "SELECT s.*, NULL AS iprestriction
-                  FROM {external_services} s
-                  JOIN {external_services_functions} sf ON (sf.externalserviceid = s.id AND (s.restrictedusers = ? OR s.tokenusers = ?) AND sf.functionname = ?)
-                 WHERE s.enabled = ? $wscond1
-
-                 UNION
-
-                SELECT s.*, su.iprestriction
-                  FROM {external_services} s
-                  JOIN {external_services_functions} sf ON (sf.externalserviceid = s.id AND s.restrictedusers = ? AND sf.functionname = ?)
-                  JOIN {external_services_users} su ON (su.externalserviceid = s.id AND su.userid = ?)
-                 WHERE s.enabled = ? AND su.validuntil IS NULL OR su.validuntil < ? $wscond2";
-
-        $params = array(0, 1, $function->name, 1);
-        $wscond1 && $params[]= $this->restricted_serviceid;
-        $params[]= 1;
-        $params[]= $function->name;
-        $params[]= $USER->get('id');
-        $params[]= 1;
-        $params[]= time();
-        $wscond2 && $params[]= $this->restricted_serviceid;
-        $rs = get_recordset_sql($sql, $params);
-        // now make sure user may access at least one service
-        $remoteaddr = getremoteaddr();
-        $allowed = false;
-        $serviceids = array();
-        foreach ($rs as $service) {
-            $serviceids[]= $service['id'];
-            if ($service['iprestriction'] and !address_in_subnet($remoteaddr, $service['iprestriction'])) {
-                // wrong request source ip, sorry
-                continue;
-            }
-            $allowed = true;
-            // one service is enough, no need to continue
-            break;
-        }
-        $rs->close();
-        if (!$allowed) {
+        // Check that the function is in a service this user is allowed
+        // to access.
+        $serviceids = $this->get_allowed_services($this->restricted_serviceid, $this->functionname);
+        if (!count($serviceids)) {
             throw new WebserviceAccessException(get_string('accesstofunctionnotallowed', 'auth.webservice', $this->functionname));
         }
+
         // now get the list of all functions - this triggers the stashing of
         // functions in the context
         $wsmanager = new webservice();
