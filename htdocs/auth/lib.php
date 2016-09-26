@@ -1686,6 +1686,8 @@ function ensure_user_account_is_active($user=null) {
         throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institution' . $state, 'mahara', $authinstance->displayname, $sitename));
         return false;
     }
+
+    return true;
 }
 
 /**
