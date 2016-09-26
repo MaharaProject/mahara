@@ -2482,15 +2482,10 @@ function auth_register_submit(Pieform $form, $values) {
             $SESSION->set('registeredokawaiting', true);
         }
         else {
-            if (isset($values['authtype']) && $values['authtype'] == 'browserid') {
-                redirect('/register.php?key='.$values['key']);
-            }
-            else {
-                email_user($user, null,
-                    get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
-                    get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
-                    get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
-            }
+            email_user($user, null,
+                get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
+                get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
+                get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
             // Add a marker in the session to say that the user has registered
             $SESSION->set('registered', true);
         }
@@ -2537,14 +2532,6 @@ class PluginAuth extends Plugin {
         $subscriptions[] = clone $activecheck;
 
         return $subscriptions;
-    }
-
-    /**
-     * Can be overridden by plugins to assert when they are able to be used.
-     * For example, a plugin might check that a certain PHP extension is loaded
-     */
-    public static function is_usable() {
-        return true;
     }
 
     /**

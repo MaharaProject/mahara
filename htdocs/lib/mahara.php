@@ -2313,6 +2313,14 @@ abstract class Plugin implements IPlugin {
     }
 
     /**
+     * Can be overridden by plugins to assert when they are able to be used.
+     * For example, a plugin might check that a certain PHP extension is loaded
+     */
+    public static function is_usable() {
+        return true;
+    }
+
+    /**
      * Check whether this plugin is okay to be installed.
      *
      * To prevent installation, throw an InstallationException
