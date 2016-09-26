@@ -25,3 +25,16 @@ $string['notreadylabel'] = 'Not ready';
 $string['readylabel'] = 'Ready';
 $string['restprotocolenabled'] = 'REST protocol enabled';
 $string['webserviceproviderenabled'] = 'Incoming web service requests allowed';
+
+// User management of webservice access tokens
+$string['mytokensmenutitle'] = 'Apps';
+$string['mytokenspagetitle'] = 'Applications';
+$string['mytokenspagedesc'] = 'These applications can access your Mahara account.';
+$string['nopersonaltokens'] = 'You have not granted access to any applications.';
+$string['clientinfo'] = 'App';
+$string['token'] = 'Access Token';
+$string['tokencreated'] = 'Created';
+$string['tokenmanuallycreated'] = 'Manually created';
+$string['clientnotspecified'] = '(Unknown)';
+$string['generateusertoken'] = 'Generate an app access token';
+$string['appaccessrevoked'] = 'Access revoked';
