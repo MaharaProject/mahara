@@ -461,53 +461,58 @@ class PluginSearchInternal extends PluginSearch {
         $firstcols = 'u.id';
         if (!empty($constraints)) {
             foreach ($constraints as $f) {
-                if ($f['field'] == 'institution') {
-                    if ($f['string'] == 'mahara') {
-                        $where .= ' AND u.id NOT IN (SELECT usr FROM {usr_institution})';
-                    }
-                    else {
-                        $where .= '
-                            AND u.id IN (
-                                SELECT usr FROM {usr_institution} WHERE institution '
-                            . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike) . '
-                            )';
-                    }
-                }
-                else if ($f['field'] == 'duplicateemail') {
-                    if (!empty($f['string'])) {
-                        $where .= '
-                            AND u.id IN (
-                                SELECT owner
-                                FROM {artefact}
-                                WHERE id IN (' . join(',', array_map('db_quote', $f['string'])) . ')
-                            )';
-                    }
-                    else {
-                        // No duplicate email is found, return empty list
-                        $where .= ' AND FALSE';
-                    }
-                }
-                else if ($f['field'] == 'exportqueue') {
-                    $firstcols = 'e.id AS eid,
-                      (SELECT case WHEN e.starttime IS NOT NULL THEN ' . db_format_tsfield('e.starttime', false) . ' ELSE ' . db_format_tsfield('e.ctime', false) . ' END) AS status,
-                      ' . $firstcols;
-                    $join .= 'JOIN {export_queue} e ON e.usr = u.id ';
-                    $where .= ' AND u.id'
-                        . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
-                }
-                else if ($f['field'] == 'archivesubmissions') {
-                    $firstcols = 'e.id AS eid, a.group,
-                      (SELECT name FROM {group} WHERE id = a.group) AS submittedto,
-                      (SELECT case WHEN a.externalid IS NOT NULL THEN a.externalid ELSE CAST(e.id AS char) END) AS specialid,
-                      e.filetitle, e.filename, e.filepath, ' . db_format_tsfield('e.ctime', 'archivectime') . ', ' . $firstcols;
-                    $join .= 'JOIN {export_archive} e ON e.usr = u.id ';
-                    $join .= 'JOIN {archived_submissions} a ON a.archiveid = e.id ';
-                    $where .= ' AND u.id'
-                        . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
-                }
-                else {
-                    $where .= ' AND u.' . $f['field']
-                        . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+                switch ($f['field']) {
+                    case 'institution':
+                        if ($f['string'] == 'mahara') {
+                            $where .= ' AND u.id NOT IN (SELECT usr FROM {usr_institution})';
+                        }
+                        else {
+                            $where .= '
+                                AND u.id IN (
+                                    SELECT usr FROM {usr_institution} WHERE institution '
+                                . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike) . '
+                                )';
+                        }
+                        break;
+                    case 'duplicateemail':
+                        if (!empty($f['string'])) {
+                            $where .= '
+                                AND u.id IN (
+                                    SELECT owner
+                                    FROM {artefact}
+                                    WHERE id IN (' . join(',', array_map('db_quote', $f['string'])) . ')
+                                )';
+                        }
+                        else {
+                            // No duplicate email is found, return empty list
+                            $where .= ' AND FALSE';
+                        }
+                        break;
+                    case 'exportqueue':
+                        $firstcols = 'e.id AS eid,
+                          (SELECT case WHEN e.starttime IS NOT NULL THEN ' . db_format_tsfield('e.starttime', false) . ' ELSE ' . db_format_tsfield('e.ctime', false) . ' END) AS status,
+                          ' . $firstcols;
+                        $join .= 'JOIN {export_queue} e ON e.usr = u.id ';
+                        $where .= ' AND u.id'
+                            . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+                        break;
+                    case 'archivesubmissions':
+                        $firstcols = 'e.id AS eid, a.group,
+                          (SELECT name FROM {group} WHERE id = a.group) AS submittedto,
+                          (SELECT case WHEN a.externalid IS NOT NULL THEN a.externalid ELSE CAST(e.id AS char) END) AS specialid,
+                          e.filetitle, e.filename, e.filepath, ' . db_format_tsfield('e.ctime', 'archivectime') . ', ' . $firstcols;
+                        $join .= 'JOIN {export_archive} e ON e.usr = u.id ';
+                        $join .= 'JOIN {archived_submissions} a ON a.archiveid = e.id ';
+                        $where .= ' AND u.id'
+                            . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+                        break;
+                    case 'authname':
+                        $join .= 'JOIN {auth_instance} ai ON ai.id = u.authinstance ';
+                        $where .= ' AND ai.authname ' . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+                        break;
+                    default:
+                        $where .= ' AND u.' . $f['field']
+                            . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
                 }
             }
         }

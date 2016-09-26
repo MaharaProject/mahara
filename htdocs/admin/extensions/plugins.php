@@ -49,8 +49,12 @@ foreach (array_keys($plugins) as $plugin) {
                     'disableable' => call_static_method($classname, 'can_be_disabled'),
                     'deprecated' => call_static_method($classname, 'is_deprecated'),
                     'name' => call_static_method($classname, 'get_plugin_display_name'),
+                    'enableable' => call_static_method($classname, 'is_usable')
                 );
-                if ($plugins[$plugin]['installed'][$key]['disableable'] || !$i->active) {
+                if (
+                    ($i->active && $plugins[$plugin]['installed'][$key]['disableable'])
+                    || (!$i->active && $plugins[$plugin]['installed'][$key]['enableable'])
+                ){
                     $plugins[$plugin]['installed'][$key]['activateform'] = activate_plugin_form($plugin, $i);
                 }
                 if ($plugin == 'artefact') {
