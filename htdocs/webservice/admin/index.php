@@ -31,28 +31,45 @@ $inlinejs = <<<JS
         var webservicesenabled = '$serviceenabled';
         var webservicesnotenabled = '$servicenotenabled';
 
-        if (!$('#needprotocols').length) {
-            $('#webservice_provider_enabled_form_enabled_container').append('<span id="needprotocols" class="form-message-inline"></span>');
+        if (!$('#needprotocolsreq').length) {
+            $('#webservice_requester_enabled_form_enabled_container').append('<span id="needprotocolsreq" class="form-message-inline"></span>');
+        }
+
+        if (!$('#needprotocolspro').length) {
+            $('#webservice_provider_enabled_form_enabled_container').append('<span id="needprotocolspro" class="form-message-inline"></span>');
+        }
+
+        function update_warning_message(){
+          var target = $('.webservice-provider-protocol-form').find('input:checkbox');
+          var masterreq = $('#webservice_requester_enabled_form').find('input:checkbox');//requester
+          var masterpro = $('#webservice_provider_enabled_form').find('input:checkbox');//provider
+          if ($(masterreq).filter(':checked').length) {
+              if (target.filter(':checked').length === 0) {
+                  $('#needprotocolsreq').removeClass('text-success').addClass('text-danger').text(webservicesnotenabled);
+              }
+              else {
+                  $('#needprotocolsreq').removeClass('text-danger').addClass('text-success').text(webservicesenabled);
+              }
+          }
+          else {
+              $('#needprotocolsreq').removeClass('text-danger').removeClass('text-success').text('');
+          }
+          if ($(masterpro).filter(':checked').length) {
+              if (target.filter(':checked').length === 0) {
+                  $('#needprotocolspro').removeClass('text-success').addClass('text-danger').text(webservicesnotenabled);
+              }
+              else {
+                  $('#needprotocolspro').removeClass('text-danger').addClass('text-success').text(webservicesenabled);
+              }
+          }
+          else {
+              $('#needprotocolspro').removeClass('text-danger').removeClass('text-success').text('');
+          }
         }
 
         function save_protos_switch(name) {
-            // Check if we have master switch and at least one protocol active
-            var master = $('#webservice_provider_enabled_form').find('input:checkbox');
-            var target = $('.webservice-provider-protocol-form').find('input:checkbox');
-
-            if ($(master).filter(':checked').length) {
-                // master switch is on
-                if (target.filter(':checked').length === 0) {
-                    $('#needprotocols').removeClass('text-success').addClass('text-danger').text(webservicesnotenabled);
-                }
-                else {
-                    $('#needprotocols').removeClass('text-danger').addClass('text-success').text(webservicesenabled);
-                }
-            }
-            else {
-                $('#needprotocols').removeClass('text-danger').removeClass('text-success').text('');
-            }
-
+            // at least one of the master switches is on
+            update_warning_message()
             // Save new state
             if (!$('#ajax_' + name).length) {
                 $('#webservice_provider_protocols_' + name).append('<input id="ajax_' + name + '" type="hidden" name="ajax" value="1">');
@@ -74,37 +91,41 @@ $inlinejs = <<<JS
             save_protos_switch('oauth');
         });
 
+        $('#webservice_provider_enabled_form_enabled').on('change', function(){
+            update_webservice_status();
+            // save master switch form
+            $('#webservice_provider_enabled_form').append('<input type="hidden" name="ajax" value="1">');
+            $.post('index.php', $('#webservice_provider_enabled_form').serialize());
+        });
         $('#webservice_requester_enabled_form_enabled').on('change', function() {
+            update_webservice_status();
             // save master connection switch form
             $('#webservice_requester_enabled_form').append('<input type="hidden" name="ajax" value="1">');
             $.post('index.php', $('#webservice_requester_enabled_form').serialize());
         });
 
-        function update_webservice_provider_status() {
+        function update_webservice_status() {
             var target = $('.webservice-provider-protocol-form').find('input:checkbox');
-            if ($('#webservice_provider_enabled_form_enabled').is(':checked')) {
+            if ($('#webservice_requester_enabled_form_enabled').is(':checked') ||
+                $('#webservice_provider_enabled_form_enabled').is(':checked')) {
+                // enable all protocols
+                target.prop('disabled', false);
                 // alert user to switch protocols on if none are active
-                if (target.filter(':checked').length === 0) {
-                    $('#needprotocols').removeClass('text-success').addClass('text-danger').text(webservicesnotenabled);
-                }
-                else {
-                    $('#needprotocols').removeClass('text-danger').addClass('text-success').text(webservicesenabled);
-                }
+                update_warning_message();
             }
             else {
                 // turn all protocols off
                 target.prop('checked', false);
-                $('#webservice_provider_enabled_form').append('<input type="hidden" name="ajax" value="1">');
+                // if main switch is off, remove message
                 $('#webservice_provider_enabled_form_pseudofieldset .form-message-inline').text('');
+                // disable all protocols
+                target.prop('disabled', true);
+                // remove the needprotocols error message
+                $('#needprotocolsreq').removeClass('text-danger').text('');
+                $('#needprotocolspro').removeClass('text-danger').text('');
             }
         }
-        $('#webservice_provider_enabled_form_enabled').on('change', function(){
-            update_webservice_provider_status();
-            // save master switch form
-            $.post('index.php', $('#webservice_provider_enabled_form').serialize());
-        });
-
-        update_webservice_provider_status();
+        update_webservice_status();
     });
 JS;
 
@@ -316,6 +337,12 @@ function webservice_requester_enabled_submit(Pieform $form, $values) {
     set_config('webservice_requester_enabled', $enabled);
     // Don't reload the page if this was submitted via ajax.
     if (param_boolean('ajax')) {
+        if (!get_config('webservice_provider_enabled')) {
+            $protos = array('soap','xmlrpc','rest','oauth');
+            foreach ($protos as $proto) {
+                set_config('webservice_provider_'.$proto.'_enabled', 0);
+            }
+        }
         exit;
     }
     redirect('/webservice/admin/index.php');
@@ -383,9 +410,11 @@ function webservice_provider_enabled_submit(Pieform $form, $values) {
         external_reload_webservices();
     }
     if (param_boolean('ajax')) {
-        $protos = array('soap','xmlrpc','rest','oauth');
-        foreach ($protos as $proto) {
-            set_config('webservice_provider_'.$proto.'_enabled', 0);
+        if (!get_config('webservice_requester_enabled')) {
+            $protos = array('soap','xmlrpc','rest','oauth');
+            foreach ($protos as $proto) {
+                set_config('webservice_provider_'.$proto.'_enabled', 0);
+            }
         }
         exit;
     }
