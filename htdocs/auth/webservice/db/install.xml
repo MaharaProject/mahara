@@ -8,6 +8,7 @@
           <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
             <FIELD NAME="name" TYPE="char" LENGTH="200" NOTNULL="true" SEQUENCE="false"/>
+            <FIELD NAME="shortname" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
             <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
             <FIELD NAME="restrictedusers" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
             <FIELD NAME="tokenusers" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
@@ -20,6 +21,7 @@
           </KEYS>
           <INDEXES>
             <INDEX NAME="nameuk" UNIQUE="true" FIELDS="name"/>
+            <INDEX NAME="shortnamecompix" UNIQUE="false" FIELDS="shortname,component"/>
           </INDEXES>
         </TABLE>
         <TABLE NAME="external_functions" COMMENT="list of all external functions">
