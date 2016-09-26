@@ -1000,7 +1000,7 @@ abstract class webservice_server implements webservice_server_interface {
      * @param $tokentype string tokentype constant
      * @return $user object
      */
-    protected function authenticate_by_token($tokentype) {
+    public function authenticate_by_token($tokentype) {
         global $WEBSERVICE_INSTITUTION;
 
         if ($tokentype == EXTERNAL_TOKEN_OAUTH1) {
