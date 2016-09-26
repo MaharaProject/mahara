@@ -506,6 +506,47 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         if (!field_exists($table, $field)) {
             add_field($table, $field);
         }
+
+        // The old code listed the components with "/webservice"
+        // on the end of them, e.g. "artefact/internal/webservice".
+        // This is redundant and makes for a poorer user interface.
+        log_debug('Change in "component" format for plugins');
+        $oldtail = '/webservice';
+        $length = strlen($oldtail);
+
+        // Functions
+        execute_sql(
+            "UPDATE {external_functions}
+            SET
+                component = LEFT(
+                    component,
+                    LENGTH(component) - {$length}
+                )
+            WHERE
+                component <> 'webservice'
+                AND RIGHT(
+                    component,
+                    {$length}
+                ) = '{$oldtail}'
+            "
+        );
+
+        // Services
+        execute_sql(
+            "UPDATE {external_services}
+            SET
+                component = LEFT(
+                    component,
+                    LENGTH(component) - {$length}
+                )
+            WHERE
+                component <> 'webservice'
+                AND RIGHT(
+                    component,
+                    {$length}
+                ) = '{$oldtail}'
+            "
+        );
     }
 
     // sweep for webservice updates everytime
