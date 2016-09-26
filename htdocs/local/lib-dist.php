@@ -45,4 +45,7 @@
  *  - local_site_content_pages(): Add to the list of "static pages" types.
  *
  *  - local_xmlrpc_services(): add custom xmlrpc functions
+ *
+ *  - local_webservice_info(&$response): Add custom information to the public information
+ *  provided by htdocs/webservice/info.php
  */
