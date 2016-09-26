@@ -69,6 +69,9 @@
             <FIELD NAME="publickey" TYPE="text" NOTNULL="true" DEFAULT="" SEQUENCE="false" COMMENT="created timestamp"/>
             <FIELD NAME="publickeyexpires" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="created timestamp"/>
             <FIELD NAME="wssigenc" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
+            <FIELD NAME="clientname" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" COMMENT="Name of client program that generated and uses client."/>
+            <FIELD NAME="clientenv" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" COMMENT="Brief description of the environment of the client program (OS, browser, etc)"/>
+            <FIELD NAME="clientguid" TYPE="char" LENGTH="128" NOTNULL="false" SEQUENCE="false" COMMENT="Optional unique ID for the client program."/>
           </FIELDS>
           <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

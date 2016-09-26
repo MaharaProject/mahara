@@ -547,6 +547,21 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
                 ) = '{$oldtail}'
             "
         );
+
+        log_debug('adding client info fields to external_tokens table');
+        $table = new XMLDBTable('external_tokens');
+
+        $field = new XMLDBField('clientname');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 200);
+        add_field($table, $field);
+
+        $field = new XMLDBField('clientenv');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 200);
+        add_field($table, $field);
+
+        $field = new XMLDBField('clientguid');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 128);
+        add_field($table, $field);
     }
 
     // sweep for webservice updates everytime
