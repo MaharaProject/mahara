@@ -412,17 +412,17 @@ function editaccess_validate(Pieform $form, $values) {
                 break;
             }
 
-            if ($item['type'] == 'loggedin' && !$item['startdate'] && !$item['stopdate']) {
+            if ($item['type'] == 'loggedin' && empty($item['startdate']) && empty($item['stopdate'])) {
                 $loggedinaccess = true;
             }
 
             $now = time();
-            if ($item['stopdate'] && $now > $item['stopdate']) {
+            if (!empty($item['stopdate']) && $now > $item['stopdate']) {
                 $SESSION->add_error_msg(get_string('newstopdatecannotbeinpast', 'view', $accesstypestrings[$item['type']]));
                 $form->set_error('accesslist', '');
                 break;
             }
-            if ($item['startdate'] && $item['stopdate'] && $item['startdate'] > $item['stopdate']) {
+            if (!empty($item['startdate']) && !empty($item['stopdate']) && $item['startdate'] > $item['stopdate']) {
                 $SESSION->add_error_msg(get_string('newstartdatemustbebeforestopdate', 'view', $accesstypestrings[$item['type']]));
                 $form->set_error('accesslist', '');
                 break;
