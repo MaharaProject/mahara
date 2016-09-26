@@ -13,16 +13,37 @@ define('INTERNAL', 1);
 define('MENUITEM', 'configextensions/pluginadminwebservices');
 define('SECTION_PAGE', 'webservice');
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('pluginadmin', 'admin'));
 require_once(get_config('docroot') . 'webservice/lib.php');
 
-$function  = param_integer('id', 0);
+// The characters to use for indenting
+define('WSDOC_INDENT_SPACE', '&nbsp;&nbsp;&nbsp;&nbsp;');
+
+$functionname = param_alphanumext('functionname', '');
+$functionid  = param_integer('id', 0);
 $dialog = param_integer('dialog', 0);
-$dbfunction = get_record('external_functions', 'id', $function);
+if ($functionid) {
+    // We've retained the id-based URL because it's used so many places. But it's
+    // a lot more readable (i.e. in URL completions) to use the name-based URL,
+    // so let's redirect to that.
+    $functionname = get_field('external_functions', 'name', 'id', $functionid);
+    if ($functionname) {
+        $redirect = '/webservice/wsdoc.php?functionname=' . $functionname;
+        if ($dialog) {
+            $redirect .= '&dialog=1';
+        }
+        redirect($redirect);
+    }
+}
+else if ($functionname) {
+    $dbfunction = get_record('external_functions', 'name', $functionname);
+}
 if (empty($dbfunction)) {
     $SESSION->add_error_msg(get_string('invalidfunction', 'auth.webservice'));
     redirect('/webservice/admin/index.php');
 }
+
+define('TITLE', get_string('function', 'auth.webservice') . ': ' . $dbfunction->name);
+
 $fdesc = webservice_function_info($dbfunction->name);
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
@@ -34,93 +55,169 @@ $smarty->assign('fdesc', $fdesc);
 $smarty->assign('xmlrpcactive', webservice_protocol_is_enabled('xmlrpc'));
 $smarty->assign('restactive', webservice_protocol_is_enabled('rest'));
 $smarty->assign('soapactive', webservice_protocol_is_enabled('soap'));
-$heading = get_string('wsdoc', 'auth.webservice');
-$smarty->assign('PAGEHEADING', $heading);
+$smarty->assign('PAGEHEADING', get_string('wsdoc', 'auth.webservice'));
 $smarty->assign('dialog', $dialog);
 $smarty->display('auth:webservice:wsdoc.tpl');
 die;
 
 /**
- * Return documentation for a ws description object
- * ws description object can be 'external_multiple_structure', 'external_single_structure'
- * or 'external_value'
- * Example of documentation for moodle_group_create_groups function:
-  list of (
-  object {
-  courseid int //id of course
-  name string //multilang compatible name, course unique
-  description string //group description text
-  enrolmentkey string //group enrol secret phrase
-  }
-  )
- * @param object $params a part of parameter/return description
+ * Recursively generates an HTML-formatted description of a webservice external_description
+ * object (i.e. webservice function parameters and return structures).
+ * The output includes some HTML tags for syntax highlighting, so it should
+ * not be htmlescaped.
+ *
+ * Example of documentation for module_mobileapi_get_notifications response structure
+ *
+ * object {
+ *     synctime: int Current timestamp on server
+ *     numnotifications: int Total number of unread notifications available
+ *     notifications:
+ *         list of (
+ *             object {
+ *                 id: int notification record id
+ *                 subject: string Notification's subject line
+ *                 message: string Notification's body
+ *             }
+ *         )
+ * }
+ * @param object $params A part of parameter/return description
+ * @param integer $indentlevel The current level of indentation
  * @return string the html to display
  */
-function wsdoc_detailed_description_html($params) {
-    /// retrieve the description of the description object
-    $paramdesc = "";
-    if (!empty($params->desc)) {
-        $paramdesc .= '<span style="color:#2A33A6">';
-        if ($params->required == VALUE_REQUIRED) {
-            $required = '';
-        }
-        if ($params->required == VALUE_DEFAULT) {
-            if ($params->default === null) {
-                $params->default = "null";
+function wsdoc_detailed_description_html($params, $indentlevel = 0) {
+    $nlsame = '</br>' . str_repeat(WSDOC_INDENT_SPACE, $indentlevel);
+    $nlright = '</br>' . str_repeat(WSDOC_INDENT_SPACE, $indentlevel + 1);
+    $comment = '';
+
+    if (!empty($params->desc) || isset($params->required)) {
+        $comment .= '<span class="wsdescription">';
+        if (isset($params->required)) {
+            switch ($params->required) {
+
+                case VALUE_DEFAULT:
+                    if ($params->default === null) {
+                        $params->default = "(null)";
+                    }
+                    else if (is_string($params->default)) {
+                        $params->default = '"' . $params->default . '"';
+                    }
+                    else if (is_bool($params->default)) {
+                        $params->default = $params->default ? "(true)" : "(false)";
+                    }
+                    else if (!is_scalar($params->default)) {
+                        $params->default = '&lt;' . gettype($params->default) . '&gt;';
+                    }
+                    $required = '<span class="wsrequired">' . get_string('required', 'auth.webservice') . '</span> ' .
+                        '<span class="wsoptional">' . get_string('default', 'auth.webservice', $params->default) . '</span> ';
+                    break;
+
+                case VALUE_OPTIONAL:
+                    $required = '<span class="wsoptional">' .
+                        get_string('optional', 'auth.webservice')
+                        . '</span> ';
+                    break;
+
+                // Don't need to print anything for a required param
+                case VALUE_REQUIRED:
+                default:
+                    $required = '';
             }
-            $required = '<b>' .
-                    get_string('default', 'auth.webservice', $params->default)
-                    . '</b>';
+            $comment .= $required;
         }
-        if ($params->required == VALUE_OPTIONAL) {
-            $required = '<b>' .
-                    get_string('optional', 'auth.webservice') . '</b>';
+        // If we have a default and a desc, put a space between them
+        if (isset($params->required) && !empty($params->desc)) {
+            $comment .= ' ';
         }
-        $paramdesc .= " " . $required . " ";
-        $paramdesc .= '<i>';
-        $paramdesc .= "//";
-
-        $paramdesc .= $params->desc;
-
-        $paramdesc .= '</i>';
-
-        $paramdesc .= '</span>';
-        $paramdesc .= '<br/>';
+        // Print the description for the param
+        if (!empty($params->desc)) {
+            $comment .= "<span class='wsdescriptiontext'>{$params->desc}</span>";
+        }
+        $comment .= '</span>';
     }
 
     /// description object is a list
     if ($params instanceof external_multiple_structure) {
-        return $paramdesc . "list of ( " . '<br/>'
-        . '    ' . wsdoc_detailed_description_html($params->content) . ")";
+        return $comment
+            . $nlsame
+            // HACK: Normally a lang string like this should be parameterized
+            // "list of (%)". But in this case the stuff in the parens could be huge,
+            // and spaces are important for formatting. So just concatenating.
+            . get_string('list', 'auth.webservice') . ' ('
+            . ($params->content instanceof external_value ? $nlright : '')
+            . wsdoc_detailed_description_html($params->content, $indentlevel + 1)
+            . $nlsame
+            . ')';
     }
+    /// description object is an object
     else if ($params instanceof external_single_structure) {
-        /// description object is an object
-        $singlestructuredesc = $paramdesc . "object {" . '<br/>';
-        foreach ($params->keys as $attributname => $attribut) {
-            $singlestructuredesc .= '<b>';
-            $singlestructuredesc .= $attributname;
-            $singlestructuredesc .= '</b>';
-            $singlestructuredesc .= " " .
-                    wsdoc_detailed_description_html($params->keys[$attributname]);
+        // Print comments (after attribute printed by parent)
+        // Then go down one line, indent, print "object {"
+        // Then down another line, indent again, and print each attribute one
+        // per line.
+        $returnstr =
+            $comment
+            . $nlsame
+            . 'object {';
+        if ($params->keys) {
+            foreach ($params->keys as $attributename => $attribute) {
+                $returnstr .=
+                    $nlright
+                    . "<span class='wsname'>$attributename:</span> ";
+                $i = $indentlevel + 1;
+                if (!$attribute instanceof external_value) {
+                    $i++;
+                }
+                $returnstr .= wsdoc_detailed_description_html($attribute, $i);
+            }
+            $returnstr .= $nlsame;
         }
-        $singlestructuredesc .= "} ";
-        $singlestructuredesc .= '<br/>';
-        return $singlestructuredesc;
+        $returnstr .= '}';
+        return $returnstr;
     }
+    /// description object is a primary type (string, integer)
     else {
-        /// description object is a primary type (string, integer)
         switch ($params->type) {
             case PARAM_BOOL:
+                $type = 'bool';
+                break;
             case PARAM_INT:
+            case PARAM_INTEGER:
                 $type = 'int';
                 break;
-            case PARAM_FLOAT;
+            case PARAM_FLOAT:
+            case PARAM_NUMBER:
                 $type = 'double';
                 break;
-            default:
+            case PARAM_RAW:
+            case PARAM_RAW_TRIMMED:
+            case PARAM_TEXT:
                 $type = 'string';
+                break;
+            case PARAM_ALPHA:
+            case PARAM_ALPHAEXT:
+            case PARAM_ALPHANUM:
+            case PARAM_ALPHANUMEXT:
+            case PARAM_BASE64:
+            case PARAM_CLEANHTML:
+            case PARAM_CLEAN:
+            case PARAM_EMAIL:
+            case PARAM_FILE:
+            case PARAM_HOST:
+            case PARAM_LOCALURL:
+            case PARAM_NOTAGS:
+            case PARAM_PATH:
+            case PARAM_PEM:
+            case PARAM_RAW_TRIMMED:
+            case PARAM_SAFEDIR:
+            case PARAM_SAFEPATH:
+            case PARAM_SAFEPATH:
+            case PARAM_URL:
+            case PARAM_STRINGID:
+            default:
+                // String with additional filters/restrictions
+                $type = "string ({$params->type})";
         }
-        return $type . " " . $paramdesc;
+        return $type . ($comment ? ' ' : '') . $comment;
     }
 }
 

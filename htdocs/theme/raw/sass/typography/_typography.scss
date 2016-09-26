@@ -257,3 +257,24 @@ label.lead {
 .licenseicon {
     padding: 0 10px 5px 0;
 }
+
+pre {
+    span.wsname {
+        font-weight: bold;
+    }
+    span.wsdescription {
+        color: #2A33A6;
+        padding-right: 10px;
+
+        .wsrequired {
+            font-weight: bold;
+            color: $brand-danger;
+        }
+        .wsoptional {
+            font-weight: bold;
+        }
+        .wsdescriptiontext {
+            font-style: italic;
+        }
+    }
+}
