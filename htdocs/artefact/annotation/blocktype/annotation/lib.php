@@ -250,7 +250,14 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
                         'options' => array(),
                     );
                     foreach ($standard->options as $option) {
-                        $selectoptions[$standard->id]['options'][$option->id] = $option->name;
+                        // We are not allowed to change standard if either the assement has changed
+                        // from initial state and/or there is feedback on the annotation
+                        if ($evidence && $evidence->element && ((int) $evidence->state !== Framework::EVIDENCE_BEGUN || $textreadonly)) {
+                            $selectoptions[$standard->id]['options'][$option->id] = array('value' => $option->name, 'disabled' => (!($evidence->element == $option->id)));
+                        }
+                        else {
+                            $selectoptions[$standard->id]['options'][$option->id] = $option->name;
+                        }
                         $selectdescriptions[$option->id] = $option->description;
                     }
                 }
