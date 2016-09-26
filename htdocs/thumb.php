@@ -19,123 +19,18 @@ require_once('user.php');
 $type = param_alpha('type');
 
 switch ($type) {
-    case 'profileiconbyid':
+    // A profile icon identified by user ID
     case 'profileicon':
-        $id = param_integer('id', 0);
-        $size = get_imagesize_parameters();
-        $earlyexpiry = param_boolean('earlyexpiry');
-        $useremail = null;
-
-        if ($id) {
-            if ($type == 'profileicon') {
-                // Convert ID of user to the ID of a profileicon
-                $data = get_record_sql('
-                    SELECT u.profileicon, u.email, f.filetype
-                    FROM {usr} u LEFT JOIN {artefact_file_files} f ON u.profileicon = f.artefact
-                    WHERE u.id = ?', array($id));
-                if (!empty($data->profileicon)) {
-                    $id = $data->profileicon;
-                    $mimetype = $data->filetype;
-                }
-                else {
-                    $useremail = $data->email;
-                    $id = null;
-                }
-            }
-            else {
-                $mimetype = get_field('artefact_file_files', 'filetype', 'artefact', $id);
-            }
-        }
-
-        if ($id && $fileid = get_field('artefact_file_files', 'fileid', 'artefact', $id)) {
-            // Check that the profile icon is allowed to be seen
-            // Any profileiconbyid file that has been set as a user's default icon is ok
-            // But icons that are not should only be seen by their owner
-            // Unless that owner places them in a view that the user can see
-            if ($type == 'profileiconbyid' && !get_field('usr', 'id', 'profileicon', $id)) {
-                $viewid = param_integer('view', 0);
-                $ok = false;
-                if ($viewid) {
-                    $ok = artefact_in_view($id, $viewid);
-                }
-                if (!$ok) {
-                    if (
-                        ($USER && !$USER->is_logged_in()) ||
-                        ($USER->is_logged_in() && $USER->get('id') != get_field('artefact', 'owner', 'id', $id))
-                       ) {
-                        exit;
-                    }
-                }
-            }
-            if ($path = get_dataroot_image_path('artefact/file/profileicons', $fileid, $size)) {
-                if ($mimetype) {
-                    header('Content-type: ' . $mimetype);
-
-                    if (!get_config('nocache')) {
-                        // We can't cache 'profileicon' for as long, because the
-                        // user can change it at any time. But we can cache
-                        // 'profileiconbyid' for quite a while, because it will
-                        // never change
-                        if ($type == 'profileiconbyid' and !$earlyexpiry) {
-                            $maxage = 604800; // 1 week
-                        }
-                        else {
-                            $maxage = 600; // 10 minutes
-                        }
-                        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-                        header('Cache-Control: max-age=' . $maxage);
-                        header('Pragma: public');
-                    }
-
-                    readfile_exit($path);
-                }
-            }
-        }
-
-        // Look for an appropriate image on gravatar.com
-        if ($useremail and $gravatarurl = remote_avatar_url($useremail, $size)) {
-            redirect($gravatarurl);
-        }
-
-        // We couldn't find an image for this user. Attempt to use the 'no user
-        // photo' image for the current theme
-
-        if (!get_config('nocache')) {
-            // We can cache such images
-            $maxage = 604800; // 1 week
-            if ($earlyexpiry) {
-                $maxage = 600; // 10 minutes
-            }
-            header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-            header('Cache-Control: max-age=' . $maxage);
-            header('Pragma: public');
-        }
-
-        if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . $THEME->basename, 0, $size)) {
-            header('Content-type: ' . 'image/png');
-            readfile_exit($path);
-        }
-
-        // If we couldn't find the no user photo picture, we put it into
-        // dataroot if we can
-        $nouserphotopic = $THEME->get_path('images/no_userphoto.png');
-        if ($nouserphotopic) {
-            // Move the file into the correct place.
-            $directory = get_config('dataroot') . 'artefact/file/profileicons/no_userphoto/' . $THEME->basename . '/originals/0/';
-            check_dir_exists($directory);
-            copy($nouserphotopic, $directory . '0');
-            // Now we can try and get the image in the correct size
-            if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . $THEME->basename, 0, $size)) {
-                header('Content-type: ' . 'image/png');
-                readfile_exit($path);
-            }
-        }
-
-
-        // Emergency fallback
-        header('Content-type: ' . 'image/png');
-        readfile_exit($THEME->get_path('images/no_userphoto.png'));
-
+        safe_require('artefact', 'file');
+        $userid = param_integer('id');
+        ArtefactTypeProfileIcon::download_thumbnail_for_user($userid);
+        exit();
+    // A profile icon identified by artefact ID
+    case 'profileiconbyid':
+        safe_require('artefact', 'file');
+        $artefactid = param_integer('id');
+        ArtefactTypeProfileIcon::download_thumbnail($artefactid);
+        exit();
     case 'logobyid':
         $filedata = get_record('artefact_file_files', 'artefact', param_integer('id'));
         if ($path = get_dataroot_image_path('artefact/file/profileicons', $filedata->fileid, get_imagesize_parameters())) {

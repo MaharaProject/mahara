@@ -24,6 +24,7 @@ $string['noticenotenabled'] = 'The Mahara mobile apps API is <b>not</b> currentl
 $string['notreadylabel'] = 'Not ready';
 $string['readylabel'] = 'Ready';
 $string['restprotocolenabled'] = 'REST protocol enabled';
+$string['servicenotallowed'] = 'The credentials you have provided are not authorized to access this functionality.';
 $string['webserviceproviderenabled'] = 'Incoming web service requests allowed';
 
 // User management of webservice access tokens

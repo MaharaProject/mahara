@@ -14,6 +14,7 @@ $services = array(
     'Mahara Mobile API' => array(
         'shortname' => 'maharamobile',
         'functions' => [
+            'module_mobileapi_get_user_profileicon',
         ],
         'enabled' => 1,
         'restrictedusers' => 0,
@@ -25,3 +26,11 @@ $services = array(
     ),
 );
 
+$functions = array(
+    'module_mobileapi_get_user_profileicon' => array(
+        'classname' => 'module_mobileapi_sync',
+        'methodname' => 'get_user_profileicon',
+        'description' => "Retrieve user's own profile icon",
+        'type' => 'read',
+    ),
+);
