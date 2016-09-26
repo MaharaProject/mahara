@@ -58,7 +58,7 @@
             <FIELD NAME="token" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" COMMENT="security token, aka private access key"/>
             <FIELD NAME="tokentype" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="type of token: 0=permanent, no session; 1=linked to current browser session via sid; 2=permanent, with emulated session"/>
             <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="owner of the token"/>
-            <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
+            <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false"/>
             <FIELD NAME="externalserviceid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
             <FIELD NAME="sid" TYPE="char" LENGTH="128" NOTNULL="false" SEQUENCE="false" COMMENT="link to browser or emulated session"/>
             <FIELD NAME="creatorid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" DEFAULT="1" SEQUENCE="false" COMMENT="user id of the token creator (useful to know when the administrator created a token and so display the token to a specific administrator)"/>
@@ -175,7 +175,7 @@
             <FIELD NAME="timelogged" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
             <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="usr ref"/>
             <FIELD NAME="externalserviceid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"/>
-            <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
+            <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false"/>
             <FIELD NAME="protocol" TYPE="char" LENGTH="10" NOTNULL="true"/>
             <FIELD NAME="auth" TYPE="char" LENGTH="10" NOTNULL="true"/>
             <FIELD NAME="functionname" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>

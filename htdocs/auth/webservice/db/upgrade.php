@@ -564,6 +564,20 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2016101100) {
+        log_debug('Make external_tokens.institution nullable');
+        $table = new XMLDBTable('external_tokens');
+        $field = new XMLDBField('institution');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null);
+        change_field_notnull($table, $field, false);
+
+        log_debug('Allow null institution in external_services_logs');
+        $table = new XMLDBTable('external_services_logs');
+        $field = new XMLDBField('institution');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+        change_field_notnull($table, $field, false);
+    }
+
     // sweep for webservice updates everytime
     $status = external_reload_webservices();
 

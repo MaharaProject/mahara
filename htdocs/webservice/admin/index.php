@@ -476,6 +476,8 @@ function webservice_provider_protocols_submit(Pieform $form, $values) {
     $enabled = $values['enabled'] ? 0 : 1;
     $proto = $values['protocol'];
     set_config('webservice_provider_'.$proto.'_enabled', $enabled);
+    // Show/hide the account settings webservice tokens page
+    clear_menu_cache();
     if (param_boolean('ajax')) {
         exit;
     }

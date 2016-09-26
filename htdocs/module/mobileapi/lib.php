@@ -143,5 +143,21 @@ class PluginModuleMobileapi extends PluginModule {
         return true;
     }
 
+    public static function right_nav_menu_items() {
+        if (PluginModuleMobileapi::is_service_ready()) {
+            return array(
+                'settings/webservice' => array(
+                    'path' => 'settings/webservice',
+                    'url' => 'module/mobileapi/apps.php',
+                    'title' => get_string('mytokensmenutitle', 'module.mobileapi'),
+                    'weight' => 50,
+                    'iconclass' => 'flag'
+                ),
+            );
+        }
+        else {
+            return array();
+        }
+    }
 }
 
