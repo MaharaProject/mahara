@@ -13,6 +13,7 @@
             <FIELD NAME="restrictedusers" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
             <FIELD NAME="tokenusers" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
             <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+            <FIELD NAME="apiversion" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"/>
             <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"/>
             <FIELD NAME="mtime" TYPE="datetime" NOTNULL="false"/>
           </FIELDS>
