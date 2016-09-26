@@ -1997,6 +1997,13 @@ function external_reload_component($component, $dir=true) {
                 $dbservice->shortname = $service['shortname'];
                 $update = true;
             }
+            // Optional "apiversion" field, to let webservice clients adapt gracefully to changes
+            // in a service over time.
+            $libApiVersion = (int)(isset($service['apiversion']) ? $service['apiversion'] : false);
+            if ($dbservice->apiversion !== $libApiVersion) {
+                $dbservice->apiversion = $libApiVersion;
+                $update = true;
+            }
             if ($update) {
                 $dbservice->mtime = db_format_timestamp(time());
                 update_record('external_services', $dbservice);
