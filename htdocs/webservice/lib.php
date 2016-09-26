@@ -1935,9 +1935,14 @@ function external_delete_descriptions($component) {
 
     delete_records_select('external_services_users', "externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?)", $params);
     delete_records_select('external_tokens', "externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?)", $params);
-    delete_records_select('external_services_functions', "externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?)", $params);
     delete_records_select('oauth_server_token', "osr_id_ref IN (SELECT id FROM {oauth_server_registry} WHERE externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?))", $params);
     delete_records_select('oauth_server_registry', "externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?)", $params);
+    delete_records_select(
+        'external_services_functions',
+        "externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?)"
+            . " OR functionname IN (SELECT name FROM {external_functions} WHERE component = ?)",
+        array($component, $component)
+    );
     delete_records('external_services', 'component', $component);
     delete_records('external_functions', 'component', $component);
 }
@@ -2014,8 +2019,8 @@ function webservice_load_services_file($component) {
     else {
         // Not a plugin, must handle manually
         $filepath = get_config('docroot') . $wsdir . '/services.php';
-        if (file_exists($filepath . '/services.php')) {
-            include($filepath . '/services.php');
+        if (file_exists($filepath)) {
+            include($filepath);
         }
     }
 
