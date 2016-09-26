@@ -447,6 +447,14 @@ function censor_password_parameters(&$backtraceline) {
  * @todo this function should go away
  */
 function die_info($message) {
+
+    // Produce JSON output
+    if (defined('JSON')) {
+        $e = new SystemException($message);
+        $e->handle_exception();
+        exit;
+    }
+
     $smarty = smarty(array(), array(), array(), array('sidebars' => false));
     $smarty->assign('message', $message);
     $smarty->assign('type', 'info');
@@ -553,8 +561,12 @@ function exception ($e) {
 class MaharaException extends Exception {
 
     protected $log = true;
+    const DEFAULT_ERRCODE = 500;
 
-    public function __construct($message='', $code=0) {
+    public function __construct($message='', $code=null) {
+        if ($code === null) {
+            $code = static::DEFAULT_ERRCODE;
+        }
         parent::__construct($message, $code);
         if (!defined('MAHARA_CRASHING')) {
             define('MAHARA_CRASHING', true);
@@ -604,6 +616,32 @@ class MaharaException extends Exception {
         return $this->getMessage();
     }
 
+    /**
+     * Returns an array that will be JSON-encoded,
+     * for when there's an exception in a script
+     * that should give a JSON response.
+     */
+    public function render_json_exception() {
+        return array(
+            'error' => true,
+            'error_number' => $this->getCode(),
+            'error_name' => $this->get_error_name(),
+            'error_class' => get_class($this),
+            'error_message' => $this->getMessage(),
+            'error_rendered' => $this->render_exception()
+        );
+    }
+
+    /**
+     * A machine-readable, non-localized name for this error.
+     * (Defaults to the name of the exception class.)
+     *
+     * @return string
+     */
+    public function get_error_name() {
+        return get_class($this);
+    }
+
     public final function handle_exception() {
 
         if (!empty($this->log)) {
@@ -613,7 +651,7 @@ class MaharaException extends Exception {
         if (defined('JSON')) { // behave differently
             @header('Content-type: text/plain');
             @header('Pragma: no-cache');
-            echo json_encode(array('error' => true, 'message' => $this->render_exception()));
+            echo json_encode($this->render_json_exception());
             exit;
         }
 
@@ -760,6 +798,7 @@ class ConfigException extends MaharaException {
 class UserException extends MaharaException {
 
     protected $log = false;
+    const DEFAULT_ERRCODE = 400;
 
     public function render_exception() {
         return $this->get_string('message') . "\n\n" . $this->getMessage();
@@ -778,6 +817,7 @@ class UserException extends MaharaException {
  * that doesn't exist
  */
 class NotFoundException extends UserException {
+    const DEFAULT_ERRCODE = 404;
     public function strings() {
         return array_merge(parent::strings(),
                            array('message' => get_string('notfoundexception', 'error'),
@@ -818,6 +858,22 @@ class SQLException extends SystemException {
         if (empty($DB_IGNORE_SQL_EXCEPTIONS) && !defined('TESTSRUNNING')) {
             log_warn($this->getMessage());
         }
+    }
+
+    /**
+     * Returns an array that will be JSON-encoded,
+     * for when there's an exception in a script
+     * that should give a JSON response.
+     */
+    public function render_json_exception() {
+        return array(
+            'error' => true,
+            'error_number' => $this->getCode(),
+            'error_name' => $this->get_error_name(),
+            'error_class' => get_class($this),
+            'error_message' => get_config('productionmode') ? '' : $this->getMessage(),
+            'error_rendered' => get_config('productionmode') ? '' : $this->render_exception(),
+        );
     }
 }
 
@@ -957,6 +1013,7 @@ class SkinNotFoundException extends NotFoundException {}
  * Exception - Access denied. Throw this if a user is trying to view something they can't
  */
 class AccessDeniedException extends UserException {
+    const DEFAULT_ERRCODE = 403;
     public function strings() {
         return array_merge(parent::strings(),
                            array('message' => get_string('accessdeniedexception', 'error'),
@@ -1016,6 +1073,7 @@ class GroupAccessDeniedException extends AccessDeniedException {
  * as the administrator
  */
 class AccessTotallyDeniedException extends UserException {
+    const DEFAULT_ERRCODE = 403;
     public function strings() {
         return array_merge(parent::strings(),
                            array('message' => get_string('accessdeniedexception', 'error'),

@@ -2042,16 +2042,48 @@ function external_reload_component($component, $dir=true) {
  * web service handling code
  */
 class WebserviceException extends MaharaException {
+
+    public $errorcode = null;
+
     /**
      * Constructor
      * @param string $errorcode The name of the string to print
      * @param string $debuginfo optional debugging information
-     * @param object $a Extra words and phrases that might be required in the error string
+     * @param integer $errornumber A numerical identifier for the error (optional)
      */
-    function __construct($errorcode=null, $debuginfo = '', $a=null) {
-        parent::__construct(get_string($errorcode, 'auth.webservice', $a) . $debuginfo);
+    function __construct($errorcode = null, $debuginfo = '', $errornumber = null) {
+        $this->errorcode = rtrim($errorcode, '0123456789');
+
+        if (string_exists($errorcode, 'auth.webservice')) {
+            $message = get_string($errorcode, 'auth.webservice');
+        }
+        else {
+            $message = $errorcode;
+        }
+
+        if ($debuginfo) {
+            $message .= ' : ' . $debuginfo;
+        }
+
+        // In 15.04-16.04, the third parameter to this constructor was
+        // documented as an object. Nothing was done with this object,
+        // so it's unlikely that changing it broke anything. But just
+        // in case, make sure that this param, if provided, is cast
+        // to an integer.
+        if ($errornumber !== null) {
+            $errornumber = (int) $errornumber;
+        }
+
+        parent::__construct($message, $errornumber);
     }
-}
+
+    public function get_error_name() {
+        // Return the error lang string identifier. Trim off any integers
+        // from the end of it, in case we've added one in to notify
+        // translators of a change in the translated string
+        return $this->errorcode;
+    }
+ }
 
 /**
  * Web service parameter exception class
@@ -2059,29 +2091,19 @@ class WebserviceException extends MaharaException {
  * This exception must be thrown to the web service client when a web service parameter is invalid
  * The error string is gotten from webservice.php
  */
-class WebserviceParameterException extends MaharaException {
-    /**
-     * Constructor
-     * @param string $errorcode The name of the string from webservice.php to print
-     * @param string $debuginfo optional debugging information
-     * @param string $a The name of the parameter
-     */
-    function __construct($errorcode=null, $debuginfo = '', $a=null) {
-        parent::__construct(get_string($errorcode, 'auth.webservice', $a) . $debuginfo);
-    }
-}
+class WebserviceParameterException extends WebserviceException {}
 
 /**
  * Exception indicating programming error, must be fixed by a programer. For example
  * a core API might throw this type of exception if a plugin calls it incorrectly.
  */
-class WebserviceCodingException extends MaharaException {
+class WebserviceCodingException extends WebserviceException {
     /**
      * Constructor
      * @param string $debuginfo optional debugging information
      */
     function __construct($debuginfo='') {
-        parent::__construct(get_string('codingerror', 'auth.webservice') . $debuginfo);
+        parent::__construct('codingerror', $debuginfo);
     }
 }
 
@@ -2091,13 +2113,13 @@ class WebserviceCodingException extends MaharaException {
  * user submitted data in forms. It is more suitable
  * for WS and other low level stuff.
  */
-class WebserviceInvalidParameterException extends MaharaException {
+class WebserviceInvalidParameterException extends WebserviceException {
     /**
      * Constructor
      * @param string $debuginfo some detailed information
      */
-    function __construct($debuginfo=null) {
-        parent::__construct(get_string('invalidparameter', 'auth.webservice') . $debuginfo);
+    function __construct($debuginfo='') {
+        parent::__construct('invalidparameter', $debuginfo);
     }
 }
 
@@ -2107,25 +2129,25 @@ class WebserviceInvalidParameterException extends MaharaException {
  * user submitted data in forms. It is more suitable
  * for WS and other low level stuff.
  */
-class WebserviceInvalidResponseException extends MaharaException {
+class WebserviceInvalidResponseException extends WebserviceException {
     /**
      * Constructor
      * @param string $debuginfo some detailed information
      */
-    function __construct($debuginfo=null) {
-        parent::__construct(get_string('invalidresponse', 'auth.webservice', $debuginfo) . $debuginfo);
+    function __construct($debuginfo='') {
+        parent::__construct('invalidresponse', $debuginfo);
     }
 }
 
 /**
  * Exception indicating access control problem in web service call
  */
-class WebserviceAccessException extends MaharaException {
+class WebserviceAccessException extends WebserviceException {
     /**
      * Constructor
      * @param string $debuginfo some detailed information
      */
-    function __construct($debuginfo) {
-        parent::__construct(get_string('accessexception', 'auth.webservice') . $debuginfo);
+    function __construct($debuginfo='') {
+        parent::__construct('accessexception', $debuginfo);
     }
 }
