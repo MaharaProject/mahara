@@ -834,9 +834,14 @@ class PluginAuthSaml extends PluginAuth {
      * Add "SSO Login" link below the normal login form.
      */
     public static function login_form_elements() {
+        $url = get_config('wwwroot') . 'auth/saml/index.php';
+        if (isset($_GET['login'])) {
+            // We're on the transient login page. Redirect back to original page once we're done.
+            $url .= '?wantsurl=' . urlencode(get_full_script_path());
+        }
         $elements = array(
             'loginsaml' => array(
-                'value' => '<div class="login-externallink"><a class="btn btn-primary btn-xs" href="' . get_config('wwwroot') . 'auth/saml/index.php">' . get_string('login', 'auth.saml') . '</a></div>'
+                'value' => '<div class="login-externallink"><a class="btn btn-primary btn-xs" href="' . $url . '">' . get_string('login', 'auth.saml') . '</a></div>'
             )
         );
         return $elements;
