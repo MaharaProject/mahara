@@ -23,6 +23,7 @@ $string['frameworkupdated'] = 'Framework updated';
 $string['matrixfile'] = 'Matrix file';
 $string['matrixfiledesc'] = 'The .matrix file containing the JSON encoded framework';
 $string['notvalidmatrixfile'] = 'This is not a valid .matrix file.';
+$string['matrixfilenotfound'] = 'No valid .matrix file selected.';
 $string['invalidjson'] = 'This is not a valid .matrix file: Unable to parse the JSON content.';
 $string['jsonmissingvars'] = 'This is not a valid .matrix file: Missing "framework" and / or "framework name".';
 $string['manuallyremovematrices'] = 'Unable to remove install directory "%s". Please remove it manually.';
