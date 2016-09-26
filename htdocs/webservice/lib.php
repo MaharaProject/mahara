@@ -200,10 +200,13 @@ function get_ws_subsystems() {
  * @param string $institution
  * @param integer $validuntil
  * @param string $iprestriction
+ * @param string $clientname (Optional) Human-readable name of client program using this token
+ * @param string $clientenv (Optional) Human-readable description of device/environment for client
+ * @param string $clientguid (Optional) Unique identifier for the client program
  * @throws WebserviceException
  * @return string token
  */
-function webservice_generate_token($tokentype, $serviceorid, $userid, $institution = 'mahara',  $validuntil=0, $iprestriction='') {
+function webservice_generate_token($tokentype, $serviceorid, $userid, $institution = 'mahara',  $validuntil = 0, $iprestriction = null, $clientname = null, $clientenv = null, $clientguid = null) {
     global $USER;
     // make sure the token doesn't exist (even if it should be almost impossible with the random generation)
     $numtries = 0;
@@ -237,9 +240,10 @@ function webservice_generate_token($tokentype, $serviceorid, $userid, $instituti
     $newtoken->wssigenc = 0;
     $newtoken->publickey = '';
     $newtoken->validuntil = $validuntil;
-    if (!empty($iprestriction)) {
-        $newtoken->iprestriction = $iprestriction;
-    }
+    $newtoken->clientname = $clientname;
+    $newtoken->clientenv = $clientenv;
+    $newtoken->clientguid = $clientguid;
+    $newtoken->iprestriction = $iprestriction;
     insert_record('external_tokens', $newtoken);
     return $newtoken->token;
 }

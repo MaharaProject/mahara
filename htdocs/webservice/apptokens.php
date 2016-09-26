@@ -44,6 +44,8 @@ $dbservices = get_records_sql_array(
         ' . db_format_tsfield('et.ctime', 'token_ctime') . ',
         et.institution,
         et.validuntil as token_validuntil,
+        et.clientname,
+        et.clientenv,
         esu.validuntil as user_validuntil,
         esu.iprestriction
     FROM
@@ -86,6 +88,12 @@ if (!empty($dbservices)) {
                             'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('enabled'),
+                        ),
+                        'client_info' => array(
+                            'title' => ' ',
+                            'datatable' => true,
+                            'type' => 'html',
+                            'value' => get_string('tokenclient', 'auth.webservice'),
                         ),
                         'token' => array(
                             'title' => ' ',
@@ -132,6 +140,24 @@ if (!empty($dbservices)) {
                 'type'         => 'html',
                 'class'        => 'text-center',
                 'key'          => $service->dispid,
+            );
+            // Name of the client program that generated the token
+            if ($service->clientname) {
+                $client = "<b>{$service->clientname}</b>";
+            }
+            else {
+                $client = get_string('tokenclientunknown', 'auth.webservice');
+            }
+
+            if ($service->clientenv) {
+                $client .= " ({$service->clientenv})";
+            }
+
+            // information about the client that generated it
+            $userform['elements']['id' . $service->dispid . '_client_info'] = array(
+                'value'        =>  $client,
+                'type'         => 'html',
+                'key'        => $service->dispid,
             );
             // token for the service if it exists
             $userform['elements']['id' . $service->dispid . '_token'] = array(
