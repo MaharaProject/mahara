@@ -242,21 +242,21 @@ function validateUrlSyntax( $urladdr, $options="" ){
     $alphanum    = '[a-zA-Z0-9]';  // Alpha Numeric
     $unreserved  = '[a-zA-Z0-9_.!~*' . '\'' . '()-]';
     $escaped     = '(%[0-9a-fA-F]{2})'; // Escape sequence - In Hex - %6d would be a 'm'
-    $reserved    = '[;/?:@&=+$,]'; // Special characters in the URI
+    $reserved    = '[;\/?:@&=+$,]'; // Special characters in the URI
 
     // Beginning Regular Expression
                        // Scheme - Allows for 'http://', 'https://', 'mailto:', or 'ftp://'
     $scheme            = '(';
-    if     ($aOptions['H'] === '') { $scheme .= 'http://'; }
-    elseif ($aOptions['S'] === '') { $scheme .= 'https://'; }
+    if     ($aOptions['H'] === '') { $scheme .= 'http:\/\/'; }
+    elseif ($aOptions['S'] === '') { $scheme .= 'https:\/\/'; }
     elseif ($aOptions['E'] === '') { $scheme .= 'mailto:'; }
-    elseif ($aOptions['F'] === '') { $scheme .= 'ftp://'; }
+    elseif ($aOptions['F'] === '') { $scheme .= 'ftp:\/\/'; }
     else
     {
-        if ($aOptions['H'] === '?') { $scheme .= '|(http://)'; }
-        if ($aOptions['S'] === '?') { $scheme .= '|(https://)'; }
+        if ($aOptions['H'] === '?') { $scheme .= '|(http:\/\/)'; }
+        if ($aOptions['S'] === '?') { $scheme .= '|(https:\/\/)'; }
         if ($aOptions['E'] === '?') { $scheme .= '|(mailto:)'; }
-        if ($aOptions['F'] === '?') { $scheme .= '|(ftp://)'; }
+        if ($aOptions['F'] === '?') { $scheme .= '|(ftp:\/\/)'; }
         $scheme = str_replace('(|', '(', $scheme); // fix first pipe
     }
     $scheme            .= ')' . $aOptions['s'];
@@ -299,7 +299,7 @@ function validateUrlSyntax( $urladdr, $options="" ){
     $port_number       = '(:(([0-5]?[0-9]{1,4})|(6[0-4][0-9]{3})|(65[0-4][0-9]{2})|(655[0-2][0-9])|(6553[0-5])))' . $aOptions['p'];
 
                        // Path - Can be as simple as '/' or have multiple folders and filenames
-    $path              = '(/((;)?(' . $unreserved . '|' . $escaped . '|' . '[:@&=+$,]' . ')+(/)?)*)' . $aOptions['f'];
+    $path              = '(\/((;)?(' . $unreserved . '|' . $escaped . '|' . '[:@&=+$,]' . ')+(\/)?)*)' . $aOptions['f'];
 
                        // Query Section - Accepts ?var1=value1&var2=value2 or ?2393,1221 and much more
     $querystring       = '(\?(' . $reserved . '|' . $unreserved . '|' . $escaped . ')*)' . $aOptions['q'];

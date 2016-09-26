@@ -86,6 +86,14 @@ if (!$wantsurl) {
         $wantsurl = $CFG->wwwroot;
     }
 }
+// taken from Moodle clean_param - make sure the wantsurl is correctly formed
+include_once('validateurlsyntax.php');
+if (!validateUrlSyntax($wantsurl, 's?H?S?F?E?u-P-a?I?p?f?q?r?')) {
+    $wantsurl = $CFG->wwwroot;
+}
+
+// trim off any reference to login and stash
+$SESSION->wantsurl = preg_replace('/\&login$/', '', $wantsurl);
 
 $as = new SimpleSAML_Auth_Simple($sp);
 $idp_entityid = null;
@@ -144,10 +152,6 @@ $THEME   = new Theme($USER);
 // ***********************************************************************
 // END of copied stuff from original init.php
 // ***********************************************************************
-
-if (!$SESSION->get('wantsurl')) {
-    $SESSION->set('wantsurl', preg_replace('/\&login$/', '', $wantsurl));
-}
 
 // now start the hunt for the associated authinstance for the organisation attached to the saml_attributes
 global $instance;
@@ -310,7 +314,8 @@ function auth_saml_disco_screen($list, $preferred) {
 
     $idps = array();
     $lang = current_language();
-    $lang = strtolower(array_shift(explode('.', $lang)));
+    $lang = explode('.', $lang);
+    $lang = strtolower(array_shift($lang));
     $haslogos = false;
     foreach ($list as $entityid => $value) {
         $desc = $name = $entityid;
