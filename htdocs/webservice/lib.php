@@ -2316,3 +2316,158 @@ class WebserviceAccessException extends WebserviceException {
         parent::__construct('accessexception', $debuginfo);
     }
 }
+
+/**
+ * Process the logged-in user's REST-based request for a webservices token.
+ * Checks whether the user has permission to self-generate a token for the
+ * requested service group. Then it issues a new token, or retrieves an
+ * existing one if the user already has an applicable token.
+ *
+ * @param string $serviceshortname Shortname of the desired service group
+ * @param string $servicecomponent The service group's component
+ * @param string $clientname (Optional) Human-readable name of client program using this token
+ * @param string $clientenv (Optional) Human-readable description of device/environment for client
+ * @param string $clientguid (Optional) Unique identifier for the client program
+ * @throws WebserviceException
+ * @return string The token generated
+ */
+function webservice_user_token_selfservice($serviceshortname, $servicecomponent, $clientname, $clientenv, $clientguid) {
+    global $USER;
+    // TODO: more granular access controls: Is this user allowed to access webservices at all?
+
+    // From here, we know that the user has at least logged in, so we can
+    // expose a little bit more information in the error responses.
+    $service = get_record('external_services', 'shortname', $serviceshortname, 'component', $servicecomponent);
+    if (empty($service)) {
+        // will throw exception if no token found
+        throw new WebserviceException(
+            'servicenotfound',
+            "No service group found with name $servicecomponent/$serviceshortname",
+            400
+        );
+    }
+    else if (!$service->enabled) {
+        throw new WebserviceException(
+            'servicenotenabled',
+            'Requested service group is disabled.',
+            501
+        );
+    }
+
+    // TODO: more granular access controls: Is this user allowed to access this particular service group?
+
+    //specific checks related to user restricted service
+    if ($service->restrictedusers) {
+        $authoriseduser = get_record(
+            'external_services_users',
+            'externalserviceid', $service->id,
+            'userid', $USER->get('id')
+        );
+
+        if (empty($authoriseduser)) {
+            throw new WebserviceException(
+                'usernotauthorised',
+                'This service is restricted to authorized users only.',
+                403
+            );
+        }
+
+        if (!empty($authoriseduser->validuntil) and $authoriseduser->validuntil < time()) {
+            throw new WebserviceException(
+                'userauthorisationexpired',
+                'Your access rights to this service have expired.',
+                403
+            );
+        }
+
+        require_once(get_config('docroot') . 'webservice/libs/net.php');
+        if (!empty($authoriseduser->iprestriction) and !address_in_subnet(getremoteaddr(), $authoriseduser->iprestriction)) {
+            throw new WebserviceException(
+                'ipnotauthorised',
+                'This service is restricted to authorized IP ranges only.',
+                403
+            );
+        }
+    }
+
+    // Check if a token has already been created for this user and this service
+    $tokensql = "SELECT t.id, t.sid, t.token, t.validuntil, t.iprestriction
+          FROM {external_tokens} t
+         WHERE t.userid = ? AND t.externalserviceid = ? AND t.tokentype = ?";
+
+    $tokenparams = array(
+        $USER->get('id'),
+        $service->id,
+        EXTERNAL_TOKEN_USER
+    );
+
+    // Client specified a GUID; so only re-use that same token.
+    if ($clientname || $clientguid) {
+        $tokensql .= ' AND clientname = ? AND clientguid = ? ';
+        $tokenparams[] = $clientname;
+        $tokenparams[] = $clientguid;
+    }
+
+    $tokensql .= ' ORDER BY t.ctime ASC';
+    $tokens = get_records_sql_array($tokensql, $tokenparams);
+    if (!$tokens) {
+        $tokens = array();
+    }
+    //A bit of sanity checks
+    foreach ($tokens as $key=>$token) {
+
+        /// Checks related to a specific token. (script execution continue)
+        $unsettoken = false;
+
+        // Take this opportunity to delete expired tokens
+        // (similar logic to the web service servers
+        //    /webservice/lib.php/webservice_server::authenticate_by_token())
+        if (!empty($token->validuntil) and $token->validuntil < time()) {
+            delete_records('external_tokens', 'id', $token->id);
+            $unsettoken = true;
+        }
+
+        // remove token if its ip not in whitelist
+        if (isset($token->iprestriction) and !address_in_subnet(getremoteaddr(), $token->iprestriction)) {
+            $unsettoken = true;
+        }
+
+        if ($unsettoken) {
+            unset($tokens[$key]);
+        }
+    }
+
+    // if some valid tokens exist then use the most recent
+    if (count($tokens) > 0) {
+        // Retrieve an existing token
+        $token = array_pop($tokens);
+        // log token access
+        set_field(
+            'external_tokens',
+            'mtime',
+            db_format_timestamp(time()),
+            'id',
+            $token->id
+        );
+        $token = $token->token;
+    }
+    else {
+        // Generate a new token
+        // If you wanted to separately restrict the ability to *generate*
+        // a token, (as opposed to just retrieving one), this would be the
+        // place to do it.
+        $token = webservice_generate_token(
+            EXTERNAL_TOKEN_USER,
+            $service,
+            $USER->get('id'), // token user
+            null, // institution
+            (time() + EXTERNAL_TOKEN_USER_EXPIRES), //expiration
+            null, // iprestriction
+            $clientname,
+            $clientenv,
+            $clientguid
+        );
+    }
+
+    return $token;
+}

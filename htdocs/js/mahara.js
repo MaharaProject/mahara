@@ -480,7 +480,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
     // create and display the container
     contextualHelpContainer = jQuery(
         '<div style="position: absolute" class="contextualHelp hidden" role="dialog">' +
-            '<span class="icon icon-spinner icon-pulse"' +
+            '<span class="icon icon-spinner icon-pulse"></span>' +
         '</div>'
     );
     var container = contextualHelpLink.parent();
