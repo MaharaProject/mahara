@@ -1501,8 +1501,11 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
  * @param string $filename the name of the file to include within the plugin structure
  * @param string $function (optional, defaults to require) the require/include function to use
  * @param string $nonfatal (optional, defaults to false) just returns false if the file doesn't exist
+ * @param array $returnvars (optional, defaults to null) Variables (defined in the file) to return.
+ * Useful for files like version.php that simply define variables. If null, instead returns the
+ * value of the include/require operation.
  */
-function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require_once', $nonfatal=false) {
+function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require_once', $nonfatal=false, $returnvars = null) {
     $plugintypes = plugin_types();
     if (!in_array($plugintype, $plugintypes)) {
         throw new SystemException("\"$plugintype\" is not a valid plugin type");
@@ -1561,11 +1564,17 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         throw new SystemException ("File $fullpath was outside document root!");
     }
 
-    if ($function == 'require') { return require($realpath); }
-    if ($function == 'include') { return include($realpath); }
-    if ($function == 'require_once') { return require_once($realpath); }
-    if ($function == 'include_once') { return include_once($realpath); }
+    if ($function == 'require') { $isloaded = require($realpath); }
+    if ($function == 'include') { $isloaded = include($realpath); }
+    if ($function == 'require_once') { $isloaded = require_once($realpath); }
+    if ($function == 'include_once') { $isloaded = include_once($realpath); }
 
+    if ($isloaded && $returnvars && is_array($returnvars)) {
+        return compact($returnvars);
+    }
+    else {
+        return $isloaded;
+    }
 }
 
 /**
@@ -1583,11 +1592,13 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
  * @param string $filename the name of the file to include within the plugin structure
  * @param string $function (optional, defaults to require) the require/include function to use
  * @param string $nonfatal (optional, defaults to false) just returns false if the file doesn't exist
+ * @param array $returnvars (optional, defaults to null) Variables (defined in the file) to return.
+ * Useful for files like version.php that simply define variables. If null, instead returns the
+ * value of the include/require operation.
  */
-function safe_require_plugin($plugintype, $pluginname, $filename='lib.php', $function='require_once', $nonfatal=false) {
+function safe_require_plugin($plugintype, $pluginname, $filename='lib.php', $function='require_once', $nonfatal=false, $returnvars = null) {
     try {
-        safe_require($plugintype, $pluginname, $filename, $function, $nonfatal);
-        return true;
+        return safe_require($plugintype, $pluginname, $filename, $function, $nonfatal, $returnvars);
     }
     catch (SystemException $e) {
         if (get_field($plugintype . '_installed', 'active', 'name', $pluginname) == 1) {
@@ -3618,7 +3629,7 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq') {
         array($id, $id, $id)
     );
     if (!$tagrecords) {
-        return false;
+        return array();
     }
     if ($cloud) {
         $minfreq = $tagrecords[count($tagrecords) - 1]->count;
