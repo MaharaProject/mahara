@@ -29,24 +29,40 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(dirname(__FILE__) . '/lib.php');
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
 define('SUBSECTIONHEADING', get_string('apptokens', 'auth.webservice'));
-/*
- * get the list of services that are available for User Access Tokens usage
- * determine if there is a corresponding token for the service
- */
-$dbservices = get_records_array('external_services', 'tokenusers', 1);
-foreach ($dbservices as $dbservice) {
-    $dbtoken = get_record('external_tokens', 'externalserviceid', $dbservice->id, 'userid', $USER->get('id'), 'tokentype', EXTERNAL_TOKEN_USER);
-    if ($dbtoken) {
-        $dbservice->token = $dbtoken->token;
-        $dbservice->ctime = $dbtoken->ctime;
-        $dbservice->mtime = $dbtoken->mtime;
-        $dbservice->institution = $dbtoken->institution;
-        $dbservice->validuntil = $dbtoken->validuntil;
-    }
-    else {
-        $dbservice->validuntil = 0;
-    }
-}
+
+// get the list of services that are available for User Access Tokens usage
+// determine if there is a corresponding token for the service
+$dbservices = get_records_sql_array(
+    "SELECT
+        es.id || '_' || (CASE WHEN et.id IS NOT NULL THEN et.id ELSE 0 END) AS dispid,
+        es.id,
+        es.name,
+        es.enabled,
+        es.restrictedusers,
+        et.token,
+        " . db_format_tsfield('et.mtime', 'token_mtime') . ',
+        ' . db_format_tsfield('et.ctime', 'token_ctime') . ',
+        et.institution,
+        et.validuntil as token_validuntil,
+        esu.validuntil as user_validuntil,
+        esu.iprestriction
+    FROM
+        {external_services} es
+        LEFT JOIN {external_tokens} et
+            ON et.externalserviceid = es.id
+            AND et.userid = ?
+            AND et.tokentype = ?
+        LEFT JOIN {external_services_users} esu
+            ON esu.externalserviceid = es.id
+            AND esu.userid = ?
+    WHERE
+        es.tokenusers = 1'
+    ,array(
+        $USER->get('id'),
+        EXTERNAL_TOKEN_USER,
+        $USER->get('id')
+    )
+);
 
 /*
  * display the access tokens for services
@@ -105,23 +121,23 @@ if (!empty($dbservices)) {
         );
         foreach ($dbservices as $service) {
             // name of the service group
-            $userform['elements']['id' . $service->id . '_service_name'] = array(
+            $userform['elements']['id' . $service->dispid . '_service_name'] = array(
                 'value'        =>  $service->name,
                 'type'         => 'html',
-                'key'        => $service->id,
+                'key'        => $service->dispid,
             );
             // is the service group enabled
-            $userform['elements']['id' . $service->id . '_enabled'] = array(
+            $userform['elements']['id' . $service->dispid . '_enabled'] = array(
                 'value'        => (($service->enabled == 1) ?  display_icon('enabled') : display_icon('disabled')),
                 'type'         => 'html',
                 'class'        => 'text-center',
-                'key'          => $service->id,
+                'key'          => $service->dispid,
             );
             // token for the service if it exists
-            $userform['elements']['id' . $service->id . '_token'] = array(
+            $userform['elements']['id' . $service->dispid . '_token'] = array(
                 'value'        =>  (empty($service->token) ? get_string('no_token', 'auth.webservice') : $service->token),
                 'type'         => 'html',
-                'key'        => $service->id,
+                'key'        => $service->dispid,
             );
             // list of functions that are available in the service group
             $functions = get_records_array('external_services_functions', 'externalserviceid', $service->id);
@@ -132,28 +148,28 @@ if (!empty($dbservices)) {
                     $function_list[]= '<a href="' . get_config('wwwroot') . 'webservice/wsdoc.php?id=' . $dbfunction->id . '">' . $function->functionname . '</a>';
                 }
             }
-            $userform['elements']['id' . $service->id . '_functions'] = array(
+            $userform['elements']['id' . $service->dispid . '_functions'] = array(
                 'value'        =>  implode(', ', $function_list),
                 'type'         => 'html',
-                'key'        => $service->id,
+                'key'        => $service->dispid,
             );
             // last time the token was accessed if there is a token
-            $userform['elements']['id'. $service->id . '_last_access'] = array(
+            $userform['elements']['id'. $service->dispid . '_last_access'] = array(
                 'value'        =>  (empty($service->mtime) ? ' ' : format_date(strtotime($service->mtime))),
                 'type'         => 'html',
-                'key'        => $service->id,
+                'key'        => $service->dispid,
             );
             // expiry date for the token if it exists
-            $userform['elements']['id' . $service->id . '_expires'] = array(
+            $userform['elements']['id' . $service->dispid . '_expires'] = array(
                 'value'        => (empty($service->validuntil) && empty($service->mtime) ? '' : format_date((empty($service->validuntil) ? strtotime($service->mtime) + EXTERNAL_TOKEN_USER_EXPIRES : $service->validuntil))),
                 'type'         => 'html',
-                'key'        => $service->id,
+                'key'        => $service->dispid,
             );
             // generate button
             // delete button
-            $userform['elements']['id' . $service->id . '_actions'] = array(
+            $userform['elements']['id' . $service->dispid . '_actions'] = array(
                 'value'        => pieform(array(
-                                    'name'            => 'webservices_user_token_generate_' . $service->id,
+                                    'name'            => 'webservices_user_token_generate_' . $service->dispid,
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_token_submit',
@@ -174,14 +190,14 @@ if (!empty($dbservices)) {
                                 .
                                 (empty($service->token) ? ' ' :
                                 pieform(array(
-                                    'name'            => 'webservices_user_token_delete_' . $service->id,
+                                    'name'            => 'webservices_user_token_delete_' . $service->dispid,
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_token_submit',
                                     'class'           => 'form-as-button pull-left',
                                     'jsform'          => false,
                                     'elements' => array(
-                                        'service'    => array('type' => 'hidden', 'value' => $service->id),
+                                        'token'    => array('type' => 'hidden', 'value' => $service->token),
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
                                                 'type'  => 'button',
@@ -194,7 +210,7 @@ if (!empty($dbservices)) {
                                 )))
                                 ,
                 'type'         => 'html',
-                'key'        => $service->id,
+                'key'        => $service->dispid,
                 'class'        => 'webserviceconfigcontrols btn-group' . (empty($service->token) ? ' only-button only-button-top' : ''),
             );
     }
@@ -388,21 +404,27 @@ $form = array(
 function webservices_user_token_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     if ($values['action'] == 'generate') {
-        delete_records('external_tokens', 'userid', $USER->get('id'), 'externalserviceid', $values['service']);
-        $services = get_records_select_array('external_services', 'id = ? AND tokenusers = ?', array($values['service'], 1));
-        if (empty($services)) {
+        $service = get_record('external_services', 'id', $values['service'], 'tokenusers', 1);
+        if (!$service) {
             $SESSION->add_error_msg(get_string('noservices', 'auth.webservice'));
         }
         else {
             // just pass the first one for the moment
-            $service = array_shift($services);
             $authinstance = get_record('auth_instance', 'id', $USER->get('authinstance'));
-            $token = webservice_generate_token(EXTERNAL_TOKEN_USER, $service, $USER->get('id'), $authinstance->institution, (time() + EXTERNAL_TOKEN_USER_EXPIRES));
+            $token = webservice_generate_token(
+                EXTERNAL_TOKEN_USER,
+                $service,
+                $USER->get('id'),
+                $authinstance->institution,
+                (time() + EXTERNAL_TOKEN_USER_EXPIRES),
+                null,
+                get_string('tokenmanuallycreated', 'auth.webservice')
+            );
             $SESSION->add_ok_msg(get_string('token_generated', 'auth.webservice'));
         }
     }
     else if ($values['action'] == 'delete') {
-        delete_records('external_tokens', 'userid', $USER->get('id'), 'externalserviceid', $values['service']);
+        delete_records('external_tokens', 'userid', $USER->get('id'), 'token', $values['token']);
         $SESSION->add_ok_msg(get_string('oauthtokendeleted', 'auth.webservice'));
     }
     redirect('/webservice/apptokens.php');
