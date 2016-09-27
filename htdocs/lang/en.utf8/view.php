@@ -29,6 +29,7 @@ $string['userviewurltaken']       = 'This URL is already taken. Please choose an
 $string['description']            = 'Page description';
 $string['startdate']              = 'Access start date/time';
 $string['stopdate']               = 'Access end date/time';
+$string['overrideconflict'] = 'One or more access permissions are in conflict with the overriding dates. These access permissions will not be valid outside the overriding dates.';
 $string['stopdatecannotbeinpast1'] = '"To" date cannot be in the past';
 $string['startdatemustbebeforestopdate'] = 'Start date must be before stop date';
 $string['newstopdatecannotbeinpast'] = 'The end date for \'%s\' access cannot be in the past.';

@@ -427,6 +427,19 @@ function editaccess_validate(Pieform $form, $values) {
                 $form->set_error('accesslist', '');
                 break;
             }
+            // $values['startdate'] and $values['stopdate'] from override
+            // check if there is a conflict
+            if (($item['startdate'] && $values['startdate'] && $item['startdate'] < $values['startdate'])
+                ||
+                ($item['stopdate'] && $values['stopdate'] && $values['stopdate'] < $item['stopdate'])
+                ||
+                ($item['stopdate'] && $values['startdate'] && $item['stopdate'] < $values['startdate'])
+                ||
+                ($item['startdate'] && $values['stopdate'] && $values['stopdate'] < $item['startdate'])
+            ) {
+                $SESSION->add_error_msg(get_string('overrideconflict', 'view', $accesstypestrings[$item['type']]));
+                break;
+            }
         }
     }
 }
