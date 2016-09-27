@@ -210,6 +210,14 @@ function get_admin_user_search_results($search, $offset, $limit) {
         }
     }
 
+    if (!empty($search->authname)) {
+        $constraints[] = array(
+            'field' => 'authname',
+            'type' => 'equals',
+            'string' => $search->authname
+        );
+    }
+
     if (!empty($search->f)) {
         $constraints[] = array('field' => 'firstname',
                                'type' => 'starts',
@@ -389,7 +397,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
 function build_admin_user_search_results($search, $offset, $limit) {
     global $USER, $THEME;
 
-    $wantedparams = array('query', 'f', 'l', 'sortby', 'sortdir', 'loggedin', 'loggedindate', 'duplicateemail', 'institution');
+    $wantedparams = array('query', 'f', 'l', 'sortby', 'sortdir', 'loggedin', 'loggedindate', 'duplicateemail', 'institution', 'authname');
     $params = array();
     foreach ($search as $k => $v) {
         if (!in_array($k, $wantedparams)) {
