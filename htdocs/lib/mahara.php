@@ -1733,7 +1733,11 @@ function plugin_all_installed($all=false) {
 
 /**
  * Helper to call a static method when you do not know the name of the class
- * you want to call the method on. PHP5 does not support $class::method().
+ * you want to call the method on. (PHP 5.0-5.2 did not support $class::method())
+ *
+ * @deprecated In PHP 5.3+, you can do $class::$method, $class::method(), or class::$method
+ * See: http://php.net/ChangeLog-5.php#5.3.0
+ * "Added support for dynamic access of static members using $foo::myFunc()."
  */
 function call_static_method($class, $method) {
     $args = func_get_args();
