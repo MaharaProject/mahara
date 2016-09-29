@@ -428,6 +428,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
      * Deletes the default blog that is created for all users
      */
     public static function cleanup(PluginImportLeap $importer) {
+        global $USER;
         if (self::$importedablog && self::$firstblogid) {
             $blog = artefact_instance_from_id(self::$firstblogid);
             if (!$blog->has_children()) { // TODO see #544160
@@ -437,6 +438,9 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         $userid = $importer->get('usr');
         if (count_records('artefact', 'artefacttype', 'blog', 'owner', $userid) != 1) {
             set_account_preference($userid, 'multipleblogs', 1);
+            if ($userid == $USER->get('id')) {
+                $USER->set_account_preference('multipleblogs', 1);
+            }
         }
     }
 
