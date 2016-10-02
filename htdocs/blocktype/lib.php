@@ -430,19 +430,29 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
 
     /*
      * The copy_type of a block affects how it should be copied when its view gets copied.
-     * nocopy:    The block doesn't appear in the new view at all.
-     * shallow:   A new block of the same type is created in the new view with a configuration as specified by the
-     *            rewrite_blockinstance_config method
-     * reference: Block configuration is copied as-is.  If the block contains artefacts, the original artefact ids are
-     *            retained in the new block's configuration even though they may have a different owner from the view.
-     * full:      All artefacts referenced by the block are copied to the new owner's portfolio, and ids in the new
-     *            block are updated to point to the copied artefacts.
+     * nocopy:       The block doesn't appear in the new view at all.
+     * shallow:      A new block of the same type is created in the new view with a configuration as specified by the
+     *               rewrite_blockinstance_config method
+     * reference:    Block configuration is copied as-is.  If the block contains artefacts, the original artefact ids are
+     *               retained in the new block's configuration even though they may have a different owner from the view.
+     * full:         All artefacts referenced by the block are copied to the new owner's portfolio, and ids in the new
+     *               block are updated to point to the copied artefacts.
+     * fullinclself: All artefacts referenced by the block are copied, whether we are copying to a new owner's portfolio
+     *               or our own one, and ids in the new block are updated to point to the copied artefacts.
      *
-     * If the old owner and the new owner are the same, reference is always used.
+     * If the old owner and the new owner are the same, reference is used unless 'fullinclself' is specified.
      * If a block contains no artefacts, reference and full are equivalent.
      */
     public static function default_copy_type() {
         return 'shallow';
+    }
+
+    /*
+     * The ignore_copy_artefacttypes of a block affects which artefacttypes should be ignored when copying.
+     * You can specify which artefacts to ignore by an array of artefacttypes.
+     */
+    public static function ignore_copy_artefacttypes() {
+        return array();
     }
 
     /**
@@ -1554,7 +1564,7 @@ class BlockInstance {
             'order'      => $this->get('order'),
         ));
 
-        if ($sameowner || $copytype == 'reference') {
+        if (($sameowner && $copytype != 'fullinclself') || $copytype == 'reference') {
             $newblock->set('configdata', $configdata);
             $newblock->commit();
             if ($this->get('blocktype') == 'taggedposts' && $copytype == 'tagsonly') {
@@ -1562,9 +1572,20 @@ class BlockInstance {
             }
             return true;
         }
-        $artefactids = get_column('view_artefact', 'artefact', 'block', $this->get('id'));
+
+        if ($ignore = call_static_method($blocktypeclass, 'ignore_copy_artefacttypes', $view)) {
+            $artefactids = (array)get_column_sql('
+                SELECT artefact FROM {view_artefact} va
+                JOIN {artefact} a ON a.id = va.artefact
+                WHERE va.block = ?
+                AND a.artefacttype NOT IN (' . join(',', array_map('db_quote', $ignore)) . ')', array($this->get('id')));
+        }
+        else {
+            $artefactids = get_column('view_artefact', 'artefact', 'block', $this->get('id'));
+        }
+
         if (!empty($artefactids)
-            && $copytype == 'full') {
+            && ($copytype == 'full' || $copytype == 'fullinclself')) {
             // Copy artefacts & put the new artefact ids into the new block.
             // Artefacts may have children (defined using the parent column of the artefact table) and attachments (currently
             // only for blogposts).  If we copy an artefact we must copy all its descendents & attachments too.
