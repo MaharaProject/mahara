@@ -6,6 +6,9 @@
                     {if !$institution->site}</a>{/if}
                 </td>
                 <td class="center">
+                    {$institution->name}
+                </td>
+                <td class="center">
                   {if !$institution->site}
                         <a href="{$WWWROOT}admin/users/institutionusers.php?usertype=members&amp;institution={$institution->name}">{$institution->members}</a>
                   {else}
