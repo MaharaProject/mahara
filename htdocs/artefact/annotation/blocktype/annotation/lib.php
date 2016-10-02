@@ -390,7 +390,11 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
     }
 
     public static function default_copy_type() {
-        return 'full';
+        return 'fullinclself';
+    }
+
+    public static function ignore_copy_artefacttypes() {
+        return array('annotationfeedback');
     }
 
     public static function has_feedback_allowed($id) {
