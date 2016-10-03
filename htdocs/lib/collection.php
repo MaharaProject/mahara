@@ -283,6 +283,7 @@ class Collection {
 
         $views = $colltemplate->get('views');
         $copyviews = array();
+        $evidenceviews = array();
         $artefactcopies = array();
         foreach ($views['views'] as $v) {
             $values = array(
@@ -293,6 +294,10 @@ class Collection {
                 'usetemplate' => $v->view
             );
             list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess, $titlefromtemplate, $artefactcopies);
+            // Check to see if we need to re-map any framework evidence
+            if (!empty($data->framework) && $userid == $data->owner && count_records('framework_evidence', 'view', $v->view)) {
+                $evidenceviews[$v->view] = $view->get('id');
+            }
             if (isset($copystatus['quotaexceeded'])) {
                 $SESSION->clear('messages');
                 return array(null, $colltemplate, array('quotaexceeded' => true));
@@ -322,6 +327,49 @@ class Collection {
                         $bi->set('configdata', array('collection' => $collection->get('id')));
                         $bi->commit();
                     }
+                }
+            }
+        }
+        // If there are views with framework evidence to re-map
+        if (!empty($evidenceviews)) {
+            // We need to get how the old views/artefacts/blocks/evidence fit together
+            $evidences = get_records_sql_array('
+                SELECT va.view, va.artefact, va.block, fe.*
+                FROM {view} v
+                JOIN {view_artefact} va ON va.view = v.id
+                JOIN {artefact} a ON a.id = va.artefact
+                JOIN {framework_evidence} fe ON fe.view = v.id
+                WHERE v.id IN (' . join(',', array_keys($evidenceviews)) . ')
+                AND a.id IN (' . join(',', array_keys($artefactcopies)) . ')
+                AND fe.annotation = va.block', array());
+            $newartefactcopies = array();
+            foreach ($artefactcopies as $ac) {
+                $newartefactcopies[$ac->newid] = 1;
+            }
+            // And get how the new views/artefacts/blocks fit together
+            $newblocks = get_records_sql_assoc('
+                SELECT va.artefact, va.view, va.block
+                FROM {view} v
+                JOIN {view_artefact} va ON va.view = v.id
+                JOIN {artefact} a ON a.id = va.artefact
+                WHERE v.id IN (' . join(',', array_values($evidenceviews)) . ')
+                AND a.id IN (' . join(',', array_keys($newartefactcopies)) . ')
+                AND artefacttype = ?', array('annotation'));
+
+            foreach ($evidences as $evidence) {
+                if (key_exists($evidence->artefact, $artefactcopies) && key_exists($artefactcopies[$evidence->artefact]->newid, $newartefactcopies)) {
+                    $newartefact = $artefactcopies[$evidence->artefact]->newid;
+                    $newevidence = new stdClass();
+                    $newevidence->view = $newblocks[$newartefact]->view;
+                    $newevidence->artefact = $newartefact;
+                    $newevidence->annotation = $newblocks[$newartefact]->block;
+                    $newevidence->framework = $evidence->framework;
+                    $newevidence->element = $evidence->element;
+                    $newevidence->state = 0;
+                    $newevidence->reviewer = null;
+                    $newevidence->ctime = $evidence->ctime;
+                    $newevidence->mtime = $evidence->mtime;
+                    insert_record('framework_evidence', $newevidence);
                 }
             }
         }
