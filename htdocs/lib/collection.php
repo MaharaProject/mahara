@@ -991,11 +991,12 @@ class Collection {
             if ($this->framework) {
                 if ($full) {
                     $this->fullurl = Collection::get_framework_url($this);
+                    return $this->fullurl;
                 }
                 else {
                     $this->frameworkurl = Collection::get_framework_url($this, false);
+                    return $this->frameworkurl;
                 }
-                return $this->frameworkurl;
             }
 
             $v = new View(0, $views['views'][0]);
