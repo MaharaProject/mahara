@@ -646,6 +646,17 @@ class external_api {
 
         }
         else if ($description instanceof external_single_structure) {
+            if ($response === null) {
+                if ($description->required == VALUE_REQUIRED) {
+                    throw new WebserviceInvalidParameterException(get_string('errormissingkey', 'auth.webservice', $description->type));
+                }
+                else if ($description->required == VALUE_DEFAULT) {
+                    return $description->default;
+                }
+                else {
+                    return null;
+                }
+            }
             if (!is_array($response)) {
                 throw new WebserviceInvalidResponseException(get_string('erroronlyarray', 'auth.webservice'));
             }
@@ -655,13 +666,12 @@ class external_api {
                     if ($subdesc->required == VALUE_REQUIRED) {
                         throw new WebserviceParameterException('errorresponsemissingkey', $key);
                     }
-                    if ($subdesc instanceof external_value) {
-                        if ($subdesc->required == VALUE_DEFAULT) {
-                            try {
-                                $result[$key] = self::clean_returnvalue($subdesc, $subdesc->default);
-                            } catch (Exception $e) {
-                                throw new WebserviceParameterException('invalidextresponse',$key . " (" . $e->getMessage() . ")");
-                            }
+                    else if ($subdesc->required == VALUE_DEFAULT) {
+                        try {
+                            $result[$key] = self::clean_returnvalue($subdesc, $subdesc->default);
+                        }
+                        catch (Exception $e) {
+                            throw new WebserviceParameterException('invalidextresponse',$key . " (" . $e->getMessage() . ")");
                         }
                     }
                 }
@@ -680,6 +690,17 @@ class external_api {
 
         }
         else if ($description instanceof external_multiple_structure) {
+            if ($response === null) {
+                if ($description->required == VALUE_REQUIRED) {
+                    throw new WebserviceInvalidParameterException(get_string('errormissingkey', 'auth.webservice', $description->type));
+                }
+                else if ($description->required == VALUE_DEFAULT) {
+                    return $description->default;
+                }
+                else {
+                    return null;
+                }
+            }
             if (!is_array($response)) {
                 throw new WebserviceInvalidResponseException(get_string('erroronlyarray', 'auth.webservice'));
             }
