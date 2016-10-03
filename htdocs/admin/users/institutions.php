@@ -116,6 +116,7 @@ if ($institution || $add) {
                 }
             }
             if ($artefactids) {
+                require_once(get_config('docroot') . 'artefact/lib.php');
                 foreach ($artefactids as $artefactid) {
                     try {
                         $a = artefact_instance_from_id($artefactid);
