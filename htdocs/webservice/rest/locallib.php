@@ -76,6 +76,13 @@ class webservice_rest_server extends webservice_base_server {
 
         $this->parameters = $_REQUEST;
 
+        // Handle file uploads
+        if (count($_FILES)) {
+            foreach ($_FILES as $k => $v) {
+                $this->parameters[$k] = $v['name'];
+            }
+        }
+
         execute_sql("delete from oauth_server_nonce");
 
         // if we should have one - setup the OAuth server handler
