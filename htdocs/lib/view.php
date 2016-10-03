@@ -4570,9 +4570,10 @@ class View {
      * @param int $groupid
      * @param boolean $membersonly Only return pages owned by members of the group
      * @param string $orderby Columns to sort by (defaults to (title, id) if empty)
+     * @param boolean $hidesubmitted Do not return pages submitted to the group
      * @throws AccessDeniedException
      */
-    public static function get_sharedviews_data($limit=10, $offset=0, $groupid, $membersonly = false, $orderby = null) {
+    public static function get_sharedviews_data($limit=10, $offset=0, $groupid, $membersonly = false, $orderby = null, $hidesubmitted = false) {
         global $USER;
         $userid = $USER->get('id');
         require_once(get_config('libroot') . 'group.php');
@@ -4591,11 +4592,17 @@ class View {
                AND (v.stopdate > CURRENT_TIMESTAMP OR v.stopdate IS NULL)
                AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)';
         $ph = array($groupid, $userid, $groupid);
+        if ($hidesubmitted) {
+            $where .= 'AND (v.submittedgroup IS NULL OR v.submittedgroup != ?)';
+            $ph[] = $groupid;
+        }
+
         if ($membersonly) {
             $from .= ' INNER JOIN {group_member} m2 ON m2.member = v.owner ';
             $where .= ' AND m2.group = ? ';
             $ph[] = $groupid;
         }
+
         $count = count_records_sql('SELECT COUNT(DISTINCT(v.id)) ' . $from . $where, $ph);
         if ($orderby === null) {
             $ordersql = ' ORDER BY v.title, v.id';
@@ -4612,7 +4619,6 @@ class View {
             $offset,
             $limit
         );
-
         if ($viewdata) {
             View::get_extra_view_info($viewdata, false);
         }
@@ -4944,9 +4950,10 @@ class View {
      * @param integer $groupid
      * @param boolean $membersonly Only return collections owned by members of the gorup
      * @param array $sort Columns to sort by (defaults to (title, id) if empty)
+     * @param boolean $hidesubmitted Do not return collections submitted to the group
      * @return array of collections
      */
-    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid, $membersonly = false, $sort = null) {
+    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid, $membersonly = false, $sort = null, $hidesubmitted = false) {
         global $USER;
 
         $userid = $USER->get('id');
@@ -4976,6 +4983,11 @@ class View {
         if ($membersonly) {
             $from .= ' INNER JOIN {group_member} m2 ON m2.member = c.owner ';
             $where .= ' AND m2.group = ? ';
+            $ph[] = $groupid;
+        }
+
+        if ($hidesubmitted) {
+            $where .= 'AND (v.submittedgroup IS NULL OR v.submittedgroup != ?)';
             $ph[] = $groupid;
         }
 

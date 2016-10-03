@@ -18,6 +18,8 @@ Background:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
      | Group Y | userA | This is group Y | standard | ON | OFF | all | OFF | OFF | userB, userC |  |
      | Group Z | userA | This is group Z | standard | ON | OFF | all | ON | OFF | userB, userC |  |
+     | Group W | userA | This is group W | standard | ON | OFF | all | ON | OFF | userB, UserC |  |
+     | Group X | userA | This is group X | course | ON | OFF | all | ON | OFF | userC | userB |
     And the following "pages" exist:
       | title | description| ownertype | ownername |
       | Page userA_01 | This is the page 01 | user | userA |
@@ -47,6 +49,23 @@ Background:
       | Page Group Z_06 | Group page 06 | group | Group Z |
       | Page Group Z_07 | Group page 07 | group | Group Z |
       | Page Group Z_08 | Group page 08 | group | Group Z |
+      #to test shared/submitted views
+      | Page userC_01 | This is the page 01 | user | userC |
+      | Page userC_02 | This is the page 02 | user | userC |
+      | Page userC_03 | This is the page 03 | user | userC |
+      | Page userC_04 | This is the page 04 | user | userC |
+      | Page userC_05 | This is the page 05 | user | userC |
+      | Page userC_06 | This is the page 06 | user | userC |
+      | Page userC_07 | This is the page 07 | user | userC |
+      | Page userC_08 | This is the page 08 | user | userC |
+      | Page userC_09 | This is the page 09 | user | userC |
+      | Page userC_10 | This is the page 10 | user | userC |
+      | Page userC_11 | This is the page 11 | user | userC |
+      | Page userC_12 | This is the page 12 | user | userC |
+      | Page userC_13 | This is the page 13 | user | userC |
+      | Page userC_14 | This is the page 14 | user | userC |
+      | Page userC_15 | This is the page 15 | user | userC |
+      | Page userC_16 | This is the page 16 | user | userC |
     And the following "collections" exist:
       | title | description| ownertype | ownername | pages |
       | Collection userA_01 | This is the collection 01 | user | userA | Page userA_06, Page userA_12 |
@@ -55,6 +74,15 @@ Background:
       | Collection userA_04 | This is the collection 04 | user | userA | Page userA_09 |
       | Collection userA_05 | This is the collection 05 | user | userA | Page userA_10 |
       | Collection userA_06 | This is the collection 06 | user | userA | Page userA_11 |
+      #to test shared/submitted views
+      | Collection userC_01 | This is the collection 01 | user | userC | Page userC_05 |
+      | Collection userC_02 | This is the collection 02 | user | userC | Page userC_06 |
+      | Collection userC_03 | This is the collection 03 | user | userC | Page userC_07 |
+      | Collection userC_04 | This is the collection 04 | user | userC | Page userC_08 |
+      | Collection userC_05 | This is the collection 05 | user | userC | Page userC_13 |
+      | Collection userC_06 | This is the collection 06 | user | userC | Page userC_14 |
+      | Collection userC_07 | This is the collection 07 | user | userC | Page userC_15 |
+      | Collection userC_08 | This is the collection 08 | user | userC | Page userC_16 |
 
 Scenario: The list of group pages, shared/submitted pages and collections should
 be displayed page by page and sorted by "page title (A-Z)" or "most recently updated".
@@ -99,6 +127,7 @@ These list must take into account the sort option choosen in the block config (B
     # Verifying log in was successful
     And I should see "Tim"
     And I should see "Group Z"
+    And I scroll to the base of id "groups"
     And I follow "Group Z"
     # Group pages
     And I should see "Page Group Z_01" in the "ul#groupviewlist" "css_element"
@@ -240,3 +269,143 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Page userB_01" in the "ul#allsubmissionlist" "css_element"
     And I should not see "Page userA_02" in the "ul#allsubmissionlist" "css_element"
     And I log out
+    # Check pages and collections are shown in correct section
+    # Share and submit pages and collections
+    # Log in as a normal user
+    Given I log in as "userC" with password "Kupuhipa1"
+    # Verifying log in was successful
+    And I should see "Tim"
+    And I should see "Group W"
+    # Share pages and collections to the standard "Group W"
+    # Edit access for Page userC_01, Page userC_03, Page userC_04
+    And I choose "Shared by me" in "Portfolio"
+    And I follow "Pages" in the "div#main-column-container" "css_element"
+    And I click on "Edit access" in "Page userC_01" row
+    And I set the select2 value "Page userC_01, Page userC_03, Page userC_04" for "editaccess_views"
+    And I select "Group W" from "accesslist[0][searchtype]"
+    And I press "Save"
+    # Edit access for Collection userC_01, Collection userC_03, Collection userC_04
+    And I choose "Shared by me" in "Portfolio"
+    And I follow "Collections" in the "div#main-column-container" "css_element"
+    And I click on "Edit access" in "Collection userC_01" row
+    And I set the select2 value "Collection userC_01, Collection userC_03, Collection userC_04" for "editaccess_collections"
+    And I select "Group W" from "accesslist[0][searchtype]"
+    And I press "Save"
+    # Submit pages and collections to the "Group W" and "Group Z"
+    And I choose "Groups"
+    And I follow "Group W"
+    And I select "Page userC_02" from "group_view_submission_form_3_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I select "Page userC_03" from "group_view_submission_form_3_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I select "Collection userC_02" from "group_view_submission_form_3_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I select "Collection userC_03" from "group_view_submission_form_3_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I choose "Groups"
+    And I follow "Group Z"
+    And I select "Page userC_04" from "group_view_submission_form_2_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I select "Collection userC_04" from "group_view_submission_form_2_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I log out
+    #Check cases
+    Given I log in as "userA" with password "Kupuhipa1"
+    # Verifying log in was successful
+    And I should see "Pete"
+    And I should see "Group W"
+    And I follow "Group W"
+    And I should see "Page userC_01" in the "ul#sharedviewlist" "css_element"
+    And I should not see "Page userC_03" in the "ul#sharedviewlist" "css_element"
+    And I should see "Page userC_04" in the "ul#sharedviewlist" "css_element"
+    And I should see "Page userC_02" in the "ul#allsubmissionlist" "css_element"
+    And I should see "Page userC_03" in the "ul#allsubmissionlist" "css_element"
+    And I should see "Collection userC_01" in the "ul#sharedcollectionlist" "css_element"
+    And I should not see "Collection userC_03" in the "ul#sharedcollectionlist" "css_element"
+    And I should see "Collection userC_04" in the "ul#sharedcollectionlist" "css_element"
+    And I should see "Collection userC_02" in the "ul#allsubmissionlist" "css_element"
+    And I should see "Collection userC_03" in the "ul#allsubmissionlist" "css_element"
+    And I log out
+    Given I log in as "userB" with password "Kupuhipa1"
+    # Verifying log in was successful
+    And I should see "Son"
+    And I should see "Group W"
+    And I follow "Group W"
+    And I should see "Page userC_01" in the "ul#sharedviewlist" "css_element"
+    And I should not see "Page userC_02" in the "ul#sharedviewlist" "css_element"
+    And I should see "Page userC_03" in the "ul#sharedviewlist" "css_element"
+    And I should see "Page userC_04" in the "ul#sharedviewlist" "css_element"
+    And I should see "Collection userC_01" in the "ul#sharedcollectionlist" "css_element"
+    And I should not see "Collection userC_02" in the "ul#sharedcollectionlist" "css_element"
+    And I should see "Collection userC_03" in the "ul#sharedcollectionlist" "css_element"
+    And I should see "Collection userC_04" in the "ul#sharedcollectionlist" "css_element"
+    And I log out
+    # Share and submit pages and collections - for course group "Group X"
+    # Log in as a normal user
+    Given I log in as "userC" with password "Kupuhipa1"
+    # Verifying log in was successful
+    And I should see "Tim"
+    And I should see "Group X"
+    # Share pages and collections to the "Group X"
+    # Edit access for Page userC_09, Page userC_11, Page userC_12
+    And I choose "Shared by me" in "Portfolio"
+    And I follow "Pages" in the "div#main-column-container" "css_element"
+    And I click on "Edit access" in "Page userC_09" row
+    And I set the select2 value "Page userC_09, Page userC_11, Page userC_12" for "editaccess_views"
+    And I select "Group X" from "accesslist[0][searchtype]"
+    And I press "Save"
+    # Edit access for Collection userC_05, Collection userC_07, Collection userC_08
+    And I choose "Shared by me" in "Portfolio"
+    And I follow "Collections" in the "div#main-column-container" "css_element"
+    And I click on "Edit access" in "Collection userC_05" row
+    And I set the select2 value "Collection userC_05, Collection userC_07, Collection userC_08" for "editaccess_collections"
+    And I select "Group X" from "accesslist[0][searchtype]"
+    And I press "Save"
+    # Submit pages and collections to the "Group X" and "Group Z"
+    And I choose "Groups"
+    And I follow "Group X"
+    And I select "Page userC_10" from "group_view_submission_form_4_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I select "Page userC_11" from "group_view_submission_form_4_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I select "Collection userC_06" from "group_view_submission_form_4_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I select "Collection userC_07" from "group_view_submission_form_4_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I choose "Groups"
+    And I follow "Group Z"
+    And I select "Page userC_12" from "group_view_submission_form_2_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I select "Collection userC_08" from "group_view_submission_form_2_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I log out
+    #Check cases
+    Given I log in as "userB" with password "Kupuhipa1"
+    # Verifying log in was successful
+    And I should see "Son"
+    And I should see "Group X"
+    And I follow "Group X"
+    And I should see "Page userC_09" in the "ul#sharedviewlist" "css_element"
+    And I should not see "Page userC_10" in the "ul#sharedviewlist" "css_element"
+    And I should not see "Page userC_11" in the "ul#sharedviewlist" "css_element"
+    And I should see "Page userC_12" in the "ul#sharedviewlist" "css_element"
+    And I should see "Page userC_10" in the "ul#allsubmissionlist" "css_element"
+    And I should see "Page userC_11" in the "ul#allsubmissionlist" "css_element"
+    And I should see "Collection userC_05" in the "ul#sharedcollectionlist" "css_element"
+    And I should not see "Collection userC_06" in the "ul#sharedcollectionlist" "css_element"
+    And I should not see "Collection userC_07" in the "ul#sharedcollectionlist" "css_element"
+    And I should see "Collection userC_08" in the "ul#sharedcollectionlist" "css_element"
+    And I should see "Collection userC_06" in the "ul#allsubmissionlist" "css_element"
+    And I should see "Collection userC_07" in the "ul#allsubmissionlist" "css_element"
