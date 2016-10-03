@@ -33,4 +33,12 @@ Scenario: Creating an institution (selenium test)
 
     # Removing the first authentication option
     And I click on "Delete" in "Web services" row
+
+    # Adding an institution logo
+    And I attach the file "Image2.png" to "Logo"
     And I press "Submit"
+
+    # Delete the institution
+    And I press "Delete" in the "table#adminstitutionslist" "css_element"
+    And I press "Yes"
+    Then I should see "Institution deleted successfully"
