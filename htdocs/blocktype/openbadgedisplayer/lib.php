@@ -186,7 +186,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
                     continue;
                 }
 
-                $html .= '<img '
+                $html .= '<img tabindex="0" id="' . (preg_replace('/\:/', '_', $group)) . '" '
                             . 'src="' . $b->image . '" '
                             . 'title="' . $b->name . '" '
                             . 'data-assertion="' . htmlentities(json_encode($badge->assertion)) . '" />';
