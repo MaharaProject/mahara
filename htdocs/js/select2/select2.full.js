@@ -5313,7 +5313,19 @@ S2.define('select2/core',[
         if (key === KEYS.ENTER || key === KEYS.SPACE ||
             (key === KEYS.DOWN && evt.altKey) &&
             $(evt.target).hasClass('select2-selection')) {
+
+           var $remove = $(evt.target).closest('.select2-selection__choice__remove');
+           if ($remove.length) {
+             var $selection = $remove.parent();
+             var data = $selection.data('data');
+             self.trigger('unselect', {
+               originalEvent: evt,
+               data: data
+             });
+          }
+
           self.open();
+
           evt.preventDefault();
         }
       }
