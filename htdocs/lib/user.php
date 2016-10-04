@@ -2420,7 +2420,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         $user->ctime = db_format_timestamp(time());
         // Ensure this user has a profile urlid
         if (get_config('cleanurls') && (!isset($user->urlid) || is_null($user->urlid))) {
-            $user->urlid = generate_urlid($user->username, get_config('cleanurluserdefault'), 3, 30);
+            $user->urlid = generate_urlid(get_raw_user_urlid($user), get_config('cleanurluserdefault'), 3, 30);
             $user->urlid = get_new_profile_urlid($user->urlid);
         }
         if (empty($user->quota)) {
