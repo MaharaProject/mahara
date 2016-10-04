@@ -141,6 +141,7 @@ if ($institution || $add) {
 
             foreach ($authinstanceids as $id) {
                 delete_records('auth_instance_config', 'instance', $id);
+                delete_records('auth_remote_user', 'authinstance', $id);
             }
 
             foreach ($regdataids as $id) {
