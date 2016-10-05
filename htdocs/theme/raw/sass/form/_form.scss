@@ -80,7 +80,9 @@ label,
 
 .pieform-fieldset {
     .html {
-        @include clearfix;
+        &:not(tr) {
+            @include clearfix;
+        }
     }
 }
 

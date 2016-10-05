@@ -1978,6 +1978,7 @@ function external_reload_component($component, $dir=true) {
             $service['enabled'] = empty($service['enabled']) ? 0 : $service['enabled'];
             $service['restrictedusers'] = ((isset($service['restrictedusers']) && $service['restrictedusers'] == 1) ? 1 : 0);
             $service['tokenusers'] = ((isset($service['tokenusers']) && $service['tokenusers'] == 1) ? 1 : 0);
+            $service['shortname'] = (isset($service['shortname']) ? $service['shortname'] : '');
 
             $update = false;
             if ($dbservice->enabled != $service['enabled']) {
@@ -1992,7 +1993,19 @@ function external_reload_component($component, $dir=true) {
                 $dbservice->tokenusers = $service['tokenusers'];
                 $update = true;
             }
+            if ($dbservice->shortname !== $service['shortname']) {
+                $dbservice->shortname = $service['shortname'];
+                $update = true;
+            }
+            // Optional "apiversion" field, to let webservice clients adapt gracefully to changes
+            // in a service over time.
+            $libApiVersion = (int)(isset($service['apiversion']) ? $service['apiversion'] : false);
+            if ($dbservice->apiversion !== $libApiVersion) {
+                $dbservice->apiversion = $libApiVersion;
+                $update = true;
+            }
             if ($update) {
+                $dbservice->mtime = db_format_timestamp(time());
                 update_record('external_services', $dbservice);
             }
 
@@ -2020,11 +2033,13 @@ function external_reload_component($component, $dir=true) {
     foreach ($services as $name => $service) {
         $dbservice = new stdClass();
         $dbservice->name               = $name;
+        $dbservice->shortname          = (isset($service['shortname']) ? $service['shortname'] : '');
         $dbservice->enabled            = empty($service['enabled']) ? 0 : $service['enabled'];
         $dbservice->restrictedusers    = ((isset($service['restrictedusers']) && $service['restrictedusers'] == 1) ? 1 : 0);
         $dbservice->tokenusers         = ((isset($service['tokenusers']) && $service['tokenusers'] == 1) ? 1 : 0);
         $dbservice->component          = $component;
         $dbservice->ctime              = db_format_timestamp(time());
+        $dbservice->mtime = $dbservice->ctime;
         $dbservice->id = insert_record('external_services', $dbservice, 'id', true);
         foreach ($service['functions'] as $fname) {
             $newf = new stdClass();

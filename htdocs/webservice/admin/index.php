@@ -545,16 +545,24 @@ function webservice_function_groups_form() {
         ),
         );
 
-    $dbservices = get_records_array('external_services', null, null, 'name');
+    $dbservices = get_records_array(
+        'external_services',
+        null,
+        null,
+        'component, name',
+        'id, name, shortname, component, enabled, restrictedusers, tokenusers'
+    );
     if ($dbservices) {
         foreach ($dbservices as $service) {
+            $iscustomservice = ($service->component === '');
             $form['elements']['id'. $service->id . '_service'] = array(
-                'value'        =>  $service->name,
+                'value'        =>  $service->name .
+                    ($service->shortname ? ' (' . $service->shortname . ')' : ''),
                 'type'         => 'html',
                 'key'          => $service->name,
             );
             $form['elements']['id'. $service->id . '_component'] = array(
-                'value'        =>  $service->component,
+                'value'        => ($iscustomservice ? get_string('customservicegroup', 'auth.webservice') : $service->component),
                 'type'         => 'html',
                 'key'          => $service->name,
             );
@@ -611,25 +619,29 @@ function webservice_function_groups_form() {
                         ),
                     ),
                 ))
-                . pieform(array(
-                    'name'            => 'webservices_function_groups_delete_' . $service->id,
-                    'renderer'        => 'div',
-                    'class'  => 'form-as-button pull-left',
-                    'successcallback' => 'webservice_function_groups_submit',
-                    'jsform'          => false,
-                    'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
-                    'elements' => array(
-                        'service'    => array('type' => 'hidden', 'value' => $service->id),
-                        'action'     => array('type' => 'hidden', 'value' => 'delete'),
-                        'submit'     => array(
-                            'type'  => 'button',
-                            'usebuttontag' => true,
-                            'class' => 'btn-default btn-sm',
-                            'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('delete', 'mahara'),
-                            'elementtitle' => get_string('delete'),
-                        ),
-                    ),
-                )),
+                . (
+                    $iscustomservice ?
+                        pieform(array(
+                            'name'            => 'webservices_function_groups_delete_' . $service->id,
+                            'renderer'        => 'div',
+                            'class'  => 'form-as-button pull-left',
+                            'successcallback' => 'webservice_function_groups_submit',
+                            'jsform'          => false,
+                            'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
+                            'elements' => array(
+                                'service'    => array('type' => 'hidden', 'value' => $service->id),
+                                'action'     => array('type' => 'hidden', 'value' => 'delete'),
+                                'submit'     => array(
+                                    'type'  => 'button',
+                                    'usebuttontag' => true,
+                                    'class' => 'btn-default btn-sm',
+                                    'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('delete', 'mahara'),
+                                    'elementtitle' => get_string('delete'),
+                                ),
+                            ),
+                        ))
+                        : ''
+                ),
                 'type'         => 'html',
                 'key'          => $service->name,
                 'class'        => 'webserviceconfigcontrols btn-group',
@@ -676,7 +688,7 @@ function webservice_function_groups_submit(Pieform $form, $values) {
             $SESSION->add_error_msg(get_string('invalidinput', 'auth.webservice'));
         }
         else {
-            $service = array('name' => $service, 'restrictedusers' => 0, 'enabled' => 0, 'tokenusers' => 0, 'component' => 'webservice', 'ctime' => db_format_timestamp(time()));
+            $service = array('name' => $service, 'restrictedusers' => 0, 'enabled' => 0, 'tokenusers' => 0, 'component' => '', 'ctime' => db_format_timestamp(time()));
             insert_record('external_services', $service);
             $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));
         }
@@ -688,13 +700,17 @@ function webservice_function_groups_submit(Pieform $form, $values) {
                 redirect('/webservice/admin/serviceconfig.php?service=' . $values['service']);
             }
             else if ($values['action'] == 'delete') {
-                // remove everything associated with a service
-                $params = array($values['service']);
-                delete_records_select('external_tokens', "externalserviceid  = ?", $params);
-                delete_records_select('external_services_users', "externalserviceid  = ?", $params);
-                delete_records_select('external_services_functions', "externalserviceid  = ?", $params);
-                delete_records('external_services', 'id', $values['service']);
-                $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));
+                $component = get_field('external_services', 'component', 'id', $values['service']);
+                // Can't manually delete plugin-provided services; only disable them.
+                if ($component === '') {
+                    // remove everything associated with a service
+                    $params = array($values['service']);
+                    delete_records_select('external_tokens', "externalserviceid  = ?", $params);
+                    delete_records_select('external_services_users', "externalserviceid  = ?", $params);
+                    delete_records_select('external_services_functions', "externalserviceid  = ?", $params);
+                    delete_records('external_services', 'id', $values['service']);
+                    $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));
+                }
             }
         }
     }

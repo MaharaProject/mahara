@@ -483,6 +483,31 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016090700) {
+        log_debug('Adding shortname column to external_services table');
+        $table = new XMLDBTable('external_services');
+        $field = new XMLDBField('shortname');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 200, null, null, null, null, null, null, '', 'name');
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+
+            $index = new XMLDBIndex('shortnamecompuix');
+            $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('shortname', 'component'));
+            add_index($table, $index);
+        }
+
+        log_debug('Clearing out "component" field from old example service groups');
+        set_field('external_services', 'component', '', 'component', 'webservice');
+
+        log_debug('Add optional "api version" field to external_services');
+        $table = new XMLDBTable('external_services');
+        $field = new XMLDBField('apiversion');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, null, null, null, null, null, 'component');
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+    }
+
     // sweep for webservice updates everytime
     $status = external_reload_webservices();
 
