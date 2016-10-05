@@ -4708,5 +4708,44 @@ function xmldb_core_upgrade($oldversion=0) {
       update_safe_iframe_regex();
     }
 
+    if ($oldversion < 2016100600) {
+        log_debug('Fix broken user data for existing users created via webservices');
+        if ($studentids = get_records_sql_array("
+            SELECT u.id, u.studentid, 1 AS makenew FROM {usr} u
+            WHERE (u.studentid IS NOT NULL AND u.studentid != '')
+            AND NOT EXISTS (
+                SELECT id FROM {artefact}
+                WHERE artefacttype = 'studentid'
+                AND owner = u.id
+            )
+            UNION
+            SELECT u.id, u.studentid, 0 AS makenew FROM {usr} u
+            JOIN {artefact} a ON (a.owner = u.id AND a.artefacttype='studentid')
+            WHERE (u.studentid IS NOT NULL AND u.studentid != '')
+            AND u.studentid != a.title", array())) {
+            foreach ($studentids as $info) {
+                set_profile_field($info->id, 'studentid', $info->studentid, (bool) $info->makenew);
+            }
+        }
+
+        if ($preferrednames = get_records_sql_array("
+            SELECT u.id, u.preferredname, 1 AS makenew FROM {usr} u
+            WHERE (u.preferredname IS NOT NULL AND u.preferredname != '')
+            AND NOT EXISTS (
+                SELECT id FROM {artefact}
+                WHERE artefacttype = 'preferredname'
+                AND owner = u.id
+            )
+            UNION
+            SELECT u.id, u.preferredname, 0 AS makenew FROM {usr} u
+            JOIN {artefact} a ON (a.owner = u.id AND a.artefacttype='preferredname')
+            WHERE (u.preferredname IS NOT NULL AND u.preferredname != '')
+            AND u.preferredname != a.title", array())) {
+            foreach ($preferrednames as $info) {
+                set_profile_field($info->id, 'preferredname', $info->preferredname, (bool) $info->makenew);
+            }
+        }
+    }
+
     return $status;
 }
