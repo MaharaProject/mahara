@@ -561,6 +561,13 @@ class mahara_user_external extends external_api {
                     $profilefields->{$field} = $user[$field];
                 }
             }
+            // We need to update the following fields for both the usr and artefact tables
+            foreach (array('firstname', 'lastname', 'email', 'studentid', 'preferredname') as $field) {
+                if (isset($user[$field])) {
+                    $profilefields->{$field} = $user[$field];
+                }
+            }
+
             update_user($updated_user, $profilefields, $remoteuser);
         }
         db_commit();
