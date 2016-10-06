@@ -192,7 +192,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             message = get_string('namefieldisrequired');
         }
         else {
-            name = name.value;
+            name = name.value.trim();
             if (name == '') {
                 message = get_string('namefieldisrequired');
             }
