@@ -2796,7 +2796,8 @@ function group_copy($groupid, $return) {
     }
     if (isset($group->urlid)) {
         // need to sort out the cleanurl
-        $group->urlid = generate_urlid($group->name, get_config('cleanurlviewdefault'), 3, 100);
+        $group->urlid = generate_urlid($group->name, get_config('cleanurlgroupdefault'), 3, 30);
+        $group->urlid = group_get_new_homepage_urlid($group->urlid);
     }
 
     db_begin();
