@@ -32,7 +32,12 @@ foreach ($metadata_files as $file) {
 // Fix up session handling config - to match Mahara
 $memcache_config = array();
 if (get_config('memcacheservers') || extension_loaded('memcache')) {
-    $sessionhandler = 'memcache';
+    if (empty(get_config('ssphpsessionhandler'))) {
+        $sessionhandler = 'memcache';
+    }
+    else {
+        $sessionhandler = get_config('ssphpsessionhandler');
+    }
     $servers = get_config('memcacheservers');
     if (empty($servers)) {
         $servers = 'localhost';

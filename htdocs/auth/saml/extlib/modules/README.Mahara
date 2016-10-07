@@ -1,0 +1,2 @@
+This is where SimpleSAMLphp modules can be directly distributed with Mahara.
+Just copy them into this directory and the autoloader will pick them up.

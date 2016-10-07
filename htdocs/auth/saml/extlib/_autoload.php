@@ -39,7 +39,11 @@ spl_autoload_register(
         }
         array_shift($classpath);
         $module = array_shift($classpath);
-        $filepath = get_config('docroot') . 'auth/saml/extlib/simplesamlphp/modules/$module/lib/' . implode('/', $classpath) . '.php';
+        $filepath = get_config('docroot') . 'auth/saml/extlib/simplesamlphp/modules/' . $module . '/lib/' . implode('/', $classpath) . '.php';
+        if (file_exists($filepath)) {
+            require_once($filepath);
+        }
+        $filepath = get_config('docroot') . 'auth/saml/extlib/modules/' . $module . '/lib/' . implode('/', $classpath) . '.php';
         if (file_exists($filepath)) {
             require_once($filepath);
         }
