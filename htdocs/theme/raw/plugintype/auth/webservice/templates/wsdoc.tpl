@@ -3,7 +3,7 @@
 {/if}
 
 <h2>{str tag="function" section="auth.webservice"}: {$function->name} </h2>
-<table>
+<table class="table table-striped">
 <tr><td>{str tag="wsdocdescription" section="auth.webservice"}:</td><td>{$functiondescription}</td></tr>
 <tr><td>{str tag="component" section="auth.webservice"}:</td><td>{$function->component}</td></tr>
 <tr><td>{str tag="class" section="auth.webservice"}:</td><td>{$function->classname}</td></tr>
@@ -13,20 +13,14 @@
 <span class='arguments'>{str tag="arguments" section="auth.webservice"}</span>
 <br/>
 
-  {foreach from=$fdesc->parameters_desc->keys item=paramdesc key=paramname}
 <span style='font-size: 80%'>
-
-  <b>{$paramname}</b> ({if $paramdesc->required == 1 }{str tag="required" section="auth.webservice"}{else}{if $paramdesc->required == 2}{str tag="optional" section="auth.webservice"}{else}{if ($paramdesc->default === null)} null {else} {$paramdesc->default}{/if}{/if}{/if})
-   <br/>
-   {$paramdesc->desc}
-   <br/>
-   <div>
-   <div class="detaildescription">
-<pre class='detaildescription'><b>{str tag="generalstructure" section="auth.webservice"}</b>
-{wsdoc_detailed_description_html($paramdesc)}
+<pre class='detaildescription'>
+{foreach from=$fdesc->parameters_desc->keys item=paramdesc key=paramname}
+<span class="wsname">{$paramname}:</span> {wsdoc_detailed_description_html($paramdesc, 1)}
+{/foreach}
 </pre>
-   </div>
-   </div>
+
+{foreach from=$fdesc->parameters_desc->keys item=paramdesc key=paramname}
 {if $xmlrpcactive == 1 }
    <br/>
    <div>
@@ -48,7 +42,7 @@
    </div>
 {/if}
 </span>
-  {/foreach}
+{/foreach}
 
 <br/>
 <br/>
