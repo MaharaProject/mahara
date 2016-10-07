@@ -184,7 +184,7 @@ class webservice_rest_client {
             }
 
             // default to parsing HTTP parameters
-            $this->serverurl = $this->serverurl. '?'.$this->auth . '&wsfunction='. $functionname;
+            $this->serverurl = $this->serverurl . '?' . $this->auth . ($functionname ? '&wsfunction=' . $functionname : '');
             $result = webservice_download_file_content($this->serverurl, $this->headers, $params,
                                                          false, 300, 20, get_config('disablesslchecks'), null, false, true);
             log_debug("REST client response: ".var_export($result, true));

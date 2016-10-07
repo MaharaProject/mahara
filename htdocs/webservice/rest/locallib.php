@@ -164,8 +164,12 @@ class webservice_rest_server extends webservice_base_server {
             // in oauth, structures are flattened using json
             if ($oauth_token) {
                 foreach ($this->parameters as $key => $value) {
-                    if (json_decode($value, true) !== NULL) {
-                        $this->parameters[$key] = json_decode($value, true);
+                    if (!is_string($value)) {
+                        continue;
+                    }
+                    $decoded = json_decode($value, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $this->parameters[$key] = $decoded;
                     }
                 }
             }
