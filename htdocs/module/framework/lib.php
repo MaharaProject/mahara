@@ -680,6 +680,8 @@ class Framework {
                        'annotation' => $annotation,
                        'state' => $state);
         if ($id) {
+            // get view
+            $view = get_field('framework_evidence', 'view', 'id', $id);
             // update row
             if (!empty($element)) {
                 $fordb['element'] = $element;
@@ -695,6 +697,11 @@ class Framework {
             $fordb['ctime'] = db_format_timestamp(time());
             $id = insert_record('framework_evidence', (object) $fordb, 'id', true);
         }
+        // We need to update mtime for the view
+        require_once('view.php');
+        $view = new View($view);
+        $view->set('mtime', time());
+        $view->commit();
         return $id;
     }
 

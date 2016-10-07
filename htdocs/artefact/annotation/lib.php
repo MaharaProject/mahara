@@ -298,6 +298,9 @@ class ArtefactTypeAnnotation extends ArtefactType {
             update_record('artefact_annotation', $data, 'annotation');
         }
 
+        if ($this->get('view')) {
+            set_field('view', 'mtime', db_format_timestamp(time()), 'id', $this->get('view'));
+        }
         db_commit();
         $this->dirty = false;
     }
@@ -436,56 +439,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                     if ($block->get('view')) {
                         // We found the annotation we're inputting feedback for.
                         // Rebuild the block's list and break out of the loop.
+                        set_field('view', 'mtime', db_format_timestamp(time()), 'id', $block->get('view'));
                         $block->rebuild_artefact_list();
-
-//                         Otherwise, we can do this but any images that were deleted while editing will still exist.
-//                         if (count_records_select('view_artefact', "view = {$block->get('view')} AND block = {$block->get('id')} AND artefact = {$this->get('id')}") == 0) {
-//                             // Insert the feedback record in the view_artefact table.
-//                             $va = new StdClass;
-//                             $va->view = $block->get('view');
-//                             $va->block = $block->get('id');
-//                             // this is the feedback id that was just inserted/updated.
-//                             $va->artefact = $this->get('id');
-//                             insert_record('view_artefact', $va);
-//                         }
-//
-//                         // Get any artefacts (i.e. images) that may have been embedded
-//                         // in the feedback text.
-//                         $feedbackartefacts = artefact_get_references_in_html($this->get('description'));
-//                         if (count($feedbackartefacts) > 0) {
-//
-//                             // Get list of allowed artefacts.
-//                             // Please note that images owned by other users that are place on feedback
-//                             // will not be part of the view_artefact because the owner of the
-//                             // annotation does not own the image being placed on the feedback.
-//                             // Therefore, when exported as Leap2A, these images will not come through.
-//                             require_once('view.php');
-//                             $searchdata = array(
-//                                             'extraselect'          => array(array('fieldname' => 'id', 'type' => 'int', 'values' => $feedbackartefacts)),
-//                                             'userartefactsallowed' => true,  // If this is a group view, the user can add personally owned artefacts
-//                             );
-//                             $view = $block->get_view();
-//                             list($allowedfeedbackartefacts, $count) = View::get_artefactchooser_artefacts(
-//                                     $searchdata,
-//                                     $view->get('owner'),
-//                                     $view->get('group'),
-//                                     $view->get('institution'),
-//                                     true
-//                             );
-//                             foreach ($feedbackartefacts as $id) {
-//                                 $va = new StdClass;
-//                                 $va->view = $block->get('view');
-//                                 $va->block = $block->get('id');
-//                                 if (isset($allowedfeedbackartefacts[$id]) || isset($old[$id])) {
-//                                     // only insert artefacts that the view can actually own
-//                                     // and which are not already in the view_artefact table.
-//                                     $va->artefact = $id;
-//                                     if (count_records_select('view_artefact', "view = {$block->get('view')} AND block = {$block->get('id')} AND artefact = {$id}") == 0) {
-//                                         insert_record('view_artefact', $va);
-//                                     }
-//                                 }
-//                             }
-//                         }
                     }
 
                     break;
