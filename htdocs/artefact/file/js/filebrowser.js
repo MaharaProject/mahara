@@ -707,7 +707,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             return;
         }
 
-        var pagemodalbody = $j('.modal-body');
+        var pagemodalbody = $j('#page-modal .modal-body');
 
         var elem = $j('#' + self.id + '_filelist .img-modal-preview');
 
@@ -747,7 +747,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 e.preventDefault();
 
                 // if folder, or a link that goes somewhere exit out
-                if(e.target.nodeName === 'A'){
+                if (e.target.nodeName === 'A') {
+                    return;
+                }
+                // if an image preview link
+                if (jQuery(e.target).parent().hasClass('img-modal-preview')) {
                     return;
                 }
 
@@ -756,7 +760,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
                 // remove visual selection if this is for selecting 1 file
                 if (self.config.selectone) {
-                    for(j = 0; j < elem.length; j = j + 1){
+                    for (j = 0; j < elem.length; j = j + 1) {
                         removeElementClass(elem[j], 'active');
                     }
                 }
