@@ -62,7 +62,7 @@ class PluginAuthBrowserid extends PluginAuth {
         $elements = array();
         $elements['helptext'] = array(
             'type' => 'html',
-            'value' => get_string('deprecatedmsg', 'auth.browserid')
+            'value' => get_string('deprecatedmsg1', 'auth.browserid')
         );
 
         if ($instances) {
@@ -77,7 +77,7 @@ class PluginAuthBrowserid extends PluginAuth {
             $elements['migrate'] = array(
                 'type' => 'switchbox',
                 'title' => get_string('migratetitle', 'auth.browserid'),
-                'description' => get_string('migratedesc', 'auth.browserid'),
+                'description' => get_string('migratedesc1', 'auth.browserid'),
                 'defaultvalue' => false,
                 'help' => true,
             );

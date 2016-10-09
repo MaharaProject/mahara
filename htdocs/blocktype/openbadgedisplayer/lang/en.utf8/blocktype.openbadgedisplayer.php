@@ -59,7 +59,7 @@ $string['nobadgegroups'] = 'No public badge collections / badges found.';
 
 $string['nobackpackidin1'] = 'Your email %s is not found in the service %s.';
 
-$string['nobadgegroupsin1'] = 'No public badge collections / badges found in the service: %s for email %s.';
+$string['nobadgegroupsin1'] = 'No public badge collections / badges found in the service %s for email %s.';
 
 $string['confighelp'] = 'Select the badge collections to show in this block.<br/>Visit the following services to manage your collections and badges:<br/>%s';
 
