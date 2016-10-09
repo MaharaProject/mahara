@@ -181,6 +181,7 @@
             </tbody>
         </table>
         {/if}
+        {include file="pagemodal.tpl"}
     {if $tabs}
     </div>
     {/if}

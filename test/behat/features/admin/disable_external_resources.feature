@@ -30,7 +30,7 @@ Scenario: Enable/disable external resources in mahara pages
  | Block title | Text block with an internal image |
  And I click the "Insert/edit image" button in the editor
  And I expand the section "Image"
- And I follow "Image2.png"
+ And I press "Select \"Image2.png\""
  And I press "Submit"
  And I press "Save"
 
