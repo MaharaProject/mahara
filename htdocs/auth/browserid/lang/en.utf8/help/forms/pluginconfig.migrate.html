@@ -1,16 +1,27 @@
 <!-- @license http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later -->
 <!-- @copyright For copyright information on Mahara, please see the README file distributed with this software. -->
 <h3>Auto-migrate Persona users</h3>
-<p>Mozilla is <a href="https://wiki.mozilla.org/Identity/Persona_Shutdown_Guidelines_for_Reliers">discontinuing the Persona authentication service</a> as of 30 November, 2016.
-If your site is using Persona, you will need to migrate those users to a different authentication method. This plugin provides a basic option to change all Persona-based user
-accounts on your site, to the Mahara "internal" authentication method.</p>
-<p>Selecting "Yes" and saving this form, will activate the migration script, and do the following:</p>
+<p>Mozilla is <a href="https://wiki.mozilla.org/Identity/Persona_Shutdown_Guidelines_for_Reliers">
+  discontinuing the Persona authentication service</a> as of 30 November 2016.
+  If your site is using Persona, you will need to migrate those users to a
+  different authentication method as they cannot log in anymore.</p>
+<p>This plugin provides a basic option to change all Persona-based user accounts
+  on your site to the Mahara "internal" authentication method.</p>
+<p>Selecting "Yes" and saving this form will activate the migration script and
+  do the following:</p>
 <ol>
-<li>All Persona auth instances on the site will be deleted.</li>
-<li>All users who are on Persona authentication, will be switched to the Internal auth instance for their institution.</li>
-<li>If their institution has no Internal auth instance, one will be created.</li>
-<li>These users will <b>not</b> have a password set. They will need to use the "Forgot password" link (and their Persona email address) to set an initial Mahara password.</li>
-<li>The users' usernames will be unchanged.</li>
+  <li>All Persona authentication instances on the site will be deleted.</li>
+  <li>All users who are on Persona authentication will be switched to the internal
+  authentication instance for their institution.</li>
+  <li>If their institution has no internal authentication instance, one will be
+  created.</li>
+  <li>These users will <b>not</b> have a password set. They will need to use the
+  "Forgot password" link and their Persona email address to set an initial
+  Mahara password.</li>
+  <li>The users' usernames will be unchanged.</li>
 </ol>
-<p><b>Note:</b> Users will not receive any notification that their authentication method has changed. You may wish to put a message on your site's logged-out homepage to explain
-to former Persona users that they should use the "Forgot password" link, and their Persona email address, to set a new password and access their Mahara account.</p>
+<p><b>Note:</b> Users will not receive any notification that their authentication
+  method has changed. You may wish to put a message on your site's logged-out
+  homepage to explain to former Persona users that they should use the "Forgot
+  password" link and their Persona email address to set a new password and
+  access their account.</p>
