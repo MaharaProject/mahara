@@ -1,0 +1,102 @@
+@media print {
+
+    /* Hide urls that are printed next to links */
+    a[href]:after {
+        content: none !important;
+    }
+    /* But show that they were links */
+    a[href] {
+        text-decoration: underline;
+    }
+
+    /* Hide some structural parts of page */
+    #nav, .collection-nav, #collection-nav,
+    .site-messages, .sidebar {
+        display: none;
+    }
+
+    /* Hide the comment area */
+    .add-comment-container {
+       display: none;
+    }
+
+    /* Hide the submission form */
+    .submissionform {
+       display: none;
+    }
+
+    /* Hide any editing type links */
+    .detail-link,
+    .addcomment,
+    .remove-widgets {
+        display: none;
+    }
+
+    /* Hide the buttons */
+    .btn-group,
+    .btn-default,
+    .btn-primary {
+        display: none !important;
+    }
+
+    /* Hide the footer */
+    .footer {
+        display: none !important;
+    }
+
+    /* Hide the "How many hits" metadata */
+    .metadata {
+        display: none !important;
+    }
+
+    /* Hide the links to download videos and images */
+    .media-download{
+        display: none !important;
+        content: none !important;
+    }
+
+    /* Hide the file upload / create folder forms */
+    .fileupload, #createfolder, #downloadfolder {
+        display: none;
+    }
+
+    /* Allow things hidden by collapsed expanding areas to show */
+    .collapse {
+        display: block;
+        visibility: visible;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    * {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+
+    @page {
+        size: A4;
+        margin: 0;
+    }
+
+    .page {
+        background: white;
+        margin: 0;
+        border: initial;
+        border-radius: initial;
+        width: initial;
+        min-height: initial;
+        box-shadow: initial;
+        background: initial;
+        page-break-after: always;
+    }
+
+    .subpage {
+        padding: 1cm;
+        border: 5px red solid;
+        height: 256mm;
+        outline: 2cm #FFEAEA solid;
+    }
+}

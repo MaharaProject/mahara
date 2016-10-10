@@ -48,12 +48,18 @@
     </a>
     {/if}
 
-    {if $LOGGEDIN && !$userisowner}
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag="more..."}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <li>
+            <a title="{str tag=print section=view}" id="print_link" href="#" onclick="window.print(); return false;">
+                <span class="icon icon-print left" role="presentation" aria-hidden="true"></span>
+                {str tag=print section=view}
+            </a>
+        </li>
+        {if $LOGGEDIN && !$userisowner}
         <li>
             <a id="toggle_watchlist_link" class="watchlist" href="">
                 {if $viewbeingwatched}
@@ -71,8 +77,8 @@
                 {str tag=reportobjectionablematerial}
             </a>
         </li>
+        {/if}
     </ul>
-    {/if}
 </div>
 
 <div class="with-heading text-small">
