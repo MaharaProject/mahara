@@ -1037,7 +1037,7 @@ $string['institutionmaxusersexceeded'] = 'This institution is full. You will hav
 $string['institutionuserserrortoomanyusers'] = 'The users were not added. The number of members cannot exceed the maximum allowed for the institution. You can add fewer users, remove some users from the institution or ask the site administrator to increase the maximum number of users.';
 $string['institutionuserserrortoomanyinvites'] = 'Your invitations were not sent. The number of existing members plus the number of outstanding invitations cannot exceed the institution\'s maximum number of users. You can invite fewer users, remove some users from the institution or ask the site administrator to increase the maximum number of users.';
 
-$string['Shortname'] = 'Shortname';
+$string['Shortname'] = 'Short name';
 $string['Members'] = 'Members';
 $string['Maximum'] = 'Maximum';
 $string['Staff'] = 'Staff';
