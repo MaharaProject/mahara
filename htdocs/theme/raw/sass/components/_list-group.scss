@@ -273,8 +273,14 @@ h4.list-group-item-heading {
     }
 }
 
-.annotation-feedback .list-group .list-group-item {
+.annotation-feedback {
     border-top: 1px solid #ddd !important;
+}
+
+.feedback.modal {
+    .btn-group-top.comment-item-buttons {
+        margin-top: -10px;
+    }
 }
 
 .column-list {

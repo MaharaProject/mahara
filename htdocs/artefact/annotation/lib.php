@@ -590,7 +590,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      */
     public static function get_annotation_feedback_options() {
         $options = new stdClass();
-        $options->limit = 10;
+        $options->limit = 0;
         $options->offset = 0;
         $options->showcomment = null;
 
@@ -796,6 +796,9 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                     if (!$is_export_preview) {
                         $item->makepublicform = pieform(self::make_annotation_feedback_public_form($data->annotation, $data->view, $data->artefact, $data->block, $item->id));
                     }
+                    else {
+                        $item->highlight = 1;
+                    }
                 }
                 else if ($item->isauthor && $item->requestpublic == 'author'
                          || $data->isowner && $item->requestpublic == 'owner') {
@@ -874,8 +877,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             'limit' => $data->limit,
             'offset' => $data->offset,
             'forceoffset' => isset($data->forceoffset) ? $data->forceoffset : null,
-            'resultcounttextsingular' => get_string('annotation', 'artefact.annotation'),
-            'resultcounttextplural' => get_string('annotations', 'artefact.annotation'),
+            'resultcounttextsingular' => get_string('annotationfeedback', 'artefact.annotation'),
+            'resultcounttextplural' => get_string('annotationfeedback', 'artefact.annotation'),
             'extradata' => $extradata,
         ));
         $data->pagination = $pagination['html'];
@@ -1091,7 +1094,11 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 // The user has switched off annotation feedback. Don't create the add annotation feedback form.
                 $smarty->assign('addannotationfeedbackform', null);
             }
+            safe_require('blocktype', 'annotation');
+            $block = new BlockInstance($blockid);
+
             $smarty->assign('blockid', $blockid);
+            $smarty->assign('annotationtitle', $block->get('title'));
             $smarty->assign('annotationfeedbackcount', $annotationfeedbackcount);
             $smarty->assign('annotationfeedback', $annotationfeedback);
             $smarty->assign('editing', $editing);

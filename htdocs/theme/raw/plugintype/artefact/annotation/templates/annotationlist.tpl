@@ -28,7 +28,7 @@
         </h5>
         <div class="btn-group btn-group-top comment-item-buttons">
             {if $item->canedit}
-            <a href="{$WWWROOT}artefact/annotation/edit.php?id={$item->id}&amp;viewid={$viewid}" class="btn btn-default btn-group-item form-as-button pull-left">
+            <a href="{$WWWROOT}artefact/annotation/edit.php?id={$item->id}&amp;viewid={$viewid}" class="btn btn-default btn-sm">
                 <span class="icon icon-lg icon-pencil text-default" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=edit}</span>
             </a>

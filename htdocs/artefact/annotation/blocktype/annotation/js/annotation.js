@@ -71,7 +71,10 @@ function modifyAnnotationFeedbackSuccess(form, data) {
                 initTinyMCE(formname);
             })(jQuery);
     });
-
+    // if we are in a modal close it
+    if (jQuery('#annotation_feedbacktable_' + $(formname + '_blockid').value).hasClass('modal-docked')) {
+        dock.hide();
+    }
     formSuccess(form, data);
 }
 
