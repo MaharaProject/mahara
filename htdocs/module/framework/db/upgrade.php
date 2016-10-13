@@ -36,5 +36,24 @@ function xmldb_module_framework_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2016101400) {
+        log_debug('Adding "framework_assessment_feedback" table');
+        $table = new XMLDBTable('framework_assessment_feedback');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('framework', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('artefact', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('oldstatus', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('newstatus', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        create_table($table);
+
+        $key = new XMLDBKey('artefactfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('framework'), 'framework', array('id'));
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        add_key($table, $key);
+    }
+
     return true;
 }

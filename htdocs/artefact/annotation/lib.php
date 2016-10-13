@@ -471,6 +471,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         // the fileid. We need to delete by the resourceid.
         delete_records('artefact_file_embedded', 'resourceid', $this->id);
         delete_records('artefact_annotation_feedback', 'artefact', $this->id);
+        delete_records('framework_assessment_feedback', 'artefact', $this->id);
         parent::delete();
         db_commit();
     }
@@ -844,6 +845,15 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                         'profileurl'    => profile_url($item->author),
                     );
                 }
+            }
+            if ($statechange = get_record('framework_assessment_feedback', 'artefact', $item->id)) {
+                safe_require('module', 'framework');
+                $state = Framework::get_state_array($statechange->newstatus, true);
+                $states = Framework::get_evidence_statuses($statechange->framework);
+                // We need to amend a bit of text to the feedback message
+                $item->description .= '<div class="assessment text-small">' .
+                    get_string('assessmentchangedto', 'artefact.annotation', $states[$statechange->newstatus]) .
+                    ' <span class="assessmentfeedback ' . $state['classes'] . '"></span></div>';
             }
         }
 
@@ -1711,7 +1721,9 @@ function add_annotation_feedback_form_validate(Pieform $form, $values) {
 }
 
 function add_annotation_feedback_form_submit(Pieform $form, $values) {
+
     global $USER;
+
     $data = (object) array(
         'title'        => get_string('Annotation', 'artefact.annotation'),
         'description'  => $values['message'],
@@ -1775,6 +1787,20 @@ function add_annotation_feedback_form_submit(Pieform $form, $values) {
         );
         // update row
         update_record('framework_evidence', (object) $fordb, (object) array('id' => $values['evidence']));
+        $framework = get_field('framework_evidence', 'framework', 'id', $values['evidence']);
+        // check if assessment status changed
+        $elements = $form->get_property('elements');
+        $assessmentchanged = false;
+        if (isset($elements['assessment']) && isset($elements['assessment']['defaultvalue'])) {
+            if ((int) $values['assessment'] !== (int) $elements['assessment']['defaultvalue']) {
+                // We need to log this assessment change
+                insert_record('framework_assessment_feedback', (object) array('framework' => $framework,
+                                                                              'artefact' => $annotationfeedback->get('id'),
+                                                                              'oldstatus' => $elements['assessment']['defaultvalue'],
+                                                                              'newstatus' => $values['assessment'],
+                                                                              'usr' => $USER->get('id')));
+            }
+        }
     }
 
     $url = $annotation->get_view_url($view->get('id'), true, false);

@@ -123,3 +123,4 @@ $string['public'] = 'Public';
 $string['enteredon'] = 'entered on';
 $string['noreflectionentryfound'] = "Cannot find reflection entry for annotation.";
 $string['nofeedback'] = "There is no feedback for this annotation yet.";
+$string['assessmentchangedto'] = "Assessment: %s";

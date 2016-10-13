@@ -125,3 +125,21 @@
         width: 5px;
     }
 }
+.assessment {
+    color: #333;
+
+    .assessmentfeedback {
+        &.begun {
+            color: #5b9aa9;
+        }
+        &.incomplete {
+            color: $brand-danger;
+        }
+        &.partial {
+            color: $brand-warning;
+        }
+        &.completed {
+            color: $brand-success;
+        }
+    }
+}
