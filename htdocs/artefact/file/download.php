@@ -170,7 +170,7 @@ serve_file($path, $title, $file->get('filetype'), $options);
 
 /**
  * Check if the image is embedded in an artefact of type:
- *     comment, annotation, annotationfeedback, blog, textbox, editnote, text.
+ *     comment, annotation, annotationfeedback, blog, textbox, editnote, text, wallpost.
  * Please check first that the fileid is of type ArtefactTypeImage and that the download
  * is called with the embedded flag set.
  *
@@ -183,7 +183,7 @@ function check_is_embedded_image_visible($fileid, $includeresourcetypes = null, 
     $isvisible = false;
     // Check for resource types a file may be embeded in.
     $resourcetypes = array(
-        'comment', 'annotation', 'annotationfeedback', 'blog', 'textbox', 'editnote', 'text', 'introtext'
+        'comment', 'annotation', 'annotationfeedback', 'blog', 'textbox', 'editnote', 'text', 'introtext', 'wallpost'
     );
     if (!empty($includeresourcetypes)) {
         if (!is_array($includeresourcetypes)) {
