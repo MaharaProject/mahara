@@ -326,10 +326,9 @@ class ArtefactTypeAnnotation extends ArtefactType {
             $feedback->delete();
         }
 
-        // Delete any embedded images for this annotation.
-        // Don't use EmbeddedImage::delete_embedded_images() - it deletes by
-        // the fileid. We need to delete by the resourceid.
-        delete_records('artefact_file_embedded', 'resourceid', $this->id);
+        // Remove any embedded images for this annotation.
+        require_once('embeddedimage.php');
+        EmbeddedImage::remove_embedded_images('annotation', $this->id);
         delete_records('artefact_annotation', 'annotation', $this->id);
         parent::delete();
         db_commit();
