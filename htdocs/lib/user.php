@@ -1574,6 +1574,7 @@ function delete_user($userid) {
     delete_records('usr_account_preference', 'usr', $userid);
     delete_records('usr_activity_preference', 'usr', $userid);
     delete_records('usr_infectedupload', 'usr', $userid);
+    delete_records('framework_assessment_feedback', 'usr', $userid);
     delete_records('usr_institution', 'usr', $userid);
     delete_records('usr_institution_request', 'usr', $userid);
     delete_records('usr_password_request', 'usr', $userid);

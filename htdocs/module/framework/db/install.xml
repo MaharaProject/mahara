@@ -84,5 +84,21 @@
             <KEY NAME="frameworkfk" TYPE="foreign" FIELDS="framework" REFTABLE="framework" REFFIELDS="id" />
         </KEYS>
     </TABLE>
+    <TABLE NAME="framework_assessment_feedback">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="framework" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="oldstatus" TYPE="int" LENGTH="1" NOTNULL="true" />
+            <FIELD NAME="newstatus" TYPE="int" LENGTH="1" NOTNULL="true" />
+            <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            <KEY NAME="frameworkfk" TYPE="foreign" FIELDS="framework" REFTABLE="framework" REFFIELDS="id" />
+            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+            <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
+        </KEYS>
+    </TABLE>
 </TABLES>
 </XMLDB>

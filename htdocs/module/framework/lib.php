@@ -240,6 +240,7 @@ class Framework {
         db_begin();
         delete_records('framework_evidence', 'framework', $this->id);
         delete_records('framework_evidence_statuses', 'framework', $this->id);
+        delete_records('framework_assessment_feedback', 'framework', $this->id);
         delete_records_sql('DELETE FROM {framework_standard_element} WHERE standard IN (' . join(',', array_map('intval', $standards)) . ')');
         delete_records('framework_standard', 'framework', $this->id);
         delete_records('framework', 'id', $this->id);
@@ -660,6 +661,8 @@ class Framework {
      * @param string $reviewer    The user marking the evidence as completed
      */
     public static function save_evidence($id = null, $framework = null, $element = null, $view = null, $annotation = null, $state = self::EVIDENCE_BEGUN, $reviewer = null) {
+        global $USER;
+
         // need to check we have at least one indicator of uniqueness
         $uniqueness = false;
         if (!empty($id)) {
@@ -678,13 +681,42 @@ class Framework {
                        'state' => $state);
         if ($id) {
             // get view
-            $view = get_field('framework_evidence', 'view', 'id', $id);
+            $evidence = get_record('framework_evidence', 'id', $id);
+            $view = $evidence->view;
             // update row
             if (!empty($element)) {
                 $fordb['element'] = $element;
             }
             $fordb['reviewer'] = ((int) $state === self::EVIDENCE_COMPLETED) ? $reviewer : null;
             update_record('framework_evidence', (object) $fordb, (object) array('id' => $id));
+            if ($evidence->state != $state) {
+                // need to add a blank annotationion feedback and assessment evidence combo
+                safe_require('blocktype', 'annotation');
+                $block = new BlockInstance($evidence->annotation);
+                $configdata = $block->get('configdata');
+
+                $data = (object) array(
+                    'title'        => get_string('Annotation', 'artefact.annotation'),
+                    'description'  => '',
+                    'onannotation' => $configdata['artefactid'],
+                );
+                $viewobj = new View($view);
+                $data->view        = $viewobj->get('id');
+                $data->owner       = $viewobj->get('owner');
+                $data->group       = $viewobj->get('group');
+                $data->institution = $viewobj->get('institution');
+                $data->author      = $USER->get('id');
+                $data->private     = 0;
+                $annotationfeedback = new ArtefactTypeAnnotationfeedback(0, $data);
+                $annotationfeedback->commit();
+
+                // We need to log this assessment change
+                insert_record('framework_assessment_feedback', (object) array('framework' => $id,
+                                                                              'artefact' => $annotationfeedback->get('id'),
+                                                                              'oldstatus' => $evidence->state,
+                                                                              'newstatus' => $state,
+                                                                              'usr' => $USER->get('id')));
+            }
         }
         else {
             // insert
