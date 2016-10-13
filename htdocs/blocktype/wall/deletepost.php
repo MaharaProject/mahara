@@ -53,6 +53,10 @@ $form = pieform(array(
 function deletepost_submit(Pieform $form, $values) {
     global $SESSION, $postid, $goto;
     delete_records('blocktype_wall_post', 'id', $postid);
+
+    require_once('embeddedimage.php');
+    EmbeddedImage::remove_embedded_images('wallpost', $postid);
+
     $SESSION->add_ok_msg(get_string('deletepostsuccess', 'blocktype.wall'));
     redirect($goto);
 }
