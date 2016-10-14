@@ -588,7 +588,7 @@ class external_api {
                         $result[$key] = self::validate_parameters($subdesc, $params[$key]);
                     } catch (WebserviceInvalidParameterException $e) {
                         //it's ok to display debug info as here the information is useful for ws client/dev
-                        throw new WebserviceParameterException('invalidextparam',"key: $key - ".$e->getMessage().(isset($e->debuginfo) ? " (debuginfo: " . $e->debuginfo.") " : ""));
+                        throw new WebserviceParameterException(get_string('invalidextparam', 'auth.webservice', "key: $key - " . $e->getMessage() . (isset($e->debuginfo) ? " (debuginfo: " . $e->debuginfo . ") " : "")));
                     }
                 }
                 unset($params[$key]);

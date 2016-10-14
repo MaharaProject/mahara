@@ -142,6 +142,7 @@ if (!empty($authtype)) {
                 $title = preg_replace('/^(.*?)_NUM_/', '', $var['name']);
                 $title = preg_replace('/_NUM_/', ' / ', $title);
                 $type = (trim($var['type']) == 'bool') ? 'switchbox' : 'text';
+                $type = (trim($var['type']) == 'file') ? 'file' : $type;
                 if ($title == 'institution') {
                     // Let see if we can fetch the exact allowed values
                     $elements[$name] = get_institution_selector();
@@ -326,9 +327,13 @@ function testclient_parameters($paramdescription, $paramstring) {
             case PARAM_FLOAT:
                 $type = 'double';
                 break;
+            case PARAM_FILE:
+                $type = 'file';
+                break;
             default:
                 $type = 'string';
         }
+
         return $paramstring . " " . $type . $brakeline;
     }
 }
