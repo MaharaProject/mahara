@@ -1,5 +1,6 @@
 .tablematrix {
     position: relative;
+    z-index: 1;
 
     tr {
         &.standard {
