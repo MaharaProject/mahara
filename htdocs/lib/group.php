@@ -558,11 +558,11 @@ function group_update($new, $create=false) {
     if (!empty($new->id)) {
         $old = get_record_select('group', 'id = ? AND deleted = 0', array($new->id));
     }
-    else if (!empty($new->institution) && isset($new->shortname) && strlen($new->shortname)) {
+    else if (!empty($new->shortname)) {
         $old = get_record_select(
             'group',
-            'shortname = ? AND institution = ? AND deleted = 0',
-            array($new->shortname, $new->institution)
+            'shortname = ? AND deleted = 0',
+            array($new->shortname)
         );
 
         if (!$old && $create) {
