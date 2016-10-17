@@ -5335,7 +5335,7 @@ class View {
 
         $this->set('numrows', $template->get('numrows'));
         $this->set('layout', $template->get('layout'));
-        if ($template->get('owner') == 0
+        if ($template->get('template') == self::SITE_TEMPLATE
             && $template->get('type') == 'portfolio') {
             $this->set('description', '');
         }
