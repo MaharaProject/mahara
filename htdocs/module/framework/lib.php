@@ -108,9 +108,6 @@ class PluginModuleFramework extends PluginModule {
     }
 
     public function add_matrix_to_db($filename) {
-        if (substr_count($filename, '/') == 0) {
-            $filename = get_config('docroot') . 'module/framework/matrices/' . $filename;
-        }
         $ok = self::matrix_is_valid_json($filename);
         if ($ok['error']) {
             return false;
