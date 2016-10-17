@@ -5428,7 +5428,7 @@ class View {
         $this->set('numcolumns', $template->get('numcolumns'));
         $this->set('numrows', $template->get('numrows'));
         $this->set('layout', $template->get('layout'));
-        if ($template->get('owner') == 0
+        if ($template->get('owner') === '0'
             && $template->get('type') == 'portfolio') {
             $this->set('description', '');
         }
