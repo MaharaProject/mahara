@@ -19,6 +19,13 @@
     div:first-child {
         display: inline-block;
     }
+    div.first {
+        .btn {
+            display: inline-block;
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+    }
     div.last {
         display: inline-block;
         margin: 0;
