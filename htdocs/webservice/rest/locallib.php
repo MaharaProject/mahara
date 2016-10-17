@@ -83,7 +83,7 @@ class webservice_rest_server extends webservice_base_server {
             }
         }
 
-        execute_sql("delete from oauth_server_nonce");
+        delete_records('oauth_server_nonce');
 
         // if we should have one - setup the OAuth server handler
         $oauth_token = null;

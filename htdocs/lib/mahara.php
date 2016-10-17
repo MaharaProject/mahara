@@ -2074,7 +2074,7 @@ abstract class Plugin implements IPlugin {
                 $cname = $def['connection'];
                 if ($results = get_records_sql_assoc(
                     'SELECT cci.*
-                     FROM client_connections_institution AS cci
+                     FROM {client_connections_institution} AS cci
                      WHERE cci.class = ? AND
                            cci.connection = ? AND
                            cci.institution IN ('.join(',', array_map('db_quote', $institutions)).') AND enable = 1', array($me, $cname))
