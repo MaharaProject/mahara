@@ -12,7 +12,6 @@
 
 
 // Grey buttons
-.btn,
 .btn-default {
     @include gradient-vertical($start-color: #FFFFFF, $end-color: #ececec, $start-percent: 10%, $end-percent: 100%);
     border-color: #dddddd;
