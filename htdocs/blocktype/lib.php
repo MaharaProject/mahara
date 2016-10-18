@@ -981,6 +981,26 @@ class BlockInstance {
         return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'javascript' => $js, 'pieformcss' => $css);
     }
 
+
+
+    public function order_artefacts_by_title($ids){
+      $result = array();
+      if ($ids) {
+          $artefacts =  get_records_sql_array(
+              'SELECT a.id, a.title FROM {artefact} a WHERE a.id in ( '. join(',', array_fill(0, count($ids), '?')) . ')', $ids
+          );
+          uasort($artefacts, array("BlockInstance", "my_files_cmp"));
+          foreach ($artefacts as $artefact) {
+            $result[] = $artefact->id;
+          }
+      }
+      return $result;
+    }
+
+    public static function my_files_cmp($a, $b) {
+        return strnatcasecmp($a->title, $b->title);
+    }
+
     /**
      * To render the html of a block for viewing
      *
