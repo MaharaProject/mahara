@@ -153,6 +153,8 @@ $string['profilenotshared'] = 'Full access to this user profile is restricted.';
 
 $string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile picture';
+$string['Updatedon'] = 'Updated on';
+$string['Createdon'] = 'Created on';
 
 // general views stuff
 $string['Added'] = 'Added';

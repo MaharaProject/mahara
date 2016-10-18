@@ -369,6 +369,7 @@ if ($view->is_anonymous()) {
 
 
 $titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->display_title(true, false, false);
+$smarty->assign('lastupdatedstr', $view->lastchanged_message());
 $smarty->assign('visitstring', $view->visit_message());
 if ($can_edit) {
     $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
