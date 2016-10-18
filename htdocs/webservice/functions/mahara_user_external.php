@@ -561,6 +561,13 @@ class mahara_user_external extends external_api {
                     $profilefields->{$field} = $user[$field];
                 }
             }
+            // The student id and preferredname get saved as an artefact and to usr table
+            if (isset($user['studentid'])) {
+                $profilefields->studentid = $user['studentid'];
+            }
+            if (isset($user['preferredname'])) {
+                $profilefields->preferredname = $user['preferredname'];
+            }
             update_user($updated_user, $profilefields, $remoteuser);
         }
         db_commit();
