@@ -168,13 +168,6 @@ class mahara_user_external extends external_api {
                 $new_user->passwordchange = (int)$user['forcepasswordchange'];
             }
 
-            if (isset($user['studentid'])) {
-                $new_user->studentid = $user['studentid'];
-            }
-            if (isset($user['preferredname'])) {
-                $new_user->preferredname = $user['preferredname'];
-            }
-
             // handle profile fields
             $profilefields = new StdClass;
             $remoteuser = null;
@@ -187,6 +180,16 @@ class mahara_user_external extends external_api {
                     $profilefields->{$field} = $user[$field];
                 }
             }
+            // The student id and preferredname get saved as an artefact and to usr table
+            if (isset($user['studentid'])) {
+                $new_user->studentid = $user['studentid'];
+                $profilefields->studentid = $user['studentid'];
+            }
+            if (isset($user['preferredname'])) {
+                $new_user->preferredname = $user['preferredname'];
+                $profilefields->preferredname = $user['preferredname'];
+            }
+
             $new_user->id = create_user($new_user, $profilefields, $institution, $authinstance, $remoteuser);
             $addedusers[] = $new_user;
             $userids[] = array('id'=> $new_user->id, 'username'=>$user['username']);
