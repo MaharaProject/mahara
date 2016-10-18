@@ -45,6 +45,14 @@
                 {str tag=postedon section=artefact.blog}:
             </strong>
             {$post->ctime}
+            {if $post->lastupdated}
+                <br>
+                <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+                <strong>
+                    {str tag=updatedon section=artefact.blog}:
+                </strong>
+                {$post->lastupdated}
+            {/if}
 
             {if $post->tags}
             <p id="posttags_{$post->id}" class="tags">

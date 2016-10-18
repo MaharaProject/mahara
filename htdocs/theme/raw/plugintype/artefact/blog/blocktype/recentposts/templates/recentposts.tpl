@@ -41,6 +41,11 @@
         <span class="metadata">
             {str tag='postedon' section='blocktype.blog/recentposts'}
             {$post->displaydate}
+            <br>
+            {if $post->updateddate}
+                {str tag='updatedon' section='blocktype.blog/recentposts'}
+                {$post->updateddate}
+            {/if}
         </span>
     </div>
 {/foreach}

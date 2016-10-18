@@ -13,6 +13,11 @@
     <div class="postdetails metadata">
         <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
         {$postedbyon}
+        {if $updatedon}
+            <br>
+            <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+            {$updatedon}
+        {/if}
     </div>
 
     {if $artefact->get('tags')}

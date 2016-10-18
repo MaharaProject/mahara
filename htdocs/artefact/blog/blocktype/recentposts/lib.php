@@ -90,7 +90,7 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
             $blogids = $configdata['artefactids'];
             $artefactids = implode(', ', array_map('db_quote', $blogids));
             $mostrecent = get_records_sql_array(
-                'SELECT a.title, ' . db_format_tsfield('a.ctime', 'ctime') . ', p.title AS parenttitle, a.id, a.parent
+                'SELECT a.title, ' . db_format_tsfield('a.ctime', 'ctime') . ', p.title AS parenttitle, a.id, a.parent, ' . db_format_tsfield('a.mtime', 'mtime') . '
                     FROM {artefact} a
                     JOIN {artefact} p ON a.parent = p.id
                     JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
@@ -115,6 +115,9 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
             // format the dates
             foreach ($mostrecent as &$data) {
                 $data->displaydate = format_date($data->ctime);
+                if ($data->ctime != $data->mtime) {
+                    $data->updateddate = format_date($data->mtime);
+                }
             }
             $smarty = smarty_core();
             $smarty->assign('mostrecent', $mostrecent);

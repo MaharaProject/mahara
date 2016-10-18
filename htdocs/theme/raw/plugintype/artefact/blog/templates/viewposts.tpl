@@ -7,6 +7,11 @@
             <div class="postdetails metadata">
                 <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
                 {$post->postedby}
+                {if $post->lastupdated}
+                    <br>
+                    <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+                    {str tag=updatedon section=artefact.blog} {$post->lastupdated}
+                {/if}
             </div>
             {if $post->tags}
             <div class="tags metadata">

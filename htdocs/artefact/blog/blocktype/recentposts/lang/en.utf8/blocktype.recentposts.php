@@ -16,3 +16,4 @@ $string['description'] = 'Display the most recent journal entries (see Content -
 $string['itemstoshow'] = 'Entries to show';
 $string['postedin'] = 'in';
 $string['postedon'] = 'on';
+$string['updatedon'] = 'Last updated';

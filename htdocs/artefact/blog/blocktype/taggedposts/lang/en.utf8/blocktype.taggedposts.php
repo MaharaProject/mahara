@@ -37,6 +37,7 @@ $string['notagsavailable'] = 'You have not created any tags';
 $string['notagsavailableerror'] = 'No tag selected. You need to add tags to your journal entries before being able to select them here.';
 $string['postedin'] = 'in';
 $string['postedon'] = 'on';
+$string['updatedon'] = 'Last updated';
 $string['itemstoshow'] = 'Items to show';
 $string['configerror'] = 'Error during block configuration';
 $string['showjournalitemsinfull'] = 'Show journal entries in full';
