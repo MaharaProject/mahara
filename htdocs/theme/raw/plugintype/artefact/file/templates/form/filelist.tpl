@@ -85,7 +85,7 @@
                 {/if}
             </td>
             <td class="filedescription hidden-xs">
-                {$file->description}
+                {$file->description|safe|add_http|clean_html}
                 {if $showtags}
                     {if $file->tags}
                     <div class="tags filetags text-small">
