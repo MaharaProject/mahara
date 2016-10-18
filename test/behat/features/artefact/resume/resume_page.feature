@@ -172,7 +172,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "Add a file"
     And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
-    And I press "Close"
+    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
@@ -183,7 +183,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "Add a file"
     And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
-    And I press "Close"
+    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
@@ -194,7 +194,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "Add a file"
     And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
-    And I press "Close"
+    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
@@ -205,7 +205,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "Add a file"
     And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
-    And I press "Close"
+    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
@@ -216,7 +216,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "Add a file"
     And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
-    And I press "Close"
+    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
@@ -227,7 +227,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "Add a file"
     And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
-    And I press "Close"
+    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
