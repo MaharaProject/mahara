@@ -388,6 +388,7 @@ function profileform_submit(Pieform $form, $values) {
                         'id' => $USER->get('id'),
                     )
                 );
+                delete_records('usr_password_request', 'usr', $USER->get('id'));
                 $USER->email = $values['email']['default'];
                 $USER->commit();
             }
