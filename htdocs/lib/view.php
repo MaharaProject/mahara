@@ -537,6 +537,11 @@ class View {
                 }
                 $ownerthemedata = $owner->get('institutiontheme');
                 $ownertheme = isset($ownerthemedata->basename) ? $ownerthemedata->basename : null;
+                if ($accounttheme = $owner->get_account_preference('theme')) {
+                    $accountthemeparts = explode('/', $accounttheme);
+                    $ownertheme = $accountthemeparts[0];
+                }
+
                 if ($ownertheme && $ownertheme != get_config('theme') && $ownertheme != 'custom') {
                     $viewdata['theme'] = $ownertheme;
                 }
