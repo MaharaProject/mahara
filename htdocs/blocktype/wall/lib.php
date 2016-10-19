@@ -234,7 +234,18 @@ EOF;
             'text'     => $values['text'],
         );
 
-        insert_record('blocktype_wall_post', $record);
+        $newid = insert_record('blocktype_wall_post', $record, 'id', true);
+
+        require_once('embeddedimage.php');
+        $newtext = EmbeddedImage::prepare_embedded_images($values['text'], 'wallpost', $newid);
+        // If there is an embedded image, update the src so users can have visibility
+        if ($values['text'] != $newtext) {
+              $updatedwallpost = new stdClass();
+              $updatedwallpost->id = $newid;
+              $updatedwallpost->text = $newtext;
+              update_record('blocktype_wall_post', $updatedwallpost, 'id');
+        }
+
         activity_occurred('wallpost', $record, 'blocktype', 'wall');
 
         $instance = new BlockInstance($values['instance']);
