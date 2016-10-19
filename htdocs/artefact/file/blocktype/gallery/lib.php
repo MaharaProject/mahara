@@ -339,6 +339,8 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                 $artefactids = artefact_get_descendants(array(intval($configdata['artefactid'])));
             }
 
+            $artefactids = $instance->order_artefacts_by_title($artefactids);
+
             // This can be either an image or profileicon. They both implement
             // render_self
             foreach ($artefactids as $artefactid) {
