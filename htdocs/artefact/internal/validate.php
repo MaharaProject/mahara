@@ -26,7 +26,7 @@ $row = get_record('artefact_internal_profile_email', 'email', $email, 'key', $ke
 
 if ($row) {
     if ($decline) {
-        delete_records_select('artefact_internal_profile_email', 'verified=0 AND key=? AND email=?', array($key, $email));
+        delete_records_select('artefact_internal_profile_email', 'verified = 0 AND "key" = ? AND email = ?', array($key, $email));
         $SESSION->add_ok_msg(get_string('emailactivationdeclined', 'artefact.internal'));
         redirect(get_config('wwwroot'));
     }
