@@ -83,16 +83,7 @@ function regenerateurls_submit(Pieform $form, $values) {
         $firstid = $lastid;
         $values = array();
         foreach ($records as $r) {
-            if (!empty($r->username)) {
-                $urlid = $r->username;
-            }
-            else if (!empty($r->preferredname)) {
-                $urlid = $r->preferredname;
-            }
-            else {
-                $urlid = $r->firstname . '-' . $r->lastname;
-            }
-            $r->urlid = generate_urlid($urlid, get_config('cleanurluserdefault'), 3, 30);
+            $r->urlid = generate_urlid(get_raw_user_urlid($r), get_config('cleanurluserdefault'), 3, 30);
             array_push($values, $r->id, $r->urlid);
             $lastid = $r->id;
         }

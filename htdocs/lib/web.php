@@ -4534,6 +4534,27 @@ function favicon_display_url($host) {
 }
 
 /**
+ * Given an user object, return raw urlid string that will be used in generate_urlid().
+ * to make a clean url.
+ *
+ * @param object  $user     An object containing $username
+ *                                               $firstname
+ *                                               $lastname
+ *                                               $preferredname (optional)
+ *
+ * @return string    A raw urlid string
+ */
+function get_raw_user_urlid($user) {
+    if (!get_config('nousernames')) {
+        $urlid = $user->username;
+    }
+    else {
+        $urlid = display_default_name($user);
+    }
+    return $urlid;
+}
+
+/**
  * Given an arbitrary string, generate a string containing only the allowed
  * characters for use in a clean url.
  *
