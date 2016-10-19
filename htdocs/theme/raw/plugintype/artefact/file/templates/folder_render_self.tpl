@@ -50,8 +50,11 @@
                 {/if}
                 {if $child->description}
                 <p class="file-description text-small text-midtone">
-                    {$child->description}
+                    {$child->description|safe|add_http|clean_html}
                 </p>
+                <script type="application/javascript">
+                jQuery(".file-description a").addClass('inner-link');
+                </script>
                 {/if}
             </li>
             {/foreach}
