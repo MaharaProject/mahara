@@ -1016,16 +1016,21 @@ function upload_matrix_form() {
 
 function validate_matrixupload(Pieform $form, $values) {
     require_once('uploadmanager.php');
+    if (empty($values['matrix'])) {
+        $form->set_error('matrix', get_string('matrixfilenotfound', 'module.framework'));
+        return;
+    }
     $um = new upload_manager('matrix');
     if ($error = $um->preprocess_file()) {
         $form->set_error('matrix', $error);
+        return;
     }
     $reqext = ".matrix";
     $fileext = substr($values['matrix']['name'], (-strlen($reqext)));
     if ($fileext !== $reqext) {
         $form->set_error('matrix', get_string('notvalidmatrixfile', 'module.framework'));
+        return;
     }
-
     $matrixfile = PluginModuleFramework::matrix_is_valid_json($um->file['tmp_name']);
     if ($matrixfile['error']) {
         $form->set_error('matrix', $matrixfile['message']);
