@@ -310,7 +310,7 @@ class User {
     public function create() {
         $this->set('ctime', time());
         if (get_config('cleanurls') && is_null($this->urlid)) {
-            $desiredurlid = generate_urlid($this->username, get_config('cleanurluserdefault'), 3, 30);
+            $desiredurlid = generate_urlid(get_raw_user_urlid($this), get_config('cleanurluserdefault'), 3, 30);
             $this->set('urlid', get_new_profile_urlid($desiredurlid));
         }
     }
