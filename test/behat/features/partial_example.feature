@@ -7,8 +7,8 @@ Feature: Testing Behat's functionality
 Scenario: Meta test testing Behat's functionality (Bug #1387836)
     Given I log in as "admin" with password "Kupuhipa1"
     And I am on homepage
-    And I follow "Content"
-    And I should be on "artefact/internal/index.php"
+    And I choose "Profile" in "Content"
+    And I follow "About me"
     And I set the following fields to these values:
     | First name | test first name |
     | Last name | test last name |
