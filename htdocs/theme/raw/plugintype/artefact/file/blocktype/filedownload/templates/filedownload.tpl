@@ -29,10 +29,14 @@
         {if $file.description}
         <div class="file-description">
             <p class="text-small">
-                {$file.description}
+                {$file.description|safe|add_http|clean_html}
             </p>
         </div>
+        <script type="application/javascript">
+        jQuery("div.file-description a").addClass('inner-link');
+        </script>
         {/if}
     </li>
     {/foreach}
 </ul>
+

@@ -7,7 +7,7 @@
 
     {if $showdescription}
     <div class="detail" itemprop="description">
-        {$description}
+        {$description|safe|add_http|clean_html}
     </div>
     {/if}
 </div>
