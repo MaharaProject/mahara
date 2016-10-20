@@ -127,6 +127,7 @@ $string['viewbloggroup'] = 'View "%s" journal';
 $string['youarenottheownerofthisblog'] = 'You are not the owner of this journal.';
 $string['youarenottheownerofthisblogpost'] = 'You are not the owner of this journal entry.';
 $string['youarenotanadminof'] = 'You are not an administrator of the "%s" institution.';
+$string['youarenotasiteadmin'] = 'You are not a site administrator.';
 $string['youarenotamemberof'] = 'You are not a member of the "%s" group.';
 $string['youarenotaneditingmemberof'] = 'You do not have editing permissions for the journals in the group "%s".';
 $string['cannotdeleteblogpost'] = 'An error occurred removing this journal entry.';

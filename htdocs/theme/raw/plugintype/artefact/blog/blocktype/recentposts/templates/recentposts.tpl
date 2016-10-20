@@ -4,7 +4,7 @@
             <span id="blog_{$blogs[0]->id}" class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             {str tag='shortcutnewentry' section='artefact.blog'}
         </a>
-    {else}
+    {elseif (count($blogs) > 1)}
     <div class="panel-footer">
         <label class="text" for="blogselect_{$blockid}">{str tag='shortcutaddpost' section='artefact.blog'}</label>
         <div class="input-group">

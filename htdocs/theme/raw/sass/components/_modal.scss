@@ -76,6 +76,11 @@ $width-sm: 90%;
     .btn.submit {
         margin-top: 15px;
     }
+    .artefactchooser-search {
+        .btn.submit {
+            margin-top: 0;
+        }
+    }
 }
 
 .modal-header,
