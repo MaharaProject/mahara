@@ -5732,6 +5732,13 @@ class View {
     }
 
     /**
+     * returns a formatted string about the created or last updated date and time
+     */
+    public function lastchanged_message() {
+        return (($this->ctime != $this->mtime) ? get_string('Updatedon', 'view') : get_string('Createdon', 'view')) . ' ' . format_date(strtotime($this->mtime));
+    }
+
+    /**
      * after editing the view, redirect back to the appropriate place
      */
     public function post_edit_redirect($new=false) {

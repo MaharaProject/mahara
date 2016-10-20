@@ -194,9 +194,7 @@
     </div>
 </div>
 
-{if $visitstring}
 <div class="metadata text-right">
-    {$visitstring}
+    {$lastupdatedstr}{if $visitstring}; {$visitstring}{/if}
 </div>
-{/if}
 {include file="footer.tpl"}
