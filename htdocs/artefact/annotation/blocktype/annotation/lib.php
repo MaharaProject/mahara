@@ -438,16 +438,16 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
     public static function get_instance_config_javascript(BlockInstance $instance) {
         return <<<EOF
         jQuery(function($) {
+            function show_se_desc(id) {
+                $("#instconf_smartevidencedesc_container div:not(.description)").addClass('hidden');
+                $("#option_" + id).removeClass('hidden');
+            }
             if ($("#instconf_smartevidence").length) {
                 // block title will be overwritten with framework choice so make it disabled
                 $("#instconf_title").attr('disabled', true);
 
                 // Set up evidence choices and show/hide related descriptions
                 $("#instconf_smartevidence").select2();
-                function show_se_desc(id) {
-                    $("#instconf_smartevidencedesc_container div:not(.description)").addClass('hidden');
-                    $("#option_" + id).removeClass('hidden');
-                }
 
                 show_se_desc($("#instconf_smartevidence").val());
                 $("#instconf_smartevidence").on('change', function() {
