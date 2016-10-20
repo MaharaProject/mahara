@@ -982,7 +982,7 @@ class User {
      */
     public function can_view_artefact($a) {
         global $USER;
-
+        safe_require('artefact', 'file');
         // Files in the public site folder and its subfolders
         if ($a instanceof ArtefactTypeFileBase) {
             $publicfolderid = ArtefactTypeFolder::admin_public_folder_id();
@@ -1014,6 +1014,15 @@ class User {
             if (($a->get('id') == ArtefactTypeFolder::admin_public_folder_id())
                 ||  (!empty($thisparent) && $thisparent == ArtefactTypeFolder::admin_public_folder_id())) {
                 return true;
+            }
+            //  Journals
+            if ($a instanceof ArtefactTypeBlog) {
+                $views = $a->get_views_instances();
+                foreach ($views as $view) {
+                    if (can_view_view($view->get('id'))) {
+                        return true;
+                    }
+                }
             }
         }
         if ($a->get('group')) {

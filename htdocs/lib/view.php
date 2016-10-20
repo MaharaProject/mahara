@@ -3229,19 +3229,19 @@ class View {
                     $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '" class="artefactid-onpage">';
                 }
                 if (!empty($artefact->group)) {
-                    $group = get_record('group', 'id', $artefact->group);
-                    $artefact->groupname = $group->name;
-                    $artefact->groupurl = get_config('wwwroot') . 'group/view.php?id=' . $group->id;
+                    $groupobj = get_record('group', 'id', $artefact->group);
+                    $artefact->groupname = $groupobj->name;
+                    $artefact->groupurl = get_config('wwwroot') . 'group/view.php?id=' . $groupobj->id;
                 }
                 else if (!empty($artefact->institution)) {
-                    $institution = new Institution($artefact->institution);
-                    if ($institution->name == 'mahara') {
+                    $institutionobj = new Institution($artefact->institution);
+                    if ($institutionobj->name == 'mahara') {
                         $artefact->institutionname = get_config('sitename');
                     }
                     else {
-                        $artefact->institutionname = $institution->displayname;
+                        $artefact->institutionname = $institutionobj->displayname;
                     }
-                    $artefact->institutionurl = get_config('wwwroot') . 'institution/index.php?institution=' . $institution->name;
+                    $artefact->institutionurl = get_config('wwwroot') . 'institution/index.php?institution=' . $institutionobj->name;
                 }
                 $smarty = smarty_core();
                 $smarty->assign('artefact', $artefact);
@@ -3413,7 +3413,20 @@ class View {
 
             $select = "(a.institution = 'mahara' OR ga.can_view = 1";
 
-            $ph = array((int)$group, $user->get('id'));
+            if (is_string($group)) {
+                $ph = array((int)$group, $user->get('id'));
+            }
+            else {
+                $class = get_class($group);
+                switch($class) {
+                    case 'stdClass':
+                          $ph = array((int)$group->id, $user->get('id'));
+                        break;
+                    case 'Array':
+                        $ph = array((int)$group['id'], $user->get('id'));
+                        break;
+                }
+            }
 
             if (!empty($data['userartefactsallowed'])) {
                 $select .= ' OR a.owner = ?';

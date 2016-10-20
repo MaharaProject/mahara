@@ -14,6 +14,7 @@ The wall post must generate a notification (Bug 547333)
     Given I log in as "userB" with password "Kupuhipa1"
     And I go to "/user/find.php"
     And I follow "Pete Mc"
+    And I scroll to the base of id "wall-wrap"
     And I set the field "Post" to "Hello"
     And I press "Post"
     And I log out

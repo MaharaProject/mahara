@@ -125,10 +125,18 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
                 // Get id and title of configued blogs
                 $recentpostconfigdata = $instance->get('configdata');
                 $wherestm = ' WHERE id IN (' . join(',', array_fill(0, count($recentpostconfigdata['artefactids']), '?')) . ')';
-                if (!$selectedblogs = get_records_sql_array('SELECT id, title FROM {artefact}'. $wherestm, $recentpostconfigdata['artefactids'])) {
-                    $selectedblogs = array();
+
+                $blogs = array();
+                if ($selectedblogs = get_records_sql_array('SELECT id, title FROM {artefact}'. $wherestm, $recentpostconfigdata['artefactids'])) {
+                    safe_require('artefact', 'blog');
+                    foreach ($selectedblogs as $selectedblog) {
+                        $blog = new ArtefactTypeBlog($selectedblog->id);
+                        if (ArtefactTypeBlog::can_edit_blog($blog, $blog->get('institution'), $blog->get('group'))) {
+                          $blogs[] = $selectedblog;
+                        }
+                    }
                 }
-                $smarty->assign('blogs', $selectedblogs);
+                $smarty->assign('blogs', $blogs);
             }
             $result = $smarty->fetch('blocktype:recentposts:recentposts.tpl');
         }
