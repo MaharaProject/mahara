@@ -56,6 +56,11 @@ jQuery(function($) {
         params.view = $(this).data("view");
         params.option = $(this).data("option");
         sendjsonrequest('matrixpoint.json.php', params, 'POST', function(data) {
+            function show_se_desc(id) {
+                $("#instconf_smartevidencedesc_container div:not(.description)").addClass('hidden');
+                $("#option_" + id).removeClass('hidden');
+            }
+
             dock.show($('#configureblock'), true, false);
             var newpagemodal = $('#configureblock');
             newpagemodal.find('.blockinstance-header').html(data.data.form.title);
@@ -126,11 +131,6 @@ jQuery(function($) {
             $("#instconf_title").attr('disabled', true);
             // Set up evidence choices and show/hide related descriptions
             $("#instconf_smartevidence").select2();
-
-            function show_se_desc(id) {
-                $("#instconf_smartevidencedesc_container div:not(.description)").addClass('hidden');
-                $("#option_" + id).removeClass('hidden');
-            }
 
             show_se_desc($("#instconf_smartevidence").val());
             $("#instconf_smartevidence").on('change', function() {
