@@ -1,3 +1,343 @@
+16.10.0 (2016-10-21)
+- Mahara 16.10.0 Release Notes
+- 
+- This is a stable release of Mahara 16.10. Stable releases are fit for
+- general use. If you find a bug, please report it to the tracker:
+- 
+- https://bugs.launchpad.net/mahara/+filebug
+- 
+- This release includes an upgrade path from 1.8.0. If you wish to
+- upgrade, we encourage you to make a copy of your website and test the
+- upgrade on it first, to minimise the effect of any potential
+- unforeseen problems.
+- 
+- Changes from the 16.04 series:
+- 
+- Highlight features:
+- * SmartEvidence: Align portfolios to competency frameworks
+- * Mahara Mobile (beta)
+- * Duplicate groups
+- * Manage all groups via CSV
+- 
+- Other notable new features include:
+- * Connection manager in web services
+- * Copy "tagged journal entries" configuration
+- * SimpleSAMLphp is managed dependency
+- * Auto-creation of SSO accounts on multi-tenanted sites
+- * Hide deleted comments when not needed for context
+- 
+- Security bugs:
+- * Bug #1577251 Should invalidate password reset links when a user
+- changes their primary email address
+- 
+- The user manual has been updated for Mahara 16.10. New features are
+- listed under the "New in Mahara 16.10" index entry.
+- 
+- http://manual.mahara.org/en/16.10
+- 
+- Bug 1508684 Unserialize untrusted data when importing skins
+- Bug 1566366 Session referer check should not be set if using SAML
+- Bug 1620018 Annotation isn't saved when added via matrix page
+- Bug 1323920 Eliminate Mochikit from mahara.js
+- Bug 1397110 Cannot add image to template pages
+- Bug 1415247 Behat uploading a file step is currently broken
+- Bug 1431659 Problems importing Annotations via Leap2a
+- Bug 1509129 Crash when posting a public comment that no one will be notified about
+- Bug 1544381 "New views" block crashes after clearing Dwoo cache
+- Bug 1545359 Individual web services switches need to be disabled if master switch is off
+- Bug 1545851 Access permission changes for collection not mentioned when working with secret URL
+- Bug 1554247 comments with attachments - attachment titles and links display on main portfolio page
+- Bug 1555410 unread email icon in the banner display wrong
+- Bug 1558883 When overriding start / end date for page is set, take that into consideration for individual ones
+- Bug 1560131 Mahara SAML auth broken with Simplesamlphp 1.14.x
+- Bug 1565198 "Recent journal entries" block should mention journal context in config
+- Bug 1565206 Update lang string for tags help file to reflect change to select2
+- Bug 1565599 Scale images in TinyMCE according to block size
+- Bug 1565669 External video doesn't play when block is on auto-retract
+- Bug 1567100 $user->find_by_username is NOT case insensitive 
+- Bug 1567186 Passwords can accidentially end up in logs from badly made plugins
+- Bug 1567784 Session ID's not being regenerated 
+- Bug 1568611 Comment ratings are not accessible
+- Bug 1568613 The screenreader "Remove" doesn't do anything
+- Bug 1568619 Open Badge details aren't accessible with screenreader
+- Bug 1570640 Badly setup authinstance can cause 'This Auth plugin has not been initialised' error
+- Bug 1570744 Duplicate session headers not removed in PHP 5.3 
+- Bug 1571421 Illegal join expression when searching shared-with-me
+- Bug 1572377 autocomplete / select2 not using current language 
+- Bug 1572407 Elasticsearch save config not including artefact/lib.php
+- Bug 1574716 Fatal error in lib/form/elements/ratings.php 
+- Bug 1574941 Admin should not be allowed to delete themself via admin bulk delete
+- Bug 1575969 PHP7 exception handler needs to accept Throwables 
+- Bug 1576643 TinyMCE is not available on the iPad 
+- Bug 1577259 PHP7 fixing dwoo dynamic property references 
+- Bug 1578000 "Call to undefined function artefact_instance_from_id()" when deleting a profile icon
+- Bug 1578701 Butons "Select all" "Slect none" in OpenBadge displayer are not translated 
+- Bug 1578995 In the skin module the background position of the image cannot be translated 
+- Bug 1579628 Modern theme: disappearing password label
+- Bug 1579999 PHP Fatal error: Class 'Session' not found
+- Bug 1580399 Users can login to suspended institutions via external auth under some circumstances
+- Bug 1581183 Pagination broken in MyFriends block 
+- Bug 1581262 Upgrade error with unable to execute install_system_portfolio_view 
+- Bug 1582778 Japanese text jumbled when submitted with image 
+- Bug 1582934 Navigation not entirely / not visible on iPad 
+- Bug 1587474 No indents forum reply fails when the last post has been deleted 
+- Bug 1587950 Warning message not in a warning color 
+- Bug 1588606 Properly checking if group template is a site template 
+- Bug 1588613 Mahara not respecting session lifetime setting from admin config page 
+- Bug 1591304 Can't edit pages if "Users can choose page themes" is enabled. 
+- Bug 1591782 Default theme breaks with skin background 
+- Bug 1592213 Render issue with Masonry on Skins page 
+- Bug 1592236 Sessions: constantly asked to log in to access the Users Admin screen 
+- Bug 1594642 missing sessionpath
+- Bug 1595359 Theme improvements to work better with skins
+- Bug 1596755 Ocean theme - tabbing through unselected sub-menu items
+- Bug 1596808 Warning when configuring the Profile completion 
+- Bug 1597117 Can't save share access form on Windows in Edge 
+- Bug 1597536 import_entry_requests table needs a ctime so we can clean up old partial requests
+- Bug 1598672 Site collections - 'Untitled' page which does not exist
+- Bug 1598990 Cannot instantiate abstract class PluginImport
+- Bug 1599305 $USER->get('grouproles') returning values for deleted groups
+- Bug 1599958 Embedly content will not display on profile page
+- Bug 1600116 Upload group csv picking up duplicate group shortnames too late
+- Bug 1602447 Can't use ">" CSS selector in skins
+- Bug 1605170 $view->get_artefact_instances() broken
+- Bug 1606094 Changing the file quota for users in an institution, can send notifications to users in other institutions
+- Bug 1607133 Quotation marks in a page titled render as "&quot;" if the page is in a collection
+- Bug 1607231 Access denied error when editing institution group as group admin
+- Bug 1609112 The is_plugin_active() function can give false positives
+- Bug 1609200 Non-admin role users can edit group settings
+- Bug 1610006 Remove mochikit from textarea.js
+- Bug 1610009 "make ssphp" isn't working
+- Bug 1611518 Unable to add page to shared collection
+- Bug 1611547 Adding members via Institutions -> members is broken
+- Bug 1612451 Artefact blog upgrade gives error for embedded image
+- Bug 1613478 Update Elastica library to 2.3.1
+- Bug 1613480 Update HTML Purifier to 4.8.0
+- Bug 1613481 Update Zend framework to 1.12.19
+- Bug 1613483 Update PDFjs to 1.4.20
+- Bug 1617143 Update NPM packages in package.json
+- Bug 1617144 Update composer packages in ./external/composer.json
+- Bug 1618317 JS error when click 'Edit image' in TinyMCE editor
+- Bug 1619519 Minor lang string fixes for Mahara 16.10
+- Bug 1620119 Annotation feedback edit/delete buttons not styled correctly
+- Bug 1620129 "Search" button is on wrong side in "Default" theme 
+- Bug 1620175 Warning message when creating a Journal
+- Bug 1620176 Warning message when adding a new Plan
+- Bug 1620394 The institution static pages form is confusing
+- Bug 1620411 Error message showing up when tried to share among the users
+- Bug 1621247 Adjustments to the framework matrix importation/display
+- Bug 1622383 Problems copying group collections to and from groups
+- Bug 1623282 Existing annotations throw warning due to missing evidence
+- Bug 1625380 Able to select a standard from Collection Edit page
+- Bug 1626289 FAILED DB upgrading for artefact.file to version 1.2.6 (2016082900)
+- Bug 1626329 A sql call in auth/saml missing curly brackets
+- Bug 1626705 Copying of group throws ADODB error
+- Bug 1626805 Page becomes blank after a while
+- Bug 1626818 Annotation feedback should be optional when block opened on page
+- Bug 1627420 Update Readme file for Mahara 16.10
+- Bug 1629105 Access user Journals causes htdocs/artefact/blog/index.php net::ERR_TOO_MANY_REDIRECTS
+- Bug 1629144 Problems with copying a SmartEvidence collection with annotations
+- Bug 1629147 Error message about non-existent framework url
+- Bug 1630764 Webservices update user has problems with preferredname and studentid fields
+- Bug 1631806 Page descriptions not retained from group, institution and site pages
+- Bug 1633213 Uploading new/existing SmartEvidence framework doesn't work
+- Bug 1633937 Double buttons
+- Bug 1634297 table prefix syntax needed for sql query in rest/locallib.php
+- Bug 1634702 Unable to decline email validation in mysql
+- Bug 845948 Add "ID" surrogate key column to "view_access" table
+- Bug 1084336 mnet: mahara doesn't implement kill_child which results in not being logged out when logged out from a remote IdP over mnet
+- Bug 1095179 file name consisting of blanks only accepted but misbehaves
+- Bug 1234615 Not checking artefact permissions before exporting
+- Bug 1264098 Whitelist more CSS3 options in skins
+- Bug 1279526 Change default license text in Journal blocktypes
+- Bug 1304146 Deleting institution error: people still attached to auth method
+- Bug 1354222 Files within a group aren't deleted after deleting the group
+- Bug 1364705 Save another 17 seconds off a 1000 user export by caching the value of $updated in LeapExportElementInternal's assign_smarty_vars function.
+- Bug 1386000 Don't display submitted pages in "Pages / collections shared with this group"
+- Bug 1431660 Feedback count for annotations doesn't update until you refresh the page
+- Bug 1438894 Artefacttype "introduction" save data to title rather than description field
+- Bug 1457709 Elasticsearch plugin doesn't work with URL-based access control
+- Bug 1489274 Full copy of blog block with embedded images still causing problems
+- Bug 1503103 When new accounts are created, default storage quota is not applied
+- Bug 1507805 Adding more behat testing steps for Resume section
+- Bug 1507865 Webservice create_users() has old social profile fields
+- Bug 1515899 Add new Glogster iframe source
+- Bug 1527031 Performance improvement for view_search() when finding copyable views
+- Bug 1527456 Remove remnants to accessconf column as we've moved away from this
+- Bug 1527960 Alphabetize the order of collections on the "Copy a page or collection" screen
+- Bug 1530008 Make buttons on "Copy a page / collection" screen smaller
+- Bug 1530606 Internal image slideshow doesn't have "First" and "Last" buttons anymore
+- Bug 1530702 New messages in inbox aren't displayed in bold in "Inbox" block
+- Bug 1531610 Clean up inconsistencies in the paginators
+- Bug 1533377 Remove Persona (browserid) auth plugin by Nov 2016, because Mozilla is ending Persona support
+- Bug 1534398 Clean URLs created during user account creation, do not respect the "nousernames" setting
+- Bug 1535848 Weekly site stats still says "Views" instead of "Pages"
+- Bug 1535853 Change capitalization on Plans overview page
+- Bug 1535855 Change "Name" to "Title" on "Sharedwith me" page
+- Bug 1539346 Upgrade adodb to 5.20.5
+- Bug 1545375 Button border missing when no second button in web services application connections
+- Bug 1548522 Avatars overlap in friends block
+- Bug 1551027 Tagged journal entries with excluded tags missing some conditions
+- Bug 1555407 image gallery display bug in Safari 8.0.4
+- Bug 1558872 Turn off link color for comment attachment "title"
+- Bug 1558874 Remove heading style for deleted forum post
+- Bug 1560329 The block config's "cancel" button breaks after a Pieform validation failure
+- Bug 1561239 Remove target="_blank" link from webservices OAuth page
+- Bug 1564184 Styleguide has a double heading
+- Bug 1564733 Tidy up the select2 for tags hardcoded lang string
+- Bug 1565546 Allowing $cfg setting to be json
+- Bug 1566127 PHP 5.3 incompatible array declarations
+- Bug 1567187 "Select" and "Edit" buttons don't have screenreader text
+- Bug 1567681 Secret URL breaks too late when going responsive
+- Bug 1568616 Open Badge displayer is ambiguous about email
+- Bug 1568631 Allow skins on group homepages
+- Bug 1568659 Remove tinymce imagebrowser height setting
+- Bug 1568665 Remove internalmedia width / height settings
+- Bug 1569121 gulp-bless-css is deprecated
+- Bug 1569552 White screen when copying collection / page
+- Bug 1570221 Don't print parameter values in logs, in productionmode
+- Bug 1570667 Image gallery arrow issues with descriptions / dark images
+- Bug 1570680 The "Copy" buttons on "Copy a page/collection" are too big
+- Bug 1571298 Make it clearer that the edit screen shows live preview of a page
+- Bug 1571848 Styling the deleted post message
+- Bug 1575955 PHP7 compatibility problems with function parameters
+- Bug 1576448 Drop support for PHP 5.3, starting with Mahara 16.10
+- Bug 1577258 More PHP7 compatibility problems with function parameters
+- Bug 1578512 Escape filenames with quotes in them, in Content-Disposition:attachment headers
+- Bug 1582039 Submitted portfolios don't appear in group pages block automatically
+- Bug 1582472 No moving of long blocks
+- Bug 1582989 Make top line on "Edit" button more visible on certain pages
+- Bug 1583416 "Copy page / collection" page doesn't show drop-down to change number of results
+- Bug 1583428 Shorten "Confirm registration" description and add help file
+- Bug 1583433 "I trigger the cron" behat step doesn't work if you have a non-default urlsecret set.
+- Bug 1584264 Move the "Unsubscribe from forum" button next to "Delete from forum"
+- Bug 1584265 Remove all places where "Feedback" i still used
+- Bug 1588091 StudentID not displayed in content
+- Bug 1588599 PHP 7 unrecoverable errors in 16.04
+- Bug 1590293 Inconsistencies in how we handle $CFG->session_timeout
+- Bug 1590300 Weirdness in edit tabs for site templates
+- Bug 1591596 Quota drop-down menus don't display correctly
+- Bug 1591759 Importing leap2a textbox giving error when textbox is empty
+- Bug 1591760 The link "Move to undefined" should not be displayed
+- Bug 1592276 Still SSRF vulnerability in external feed
+- Bug 1592559 Login eror message shown twice
+- Bug 1594081 Tag links in customizable theme have different link color
+- Bug 1594613 Add behat tests for clear caches" admin script
+- Bug 1594615 Replace PEAR::XML_Feed_Parser by the PHP XML standard library
+- Bug 1595364 Unable to remove first auth method via institution edit
+- Bug 1595408 Export a page with comments raises an error
+- Bug 1595789 "$cfg->urlsecret = null;" doesn't work during installation
+- Bug 1596809 String missing in the Profile completion sidebar for annotation feedback
+- Bug 1597549 Share access for site wide Profile page error
+- Bug 1598962 choose template .tpl needs styling
+- Bug 1598974 Mahara as MNet IDP breaks because of longer session ids
+- Bug 1599373 Don't print "share page" link when viewing site template pages
+- Bug 1599375 Hide default portfolio page site template from site pages sharing list
+- Bug 1600069 See other's profile images one is not meant to
+- Bug 1600099 Improving webservices connection manager user interface
+- Bug 1600665 Google calendar URLs no longer work in Google Apps block
+- Bug 1602045 Move cursor not displaying for click and dragging files
+- Bug 1602452 Replace PEAR/Archive/Tar by Phar
+- Bug 1604601 Remove instances where "On" is still used instead of "Yes"
+- Bug 1605067 Accessibility: Search text Placeholder goes away after tabbing into field
+- Bug 1605071 Display something more error-like when an AJAX block errors out
+- Bug 1605072 Attempting to upload a folder fails with unclear error
+- Bug 1605110 Raw theme table border style overrides user settings
+- Bug 1605127 Mismatched function declaration, update_url() in lib/activity.php
+- Bug 1606086 Upgrade dropzone.js to v.4.3.0
+- Bug 1606101 LDAP user sync using root ID to suspend users
+- Bug 1606432 Fatal error trying to manually update a user's quota
+- Bug 1606725 Accessibility - Search button
+- Bug 1606730 Accessibility - Required field indicator
+- Bug 1606744 Accessibility - Select 'other' text field label incorrect
+- Bug 1606752 Attempting to upload a folder fails with unclear error in Safari only
+- Bug 1607669 LDAP user sync incorrectly proceeds when LDAP list or search fails
+- Bug 1609142 Closing help options with 'X' causes cancel of form
+- Bug 1609538 Block edit screen has empy success (green) messages boxes
+- Bug 1613135 Fix negative block_instance sortorders before running upgrade
+- Bug 1614298 Unable to upgrade if webservices contrib plugin already installed
+- Bug 1614805 Make out-of-sequence plugin upgrades consistent in CLI upgrader & web upgrader
+- Bug 1615280 Email validation rejects top-level domains longer than 4 characters
+- Bug 1619514 Profile completion annotation feedback doesn't count down
+- Bug 1620130 "Default" and "Ocean" themes don't have the row and column highlights in on SmartEvidence page
+- Bug 1622729 Better SE matrix page adding of annotation block
+- Bug 1622788 Update the dependencies error for ssphp
+- Bug 1622797 Change "Doesn't meet the standard" icon to a more distinct one
+- Bug 1623699 Add link from matrix page to first page in collection when error
+- Bug 1624142 Changes while saving the cover letter doesnt show up
+- Bug 1624153 Valid URL(www) is not accepted while saving Books and publications
+- Bug 1624953 Remove button is inside multiple parenthesis
+- Bug 1625861 Consolidate SmartEvidence administration
+- Bug 1626287 default_notification_method function is missing in Multirecipient message system
+- Bug 1629154 Fatal error displayed when deleting the institution which has a logo
+- Bug 1631209 Updating annotations needs to update collection mtime
+- Bug 1631795 Images not displayed for others in wall post
+- Bug 1631809 Allow image preview in modal - not working for file lists within modals
+- Bug 1632863 Show assessment decision in annotation block
+- Bug 1632865 Annotation feedback changes
+- Bug 1298144 When the folder is empty, the link to "Download as zip file" should not show
+- Bug 1461331 Still receive group messages after turn off Group messages notification
+- Bug 1515398 Journal entry add file should be a button
+- Bug 1524095 Remote avatar called each page load rather than once per session
+- Bug 1525736 update_record() doesn't allow for a column listed in the 'where' object to be updated
+- Bug 1526073 set_config() writes to the database even if it's not necessary
+- Bug 1534383 Refactor BlockInstance::bulk_delete_artefacts($records)
+- Bug 1542126 Get rid of "THIS IS BAD" message for Exceptions that don't subclass MaharaException
+- Bug 1557200 Allow for easier filling out of a tinymce form behat step
+- Bug 1567152 Undefined property warning on "Find groups" page
+- Bug 1571910 Missing cacheversion on upgrade gives errors
+- Bug 1577251 Should invalidate password reset links when a user changes their primary email address
+- Bug 1581227 PHP Fatal error: Call to undefined function log_()
+- Bug 1582967 Comment deletion forms & buttons with non-unique IDs
+- Bug 1584273 Make disabled plugin sentence easier to read
+- Bug 1585011 Artefact view has two <H1> titles when it only needs one
+- Bug 1585029 Warning when running interactive test client facility for web services
+- Bug 1590626 Field with error is not highlighted on profile wall
+- Bug 1590632 Behat tests for profile icon page
+- Bug 1591052 Remove obsolete "smarty" directories in dataroot
+- Bug 1597957 Language selector not respected on login screen page
+- Bug 1597977 Tidying up places that have checkboxes which can be yes/no switch boxes
+- Bug 1599404 The function "get_mahara_install_subdirectory" doesn't correctly handle a URL with a missing trailing slash
+- Bug 1602492 Group upload csv errors not displaying correctly
+- Bug 1603332 Make default plugin config styling be "panel panel-body"
+- Bug 1605419 Remove unused & obsolete methods of the "View" class
+- Bug 1606435 Not sending enough parameters to "useroverquotathreshold" lang string
+- Bug 1607564 ClamAV quarantine directory should not be a language string
+- Bug 1609731 Error in theme/Readme.md - 'template' should be 'templates'
+- Bug 1611995 Delete redundant profileicons.json.php file
+- Bug 1620416 Use of assign_by_ref() is not clear as to what is required
+- Bug 1624959 Webservices Service Group heading not aligned correctly
+- Bug 1627545 Warning message is displayed when no framework is uploaded and saved
+- Bug 1630078 Language string section typo in js/textareamaxlengthchecker.js
+- Bug 1632883 Error messages hard to read in certain themes
+- Bug 826649 Add group shortnames to manually created groups
+- Bug 995681 Allow for user auto-creation via SAML for multi-tenanted Mahara
+- Bug 1027739 Copy block config of tagged journal entries block
+- Bug 1393536 Implementing a connection manager
+- Bug 1409546 Smart Evidence - Phase 1 - SmartEvidence Module
+- Bug 1470708 Add a "clear caches" admin script
+- Bug 1523747 Add json pagination to watchlist block
+- Bug 1564706 Allow handling of more media file formats
+- Bug 1566606 Don't show "Add to watchlist" and "Report obj. material" on my own pages
+- Bug 1572356 Allow image preview in modal
+- Bug 1579285 Add SimpleSAMLphp as a managed dependency
+- Bug 1580499 Hide deleted comments unless they're needed for context
+- Bug 1583435 Make it easier to run one specific feature file
+- Bug 1588608 Improvements for Send friend request message field
+- Bug 1594579 Be able to copy a group
+- Bug 1595026 Download CSV file with group settings for displayed groups
+- Bug 1595028 Download CSV file with group membership
+- Bug 1595123 Mark suspended / expired accounts in User Search in admin area
+- Bug 1597133 Add institution shortname to manually created groups
+- Bug 1598927 Set create skin 'skin access' to private by default
+- Bug 1602426 New themes cannot be set as parent theme
+- Bug 1603189 SmartEvidence: Set up infrastructure
+- Bug 1620879 Allow users to self-issue webservice access tokens
+- Bug 1625388 Display the institution shortname on the institution's settings page
+- Bug 1528986 Ojectionable content modal's text box doesn't resize properly
+- Bug 1555414 zip file editing icons not display in a line
+- Bug 1600668 Google drive folders no longer work in Google Apps block
+
 16.10rc2 (2016-09-27)
 
 16.10rc1 (2016-09-02)
