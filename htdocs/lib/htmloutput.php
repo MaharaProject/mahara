@@ -37,18 +37,21 @@ function print_export_head($stylesheets) {
 function print_export_iframe_die($message, $link=null) {
     $message = hsc($message);
     if (isset($link)) {
-        $message .= ' <a target="_top" href="' . hsc($link) . '">' . get_string('continue', 'admin') . '</a>';
+        $message .= ' <a class="decompress-link" target="_top" href="' . hsc($link) . '">' . get_string('continue', 'admin') . '</a>';
     }
     echo '<div class="progress-bar" style="width: 100%;"><p>' . $message . '</p></div></body></html>';
 }
 
 function print_iframe_progress_handler($percent, $status) {
-    // "Erase" the current output with a new background div
-    echo '<div style="width: 100%; background-color: #d4d4d4; position: absolute; text-align: center; height: 40px; left: 0; top: 0;" class="progress-bar"></div>';
-    // The progress bar itself
-    echo '<div class="progress-bar-progress" style="width: ' . intval($percent) . '%; background-color: #cff253; position: absolute; text-align: center; height: 40px; left: 0; top: 0;"></div>' . "\n";
-    // The status text
-    echo '<p class="progress-text" style="color: #000000; position: absolute; text-align: center; height: 40px; left: 0; top: 0; width:100%; margin-top:8px;">' . hsc($status) . "</p>\n";
+    // The progress bar using linear gradient to show progress
+    // so we can have two background colours on same div allowing the text to not be hidden
+    echo '<div style="width: 100%; background-color: #d4d4d4; position: absolute;
+                      text-align: center; height: 40px; left: 0; top: 0;
+                      background-image: linear-gradient(left, #cff253, #cff253 ' . intval($percent) . '%, transparent ' . intval($percent) . '%, transparent 100%);
+                      background-image: -webkit-linear-gradient(left, #cff253, #cff253 ' . intval($percent) . '%, transparent ' . intval($percent) . '%, transparent 100%);
+                      background-image: -moz-linear-gradient(left, #cff253, #cff253 ' . intval($percent) . '%, transparent ' . intval($percent) . '%, transparent 100%);
+                      background-image: -o-linear-gradient(left, #cff253, #cff253 ' . intval($percent) . '%, transparent ' . intval($percent) . '%, transparent 100%);
+                      " class="progress-bar"><p class="progress-text" style="color: #000000; text-align: center; height: 40px; left: 0; top: 0; width:100%; margin-top:8px;">' . hsc($status) . "</p></div>\n";
 }
 
 function print_export_footer($strexportgenerated, $continueurl, $continueurljs, $jsmessages=array(), $newlocation) {
@@ -100,7 +103,7 @@ function print_extractprogress_head($stylesheets, $artefacts) {
 function print_extractprogress_footer($message, $next) {
 ?>
         <div class="progress-bar" style="width: 100%;">
-        <p><?php echo $message; ?> <a href="<?php echo $next; ?>" target="_top"><?php echo get_string('Continue', 'artefact.file'); ?></a></p>
+        <p><?php echo $message; ?> <a class="decompress-link" href="<?php echo $next; ?>" target="_top"><?php echo get_string('Continue', 'artefact.file'); ?></a></p>
         </div>
     </body>
 </html>
