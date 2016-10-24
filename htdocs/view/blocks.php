@@ -135,7 +135,7 @@ $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 // longer available to them.
 if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
     $smarty = smarty(array(), $stylesheets, false, $extraconfig);
-    $smarty->assign('maintitle', TITLE);
+    $smarty->assign('PAGEHEADING', get_string('choosetheme'));
     $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
     $smarty->assign('view', $view->get('id'));
     $smarty->assign('viewtitle', $view->get('title'));
