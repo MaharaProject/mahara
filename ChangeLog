@@ -1,3 +1,21 @@
+15.04.10 (2016-10-25)
+- Bug 1594642: missing sessionpath
+- Bug 1597536: import_entry_requests table needs a ctime so we can clean up old partial requests
+- Bug 1612451: Artefact blog upgrade gives error for embedded image
+- Bug 1630753: Webservices create user has problems with preferredname and studentid fields
+- Bug 1630764: Webservices update user has problems with preferredname and studentid fields
+- Bug 1527960: Alphabetize the order of collections on the "Copy a page or collection" screen
+- Bug 1533377: Remove Persona (browserid) auth plugin by Nov 2016, because Mozilla is ending Persona support
+- Bug 1534398: Clean URLs created during user account creation, do not respect the "nousernames" setting
+- Bug 1596809: String missing in the Profile completion sidebar for annotation feedback
+- Bug 1606744: Accessibility - Select 'other' text field label incorrect
+- Bug 1613135: Fix negative block_instance sortorders before running upgrade
+- Bug 1614298: Unable to upgrade if webservices contrib plugin already installed
+- Bug 1614805: Make out-of-sequence plugin upgrades consistent in CLI upgrader & web upgrader
+- Bug 1626287: default_notification_method function is missing in Multirecipient message system
+- Bug 1577251: Should invalidate password reset links when a user changes their primary email address
+- Bug 1611995: Delete redundant profileicons.json.php file
+
 15.04.9 (2016-08-08)
 - Bug 1431659: Problems importing Annotations via Leap2a
 - Bug 1602447: Can't use ">" CSS selector in skins
