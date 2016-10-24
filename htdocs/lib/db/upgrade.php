@@ -4709,6 +4709,8 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2016100600) {
+        $cur_max_execution_time = @ini_get('max_execution_time');
+        ini_set('max_execution_time', 0);
         log_debug('Fix broken user data for existing users created via webservices');
         if ($studentids = get_records_sql_array("
             SELECT u.id, u.studentid, 1 AS makenew FROM {usr} u
@@ -4745,6 +4747,7 @@ function xmldb_core_upgrade($oldversion=0) {
                 set_profile_field($info->id, 'preferredname', $info->preferredname, (bool) $info->makenew);
             }
         }
+        ini_set('max_execution_time', $cur_max_execution_time);
     }
 
     return $status;
