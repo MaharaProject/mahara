@@ -1,3 +1,41 @@
+16.04.4 (2016-10-25)
+- Bug 1537861: View layout becomes corrupted when changed
+- Bug 1554247: comments with attachments - attachment titles and links display on main portfolio page
+- Bug 1568611: Comment ratings are not accessible
+- Bug 1568613: The screenreader "Remove" doesn't do anything
+- Bug 1568619: Open Badge details aren't accessible with screenreader
+- Bug 1587950: Warning message not in a warning color
+- Bug 1594642: missing sessionpath
+- Bug 1597117: Can't save share access form on Windows in Edge
+- Bug 1597536: import_entry_requests table needs a ctime so we can clean up old partial requests
+- Bug 1598672: Site collections - 'Untitled' page which does not exist
+- Bug 1612451: Artefact blog upgrade gives error for embedded image
+- Bug 1618317: JS error when click 'Edit image' in TinyMCE editor
+- Bug 1620394: The institution static pages form is confusing
+- Bug 1622383: Problems copying group collections to and from groups
+- Bug 1626805: Page becomes blank after a while
+- Bug 1630753: Webservices create user has problems with preferredname and studentid fields
+- Bug 1630764: Webservices update user has problems with preferredname and studentid fields
+- Bug 1631806: Page descriptions not retained from group, institution and site pages
+- Bug 1386000: Don't display submitted pages in "Pages / collections shared with this group"
+- Bug 1527960: Alphabetize the order of collections on the "Copy a page or collection" screen
+- Bug 1533377: Remove Persona (browserid) auth plugin by Nov 2016, because Mozilla is ending Persona support
+- Bug 1534398: Clean URLs created during user account creation, do not respect the "nousernames" setting
+- Bug 1560329: The block config's "cancel" button breaks after a Pieform validation failure
+- Bug 1569121: gulp-bless-css is deprecated
+- Bug 1595364: Unable to remove first auth method via institution edit
+- Bug 1596809: String missing in the Profile completion sidebar for annotation feedback
+- Bug 1598962: choose template .tpl needs styling
+- Bug 1606744: Accessibility - Select 'other' text field label incorrect
+- Bug 1613135: Fix negative block_instance sortorders before running upgrade
+- Bug 1614298: Unable to upgrade if webservices contrib plugin already installed
+- Bug 1614805: Make out-of-sequence plugin upgrades consistent in CLI upgrader & web upgrader
+- Bug 1615280: Email validation rejects top-level domains longer than 4 characters
+- Bug 1626287: default_notification_method function is missing in Multirecipient message system
+- Bug 1627420: Update Readme file for Mahara 16.10
+- Bug 1577251: Should invalidate password reset links when a user changes their primary email address
+- Bug 1611995: Delete redundant profileicons.json.php file
+
 16.04.3 (2016-08-08)
 - Bug 1431659: Problems importing Annotations via Leap2a
 - Bug 1602447: Can't use ">" CSS selector in skins
