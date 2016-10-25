@@ -4702,7 +4702,9 @@ function xmldb_core_upgrade($oldversion=0) {
       log_debug('Add iframe url in iframe_source table for glogster educational new url pattern');
       delete_records('iframe_source', 'prefix', 'edu.glogster.com/glog/');
       delete_records('iframe_source', 'prefix', 'edu.glogster.com//glog/');
-      if (!get_field('iframe_source', 'prefix', 'prefix', 'edu.glogster.com//?glog/')) {
+      if (!get_field('iframe_source', 'prefix', 'prefix', 'edu.glogster.com//?glog/') &&
+          get_field('iframe_source_icon', 'name', 'name', 'Glogster')) {
+          // Only insert the new Gloster URL if the icon has not been deleted by the user.
           insert_record('iframe_source', (object) array('prefix' => 'edu.glogster.com//?glog/', 'name' => 'Glogster'));
       }
       update_safe_iframe_regex();
