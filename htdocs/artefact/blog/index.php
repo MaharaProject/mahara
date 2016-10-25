@@ -82,9 +82,16 @@ list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limi
 
 if (empty($blogs->institution) && empty($blogs->group)) {
     if (!$USER->get_account_preference('multipleblogs')) {
-        $extra = !empty($institution) ? '?institution=' . $institution : '';
-        $extra = !empty($group) ? '?group=' . $group : '';
-        redirect(get_config('wwwroot') . 'artefact/blog/view/index.php' . $extra);
+        // Check to see if the user has multiple blogs anyway
+        if ($blogs->count > 1) {
+            set_account_preference($USER->get('id'), 'multipleblogs', 1);
+            $USER->set_account_preference('multipleblogs', 1);
+        }
+        else {
+            $extra = !empty($institution) ? '?institution=' . $institution : '';
+            $extra = !empty($group) ? '?group=' . $group : '';
+            redirect(get_config('wwwroot') . 'artefact/blog/view/index.php' . $extra);
+        }
     }
 }
 
