@@ -1440,7 +1440,7 @@ class AuthFactory {
  * @param array  $values The submitted values
  */
 function login_validate(Pieform $form, $values) {
-    if (!empty('login_submitted')) {
+    if (!empty($values['login_submitted'])) {
         if (empty($values['login_username']) || empty($values['login_password'])) {
             $form->set_error(null, get_string('loginfailed'));
         }
