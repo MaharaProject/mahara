@@ -715,3 +715,10 @@ $cfg->passwordsaltalt1 = 'old salt value';
  * The default sources are Mozilla Backpack and openbadgepassport.com
  */
 $cfg->openbadgedisplayer_source = '{"backpack":"https://backpack.openbadges.org/","passport":"https://openbadgepassport.com/"}';
+
+/**
+ * @global string $cfg->ssphpsessionhandler
+ * An alternative session handler for SimpleSAMLphp if you do not wish to use memcache.
+ * Specify the name of the session handler.
+ */
+// $cfg->ssphpsessionhandler = 'memcached';
