@@ -6,59 +6,11 @@ So I can have different settings for each institution
 
 Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
- And I go to "admin/users/institutions.php"
+ And I follow "Administration"
+ And I choose "Institutions" in "Institutions"
  And I press "Add institution"
- # Checking the default settings are correct
- And the following fields match these values:
- | Institution name * |  |
- | Registration allowed | 0 |
- | Confirm registration | 1 |
- | Drop-down navigation  | 0 |
- | Update user quotas | 0 |
- | Allow institution public pages | 1 |
- | Maximum user accounts allowed | |
- # Turning the switches on and off
  And I set the following fields to these values:
  | Institution name * | Team Awesome |
- | Registration allowed | 1 |
- | Confirm registration | 0 |
- | Drop-down navigation  | 1 |
- | Update user quotas | 1 |
- | Allow institution public pages | 0 |
- | Maximum user accounts allowed | |
-# Setting the switches back to default settings
- And I set the following fields to these values:
- | Registration allowed | 0 |
- | Confirm registration | 1 |
- | Drop-down navigation  | 0 |
- | Update user quotas | 0 |
- | Allow institution public pages | 1 |
- | Maximum user accounts allowed | |
- # Checking the default settings are correct
- And the following fields match these values:
- | First name | 0 |
- | Last name | 0 |
- | Student ID | 0 |
- | Display name | 0 |
- | Introduction | 0 |
- | Email address | 0 |
- | Official website address | 0 |
- | Personal website address | 0 |
- | Blog address | 0 |
- | Postal address| 0 |
- | Town | 0 |
- | City/region | 0 |
- | Country | 0 |
- | Home phone | 0 |
- | Business phone | 0 |
- | Mobile phone | 0 |
- | Fax number | 0 |
- | Occupation | 0 |
- | Industry | 0 |
- | Email disabled | 0 |
- | Social media | 0 |
- # Turning the switches on and off
- And I set the following fields to these values:
  | First name | 1 |
  | Last name | 1 |
  | Student ID | 1 |

@@ -10,26 +10,6 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
  And I follow "Create group"
  And I set the following fields to these values:
  | Group name | The Avengers |
- # Checking all the switches are set to their correct default
- And the following fields match these values:
- | Open | 1 |
- | Controlled | 0 |
- | Request | 0 |
- | Friend invitations | 0 |
- | Recommendations | 0 |
- | Roles | Standard: Member, Admin |
- | Create and edit | All group members |
- | Allow submissions | 0 |
- | Allow archiving of submissions | 0 |
- | Publicly viewable group | 0 |
- | Hide group | 0 |
- | Hide membership | 0 |
- | Hide membership from members | 0 |
- | Participation report | 0 |
- | Auto-add users | 0 |
- | Shared page notifications | All group members |
- | Comment notifications | All group members |
- | Send forum posts immediately | 0 |
  And I press "Save group"
  And I follow "Edit \"The Avengers\" Settings"
  # Checking all the switches can all be changed

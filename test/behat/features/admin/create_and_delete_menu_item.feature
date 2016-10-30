@@ -32,12 +32,6 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     #And I accept the confirm popup
     And I should see "Item deleted"
     And I press "Save changes"
-   # Checking the default settings are correct
-    And the following fields match these values:
-     | Terms and conditions | 0 |
-     | Privacy statement | 1 |
-     | About | 1 |
-     | Contact us | 1 |
    # Flicking the switches to the opposite
     And I enable the switch "Terms and conditions"
     And I disable the following switches:

@@ -8,12 +8,6 @@ Scenario: Turning switches on and off on the Add user page (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
  And I choose "Add user" in "Users"
-# Checking the default settings are correct
- And the following fields match these values:
- | Site staff | 0 |
- | Site administrator | 0 |
- | Institution administrator | 0 |
- # Flicking the switches to the opposite
  And I set the following fields to these values:
  | Site staff | 1 |
  | Site administrator | 1 |
