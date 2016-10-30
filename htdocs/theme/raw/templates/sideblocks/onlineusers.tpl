@@ -7,12 +7,14 @@
     <ul class="list-group">
         {foreach from=$sbdata.users item=user}
             <li class="list-group-item list-unstyled list-group-item-link">
-                <a href="{profile_url($user)}" class="">
+                <a href="{profile_url($user)}" class="online-user">
                     <span class="user-icon">
                         <img src="{$user->profileiconurl}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="profile-icon-container">
                     </span>
-                    {$user|display_name}
-                {if $user->loggedinfrom} ({$user->loggedinfrom}){/if}
+                    <span class="user-name">
+                        {$user|display_name}
+                        {if $user->loggedinfrom} ({$user->loggedinfrom}){/if}
+                    </span>
                 </a>
             </li>
         {/foreach}

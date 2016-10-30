@@ -1,4 +1,4 @@
-// // modiufications for list elements such a list of pages, collections
+// // modifications for list elements such a list of pages, collections
 
 // Left panel
 .list-group {
@@ -90,21 +90,15 @@ h4.list-group-item-heading {
         color: $state-warning-text;
 
     }
-    &.list-group-item-profile-notification {
-        padding-right: 70px;
-        word-wrap: normal;
-        word-break: break-all;
-        white-space: normal;
-        a {
-            display: table-row;
-        }
-        div,
-        > span {
-            display: table-cell;
-        }
-        &#invitedgroups + #pendingfriends {
-            padding-right: 0;
-        }
+}
+
+// Sidebar notification item styles
+.list-group-item-profile-notification {
+    word-wrap: normal;
+    word-break: break-all;
+    white-space: normal;
+    &:first-child {
+        padding-right: 80px;
     }
 }
 
@@ -137,6 +131,19 @@ h4.list-group-item-heading {
         .file-size {
             float: right;
             color: darken($brand-default, 40%);
+        }
+    }
+
+    // Online user link see onlineusers.tpl
+    .online-user {
+        position: relative;
+        padding-left: 50px;
+        min-height: 50px;
+
+        .user-icon {
+            position: absolute;
+            left: 20px;
+            top: 15px;
         }
     }
 }
