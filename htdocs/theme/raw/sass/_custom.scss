@@ -211,6 +211,13 @@
     }
 }
 
+.progress-bar .decompress-link {
+    color: $progress-bar-color;
+    text-decoration: underline;
+    display: inline-block;
+    margin-top: 8px;
+}
+
 // Admin user search page (advanced options)
 // limit the size of dynamic to match select box above
 .userserach-filter {
