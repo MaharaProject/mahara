@@ -450,7 +450,8 @@ class PluginAuthSaml extends PluginAuth {
             $libchecks .= '<li>' . get_string('errorbadlib', 'auth.saml', get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php') . '</li>';
         }
         // Make sure we can use 'memcache' with simplesamlphp as 'phpsession' doesn't work correctly in many situations
-        if (empty(get_config('memcacheservers')) && !extension_loaded('memcache')) {
+        $memcacheservers_config = get_config('memcacheservers');
+        if (empty($memcacheservers_config) && !extension_loaded('memcache')) {
             $libchecks .= '<li>' . get_string('errornomemcache', 'auth.saml') . '</li>';
         }
         if (!empty($libchecks)) {
