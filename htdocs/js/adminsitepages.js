@@ -46,7 +46,7 @@ function updateWYSIWYGText() {
 function updateSiteDefault(changed) {
     changedCheckbox = (changed) ? true : false;
     var editor = jQuery('#editsitepage_pagetext_container .mce-tinymce');
-    if ($('editsitepage_pageusedefault').checked == true) {
+    if ($('editsitepage_pageusedefault') && $('editsitepage_pageusedefault').checked == true) {
         tinyMCE.activeEditor.getBody().setAttribute('contenteditable', false);
         $('changecheckboxdiv').style.display = 'block';
         $('changecheckboxdiv').style.zIndex = '1';
