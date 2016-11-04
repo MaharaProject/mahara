@@ -220,9 +220,6 @@ These list must take into account the sort option choosen in the block config (B
     #And I follow "2" in the "div#sharedviews_pagination" "css_element"
     And I jump to page "2" of the list "sharedviews_pagination"
     And I should not see "Page userA_01" in the "ul#sharedviewlist" "css_element"
-    #And I follow "3" in the "div#sharedviews_pagination" "css_element"
-    And I jump to page "3" of the list "sharedviews_pagination"
-    And I should not see "Page userA_01" in the "ul#sharedviewlist" "css_element"
     # Update the shared collection "Collection userA_06"
     And I choose "Collections" in "Portfolio"
     And I click on "Edit \"Collection userA_06\""
@@ -254,11 +251,7 @@ These list must take into account the sort option choosen in the block config (B
     And I select "Collection userA_03" from "group_view_submission_form_2_options"
     And I press "Submit"
     And I press "Yes"
-    And I log out
     # Check the list of submitted pages/collections
-    Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "My groups" in "Groups"
-    And I follow "Group Z"
     And I should see "Page userA_03" in the "ul#allsubmissionlist" "css_element"
     And I should see "Page userA_02" in the "ul#allsubmissionlist" "css_element"
     And I should see "Collection userA_03" in the "ul#allsubmissionlist" "css_element"
