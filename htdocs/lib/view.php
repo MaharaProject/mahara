@@ -3235,7 +3235,7 @@ class View {
                 }
                 if (!empty($artefact->group)) {
                     $group = get_record('group', 'id', $artefact->group);
-                    $artefact->groupname = !empty($group->shortname) ? $group->shortname : $group->name;
+                    $artefact->groupname = $group->name;
                     $artefact->groupurl = get_config('wwwroot') . 'group/view.php?id=' . $group->id;
                 }
                 else if (!empty($artefact->institution)) {
