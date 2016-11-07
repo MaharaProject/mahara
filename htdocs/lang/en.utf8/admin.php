@@ -1303,3 +1303,6 @@ $string['cli_restore_done'] = 'Restored backup of "%s" done';
 $string['cli_restore_warning'] = '*** WARNING *** Unable to restore backup of "%s"';
 $string['cli_tmpdir_notwritable'] = 'Temporary upload directory "%s" is not writable.';
 $string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for series "%s"';
+
+$string['withselectedcontentexport'] = 'Re-queue items into export queue';
+$string['withselectedcontentdelete'] = 'Delete selected items from export queue';
