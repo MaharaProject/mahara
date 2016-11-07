@@ -508,6 +508,50 @@ function activity_get_viewaccess_users($view) {
     return $u;
 }
 
+/**
+ * Return the minimum and maximum access times if they exist for the page
+ * based on user getting access. To be used with view access notifications
+ *
+ * @param string $viewid ID of the view
+ * @param string $userid ID of the user
+ * @return array Min and max access dates
+ */
+function activity_get_viewaccess_user_dates($viewid, $userid) {
+    if ($results = get_records_sql_array("
+        SELECT MIN(startdate) AS mindate, MAX(stopdate) as maxdate FROM (
+            SELECT startdate, stopdate FROM {view}
+            WHERE id = ?
+            UNION
+            SELECT startdate, stopdate FROM {view_access}
+            WHERE view = ? AND usr = ?
+            UNION
+            SELECT startdate, stopdate FROM {view_access} va
+            JOIN {group_member} gm ON gm.group = va.group
+            WHERE va.view = ? AND gm.member = ?
+            UNION
+            SELECT startdate, stopdate FROM {view_access} va
+            JOIN {usr_institution} ui ON ui.institution = va.institution
+            WHERE va.view = ? and ui.usr = ?
+            UNION
+            SELECT startdate, stopdate FROM {view_access}
+            WHERE view = ? AND accesstype IN ('loggedin','public')
+            UNION
+            SELECT startdate, stopdate FROM {view_access}
+            WHERE accesstype = 'friends' AND view = ?
+            AND EXISTS (
+                SELECT * FROM {usr_friend}
+                WHERE (usr1 = (SELECT owner FROM {view} WHERE id = ?) AND usr2 = ?)
+                OR (usr2 = (SELECT owner FROM {view} WHERE id = ?) AND usr1 = ?)
+            )
+        ) AS dates", array($viewid, $viewid, $userid, $viewid, $userid, $viewid, $userid, $viewid, $viewid, $viewid, $userid, $viewid, $userid))
+    ) {
+        return array('mindate' => $results[0]->mindate,
+                     'maxdate' => $results[0]->maxdate);
+    }
+    return array('mindate' => null,
+                 'maxdate' => null);
+}
+
 function activity_locate_typerecord($activitytype, $plugintype=null, $pluginname=null) {
     if (is_object($activitytype)) {
         return $activitytype;
@@ -1356,6 +1400,24 @@ class ActivityTypeViewAccess extends ActivityType {
         }
     }
 
+    public function get_view_access_message($user) {
+        $accessdates = activity_get_viewaccess_user_dates($this->view, $user->id);
+        $accessdatemessage = '';
+        if (!empty($accessdates['mindate']) && !empty($accessdates['maxdate'])) {
+            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessfromto', 'activity', $accessdates['mindate'], $accessdates['maxdate']);
+        }
+        else if (!empty($accessdates['mindate'])) {
+            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessfrom', 'activity', $accessdates['mindate']);
+        }
+        else if (!empty($accessdates['maxdate'])) {
+            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessto', 'activity', $accessdates['maxdate']);
+        }
+        else {
+            $accessdatemessage = false;
+        }
+        return $accessdatemessage;
+    }
+
     public function get_message($user) {
         $title = $this->title;
         $plural = '';
@@ -1363,13 +1425,22 @@ class ActivityTypeViewAccess extends ActivityType {
             $title = implode('", "', $titles);
             $plural = 'views';
         }
+        $accessdatemessage = ($this->view && $user->id) ? $this->get_view_access_message($user) : null;
+
         $newaccessmessagestr = $this->incollection ? 'newcollectionaccessmessage' . $plural : 'newviewaccessmessage' . $plural;
         if ($this->ownername) {
-            return get_string_from_language($user->lang, $newaccessmessagestr, 'activity',
+            $message = get_string_from_language($user->lang, $newaccessmessagestr, 'activity',
                                             $title, $this->ownername, $this->title);
         }
-        $newaccessmessagenoownerstr = $this->incollection ? 'newcollectionaccessmessagenoowner' : 'newviewaccessmessagenoowner' . $plural;
-        return get_string_from_language($user->lang, $newaccessmessagenoownerstr, 'activity', $title, $this->title);
+        else {
+            $newaccessmessagenoownerstr = $this->incollection ? 'newcollectionaccessmessagenoowner' : 'newviewaccessmessagenoowner' . $plural;
+            $message = get_string_from_language($user->lang, $newaccessmessagenoownerstr, 'activity', $title, $this->title);
+        }
+
+        if ($accessdatemessage) {
+            $message .= "\n\n" . $accessdatemessage;
+        }
+        return $message;
     }
 
     public function get_required_parameters() {
