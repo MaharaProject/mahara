@@ -673,12 +673,14 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                 $_FILES['userfile']['type'] = $_POST['_userfile']['type'];
             }
             if (strlen($_FILES['userfile']['name']) > 1024) {
+                http_response_code(403);
                 return array(
                     'error'   => true,
                     'message' => get_string('nametoolong', 'artefact.file'),
                 );
             }
             else if ($element['config']['uploadagreement'] && !param_boolean($prefix . '_notice', false)) {
+                http_response_code(403);
                 return array(
                     'error'   => true,
                     'message' => get_string('youmustagreetothecopyrightnotice', 'artefact.file'),
