@@ -540,7 +540,7 @@ $siteoptionform = array(
                     'disabled'      => in_array('smtpuser', $OVERRIDDEN),
                 ),
                 'smtppass' => array(
-                    'type'          => 'text',
+                    'type'          => 'password',
                     'title'         => get_string('emailsmtppass', 'admin'),
                     'defaultvalue'  => get_config('smtppass'),
                     'disabled'      => in_array('smtppass', $OVERRIDDEN),
