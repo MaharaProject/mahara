@@ -54,7 +54,7 @@ if (count($authinstances) > 0) {
         }
     }
     if ($USER->get('admin')) {
-        $definst = get_field('auth_instance', 'id', 'institution', 'mahara');
+        $definst = get_field('auth_instance', 'id', 'institution', 'mahara', 'active', 1);
         $default = $definst ? $definst : key($options);
     }
     else {
@@ -184,7 +184,7 @@ function uploadcsv_validate(Pieform $form, $values) {
     require_once('csvfile.php');
 
     $authinstance = (int) $values['authinstance'];
-    $institution = get_field('auth_instance', 'institution', 'id', $authinstance);
+    $institution = get_field('auth_instance', 'institution', 'id', $authinstance, 'active', 1);
     if (!$USER->can_edit_institution($institution)) {
         $form->set_error('authinstance', get_string('notadminforinstitution', 'admin'));
         return;
@@ -461,7 +461,10 @@ function uploadcsv_submit(Pieform $form, $values) {
     $formatkeylookup = array_flip($FORMAT);
 
     $authinstance = (int) $values['authinstance'];
-    $authrecord   = get_record('auth_instance', 'id', $authinstance);
+    $authrecord   = get_record('auth_instance', 'id', $authinstance, 'active', 1);
+    if (!$authrecord) {
+        throw new InvalidArgumentException("trying to add user to inactive auth instance {$authinstance}");
+    }
     $authobj      = AuthFactory::create($authinstance);
 
     $institution = new Institution($authobj->institution);

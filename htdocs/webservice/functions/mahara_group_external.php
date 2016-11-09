@@ -173,7 +173,7 @@ class mahara_group_external extends external_api {
                 }
                 else {
                     // Make sure auth is valid
-                    if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
+                    if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance, 'active', 1)) {
                         throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
                     }
                     // check the institution is allowed
@@ -465,7 +465,7 @@ class mahara_group_external extends external_api {
                 }
                 else {
                     // Make sure auth is valid
-                    if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
+                    if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance, 'active', 1)) {
                         throw new WebserviceInvalidParameterException('update_groups | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
                     }
                     // check the institution is allowed
@@ -624,7 +624,7 @@ class mahara_group_external extends external_api {
                 }
                 else {
                     // Make sure auth is valid
-                    if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
+                    if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance, 'active', 1)) {
                         throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
                     }
                     // check the institution is allowed

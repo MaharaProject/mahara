@@ -130,7 +130,7 @@ class mahara_user_external extends external_api {
                 // only institutions for the web service user token
                 if ($WEBSERVICE_INSTITUTION == $institution) {
                     // now find the user by remote
-                    $instance_id = get_field('auth_instance', 'id', 'instancename', $authtype, 'institution', $WEBSERVICE_INSTITUTION);
+                    $instance_id = get_field('auth_instance', 'id', 'instancename', $authtype, 'institution', $WEBSERVICE_INSTITUTION, 'active', 1);
                     log_debug('in autologin_redirect: auth_instance id: '.$instance_id);
                     if ($instance_id) {
                         $user_id = get_field('auth_remote_user', 'localusr', 'remoteusername', $params['ext_user_username'], 'authinstance', $instance_id);

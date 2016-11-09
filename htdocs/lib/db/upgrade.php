@@ -4861,5 +4861,13 @@ function xmldb_core_upgrade($oldversion=0) {
         bump_cache_version();
     }
 
+    if ($oldversion < 2017012600) {
+        log_debug('Add "active" column to "auth_instance" table');
+        $table = new XMLDBTable('auth_instance');
+        $field = new XMLDBField('active');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
+    }
+
     return $status;
 }

@@ -108,14 +108,14 @@ function forgotpass_validate(Pieform $form, $values) {
     if (!$form->get_error('emailusername')) {
         // Check if the user who associates to username or email address is using the external authentication
         if (record_exists_sql('SELECT u.authinstance
-            FROM {usr} u INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id)
+            FROM {usr} u INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id AND ai.active = 1)
             WHERE (LOWER(u.email) = ? OR LOWER(u.username) = ?)
             AND ((ai.authname != \'internal\') AND (ai.authname != \'none\'))', array_fill(0, 2, strtolower($values['emailusername'])))) {
                 $form->set_error('emailusername', get_string('forgotpassuserusingexternalauthentication', 'mahara', get_config('wwwroot') . 'contact.php'));
         }
         else {
             if (!($authinstance = get_field_sql('SELECT u.authinstance
-                FROM {usr} u INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id)
+                FROM {usr} u INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id AND ai.active = 1)
                 WHERE (LOWER(u.email) = ? OR LOWER(u.username) = ?)
                 AND ai.authname = \'internal\'', array_fill(0, 2, strtolower($values['emailusername']))))) {
                     $form->set_error('emailusername', get_string('forgotpassnosuchemailaddressorusername'));
@@ -138,7 +138,7 @@ function forgotpass_submit(Pieform $form, $values) {
 
     try {
         if (!($user = get_record_sql('SELECT u.* FROM {usr} u
-            INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id)
+            INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id AND ai.active = 1)
             WHERE (LOWER(u.email) = ? OR LOWER(u.username) = ?)
             AND ai.authname = \'internal\'', array_fill(0, 2, strtolower($values['emailusername']))))) {
                 die_info(get_string('forgotpassnosuchemailaddressorusername'));

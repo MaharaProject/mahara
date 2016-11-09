@@ -173,7 +173,10 @@ function import_next_user($filename, $username, $authinstance) {
 
     log_debug('adding user ' . $username . ' from ' . $filename);
 
-    $authobj = get_record('auth_instance', 'id', $authinstance);
+    $authobj = get_record('auth_instance', 'id', $authinstance, 'active', 1);
+    if (!$authobj) {
+        throw new InvalidArgumentException("trying to add user to inactive auth instance {$authinstance}");
+    }
     $institution = new Institution($authobj->institution);
 
     $date = time();

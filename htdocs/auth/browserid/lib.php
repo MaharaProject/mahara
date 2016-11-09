@@ -124,6 +124,7 @@ HTML
                         $todb = new stdClass();
                         $todb->instancename = 'internal';
                         $todb->authname = 'internal';
+                        $todb->active = 1;
                         $todb->institution = $authinst->institution;
                         $todb->priority = $authinst->priority;
                         $internal = insert_record('auth_instance', $todb, 'id', true);

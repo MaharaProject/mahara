@@ -121,7 +121,7 @@ class AuthImap extends Auth {
  */
 class PluginAuthImap extends PluginAuth {
 
-    private static $default_config = array('host'=>'', 'port'=>'143', 'protocol'=>'/imap', 'domainname'=>'', 'changepasswordurl'=>'', 'weautocreateusers'=>'');
+    private static $default_config = array('host'=>'', 'port'=>'143', 'protocol'=>'/imap', 'domainname'=>'', 'changepasswordurl'=>'', 'weautocreateusers'=>'', 'active' => 1);
 
     public static function has_config() {
         return false;
@@ -163,6 +163,7 @@ class PluginAuthImap extends PluginAuth {
                     self::$default_config[$key] = $current_config[$key];
                 }
             }
+            self::$default_config['active'] = $default->active;
         } else {
             $default = new stdClass();
             $default->instancename = '';
@@ -175,6 +176,12 @@ class PluginAuthImap extends PluginAuth {
                 'required' => true
             ),
             'defaultvalue' => $default->instancename
+        );
+
+        $elements['active'] = array(
+            'type'  => 'switchbox',
+            'title' => get_string('active', 'auth'),
+            'defaultvalue' => (int) self::$default_config['active'],
         );
 
         $elements['instance'] = array(
@@ -279,6 +286,7 @@ class PluginAuthImap extends PluginAuth {
         $authinstance->instancename = $values['instancename'];
         $authinstance->institution  = $values['institution'];
         $authinstance->authname     = $values['authname'];
+        $authinstance->active       = $values['active'];
 
         if ($values['create']) {
             $values['instance'] = insert_record('auth_instance', $authinstance, 'id', true);

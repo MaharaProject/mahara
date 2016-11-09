@@ -17,7 +17,8 @@
                 <FIELD NAME="instancename" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="priority" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
-               <FIELD NAME="authname" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="authname" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />

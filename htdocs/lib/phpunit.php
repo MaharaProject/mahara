@@ -245,7 +245,7 @@ EOD;
      * @return int new user id.
      */
     protected function create_test_user($userdata = null, $institution = null) {
-        $authinstance = get_record('auth_instance', 'institution', 'mahara');
+        $authinstance = get_record('auth_instance', 'institution', 'mahara', 'active', 1);
         $testdata = array(
             'username'     => 'test' . count($this->testusers),
             'email'        => 'test' . count($this->testusers) . '@localhost',

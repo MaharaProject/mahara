@@ -298,7 +298,10 @@ function adduser_submit(Pieform $form, $values) {
         $user->quota = $values['quota'];
     }
 
-    $authinstance = get_record('auth_instance', 'id', $values['authinstance']);
+    $authinstance = get_record('auth_instance', 'id', $values['authinstance'], 'active', 1);
+    if (!$authinstance) {
+        throw new InvalidArgumentException("trying to add user to inactive auth instance " . $values['authinstance']);
+    }
     $remoteauth = false;
     if ($authinstance->authname != 'internal') {
         $remoteauth = true;

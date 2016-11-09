@@ -435,8 +435,8 @@ function webservices_user_token_submit(Pieform $form, $values) {
             $SESSION->add_error_msg(get_string('noservices', 'auth.webservice'));
         }
         else {
-            // just pass the first one for the moment
-            $authinstance = get_record('auth_instance', 'id', $USER->get('authinstance'));
+            // just pass the first active one for the moment
+            $authinstance = get_record('auth_instance', 'id', $USER->get('authinstance'), 'active', 1);
             $token = webservice_generate_token(
                 EXTERNAL_TOKEN_USER,
                 $service,

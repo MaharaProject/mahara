@@ -1533,7 +1533,7 @@ function delete_user($userid) {
 
     // Set authinstance to default internal, otherwise the old authinstance can be blocked from deletion
     // by deleted users.
-    $authinst = get_field('auth_instance', 'id', 'institution', 'mahara', 'authname', 'internal');
+    $authinst = get_field('auth_instance', 'id', 'institution', 'mahara', 'authname', 'internal', 'active', 1);
     if ($authinst) {
         $deleterec->authinstance = $authinst;
     }
@@ -2463,6 +2463,9 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         }
     }
     $authobj = get_record('auth_instance', 'id', $user->authinstance);
+    if ($authobj->active == '0') {
+        throw new InvalidArgumentException("user_create: trying to add user to inactive auth instance {$user->authinstance}");
+    }
     $authinstance = AuthFactory::create($authobj->id);
     // For legacy compatibility purposes, we'll also put the remote auth on there if it has been
     // specifically requested.

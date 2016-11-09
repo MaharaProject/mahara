@@ -218,7 +218,7 @@ EOD;
             $record['institution'] = 'mahara';
             $record['authname'] = 'internal';
         }
-        if (!$auth = get_record('auth_instance', 'institution', $record['institution'], 'authname', $record['authname'])) {
+        if (!$auth = get_record('auth_instance', 'institution', $record['institution'], 'authname', $record['authname'], 'active', 1)) {
             throw new SystemException("The authentication method authname" . $record['authname'] . " for institution '" . $record['institution'] . "' does not exist.");
         }
         $record['authinstance'] = $auth->id;
@@ -492,6 +492,7 @@ EOD;
         $authinstance = (object)array(
                 'instancename' => 'internal',
                 'priority'     => 0,
+                'active'       => 1,
                 'institution'  => $newinstitution->name,
                 'authname'     => 'internal',
         );

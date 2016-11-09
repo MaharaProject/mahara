@@ -743,6 +743,7 @@ function core_install_lastcoredata_defaults() {
     $auth_instance->priority='1';
     $auth_instance->institution   = 'mahara';
     $auth_instance->authname      = 'internal';
+    $auth_instance->active        = 1;
     $auth_instance->id = insert_record('auth_instance', $auth_instance, 'id', true);
 
     // Insert the root user
