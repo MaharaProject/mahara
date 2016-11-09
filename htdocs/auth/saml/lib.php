@@ -280,6 +280,7 @@ class PluginAuthSaml extends PluginAuth {
         'firstnamefield'        => '',
         'surnamefield'          => '',
         'emailfield'            => '',
+        'studentidfield'         => '',
         'updateuserinfoonlogin' => 1,
         'institution'           => '',
         'institutionattribute'  => '',
@@ -557,107 +558,113 @@ class PluginAuthSaml extends PluginAuth {
             $idp_title .= " (" . $entityid . ")";
         }
         $elements = array(
-            'instance' => array(
-                'type'  => 'hidden',
-                'value' => $instance,
+          'instance' => array(
+            'type' => 'hidden',
+            'value' => $instance,
+          ),
+          'instancename' => array(
+            'type' => 'hidden',
+            'value' => 'SAML',
+          ),
+          'institution' => array(
+            'type' => 'hidden',
+            'value' => $institution,
+          ),
+          'authname' => array(
+            'type' => 'hidden',
+            'value' => 'saml',
+          ),
+          'institutionidp' => array(
+            'type' => 'textarea',
+            'title' => $idp_title,
+            'rows' => 10,
+            'cols' => 80,
+            'defaultvalue' => self::$default_config['institutionidp'],
+            'help' => true,
+            'class' => 'under-label',
+          ),
+          'institutionattribute' => array(
+            'type' => 'text',
+            'title' => get_string('institutionattribute', 'auth.saml', $institution),
+            'rules' => array(
+              'required' => true,
             ),
-            'instancename' => array(
-                'type'  => 'hidden',
-                'value' => 'SAML',
+            'defaultvalue' => self::$default_config['institutionattribute'],
+            'help' => true,
+          ),
+          'institutionvalue' => array(
+            'type' => 'text',
+            'title' => get_string('institutionvalue', 'auth.saml'),
+            'rules' => array(
+              'required' => true,
             ),
-            'institution' => array(
-                'type'  => 'hidden',
-                'value' => $institution,
+            'defaultvalue' => self::$default_config['institutionvalue'],
+            'help' => true,
+          ),
+          'institutionregex' => array(
+            'type' => 'switchbox',
+            'title' => get_string('institutionregex', 'auth.saml'),
+            'defaultvalue' => self::$default_config['institutionregex'],
+            'help' => true,
+          ),
+          'user_attribute' => array(
+            'type' => 'text',
+            'title' => get_string('userattribute', 'auth.saml'),
+            'rules' => array(
+              'required' => true,
             ),
-            'authname' => array(
-                'type'  => 'hidden',
-                'value' => 'saml',
-            ),
-            'institutionidp' => array(
-                'type'  => 'textarea',
-                'title' => $idp_title,
-                'rows' => 10,
-                'cols' => 80,
-                'defaultvalue' => self::$default_config['institutionidp'],
-                'help' => true,
-                'class' => 'under-label',
-            ),
-            'institutionattribute' => array(
-                'type'  => 'text',
-                'title' => get_string('institutionattribute', 'auth.saml', $institution),
-                'rules' => array(
-                    'required' => true,
-                ),
-                'defaultvalue' => self::$default_config['institutionattribute'],
-                'help' => true,
-            ),
-            'institutionvalue' => array(
-                'type'  => 'text',
-                'title' => get_string('institutionvalue', 'auth.saml'),
-                'rules' => array(
-                'required' => true,
-                ),
-                'defaultvalue' => self::$default_config['institutionvalue'],
-                'help' => true,
-            ),
-            'institutionregex' => array(
-                'type'         => 'switchbox',
-                'title' => get_string('institutionregex', 'auth.saml'),
-                'defaultvalue' => self::$default_config['institutionregex'],
-                'help' => true,
-            ),
-            'user_attribute' => array(
-                'type'  => 'text',
-                'title' => get_string('userattribute', 'auth.saml'),
-                'rules' => array(
-                    'required' => true,
-                ),
-                'defaultvalue' => self::$default_config['user_attribute'],
-                'help' => true,
-            ),
-            'remoteuser' => array(
-                'type'         => 'switchbox',
-                'title' => get_string('remoteuser', 'auth.saml'),
-                'defaultvalue' => self::$default_config['remoteuser'],
-                'help'  => true,
-            ),
-            'loginlink' => array(
-                'type'         => 'switchbox',
-                'title' => get_string('loginlink', 'auth.saml'),
-                'defaultvalue' => self::$default_config['loginlink'],
-                'disabled' => (self::$default_config['remoteuser'] ? false : true),
-                'help'  => true,
-            ),
-            'updateuserinfoonlogin' => array(
-                'type'         => 'switchbox',
-                'title' => get_string('updateuserinfoonlogin', 'auth.saml'),
-                'defaultvalue' => self::$default_config['updateuserinfoonlogin'],
-                'help'  => true,
-            ),
-            'weautocreateusers' => array(
-                'type'         => 'switchbox',
-                'title' => get_string('weautocreateusers', 'auth.saml'),
-                'defaultvalue' => self::$default_config['weautocreateusers'],
-                'help'  => true,
-            ),
-            'firstnamefield' => array(
-                'type'  => 'text',
-                'title' => get_string('samlfieldforfirstname', 'auth.saml'),
-                'defaultvalue' => self::$default_config['firstnamefield'],
-                'help'  => true,
-            ),
-            'surnamefield' => array(
-                'type'  => 'text',
-                'title' => get_string('samlfieldforsurname', 'auth.saml'),
-                'defaultvalue' => self::$default_config['surnamefield'],
-                'help'  => true,
-            ),
-            'emailfield' => array(
-                'type'  => 'text',
-                'title' => get_string('samlfieldforemail', 'auth.saml'),
-                'defaultvalue' => self::$default_config['emailfield'],
-                'help' => true,
-            ),
+            'defaultvalue' => self::$default_config['user_attribute'],
+            'help' => true,
+          ),
+          'remoteuser' => array(
+            'type' => 'switchbox',
+            'title' => get_string('remoteuser', 'auth.saml'),
+            'defaultvalue' => self::$default_config['remoteuser'],
+            'help' => true,
+          ),
+          'loginlink' => array(
+            'type' => 'switchbox',
+            'title' => get_string('loginlink', 'auth.saml'),
+            'defaultvalue' => self::$default_config['loginlink'],
+            'disabled' => (self::$default_config['remoteuser'] ? false : true),
+            'help' => true,
+          ),
+          'updateuserinfoonlogin' => array(
+            'type' => 'switchbox',
+            'title' => get_string('updateuserinfoonlogin', 'auth.saml'),
+            'defaultvalue' => self::$default_config['updateuserinfoonlogin'],
+            'help' => true,
+          ),
+          'weautocreateusers' => array(
+            'type' => 'switchbox',
+            'title' => get_string('weautocreateusers', 'auth.saml'),
+            'defaultvalue' => self::$default_config['weautocreateusers'],
+            'help' => true,
+          ),
+          'firstnamefield' => array(
+            'type' => 'text',
+            'title' => get_string('samlfieldforfirstname', 'auth.saml'),
+            'defaultvalue' => self::$default_config['firstnamefield'],
+            'help' => true,
+          ),
+          'surnamefield' => array(
+            'type' => 'text',
+            'title' => get_string('samlfieldforsurname', 'auth.saml'),
+            'defaultvalue' => self::$default_config['surnamefield'],
+            'help' => true,
+          ),
+          'emailfield' => array(
+            'type' => 'text',
+            'title' => get_string('samlfieldforemail', 'auth.saml'),
+            'defaultvalue' => self::$default_config['emailfield'],
+            'help' => true,
+          ),
+          'studentidfield' => array(
+            'type' => 'text',
+            'title' => 'Test id number',
+            'defaultvalue' => self::$default_config['studentidfield'],
+            'help' => true,
+          ),
         );
 
         return array(
@@ -802,6 +809,7 @@ class PluginAuthSaml extends PluginAuth {
             'firstnamefield' => $values['firstnamefield'],
             'surnamefield' => $values['surnamefield'],
             'emailfield' => $values['emailfield'],
+            'studentidfield' => $values['studentidfield'],
             'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
             'institutionattribute' => $values['institutionattribute'],
             'institutionvalue' => $values['institutionvalue'],
