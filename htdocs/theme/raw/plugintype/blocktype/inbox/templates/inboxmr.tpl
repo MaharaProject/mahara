@@ -5,9 +5,9 @@
 {else}
     <div id="inboxblock" class="inboxblock list-group">
         {foreach from=$items item=i}
-        <div class="has-attachment panel-default collapsible list-group-item">
+        <div class="has-attachment panel-default collapsible list-group-item{if !$i->read} js-panel-unread{/if}" data-requesturl="{$WWWROOT}module/multirecipientnotification/indexin.json.php">
             {if $i->message}
-                <a class="collapsed link-block{if !$i->read} unread{/if}" data-toggle="collapse" href="#message_content_{$i->type}_{$i->id}" aria-expanded="false">
+                <a class="collapsed link-block{if !$i->read} unread{/if}" data-toggle="collapse" href="#message_content_{$i->type}_{$i->id}" data-id="{$i->id}" aria-expanded="false">
                     {if $i->type == 'usermessage'}
                         <span class="icon icon-envelope text-default left" role="presentation" aria-hidden="true"></span>
                     {elseif $i->type == 'institutionmessage'}
@@ -61,4 +61,7 @@
         {str tag=More section=blocktype.inbox}</a>
     </div>
     {/if}
+    <script type="application/javascript">
+    jQuery(document).trigger('pageupdated');
+    </script>
 {/if}

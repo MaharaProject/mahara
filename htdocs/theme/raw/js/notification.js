@@ -9,8 +9,12 @@ jQuery(function($) {
     // Set up event handlers
     function init() {
 
-        //reattach listeners when page has finished updating
+        // Re-attach listeners when page has finished updating
         $(window).on('pageupdated',function() {
+            // Need to reset this if lazy loading a block
+            if ($('[data-requesturl]').length > 0) {
+                requesturl = $('[data-requesturl]').attr('data-requesturl');
+            }
             attachNotificationEvents();
         });
 
@@ -115,12 +119,13 @@ jQuery(function($) {
     function markthisread(e, self, paginatorData) {
 
         var checked = $(self).find('.control.unread input.tocheck'),
+           inboxblockunread = $(self).find('.link-block.unread'),
            item = self,
            i,
            requestdata = {};
 
-        if (checked.length < 1) {
-            return; //no valid items selected
+        if (checked.length < 1 && inboxblockunread.length < 1) {
+            return; // no valid items selected
         }
 
         for (i = 0; i < checked.length; i++) {
