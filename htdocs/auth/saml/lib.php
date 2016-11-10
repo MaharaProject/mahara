@@ -90,6 +90,7 @@ class AuthSaml extends Auth {
         $firstname       = isset($attributes[$this->config['firstnamefield']][0]) ? $attributes[$this->config['firstnamefield']][0] : null;
         $lastname        = isset($attributes[$this->config['surnamefield']][0]) ? $attributes[$this->config['surnamefield']][0] : null;
         $email           = isset($attributes[$this->config['emailfield']][0]) ? $attributes[$this->config['emailfield']][0] : null;
+        $studentid           = isset($attributes[$this->config['studentidfield']][0]) ? $attributes[$this->config['studentidfield']][0] : null;
         $institutionname = $this->institution;
 
         $create = false;
@@ -183,6 +184,7 @@ class AuthSaml extends Auth {
             $user->firstname          = $firstname;
             $user->lastname           = $lastname;
             $user->email              = $email;
+            $user->studentid          = $studentid;
 
             // must have these values
             if (empty($firstname) || empty($lastname) || empty($email)) {
@@ -229,6 +231,14 @@ class AuthSaml extends Auth {
                 set_profile_field($user->id, 'email', $email);
                 $user->email = $email;
             }
+
+
+            if (! empty($studentid)) {
+                set_profile_field($user->id, 'studentid', $studentid);
+                $user->studentid = $studentid;
+            }
+
+
             $user->lastlastlogin      = $user->lastlogin;
             $user->lastlogin          = time();
         }
