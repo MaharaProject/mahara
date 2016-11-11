@@ -157,7 +157,9 @@ class BehatConfigManager {
                         'files_path' => get_mahararoot_dir() . '/test/behat/upload_files',
                         'sessions' => array(
                             'default' => array(
-                                'selenium2' => null
+                                'selenium2' => array (
+                                    'wd_host' => $CFG->behat_selenium2
+                                ),
                             ),
                             'headless' => array(
                                 'goutte' => null
