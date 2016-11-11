@@ -5,12 +5,18 @@ ACTION=$1
 SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
 MAHARAROOT=`dirname $( dirname $( dirname "$SCRIPTPATH" ))`
 SERVER=0
+test -z $SELENIUM_PORT && export SELENIUM_PORT=4400
+test -z $PHP_PORT && export PHP_PORT=8000
+test -z $XVFB_PORT && export XVFB_PORT=10
+
+echo "S: $SELENIUM_PORT"
+echo "P: $PHP_PORT"
 
 # Wait and check if the selenium server is running in maximum 15 seconds
 function is_selenium_running {
     for i in `seq 1 15`; do
         sleep 1
-        res=$(curl -o /dev/null --silent --write-out '%{http_code}\n' http://localhost:4444/wd/hub/status)
+        res=$(curl -o /dev/null --silent --write-out '%{http_code}\n' http://localhost:${SELENIUM_PORT}/wd/hub/status)
         if [ $res == "200" ]; then
             return 0;
         fi
@@ -20,7 +26,7 @@ function is_selenium_running {
 
 function cleanup {
     echo "Shutdown Selenium"
-    curl -o /dev/null --silent http://localhost:4444/selenium-server/driver/?cmd=shutDownSeleniumServer
+    curl -o /dev/null --silent http://localhost:${SELENIUM_PORT}/selenium-server/driver/?cmd=shutDownSeleniumServer
 
     if [[ $SERVER ]]
     then
@@ -109,11 +115,11 @@ then
         then
             # we want to run selenium headless on a different display - this allows for that ;)
             echo "Starting Xvfb ..."
-            Xvfb :10 -ac > /dev/null 2>&1 & echo "PID [$!]"
+            Xvfb :${XVFB_PORT} -ac > /tmp/xvfb.log 2>&1 & echo "PID [$!]"
 
-            DISPLAY=:10 nohup java -jar $SELENIUM_PATH > /dev/null 2>&1 & echo $!
+            DISPLAY=:${XVFB_PORT} nohup java -jar $SELENIUM_PATH -port ${SELENIUM_PORT} > /tmp/selenium.log 2>&1 & echo $!
         else
-            java -jar $SELENIUM_PATH &> /dev/null &
+            java -jar $SELENIUM_PATH -port ${SELENIUM_PORT} &> /tmp/selenium.log &
         fi
 
         if is_selenium_running; then
@@ -125,7 +131,7 @@ then
     fi
 
     echo "Start PHP server"
-    php --server localhost:8000 --docroot $MAHARAROOT/htdocs &>/dev/null &
+    php --server localhost:${PHP_PORT} --docroot $MAHARAROOT/htdocs &> /tmp/php.log &
     SERVER=$!
 
     BEHATCONFIGFILE=`php htdocs/testing/frameworks/behat/cli/util.php --config`
