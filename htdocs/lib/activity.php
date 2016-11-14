@@ -471,7 +471,8 @@ function watchlist_process_notifications() {
 
 function activity_get_viewaccess_users($view) {
     require_once(get_config('docroot') . 'lib/group.php');
-    $sql = "SELECT userlist.userid, usr.*, actpref.method, accpref.value AS lang
+    $sql = "SELECT userlist.userid, usr.*, actpref.method, accpref.value AS lang,
+              aic.value AS mnethostwwwroot, h.appname AS mnethostapp
                 FROM (
                     SELECT friend.usr1 AS userid
                       FROM {view} view
@@ -500,7 +501,10 @@ function activity_get_viewaccess_users($view) {
                 JOIN {usr} usr ON usr.id = userlist.userid
                 LEFT JOIN {usr_activity_preference} actpref ON actpref.usr = usr.id
                 LEFT JOIN {activity_type} acttype ON actpref.activity = acttype.id AND acttype.name = 'viewaccess'
-                LEFT JOIN {usr_account_preference} accpref ON accpref.usr = usr.id AND accpref.field = 'lang'";
+                LEFT JOIN {usr_account_preference} accpref ON accpref.usr = usr.id AND accpref.field = 'lang'
+                LEFT JOIN {auth_instance} ai ON ai.id = usr.authinstance
+                LEFT OUTER JOIN {auth_instance_config} aic ON (aic.instance = ai.id AND aic.field = 'wwwroot')
+                LEFT OUTER JOIN {host} h ON aic.value = h.wwwroot";
     $values = array($view, $view, $view, $view);
     if (!$u = get_records_sql_assoc($sql, $values)) {
         $u = array();
