@@ -671,7 +671,7 @@ class PluginAuthSaml extends PluginAuth {
           ),
           'studentidfield' => array(
             'type' => 'text',
-            'title' => 'Test id number',
+            'title' => get_string('samlfieldforstudentid', 'auth.saml'),
             'defaultvalue' => self::$default_config['studentidfield'],
             'help' => true,
           ),
