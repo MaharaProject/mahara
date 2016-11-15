@@ -437,6 +437,7 @@ $string['passwordsaved'] = 'Your new password has been saved';
 $string['passwordsdonotmatch'] = 'The passwords do not match.';
 $string['passwordtooeasy'] = 'Your password is too easy. Please choose a harder password.';
 $string['register'] = 'Register';
+$string['reloadtoview'] = 'Reload the page to view';
 $string['sessiontimedout'] = 'Your session has timed out. Please enter your login details to continue.';
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="%s">log in</a> to continue browsing.';
 $string['sessiontimedoutreload'] = 'Your session has timed out. Reload the page to log in again.';

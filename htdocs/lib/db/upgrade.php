@@ -5423,5 +5423,10 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records('usr_account_preference','field','mobileuploadtoken');
     }
 
+    if ($oldversion < 2017110600) {
+        log_debug('Add Voki filters to DB');
+        reload_html_filters();
+    }
+
     return $status;
 }

@@ -8,4 +8,8 @@
         <filename>Twitter</filename>
         <site>http://twitter.com</site>
     </filter>
+    <filter>
+        <filename>Voki</filename>
+        <site>http://www.voki.com</site>
+    </filter>
 </filters>
