@@ -5414,5 +5414,11 @@ function xmldb_core_upgrade($oldversion=0) {
             add_field($table, $field);
         }
     }
+
+    if ($oldversion < 2017092608) {
+        log_debug('Add Voki filters to DB');
+        reload_html_filters();
+    }
+
     return $status;
 }

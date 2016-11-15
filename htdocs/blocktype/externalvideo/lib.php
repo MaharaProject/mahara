@@ -458,4 +458,12 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
     public static function get_artefacts(BlockInstance $instance) {
         return array();
     }
+
+    public static function get_instance_javascript(BlockInstance $bi) {
+        return array(
+            array(
+                'file'   => 'js/voki.js',
+            )
+        );
+    }
 }
