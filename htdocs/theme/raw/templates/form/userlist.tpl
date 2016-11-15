@@ -72,7 +72,7 @@
             }
         });
 
-        jQuery('{{$name}}_search_btn').click(function(e) {
+        jQuery('#{{$name}}_search_btn').click(function(e) {
             {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
             e.preventDefault();
         });
