@@ -22,6 +22,15 @@
     }
 }
 
+// Ensure that when tinyMce is displayed correctly on IE11
+// When it is on fullscreen mode
+.mce-fullscreen {
+    .modal-docked .modal-body,
+    .page-modal .modal-body{
+        overflow: visible;
+    }
+}
+
 .mce-fullscreen.mce-tinymce {
     z-index: $zindex-tooltip + 10; // needs to be above all bootstrap components
 }
