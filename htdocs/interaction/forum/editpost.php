@@ -178,7 +178,7 @@ function editpost_validate(Pieform $form, $values) {
     }
     $result = probation_validate_content($values['body']);
     if ($result !== true) {
-        $form->set_error('body', get_string('newuserscantpostlinksorimages'));
+        $form->set_error('body', get_string('newuserscantpostlinksorimages1'));
     }
 }
 

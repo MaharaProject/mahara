@@ -1511,7 +1511,7 @@ function add_feedback_form_validate(Pieform $form, $values) {
     }
     $result = probation_validate_content($values['message']);
     if ($result !== true) {
-        $form->set_error('message', get_string('newuserscantpostlinksorimages'));
+        $form->set_error('message', get_string('newuserscantpostlinksorimages1'));
     }
     if ($values['replyto']) {
         $parent = get_record_sql(

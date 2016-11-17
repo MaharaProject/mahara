@@ -63,7 +63,11 @@
                         {$item->deletedmessage}
                     </span>
                 {else}
-                    {$item->description|safe|clean_html}
+                    {if $item->author}
+                        {$item->description|safe|clean_html}
+                    {else}
+                        {$item->description|safe}
+                    {/if}
                 {/if}
             </div>
 

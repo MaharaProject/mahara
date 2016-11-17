@@ -98,7 +98,7 @@ function edit_annotation_feedback_validate(Pieform $form, $values) {
     require_once(get_config('libroot.php') . 'antispam.php');
     $result = probation_validate_content($values['message']);
     if ($result !== true) {
-        $form->set_error('message', get_string('newuserscantpostlinksorimages'));
+        $form->set_error('message', get_string('newuserscantpostlinksorimages1'));
     }
 }
 
