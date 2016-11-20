@@ -152,13 +152,14 @@ function pieform_element_select(Pieform $form, $element) {
         );
         if (isset($use_other)) {
             $other_value = ' value="' . hsc($use_other) . '"';
+            $other_attrib['class'] = 'text form-control secondary-textbox';
         }
         else {
-            $other_attrib['class'] = 'hidden';
+            $other_attrib['class'] = 'text form-control secondary-textbox hidden';
             $other_value = '';
         }
         $result .= '<label for="' . $form->make_id($other_attrib, true) . '" class="accessible-hidden sr-only">' . get_string('licenseotherurl') . '</label>'
-                . '<input type="text"'
+                . '<input type="text" '
                 . $form->element_attributes($other_attrib)
                 . $other_value
                 . ">\n";
