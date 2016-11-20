@@ -4763,5 +4763,27 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016111100) {
+        log_debug('Make sure all places the default admin email is recorded as the same address');
+        if ($results = get_records_sql_array("SELECT u.id, u.email AS usr_email,
+                                                    a.id AS artefactid, a.title AS artefact_email,
+                                                    ae.email as artefact_internal_profile_email, ae.principal
+                                                  FROM usr u
+                                                  JOIN artefact a ON a.owner = u.id
+                                                  JOIN artefact_internal_profile_email ae ON (ae.owner = u.id and ae.artefact = a.id)
+                                                  WHERE a.artefacttype = 'email' AND (u.email = ? OR a.title = ?)",
+                                                 array('admin@example.org', 'admin@example.org'))) {
+            foreach ($results as $result) {
+                // Using the one in 'artefact_internal_profile_email' table as correct one
+                if ($result->artefact_email != $result->artefact_internal_profile_email) {
+                    update_record('artefact', array('title' => $result->artefact_internal_profile_email), array('owner' => $result->id, 'artefacttype' => 'email', 'id' => $result->artefactid));
+                }
+                if ($result->usr_email != $result->artefact_internal_profile_email && $result->principal == 1) {
+                    update_record('usr', array('email' => $result->artefact_internal_profile_email), array('id' => $result->id));
+                }
+            }
+        }
+    }
+
     return $status;
 }
