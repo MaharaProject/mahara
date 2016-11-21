@@ -452,7 +452,7 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
      * appropriate in setup_relationships.  To do that we would have
      * to change that call to happen after views are created.
      */
-    public static function setup_view_relationships(SimpleXMLElement $entry, PluginImportLeap $importer) {
+    public static function setup_view_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         $annotation = self::get_annotation_instance($entry, $importer);
 
         if (!$annotation->get('id')) {
