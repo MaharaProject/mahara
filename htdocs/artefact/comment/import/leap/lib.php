@@ -279,16 +279,14 @@ class LeapImportComment extends LeapImportArtefactPlugin {
      * appropriate in setup_relationships.  To do that we would have
      * to change that call to happen after views are created.
      */
-    public static function setup_view_relationships_from_request(PluginImportLeap $importer) {
+    public static function setup_view_relationships_from_requests(PluginImportLeap $importer) {
         if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importer->get('importertransport')->get('importid'), 'comment'))) {
             foreach ($entry_requests as $entry_request) {
-                $commentids = unserialize($entry_request->artefactmapping);
+                $commentids = $importer->artefactids[$entry_request->entryid];
                 $comment = new ArtefactTypeComment($commentids[0]);
-
                 if ($comment->get('onartefact')) {
                     continue;
                 }
-
                 $entry = $importer->get_entry_by_id($entry_request->entryid);
                 $referentid = self::get_referent_entryid($entry, $importer);
                 if ($viewid = $importer->get_viewid_imported_by_entryid($referentid)) {
