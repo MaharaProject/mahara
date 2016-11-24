@@ -40,7 +40,7 @@ if ($accesschanged = $SESSION->get('pageaccesschanged')) {
     $alertstr = substr($alertstr, 0, -1) . '.';
     $alertstr = get_string('viewsaddedtocollection1', 'collection', $SESSION->get('pagesadded')) . ' ' . $alertstr;
     $hassecreturl = $SESSION->get('hassecreturl');
-    $alertstr .= ($hassecreturl) ? get_string('viewaddedsecreturl', 'collection') : '';
+    $alertstr .= ($hassecreturl) ? ' ' . get_string('viewaddedsecreturl', 'collection') : '';
     $inlinejs = <<<EOF
 jQuery(function($) {
     var message = $('<div id="changestatusline" class="alert alert-dismissible alert-warning" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p>$alertstr</p></div>');
@@ -243,7 +243,7 @@ function addviews_submit(Pieform $form, $values) {
     $hassecreturl = false;
     $views_all = array_merge($differentarray, $viewids);
     if (!empty($views_all)) {
-        if (count_records_sql("SELECT token FROM {view_access} WHERE view IN (" . join(',', array_merge($differentarray, $viewids)) . ") AND (token IS NOT NULL AND token !='')")) {
+        if (record_exists_select("view_access", "view IN (" . join(',', array_merge($differentarray, $viewids)) . ") AND (token IS NOT NULL AND token !='')")) {
             $hassecreturl = true;
         }
     }

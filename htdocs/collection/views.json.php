@@ -103,7 +103,7 @@ if (!empty($direction)) {
             $hassecreturl = false;
             $views_all = array_merge($differentarray, $viewids);
             if (!empty($views_all)) {
-                if (count_records_sql("SELECT token FROM {view_access} WHERE view IN (" . join(',', array_merge($differentarray, $viewids)) . ") AND (token IS NOT NULL AND token !='')")) {
+                if (record_exists_select("view_access", "view IN (" . join(',', array_merge($differentarray, $viewids)) . ") AND (token IS NOT NULL AND token !='')")) {
                     $hassecreturl = true;
                 }
             }
