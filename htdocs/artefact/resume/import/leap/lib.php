@@ -577,7 +577,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
      * Imports data for the personalinformation artefact type, by looking for
      * it in the persondata element
      */
-    public static function import_author_data(PluginImport $importer, $persondataid) {
+    public static function import_author_data(PluginImportLeap $importer, $persondataid) {
         if ($data = self::get_personalinformation_from_author_data($importer, $persondataid)) {
             $artefact = new ArtefactTypePersonalinformation(0, array('owner' => $importer->get('usr')));
             foreach ($data['content'] as $key => $value) {
