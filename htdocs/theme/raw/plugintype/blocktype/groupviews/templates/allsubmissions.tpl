@@ -6,7 +6,7 @@
         <h5 class="text-inline">{$item.name|str_shorten_text:60:true}</h5>
         <span class="owner metadata inner-link text-small">
             {str tag=by section=view}
-            <a href="{$item.ownerurl}" class="text-success text-small">
+            <a href="{$item.ownerurl}" class="text-link text-small">
             {$item.ownername}
             </a>
         </span>

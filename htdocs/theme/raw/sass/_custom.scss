@@ -50,12 +50,12 @@
 .layoutthumb {
     rect.layout1 {
         fill: darken($panel-default-heading-bg, 10%);
-        stroke: #ccc;
+        stroke: $panel-default-border;
     }
 
     rect.layout0 {
         fill: darken($panel-default-heading-bg, 15%);
-        stroke: #ccc;
+        stroke: $panel-default-border;
     }
 
     svg {
@@ -195,10 +195,6 @@
     display: inline-block;
 }
 
-.form-group .select2-container .select2-selection .select2-search input[type=search] {
-    width: 100% !important;
-}
-
 .progress-bar {
     position: relative;
     background-color: darken($brand-primary, 5%);
@@ -303,7 +299,6 @@
 // Editgroup membership modal
 // see editgroupmemship.tpl
 .editgroup-container {
-    border-bottom: 1px solid #f9f9f9;
     padding-bottom: 20px;
     margin-bottom: 20px;
     &:last-child {
@@ -336,7 +331,7 @@
         position: relative;
         top: -3px;
         margin-left: 3px;
-        color: #888;
+        color: $gray-light;
     }
     .asc > a::after {
         content: '\f0dd';
@@ -349,7 +344,7 @@
 }
 
 .containobjectionable {
-    background-color: #FEE7E7;
+    background-color: $state-danger-bg;
 }
 
 .permissions-table {
@@ -401,7 +396,7 @@
 // Remove the link colour from a comment that has an attachement
 @media (min-width: 992px) {
     .viewfooter .comment-item .comment-attachment .panel.collapsible h4 a.collapsed {
-        color: #333;
+        color: $text-color;
     }
 }
 

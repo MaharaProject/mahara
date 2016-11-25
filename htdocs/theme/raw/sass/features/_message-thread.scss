@@ -48,12 +48,12 @@
         padding-bottom:10px;
         margin-bottom: 21px;
         margin-bottom: 21px;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid $panel-default-border;
     }
     .date,
     .recipients,
     .subject {
-        color: #555;
+        color: $gray;
         font-size: 0.9em;
     }
 }

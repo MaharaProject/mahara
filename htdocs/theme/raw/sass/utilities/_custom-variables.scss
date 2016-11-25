@@ -1,6 +1,6 @@
 // Custom component variables (non-bootstrap components)
 
-//Arrow compoanent variables
+//Arrow component variables
 $arrow-color: lighten(desaturate($brand-primary, 80%), 55%) !default;
 $arrow-text-color: $text-color !default;
 $arrow-link-color: $link-color !default;
@@ -17,3 +17,9 @@ $dashboard-widget-color: $brand-primary !default;
 
 $help-icon-color: $state-info-text !default;
 $rss-icon-color: #FE6500 !default;
+
+// Smart Evidence status colors
+$assessment-begun-color: #5b9aa9 !default;
+$assessment-incomplete-color: $brand-danger !default;
+$assessment-partial-color: $brand-warning !default;
+$assessment-completed-color: $brand-success !default;

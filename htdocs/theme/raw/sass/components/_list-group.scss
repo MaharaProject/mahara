@@ -134,7 +134,7 @@ h4.list-group-item-heading {
         }
         .file-size {
             float: right;
-            color: darken($brand-default, 40%);
+            color: $theme-text-lighttone-color;
         }
     }
 
@@ -159,7 +159,7 @@ h4.list-group-item-heading {
         @extend .list-group-item-warning;
     }
     &.published {
-        background: #fefefe;
+        background: lighten($panel-default-heading-bg, 1%);
     }
     &.flush {
         padding: 10px 0;
@@ -285,7 +285,7 @@ h4.list-group-item-heading {
 }
 
 .annotation-feedback {
-    border-top: 1px solid #ddd !important;
+    border-top: 1px solid $list-group-border !important;
 }
 
 .feedback.modal {

@@ -1,13 +1,13 @@
 a.panel-footer {
     text-align:center;
-    color: #555;
+    color: $gray;
     display: block;
     &:hover {
-        color: #222;
+        color: $gray-darker;
         background: $gray-lighter;
         text-decoration: none;
         .icon {
-            color: #777;
+            color: $gray-light;
         }
         .icon.pull-right { //only apply link colorto right aligned icons
             color: $link-color;
@@ -57,7 +57,7 @@ a.panel-footer {
         }
     }
     a:not(.btn) {
-        color: #333;
+        color: $gray-dark;
     }
 }
 
