@@ -2860,8 +2860,6 @@ function remote_avatar_url($email, $size) {
     $allowedsizes = array(16, 20, 25, 40, 50, 60, 100);
     if (!in_array($s, $allowedsizes)) {
         log_warn('remote_avatar_url: size should be in (' . join(', ', $allowedsizes) . ')');
-    }
-    else {
         $s = 40;
     }
     $notfound = $THEME->get_image_url('no_userphoto' . $s);
