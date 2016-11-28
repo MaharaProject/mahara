@@ -139,12 +139,17 @@ jQuery(document).ready(function() {
 
     // handling errors stemming from dropzone itself
     myDropzone.on("error", function(userfile, errmsg, errxhr) {
+        var messagestr;
+        try {
+            var messageobj = JSON.parse(errmsg);
+            messagestr = messageobj.message;
+        }
+        catch (error) {
+            messagestr = errmsg;
+        }
         current_drop_number = 0;
         var data = {'error':'true'};
-        data['message'] = errmsg;
-        if (undefined != errxhr) {
-            data['message'] += errxhr;
-        }
+        data['message'] = messagestr;
         dropzone_uploadnumber ++;
         data['uploadnumber'] = dropzone_uploadnumber;
         window[prefix].callback(window[prefix].form, data);
