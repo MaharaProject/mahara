@@ -16,7 +16,7 @@ var checkOldContent = false;
 
 function updateWYSIWYGText() {
     if (((checkOldContent && oldPageContent != tinyMCE.activeEditor.getContent()) || changedCheckbox) && !confirm(get_string('discardpageedits', 'admin'))) {
-        $('editsitepage_pagename').value = oldPageName;
+        jQuery('#editsitepage_pagename').val(oldPageName);
         return;
     }
     if (!tinyMCE.Env.ie) {
@@ -25,17 +25,17 @@ function updateWYSIWYGText() {
     }
     sendjsonrequest(
         config['wwwroot'] + 'admin/site/editchangecontent.json.php',
-        {'contentname' : $('editsitepage_pagename').value,
-         'institution' : $('editsitepage_pageinstitution').value
+        {'contentname' : jQuery('#editsitepage_pagename').val(),
+         'institution' : jQuery('#editsitepage_pageinstitution').val()
         },
         'POST',
         function(data) {
             if (!data.error) {
                 tinyMCE.activeEditor.setContent(data.content);
                 oldPageContent = tinyMCE.activeEditor.getContent();
-                oldPageName = $('editsitepage_pagename').value;
-                if ($('editsitepage_pageusedefault')) {
-                    $('editsitepage_pageusedefault').checked = (data.pageusedefault) ? true : false;
+                oldPageName = jQuery('#editsitepage_pagename').val();
+                if (jQuery('#editsitepage_pageusedefault')) {
+                    jQuery('#editsitepage_pageusedefault').prop('checked', (data.pageusedefault) ? true : false);
                     updateSiteDefault(false);
                 }
             }
@@ -46,32 +46,37 @@ function updateWYSIWYGText() {
 function updateSiteDefault(changed) {
     changedCheckbox = (changed) ? true : false;
     var editor = jQuery('#editsitepage_pagetext_container .mce-tinymce');
-    if ($('editsitepage_pageusedefault') && $('editsitepage_pageusedefault').checked == true) {
-        tinyMCE.activeEditor.getBody().setAttribute('contenteditable', false);
-        $('changecheckboxdiv').style.display = 'block';
-        $('changecheckboxdiv').style.zIndex = '1';
-        $('changecheckboxdiv').style.position = 'absolute';
-        $('changecheckboxdiv').style.width = editor.outerWidth() + 'px';
-        $('changecheckboxdiv').style.height = editor.outerHeight() + 'px';
-        $('changecheckboxdiv').style.top = editor.offset().top + 'px';
-        $('changecheckboxdiv').style.left = editor.offset().left + 'px';
+    if (jQuery('#editsitepage_pageusedefault')[0] && $('editsitepage_pageusedefault').prop('checked') === true) {
+        jQuery(tinyMCE.activeEditor.getBody()).prop('contenteditable', false);
+        jQuery('#changecheckboxdiv').css({
+          'display': 'block',
+          'zIndex': '1',
+          'position': 'absolute',
+          'width': editor.outerWidth() + 'px',
+          'height': editor.outerHeight() + 'px',
+          'top': editor.offset().top + 'px',
+          'left': editor.offset().left + 'px'
+        });
     }
     else {
-        tinyMCE.activeEditor.getBody().setAttribute('contenteditable', true);
-        $('changecheckboxdiv').style.display = 'none';
-        $('changecheckboxdiv').style.width = '1px';
-        $('changecheckboxdiv').style.height = '1px';
+      jQuery(tinyMCE.activeEditor.getBody()).prop('contenteditable', true);
+      jQuery('#changecheckboxdiv').css({
+        'display': 'none',
+        'width': '1px',
+        'height': '1px'
+      });
     }
 }
 
 function connectElements() {
-    connect('editsitepage_pagename', 'onchange', updateWYSIWYGText);
-    connect('editsitepage_pageinstitution', 'onchange', updateWYSIWYGText);
-    if ($('editsitepage_pageusedefault')) {
-        connect('editsitepage_pageusedefault', 'onchange', updateSiteDefault);
+    jQuery('#editsitepage_pagename').on('change', updateWYSIWYGText);
+    jQuery('#editsitepage_pageinstitution').on('change', updateWYSIWYGText);
+    if (jQuery('#editsitepage_pageusedefault').length) {
+        jQuery('#editsitepage_pageusedefault').on('change', updateSiteDefault);
     }
     // create hidden div to place over tinymce to 'show' when it is disabled from editing
-    appendChildNodes(document.body, DIV({'id':'changecheckboxdiv','style':'display:none;background-color: rgba(200,200,200,0.5)'}, ''));
+    var changeboxdiv = jQuery('<div />', {'id':'changecheckboxdiv','style':'display:none;background-color: rgba(200,200,200,0.5)'});
+    jQuery(document.body).append(changeboxdiv);
 }
 
 function contentSaved(form, data) {
@@ -90,13 +95,13 @@ function contentSaved(form, data) {
     updateSiteDefault(false);
 }
 
-addLoadEvent(function() {
-    connectElements();
-    // need to wait until tinyMCE editor is loaded before updating editor's text
-    var checkExists = setInterval(function() {
-        if (tinyMCE.activeEditor != "null") {
-            updateWYSIWYGText();
-            clearInterval(checkExists);
-        }
-    }, 500);
+jQuery.ready(function() {
+  connectElements();
+  // need to wait until tinyMCE editor is loaded before updating editor's text
+  var checkExists = setInterval(function() {
+      if (tinyMCE.activeEditor != "null") {
+          updateWYSIWYGText();
+          clearInterval(checkExists);
+      }
+  }, 500);
 });

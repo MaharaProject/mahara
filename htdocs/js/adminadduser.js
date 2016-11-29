@@ -11,96 +11,95 @@
 
 var current;
 
-function move_step(i) {
-    var selected = getFirstParentByTagAndClassName(i, 'td', 'step');
-    if (selected != current) {
-        addElementClass(selected, 'current');
-        if (current) {
-            removeElementClass(current, 'current');
-        }
-        current = selected;
-    }
-}
+jQuery(function($) {
+  function move_step(i) {
+      var selected = $(i).closest('td.step')[0];
+      if (selected != current) {
+          $(selected).addClass('current');
+          if (current) {
+              $(current).removeClass('current');
+          }
+          current = selected;
+      }
+  }
 
-function change_quota(i) {
-    var quota = document.getElementById('adduser_quota');
-    var quotaUnits = document.getElementById('adduser_quota_units');
-    var params = {};
-    params.instid = i.value;
-    if (quotaUnits == null) {
-        params.disabled = true;
-    }
-    sendjsonrequest('quota.json.php', params, 'POST', function(data) {
-        if (quotaUnits == null) {
-            quota.value = data.data;
-        }
-        else {
-            quota.value = data.data.number;
-            quotaUnits.value = data.data.units;
-        }
-    });
-}
+  function change_quota(input) {
+      var quota = document.getElementById('adduser_quota');
+      var quotaUnits = document.getElementById('adduser_quota_units');
+      var params = {};
+      params.instid = $(input).val();
+      if (quotaUnits == null) {
+          params.disabled = true;
+      }
+      sendjsonrequest('quota.json.php', params, 'POST', function(data) {
+          if (quotaUnits == null) {
+              quota.value = data.data;
+          }
+          else {
+              quota.value = data.data.number;
+              quotaUnits.value = data.data.units;
+          }
+      });
+  }
 
-addLoadEvent(function() {
-    var step1_spans = getElementsByTagAndClassName('span', 'requiredmarker', 'step1');
-    var step1_inputs = getElementsByTagAndClassName('input', 'required', 'step1');
-    var leap2a_input = $('adduser_leap2afile');
-    var leap2a_label = $('leap2a_label');
+    var step1_spans = $('.step1').find('span.requiredmarker');
+    var step1_inputs = $('.step1').find('input.required');
+    var leap2a_input = $('#adduser_leap2afile');
+    var leap2a_label = $('#leap2a_label');
 
     leap2a_input.disabled = true;
-    addElementClass('step1', 'current');
+    $('.step').addClass('current');
 
     /**
      * state = true if the user selects the leap2a radio button, else false
      */
     function set_step1_requiredfields(state) {
         if (state) {
-            forEach(step1_spans, function(span) {
-                setStyle(span, {'visibility': 'hidden'});
+            $(step1_spans).each(function() {
+              $(this).css('visibility', 'hidden');
             });
-            forEach(step1_inputs, function(input) {
-                removeElementClass(input, 'required');
+            $(step1_inputs).each(function() {
+              $(this).removeClass('required');
             });
         }
         else {
-            forEach(step1_spans, function(span) {
-                setStyle(span, {'visibility': 'visible'});
-            });
-            forEach(step1_inputs, function(input) {
-                addElementClass(input, 'required');
-            });
+          $(step1_spans).each(function() {
+            $(this).css('visibility', 'visible');
+          });
+          $(step1_inputs).each(function() {
+            $(this).addClass('required');
+          });
         }
 
-        $('adduser_firstname').disabled = state;
-        $('adduser_lastname').disabled = state;
-        $('adduser_email').disabled = state;
-        $('adduser_leap2afile').disabled = !state;
+        $('#adduser_firstname').prop('disabled',state);
+        $('#adduser_lastname').prop('disabled',state);
+        $('#adduser_email').prop('disabled',state);
+        $('#adduser_leap2afile').disabled = !state;
     }
 
 
-    forEach(getElementsByTagAndClassName('input', 'ic', 'adduser'), function(i) {
-        connect(i, 'onclick', function(e) {
-            set_step1_requiredfields(i.id == 'uploadleap');
-        });
-        if (i.checked) {
-            set_step1_requiredfields(i.id == 'uploadleap');
-        }
+    $('#adduser input.ic').each(function() {
+      $(this).on('click', function(e) {
+          set_step1_requiredfields($(this).prop('id') == 'uploadleap');
+      });
+      if ($(this).prop('checked')) {
+          set_step1_requiredfields($(this).prop('id') == 'uploadleap');
+      }
     });
 
 
-    current = getFirstElementByTagAndClassName('td', 'step1', 'adduser');
-    forEach(getElementsByTagAndClassName('input', null, 'adduser'), function(i) {
-        connect(i, 'onfocus', partial(move_step, i));
-        connect(i, 'onclick', partial(move_step, i));
+    current = $('#adduser td.step1')[0];
+    $('#adduser input').each(function() {
+      $(this).on('focus', move_step.bind(null, this));
+      $(this).on('click', move_step.bind(null, this));
     });
 
     select = document.getElementById('adduser_authinstance');
     if (select != null) {
-        connect(select, 'onchange', partial(change_quota, select));
+        $(select).on('change', change_quota.bind(null, select));
     }
     else {
         select = document.getElementsByName('authinstance')[0];
     }
     change_quota(select);
 });
-
