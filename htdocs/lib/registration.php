@@ -1226,7 +1226,8 @@ function view_stats_table($limit, $offset) {
 
     $viewdata = get_records_sql_assoc(
         "SELECT
-            v.id, v.title, v.owner, v.group, v.institution, v.visits, v.type, v.ownerformat, v.urlid
+            v.id, v.title, v.owner, v.group, v.institution, v.visits, v.type,
+            v.ownerformat, v.urlid, v.template
         FROM {view} v
         WHERE (v.owner != 0 OR \"owner\" IS NULL) AND v.type != ?
         ORDER BY v.visits DESC, v.title, v.id",
