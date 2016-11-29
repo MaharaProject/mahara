@@ -9,10 +9,10 @@
  *
  */
 
-addLoadEvent(function() {
-    connect(window,'onkeypress',function(e) {
-        var targetType = e.target().nodeName;
-        
+jQuery(function($) {
+    $(window).keypress(function(e) {
+        var targetType = e.target.nodeName;
+
         if (
             targetType == 'INPUT'
             || targetType == 'TEXTAREA'
@@ -23,7 +23,7 @@ addLoadEvent(function() {
         }
 
         if (config.commandMode) {
-            switch(e.key().string) {
+            switch(e.key) {
                 case 'a':
                     document.location.href = config.wwwroot + 'admin/';
                     break;
@@ -58,7 +58,7 @@ addLoadEvent(function() {
             config.commandMode = false;
         }
         else {
-            if (e.key().string == 'g') {
+            if (e.key.string == 'g') {
                 config.commandMode = true;
             }
         }
