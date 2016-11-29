@@ -53,7 +53,8 @@ foreach (array('soap', 'xmlrpc', 'rest') as $proto) {
         $popts[$proto] = get_string($proto, 'auth.webservice');
     }
 }
-$default_protocol = (empty($protocol) ?  array_shift(array_keys($popts)) : $protocol);
+$popts_keys = array_keys($popts);
+$default_protocol = (empty($protocol) ?  array_shift($popts_keys) : $protocol);
 $elements['protocol'] = array(
     'type'         => 'select',
     'title'        => get_string('protocol', 'auth.webservice'),
@@ -96,7 +97,8 @@ if (!empty($authtype)) {
             $sopts[$dbservice->id] = $dbservice->name . ' (' . ($dbservice->restrictedusers ? get_string('userauth', 'auth.webservice') : get_string('tokenauth', 'auth.webservice')) . ')';
         }
     }
-    $default_service = ($service == 0 ? array_shift(array_keys($sopts)) : $service);
+    $sopts_keys = array_keys($sopts);
+    $default_service = ($service == 0 ? array_shift($sopts_keys) : $service);
     $elements['service'] = array(
         'type'         => 'select',
         'title'        => get_string('servicename', 'auth.webservice'),
@@ -115,7 +117,8 @@ if (!empty($authtype)) {
                 $fopts[$dbfunction->id] = $dbfunction->functionname;
             }
         }
-        $default_function = ($function == 0 ? array_shift(array_keys($fopts)) : $function);
+        $fopts_keys = array_keys($fopts);
+        $default_function = ($function == 0 ? array_shift($fopts_keys) : $function);
         $elements['function'] = array(
             'type'         => 'select',
             'title'        => get_string('functions', 'auth.webservice'),
