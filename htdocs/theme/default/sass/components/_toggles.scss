@@ -1,7 +1,5 @@
 .header {
     .navbar-toggle {
-        margin-top: 15px;
-
         @include gradient-vertical($start-color: #FFFFFF, $end-color: #ececec, $start-percent: 10%, $end-percent: 100%);
         border-color: #dddddd;
         color: #676767;

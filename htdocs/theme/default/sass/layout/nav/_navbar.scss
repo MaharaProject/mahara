@@ -3,38 +3,12 @@
     min-height: auto;
 }
 
-.navbar.header {
-    padding: 0;
-    border-bottom: 0;
-}
-
 .navbar-fixed-top {
     position:relative;
     border: 0;
 
     @media (min-width: $screen-sm-min) {
         position:fixed;
-    }
-}
-
-.navbar-form {
-    clear: right;
-    margin-top: 0;
-    border: 0;
-
-    @media (min-width: $screen-xs-min) and (max-width: $screen-md-min - 1) {
-        clear: none;
-        margin-top: 7px;
-    }
-
-    @media (max-width: $screen-sm-min - 1) {
-        width:100%;
-        margin:0;
-        padding: 10px 0;
-
-        .container > & {
-            margin: 0 auto;
-        }
     }
 }
 
@@ -90,38 +64,5 @@
     &:focus,
     &:hover {
         color: $theme-primary-color;
-    }
-}
-
-// hidding the search next to the top nav until its required for mobile, and vice versa for the search box next to the main-nav
-.header .navbar-form.navbar-collapse {
-    display: none !important;
-    padding: 0;
-    margin: 0;
-    height: auto !important;
-    @media (max-width: $screen-lg-min) {
-        display: inline-block !important;
-        clear: none;
-        margin-top: 13px;
-    }
-    @media (max-width: $screen-sm-min - 1) {
-        margin: 0;
-        display: none !important;
-        &.in {
-            display: inline-block !important;
-        }
-    }
-}
-.main-nav {
-    border-bottom-width: 0;
-    .mainnav-search {
-        margin-top: 3px;
-        margin-bottom: 0;
-    }
-    .navbar-form.navbar-collapse {
-        display: inline-block;
-        @media (max-width: $screen-lg-min - 1) {
-            display: none !important;
-        }
     }
 }

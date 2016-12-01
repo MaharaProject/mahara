@@ -2,11 +2,6 @@
 
     <nav id="main-nav" class="no-site-messages {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{if $DROPDOWNMENU}dropdown-adminnav navbar-default{else}adminnav navbar-inverse{/if}{else}navbar-inverse{/if} nav collapse navbar-collapse nav-main main-nav ">
        <div class="container">
-           {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
-           <div class="navbar-form navbar-right collapse  navbar-collapse mainnav-search">
-               {header_search_form}
-           </div>
-           {/if}
            {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
                 <div class="navbar-header">
                     <a class="navbar-text navbar-link" href="{$WWWROOT}" accesskey="h" class="return-site">
