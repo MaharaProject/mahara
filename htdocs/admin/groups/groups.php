@@ -74,15 +74,15 @@ $searchform = pieform(array(
 ));
 
 $js = <<< EOF
-addLoadEvent(function () {
-p = {$data['pagination_js']}
-connect('search_submit', 'onclick', function (event) {
-    replaceChildNodes('messages');
-    var params = {'query': $('search_query').value,
-                  'institution': $('search_institution').value};
+jQuery(document).ready(function() {
+  p = {$data['pagination_js']}
+  jQuery('#search_submit').on('click', function(event) {
+    jQuery('#messages').empty();
+    var params = {'query': jQuery('#search_query').val(),
+                  'institution': jQuery('#search_institution').val()};
     p.sendQuery(params);
-    event.stop();
-    });
+    event.preventDefault();
+  });
 });
 EOF;
 
