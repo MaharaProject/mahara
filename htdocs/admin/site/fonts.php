@@ -138,22 +138,23 @@ $pagination = build_pagination(array(
 ));
 
 $js = <<< EOF
-addLoadEvent(function () {
+jQuery(function ($) {
     p = {$pagination['javascript']}
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF
-    if ($('fontlist')) {
-        getFirstElementByTagAndClassName('a', null, 'fontlist').focus();
+    if ($('#fontlist').length) {
+      $('#fontlist a:first').focus();
     }
 EOF;
 }
 else {
     $js .= <<< EOF
-    if ($('searchresultsheading')) {
-        addElementClass('searchresultsheading', 'hidefocus');
-        setNodeAttribute('searchresultsheading', 'tabIndex', 0);
-        $('searchresultsheading').focus();
+    if ($('#searchresultsheading').length) {
+      $('#searchresultsheading')
+      .addClass('hidefocus')
+      .prop('tabIndex', 0)
+      .focus();
     }
 EOF;
 }
