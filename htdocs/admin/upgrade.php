@@ -135,75 +135,76 @@ foreach ($upgrades as $key => $upgrade) {
 }
 
 $js = <<< EOJS
-            function processNext() {
-                var element = todo.shift();
-                if (!element) {
-                    jQuery('#installdone').removeClass('hidden');
-                    jQuery('html, body').animate({ scrollTop: jQuery('#installdone').offset().top }, 'slow');
-                    return; // done
+jQuery(function($) {
+    function processNext() {
+        var element = todo.shift();
+
+        if (!element) {
+            $('#installdone').removeClass('hidden');
+            $('html, body').animate({ scrollTop: $('#installdone').offset().top }, 'slow');
+            return; // done
+        }
+
+        $('[id="' + element + '"]').html('<span class="{$loadingicon}" title="' + {$loadingstring} + '" role="presentation" aria-hidden="true"></span>');
+
+        sendjsonrequest('upgrade.json.php', { 'name': element, 'last': todo.length == 0 }, 'GET', function (data) {
+            if ( !data.error ) {
+                var message;
+                if (data.coredata) {
+                    message = {$coresuccess};
+                    $('[id="' + data.key + '"]').html('<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message);
                 }
-
-                $(element).innerHTML = '<span class="{$loadingicon}" title="' + {$loadingstring} + '" role="presentation" aria-hidden="true"></span>';
-
-                sendjsonrequest('upgrade.json.php', { 'name': element, 'last': todo.length == 0 }, 'GET', function (data) {
-                    if ( !data.error ) {
-                        var message;
-                        if (data.coredata) {
-                            message = {$coresuccess};
-                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message;
-                        }
-                        else if (data.localdata) {
-                            message = {$localsuccess};
-                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message;
-                        }
-                        else if (data.install || data.upgrade) {
-                            if (data.install) {
-                                message = {$installsuccessstring};
-                            }
-                            else {
-                                if (data.message) {
-                                    message = data.message;
-                                }
-                                else {
-                                    message = {$successstring};
-                                }
-                            }
-                            message += data.newversion ? data.newversion : '';
-                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message;
-                        }
-                        else if (data.done) {
-                            message = data.message;
-                            $(data.key).innerHTML = '<span class="{$warningicon}" title=":|" role="presentation" aria-hidden="true"></span> ' + message;
-                        }
-                        else {
-                            message = data.message;
-                            $(data.key).innerHTML = '<span class="{$failureicon}" title=":(" role="presentation" aria-hidden="true"></span>' + message;
-                        }
-                        if (data.feedback) {
-                            var feedback_element = DIV();
-                            feedback_element.innerHTML = data.feedback;
-                            appendChildNodes('messages', feedback_element);
-                        }
-                        processNext();
+                else if (data.localdata) {
+                    message = {$localsuccess};
+                    $('[id="' + data.key + '"]').html('<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message);
+                }
+                else if (data.install || data.upgrade) {
+                    if (data.install) {
+                        message = {$installsuccessstring};
                     }
                     else {
-                        var message = '';
-                        if (data.errormessage) {
-                            message = data.errormessage;
+                        if (data.message) {
+                            message = data.message;
                         }
                         else {
-                            message = {$failurestring};
+                            message = {$successstring};
                         }
-                        $(data.key).innerHTML = '<span class="{$failureicon}" title=":(" role="presentation" aria-hidden="true"></span>' + message;
                     }
-                },
-                function () {
-                    $(element).innerHTML = '<span class="{$failureicon}" title=":("  role="presentation" aria-hidden="true"></span>' + {$failurestring};
-                },
-                true);
+                    message += data.newversion ? data.newversion : '';
+                    $('[id="' + data.key + '"]').html('<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message);
+                }
+                else if (data.done) {
+                    message = data.message;
+                    $('[id="' + data.key + '"]').html('<span class="{$warningicon}" title=":|" role="presentation" aria-hidden="true"></span> ' + message);
+                }
+                else {
+                    message = data.message;
+                    $('[id="' + data.key + '"]').html('<span class="{$failureicon}" title=":(" role="presentation" aria-hidden="true"></span>' + message);
+                }
+                if (data.feedback) {
+                    $('#messages').append($('<div>').html(data.feedback));
+                }
+                processNext();
             }
+            else {
+                var message = '';
+                if (data.errormessage) {
+                    message = data.errormessage;
+                }
+                else {
+                    message = {$failurestring};
+                }
+                  $('[id="' + data.key + '"]').html('<span class="{$failureicon}" title=":(" role="presentation" aria-hidden="true"></span>' + message);
+            }
+        },
+        function () {
+            $('[id="' + element + '"]').html('<span class="{$failureicon}" title=":("  role="presentation" aria-hidden="true"></span>' + {$failurestring});
+        },
+        true);
+    }
 
-            addLoadEvent( processNext );
+    processNext();
+});
 EOJS;
 
 uksort($upgrades, 'sort_upgrades');

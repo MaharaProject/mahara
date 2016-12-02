@@ -65,8 +65,8 @@ default:
 }
 
 $js = <<< EOF
-addLoadEvent(function () {
-    {$data['table']['pagination_js']}
+jQuery(function() {
+  {$data['table']['pagination_js']}
 });
 EOF;
 
