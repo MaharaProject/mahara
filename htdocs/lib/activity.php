@@ -1539,7 +1539,7 @@ function get_notification_settings_elements($user = null, $sitedefaults = false)
         throw new SystemException("Function get_notification_settings_elements requires a user or sitedefaults must be true");
     }
 
-    if ($sitedefaults || $user->get('admin') || $user->is_institutional_admin()) {
+    if ($sitedefaults || $user->get('admin')) {
         $activitytypes = get_records_array('activity_type', '', '', 'id');
     }
     else {
@@ -1642,7 +1642,7 @@ function save_notification_settings($values, $user = null, $sitedefaults = false
         throw new SystemException("Function save_notification_settings requires a user or sitedefaults must be true");
     }
 
-    if ($sitedefaults || $user->get('admin') || $user->is_institutional_admin()) {
+    if ($sitedefaults || $user->get('admin')) {
         $activitytypes = get_records_array('activity_type');
     }
     else {
@@ -1702,5 +1702,12 @@ function get_special_notifications($user, $activitytypes) {
             $activitytypes = array_merge($activitytypes, $reportpost);
         }
     }
+
+    // If user is an institution admin, should receive objectionable material notifications
+    if ($user->is_institutional_admin()) {
+        $objectionable = get_records_array('activity_type', 'name', 'objectionable', 'id');
+        $activitytypes = array_merge($activitytypes, $objectionable);
+    }
+
     return $activitytypes;
 }
