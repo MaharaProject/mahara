@@ -119,9 +119,9 @@ $smarty->assign('data', $data);
 
 $smarty->assign('INLINEJAVASCRIPT', <<<EOF
 
-addLoadEvent(function () {
+jQuery(function ($) {
     p = {$pagination['javascript']}
-    connect('usertype_type', 'onchange', function (event) {
+    $('#usertype_type').on('change', function (event) {
         var params = {
             'limit': $limit,
             'offset': 0,
@@ -130,34 +130,34 @@ addLoadEvent(function () {
             'type': $('usertype_type').value,
         };
         p.sendQuery(params);
-        event.stop();
+        event.preventDefault();
         // Show the buttons relating to the 'type' selected
         show_buttons(params.type);
     });
 
     function show_buttons(type) {
         if (type == 'suspended') {
-            jQuery('#buttons_unsuspend').show();
-            jQuery('#buttons_unexpire').hide();
+            $('#buttons_unsuspend').show();
+            $('#buttons_unexpire').hide();
         }
         else if (type == 'expired') {
-            jQuery('#buttons_unsuspend').hide();
-            jQuery('#buttons_unexpire').show();
+            $('#buttons_unsuspend').hide();
+            $('#buttons_unexpire').show();
         }
     }
+
+    $(window).on('pageupdated', {}, function(e, data) {
+        // For when we are switching between suspended and expired
+        var tmp = $('<div>').append(data.data.pagination);
+        var paginationid = tmp.find('.pagination-wrapper').attr('id');
+        if (paginationid !== $('.pagination-wrapper').attr('id')) {
+            $('.pagination-wrapper').replaceWith(data.data.pagination);
+            p = eval(data.data.pagination_js);
+        }
+    });
+
     show_buttons('$type');
 });
-
-jQuery(window).on('pageupdated', {}, function(e, data) {
-    // For when we are switching between suspended and expired
-    var tmp = jQuery('<div>').append(data.data.pagination);
-    var paginationid = tmp.find('.pagination-wrapper').attr('id');
-    if (paginationid !== jQuery('.pagination-wrapper').attr('id')) {
-        jQuery('.pagination-wrapper').replaceWith(data.data.pagination);
-        p = eval(data.data.pagination_js);
-    }
-});
-
 EOF
 );
 

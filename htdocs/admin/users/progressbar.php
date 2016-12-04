@@ -225,11 +225,12 @@ function progressbarform_submit(Pieform $form, $values) {
 
 $wwwroot = get_config('wwwroot');
 $js = <<< EOF
-function reloadBar() {
-    window.location.href = '{$wwwroot}admin/users/progressbar.php?institution='+$('progressbarselect_institution').value;
-}
-addLoadEvent(function() {
-    connect($('progressbarselect_institution'), 'onchange', reloadBar);
+jQuery(function($) {
+  function reloadBar() {
+      window.location.href = '{$wwwroot}admin/users/progressbar.php?institution='+$('#progressbarselect_institution').val();
+  }
+
+  $('#progressbarselect_institution').on('change', reloadBar);
 });
 EOF;
 

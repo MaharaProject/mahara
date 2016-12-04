@@ -66,11 +66,12 @@ $data = build_pending_html($pending, $institution);
 
 $wwwroot = get_config('wwwroot');
 $js = <<< EOF
-function reloadUsers() {
-    window.location.href = '{$wwwroot}admin/users/pendingregistrations.php?institution='+$('usertypeselect_institution').value;
-}
-addLoadEvent(function() {
-    connect($('usertypeselect_institution'), 'onchange', reloadUsers);
+jQuery(function($) {
+  function reloadUsers() {
+      window.location.href = '{$wwwroot}admin/users/pendingregistrations.php?institution='+$('#usertypeselect_institution').val();
+  }
+
+  $('#usertypeselect_institution').on('change', reloadUsers);
 });
 EOF;
 

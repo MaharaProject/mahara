@@ -93,7 +93,7 @@ function adminusers_submit(Pieform $form, $values) {
 
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs'] . '
-addLoadEvent(function() {
+jQuery(function($) {
     formchangemanager.add(\'adminusers\');
     formchangemanager.unbindForm(\'adminusers\');
 });');

@@ -277,24 +277,26 @@ function institutionusers_submit(Pieform $form, $values) {
 
 $wwwroot = get_config('wwwroot');
 $js = <<< EOF
-function reloadUsers() {
-    var last = '';
-    if ($('usertypeselect_lastinstitution')) {
-        last = '&lastinstitution=' + $('usertypeselect_lastinstitution').value;
+jQuery(function($) {
+    function reloadUsers() {
+        var last = '';
+        if ($('#usertypeselect_lastinstitution').length) {
+            last = '&lastinstitution=' + $('#usertypeselect_lastinstitution').val();
+        }
+        var inst = '';
+        if ($('#institutionselect_institution').length) {
+            inst = '&institution=' + $('#institutionselect_institution').val();
+        }
+        window.location.href = '{$wwwroot}admin/users/institutionusers.php?usertype='+$('#usertypeselect_usertype').val()+last+inst;
     }
-    var inst = '';
-    if ($('institutionselect_institution')) {
-        inst = '&institution=' + $('institutionselect_institution').value;
+
+    // on load
+    $('#usertypeselect_usertype').on('change', reloadUsers);
+    if ($('#usertypeselect_lastinstitution').length) {
+        $('#usertypeselect_lastinstitution').on('change', reloadUsers);
     }
-    window.location.href = '{$wwwroot}admin/users/institutionusers.php?usertype='+$('usertypeselect_usertype').value+last+inst;
-}
-addLoadEvent(function() {
-    connect($('usertypeselect_usertype'), 'onchange', reloadUsers);
-    if ($('usertypeselect_lastinstitution')) {
-        connect($('usertypeselect_lastinstitution'), 'onchange', reloadUsers);
-    }
-    if ($('institutionselect_institution')) {
-        connect($('institutionselect_institution'), 'onchange', reloadUsers);
+    if ($('#institutionselect_institution').length) {
+        $('#institutionselect_institution').on('change', reloadUsers);
     }
     formchangemanager.add('institutionusers');
     // Unbind the handler for standard pieform input
