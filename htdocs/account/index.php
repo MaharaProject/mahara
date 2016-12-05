@@ -301,23 +301,26 @@ function accountprefs_submit(Pieform $form, $values) {
 
 $prefsform = pieform($prefsform);
 
+$ijs = <<< EOF
+var clearPasswords = (function($) {
+  return function (form, data) {
+      formSuccess(form, data);
+      if (jQuery('#accountprefs_oldpassword')) {
+          jQuery('#accountprefs_oldpassword').val('');
+          jQuery('#accountprefs_password1').val('');
+          jQuery('#accountprefs_password2').val('');
+      }
+      if (data.username) {
+          var username = $('#profile-sideblock-username a:first');
+          if (username) {
+              $(username).empty().append(data.username);
+          }
+      }
+  }
+}(jQuery))
+EOF;
 $smarty = smarty();
 $smarty->assign('form', $prefsform);
 $smarty->assign('candeleteself', $USER->can_delete_self());
-$smarty->assign('INLINEJAVASCRIPT', "
-function clearPasswords(form, data) {
-    formSuccess(form, data);
-    if ($('accountprefs_oldpassword')) {
-        $('accountprefs_oldpassword').value = '';
-        $('accountprefs_password1').value = '';
-        $('accountprefs_password2').value = '';
-    }
-    if (data.username) {
-        var username = getFirstElementByTagAndClassName('a', null, 'profile-sideblock-username');
-        if (username) {
-            replaceChildNodes(username, data.username);
-        }
-    }
-}
-");
+$smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->display('account/index.tpl');
