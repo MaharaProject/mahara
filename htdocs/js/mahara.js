@@ -646,8 +646,15 @@ function contextualHelpPosition(ref, contextualHelpContainer) {
 function ensureHelpIsOnScreen(container, position) {
     var screenheight = $j(window).height();
     var containerheight = $j(container).height();
-    if (position.y + containerheight > screenheight + $j('html').scrollTop()) {
+    var scrolltop = $j('html').scrollTop();
+    if (position.y + containerheight > screenheight + scrolltop) {
         position.y -= containerheight - 18;
+        $j(container).css('top', position.y);
+    }
+    // If the popup's begin outside the screen, put it at top.
+    var offsettop = $j(container).offset().top;
+    if (offsettop < 0) {
+        position.y += -offsettop + scrolltop;
         $j(container).css('top', position.y);
     }
 }
