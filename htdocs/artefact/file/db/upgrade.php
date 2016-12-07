@@ -442,5 +442,18 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2015101901) {
+        log_debug('Recreate artefact_file_mime_types table');
+
+        $table = new XMLDBTable('artefact_file_mime_types');
+        drop_table($table);
+
+        $table = new XMLDBTable('artefact_file_mime_types');
+        $table->addFieldInfo('mimetype', XMLDB_TYPE_CHAR, 128, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('description', XMLDB_TYPE_CHAR, 32, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('mimetype, description'));
+        create_table($table);
+    }
+
     return $status;
 }
