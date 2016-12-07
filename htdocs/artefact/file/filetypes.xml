@@ -796,11 +796,6 @@
         <description>3gp</description>
         <mimetypes>
             <mimetype>audio/3gpp</mimetype>
-        </mimetypes>
-    </filetype>
-    <filetype>
-        <description>3gp</description>
-        <mimetypes>
             <mimetype>video/3gpp</mimetype>
         </mimetypes>
     </filetype>

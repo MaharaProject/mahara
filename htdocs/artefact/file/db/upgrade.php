@@ -470,5 +470,30 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         execute_sql('CREATE INDEX mimetypeix ON {artefact_file_mime_types} (mimetype)');
     }
 
+    if ($oldversion < 2016082901) {
+        log_debug('Recreate artefact_file_mime_types table');
+
+        $table = new XMLDBTable('artefact_file_mime_types');
+        drop_table($table);
+
+        $table = new XMLDBTable('artefact_file_mime_types');
+        $table->addFieldInfo('mimetype', XMLDB_TYPE_CHAR, 128, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('description', XMLDB_TYPE_CHAR, 32, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('mimetype, description'));
+        create_table($table);
+
+        log_debug('Update config record for mp4 internalmedia type');
+
+        if ($data = get_config_plugin('blocktype', 'internalmedia', 'enabledtypes')) {
+            $data = unserialize($data);
+            $key = array_search('mp4_video',$data);
+
+            if (!empty($key)) {
+                $data[$key] = 'mp4';
+                set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize($data));
+            }
+        }
+    }
+
     return $status;
 }
