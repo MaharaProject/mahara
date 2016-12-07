@@ -14,11 +14,14 @@ $width-sm: 90%;
     margin-top: 100px;
     text-align: center;
     width: 100%;
+    overflow: hidden;
     @extend .icon;
     @extend .icon-spinner;
-    @extend .icon-pulse;
     @extend .icon-3x;
     @extend .text-watermark;
+    &::before {
+        @extend .icon-pulse;
+    }
 }
 
 .modal-tinymce {
