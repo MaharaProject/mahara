@@ -536,6 +536,13 @@
             }
         }
     }
+
+    input[type=text].secondary-textbox {
+        margin-top: 15px;
+        @media (min-width: $screen-lg-min) {
+            margin-left: 265px;
+        }
+    }
 }
 
 .panel .form-group-nested {
