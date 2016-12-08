@@ -2428,6 +2428,8 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
      * Render's the icon thumbnail for the specified user
      */
     public static function download_thumbnail_for_user($userid) {
+        global $THEME;
+
         $size = get_imagesize_parameters();
         $earlyexpiry = param_boolean('earlyexpiry', false);
 
@@ -2440,7 +2442,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         );
 
         // User has a profile icon file selected. Use it.
-        if (!empty($data->profileicon)) {
+        if (!empty($data) && !empty($data->profileicon)) {
             $id = $data->profileicon;
             $mimetype = $data->filetype;
 
@@ -2450,9 +2452,8 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         }
 
         // No profile icon file selected. Go through fallback icons.
-
         // Look for an appropriate image on gravatar.com
-        $useremail = $data->email;
+        $useremail = !empty($data) ? $data->email : false;
         if ($useremail and $gravatarurl = remote_avatar_url($useremail, $size)) {
             redirect($gravatarurl);
         }
@@ -2557,6 +2558,11 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
                     perf_to_log();
                     exit;
                 }
+            }
+            else {
+                // If we can't find the profile icon by id (deleted off server) then show the one
+                // for nonexistant user, defaults to no_userphoto
+                self::download_thumbnail_for_user(-1);
             }
         }
     }
