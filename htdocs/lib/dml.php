@@ -274,6 +274,9 @@ function count_records_select($table, $select='', array $values=null, $countitem
  */
 function count_records_sql($sql, array $values=null) {
     $rs = get_recordset_sql($sql, $values);
+    if (!$rs->fields) {
+        throw new SQLException('count_records_sql() should not return false. Is your query misisng "COUNT(*)"?');
+    }
     return reset($rs->fields);
 }
 
