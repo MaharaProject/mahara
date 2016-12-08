@@ -143,7 +143,7 @@ $feedback = ArtefactTypeComment::get_comments($commentoptions);
 $inlinejavascript = <<<EOF
 var viewid = {$viewid};
 var artefactid = {$artefactid};
-addLoadEvent(function () {
+jQuery(function () {
     paginator = {$feedback->pagination_js}
 });
 EOF;

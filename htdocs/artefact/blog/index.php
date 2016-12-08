@@ -103,7 +103,7 @@ $smarty->assign('institutionname', $institutionname);
 $smarty->assign('group', $groupid);
 $js = '';
 if ($blogs->pagination_js) {
-    $js .= 'addLoadEvent(function() {' . $blogs->pagination_js . '});';
+    $js .= 'jQuery(function() {' . $blogs->pagination_js . '});';
 }
 if (!empty($institutionname) && ($institutionname != 'mahara')) {
     $smarty->assign('institution', $institutionname);

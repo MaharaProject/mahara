@@ -1,26 +1,23 @@
 function rewriteTaskTitles(blockid) {
-    forEach(
-        getElementsByTagAndClassName('a', 'task-title', 'tasktable_' + blockid),
-        function(element) {
-            disconnectAll(element);
-            connect(element, 'onclick', function(e) {
-                e.stop();
-                var description = getFirstElementByTagAndClassName('div', 'task-desc', element.parentNode);
-                toggleElementClass('hidden', description);
-            });
-        }
-    );
+  jQuery('tasktable_' + blockid + ' a.task-title').each(function() {
+      jQuery(this).off();
+      jQuery(this).on('click', function(e) {
+          e.preventDefault();
+          var description = jQuery(this).parent().find('div.task-desc');
+          description.toggleClass('hidden');
+      });
+  });
 }
 function TaskPager(blockid) {
     var self = this;
     paginatorProxy.addObserver(self);
-    connect(self, 'pagechanged', partial(rewriteTaskTitles, blockid));
+    jQuery(self).on('pagechanged', rewriteTaskTitles.bind(null, blockid));
 }
 
 var taskPagers = [];
 
 function initNewPlansBlock(blockid) {
-    if ($('plans_page_container_' + blockid)) {
+    if (jQuery('#plans_page_container_' + blockid)) {
         new Paginator('block' + blockid + '_pagination', 'tasktable_' + blockid, null, 'artefact/plans/viewtasks.json.php', null);
         taskPagers.push(new TaskPager(blockid));
     }

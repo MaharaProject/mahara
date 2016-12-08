@@ -33,7 +33,7 @@ $plans = ArtefactTypePlan::get_plans($offset, $limit);
 ArtefactTypePlan::build_plans_list_html($plans);
 
 $js = <<< EOF
-addLoadEvent(function () {
+jQuery(function () {
     {$plans['pagination_js']}
 });
 EOF;

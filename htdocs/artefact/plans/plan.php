@@ -40,7 +40,7 @@ $tasks = ArtefactTypeTask::get_tasks($plan->get('id'), $offset, $limit);
 ArtefactTypeTask::build_tasks_list_html($tasks);
 
 $js = <<< EOF
-addLoadEvent(function () {
+jQuery(function () {
     {$tasks['pagination_js']}
 });
 EOF;

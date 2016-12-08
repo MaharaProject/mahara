@@ -129,18 +129,18 @@ class PluginBlocktypeTextbox extends MaharaCoreBlocktype {
         return <<<EOF
 formchangemanager.setFormStateById('instconf', FORM_CHANGED);
 function updateTextContent(a) {
-    setNodeAttribute('instconf_title', 'value', a.title);
+    jQuery('#instconf_title').prop('value', a.title);
     if (typeof(tinyMCE) != 'undefined') {
         tinyMCE.activeEditor.setContent(a.description);
     }
-    setNodeAttribute('instconf_license', 'value', a.license);
-    setNodeAttribute('instconf_licensor', 'value', a.licensor);
-    setNodeAttribute('instconf_licensorurl', 'value', a.licensorurl);
-    jQuery('#instconf_textreadonly_display').innerHTML = a.safedescription;
-    jQuery('#instconf_licensereadonly_display').innerHTML = a.safelicense;
-    setNodeAttribute('instconf_tags', 'value', a.tags);
-    jQuery('#instconf_textreadonly_display').innerHTML = a.safedescription;
-    jQuery('#instconf_tagsreadonly_display').innerHTML = a.safetags;
+    jQuery('#instconf_license').prop('value', a.license);
+    jQuery('#instconf_licensor').prop('value', a.licensor);
+    jQuery('#instconf_licensorurl').prop('value', a.licensorurl);
+    jQuery('#instconf_textreadonly_display').html(a.safedescription);
+    jQuery('#instconf_licensereadonly_display').html(a.safelicense);
+    jQuery('#instconf_tags').prop('value', a.tags);
+    jQuery('#instconf_textreadonly_display').html(a.safedescription);
+    jQuery('#instconf_tagsreadonly_display').html(a.safetags);
     jQuery('#instconf_makecopy').prop('checked', false);
     if (a.editable == 1) {
         jQuery('#instconf_textreadonly_container').addClass('hidden');
@@ -167,7 +167,7 @@ function updateTextContent(a) {
                 }
             }
             if (otherblockcount) {
-                replaceChildNodes('textbox_blockcount', otherblockcount);
+                jQuery('#textbox_blockcount').empty().append(otherblockcount);
                 jQuery(blockcountmsg).removeClass('hidden');
             }
             else {
@@ -178,7 +178,7 @@ function updateTextContent(a) {
         if (typeof a.attachments != 'undefined') {
             // remove any attached files
             for (var key in instconf_artefactids.selecteddata) {
-                signal($('instconf_artefactids_unselect_' + key), 'onclick', instconf_artefactids.unselect);
+              jQuery('#instconf_artefactids_unselect_' + key).triggerHandler('click', instconf_artefactids.unselect);
             }
             // add in ones we need
             if (a.attachments.length > 0) {
@@ -205,23 +205,23 @@ function updateTextContent(a) {
         jQuery('#instconf_tagsreadonly_container').removeClass('hidden');
     }
 }
-connect('chooseartefactlink', 'onclick', function(e) {
-    e.stop();
+jQuery('#chooseartefactlink').on('click', function(e) {
+    e.preventDefault();
     // if the artefact chooser is hidden, use paginator p to populate it, then toggle its visibility
-    if (hasElementClass(getElement('instconf_artefactid_container'), 'hidden')) {
+    if (jQuery('#instconf_artefactid_container').hasClass('hidden')) {
         var queryData = [];
         queryData.extradata = serializeJSON(p.extraData);
         p.sendQuery(queryData, true);
     }
-    toggleElementClass('hidden', 'instconf_artefactid_container');
-    toggleElementClass('hidden', 'instconf_managenotes_container');
+    jQuery('#instconf_artefactid_container').toggleClass('hidden');
+    jQuery('#instconf_managenotes_container').toggleClass('hidden');
 });
-forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), function(link) {
-    connect(link, 'onclick', function(e) {
-        e.stop();
-        forEach(getElementsByTagAndClassName('input', 'radio', 'artefactid_data'), function(i) {
-            if (i.checked) {
-                i.checked = false;
+jQuery('#instconf a.copytextboxnote').each(function() {
+    jQuery(this).on('click', function(e) {
+        e.preventDefault();
+        jQuery('#artefactid_data input.radio').each(function() {
+            if (jQuery(this).prop('checked')) {
+                jQuery(this).prop('checked', false);
             }
         });
         jQuery('#instconf_makecopy').prop('checked', true);
