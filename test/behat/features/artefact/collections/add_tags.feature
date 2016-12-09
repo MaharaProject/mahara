@@ -28,8 +28,8 @@ Scenario: Adding tags to files (Bug 1426983)
    And I set the following fields to these values:
    | Title *  | Journal one  |
    | Entry | This is a test |
-   And I fill in select2 input "editpost_tags" with "journal" and select "journal"
    And I scroll to the base of id "editpost_tags_container"
+   And I fill in select2 input "editpost_tags" with "journal" and select "journal"
    And I fill in select2 input "editpost_tags" with "test" and select "test"
    And I press "Save entry"
    # Creating a Plan with a tag
@@ -38,6 +38,7 @@ Scenario: Adding tags to files (Bug 1426983)
    And I fill in the following:
    | Title *  | Plan 9 from outer space  |
    | Description  | Woooo |
+   And I scroll to the base of id "addplan_tags_container"
    And I fill in select2 input "addplan_tags" with "plan" and select "plan"
    And I fill in select2 input "addplan_tags" with "test" and select "test"
    And I press "Save plan"
@@ -46,8 +47,8 @@ Scenario: Adding tags to files (Bug 1426983)
    And I fill in the following:
    | Title * | Task one   |
    | Completion date * | 2020/12/31   |
-   And I fill in select2 input "addtasks_tags" with "task" and select "task"
    And I scroll to the base of id "addtasks_tags_container"
+   And I fill in select2 input "addtasks_tags" with "task" and select "task"
    And I fill in select2 input "addtasks_tags" with "test" and select "test"
    And I press "Save task"
    # Creating page 1 with a tag

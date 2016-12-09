@@ -65,7 +65,7 @@ Version: 4.0.0 Timestamp: Jul 1 13:43:36 EDT 2015
   position: absolute;
   left: -100000px;
   width: 100%;
-  z-index: 1051; }
+  z-index: 999; }
 
 .select2-results {
   display: block; }
@@ -76,11 +76,18 @@ Version: 4.0.0 Timestamp: Jul 1 13:43:36 EDT 2015
   padding: 0; }
 
 .select2-results__option {
-  padding: 6px;
+  padding: 4px;
   user-select: none;
   -webkit-user-select: none;
+  overflow: auto;
   img {
-    margin: -4px 3px -4px -4px;
+    margin-right: 4px;
+    display: block;
+    float: left;
+  }
+  span {
+      line-height: 1;
+      vertical-align: text-top;
   }
 }
 .select2-results__option[aria-selected] {
@@ -507,3 +514,7 @@ Version: 4.0.0 Timestamp: Jul 1 13:43:36 EDT 2015
 
 .select2-container--classic.select2-container--open .select2-dropdown {
   border-color: #5897fb; }
+
+.select2-container.select2-container--default.select2-container--open {
+  z-index: 2001;
+}

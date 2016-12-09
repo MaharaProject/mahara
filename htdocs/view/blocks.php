@@ -126,9 +126,6 @@ $stylesheets = array();
 foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')) as $sheet) {
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($sheet) . '">';
 }
-foreach (array_reverse($THEME->get_url('style/select2.css', true)) as $sheet) {
-    $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($sheet) . '">';
-}
 
 $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 // Tell the user to change the view theme if the current one is no

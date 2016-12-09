@@ -10,10 +10,6 @@ Feature: Mahara users can create their blogs
 
  Scenario: Create blogs
   Given I log in as "userA" with password "Kupuhipa1"
-  And I set the following account settings values:
-    | field | value |
-    | multipleblogs | 1 |
-    | tagssideblockmaxtags | 10 |
   When I follow "Settings"
   And I fill in the following:
     | tagssideblockmaxtags | 10 |
@@ -34,7 +30,8 @@ Feature: Mahara users can create their blogs
   And I set the following fields to these values:
   | Title | Journal entry 1 |
   | Entry | This is a test |
-  When I fill in select2 input "editpost_tags" with "blogentry" and select "blogentry"
+  And I scroll to the base of id "editpost_tags_container"
+  And I fill in select2 input "editpost_tags" with "blogentry" and select "blogentry"
   And I press "Save entry"
   And I choose "Pages" in "Portfolio"
   And I press "Create page"
