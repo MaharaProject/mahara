@@ -75,6 +75,10 @@
             display: block;
         }
     }
+
+    .collection-item & {
+        font-size: $font-size-h3;
+    }
 }
 
 h4.list-group-item-heading {

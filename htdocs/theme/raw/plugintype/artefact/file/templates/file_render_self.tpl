@@ -1,7 +1,7 @@
 {if $artefacttype == 'image' || $artefacttype == 'profileicon'}
-<h3 class="title">
+<h2 class="title">
     {str tag=Preview section=artefact.file}
-</h3>
+</h2>
 <div class="filedata-icon">
     <a href="{$downloadpath}">
         <img src="{$downloadpath}&maxwidth=400&maxheight=180" alt="">
