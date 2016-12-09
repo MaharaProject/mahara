@@ -55,15 +55,6 @@
             <span class="lead text-small">{str tag=nosharedviewsyet section=view}</span>
         </div>
     {/if}
-
-    {if $sharedviews.pagination_js}
-    <script>
-        addLoadEvent(function() {literal}{{/literal}
-            {$sharedviews.pagination_js|safe}
-            removeElementClass('sharedviews_page_container', 'hidden');
-        {literal}}{/literal});
-    </script>
-    {/if}
     <hr />
 {/if}
 

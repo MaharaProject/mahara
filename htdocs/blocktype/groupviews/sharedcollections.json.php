@@ -55,6 +55,7 @@ else {
 
 // For group members, display a list of collections that others have
 // shared to the group
+$hidesubmitted = group_user_can_assess_submitted_views($groupid, $USER->get('id'));
 if (empty($configdata['showsharedcollections'])) {
     $sharedcollections = array(
         'data'   => array(),
@@ -69,7 +70,8 @@ else {
             $offset,
             $groupid,
             ($configdata['showsharedcollections'] == 2 ? false : true),
-            $sortsharedcollectionsby
+            $sortsharedcollectionsby,
+            $hidesubmitted
     );
 }
 
