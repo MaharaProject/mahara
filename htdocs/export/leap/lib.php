@@ -471,7 +471,9 @@ class PluginExportLeap extends PluginExport {
                     }
                     else if (isset($blockinstance['config']['artefactids'])) {
                         $ids = json_decode($blockinstance['config']['artefactids']);
-                        $blockinstance['config']['artefactids'] = json_encode(array(array_map(array($this, 'prepend_artefact_identifier'), $ids[0])));
+                        if ($ids[0]) {
+                            $blockinstance['config']['artefactids'] = json_encode(array(array_map(array($this, 'prepend_artefact_identifier'), $ids[0])));
+                        }
                     }
                 }
             } // cols
