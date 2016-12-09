@@ -1,8 +1,8 @@
 {foreach from=$tasks.data item=task}
     {if $task->completed == -1}
-        <tr class="incomplete danger">
-            <td class="incomplete">
-                <span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span>
+        <tr class="task incomplete danger">
+            <td class="incomplete task-status">
+                <span class="icon icon-times icon-lg text-danger" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=overdue section=artefact.plans}</span>
             </td>
             <td class="plantasktitle">{$task->title}</td>
@@ -14,10 +14,10 @@
             </td>
 
     {else}
-        <tr class="complete">
+        <tr class="task complete">
             {if $task->completed == 1}
-                <td class="completed text-center">
-                    <span class="icon icon-check-square-o icon-lg left text-success" role="presentation" aria-hidden="true"></span>
+                <td class="completed task-status">
+                    <span class="icon icon-check-square-o icon-lg text-success" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=completed section=artefact.plans}</span>
                 </td>
             {else}

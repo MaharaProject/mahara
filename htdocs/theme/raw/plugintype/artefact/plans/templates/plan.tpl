@@ -19,10 +19,10 @@
     </div>
 {else}
 <div class="table-responsive">
-<table id="taskslist" class="listing table table-striped text-small">
+<table id="taskslist" class="task-listing table table-striped text-small">
     <thead>
         <tr>
-            <th>{str tag='completed' section='artefact.plans'}</th>
+            <th class="task-status">{str tag='completed' section='artefact.plans'}</th>
             <th>{str tag='title' section='artefact.plans'}</th>
             <th>{str tag='completiondate' section='artefact.plans'}</th>
             <th>{str tag='description' section='artefact.plans'}</th>
