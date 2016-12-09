@@ -88,14 +88,16 @@ var table = new TableRenderer(
     [
         function(rowdata) {
             if (rowdata.id) {
-                return TD({'class': 'profileiconcell'}, null, IMG({'src': '{$wwwroot}thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.title ? rowdata.title : rowdata.note}));
+              return jQuery('<td>', {'class': 'profileiconcell'})
+                .append(jQuery('<img>', {'src': '{$wwwroot}thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.title ? rowdata.title : rowdata.note}))[0];
             }
             else {
-                return TD({'class': 'profileiconcell'}, null, IMG({'src': '{$ravatar}', 'alt': rowdata.title ? rowdata.title : rowdata.note}));
+              return jQuery('<td>', {'class': 'profileiconcell'})
+                .append(jQuery('<img>', {'src': '{$ravatar}', 'alt': rowdata.title ? rowdata.title : rowdata.note}))[0];
             }
         },
         function(rowdata) {
-            return TD(null, rowdata.title ? rowdata.title : rowdata.note);
+            return jQuery('<td>', {'text': rowdata.title ? rowdata.title : rowdata.note})[0];
         },
         function(rowdata) {
             var options = {
@@ -107,8 +109,9 @@ var table = new TableRenderer(
             if (rowdata['isdefault'] == 't' || rowdata['isdefault'] == 1) {
                 options.checked = 'checked';
             }
-            var label = LABEL({'class': 'accessible-hidden sr-only', 'for': 'setdefault_' + rowdata.id}, rowdata.default_str);
-            return TD({'class': 'defaultcell'}, INPUT(options), label);
+            var label = jQuery('<label>', {'class': 'accessible-hidden sr-only', 'for': 'setdefault_' + rowdata.id, 'text': rowdata.default_str});
+            return jQuery('<td>', {'class': 'defaultcell'})
+                .append(jQuery('<input>', options).append(label))[0];
         },
         function(rowdata) {
             var options = {
@@ -121,8 +124,9 @@ var table = new TableRenderer(
             if (!rowdata.id) {
                 options.disabled = 'disabled';
             }
-            var label = LABEL({'class': 'accessible-hidden sr-only', 'for': 'markdelete_' + rowdata.id}, rowdata.delete_str);
-            return TD({'class': 'deletecell'}, INPUT(options), label);
+            var label =  jQuery('<label>',{'class': 'accessible-hidden sr-only', 'for': 'markdelete_' + rowdata.id, 'text': rowdata.delete_str});
+            return jQuery('<td>',{'class': 'deletecell'})
+              .append(jQuery('<input>', options), label)[0];
         }
     ]
 );
@@ -134,10 +138,10 @@ table.updatecallback = function(response) {
 
     if (defaultIcon.length) {
         defaultIcon = defaultIcon[0].id;
-        forEach(getElementsByTagAndClassName('img', null, 'column-right'), function(i) {
-            if (i.src.match(/thumb\.php\?type=profileiconbyid/)) {
-                i.src = i.src.replace(/id=[0-9]+/, 'id=' + String(defaultIcon));
-            }
+        jQuery('#column-right img').each(function() {
+          if (jQuery(this).prop('src').match(/thumb\.php\?type=profileiconbyid/)) {
+              jQuery(this).prop('src',  jQuery(this).prop('src').replace(/id=[0-9]+/, 'id=' + String(defaultIcon)));
+          }
         });
     }
 };
@@ -146,13 +150,11 @@ table.postupdatecallback = function(response) {
     profileiconschecker.init();
 };
 
-var uploadingMessage = TR(null,
-    TD(null, {$struploadingfile})
-);
+var uploadingMessage = jQuery('<tr><td>' + {$struploadingfile} + '</td></tr>') ;
 
 function preSubmit(form, data) {
     formStartProcessing(form, data);
-    insertSiblingNodesAfter($('upload_submit_container'), uploadingMessage);
+    uploadingMessage.insertAfter(jQuery('#upload_submit_container'));
 }
 
 function postSubmit(form, data) {
@@ -160,20 +162,21 @@ function postSubmit(form, data) {
     table.doupdate();
     formStopProcessing(form, data);
     quotaUpdate();
-    $(form).reset();
-    $('upload_title').value = '';
+
+    jQuery(form)[0].reset();
+    jQuery('#upload_title').val('');
 }
 
-addLoadEvent( function() {
-    connect('settings_delete', 'onclick', function(e) {
+jQuery(function($) {
+    $('#settings_delete').on('click', function(e) {
         profileiconschecker.set(FORM_SUBMITTED);
 
         // Find form
-        var form = getFirstParentByTagAndClassName(this, 'form', 'pieform');
-        forEach (getElementsByTagAndClassName('input', 'checkbox', form), function (profileicon) {
-            var id = getNodeAttribute(profileicon, 'name').match(/\d+/)[0];
-            if (profileicon.checked == true) {
-                var counts = profileicon.value.split(',', 3);
+        var form = $(this).closest('form.pieform');
+        $(form).find('input.checkbox').each(function () {
+            var id = $(this).prop('name').match(/\d+/)[0];
+            if ($(this).prop('checked')) {
+                var counts = $(this).prop('value').value.split(',', 3);
                 var warn = '';
                 if (counts[0] > 0) {
                     warn += {$profileiconattachedtoportfolioitems} + ' ';
@@ -187,7 +190,7 @@ addLoadEvent( function() {
                 if (warn != '') {
                     warn += {$confirmdeletefile};
                     if (!confirm(warn)) {
-                        e.stop();
+                        e.preventDefault();
                         return false;
                     }
                 }
