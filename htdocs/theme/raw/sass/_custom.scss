@@ -422,3 +422,11 @@
         }
     }
 }
+
+// Make the other license text box align correctly on files page
+.fileuploadlicense input[type=text].secondary-textbox,
+.fileedittable input[type=text].secondary-textbox {
+    @media (min-width: $screen-lg-min) {
+        margin-left: 100px;
+    }
+}
