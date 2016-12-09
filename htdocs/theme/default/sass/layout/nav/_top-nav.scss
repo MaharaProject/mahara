@@ -1,18 +1,4 @@
 .top-nav.navbar-nav {
-    margin: 10px 0 0 0;
-    padding: 0;
-    font-size: 13px;
-    text-align: right;
-
-    @media (max-width: $screen-md-min) {
-        position: inherit;
-        right: auto;
-        background-color: transparent;
-        border-radius: 0;
-        margin: 10px 10px;
-        font-size: 14px;
-    }
-
     .login-link + .language-form {
         float: none;
         @media (min-width: $screen-xs-min) {
@@ -29,11 +15,6 @@
 
     > li {
         > a {
-            padding: 10px;
-
-            @media (max-width: $screen-md-min) {
-                padding: 10px 5px;
-            }
             &:focus,
             &:hover {
                 color: lighten($theme-primary-color, 8%);
