@@ -49,6 +49,7 @@ else {
 
 // For group members, display a list of views that others have
 // shared to the group
+$hidesubmitted = group_user_can_assess_submitted_views($groupid, $USER->get('id'));
 if (empty($configdata['showsharedviews'])) {
    $sharedviews = array(
         'data'   => array(),
@@ -63,7 +64,8 @@ else {
             $offset,
             $groupid,
             ($configdata['showsharedviews'] == 2 ? false : true),
-            $sortsharedviewsby
+            $sortsharedviewsby,
+            $hidesubmitted
     );
     foreach ($sharedviews['data'] as &$view) {
         if (!$editing && isset($view['template']) && $view['template']) {
