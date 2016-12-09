@@ -77,7 +77,6 @@ function build_webservice_log_search_results($search) {
 
     $smarty = smarty_core();
     $smarty->assign('results', $results);
-    $smarty->assign('institutions', $institutions);
     $smarty->assign('searchurl', $searchurl);
     $smarty->assign('sortby', $search->sortby);
     $smarty->assign('sortdir', $search->sortdir);
