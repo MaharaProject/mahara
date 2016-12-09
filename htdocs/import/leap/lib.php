@@ -2055,7 +2055,8 @@ class PluginImportLeap extends PluginImport {
             'title' => (string)$entry->title . ' ' . get_string('attachment'),
             'owner' => $this->get('usr'),
         );
-        $data->oldextension = end(explode('.', $data->title));
+        $title_explode = explode('.', $data->title);
+        $data->oldextension = end($title_explode);
         return ArtefactTypeFile::save_file($pathname, $data, $this->get('usrobj'), true);
     }
 

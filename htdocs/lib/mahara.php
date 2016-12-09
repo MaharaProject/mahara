@@ -441,7 +441,8 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
         // if it's a block instance config form element, try the wildcard form name
         // and element without it's prefixes
         if (preg_match('/^instconf_/', $element)) {
-            $element = end(explode('_', $element));
+            $element_explode = explode('_', $element);
+            $element = end($element_explode);
         }
         return get_helpfile_location('core', '', 'ANY', $element, $page, $section);
     }

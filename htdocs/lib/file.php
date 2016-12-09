@@ -279,7 +279,8 @@ function file_mime_type($file, $originalfilename=false) {
         if (is_null($mimetypes)) {
             $mimetypes = get_records_assoc('artefact_file_mime_types', '', '', '', 'description,mimetype');
         }
-        $ext = strtolower(array_pop(explode('.', $basename)));
+        $basename_explode = explode('.', $basename);
+        $ext = strtolower(array_pop($basename_explode));
         if (isset($mimetypes[$ext])) {
             return $mimetypes[$ext]->mimetype;
         }

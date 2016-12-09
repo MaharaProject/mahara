@@ -907,7 +907,8 @@ class mahara_user_external extends external_api {
      */
     public static function get_my_user() {
         global $USER;
-        return array_shift(self::get_users_by_id(array(array('id' => $USER->get('id')))));
+        $users_by_id = self::get_users_by_id(array(array('id' => $USER->get('id'))));
+        return array_shift($users_by_id);
     }
 
     /**
