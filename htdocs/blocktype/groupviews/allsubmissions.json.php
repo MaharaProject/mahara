@@ -39,6 +39,9 @@ if (!isset($configdata['showsubmitted'])) {
     $configdata['showsubmitted'] = 1;
 }
 
+$limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
+$limit = ($limit > 0) ? $limit : 5;
+
 if (empty($configdata['showsubmitted'])) {
     $allsubmitted = array(
         'data'   => array(),
@@ -48,8 +51,6 @@ if (empty($configdata['showsubmitted'])) {
     );
 }
 else {
-    $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
-    $limit = ($limit > 0) ? $limit : 5;
     if (!isset($configdata['sortsubmittedby']) || $configdata['sortsubmittedby'] == PluginBlocktypeGroupViews::SORTBY_TITLE) {
         $sortsubmittedby = 'c.name, v.title';
     }
