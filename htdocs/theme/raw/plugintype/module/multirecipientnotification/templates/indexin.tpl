@@ -3,7 +3,7 @@
     <span class="icon icon-edit icon-lg left" role="presentation" aria-hidden="true"></span>
     {str section='module.multirecipientnotification' tag='composemessage'}
 </a>
-
+<div id="notifications-page-header"/></div>
 
 {if $activitylist.count > 0}
 

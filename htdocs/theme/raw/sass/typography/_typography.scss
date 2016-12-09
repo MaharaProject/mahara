@@ -18,6 +18,11 @@ h1 {
     }
 }
 
+#notifications-page-header {
+    @extend .page-header;
+    clear: both;
+}
+
 // Add padding if there is no navigation
 .header + .container h1 {
     padding-top: 20px;
