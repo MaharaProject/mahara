@@ -4833,5 +4833,28 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    // Need to run these two group updates again because we didn't notice
+    // deleting an institution causes group shortnames to be deleted
+    if ($oldversion < 2016122300) {
+        require_once(get_config('docroot') . 'lib/group.php');
+        log_debug('Assign a unique shortname for each existing group that doesn\'t have one.');
+
+        $groups = get_records_select_array(
+            'group',
+            "(shortname IS NULL OR shortname = '') AND deleted = 0"
+        );
+
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                $group->shortname = group_generate_shortname($group->name);
+                update_record('group', $group, 'id');
+            }
+        }
+
+        log_debug('Assign an istitution for each existing group that doesn\'t have one.');
+        $groups = execute_sql("UPDATE {group} SET institution = 'mahara'
+            WHERE (institution IS NULL OR institution = '') AND deleted = 0", array());
+    }
+
     return $status;
 }

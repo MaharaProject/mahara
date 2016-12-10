@@ -154,7 +154,7 @@ if ($institution || $add) {
             execute_sql('DELETE FROM {favorite_usr} WHERE favorite IN (SELECT id FROM {favorite} WHERE institution = ?)', array($values['i']));
             delete_records('favorite', 'institution', $values['i']);
 
-            execute_sql("UPDATE {group} SET institution = NULL, shortname = NULL WHERE institution = ?", array($values['i']));
+            execute_sql("UPDATE {group} SET institution = 'mahara' WHERE institution = ?", array($values['i']));
             delete_records('auth_instance', 'institution', $values['i']);
             delete_records('host', 'institution', $values['i']);
             delete_records('institution_locked_profile_field', 'name', $values['i']);
