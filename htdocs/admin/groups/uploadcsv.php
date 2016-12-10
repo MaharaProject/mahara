@@ -174,7 +174,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         }
         else if ($values['updategroups']) {
             // The groupname needs to exist
-            if (!record_exists('group', 'shortname', $shortname, 'institution', $institution)) {
+            if (!record_exists('group', 'shortname', $shortname)) {
                 $csverrors->add($i, get_string('uploadgroupcsverrorshortnamemissing', 'admin', $i, $shortname));
             }
         }
@@ -197,15 +197,14 @@ function uploadcsv_validate(Pieform $form, $values) {
             }
         }
         else {
-            // This displayname must be new if not our shortname/institution
+            // This displayname must be new if not tied to our shortname
             if (get_records_sql_array('
                     SELECT id FROM {group}
                     WHERE LOWER(TRIM(name)) = ?
-                        AND NOT (shortname = ? AND institution = ?)',
+                        AND NOT (shortname = ?)',
                     array(
                         strtolower(trim($displayname)),
-                        $shortname,
-                        $institution
+                        $shortname
                     ))) {
                 $csverrors->add($i, get_string('uploadgroupcsverrordisplaynamealreadyexists', 'admin', $i, $displayname));
             }

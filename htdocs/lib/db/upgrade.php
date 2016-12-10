@@ -4790,5 +4790,34 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records('usr_watchlist_view', 'usr', 0);
     }
 
+    if ($oldversion < 2016112301) {
+        require_once(get_config('docroot') . 'lib/group.php');
+        log_debug('Make sure all existing groups have a unique shortname.');
+        $groups = get_records_sql_array("
+            SELECT id, name, shortname FROM {group} WHERE shortname IN (
+                SELECT shortname FROM {group} GROUP BY shortname HAVING COUNT(shortname) > 1
+            )", array());
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                $shortname = group_generate_shortname($group->shortname);
+                if ($shortname != $group->shortname) {
+                    log_warn('Duplicate group shortname "' . $group->shortname . '" for group "' . $group->name . '" changed to "' . $shortname . '"', true, false);
+                    update_record('group', array('shortname' => $shortname), array('id' => $group->id));
+                }
+            }
+        }
+
+        log_debug('Changing group uniqueness constraint from (institution,shortname) to just (shortname)');
+        // All shortnames should be unique now so we need to alter the unique key
+        $table = new XMLDBTable('group');
+        $index = new XMLDBIndex('shortnameuk');
+        $index->setAttributes(XMLDB_KEY_UNIQUE, array('institution', 'shortname'));
+        drop_index($table, $index);
+        $index = new XMLDBIndex('shortnameuk');
+        $index->setAttributes(XMLDB_KEY_UNIQUE, array('shortname'));
+        add_index($table, $index);
+
+    }
+
     return $status;
 }
