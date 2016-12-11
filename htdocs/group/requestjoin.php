@@ -71,29 +71,37 @@ function requestjoingroup_submit(Pieform $form, $values) {
     );
     // Send request to all group admins
     require_once('activity.php');
-    $groupadmins = get_column('group_member', 'member', 'group', $group->id, 'role', 'admin');
-    foreach ($groupadmins as $groupadmin) {
-        $adminlang = get_user_language($groupadmin);
-        if (isset($values['reason']) && $values['reason'] != '') {
-            $message = get_string_from_language($adminlang, 'grouprequestmessagereason', 'group', display_name($USER, get_record('usr', 'id', $groupadmin)), $group->name, $values['reason']);
-        }
-        else {
-            $message = get_string_from_language($adminlang, 'grouprequestmessage', 'group', display_name($USER, get_record('usr', 'id', $groupadmin)), $group->name);
-        }
-        activity_occurred('groupmessage', array(
-            'group'   => $group->id,
-            'users'   => array($groupadmin),
-            'subject' => get_string_from_language($adminlang, 'grouprequestsubject', 'group'),
-            'message' => $message,
-            'url'     => 'group/members.php?id=' . $group->id . '&membershiptype=request',
-            'strings' => (object) array(
-                'urltext' => (object) array(
-                    'key'     => 'pendingmembers',
-                    'section' => 'group',
-                ),
-            ),
-        ));
+    $message = (object) array(
+        'key' => 'grouprequestmessage',
+        'section' => 'group',
+        'args' => array(
+            display_name($USER, 0, true),
+            $group->name
+        )
+    );
+
+    if (isset($values['reason']) && $values['reason'] != '') {
+        $message->key = 'grouprequestmessagereason';
+        $message->args[] = $values['reason'];
     }
+
+    activity_occurred('groupmessage', array(
+        'group'   => $group->id,
+        'roles'   => array('admin'),
+        'url'     => 'group/members.php?id=' . $group->id . '&membershiptype=request',
+        'strings' => (object) array(
+            'subject' => (object) array(
+                'key' => 'grouprequestsubject',
+                'section' => 'group',
+            ),
+            'message' => $message,
+            'urltext' => (object) array(
+                'key'     => 'pendingmembers',
+                'section' => 'group',
+            ),
+        ),
+    ));
+
     $SESSION->add_ok_msg(get_string('grouprequestsent', 'group'));
     redirect($goto);
 }
