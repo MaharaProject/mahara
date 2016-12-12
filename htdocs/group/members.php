@@ -142,18 +142,18 @@ $searchform = pieform(array(
 ));
 
 $js = <<< EOF
-addLoadEvent(function () {
+jQuery(function ($) {
     p = {$pagination['javascript']}
-    connect('search_submit', 'onclick', function (event) {
-        replaceChildNodes('messages');
-        var params = {'query': $('search_query').value, 'id':$('search_id').value,
-            'membershiptype':$('search_membershiptype').value,
-            'setlimit':$('search_setlimit').value,
-            'limit':$('setlimitselect').value,
-            'sortoption':$('search_sortoption').value
+    $('#search_submit').on('click', function (event) {
+        $('#messages').empty();
+        var params = {'query': $('#search_query').val(), 'id':$('#search_id').val(),
+            'membershiptype':$('#search_membershiptype').val(),
+            'setlimit':$('#search_setlimit').val(),
+            'limit':$('#setlimitselect').val(),
+            'sortoption':$('#search_sortoption').val()
             };
         p.sendQuery(params);
-        event.stop();
+        event.preventDefault();
     });
 });
 EOF;

@@ -33,39 +33,38 @@ results.rowfunction = function (r, rownumber, d) {
 
     var titleElement;
     if (r.links && r.links._default) {
-        titleElement = [H3({'class': 'title'}, A({'href': r.links._default}, r.title))];
+        titleElement = [jQuery('<h3>',{'class': 'title'}), jQuery('<a>', {'href': r.links._default, 'text': r.title}))];
         delete r.links._default;
     }
     else {
-        titleElement = [H3({'class': 'title'}, r.title)];
+        titleElement = [jQuery('<h3>', {'class': 'title', 'text': r.title})];
     }
 
     for ( var k in r.links ) {
-        var link = A({'href': r.links[k]}, k);
+        var link = jQuery('<a>', {'href': r.links[k], 'text': k});
         titleElement.push(link);
     }
 
     if (r.views) {
-        var viewsList = UL(null);
-        var viewsElement = DIV(null, LABEL(null, $enc_pages), viewsList);
+        var viewsList = jQuery('<ul>');
+        var viewsElement = jQuery('<div>').append(jQuery('<label>').append($enc_pages), viewsList);
         for ( var k in r.views ) {
-            var link = A({'href': r.views[k]}, k);
-            viewsList.appendChild(LI(null, link));
+            var link = jQuery('<a>',{'href': r.views[k]}).append(k);
+            viewsList.append(jQuery('<li>').append(link));
         }
     }
 
-    var descriptionElement = P(null);
-    descriptionElement.innerHTML = r.summary;
+    var descriptionElement = jQuery('<p>');
+    descriptionElement.html(r.summary);
 
-    return TR({'class': 'r' + (rownumber % 2)}, TD(null,
-        titleElement,
-        descriptionElement,
-        viewsElement
-    ));
+    return jQuery('<tr>', {'class': 'r' + (rownumber % 2)}).append(
+      jQuery('<td>').append(
+        titleElement, descriptionElement, viewsElement
+      ))[0];
 };
 
 function dosearch(e) {
-    results.query = $('search_query').value;
+    results.query = jQuery('#search_query').val();
     results.offset = 0;
 
     results.doupdate();

@@ -68,13 +68,13 @@ $filterform = pieform(array(
 ));
 
 $js = <<< EOF
-addLoadEvent(function () {
+jQuery(function ($) {
     p = {$data['pagination_js']}
-    connect('filter_submit', 'onclick', function (event) {
-        replaceChildNodes('messages');
+    $('#filter_submit').on('click', function (event) {
+        $('#messages').empty();
         var params = {'filter': $('filter_filter').value};
         p.sendQuery(params);
-        event.stop();
+        event.preventDefault();
     });
 });
 EOF;

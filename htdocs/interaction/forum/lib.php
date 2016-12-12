@@ -142,24 +142,25 @@ class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_js() {
         return <<<EOF
-function update_maxindent() {
-    var s = $('edit_interaction_indentmode');
-    var m = $('edit_interaction_maxindent_container');
-    var t = $('edit_interaction_maxindent');
-    if (!m) {
-        return;
+jQuery(function($) {
+    function update_maxindent() {
+        var s = $('#edit_interaction_indentmode');
+        var m = $('#edit_interaction_maxindent_container');
+        var t = $('#edit_interaction_maxindent');
+        if (!m) {
+            return;
+        }
+        if (s.options[s.selectedIndex].val() == 'max_indent') {
+            m.removeClass('hidden');
+            t.removeClass('hidden');
+        }
+        else {
+          m.addClass('hidden');
+          t.addClass('hidden');
+        }
     }
-    if (s.options[s.selectedIndex].value == 'max_indent') {
-        removeElementClass(m, 'hidden');
-        removeElementClass(t, 'hidden');
-    }
-    else {
-        addElementClass(m, 'hidden');
-        addElementClass(t, 'hidden');
-    }
-}
-addLoadEvent(function() {
-    connect('edit_interaction_indentmode', 'onchange', update_maxindent);
+
+    $('#edit_interaction_indentmode').on('change', update_maxindent);
 });
 EOF;
     }

@@ -1334,14 +1334,14 @@ function get_login_form_js($form) {
     $cookiename = get_config('cookieprefix') . 'ctest';
     $js = <<< EOF
 <script type="application/javascript">
-var loginbox = $('loginform_container');
+var loginbox = jQuery('#loginform_container');
 document.cookie = "$cookiename=1";
 if (document.cookie) {
-    loginbox.innerHTML = $form;
+    loginbox.html($form);
     document.cookie = '$cookiename=1;expires=1/1/1990 00:00:00';
 }
 else {
-    replaceChildNodes(loginbox, P(null, $strcookiesnotenabled));
+    loginbox.empty().append(jQuery('<p>', { 'text': $strcookiesnotenabled }));
 }
 </script>
 EOF;

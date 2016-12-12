@@ -115,16 +115,16 @@ if ($USER->get('institutions')) {
 $searchform = pieform($searchform);
 
 $js = <<< EOF
-addLoadEvent(function () {
+jQuery(function ($) {
     p = {$data['pagination_js']}
-    connect('search_submit', 'onclick', function (event) {
-        replaceChildNodes('messages');
-        var params = {'query': $('search_query').value, 'extradata':serializeJSON({'page':'find'})};
-        if ($('search_filter')) {
-            params.filter = $('search_filter').value;
+    $('#search_submit').on('click', function (event) {
+        $('#messages').empty();
+        var params = {'query': $('#search_query').val(), 'extradata':serializeJSON({'page':'find'})};
+        if ($('#search_filter').length) {
+            params.filter = $('#search_filter').val();
         }
         p.sendQuery(params);
-        event.stop();
+        event.preventDefault();
     });
 });
 EOF;

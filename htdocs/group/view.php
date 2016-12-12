@@ -76,7 +76,7 @@ if ($group->public) {
 $javascript = array('paginator');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
-$inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
+$inlinejs = "jQuery( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
 
 $headers = array_merge($headers, $view->get_all_blocktype_css());
 

@@ -291,7 +291,7 @@ function PaginatorProxy() {
      */
     this.alertObservers = function(eventName, data) {
         forEach(self.observers, function(o) {
-            signal(o, eventName, data);
+            signal(o, eventName, data); // remove when signal/ Mochikit completely eliminated from the App
             jQuery(o).triggerHandler(eventName, data);
         });
     };

@@ -262,26 +262,27 @@ $pagination = build_pagination(array(
 ));
 
 $inlinejavascript = <<<EOF
-addLoadEvent(function() {
-    forEach(getElementsByTagAndClassName('input', 'topic-checkbox'), function(checkbox) {
-        var tr = getFirstParentByTagAndClassName(checkbox, 'tr', null);
-        var origColour = tr.style.backgroundColor;
-        connect(checkbox, 'onclick', function(e) {
-            if (tr.style.backgroundColor == origColour) {
-                tr.style.backgroundColor = '#ffc';
+jQuery(function($) {
+    $('input.topic-checkbox').each(function() {
+
+        var tr = $(this).closest('tr');
+        var origColour = tr.css('backgroundColor');
+        $(this).on('click', function(e) {
+            if (tr.css('backgroundColor') === origColour) {
+                tr.css('backgroundColor', '#ffc');
             }
             else {
-                tr.style.backgroundColor = origColour;
+                tr.css('backgroundColor', origColour);
             }
         });
     });
     if (action = document.getElementById('action')) {
-        connect(action, 'onchange', function(e) {
+        $(action).on('change', function(e) {
             if (this.options[this.selectedIndex].value == 'moveto') {
-                \$j('#otherforums').removeClass('hidden');
+                $('#otherforums').removeClass('hidden');
             }
             else {
-                \$j('#otherforums').addClass('hidden');
+                $('#otherforums').addClass('hidden');
             }
         });
     }

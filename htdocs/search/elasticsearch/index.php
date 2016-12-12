@@ -117,51 +117,51 @@ $searchform = array(
 $searchform = pieform($searchform);
 
 $js = <<< EOF
-addLoadEvent(function () {
+jQuery(function ($) {
     var firstpage = false;
 
     function SearchPager() {
         var self = this;
         paginatorProxy.addObserver(self);
-        connect(self, 'pagechanged', function() {
+        $(self).on('pagechanged', function() {
             if (firstpage) {
                 firstpage = false;
-                addElementClass('totalresultsdisplay', 'hidefocus');
-                setNodeAttribute('totalresultsdisplay', 'tabindex', -1);
-                $('totalresultsdisplay').focus();
+                $('#totalresultsdisplay').addClass('hidefocus')
+                  .prop('tabindex', -1)
+                  .focus();
             }
             else {
-                getFirstElementByTagAndClassName('a', null, $('universalsearchresults')).focus();
+                $('#universalsearchresults a:first').focus();
             }
         });
     }
     var searchPager = new SearchPager();
 
     p = {$data['pagination_js']}
-    connect('search_submit', 'onclick', function (event) {
+    $('#search_submit').on('click', function (event) {
         firstpage = true;
-        replaceChildNodes('messages');
+        $('#messages').empty();
 
-        if ($('search_tagsonly').value === 'tagsonly') {
+        if ($('#search_tagsonly').val() === 'tagsonly') {
             var tagsonly = true;
         }
         else {
             var tagsonly = false;
         }
 
-        var params = {'query': $('search_query').value, 'tagsonly': tagsonly, 'mainfacetterm': null,'limit': $('setlimitselect').value, 'extradata':serializeJSON({'page':'index'})};
+        var params = {'query': $('#search_query').val(), 'tagsonly': tagsonly, 'mainfacetterm': null,'limit': $('#setlimitselect').val(), 'extradata':serializeJSON({'page':'index'})};
         p.sendQuery(params);
-        event.stop();
+        event.preventDefault();
     });
 });
 EOF;
 
 if (!empty($query)) {
     $js .= <<< EOF
-addLoadEvent(function() {
-    addElementClass('totalresultsdisplay', 'hidefocus');
-    setNodeAttribute('totalresultsdisplay', 'tabindex', -1);
-    $('totalresultsdisplay').focus();
+jQuery(function($) {
+    $('#totalresultsdisplay').addClass('hidefocus')
+        .prop('tabindex', -1)
+        .focus();
 });
 EOF;
 }
