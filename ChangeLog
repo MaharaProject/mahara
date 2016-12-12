@@ -1,3 +1,32 @@
+16.10.1 (2016-12-13)
+- Bug 1540534 Page comment moderation doesn't affect artefact comments
+- Bug 1565199 Journals that you can't add entries to appear in drop-down for "Add new entry" in "Recent journal entries" block 
+- Bug 1600126 Group shortname should be unique across the entier site not just per institution 
+- Bug 1603206 Anonymously placed comments end up with system user
+- Bug 1606509 Anonymouse users should not be able to have URLs linked in comments
+- Bug 1631808 Simplesamlphp support for clustered memcache session store
+- Bug 1636087 iframe source icon not present in table for 16.10 upgrade
+- Bug 1636090 Execution timeout during 16.10 upgrade when fixing broken user data
+- Bug 1636599 Infinite redirect loop with journals page
+- Bug 1636854 Parse error: syntax error, unexpected "login_submitted"
+- Bug 1636866 auth/saml/lib.php breaks PHP 5.4 compatability
+- Bug 1637287 Group members should not receive group membership request notifications
+- Bug 1638687 Blank page when creating collection
+- Bug 1639096 Don't display submitted pages in 'shared with group' sections is broken for pagination
+- Bug 1647220 Error messages on Institution statistics
+- Bug 1647885 Not all file types and mime types get populated on install/upgrade
+- Bug 1603658 "Other license (enter URL)" does not work
+- Bug 1631807 Problem when editing the content on IE11
+- Bug 1633311 JS error in Firefox when editing annotation blocks
+- Bug 1636061 Group short name displayed rather than group name in "Recent journal entries" block
+- Bug 1638733 Static pages gives js error
+- Bug 1644649 Bad call to count_records_sql() for collection views
+- Bug 1645188 Comment ratings are not accessible - aria-hidden still present
+- Bug 1642076 Group admin manage page search button not working
+- Bug 1646291 Default no user icon not been found if using get profile icon by id
+- Bug 1619036 ADODB error when edit page layout
+- Bug 1259756 All form elements need labels
+
 16.10.0 (2016-10-21)
 - Mahara 16.10.0 Release Notes
 - 
