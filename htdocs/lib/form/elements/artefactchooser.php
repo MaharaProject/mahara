@@ -136,92 +136,94 @@ function pieform_element_artefactchooser_views_js(Pieform $form, $element) {
         $artefactchooserselect = '';
     }
     $pagination_js .= <<<EOF
-var ul = getFirstElementByTagAndClassName('ul', 'artefactchooser-tabs', '{$form->get_name()}_{$element['name']}_container');
-var doneBrowse = false;
-var browseA = null;
-var searchA = null;
-var browseTabCurrent = true;
-if (ul) {
-    forEach(getElementsByTagAndClassName('a', null, ul), function(a) {
-        p.rewritePaginatorLink(a);
-        // Need to make sure the accessible hidden <span> is present
-        // If loaded via ajax it may not be present
-        if (a.childNodes.length < 2) {
-            jQuery(a).append('<span class="sr-only">(' + get_string_ajax('tab', 'mahara') + ')</span>');
-        }
+jQuery(function($) {
+  var ul = $('#{$form->get_name()}_{$element['name']}_container ul.artefactchooser-tabs:first');
+  var doneBrowse = false;
+  var browseA = null;
+  var searchA = null;
+  var browseTabCurrent = true;
+  if (ul.length) {
+      ul.find('a').each(function(i, a) {
+          p.rewritePaginatorLink(a);
+          // Need to make sure the accessible hidden <span> is present
+          // If loaded via ajax it may not be present
+          if (a.childNodes.length < 2) {
+              $(a).append('<span class="sr-only">(' + get_string_ajax('tab', 'mahara') + ')</span>');
+          }
 
-        if (!doneBrowse) {
-            browseA = a;
-            jQuery(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
-            doneBrowse = true;
+          if (!doneBrowse) {
+              browseA = a;
+              $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
+              doneBrowse = true;
 
-            // Hide the search form
-            connect(a, 'onclick', function(e) {
-                addElementClass('artefactchooser-searchform', 'hidden');
-                removeElementClass(searchA.parentNode, 'active');
-                jQuery(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
-                jQuery(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
-                addElementClass(browseA.parentNode, 'active');
-                browseA.blur();
-                $('artefactchooser-searchfield').value = ''; // forget the search for now, easier than making the tabs remember it
-                if (!browseTabCurrent) {
-                    {$artefactchooserdata}
-                    browseTabCurrent = true;
-                }
-                e.stop();
-            });
-        }
-        else {
-            searchA = a;
+              // Hide the search form
+              $(a).on('click', function(e) {
+                  $('#artefactchooser-searchform').addClass('hidden');
+                  $(searchA.parentNode).removeClass('active');
+                  $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
+                  $(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
+                  $(browseA.parentNode).addClass('active');
+                  browseA.blur();
+                  $('#artefactchooser-searchfield').val(''); // forget the search for now, easier than making the tabs remember it
+                  if (!browseTabCurrent) {
+                      {$artefactchooserdata}
+                      browseTabCurrent = true;
+                  }
+                  e.preventDefault();
+              });
+          }
+          else {
+              searchA = a;
 
-            // Display the search form
-            connect(a, 'onclick', function(e) {
-                showElement('artefactchooser-searchform');
-                removeElementClass('artefactchooser-searchform', 'hidden');
-                removeElementClass(browseA.parentNode, 'active');
-                jQuery(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
-                jQuery(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
-                addElementClass(searchA.parentNode, 'active');
+              // Display the search form
+              $(a).on('click', function(e) {
+                  $('#artefactchooser-searchform').show();
+                  $('#artefactchooser-searchform').removeClass('hidden');
+                  $(browseA.parentNode).removeClass('active');
+                  $(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
+                  $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
+                  $(searchA.parentNode).addClass('active');
 
-                connect('artefactchooser-searchfield', 'onkeypress', function(e) {
-                    if (e.key().code == 13) { // enter pressed - submitting form
-                        e.stop();
-                        signal('artefactchooser-searchsubmit', 'onclick', true);
-                    }
-                });
+                  $('#artefactchooser-searchfield').on('keypress', function(e) {
+                      if (e.key().code == 13) { // enter pressed - submitting form
+                          e.preventDefault();
+                          $('#artefactchooser-searchsubmit').triggerHandler('click', true);
+                      }
+                  });
 
-                // Wire up the search button
-                connect('artefactchooser-searchsubmit', 'onclick', function(e) {
-                    if (e._event != true) {
-                        e.stop();
-                    }
+                  // Wire up the search button
+                  $('#artefactchooser-searchsubmit').on('click', function(e) {
+                      if (e._event != true) {
+                          e.preventDefault();
+                      }
 
-                    var loc = searchA.href.indexOf('?');
-                    var queryData = [];
-                    if (loc != -1) {
-                        queryData = parseQueryString(searchA.href.substring(loc + 1, searchA.href.length));
-                        queryData.extradata = serializeJSON(p.extraData);
-                        // need to do this old school as the mochikit js is being called on a jquery page
-                        queryData.search = document.getElementById('artefactchooser-searchfield').value;
-                    }
+                      var loc = searchA.href.indexOf('?');
+                      var queryData = [];
+                      if (loc != -1) {
+                          queryData = {
+                            extraData: serializeJSON(p.extraData),
+                            search: $('#artefactchooser-searchfield').val()
+                          }
+                      }
 
-                    sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
-                        // Use pagination.js to update search results
-                        p.updateResults(data);
-                        {$artefactchooserdata}
-                        {$artefactchooserselect}
-                    });
-                });
-                $('artefactchooser-searchfield').focus();
-                if (browseTabCurrent) {
-                    {$artefactchooserdata}
-                    browseTabCurrent = false;
-                }
-                e.stop();
-            });
-        }
-    });
-}
+                      sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
+                          // Use pagination.js to update search results
+                          p.updateResults(data);
+                          {$artefactchooserdata}
+                          {$artefactchooserselect}
+                      });
+                  });
+                  $('#artefactchooser-searchfield').focus();
+                  if (browseTabCurrent) {
+                      {$artefactchooserdata}
+                      browseTabCurrent = false;
+                  }
+                  e.preventDefault();
+              });
+          }
+      });
+  }
+});
 EOF;
     if (!empty($element['selectone']) && !empty($element['selectjscallback'])) {
         $datatable = $element['name'] . '_data';
@@ -229,44 +231,44 @@ EOF;
 /**
  * Call the selectjscallback function whenever a radio button is clicked
  */
-function ArtefactChooserSelect(artefacts) {
-    var self = this;
+var ArtefactChooserSelect = (function($) {
+  return function (artefacts) {
+      var self = this;
 
-    this.artefacts = artefacts;
+      this.artefacts = artefacts;
 
-    this.init = function() {
-        self.connectPagination();
-        self.connectRadios();
-    }
+      this.init = function() {
+          self.connectPagination();
+          self.connectRadios();
+      }
 
-    /**
-     * Connects pagination so that when a page is changed, we are told about it
-     */
-    this.connectPagination = function() {
-        paginatorProxy.addObserver(self);
-        connect(self, 'pagechanged', self.pageChanged);
-    }
+      /**
+       * Connects pagination so that when a page is changed, we are told about it
+       */
+      this.connectPagination = function() {
+          paginatorProxy.addObserver(self);
+          $(self).on('pagechanged', self.pageChanged);
+      }
 
-    /**
-     * Update artefact data & connect radios to the selectjscallback
-     */
-    this.pageChanged = function(data) {
-        self.artefacts = data.artefactdata;
-        self.connectRadios(data);
-    }
+      /**
+       * Update artefact data & connect radios to the selectjscallback
+       */
+      this.pageChanged = function(data) {
+          self.artefacts = data.artefactdata;
+          self.connectRadios(data);
+      }
 
-    this.connectRadios = function(data) {
-        forEach(getElementsByTagAndClassName('input', null, '{$datatable}'), function(radio) {
-            connect(radio, 'onclick', function() {
-                if (self.artefacts[radio.value]) {
-                    {$element['selectjscallback']}(self.artefacts[radio.value]);
-                }
-            });
-        });
-    }
+      this.connectRadios = function(data) {
+          $('#{$datatable} input').on('click', function(id, radio) {
+              if (self.artefacts[radio.value]) {
+                  {$element['selectjscallback']}(self.artefacts[radio.value]);
+              }
+          });
+      }
 
-    self.init();
-}
+      self.init();
+  }
+}(jQuery));
 
 // reattach listeners when page has finished updating
 jQuery(window).on('pageupdated', {}, function(e, data) {
@@ -283,194 +285,193 @@ EOF;
  * Manages the problem of changing pages in the artefact chooser losing what
  * things were selected/not selected
  */
-function ArtefactChooserData() {
-    var self = this;
+var ArtefactChooserData = (function($) {
+  return function() {
+      var self = this;
 
-    this.init = function() {
-        self.insertElementContainers();
-        self.connectPagination();
-        self.connectCheckboxes();
-        self.scrapeForOnpage();
-        self.scrapeForSelected();
-    }
+      this.init = function() {
+          self.insertElementContainers();
+          self.connectPagination();
+          self.connectCheckboxes();
+          self.scrapeForOnpage();
+          self.scrapeForSelected();
+      }
 
-    /**
-     * Puts two containers into the DOM, that will each contain hidden form elements
-     * - one for all the elements on the current page of results, and one for
-     * the currently selected options.
-     *
-     * Clears out existing containers instead of making new ones, if containers
-     * already exist. This happens when changing tabs on the artefact chooser
-     */
-    this.insertElementContainers = function() {
-        self.seenElementsContainer     = $('seen-elements-container');
-        self.selectedElementsContainer = $('selected-elements-container');
+      /**
+       * Puts two containers into the DOM, that will each contain hidden form elements
+       * - one for all the elements on the current page of results, and one for
+       * the currently selected options.
+       *
+       * Clears out existing containers instead of making new ones, if containers
+       * already exist. This happens when changing tabs on the artefact chooser
+       */
+      this.insertElementContainers = function() {
+          self.seenElementsContainer     = $('#seen-elements-container');
+          self.selectedElementsContainer = $('#selected-elements-container');
 
-        if (self.seenElementsContainer) {
-            // Clear out the list of seen elements
-            replaceChildNodes(self.seenElementsContainer);
-        }
-        else {
-            self.seenElementsContainer = DIV({'id': 'seen-elements-container', 'style': 'display: none;'});
-            insertSiblingNodesAfter('artefactchooser-body', self.seenElementsContainer);
-        }
+          if (self.seenElementsContainer) {
+              // Clear out the list of seen elements
+              self.seenElementsContainer.empty();
+          }
+          else {
+              self.seenElementsContainer = $('<div>', {'id': 'seen-elements-container', 'style': 'display: none;'});
+              self.seenElementsContainer.insertAfter('#artefactchooser-body');
+          }
 
-        if (self.selectedElementsContainer) {
-            // Clear out the list of selected elements
-            replaceChildNodes(self.selectedElementsContainer);
-        }
-        else {
-            self.selectedElementsContainer = DIV({'id': 'selected-elements-container', 'style': 'display: none;'});
-            insertSiblingNodesAfter('artefactchooser-body', self.selectedElementsContainer);
-        }
-    }
+          if (self.selectedElementsContainer) {
+              // Clear out the list of selected elements
+              self.selectedElementsContainer.empty();
+          }
+          else {
+              self.selectedElementsContainer = $('<div>', {'id': 'selected-elements-container', 'style': 'display: none;'});
+              self.selectedElementsContainer.insertAfter('#artefactchooser-body');
+          }
+      }
 
-    /**
-     * Connects pagination so that when a page is changed, we are told about it
-     */
-    this.connectPagination = function() {
-        paginatorProxy.addObserver(self);
-        connect(self, 'pagechanged', self.pageChanged);
-    }
+      /**
+       * Connects pagination so that when a page is changed, we are told about it
+       */
+      this.connectPagination = function() {
+          paginatorProxy.addObserver(self);
+          $(self).on('pagechanged', self.pageChanged);
+      }
 
-    /**
-     * Connects checkboxes so when they're clicked we can deal with it
-     */
-    this.connectCheckboxes = function() {
-        forEach(getElementsByTagAndClassName('input', 'artefactid-checkbox', 'artefactchooser-body'), function(checkBox) {
-            connect(checkBox, 'onclick', partial(self.checkboxClicked, checkBox));
-        });
-    }
+      /**
+       * Connects checkboxes so when they're clicked we can deal with it
+       */
+      this.connectCheckboxes = function() {
+          $('#artefactchooser-body input.artefactid-checkbox').each(function() {
+              $(this).on('click', self.checkboxClicked.bind(null, checkBox));
+          });
+      }
 
-    /**
-     * Find all hidden onpage inputs, and move them to the container, otherwise
-     * destroy them if they're already in there (which happens if we go to a
-     * page we've already seen)
-     */
-    this.scrapeForOnpage = function() {
-        forEach(getElementsByTagAndClassName('input', 'artefactid-onpage', 'artefactchooser-body'), function(i) {
-            var append = true;
-            forEach(self.seenElementsContainer.childNodes, function(seen) {
-                if (seen.value == i.value) {
-                    append = false;
-                    throw MochiKit.Iter.StopIteration;
-                }
-            });
-            if (append) {
-                appendChildNodes(self.seenElementsContainer, i);
-            }
-            else {
-                // Element is surplus to requirements
-                removeElement(i);
-            }
-        });
-    }
+      /**
+       * Find all hidden onpage inputs, and move them to the container, otherwise
+       * destroy them if they're already in there (which happens if we go to a
+       * page we've already seen)
+       */
+      this.scrapeForOnpage = function() {
+          $('artefactchooser-body input.artefactid-onpage').each(function(index, input) {
+              var append = true;
+              self.seenElementsContainer.children().each(function(id, seen) {
+                  if (seen.value == input.value) {
+                      return append = false;
+                  }
+              });
+              if (append) {
+                  self.seenElementsContainer.append(input);
+              }
+              else {
+                  // Element is surplus to requirements
+                  $(input).remove();
+              }
+          });
+      }
 
-    /**
-     * Find all hidden currently selected inputs, and move them to the selected container
-     */
-    this.scrapeForSelected = function() {
-        forEach(getElementsByTagAndClassName('input', 'artefactid-checkbox', 'artefactchooser-body'), function(i) {
-            if (i.checked) {
-                self.ensureSelectedElement(i);
-            }
-        });
-    }
+      /**
+       * Find all hidden currently selected inputs, and move them to the selected container
+       */
+      this.scrapeForSelected = function() {
+          $('#artefactchooser-body input.artefactid-checkbox').each(function(input) {
+              if ($(input).prop('checked')) {
+                  self.ensureSelectedElement(input);
+              }
+          });
+      }
 
-    /**
-     * When a checkbox is clicked, update the list of selected inputs
-     */
-    this.checkboxClicked = function(checkbox) {
-        if (checkbox.checked) {
-            // Add to the list if it's not there
-            self.ensureSelectedElement(checkbox);
-        }
-        else {
-            // Remove from the list if it's there
-            self.removeSelectedElement(checkbox);
-        }
-    }
+      /**
+       * When a checkbox is clicked, update the list of selected inputs
+       */
+      this.checkboxClicked = function(checkbox) {
+          if (checkbox.checked) {
+              // Add to the list if it's not there
+              self.ensureSelectedElement(checkbox);
+          }
+          else {
+              // Remove from the list if it's there
+              self.removeSelectedElement(checkbox);
+          }
+      }
 
-    /**
-     * When a pagination link is clicked, update the list of seen inputs
-     */
-    this.pageChanged = function(data) {
-        self.scrapeForOnpage();
-        if (findValue(self.seenOffsets, data.offset) == -1) {
-            self.scrapeForSelected();
-            self.seenOffsets.push(data.offset);
-        }
-        else {
-            self.syncroniseCheckboxStateFromContainer();
-        }
-        self.connectCheckboxes();
-    }
+      /**
+       * When a pagination link is clicked, update the list of seen inputs
+       */
+      this.pageChanged = function(data) {
+          self.scrapeForOnpage();
+          if ($.inArray(data.offset, self.seenOffsets) == -1) {
+              self.scrapeForSelected();
+              self.seenOffsets.push(data.offset);
+          }
+          else {
+              self.syncroniseCheckboxStateFromContainer();
+          }
+          self.connectCheckboxes();
+      }
 
-    /**
-     * Ensures that the element we have been given is in the list of selected
-     * elements
-     */
-    this.ensureSelectedElement = function(element) {
-        var append = true;
-        forEach(self.selectedElementsContainer.childNodes, function(selected) {
-            if (selected.name == element.name) {
-                append = false;
-                throw MochiKit.Iter.StopIteration;
-            }
-        });
+      /**
+       * Ensures that the element we have been given is in the list of selected
+       * elements
+       */
+      this.ensureSelectedElement = function(element) {
+          var append = true;
+          $(self.selectedElementsContainer.children().each(function(index, selected) {
+              if (selected.name == element.name) {
+                  return append = false;
+              }
+          });
 
-        if (append) {
-            appendChildNodes(self.selectedElementsContainer,
-                INPUT({'type': 'hidden', 'name': element.name, 'value': 1})
-            );
-        }
-    }
+          if (append) {
+              self.selectedElementsContainer.append($('<input>', {'type': 'hidden', 'name': element.name, 'value': 1})
+              );
+          }
+      }
 
-    /**
-     * Ensures that the element we have been given is NOT in the list of
-     * selected elements
-     */
-    this.removeSelectedElement = function(element) {
-        forEach(self.selectedElementsContainer.childNodes, function(selected) {
-            if (selected.name == element.name) {
-                removeElement(selected);
-                throw MochiKit.Iter.StopIteration;
-            }
-        });
-    }
+      /**
+       * Ensures that the element we have been given is NOT in the list of
+       * selected elements
+       */
+      this.removeSelectedElement = function(element) {
+          self.selectedElementsContainer.children().each(function(index, selected) {
+              if (selected.name == element.name) {
+                  $(selected).remove();
+                  return false;
+              }
+          });
+      }
 
-    /**
-     * Called when the user browses back to a page they have already seen. They
-     * may have added/removed what they have checked on that page, so we need
-     * to syncronise the display with their choices
-     */
-    this.syncroniseCheckboxStateFromContainer = function() {
-        forEach(getElementsByTagAndClassName('input', 'artefactid-checkbox', 'artefactchooser-body'), function(checkbox) {
-            checkbox.checked = false;
-            forEach(self.selectedElementsContainer.childNodes, function(selected) {
-                if (selected.name == checkbox.name) {
-                    // Checkbox should be checked
-                    checkbox.checked = true;
-                    throw MochiKit.Iter.StopIteration;
-                }
-            });
-        });
-    }
+      /**
+       * Called when the user browses back to a page they have already seen. They
+       * may have added/removed what they have checked on that page, so we need
+       * to syncronise the display with their choices
+       */
+      this.syncroniseCheckboxStateFromContainer = function() {
+          $('#artefactchooser-body input.artefactid-checkbox').each(function(i, checkbox) {
+              $(checkbox).prop('checked', false);
+              self.selectedElementsContainer.children().each(function(index, selected) {
+                  if (selected.name == checkbox.name) {
+                      // Checkbox should be checked
+                      $(checkbox).prop('checked', true);
+                      return false;
+                  }
+              });
+          });
+      }
 
-    // Contains hidden elements representing every artefact we have seen,
-    // regardless of whether it has been selected
-    this.seenElementsContainer = null;
+      // Contains hidden elements representing every artefact we have seen,
+      // regardless of whether it has been selected
+      this.seenElementsContainer = null;
 
-    // Contains hidden elements representing every artefact that has been
-    // selected on any page we have seen
-    this.selectedElementsContainer = null;
+      // Contains hidden elements representing every artefact that has been
+      // selected on any page we have seen
+      this.selectedElementsContainer = null;
 
-    // Pagination offsets we have already seen. We have always seen offset 0
-    // when we begin.
-    this.seenOffsets = [0];
+      // Pagination offsets we have already seen. We have always seen offset 0
+      // when we begin.
+      this.seenOffsets = [0];
 
-    self.init();
-}
+      self.init();
+  }
+}(jQuery));
 
 new ArtefactChooserData();
 

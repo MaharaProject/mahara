@@ -40,7 +40,7 @@ function pieform_element_text(Pieform $form, $element) {/*{{{*/
         $inputid = hsc($form->get_name() . '_' . $element['name']);
         $linktext = $element['expandtext'] ? hsc($element['expandtext']) : get_string('edit');
         $html .= '<a class="btn btn-default" href="" '
-            . "onclick=\"addElementClass('${inputid}_expand', 'hidden'); removeElementClass('{$inputid}', 'hidden'); return false;\""
+            . "onclick=\"jQuery('#${inputid}_expand').addClass('hidden'); jQuery('#{$inputid}').removeClass('hidden'); return false;\""
             . "id=\"${inputid}_expand\">" . $linktext . '</a>';
         $element['class'] .= ' hidden';
     }

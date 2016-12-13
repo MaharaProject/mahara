@@ -33,9 +33,9 @@ function pieform_element_passwordnoread(Pieform $form, $element) {
         $linktext = isset($element['expandtext']) ? hsc($element['expandtext']) : get_string('changepassword');
         $html = '<a href="" '
                 . "onclick=\""
-                . "addElementClass('${inputid}_expand', 'hidden'); "
+                . "jQuery('#${inputid}_expand').addClass('hidden'); "
                 . "jQuery('#{$inputid}').attr('name', '{$element['name']}');"
-                . "removeElementClass('{$inputid}', 'hidden'); "
+                . "jQuery('#{$inputid}').removeClass('hidden'); "
                 . "return false;"
                 . "\" id=\"${inputid}_expand\">" . $linktext . '</a>';
                 $element['class'] .= ' hidden';

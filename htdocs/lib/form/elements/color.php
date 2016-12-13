@@ -34,13 +34,13 @@ function pieform_element_color(Pieform $form, $element) {
             var {$baseid}_oldval = '';
             function {$baseid}_toggle(x) {
                 if ( x.checked ) {
-                    {$baseid}_oldval = $('{$baseid}').value;
-                    $('{$baseid}').value   = '';
-                    $('{$baseid}').disabled   = true;
+                    {$baseid}_oldval = jQuery('#{$baseid}').val();
+                    jQuery('#{$baseid}').val('');
+                    jQuery('#{$baseid}').prop('disabled', true);
                 }
                 else {
-                    $('{$baseid}').value   = {$baseid}_oldval;
-                    $('{$baseid}').disabled   = false;
+                    jQuery('#{$baseid}').val({$baseid}_oldval);
+                    jQuery('#{$baseid}').prop('disabled', false);
                 }
             }
         </script>
