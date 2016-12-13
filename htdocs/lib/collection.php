@@ -1079,7 +1079,8 @@ class Collection {
 
         // We don't send out notifications about the release of remote-submitted Views & Collections
         // (though I'm not sure why)
-        if ($this->submittedgroup) {
+        // if the method is called in an upgrade and we dont have a release user
+        if (!defined('INSTALLER') && $this->submittedgroup) {
             $releaseuser = optional_userobj($releaseuser);
             $releaseuserdisplay = display_name($releaseuser, $this->owner);
             $submitinfo = $this->submitted_to();

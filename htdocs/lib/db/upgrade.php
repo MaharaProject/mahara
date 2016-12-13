@@ -4816,7 +4816,21 @@ function xmldb_core_upgrade($oldversion=0) {
         $index = new XMLDBIndex('shortnameuk');
         $index->setAttributes(XMLDB_KEY_UNIQUE, array('shortname'));
         add_index($table, $index);
+    }
 
+    if ($oldversion < 2016112400) {
+        log_debug('Realease all collections that are still submitted but to a deleted group');
+        require_once(get_config('libroot') . 'collection.php');
+        if ($collections = get_records_sql_array("
+            SELECT c.id
+            FROM {collection} c JOIN {group} g ON c.submittedgroup=g.id
+            WHERE c.submittedstatus = ".Collection::SUBMITTED." AND g.deleted = 1 "
+            )) {
+            foreach ($collections as $collectionid) {
+                $collection = new Collection($collectionid->id);
+                $collection->release();
+            }
+        }
     }
 
     return $status;

@@ -790,6 +790,13 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
         $view->delete();
     }
 
+    // Release collections submitted to the group
+    require_once(get_config('libroot') . 'collection.php');
+    foreach (get_column('collection', 'id', 'submittedgroup', $group->id) as $collectionid) {
+        $collection = new Collection($collectionid);
+        $collection->release();
+    }
+
     // Release views submitted to the group
     foreach (get_column('view', 'id', 'submittedgroup', $group->id) as $viewid) {
         $view = new View($viewid);
