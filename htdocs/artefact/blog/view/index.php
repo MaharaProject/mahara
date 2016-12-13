@@ -160,13 +160,15 @@ function changepoststatus_success(form, data) {
         removeElementClass($('posttitle_' + data.id), 'draft');
         addElementClass($('posttitle_' + data.id), 'published');
         $('poststatus' + data.id).innerHTML = {$strpublished};
-        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span> ' + {$strchangepoststatusunpublish};
+        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span> ' + {$strchangepoststatusunpublish} +
+          '<span class="sr-only">' + {$strchangepoststatusunpublish} + ' "' + data.title + '"</span>';
     }
     else {
         removeElementClass($('posttitle_' + data.id), 'published');
         addElementClass($('posttitle_' + data.id), 'draft');
         $('poststatus' + data.id).innerHTML = {$strdraft};
-        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="icon icon-check icon-lg left text-success" role="presentation" aria-hidden="true"></span>' + {$strchangepoststatuspublish};
+        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="icon icon-check icon-lg left text-success" role="presentation" aria-hidden="true"></span>' + {$strchangepoststatuspublish} +
+        '<span class="sr-only">' + {$strchangepoststatuspublish} + ' "' + data.title + '"</span>';
     }
 }
 function delete_success(form, data) {
@@ -230,6 +232,7 @@ function changepoststatus_submit(Pieform $form, $values) {
         'message' => $strmessage,
         'goto' => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blogpost->get('parent'),
         'id' => $values['changepoststatus'],
+        'title' => $blogpost->get('title'),
     ));
 }
 
