@@ -7,11 +7,11 @@
         {$friends.pagination|safe}
     </div>
     <script>
-    addLoadEvent(function() {literal}{{/literal}
+    jQuery(function($) {literal}{{/literal}
         {$friends.pagination_js|safe}
-        removeElementClass('myfriends_page_container', 'hidden');
-        jQuery(window).on('pageupdated', { }, function() {
-            jQuery('.js-masonry.user-thumbnails').masonry({ itemSelector: '.user-icon' });
+        $('#myfriends_page_container').removeClass('hidden');
+        $(window).on('pageupdated', { }, function() {
+            $('.js-masonry.user-thumbnails').masonry({ itemSelector: '.user-icon' });
         });
     {literal}}{/literal});
     </script>

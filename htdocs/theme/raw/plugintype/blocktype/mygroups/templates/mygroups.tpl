@@ -8,9 +8,9 @@
     {if $USERGROUPS.pagination_js}
     <script>
         var cleanurlid = {$userid};
-        addLoadEvent(function() {literal}{{/literal}
+        jQuery(function($) {literal}{{/literal}
             {$USERGROUPS.pagination_js|safe}
-            removeElementClass('usergroups_page_container', 'hidden');
+            $('#usergroups_page_container').removeClass('hidden');
         {literal}}{/literal});
     </script>
     {/if}

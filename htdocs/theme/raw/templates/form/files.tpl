@@ -6,12 +6,11 @@
     function {{$name}}_new() {
         {{$name}}_current++;
         var id = '{{$name}}_files_' + {{$name}}_current;
-        {{$name}}_newlabel = LABEL({'for': id, 'class': 'sr-only'}, $('{{$name}}_files_label').innerHTML);
-        {{$name}}_newrefinput = INPUT({'type': 'file', 'id': id, 'name': id, 'class': 'file'});
-        var {{$name}}_newref = DIV({'class': 'file-wrapper'
-        },{{$name}}_newlabel, {{$name}}_newrefinput);
+        {{$name}}_newlabel = jQuery('<label>', {'for': id, 'class': 'sr-only'}).append(jQuery('#{{$name}}_files_label').html());
+        {{$name}}_newrefinput = jQuery('<input>', {'type': 'file', 'id': id, 'name': id, 'class': 'file'});
+        var {{$name}}_newref = jQuery('<div>', {'class': 'file-wrapper'}).append({{$name}}_newlabel, {{$name}}_newrefinput);
 
-        appendChildNodes('{{$name}}_list', {{$name}}_newref);
+        jQuery('#{{$name}}_list').append({{$name}}_newref);
 
         {{$name}}_newrefinput.focus();
     }

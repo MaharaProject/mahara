@@ -8,7 +8,7 @@
 
 <script type="application/javascript">
 {{if !$inblockconfig}}
-    addLoadEvent(function () {
+    jQuery(window).load(function () {
 {{/if}}
     jQuery("#{{$id}}").select2({
         ajax: {
