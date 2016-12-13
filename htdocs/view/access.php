@@ -246,19 +246,20 @@ if ($institution) {
         'defaultvalue' => $view->get('template') && $view->get('retainview'),
     );
     $js .= <<< EOF
-function update_retainview() {
-    if ($('editaccess_template').checked) {
-        removeElementClass($('editaccess_retainview_container'), 'hidden');
-    }
-    else {
-        addElementClass($('editaccess_retainview_container'), 'hidden');
-        $('editaccess_retainview').checked = false;
-        update_loggedin_access();
-    }
-};
-addLoadEvent(function() {
+jQuery(function($) {
+    function update_retainview() {
+        if ($('#editaccess_template').prop('checked')) {
+            $('#editaccess_retainview_container').removeClass('hidden');
+        }
+        else {
+            $('#editaccess_retainview_container').addClass('hidden');
+            $('#editaccess_retainview').prop('checked',false);
+            update_loggedin_access();
+        }
+    };
     update_retainview();
-    connect('editaccess_template', 'onclick', update_retainview);
+
+    $('#editaccess_template').on('click', update_retainview);
 });
 EOF;
     $js .= "function update_loggedin_access() {}\n";
@@ -270,25 +271,26 @@ if (!$allowcomments) {
 $allowcomments = json_encode((int) $allowcomments);
 
 $js .= <<<EOF
-var allowcomments = {$allowcomments};
-function update_comment_options() {
-    allowcomments = $('editaccess_allowcomments').checked;
-    if (allowcomments) {
-        removeElementClass($('editaccess_approvecomments'), 'hidden');
-        removeElementClass($('editaccess_approvecomments_container'), 'hidden');
-        forEach(getElementsByTagAndClassName(null, 'commentcolumn', 'accesslisttable'), function (elem) {
-            addElementClass(elem, 'hidden');
-        });
+jQuery(function($) {
+    var allowcomments = {$allowcomments};
+    function update_comment_options() {
+        allowcomments = $('#editaccess_allowcomments').prop('checked');
+        if (allowcomments) {
+            $('#editaccess_approvecomments').removeClass('hidden');
+            $('#editaccess_approvecomments_container').removeClass('hidden');
+            $('#accesslisttable .commentcolumn').each(function () {
+                $(this).addClass('hidden');
+            });
+        }
+        else {
+
+            $('#editaccess_approvecomments_container').addClass('hidden');
+            $('#accesslisttable .commentcolumn').each(function () {
+                $(this).removeClass('hidden');
+            });
+        }
     }
-    else {
-        addElementClass($('editaccess_approvecomments_container'), 'hidden');
-        forEach(getElementsByTagAndClassName(null, 'commentcolumn', 'accesslisttable'), function (elem) {
-            removeElementClass(elem, 'hidden');
-        });
-    }
-}
-addLoadEvent(function() {
-    connect('editaccess_allowcomments', 'onclick', update_comment_options);
+    $('#editaccess_allowcomments').on('click', update_comment_options);
     update_comment_options();
 });
 EOF;

@@ -87,43 +87,51 @@ $js = <<<EOF
 
 templatelist = new SearchTable('templatesearch');
 
-addLoadEvent(function() {
+jQuery(function($) {
 
   templatelist.rewriteOther = function () {
-    forEach(getElementsByTagAndClassName('a', 'grouplink', 'templatesearch'), function(i) {
-      connect(i, 'onclick', function (e) {
-        e.stop();
-        var href = getNodeAttribute(this, 'href');
-        var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        sendjsonrequest(config.wwwroot + 'group/groupinfo.json.php', params, 'POST', partial(showPreview, 'small'));
+    $('#templatesearch a.grouplink').each(function() {
+      $(this).on('click', function (e) {
+        e.preventDefault();
+        var href = $(this).prop('href');
+        var params = {
+          'id': getUrlParameter('id', href)
+        }
+        sendjsonrequest(config.wwwroot + 'group/groupinfo.json.php', params, 'POST', showPreview.bind(null, 'small'));
+      });
+  });
+    $('#templatesearch a.userlink').each(function() {
+      jQuery(this).on('click', function (e) {
+        e.preventDefault();
+        var href = jQuery(this).prop('href');
+        var params = {
+          'id': getUrlParameter('id', href)
+        }
+        sendjsonrequest(config.wwwroot + 'user/userdetail.json.php', params, 'POST', showPreview.bind(null, 'small'));
       });
     });
-    forEach(getElementsByTagAndClassName('a', 'userlink', 'templatesearch'), function(i) {
-      connect(i, 'onclick', function (e) {
-        e.stop();
-        var href = getNodeAttribute(this, 'href');
-        var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        sendjsonrequest(config.wwwroot + 'user/userdetail.json.php', params, 'POST', partial(showPreview, 'small'));
+    $('#templatesearch a.viewlink').each(function() {
+      $(this).off();
+      $(this).prop('title', {$strpreview});
+      $(this).on('click', function (e) {
+        e.preventDefault();
+        var href = $(this).prop('href');
+        var params = {
+          'id': getUrlParameter('id', href)
+        }
+        sendjsonrequest('viewcontent.json.php', params, 'POST', showPreview.bind(null, 'big'));
       });
     });
-    forEach(getElementsByTagAndClassName('a', 'viewlink', 'templatesearch'), function(i) {
-      disconnectAll(i);
-      setNodeAttribute(i, 'title', {$strpreview});
-      connect(i, 'onclick', function (e) {
-        e.stop();
-        var href = getNodeAttribute(this, 'href');
-        var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        sendjsonrequest('viewcontent.json.php', params, 'POST', partial(showPreview, 'big'));
-      });
-    });
-    forEach(getElementsByTagAndClassName('a', 'collectionlink', 'templatesearch'), function(i) {
-      disconnectAll(i);
-      setNodeAttribute(i, 'title', {$strpreview});
-      connect(i, 'onclick', function (e) {
-        e.stop();
-        var href = getNodeAttribute(this, 'href');
-        var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        sendjsonrequest('../collection/viewcontent.json.php', params, 'POST', partial(showPreview, 'big'));
+    $('#templatesearch a.collectionlink').each(function() {
+      $(this).off();
+      $(this).prop('title', {$strpreview});
+      $(this).on('click', function (e) {
+        e.preventDefault();
+        var href = $(this).prop('href');
+        var params = {
+          'id': getUrlParameter('id', href)
+        }
+        sendjsonrequest('../collection/viewcontent.json.php', params, 'POST', showPreview.bind(null, 'big'));
       });
     });
   };
