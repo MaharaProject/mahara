@@ -158,41 +158,43 @@ $failurestring = json_encode(get_string('upgradefailure', 'admin'));
 
 $javascript = <<<JAVASCRIPT
 
-function installplugin(name) {
-    $(name + '.message').innerHTML = '<span class="{$loadingicon}" title=' + {$loadingstring} + '" role="presentation" aria-hidden="true"></span>';
+var installplugin = (function($) {
+  return function (name) {
+      $('[id="' + name + '.message"]').html('<span class="{$loadingicon}" title=' + {$loadingstring} + '" role="presentation" aria-hidden="true"></span>');
 
-    sendjsonrequest('../upgrade.json.php', { 'name': name }, 'GET', function (data) {
-        if (!data.error) {
-            var message = {$successstring} + data.newversion;
-            $(name + '.message').innerHTML = '<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message;
-            $(name + '.install').innerHTML = '';
-            jQuery($(name)).removeClass('list-group-item-danger').addClass('list-group-item-success');
-            // move the whole thing into the list of installed plugins
-            // new parent node
-            var bits = name.split('\.');
-            jQuery("ul[id='" + bits[0] + ".installed'] li:eq(0)").after($(name));
-            var oldlist = jQuery("ul[id='" + bits[0] + ".notinstalled']").find('li:not(:has(h3))');
-            if (oldlist.length == 0) {
-                jQuery("ul[id='" + bits[0] + ".notinstalled']").hide();
-            }
-        }
-        else {
-            var message = '';
-            if (data.errormessage) {
-                message = data.errormessage;
-            }
-            else {
-                message = {$failurestring};
-            }
-            $(name).innerHTML = '<span class="{$failureicon}" title=":(" role="presentation" aria-hidden="true"></span>' + message;
-        }
-    },
-    function () {
-        message = {$failurestring};
-        $(name).innerHTML = message;
-    },
-    true);
-}
+      sendjsonrequest('../upgrade.json.php', { 'name': name }, 'GET', function (data) {
+          if (!data.error) {
+              var message = {$successstring} + data.newversion;
+              $('[id="' + name + '.message"]').html('<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message);
+              $('[id="' + name + '.install"]').html('');
+              $('[id="' + name + '"]').removeClass('list-group-item-danger').addClass('list-group-item-success');
+              // move the whole thing into the list of installed plugins
+              // new parent node
+              var bits = name.split('\.');
+              $("ul[id='" + bits[0] + ".installed'] li:eq(0)").after($('[id="' + name + '"]'));
+              var oldlist = $("ul[id='" + bits[0] + ".notinstalled']").find('li:not(:has(h3))');
+              if (oldlist.length == 0) {
+                  $("ul[id='" + bits[0] + ".notinstalled']").hide();
+              }
+          }
+          else {
+              var message = '';
+              if (data.errormessage) {
+                  message = data.errormessage;
+              }
+              else {
+                  message = {$failurestring};
+              }
+              $('[id="' + name + '"]').html('<span class="{$failureicon}" title=":(" role="presentation" aria-hidden="true"></span>' + message);
+          }
+      },
+      function () {
+          message = {$failurestring};
+          $('[id="' + name + '"]').html(message);
+      },
+      true);
+  }
+}(jQuery));
 JAVASCRIPT;
 
 
