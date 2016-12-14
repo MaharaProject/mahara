@@ -1587,13 +1587,14 @@ class OpenSslRepo {
         if (empty($province)) $province = 'Wellington';
         if (empty($locality)) $locality = 'Te Aro';
 
+        $commonname = substr(get_config('wwwroot'), 0, 64);
         $dn = array(
            "countryName" => $country,
            "stateOrProvinceName" => $province,
            "localityName" => $locality,
            "organizationName" => $organization,
            "organizationalUnitName" => 'Mahara',
-           "commonName" => get_config('wwwroot'),
+           "commonName" => $commonname,
            "emailAddress" => $email
         );
 
