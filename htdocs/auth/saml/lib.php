@@ -22,6 +22,11 @@ class AuthSaml extends Auth {
         return get_config('dataroot') . 'metadata/';
     }
 
+    public static function prepare_metadata_path($idp) {
+        $path = self::get_metadata_path() . preg_replace('/[\/:\.]/', '_', $idp) . '.xml';
+        return $path;
+    }
+
     public static function get_certificate_path() {
         check_dir_exists(get_config('dataroot') . 'certificate/');
         return get_config('dataroot') . 'certificate/';
@@ -44,6 +49,7 @@ class AuthSaml extends Auth {
         $this->config['remoteuser'] = true;
         $this->config['loginlink'] = false;
         $this->config['institutionidp'] = '';
+        $this->config['institutionidpentityid'] = '';
         $this->instanceid = $id;
 
         if (!empty($id)) {
@@ -283,21 +289,22 @@ class AuthSaml extends Auth {
 class PluginAuthSaml extends PluginAuth {
 
     private static $default_config = array(
-        'user_attribute'        => '',
-        'weautocreateusers'     => 0,
-        'firstnamefield'        => '',
-        'surnamefield'          => '',
-        'emailfield'            => '',
-        'studentidfield'        => '',
-        'updateuserinfoonlogin' => 1,
-        'institution'           => '',
-        'institutionattribute'  => '',
-        'institutionvalue'      => '',
-        'institutionregex'      => 0,
-        'remoteuser'            => 1,
-        'loginlink'             => 0,
-        'active'                => 1
-            );
+        'user_attribute'         => '',
+        'weautocreateusers'      => 0,
+        'firstnamefield'         => '',
+        'surnamefield'           => '',
+        'emailfield'             => '',
+        'studentidfield'         => '',
+        'updateuserinfoonlogin'  => 1,
+        'institution'            => '',
+        'institutionattribute'   => '',
+        'institutionvalue'       => '',
+        'institutionregex'       => 0,
+        'remoteuser'             => 1,
+        'loginlink'              => 0,
+        'institutionidpentityid' => '',
+        'active'                 => 1
+    );
 
     public static function can_be_disabled() {
         return true;
@@ -509,6 +516,19 @@ class PluginAuthSaml extends PluginAuth {
         return true;
     }
 
+    public static function get_idps($xml) {
+        $xml = new SimpleXMLElement($xml);
+        $xml->registerXPathNamespace('md',   'urn:oasis:names:tc:SAML:2.0:metadata');
+        $xml->registerXPathNamespace('mdui', 'urn:oasis:names:tc:SAML:metadata:ui');
+        // Find all IDPSSODescriptor elements and then work back up to the entityID.
+        $idps = $xml->xpath('//md:EntityDescriptor[//md:IDPSSODescriptor]');
+        $entityid = null;
+        if ($idps && isset($idps[0])) {
+            $entityid = (string)$idps[0]->attributes('', true)->entityID[0];
+        }
+        return array($entityid, $idps);
+    }
+
     public static function get_instance_config_options($institution, $instance = 0) {
         if (!class_exists('SimpleSAML_XHTML_IdPDisco')) {
             global $SESSION;
@@ -545,25 +565,23 @@ class PluginAuthSaml extends PluginAuth {
         // lookup the institution metadata
         $entityid = "";
         self::$default_config['institutionidp'] = "";
-        if (file_exists(AuthSaml::get_metadata_path() . $institution . '.xml')) {
-            $rawxml = file_get_contents(AuthSaml::get_metadata_path() . $institution . '.xml');
-            if (empty($rawxml)) {
-                // bad metadata - get rid of it
-                unlink(AuthSaml::get_metadata_path() . $institution . '.xml');
-            }
-            else {
-                $xml = new SimpleXMLElement($rawxml);
-                $xml->registerXPathNamespace('md',   'urn:oasis:names:tc:SAML:2.0:metadata');
-                $xml->registerXPathNamespace('mdui', 'urn:oasis:names:tc:SAML:metadata:ui');
-                // Find all IDPSSODescriptor elements and then work back up to the entityID.
-                $idps = $xml->xpath('//md:EntityDescriptor[//md:IDPSSODescriptor]');
-                if ($idps && isset($idps[0])) {
-                    $entityid = (string)$idps[0]->attributes('', true)->entityID[0];
-                    self::$default_config['institutionidp'] = $rawxml;
+        if (!empty(self::$default_config['institutionidpentityid'])) {
+            $idpfile = AuthSaml::prepare_metadata_path(self::$default_config['institutionidpentityid']);
+            if (file_exists($idpfile)) {
+                $rawxml = file_get_contents($idpfile);
+                if (empty($rawxml)) {
+                    // bad metadata - get rid of it
+                    unlink($idpfile);
                 }
                 else {
-                    // bad metadata - get rid of it
-                    unlink(AuthSaml::get_metadata_path() . $institution . '.xml');
+                    list ($entityid, $idps) = self::get_idps($rawxml);
+                    if ($entityid) {
+                        self::$default_config['institutionidp'] = $rawxml;
+                    }
+                    else {
+                        // bad metadata - get rid of it
+                        unlink($idpfile);
+                    }
                 }
             }
         }
@@ -572,6 +590,74 @@ class PluginAuthSaml extends PluginAuth {
         if ($entityid) {
             $idp_title .= " (" . $entityid . ")";
         }
+        $entityidps = array();
+        $entityidp_hiddenlabel = true;
+        // Fetch the idp info via disco
+        require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
+        require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
+        SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
+        $discoHandler = new PluginAuthSaml_IdPDisco(array('saml20-idp-remote', 'shib13-idp-remote'), 'saml');
+        $disco = $discoHandler->getTheIdPs();
+        if (count($disco['list']) > 0) {
+            $lang = current_language();
+            $lang = explode('.', $lang);
+            $lang = strtolower(array_shift($lang));
+            $entityidp_hiddenlabel = false;
+            foreach($disco['list'] as $idp) {
+                $idpname = (isset($idp['name'][$lang])) ? $idp['name'][$lang] : $idp['entityid'];
+                $entityidps[$idp['entityid']] = $idpname;
+            }
+        }
+        asort($entityidps);
+        // add the 'New' option to the top of the list
+        $entityidps = array('new' => get_string('newidpentity', 'auth.saml')) + $entityidps;
+
+        $idpselectjs = <<< EOF
+<script type="application/javascript">
+jQuery('document').ready(function($) {
+
+    function update_idp_label(idp) {
+        var idplabel = $('label[for="auth_config_institutionidp"]').html();
+        // remove the idp entity from string
+        if (idplabel.lastIndexOf('(') != -1) {
+            idplabel = idplabel.substring(0, idplabel.lastIndexOf('('));
+        }
+        // add in new one
+        if (idp) {
+            idplabel = idplabel.trim() + ' (' + idp + ')';
+        }
+        $('label[for="auth_config_institutionidp"]').html(idplabel);
+    }
+
+    function update_idp_info(idp) {
+
+        if (idp == 'new') {
+            // clear the metadata box
+            $('#auth_config_institutionidp').val('');
+            update_idp_label(false);
+        }
+        else {
+            // fetch the metadata info and update the textarea
+            idpsafe = idp.replace(/[\/:\.]/g, '_'); // change dots to underscores as that is how we save file
+            sendjsonrequest(config.wwwroot + 'auth/saml/idpmetadata.json.php', {'idp': idpsafe}, 'POST', function (data) {
+                if (!data.error) {
+                    $('#auth_config_institutionidp').val(data.data.metadata);
+                }
+            });
+            update_idp_label(idp);
+        }
+    }
+
+    // On change
+    $('#auth_config_institutionidpentityid').on('change', function() {
+        update_idp_info($(this).val());
+    });
+    // On load
+    update_idp_info($('#auth_config_institutionidpentityid').val());
+});
+</script>
+EOF;
+
         $elements = array(
             'instance' => array(
                 'type'  => 'hidden',
@@ -594,6 +680,13 @@ class PluginAuthSaml extends PluginAuth {
                 'title' => get_string('active', 'auth'),
                 'defaultvalue' => (int) self::$default_config['active'],
             ),
+            'institutionidpentityid' => array(
+                'type'  => 'select',
+                'title' => get_string('institutionidpentity', 'auth.saml'),
+                'options' => $entityidps,
+                'defaultvalue' => ($entityid ? $entityid : 'new'),
+                'hiddenlabel' => $entityidp_hiddenlabel,
+            ),
             'institutionidp' => array(
                 'type'  => 'textarea',
                 'title' => $idp_title,
@@ -602,6 +695,10 @@ class PluginAuthSaml extends PluginAuth {
                 'defaultvalue' => self::$default_config['institutionidp'],
                 'help' => true,
                 'class' => 'under-label',
+            ),
+            'idpselectjs' => array(
+                'type'         => 'html',
+                'value'        => $idpselectjs,
             ),
             'institutionattribute' => array(
                 'type'  => 'text',
@@ -702,39 +799,17 @@ class PluginAuthSaml extends PluginAuth {
 
         if (!empty($values['institutionidp'])) {
             try {
-                $xml = new SimpleXMLElement($values['institutionidp']);
-                $xml->registerXPathNamespace('md',   'urn:oasis:names:tc:SAML:2.0:metadata');
-                $xml->registerXPathNamespace('mdui', 'urn:oasis:names:tc:SAML:metadata:ui');
-                // Find all IDPSSODescriptor elements and then work back up to the entityID.
-                $idps = $xml->xpath('//md:EntityDescriptor[//md:IDPSSODescriptor]');
-                if ($idps && isset($idps[0])) {
-                    $entityid = (string)$idps[0]->attributes('', true)->entityID[0];
-                }
-                else {
+                list ($entityid, $idps) = self::get_idps($values['institutionidp']);
+                if (!$entityid) {
                     throw new Exception("Could not find entityId", 1);
                 }
-
-                // has this IdP already been configured?
-                $institutions = get_records_sql_array(
-                    'SELECT aic.value AS idpentityid,
-                            ai.institution AS institution
-                    FROM {auth_instance_config} as aic
-                    JOIN {auth_instance} AS ai
-                    ON aic.instance = ai.id
-                      WHERE field = \'institutionidpentityid\' AND value = ? AND
-                            ai.institution <> ?
-                      ORDER BY instance',
-                  array($entityid, $values['institution']));
-                $i = 'Unknown';
-                if (is_array($institutions)) {
-                    $i = $institutions[0]->institution;
-                    $form->set_error('institutionidp', get_string('errorduplicateidp1', 'auth.saml', $entityid, $i));
-                }
-
             }
             catch (Exception $e) {
                 $form->set_error('institutionidp', get_string('errorbadmetadata', 'auth.saml'));
             }
+        }
+        else {
+            $form->set_error('institutionidpentityid', get_string('errormissingmetadata', 'auth.saml'));
         }
 
         // If we're using Mahara usernames (usr.username) instead of remote usernames
@@ -768,6 +843,7 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function save_instance_config_options($values, Pieform $form) {
+        global $SESSION;
 
         $authinstance = new stdClass();
 
@@ -804,22 +880,43 @@ class PluginAuthSaml extends PluginAuth {
             $current = array();
         }
 
-        // grab the entityId
-        if (!empty($values['institutionidp'])) {
-            $xml = new SimpleXMLElement($values['institutionidp']);
-            $xml->registerXPathNamespace('md',   'urn:oasis:names:tc:SAML:2.0:metadata');
-            $xml->registerXPathNamespace('mdui', 'urn:oasis:names:tc:SAML:metadata:ui');
-            // Find all IDPSSODescriptor elements and then work back up to the entityID.
-            $idps = $xml->xpath('//md:EntityDescriptor[//md:IDPSSODescriptor]');
-            $entityid = (string)$idps[0]->attributes('', true)->entityID[0];
+        // grab the entityId from the metadata
+        list ($entityid, $idps) = self::get_idps($values['institutionidp']);
+
+        $changedxml = false;
+        if ($values['institutionidpentityid'] != 'new') {
+            $existingidpfile = AuthSaml::prepare_metadata_path($values['institutionidpentityid']);
+            if (file_exists($existingidpfile)) {
+                $rawxml = file_get_contents($existingidpfile);
+                if ($rawxml != $values['institutionidp']) {
+                    $changedxml = true;
+                    // find out which institutions are using it
+                    $duplicates = get_records_sql_array("
+                        SELECT COUNT(aic.instance) AS instances
+                        FROM {auth_instance_config} aic
+                        JOIN {auth_instance} ai ON (ai.authname = 'saml' AND ai.id = aic.instance)
+                        WHERE aic.field = 'institutionidpentityid' AND aic.value = ? AND aic.instance != ?",
+                        array($values['institutionidpentityid'], $values['instance']));
+                    if ($duplicates[0]->instances > 0) {
+                        $SESSION->add_ok_msg(get_string('idpentityupdatedduplicates', 'auth.saml', $duplicates[0]->instances));
+                    }
+                    else {
+                        $SESSION->add_ok_msg(get_string('idpentityupdated', 'auth.saml'));
+                    }
+                }
+                else {
+                    $SESSION->add_ok_msg(get_string('idpentityadded', 'auth.saml'));
+                }
+            }
+            else {
+                // existing idpfile not found so just save it
+                $changedxml = true;
+            }
         }
         else {
-            // cleanup old one if exists
-            $entityid = "";
-            if (file_exists(AuthSaml::get_metadata_path() . $values['institution'] . '.xml')) {
-                // bad metadata - get rid of it
-                unlink(AuthSaml::get_metadata_path() . $values['institution'] . '.xml');
-            }
+           $values['institutionidpentityid'] = $entityid;
+           $changedxml = true;
+           $SESSION->add_ok_msg(get_string('idpentityadded', 'auth.saml'));
         }
 
         self::$default_config = array(
@@ -853,8 +950,9 @@ class PluginAuthSaml extends PluginAuth {
         }
 
         // save the institution config
-        if (!empty($values['institutionidp'])) {
-            file_put_contents(AuthSaml::get_metadata_path() . $values['institution'] . '.xml', $values['institutionidp']);
+        if ($changedxml) {
+            $idpfile = AuthSaml::prepare_metadata_path($values['institutionidpentityid']);
+            file_put_contents($idpfile, $values['institutionidp']);
         }
 
         return $values;

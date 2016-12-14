@@ -4895,5 +4895,26 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017021400) {
+        if ($results = get_records_sql_array("SELECT ai.institution, aic.value AS idp
+                                              FROM {auth_instance_config} aic
+                                              JOIN {auth_instance} ai ON ai.id = aic.instance
+                                              WHERE aic.field = 'institutionidpentityid' AND aic.value != ''", array())) {
+            log_debug('Change SAML metadata naming convention');
+            foreach ($results as $result) {
+                safe_require('auth', 'saml');
+                $metadata_current_file = AuthSaml::get_metadata_path() . $result->institution . '.xml';
+                $idp = str_replace('.', '_', $result->idp);
+                $metadata_new_file = AuthSaml::prepare_metadata_path($idp);
+                if (file_exists($metadata_current_file)) {
+                    // rename metadata from institution to idp
+                    if (copy($metadata_current_file, $metadata_new_file)) {
+                        unlink($metadata_current_file);
+                    }
+                }
+            }
+        }
+    }
+
     return $status;
 }

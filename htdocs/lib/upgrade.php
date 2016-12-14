@@ -1515,7 +1515,7 @@ function site_warnings() {
                   WHERE ai.id NOT IN (
                                       SELECT instance FROM {auth_instance_config} aic
                                       WHERE aic.field = ?
-                  ) AND ai.authname = ?", array('institutionidpentityid', 'saml'))) {
+                  ) AND ai.authname = ? ORDER BY i.displayname", array('institutionidpentityid', 'saml'))) {
             foreach ($samls as $saml) {
                 $warnings[] = get_string('obsoletesamlinstance', 'auth.saml', get_config('wwwroot') . 'admin/users/addauthority.php?id=' . $saml->id . '&edit=1&i=' . $saml->name . '&p=saml', $saml->instancename, $saml->displayname);
             }
