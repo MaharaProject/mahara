@@ -131,7 +131,8 @@
     }
 }
 
-.file-wrapper {
+.file-wrapper,
+.file-wrapper input[type=file] {
     margin-bottom: 8px;
 }
 
