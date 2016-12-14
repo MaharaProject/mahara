@@ -141,6 +141,22 @@ if ($institution || $add) {
             }
 
             foreach ($authinstanceids as $id) {
+                // Check if authinstance is SAML and this is the only institution using the related idp metadata
+                if ($idps = get_records_sql_array("SELECT aic.value FROM {auth_instance} ai
+                                                  JOIN {auth_instance_config} aic ON aic.instance = ai.id
+                                                  WHERE aic.field = 'institutionidpentityid'
+                                                  AND ai.authname = 'saml' AND ai.id = ?", array($id))) {
+                    foreach ($idps as $idp) {
+                        if (!count_records_sql("SELECT COUNT(*) FROM {auth_instance_config} aic
+                                                WHERE value = ? AND instance != ?", array($idp->value, $id))) {
+                            safe_require('auth', 'saml');
+                            $idpfile = AuthSaml::prepare_metadata_path($idp->value);
+                            if (file_exists($idpfile)) {
+                                unlink($idpfile);
+                            }
+                        }
+                    }
+                }
                 delete_records('auth_instance_config', 'instance', $id);
                 delete_records('auth_remote_user', 'authinstance', $id);
             }

@@ -32,17 +32,24 @@ $string['errornomemcache'] = 'A memcache server is needed for auth/saml. Either 
 $string['errornomemcache7php'] = 'A memcache server is needed for auth/saml. Either list the paths to your memcache servers in the $cfg->memcacheservers config variable or install memcache locally.<br>To install the PHP library "memcache" locally:<br>sudo apt-get install php-memcache<br>sudo phpenmod memcache<br>Then restart you web server.';
 $string['errorbadconfig'] = 'The SimpleSAMLPHP config directory %s is incorrect.';
 $string['errorbadmetadata'] = 'Badly formed SAML metadata. Ensure XML contains one valid Identity Provider.';
-$string['errorduplicateidp1'] = 'The Identity Provider "%s" is already in use by institution "%s". Ensure the XML contains one valid and unique Identity Provider.';
 $string['errorbadinstitutioncombo'] = 'There is already an existing authentication instance with this institution attribute and institution value combination.';
+$string['errormissingmetadata'] = 'You have chosen to add new Identity Provider metadata but none is supplied.';
 $string['errormissinguserattributes1'] = 'You seem to be authenticated, but we did not receive the required user attributes. Please check that your Identity Provider releases the first name, surname, and email fields for SSO to %s or inform the administrator.';
 $string['errorregistrationenabledwithautocreate1'] = 'An institution has registration enabled. For security reasons this excludes user auto-creation, unless you are using remote usernames.';
 $string['errorremoteuser1'] = 'Matching on "remoteuser" is mandatory if "usersuniquebyusername" is turned off.';
 $string['IdPSelection'] = 'Identity Provider selection';
 $string['noidpsfound'] = 'No Identity Providers found';
 $string['idpentityid'] = 'Identity Provider entity';
+$string['idpentityadded'] = "Added the Identity Provider metadata for this SAML instance.";
+$string['idpentityupdated'] = "Updated the Identity Provider metadata for this SAML instance.";
+$string['idpentityupdatedduplicates'] = array(
+    0 => "Updated the Identity Provider metadata for this and 1 other SAML instance.",
+    1 => "Updated the Identity Provider metadata for this and %s other SAML instances."
+);
 $string['idpprovider'] = 'Provider';
 $string['institutionattribute'] = 'Institution attribute (contains "%s")';
 $string['institutionidp'] = 'Institution Identity Provider SAML metadata';
+$string['institutionidpentity'] = 'Available Identity Providers';
 $string['institutionvalue'] = 'Institution value to check against attribute';
 $string['libchecks'] = 'Checking for correct libraries installed: %s';
 $string['link'] = 'Link accounts';
@@ -53,6 +60,7 @@ $string['logintolinkdesc'] = '<p><b>You are currently connected with remote user
 $string['logo'] = 'Logo';
 $string['institutionregex'] = 'Do partial string match with institution shortname';
 $string['login'] = 'SSO';
+$string['newidpentity'] = 'Add new Identity Provider';
 $string['notusable'] = 'Please install the SimpleSAMLPHP Service Provider libraries';
 $string['obsoletesamlplugin'] = 'The auth/saml plugin needs to be reconfigured. Please update the plugin via the <a href="%s">plugin configuration</a> form.';
 $string['obsoletesamlinstance'] = 'The SAML authentication instance <a href="%s">%s</a> for institution "%s" needs updating.';
