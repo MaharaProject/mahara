@@ -34,7 +34,7 @@
             <FIELD NAME="description" TYPE="char" LENGTH="32" NOTNULL="true"/>
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="mimetype"/>
+            <KEY NAME="primary" TYPE="primary" FIELDS="mimetype, description" />
         </KEYS>
     </TABLE>
     <TABLE NAME="artefact_file_embedded">
