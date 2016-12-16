@@ -10,10 +10,10 @@
  */
 
 TableRendererPageLoaded = false;
-addLoadEvent(function() { TableRendererPageLoaded = true; });
-document.write('<script type="application/javascript" src="' + config.wwwroot + 'js/Pager.js"></script>');
+jQuery(function() { TableRendererPageLoaded = true; });
 
-function TableRenderer(target, source, columns, options) {
+var TableRenderer = (function($) {
+return function (target, source, columns, options) {
     // to use on the callbacks
     var self = this;
     this.source = source;
@@ -26,43 +26,42 @@ function TableRenderer(target, source, columns, options) {
     this.paginate_firstlast = true;
     this.statevars = ['offset','limit'];
     this.emptycontent = undefined;  // Something to display when no results are found
-    this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); };
+    this.rowfunction = function(rowdata, rownumber, data) { return $('<tr>', {'class': 'r' + (rownumber % 2)}); };
     this.updatecallback = function () {};
     this.postupdatecallback = function () {};
     this.updateOnLoadFlag = false;
     this.lastArgs = {};
 
     this.init = function() {
-        self.table = getElement(target);
-        self.loadingMessage = DIV(
-            {'class': 'loading-box'},
-                DIV({'class':'loading-inner'},
-                    SPAN({'class':'icon-spinner icon-pulse icon icon-lg'}),
-                    SPAN({'class':'loading-message'}, get_string('loading'))
+        self.table = $('#' + target);
+        self.loadingMessage = $('<div>', {'class': 'loading-box'}).append(
+                $('<div>', {'class':'loading-inner'}).append(
+                    $('<span>', {'class':'icon-spinner icon-pulse icon icon-lg'}),
+                    $('<span>',{'class':'loading-message'}).append(get_string('loading'))
                 )
             );
-        insertSiblingNodesAfter(self.table, self.loadingMessage);
+        self.loadingMessage.insertAfter(self.table);
 
-        self.tbody = getFirstElementByTagAndClassName('tbody', null, self.table);
-        self.thead = getFirstElementByTagAndClassName('thead', null, self.table);
-        self.tfoot = getFirstElementByTagAndClassName('tfoot', null, self.table);
+        self.tbody = self.table.find('tbody').first();
+        self.thead = self.table.find('thead').first();
+        self.tfoot = self.table.find('tfoot').first();
 
-        if (!self.thead) {
-            self.thead = THEAD();
-            if (self.table.firstChild) {
-                insertSiblingNodesBefore(self.table.firstChild, self.thead);
+        if (!self.thead.length) {
+            self.thead = $('<thead>');
+            if (self.table[0].firstChild) {
+                self.table.prepend(self.thead);
             }
             else {
-                appendChildNodes(self.table, self.thead);
+                self.table.append(self.thead);
             }
         }
-        if (!self.tbody) {
-            self.tbody = TBODY();
-            appendChildNodes(self.table, self.tbody);
+        if (!self.tbody.length) {
+            self.tbody = $('<tbody>');
+            self.table.append(self.tbody);
         }
-        if (!self.tfoot) {
-            self.tfoot = TFOOT();
-            appendChildNodes(self.table, self.tfoot);
+        if (!self.tfoot.length) {
+          self.tfoot = $('<tfoot>');
+          self.table.append(self.tfoot);
         }
 
         if (self.paginate) {
@@ -72,12 +71,12 @@ function TableRenderer(target, source, columns, options) {
 
         if (TableRendererPageLoaded) {
             if (typeof(self.emptycontent) != 'undefined') {
-                self.emptycontent = DIV(null,self.emptycontent);
-                insertSiblingNodesBefore(self.table, self.emptycontent);
+                self.emptycontent = $('<div>').append(self.emptycontent);
+                self.emptycontent.insertBefore(self.table);
             }
             if (!self.updateOnLoadFlag) {
                 if (self.loadingMessage) {
-                    removeElement(self.loadingMessage);
+                    self.loadingMessage.remove();
                     self.loadingMessage = null;
                 }
             }
@@ -90,16 +89,16 @@ function TableRenderer(target, source, columns, options) {
         }
         if(!self.pager || self.pager.options.lastPage != Math.floor( (count-1) / limit ) + 1 ) {
             if (self.pager) {
-                if (self.headRow) {
-                    removeElement(self.headRow);
+                if (self.headRow.length) {
+                    self.headRow.remove();
                 }
-                if (self.footRow) {
-                    removeElement(self.footRow);
+                if (self.footRow.length) {
+                    self.footRow.remove();
                 }
                 self.pager.removeAllInstances();
             }
             self.pager = new Pager(count, limit,
-                update(
+                $.extend(
                     null,
                     self.defaultPagerOptions,
                     self.pagerOptions,
@@ -113,16 +112,16 @@ function TableRenderer(target, source, columns, options) {
                 return;
             }
 
-            self.headRow = TR(null, TD({'colspan': self.linkspan }, self.pager.newDisplayInstance()));
-            self.footRow = TR(null, TD({'colspan': self.linkspan }, self.pager.newDisplayInstance()));
+            self.headRow = $('<tr>').append($('<td>', {'colspan': self.linkspan }).append(self.pager.newDisplayInstance()))[0];
+            self.footRow = $('<tr>').append($('<td>', {'colspan': self.linkspan }).append(self.pager.newDisplayInstance()))[0];
 
             if ( self.thead.firstChild ) {
-                insertSiblingNodesBefore(self.thead.firstChild, self.headRow);
+                $(self.headRow).insertBefore(self.thead.children().first());
             }
             else {
-                appendChildNodes(self.thead, self.headRow);
+                self.thead.append(self.headRow);
             }
-            appendChildNodes(self.tfoot, self.footRow);
+            self.tfoot.append(self.footRow);
         }
     };
 
@@ -148,11 +147,11 @@ function TableRenderer(target, source, columns, options) {
     };
 
     this.renderdata = function(data, options) {
-        replaceChildNodes(self.tbody);
+        self.tbody.empty();
         var rownumber = 0;
 
         if (data.count > 0) {
-            forEach(data.data, function(row) {
+            $.each(data.data, function(id, row) {
                 rownumber++;
 
                 row._rownumber = rownumber;
@@ -161,25 +160,25 @@ function TableRenderer(target, source, columns, options) {
                 if ( row._class ) { tr.className = row._class; }
                 if ( row._id ) { tr.id = row._id; }
 
-                forEach(self.columns, function (column) {
+                $.each(self.columns, function (i, column) {
                     if ( typeof(column) == 'string' ) {
-                        appendChildNodes(tr, TD(null,row[column]));
+                      tr.append($('<td>').append(row[column]));
                     }
                     else if ( typeof(column) == 'function' ) {
-                        appendChildNodes(tr, column(row,data));
+                      tr.append($('<td>').append(column(row,data)));
                     }
                     else if ( typeof(column) == 'undefined' ) {
                         return;
                     }
                     else {
-                        logError("Can't deal with column def of type: " + typeof(column));
+                        console.error("Can't deal with column def of type: " + typeof(column));
                     }
                 });
 
-                appendChildNodes(self.tbody, tr);
+                self.tbody.append(tr);
                 if (options && row.id == options.focusid && self.options.focusElement) {
-                    if (jQuery(tr).find(self.options.focusElement).length) {
-                        jQuery(tr).find(self.options.focusElement).focus();
+                    if (tr.find(self.options.focusElement).length) {
+                        tr.find(self.options.focusElement).focus();
                     }
                 }
             });
@@ -192,7 +191,7 @@ function TableRenderer(target, source, columns, options) {
         }
         self.lastArgs = request_args;
 
-        forEach(self.statevars, function(key) {
+        $.each(self.statevars, function(id, key) {
             if (typeof(request_args[key]) == 'undefined' && typeof(self[key]) != 'undefined') {
                 request_args[key] = self[key];
             }
@@ -207,7 +206,7 @@ function TableRenderer(target, source, columns, options) {
                 self.updatecallback(response);
             }
             catch (e) {
-                logError('tablerenderer call updatecallback(', response, ') failed.');
+                console.error('tablerenderer call updatecallback(', response, ') failed.');
             }
 
             if (self.paginate) {
@@ -218,35 +217,35 @@ function TableRenderer(target, source, columns, options) {
 
             if (typeof(self.emptycontent) != 'undefined') {
                 // Make sure the emptycontent is in a div
-                if (self.emptycontent.nodeName != 'DIV') {
-                    self.emptycontent = DIV(null, self.emptycontent);
-                    insertSiblingNodesBefore(self.table, self.emptycontent);
+                if (self.emptycontent[0].nodeName != 'DIV') {
+                    self.emptycontent = $('<div>').append(self.emptycontent);
+                    self.emptycontent.insertBefore(self.table);
                 }
 
                 if (self.count > 0) {
-                    addElementClass(self.emptycontent, 'hidden');
-                    self.table.style.display = '';
+                    self.emptycontent.addClass('hidden');
+                    self.table.css('display', '');
                 }
                 else {
-                    self.table.style.display = 'none';
-                    removeElementClass(self.emptycontent, 'hidden');
+                    self.table.css('display', 'none');
+                    self.emptycontent.removeClass('hidden');
                 }
             }
 
             if (self.loadingMessage) {
-                removeElement(self.loadingMessage);
+                self.loadingMessage.remove();
                 self.loadingMessage = null;
             }
 
             self.renderdata(response, options);
 
-            removeElementClass(self.table, 'hidden');
+            self.table.removeClass('hidden');
 
             try {
                 self.postupdatecallback(response);
             }
             catch (e) {
-                logError('tablerenderer call postupdatecallback(', response, ') failed.');
+                console.error('tablerenderer call postupdatecallback(', response, ') failed.');
             }
 
         }, null, true);
@@ -269,7 +268,7 @@ function TableRenderer(target, source, columns, options) {
             }
         }
         else {
-            logWarning('Already on the first page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
+            console.warn('Already on the first page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
         }
     };
 
@@ -279,7 +278,7 @@ function TableRenderer(target, source, columns, options) {
             self.doupdate(self.lastArgs);
         }
         else {
-            logWarning('Already on the last page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
+            console.warn('Already on the last page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
         }
     };
 
@@ -294,12 +293,12 @@ function TableRenderer(target, source, columns, options) {
             self.doupdate();
         }
         else {
-            addLoadEvent(partial(self.doupdate, request_args, null));
+            $(document).ready(self.doupdate.bind(null, request_args, null));
         }
     };
 
     this.defaultPagerOptions =
-{        'pageChangeCallback': self.pageChange,
+  {        'pageChangeCallback': self.pageChange,
         'previousPageString': get_string('prevpage'),
         'nextPageString': get_string('nextpage'),
         'lastPageString': get_string('lastpage'),
@@ -311,6 +310,7 @@ function TableRenderer(target, source, columns, options) {
         this.init();
     }
     else {
-        addLoadEvent(this.init);
+        $(document).ready(this.init);
     }
-}
+};
+}(jQuery));

@@ -50,7 +50,7 @@ $form = pieform(array(
     )
 ));
 
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(array('tablerenderer', 'Pager'));
 $smarty->assign('form', $form);
 $smarty->assign('heading', $group->name);
 $smarty->assign('subheading', TITLE);

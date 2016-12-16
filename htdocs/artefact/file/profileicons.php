@@ -346,7 +346,7 @@ function settings_submit_delete(Pieform $form, $values) {
 }
 
 $smarty = smarty(
-    array('tablerenderer'),
+    array('tablerenderer', 'Pager'),
     array(),
     array(),
     array(

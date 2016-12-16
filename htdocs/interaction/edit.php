@@ -68,7 +68,7 @@ $form = pieform(array(
     )
 );
 
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(array('tablerenderer', 'Pager'));
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', $group->name);

@@ -39,7 +39,7 @@ jQuery(function($) {
     });
 });';
 
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(array('tablerenderer', 'Pager'));
 $smarty->assign('goals', $goals);
 $smarty->assign('skills', $skills);
 $smarty->assign('INLINEJAVASCRIPT', $js);
