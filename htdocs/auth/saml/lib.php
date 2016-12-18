@@ -293,6 +293,10 @@ class PluginAuthSaml extends PluginAuth {
         return true;
     }
 
+    public static function is_active() {
+        return get_field('auth_installed', 'active', 'name', 'saml');
+    }
+
     public static function has_config() {
         return true;
     }
