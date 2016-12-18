@@ -99,10 +99,10 @@
             </td>
 
             {if $showtags && $editmeta}
-            <td class="filesize">{tif $file->size ?: ''}</td>
+            <td class="filesize">{if $file->foldersize}{$file->foldersize}{elseif $file->size}{$file->size}{/if}</td>
             {/if}
             {if !$showtags && !$editmeta}
-            <td class="filesize">{tif $file->size ?: ''}</td>
+            <td class="filesize">{if $file->foldersize}{$file->foldersize}{elseif $file->size}{$file->size}{/if}</td>
             <td class="filedate">{tif $file->mtime ?: ''}</td>
             {/if}
             {if $editmeta || $selectable}

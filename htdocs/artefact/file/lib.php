@@ -659,6 +659,17 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                         $item->can_edit = 1;    // This will show the delete, edit buttons in filelist, but doesn't change the actual permissions in the checkbox
                     }
                 }
+                if ($item->artefacttype == 'folder') {
+                    if ($item->childcount > 0) {
+                        $foldersize = get_record_sql("SELECT SUM(aff.size) FROM {artefact} a
+                                                      JOIN {artefact_file_files} aff ON aff.artefact = a.id
+                                                      WHERE a.path LIKE ?", array('%/' . $item->id . '/%'));
+                        $item->foldersize = ArtefactTypeFile::short_size($foldersize->sum, true);
+                    }
+                    else {
+                        $item->foldersize = ArtefactTypeFile::short_size(0, true);
+                    }
+                }
             }
             $where = 'artefact IN (' . join(',', array_keys($filedata)) . ')';
             $tags = get_records_select_array('artefact_tag', $where);

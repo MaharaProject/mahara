@@ -230,7 +230,8 @@ function pieform_element_filebrowser_get_groupinfo($group) {
 function pieform_element_filebrowser_get_path($folder) {
     $path = array();
     if ($folder) {
-        $folders = ArtefactTypeFileBase::artefactchooser_folder_data(artefact_instance_from_id($folder))->data;
+        $artefact = artefact_instance_from_id($folder);
+        $folders = ArtefactTypeFileBase::artefactchooser_folder_data($artefact)->data;
         $f = $folder;
         while ($f) {
             $path[] = (object) array('title' => $folders[$f]->title, 'id' => $f);
