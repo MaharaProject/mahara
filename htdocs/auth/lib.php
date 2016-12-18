@@ -33,6 +33,10 @@ class AuthInstanceException extends UserException {
         return array_merge(parent::strings(),
                            array('title' => $this->get_sitename() . ': Authentication problem'));
     }
+
+    public function render_exception() {
+        return $this->get_string('message') . "\n\n" . preg_replace('/<br\s?\/?>/ius', "\n", $this->getMessage());
+    }
 }
 
 /**

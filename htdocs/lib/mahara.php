@@ -307,6 +307,16 @@ function get_string($identifier, $section='mahara') {
     return get_string_location($identifier, $section, $variables);
 }
 
+function get_string_php_version($identifier, $section = 'mahara') {
+    if (version_compare(PHP_VERSION, '7.0.0') >= 0
+        && string_exists($identifier . '7php', $section)) {
+        return get_string($identifier . '7php', $section);
+    }
+    else {
+        return get_string($identifier, $section);
+    }
+}
+
 function get_string_from_language($lang, $identifier, $section='mahara') {
 
     $variables = func_get_args();

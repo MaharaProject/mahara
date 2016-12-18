@@ -41,7 +41,7 @@ if (get_field('auth_installed', 'active', 'name', 'saml') != 1) {
 }
 
 if (!extension_loaded('mcrypt')) {
-    throw new AuthInstanceException(get_string('errornomcrypt','auth.saml'));
+    throw new AuthInstanceException(get_string_php_version('errornomcrypt','auth.saml'));
 }
 
 $sp = 'default-sp';
