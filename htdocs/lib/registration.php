@@ -1384,7 +1384,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata) {
 
     $viewdata = get_records_sql_assoc(
         "SELECT
-            v.id, v.title, v.owner, v.group, v.institution, v.visits, v.type, v.ownerformat, v.urlid
+            v.id, v.title, v.owner, v.group, v.institution, v.visits, v.type, v.ownerformat, v.urlid, v.template
         FROM {view} v
         WHERE v.id IN (" . join(',', array_fill(0, $institutiondata['views'], '?')) . ") AND v.type != ?
         ORDER BY v.visits DESC, v.title, v.id",
