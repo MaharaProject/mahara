@@ -529,6 +529,27 @@ class PluginAuthSaml extends PluginAuth {
         return array($entityid, $idps);
     }
 
+    public static function get_disco_list($lang = null, $entityidps = array()) {
+        if (empty($lang)) {
+            $lang = current_language();
+        }
+        require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
+        require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
+        SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
+        $discoHandler = new PluginAuthSaml_IdPDisco(array('saml20-idp-remote', 'shib13-idp-remote'), 'saml');
+        $disco = $discoHandler->getTheIdPs();
+        if (count($disco['list']) > 0) {
+            $lang = explode('.', $lang);
+            $lang = strtolower(array_shift($lang));
+            foreach($disco['list'] as $idp) {
+                $idpname = (isset($idp['name'][$lang])) ? $idp['name'][$lang] : $idp['entityid'];
+                $entityidps[$idp['entityid']] = $idpname;
+            }
+            return $entityidps;
+        }
+        return false;
+    }
+
     public static function get_instance_config_options($institution, $instance = 0) {
         if (!class_exists('SimpleSAML_XHTML_IdPDisco')) {
             global $SESSION;
@@ -593,20 +614,10 @@ class PluginAuthSaml extends PluginAuth {
         $entityidps = array();
         $entityidp_hiddenlabel = true;
         // Fetch the idp info via disco
-        require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
-        require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
-        SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
-        $discoHandler = new PluginAuthSaml_IdPDisco(array('saml20-idp-remote', 'shib13-idp-remote'), 'saml');
-        $disco = $discoHandler->getTheIdPs();
-        if (count($disco['list']) > 0) {
-            $lang = current_language();
-            $lang = explode('.', $lang);
-            $lang = strtolower(array_shift($lang));
+        $discolist = self::get_disco_list();
+        if ($discolist) {
+            $entityidps += $discolist;
             $entityidp_hiddenlabel = false;
-            foreach($disco['list'] as $idp) {
-                $idpname = (isset($idp['name'][$lang])) ? $idp['name'][$lang] : $idp['entityid'];
-                $entityidps[$idp['entityid']] = $idpname;
-            }
         }
         asort($entityidps);
         // add the 'New' option to the top of the list
