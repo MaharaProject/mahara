@@ -2476,7 +2476,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
     /**
      * Render's the icon's thumbnail and exits
      */
-    public static function download_thumbnail($artefactid) {
+    public static function download_thumbnail($artefactid, $type=null) {
         global $USER;
         $id = $artefactid;
         $size = get_imagesize_parameters();
