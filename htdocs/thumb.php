@@ -29,7 +29,7 @@ switch ($type) {
     case 'profileiconbyid':
         safe_require('artefact', 'file');
         $artefactid = param_integer('id');
-        ArtefactTypeProfileIcon::download_thumbnail($artefactid);
+        ArtefactTypeProfileIcon::download_thumbnail($artefactid, $type);
         exit();
     case 'logobyid':
         $filedata = get_record('artefact_file_files', 'artefact', param_integer('id'));
