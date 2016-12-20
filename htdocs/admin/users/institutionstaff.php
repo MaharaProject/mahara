@@ -92,9 +92,9 @@ function staffusers_submit(Pieform $form, $values) {
 
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs'] . '
-addLoadEvent(function() {
-    formchangemanager.add(\'staffusers\');
-    formchangemanager.unbindForm(\'staffusers\');
+jQuery(function($) {
+  formchangemanager.add(\'staffusers\');
+  formchangemanager.unbindForm(\'staffusers\');
 });');
 $smarty->assign('staffusersform', pieform($form));
 $smarty->display('admin/users/institutionstaff.tpl');

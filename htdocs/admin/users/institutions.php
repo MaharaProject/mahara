@@ -655,14 +655,14 @@ else {
     $smarty->assign('searchform', $searchform);
 
     $js = <<< EOF
-    addLoadEvent(function () {
-    p = {$data['pagination_js']}
-    connect('search_submit', 'onclick', function (event) {
-        replaceChildNodes('messages');
-        var params = {'query': $('search_query').value};
+    jQuery(function($) {
+      p = {$data['pagination_js']}
+      $('#search_submit').on('click', function(event) {
+        $('#messages').empty();
+        var params = {'query': $('#search_query').val()};
         p.sendQuery(params);
-        event.stop();
-        });
+        event.preventDefault();
+      });
     });
 EOF;
 

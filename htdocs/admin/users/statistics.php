@@ -89,14 +89,14 @@ default:
 
 $wwwroot = get_config('wwwroot');
 $js = <<< EOF
-addLoadEvent(function () {
+jQuery(function ($) {
     {$data['table']['pagination_js']}
-});
-function reloadStats() {
-    window.location.href = '{$wwwroot}admin/users/statistics.php?institution='+$('usertypeselect_institution').value+'&type={$type}';
-}
-addLoadEvent(function() {
-    connect($('usertypeselect_institution'), 'onchange', reloadStats);
+
+    function reloadStats() {
+        window.location.href = '{$wwwroot}admin/users/statistics.php?institution='+$('#usertypeselect_institution').val() +'&type={$type}';
+    }
+
+    $('#usertypeselect_institution').on('change', reloadStats);
 });
 EOF;
 

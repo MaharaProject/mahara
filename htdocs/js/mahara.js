@@ -926,3 +926,22 @@ function updateUrlParameter(url, param, value) {
     }
     return url;
 }
+
+function getUrlParameter(param, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    var vars = url.split("?");
+
+    if (!vars[1]) return null; // no search parameters
+
+    varparams = vars[1].split("&");
+
+    for (var i = 0; i < varparams.length; i++) {
+        var pair = varparams[i].split("=");
+        if (pair[0] == param) {
+            return pair[1] || '';
+        }
+    }
+    return null;
+}

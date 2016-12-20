@@ -112,44 +112,44 @@ function auth_config_submit(Pieform $form, $values) {
 }
 
 $js = <<<EOF
-function authloginmsgVisibility() {
-    // If Parent authority is 'None'
-    if ($('auth_config_parent').value != 0) {
-      addElementClass('auth_config_authloginmsg_container', 'hidden');
-    }
-    else {
-      removeElementClass('auth_config_authloginmsg_container', 'hidden');
-    }
-}
-var ssoAllOptions = {
-    'updateuserinfoonlogin': 'theyssoin',
-    'weautocreateusers': 'theyssoin',
-    'theyautocreateusers': 'wessoout',
-    'weimportcontent': 'theyssoin'
-};
-function updateSsoOptions() {
-    var current = $('auth_config_ssodirection').value;
-    for (var opt in ssoAllOptions) {
-        if (ssoAllOptions[opt] == current) {
-            removeElementClass('auth_config_' + opt + '_container', 'hidden');
-        }
-        else {
-            addElementClass('auth_config_' + opt + '_container', 'hidden');
-        }
-    }
-}
-addLoadEvent(
-    function() {
-        if ($('auth_config_parent')) {
-            connect('auth_config_parent', 'onchange', authloginmsgVisibility);
-            authloginmsgVisibility();
-        }
-        if ($('auth_config_ssodirection')) {
-            connect('auth_config_ssodirection', 'onchange', updateSsoOptions);
-            updateSsoOptions();
-        }
-    }
-);
+jQuery(function($) {
+  function authloginmsgVisibility() {
+      // If Parent authority is 'None'
+      if ($('#auth_config_parent').val() != 0) {
+        $('#auth_config_authloginmsg_container').addClass('hidden');
+      }
+      else {
+        $('#auth_config_authloginmsg_container').removeClass('hidden');
+      }
+  }
+  var ssoAllOptions = {
+      'updateuserinfoonlogin': 'theyssoin',
+      'weautocreateusers': 'theyssoin',
+      'theyautocreateusers': 'wessoout',
+      'weimportcontent': 'theyssoin'
+  };
+
+  function updateSsoOptions() {
+      var current = $('#auth_config_ssodirection').val();
+      for (var opt in ssoAllOptions) {
+          if (ssoAllOptions[opt] == current) {
+              $('#auth_config_' + opt + '_container').removeClass('hidden');
+          }
+          else {
+            $('#auth_config_' + opt + '_container').addClass('hidden');
+          }
+      }
+  }
+
+  if ($('#auth_config_parent').length) {
+    $('#auth_config_parent').on('change', authloginmsgVisibility);
+    authloginmsgVisibility();
+  }
+  if ($('#auth_config_ssodirection').length) {
+    $('#auth_config_ssodirection').on('change', updateSsoOptions);
+    updateSsoOptions();
+  }
+});
 EOF;
 
 $institution = get_record('institution', 'name', $institution);
