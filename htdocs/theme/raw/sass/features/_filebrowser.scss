@@ -145,3 +145,7 @@
 .icon-drag:hover {
     cursor: move;
 }
+
+table.filelist .filename {
+    word-break: break-all;
+}
