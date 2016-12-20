@@ -312,7 +312,7 @@ class PluginAuthSaml extends PluginAuth {
         $occupation = get_profile_field($id, 'occupation');
 
         $dn = array(
-            'commonName' => ($user->get('username') ? $user->get('username') : 'Mahara'),
+            'commonName' => ($user->get('username') ? substr($user->get('username'), 0, 64) : 'Mahara'),
             'countryName' => ($country ? strtoupper($country) : 'NZ'),
             'localityName' => ($town ? $town : 'Wellington'),
             'emailAddress' => ($user->get('email') ? $user->get('email') : $CFG->noreplyaddress),
