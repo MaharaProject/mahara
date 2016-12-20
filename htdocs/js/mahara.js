@@ -945,3 +945,9 @@ function getUrlParameter(param, url) {
     }
     return null;
 }
+
+function createNodesFromList(node, list) {
+  return jQuery.map(list, function(text) {
+    return jQuery(node).html(text);
+  });
+}
