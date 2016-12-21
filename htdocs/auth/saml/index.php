@@ -344,6 +344,9 @@ function auth_saml_disco_screen($list, $preferred) {
         $idps[]= array('idpentityid' => $entityid, 'name' => $name, 'description' => $desc, 'logo' => $idplogo);
     }
 
+    usort($idps, function($a, $b) {
+        return $a['name'] > $b['name'];
+    });
     $idps = array(
         'count'   => count($idps),
         'limit'   => count($idps),
