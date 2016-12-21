@@ -19,19 +19,20 @@
  *                  pagination data
  * @param limit     Extra data to pass back in the ajax requests to the script
  */
-var Paginator = function(id, list, heading, script, extradata) {
+var Paginator = (function($) {
+return function(id, list, heading, script, extradata) {
     var self = this;
 
     this.init = function(id, list, heading, script, extradata) {
         self.id = id;
 
         if (script && script.length !== 0) {
-            self.list = $(list);
-            self.heading = $(heading);
+            self.list = $('#' + list)[0];
+            self.heading = $('#' + heading)[0];
             self.jsonScript = config['wwwroot'] + script;
             self.extraData = extradata;
 
-            if (self.list !== null && self.list.tagName == 'TABLE') {
+            if (self.list && self.list.tagName == 'TABLE') {
                 self.isTable = true;
             }
 
@@ -53,8 +54,7 @@ var Paginator = function(id, list, heading, script, extradata) {
             }
 
             if (self.heading) {
-                addElementClass(self.heading, 'hidefocus');
-                setNodeAttribute(self.heading, 'tabIndex', -1);
+                $(self.heading).addClass('hidefocus').prop('tabIndex', -1);
             }
 
             self.rewritePaginatorLinks();
@@ -66,64 +66,64 @@ var Paginator = function(id, list, heading, script, extradata) {
     };
 
     this.rewritePaginatorLinks = function() {
-        forEach(getElementsByTagAndClassName('li', null, self.id), function(i) {
-            var a = getFirstElementByTagAndClassName('a', null, i);
+        $('#' + self.id + ' li').each(function() {
+          var a = $(this).find('a')[0];
 
-            // If there is a link
-            if (a) {
-                self.rewritePaginatorLink(a);
-            }
+          // If there is a link
+          if (a) {
+              self.rewritePaginatorLink(a);
+          }
         });
     };
 
     this.rewritePaginatorSelectFormWithoutJSON = function() {
-        var setlimitform = getFirstElementByTagAndClassName('form', 'js-pagination', self.id);
+        var setlimitform = $('#' + self.id + ' form.js-pagination').first();
         // If there is a form for choosing page size(page limit)
-        if (setlimitform) {
-            var setlimitselect = getFirstElementByTagAndClassName('select', 'js-pagination', setlimitform);
-            var currentoffset = getFirstElementByTagAndClassName('input', 'currentoffset', setlimitform);
-            connect (setlimitselect, 'onchange', function(e) {
-                e.stop();
+        if (setlimitform.length) {
+            var setlimitselect = setlimitform.find('select.js-pagination').first();
+            var currentoffset = setlimitform.find('input.currentoffset').first();
+            setlimitselect.on('change', function(e) {
+                e.preventDefault();
 
-                var url = setlimitform.action;
+                var url = setlimitform[0].action;
                 if (url.indexOf('?') != -1) {
                     url += "&";
                 }
                 else {
                     url += "?";
                 }
-                url += setlimitselect.name + "=" + setlimitselect.value;
-                var offsetvalue = currentoffset.value;
-                if ((offsetvalue % setlimitselect.value) !== 0) {
-                    offsetvalue = Math.floor(offsetvalue / setlimitselect.value) * setlimitselect.value;
+                url += setlimitselect[0].name + "=" + setlimitselect.val();
+                var offsetvalue = currentoffset.val();
+                if ((offsetvalue % setlimitselect.val()) !== 0) {
+                    offsetvalue = Math.floor(offsetvalue / setlimitselect.val()) * setlimitselect.val();
                 }
-                url += "&" + currentoffset.name + "=" + offsetvalue;
+                url += "&" + currentoffset[0].name + "=" + offsetvalue;
                 location.assign(url);
             });
         }
     };
 
     this.rewritePaginatorSelectForm = function() {
-        var setlimitform = getFirstElementByTagAndClassName('form', 'js-pagination', self.id);
+        var setlimitform = $('#' + self.id + ' form.js-pagination').first();
         // If there is a form for choosing page size(page limit)
-        if (setlimitform) {
-            var setlimitselect = getFirstElementByTagAndClassName('select', 'js-pagination', setlimitform);
-            var currentoffset = getFirstElementByTagAndClassName('input', 'currentoffset', setlimitform);
-            connect (setlimitselect, 'onchange', function(e) {
-                e.stop();
+        if (setlimitform.length) {
+            var setlimitselect = setlimitform.find('select.js-pagination').first();
+            var currentoffset = setlimitform.find('input.currentoffset').first();
+            setlimitselect.on('change', function(e) {
+                e.preventDefault();
 
-                var url = setlimitform.action
+                var url = setlimitform[0].action;
                 var loc = url.indexOf('?');
                 var queryData = [];
                 if (loc != -1) {
                     queryData = parseQueryString(url.substring(loc + 1, url.length));
-                    queryData.offset = currentoffset.value;
-                    if ((queryData.offset % setlimitselect.value) !== 0) {
-                        queryData.offset = Math.floor(queryData.offset / setlimitselect.value) * setlimitselect.value;
+                    queryData.offset = currentoffset.val();
+                    if ((queryData.offset % setlimitselect.val()) !== 0) {
+                        queryData.offset = Math.floor(queryData.offset / setlimitselect.val()) * setlimitselect.val();
                     }
                 }
                 queryData.setlimit = "1";
-                queryData.limit = setlimitselect.value;
+                queryData.limit = setlimitselect.val();
                 queryData.extradata = serializeJSON(self.extraData);
 
                 self.sendQuery(queryData);
@@ -132,7 +132,7 @@ var Paginator = function(id, list, heading, script, extradata) {
     };
 
     this.updateResults = function (data, params, changedPage) {
-        var container = self.isTable ? getFirstElementByTagAndClassName('tbody', null, self.list) : self.list,
+        var container = self.isTable ? $(self.list).find('tbody').first()[0] : self.list,
             listdata = data.data.html ? data.data.html : data.data.tablerows,
             paginationdata = data.data.pagination;
 
@@ -140,7 +140,7 @@ var Paginator = function(id, list, heading, script, extradata) {
             var noresults = get_string_ajax('noresultsfound', 'mahara');
 
             if (self.isTable) {
-                var columns = $j(self.list).find('th').length;
+                var columns = $(self.list).find('th').length;
                 listdata = '<tr class="no-results"><td colspan="' + columns + '">' + noresults + '</td></tr>';
             } else {
                 listdata = '<p class="no-results">' + noresults + '</p>';
@@ -152,38 +152,38 @@ var Paginator = function(id, list, heading, script, extradata) {
             // konqueror, so this workaround detects them and does
             // things differently
             if (self.isTable && ((document.all && !window.opera) || (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent)))) {
-                var temp = DIV({'id':'ie-workaround'});
+                var temp = $('<div>', {'id':'ie-workaround'});
                 if (container.tagName == 'TBODY') {
-                    temp.innerHTML = '<table><tbody>' + listdata + '</tbody></table>';
-                    swapDOM(container, temp.childNodes[0].childNodes[0]);
+                    temp.html('<table><tbody>' + listdata + '</tbody></table>');
+                    $(container).replaceWith(temp.find('table tbody:first'));
                 }
                 else {
-                    temp.innerHTML = listdata;
-                    replaceChildNodes(container, temp.childNodes);
+                    temp.html(listdata);
+                    $(container).empty().append(temp.children());
                 }
             }
             else {
-                container.innerHTML = listdata;
+                $(container).html(listdata);
             }
 
             if (listdata.match(/data\-confirm/gm) !== null) {
                 // need to re-animate the confirm option popup
-                jQuery('[data-confirm]').on('click', function() {
-                    var content = jQuery(this).attr('data-confirm');
+                $('[data-confirm]').on('click', function() {
+                    var content = $(this).attr('data-confirm');
                     return confirm(content);
                 });
             }
             // In Chrome, tbody remains set to the value before tbody.innerHTML was modified
             //  to fix that, we re-initialize tbody using getFirstElementByTagAndClassName
             if (/chrome/.test(navigator.userAgent.toLowerCase()) && container.tagName == 'TBODY') {
-                container = getFirstElementByTagAndClassName('tbody', null, self.list);
+                container = $(self.list).find('tbody').first()[0];
             }
 
             // Pieforms should separate its js from its html. For
             // now, be evil: scrape it out of the script elements and eval
             // it every time the page changes. :(
-            forEach(getElementsByTagAndClassName('script', null, container), function(s) {
-                var m = scrapeText(s).match(new RegExp('^(new Pieform\\\(.*?\\\);)$'));
+            $(container).find('script').each(function(id, s) {
+                var m = $(s).text().match(new RegExp('^(new Pieform\\\(.*?\\\);)$'));
                 if (m && m[1]) {
                     eval('var pf = ' + m[1] + ' pf.init();');
                 }
@@ -193,24 +193,22 @@ var Paginator = function(id, list, heading, script, extradata) {
         var results;
 
         // Update the pagination
-        if ($(self.id)) {
-            var tmp = DIV();
-            tmp.innerHTML = paginationdata;
-            swapDOM(self.id, tmp.firstChild);
+        if ($('#' + self.id).length) {
+            $('#' + self.id).replaceWith(paginationdata);
 
             // Run the pagination js to make it live
             Paginator.oldparams = params;
             eval(data['data']['pagination_js']);
 
             // Update the result count
-            results = getFirstElementByTagAndClassName('div', 'results', self.id);
-            if (results && data.data.results) {
-                results.innerHTML = data.data.results;
+            results = $('#' + self.id + ' div.results');
+            if (results.length && data.data.results) {
+                results.html(data.data.results);
             }
         }
 
         if (self.heading) {
-            removeElementClass(self.heading, 'hidden');
+            $(self.heading).removeClass('hidden');
         }
 
         // Focus management based on whether the user searched for something or just changed the page
@@ -218,26 +216,26 @@ var Paginator = function(id, list, heading, script, extradata) {
             self.heading.focus();
         }
         else if (container) {
-            var firstLink = getFirstElementByTagAndClassName('a', null, container);
-            if (firstLink) {
+            var firstLink = $(container).find('a').first();
+            if (firstLink.length) {
                 firstLink.focus();
             }
-            else if (results) {
-                setNodeAttribute(results, 'tabindex', -1);
-                addElementClass(results, 'hidefocus');
-                results.focus();
+            else if (results.length) {
+                results.prop('tabindex', -1)
+                    .addClass('hidefocus')
+                    .focus();
             }
         }
 
         // Fire event to let listseners know to reattach listeners
-        jQuery(document).trigger('pageupdated', [ data ]);
+        $(document).trigger('pageupdated', [ data ]);
 
         self.params = params;
     };
 
     this.sendQuery = function(params, changedPage) {
         if (params) {
-            params = $j.extend({}, self.params, params);
+            params = $.extend({}, self.params, params);
         }
         else {
             params = self.params;
@@ -252,8 +250,8 @@ var Paginator = function(id, list, heading, script, extradata) {
     };
 
     this.rewritePaginatorLink = function(a) {
-        connect(a, 'onclick', function(e) {
-            e.stop();
+        $(a).on('click', function(e) {
+            e.preventDefault();
 
             var loc = a.href.indexOf('?');
             var queryData = [];
@@ -274,7 +272,7 @@ var Paginator = function(id, list, heading, script, extradata) {
 
     this.init(id, list, heading, script, extradata);
 };
-
+}(jQuery));
 /**
  * Any object can subscribe to the PaginatorProxy and thus be alerted when a
  * paginator changes page.
@@ -293,8 +291,8 @@ function PaginatorProxy() {
      */
     this.alertObservers = function(eventName, data) {
         forEach(self.observers, function(o) {
-            signal(o, eventName, data); // remove when signal/ Mochikit completely eliminated from the App
-            $j(o).triggerHandler(eventName, data);
+            signal(o, eventName, data);
+            jQuery(o).triggerHandler(eventName, data);
         });
     };
 
