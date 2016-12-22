@@ -81,7 +81,7 @@ class ElasticsearchType_interaction_instance extends ElasticsearchType
 
     }
 
-    public static function getRecordById($type, $id){
+    public static function getRecordById($type, $id, $map = null) {
         $record = parent::getRecordById($type, $id);
         if (!$record || $record->deleted) {
             return false;

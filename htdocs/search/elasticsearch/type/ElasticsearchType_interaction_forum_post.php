@@ -76,7 +76,7 @@ class ElasticsearchType_interaction_forum_post extends ElasticsearchType
 
     }
 
-    public static function getRecordById($type, $id){
+    public static function getRecordById($type, $id, $map = null) {
 
         $sql = 'SELECT p.id, p.subject, p.body, i.group, p.deleted, p.ctime
         FROM {interaction_forum_post} p

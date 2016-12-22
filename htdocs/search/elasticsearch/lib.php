@@ -1273,7 +1273,7 @@ abstract class ElasticsearchType
     /**
      *   get the info from the DB for indexing
      */
-    public static function getRecordById($type, $id){
+    public static function getRecordById($type, $id, $map = null) {
         $record = get_record($type, 'id', $id);
         if ($record) {
             // we need to set block_instance creation time later (using view ctime)

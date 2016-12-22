@@ -137,7 +137,7 @@ class ElasticsearchType_block_instance extends ElasticsearchType
 
     }
 
-    public static function getRecordById($type, $id) {
+    public static function getRecordById($type, $id, $map = null) {
         $record = parent::getRecordById($type, $id);
         if (!$record) {
             return false;
