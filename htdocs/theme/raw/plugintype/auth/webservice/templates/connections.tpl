@@ -160,9 +160,6 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
     </div>
     {{/foreach}}
 </div>
-{{else}}
-<div>{{str tag='instancelistempty' section='auth.webservice'}}</div>
-{{/if}}
 <div class="postlist">{{str tag='pcdescription' section='auth.webservice'}}</div>
 <div class="select connections">
     <span class="picker">
@@ -176,6 +173,9 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
         <button class="btn btn-primary" type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
     </div>
 </div>
+{{else}}
+<div>{{str tag='instancelistempty' section='auth.webservice'}}</div>
+{{/if}}
 
 <input type="hidden" id="instancePriority" name="instancePriority" value="{{$instancestring}}" />
 <input type="hidden" id="deleteList" name="deleteList" value="" />
