@@ -32,230 +32,254 @@ foreach ($adminstrings as $string) {
 }
 
 $thead = array(json_encode(get_string('type', 'admin')), json_encode(get_string('name', 'admin')), json_encode(get_string('linkedto', 'admin')), '""');
-$ijs = "var thead = TR(null,map(partial(TH,null),[" . implode($thead,",") . "]));\n";
-$ijs .= "var externallink = " . json_encode(get_string('externallink', 'admin')) . ";\n";
-$ijs .= "var sitefile = " . json_encode(get_string('sitefile','admin')) . ";\n";
+$thead = implode($thead, ",");
+$externallink = json_encode(get_string('externallink', 'admin'));
+$sitefile = json_encode(get_string('sitefile','admin'));
+
 $namelabel = json_encode(get_string('name', 'admin'));
 $linkedtolabel = json_encode(get_string('linkedto', 'admin'));
-$ijs .= <<< EOJS
+$ijs = <<< EOJS
 // Request a list of menu items from the server
-function getitems() {
-    sendjsonrequest('getmenuitems.json.php', {'public':selectedmenu == 'loggedoutmenu'}, 'GET',
-                    function(data) { displaymenuitems(data.menuitems); });
-}
-// Get a list of the available admin files
-function getadminfiles() {
-    sendjsonrequest('getadminfiles.json.php', {'public':selectedmenu == 'loggedoutmenu'},
-                    'GET',
-                    function (data) {
-                        if (!data.error) {
-                            adminfiles = data.adminfiles;
-                        }
-                        else {
-                            adminfiles = null;
-                        }
-                    });
-}
 
-// Puts the list of menu items into the empty table.
-function displaymenuitems(itemlist) {
-    var rows = map(formatrow,itemlist);
-    var form = FORM({'id':'form','method':'post','enctype':'multipart/form-data',
-                         'encoding':'multipart/form-data', 'name':'linksandresourcesform'},
-                    DIV({'class':'table-responsive'},
-                    TABLE({'class':'nohead table table-striped'},THEAD(null,[thead]), TBODY(null,[rows,addform()]))));
-    replaceChildNodes($('menuitemlist'),form);
-}
 
-// Creates one table row
-function formatrow (item) {
-    // item has id, type, name, link, linkedto
-    var type = eval(item.type);
-    var linkedto = A({'href':item.linkedto},item.linktext);
-    var edit = BUTTON({'type':'button','class':'button btn btn-default btn-sm','title':{$getstring['edit']}}, SPAN({'class':'icon icon-lg icon-pencil', 'role':'presentation'}), SPAN({'class':'sr-only'}, {$getstring['edit']}));
-    connect(edit, 'onclick', function () { edititem(item); });
-    var del = BUTTON({'type':'button','class':'button btn btn-default btn-sm','title': {$getstring['delete']}}, SPAN({'class':'icon icon-lg icon-trash text-danger', 'role':'presentation'}), SPAN({'class':'sr-only'}, {$getstring['delete']}));
-    connect(del, 'onclick', function () { delitem(item.id); });
-    var buttonGroup = SPAN({'class':'btn-group'}, edit, del);
-    var cells = map(
-        partial(TD,null),
-        [
-            type,
-            item.name,
-            linkedto,
-            [buttonGroup,contextualHelpIcon('linksandresourcesform', null, 'core', 'admin', null, 'adminmenuedit')]
-        ]
-    );
-    return TR({'id':'menuitem_'+item.id},cells);
-}
+jQuery(function($) {
+  var externallink = $externallink;
+  var sitefile = $sitefile;
 
-// Returns the form which adds a new menu item
-function addform(type) {
-    var item = {'id':'new'};
-    item.type = type ? type : 'externallist';
-    return editform(item);
-}
+  function getitems() {
+      sendjsonrequest('getmenuitems.json.php', {'public':selectedmenu == 'loggedoutmenu'}, 'GET',
+                      function(data) { displaymenuitems(data.menuitems); });
+  }
+  // Get a list of the available admin files
+  function getadminfiles() {
+      sendjsonrequest('getadminfiles.json.php', {'public':selectedmenu == 'loggedoutmenu'},
+                      'GET',
+                      function (data) {
+                          if (!data.error) {
+                              adminfiles = data.adminfiles;
+                          }
+                          else {
+                              adminfiles = null;
+                          }
+                      });
+  }
 
-// Creates the contents of a menu item edit form
-// This is formatted as a table within the form (which is within a row of the table).
-function editform(item) {
-    // item has id, type, name, link, linkedto
-    // The form has two radio buttons to select the type, external link or admin file
-    var elink = INPUT({'type':'radio','class':'radio with-label','name':'type'+item.id,'id':'type_'+item.id+'_externallink','value':'externallink'});
-    var afile = INPUT({'type':'radio','class':'radio with-label','name':'type'+item.id,'id':'type_'+item.id+'_sitefile','value':'sitefile'});
+  // Puts the list of menu items into the empty table.
+  function displaymenuitems(itemlist) {
+      var rows = $.map(itemlist, formatrow);
 
-    // Either a save, a cancel button, or both.
-    var savecancel = [];
-    var save = BUTTON({'type':'button','class':'button btn btn-default btn-sm','title': {$getstring['update']}}, SPAN({'class':'icon icon-plus icon-lg', 'role':'presentation'}), SPAN({'class':'sr-only'}, {$getstring['update']}));
-    connect(save, 'onclick', function () { saveitem(item.id); });
+      var form  = $('<form>', { 'id': 'form', 'method': 'post',
+        'enctype': 'multipart/form-data', 'encoding': 'multipart/form-data', 'name':'linksandresourcesform'});
+      var tableResponsive = $('<div>', {'class':'table-responsive'});
+      var table = $('<table>', { 'class': 'nohead table table-striped' });
+      var tbody = $('<tbody>').append(rows, addform());
+      var thead = $('<thead>').append($('<tr>').append($.map([$thead], function(header) { return $('<th>').text(header);})));
 
-    // The link field will be a text box or a select in the case of an admin file.
-    var linkedto = null;
+      $(table).append(thead, tbody);
+      $(form).append(table);
 
-    var rowtype = 'add';
-    if (!item) {
-        // This is the 'add' form rather than the edit form
-        // Set defaults.
-        item = {'type':'externallist'};
-    }
-    if (!item.linkedto) {
-        item.linkedto = '';
-        item.name = '';
-        connect(elink, 'onclick', function () { changeaddform('externallink'); });
-        connect(afile, 'onclick', function () { changeaddform('sitefile'); });
-        // The save button says 'add', and there's no cancel button.
-        setNodeAttribute(save,'value',{$getstring['add']});
-        setNodeAttribute(save,'title',{$getstring['add']});
-        var savesr = getFirstElementByTagAndClassName('span', 'sr-only', save);
-        savesr.innerHTML = {$getstring['add']};
-        savecancel = [save];
-    }
-    else { // Editing an existing menu item.
-        // The save button says 'update' and there's a cancel button.
-        var rowtype = 'edit';
-        setNodeAttribute(save,'value',{$getstring['update']});
-        var cancel = BUTTON({'type':'button','class':'button btn-sm btn btn-link'}, {$getstring['cancel']});
-        connect(cancel, 'onclick', closeopenedits);
-        savecancel = [save,cancel];
-        connect(elink, 'onclick', function () { changeeditform(item,'externallink'); });
-        connect(afile, 'onclick', function () { changeeditform(item,'sitefile'); });
-    }
+      $('#menuitemlist').empty().append(form);
+  }
 
-    // A text field for the name
-    var name = SPAN(null,LABEL({'for':'name'+item.id,'class':'sr-only'},$namelabel),INPUT({'type':'text','class':'text form-control input-sm','id':'name'+item.id,'value':item.name}));
+  // Creates one table row
+  function formatrow (item) {
+      // item has id, type, name, link, linkedto
+      var type = eval(item.type);
+      var linkedto = $('<a>', {'href':item.linkedto, 'text': item.linktext});
+      var edit = $('<button>', {'type':'button','class':'button btn btn-default btn-sm','title':{$getstring['edit']}})
+        .append($('<span>', {'class':'icon icon-lg icon-pencil', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['edit']}}));
+      edit.on('click', function () { edititem(item); });
+      var del = $('<button>', {'type':'button','class':'button btn btn-default btn-sm','title': {$getstring['delete']}})
+      .append($('<span>', {'class':'icon icon-lg icon-trash text-danger', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['delete']}}));
+      del.on('click', function() { delitem(item.id); });
+      var buttonGroup = $('<span>', {'class':'btn-group'}).append(edit, del);
 
-    if (item.type == 'sitefile') {
-        if (adminfiles == null) {
-            // There are no admin files, we don't need the select or save button
-            linkedto = {$getstring['nositefiles']};
-            savecancel = [cancel];
-        }
-        else {
-            // Select the currently selected file.
-            linkedtoselect = SELECT({'id':'linkedto'+item.id});
-            linkedto = SPAN(null,LABEL({'for':'linkedto'+item.id,'class':'sr-only'},$linkedtolabel), linkedtoselect);
-            for (var i = 0; i < adminfiles.length; i++) {
-                if (item.file == adminfiles[i].id) {
-                    appendChildNodes(linkedtoselect, OPTION({'value':adminfiles[i].id, 'selected':true}, adminfiles[i].name));
-                }
-                else {
-                    appendChildNodes(linkedtoselect, OPTION({'value':adminfiles[i].id}, adminfiles[i].name));
-                }
-            }
-        }
-        setNodeAttribute(afile,'checked',true);
-    }
-    else { // type = externallist
-        linkedto =  SPAN(null,LABEL({'for':'linkedto'+item.id,'class':'sr-only'},$linkedtolabel),
-                         INPUT({'type':'text','class':'text form-control input-sm','id':'linkedto'+item.id,'value':item.linkedto}));
-        setNodeAttribute(elink,'checked',true);
-    }
-    var radios = [DIV({'class' : 'radio'}, elink, LABEL({'for':'type_'+item.id+'_externallink'}, {$getstring['externallink']}), contextualHelpIcon('linksandresourcesform', 'elink', 'core', 'admin', null, 'adminexternallink')),
-                  DIV({'class' : 'radio'}, afile, LABEL({'for':'type_'+item.id+'_sitefile'}, {$getstring['sitefile']}),contextualHelpIcon('linksandresourcesform', 'afile', 'core', 'admin', null, 'adminsitefile'))];
-    var row = TR({'id':'row'+item.id, 'class':rowtype},
-                 map(partial(TD,null),[radios,name,linkedto,savecancel]));
-    return row;
-}
+      var cells = $.map([type, item.name, linkedto, [buttonGroup,contextualHelpIcon('linksandresourcesform', null, 'core', 'admin', null, 'adminmenuedit')] ], function(el) {
+        return $('<td>').append(el);
+      })
+      return $('<tr>', {'id':'menuitem_'+item.id}).append(cells);
+  }
 
-// Close all open edit forms
-function closeopenedits() {
-    var rows = getElementsByTagAndClassName('tr',null,$('menuitemlist'));
-    for (var i=0; i<rows.length; i++) {
-        if (hasElementClass(rows[i],'edit')) {
-            removeElement(rows[i]);
-        }
-        else if (hasElementClass(rows[i],'hidden')) {
-            removeElementClass(rows[i],'hidden');
-        }
-    }
-}
+  // Returns the form which adds a new menu item
+  function addform(type) {
+      var item = {'id':'new'};
+      item.type = type ? type : 'externallist';
+      return editform(item);
+  }
 
-// Change the type of an edit form
-function changeeditform(item, type) {
-    item.type = type;
-    edititem(item);
-}
+  // Creates the contents of a menu item edit form
+  // This is formatted as a table within the form (which is within a row of the table).
+  function editform(item) {
+      // item has id, type, name, link, linkedto
+      // The form has two radio buttons to select the type, external link or admin file
+      var elink = $('<input>', {'type':'radio','class':'radio with-label','name':'type'+item.id,'id':'type_'+item.id+'_externallink','value':'externallink'});
+      var afile = $('<input>', {'type':'radio','class':'radio with-label','name':'type'+item.id,'id':'type_'+item.id+'_sitefile','value':'sitefile'});
 
-// Change the type of the add form
-function changeaddform(type) {
-    var newrow = addform(type);
-    swapDOM($('rownew'),newrow);
-}
+      // Either a save, a cancel button, or both.
+      var savecancel = [];
+      var save = $('<button>', {'type':'button','class':'button btn btn-default btn-sm','title': {$getstring['update']}})
+        .append($('<span>', {'class':'icon icon-plus icon-lg', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['update']}}));
+      save.on('click', function () { saveitem(item.id); });
 
-// Open a new edit form
-function edititem(item) {
-    closeopenedits();
-    var menuitem = $('menuitem_'+item.id);
-    addElementClass(menuitem,'hidden');
-    var newrow = editform(item);
-    insertSiblingNodesBefore(menuitem, newrow);
-}
+      // The link field will be a text box or a select in the case of an admin file.
+      var linkedto = null;
 
-// Receive standard json error message
-// Request deletion of a menu item from the db
-function delitem(itemid) {
-    if (confirm({$getstring['confirmdeletemenuitem']})) {
-        sendjsonrequest('deletemenuitem.json.php',{'itemid':itemid}, 'POST', getitems);
-    }
-}
+      var rowtype = 'add';
+      if (!item) {
+          // This is the 'add' form rather than the edit form
+          // Set defaults.
+          item = {'type':'externallist'};
+      }
+      if (!item.linkedto) {
+          item.linkedto = '';
+          item.name = '';
+          elink.on('click', function () { changeaddform('externallink'); });
+          afile.on('click', function () { changeaddform('sitefile'); });
+          // The save button says 'add', and there's no cancel button.
+          save.prop('value',{$getstring['add']});
+          save.prop('title',{$getstring['add']});
+          var savesr = $(save).find('span.sr-only').first();
+          savesr.innerHTML = {$getstring['add']};
+          savecancel = [save];
+      }
+      else { // Editing an existing menu item.
+          // The save button says 'update' and there's a cancel button.
+          var rowtype = 'edit';
+          save.prop('value',{$getstring['update']});
+          var cancel = $('<button>', {'type':'button','class':'button btn-sm btn btn-link','text': {$getstring['cancel']}});
+          cancel.on('click', closeopenedits);
+          savecancel = [save,cancel];
+          elink.on('click', function () { changeeditform(item,'externallink'); });
+          afile.on('click', function () { changeeditform(item,'sitefile'); });
+      }
 
-// Send the menu item in the form to the database.
-function saveitem(itemid) {
-    var f = $('form');
-    var name = $('name'+itemid).value;
-    var linkedto = $('linkedto'+itemid).value;
-    if (name == '') {
-        displayMessage(get_string('namedfieldempty', 'mahara', {$getstring['name']}), 'error');
-        return false;
-    }
-    if (linkedto == '') {
-        displayMessage(get_string('namedfieldempty', ' mahara', {$getstring['linkedto']}), 'error');
-        return false;
-    }
+      // A text field for the name
+      var name = $('<span>')
+        .append($('<label>', {'for':'name'+item.id,'class':'sr-only', 'text': $namelabel}),
+          $('<input>', {'type':'text','class':'text form-control input-sm','id':'name'+item.id,'value':item.name}));
 
-    var data = {'type':eval('f.type'+itemid+'[0].checked') ? 'externallink' : 'sitefile',
-                'name':name,
-                'linkedto':linkedto,
-                'itemid':itemid,
-                'public':selectedmenu == 'loggedoutmenu'};
-    sendjsonrequest('updatemenu.json.php', data, 'POST', getitems);
-    return false;
-}
+      if (item.type == 'sitefile') {
+          if (adminfiles == null) {
+              // There are no admin files, we don't need the select or save button
+              linkedto = {$getstring['nositefiles']};
+              savecancel = [cancel];
+          }
+          else {
+              // Select the currently selected file.
+              linkedtoselect = $('<select>', {'id':'linkedto'+item.id});
+              linkedto = $('<span>').append($('<label>', {'for':'linkedto'+item.id,'class':'sr-only', 'text': $linkedtolabel}), linkedtoselect);
+              for (var i = 0; i < adminfiles.length; i++) {
+                  if (item.file == adminfiles[i].id) {
+                    $(linkedtoselect).append($('<option>', {'value':adminfiles[i].id, 'selected':true, 'text': adminfiles[i].name }));
+                  }
+                  else {
+                    $(linkedtoselect).append($('<option>', {'value':adminfiles[i].id,  'text': adminfiles[i].name }));
+                  }
+              }
+          }
+          afile.prop('checked',true);
+      }
+      else { // type = externallist
+          linkedto = $('<span>').append(
+            $('<label>', {'for':'linkedto'+item.id,'class':'sr-only', 'text': $linkedtolabel}),
+            $('<input>', {'type':'text','class':'text form-control input-sm','id':'linkedto'+item.id,'value':item.linkedto})
+          );
+          elink.prop('checked',true);
+      }
+      var radios = [$('<div>', {'class' : 'radio'}).append(elink,
+        $('<label>', {'for':'type_'+item.id+'_externallink', 'text': {$getstring['externallink']}}),
+        contextualHelpIcon('linksandresourcesform', 'elink', 'core', 'admin', null, 'adminexternallink')
+      ),
+      $('<div>', {'class' : 'radio'}).append(afile,
+        $('<label>', {'for':'type_'+item.id+'_sitefile', 'text': {$getstring['sitefile']}}),
+        contextualHelpIcon('linksandresourcesform', 'afile', 'core', 'admin', null, 'adminsitefile'))];
+      var row = $('<tr>', {'id':'row'+item.id, 'class':rowtype}).append(
+        $.map([radios, name, linkedto, savecancel], function (el) { return $('<td>').append(el); })
+      );
+      return row;
+  }
 
-function changemenu() {
-    isPageRendering = true;
-    selectedmenu = $('menuselect').value;
-    getitems();
-    getadminfiles();
-    isPageRendering = false;
-}
+  // Close all open edit forms
+  function closeopenedits() {
+      var rows = $('#menuitemlist tr');
+      for (var i=0; i<rows.length; i++) {
+        var row = $(rows[i])
+          if (row.hasClass('edit')) {
+              row.remove();
+          }
+          else if (row.hasClass('hidden')) {
+            row.removeClass('hidden');
+          }
+      }
+  }
 
-var selectedmenu = 'loggedoutmenu';
-var adminfiles = null;
-addLoadEvent(function () {
-    $('menuselect').value = selectedmenu;
-    $('menuselect').onchange = changemenu;
-    changemenu();
+  // Change the type of an edit form
+  function changeeditform(item, type) {
+      item.type = type;
+      edititem(item);
+  }
+
+  // Change the type of the add form
+  function changeaddform(type) {
+      var newrow = addform(type);
+      $('#rownew').replaceWith(newrow);
+  }
+
+  // Open a new edit form
+  function edititem(item) {
+      closeopenedits();
+      var menuitem = $('#menuitem_'+item.id);
+      menuitem.addClass('hidden');
+      var newrow = editform(item);
+      newrow.insertBefore(menuitem);
+  }
+
+  // Receive standard json error message
+  // Request deletion of a menu item from the db
+  function delitem(itemid) {
+      if (confirm({$getstring['confirmdeletemenuitem']})) {
+          sendjsonrequest('deletemenuitem.json.php',{'itemid':itemid}, 'POST', getitems);
+      }
+  }
+
+  // Send the menu item in the form to the database.
+  function saveitem(itemid) {
+      var f = $('#form')[0];
+      var name = $('#name'+itemid).val();
+      var linkedto = $('#linkedto'+itemid).val();
+      if (name == '') {
+          displayMessage(get_string('namedfieldempty', 'mahara', {$getstring['name']}), 'error');
+          return false;
+      }
+      if (linkedto == '') {
+          displayMessage(get_string('namedfieldempty', ' mahara', {$getstring['linkedto']}), 'error');
+          return false;
+      }
+
+      var data = {'type':eval('f.type'+itemid+'[0].checked') ? 'externallink' : 'sitefile',
+                  'name':name,
+                  'linkedto':linkedto,
+                  'itemid':itemid,
+                  'public':selectedmenu == 'loggedoutmenu'};
+      sendjsonrequest('updatemenu.json.php', data, 'POST', getitems);
+      return false;
+  }
+
+  function changemenu() {
+      isPageRendering = true;
+      selectedmenu = $('#menuselect').val();
+      getitems();
+      getadminfiles();
+      isPageRendering = false;
+  }
+
+  var selectedmenu = 'loggedoutmenu';
+  var adminfiles = null;
+
+
+  $('#menuselect').val(selectedmenu);
+  $('#menuselect').on('change', changemenu);
+  changemenu();
 });
 EOJS;
 
