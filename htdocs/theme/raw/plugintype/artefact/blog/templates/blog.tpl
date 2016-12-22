@@ -32,9 +32,9 @@
     {/if}
     {if $posts.pagination_js}
     <script>
-    addLoadEvent(function() {literal}{{/literal}
+    jQuery(function($) {literal}{{/literal}
         {$posts.pagination_js|safe}
-        removeElementClass('blogpost_page_container{if $blockid}_{$blockid}{/if}', 'hidden');
+        $('#blogpost_page_container{if $blockid}_{$blockid}{/if}').removeClass('hidden');
     {literal}}{/literal});
     </script>
     {/if}

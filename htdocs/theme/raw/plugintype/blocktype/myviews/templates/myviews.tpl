@@ -8,9 +8,9 @@
     {/if}
     {if $myviews.pagination_js}
     <script type="application/javascript">
-        addLoadEvent(function() {literal}{{/literal}
+        jQuery(function($) {literal}{{/literal}
             {$myviews.pagination_js|safe}
-            removeElementClass('myviews_page_container', 'hidden');
+            $('#myviews_page_container').removeClass('hidden');
         {literal}}{/literal});
     </script>
     {/if}
@@ -18,4 +18,3 @@
 {else}
 <p class="content-text lead text-center">{str tag='noviewstosee' section='group'}</p>
 {/if}
-

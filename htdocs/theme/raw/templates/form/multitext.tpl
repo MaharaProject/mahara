@@ -5,10 +5,10 @@
 
     function {{$name}}_new() {
         {{$name}}_current++;
-        {{$name}}_newrefinput = INPUT({'type': 'text', 'name': '{{$name}}[' + {{$name}}_current + ']'});
-        var {{$name}}_newref = DIV(null, {{$name}}_newrefinput);
+        {{$name}}_newrefinput = jQuery('<input>', {'type': 'text', 'name': '{{$name}}[' + {{$name}}_current + ']'});
+        var {{$name}}_newref = jQuery('<div>').append({{$name}}_newrefinput);
 
-        appendChildNodes('{{$name}}_list', {{$name}}_newref);
+        jQuery('#{{$name}}_list').append({{$name}}_newref);
 
         {{$name}}_newrefinput.focus();
     }
@@ -17,7 +17,7 @@
 {{foreach from=$value key=k item=v}}
   <div>
     <input type="text" name="{{$name}}[{{$k}}]" value="{{$v}}">
-    <a href="" onclick="removeElement(this.parentNode); return false;">[x]</a>
+    <a href="" onclick="jQuery(this.parentNode).remove(); return false;">[x]</a>
   </div>
 {{/foreach}}
   <div>

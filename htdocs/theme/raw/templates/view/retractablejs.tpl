@@ -14,8 +14,8 @@ $j('#blockinstance_{$id} .retractor').click(function (e) {literal}{{/literal}
     {literal}}{/literal}
     e.preventDefault();
 {literal}}{/literal});
-addLoadEvent(function() {literal}{{/literal}
-    var $content = $j('#blockinstance_{$id} > .blockinstance-content');
+jQuery(function($) {literal}{{/literal}
+    var $content = $('#blockinstance_{$id} > .blockinstance-content');
     if (!$content.hasClass('js-hidden')) {literal}{{/literal}
         return;
     {literal}}{/literal}

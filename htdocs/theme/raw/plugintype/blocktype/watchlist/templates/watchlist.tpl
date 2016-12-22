@@ -11,9 +11,9 @@
     {/if}
     {if $watchlist.pagination_js}
     <script type="application/javascript">
-        jQuery(function() {literal}{{/literal}
+        jQuery(function($) {literal}{{/literal}
             {$watchlist.pagination_js|safe}
-            removeElementClass('watchlist_page_container', 'hidden');
+            $('#watchlist_page_container').removeClass('hidden');
         {literal}}{/literal});
     </script>
     {/if}

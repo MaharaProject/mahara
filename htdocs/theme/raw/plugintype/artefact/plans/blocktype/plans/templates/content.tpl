@@ -16,9 +16,9 @@
             {$tasks.pagination|safe}
         </div>
         <script>
-        addLoadEvent(function() {literal}{{/literal}
+        jQuery(function($) {literal}{{/literal}
             {$tasks.pagination_js|safe}
-            removeElementClass('plans_page_container_{$blockid}', 'hidden');
+            $('#plans_page_container_{$blockid}').removeClass('hidden');
         {literal}}{/literal});
         </script>
         {/if}

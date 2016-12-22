@@ -5,7 +5,7 @@
 
     var {{$name}}_searchfunc = function (params) {
 
-        replaceChildNodes('{{$name}}_messages');
+        jQuery("#{{$name}}_messages").empty();
 
         {{if $group}}
         {{$name}}_searchparams['group'] = {{$group}};
@@ -20,7 +20,7 @@
             function (users) {
                 var members = {};
                 var counter = 0;
-                forEach($('{{$name}}_members').childNodes, function(node) {
+                jQuery('#{{$name}}_members').children().each(function(id, node) {
                     if (node.nodeName == 'OPTION') {
                         members[node.value] = 1;
                         counter++;
@@ -30,95 +30,94 @@
                 var results = [];
 
                 if (users.data) {
-                    forEach(users.data, function(user) {
+                    jQuery.each(users.data, function(id, user) {
                         if (members[user.id]) {
                             return;
                         }
                         //appendChildNodes('{{$name}}_potential',OPTION({'value':user.id},user.name));
-                        results.push(OPTION({'value':user.id},user.name));
+                        results.push(jQuery('<option>', {'value':user.id, 'text': user.name}));
                     });
                 }
 
-                replaceChildNodes('{{$name}}_potential', results);
+                jQuery('#{{$name}}_potential').empty().append(results);
                 if (typeof params.query != 'undefined') {
-                    $('{{$name}}_potential').focus();
+                    jQuery('#{{$name}}_potential')[0].focus();
                 }
 
                 if(users.count > users.limit) {
-                    replaceChildNodes('{{$name}}_messages',
-                        DIV(null,
-                            {{$onlyshowingfirst|safe}}, ' ',
-                            SPAN({'id': '{{$name}}_userlimit'}, users.limit),
-                            ' ', {{$resultsof|safe}}, ' ',
-                            SPAN({'id': '{{$name}}_usercount'}, users.count - counter)
+                    jQuery('#{{$name}}_messages').empty().append(
+                        jQuery('<div>').append(
+                          {{$onlyshowingfirst|safe}}, ' ',
+                          jQuery('<span>', {'id': '{{$name}}_userlimit', 'text': users.limit }),
+                          ' ', {{$resultsof|safe}}, ' ',
+                          jQuery('<span>', {'id': '{{$name}}_usercount', 'text': users.count - counter })
                         )
                     );
                 }
             });
     }
 
-    addLoadEvent(function () {
-        removeElement($('{{$name}}_potential').childNodes[0]);
-        removeElement($('{{$name}}_members').childNodes[0]);
+    jQuery(function ($) {
+        $('#{{$name}}_potential :first').remove();
+        $('#{{$name}}_members :first').remove();
 
         {{$name}}_searchparams = {{$searchparams|safe}};
 
         {{$name}}_searchfunc({});
 
-        jQuery('#{{$name}}_search').keypress(function(k) {
+        $('#{{$name}}_search').keypress(function(k) {
             if (k.keyCode == 13) {
-                {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
+                {{$name}}_searchfunc({'query': $('#{{$name}}_search').val()});
                 k.preventDefault();
             }
         });
 
-        jQuery('#{{$name}}_search_btn').click(function(e) {
-            {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
+        $('#{{$name}}_search_btn').click(function(e) {
+            {{$name}}_searchfunc({'query': $('#{{$name}}_search').val()});
             e.preventDefault();
         });
     });
 
     function {{$name}}_moveopts(from,to) {
-        var from = $('{{$name}}_' + from);
-        var to   = $('{{$name}}_' + to);
+        var from = jQuery('#{{$name}}_' + from);
+        var to   = jQuery('#{{$name}}_' + to);
         var list = new Array();
 
-        forEach(from.childNodes, function(opt) {
-            if (!opt.selected) {
+        from.children().each(function() {
+            if (!this.selected) {
                 return;
             }
-            list.push(opt);
+            list.push(this);
         });
 
         if (list.length === 0) {
             return;
         }
 
-        forEach(list, function(node) {
-            to.appendChild(node);
-            node.selected = false;
+        jQuery.each(list, function() {
+            to.append(this);
+            jQuery(this).prop('selected', false);
         });
 
         // Update the counters if they are present
-        if ($('{{$name}}_userlimit')) {
-            if (from.id == '{{$name}}_potential') {
-                replaceChildNodes('{{$name}}_userlimit', parseInt($('{{$name}}_userlimit').innerHTML, 10) - list.length);
-                replaceChildNodes('{{$name}}_usercount', parseInt($('{{$name}}_usercount').innerHTML, 10) - list.length);
+        if (jQuery('#{{$name}}_userlimit').length) {
+            if (from.id === '{{$name}}_potential') {
+                jQuery('#{{$name}}_userlimit').empty().append(parseInt(jQuery('#{{$name}}_userlimit').html(), 10) - list.length);
+                jQuery('#{{$name}}_usercount').empty().append(parseInt(jQuery('#{{$name}}_usercount').html(), 10) - list.length);
             }
             else {
-                replaceChildNodes('{{$name}}_userlimit', parseInt($('{{$name}}_userlimit').innerHTML, 10) + list.length);
-                replaceChildNodes('{{$name}}_usercount', parseInt($('{{$name}}_usercount').innerHTML, 10) + list.length);
+                jQuery('#{{$name}}_userlimit').empty().append(parseInt(jQuery('#{{$name}}_userlimit').html(), 10) + list.length);
+                jQuery('#{{$name}}_usercount').empty().append(parseInt(jQuery('#{{$name}}_usercount').html(), 10) + list.length);
             }
         }
-
         var members = new Array();
-        forEach($('{{$name}}_members').childNodes, function(node) {
+        jQuery('#{{$name}}_members').children().each(function(i, node) {
             if (typeof(node) == 'object' && typeof(node.value) == 'string') {
                 members.push(node.value);
             }
         });
 
-        $('{{$name}}').value=members.join(',');
+        jQuery('#{{$name}}').val(members.join(','));
         if (typeof formchangemanager !== 'undefined') {
             var form = jQuery('select#{{$name}}_members').closest('form')[0];
             formchangemanager.setFormState(form, FORM_CHANGED);
@@ -127,9 +126,9 @@
         to.focus();
     };
 
-    addLoadEvent(function () {
-        connect('{{$name}}_potential', 'ondblclick', function (event) { {{$name}}_moveopts('potential','members') });
-        connect('{{$name}}_members', 'ondblclick', function (event) { {{$name}}_moveopts('members','potential') });
+    jQuery(function ($) {
+        $('#{{$name}}_potential').on('dblclick', function (event) { {{$name}}_moveopts('potential','members') });
+        $('#{{$name}}_members', 'ondblclick', function (event) { {{$name}}_moveopts('members','potential') });
     });
 </script>
 <table class="userlisttable fullwidth">

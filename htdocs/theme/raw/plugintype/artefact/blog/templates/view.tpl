@@ -27,9 +27,9 @@
     </div>
     <div id="blogpost_page_container" class="hidden">{$posts.pagination|safe}</div>
     <script>
-    addLoadEvent(function() {literal}{{/literal}
+    jQuery(function($) {literal}{{/literal}
         {$posts.pagination_js|safe}
-        removeElementClass('blogpost_page_container', 'hidden');
+        $('#blogpost_page_container').removeClass('hidden');
         {literal}}{/literal});
     </script>
     {else}

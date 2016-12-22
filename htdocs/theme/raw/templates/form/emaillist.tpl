@@ -20,8 +20,8 @@
     var {{$name}}_newref = null;
 
     function {{$name}}_addedemail() {
-        removeElement({{$name}}_newrefinput);
-        removeElement({{$name}}_newref);
+        jQuery("#{{$name}}_newrefinput").remove();
+        jQuery("#{{$name}}_newref").remove();
         var newEmail = {{$name}}_newrefinput.value;
         if (typeof(newEmail) == 'string' && newEmail.length > 0) {
             if (newEmail.length > 255) {
@@ -29,16 +29,15 @@
             }
             else {
                 var email = {{$name}}_newrefinput.value;
-                appendChildNodes('{{$name}}_list', DIV({'class': 'unsent'},
-                    INPUT({'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
+                jQuery('#{{$name}}_list').append(jQuery('<div>', {'class': 'unsent'}).append(
+                    jQuery('<input>', {'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
                     ' ',
-                    SPAN({'class': 'pseudolabel no-radio'}, email),' ',
-                    BUTTON({'class': 'btn btn-default btn-sm', 'onclick': '{{$name}}_remove(this); return false'},
-                        SPAN({'class': 'icon icon-times left icon-lg text-danger', 'role': 'presentation'}),
-                        SPAN('{{str tag=delete}}')
+                    jQuery('<span>', {'class': 'pseudolabel no-radio'}).append(email),' ',
+                    jQuery('<button>', {'class': 'btn btn-default btn-sm', 'onclick': '{{$name}}_remove(this); return false'}).append(
+                      jQuery('<span>', {'class': 'icon icon-times left icon-lg text-danger', 'role': 'presentation'}),
+                      jQuery('<span>', {'text': '{{str tag=delete}}'})
                     ),
-                    DIV({'class': 'clearfix metadata validation-message'}, {{$validationemailstr|safe}})
-                    //' ' + {{$validationemailstr|safe}}
+                    jQuery('<div>', {'class': 'clearfix metadata validation-message'}).append({{$validationemailstr|safe}})
                 ));
                 if (typeof formchangemanager !== 'undefined') {
                     var form = jQuery(this).closest('form')[0];
@@ -56,24 +55,24 @@
             return false;
         }
 
-        {{$name}}_newrefinput = INPUT({'type': 'text', 'id': 'addnew{{$name}}', 'class': 'form-control'});
-        {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'class': 'btn btn-default', 'value': '{{$addbuttonstr}}'});
-        {{$name}}_newref = DIV({'class': 'input-group'},{{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
+        {{$name}}_newrefinput = jQuery('<input>', {'type': 'text', 'id': 'addnew{{$name}}', 'class': 'form-control'});
+        {{$name}}_newrefsubmit = jQuery('<input>', {'type': 'submit', 'class': 'btn btn-default', 'value': '{{$addbuttonstr}}'});
+        {{$name}}_newref = jQuery('<div>', {'class': 'input-group'}).append({{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
 
-        appendChildNodes('{{$name}}_list', {{$name}}_newref);
+        jQuery('#{{$name}}_list').append({{$name}}_newref);
 
         {{$name}}_newrefinput.focus();
 
-        connect({{$name}}_newrefinput, 'onchange', function(k) {
+        {{$name}}_newrefinput.on('change', function(k) {
             if (typeof formchangemanager !== 'undefined') {
                 var form = jQuery(this).closest('form')[0];
                 formchangemanager.setFormState(form, FORM_CHANGED);
             }
         });
 
-        connect({{$name}}_newrefsubmit, 'onclick', function(k) {
+        {{$name}}_newrefsubmit.on('click', function(k) {
             {{$name}}_addedemail();
-            k.stop();
+            k.preventDefault();
         });
     }
 
@@ -81,8 +80,8 @@
         var div = x.parentNode;
 
         var radio = filter(
-                function(elem) { return getNodeAttribute(elem, 'type') == 'radio'; },
-                getElementsByTagAndClassName('input', null, div)
+                function(elem) { return jQuery(elem).prop('type') === 'radio'; },
+                jQuery(div).find('input')
         );
 
         if (radio[0] && radio[0].checked) {
@@ -95,7 +94,7 @@
             formchangemanager.setFormState(form, FORM_CHANGED);
         }
 
-        removeElement(x.parentNode);
+        jQuery(x.parentNode).remove();
     }
 </script>
 <div id="{{$name}}_list" class="{{$name}}-list email-list">

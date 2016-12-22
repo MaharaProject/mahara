@@ -13,9 +13,9 @@
 
         {if $groupviews.pagination_js}
         <script>
-            addLoadEvent(function() {literal}{{/literal}
+            jQuery(function($) {literal}{{/literal}
                 {$groupviews.pagination_js|safe}
-                removeElementClass('groupviews_page_container', 'hidden');
+                $('#groupviews_page_container').removeClass('hidden');
             {literal}}{/literal});
         </script>
         {/if}
@@ -44,9 +44,9 @@
 
         {if $sharedviews.pagination_js}
         <script>
-            addLoadEvent(function() {literal}{{/literal}
+            jQuery(function($) {literal}{{/literal}
                 {$sharedviews.pagination_js|safe}
-                removeElementClass('sharedviews_page_container', 'hidden');
+                $('#sharedviews_page_container').removeClass('hidden');
             {literal}}{/literal});
         </script>
         {/if}
@@ -76,9 +76,9 @@
 
         {if $sharedcollections.pagination_js}
         <script>
-            addLoadEvent(function() {literal}{{/literal}
+            jQuery(function($) {literal}{{/literal}
                 {$sharedcollections.pagination_js|safe}
-                removeElementClass('sharedcollections_page_container', 'hidden');
+                $('#sharedcollections_page_container').removeClass('hidden');
             {literal}}{/literal});
         </script>
         {/if}
@@ -105,9 +105,9 @@
         {/if}
         {if $allsubmitted.pagination_js}
         <script>
-            addLoadEvent(function() {literal}{{/literal}
+            jQuery(function($) {literal}{{/literal}
                 {$allsubmitted.pagination_js|safe}
-                removeElementClass('allsubmitted_page_container', 'hidden');
+                $('#allsubmitted_page_container').removeClass('hidden');
             {literal}}{/literal});
         </script>
         {/if}
