@@ -17,12 +17,6 @@ Scenario: Testing functions for user search page (Bug 1431569)
  And I follow "P" in the "div#firstnamelist" "css_element"
  And I follow "userA"
  And I should see "Account settings | Pete Mc (userA)"
- # Checking the default settings are right
- And the following fields match these values:
- | Force password change on next login  | 0 |
- | Site staff | 0 |
- | Site administrator | 1 |
- | Disable email | 0 |
  # Flicking the switches to new settings
  And I set the following fields to these values:
  | Force password change on next login  | 1 |

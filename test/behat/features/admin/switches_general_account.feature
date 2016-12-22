@@ -10,18 +10,6 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  # In the adding users area
  When I choose "Add user" in "Users"
  And I press "General account options"
- # Cheking the default settings are correct first
- And the following fields match these values:
- | Friends control |  |
- | HTML editor | 1 |
- | Disable email | 0 |
- | Messages from other users |  |
- | Show controls to add and remove columns when editing a page | 0 |
- | Multiple journals | 0 |
- | Maximum tags in cloud | 20 |
- | Maximum number of groups to display | |
- | Sort groups | A to Z |
- | Dashboard information | 1 |
  # Changing the switches to their opposite setting
  And I set the following fields to these values:
  | HTML editor | 0 |
@@ -40,15 +28,6 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  # In the Admin block adding users by CSV area
  And I choose "Add users by CSV" in "Users"
  And I follow "General account options"
- And the following fields match these values:
- | Friends control | |
- | HTML editor | 1 |
- | Disable email | 0 |
- | Show controls to add and remove columns when editing a page | 0 |
- | Multiple journals | 0 |
- | Maximum tags in cloud | 20 |
- | Maximum number of groups to display | |
- | Dashboard information | 1 |
  # Changing the switches to the opposite setting
  And I set the following fields to these values:
  | HTML editor | 0 |
@@ -64,15 +43,7 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  And I follow "Logout"
  Then I log in as "bob01" with password "Mahara1"
  And I go to "account/index.php"
-# And I wait "1" seconds
  And I should not see "Undefined index:"
- # Checking the default settings are correct
- And the following fields match these values:
- | HTML editor | 0 |
- | Disable email | 1 |
-# | Show controls to add and remove columns when editing a page | 1 |
- | Multiple journals | 1 |
- | Dashboard information | 0 |
  # Changing the switches to their opposite setting
  And I set the following fields to these values:
  | HTML editor | 1 |

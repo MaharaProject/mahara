@@ -24,13 +24,4 @@ So people can have access to their Mahara
  And I follow "Administration"
  And I choose "Pending registrations" in "Institutions"
  And I follow "Approve"
- # Checking switch matches the default value
- And the following fields match these values:
- | Institution staff | 0 |
- # Turning it to the opposite
- And I set the following fields to these values:
- | Institution staff | 1 |
- # Checking it can turn back to the default setting
- And I set the following fields to these values:
- | Institution staff | 0 |
-And I press "Approve"
+ And I press "Approve"
