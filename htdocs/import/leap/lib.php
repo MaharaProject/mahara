@@ -287,7 +287,7 @@ class PluginImportLeap extends PluginImport {
      */
     public function call_import_method_plugins($method) {
         $installedplugins = array_map(create_function('$a', 'return $a->name;'), plugins_installed('artefact'));
-        $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans', 'annotation');
+        $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans', 'annotation', 'comment');
         foreach ($orderedimportplugins as $plugin) {
             if (!in_array($plugin, $installedplugins)) {
                 continue;
