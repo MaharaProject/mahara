@@ -32,8 +32,13 @@
  * @return string           The HTML for the element
  */
 function pieform_element_checkbox(Pieform $form, $element) {/*{{{*/
+
+    $smarty = smarty_core();
+
+    $baseattributes = $form->element_attributes($element);
+
     $checked = false;
-    if (isset($element['rules']['required'])){
+    if (isset($element['rules']['required'])) {
         throw new PieformException("For pieform_element_checkbox, 'required' is not allowed as a rule. Radio should be used instead.");
     }
     if (!empty($element['value'])) {
@@ -52,14 +57,15 @@ function pieform_element_checkbox(Pieform $form, $element) {/*{{{*/
 
     $arialabel = '';
     if (!empty($element['arialabel'])) {
-        $arialabel = ' aria-label="' . Pieform::hsc($element['title']) . '"';
+        $arialabel = Pieform::hsc($element['title']);
     }
 
-    return '<input type="checkbox"'
-        . $form->element_attributes($element)
-        . $arialabel
-        . ($checked ? ' checked="checked"' : '')
-        . '>';
+    $smarty->assign('baseattributes', $baseattributes);
+    $smarty->assign('arialabel', $arialabel);
+    $smarty->assign('checked', $checked);
+
+    return $smarty->fetch('form/checkbox.tpl');
+
 }/*}}}*/
 
 function pieform_element_checkbox_get_value(Pieform $form, $element) {/*{{{*/
