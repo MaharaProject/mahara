@@ -86,25 +86,61 @@ class Session {
             ini_set('session.use_strict_mode', true);
         }
 
-        $sessionpath = get_config('sessionpath');
-        ini_set('session.save_path', '3;' . $sessionpath);
-        // Attempt to create session directories
-        if (!is_dir("$sessionpath/0")) {
-            // Create three levels of directories, named 0-9, a-f
-            $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
-            if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
-                $characters = array_merge($characters, array('g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-                                                             'o', 'p', 'q', 'r', 's', 't', 'u', 'v'));
-            }
-            foreach ($characters as $c1) {
-                check_dir_exists("$sessionpath/$c1");
-                foreach ($characters as $c2) {
-                    check_dir_exists("$sessionpath/$c1/$c2");
-                    foreach ($characters as $c3) {
-                        check_dir_exists("$sessionpath/$c1/$c2/$c3");
+        // Now lets use the correct session handler
+        // Currently only deals with file and memcached
+        switch (get_config('sessionhandler')) {
+            case 'memcache':
+                throw new ConfigSanityException(get_string('memcacheusememcached', 'error'));
+                break;
+            case 'memcached':
+                $memcacheservers = get_config('memcacheservers');
+                if (!$memcacheservers) {
+                    throw new ConfigSanityException(get_string('nomemcacheserversdefined', 'error', get_config('sessionhandler')));
+                }
+                if (!extension_loaded(get_config('sessionhandler'))) {
+                    throw new ConfigSanityException(get_string('nophpextension', 'error', get_config('sessionhandler')));
+                }
+                // Because we only want memcached servers we need to strip off any 'tcp://' if accidentally added
+                $servers = preg_replace('#tcp://#', '', $memcacheservers);
+                foreach (explode(',', $servers) as $server) {
+                    list($destination, $port) = explode(':', $server);
+                    $nc = 'nc -z ' . $destination . ' ' . $port;
+                    $status = exec($nc, $out, $fail);
+                    if ($fail === 1) {
+                        // if server has 'nc' command but can't reach the server:port
+                        throw new ConfigSanityException(get_string('nomemcachedserver', 'error', $server));
                     }
                 }
-            }
+                ini_set('session.save_handler', 'memcached');
+                ini_set('session.save_path', $servers);
+
+                $sess = new MemcachedSession();
+                session_set_save_handler($sess, true);
+                break;
+            case 'file':
+                $sessionpath = get_config('sessionpath');
+                ini_set('session.save_path', '3;' . $sessionpath);
+                // Attempt to create session directories
+                if (!is_dir("$sessionpath/0")) {
+                    // Create three levels of directories, named 0-9, a-f
+                    $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+                    if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
+                        $characters = array_merge($characters, array('g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+                                                                     'o', 'p', 'q', 'r', 's', 't', 'u', 'v'));
+                    }
+                    foreach ($characters as $c1) {
+                        check_dir_exists("$sessionpath/$c1");
+                        foreach ($characters as $c2) {
+                            check_dir_exists("$sessionpath/$c1/$c2");
+                            foreach ($characters as $c3) {
+                                check_dir_exists("$sessionpath/$c1/$c2/$c3");
+                            }
+                        }
+                    }
+                }
+                break;
+            default:
+                throw new ConfigSanityException(get_string('wrongsessionhandle', 'error', get_config('sessionhandler')));
         }
     }
 
@@ -640,5 +676,13 @@ function clear_duplicate_cookies() {
             ini_get('session.cookie_secure'),
             ini_get('session.cookie_httponly')
         );
+    }
+}
+
+class MemcachedSession extends SessionHandler {
+    // we need to extend and override the read method to force it to return string value
+    // in order to comply with PHP 7's more strict type checking
+    public function read($session_id) {
+        return (string)parent::read($session_id);
     }
 }

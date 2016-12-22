@@ -724,6 +724,15 @@ $cfg->openbadgedisplayer_source = '{"backpack":"https://backpack.openbadges.org/
 // $cfg->memcacheservers = 'hostname1:port1,hostname2:port2,hostname3:port3';
 
 /**
+ * @global string $cfg->sessionhandler
+ * An alternative session handler for Mahara if you do not wish to use files.
+ * Specify the name of the session handler.
+ */
+$cfg->sessionhandler = 'file';
+//$cfg->sessionhandler = 'memcached';
+//$cfg->memcacheservers = 'localhost:11211';
+
+/**
  * @global string $cfg->ssphpsessionhandler
  * An alternative session handler for SimpleSAMLphp if you do not wish to use memcache.
  * Specify the name of the session handler.
