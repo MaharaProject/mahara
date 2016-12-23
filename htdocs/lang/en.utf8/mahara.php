@@ -48,6 +48,7 @@ $string['loading'] = 'Loading ...';
 $string['showtags'] = 'Show my tags';
 $string['errorprocessingform'] = 'There was an error with submitting this form. Please check the marked fields and try again.';
 $string['description'] = 'Description';
+$string['orientation'] = 'Orientation';
 $string['remove']  = 'Remove';
 $string['Close'] = 'Close';
 $string['Help'] = 'Help';

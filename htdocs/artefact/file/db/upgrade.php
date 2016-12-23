@@ -498,5 +498,17 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         add_index($table, $index);
     }
 
+    if ($oldversion < 2017101300) {
+        log_debug("Add 'orientation' column to the 'artefact_file_image' table for image rotator");
+        $table = new XMLDBTable('artefact_file_image');
+        $field = new XMLDBField('orientation');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 10, null, null, null, XMLDB_ENUM, array('0', '90', '180', '270'), '0');
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+        // clear the cached resized images to all recreation with new naming scheme
+        clear_resized_images_cache();
+    }
+
     return $status;
 }

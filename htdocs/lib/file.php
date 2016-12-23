@@ -511,10 +511,15 @@ function is_image_file($path) {
  *
  *                     As a number, the path returned will have the largest side being
  *                     the length specified.
+ * @param int $orientation  The orinetation of the returned image
+ *                          - valid options  0 (original),
+ *                                          90 (90 deg clockwise),
+ *                                         180 (inverted),
+ *                                         270 (90 deg anti-clockwise)
  * @return string The path on disk where the appropriate file resides, or false
  *                if an appropriate file could not be located or generated
  */
-function get_dataroot_image_path($path, $id, $size=null) {
+function get_dataroot_image_path($path, $id, $size=null, $orientation = 0) {
     global $THEME;
     $dataroot = get_config('dataroot');
     $imagepath = $dataroot . $path;
@@ -544,11 +549,21 @@ function get_dataroot_image_path($path, $id, $size=null) {
         return false;
     }
 
-    if (!$size) {
-        // No size has been asked for. Return the original
+    if (!$size && $orientation == 0) {
+        // No size has been asked for nor any rotation. Return the original
         return $originalimage;
     }
     else {
+        // If we are rorating an image and do not have the $size supplied we need to get size of original
+        if (!$size && $orientation != 0 && is_readable($originalimage) && filesize($originalimage)) {
+            list($owidth, $oheight) = getimagesize($originalimage);
+            $size['w'] = $owidth;
+            $size['h'] = $oheight;
+            if ($orientation == 90 || $orientation == 270) {
+                $size['h'] = $owidth;
+                $size['w'] = $oheight;
+            }
+        }
         // Check if the image is available in the size requested
         $sizestr = serialize($size);
         $md5     = md5("{$id}.{$sizestr}");
@@ -559,7 +574,7 @@ function get_dataroot_image_path($path, $id, $size=null) {
            $resizedimagedir .= substr($md5, $i, 1) . '/';
             check_dir_exists($resizedimagedir);
         }
-        $resizedimagefile = "{$resizedimagedir}{$md5}.$id";//.$sizestr";
+        $resizedimagefile = "{$resizedimagedir}{$md5}.{$orientation}.$id";//.$sizestr";
 
         if (is_readable($resizedimagefile)) {
             return $resizedimagefile;
@@ -633,6 +648,11 @@ function get_dataroot_image_path($path, $id, $size=null) {
 
             if (!$oldih) {
                 return false;
+            }
+
+            if ($orientation != 0) {
+                // We minus orientation from 360 as imagerotate() does rotation anticlockwise and we do it clockwise
+                $oldih = imagerotate($oldih, 360 - $orientation, 0);
             }
 
             $oldx = imagesx($oldih);

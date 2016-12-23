@@ -559,3 +559,14 @@
 #agreetoprivacy .panel {
     border: 0;
 }
+
+.image-rotator {
+    height: 110px;
+    line-height: 75px;
+
+    .image-rotator-inner {
+        display: inline-block;
+        text-align: center;
+        width: 110px;
+    }
+}

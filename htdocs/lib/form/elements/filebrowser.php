@@ -87,6 +87,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     }
 
     if ($config['select']) {
+        $selected = array();
         if (function_exists($element['selectlistcallback'])) {
             if ($form->is_submitted() && $form->has_errors() && param_exists($prefix . '_selected') && is_array(param_array($prefix . '_selected'))) {
                 $value = array_keys(param_array($prefix . '_selected'));
@@ -109,6 +110,9 @@ function pieform_element_filebrowser(Pieform $form, $element) {
                 }
             }
             $selected = $element['selectlistcallback']($value);
+        }
+        foreach ($selected as $k => $v) {
+            $v->time = '&time=' . time();
         }
         $smarty->assign('selectedlist', $selected);
         $selectedliststr = json_encode($selected);
@@ -157,14 +161,17 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $filters = isset($element['filters']) ? $element['filters'] : null;
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution, $filters);
-    $smarty->assign('filelist', $filedata);
     // Only allow 'Download folder content as zip' link if theres some kind of content (file or subfolder with content)
     $addzipdownloadlink = false;
     foreach ($filedata as $k => $v) {
         if (empty($v->isparent) && ($v->artefacttype != 'folder' || ($v->artefacttype == 'folder' && !empty($v->childcount)))) {
             $addzipdownloadlink = true;
         }
+        if ($v->artefacttype == 'image' || $v->artefacttype == 'profileicon') {
+            $v->icon .= '&time=' . time();
+        }
     }
+    $smarty->assign('filelist', $filedata);
     $smarty->assign('downloadfolderaszip', $addzipdownloadlink);
     $configstr = json_encode($config);
     $fileliststr = json_encode($filedata);
@@ -339,9 +346,12 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
         if (empty($v->isparent) && ($v->artefacttype != 'folder' || ($v->artefacttype == 'folder' && !empty($v->childcount)))) {
             $addzipdownloadlink = true;
         }
+        if ($v->artefacttype == 'image' || $v->artefacttype == 'profileicon') {
+            $v->icon .= '&time=' . time();
+        }
     }
-    $smarty->assign('downloadfolderaszip', $addzipdownloadlink);
 
+    $smarty->assign('downloadfolderaszip', $addzipdownloadlink);
     $smarty->assign('edit', -1);
     $smarty->assign('highlight', $highlight);
     $smarty->assign('editable', $editable);
@@ -597,6 +607,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             'tags'        => param_variable($prefix . '_edit_tags', ''),
             'folder'      => $element['folder'],
             'allowcomments' => param_boolean($prefix . '_edit_allowcomments'),
+            'orientation'  => param_variable($prefix . '_edit_orientation'),
         );
         if (get_config('licensemetadata')) {
             $data = array_merge($data, array(
@@ -1203,6 +1214,10 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     $artefact->set('title', trim($data['title']));
     $artefact->set('description', $data['description']);
     $artefact->set('allowcomments', (int) $data['allowcomments']);
+    if (property_exists($artefact, 'orientation')) {
+        $orientation = is_mysql() ? (string) $data['orientation'] : (int) $data['orientation'];
+        $artefact->set('orientation', $orientation);
+    }
 
     $oldtags = $artefact->get('tags');
     $newtags = $data['tags'];

@@ -5790,5 +5790,12 @@ function xmldb_core_upgrade($oldversion=0) {
         add_index($table, $index);
     }
 
+    if ($oldversion < 2018022500) {
+        log_debug('Upgrade artefact/file plugin');
+        if ($data = check_upgrades('artefact.file')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }

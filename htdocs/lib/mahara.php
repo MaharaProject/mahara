@@ -5150,7 +5150,7 @@ function is_valid_serialized_skin_attribute($sobj) {
 }
 
 /*
- * Crear all Mahara chaches.
+ * Clear all Mahara caches.
  * @param   bool   $clearsessiondirs  Optional to clear sessions. Useful during upgrade when session structure changes
  *
  * @return bool True if success, false otherwise.
@@ -5162,6 +5162,7 @@ function clear_all_caches($clearsessiondirs = false) {
         clear_menu_cache();
         update_safe_iframe_regex();
         bump_cache_version();
+        clear_resized_images_cache();
 
         $dwoo_dir = get_config('dataroot') . 'dwoo';
         if (check_dir_exists($dwoo_dir) && !rmdirr($dwoo_dir)) {
@@ -5186,6 +5187,30 @@ function clear_all_caches($clearsessiondirs = false) {
     }
 
     return $result;
+}
+
+/**
+ * Clear the generated resized images
+ * @param bool $profileonly Optional clear only the profile image resized files
+ *
+ * @return bool True if success, false otherwise
+ */
+function clear_resized_images_cache($profileonly=false) {
+    require_once(get_config('libroot') . 'file.php');
+
+    $filedir = get_config('dataroot') . 'artefact/file/';
+    $profiledir = $filedir . 'profileicons/resized';
+    if (check_dir_exists($profiledir) && !rmdirr($profiledir)) {
+        log_debug('Can not remove profile image resized directory ' . $profiledir);
+        return false;
+    }
+    if (!$profileonly) {
+        $imagedir = $filedir . 'resized';
+        if (check_dir_exists($imagedir) && !rmdirr($imagedir)) {
+            log_debug('Can not remove image resized directory ' . $imagedir);
+            return false;
+        }
+    }
 }
 
 /*

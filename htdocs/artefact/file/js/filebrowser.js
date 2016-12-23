@@ -282,6 +282,29 @@ var FileBrowser = (function($) {
         else {
             descriptionrow.removeClass('hidden');
         }
+        if (self.filedata[id].artefacttype == 'image' || self.filedata[id].artefacttype == 'profileicon') {
+            var rotator = $('#' + self.id + '_rotator');
+            rotator.removeClass('hidden');
+            var rotatorimg = rotator.find('img');
+            // set up initial info
+            var origangle = parseInt(self.filedata[id].orientation, 10);
+            var jstimestamp = Math.round(new Date().getTime()/1000);
+            rotatorimg.prop('src', config.wwwroot + '/artefact/file/download.php?file=' + id + '&maxheight=100&maxwidth=100&ts=' + jstimestamp);
+            rotatorimg.data('angle', origangle);
+            rotatorimg.prop('style', '');
+            rotator.find('span').off();
+            $('#' + self.id + '_edit_orientation').val(origangle);
+            // Do transformation
+            rotator.find('span').on('click', function() {
+                var angle =  (rotatorimg.data('angle') + 90) || 90;
+                rotatorimg.css({'transform': 'rotate(' + (angle - origangle) + 'deg)', 'transition': 'all 1s ease'});
+                rotatorimg.data('angle', angle);
+                $('#' + self.id + '_edit_orientation').val(angle % 360);
+            });
+        }
+        else {
+            $('#' + self.id + '_rotator').addClass('hidden');
+        }
         $('#' + self.id + '_edit_title').val(self.filedata[id].title);
         $('#' + self.id + '_edit_description').val(self.filedata[id].description == null ? '' : self.filedata[id].description);
         if ($('#' + self.id + '_edit_license').length) {

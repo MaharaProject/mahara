@@ -5,10 +5,18 @@
                 {if $fileinfo}{if $fileinfo->artefacttype == 'folder'}{str tag=editfolder section=artefact.file}{else}{str tag=editfile section=artefact.file}{/if}{/if}
             </h4>
             <div class="form-group requiredmarkerdesc">{str tag='requiredfields' section='pieforms' arg1='*'}</div>
+            <div id="{$prefix}_rotator" class="form-group image-rotator">
+                <label for="{$prefix}_edit_orientation">{str tag=orientation}</label>
+                <span class="image-rotator-inner">
+                    <img role="presentation" aria-hidden="true" src="" title="" alt="">
+                </span>
+                <span class="icon icon-rotate-right btn btn-default"></span>
+                <input type="hidden" id="{$prefix}_edit_orientation" name="{$prefix}_edit_orientation" value="0">
+            </div>
             <div class="required form-group">
                 <label for="{$prefix}_edit_title">{str tag=name}<span class="requiredmarker"> *</span>
                 </label>
-                <input type="text" class="text" name="{$prefix}_edit_title" id="{$prefix}_edit_title" value="{$fileinfo->title}"/>
+                <input type="text" class="text" name="{$prefix}_edit_title" id="{$prefix}_edit_title" value="{$fileinfo->title}" size="40" />
             </div>
             {if $fileinfo->artefacttype != 'profileicon'}
             <div class="form-group">

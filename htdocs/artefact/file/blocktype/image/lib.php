@@ -43,13 +43,13 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
         $image = $instance->get_artefact_instance($id);
         $wwwroot = get_config('wwwroot');
         $viewid = $instance->get('view');
-
+        $edittime = '&time=' . time();
         if ($image instanceof ArtefactTypeProfileIcon) {
-            $src = $wwwroot . 'thumb.php?type=profileiconbyid&id=' . $id . '&view=' . $viewid;
+            $src = $wwwroot . 'thumb.php?type=profileiconbyid&id=' . $id . '&view=' . $viewid . $edittime;
             $description = $image->get('title');
         }
         else {
-            $src = $wwwroot . 'artefact/file/download.php?file=' . $id . '&view=' . $viewid;
+            $src = $wwwroot . 'artefact/file/download.php?file=' . $id . '&view=' . $viewid . $edittime;
             $description = $image->get('description');
             $description = empty($description) ? $image->get('title') : $description;
         }
@@ -111,6 +111,19 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
             ),
         );
     }
+
+    public static function instance_config_save($values, $instance) {
+        if (isset($values['artefactid'])) {
+            // Pass back a list of any other blocks that need to be rendered
+            // due to this change.
+            $values['_redrawblocks'] = array_unique(get_column(
+                                                               'view_artefact', 'block',
+                                                               'artefact', $values['artefactid'],
+                                                               'view', $instance->get('view')
+                                                               ));
+        }
+        return $values;
+   }
 
     public static function filebrowser_element(&$instance, $default=array()) {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);

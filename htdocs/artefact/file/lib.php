@@ -537,12 +537,13 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         global $USER;
         $select = '
             SELECT
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon,
+                a.id, a.artefacttype, a.mtime, f.size, fi.orientation, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon,
                 COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount, COUNT(DISTINCT s.id) AS skincount,
                 COUNT(DISTINCT api.id) AS profileiconcount';
         $from = '
             FROM {artefact} a
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
+                LEFT OUTER JOIN {artefact_file_image} fi ON fi.artefact = a.id
                 LEFT OUTER JOIN {artefact} c ON c.parent = a.id
                 LEFT OUTER JOIN {artefact} api ON api.parent = a.id AND api.artefacttype = \'profileicon\'
                 LEFT OUTER JOIN {view_artefact} va ON va.artefact = a.id
@@ -567,7 +568,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $groupby = '
             GROUP BY
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments,
-                u.profileicon';
+                u.profileicon, fi.orientation';
 
         $phvals = array();
 
@@ -2308,6 +2309,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     protected $width;
     protected $height;
+    protected $orientation;
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -2345,7 +2347,8 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         $data = (object)array(
             'artefact'      => $this->get('id'),
             'width'         => $this->get('width'),
-            'height'        => $this->get('height')
+            'height'        => $this->get('height'),
+            'orientation'   => $this->get('orientation')
         );
 
         if ($new) {
@@ -2380,7 +2383,9 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public function get_local_path($data=array()) {
-        return get_dataroot_image_path('artefact/file/', $this->fileid, $data);
+        require_once('file.php');
+        $result = get_dataroot_image_path('artefact/file/', $this->fileid, $data, $this->orientation);
+        return $result;
     }
 
     public function delete() {
@@ -2480,7 +2485,9 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
     }
 
     public function get_local_path($data=array()) {
-        return get_dataroot_image_path('artefact/file/profileicons/', $this->fileid, $data);
+        require_once('file.php');
+        $result = get_dataroot_image_path('artefact/file/profileicons/', $this->fileid, $data, $this->orientation);
+        return $result;
     }
 
     public function in_view_list() {
@@ -2586,6 +2593,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         $mimetype = get_field('artefact_file_files', 'filetype', 'artefact', $id);
 
         if ($id && $fileid = get_field('artefact_file_files', 'fileid', 'artefact', $id)) {
+            $orientation = get_field('artefact_file_image', 'orientation', 'artefact', $id);
             // Check that the profile icon is allowed to be seen
             // Any profileiconbyid file that has been set as a user's default icon is ok
             // But icons that are not should only be seen by their owner
@@ -2605,7 +2613,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
                     }
                 }
             }
-            if ($path = get_dataroot_image_path('artefact/file/profileicons', $fileid, $size)) {
+            if ($path = get_dataroot_image_path('artefact/file/profileicons', $fileid, $size, $orientation)) {
                 if ($mimetype) {
                     header('Content-type: ' . $mimetype);
 
