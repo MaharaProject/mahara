@@ -1092,12 +1092,12 @@ class Collection {
                     'users' => array($this->get('owner')),
                     'strings' => (object) array(
                         'subject' => (object) array(
-                            'key'     => 'collectionreleasedsubject',
+                            'key'     => 'collectionreleasedsubject1',
                             'section' => 'group',
                             'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
                         ),
                         'message' => (object) array(
-                            'key'     => 'collectionreleasedmessage',
+                            'key'     => 'collectionreleasedmessage1',
                             'section' => 'group',
                             'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
                         ),

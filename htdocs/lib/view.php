@@ -1577,9 +1577,9 @@ class View {
         activity_occurred('maharamessage',
             array(
                 'users' => array($this->get('owner')),
-                'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject', 'group', $this->get('title'),
+                'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject1', 'group', $this->get('title'),
                     $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
-                'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'group', $this->get('title'),
+                'message' => get_string_from_language($ownerlang, 'viewreleasedmessage1', 'group', $this->get('title'),
                     $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
                 'url' => $url,
                 'urltext' => $this->get('title'),
