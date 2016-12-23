@@ -15,12 +15,14 @@
         {{$name}}_newrefinput.focus();
     }
 </script>
-<div id="{{$name}}_list" class="file-wrapper">
+<div id="{{$name}}_list">
     {{if $maxfilesize}}
     <input type="hidden" name="MAX_FILE_SIZE" value="{{$maxfilesize}}">
     {{/if}}
-    <label id="{{$name}}_files_label" class="accessible-hidden sr-only" for="{{$name}}_files_0">{{$title}}</label>
-    <input type="file" id="{{$name}}_files_0" name="{{$name}}_files_0">
+    <div class="file-wrapper">
+        <label id="{{$name}}_files_label" class="accessible-hidden sr-only" for="{{$name}}_files_0">{{$title}}</label>
+        <input type="file" id="{{$name}}_files_0" name="{{$name}}_files_0">
+    </div>
 </div>
 <a class="btn btn-default btn-xs" href="" onclick="{{$name}}_new(); return false;">
     <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
