@@ -739,15 +739,17 @@ abstract class ArtefactType implements IArtefactType {
         safe_require('artefact', 'comment');
         ArtefactTypeComment::delete_comments_onartefacts($artefactids);
 
-        $records = get_records_select_assoc(
-            'artefact',
-            'id IN (' . join(',', array_map('intval', $artefactids)) . ')',
-            null, 'artefacttype', 'id,parent,artefacttype,container'
-        );
+        $sql = 'SELECT a.id, a.parent, a.artefacttype, a.container, i.plugin
+                FROM {artefact} a
+                JOIN {artefact_installed_type} i ON a.artefacttype = i.name
+                WHERE a.id IN (' . join(',', array_fill(0, count($artefactids), '?')) . ')'.
+                ' ORDER BY artefacttype';
+        $records = get_records_sql_assoc($sql, $artefactids);
 
         $containers = array();
         $leaves = array();
         foreach ($records as $r) {
+            safe_require('artefact', $r->plugin);
             if ($r->container) {
                 $containers[$r->artefacttype][] = (int)$r->id;
             }
@@ -756,7 +758,6 @@ abstract class ArtefactType implements IArtefactType {
             }
         }
 
-        safe_require('artefact', 'file');
         // Delete non-containers grouped by artefacttype
         foreach ($leaves as $artefacttype => $ids) {
             $classname = generate_artefact_class_name($artefacttype);
