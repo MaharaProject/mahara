@@ -22,7 +22,20 @@ if (!isset($templatedata['layoutoptions']) || !is_array($templatedata['layoutopt
 }
 
 echo $form_tag;
-$output = '<div id="viewlayout_basic_container" class="basiclayoutfieldset form-group collapsible-group">';
+// set our renderer
+$this->include_plugin('renderer', $this->data['renderer']);
+// page description form
+$output = '<div class="row"><div class="col-md-9">';
+$output .= pieform_render_element($this, $elements['title']);
+$output .= ($elements['urlid']) ? pieform_render_element($this, $elements['urlid']) : '';
+$output .= pieform_render_element($this, $elements['description']);
+$output .= pieform_render_element($this, $elements['tags']);
+$output .= ($elements['ownerformat']) ? pieform_render_element($this, $elements['ownerformat']) : '';
+$output .= ($elements['locked']) ? pieform_render_element($this, $elements['locked']) : '';
+$output .= ($elements['anonymise']) ?pieform_render_element($this, $elements['anonymise']) : '';
+$output .= '</div></div>';
+// Page layout form
+$output .= '<div id="viewlayout_basic_container" class="basiclayoutfieldset form-group collapsible-group">';
 $output .= '<fieldset class="pieform-fieldset basiclayoutfieldset collapsible">'
         . '<legend><h3><a href="#viewlayout_layoutselect_container" data-toggle="collapse" aria-expanded="true" aria-controls="#viewlayout_layoutselect_container" class="">'
         . get_string('basicoptions', 'view')

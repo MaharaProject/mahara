@@ -6766,7 +6766,7 @@ function createview_submit(Pieform $form, $values) {
         }
     }
 
-    redirect(get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id'));
+    redirect(get_config('wwwroot') . 'view/editlayout.php?new=1&id=' . $view->get('id'));
 }
 
 /**
@@ -6826,7 +6826,7 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
                                         $copystatus['artefacts'],
                                         $template->get('title'))
                              );
-        redirect(get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id'));
+        redirect(get_config('wwwroot') . 'view/editlayout.php?new=1&id=' . $view->get('id'));
     }
 }
 
