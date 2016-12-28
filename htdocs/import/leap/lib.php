@@ -1656,7 +1656,13 @@ class PluginImportLeap extends PluginImport {
 
         // DOMDocument wraps the content with '<html><body></body></html>'
         // so we call children() twice to remove it again
-        return $xml->children()->children()->asXML();
+        $children = $xml->children()->children();
+        // We need to return all children of <body> tag
+        $return = '';
+        foreach ($children as $child) {
+            $return .= $child->asXML();
+        }
+        return $return;
     }
 
     private function _fixref($hrefsrc) {
