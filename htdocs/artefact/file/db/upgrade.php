@@ -442,34 +442,6 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2016082900) {
-        log_debug('Drop the old primary key constraint and add new id column from/to the table artefact_file_mime_types');
-        if (is_postgres()) {
-            execute_sql('ALTER TABLE {artefact_file_mime_types}
-                            DROP CONSTRAINT IF EXISTS {artefilemimetype_mim_pk},
-                            ADD COLUMN id SERIAL PRIMARY KEY');
-        }
-        else if (is_mysql()) {
-            execute_sql('ALTER TABLE {artefact_file_mime_types}
-                            DROP PRIMARY KEY,
-                            ADD id INT AUTO_INCREMENT NOT NULL,
-                            ADD PRIMARY KEY ( id )');
-        }
-
-
-        log_debug('Update MIME types for more media files');
-        // 1. OGG See more https://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
-        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'audio/ogg'), (object) array('mimetype' => 'audio/ogg', 'description' => 'ogg'));
-        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'audio/ogg'), (object) array('mimetype' => 'audio/ogg', 'description' => 'oga'));
-        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'video/ogg'), (object) array('mimetype' => 'video/ogg', 'description' => 'ogv'));
-        // 2. 3GPP - https://en.wikipedia.org/wiki/3GP_and_3G2
-        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'audio/3gpp'), (object) array('mimetype' => 'audio/3gpp', 'description' => '3gp'));
-        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'video/3gpp'), (object) array('mimetype' => 'video/3gpp', 'description' => '3gp'));
-
-        log_debug('Add an index of mimetype to the table artefact_file_mime_types');
-        execute_sql('CREATE INDEX mimetypeix ON {artefact_file_mime_types} (mimetype)');
-    }
-
     if ($oldversion < 2016082901) {
         log_debug('Recreate artefact_file_mime_types table');
 
