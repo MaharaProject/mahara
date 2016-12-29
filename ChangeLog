@@ -1,3 +1,17 @@
+16.04.5 (2016-12-29)
+- Bug 1652995: Phpmailer security update (v5.2.21)
+- Bug 1540534: Page comment moderation doesn't affect artefact comments
+- Bug 1603206: Anonymously placed comments end up with system user
+- Bug 1636599: Infinite redirect loop with journals page
+- Bug 1639096: Don't display submitted pages in 'shared with group' sections is broken for pagination
+- Bug 1647220: Error messages on Institution statistics
+- Bug 1647885: Not all file types and mime types get populated on install/upgrade
+- Bug 1603658: "Other license (enter URL)" does not work
+- Bug 1631807: Problem when editing the content on IE11
+- Bug 1638733: Static pages gives js error
+- Bug 1645188: Comment ratings are not accessible - aria-hidden still present
+- Bug 1648089: The pop-up help window pops up when the content is too long
+
 16.04.4 (2016-10-25)
 - Bug 1537861: View layout becomes corrupted when changed
 - Bug 1554247: comments with attachments - attachment titles and links display on main portfolio page
