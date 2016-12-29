@@ -1,3 +1,6 @@
+15.04.11 (2016-12-29)
+- Bug 1652995: Phpmailer security update (v5.2.21)
+
 15.04.10 (2016-10-25)
 - Bug 1594642: missing sessionpath
 - Bug 1597536: import_entry_requests table needs a ctime so we can clean up old partial requests
