@@ -405,7 +405,7 @@ class MaharaMediaPlayer_flash extends MaharaMediaPlayer {
      * @param BlockInstance $block
      * @return array
      */
-    protected static function get_unique_id($artefact, $block) {
+    protected static function get_unique_id(ArtefactType $artefact, BlockInstance $block) {
         return 'blocktype_internalmedia_flash_' . parent::get_unique_id($artefact, $block);
     }
 
@@ -572,7 +572,7 @@ class MaharaMediaPlayer_html5audio extends MaharaMediaPlayer {
      */
     const VIDEOJS_CONTROL_HEIGHT = 30;
 
-    protected static function get_unique_id($artefact, $block) {
+    protected static function get_unique_id(ArtefactType $artefact, BlockInstance $block) {
         return 'audio_' . parent::get_unique_id($artefact, $block);
     }
 
@@ -609,7 +609,7 @@ class MaharaMediaPlayer_html5audio extends MaharaMediaPlayer {
         return 'videojs/video.js';
     }
 
-    public static function get_js_initjs(ArtefactTypeFile $artefact, BlockInstance $block, $width, $height) {
+    public static function get_js_initjs(ArtefactType $artefact, BlockInstance $block, $width, $height) {
         return 'videojs(
             "' . self::get_unique_id($artefact, $block) . '",
             {
@@ -627,7 +627,7 @@ class MaharaMediaPlayer_html5audio extends MaharaMediaPlayer {
  */
 class MaharaMediaPlayer_html5video extends MaharaMediaPlayer {
 
-    protected static function get_unique_id($artefact, $block) {
+    protected static function get_unique_id(ArtefactType $artefact, BlockInstance $block) {
         return 'video_' . parent::get_unique_id($artefact, $block);
     }
 
@@ -663,7 +663,7 @@ class MaharaMediaPlayer_html5video extends MaharaMediaPlayer {
         return 'videojs/video.js';
     }
 
-    public static function get_js_initjs(ArtefactTypeFile $artefact, BlockInstance $block, $width, $height) {
+    public static function get_js_initjs(ArtefactType $artefact, BlockInstance $block, $width, $height) {
         global $CFG;
         return 'videojs(
             "' . self::get_unique_id($artefact, $block) . '",
