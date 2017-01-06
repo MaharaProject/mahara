@@ -1123,7 +1123,7 @@ class Theme {
     }
 
     public function facebook_logo() {
-        return $this->get_url('images/site-logo4facebook.png');
+        return $this->get_url('../images/site-logo-facebook.png');
     }
 
     public function additional_stylesheets() {
