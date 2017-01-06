@@ -232,6 +232,7 @@ function check_test_site_config() {
         $contents = '$CFG->behat_wwwroot, $CFG->behat_dbprefix and $CFG->behat_dataroot' .
                         ' are currently used as $CFG->wwwroot, $CFG->dbprefix and $CFG->dataroot';
         $filepath = self::get_test_file_path();
+        check_dir_exists($filepath, true);
         if (!file_put_contents($filepath, $contents)) {
             behat_error(BEHAT_MAHARA_EXITCODE_NOTWRITABLEDATAROOT, 'File ' . $filepath . ' can not be created');
         }
