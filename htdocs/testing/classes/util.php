@@ -552,10 +552,7 @@ abstract class TestingUtil {
 
         // Create the folder 'behat' in dataroot
         $dirpath = self::get_dataroot() . '/' . self::get_framework();
-log_debug('dirpath: ' . $dirpath);
-        if (!file_exists($dirpath)) {
-            mkdir($dirpath);
-        }
+        check_dir_exists($dirpath, true);
 
     }
 
