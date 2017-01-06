@@ -5,6 +5,8 @@
     <meta property="og:title" content="{$PAGETITLE}" />
     <meta property="og:description" content="{$sitedescription4facebook}" />
     <meta property="og:image" content="{$sitelogo4facebook}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0" />
     {if isset($PAGEAUTHOR)}<meta name="author" content="{$PAGEAUTHOR}">{/if}
     <title>{$PAGETITLE}</title>
