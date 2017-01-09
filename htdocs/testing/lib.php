@@ -165,7 +165,7 @@ function testing_update_dependencies() {
     if (file_exists($composerroot . '/composer.json')
         && file_exists($composerroot . '/composer.phar')
         && file_exists($composerroot . '/composer.lock')) {
-        echo "Updating composer dependencies...\n";
+        echo "Verifying that composer dependencies are up to date...\n";
         passthru("php {$composerroot}/composer.phar update\
             --working-dir={$composerroot}\
             --no-interaction --quiet --no-dev", $errorcode);
