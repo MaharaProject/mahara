@@ -101,6 +101,7 @@ class BehatConfigManager {
         $contents = self::get_config_file_contents($suites);
 
         // Stores the file.
+        check_dir_exists(dirname($configfilepath), true, true);
         if (!file_put_contents($configfilepath, $contents)) {
             behat_error(BEHAT_MAHARA_EXITCODE_BADPERMISSIONS, 'File ' . $configfilepath . ' can not be created');
         }
