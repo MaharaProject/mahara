@@ -72,10 +72,6 @@ class BehatCommand {
             return BEHAT_EXITCODE_NOTINSTALLED;
         }
 
-        if (!self::is_behat_updated()) {
-            return BEHAT_EXITCODE_NOTUPDATED;
-        }
-
         // Run behat command.
         list($output, $code) = self::run(' --help');
         if ($code != 0) {
@@ -94,24 +90,6 @@ class BehatCommand {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Returns TRUE if the composer lock file is up to date
-     * @return bool
-     */
-    public static function is_behat_updated() {
-        $composerroot = get_composerroot_dir();
-        if (file_exists($composerroot.DIRECTORY_SEPARATOR.'composer.lock')
-            && file_exists($composerroot.DIRECTORY_SEPARATOR.'composer.json')) {
-            $lock = json_decode(file_get_contents($composerroot.DIRECTORY_SEPARATOR.'composer.lock'))->hash;
-            $json = md5(file_get_contents($composerroot.DIRECTORY_SEPARATOR.'composer.json'));
-
-            if ($lock === $json) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

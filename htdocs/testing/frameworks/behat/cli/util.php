@@ -13,7 +13,7 @@
 /**
  * CLI tool to manage Behat integration in Mahara
  *
- * Like Moodle, This tool uses 
+ * Like Moodle, This tool uses
  * $CFG->behat_dataroot for $CFG->dataroot
  * and $CFG->behat_dbprefix for $CFG->dbprefix
  */
@@ -124,19 +124,24 @@ if ($statuscode == BEHAT_EXITCODE_CANNOTRUN) {
 
 try {
     if ($cli->get_cli_param('init')) {
+
+        // No need to init; already initialized.
+        if ($statuscode === 0) {
+            cli::cli_exit("The Behat test environment is already installed and active", 0);
+        }
+
         cli::cli_print("Initializing the test site...");
+        if ($statuscode === BEHAT_EXITCODE_NOTINSTALLED) {
+            // Install behat and dependencies using composer
+            testing_install_dependencies();
+        }
+        else {
+            // Update behat and dependencies using composer
+            testing_update_dependencies();
+        }
+
+        // Other possible actions we may need to take.
         switch ($statuscode) {
-            case 0:
-                cli::cli_exit("The Behat test environment is installed and enabled");
-                break;
-            case BEHAT_EXITCODE_NOTINSTALLED:
-                // Install behat and dependencies using composer
-                testing_install_dependencies();
-                break;
-            case BEHAT_EXITCODE_NOTUPDATED:
-                // Update behat and dependencies using composer
-                testing_update_dependencies();
-                break;
             case BEHAT_MAHARA_EXITCODE_NOTINSTALLED:
                 BehatTestingUtil::install_site();
                 break;
@@ -152,6 +157,8 @@ try {
                 behat_error($statuscode);
                 break;
         }
+
+        // Now that all setup should be complete, start up test mode.
         BehatTestingUtil::start_test_mode();
     }
     else if ($cli->get_cli_param('install')) {
