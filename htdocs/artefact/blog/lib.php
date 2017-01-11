@@ -555,7 +555,7 @@ class ArtefactTypeBlog extends ArtefactType {
                     'alt' => get_string('deletespecific', 'mahara', $title),
                     'elementtitle' => get_string('delete'),
                     'confirm' => $confirm,
-                    'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
+                    'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('deletespecific', 'mahara', $title) . '</span>',
                 ),
                 'delete' => array(
                     'type' => 'hidden',
@@ -1009,7 +1009,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             // Format dates properly
             if (is_null($viewoptions)) {
                 // My Blogs area: create forms for changing post status & deleting posts.
-                $post->changepoststatus = ArtefactTypeBlogpost::changepoststatus_form($post->id, $post->published);
+                $post->changepoststatus = ArtefactTypeBlogpost::changepoststatus_form($post->id, $post->published, $post->title);
                 $post->delete = ArtefactTypeBlogpost::delete_form($post->id, $post->title);
             }
             else {
@@ -1121,17 +1121,18 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return true;
     }
 
-    public static function changepoststatus_form($id, $published = null) {
+    public static function changepoststatus_form($id, $published = null, $title = null) {
         //Get current post status from database
-        if ($published === null) {
+        if ($published === null || $title === null) {
             $post = new ArtefactTypeBlogPost($id);
-            $published = $post->published;
+            $published = empty($published) ? $post->published : $published;
+            $title = empty($title) ? $post->title : $title;
         }
         if ($published) {
-            $strchangepoststatus = '<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span> ' .get_string('unpublish', 'artefact.blog');
+            $strchangepoststatus = '<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('unpublishspecific', 'artefact.blog', $title) . '</span> ' . get_string('unpublish', 'artefact.blog');
         }
         else {
-            $strchangepoststatus = '<span class="icon icon-check icon-lg left text-success" role="presentation" aria-hidden="true"></span> ' . get_string('publish', 'artefact.blog');
+            $strchangepoststatus = '<span class="icon icon-check icon-lg left text-success" role="presentation" aria-hidden="true"></span><span class="sr-only"> ' . get_string('publishspecific', 'artefact.blog', $title) . '</span> ' . get_string('publish', 'artefact.blog');
         }
         return pieform(array(
             'name' => 'changepoststatus_' . $id,
@@ -1178,7 +1179,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'class' => 'btn-default btn-sm',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
-                    'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' .get_string('delete') . '</span>',
+                    'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('deletespecific', 'mahara', $title) . '</span>',
                 ),
             ),
         ));

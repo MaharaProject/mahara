@@ -22,6 +22,7 @@ $string['institutionblogs'] = 'Institution journals';
 $string['groupblogs'] = 'Group journals';
 $string['addblog'] = 'Create journal';
 $string['addpost'] = 'New entry';
+$string['addpostspecific'] = 'New entry "%s"';
 $string['alignment'] = 'Alignment';
 $string['allowcommentsonpost'] = 'Allow comments on your entry.';
 $string['allposts'] = 'All entries';
@@ -104,8 +105,10 @@ $string['nposts'] = array(
 );
 
 $string['publish'] = 'Publish';
+$string['publishspecific'] = 'Publish "%s"';
 $string['publishit'] = 'Publish it.';
 $string['unpublish'] = 'Unpublish';
+$string['unpublishspecific'] = 'Unpublish "%s"';
 $string['publishfailed'] = 'An error occurred. Your entry was not published.';
 $string['publishblogpost?'] = 'Are you sure you want to publish this entry?';
 $string['published'] = 'Published';

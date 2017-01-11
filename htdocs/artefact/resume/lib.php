@@ -1080,7 +1080,9 @@ EOF;
         $deljsstr = json_encode(get_string('deletespecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
 
         $upstr = get_string('moveup', 'artefact.resume');
+        $upjsstr = json_encode(get_string('moveupspecific', 'artefact.resume', '%s')) . ".replace('%s', {$titlestring})";
         $downstr = get_string('movedown', 'artefact.resume');
+        $downjsstr = json_encode(get_string('movedownspecific', 'artefact.resume', '%s')) . ".replace('%s', {$titlestring})";
 
         $js = call_static_method(generate_artefact_class_name($compositetype), 'get_composite_js');
 
@@ -1099,7 +1101,7 @@ EOF;
                 var up =
                     A({'href': '', 'class': 'moveup'},
                         SPAN({'class': 'icon icon-long-arrow-up','role':'presentation'}),
-                        SPAN({'class': 'sr-only'}, '{$upstr}'));
+                        SPAN({'class': 'sr-only'}, {$upjsstr}));
                 connect(up, 'onclick', function (e) {
                     e.stop();
                     return moveComposite(d.type, r.id, r.artefact, 'up');
@@ -1110,7 +1112,7 @@ EOF;
                 var down =
                     A({'href': '', 'class':'movedown'},
                         SPAN({'class': 'icon icon-long-arrow-down', 'role':'presentation'}),
-                        SPAN({'class': 'sr-only'}, '{$downstr}'));
+                        SPAN({'class': 'sr-only'}, {$downjsstr}));
                 connect(down, 'onclick', function (e) {
                     e.stop();
                     return moveComposite(d.type, r.id, r.artefact, 'down');
@@ -1129,7 +1131,7 @@ EOF;
             var editlink =
                 A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}, 'class': 'btn btn-default btn-xs'},
                     SPAN({'class': 'icon icon-pencil icon-lg', 'role':'presentation'}),
-                    SPAN({'class': 'sr-only'}, {$editstr}));
+                    SPAN({'class': 'sr-only'}, {$editjsstr}));
             var dellink =
                 A({'href': '', 'title': {$delstr}, 'class': 'btn btn-default btn-xs'},
                     SPAN({'class': 'icon icon-trash text-danger icon-lg','role':'presentation'}),
