@@ -97,9 +97,10 @@ class PluginImportFile extends PluginImport {
         $savedfiles = array(); // to put files into so we can delete them should we encounter an exception
         foreach ($this->files as $f) {
             try {
+                $explode_wantsfilename = explode('.', $f->wantsfilename);
                 $data = (object)array(
                     'title' => $f->wantsfilename,
-                    'oldextension' => end(explode('.', $f->wantsfilename)),
+                    'oldextension' => end($explode_wantsfilename),
                     'description' => $f->wantsfilename . ' (' . get_string('importedfrom', 'mahara', $this->get('importertransport')->get_description()) . ')',
                     'parent' => $this->importdir,
                     'owner' => $this->get('usr'),

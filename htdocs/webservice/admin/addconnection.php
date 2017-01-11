@@ -362,7 +362,8 @@ $typeopts = array();
 foreach (array('rest', 'soap', 'xmlrpc') as $proto) {
     $typeopts[$proto] = get_string($proto, 'auth.webservice');
 }
-$default_type = (empty($dbconnection->type) ?  array_shift(array_keys($typeopts)) : $dbconnection->type);
+$typeopts_keys = array_keys($typeopts);
+$default_type = (empty($dbconnection->type) ?  array_shift($typeopts_keys) : $dbconnection->type);
 $connection_details['elements']['type'] = array(
     'type'         => 'select',
     'title'        => get_string('type', 'auth.webservice'),

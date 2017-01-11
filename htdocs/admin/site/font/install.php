@@ -196,7 +196,8 @@ function addfontform_validate(Pieform $form, $values) {
                     }
                     // Check that all the needed files exist in the zip file
                     foreach ($check as $key => $item) {
-                        if (end(explode('.', $zip->getNameIndex($i))) == $item['suffix']) {
+                        $name_explode = explode('.', $zip->getNameIndex($i));
+                        if (end($name_explode) == $item['suffix']) {
                             $check[$key]['found'] = true;
                         }
                     }
@@ -256,7 +257,8 @@ function addfontform_submit(Pieform $form, $values) {
                 // Check that all the needed files exist in the zip file
                 $check = uploadfiles_info();
                 foreach ($check as $key => $item) {
-                    if (end(explode('.', $zip->getNameIndex($i))) == $item['suffix']) {
+                    $name_explode = explode('.', $zip->getNameIndex($i));
+                    if (end($name_explode) == $item['suffix']) {
                         // Extract font file
                         $zip->extractTo($fontpath, $zip->getNameIndex($i));
                         $values['fontfile' . strtoupper($item['suffix'])]['name'] = $zip->getNameIndex($i);
