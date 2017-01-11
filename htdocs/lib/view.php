@@ -312,7 +312,8 @@ class View {
         $this->dirtycolumns = array();
 
         // set only for existing views - _create provides default value
-        if (empty($this->columnsperrow)) {
+        // Ignore if the constructor is called with deleted set to true
+        if (empty($this->columnsperrow) && empty($this->deleted)) {
             $this->columnsperrow = get_records_assoc('view_rows_columns', 'view', $this->get('id'), 'row', 'row, columns');
             if (empty($this->columnsperrow)) {
                 // if we are missing the info for some reason we will give the page it's layout back
