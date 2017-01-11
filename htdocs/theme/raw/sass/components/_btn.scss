@@ -344,9 +344,15 @@ td.action-list-copy {
     }
 }
 
-.btn-with-heading {
-    float: right;
-    margin-top:-75px;
+// Fix the compose button positionning in the inbox/sent notifications pages.
+.notifications + #messages + h1 {
+    border-bottom: none;
+    display: inline-block;
+    margin-bottom: 0;
+    padding-bottom: 6.5px;
+    + .btn-with-heading {
+        float: right;
+    }
 }
 
 .collapsible-group + .button {
