@@ -80,7 +80,7 @@ else {
     $javascript .= 'results.query = \'\';';
 }
 
-$smarty = smarty(array('tablerenderer'), array(), array(), array('sidebars' => true));
+$smarty = smarty(array('tablerenderer', 'Pager'), array(), array(), array('sidebars' => true));
 $smarty->assign('query', $query);
 $smarty->assign('artefacttype', $artefacttype);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
