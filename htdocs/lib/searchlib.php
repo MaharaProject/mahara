@@ -930,14 +930,14 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
 
     if ($results['count']) {
         $userids = array_map(create_function('$a', 'return $a["id"];'), $results['data']);
-        $introductions = get_records_sql_assoc("SELECT \"owner\", title
+        $introductions = get_records_sql_assoc("SELECT \"owner\", description
             FROM {artefact}
             WHERE artefacttype = 'introduction'
             AND \"owner\" IN (" . implode(',', db_array_to_ph($userids)) . ')',
             $userids);
         foreach ($results['data'] as &$result) {
             $result['name'] = display_name($result);
-            $result['introduction'] = isset($introductions[$result['id']]) ? $introductions[$result['id']]->title : '';
+            $result['introduction'] = isset($introductions[$result['id']]) ? $introductions[$result['id']]->description : '';
             if (isset($result['jointime'])) {
                 $result['jointime'] = format_date($result['jointime'], 'strftimedate');
             }
