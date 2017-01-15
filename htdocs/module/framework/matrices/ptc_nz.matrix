@@ -6,9 +6,9 @@
      "evidencestatuses":
       [
         {"begun":"Ready for assessment"},
-        {"incomplete":"Doesn't meet the criterium"},
-        {"partialcomplete":"Partially meets the criterium"},
-        {"completed":"Meets the criterium"}
+        {"incomplete":"Doesn't meet the criterion"},
+        {"partialcomplete":"Partially meets the criterion"},
+        {"completed":"Meets the criterion"}
       ],
       "standards":
       [
