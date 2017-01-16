@@ -621,14 +621,26 @@ class Collection {
 
     /**
      * Check that a collection can have a framework
-     * - The collection is not owned by a group
-     * - The framework plugin is active
-     * - The institution has 'SmartEvidence' turned on
-     * - There frameworks available for the institution
      *
      * @return bool
      */
     public function can_have_framework() {
+        return ($this->get_framework_institution()) ? true : false;
+    }
+
+    /**
+     * Check if any allowed institutions lets a collection have a framework
+     * and return first valid one.
+     *
+     * Checks:
+     * - The collection is not owned by a group
+     * - The framework plugin is active
+     * - The institution has 'SmartEvidence' turned on
+     * - There are frameworks available for the institutions
+     *
+     * @return object $institution or false
+     */
+     public function get_framework_institution() {
         if (!empty($this->group)) {
             return false;
         }
@@ -636,22 +648,31 @@ class Collection {
         if (!is_plugin_active('framework', 'module')) {
             return false;
         }
-
+        $allowsmartevidence = false;
         if ($this->institution) {
             $institution = $this->institution;
+            $institution = new Institution($institution);
+            $allowsmartevidence = ($institution->allowinstitutionsmartevidence) ? $institution : false;
         }
         else {
             $user = new User();
             $user->find_by_id($this->owner);
-            $institutions = array_keys($user->get('institutions'));
-            $institution = (!empty($institutions)) ? $institutions[0] : 'mahara';
+            $institutionids = array_keys($user->get('institutions'));
+            if (!empty($institutionids)) {
+                foreach ($institutionids as $institution) {
+                    $institution = new Institution($institution);
+                    if ($institution->allowinstitutionsmartevidence == true) {
+                        $allowsmartevidence = $institution;
+                        break;
+                    }
+                }
+            }
+            else {
+                $institution = new Institution('mahara');
+                $allowsmartevidence = ($institution->allowinstitutionsmartevidence) ? $institution : false;
+            }
         }
-        $institution = new Institution($institution);
-        // Check that smart evidence is enabled for the institution
-        if (!$institution->allowinstitutionsmartevidence) {
-            return false;
-        }
-        return true;
+        return $allowsmartevidence;
     }
 
     /**
@@ -660,23 +681,9 @@ class Collection {
      * @return array Available frameworks
      */
     public function get_available_frameworks() {
-        if (!$this->can_have_framework()) {
+        $institution = $this->get_framework_institution();
+        if (!$institution) {
             return array();
-        }
-
-        if ($this->institution) {
-            $institution = $this->institution;
-        }
-        else {
-            $user = new User();
-            $user->find_by_id($this->owner);
-            $institutions = array_keys($user->get('institutions'));
-            $institution = (!empty($institutions)) ? $institutions[0] : 'mahara';
-        }
-        $institution = new Institution($institution);
-        // Check that smart evidence is enabled for the institution
-        if (!$institution->allowinstitutionsmartevidence) {
-            return false;
         }
 
         if ($frameworks = Framework::get_frameworks($institution->name, true)) {
