@@ -4856,5 +4856,10 @@ function xmldb_core_upgrade($oldversion=0) {
             WHERE (institution IS NULL OR institution = '') AND deleted = 0", array());
     }
 
+    if ($oldversion < 2017011800) {
+        log_debug('Bump cache version to fetch new favicon');
+        bump_cache_version();
+    }
+
     return $status;
 }
