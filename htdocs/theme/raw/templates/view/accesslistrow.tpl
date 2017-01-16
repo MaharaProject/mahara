@@ -37,10 +37,10 @@
         <span class="sr-only">{str tag=editaccess}</span>
     </a>
 </td>
-<td class="secreturls text-right tiny active">
+<td class="secreturls text-center tiny active">
     <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" class="text-default">
         <span>{$item.secreturls}</span>
-        <span class="icon icon-globe icon-lg right" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-globe icon-lg" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag=edit}</span>
     </a>
 </td>
