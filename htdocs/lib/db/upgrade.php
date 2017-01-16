@@ -4534,5 +4534,10 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records('usr_watchlist_view', 'usr', 0);
     }
 
+    if ($oldversion < 2016033125) {
+        log_debug('Bump cache version to fetch new favicon');
+        bump_cache_version();
+    }
+
     return $status;
 }
