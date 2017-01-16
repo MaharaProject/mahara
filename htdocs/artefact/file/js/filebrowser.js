@@ -8,7 +8,8 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 
-function FileBrowser(idprefix, folderid, config, globalconfig) {
+var FileBrowser = (function($) {
+  return function (idprefix, folderid, config, globalconfig) {
 
     var self = this;
     this.id = idprefix;
@@ -21,14 +22,14 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.createfolder_is_connected = false;
 
     this.init = function () {
-        self.form = getFirstParentByTagAndClassName(self.id + '_filelist_container', 'form', 'pieform');
+        self.form = $('#' + self.id + '_filelist_container').closest('form.pieform')[0];
         if (!self.form) {
             alert('Filebrowser error 1');
         }
         if (self.config.select && typeof(self.form.submit) != 'function') {
             // logWarn('Filebrowser error 2'); // Rename your submit element to something other than "submit".
         }
-        self.foldername = $(self.id + '_foldername').value;
+        self.foldername = $('#' + self.id + '_foldername').val();
         if (self.config.select) {
             self.select_init();
         }
@@ -40,104 +41,112 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             self.edit_init();
         }
 
-    }
+    };
 
     this.submitform = function () {
-        signal(self.form, 'onsubmit');
+        signal(self.form, 'onsubmit'); // MochiKit to be removed after cleanup
+        $(self.form).triggerHandler('submit');
         self.form.submit();
     };
 
     this.upload_init = function () {
-        if ($(self.id + '_notice')) {
+        if ($('#' + self.id + '_notice').length) {
             // If the file input is disabled immediately without this delay, later javascript changes
             // to the filebrowser are not rendered by Chrome when the filebrowser is inside a block
             // configuration form.
-            callLater(0.0001, function() { setNodeAttribute(self.id + '_userfile', 'disabled', true); });
+            setTimeout(function () {
+                $('#' + self.id + '_userfile').prop('disabled', true);
+            }, 1);
         }
-        if (!$(self.id + '_upload')) {
-            insertSiblingNodesAfter(self.id + '_uploadnumber', INPUT({
-                'type': 'hidden',
-                'name': self.id + '_upload',
-                'id' : self.id + '_upload',
-                'value':0
-            }));
+        if (!$('#' + self.id + '_upload').length) {
+
+          $('<input>', {
+              'type': 'hidden',
+              'name': self.id + '_upload',
+              'id' : self.id + '_upload',
+              'value':0
+          }).insertAfter($('#' + self.id + '_uploadnumber'));
         }
         self.upload_connectbuttons();
-    }
+    };
 
     this.upload_connectbuttons = function () {
-        if ($(self.id + '_notice')) {
-            connect(self.id + '_notice', 'onclick', function (e) {
+        if ($('#' + self.id + '_notice').length) {
+          $('#' + self.id + '_notice').on('click', function (e) {
                 // error class is too general?
-                forEach(getElementsByTagAndClassName('div', 'error', self.id + '_upload_messages'), removeElement);
+                $('#' + self.id + '_upload_messages div.error').each(function(el) {
+                    $(el).remove();
+                });
                 if (this.checked) {
-                    $(self.id + '_userfile').disabled = false; // setNodeAttribute to false doesn't work here.
+                    $('#'+ self.id + '_userfile').prop('disabled', false); // setNodeAttribute to false doesn't work here.
                 } else {
-                    setNodeAttribute(self.id + '_userfile', 'disabled', true);
+                    $('#'+ self.id + '_userfile').prop('disabled', true);
                 }
             });
         }
-        connect(self.id + '_userfile', 'onchange', self.upload_submit);
-    }
+        $('#' + self.id + '_userfile').on('change', self.upload_submit);
+    };
 
     this.upload_validate_dropzone = function () {
-        if ($(self.id + '_notice') && !$(self.id + '_notice').checked) {
+        if ($('#' + self.id + '_notice').length && !$('#' + self.id + '_notice').prop('checked')) {
             return get_string('youmustagreetothecopyrightnotice');
         }
         return false;
-    }
+    };
 
     this.upload_validate = function () {
-        if ($(self.id + '_notice') && !$(self.id + '_notice').checked) {
-            appendChildNodes(self.id+'_upload_messages', DIV({'class':'error'}, get_string('youmustagreetothecopyrightnotice')));
+        if ($('#' + self.id + '_notice').length && !$('#' + self.id + '_notice').prop('checked')) {
+            $('#' + self.id+'_upload_messages').append($('<div>', {'class':'error'}), get_string('youmustagreetothecopyrightnotice'));
             return false;
         }
-        return !isEmpty($(self.id + '_userfile').value);
-    }
+        return !isEmpty($('#' + self.id + '_userfile').val());
+    };
 
     this.upload_presubmit_dropzone = function (e) {
         // Display upload status
         self.nextupload++;
-        var message = makeMessage(DIV(null,
-            SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
+        var message = makeMessage($('<div>').append(
+            $('<span>', {'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
             get_string('uploadingfiletofolder','artefact.file',e.name,self.foldername)
             ), 'info');
-        setNodeAttribute(message, 'id', 'uploadstatusline' + self.nextupload);
-        appendChildNodes(self.id + '_upload_messages', message);
-        $(self.id+'_uploadnumber').value = self.nextupload;
+        $(message).prop('id', 'uploadstatusline' + self.nextupload);
+        $('#' + self.id + '_upload_messages').append(message);
+        $('#' + self.id + '_uploadnumber').val(self.nextupload);
         return true;
-    }
+    };
 
     this.upload_presubmit = function (e) {
         // Display upload status
-        if ($(self.id + '_userfile').files) {
-            for (var i = 0; i < $(self.id + '_userfile').files.length; ++ i) {
+        if ($('#' + self.id + '_userfile').prop('files')) {
+            for (var i = 0; i < $('#' + self.id + '_userfile').prop('files').length; ++ i) {
                 self.nextupload++;
-                var localname = $(self.id + '_userfile').files[i].name;
-                var message = makeMessage(DIV(null,
-                    SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
-                    get_string('uploadingfiletofolder','artefact.file',localname,self.foldername)
-                    ), 'ok');
-                setNodeAttribute(message, 'id', 'uploadstatusline' + self.nextupload);
-                appendChildNodes(self.id + '_upload_messages', message);
+                var localname = $('#' + self.id + '_userfile').prop('files')[i].name;
+                var a1, a2;
+                var message = makeMessage($('<div>').append(
+                  $('<span>', {'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
+                  get_string('uploadingfiletofolder','artefact.file',localname,self.foldername)
+                ), 'ok');
+                $(message).prop('id', 'uploadstatusline' + self.nextupload);
+                $('#' + self.id + '_upload_messages').append(message);
             }
         }
-        $(self.id+'_uploadnumber').value = self.nextupload;
+        $('#' + self.id+'_uploadnumber').val(self.nextupload);
         return true;
-    }
+    };
 
     this.upload_submit = function (e) {
-        e.stop();
+        e.preventDefault();
         if (!self.upload_validate()) {
             return false;
         }
 
         self.upload_presubmit();
-        $(self.id + '_upload').value = 1;
+        $('#' + self.id + '_upload').val(1);
         self.submitform();
 
         // $(self.id + '_userfile').value = ''; // Won't work in IE
-        replaceChildNodes(self.id + '_userfile_container', INPUT({
+        $('#' + self.id + '_userfile_container').empty().append(
+            $('<input>', {
             'type':'file',
             'class':'file',
             'id':self.id+'_userfile',
@@ -145,10 +154,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             'multiple':'',
             'size':40
         }));
-        connect(self.id + '_userfile', 'onchange', self.upload_submit);
-        $(self.id + '_upload').value = 0;
+        $('#' + self.id + '_userfile').on('change', self.upload_submit);
+        $('#' + self.id + '_upload').val(0);
         return false;
-    }
+    };
 
     this.fileexists = function (filename, id) {
         for (var i in self.filedata) {
@@ -157,11 +166,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         }
         return false;
-    }
+    };
 
     this.createfolder_submit = function (e) {
         var message;
-        var name = $(self.id + '_createfolder_name');
+        var name = $('#' + self.id + '_createfolder_name')[0];
         if (!name) {
             message = get_string('foldernamerequired');
         }
@@ -178,21 +187,21 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         }
         if (message) {
-            e.stop();
-            replaceChildNodes(self.id + '_createfolder_messages', makeMessage(message, 'error'));
+            e.preventDefault();
+            $('#' + self.id + '_createfolder_messages').empty().append(makeMessage(message, 'error'));
             return false;
         }
         progressbarUpdate('folder');
-    }
+    };
 
     this.edit_submit = function (e) {
         var message;
-        var name = $(self.id + '_edit_title');
-        if (!name) {
+        var name = $('#' + self.id + '_edit_title');
+        if (!name.length) {
             message = get_string('namefieldisrequired');
         }
         else {
-            name = name.value.trim();
+            name = name.val().trim();
             if (name == '') {
                 message = get_string('namefieldisrequired');
             }
@@ -204,11 +213,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         }
         if (message) {
-            e.stop();
-            replaceChildNodes(self.id + '_edit_messages', makeMessage(message, 'error'));
+            e.preventDefault();
+            $('#' + self.id + '_edit_messages').append(makeMessage(message, 'error'));
             return false;
         }
-    }
+    };
 
     this.callback_feedback = function (data) {
         var infoclass = 'info';
@@ -227,134 +236,133 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             // pass the artefacttype to update progress bar
             progressbarUpdate(data.artefacttype, data.deleted);
         }
-        var newmessage = makeMessage(DIV(null,' ', data.message), infoclass);
-        setNodeAttribute(newmessage, 'id', 'uploadstatusline' + data.uploadnumber);
+        var newmessage = makeMessage($('<div>').append(data.message), infoclass);
+        $(newmessage).prop('id', 'uploadstatusline' + data.uploadnumber);
         if (data.uploadnumber) {
-            removeElement($('uploadstatusline'+data.uploadnumber));
+            $('#uploadstatusline'+data.uploadnumber).remove();
         }
-        appendChildNodes(self.id + '_upload_messages', newmessage);
-    }
+        $('#' + self.id + '_upload_messages').append(newmessage);
+    };
 
     this.hide_edit_form = function () {
 
-        var editrow = $(self.id + '_edit_row');
-        if (!hasElementClass(editrow, 'hidden')) {
+        var editrow = $('#' + self.id + '_edit_row');
+        if (!editrow.hasClass('hidden')) {
             if ((typeof formchangemanager !== 'undefined') && !formchangemanager.confirmLeavingForm()) {
                 return false;
             }
-            addElementClass(editrow, 'hidden');
+            editrow.addClass('hidden');
             // Reconnect the old edit button to open the form
-            if (editrow.previousSibling) {
-                forEach(getElementsByTagAndClassName('button', null, editrow.previousSibling), function (elem) {
-                    var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
+            if (editrow[0].previousSibling) {
+                $(editrow[0].previousSibling).find('button').each(function () {
+                    var name = $(this).prop('name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
                     if (name && name[1] && name[1] == 'edit') {
-                        disconnectAll(elem);
-                        connect(elem, 'onclick', self.edit_form);
+                        $(this).off();
+                        $(this).on('click', self.edit_form);
                     }
                 });
             }
         }
         return true;
-    }
+    };
 
     this.edit_form = function (e) {
-        e.stop();
+        e.preventDefault();
 
         // In IE, this.value is set to the button text
-        var id = getNodeAttribute(this, 'name').replace(/.*_edit\[(\d+)\]$/, '$1');
+        var id = $(this).prop('name').replace(/.*_edit\[(\d+)\]$/, '$1');
 
         if (!self.hide_edit_form()) {
             return;
         }
-        $(self.id + '_edit_heading').innerHTML = self.filedata[id].artefacttype == 'folder' ? get_string('editfolder') : get_string('editfile');
-        var descriptionrow = getFirstParentByTagAndClassName($(self.id + '_edit_description'), 'tr');
+        $('#' + self.id + '_edit_heading').html(self.filedata[id].artefacttype == 'folder' ? get_string('editfolder') : get_string('editfile'));
+        var descriptionrow = $('#' + self.id + '_edit_description').closest('tr');
         if (self.filedata[id].artefacttype == 'profileicon') {
-            addElementClass(descriptionrow, 'hidden');
+            descriptionrow.addClass('hidden');
         }
         else {
-            removeElementClass(descriptionrow, 'hidden');
+            descriptionrow.removeClass('hidden');
         }
-        $(self.id + '_edit_title').value = self.filedata[id].title;
-        $(self.id + '_edit_description').value = self.filedata[id].description == null ? '' : self.filedata[id].description;
-        if ($(self.id + '_edit_license')) {
+        $('#' + self.id + '_edit_title').val(self.filedata[id].title);
+        $('#' + self.id + '_edit_description').val(self.filedata[id].description == null ? '' : self.filedata[id].description);
+        if ($('#' + self.id + '_edit_license').length) {
             if (self.filedata[id].license == null) {
-                $(self.id + '_edit_license').value = ''
+                $('#' + self.id + '_edit_license').val('');
             }
             else {
-                $(self.id + '_edit_license').value = self.filedata[id].license;
-                if ($(self.id + '_edit_license').value != self.filedata[id].license) {
+                $('#' + self.id + '_edit_license').val(self.filedata[id].license);
+                if ($('#' + self.id + '_edit_license').val() != self.filedata[id].license) {
                     // Doesn't exist in the select box, add it!
-                    var new_option = jQuery('<option/>');
+                    var new_option = $('<option>');
                     new_option.attr('value', self.filedata[id].license);
                     new_option.text(self.filedata[id].license);
-                    jQuery($(self.id + '_edit_license')).append(new_option);
-                    $(self.id + '_edit_license').value = self.filedata[id].license;
+                    $('#' + self.id + '_edit_license').append(new_option);
+                    $('#' + self.id + '_edit_license').val(self.filedata[id].license);
                 }
             }
-            $(self.id + '_edit_licensor').value = self.filedata[id].licensor == null ? '' : self.filedata[id].licensor;
-            $(self.id + '_edit_licensorurl').value = self.filedata[id].licensorurl == null ? '' : self.filedata[id].licensorurl;
-            pieform_select_other($(self.id + '_edit_license'));
+            $('#' + self.id + '_edit_licensor').val(self.filedata[id].licensor == null ? '' : self.filedata[id].licensor);
+            $('#' + self.id + '_edit_licensorurl').val(self.filedata[id].licensorurl == null ? '' : self.filedata[id].licensorurl);
+            pieform_select_other($('#' + self.id + '_edit_license')[0]);
         }
-        $(self.id + '_edit_allowcomments').checked = self.filedata[id].allowcomments;
+        $('#' + self.id + '_edit_allowcomments').prop('checked', self.filedata[id].allowcomments);
 
-        $(self.id + '_edit_tags').selectedIndex = -1;
+        $('#' + self.id + '_edit_tags').prop('selectedIndex', -1);
         self.tag_select2_clear(self.id + '_edit_tags');
         if (self.filedata[id].tags) {
             for (var x in self.filedata[id].tags) {
                 var option = document.createElement("option");
                 option.text = option.value = self.filedata[id].tags[x];
                 option.selected = "selected";
-                $(self.id + '_edit_tags').add(option);
+                $('#' + self.id + '_edit_tags').append(option);
             }
         }
-
-        replaceChildNodes($(self.id + '_edit_messages'));
-        forEach(getElementsByTagAndClassName('input', 'permission', self.id + '_edit_row'), function (elem) {
-            var perm = getNodeAttribute(elem, 'name').split(':');
+        $('#' + self.id + '_edit_messages').empty();
+        $('#' + self.id + '_edit_row input.permission').each(function () {
+            var perm = $(this).prop('name').split(':');
             if (self.filedata[id].permissions[perm[1]] && self.filedata[id].permissions[perm[1]][perm[2]] == 1) {
-                elem.checked = true;
+                $(this).prop('checked', true);
             }
             else {
-                elem.checked = false;
+                $(this).prop('checked', false);
             }
         });
         // $(self.id + '_edit_artefact').value = id; // Changes button text in IE
-        setNodeAttribute(self.id + '_edit_artefact', 'name', self.id + '_update[' + id + ']');
+        $('#' + self.id + '_edit_artefact').prop('name', self.id + '_update[' + id + ']');
 
         self.tag_select2(self.id + '_edit_tags');
-        var edit_row = removeElement(self.id + '_edit_row');
-        var this_row = getFirstParentByTagAndClassName(this, 'tr');
-        insertSiblingNodesAfter(this_row, edit_row);
-        removeElementClass(edit_row, 'hidden');
+        var edit_row = $('#' + self.id + '_edit_row').detach();
+        var this_row = $(this).closest('tr');
+        edit_row.insertAfter(this_row);
+        edit_row.removeClass('hidden');
 
         // Make the edit button close the form again
-        disconnectAll(this);
-        connect(this, 'onclick', function (e) {
-            e.stop();
+        $(this).off();
+        $(this).on('click', function (e) {
+            e.preventDefault();
             // Check if there are some dirty changes before close the edit form
             if ((typeof formchangemanager !== 'undefined') && formchangemanager.confirmLeavingForm()) {
-                addElementClass(self.id + '_edit_row', 'hidden');
-                disconnectAll(this);
-                connect(this, 'onclick', self.edit_form);
+                $('#' + self.id + '_edit_row').addClass('hidden');
+                $(this).off();
+                $(this).on('click', self.edit_form);
             }
             return false;
         });
 
         return false;
-    }
+    };
 
     this.tag_select2_clear = function (id) {
-        var select2 = jQuery('#' + id).data('select2');
+        var select2 = $('#' + id).data('select2');
         if (select2) {
-            jQuery('#' + id).select2();
+            $('#' + id).select2();
         }
-        jQuery('#' + id).find('option').remove();
-    }
+        $('#' + id).find('option').remove();
+    };
 
     this.tag_select2 = function (id) {
         var placeholder = get_string('defaulthint');
 
-        jQuery('#' + id).select2({
+        $('#' + id).select2({
             ajax: {
                 url: self.config.wwwroot + "json/taglist.php",
                 dataType: 'json',
@@ -367,7 +375,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         'sesskey': self.config.sesskey,
                         'offset': 0,
                         'limit': 10,
-                    }
+                    };
                 },
                 processResults: function(data, page) {
                     return {
@@ -386,17 +394,17 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             minimumInputLength: 1,
             tags: true,
         });
-    }
+    };
 
     this.edit_init = function () { }
 
     this.browse_init = function () {
         if (self.config.edit || self.config.editmeta) {
-            forEach(getElementsByTagAndClassName('button', null, self.id + '_filelist'), function (elem) {
-                var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
+            $('#' + self.id + '_filelist button').each(function () {
+                var name = $(this).prop('name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
                 if (name && name[1]) {
                     if (name[1] == 'edit') {
-                        connect(elem, 'onclick', self.edit_form);
+                        $(this).on('click', self.edit_form);
                     }
                     else if (name[1] == 'delete') {
                         var id = name[2];
@@ -433,9 +441,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         }
 
                         if (warn != '') {
-                            connect(elem, 'onclick', function (e) {
+                            $(this).on('click', function (e) {
                                 if (!confirm(warn)) {
-                                    e.stop();
+                                    e.preventDefault();
                                     return false;
                                 }
                             });
@@ -443,81 +451,77 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                     }
                 }
             });
-            connect(self.id + '_edit_cancel', 'onclick', function (e) {
-                e.stop();
+            $('#' + self.id + '_edit_cancel').on('click', function (e) {
+                e.preventDefault();
                 if (typeof formchangemanager !== 'undefined') {
-                    var form = jQuery(this).closest('form')[0];
+                    var form = $(this).closest('form')[0];
                     formchangemanager.setFormState(form, FORM_INIT);
                 }
                 self.hide_edit_form();
                 return false;
             });
-            connect(self.id + '_edit_artefact', 'onclick', self.edit_submit);
+            $('#' + self.id + '_edit_artefact').on('click', self.edit_submit);
 
             if (self.config.edit) {
-                // IE doesn't like it when Mochikit has droppables registered without elements attached.
-                forEach(Draggables.drags, function (drag) { drag.destroy(); });
-                forEach(Droppables.drops, function (drop) { drop.destroy(); });
 
-                forEach(getElementsByTagAndClassName('div', 'icon-drag', self.id + '_filelist'), function (elem) {
-                    self.make_icon_draggable(elem);
-                    self.make_icon_keyboard_accessible(elem);
+                $('#' + self.id + '_filelist div.icon-drag').each(function () {
+                    self.make_icon_draggable(this);
+                    self.make_icon_keyboard_accessible(this);
                 });
-                forEach(getElementsByTagAndClassName('tr', 'folder', self.id + '_filelist'), self.make_row_droppable);
-                forEach(getElementsByTagAndClassName('a', 'changefolder', self.id + '_foldernav'), self.make_folderlink_droppable);
+                $('#' + self.id + '_filelist tr.folder').each(self.make_droppable);
+                $('#' + self.id + '_foldernav a.changefolder').each(self.make_droppable);
             }
         }
-        forEach(getElementsByTagAndClassName('a', 'changeowner', self.id + '_upload_browse'), function (elem) {
-            connect(elem, 'onclick', function (e) {
-                var href = getNodeAttribute(this, 'href');
-                var params = parseQueryString(href.substring(href.indexOf('?')+1));
-                $(self.id + '_changeowner').value = 1;
-                $(self.id + '_owner').value = params.owner;
-                if (params.ownerid) {
-                    $(self.id + '_ownerid').value = params.ownerid;
+        $('#' + self.id + '_upload_browse a.changeowner').each(function () {
+            $(this).on('click', function (e) {
+                var href = $(this).prop('href');
+                $('#' + self.id + '_changeowner').val(1);
+                $('#' + self.id + '_owner').val(getUrlParameter('owner', href));
+                if (getUrlParameter('ownerid', href)) {
+                    $('#' + self.id + '_ownerid').val(getUrlParameter('ownerid', href));
                 }
                 else {
-                    $(self.id + '_ownerid').value = '';
+                    $('#' + self.id + '_ownerid').val('');
                 }
-                if (params.folder) {
-                    $(self.id + '_changefolder').value = params.folder;
+                if (getUrlParameter('folder', href)) {
+                    $('#' + self.id + '_changefolder').val(getUrlParameter('folder', href));
                 }
                 self.submitform();
-                $(self.id + '_changeowner').value = $(self.id + '_changefolder').value = '';
-                e.stop();
+                $('#' + self.id + '_changefolder').val('');
+                $('#' + self.id + '_changeowner').val($('#' + self.id + '_changefolder').val());
+                e.preventDefault();
                 return false;
             });
         });
-        forEach(getElementsByTagAndClassName('a', 'changefolder', self.id + '_upload_browse'), function (elem) {
-            connect(elem, 'onclick', function (e) {
+        $('#' + self.id + '_upload_browse a.changefolder').each(function () {
+            $(this).on('click', function (e) {
                 if (self.config.edit) {
                     if ((typeof formchangemanager !== 'undefined') && !formchangemanager.confirmLeavingForm()) {
-                        e.stop();
+                        e.preventDefault();
                         return false;
                     }
                 }
-                var href = getNodeAttribute(this, 'href');
-                var params = parseQueryString(href.substring(href.indexOf('?')+1));
-                $(self.id + '_changefolder').value = params.folder;
-                if ($(self.id + '_owner')) {
-                    $(self.id + '_owner').value = params.owner ? params.owner : '';
-                    $(self.id + '_ownerid').value = params.ownerid ? params.ownerid : '';
+                var href = $(this).prop('href');
+                $('#' + self.id + '_changefolder').val(getUrlParameter('folder', href));
+                if ($('#' + self.id + '_owner').length) {
+                    $('#' + self.id + '_owner').val(getUrlParameter('owner', href));
+                    $('#' + self.id + '_ownerid').val(getUrlParameter('ownerid', href));
                 }
                 self.submitform();
-                $(self.id + '_changefolder').value = '';
-                e.stop();
+                $('#' + self.id + '_changefolder').val('');
+                e.preventDefault();
                 return false;
             });
         });
-        if ($(self.id + '_createfolder') && !self.createfolder_is_connected) {
-            connect($(self.id + '_createfolder'), 'onclick', self.createfolder_submit);
+        if ($('#' + self.id + '_createfolder').length && !self.createfolder_is_connected) {
+            $('#' + self.id + '_createfolder').on('click', self.createfolder_submit);
             self.createfolder_is_connected = true;
         }
         if (self.config.select) {
             self.connect_select_buttons();
         }
         self.connect_link_modal();
-    }
+    };
 
     this.create_move_list = function(icon, moveid) {
         var self = this;
@@ -525,15 +529,15 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             self.move_list.remove();
         }
 
-        var wrapper = $j('<div>');
-        var ul = $j('<ul>').addClass('file-move-list');
-        $j('#' + self.id + '_filelist a.changefolder').each(function(i) {
-            var title = $j(this);
+        var wrapper = $('<div>');
+        var ul = $('<ul>').addClass('file-move-list');
+        $('#' + self.id + '_filelist a.changefolder').each(function(i) {
+            var title = $(this);
             var elemid = title.attr('id').replace(/^changefolder:/, '');
             if (elemid != moveid) {
                 var displaytitle = title.find('.display-title').html();
                 if (typeof displaytitle !== 'undefined') {
-                    var link = $j('<a>').attr('href', '#').html(get_string('moveto', 'artefact.file', displaytitle));
+                    var link = $('<a>').attr('href', '#').html(get_string('moveto', 'artefact.file', displaytitle));
                     link.on('click keydown', function(e) {
                         if ((e.type === 'click' || e.keyCode === 32) && !e.isDefaultPrevented()) {
                             self.setfocus = 'changefolder:' + elemid;
@@ -542,16 +546,16 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                             e.preventDefault();
                         }
                     });
-                    ul.append($j('<li><span class="icon icon-long-arrow-right left"></span>').append(link));
+                    ul.append($('<li><span class="icon icon-long-arrow-right left"></span>').append(link));
                 }
             }
         });
 
         if (ul.children().length === 0) {
-            wrapper.append($j('<span>').html(get_string_ajax('nofolderformove', 'artefact.file')));
+            wrapper.append($('<span>').html(get_string_ajax('nofolderformove', 'artefact.file')));
         }
 
-        var cancellink = $j('<a>').attr('href', '#').html(get_string('cancel'));
+        var cancellink = $('<a>').attr('href', '#').html(get_string('cancel'));
         cancellink.on('click keydown', function(e) {
             if ((e.type === 'click' || e.keyCode === 32) && !e.isDefaultPrevented()) {
                 wrapper.remove();
@@ -560,7 +564,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 e.preventDefault();
             }
         });
-        ul.append($j('<li><span class="icon icon-times left"></span>').append(cancellink));
+        ul.append($('<li><span class="icon icon-times left"></span>').append(cancellink));
         wrapper.append(ul);
 
         self.move_list = wrapper;
@@ -570,166 +574,108 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.make_icon_keyboard_accessible = function(icon) {
         var self = this;
         var id = icon.id.replace(/.+:/, '');
-        $j(icon).on('click keydown', function(e) {
+        $(icon).on('click keydown', function(e) {
             if (e.type === 'click' || e.keyCode === 32 || e.keyCode === 13) {
                 var folderlist = self.create_move_list(icon, id);
-                $j(icon).closest('tr').find('.filename').append(folderlist);
+                $(icon).closest('tr').find('.filename').append(folderlist);
                 folderlist.find('a').first().focus();
                 e.preventDefault();
             }
         });
     };
 
-    this.make_row_droppable = function(row) {
-        new Droppable(row, {
-            accept: ['icon-drag-current'],
-            hoverclass: 'folderhover',
-            ondrop: function (dragged, dropped) {
-                var dragid = dragged.id.replace(/^.*drag:(\d+)$/, '$1');
-                var dropid = dropped.id.replace(/^file:(\d+)$/, '$1');
-                if (dragid == dropid) {
-                    return;
-                }
-                self.move_to_folder(dragid, dropid);
-            }
-        });
-
-        // Droppable() calls makePositioned() on the row, which causes the
-        // the border disappear from its child elements.  Set it back to
-        // 'static' and see if this causes any problems...
-        // setStyle(row, {'position': 'static'});
-        undoPositioned(row);
-    };
-
-    this.make_folderlink_droppable = function(link) {
-        new Droppable(link, {
-            accept: ['icon-drag-current'],
-            hoverclass: 'folderhover',
-            ondrop: function (dragged, dropped) {
-                var dragid = dragged.id.replace(/^.*drag:(\d+)$/, '$1');
-                var dropid = dropped.href.replace(/^.*\?folder=(\d+)$/, '$1');
-                if (dragid == dropid) {
-                    return;
-                }
-                self.move_to_folder(dragid, dropid);
-            }
+    this.make_droppable = function() {
+        $(this).droppable({
+          hoverClass: "folderhover",
+          drop: function(event, ui) {
+              var dragid = ui.draggable.prop('id').replace(/^.*drag:(\d+)$/, '$1');
+              var dropid = this.id.replace(/^file:(\d+)$/, '$1');
+              if (dragid == dropid) {
+                  return;
+              }
+              self.move_to_folder(dragid, dropid);
+          }
         });
     };
+
 
     this.move_to_folder = function(dragid, dropid) {
-        $(this.id + '_move').value = dragid;
-        $(this.id + '_moveto').value = dropid;
+        $('#' + this.id + '_move').val(dragid);
+        $('#' + this.id + '_moveto').val(dropid);
         this.submitform();
-        $(this.id + '_move').value = '';
-        $(this.id + '_moveto').value = '';
-    }
+        $('#' + this.id + '_move').val('');
+        $('#' + this.id + '_moveto').val('');
+    };
 
     this.drag = {};
 
     this.make_icon_draggable = function(elem) {
-        new Draggable(elem, {
-            starteffect: function(elem) {
-                if (!self.drag.clone) {
-                    // Works better in IE if we just drag an empty div around without the child image.
-                    // Otherwise the element seems to get dropped during the drag and we end up with a
-                    // crossed-circle cursor.
-
-                    self.drag.clone = DIV({'id':elem.id, 'class':'icon-drag'});
-                    setNodeAttribute(elem, 'id', 'copy-of-' + elem.id);
-
-                    removeElementClass(elem, 'icon-drag');
-                    addElementClass(elem, 'icon-drag-current');
-
-                    insertSiblingNodesAfter(elem, self.drag.clone);
-
-                    var child = getFirstElementByTagAndClassName('img', null, elem);
-                    var dimensions = elementDimensions(child);
-
-                    removeElement(child);
-                    appendChildNodes(self.drag.clone, child);
-
-                    setStyle(elem, {
-                        'position': 'absolute',
-                    });
-                    setElementDimensions(elem, dimensions);
-                }
-            },
-            // This is actually an 'ondragfail' methodm, rather than a user revert
-            revert: function (element) {
-
-                if (self.drag.clone) {
-                    removeElement(element);
-                    forEach(Draggables.drags, function(drag) {
-                        if (drag.element == element) {
-                            drag.destroy();
-                        }
-                    });
-                    element = null;
-                    // /self.make_icon_draggable(self.drag.clone);
-                    self.drag = {};
-                }
-            }
+        $(elem).draggable({
+          revert: "invalid",
+          helper: function(e) {
+            return $('<div>', { 'class': "icon-drag-current"}).css('height','1em');
+          }
         });
     };
 
     this.select_init = function () {
-        if ($(self.id + '_open_upload_browse')) {
-            connect(self.id + '_open_upload_browse', 'onclick', function (e) {
-                e.stop();
-                removeElementClass(self.id + '_upload_browse', 'hidden');
-                addElementClass(self.id + '_open_upload_browse_container', 'hidden');
+        if ($('#' + self.id + '_open_upload_browse').length) {
+            $('#' + self.id + '_open_upload_browse').on('click', function (e) {
+                e.preventDefault();
+                $('#' + self.id + '_upload_browse').removeClass('hidden');
+                $('#' + self.id + '_open_upload_browse_container').addClass('hidden');
                 return false;
             });
         }
-        if ($(self.id + '_close_upload_browse')) {
-            connect(self.id + '_close_upload_browse', 'onclick', function (e) {
-                e.stop();
-                addElementClass(self.id + '_upload_browse', 'hidden');
-                removeElementClass(self.id + '_open_upload_browse_container', 'hidden');
+        if ($('#' + self.id + '_close_upload_browse')) {
+            $('#' + self.id + '_close_upload_browse').on('click', function (e) {
+                e.preventDefault();
+                $('#' + self.id + '_upload_browse').addClass('hidden');
+                $('#' + self.id + '_open_upload_browse_container').removeClass('hidden');
                 return false;
             });
         }
-        forEach(getElementsByTagAndClassName('button', 'unselect', self.id + '_selectlist'), function (elem) {
-            connect(elem, 'onclick', self.unselect);
+        $('#' + self.id + '_selectlist button.unselect').each(function () {
+            $(this).on('click', self.unselect);
         });
-    }
+    };
 
     /**
      * A modal popup to show larger version of image.
      * The popup is hooked onto the name link in filebrowser
      */
     this.connect_link_modal = function () {
-        if ($j('#' + self.id + '_filelist').length === 0) {
+        if ($('#' + self.id + '_filelist').length === 0) {
             return;
         }
-        var pagemodal = $j('#page-modal');
+        var pagemodal = $('#page-modal');
         if (pagemodal.length === 0) {
             return;
         }
 
-        var pagemodalbody = $j('#page-modal .modal-body');
+        var pagemodalbody = $('#page-modal .modal-body');
 
-        var elem = $j('#' + self.id + '_filelist .img-modal-preview');
+        var elem = $('#' + self.id + '_filelist .img-modal-preview');
 
         elem.each(function() {
 
-            $j(this).on('click', function(e) {
+            $(this).on('click', function(e) {
 
                 e.preventDefault();
-                var previewimg = $j('#previewimg');
+                var previewimg = $('#previewimg');
                 if (previewimg.length === 0) {
-                    previewimg = $j('<img id="previewimg" src="">');
+                    previewimg = $('<img id="previewimg" src="">');
                     pagemodalbody.append(previewimg);
                 }
-                var imgsrc = $j(this).attr('href');
+                var imgsrc = $(this).attr('href');
                 imgsrc = updateUrlParameter(imgsrc, 'maxwidth', 400);
                 imgsrc = updateUrlParameter(imgsrc, 'maxheight', 400);
                 previewimg.attr('src',imgsrc);
-                $j('#page-modal').modal('show');
+                $('#page-modal').modal('show');
 
             });
         });
-    }
+    };
 
     this.connect_select_buttons = function () {
 
@@ -751,7 +697,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                     return;
                 }
                 // if an image preview link
-                if (jQuery(e.target).parent().hasClass('img-modal-preview')) {
+                if ($(e.target).parent().hasClass('img-modal-preview')) {
                     return;
                 }
 
@@ -761,12 +707,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 // remove visual selection if this is for selecting 1 file
                 if (self.config.selectone) {
                     for (j = 0; j < elem.length; j = j + 1) {
-                        removeElementClass(elem[j], 'active');
+                        $(elem[j]).removeClass('active');
                     }
                 }
-
-                removeElementClass(this, 'warning');
-                addElementClass(this, 'active');
+                $(this).removeClass('warning').addClass('active');
 
                 if (!self.selecteddata[id]) {
                      self.add_to_selected_list(id);
@@ -774,42 +718,42 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 return false;
             });
         }
-    }
+    };
 
     this.update_metadata_to_selected_list = function () {
-        forEach(getElementsByTagAndClassName('button', 'btn-default', self.id + '_filelist'), function (elem) {
-            var id = elem.name.replace(/.*_edit\[(\d+)\]$/, '$1');
-            var row = getFirstParentByTagAndClassName(elem, 'tr');
-            var newtitle = getFirstElementByTagAndClassName('span', 'display-title', row);
-            var newdescription = getFirstElementByTagAndClassName('td', 'filedescription', row);
+        $('#' + self.id + '_filelist button btn-default').each(function () {
+            var id = this.name.replace(/.*_edit\[(\d+)\]$/, '$1');
+            var row = $(this).closest('tr');
+            var newtitle = row.find('span.display-title').first();
+            var newdescription =  row.find('td.filedescription').first();
             if (self.selecteddata[id]) {
-                var hiddeninput = $(self.id + '_selected[' + id + ']');
-                var row2update = getFirstParentByTagAndClassName(hiddeninput, 'tr');
-                var filetitle = getFirstElementByTagAndClassName('a', null, row2update);
-                if (filetitle) {
-                    filetitle.innerHTML = newtitle.innerHTML;
+                var hiddeninput = $('#' + self.id + '_selected[' + id + ']');
+                var row2update = hiddeninput.closest('tr');
+                var filetitle = row2update.closest('a');
+                if (filetitle.length) {
+                    filetitle.html(newtitle.html());
                 }
-                var filedesc = getFirstElementByTagAndClassName('td', 'filedescription', row2update);
+                var filedesc = row2update.closest('td.filedescription');
                 if (filedesc) {
-                    filedesc.innerHTML = newdescription.innerHTML;
+                    filedesc.html(newdescription.html());
                 }
             }
         });
-    }
+    };
 
     this.add_to_selected_list = function (id, highlight) {
         if (!self.filedata[id]) {
             return;
         }
-        var tbody = getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist'),
-            rows = getElementsByTagAndClassName('tr', null, tbody);
+        var tbody = $('#' + self.id + '_selectlist tbody').first(),
+            rows = tbody.find('tr');
 
         if (self.config.selectone) {
-            forEach(rows, function (row) {
-                var hiddeninput = getFirstElementByTagAndClassName('input', 'hidden', row);
+            rows.each(function () {
+                var hiddeninput = $(this).find('input.hidden');
 
-                if (hiddeninput) {
-                    removeElement(hiddeninput);
+                if (hiddeninput.length) {
+                    hiddeninput.remove();
                 }
             });
             self.selecteddata = {};
@@ -823,8 +767,8 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             'url': self.filedata[id].url
         };
 
-        if ($(self.id + '_select_' + id)) {
-            addElementClass('file:' + id, 'active');
+        if ($('#' + self.id + '_select_' + id).length) {
+            $('[id="file:' + id + '"]').addClass('active');
         }
         if (self.filedata[id].tags) {
             self.selecteddata[id].tags = self.filedata[id].tags;
@@ -841,24 +785,29 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         // Check if the file to add was already in the selected list
         var existed = false;
         for (i = 0; i < rows.length; i++) {
-            var r = rows[i];
-            var rowbutton = getFirstElementByTagAndClassName('button', 'button', r);
-            var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
+            var r = $(rows[i]);
+            var rowbutton = r.find('button.button');
+            var rowid = rowbutton.prop('name').replace(/.*_unselect\[(\d+)\]$/, '$1');
             if (rowid == id) {
                 existed = true;
-                var hiddeninput = getFirstElementByTagAndClassName('input', 'hidden', r);
-                if (!hiddeninput) {
-                    hiddeninput = INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id});
-                    appendChildNodes(getFirstParentByTagAndClassName(rowbutton, 'td'), hiddeninput);
+                var hiddeninput = r.find('input.hidden').first();
+                if (!hiddeninput.length) {
+                    hiddeninput = $('<input>', {'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id});
+                    rowbutton.closest('td').append(hiddeninput);
                 }
                 continue;
             }
-        };
+        }
         if (!existed) {
-            var remove = BUTTON({'class': 'btn btn-default btn-xs text-small button submit unselect', 'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')}, SPAN({'class': 'icon icon-times icon-lg text-danger left'}), SPAN(null, get_string('remove')));
-            connect(remove, 'onclick', self.unselect);
+            var remove = $('<button>', {'class': 'btn btn-default btn-xs text-small button submit unselect',
+                                            'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')});
+            remove.append(
+                $('<span>', {'class': 'icon icon-times icon-lg text-danger left'}),
+                $('<span>', { 'text': get_string('remove')})
+            );
+            remove.on('click', self.unselect);
 
-            filelink = ''
+            filelink = '';
             if (self.filedata[id].artefacttype == 'folder') {
                 filelink = self.filedata[id].title;
             }
@@ -866,49 +815,49 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 filelink = A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id}, self.filedata[id].title);
             }
 
-            fileIconImg = ''
+            fileIconImg = '';
             if (self.filedata[id].icon.length) {
-                fileIconImg = IMG({'src':self.filedata[id].icon});
+                fileIconImg = $('<img>', {'src':self.filedata[id].icon});
             } else {
-                fileIconImg = SPAN({'class': 'icon icon-' + self.filedata[id].artefacttype + ' icon-lg'});
+                fileIconImg = $('<span>', {'class': 'icon icon-' + self.filedata[id].artefacttype + ' icon-lg'});
             }
 
-            appendChildNodes(tbody, TR({'class': (highlight ? ' highlight-file' : '')},
-                   TD(null, fileIconImg),
-                   TD(null, filelink),
-                   TD({'class':'text-right s'}, remove, INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id}))
-                  ));
+            tbody.append($('<tr>', {'class': (highlight ? ' highlight-file' : '')}).append(
+                $('<td>').append(fileIconImg),
+                $('<td>').append(filelink),
+                $('<td>', {'class':'text-right s'}).append(remove, $('<input>', {'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']',
+                                                                                            'name':self.id+'_selected[' + id + ']', 'value':id}))
+            ));
         }
         // Display the list
-        var rows = getElementsByTagAndClassName('tr', null, tbody);
+        rows = tbody.find('tr');
         var rcount = 0;
         for (i = 0; i < rows.length; i++) {
-            var r = rows[i];
-            var rowbutton = getFirstElementByTagAndClassName('button', 'button', r);
-            var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
+            var r = $(rows[i]);
+            var rowbutton = r.find('button.button').first();
+            var rowid = rowbutton.prop('name').replace(/.*_unselect\[(\d+)\]$/, '$1');
             if (typeof(self.selecteddata[rowid]) != 'undefined') {
-                setNodeAttribute(r, 'class', 'active');
-                removeElementClass(r, 'hidden');
+                r.addClass('active').removeClass('hidden');
                 rcount ++;
             }
             else {
-                addElementClass(r, 'hidden');
+                r.addClass('hidden');
             }
-        };
+        }
 
        self.createevent('fileselect', document, self.selecteddata[id]);
 
         if (rcount == 1) {
-            removeElementClass(self.id + '_selectlist', 'hidden');
-            addElementClass(self.id + '_empty_selectlist', 'hidden');
+            $('#' + self.id + '_selectlist').removeClass('hidden');
+            $('#' + self.id + '_empty_selectlist').addClass('hidden');
         }
         this.update_metadata_to_selected_list();
         // are we running inside tinymce imagebrowser plugin?
         if (window.imgbrowserconf_artefactid) {
             // propagate the click
-            jQuery('#filebrowserupdatetarget').click();
+            $('#filebrowserupdatetarget').click();
         }
-    }
+    };
 
     this.createevent = function(eventName, element, data) {
         var e; // The custom event that will be created
@@ -930,38 +879,38 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
     }
 
+
     this.unselect = function (e) {
-        e.stop();
-        var id = this.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
-        delete self.selecteddata[id];
-        // Display the list
-        var rows = getElementsByTagAndClassName('tr', null, getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist'));
-        var rcount = 0;
-        for (i = 0; i < rows.length; i++) {
-            var r = rows[i];
-            var rowbutton = getFirstElementByTagAndClassName('button', 'button', r);
-            var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
-            if (typeof(self.selecteddata[rowid]) != 'undefined') {
-                setNodeAttribute(r, 'class', 'active');
-                removeElementClass(r, 'hidden');
-                rcount ++;
-            }
-            else {
-                var hiddeninput = getFirstElementByTagAndClassName('input', 'hidden', r);
-                if (hiddeninput) {
-                    removeElement(hiddeninput);
-                }
-                addElementClass(r, 'hidden');
-            }
-        };
-        if (rcount == 0) {
-                addElementClass(self.id + '_selectlist', 'hidden');
-                removeElementClass(self.id + '_empty_selectlist', 'hidden');
-        }
-        if ($(self.id + '_select_' + id)) {
-            removeElementClass('file:' + id, 'active');
-        }
-        return false;
+      e.preventDefault();
+      var id = this.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
+      delete self.selecteddata[id];
+      // Display the list
+      var rows = $('#' + self.id + '_selectlist tbody').first().find('tr');
+      var rcount = 0;
+      for (i = 0; i < rows.length; i++) {
+          var r = $(rows[i]);
+          var rowbutton = r.find('button.button').first();
+          var rowid = rowbutton.prop('name').replace(/.*_unselect\[(\d+)\]$/, '$1');
+          if (typeof(self.selecteddata[rowid]) != 'undefined') {
+              r.addClass('active').removeClass('hidden');
+              rcount ++;
+          }
+          else {
+              var hiddeninput = r.find('input.hidden').first();
+              if (hiddeninput.length) {
+                  hiddeninput.remove();
+              }
+              r.addClass('hidden');
+          }
+      }
+      if (rcount == 0) {
+          $('#' + self.id + '_selectlist').addClass('hidden');
+          $('#' + self.id + '_empty_selectlist').removeClass('hidden');
+      }
+      if ($('#' + self.id + '_select_' + id).length) {
+          $('[id="file:' + id + '"]').addClass('active');
+      }
+      return false;
     }
 
     this.callback = function (form, data) {
@@ -976,70 +925,72 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             self.callback_feedback(data);  // add/update message
             if (data.maxuploadsize) {
                 // keep max upload size up to date
-                replaceChildNodes(self.id + '_userfile_maxuploadsize', '(' + get_string('maxuploadsize') + ' ' + data.maxuploadsize + ')');
+                $('#' + self.id + '_userfile_maxuploadsize').append('(' + get_string('maxuploadsize') + ' ' + data.maxuploadsize + ')');
             }
         }
         // Clear the create folder form
-        if (data.foldercreated && $(self.id + '_createfolder_name')) {
-            $(self.id + '_createfolder_name').value = '';
+        if (data.foldercreated && $('#' + self.id + '_createfolder_name').length) {
+            $('#' + self.id + '_createfolder_name').val('');
         }
         // Only update the file listing if the user hasn't changed folders yet
         if (data.newlist && (data.folder == self.folderid || data.changedfolder)) {
             self.filedata = data.newlist.data;
             if (self.config.edit || self.config.editmeta) {
-                replaceChildNodes(self.id + '_edit_placeholder', removeElement(self.id + '_edit_row'));
+
+                var editrow = $('#' + self.id + '_edit_row').detach();
+                $('#' + self.id + '_edit_placeholder').append(editrow);
             }
-            $(self.id+'_filelist_container').innerHTML = data.newlist.html;
+            $('#' + self.id+'_filelist_container').html(data.newlist.html);
 
             // Focus management
             if (self.setfocus) {
-                $(self.setfocus).focus();
+                $('#' + self.setfocus)[0].focus();
                 self.setfocus = null;
             }
             else if (data.foldercreated) {
-                $('changefolder:' + data.highlight).focus();
+                $('[id="changefolder:' + data.highlight + '"]')[0].focus();
             }
 
             if (data.changedfolder && data.newpath) {
-                $(self.id+'_folder').value = self.folderid = data.folder;
-                $(self.id+'_foldername').value = self.foldername = data.newpath.foldername;
-                $(self.id+'_foldernav').innerHTML = data.newpath.html;
+                $('#' + self.id+'_folder').val(self.folderid = data.folder);
+                $('#' + self.id+'_foldername').val(self.foldername = data.newpath.foldername);
+                $('#' + self.id+'_foldernav').html(data.newpath.html);
                 if (data.changedowner && data.newtabs && data.newtabdata) {
                     self.tabdata = data.newtabdata;
-                    $(self.id+'_ownertabs').innerHTML = data.newtabs;
+                    $('#' + self.id+'_ownertabs').html(data.newtabs);
                     if (data.newsubtabs) {
-                        $(self.id + '_ownersubtabs').innerHTML = data.newsubtabs;
-                        removeElementClass(self.id + '_ownersubtabs', 'hidden')
+                        $('#' + self.id + '_ownersubtabs').html(data.newsubtabs);
+                        $('#' + self.id + '_ownersubtabs').removeClass('hidden');
                     }
                     else {
-                        addElementClass(self.id + '_ownersubtabs', 'hidden');
+                        $('#' + self.id + '_ownersubtabs').addClass('hidden');
                     }
-                    if ($(self.id + '_upload_container')) {
+                    if ($('#' + self.id + '_upload_container').length) {
                         if (data.newtabdata.upload) {
-                            removeElementClass(self.id + '_upload_container', 'hidden');
+                            $('#' + self.id + '_upload_container').removeClass('hidden');
                         }
                         else {
-                            addElementClass(self.id + '_upload_container', 'hidden');
+                            $('#' + self.id + '_upload_container').addClass('hidden');
                         }
                     }
                     self.config.editmeta = data.editmeta;
                 }
                 if (self.config.upload) {
-                    if (data.disableedit && !hasElementClass(self.id + '_upload_container', 'hidden')) {
-                        addElementClass(self.id + '_upload_container', 'hidden');
-                        if ($('createfolder')) {
-                            addElementClass('createfolder', 'hidden');
+                    if (data.disableedit && !$('#' + self.id + '_upload_container').hasClass('hidden')) {
+                        $('#' + self.id + '_upload_container').addClass('hidden');
+                        if ($('#createfolder').length) {
+                            $('#createfolder').addClass('hidden');
                         }
-                        removeElementClass(self.id + '_upload_disabled', 'hidden');
+                        $('#' + self.id + '_upload_disabled').removeClass('hidden');
                     }
-                    else if (hasElementClass(self.id + '_upload_container', 'hidden') && !data.disableedit) {
+                    else if ($('#' + self.id + '_upload_container').hasClass('hidden') && !data.disableedit) {
                         if (!self.tabdata || self.tabdata.upload) {
-                            removeElementClass(self.id + '_upload_container', 'hidden');
+                            $('#' + self.id + '_upload_container').removeClass('hidden');
                         }
-                        if ($('createfolder')) {
-                            removeElementClass('createfolder', 'hidden');
+                        if ($('#createfolder').length) {
+                            $('#createfolder').removeClass('hidden');
                         }
-                        addElementClass(self.id + '_upload_disabled', 'hidden');
+                        $('#' + self.id + '_upload_disabled').addClass('hidden');
                     }
                 }
             }
@@ -1050,8 +1001,8 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             if (self.config.select && self.config.editmeta) {
                 self.update_metadata_to_selected_list();
             }
-            if (data.tagblockhtml && $('sb-tags')) {
-                $('sb-tags').innerHTML = data.tagblockhtml;
+            if (data.tagblockhtml && $('#sb-tags').length) {
+                $('#sb-tags').html(data.tagblockhtml);
             }
             self.browse_init();
         }
@@ -1067,9 +1018,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
             self.init();
         }
-    }
-
-}
+    };
+};
+}(jQuery));
 
 // This variable = true if the users has updated the field 'Tags' by clicking the tag.
 var tags_changed = false;

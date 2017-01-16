@@ -1558,7 +1558,9 @@ function pieform_element_filebrowser_views_js(Pieform $form, $element) {
  */
 function pieform_element_filebrowser_get_headdata($element) {
     global $THEME;
-    $headdata = array('<script type="application/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js"></script>');
+    // TODO : need a better dependancy injection, jquery ui might be also inserted by other scripts ...
+    $headdata = array('<script type="application/javascript" src="' . get_config('wwwroot') . 'js/jquery/jquery-ui/js/jquery-ui.min.js"></script>',
+        '<script type="application/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js"></script>');
     if ($element['config']['upload']) {
         // only add dropzone if filebrowser is allowed to upload
         $headdata[] = '<script type="application/javascript" src="' . get_config('wwwroot') . 'js/dropzone/dropzone.min.js"></script>';
