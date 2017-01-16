@@ -156,32 +156,32 @@ $strchangepoststatusunpublish = json_encode(get_string('unpublish', 'artefact.bl
 $js = <<<EOF
 function changepoststatus_success(form, data) {
 
-    if ($('changepoststatus_' + data.id + '_currentpoststatus').value === "0") {
-        removeElementClass($('posttitle_' + data.id), 'draft');
-        addElementClass($('posttitle_' + data.id), 'published');
-        $('poststatus' + data.id).innerHTML = {$strpublished};
-        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span> ' + {$strchangepoststatusunpublish} +
-          '<span class="sr-only">' + {$strchangepoststatusunpublish} + ' "' + data.title + '"</span>';
+    if (jQuery('#changepoststatus_' + data.id + '_currentpoststatus').val() === "0") {
+        jQuery('#posttitle_' + data.id).removeClass( 'draft');
+        jQuery('#posttitle_' + data.id).addClass('published');
+        jQuery('#poststatus' + data.id).html({$strpublished});
+        jQuery('#changepoststatus_' + data.id + '_submit').html('<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span> ' + {$strchangepoststatusunpublish} +
+          '<span class="sr-only">' + {$strchangepoststatusunpublish} + ' "' + data.title + '"</span>');
     }
     else {
-        removeElementClass($('posttitle_' + data.id), 'published');
-        addElementClass($('posttitle_' + data.id), 'draft');
-        $('poststatus' + data.id).innerHTML = {$strdraft};
-        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="icon icon-check icon-lg left text-success" role="presentation" aria-hidden="true"></span>' + {$strchangepoststatuspublish} +
-        '<span class="sr-only">' + {$strchangepoststatuspublish} + ' "' + data.title + '"</span>';
+        jQuery('#posttitle_' + data.id).removeClass('published');
+        jQuery('#posttitle_' + data.id).addClass('draft');
+        jQuery('#poststatus' + data.id).html({$strdraft});
+        jQuery('#changepoststatus_' + data.id + '_submit').html('<span class="icon icon-check icon-lg left text-success" role="presentation" aria-hidden="true"></span>' + {$strchangepoststatuspublish} +
+        '<span class="sr-only">' + {$strchangepoststatuspublish} + ' "' + data.title + '"</span>');
     }
 }
 function delete_success(form, data) {
-    addElementClass('postdetails_' + data.id, 'hidden');
-    if ($('postfiles_' + data.id)) {
-        addElementClass('postfiles_' + data.id, 'hidden');
+    jQuery('#postdetails_' + data.id).addClass('hidden');
+    if (jQuery('#postfiles_' + data.id).length) {
+      jQuery('#postfiles_' + data.id).addClass('hidden');
     }
-    addElementClass('postdescription_' + data.id, 'hidden');
-    addElementClass('posttitle_' + data.id, 'hidden');
-    var results = \$j('#blogpost_pagination div.results').html();
+    jQuery('#postdescription_' + data.id).addClass('hidden');
+    jQuery('#posttitle_' + data.id).addClass('hidden');
+    var results = jQuery('#blogpost_pagination div.results').html();
     var oldcount = parseInt(results, 10);
     var newcount = oldcount - 1;
-    \$j('#blogpost_pagination div.results').html(results.replace(oldcount, newcount));
+    jQuery('#blogpost_pagination div.results').html(results.replace(oldcount, newcount));
     progressbarUpdate('blogpost', true);
 }
 EOF;

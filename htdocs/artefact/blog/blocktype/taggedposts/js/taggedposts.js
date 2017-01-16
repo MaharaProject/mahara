@@ -1,23 +1,20 @@
-function addNewTaggedPostShortcut(blockid) {
-    forEach(
-        getElementsByTagAndClassName('a', 'btnshortcut', 'blockinstance_' + blockid),
-        function(a) {
-            disconnectAll(a);
-            connect(a, 'onclick', function(e) {
-                e.stop();
-                var p = getFirstParentByTagAndClassName(a, 'div', 'shortcut');
-                var selectedBlog = getFirstElementByTagAndClassName('select','select', p);
-                var currentTag = getFirstElementByTagAndClassName('input','select', p);
-                var BlogIDInput = INPUT({'name': 'blog', 'type': 'text', 'value': selectedBlog.value});
-                var TagInput = INPUT({'name': 'tagselect', 'type': 'text', 'value': currentTag.value});
-                var myForm = FORM(
-                    {'action': config.wwwroot + 'artefact/blog/post.php', 'method': 'POST'},
-                    BlogIDInput,
-                    TagInput
-                );
-                document.body.appendChild(myForm);
-                myForm.submit();
-            });
-        }
-    );
-}
+var addNewTaggedPostShortcut = (function($) {
+    return function (blockid) {
+      $('#blockinstance_' + blockid + ' a.btnshortcut').each(function() {
+            $(this).off();
+            $(this).on('click', function(e) {
+                  e.preventDefault();
+                  var p = $(this).closest('div.shortcut');
+                  var selectedBlog = p.find('select.select').first();
+                  var currentTag = p.find('input.select').first();
+                  var BlogIDInput = $('<input>', {'name': 'blog', 'type': 'text', 'value': selectedBlog.value});
+                  var TagInput = $('<input>', {'name': 'tagselect', 'type': 'text', 'value': currentTag.value});
+                  var myForm = $('<form>', {'action': config.wwwroot + 'artefact/blog/post.php', 'method': 'POST'})
+                    .append(BlogIDInput, TagInput);
+                  document.body.appendChild(myForm);
+                  myForm.submit();
+              });
+          }
+      );
+    };
+}(jQuery));

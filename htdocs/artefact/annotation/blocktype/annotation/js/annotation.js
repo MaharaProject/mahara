@@ -54,14 +54,14 @@ function modifyAnnotationFeedbackSuccess(form, data) {
     tinyMCE.triggerSave();
     sendjsonrequest('../artefact/annotation/annotations.json.php',
         {
-            'annotationid' : $(formname + '_annotationid').value,
-            'viewid'       : $(formname + '_viewid').value,
-            'artefactid'   : $(formname + '_artefactid').value,
-            'blockid'      : $(formname + '_blockid').value,
+            'annotationid' : jQuery('#' + formname + '_annotationid').val(),
+            'viewid'       : jQuery('#' + formname + '_viewid').val(),
+            'artefactid'   : jQuery('#' + formname + '_artefactid').val(),
+            'blockid'      : jQuery('#' + formname + '_blockid').val(),
             'limit'        : limit,
             'offset'       : offset,
         }, 'GET', function (data) {
-            var blockid = $(formname + '_blockid').value;
+            var blockid = jQuery('#' + formname + '_blockid').val();
             // Populate the div.
 
             (function($) {
@@ -72,7 +72,7 @@ function modifyAnnotationFeedbackSuccess(form, data) {
             })(jQuery);
     });
     // if we are in a modal close it
-    if (jQuery('#annotation_feedbacktable_' + $(formname + '_blockid').value).hasClass('modal-docked')) {
+    if (jQuery('#annotation_feedbacktable_' + jQuery('#' + formname + '_blockid').val()).hasClass('modal-docked')) {
         dock.hide();
     }
     formSuccess(form, data);
@@ -80,10 +80,10 @@ function modifyAnnotationFeedbackSuccess(form, data) {
 
 function addAnnotationFeedbackSuccess(form, data) {
     var formname = form.name;
-    var blockid  = $(formname + '_blockid').value;
+    var blockid  = jQuery('#' + formname + '_blockid').val();
     var limit    = getURLParameter('limit');
     var offset   = getURLParameter('offset');
-    var tinymce = $(form.id + '_message');
+    var tinymce = jQuery('#' + form.id + '_message');
 
     if (limit === false && offset === false) {
         // Pagination is not used.
@@ -104,14 +104,14 @@ function addAnnotationFeedbackSuccess(form, data) {
         tinyMCE.triggerSave();
         sendjsonrequest('../artefact/annotation/annotations.json.php',
             {
-                'annotationid' : $(formname + '_annotationid').value,
-                'viewid'       : $(formname + '_viewid').value,
-                'artefactid'   : $(formname + '_artefactid').value,
-                'blockid'      : $(formname + '_blockid').value,
+                'annotationid' : jQuery('#' + formname + '_annotationid').val(),
+                'viewid'       : jQuery('#' + formname + '_viewid').val(),
+                'artefactid'   : jQuery('#' + formname + '_artefactid').val(),
+                'blockid'      : jQuery('#' + formname + '_blockid').val(),
                 'limit'        : limit,
                 'offset'       : offset,
             }, 'GET', function (data) {
-                var blockid = $(formname + '_blockid').value;
+                var blockid = jQuery('#' + formname + '_blockid').val();
                 // Populate the div
                 (function($) {
                     var scope = $('#annotationfeedbackview_' + blockid);
@@ -131,7 +131,7 @@ function addAnnotationFeedbackSuccess(form, data) {
     if (data.fieldnames && data.fieldnames.message) {
         messageid = data.fieldnames.message;
     }
-    $(formname + '_' + messageid).value = '';
+    jQuery('#' + formname + '_' + messageid).val('');
     formSuccess(form, data);
 }
 
