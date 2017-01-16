@@ -470,14 +470,6 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return 'file';
     }
 
-    public static function get_switch_width() {
-        $on = get_string('on', 'mahara');
-        $off = get_string('off', 'mahara');
-
-        $strlength = max(strlen($on), strlen($off));
-        return floor(57 + (($strlength - 2) * 3.5) + pow(1.4, ($strlength - 2))) . 'px';
-    }
-
     public function move($newparentid) {
         $this->set('parent', $newparentid);
         $this->commit();

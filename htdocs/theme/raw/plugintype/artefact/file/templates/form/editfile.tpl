@@ -78,6 +78,7 @@
                     </label>
                     </div>
                 </div>
+                <script type="application/javascript">Switchbox.computeWidth("{$prefix}_edit_allowcomments");</script>
             </div>
         <div>
         <div class="submitcancel form-group">

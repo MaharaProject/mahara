@@ -205,9 +205,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $params .= '&institution=' . $institution;
     }
 
-    $switchwidth = ArtefactTypeFileBase::get_switch_width();
-    $smarty->assign('switchwidth',$switchwidth);
-
     $smarty->assign('folderparams', $params);
 
     return $smarty->fetch('artefact:file:form/filebrowser.tpl');
@@ -328,8 +325,6 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     }
     $smarty->assign('downloadfolderaszip', $addzipdownloadlink);
 
-    $switchwidth = ArtefactTypeFileBase::get_switch_width();
-
     $smarty->assign('edit', -1);
     $smarty->assign('highlight', $highlight);
     $smarty->assign('editable', $editable);
@@ -339,7 +334,6 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $smarty->assign('showtags', $showtags);
     $smarty->assign('editmeta', $editmeta);
     $smarty->assign('filelist', $filedata);
-    $smarty->assign('switchwidth', $switchwidth);
     $smarty->assign('querybase', $querybase);
     $smarty->assign('prefix', $prefix);
 
