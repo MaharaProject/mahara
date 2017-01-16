@@ -134,7 +134,8 @@ try {
             $CFG->dbtype = 'mysqli';
         }
         else {
-            $CFG->dbtype = 'mysql';
+            // mysql
+            throw new ConfigSanityException(get_string('mysqlmodulenolongersupported', 'error'));
         }
     }
 
