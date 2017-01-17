@@ -711,7 +711,7 @@ class Framework {
                 $annotationfeedback->commit();
 
                 // We need to log this assessment change
-                insert_record('framework_assessment_feedback', (object) array('framework' => $id,
+                insert_record('framework_assessment_feedback', (object) array('framework' => $evidence->framework,
                                                                               'artefact' => $annotationfeedback->get('id'),
                                                                               'oldstatus' => $evidence->state,
                                                                               'newstatus' => $state,
