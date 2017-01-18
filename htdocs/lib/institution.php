@@ -929,23 +929,24 @@ function institution_selector_for_page($institution, $page) {
 
     $page = json_encode($page);
     $js = <<< EOF
-function reloadUsers() {
-    var urlstr = $page;
-    var inst = '';
-    if ($('institutionselect_institution')) {
-        inst = 'institution='+$('institutionselect_institution').value;
-        if (urlstr.indexOf('?') > 0) {
-            urlstr = urlstr + '&' + inst;
+jQuery(function($) {
+    function reloadUsers() {
+        var urlstr = $page;
+        var inst = '';
+        if ($('#institutionselect_institution').length) {
+            inst = 'institution=' + $('#institutionselect_institution').val();
+            if (urlstr.indexOf('?') > 0) {
+                urlstr = urlstr + '&' + inst;
+            }
+            else {
+                urlstr = urlstr + '?' + inst;
+            }
         }
-        else {
-            urlstr = urlstr + '?' + inst;
-        }
+        window.location.href = urlstr;
     }
-    window.location.href = urlstr;
-}
-addLoadEvent(function() {
-    if ($('institutionselect_institution')) {
-        connect($('institutionselect_institution'), 'onchange', reloadUsers);
+
+    if ($('#institutionselect_institution').length) {
+        $('#institutionselect_institution').on('change', reloadUsers);
     }
 });
 EOF;

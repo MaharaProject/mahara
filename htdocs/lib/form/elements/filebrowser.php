@@ -185,7 +185,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $_PIEFORM_FILEBROWSERS[$prefix]['views_js'] = $initjs;
 
-    $initjs .= "addLoadEvent({$prefix}.init);";
+    $initjs .= "jQuery({$prefix}.init);";
     $initjs .= "upload_max_filesize = '" . get_real_size(ini_get('upload_max_filesize')) . "';";
     if ($form->is_submitted() && $form->has_errors()) {
         // need to reapply bootstrap file browser stuff

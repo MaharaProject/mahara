@@ -127,18 +127,19 @@ function pieform_renderer_maharatable_get_js($id) {
     $result = <<<EOF
 function {$id}_set_error(message, element) {
     element = '{$id}_' + element + '_container';
-    var container = getFirstElementByTagAndClassName('TD', null, $(element));
-    addElementClass(container, 'error');
-    addElementClass(container.firstChild, 'error');
-    insertSiblingNodesAfter($(element), TR({'id': '{$id}_error_' + element}, TD({'class': 'errmsg'}, message)));
+    var container = jQuery('#' + element).find('td').first();
+    container.addClass('error');
+    container.children().first().addClass('error');
+    jQuery('<tr>', {'id': '{$id}_error_' + element}).append(jQuery('<td>', {'class': 'errmsg', 'text': message} ))
+        .insertAfter(jQuery('#' + element));
 }
 function {$id}_remove_all_errors() {
-    forEach(getElementsByTagAndClassName('TD', 'errmsg', $('$id')), function(item) {
-        removeElement(item.parentNode);
+    jQuery('#$id td.errmsg').each(function() {
+        jQuery(this).parent().remove();
     });
-    forEach(getElementsByTagAndClassName('TD', 'error', $('$id')), function(item) {
-        removeElementClass(item, 'error');
-        removeElementClass(item.firstChild, 'error');
+    jQuery('#$id td.error').each(function() {
+        jQuery(this).removeClass('error');
+        jQuery(this).children().first().removeClass('error');
     });
 }
 EOF;
