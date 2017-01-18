@@ -60,19 +60,20 @@ if ($USER->is_logged_in()) {
         // allow the user to choose never to see the info boxes again
         $strhowtodisable = json_encode(get_string('howtodisable', 'mahara', get_config('wwwroot') . 'account'));
         $js = <<<JAVASCRIPT
-function hideinfo() {
-    var m = SPAN();
-    m.innerHTML = {$strhowtodisable};
-    slideUp('home-info-container', {afterFinish: function() {displayMessage(m, 'ok');}});
-}
+jQuery(function($) {
+    function hideinfo() {
+        var m = $('<span>');
+        m.html({$strhowtodisable});
+        $('#home-info-container').slideUp('fast', function() { displayMessage(m, 'ok'); });
+    }
 
-function nevershow() {
-    var data = {'showhomeinfo' : 0};
-    sendjsonrequest('homeinfo.json.php', data, 'POST', hideinfo);
-}
-addLoadEvent(function () {
-    if ($('hideinfo')) {
-        $('hideinfo').onclick = nevershow;
+    function nevershow() {
+        var data = {'showhomeinfo' : 0};
+        sendjsonrequest('homeinfo.json.php', data, 'POST', hideinfo);
+    }
+
+    if ($('#hideinfo').length) {
+        $('#hideinfo').on('click', nevershow);
     }
 });
 JAVASCRIPT;

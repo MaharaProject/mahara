@@ -128,7 +128,7 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
 
         // Dirty hack to display the seal just before the table
         // TODO: add a way to append stuff to the header in the maharatable pieform renderer
-        $sealpositionhack = "insertSiblingNodesBefore('instconf', $('freecultureseal')); addElementClass('instconf', 'fl');";
+        $sealpositionhack = "jQuery('#freecultureseal').insertBefore('#insconf'); jQuery('#instconf').addClass('fl');";
 
         return array(
             'seal' => array(

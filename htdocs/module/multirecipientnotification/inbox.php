@@ -95,24 +95,22 @@ $paginationjavascript = <<<JAVASCRIPT
 
 jQuery(function($) {
 // We want the paginator to tell us when a page gets changed.
-function PaginatorData() {
-    var self = this;
-    var params = {};
-    this.pageChanged = function(data) {
-        self.params = {
-            'offset': data.offset,
-            'limit': data.limit,
-            'type': data.type
-        }
-    }
-    paginatorProxy.addObserver(self);
-    connect(self, 'pagechanged', self.pageChanged);
-}
-window.paginatorData = new PaginatorData();
-addLoadEvent(function () {
-    window.paginator = {$activitylist['pagination_js']}
-});
+  function PaginatorData() {
+      var self = this;
+      var params = {};
+      this.pageChanged = function(data) {
+          self.params = {
+              'offset': data.offset,
+              'limit': data.limit,
+              'type': data.type
+          }
+      }
+      paginatorProxy.addObserver(self);
+      $(self).on('pagechanged', self.pageChanged);
+  }
+  window.paginatorData = new PaginatorData();
 
+  window.paginator = {$activitylist['pagination_js']}
 });
 JAVASCRIPT;
 

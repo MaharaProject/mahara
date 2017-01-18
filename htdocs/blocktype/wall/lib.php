@@ -194,15 +194,15 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
     public function wallpost_js() {
         $js = <<<EOF
 function wallpost_success(form, data) {
-    if ($('wall') && data.posts && data.block) {
-        var wall = getFirstElementByTagAndClassName('div', 'wall', 'blockinstance_' + data.block);
-        var temp = DIV();
+    if (jQuery('#wall').length && data.posts && data.block) {
+        var wall = jQuery('#blockinstance_' + data.block + ' div.wall').first();
+        var temp = jQuery('<div>');
         var textareaid = 'wallpost_' + data.block + '_text';
-        temp.innerHTML = data.posts;
-        newposts = getElementsByTagAndClassName('div', 'wallpost', temp);
-        replaceChildNodes(wall, newposts);
-        if ($(textareaid)) {
-            $(textareaid).value = '';
+        temp.html(data.posts);
+        newposts = jQuery(temp).find('div.wallpost');
+        wall.empty().append(newposts);
+        if (jQuery('#' + textareaid).length) {
+            jQuery('#' + textareaid).val('');
             // Clear TinyMCE
             if (typeof(tinyMCE) != 'undefined' && typeof(tinyMCE.get(textareaid)) != 'undefined') {
                 tinyMCE.activeEditor.setContent('');
