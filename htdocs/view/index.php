@@ -25,22 +25,22 @@ $offset = param_integer('offset', 0);
 list($searchform, $data, $pagination) = View::views_by_owner();
 
 $js = <<< EOF
-addLoadEvent(function () {
+jQuery(function ($) {
     p = {$pagination['javascript']}
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF
-    if ($('myviews')) {
-        getFirstElementByTagAndClassName('a', null, 'myviews').focus();
+    if ($('#myviews').length) {
+        $('#myviews a').focus();
     }
 EOF;
 }
 else {
     $js .= <<< EOF
-    if ($('searchresultsheading')) {
-        addElementClass('searchresultsheading', 'hidefocus');
-        setNodeAttribute('searchresultsheading', 'tabIndex', -1);
-        $('searchresultsheading').focus();
+    if ($('#searchresultsheading').length) {
+        $('#searchresultsheading').addClass('hidefocus')
+            .prop('tabIndex', -1)
+            .focus();
     }
 EOF;
 }
