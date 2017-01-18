@@ -44,7 +44,6 @@ var FileBrowser = (function($) {
     };
 
     this.submitform = function () {
-        signal(self.form, 'onsubmit'); // MochiKit to be removed after cleanup
         $(self.form).triggerHandler('submit');
         self.form.submit();
     };
