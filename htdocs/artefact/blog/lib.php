@@ -878,6 +878,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $smarty->assign('postedbyon', get_string('postedbyon', 'artefact.blog',
                                                  display_name($this->owner),
                                                  format_date($this->ctime)));
+        if ($this->ctime != $this->mtime) {
+            $smarty->assign('updatedon', get_string('updatedon', 'artefact.blog') . ' ' . format_date($this->mtime));
+        }
         return array('html' => $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl'),
                      'javascript' => '');
     }
@@ -1025,6 +1028,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     $post->commentcount = $commentcount;
                     $post->comments = $comments;
                 }
+            }
+            if ($post->ctime != $post->mtime) {
+                $post->lastupdated = format_date($post->mtime, 'strftimedaydatetime');
             }
             $post->ctime = format_date($post->ctime, 'strftimedaydatetime');
             $post->mtime = format_date($post->mtime);

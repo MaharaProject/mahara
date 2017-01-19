@@ -106,7 +106,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             $tagsout = array_filter($tagsout);
             $sqlvalues = array($view);
             $sql =
-                'SELECT a.title, p.title AS parenttitle, a.id, a.parent, a.owner, a.description, a.allowcomments, at.tag, a.ctime
+                'SELECT a.title, p.title AS parenttitle, a.id, a.parent, a.owner, a.description, a.allowcomments, at.tag, a.ctime, a.mtime
                 FROM {artefact} a
                 JOIN {artefact} p ON a.parent = p.id
                 JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
@@ -215,6 +215,9 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
                 $dataobject["artefact"] = $result->parent;
                 $result->postedbyon = get_string('postedbyon', 'artefact.blog', display_default_name($result->owner), format_date(strtotime($result->ctime)));
                 $result->displaydate= format_date(strtotime($result->ctime));
+                if ($result->ctime != $result->mtime) {
+                    $result->updateddate= format_date(strtotime($result->mtime));
+                }
 
                 $artefact = new ArtefactTypeBlogpost($result->id);
                 // get comments for this post

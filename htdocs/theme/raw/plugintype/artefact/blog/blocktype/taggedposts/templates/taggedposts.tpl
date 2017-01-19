@@ -125,6 +125,11 @@
             <span class="metadata">
                 {str tag='postedon' section='blocktype.blog/taggedposts'}
                 {$post->displaydate}
+                {if $post->updateddate}
+                <br>
+                    {str tag='updatedon' section='blocktype.blog/taggedposts'}
+                    {$post->updateddate}
+                {/if}
             </span>
         </h4>
     </div>

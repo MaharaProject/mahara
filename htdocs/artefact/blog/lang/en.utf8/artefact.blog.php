@@ -96,6 +96,7 @@ $string['post'] = 'entry';
 $string['postbody'] = 'Entry';
 $string['postbodydesc'] = ' ';
 $string['postedon'] = 'Posted on';
+$string['updatedon'] = 'Last updated';
 $string['postedbyon'] = 'Posted by %s on %s';
 $string['posttitle'] = 'Title';
 $string['posts'] = 'entries';
