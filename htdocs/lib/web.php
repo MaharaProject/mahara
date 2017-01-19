@@ -407,18 +407,6 @@ EOF;
             unset($headers[$key]);
         }
     }
-
-    if (get_config('developermode') & DEVMODE_UNPACKEDJS) {
-        $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
-        $javascript_array[] = $jsroot . 'MochiKit/Position.js';
-        $javascript_array[] = $jsroot . 'MochiKit/Color.js';
-        $javascript_array[] = $jsroot . 'MochiKit/Visual.js';
-        $javascript_array[] = $jsroot . 'MochiKit/DragAndDrop.js';
-        $javascript_array[] = $jsroot . 'MochiKit/Format.js';
-    }
-    else {
-        $javascript_array[] = $jsroot . 'MochiKit/Packed.js';
-    }
     $javascript_array[] = $jsroot . 'keyboardNavigation.js';
 
     //If necessary, load MathJax path

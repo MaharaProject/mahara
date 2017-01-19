@@ -47,7 +47,7 @@
         // adding the clone to the displayArray list
         for (i = 0; i < outputArray.length; i++) {
             var myDiv =  document.getElementById('instanceDiv' + outputArray[i]);
-            replaceChildNodes(getFirstElementByTagAndClassName('span', 'authIcons', 'instanceDiv' + outputArray[i]));
+            jQuery(myDiv).find('span.authIcons').empty()
             displayArray.push(myDiv.cloneNode(true));
         }
 
@@ -56,14 +56,23 @@
         for(i = 0; i < displayArray.length; i++) {
             if(displayArray.length > 1) {
                 if (i + 1 != displayArray.length) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link text-midtone" href="" onclick="move_down('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-down" role="presentation" aria-hidden="true"></span><span class="sr-only">'+get_string('moveitemdown')+'</span></a>'+"\n";
+                    jQuery(displayArray[i]).find('span.authIcons').first()
+                        .append('<a class="btn btn-link text-midtone" href="" onclick="move_down('+outputArray[i]+'); ' +
+                            'return false;"><span class="icon icon-long-arrow-down" role="presentation" aria-hidden="true">' +
+                            '</span><span class="sr-only">'+get_string('moveitemdown')+'</span></a>'+"\n");
                 }
                 if(i != 0) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link text-midtone" href="" onclick="move_up('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-up" role="presentation" aria-hidden="true"></span><span class="sr-only">'+get_string('moveitemup')+'</span></a>'+"\n";
+                    jQuery(displayArray[i]).find('span.authIcons').first()
+                        .append('<a class="btn btn-link text-midtone" href="" onclick="move_up('+outputArray[i]+'); ' +
+                            'return false;"><span class="icon icon-long-arrow-up" role="presentation" aria-hidden="true">' +
+                            '</span><span class="sr-only">'+get_string('moveitemup')+'</span></a>'+"\n");
                 }
             }
 
-            getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-default btn-sm" href="" onclick="removeAuth('+outputArray[i]+'); return false;"><span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'+get_string('deleteitem')+'</span></a>'+"\n";
+            jQuery(displayArray[i]).find('span.authIcons').first()
+                .append('<a class="btn btn-default btn-sm" href="" onclick="removeAuth('+outputArray[i]+'); ' +
+                    'return false;"><span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true">' +
+                    '</span><span class="sr-only">'+get_string('deleteitem')+'</span></a>'+"\n");
 
             instanceListDiv.appendChild(displayArray[i]);
         }
@@ -170,7 +179,7 @@
         }
         instanceArray.push(id);
         rebuildInstanceList(instanceArray);
-        replaceChildNodes('messages');
+        jQuery('#messages').empty();
     }
 
 </script>

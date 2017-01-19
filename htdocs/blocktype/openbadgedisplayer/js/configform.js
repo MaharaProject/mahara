@@ -15,7 +15,7 @@
  and add it to window scope.*/
 if (typeof pieform_element_checkboxes_update === 'undefined') {
     window.pieform_element_checkboxes_update = function (p, v) {
-        forEach(getElementsByTagAndClassName('input', 'checkboxes', p), function(e) {
+        jQuery(p).find('input.checkboxes').each(function(i, e) {
             if (!e.disabled) {
                 e.checked = v;
             }

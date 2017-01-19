@@ -98,7 +98,7 @@ var FileBrowser = (function($) {
             $('#' + self.id+'_upload_messages').append($('<div>', {'class':'error'}), get_string('youmustagreetothecopyrightnotice'));
             return false;
         }
-        return !isEmpty($('#' + self.id + '_userfile').val());
+        return !$.isEmptyObject($('#' + self.id + '_userfile').val());
     };
 
     this.upload_presubmit_dropzone = function (e) {
@@ -811,7 +811,7 @@ var FileBrowser = (function($) {
                 filelink = self.filedata[id].title;
             }
             else {
-                filelink = A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id}, self.filedata[id].title);
+                filelink = $('<a>', {'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id}).append(self.filedata[id].title);
             }
 
             fileIconImg = '';

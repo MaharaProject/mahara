@@ -303,7 +303,7 @@ foreach ($all as $k => $v) {
         'class' => 'last with-text-input',
         'title' => $v['title'],
         'defaultvalue' => in_array($k, $active),
-        'onclick' => "getElement('footerlinks_{$k}_link').disabled = !this.checked;",
+        'onclick' => "jQuery('#footerlinks_{$k}_link')[0].disabled = !this.checked;",
     );
     $footerelements[$k . '_link'] = array(
         'type' => 'text',

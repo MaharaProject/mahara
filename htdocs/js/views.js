@@ -1174,11 +1174,9 @@
 
         // still needed for tinymce :-/
         // @todo - find a way to remove the eval
-        (function($) {
-
+        (function() {
             eval(configblock.javascript);
-
-        })(getElement);
+        })();
 
         keytabbinginadialog(newblock, newblock.find('.deletebutton'), newblock.find('.cancel'));
 

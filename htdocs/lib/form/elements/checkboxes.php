@@ -78,9 +78,9 @@ function pieform_element_checkboxes_get_value(Pieform $form, $element) {/*{{{*/
 function pieform_element_checkboxes_js() {/*{{{*/
     return <<<EOF
 function pieform_element_checkboxes_update(p, v) {
-    forEach(getElementsByTagAndClassName('input', 'checkboxes', p), function(e) {
-        if (!e.disabled) {
-            e.checked = v;
+    jQuery('#' + p + ' input.checkboxes').each(function() {
+        if (!jQuery(this).prop('disabled')) {
+            jQuery(this).prop('checked', v);
         }
     });
     if (typeof formchangemanager !== 'undefined') {

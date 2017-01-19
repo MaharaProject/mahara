@@ -166,7 +166,7 @@ $smarty = smarty(array('paginator'));
 $smarty->assign('views', $data->data);
 $smarty->assign('searchform', $searchform);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() {' . $pagination['javascript'] . '});');
+$smarty->assign('INLINEJAVASCRIPT', 'jQuery(function() {' . $pagination['javascript'] . '});');
 $smarty->display('view/sharedviews.tpl');
 exit;
 
