@@ -8,7 +8,7 @@
 
 <script type="application/javascript">
 {{if !$inblockconfig}}
-    jQuery(window).load(function () {
+    jQuery(window).on('load', function () {
 {{/if}}
     jQuery("#{{$id}}").select2({
         ajax: {
@@ -27,7 +27,15 @@
             },
             processResults: function(data, page) {
                 return {
-                    results: data.results,
+                    results: jQuery.map(data.results, function(item) {
+                        // sometimes text contains html that has to be renderered in the result list (e.g. user profile)
+                        // we're assigning text to resultsText variable that get rendered in results, and
+                        // leave only text values in text variable. (in selection field will be displayed only text without markup)
+                        return jQuery.extend(item, {
+                          resultsText: item.text,
+                          text: jQuery('<div>').html(item.text).text()
+                        })
+                    }),
                     pagination: {
                         more: data.more
                     }
@@ -40,6 +48,9 @@
         allowClear: {{$allowclear}},
         {{if $hint}}placeholder: "{{$hint}}",{{/if}}
         minimumInputLength: {{$mininputlength}},
+        templateResult: function(item) {
+            return item.resultsText || item.text;
+        },
         {{$extraparams|safe}}
     });
 {{if !$inblockconfig}}
