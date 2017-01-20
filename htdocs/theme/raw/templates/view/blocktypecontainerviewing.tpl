@@ -15,7 +15,7 @@
 
 
             {if $retractable}
-            <span class="icon icon-chevron-up collapse-indicator pull-right inner-link" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chevron-up collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
             {/if}
 
         </h3>
