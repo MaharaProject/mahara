@@ -28,8 +28,8 @@ function addFeedbackError(form, data) {
 function addFeedbackSuccess(form, data) {
     paginator.updateResults(data);
     // Clear rating from previous submission
-    forEach(getElementsByTagAndClassName('input', 'star', 'add_feedback_form_rating_container'), function (r) {
-        r.checked = false;
+    jQuery('#add_feedback_form_rating_container input.star').each(function() {
+        jQuery(this).prop('checked', false);
     });
     paginator.alertProxy('pagechanged', data['data']);
 
@@ -43,10 +43,10 @@ function addFeedbackSuccess(form, data) {
     if (data.fieldnames && data.fieldnames.message) {
         messageid = data.fieldnames.message;
     }
-    $('add_feedback_form_' + messageid).value = '';
+    jQuery('#add_feedback_form_' + messageid).val('');
 
     // Clear the "Make public" switch back to its default "public" setting
-    $j('input#add_feedback_form_ispublic').prop('checked', true);
+    jQuery('input#add_feedback_form_ispublic').prop('checked', true);
 
     // need to change the watchlist link
     if (data.data.updatelink) {
@@ -57,82 +57,82 @@ function addFeedbackSuccess(form, data) {
 
     // Check if the form is displayed inside a modal
     // then close the modal
-    if ($j('#feedback-form').length) {
+    if (jQuery('#feedback-form').length) {
         dock.hide();
     }
 }
 
 function objectionSuccess(form, data) {
-    $('objection_form_message').value = '';
+    jQuery('#objection_form_message').val('');
     formSuccess(form, data);
     // close the form when the form is submited
     // Using bootstrap modal
-    if ($j('#report-form').length) {
-        $j('#report-form').modal('hide');
+    if (jQuery('#report-form').length) {
+        jQuery('#report-form').modal('hide');
     }
 }
 
 function resetFeedbackReplyto() {
-    $j('#comment_reply_parent').hide();
-    $j('#add_feedback_form_replyto').val('');
-    $j('#add_feedback_form_ispublic_container .form-switch').show().removeClass('hidden');
-    $j('#add_feedback_form_ispublic_container .add_feedback_form_privacy_message').remove();
+    jQuery('#comment_reply_parent').hide();
+    jQuery('#add_feedback_form_replyto').val('');
+    jQuery('#add_feedback_form_ispublic_container .form-switch').show().removeClass('hidden');
+    jQuery('#add_feedback_form_ispublic_container .add_feedback_form_privacy_message').remove();
 }
 
 function isTinyMceUsed() {
     return (typeof(tinyMCE) != 'undefined' && typeof(tinyMCE.get('add_feedback_form_message')) != 'undefined');
 }
 
-jQuery(function($j) {
+jQuery(function($) {
     // Watchlist
-    if ($j('#toggle_watchlist_link').length) {
-        $j('#toggle_watchlist_link').click(function (e) {
+    if ($('#toggle_watchlist_link').length) {
+        $('#toggle_watchlist_link').click(function (e) {
             e.preventDefault();
             e.stopPropagation();
             if (typeof artefactid === 'undefined') {
                 artefactid = 0;
             }
             sendjsonrequest(config.wwwroot + 'view/togglewatchlist.json.php', {'view': viewid, 'artefact': artefactid}, 'POST', function(data) {
-                $('toggle_watchlist_link').innerHTML = data.newtext;
+                jQuery('#toggle_watchlist_link').html(data.newtext);
             });
         });
     }
 
     // Copy view
-    var copyurl = $j("#copyview-button").attr('href');
-    $j("#copyview-button").on('click', function(event) {
+    var copyurl = $("#copyview-button").attr('href');
+    $("#copyview-button").on('click', function(event) {
         if (event.currentTarget.href.match(/collection=(.*)/)) {
             event.preventDefault();
             event.stopPropagation();
-            $j("#copyview-form").modal('show');
+            $("#copyview-form").modal('show');
         }
     });
-    $j("#copy-view-button").on('click', function() {
+    $("#copy-view-button").on('click', function() {
         // drop the collection bit from the url
         var url = copyurl.replace(/collection=(.*)/, '');
         window.location = url;
     });
-    $j("#copy-collection-button").on('click', function() {
+    $("#copy-collection-button").on('click', function() {
         window.location = copyurl;
     });
 
     function setupCommentButton(element) {
         // Set up the onclick method for all comment reply buttons
-        var replybutton = $j(element);
+        var replybutton = $(element);
         // Each comment stores its ID as a "replyto" data attribute
         var replyto = replybutton.data('replyto');
         var canpublicreply = replybutton.data('canpublicreply');
         var canprivatereply = replybutton.data('canprivatereply');
         if (replyto) {
             // Put this comment's ID in the "replyto" hidden form field
-            $j('#add_feedback_form_replyto').val(replyto);
+            $('#add_feedback_form_replyto').val(replyto);
 
-            var replyview = $j('#comment_reply_parent');
+            var replyview = $('#comment_reply_parent');
             // Remove any previous "reply to" comment that was being displayed
             replyview.find('div').remove();
 
             // Display a copy of this comment below the feedback form
-            var commentcopy = $j('#comment' + replyto).clone();
+            var commentcopy = $('#comment' + replyto).clone();
             // Disable the action buttons from the display copy
             commentcopy.find('.comment-item-buttons').remove();
             commentcopy.appendTo(replyview);
@@ -140,8 +140,8 @@ jQuery(function($j) {
 
             // Check whether we need to force a "private" or "public" message
             // (This is only for display. We'll also check & enforce this on the server side.)
-            var makepublicswitch = $j('#add_feedback_form_ispublic_container .form-switch');
-            $j('#add_feedback_form_ispublic_container .add_feedback_form_privacy_message').remove();
+            var makepublicswitch = $('#add_feedback_form_ispublic_container .form-switch');
+            $('#add_feedback_form_ispublic_container .add_feedback_form_privacy_message').remove();
             if (canpublicreply && canprivatereply) {
                 // If they have both options, show the normal switch
                 makepublicswitch.show().removeClass('hidden');
@@ -153,44 +153,44 @@ jQuery(function($j) {
                 // They can only post a public reply
                 if (!canprivatereply) {
                     makepublicswitch.find("input#add_feedback_form_ispublic").prop('checked', true);
-                    msg = $j(".add_feedback_form_forcepublic_message").clone().show().removeClass("hidden");
+                    msg = $(".add_feedback_form_forcepublic_message").clone().show().removeClass("hidden");
                 }
                 // They can only post a private reply
                 else {
                     makepublicswitch.find("input#add_feedback_form_ispublic").prop('checked', false);
-                    msg = $j(".add_feedback_form_forceprivate_message").clone().show().removeClass("hidden");
+                    msg = $(".add_feedback_form_forceprivate_message").clone().show().removeClass("hidden");
                 }
 
-                $j('#add_feedback_form_ispublic_container').append(msg);
+                $('#add_feedback_form_ispublic_container').append(msg);
             }
         }
     }
 
-    $j('#feedbacktable').on('click', '.js-reply', null, function(e){
-        var replybutton = $j(this);
+    $('#feedbacktable').on('click', '.js-reply', null, function(e){
+        var replybutton = $(this);
 
         e.preventDefault();
         setupCommentButton(replybutton);
 
         if (replybutton.parents('.js-feedbackbase').length) {
-            $j('#add_feedback_heading').focus();
+            $('#add_feedback_heading').focus();
             jQuery('html, body').animate({ scrollTop: jQuery('#add_feedback_heading').offset().top }, 'fast');
             return false;
         }
 
         if (replybutton.parents('.js-feedbackblock').length) {
-            var commentModal = $j('#add_feedback_link').attr('data-target');
-            var target = $j(commentModal);
+            var commentModal = $('#add_feedback_link').attr('data-target');
+            var target = $(commentModal);
             dock.show(target, false, true);
         }
     });
 
-    $j('.js-add-comment-modal').on('click', function(e) {
-        var replyviewContent = $j('#comment_reply_parent').children();
+    $('.js-add-comment-modal').on('click', function(e) {
+        var replyviewContent = $('#comment_reply_parent').children();
 
         e.preventDefault();
         // Remove any previous "reply to" comment that was being displayed
         replyviewContent.remove();
-        $j('input#add_feedback_form_replyto').val('');
+        $('input#add_feedback_form_replyto').val('');
     });
 });

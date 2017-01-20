@@ -8,7 +8,8 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 
-function SearchTable(id) {
+var SearchTable = (function($) {
+  return function (id) {
     var self = this;
     this.id = id;
 
@@ -19,28 +20,28 @@ function SearchTable(id) {
     };
 
     this.searchByChildLink = function (element) {
-        var children = getElementsByTagAndClassName('a', null, element);
+        var children = $(element).find('a');
         if (children.length == 1) {
-            var href = getNodeAttribute(children[0], 'href');
+            var href = children.first().prop('href');
             self.params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
             self.doSearch();
         }
     };
 
     this.changePage = function(e) {
-        e.stop();
+        e.preventDefault();
         self.searchByChildLink(this);
     };
 
     this.rewritePaging = function() {
-        forEach(getElementsByTagAndClassName('span', 'pagination', self.id), function(i) {
-            connect(i, 'onclick', self.changePage);
+        $('#' + self.id + ' span.pagination').each(function() {
+            $(this).on('click', self.changePage);
         });
     };
 
     this.rewriteQueryButtons = function() {
-        forEach(getElementsByTagAndClassName('button', 'query-button', self.id), function(i) {
-            connect(i, 'onclick', self.newQuery);
+        $('#' + self.id + ' button.query-button').each(function() {
+            $(this).on('click', self.newQuery);
         });
     };
 
@@ -48,17 +49,17 @@ function SearchTable(id) {
 
     this.newQuery = function(e) {
         self.params = {};
-        forEach(getElementsByTagAndClassName('input', null, getFirstParentByTagAndClassName(this, 'form')), function(i) {
-            self.params[i.name] = i.value;
+        $(this).closest('form').find('input').each(function() {
+            self.params[this.name] = this.value;
         });
         self.doSearch();
-        e.stop();
+        e.preventDefault();
     };
 
     this.doSearch = function() {
         sendjsonrequest(self.id + '.json.php', self.params, 'POST', function(data) {
-            $(self.id + '_table').innerHTML = data.data.table;
-            $(self.id + '_pagination').innerHTML = data.data.pagination;
+            $('#' + self.id + '_table').html(data.data.table);
+            $('#' + self.id + '_pagination').html(data.data.pagination);
             if (data.data.count) {
                 self.rewritePaging();
                 self.rewriteOther();
@@ -66,7 +67,8 @@ function SearchTable(id) {
         });
     };
 
-    addLoadEvent(self.init);
-}
+    $(document).ready(self.init);
+  };
+}(jQuery));
 
 //searchTable = new SearchTable();

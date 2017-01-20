@@ -10,47 +10,45 @@
 
 // TODO: i18n
 
-addLoadEvent(function() {
-    removeElementClass($('whatviewsselection'), 'hidden');
+jQuery(function($) {
+    $('#whatviewsselection').removeClass('hidden');
 
     var containers = {
-        'views': {'container': $('whatviews'), 'visible': false}
+        'views': {'container': $('#whatviews'), 'visible': false}
     };
-    if ($('whatcollections')) {
-        containers.collections = {'container': $('whatcollections'), 'visible': false};
+    if ($('#whatcollections').length) {
+        containers.collections = {'container': $('#whatcollections')[0], 'visible': false};
     }
 
     var radios = [];
 
     function toggleRadios(state) {
-        forEach(radios, function(r) {
-            r.disabled = state;
+        $.each(radios, function() {
+            $(this).prop('disabled', state);
         });
     }
-    var enableRadios  = partial(toggleRadios, '');
-    var disableRadios = partial(toggleRadios, 'disabled');
+    var enableRadios  = toggleRadios.bind(null, '');
+    var disableRadios = toggleRadios.bind(null, 'disabled');
 
     // Make the radio buttons show/hide the view selector
-    forEach(getElementsByTagAndClassName('input', 'radio', 'whattoexport-buttons'), function(radio) {
+    $('#whattoexport-buttons input.radio').each(function(id, radio) {
         radios.push(radio);
-        connect(radio, 'onclick', function(e) {
-            if (radio.checked) {
+        $(radio).on('click', function(e) {
+            if ($(radio).prop('checked')) {
                 for (var c in containers) {
                     if (c != radio.value && containers[c].visible) {
                         disableRadios();
                         containers[c].visible = false;
-                        slideUp(containers[c].container, {'duration': 0.5, 'afterFinish': enableRadios});
+                        containers[c].container.slideUp( 500, enableRadios);
                         break;
                     }
                 }
                 if (radio.value != 'all' && !containers[radio.value].visible) {
                     disableRadios();
                     containers[radio.value].visible = true;
-                    slideDown(containers[radio.value].container, {
-                        'duration': 0.5, 'afterFinish': enableRadios,
-                        'beforeSetup': function() {
-                            removeElementClass(containers[radio.value].container, 'js-hidden');
-                        }
+                    containers[radio.value].container.slideDown( 500, function() {
+                      containers[radio.value].container.removeClass('js-hidden');
+                      enableRadios();
                     });
                 }
             }
@@ -58,54 +56,56 @@ addLoadEvent(function() {
         // Open the view selector if the views checkbox is select on page load
         if (radio.value != 'all' && radio.checked && !containers[radio.value].visible) {
             containers[radio.value].visible = true;
-            removeElementClass(containers[radio.value].container, 'js-hidden');
+            containers[radio.value].container.removeClass('js-hidden');
         }
     });
 
     // Make the export format radio buttons show/hide the includefeedback checkbox
-    forEach(getElementsByTagAndClassName('input', 'radio', 'exportformat-buttons'), function(radio) {
-        connect(radio, 'onclick', function(e) {
-            hideElement($('includefeedback'));
-            if (radio.checked) {
-                if (radio.value == 'html') {
-                    showElement($('includefeedback'));
+    $('#exportformat-buttons input.radio').each(function() {
+        $(this).on('click', function(e) {
+            $('#includefeedback').hide();
+            if ($(this).prop('checked')) {
+                if ($(this).val() === 'html') {
+                    $('#includefeedback').show();
                 }
             }
         });
     });
 
     // Hook up 'click to preview' links
-    forEach(getElementsByTagAndClassName('a', 'viewlink', containers.views.container), function(i) {
-        disconnectAll(i);
-        setNodeAttribute(i, 'title', 'Click to preview');
-        connect(i, 'onclick', function (e) {
-            e.stop();
-            var href = getNodeAttribute(this, 'href');
-            var params = parseQueryString(href.substring(href.indexOf('?') + 1, href.length));
-            params['export'] = 1;
-            sendjsonrequest(config['wwwroot'] + 'view/viewcontent.json.php', params, 'POST', partial(showPreview, 'big'));
+    $(containers.views.container).find('a.viewlink').each(function() {
+        $(this).off();
+        $(this).prop('title', 'Click to preview');
+        $(this).on('click', function (event) {
+            event.preventDefault();
+            var href = $(this).prop('href');
+            var params = {
+                'id': getUrlParameter('id', href) || '',
+                'export': 1
+            };
+            sendjsonrequest(config['wwwroot'] + 'view/viewcontent.json.php', params, 'POST', showPreview.bind(null, 'big'));
         });
     });
 
     // Checkbox helpers
-    var checkboxes = getElementsByTagAndClassName('input', 'checkbox', 'whatviews');
-    var checkboxHelperDiv = DIV();
+    var checkboxes = $('#whatviews input.checkbox');
+    var checkboxHelperDiv = $('<div>');
 
-    var checkboxSelectAll = $('selection_all');
-    connect(checkboxSelectAll, 'onclick', function(e) {
-        e.stop();
-        forEach(checkboxes, function(i) {
-            i.checked = true;
+    var checkboxSelectAll = $('#selection_all');
+    $(checkboxSelectAll).on('click', function(e) {
+        e.preventDefault();
+        checkboxes.each(function() {
+          $(this).prop('checked', true);
         });
     });
 
-    var checkboxReverseSelection = $('selection_reverse');
-    connect(checkboxReverseSelection, 'onclick', function(e) {
-        e.stop();
-        forEach(checkboxes, function(i) {
-            i.checked = !i.checked;
-        });
+    var checkboxReverseSelection = $('#selection_reverse');
+    checkboxReverseSelection.on('click', function(e) {
+        e.preventDefault();
+          checkboxes.each(function() {
+            $(this).prop('checked', !$(this).prop('checked'));
+          });
     });
 
-    insertSiblingNodesBefore(getFirstElementByTagAndClassName('div', null, containers.views.container), checkboxHelperDiv);
+    checkboxHelperDiv.insertBefore($(containers.views.container).find('div:first'));
 });
