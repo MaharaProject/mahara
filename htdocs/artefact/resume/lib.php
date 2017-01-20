@@ -1026,49 +1026,44 @@ EOF;
     }
 
     static function get_tablerenderer_title_js($titlestring, $extrastring, $bodystring, $attachstring) {
-        return "
-                function (r, d) {
+        return <<<EOF
+                function (row, data) {
                     if (!{$bodystring} && !{$attachstring}) {
-                        return TD(null, SPAN(null, {$titlestring}), DIV({'class': 'detail text-midtone'}, {$extrastring}));
+                      return jQuery('<td>').append(
+                        jQuery('<span>').append({$titlestring}),
+                        jQuery('<div>', {'class': 'detail text-midtone'}).append({$extrastring})
+                      )[0];
                     }
-                    var link = A({'class': 'toggle textonly', 'href': ''}, {$titlestring});
-                    connect(link, 'onclick', function (e) {
-                        e.stop();
-                        return showhideComposite(r, {$bodystring}, {$attachstring});
+                    var link = jQuery('<a>', {'class': 'toggle textonly', 'href': ''}).append({$titlestring})[0];
+                    jQuery(link).on('click', function (e) {
+                        e.preventDefault();
+                        return showhideComposite(row, {$bodystring}, {$attachstring});
                     });
-                    var extra = DIV({'class': 'detail text-midtone'}, {$extrastring});
-                    return TD({'id': 'composite-' + r.artefact + '-' + r.id}, DIV({'class': 'expandable-head'}, link, extra));
+                    var extra = jQuery('<div>', {'class': 'detail text-midtone'}).append({$extrastring});
+                    return jQuery('<td>', {'id': 'composite-' + row.artefact + '-' + row.id}).append(
+                        jQuery('<div>', {'class': 'expandable-head'}).append(link, extra)
+                    )[0];
                 },
-                ";
+EOF;
     }
 
     static function get_showhide_composite_js() {
-        return "
-            function showhideComposite(r, content, attachments) {
+        return <<<EOF
+            function showhideComposite(row, content, attachments) {
                 // get the reference for the title we just clicked on
-                var titleTD = $('composite-' + r.artefact + '-' + r.id);
-                var bodyNode = $('composite-body-' + r.artefact +  '-' + r.id);
-                if (bodyNode) {
-                    if (hasElementClass(bodyNode, 'hidden')) {
-                        removeElementClass(bodyNode, 'hidden');
-                    }
-                    else {
-                        addElementClass(bodyNode, 'hidden');
-                    }
+                var titleTD = jQuery('#composite-' + row.artefact + '-' + row.id);
+                var bodyNode = jQuery('#composite-body-' + row.artefact +  '-' + row.id);
+                if (bodyNode.length) {
+                    bodyNode.toggleClass('hidden');
                     return false;
                 }
-                if (attachments) {
-                    var newNode = DIV({'id': 'composite-body-' + r.artefact + '-' + r.id},
-                        DIV({'class':'content-text'}, content), attachments);
-                }
-                else {
-                    var newNode = DIV({'id': 'composite-body-' + r.artefact + '-' + r.id},
-                        DIV({'class':'content-text'}, content));
-                }
-                insertSiblingNodesAfter(getFirstElementByTagAndClassName(null, 'expandable-head', titleTD), newNode);
-                setupExpanders(jQuery(newNode));
+                    var newNode = jQuery('<div>', {'id': 'composite-body-' + row.artefact + '-' + row.id}).append(
+                      jQuery('<div>', {'class':'content-text'}).append(content),
+                      attachments
+                      );
+                newNode.insertAfter(titleTD.find('.expandable-head').first());
             }
-        ";
+EOF;
     }
 
     static function get_artefacttype_js($compositetype) {
@@ -1095,52 +1090,58 @@ EOF;
 
         $js .= <<<EOF
 
-        function (r, d) {
+        function (row, data) {
             var buttons = [];
-            if (r._rownumber > 1) {
+            if (row._rownumber > 1) {
                 var up =
-                    A({'href': '', 'class': 'moveup'},
-                        SPAN({'class': 'icon icon-long-arrow-up','role':'presentation'}),
-                        SPAN({'class': 'sr-only'}, {$upjsstr}));
-                connect(up, 'onclick', function (e) {
-                    e.stop();
-                    return moveComposite(d.type, r.id, r.artefact, 'up');
+                    jQuery('<a>', {'href': '', 'class': 'moveup'}).append(
+                        jQuery('<span>',{'class': 'icon icon-long-arrow-up','role':'presentation'}),
+                        jQuery('<span>',{'class': 'sr-only', 'text': {$upjsstr}})
+                    );
+                    up.on('click', function (e) {
+                    e.preventDefault();
+                    return moveComposite(data.type, row.id, row.artefact, 'up');
                 });
                 buttons.push(up);
             }
-            if (!r._last) {
+            if (!row._last) {
                 var down =
-                    A({'href': '', 'class':'movedown'},
-                        SPAN({'class': 'icon icon-long-arrow-down', 'role':'presentation'}),
-                        SPAN({'class': 'sr-only'}, {$downjsstr}));
-                connect(down, 'onclick', function (e) {
-                    e.stop();
-                    return moveComposite(d.type, r.id, r.artefact, 'down');
+                    jQuery('<a>', {'href': '', 'class':'movedown'}).append(
+                      jQuery('<span>',{'class': 'icon icon-long-arrow-down','role':'presentation'}),
+                      jQuery('<span>',{'class': 'sr-only', 'text': {$downjsstr}})
+                    );
+                    down.on('click', function (e) {
+                    e.preventDefault();
+                    return moveComposite(data.type, row.id, row.artefact, 'down');
                 });
                 buttons.push(' ');
                 buttons.push(down);
             }
-            return TD({'class':'movebuttons'}, buttons);
+            return jQuery('<td>',{'class':'movebuttons'}).append(buttons)[0];
         },
 EOF;
 
         $js .= call_static_method(generate_artefact_class_name($compositetype), 'get_tablerenderer_js');
 
         $js .= <<<EOF
-        function (r, d) {
+        function (row, data) {
             var editlink =
-                A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}, 'class': 'btn btn-default btn-xs'},
-                    SPAN({'class': 'icon icon-pencil icon-lg', 'role':'presentation'}),
-                    SPAN({'class': 'sr-only'}, {$editjsstr}));
+                jQuery('<a>', {'href': 'editcomposite.php?id=' + row.id + '&artefact=' + row.artefact,
+                               'title': {$editstr}, 'class': 'btn btn-default btn-xs'}).append(
+                                    jQuery('<span>',{'class': 'icon icon-pencil icon-lg', 'role':'presentation'}),
+                                    jQuery('<span>',{'class': 'sr-only'}).append({$editjsstr})
+                               );
             var dellink =
-                A({'href': '', 'title': {$delstr}, 'class': 'btn btn-default btn-xs'},
-                    SPAN({'class': 'icon icon-trash text-danger icon-lg','role':'presentation'}),
-                    SPAN({'class': 'sr-only'}, {$deljsstr}));
-            connect(dellink, 'onclick', function (e) {
-                e.stop();
-                return deleteComposite(d.type, r.id, r.artefact);
+                jQuery('<a>', {'href': '', 'title': {$delstr}, 'class': 'btn btn-default btn-xs'}).append(
+                    jQuery('<span>',{'class': 'icon icon-trash text-danger icon-lg','role':'presentation'}),
+                    jQuery('<span>',{'class': 'sr-only'}).append({$deljsstr})
+                );
+                dellink.on('click', function (e) {
+                e.preventDefault();
+                return deleteComposite(data.type, row.id, row.artefact);
             });
-            return TD({'class':'control-buttons'}, DIV({'class':'btn-group'}, null, editlink, ' ', dellink));
+            return jQuery('<td>', {'class':'control-buttons'}).append(
+                jQuery('<div>', {'class':'btn-group'}).append( null, editlink, ' ', dellink))[0];
         }
     ],
     {
@@ -1173,16 +1174,23 @@ function formatSize(size) {
 }
 function listAttachments(attachments) {
     if (attachments.length > 0) {
-        var togglelink = SPAN({$attachmentsstr});
-        var thead = THEAD({}, TR(null, TH(null, togglelink)));
-        var tbody = TBODY({});
+        var togglelink = jQuery('<span>').append({$attachmentsstr});
+        var thead = jQuery('<thead>').append(jQuery('<tr>').append(jQuery('<th>').append(togglelink)));
+        var tbody = jQuery('<tbody>');
         for (var i=0; i < attachments.length; i++) {
             var item = attachments[i];
             var href = self.config.wwwroot + 'artefact/file/download.php?file=' + attachments[i].id;
-            var link = A({'href': href}, {$downloadstr});
-            appendChildNodes(tbody, TR(null, TD(null, item.title + ' (' + formatSize(item.size) + ') - ', SPAN(null, link))));
+            var link = jQuery('<a>', {'href': href, 'text': '{$downloadstr}' });
+            tbody.append(
+              jQuery('<tr>').append(
+                jQuery('<td>').append(
+                  item.title + ' (' + formatSize(item.size) + ') - ',
+                  jQuery('<span>').append(link)
+                )
+              )
+            );
         }
-        return TABLE({'class': 'table'}, thead, tbody);
+        return jQuery('<table>', {'class': 'table'}).append(thead, tbody)[0];
     }
     else {
         // No attachments
@@ -1234,26 +1242,26 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_body_js_string(),
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
-                function (r, d) {
-                    return TD({'style':'text-align:center'}, r.clipcount);
+                function (row, data) {
+                    return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
                 },
         ";
     }
 
     public static function get_tablerenderer_title_js_string() {
-        return " r.jobtitle + ': ' + r.employer";
+        return " row.jobtitle + ': ' + row.employer";
     }
 
     public static function get_tablerenderer_date_js_string() {
-        return " r.startdate + (r.enddate ? ' - ' + r.enddate : '')";
+        return " row.startdate + (row.enddate ? ' - ' + row.enddate : '')";
     }
 
     public static function get_tablerenderer_body_js_string() {
-        return " r.positiondescription";
+        return " row.positiondescription";
     }
 
     public static function get_tablerenderer_attachments_js_string() {
-        return " listAttachments(r.attachments)";
+        return " listAttachments(row.attachments)";
     }
 
     public static function get_addform_elements() {
@@ -1372,18 +1380,18 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_body_js_string(),
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
-                function (r, d) {
-                    return TD({'style':'text-align:center'}, r.clipcount);
+                function (row, data) {
+                    return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
                 },
         ";
     }
 
     public static function get_tablerenderer_title_js_string() {
-        return " formatQualification(r.qualname, r.qualtype, r.institution)";
+        return " formatQualification(row.qualname, row.qualtype, row.institution)";
     }
 
     public static function get_tablerenderer_date_js_string() {
-        return " r.startdate + (r.enddate ? ' - ' + r.enddate : '')";
+        return " row.startdate + (row.enddate ? ' - ' + row.enddate : '')";
     }
 
     public static function format_render_self_data($data) {
@@ -1405,11 +1413,11 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
     }
 
     public static function get_tablerenderer_body_js_string() {
-        return " r.qualdescription";
+        return " row.qualdescription";
     }
 
     public static function get_tablerenderer_attachments_js_string() {
-        return " listAttachments(r.attachments)";
+        return " listAttachments(row.attachments)";
     }
 
     public static function get_addform_elements() {
@@ -1552,26 +1560,26 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_body_js_string(),
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
-                function (r, d) {
-                    return TD({'style':'text-align:center'}, r.clipcount);
+                function (row, data) {
+                    return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
                 },
         ";
     }
 
     public static function get_tablerenderer_title_js_string() {
-        return "r.title";
+        return "row.title";
     }
 
     public static function get_tablerenderer_date_js_string() {
-        return " r.date";
+        return " row.date";
     }
 
     public static function get_tablerenderer_body_js_string() {
-        return "r.description";
+        return "row.description";
     }
 
     public static function get_tablerenderer_attachments_js_string() {
-        return " listAttachments(r.attachments)";
+        return " listAttachments(row.attachments)";
     }
 
     public static function get_addform_elements() {
@@ -1667,26 +1675,33 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_body_js_string(),
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
-                function (r, d) {
-                    return TD({'style':'text-align:center'}, r.clipcount);
+                function (row, data) {
+                    return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
                 },
         ";
     }
 
     public static function get_tablerenderer_title_js_string() {
-        return "r.title + ' (' + r.contribution + ')'";
+        return "row.title + ' (' + row.contribution + ')'";
     }
 
     public static function get_tablerenderer_date_js_string() {
-        return " r.date";
+        return " row.date";
     }
 
     public static function get_tablerenderer_body_js_string() {
-        return "DIV(r.description, DIV({'id':'composite-book-url'}, A({'href':r.url}, r.url)))";
-    }
+      return <<<EOF
+          jQuery('<div>').append(
+              row.description,
+              jQuery('<div>', {'id':'composite-book-url'}).append(
+                  jQuery('<a>', {'href':row.url, 'text' : row.url})
+              )
+          )[0]
+EOF;
+  }
 
     public static function get_tablerenderer_attachments_js_string() {
-        return " listAttachments(r.attachments)";
+        return " listAttachments(row.attachments)";
     }
 
     public static function get_addform_elements() {
@@ -1796,26 +1811,26 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_body_js_string(),
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
-                function (r, d) {
-                    return TD({'style':'text-align:center'}, r.clipcount);
+                function (row, data) {
+                    return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
                 },
         ";
     }
 
     public static function get_tablerenderer_title_js_string() {
-        return "r.title";
+        return "row.title";
     }
 
     public static function get_tablerenderer_date_js_string() {
-        return " r.startdate + (r.enddate ? ' - ' + r.enddate : '')";
+        return " row.startdate + (row.enddate ? ' - ' + row.enddate : '')";
     }
 
     public static function get_tablerenderer_body_js_string() {
-        return "r.description";
+        return "row.description";
     }
 
     public static function get_tablerenderer_attachments_js_string() {
-        return " listAttachments(r.attachments)";
+        return " listAttachments(row.attachments)";
     }
 
     public static function get_addform_elements() {
