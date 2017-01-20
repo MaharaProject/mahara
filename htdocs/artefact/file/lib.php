@@ -637,22 +637,28 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     $item->size = ArtefactTypeFile::short_size($item->size, true);
                 }
                 if ($group) {
-                    // site public files
-                    if ($institution == 'mahara' && ArtefactTypeFolder::admin_public_folder_id() == $parentfolderid) {
-                        $item->can_edit = 0;
-                        $item->can_view = 1;
-                        $item->can_republish = 1;
-                    }
-                    else if (!empty($item->author) && $item->author == $USER->get('id')) {
-                        $item->can_edit = 1;
-                        $item->can_view = 1;
-                        $item->can_republish = 1;
-                    }
-                    else {
-                        $item->can_edit = $can_edit_parent && $item->can_edit;
-                        $item->can_view = $can_view_parent && $item->can_view;
-                        $item->can_republish = $can_view_parent && $item->can_republish;
-                    }
+                  if ( $institution == 'mahara' && $USER->get('admin')) {
+                    //site files inside and outside public folder (only admin user)
+                    $item->can_edit = 1;
+                    $item->can_view = 1;
+                    $item->can_republish = 1;
+                  }
+                  else if ($institution == 'mahara' && ArtefactTypeFolder::admin_public_folder_id() == $parentfolderid) {
+                       // site public files, not admin user
+                       $item->can_edit = 0;
+                       $item->can_view = 1;
+                       $item->can_republish = 1;
+                  }
+                  else if (!empty($item->author) && $item->author == $USER->get('id')) {
+                      $item->can_edit = 1;
+                      $item->can_view = 1;
+                      $item->can_republish = 1;
+                  }
+                  else {
+                      $item->can_edit = $can_edit_parent && $item->can_edit;
+                      $item->can_view = $can_view_parent && $item->can_view;
+                      $item->can_republish = $can_view_parent && $item->can_republish;
+                  }
                 }
                 if (!empty($item->author)) {
                     if ($group && $item->author == $USER->get('id')) {
