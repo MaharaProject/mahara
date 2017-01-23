@@ -868,13 +868,40 @@ class Collection {
      */
     public function remove_view($view) {
         db_begin();
+
+        $position = get_field_sql('
+            SELECT displayorder FROM {collection_view}
+                WHERE collection = ?
+                AND view = ?',
+                array($this->get('id'),$view)
+        );
+
         delete_records('collection_view','view',$view,'collection',$this->get('id'));
 
+        $this->update_display_order($position);
         // Secret url records belong to the collection, so remove them from the view.
         // @todo: add user message to whatever calls this.
         delete_records_select('view_access', 'view = ? AND token IS NOT NULL', array($view));
 
         db_commit();
+    }
+
+    /**
+     * Updates the position number of the views in a collection
+     *
+     * @param integer $start position from where to start updating
+     */
+    public function update_display_order($start = 0) {
+        $start = intval($start);
+        $ids = get_column_sql('
+                SELECT view FROM {collection_view}
+                WHERE collection = ?
+                ORDER BY displayorder', array($this->get('id')));
+        foreach ($ids as $k => $v) {
+            if ($start <= $k) {
+                set_field('collection_view', 'displayorder', $k, 'view', $v, 'collection',$this->get('id'));
+            }
+        }
     }
 
     /**
