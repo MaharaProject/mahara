@@ -33,7 +33,7 @@ results.rowfunction = function (r, rownumber, d) {
 
     var titleElement;
     if (r.links && r.links._default) {
-        titleElement = [jQuery('<h3>',{'class': 'title'}), jQuery('<a>', {'href': r.links._default, 'text': r.title}))];
+        titleElement = [jQuery('<h3>',{'class': 'title'}), jQuery('<a>', {'href': r.links._default, 'text': r.title})];
         delete r.links._default;
     }
     else {
@@ -79,7 +79,7 @@ else {
     $javascript .= 'results.query = \'\';';
 }
 
-$smarty = smarty(array('tablerenderer', 'Pager'), array(), array(), array('sidebars' => true));
+$smarty = smarty(array('tablerenderer'), array(), array(), array('sidebars' => true));
 $smarty->assign('query', $query);
 $smarty->assign('artefacttype', $artefacttype);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

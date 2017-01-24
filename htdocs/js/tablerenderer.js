@@ -21,9 +21,6 @@ return function (target, source, columns, options) {
     this.options = options;
     this.offset = 0;
     this.limit = 10;
-    this.paginate = true;
-    this.paginate_simple = true;
-    this.paginate_firstlast = true;
     this.statevars = ['offset','limit'];
     this.emptycontent = undefined;  // Something to display when no results are found
     this.rowfunction = function(rowdata, rownumber, data) { return $('<tr>', {'class': 'r' + (rownumber % 2)}); };
@@ -64,11 +61,6 @@ return function (target, source, columns, options) {
           self.table.append(self.tfoot);
         }
 
-        if (self.paginate) {
-            self.linkspan = self.columns.length > 0 ? self.columns.length : 1;
-            self.assertPager(self.offset, self.limit, self.count);
-        }
-
         if (TableRendererPageLoaded) {
             if (typeof(self.emptycontent) != 'undefined') {
                 self.emptycontent = $('<div>').append(self.emptycontent);
@@ -81,69 +73,6 @@ return function (target, source, columns, options) {
                 }
             }
         }
-    };
-
-    this.assertPager = function (offset, limit, count) {
-        if (!count) {
-            return;
-        }
-        if(!self.pager || self.pager.options.lastPage != Math.floor( (count-1) / limit ) + 1 ) {
-            if (self.pager) {
-                if (self.headRow.length) {
-                    self.headRow.remove();
-                }
-                if (self.footRow.length) {
-                    self.footRow.remove();
-                }
-                self.pager.removeAllInstances();
-            }
-            self.pager = new Pager(count, limit,
-                $.extend(
-                    null,
-                    self.defaultPagerOptions,
-                    self.pagerOptions,
-                    { 'currentPage': Math.floor(offset / limit) + 1 }
-                )
-            );
-
-            if (self.pager.options.lastPage == 1) {
-                self.headRow = null;
-                self.footRow = null;
-                return;
-            }
-
-            self.headRow = $('<tr>').append($('<td>', {'colspan': self.linkspan }).append(self.pager.newDisplayInstance()))[0];
-            self.footRow = $('<tr>').append($('<td>', {'colspan': self.linkspan }).append(self.pager.newDisplayInstance()))[0];
-
-            if ( self.thead.firstChild ) {
-                $(self.headRow).insertBefore(self.thead.children().first());
-            }
-            else {
-                self.thead.append(self.headRow);
-            }
-            self.tfoot.append(self.footRow);
-        }
-    };
-
-    this.pageChange = function(n) {
-        self.lastArgs.offset = ( n - 1 ) * self.limit;
-        self.doupdate(self.lastArgs);
-    };
-
-    this.onFirstPage = function () {
-        if (self.offset == 0) {
-            return true;
-        }
-
-        return false;
-    };
-    this.onLastPage = function () {
-        // logDebug('offset=' + self.offset + ', limit=' + self.limit + ', count=' + self.count);
-        if ( self.offset + self.limit >= self.count ) {
-            return true;
-        }
-
-        return false;
     };
 
     this.renderdata = function(data, options) {
@@ -209,12 +138,6 @@ return function (target, source, columns, options) {
                 console.error('tablerenderer call updatecallback(', response, ') failed.');
             }
 
-            if (self.paginate) {
-                if (typeof(self.assertPager) == 'function') {
-                    self.assertPager(self.offset, self.limit, self.count);
-                }
-            }
-
             if (typeof(self.emptycontent) != 'undefined') {
                 // Make sure the emptycontent is in a div
                 if (self.emptycontent[0].nodeName != 'DIV') {
@@ -251,42 +174,6 @@ return function (target, source, columns, options) {
         }, null, true);
     };
 
-    this.goFirstPage = function() {
-        self.lastArgs.offset = 0;
-        self.doupdate(self.lastArgs);
-    };
-
-    this.goPrevPage = function() {
-        if ( self.offset > 0 ) {
-            if ( self.offset - self.limit < 0 ) {
-                self.lastArgs.offset = 0;
-                self.doupdate(self.lastArgs);
-            }
-            else {
-                self.lastArgs.offset = self.offset - self.limit;
-                self.doupdate(self.lastArgs);
-            }
-        }
-        else {
-            console.warn('Already on the first page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
-        }
-    };
-
-    this.goNextPage = function() {
-        if ( self.offset + self.limit < self.count ) {
-            self.lastArgs.offset = self.offset + self.limit;
-            self.doupdate(self.lastArgs);
-        }
-        else {
-            console.warn('Already on the last page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
-        }
-    };
-
-    this.goLastPage = function() {
-        self.lastArgs.offset = Math.floor( ( self.count - 1 ) / self.limit) * self.limit;
-        self.doupdate(self.lastArgs);
-    };
-
     this.updateOnLoad = function(request_args) {
         self.updateOnLoadFlag = true;
         if ( TableRendererPageLoaded ) {
@@ -296,15 +183,6 @@ return function (target, source, columns, options) {
             $(document).ready(self.doupdate.bind(null, request_args, null));
         }
     };
-
-    this.defaultPagerOptions =
-  {        'pageChangeCallback': self.pageChange,
-        'previousPageString': get_string('prevpage'),
-        'nextPageString': get_string('nextpage'),
-        'lastPageString': get_string('lastpage'),
-        'firstPageString': get_string('firstpage')
-    };
-    this.pagerOptions = {};
 
     if ( TableRendererPageLoaded ) {
         this.init();

@@ -132,7 +132,6 @@ var table = new TableRenderer(
 );
 table.updateOnLoad();
 table.emptycontent = {$strnoimagesfound};
-table.paginate = false;
 table.updatecallback = function(response) {
     var defaultIcon = filter(function (i) { return i.isdefault == 't'; }, response.data);
 
@@ -349,7 +348,7 @@ function settings_submit_delete(Pieform $form, $values) {
 }
 
 $smarty = smarty(
-    array('tablerenderer', 'Pager'),
+    array('tablerenderer'),
     array(),
     array(),
     array(

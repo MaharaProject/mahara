@@ -34,7 +34,7 @@ $compositetypes = array(
 $inlinejs = ArtefactTypeResumeComposite::get_js($compositetypes);
 $compositeforms = ArtefactTypeResumeComposite::get_forms($compositetypes);
 
-$smarty = smarty(array('tablerenderer', 'Pager'));
+$smarty = smarty(array('tablerenderer'));
 $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());

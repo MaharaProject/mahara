@@ -155,7 +155,7 @@ jQuery(function($) {
 
 EOF;
 
-$smarty = smarty(array('tablerenderer', 'Pager'));
+$smarty = smarty(array('tablerenderer'));
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
