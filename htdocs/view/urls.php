@@ -253,7 +253,8 @@ function newurl_submit(Pieform $form, $values) {
 
     if ($collection) {
         $collection->new_token();
-        $viewid = reset($collection->get_viewids());
+        $viewids = $collection->get_viewids();
+        $viewid = reset($viewids);
     }
     else {
         View::new_token($viewid);
