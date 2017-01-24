@@ -29,8 +29,10 @@ if (empty($dbserviceuser)) {
 
 $services = get_records_array('external_services', 'restrictedusers', 1);
 $sopts = array();
-foreach ($services as $service) {
-    $sopts[$service->id] = $service->name;
+if ($services) {
+    foreach ($services as $service) {
+        $sopts[$service->id] = $service->name;
+    }
 }
 
 $dbuser = get_record('usr', 'id', $dbserviceuser->userid);
@@ -50,7 +52,8 @@ if (isset($dbserviceuser->externalserviceid)) {
 }
 else {
     $serviceenabled = 0;
-    $defaultserviceid = array_pop(array_keys($sopts));
+    $sopts_keys = array_keys($sopts);
+    $defaultserviceid = array_pop($sopts_keys);
     $restrictedusers = 0;
 }
 
