@@ -25,38 +25,29 @@ require_once(get_config('docroot') . 'lib/pieforms/pieform/elements/checkbox.php
  * @return string           The HTML for the element
  */
 function pieform_element_switchbox(Pieform $form, $element) {
-    $wrapper = !empty($element['wrapperclass']) ? $element['wrapperclass'] : '';
+    $smarty = smarty_core();
+    $smarty->left_delimiter = '{{';
+    $smarty->right_delimiter = '}}';
 
-    $html = '<div class="' . $wrapper . '">' . pieform_element_checkbox($form, $element) . '</div>';
+    $checkbox = pieform_element_checkbox($form, array_merge($element, array('arialabel' => true)));
 
-    $labels = pieform_element_switchbox_labeltext($element);
+    $wrapper = (!empty($element['wrapperclass']) ? $element['wrapperclass'] : '');
+    $smarty->assign('wrapper', $wrapper);
+    $smarty->assign('elementid', $form->make_id($element, $form->get_name()));
+    $smarty->assign('libfile', get_config('wwwroot') . 'js/switchbox.js');
+    $smarty->assign('checkbox', $checkbox);
 
     // Dealing with the label text
-    $type = $labels['type'];
-    $onlabel = $labels['on'];
-    $offlabel = $labels['off'];
+    $labels = pieform_element_switchbox_labeltext($element);
+    $smarty->assign('type', $labels['type']);
+    $smarty->assign('onlabel', $labels['on']);
+    $smarty->assign('offlabel', $labels['off']);
 
-    $strlength = max(strlen($onlabel), strlen($offlabel));
-    $width = floor((57 + (($strlength - 2) * 3.5) + pow(1.4, ($strlength - 2)))) . 'px';
-
-    $elementid = $form->make_id($element, $form->get_name());
-
-    $html = '<div class="form-switch ' . $wrapper . '">';
-    $html .= '    <div class="switch ' . $type . '" style="width:'.$width.'">';
-    $html .= pieform_element_checkbox($form, array_merge($element, array('arialabel' => true)));
-    $html .= '        <label class="switch-label" for="' . $elementid . '" aria-hidden="true">';
-    $html .= '            <span class="switch-inner"></span>';
-    $html .= '            <span class="switch-indicator"></span>';
-    $html .= '            <span class="state-label on">'. $onlabel .'</span>';
-    $html .= '            <span class="state-label off">'. $offlabel .'</span>';
-    $html .= '        </label>';
-    $html .= '    </div>';
-    $html .= '</div>';
-    return $html;
+    return $smarty->fetch('form/switchbox.tpl');
 }
 
 function pieform_element_switchbox_labeltext($element){
-        // Dealing with the label text
+    // Dealing with the label text
     $type = isset($element['switchtext']) ? $element['switchtext'] : '';
 
     switch ($type) {
@@ -88,8 +79,10 @@ function pieform_element_switchbox_labeltext($element){
  * @return array         An array of HTML elements to go in the <head>
  */
 function pieform_element_switchbox_get_headdata($element) {
-    global $THEME;
-    return array();
+    $libfile = get_config('wwwroot') . 'js/switchbox.js';
+    $scripts = array();
+    $scripts[] = '<script type="application/javascript" src="' . $libfile . '"></script>';
+    return $scripts;
 }
 
 function pieform_element_switchbox_get_value(Pieform $form, $element) {

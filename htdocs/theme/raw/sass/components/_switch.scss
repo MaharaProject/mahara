@@ -1,6 +1,10 @@
 $transition: 0.1s ease-in 0s;
 $height: 28px;
+$indicator-horizontal-margin : 9px;
+$indicator-size: 10px;
+$label-font-size: 14px;
 
+$indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
 
 .switchbox.form-group {
     > label {
@@ -18,7 +22,8 @@ $height: 28px;
         -ms-user-select: none;
         user-select: none;
         position: relative;
-        width: 60px; //overridden with inline styles
+        overflow: hidden;
+        width: 60px; // Overridden with inline styles
         input {
             @extend .sr-only;
 
@@ -74,6 +79,7 @@ $height: 28px;
         &:after {
             @include box-sizing(border-box);
             @include box-shadow(none);
+            content: '';
             background-color: $brand-default;
             border: 1px solid $btn-default-border;
             display: block;
@@ -81,22 +87,6 @@ $height: 28px;
             width: 50%;
             height: $height;
             padding: 0;
-            line-height: 26px;
-            font-size: 14px;
-            text-transform: capitalize;
-        }
-
-        &:before {
-            content:'';
-            padding-left: 10px;
-            color: $text-color;
-        }
-
-        &:after {
-            content:'';
-            padding-right: 10px;
-            color: $text-color;
-            text-align: right;
         }
     }
 
@@ -104,50 +94,61 @@ $height: 28px;
         margin-left: 0;
     }
 
+
     .switch-indicator {
         @include transition(all $transition);
-        border-radius: 20px;
+        border-radius: 50%;
         display: block;
-        width: 10px;
-        height:10px;
-        margin: 6px 7px;
+        width: $indicator-size;
+        height: $indicator-size;
+        margin: -($indicator-size / 2) $indicator-horizontal-margin 0;
+        margin-right: $indicator-horizontal-margin + $indicator-total-width;
         background: rgba($brand-danger, 0.8);
         border: 1px solid rgba(darken($brand-danger, 5%), 0.8);
         position: absolute;
-        top: 3px;
-        right: 3.5rem;
+        top: 50%;
+        left: 0;
+        right: 100%;
+        transform: none;
     }
 
     input:checked + .switch-label .switch-indicator {
-        right: 0px;
+        left: 100%;
+        right: 0;
+        transform: translateX(#{-$indicator-total-width});
         background-color: rgba($brand-success, 0.8);
         border: 1px solid rgba(darken($brand-success, 5%), 0.8);
 
         ~ .off {
-            text-indent: 55%;
+            transform: translateX(#{-$indicator-total-width}) translateX(100%);
         }
 
         ~ .on {
-            text-indent: -0;
+            transform: none;
         }
     }
 
-
     .state-label {
         @include transition(all $transition);
-        display: block;
-        float: left;
+        white-space: nowrap;
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        top: 0;
         height: $height;
-        padding:3px 10px;
-        margin-top:-$height;
-
+        width: 100%;
+        padding: 0 $indicator-horizontal-margin;
+        font-size: $label-font-size;
+        line-height: $height;
+        backface-visibility: hidden;
         &.off {
-            padding-left: 45%;
-            text-indent: 0;
+            padding-left: $indicator-total-width;
+            transform: none;
         }
 
         &.on {
-            text-indent: -55%;
+            padding-right: $indicator-total-width;
+            transform: translateX(#{$indicator-total-width}) translateX(-100%);
         }
     }
 }
