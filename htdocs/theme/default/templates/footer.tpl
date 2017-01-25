@@ -27,7 +27,7 @@
             <div class="footer-inner container">
                 <div id="powered-by" class="pull-left mahara-logo">
                     <a href="https://mahara.org/">
-                        <img src="{theme_url filename='images/powered_by_mahara.png'}" alt="Powered by Mahara">
+                        <img src="{theme_url filename='images/powered_by_mahara.png'}?v={$CACHEVERSION}" alt="Powered by Mahara">
                     </a>
                 </div>
                 <!-- This site is powered by Mahara, an Open Source
