@@ -126,30 +126,35 @@ function testing_install_dependencies() {
     // Directory to install PHP composer
     $composerroot = get_composerroot_dir();
 
-    echo "Installing composer and dependencies...\n";
-    // Download composer.phar if we can.
-    if (!file_exists($composerroot . '/composer.phar')) {
-        passthru("curl -sS https://getcomposer.org/installer\
-                | php -- --install-dir=$composerroot", $errorcode);
+    if (file_exists('/.dockerenv')) {
+        echo "WARN: Need to update composer before running behat in docker via: make initcomposer\n";
     }
     else {
-        // If it is already there update the installer.
-        passthru("php {$composerroot}/composer.phar\
-            --working-dir={$composerroot} self-update", $errorcode);
-    }
+        echo "Installing composer and dependencies...\n";
+        // Download composer.phar if we can.
+        if (!file_exists($composerroot . '/composer.phar')) {
+            passthru("curl -sS https://getcomposer.org/installer\
+                    | php -- --install-dir=$composerroot", $errorcode);
+        }
+        else {
+            // If it is already there update the installer.
+            passthru("php {$composerroot}/composer.phar\
+                --working-dir={$composerroot} self-update", $errorcode);
+        }
 
-    // Install dependencies.
-    if (file_exists($composerroot . '/composer.json')
-        && file_exists($composerroot . '/composer.phar')
-        && !file_exists($composerroot . '/composer.lock')) {
-        passthru("php {$composerroot}/composer.phar install\
-            --working-dir={$composerroot}\
-            --no-interaction --quiet --no-dev", $errorcode);
-    }
+        // Install dependencies.
+        if (file_exists($composerroot . '/composer.json')
+            && file_exists($composerroot . '/composer.phar')
+            && !file_exists($composerroot . '/composer.lock')) {
+            passthru("php {$composerroot}/composer.phar install\
+                --working-dir={$composerroot}\
+                --no-interaction --quiet --no-dev", $errorcode);
+        }
 
-    if (!empty($errorcode)) {
-        echo "Can not install PHP composer and dependencies\n";
-        exit($errorcode);
+        if (!empty($errorcode)) {
+            echo "Can not install PHP composer and dependencies\n";
+            exit($errorcode);
+        }
     }
 }
 
@@ -165,13 +170,19 @@ function testing_update_dependencies() {
     if (file_exists($composerroot . '/composer.json')
         && file_exists($composerroot . '/composer.phar')
         && file_exists($composerroot . '/composer.lock')) {
-        echo "Verifying that composer dependencies are up to date...\n";
-        passthru("php {$composerroot}/composer.phar update\
-            --working-dir={$composerroot}\
-            --no-interaction --quiet --no-dev", $errorcode);
-        if ($errorcode !== 0) {
-            echo "Can not update composer dependencies\n";
-            exit($errorcode);
+
+        if (file_exists('/.dockerenv')) {
+            echo "WARN: Need to update composer before running behat in docker via: make initcomposer\n";
+        }
+        else {
+             echo "Verifying that composer dependencies are up to date...\n";
+             passthru("php {$composerroot}/composer.phar update\
+                --working-dir={$composerroot}\
+                --no-interaction --quiet --no-dev", $errorcode);
+            if ($errorcode !== 0) {
+                echo "Can not update composer dependencies\n";
+                exit($errorcode);
+            }
         }
     }
 }
