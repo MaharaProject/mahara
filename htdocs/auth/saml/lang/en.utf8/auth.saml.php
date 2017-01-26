@@ -60,6 +60,7 @@ $string['resetmetadata'] = 'Reset the certificates for Mahara\'s metadata. This 
 $string['samlfieldforemail'] = 'SSO field for email';
 $string['samlfieldforfirstname'] = 'SSO field for first name';
 $string['samlfieldforsurname'] = 'SSO field for surname';
+$string['samlfieldforstudentid'] = 'SSO field for student ID';
 $string['spentityid'] = "Service Provider entityId";
 $string['title'] = 'SAML';
 $string['updateuserinfoonlogin'] = 'Update user details on login';
