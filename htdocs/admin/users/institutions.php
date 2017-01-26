@@ -448,13 +448,15 @@ if ($institution || $add) {
             'title'        => get_string('resetcolours', 'admin'),
             'description'  => get_string('resetcoloursdesc2', 'admin'),
         );
-        $elements['dropdownmenu'] = array(
-            'type'         => 'switchbox',
-            'title'        => get_string('dropdownmenu', 'admin'),
-            'description'  => get_string('dropdownmenudescriptioninstitution2','admin'),
-            'defaultvalue' => $data->dropdownmenu,
-            'help'         => true,
-        );
+        if (get_config('dropdownmenuenabled')) {
+            $elements['dropdownmenu'] = array(
+                'type'         => 'switchbox',
+                'title'        => get_string('dropdownmenu', 'admin'),
+                'description'  => get_string('dropdownmenudescriptioninstitution2','admin'),
+                'defaultvalue' => $data->dropdownmenu,
+                'help'         => true,
+            );
+        }
     }
     // The skins checkbox should be shown for the default institution
     if (get_config('skins')) {

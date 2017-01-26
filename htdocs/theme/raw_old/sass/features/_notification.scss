@@ -1,0 +1,44 @@
+.form-notificationlist {
+    .selectall {
+        margin-top: 15px;
+        margin-right: 30px;
+        font-size: $font-size-base - 2;
+    }
+    .notification-list {
+        padding-top: 20px;
+        clear: both;
+    }
+}
+.notification {
+    .details-group span {
+        display: inline-block;
+        margin:0;
+        padding:0;
+        line-height: 12px;
+        height: 17px;
+        vertical-align: middle;
+    }
+    .fromusers {
+        margin-bottom: 0;
+    }
+    .tousers {
+        margin-bottom: 15px;
+    }
+    .action {
+        padding-right: 10px;
+    }
+    .subject {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 60%;
+    }
+    .panel-heading {
+        font-weight: 300;
+    }
+}
+
+.touser,
+.fromuser {
+    padding-right: 10px;
+}

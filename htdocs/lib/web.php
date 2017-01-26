@@ -578,7 +578,7 @@ EOF;
     }
 
     // and/or disable drop-downs if a handheld device detected
-    $dropdownmenu = $SESSION->get('handheld_device') ? false : $dropdownmenu;
+    $dropdownmenu = $SESSION->get('handheld_device') ? false : $dropdownmenu && get_config('dropdownmenuenabled');
 
     if ($dropdownmenu) {
         $smarty->assign('DROPDOWNMENU', $dropdownmenu);
@@ -660,7 +660,17 @@ EOF;
     $smarty->assign('publicsearchallowed', $publicsearchallowed);
     if ($USER->is_logged_in()) {
         global $SELECTEDSUBNAV; // It's evil, but rightnav & mainnav stuff are now in different templates.
-        $smarty->assign('MAINNAV', main_nav());
+        if (in_array('raw_old', $THEME->inheritance)) {
+            $menutype = (in_admin_section() ? 'adminnav' : null);
+            $smarty->assign('MAINNAV', main_nav($menutype));
+        }
+        else {
+            $smarty->assign('MAINNAV', main_nav());
+            $is_admin = $USER->get('admin') || $USER->is_institutional_admin() || $USER->get('staff') || $USER->is_institutional_staff();
+            if ($is_admin) {
+                $smarty->assign('MAINNAVADMIN', main_nav('adminnav'));
+            }
+        }
         $mainnavsubnav = $SELECTEDSUBNAV;
         $smarty->assign('RIGHTNAV', right_nav());
         if (!$mainnavsubnav && $dropdownmenu) {
@@ -2950,7 +2960,7 @@ function mahara_standard_nav() {
  *
  * @return array
  */
-function main_nav() {
+function main_nav($type = null) {
     global $USER;
 
     $language = current_language();
@@ -2958,7 +2968,7 @@ function main_nav() {
     // Get the first institution
     $institution = $USER->get_primary_institution();
     $menutype = '';
-    if (in_admin_section()) {
+    if ($type == 'adminnav') {
         global $USER, $SESSION;
         if ($USER->get('admin')) {
             $menutype = 'admin_nav';

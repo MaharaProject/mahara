@@ -15,7 +15,7 @@
         {if $USERMASQUERADING}
             <div class="site-message alert alert-warning" role="alert">
                 <span class="icon icon-lg icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span>
-                <span>{$masqueradedetails}</span> 
+                <span>{$masqueradedetails}</span>
                 <a href="{$becomeyoulink}">{$becomeyouagain}</a>
             </div>
         {/if}
@@ -49,6 +49,15 @@
                     <span class="icon-bar" role="presentation"></span>
                 </button>
             {/if}
+            {if $MAINNAVADMIN}
+             <!-- Brand and toggle get grouped for better mobile display -->
+                <button type="button" class="menu-toggle navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-main-admin">
+                    <span class="sr-only">{str tag="show"} {str tag="menu"}</span>
+                    <span class="icon-bar" role="presentation"></span>
+                    <span class="icon-bar" role="presentation"></span>
+                    <span class="icon-bar" role="presentation"></span>
+                </button>
+            {/if}
             {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
             <button type="button" class="navbar-toggle search-toggle collapsed" data-toggle="collapse" data-target=".navbar-form">
                 <span class="icon icon-search" role="presentation" aria-hidden="true"></span>
@@ -59,20 +68,12 @@
                 <a href="{$WWWROOT}" class="logo">
                     <img src="{$sitelogo}" alt="{$sitename}">
                 </a>
-                {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
-                    <div class="admin-title">
-                        <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
-                    </div>
-                {/if}
                 <div id="loading-box" class="loading-box" style='display:none'></div>
             </div>
             {include file="header/topright.tpl"}
-
+            {include file="header/navigation.tpl"}
         </div>
     </header>
-
-    {include file="header/navigation.tpl"}
-
 
     <div class="container main-content">
         <div class="row">

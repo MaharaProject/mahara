@@ -1,0 +1,66 @@
+a.panel-footer {
+    text-align:center;
+    color: #555;
+    display: block;
+    &:hover {
+        color: #222;
+        background: $gray-lighter;
+        text-decoration: none;
+        .icon {
+            color: #777;
+        }
+        .icon.pull-right { //only apply link colorto right aligned icons
+            color: $link-color;
+        }
+    }
+    .icon.pull-right {
+        margin-top: 3px;
+    }
+}
+
+.has-attachment {
+    position: relative;
+    z-index: 1;
+    background-color:#fff;
+}
+
+.panel-footer {
+    p {
+        margin:0;
+    }
+    &.has-form {
+        @include clearfix;
+        .control {
+            display: inline-block;
+        }
+    }
+    &.has-link {
+        a {
+            display: block;
+        }
+    }
+
+    .expand-add-button {
+        .show-form {
+            display: none;
+        }
+        .hide-form {
+            display: inline-block;
+        }
+        &.collapsed {
+            .show-form {
+                display: inline-block;
+            }
+            .hide-form {
+                display: none;
+            }
+        }
+    }
+    a:not(.btn) {
+        color: #333;
+    }
+}
+
+.fieldset-body .panel-footer {
+    margin: 20px -15px -10px;
+}

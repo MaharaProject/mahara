@@ -1,0 +1,226 @@
+// This file handles/modifies both real collapsible panels,
+// and collapsible pieform fieldsets (which are styled to look like panels)
+
+.panel.collapsible {
+    margin-bottom: 0;
+    border-radius: 0;
+    .panel-heading a {
+        border-radius: 0;
+    }
+    &.form-group {
+        display:block;
+    }
+    .panel {
+        border-radius: 0;
+    }
+}
+
+
+.pieform-fieldset,
+.panel {
+    &.collapsible {
+        @include box-shadow(none);
+        &.last {
+            legend,
+            .panel-heading {
+                @include border-bottom-radius($border-radius-small);
+                a {
+                    &.collapsed {
+                        @include border-bottom-radius($border-radius-small);
+                    }
+                }
+            }
+            legend {
+                a {
+                    border-bottom: 1px solid $panel-default-border;
+                }
+            }
+
+            .fieldset-body {
+                border-top:0;
+                @include border-bottom-radius($border-radius-small);
+            }
+        }
+        &.first .panel-heading a {
+            @include border-top-radius(3px);
+        }
+
+        .section-import & {
+            &:last-child {
+                @extend .last;
+            }
+        }
+
+        legend {
+            margin-bottom: 0;
+            border:0;
+        }
+        .type-icon {
+            display:inline-block;
+            width: 32px;
+            padding: 0 30px;
+        }
+
+        &.has-attachment .panel-heading,
+        .collapsible-group & .panel-heading,
+        legend h4,
+        legend h3  {
+            margin: 0;
+            font-size: 16px;
+            padding: 0;
+
+            .pieform > .collapsible-group:first-child & {
+                @include border-top-radius(3px);
+            }
+        }
+
+        .fieldset-body {
+            border: 1px solid $panel-default-border;
+            padding: 10px 15px;
+            background: #fff;
+            margin-bottom: -1px; //remove double border
+            .jstabs & {
+                border: 0;
+            }
+        }
+        .collapsible-group & {
+            .form-group {
+                margin: 0;
+                position: relative;
+                padding: 20px 0;
+                border-bottom: 1px solid #f0f0f0;
+                &:last-child,
+                &.last {
+                    border-bottom: 0;
+                }
+            }
+            &.with-formgroup {
+                margin-top: 15px;
+            }
+        }
+        .html {
+            &:not(.heading) {
+                @include clearfix;
+            }
+        }
+    }
+
+    &.as-link {
+       @include panel-as-link();
+    }
+}
+
+.link-expand-right.form-group {
+    position: static;
+    legend {
+        position:absolute;
+        top: 5px;
+        right: 20px;
+        width: auto;
+        @media (max-width: $screen-xs-min) {
+            position: static;
+            text-align: right;
+        }
+    }
+}
+
+// @todo: Rethink this, it's too complex
+.panel.collapsible:not(.panel-secondary) {
+    border-width: 0;
+    // For attachment collapsible
+    &.has-attachment {
+        border-radius: $border-radius-small;
+        border-width: 1px;
+        .panel-heading a {
+            border-width: 0;
+            &:not(.collapsed) {
+                border-bottom-width: 1px;
+            }
+        }
+    }
+
+    // Remove border from heading - add to link tag.
+    // In this case we have a nested a tag that takes up the whole of the heading space
+    // rather than applying the panel-header to the link
+    .panel-heading {
+        border: 0;
+        a {
+            text-shadow: 1px 0 0 #fff;
+        }
+    }
+
+    &.panel-primary{
+        .panel-heading a {
+            font-weight: bold;
+        }
+    }
+
+    &.notification {
+        .panel-footer {
+            margin-bottom: 20px;
+        }
+        .no-footer {
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+    }
+
+    .panel-body,
+    .panel-footer,
+    .panel-heading a {
+        border: 1px solid $panel-default-border;
+    }
+
+    .panel-heading a,
+    .panel-body:not(.no-footer) {
+        border-bottom-width: 0;
+    }
+
+    // last class will add bottom border to collapsible element(s)
+    // Except has-attachment, it doesn't need one.
+    &.last .panel-heading a.collapsed {
+        border-bottom-width: 1px;
+    }
+    // Style variations
+    @each $status, $bgcolor in $panel-background {
+         &.panel-#{$status} {
+            .panel-heading a {
+                background-color: darken($bgcolor, 3%);
+                &.collapsed {
+                    background-color: $bgcolor;
+                }
+                &:hover,
+                &:focus {
+                   background-color: darken($bgcolor, 3%);
+                }
+            }
+            .panel-footer,
+            .panel-body,
+            .panel-heading a {
+                border: 1px solid darken($bgcolor, 15%);
+            }
+            .panel-heading a,
+            .panel-body:not(.no-footer) {
+                border-bottom-width:0;
+            }
+        }
+    }
+}
+
+.collapse > .collapse {
+    display: block ; // fix for not being able to put a class just on the wrapper
+    visibility: visible;
+}
+
+.collapsible {
+    legend h4,
+    legend h3 {
+        a {
+            text-shadow: 1px 0 0 #fff;
+            background-color: darken(#f5f5f5, 1%);
+            border: 1px solid $panel-default-border;
+            border-bottom: 0;
+            padding: 10px 15px;
+        }
+    }
+}

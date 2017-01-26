@@ -1,0 +1,30 @@
+.link-thumb {
+    text-align: center;
+    min-width: 62px;
+    position: relative;
+    display: block;
+    padding: 7px 15px 15px;
+    font-size: 20px;
+    margin-bottom: 4px;
+    background-color: darken(#f5f5f5, 1%);
+    &.thumbnail {
+        &:hover,
+        &.focus,
+        &.active {
+            background-color: darken(#f5f5f5, 7%);
+            color: #333;
+            text-decoration: none;
+            border-color: #ccc;
+        }
+    }
+    .metadata {
+        font-size: 10px;
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+    }
+}
+
+.list-inline .list-tile {
+    padding: 0;
+}

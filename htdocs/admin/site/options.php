@@ -87,13 +87,6 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('theme', $OVERRIDDEN),
                 ),
-                'dropdownmenu' => array(
-                    'type'         => 'switchbox',
-                    'title'        => get_string('dropdownmenu', 'admin'),
-                    'description'  => get_string('dropdownmenudescription2', 'admin'),
-                    'defaultvalue' => get_config('dropdownmenu'),
-                    'disabled'     => in_array('dropdownmenu', $OVERRIDDEN),
-                ),
                 'homepageinfo' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('homepageinfo1', 'admin'),
@@ -763,6 +756,16 @@ $siteoptionform = array(
     )
 );
 
+if (get_config('dropdownmenuenabled')) {
+    $siteoptionform['elements']['sitesettings']['elements']['dropdownmenu'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('dropdownmenu', 'admin'),
+        'description'  => get_string('dropdownmenudescription2', 'admin'),
+        'defaultvalue' => get_config('dropdownmenu'),
+        'disabled'     => in_array('dropdownmenu', $OVERRIDDEN),
+    );
+}
+
 $siteoptionform['elements']['submit'] = array(
     'type'  => 'button',
     'usebuttontag' => true,
@@ -781,7 +784,7 @@ function siteoptions_fail(Pieform $form, $field) {
 
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
-        'sitename','lang','theme', 'dropdownmenu',
+        'sitename','lang','theme',
         'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'allowanonymouspages', 'generatesitemap',
         'registration_sendweeklyupdates', 'mathjax', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
@@ -796,6 +799,9 @@ function siteoptions_submit(Pieform $form, $values) {
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
         'eventloglevel', 'eventlogexpiry', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',
     );
+    if (get_config('dropdownmenuenabled')) {
+      $fields = array_merge($fields, array('dropdownmenu'));
+    }
     $count = 0;
     $where_sql = " WHERE admin = 0 AND id != 0";
     // if default account lifetime expiry has no end date

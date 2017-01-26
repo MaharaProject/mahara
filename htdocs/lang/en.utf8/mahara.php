@@ -709,6 +709,7 @@ $string['activityprefs'] = 'Activity preferences';
 $string['changepassword'] = 'Change password';
 $string['notifications'] = 'Notifications';
 $string['inbox'] = 'Inbox';
+$string['unread'] = '%s unread';
 $string['gotoinbox'] = 'Go to inbox';
 $string['institutionmembership'] = 'Institution membership';
 $string['institutionmembershipdescription'] = 'If you are a member of any institutions, they will be listed here. You may also request membership of institutions and accept or decline pending membership invitations.';

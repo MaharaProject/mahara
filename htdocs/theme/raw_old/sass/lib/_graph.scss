@@ -1,0 +1,31 @@
+.graphtitle {
+    display: block;
+    font-size: 13px;
+}
+.graphlegend ul {
+    list-style: none;
+    li {
+        white-space: nowrap;
+        display: inline-block;
+        padding-left: 30px;
+        position: relative;
+        margin-bottom: 4px;
+        border-radius: 3px;
+        padding: 2px 17px 2px 25px;
+        font-size: 0.9em;
+        cursor: default;
+        -webkit-transition: background-color 200ms ease-in-out;
+        -moz-transition: background-color 200ms ease-in-out;
+        -o-transition: background-color 200ms ease-in-out;
+        transition: background-color 200ms ease-in-out;
+        span {
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 18px;
+            height: 100%;
+            border-radius: 3px;
+        }
+    }
+}

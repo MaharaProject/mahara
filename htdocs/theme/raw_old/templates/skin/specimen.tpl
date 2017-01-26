@@ -1,0 +1,617 @@
+<html>
+<head>
+<style>
+{$stylesheet|safe}
+.{$fontclass} {
+    font-family: '{$fonttitle|escape_css_string|safe}';
+}
+body {
+    color: #333333;
+    font: 13px/1.333 Arial, "Nimbus Sans L", Helvetica, sans-serif;
+    background: #FFFFFF;
+}
+.superspecimen {
+    max-width: 700px;
+    padding: 15px;
+}
+.superspecimen .superheader {
+    margin-bottom: 10px;
+}
+.superspecimen h1 {
+    font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
+    font-size: 2em;
+    font-weight: bold;
+    margin: 3px 0;
+}
+.superspecimen .fontcard {
+    margin-top: 15px;
+    padding: 20px;
+}
+.fontcard {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #D1D1D1;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    position: relative;
+}
+.superspecimen .supersample {
+    font-size: 64px;
+    line-height: 1.08em;
+    margin-bottom: 20px;
+}
+.superspecimen .styles {
+    font-size: 32px;
+    line-height: 1.25em;
+    margin-bottom: 20px;
+}
+.superspecimen .identifier {
+    color: #777777;
+    display: block;
+    font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
+    font-size: 11px;
+    line-height: 1.25em;
+}
+p {
+    line-height: 1.333em;
+    margin-bottom: 1em;
+}
+.sample {
+    overflow: hidden;
+    padding-bottom: 2em;
+}
+.sample div {
+    border: 1px solid #CCCCCC;
+    float: left;
+    font-size: 3.2em;
+    height: 2em;
+    margin-bottom: -1px;
+    margin-right: -1px;
+    text-align: center;
+    width: 1.25em;
+}
+.sample div .defaultCharacter {
+    color: #CCCCCC;
+    display: block;
+    font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
+    font-size: 0.4em;
+}
+</style>
+</head>
+
+<body>
+
+<div class="superspecimen">
+<div class="superheader">
+    <img src="Mahara_webfonts.png" border="0">
+</div>
+<h1>{$fonttitle}</h1>
+{$fontlicence|safe}
+<div class="fontcard">
+    <div class="supersample {$fontclass}">Grumpy wizards make toxic brew for the evil Queen and Jack.</div>
+    <div class="styles">
+        <div class="fontitem">
+            <span class="identifier">Normal 400</span>
+            <span class="stylesample {$fontclass}" style="font-size: 36px">Grumpy wizards make toxic brew for the evil Queen</span>
+        </div>
+    </div>
+    <p class="paragraph {$fontclass}">One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked.</p>
+    <div class="sample {$fontclass}">
+<!-- start of specimen table -->
+<div><span class="defaultCharacter">&#32;</span><span>&#32;</span></div>
+<div><span class="defaultCharacter">&#33;</span><span>&#33;</span></div>
+<div><span class="defaultCharacter">&#34;</span><span>&#34;</span></div>
+<div><span class="defaultCharacter">&#35;</span><span>&#35;</span></div>
+<div><span class="defaultCharacter">&#36;</span><span>&#36;</span></div>
+<div><span class="defaultCharacter">&#37;</span><span>&#37;</span></div>
+<div><span class="defaultCharacter">&#38;</span><span>&#38;</span></div>
+<div><span class="defaultCharacter">&#39;</span><span>&#39;</span></div>
+<div><span class="defaultCharacter">&#40;</span><span>&#40;</span></div>
+<div><span class="defaultCharacter">&#41;</span><span>&#41;</span></div>
+<div><span class="defaultCharacter">&#42;</span><span>&#42;</span></div>
+<div><span class="defaultCharacter">&#43;</span><span>&#43;</span></div>
+<div><span class="defaultCharacter">&#44;</span><span>&#44;</span></div>
+<div><span class="defaultCharacter">&#45;</span><span>&#45;</span></div>
+<div><span class="defaultCharacter">&#46;</span><span>&#46;</span></div>
+<div><span class="defaultCharacter">&#47;</span><span>&#47;</span></div>
+<div><span class="defaultCharacter">&#48;</span><span>&#48;</span></div>
+<div><span class="defaultCharacter">&#49;</span><span>&#49;</span></div>
+<div><span class="defaultCharacter">&#50;</span><span>&#50;</span></div>
+<div><span class="defaultCharacter">&#51;</span><span>&#51;</span></div>
+<div><span class="defaultCharacter">&#52;</span><span>&#52;</span></div>
+<div><span class="defaultCharacter">&#53;</span><span>&#53;</span></div>
+<div><span class="defaultCharacter">&#54;</span><span>&#54;</span></div>
+<div><span class="defaultCharacter">&#55;</span><span>&#55;</span></div>
+<div><span class="defaultCharacter">&#56;</span><span>&#56;</span></div>
+<div><span class="defaultCharacter">&#57;</span><span>&#57;</span></div>
+<div><span class="defaultCharacter">&#58;</span><span>&#58;</span></div>
+<div><span class="defaultCharacter">&#59;</span><span>&#59;</span></div>
+<div><span class="defaultCharacter">&#60;</span><span>&#60;</span></div>
+<div><span class="defaultCharacter">&#61;</span><span>&#61;</span></div>
+<div><span class="defaultCharacter">&#62;</span><span>&#62;</span></div>
+<div><span class="defaultCharacter">&#63;</span><span>&#63;</span></div>
+<div><span class="defaultCharacter">&#64;</span><span>&#64;</span></div>
+<div><span class="defaultCharacter">&#65;</span><span>&#65;</span></div>
+<div><span class="defaultCharacter">&#66;</span><span>&#66;</span></div>
+<div><span class="defaultCharacter">&#67;</span><span>&#67;</span></div>
+<div><span class="defaultCharacter">&#68;</span><span>&#68;</span></div>
+<div><span class="defaultCharacter">&#69;</span><span>&#69;</span></div>
+<div><span class="defaultCharacter">&#70;</span><span>&#70;</span></div>
+<div><span class="defaultCharacter">&#71;</span><span>&#71;</span></div>
+<div><span class="defaultCharacter">&#72;</span><span>&#72;</span></div>
+<div><span class="defaultCharacter">&#73;</span><span>&#73;</span></div>
+<div><span class="defaultCharacter">&#74;</span><span>&#74;</span></div>
+<div><span class="defaultCharacter">&#75;</span><span>&#75;</span></div>
+<div><span class="defaultCharacter">&#76;</span><span>&#76;</span></div>
+<div><span class="defaultCharacter">&#77;</span><span>&#77;</span></div>
+<div><span class="defaultCharacter">&#78;</span><span>&#78;</span></div>
+<div><span class="defaultCharacter">&#79;</span><span>&#79;</span></div>
+<div><span class="defaultCharacter">&#80;</span><span>&#80;</span></div>
+<div><span class="defaultCharacter">&#81;</span><span>&#81;</span></div>
+<div><span class="defaultCharacter">&#82;</span><span>&#82;</span></div>
+<div><span class="defaultCharacter">&#83;</span><span>&#83;</span></div>
+<div><span class="defaultCharacter">&#84;</span><span>&#84;</span></div>
+<div><span class="defaultCharacter">&#85;</span><span>&#85;</span></div>
+<div><span class="defaultCharacter">&#86;</span><span>&#86;</span></div>
+<div><span class="defaultCharacter">&#87;</span><span>&#87;</span></div>
+<div><span class="defaultCharacter">&#88;</span><span>&#88;</span></div>
+<div><span class="defaultCharacter">&#89;</span><span>&#89;</span></div>
+<div><span class="defaultCharacter">&#90;</span><span>&#90;</span></div>
+<div><span class="defaultCharacter">&#91;</span><span>&#91;</span></div>
+<div><span class="defaultCharacter">&#92;</span><span>&#92;</span></div>
+<div><span class="defaultCharacter">&#93;</span><span>&#93;</span></div>
+<div><span class="defaultCharacter">&#94;</span><span>&#94;</span></div>
+<div><span class="defaultCharacter">&#95;</span><span>&#95;</span></div>
+<div><span class="defaultCharacter">&#97;</span><span>&#97;</span></div>
+<div><span class="defaultCharacter">&#98;</span><span>&#98;</span></div>
+<div><span class="defaultCharacter">&#99;</span><span>&#99;</span></div>
+<div><span class="defaultCharacter">&#100;</span><span>&#100;</span></div>
+<div><span class="defaultCharacter">&#101;</span><span>&#101;</span></div>
+<div><span class="defaultCharacter">&#102;</span><span>&#102;</span></div>
+<div><span class="defaultCharacter">&#103;</span><span>&#103;</span></div>
+<div><span class="defaultCharacter">&#104;</span><span>&#104;</span></div>
+<div><span class="defaultCharacter">&#105;</span><span>&#105;</span></div>
+<div><span class="defaultCharacter">&#106;</span><span>&#106;</span></div>
+<div><span class="defaultCharacter">&#107;</span><span>&#107;</span></div>
+<div><span class="defaultCharacter">&#108;</span><span>&#108;</span></div>
+<div><span class="defaultCharacter">&#109;</span><span>&#109;</span></div>
+<div><span class="defaultCharacter">&#110;</span><span>&#110;</span></div>
+<div><span class="defaultCharacter">&#111;</span><span>&#111;</span></div>
+<div><span class="defaultCharacter">&#112;</span><span>&#112;</span></div>
+<div><span class="defaultCharacter">&#113;</span><span>&#113;</span></div>
+<div><span class="defaultCharacter">&#114;</span><span>&#114;</span></div>
+<div><span class="defaultCharacter">&#115;</span><span>&#115;</span></div>
+<div><span class="defaultCharacter">&#116;</span><span>&#116;</span></div>
+<div><span class="defaultCharacter">&#117;</span><span>&#117;</span></div>
+<div><span class="defaultCharacter">&#118;</span><span>&#118;</span></div>
+<div><span class="defaultCharacter">&#119;</span><span>&#119;</span></div>
+<div><span class="defaultCharacter">&#120;</span><span>&#120;</span></div>
+<div><span class="defaultCharacter">&#121;</span><span>&#121;</span></div>
+<div><span class="defaultCharacter">&#122;</span><span>&#122;</span></div>
+<div><span class="defaultCharacter">&#123;</span><span>&#123;</span></div>
+<div><span class="defaultCharacter">&#124;</span><span>&#124;</span></div>
+<div><span class="defaultCharacter">&#125;</span><span>&#125;</span></div>
+<div><span class="defaultCharacter">&#126;</span><span>&#126;</span></div>
+<div><span class="defaultCharacter">&#161;</span><span>&#161;</span></div>
+<div><span class="defaultCharacter">&#162;</span><span>&#162;</span></div>
+<div><span class="defaultCharacter">&#163;</span><span>&#163;</span></div>
+<div><span class="defaultCharacter">&#164;</span><span>&#164;</span></div>
+<div><span class="defaultCharacter">&#165;</span><span>&#165;</span></div>
+<div><span class="defaultCharacter">&#166;</span><span>&#166;</span></div>
+<div><span class="defaultCharacter">&#167;</span><span>&#167;</span></div>
+<div><span class="defaultCharacter">&#168;</span><span>&#168;</span></div>
+<div><span class="defaultCharacter">&#169;</span><span>&#169;</span></div>
+<div><span class="defaultCharacter">&#170;</span><span>&#170;</span></div>
+<div><span class="defaultCharacter">&#171;</span><span>&#171;</span></div>
+<div><span class="defaultCharacter">&#172;</span><span>&#172;</span></div>
+<div><span class="defaultCharacter">&#174;</span><span>&#174;</span></div>
+<div><span class="defaultCharacter">&#175;</span><span>&#175;</span></div>
+<div><span class="defaultCharacter">&#176;</span><span>&#176;</span></div>
+<div><span class="defaultCharacter">&#177;</span><span>&#177;</span></div>
+<div><span class="defaultCharacter">&#178;</span><span>&#178;</span></div>
+<div><span class="defaultCharacter">&#179;</span><span>&#179;</span></div>
+<div><span class="defaultCharacter">&#180;</span><span>&#180;</span></div>
+<div><span class="defaultCharacter">&#181;</span><span>&#181;</span></div>
+<div><span class="defaultCharacter">&#182;</span><span>&#182;</span></div>
+<div><span class="defaultCharacter">&#183;</span><span>&#183;</span></div>
+<div><span class="defaultCharacter">&#184;</span><span>&#184;</span></div>
+<div><span class="defaultCharacter">&#185;</span><span>&#185;</span></div>
+<div><span class="defaultCharacter">&#186;</span><span>&#186;</span></div>
+<div><span class="defaultCharacter">&#187;</span><span>&#187;</span></div>
+<div><span class="defaultCharacter">&#188;</span><span>&#188;</span></div>
+<div><span class="defaultCharacter">&#189;</span><span>&#189;</span></div>
+<div><span class="defaultCharacter">&#190;</span><span>&#190;</span></div>
+<div><span class="defaultCharacter">&#191;</span><span>&#191;</span></div>
+<div><span class="defaultCharacter">&#192;</span><span>&#192;</span></div>
+<div><span class="defaultCharacter">&#193;</span><span>&#193;</span></div>
+<div><span class="defaultCharacter">&#194;</span><span>&#194;</span></div>
+<div><span class="defaultCharacter">&#195;</span><span>&#195;</span></div>
+<div><span class="defaultCharacter">&#196;</span><span>&#196;</span></div>
+<div><span class="defaultCharacter">&#197;</span><span>&#197;</span></div>
+<div><span class="defaultCharacter">&#198;</span><span>&#198;</span></div>
+<div><span class="defaultCharacter">&#199;</span><span>&#199;</span></div>
+<div><span class="defaultCharacter">&#200;</span><span>&#200;</span></div>
+<div><span class="defaultCharacter">&#201;</span><span>&#201;</span></div>
+<div><span class="defaultCharacter">&#202;</span><span>&#202;</span></div>
+<div><span class="defaultCharacter">&#203;</span><span>&#203;</span></div>
+<div><span class="defaultCharacter">&#204;</span><span>&#204;</span></div>
+<div><span class="defaultCharacter">&#205;</span><span>&#205;</span></div>
+<div><span class="defaultCharacter">&#206;</span><span>&#206;</span></div>
+<div><span class="defaultCharacter">&#207;</span><span>&#207;</span></div>
+<div><span class="defaultCharacter">&#208;</span><span>&#208;</span></div>
+<div><span class="defaultCharacter">&#209;</span><span>&#209;</span></div>
+<div><span class="defaultCharacter">&#210;</span><span>&#210;</span></div>
+<div><span class="defaultCharacter">&#211;</span><span>&#211;</span></div>
+<div><span class="defaultCharacter">&#212;</span><span>&#212;</span></div>
+<div><span class="defaultCharacter">&#213;</span><span>&#213;</span></div>
+<div><span class="defaultCharacter">&#214;</span><span>&#214;</span></div>
+<div><span class="defaultCharacter">&#215;</span><span>&#215;</span></div>
+<div><span class="defaultCharacter">&#216;</span><span>&#216;</span></div>
+<div><span class="defaultCharacter">&#217;</span><span>&#217;</span></div>
+<div><span class="defaultCharacter">&#218;</span><span>&#218;</span></div>
+<div><span class="defaultCharacter">&#219;</span><span>&#219;</span></div>
+<div><span class="defaultCharacter">&#220;</span><span>&#220;</span></div>
+<div><span class="defaultCharacter">&#221;</span><span>&#221;</span></div>
+<div><span class="defaultCharacter">&#222;</span><span>&#222;</span></div>
+<div><span class="defaultCharacter">&#223;</span><span>&#223;</span></div>
+<div><span class="defaultCharacter">&#224;</span><span>&#224;</span></div>
+<div><span class="defaultCharacter">&#225;</span><span>&#225;</span></div>
+<div><span class="defaultCharacter">&#226;</span><span>&#226;</span></div>
+<div><span class="defaultCharacter">&#227;</span><span>&#227;</span></div>
+<div><span class="defaultCharacter">&#228;</span><span>&#228;</span></div>
+<div><span class="defaultCharacter">&#229;</span><span>&#229;</span></div>
+<div><span class="defaultCharacter">&#230;</span><span>&#230;</span></div>
+<div><span class="defaultCharacter">&#231;</span><span>&#231;</span></div>
+<div><span class="defaultCharacter">&#232;</span><span>&#232;</span></div>
+<div><span class="defaultCharacter">&#233;</span><span>&#233;</span></div>
+<div><span class="defaultCharacter">&#234;</span><span>&#234;</span></div>
+<div><span class="defaultCharacter">&#235;</span><span>&#235;</span></div>
+<div><span class="defaultCharacter">&#236;</span><span>&#236;</span></div>
+<div><span class="defaultCharacter">&#237;</span><span>&#237;</span></div>
+<div><span class="defaultCharacter">&#238;</span><span>&#238;</span></div>
+<div><span class="defaultCharacter">&#239;</span><span>&#239;</span></div>
+<div><span class="defaultCharacter">&#240;</span><span>&#240;</span></div>
+<div><span class="defaultCharacter">&#241;</span><span>&#241;</span></div>
+<div><span class="defaultCharacter">&#242;</span><span>&#242;</span></div>
+<div><span class="defaultCharacter">&#243;</span><span>&#243;</span></div>
+<div><span class="defaultCharacter">&#244;</span><span>&#244;</span></div>
+<div><span class="defaultCharacter">&#245;</span><span>&#245;</span></div>
+<div><span class="defaultCharacter">&#246;</span><span>&#246;</span></div>
+<div><span class="defaultCharacter">&#247;</span><span>&#247;</span></div>
+<div><span class="defaultCharacter">&#248;</span><span>&#248;</span></div>
+<div><span class="defaultCharacter">&#249;</span><span>&#249;</span></div>
+<div><span class="defaultCharacter">&#250;</span><span>&#250;</span></div>
+<div><span class="defaultCharacter">&#251;</span><span>&#251;</span></div>
+<div><span class="defaultCharacter">&#252;</span><span>&#252;</span></div>
+<div><span class="defaultCharacter">&#253;</span><span>&#253;</span></div>
+<div><span class="defaultCharacter">&#254;</span><span>&#254;</span></div>
+<div><span class="defaultCharacter">&#255;</span><span>&#255;</span></div>
+<div><span class="defaultCharacter">&#256;</span><span>&#256;</span></div>
+<div><span class="defaultCharacter">&#257;</span><span>&#257;</span></div>
+<div><span class="defaultCharacter">&#258;</span><span>&#258;</span></div>
+<div><span class="defaultCharacter">&#259;</span><span>&#259;</span></div>
+<div><span class="defaultCharacter">&#260;</span><span>&#260;</span></div>
+<div><span class="defaultCharacter">&#261;</span><span>&#261;</span></div>
+<div><span class="defaultCharacter">&#262;</span><span>&#262;</span></div>
+<div><span class="defaultCharacter">&#263;</span><span>&#263;</span></div>
+<div><span class="defaultCharacter">&#264;</span><span>&#264;</span></div>
+<div><span class="defaultCharacter">&#265;</span><span>&#265;</span></div>
+<div><span class="defaultCharacter">&#266;</span><span>&#266;</span></div>
+<div><span class="defaultCharacter">&#267;</span><span>&#267;</span></div>
+<div><span class="defaultCharacter">&#268;</span><span>&#268;</span></div>
+<div><span class="defaultCharacter">&#269;</span><span>&#269;</span></div>
+<div><span class="defaultCharacter">&#270;</span><span>&#270;</span></div>
+<div><span class="defaultCharacter">&#271;</span><span>&#271;</span></div>
+<div><span class="defaultCharacter">&#272;</span><span>&#272;</span></div>
+<div><span class="defaultCharacter">&#273;</span><span>&#273;</span></div>
+<div><span class="defaultCharacter">&#274;</span><span>&#274;</span></div>
+<div><span class="defaultCharacter">&#275;</span><span>&#275;</span></div>
+<div><span class="defaultCharacter">&#276;</span><span>&#276;</span></div>
+<div><span class="defaultCharacter">&#277;</span><span>&#277;</span></div>
+<div><span class="defaultCharacter">&#278;</span><span>&#278;</span></div>
+<div><span class="defaultCharacter">&#279;</span><span>&#279;</span></div>
+<div><span class="defaultCharacter">&#280;</span><span>&#280;</span></div>
+<div><span class="defaultCharacter">&#281;</span><span>&#281;</span></div>
+<div><span class="defaultCharacter">&#282;</span><span>&#282;</span></div>
+<div><span class="defaultCharacter">&#283;</span><span>&#283;</span></div>
+<div><span class="defaultCharacter">&#284;</span><span>&#284;</span></div>
+<div><span class="defaultCharacter">&#285;</span><span>&#285;</span></div>
+<div><span class="defaultCharacter">&#286;</span><span>&#286;</span></div>
+<div><span class="defaultCharacter">&#287;</span><span>&#287;</span></div>
+<div><span class="defaultCharacter">&#288;</span><span>&#288;</span></div>
+<div><span class="defaultCharacter">&#289;</span><span>&#289;</span></div>
+<div><span class="defaultCharacter">&#290;</span><span>&#290;</span></div>
+<div><span class="defaultCharacter">&#291;</span><span>&#291;</span></div>
+<div><span class="defaultCharacter">&#292;</span><span>&#292;</span></div>
+<div><span class="defaultCharacter">&#293;</span><span>&#293;</span></div>
+<div><span class="defaultCharacter">&#294;</span><span>&#294;</span></div>
+<div><span class="defaultCharacter">&#295;</span><span>&#295;</span></div>
+<div><span class="defaultCharacter">&#296;</span><span>&#296;</span></div>
+<div><span class="defaultCharacter">&#297;</span><span>&#297;</span></div>
+<div><span class="defaultCharacter">&#298;</span><span>&#298;</span></div>
+<div><span class="defaultCharacter">&#299;</span><span>&#299;</span></div>
+<div><span class="defaultCharacter">&#300;</span><span>&#300;</span></div>
+<div><span class="defaultCharacter">&#301;</span><span>&#301;</span></div>
+<div><span class="defaultCharacter">&#302;</span><span>&#302;</span></div>
+<div><span class="defaultCharacter">&#303;</span><span>&#303;</span></div>
+<div><span class="defaultCharacter">&#304;</span><span>&#304;</span></div>
+<div><span class="defaultCharacter">&#305;</span><span>&#305;</span></div>
+<div><span class="defaultCharacter">&#306;</span><span>&#306;</span></div>
+<div><span class="defaultCharacter">&#307;</span><span>&#307;</span></div>
+<div><span class="defaultCharacter">&#308;</span><span>&#308;</span></div>
+<div><span class="defaultCharacter">&#309;</span><span>&#309;</span></div>
+<div><span class="defaultCharacter">&#310;</span><span>&#310;</span></div>
+<div><span class="defaultCharacter">&#311;</span><span>&#311;</span></div>
+<div><span class="defaultCharacter">&#312;</span><span>&#312;</span></div>
+<div><span class="defaultCharacter">&#313;</span><span>&#313;</span></div>
+<div><span class="defaultCharacter">&#314;</span><span>&#314;</span></div>
+<div><span class="defaultCharacter">&#315;</span><span>&#315;</span></div>
+<div><span class="defaultCharacter">&#316;</span><span>&#316;</span></div>
+<div><span class="defaultCharacter">&#317;</span><span>&#317;</span></div>
+<div><span class="defaultCharacter">&#318;</span><span>&#318;</span></div>
+<div><span class="defaultCharacter">&#319;</span><span>&#319;</span></div>
+<div><span class="defaultCharacter">&#320;</span><span>&#320;</span></div>
+<div><span class="defaultCharacter">&#321;</span><span>&#321;</span></div>
+<div><span class="defaultCharacter">&#322;</span><span>&#322;</span></div>
+<div><span class="defaultCharacter">&#323;</span><span>&#323;</span></div>
+<div><span class="defaultCharacter">&#324;</span><span>&#324;</span></div>
+<div><span class="defaultCharacter">&#325;</span><span>&#325;</span></div>
+<div><span class="defaultCharacter">&#326;</span><span>&#326;</span></div>
+<div><span class="defaultCharacter">&#327;</span><span>&#327;</span></div>
+<div><span class="defaultCharacter">&#328;</span><span>&#328;</span></div>
+<div><span class="defaultCharacter">&#329;</span><span>&#329;</span></div>
+<div><span class="defaultCharacter">&#330;</span><span>&#330;</span></div>
+<div><span class="defaultCharacter">&#331;</span><span>&#331;</span></div>
+<div><span class="defaultCharacter">&#332;</span><span>&#332;</span></div>
+<div><span class="defaultCharacter">&#333;</span><span>&#333;</span></div>
+<div><span class="defaultCharacter">&#334;</span><span>&#334;</span></div>
+<div><span class="defaultCharacter">&#335;</span><span>&#335;</span></div>
+<div><span class="defaultCharacter">&#336;</span><span>&#336;</span></div>
+<div><span class="defaultCharacter">&#337;</span><span>&#337;</span></div>
+<div><span class="defaultCharacter">&#338;</span><span>&#338;</span></div>
+<div><span class="defaultCharacter">&#339;</span><span>&#339;</span></div>
+<div><span class="defaultCharacter">&#340;</span><span>&#340;</span></div>
+<div><span class="defaultCharacter">&#341;</span><span>&#341;</span></div>
+<div><span class="defaultCharacter">&#342;</span><span>&#342;</span></div>
+<div><span class="defaultCharacter">&#343;</span><span>&#343;</span></div>
+<div><span class="defaultCharacter">&#344;</span><span>&#344;</span></div>
+<div><span class="defaultCharacter">&#345;</span><span>&#345;</span></div>
+<div><span class="defaultCharacter">&#346;</span><span>&#346;</span></div>
+<div><span class="defaultCharacter">&#347;</span><span>&#347;</span></div>
+<div><span class="defaultCharacter">&#348;</span><span>&#348;</span></div>
+<div><span class="defaultCharacter">&#349;</span><span>&#349;</span></div>
+<div><span class="defaultCharacter">&#350;</span><span>&#350;</span></div>
+<div><span class="defaultCharacter">&#351;</span><span>&#351;</span></div>
+<div><span class="defaultCharacter">&#352;</span><span>&#352;</span></div>
+<div><span class="defaultCharacter">&#353;</span><span>&#353;</span></div>
+<div><span class="defaultCharacter">&#354;</span><span>&#354;</span></div>
+<div><span class="defaultCharacter">&#355;</span><span>&#355;</span></div>
+<div><span class="defaultCharacter">&#356;</span><span>&#356;</span></div>
+<div><span class="defaultCharacter">&#357;</span><span>&#357;</span></div>
+<div><span class="defaultCharacter">&#358;</span><span>&#358;</span></div>
+<div><span class="defaultCharacter">&#359;</span><span>&#359;</span></div>
+<div><span class="defaultCharacter">&#360;</span><span>&#360;</span></div>
+<div><span class="defaultCharacter">&#361;</span><span>&#361;</span></div>
+<div><span class="defaultCharacter">&#362;</span><span>&#362;</span></div>
+<div><span class="defaultCharacter">&#363;</span><span>&#363;</span></div>
+<div><span class="defaultCharacter">&#364;</span><span>&#364;</span></div>
+<div><span class="defaultCharacter">&#365;</span><span>&#365;</span></div>
+<div><span class="defaultCharacter">&#366;</span><span>&#366;</span></div>
+<div><span class="defaultCharacter">&#367;</span><span>&#367;</span></div>
+<div><span class="defaultCharacter">&#368;</span><span>&#368;</span></div>
+<div><span class="defaultCharacter">&#369;</span><span>&#369;</span></div>
+<div><span class="defaultCharacter">&#370;</span><span>&#370;</span></div>
+<div><span class="defaultCharacter">&#371;</span><span>&#371;</span></div>
+<div><span class="defaultCharacter">&#372;</span><span>&#372;</span></div>
+<div><span class="defaultCharacter">&#373;</span><span>&#373;</span></div>
+<div><span class="defaultCharacter">&#374;</span><span>&#374;</span></div>
+<div><span class="defaultCharacter">&#375;</span><span>&#375;</span></div>
+<div><span class="defaultCharacter">&#376;</span><span>&#376;</span></div>
+<div><span class="defaultCharacter">&#377;</span><span>&#377;</span></div>
+<div><span class="defaultCharacter">&#378;</span><span>&#378;</span></div>
+<div><span class="defaultCharacter">&#379;</span><span>&#379;</span></div>
+<div><span class="defaultCharacter">&#380;</span><span>&#380;</span></div>
+<div><span class="defaultCharacter">&#381;</span><span>&#381;</span></div>
+<div><span class="defaultCharacter">&#382;</span><span>&#382;</span></div>
+<div><span class="defaultCharacter">&#383;</span><span>&#383;</span></div>
+<div><span class="defaultCharacter">&#710;</span><span>&#710;</span></div>
+<div><span class="defaultCharacter">&#711;</span><span>&#711;</span></div>
+<div><span class="defaultCharacter">&#728;</span><span>&#728;</span></div>
+<div><span class="defaultCharacter">&#730;</span><span>&#730;</span></div>
+<div><span class="defaultCharacter">&#731;</span><span>&#731;</span></div>
+<div><span class="defaultCharacter">&#732;</span><span>&#732;</span></div>
+<div><span class="defaultCharacter">&#733;</span><span>&#733;</span></div>
+<div><span class="defaultCharacter">&#902;</span><span>&#902;</span></div>
+<div><span class="defaultCharacter">&#903;</span><span>&#903;</span></div>
+<div><span class="defaultCharacter">&#904;</span><span>&#904;</span></div>
+<div><span class="defaultCharacter">&#905;</span><span>&#905;</span></div>
+<div><span class="defaultCharacter">&#906;</span><span>&#906;</span></div>
+<div><span class="defaultCharacter">&#908;</span><span>&#908;</span></div>
+<div><span class="defaultCharacter">&#910;</span><span>&#910;</span></div>
+<div><span class="defaultCharacter">&#911;</span><span>&#911;</span></div>
+<div><span class="defaultCharacter">&#913;</span><span>&#913;</span></div>
+<div><span class="defaultCharacter">&#914;</span><span>&#914;</span></div>
+<div><span class="defaultCharacter">&#915;</span><span>&#915;</span></div>
+<div><span class="defaultCharacter">&#916;</span><span>&#916;</span></div>
+<div><span class="defaultCharacter">&#917;</span><span>&#917;</span></div>
+<div><span class="defaultCharacter">&#918;</span><span>&#918;</span></div>
+<div><span class="defaultCharacter">&#919;</span><span>&#919;</span></div>
+<div><span class="defaultCharacter">&#920;</span><span>&#920;</span></div>
+<div><span class="defaultCharacter">&#921;</span><span>&#921;</span></div>
+<div><span class="defaultCharacter">&#922;</span><span>&#922;</span></div>
+<div><span class="defaultCharacter">&#923;</span><span>&#923;</span></div>
+<div><span class="defaultCharacter">&#924;</span><span>&#924;</span></div>
+<div><span class="defaultCharacter">&#925;</span><span>&#925;</span></div>
+<div><span class="defaultCharacter">&#926;</span><span>&#926;</span></div>
+<div><span class="defaultCharacter">&#927;</span><span>&#927;</span></div>
+<div><span class="defaultCharacter">&#928;</span><span>&#928;</span></div>
+<div><span class="defaultCharacter">&#929;</span><span>&#929;</span></div>
+<div><span class="defaultCharacter">&#931;</span><span>&#931;</span></div>
+<div><span class="defaultCharacter">&#932;</span><span>&#932;</span></div>
+<div><span class="defaultCharacter">&#933;</span><span>&#933;</span></div>
+<div><span class="defaultCharacter">&#934;</span><span>&#934;</span></div>
+<div><span class="defaultCharacter">&#935;</span><span>&#935;</span></div>
+<div><span class="defaultCharacter">&#936;</span><span>&#936;</span></div>
+<div><span class="defaultCharacter">&#937;</span><span>&#937;</span></div>
+<div><span class="defaultCharacter">&#938;</span><span>&#938;</span></div>
+<div><span class="defaultCharacter">&#939;</span><span>&#939;</span></div>
+<div><span class="defaultCharacter">&#940;</span><span>&#940;</span></div>
+<div><span class="defaultCharacter">&#941;</span><span>&#941;</span></div>
+<div><span class="defaultCharacter">&#942;</span><span>&#942;</span></div>
+<div><span class="defaultCharacter">&#943;</span><span>&#943;</span></div>
+<div><span class="defaultCharacter">&#944;</span><span>&#944;</span></div>
+<div><span class="defaultCharacter">&#945;</span><span>&#945;</span></div>
+<div><span class="defaultCharacter">&#946;</span><span>&#946;</span></div>
+<div><span class="defaultCharacter">&#947;</span><span>&#947;</span></div>
+<div><span class="defaultCharacter">&#948;</span><span>&#948;</span></div>
+<div><span class="defaultCharacter">&#949;</span><span>&#949;</span></div>
+<div><span class="defaultCharacter">&#950;</span><span>&#950;</span></div>
+<div><span class="defaultCharacter">&#951;</span><span>&#951;</span></div>
+<div><span class="defaultCharacter">&#952;</span><span>&#952;</span></div>
+<div><span class="defaultCharacter">&#953;</span><span>&#953;</span></div>
+<div><span class="defaultCharacter">&#954;</span><span>&#954;</span></div>
+<div><span class="defaultCharacter">&#955;</span><span>&#955;</span></div>
+<div><span class="defaultCharacter">&#956;</span><span>&#956;</span></div>
+<div><span class="defaultCharacter">&#957;</span><span>&#957;</span></div>
+<div><span class="defaultCharacter">&#958;</span><span>&#958;</span></div>
+<div><span class="defaultCharacter">&#959;</span><span>&#959;</span></div>
+<div><span class="defaultCharacter">&#960;</span><span>&#960;</span></div>
+<div><span class="defaultCharacter">&#961;</span><span>&#961;</span></div>
+<div><span class="defaultCharacter">&#962;</span><span>&#962;</span></div>
+<div><span class="defaultCharacter">&#963;</span><span>&#963;</span></div>
+<div><span class="defaultCharacter">&#964;</span><span>&#964;</span></div>
+<div><span class="defaultCharacter">&#965;</span><span>&#965;</span></div>
+<div><span class="defaultCharacter">&#966;</span><span>&#966;</span></div>
+<div><span class="defaultCharacter">&#967;</span><span>&#967;</span></div>
+<div><span class="defaultCharacter">&#968;</span><span>&#968;</span></div>
+<div><span class="defaultCharacter">&#969;</span><span>&#969;</span></div>
+<div><span class="defaultCharacter">&#970;</span><span>&#970;</span></div>
+<div><span class="defaultCharacter">&#971;</span><span>&#971;</span></div>
+<div><span class="defaultCharacter">&#972;</span><span>&#972;</span></div>
+<div><span class="defaultCharacter">&#973;</span><span>&#973;</span></div>
+<div><span class="defaultCharacter">&#974;</span><span>&#974;</span></div>
+<div><span class="defaultCharacter">&#1025;</span><span>&#1025;</span></div>
+<div><span class="defaultCharacter">&#1026;</span><span>&#1026;</span></div>
+<div><span class="defaultCharacter">&#1027;</span><span>&#1027;</span></div>
+<div><span class="defaultCharacter">&#1028;</span><span>&#1028;</span></div>
+<div><span class="defaultCharacter">&#1029;</span><span>&#1029;</span></div>
+<div><span class="defaultCharacter">&#1030;</span><span>&#1030;</span></div>
+<div><span class="defaultCharacter">&#1031;</span><span>&#1031;</span></div>
+<div><span class="defaultCharacter">&#1032;</span><span>&#1032;</span></div>
+<div><span class="defaultCharacter">&#1033;</span><span>&#1033;</span></div>
+<div><span class="defaultCharacter">&#1034;</span><span>&#1034;</span></div>
+<div><span class="defaultCharacter">&#1035;</span><span>&#1035;</span></div>
+<div><span class="defaultCharacter">&#1036;</span><span>&#1036;</span></div>
+<div><span class="defaultCharacter">&#1037;</span><span>&#1037;</span></div>
+<div><span class="defaultCharacter">&#1038;</span><span>&#1038;</span></div>
+<div><span class="defaultCharacter">&#1039;</span><span>&#1039;</span></div>
+<div><span class="defaultCharacter">&#1040;</span><span>&#1040;</span></div>
+<div><span class="defaultCharacter">&#1041;</span><span>&#1041;</span></div>
+<div><span class="defaultCharacter">&#1042;</span><span>&#1042;</span></div>
+<div><span class="defaultCharacter">&#1043;</span><span>&#1043;</span></div>
+<div><span class="defaultCharacter">&#1044;</span><span>&#1044;</span></div>
+<div><span class="defaultCharacter">&#1045;</span><span>&#1045;</span></div>
+<div><span class="defaultCharacter">&#1046;</span><span>&#1046;</span></div>
+<div><span class="defaultCharacter">&#1047;</span><span>&#1047;</span></div>
+<div><span class="defaultCharacter">&#1048;</span><span>&#1048;</span></div>
+<div><span class="defaultCharacter">&#1049;</span><span>&#1049;</span></div>
+<div><span class="defaultCharacter">&#1050;</span><span>&#1050;</span></div>
+<div><span class="defaultCharacter">&#1051;</span><span>&#1051;</span></div>
+<div><span class="defaultCharacter">&#1052;</span><span>&#1052;</span></div>
+<div><span class="defaultCharacter">&#1053;</span><span>&#1053;</span></div>
+<div><span class="defaultCharacter">&#1054;</span><span>&#1054;</span></div>
+<div><span class="defaultCharacter">&#1055;</span><span>&#1055;</span></div>
+<div><span class="defaultCharacter">&#1056;</span><span>&#1056;</span></div>
+<div><span class="defaultCharacter">&#1057;</span><span>&#1057;</span></div>
+<div><span class="defaultCharacter">&#1058;</span><span>&#1058;</span></div>
+<div><span class="defaultCharacter">&#1059;</span><span>&#1059;</span></div>
+<div><span class="defaultCharacter">&#1060;</span><span>&#1060;</span></div>
+<div><span class="defaultCharacter">&#1061;</span><span>&#1061;</span></div>
+<div><span class="defaultCharacter">&#1062;</span><span>&#1062;</span></div>
+<div><span class="defaultCharacter">&#1063;</span><span>&#1063;</span></div>
+<div><span class="defaultCharacter">&#1064;</span><span>&#1064;</span></div>
+<div><span class="defaultCharacter">&#1065;</span><span>&#1065;</span></div>
+<div><span class="defaultCharacter">&#1066;</span><span>&#1066;</span></div>
+<div><span class="defaultCharacter">&#1067;</span><span>&#1067;</span></div>
+<div><span class="defaultCharacter">&#1068;</span><span>&#1068;</span></div>
+<div><span class="defaultCharacter">&#1069;</span><span>&#1069;</span></div>
+<div><span class="defaultCharacter">&#1070;</span><span>&#1070;</span></div>
+<div><span class="defaultCharacter">&#1071;</span><span>&#1071;</span></div>
+<div><span class="defaultCharacter">&#1072;</span><span>&#1072;</span></div>
+<div><span class="defaultCharacter">&#1073;</span><span>&#1073;</span></div>
+<div><span class="defaultCharacter">&#1074;</span><span>&#1074;</span></div>
+<div><span class="defaultCharacter">&#1075;</span><span>&#1075;</span></div>
+<div><span class="defaultCharacter">&#1076;</span><span>&#1076;</span></div>
+<div><span class="defaultCharacter">&#1077;</span><span>&#1077;</span></div>
+<div><span class="defaultCharacter">&#1078;</span><span>&#1078;</span></div>
+<div><span class="defaultCharacter">&#1079;</span><span>&#1079;</span></div>
+<div><span class="defaultCharacter">&#1080;</span><span>&#1080;</span></div>
+<div><span class="defaultCharacter">&#1081;</span><span>&#1081;</span></div>
+<div><span class="defaultCharacter">&#1082;</span><span>&#1082;</span></div>
+<div><span class="defaultCharacter">&#1083;</span><span>&#1083;</span></div>
+<div><span class="defaultCharacter">&#1084;</span><span>&#1084;</span></div>
+<div><span class="defaultCharacter">&#1085;</span><span>&#1085;</span></div>
+<div><span class="defaultCharacter">&#1086;</span><span>&#1086;</span></div>
+<div><span class="defaultCharacter">&#1087;</span><span>&#1087;</span></div>
+<div><span class="defaultCharacter">&#1088;</span><span>&#1088;</span></div>
+<div><span class="defaultCharacter">&#1089;</span><span>&#1089;</span></div>
+<div><span class="defaultCharacter">&#1090;</span><span>&#1090;</span></div>
+<div><span class="defaultCharacter">&#1091;</span><span>&#1091;</span></div>
+<div><span class="defaultCharacter">&#1092;</span><span>&#1092;</span></div>
+<div><span class="defaultCharacter">&#1093;</span><span>&#1093;</span></div>
+<div><span class="defaultCharacter">&#1094;</span><span>&#1094;</span></div>
+<div><span class="defaultCharacter">&#1095;</span><span>&#1095;</span></div>
+<div><span class="defaultCharacter">&#1096;</span><span>&#1096;</span></div>
+<div><span class="defaultCharacter">&#1097;</span><span>&#1097;</span></div>
+<div><span class="defaultCharacter">&#1098;</span><span>&#1098;</span></div>
+<div><span class="defaultCharacter">&#1099;</span><span>&#1099;</span></div>
+<div><span class="defaultCharacter">&#1100;</span><span>&#1100;</span></div>
+<div><span class="defaultCharacter">&#1101;</span><span>&#1101;</span></div>
+<div><span class="defaultCharacter">&#1102;</span><span>&#1102;</span></div>
+<div><span class="defaultCharacter">&#1103;</span><span>&#1103;</span></div>
+<div><span class="defaultCharacter">&#1104;</span><span>&#1104;</span></div>
+<div><span class="defaultCharacter">&#1105;</span><span>&#1105;</span></div>
+<div><span class="defaultCharacter">&#1106;</span><span>&#1106;</span></div>
+<div><span class="defaultCharacter">&#1107;</span><span>&#1107;</span></div>
+<div><span class="defaultCharacter">&#1108;</span><span>&#1108;</span></div>
+<div><span class="defaultCharacter">&#1109;</span><span>&#1109;</span></div>
+<div><span class="defaultCharacter">&#1110;</span><span>&#1110;</span></div>
+<div><span class="defaultCharacter">&#1111;</span><span>&#1111;</span></div>
+<div><span class="defaultCharacter">&#1112;</span><span>&#1112;</span></div>
+<div><span class="defaultCharacter">&#1113;</span><span>&#1113;</span></div>
+<div><span class="defaultCharacter">&#1114;</span><span>&#1114;</span></div>
+<div><span class="defaultCharacter">&#1115;</span><span>&#1115;</span></div>
+<div><span class="defaultCharacter">&#1116;</span><span>&#1116;</span></div>
+<div><span class="defaultCharacter">&#1117;</span><span>&#1117;</span></div>
+<div><span class="defaultCharacter">&#1118;</span><span>&#1118;</span></div>
+<div><span class="defaultCharacter">&#1119;</span><span>&#1119;</span></div>
+<div><span class="defaultCharacter">&#8192;</span><span>&#8192;</span></div>
+<div><span class="defaultCharacter">&#8193;</span><span>&#8193;</span></div>
+<div><span class="defaultCharacter">&#8194;</span><span>&#8194;</span></div>
+<div><span class="defaultCharacter">&#8195;</span><span>&#8195;</span></div>
+<div><span class="defaultCharacter">&#8196;</span><span>&#8196;</span></div>
+<div><span class="defaultCharacter">&#8197;</span><span>&#8197;</span></div>
+<div><span class="defaultCharacter">&#8198;</span><span>&#8198;</span></div>
+<div><span class="defaultCharacter">&#8199;</span><span>&#8199;</span></div>
+<div><span class="defaultCharacter">&#8200;</span><span>&#8200;</span></div>
+<div><span class="defaultCharacter">&#8201;</span><span>&#8201;</span></div>
+<div><span class="defaultCharacter">&#8202;</span><span>&#8202;</span></div>
+<div><span class="defaultCharacter">&#8211;</span><span>&#8211;</span></div>
+<div><span class="defaultCharacter">&#8212;</span><span>&#8212;</span></div>
+<div><span class="defaultCharacter">&#8216;</span><span>&#8216;</span></div>
+<div><span class="defaultCharacter">&#8217;</span><span>&#8217;</span></div>
+<div><span class="defaultCharacter">&#8218;</span><span>&#8218;</span></div>
+<div><span class="defaultCharacter">&#8220;</span><span>&#8220;</span></div>
+<div><span class="defaultCharacter">&#8221;</span><span>&#8221;</span></div>
+<div><span class="defaultCharacter">&#8222;</span><span>&#8222;</span></div>
+<div><span class="defaultCharacter">&#8226;</span><span>&#8226;</span></div>
+<div><span class="defaultCharacter">&#8249;</span><span>&#8249;</span></div>
+<div><span class="defaultCharacter">&#8250;</span><span>&#8250;</span></div>
+<div><span class="defaultCharacter">&#8364;</span><span>&#8364;</span></div>
+<!-- end of specimen table -->
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+.pagination-wrapper {
+    margin: 15px 0 0 0;
+    .table-responsive & {
+        margin: 15px;
+    }
+    @extend .clearfix;
+    .lead {
+        margin-bottom: 0;
+    }
+    .pagination {
+        margin: 0;
+        padding-left: 0 !important;
+        @media (max-width: $screen-sm-min) {
+            padding-top: 10px;
+            .hidden-xs {
+                display: none;
+            }
+        }
+        @media (max-width: $screen-md-min) {
+            max-width: 500px;
+        }
+    }
+    .form-pagination {
+        font-size: $font-size-small;
+        margin-top: 10px;
+        label {
+            min-width: inherit;
+        }
+    }
+}
+
+.pagination-page-limit {
+    clear: both;
+    float: right;
+    label {
+        display: inline-block;
+    }
+}
+
+// Small
+.pagination-xs {
+  @include pagination-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-small, $border-radius-small);
+}
+
+.panel-pagination {
+    width: 100%;
+    clear: both;
+}

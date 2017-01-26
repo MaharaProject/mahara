@@ -1,0 +1,12 @@
+.panel-half {
+    width: 48%;
+    float: left;
+    margin-left: 4%;
+    &.first {
+        margin-left:0;
+    }
+    @media (max-width: $screen-sm-min) {
+        width: 100%;
+        margin-left:0;
+    }
+}

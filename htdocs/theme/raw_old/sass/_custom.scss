@@ -1,0 +1,464 @@
+// Generic custom css (anything longer than a screen view should have its own component file)
+
+#exportgeneration {
+    text-align: center;
+}
+
+#progress-iframe { // old style progress bars, e.g. portfolio export
+    border: 1px solid $gray;
+    height: 40px;
+    width: 100%;
+    max-width: 650px;
+    margin: 20px 0;
+}
+
+.task-item .link-block .icon {
+    margin-left: -8px; //correct alignment
+}
+
+.no-results {
+    @extend .lead;
+    clear: both;
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.no-results-small {
+    @extend .no-results;
+    padding: 15px 0;
+}
+
+.wysiwyg {
+    label {
+        display:block;
+    }
+    label  + .mce-tinymce {
+        width:100%;
+    }
+}
+
+.toolbar-affix.affix {
+    position: fixed;
+    top: 70px;
+    z-index: 1;
+    @media (max-width: $screen-sm-min) {
+        top: 0;
+    }
+}
+
+.layoutthumb {
+    rect.layout1 {
+        fill: darken($panel-default-heading-bg, 10%);
+        stroke: #ccc;
+    }
+
+    rect.layout0 {
+        fill: darken($panel-default-heading-bg, 15%);
+        stroke: #ccc;
+    }
+
+    svg {
+        @media (max-width: $screen-sm-min) {
+           zoom: 0.8;
+       }
+    }
+}
+
+// Show that layout thumbnails can be clicked (Bug 1543358)
+.layoutoption > .thumbnail {
+    cursor: pointer;
+}
+
+.blocktype-radio {
+    display: none;
+}
+
+// see emaillist.tpl
+.email-list {
+    padding-bottom: 20px;
+    display: block;
+    .validation-message {
+        padding: 8px 0 15px 15px
+    }
+    @media (min-width: $screen-sm-min) {
+        display: inline-block;
+        width: 420px;
+    }
+    @media (min-width: $screen-lg-min) {
+        width: 500px;
+    }
+}
+
+// Styles for select2 in forms
+// overriding select2 default styles
+.select2-container-multi {
+    max-width: 85% !important;
+    display: inline-block;
+    @media (min-width: $screen-sm-min) {
+        width: 420px !important;
+    }
+    @media (min-width: $screen-lg-min) {
+        width: 500px !important;
+    }
+    &.select2-dropdown-open {
+        .select2-choices {
+            border-radius: 4px 4px 0 0;
+        }
+    }
+    .select2-choices {
+        @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075) inset);
+        border-radius: 4px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        background-image: none;
+        width: 100%;
+        .select2-search-choice {
+            border: none;
+        }
+    }
+}
+
+// Specific panel-secondary styling for the edit page layout
+.panel-secondary.blockinstance > .panel-heading > .blockinstance-header {
+    display: block;
+    padding-left: 10px;
+    padding-right: 80px;
+    word-break: normal;
+}
+
+// Style label institution selection
+.institutionselector {
+    .select {
+        margin-bottom: 15px;
+    }
+    label {
+        font-weight: bold;
+    }
+    @media (min-width: $screen-sm-min) {
+        float: right;
+        width: 50%;
+        .form-group {
+            float: right;
+        }
+        label {
+            display: table-cell;
+            width: auto;
+        }
+        .picker {
+            width: auto;
+            display: table-cell;
+        }
+    }
+}
+
+// Reset checkout boxes inside col in portfolio export page
+.portfolio-export {
+    .heading {
+        margin-top: 15px;
+    }
+    .heading-exportable-pages {
+        margin-top: 0;
+        float: left;
+    }
+    .btn-group {
+        float: right;
+    }
+}
+.exportable-artefacts {
+    .row {
+        :first-child {
+            clear: both;
+        }
+        border-bottom: 1px solid $list-group-border;
+    }
+    .checkbox input[type=checkbox] {
+        margin-left: 0;
+    }
+    label {
+        margin-bottom: 10px;
+    }
+}
+.exportable-artefact-container {
+    padding: 15px 15px 0;
+    background-color: rgba($brand-default, 0.2);
+}
+
+// reset the padding when the individual font file is collapsed in font install
+.individualfiles.form-group {
+    padding: 0;
+    border-bottom: 0 none;
+}
+
+// Login panel
+.login-externallink {
+    display: inline-block;
+}
+
+.form-group .select2-container .select2-selection .select2-search input[type=search] {
+    width: 100% !important;
+}
+
+.progress-bar {
+    position: relative;
+    background-color: darken($brand-primary, 5%);
+    &.small-progress span {
+        color: $text-color;
+        display: block;
+        left: 100%;
+        padding-left: 5px;
+        position: absolute;
+    }
+}
+
+.progress-bar .decompress-link {
+    color: $progress-bar-color;
+    text-decoration: underline;
+    display: inline-block;
+    margin-top: 8px;
+}
+
+// Admin user search page (advanced options)
+// limit the size of dynamic to match select box above
+.userserach-filter {
+    margin-bottom: 15px;
+    .loggedindate-container {
+        margin-top: 10px;
+        max-width: 250px;
+    }
+    .duplicateemail-filter {
+        margin-top: 10px;
+    }
+}
+
+// Puts the date picker in form-condensed fields on the next line
+.form-condensed {
+    .picker {
+        &.first {
+            margin-left: 270px;
+        }
+    }
+}
+
+// Gallery thumbnails
+// override bootstrap thumbnails styling
+.thumbnails {
+    padding-top: 20px;
+    .thumb {
+        margin: 5px;
+    }
+}
+.thumbnail {
+    margin: 0 15px 0 0;
+    .panel-body & {
+        margin-bottom: 10px;
+    }
+}
+
+.user-thumbnails {
+    .user-icon {
+        margin: 5px;
+    }
+}
+
+//Google apps
+.google-app {
+    font-style: normal;
+    img {
+        height: 20px;
+    }
+    a {
+        color: #245dc1;
+    }
+}
+
+// Choose skin
+.layoutoptions-container {
+    @extend .clearfix;
+    margin-top: 15px;
+}
+.layoutoption,
+.skin {
+    float: left;
+    margin-bottom: 10px;
+}
+
+.objectionable-message {
+    padding: 0 0 10px 0;
+}
+
+// Other social media input
+#editprofileform_profiletype_other {
+    @extend .form-control;
+    width: 250px !important;
+    margin-top: 10px;
+    @media (min-width: $screen-xs-min) {
+        margin-left: 10px;
+    }
+    @media (min-width: $screen-sm-min) {
+        margin-top: 0;
+    }
+}
+
+// Editgroup membership modal
+// see editgroupmemship.tpl
+.editgroup-container {
+    border-bottom: 1px solid #f9f9f9;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    &:last-child {
+        border-bottom-width: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .heading {
+        margin: 0;
+    }
+}
+
+// Used to make the forum settings look like it should
+@media (min-width: 768px) {
+    #edit_interaction_weight_container {
+        padding-left: 265px;
+        label, span.description {
+            margin-left: -265px;
+        }
+    }
+}
+
+.panel-secondary > .panel-heading {
+    font-size: 18px;
+}
+
+.table thead {
+    a::after {
+        font-family: 'FontAwesome';
+        position: relative;
+        top: -3px;
+        margin-left: 3px;
+        color: #888;
+    }
+    .asc > a::after {
+        content: '\f0dd';
+    }
+    .desc > a::after,
+    .sorted > a::after {
+        content: '\f0de';
+        top: 2px;
+    }
+}
+
+.containobjectionable {
+    background-color: #FEE7E7;
+}
+
+.permissions-table {
+    display: inline-block;
+    .editpermissions.table {
+        width: auto;
+        background-color: rgba(255,255,255,0);
+        thead tr th {
+            font-weight: 400;
+            font-size: 12px;
+            padding: 2px 8px 8px;
+        }
+        thead tr,
+        tbody td {
+            min-width: 50px;
+        }
+    }
+}
+
+#needprotocolspro {
+    padding-left: 10px;
+}
+
+#needprotocolsreq {
+    padding-left: 10px;
+}
+
+.secreturls .list-group-item,
+.iframesources .buttonscell {
+    .collapse-indicator.open .icon-chevron-down {
+        transform: rotate(-180deg);
+        transition-duration: 0.3s;
+    }
+    .collapse-indicator.closed .icon-chevron-down {
+        transform: rotate(0deg);
+        transition-duration: 0.3s;
+    }
+}
+
+.secreturls .list-group-item {
+    .secret-url {
+        word-wrap: break-word;
+    }
+}
+.iframesources .buttonscell a {
+    font-size: 12px;
+}
+
+// Remove the link colour from a comment that has an attachement
+@media (min-width: 992px) {
+    .viewfooter .comment-item .comment-attachment .panel.collapsible h4 a.collapsed {
+        color: #333;
+    }
+}
+
+#inboxblock .link-block.unread {
+    font-weight: bold;
+}
+
+// Preview image in popup modal
+#previewimg {
+    display: block;
+    margin: 0 auto;
+}
+
+// Edit/add skin page
+// See templates/skin/index.tpl
+.row.skins {
+    margin-top: 30px;
+    .skin {
+        position: relative;
+        min-height: 1px;
+        padding-left: 15px;
+        padding-right: 15px;
+        width: 100%;
+        float: none;
+        @media screen and (min-width: $screen-xs-min) {
+            float: left;
+            width: 50%;
+        }
+        @media screen and (min-width: $screen-sm-min) {
+            width: 33.333333%;
+        }
+    }
+}
+
+#auth_config_institutionidp {
+    width: 90%;
+}
+
+.btn-search.btn.btn-primary.admin-groups.button.btn {
+    margin-left: -13px;
+    margin-top: 2px;
+    vertical-align: text-top;
+}
+
+.connections button {
+    margin-top: 10px;
+}
+
+.emptybtnspace {
+    display: inline-block;
+    width: 30px;
+}
+
+// Make the other license text box align correctly on files page
+.fileuploadlicense input[type=text].secondary-textbox,
+.fileedittable input[type=text].secondary-textbox {
+    @media (min-width: $screen-lg-min) {
+        margin-left: 100px;
+    }
+}

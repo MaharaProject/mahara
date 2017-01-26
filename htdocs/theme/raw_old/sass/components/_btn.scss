@@ -1,0 +1,377 @@
+// Modifications and extra use cases for bootstrap  buttons
+
+.btn.text-left {
+    text-align:left;
+}
+
+.btn.text-right {
+    text-align:right;
+}
+
+.btn label {
+    min-width: 0;
+}
+
+.btn-link-danger {
+    color: $brand-danger;
+}
+
+.btn-text {
+    color: inherit;
+    padding:0;
+}
+
+.btn {
+    vertical-align: baseline;
+
+    .customrow & {
+        margin-top: 25px; // layout builder button alignment
+    }
+    input {
+        margin-top: 0;
+    }
+    &.checkbox input.checkbox {
+        width: auto;
+        display: inline-block;
+        float: right;
+    }
+}
+
+.customrow + .btn {
+    margin-top: 10px;
+}
+
+// Used on pending friends page
+.btn-toggle.panel-footer {
+    padding:0;
+    > .btn {
+        border-radius: 0;
+        width: 100%;
+        float: left;
+        height: 42px;
+        line-height: 30px;
+        text-align: left;
+        &:first-child {
+            border-radius: 0 0 0 3px;
+            border-bottom: 1px solid $panel-default-border;
+        }
+        &:last-child {
+            border-radius: 0 0 3px 0;
+
+        }
+        .btn {
+            padding: 0;
+            margin: 0;
+            color: inherit;
+             &:hover {
+                 text-decoration: none;
+             }
+        }
+        form {
+            display: inline-block;
+        }
+        &:hover {
+            color: #222;
+            background: $gray-lighter;
+            text-decoration: none;
+
+            .icon {
+                color: #777;
+            }
+        }
+    }
+}
+
+h1 + div > .btn-top-left,
+.page-header + div.btn-top-left {
+    float: none;
+    margin-bottom: 0;
+    @media (min-width: $screen-xs-min) {
+        margin-top: -53px;
+        .page-header + & {
+            margin-top: -43px;
+        }
+    }
+    form {
+        margin: 0 !important;
+        display: inline-block;
+        .form-group-inline {
+            padding: 0;
+        }
+    }
+}
+
+h1 ~ div > .btn-group-top,
+.page-header ~ div.btn-group-top,
+.page-header + .btn-action-list .btn-group-top,
+.nav-tabs +  div.btn-group-top {
+    margin-top: -20px;
+    @media (max-width: $screen-xs-min) {
+        margin: 0 0 10px 0;
+        width: 100%;
+        .btn-group .btn,
+        .form-as-button,
+        .btn {
+            margin-bottom: 3px;
+            width: 100%;
+            border-right-width: 1px;
+            border-radius: $border-radius-base !important;
+            .btn {
+                margin-bottom: 0;
+            }
+        }
+        .form-as-button:first-child:not(.last) {
+            .btn {
+                border-right-width: 1px;
+            }
+        }
+    }
+}
+
+.btn-group-top {
+    position: relative;
+    z-index: 1;
+    @media (min-width: $screen-xs-min) {
+        float: right;
+        .btn {
+            @include border-top-radius(0);
+            border-top: 0;
+        }
+        .btn-group-top {
+            margin: 0;
+        }
+    }
+}
+
+.nav-tabs +  div.btn-group-top{
+    margin-top: 0;
+}
+
+td.btn-group {
+    min-width: 300px;
+}
+
+td.action-list-copy {
+    min-width: 195px;
+    .btn-group-top {
+        margin-top: -8px;
+    }
+}
+
+// Often the same template is used to render buttons at the top of the page and
+// in a list group. cf. groups table/groups
+.list-group,
+.panel-heading {
+    .btn-group-top {
+        @include clearfix;
+        text-align: right;
+        float: right;
+        margin-top: 10px;
+        @media (min-width: $screen-sm-min) {
+            @include clearfix;
+            margin-top: -10px;
+            margin-bottom: 11px;
+        }
+        .btn {
+            @extend .btn-sm;
+            padding-top: 3px;
+            border-top: 1px solid $panel-default-border;
+            @media (min-width: $screen-md-min) {
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+                border-top: 0;
+            }
+        }
+        .btn-top-right {
+            margin: 0; // negate nested margin
+        }
+    }
+    .btn-action-list{
+        float: right;
+        width: 100%;
+    }
+}
+// Edit page configure buttons
+.panel-secondary .blockinstance-controls .btn-group-top {
+    position: absolute;
+    top: 11px;
+    right: 10px;
+    margin-top: -10px;
+    .btn {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-top: 0;
+        background: rgba(#ccc, 0.8);
+        &:hover {
+            background: rgba(#ddd, 1);
+        }
+    }
+}
+
+// Page editor column + and - controls
+.btn-header {
+    width:100%;
+
+    &.btn-two .btn {
+        width: 25%;
+        &:first-child {
+            width:75%
+        }
+    }
+    &.btn-three .btn {
+        width: 50%;
+        &:first-child,
+        &:last-child {
+            width:25%;
+        }
+    }
+}
+
+
+//page builder collapsible
+.btn-group-vertical {
+    .indicator {
+        margin-left: -4px;
+        font-size: $font-size-base - 3;
+        padding: 7px 5px 0 0;
+        vertical-align: top;
+        &.icon-arrows {
+            vertical-align: middle;
+            margin-left: -7px;
+        }
+    }
+    .title {
+        white-space: normal;
+        margin-left: 5px;
+        display: inline-block;
+    }
+    .block-icon {
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 5px;
+        margin-left: -2px;
+        font-size: 14px;
+        .col-collapsed & {
+            margin-left: 2px;
+            font-size: 18px;
+        }
+    }
+     &.btn-accordion {
+        .btn {
+            font-size: 13px;
+            margin-bottom: -1px;
+            max-width: 100%;
+            overflow: hidden;
+            width:100%;
+            min-width: 60px;
+            &.ui-accordion-header {
+                 margin-bottom: -3px;
+            }
+            &.last {
+                border-bottom-radius: 3px;
+                background-color: #F9F9F9
+            }
+        }
+        // To override btn-primary colour
+        .btn-primary {
+            color: $gray-dark;
+            background: darken($brand-default, 10%);
+            border-color: #adadad;
+        }
+    }
+    label {
+        font-size: 12px;
+        white-space: normal;
+        vertical-align: middle;
+        padding: 0;
+        padding-right: 5px;
+        padding-top: 3px;
+        width: auto;
+        max-width: 85%;
+        margin-left: 2px;
+    }
+}
+//page builder collapsible
+.btn-accordion.ui-accordion .ui-accordion-content {
+    @include box-sizing(border-box);
+    border-radius: 0;
+    margin-top: 10px;
+    margin-bottom:15px;
+    padding: 0;
+    max-width:100%;
+    border:0;
+    .btn-group-vertical {
+        @include box-sizing(border-box);
+        max-width: 100%;
+        width: 100%;
+        // take away the edges on inner accordion buttons
+        .btn {
+            border-radius: 0;
+            display:block;
+            margin: 0;
+            &:not(:last-child) {
+                border-bottom: 0;
+
+                &:hover {
+                    +.btn {
+                        border-top-color: darken($btn-default-border, 12%);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Hack to fix the inline script tags that keep getting in places they don't belong
+.btn-group .form-as-button.last + script + .btn {
+    margin-left: -1px;
+}
+
+.btn {
+    .icon-chevron-down {
+        opacity: 0.5;
+    }
+    &:hover {
+        .icon-chevron-down {
+            opacity: 1;
+        }
+    }
+}
+
+.btn:disabled {
+    .icon {
+        opacity:0.3;
+    }
+}
+
+// Fix the compose button positionning in the inbox/sent notifications pages.
+.notifications + #messages + h1 {
+    border-bottom: none;
+    display: inline-block;
+    margin-bottom: 0;
+    padding-bottom: 6.5px;
+    + .btn-with-heading {
+        float: right;
+    }
+}
+
+.collapsible-group + .button {
+    margin-top: 30px;
+}
+
+.socialbtn {
+    margin-bottom: 10px;
+}
+
+// edit page btn-group
+.btn-toolbar .btn-title {
+    padding-left: 5px;
+    @media (min-width: $screen-xs-min) and (max-width: $screen-md-min) {
+        @include sr-only;
+    }
+}
+
+// Group categories.php: 138
+.btn-add-group {
+    margin-top: 20px;
+}

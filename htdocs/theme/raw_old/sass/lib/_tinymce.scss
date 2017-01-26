@@ -1,0 +1,60 @@
+.mce-ico.mce-i-icon.tooltoggle-icon {
+    @extend .icon;
+    @extend .icon-lg;
+    @extend .icon-angle-down;
+
+    &:before {
+        display: block;
+        text-align: center;
+    }
+}
+
+.mce-panel.mce-tinymce {
+    background: #F9F9F9;
+    border: 0;
+    .mce-panel {
+        background: #F9F9F9;
+    }
+
+    .mce-statusbar.mce-container{
+        margin-top: 5px;
+        background: $panel-default-heading-bg;
+    }
+}
+
+// Ensure that when tinyMce is displayed correctly on IE11
+// When it is on fullscreen mode
+.mce-fullscreen {
+    .modal-docked .modal-body,
+    .page-modal .modal-body{
+        overflow: visible;
+    }
+}
+
+.mce-fullscreen.mce-tinymce {
+    z-index: $zindex-tooltip + 10; // needs to be above all bootstrap components
+}
+
+.modal-tinymce .hidden-xs {
+    @extend .sr-only;
+}
+
+.tinymce-large iframe{
+    min-height: 300px;
+}
+
+label.sr-only + div.mce-tinymce {
+    max-width: 100%;
+    width: 99%;
+}
+
+.mce-container .mce-wordcount {
+    text-align: right;
+}
+
+.mce-active .mce-ico.mce-i-icon.tooltoggle-icon {
+    transform: rotate(180deg);
+    &:before {
+        margin-top: 1px;
+    }
+}

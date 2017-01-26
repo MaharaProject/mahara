@@ -1,0 +1,103 @@
+// Core variables and mixins
+@import "../lib/font-awesome/font-awesome";
+
+@import "mixins";
+@import "classes"; // Custom utility classes
+
+@import "../typography/fonts";
+@import "../typography/typography";
+@import "../typography/icons";
+@import "../typography/tables";
+@import "../typography/text";
+
+
+// General customisation and component files go here...
+@import "../layout/layout";
+@import "../layout/col-collapse";
+@import "../layout/columns";
+@import "../layout/footer";
+@import "../layout/header";
+@import "../layout/profile-block";
+
+// Panels are a very commonly used layout component
+@import "../layout/panel/panel";
+@import "../layout/panel/panel-body";
+@import "../layout/panel/panel-collapse"; // for collapsible panels and collapsible fieldsets
+@import "../layout/panel/panel-control";
+@import "../layout/panel/panel-footer";
+@import "../layout/panel/panel-form";
+@import "../layout/panel/panel-half";
+@import "../layout/panel/panel-heading";
+@import "../layout/panel/panel-items"; // groups of panels
+@import "../layout/panel/panel-secondary";
+
+// Navigation
+@import "../layout/nav/main-nav";
+@import "../layout/nav/minor-nav";
+@import "../layout/nav/nav-tabs";
+@import "../layout/nav/navbar";
+@import "../layout/nav/tabs";
+@import "../layout/nav/top-nav";
+
+
+// Forms
+@import "../form/alert";
+@import "../form/form";
+@import "../form/form-group";
+@import "../form/input-group";
+@import "../form/site-messages";
+@import "../form/dropdown-group";
+@import "../form/dropdown";
+
+
+// Components - small reusable design elements
+@import "../components/arrow-bar";
+@import "../components/artefactchooser";
+@import "../components/btn";
+@import "../components/btn-group";
+@import "../components/carousel";
+@import "../components/contextual-help";
+@import "../components/cells";
+@import "../components/custom-dropdown";
+@import "../components/dropzone-previews";
+@import "../components/indicator";
+@import "../components/label";
+@import "../components/link-thumb"; // text displayed as a thumbnail (cf. admin cookie consent directives)
+@import "../components/list-group";
+@import "../components/loading-inner";
+@import "../components/modal";
+@import "../components/pagination";
+@import "../components/switch";
+@import "../components/toggles";
+@import "../components/tags";
+@import "../components/user-icon";
+@import "../components/framework"; // For the framework matrix
+
+
+// Feature related sass. We avoid this where we can in favour of reusable components
+@import "../features/collection-navigation";
+@import "../features/comment";
+@import "../features/dashboard-widget";
+@import "../features/filebrowser";
+@import "../features/forum-post";
+@import "../features/manage-collection";
+@import "../features/message-thread";
+@import "../features/notification"; // email style notification panels
+@import "../features/option-alt";
+@import "../features/skiplink";
+@import "../features/user-pages";
+@import "../features/plan-task";
+
+
+// Supporting sass for library code
+@import "../lib/meter.scss"; // progress bar (old/ported)
+@import "../lib/select2";
+@import "../lib/star";
+@import "../lib/tinymce";
+@import "../lib/draggable";
+@import "../lib/graph";
+@import "../lib/elasticsearch";
+
+// Keep these files last to override all other style sheets
+@import "../custom";
+@import "../shame";

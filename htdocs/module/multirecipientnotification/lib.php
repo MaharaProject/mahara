@@ -65,6 +65,7 @@ class PluginModuleMultirecipientnotification extends PluginModule {
             'alt' => get_string('inbox'),
             'title' => get_string('inbox'),
             'count' => $unread,
+            'unread' => get_string('unread', 'mahara', $unread),
             'countclass' => 'unreadmessagecount',
             'linkid' => 'mail',
             'weight' => 20,

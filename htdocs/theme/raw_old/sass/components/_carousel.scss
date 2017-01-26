@@ -1,0 +1,69 @@
+.carousel {
+    width: 82%;
+    margin: 0 auto;
+    .item {
+        display: block;
+        // &.inline {
+        //     display: block;
+        // }
+    }
+
+    &.carousel-ready {
+        .item {
+            display: none;
+            &.active,
+            &.next {
+                display: block;
+            }
+            img {
+                vertical-align: middle;
+            }
+        }
+    }
+    // Overriding bootstrap carousel styles
+    .carousel-caption {
+        text-align: left;
+        position: relative;
+        color: $text-color;
+        background-color: transparent;
+        text-shadow: none;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 10px 0 0 0;
+    }
+    .carousel-control {
+        width: 8%;
+        opacity: 1;
+        top: 0;
+        bottom: 100%;
+        ~ .icon {
+            vertical-align: middle;
+        }
+        &.left {
+            left: -10%;
+        }
+        &.right {
+            right: -10%;
+        }
+        &:hover,
+        &:focus {
+            opacity: 1;
+        }
+        .icon-lg {
+            font-size: 1.5em;
+        }
+        a {
+            display: block;
+            padding: 3px;
+            color: #000;
+            opacity: .5;
+            &:hover,
+            &:focus {
+                outline: 0;
+                text-decoration: none;
+                opacity: .9;
+            }
+        }
+    }
+}

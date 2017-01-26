@@ -1,0 +1,108 @@
+.top-nav.navbar-nav {
+    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 7px 0 0;
+    background-color: #efefef;
+    border-radius: 0 0 3px 3px;
+    padding: 0 10px 0 0;
+
+    &.with-languageform {
+        background-color: transparent;
+    }
+
+    .login-link + .language-form {
+        clear: right;
+        @media (min-width: $screen-xs-min) {
+            clear: none;
+        }
+        form {
+            padding-top: 35px;
+            @media (min-width: $screen-xs-min) {
+                margin-top: 5px;
+                padding-top: 0;
+            }
+            @media (min-width: $screen-sm-min) {
+                margin-top: 0;
+            }
+        }
+    }
+
+    .language-form form {
+        padding-top: 70px;
+        @media (min-width: $screen-xs-min) {
+            margin-top: 5px;
+            padding-top: 0;
+        }
+        @media (min-width: $screen-sm-min) {
+            margin-top: 0;
+        }
+    }
+
+    @media (min-width: $screen-sm-min) {
+        position: relative;
+        margin-top: 7px;
+        clear:none;
+        float:none;
+        margin-right: 0;
+        margin-left:0;
+        background-color: transparent;
+        padding-right:0;
+    }
+
+    @media (min-width: $screen-md-min) {
+        padding:0;
+    }
+
+    >li {
+        float: left;
+        >a {
+            padding: 10px;
+            @media (min-width: $screen-md-min) {
+                padding: 10px 15px;
+            }
+            &:hover {
+                background: transparent;
+            }
+        }
+    }
+
+
+   .has-icon {
+        &.login-link {
+            float: right;
+            a {
+                padding: 7px 15px;
+            }
+        }
+
+        .nav-title {
+            display:none; //if icon - hide title on mobile
+            @media (min-width: $screen-md-min) {
+                margin-left: 5px;
+                display:inline-block;
+            }
+        }
+
+        .navcount {
+            margin-left: 5px;
+        }
+    }
+
+    .backto-be-admin {
+        @media (min-width: $screen-sm-min) {
+            display: none;
+        }
+        a {
+            @media (max-width: $screen-sm-min - 1) {
+                background-color: $state-warning-bg;
+            }
+        }
+    }
+    .inbox {
+        a {
+            white-space: nowrap;
+        }
+    }
+}
