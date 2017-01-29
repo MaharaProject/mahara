@@ -5,9 +5,9 @@
 <div id="blogpost-{$postid}" class="panel-body flush">
 
     {if $artefacttitle && $simpledisplay}
-    <h3 class="title">
+    <h2 class="title">
         {$artefacttitle|safe}
-    </h3>
+    </h2>
     {/if}
 
     <div class="postdetails metadata">
@@ -40,7 +40,7 @@
 
     {if isset($attachments)}
         <div class="has-attachment panel panel-default collapsible">
-            <h5 class="panel-heading">
+            <h3 class="panel-heading">
                 <a class="text-left collapsed" aria-expanded="false" href="#blog-attach-{$postid}" data-toggle="collapse">
                     <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
 
@@ -48,7 +48,7 @@
                     <span class="metadata">({$attachments|count})</span>
                     <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
                 </a>
-            </h5>
+            </h3>
             <!-- Attachment list with view and download link -->
             <div id="blog-attach-{$postid}" class="collapse">
                 <ul class="list-unstyled list-group">
