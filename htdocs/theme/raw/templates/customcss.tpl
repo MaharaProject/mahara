@@ -231,12 +231,15 @@ a.admin-site {
 
 header.header .header-search-form .form-control {
     background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAic6ZYLJxAAAAA1JREFUCNdj+P//vzwACRsDHRWss5MAAAAASUVORK5CYII=') {$data.background};
-    border: 0px none;
+    border: 1px solid #ccc;
     color: {$data.backgroundfg};
 }
 header.header .header-search-form .form-control:focus {
     background-color: {$data.backgroundfg};
     color: {$data.background};
+}
+.header .header-search-form .input-group-btn {
+    border-left: 1px solid #ccc;
 }
 
 .admin .arrow-bar {
