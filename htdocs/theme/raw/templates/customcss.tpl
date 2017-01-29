@@ -114,7 +114,8 @@ a:focus,
 }
 
 
-.btn-primary {
+.btn-primary,
+a.btn-primary {
     background: {$data.background};
     color: {$data.backgroundfg};
     border-color: #ccc;
