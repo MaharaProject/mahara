@@ -51,6 +51,7 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
         else {
             $src = $wwwroot . 'artefact/file/download.php?file=' . $id . '&view=' . $viewid;
             $description = $image->get('description');
+            $description = empty($description) ? $image->get('title') : $description;
         }
 
         if (!empty($configdata['width'])) {
