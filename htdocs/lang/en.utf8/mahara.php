@@ -442,6 +442,7 @@ $string['cannotremovedefaultemail'] = 'You cannot remove your primary email addr
 $string['emailtoolong'] = 'Email addresses cannot be longer than 255 characters.';
 $string['mustspecifyoldpassword'] = 'You must specify your current password.';
 $string['Site'] = 'Site';
+$string['maildisabled'] = 'Email disabled';
 
 // Misc. register stuff that could be used elsewhere
 $string['profileicon'] = 'Profile image';

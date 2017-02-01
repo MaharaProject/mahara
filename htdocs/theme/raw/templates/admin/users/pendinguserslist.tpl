@@ -3,6 +3,11 @@
         <thead>
                 <th>{str tag=pendingregistration section=admin}</th>
                 <th>{str tag=registrationreason section=admin}</th>
+                {if $extracols}
+                    {foreach from=$extracols key=colkey item=col}
+                        <th>{str tag=$colkey section=mahara}</th>
+                    {/foreach}
+                {/if}
                 <th>&nbsp;</th>
         </thead>
         <tbody>
@@ -17,6 +22,13 @@
                     <td class="pendinginfo">
                             <div class="detail">{$registration->reason}</div>
                     </td>
+                    {if $extracols}
+                        {foreach from=$extracols key=colkey item=col}
+                        <td>
+                            <div class="detail">{if property_exists($registration->extra, $colkey)}{$registration->extra->$colkey}{/if}</div>
+                        </td>
+                        {/foreach}
+                    {/if}
                     <td class="">
                         <div class="btn-group">
                             <a class="btn btn-default btn-xs" href="{$WWWROOT}admin/users/actionregistration.php?r={$registration->id}&action=approve">

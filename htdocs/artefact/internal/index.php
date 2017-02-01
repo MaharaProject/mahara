@@ -108,6 +108,15 @@ foreach ( $element_list as $element => $type ) {
         $items[$element]['options'] = array('' => get_string('nocountryselected')) + $countries;
         $items[$element]['defaultvalue'] = get_config('country');
     }
+    $classname = 'ArtefactType' . ucfirst($element);
+    if (is_callable(array($classname, 'getoptions'))) {
+        $options = call_static_method($classname, 'getoptions');
+        $items[$element]['options'] = $options;
+    }
+    if (is_callable(array($classname, 'defaultoption'))) {
+        $defaultoption = call_static_method($classname, 'defaultoption');
+        $items[$element]['defaultvalue'] = $defaultoption;
+    }
     if ($element == 'socialprofile') {
         $items[$element] = ArtefactTypeSocialprofile::render_profile_element();
     }
@@ -149,19 +158,19 @@ $elements = array(
         'type' => 'fieldset',
         'legend' => get_string('aboutme', 'artefact.internal'),
         'class' => 'has-help' . $fieldset != 'aboutme' ? 'collapsed' : '',
-        'elements' => get_desired_fields($items, array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction'), 'about'),
+        'elements' => get_desired_fields($items, 'about'),
     ),
     'contact' => array(
         'type' => 'fieldset',
         'legend' => get_string('contact', 'artefact.internal'),
         'class' => $fieldset != 'contact' ? '' : '',
-        'elements' => get_desired_fields($items, array('email', 'maildisabled', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'), 'contact'),
+        'elements' => get_desired_fields($items, 'contact'),
     ),
     'social' => array(
         'type' => 'fieldset',
         'legend' => get_string('social', 'artefact.internal'),
         'class' => $fieldset != 'social' ? 'collapsed' : '',
-        'elements' => get_desired_fields($items, array('socialprofile'), 'social'),
+        'elements' => get_desired_fields($items, 'social'),
     ),
     'general' => array(
         'type' => 'fieldset',
@@ -197,8 +206,22 @@ $profileform = pieform(array(
     'autofocus'  => false,
 ));
 
-function get_desired_fields(&$allfields, $desiredfields, $section) {
+function get_desired_fields(&$allfields, $section) {
     global $USER;
+    $desiredfields = array('about' => array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction'),
+                           'contact' => array('email', 'maildisabled', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'),
+                           'social' => array('socialprofile'),
+                           );
+
+    if (is_callable(array('ArtefactTypeProfileLocal', 'get_desired_fields'))) {
+        $localfields = call_static_method('ArtefactTypeProfileLocal', 'get_desired_fields');
+        foreach ($localfields as $k => $v) {
+            foreach ($v as $k2 => $v2) {
+                array_splice($desiredfields[$k], $k2, 0, array($v2));
+            }
+        }
+    }
+
     if ($section == 'about') {
         $r = get_record_select('view', 'type = ? AND owner = ?', array('profile', $USER->id), 'id');
         $label = '<div id="profileicon" class="profile-icon pseudolabel pull-left"><a href="' . get_config('wwwroot') . 'artefact/file/profileicons.php" class="user-icon"><img src="'
@@ -217,7 +240,7 @@ function get_desired_fields(&$allfields, $desiredfields, $section) {
             'value'     => $descr,
         )
     );
-    foreach ($desiredfields as $field) {
+    foreach ($desiredfields[$section] as $field) {
         if (isset($allfields[$field])) {
             $return[$field] = $allfields[$field];
             unset($allfields[$field]);
@@ -401,7 +424,6 @@ function profileform_submit(Pieform $form, $values) {
         }
         else {
             if (!isset($profilefields[$element]) || $values[$element] != $profilefields[$element]) {
-
                 if ($element == 'introduction') {
                     $newintroduction = EmbeddedImage::prepare_embedded_images($values[$element], 'profileintrotext', $USER->get('id'));
                     $values[$element] = $newintroduction;

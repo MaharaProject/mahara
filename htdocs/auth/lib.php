@@ -826,6 +826,14 @@ function auth_check_required_fields() {
         if (get_profile_field($USER->get('id'), $field) != null) {
             continue;
         }
+        // If profile field saves it's data somewhere different to normal
+        $classname = 'ArtefactType' . ucfirst($field);
+        if (is_callable(array($classname, 'defaultoption'))) {
+            $option = call_static_method($classname, 'defaultoption');
+            if (!empty($option)) {
+                continue;
+            }
+        }
 
         if ($field == 'email') {
             if (isset($elements['email'])) {
@@ -863,6 +871,14 @@ function auth_check_required_fields() {
         if ($field == 'country') {
             $elements[$field]['options'] = getoptions_country();
             $elements[$field]['defaultvalue'] = get_config('country');
+        }
+        if (is_callable(array($classname, 'getoptions'))) {
+            $options = call_static_method($classname, 'getoptions');
+            $elements[$field]['options'] = $options;
+        }
+        if (is_callable(array($classname, 'defaultoption'))) {
+            $defaultoption = call_static_method($classname, 'defaultoption');
+            $elements[$field]['defaultvalue'] = $defaultoption;
         }
 
         if ($field == 'email') {
@@ -2126,6 +2142,10 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
             )
         )
     );
+
+    if (function_exists('local_register_form')) {
+        local_register_form($elements);
+    }
 
     $sql = 'SELECT
                 i.*
