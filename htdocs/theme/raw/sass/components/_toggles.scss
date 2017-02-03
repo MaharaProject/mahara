@@ -1,40 +1,57 @@
-
-.menu-toggle {
-    border-left: 0;
-    border-radius: 0 3px 3px 0;
-    &:before {
-        position:absolute;
-        left: 0;
-        top: 7px;
-        display:block;
-        content:"";
-        height:20px;
-        border-right:1px solid $navbar-default-toggle-border-color;
-        border-left:1px solid #fff;
+// Navigation toggle styles
+.nav-toggle-area {
+    position: relative;
+    .user-icon {
+        padding: 0;
+        position: absolute;
+        margin: 7px 0 7px 9px;
+        z-index: 3;
+        left: 45px;
+        display: block;
+        @media (min-width: $screen-sm-min) {
+            left: 0;
+        }
     }
 }
 
-.search-toggle {
-    color: $navbar-default-toggle-icon-bar-bg;
-    line-height: 13px;
-    height: 34px;
-    margin-right: 0;
-    border-right: 0;
-    border-radius: 3px 0 0 3px;
-}
-
-
 .navbar-toggle {
-    width: 42px;
-    margin-right: -4px;
-    margin-top: 50px;
+    display: block;
+    margin: 0;
+    border-color: $navbar-default-toggle-border-color;
+    border-left-width: 0;
+    border-radius: 0;
+    min-width: 45px;
+    color: $navbar-default-toggle-icon-bar-bg;
+    &:hover,
+    &:focus {
+        background-color: $navbar-default-toggle-hover-bg;
+    }
+
+    &.search-toggle {
+        @media (min-width: $screen-sm-min) {
+            display: none;
+        }
+        .icon {
+            color: $navbar-default-link-hover-color;
+        }
+    }
+
+    &.user-toggle {
+        padding-left: 45px;
+        @media (min-width: $screen-sm-min) {
+            border-left-width: 1px;
+        }
+    }
+
+    &:last-of-type {
+        border-left-width: 1px;
+    }
 }
 
 .navbar-showchildren {
-    background-color: darken($navbar-inverse-bg, 10%);
+    color: $navbar-inverse-toggle-icon-bar-bg;
     border-radius: 0;
     border: 0;
-    color: $navbar-inverse-link-color;
     position: absolute;
     right: 10px;
     top: 5px;
@@ -44,25 +61,25 @@
     transition-duration: 0.3s;
     &:hover,
     &:focus {
-        .navbar-inverse & {
-            background-color: darken($navbar-inverse-bg, 10%);
-            color: lighten($navbar-inverse-bg, 35%);
-        }
+        background-color: $navbar-inverse-toggle-hover-bg;
         .icon {
-            color: $navbar-default-link-hover-color;
+            color: $navbar-inverse-link-hover-color;
         }
     }
     .icon {
         transform: rotate(-180deg);
         transition-duration: 0.3s;
-        color: $navbar-default-link-color;
     }
     &.collapsed {
-        background-color: transparent;
-        height: 36px;
         .icon {
             transform: rotate(0deg);
             transition-duration: 0.3s;
+        }
+    }
+    .active & {
+        background-color: $navbar-inverse-toggle-hover-bg;
+        .icon {
+            color: $navbar-inverse-link-hover-color;
         }
     }
 }

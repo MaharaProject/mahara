@@ -83,6 +83,8 @@ $string['tab'] = 'tab';
 $string['selected'] = 'selected';
 $string['admin'] = 'Admin';
 $string['menu'] = 'Menu';
+$string['adminmenu'] = 'Administration menu';
+$string['usermenu'] = 'User menu';
 
 $string['at'] = 'at';
 $string['From'] = 'From';

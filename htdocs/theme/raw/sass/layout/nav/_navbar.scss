@@ -1,80 +1,57 @@
 /*
- * Modificatiosn to bootstraps default navbar components
+ * Modification to bootstraps default navbar components
  */
+// Login link and language form
+.topright-menu {
+    float: right;
+    padding-top: 10px;
 
-.navbar.header {
-    margin-bottom:0;
-    padding: 7px 0;
-    border-bottom:1px solid $navbar-default-border;
+    li {
+        display: inline-block;
+        float: right;
+    }
+
+    .login-link a {
+        margin-left: 15px;
+        padding: 7px 15px;
+    }
 }
 
-.dropdown-adminnav {
-    margin-bottom: $grid-gutter-width;
-}
-
-body:not(.admin) .navbar.minor-nav {
+// Header search form
+.navbar-form.navbar-collapse {
+    padding: 15px 0 15px 15px;
     margin-bottom: 0;
-}
-
-.navbar-fixed-top {
-    position:relative;
-    border: 0;
-
+    border-bottom-width: 0;
     @media (min-width: $screen-sm-min) {
-        position:fixed;
+        position: absolute;
+        display: block;
+        max-width: none;
+        visibility: visible;
+        top: 10px;
+        right: 163px;
+        margin: 0 30px 0 0;
+        padding: 0;
+        box-shadow: none;
+        height: auto !important;
     }
-}
-.navbar-nav {
-    font-size:14px;
-    margin: 7px -5px;
-    @media (min-width: $screen-sm-min) {
-        float:none;
-        margin: 0px -15px;
-    }
-}
 
-.navbar-collapse {
-    padding:0;
-}
-
-.navbar-form {
-    padding-right: 0;
-    @media (max-width: $screen-sm-min - 1) {
-
-        width:100%;
-        margin:0;
-        padding: 10px 0;
-        .container > & {
-            margin: 0 auto;
+    .header-search-form {
+        input[type=text] {
+            width: calc(100% - 43px);
+            float: left;
+            @media (min-width: $screen-sm-min) {
+                width: auto;
+            }
         }
-    }
-    @media (min-width: $screen-sm-min) {
-        @include transition-duration(0.3s);
-    }
-    input[type=submit] {
-        display: none !important; // temp
-    }
-}
-
-.nav>li>a {
-    padding: 10px 5px;
-    @media (min-width: $screen-sm-min) {
-        padding: 10px 15px;
-    }
-}
-
-.navbar-inverse {
-    .navbar-nav {
-        >.active {
-            > a,
-            > a:hover,
-            > a:focus {
-                @media (max-width: $screen-sm-min - 1) {
-                    border-top-color: rgba(darken($navbar-inverse-bg, 7%), 0.5);
-                    font-weight:bold;
-                    color: $navbar-inverse-link-hover-color;
-                    background-color: $navbar-inverse-link-hover-bg;
-                }
+        .input-group-btn {
+            display: block !important;
+            float: left;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left: 0;
+            margin-left: -1px;
+            @media (min-width: $screen-sm-min) {
+                float: right;
             }
         }
     }

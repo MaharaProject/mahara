@@ -1,7 +1,7 @@
 .header {
-    top: 30px;
-    @media (max-width: $screen-sm-min -1) {
-        top: 0;
+    top: 0;
+    @media (min-width: $screen-sm-min) {
+        top: 30px;
     }
 
     .logo-area,
@@ -11,6 +11,7 @@
         float: left;
     }
     .logo {
+        padding: 6px 0;
         margin-right: 15px;
         // logo restricted to 45px - custom work required for a larger version
         img {
@@ -18,38 +19,18 @@
         }
     }
     .admin-title {
-        margin: 15px 10px 5px 0;
-        @media (max-width: $screen-sm-min - 1) {
-            clear: both;
-            margin-top: 10px;
+        @extend .sr-only;
+        @media (min-width: $screen-sm-min) {
+            position: static;
+            width: auto;
+            height: auto;
+            margin: 18px 10px 5px 0;
         }
     }
-    // see _loading-inner for more realting to .logo-area
-
+    // if container is directly after header, then it will need a margin
     + .container {
-        // if container is directly after header, then it will need a margin
-        margin-top: 50px;
-        @media (min-width: $screen-xs-min) and (max-width: $screen-md-min - 1){
-            margin-top: 20px;
+        @media (min-width: $screen-sm-min) {
+            margin-top: 50px;
         }
-    }
-    .header-search-form {
-        .input-group-btn {
-    		display: block !important;
-    		float: right;
-    		border-top-left-radius: 0;
-    		border-bottom-left-radius: 0;
-    		border-left: 0;
-    		margin-left: -1px;
-    	}
-    	@media (max-width: $screen-sm-min) {
-    		input[type=text] {
-    			width: 87%;
-    			float: left;
-    		}
-    		.input-group-btn {
-    			float: left;
-    		}
-    	}
     }
 }

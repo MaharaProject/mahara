@@ -15,7 +15,7 @@
         {if $USERMASQUERADING}
             <div class="site-message alert alert-warning" role="alert">
                 <span class="icon icon-lg icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span>
-                <span>{$masqueradedetails}</span> 
+                <span>{$masqueradedetails}</span>
                 <a href="{$becomeyoulink}">{$becomeyouagain}</a>
             </div>
         {/if}
@@ -59,11 +59,6 @@
                 <a href="{$WWWROOT}" class="logo">
                     <img src="{$sitelogo}" alt="{$sitename}">
                 </a>
-                {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
-                    <div class="admin-title">
-                        <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
-                    </div>
-                {/if}
                 <div id="loading-box" class="loading-box" style='display:none'></div>
             </div>
             {include file="header/topright.tpl"}
