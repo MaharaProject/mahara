@@ -76,7 +76,7 @@ if ($institution || $add) {
                     $authinstanceids
                 );
                 if ($badusers) {
-                    $defaultauth = record_exists('auth_instance', 'institution', 'mahara', 'authname', 'internal');
+                    $defaultauth = record_exists('auth_instance', 'institution', 'mahara', 'authname', 'internal', 'active', 1);
                     if ($values['i'] == 'mahara' || !$defaultauth) {
                         $form->set_error(
                             'submit',
@@ -133,7 +133,7 @@ if ($institution || $add) {
                 execute_sql("
                     UPDATE {usr}
                     SET authinstance = (
-                        SELECT MIN(id) FROM {auth_instance} WHERE institution = 'mahara' AND authname = 'internal'
+                        SELECT MIN(id) FROM {auth_instance} WHERE institution = 'mahara' AND authname = 'internal' AND active = 1
                     )
                     WHERE authinstance IN (" . join(',', array_fill(0, count($authinstanceids), '?')) . ')',
                     $authinstanceids
@@ -915,6 +915,7 @@ function institution_submit(Pieform $form, $values) {
         $authinstance = (object)array(
             'instancename' => 'internal',
             'priority'     => 0,
+            'active'       => 1,
             'institution'  => $newinstitution->name,
             'authname'     => 'internal',
         );

@@ -416,7 +416,7 @@ function testclient_submit(Pieform $form, $values) {
                redirect('/webservice/testclient.php?' . implode('&', $params));
             }
             // determine the internal auth instance
-            $auth_instance = get_record('auth_instance', 'institution', $ext_user->institution, 'authname', 'webservice');
+            $auth_instance = get_record('auth_instance', 'institution', $ext_user->institution, 'authname', 'webservice', 'active', 1);
             if (empty($auth_instance)) {
                $SESSION->add_error_msg(get_string('invaliduser', 'auth.webservice', $values['wsusername']));
                redirect('/webservice/testclient.php?' . implode('&', $params));

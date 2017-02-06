@@ -113,7 +113,7 @@ class mahara_institution_external extends external_api {
         foreach ($params['users'] as $user) {
             $dbuser = self::checkuser($user);
             // Make sure auth is valid
-            if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
+            if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance, 'active', 1)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
             // check the institution is allowed
@@ -192,7 +192,7 @@ class mahara_institution_external extends external_api {
             $dbuser = self::checkuser($user);
 
             // Make sure auth is valid
-            if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
+            if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance, 'active', 1)) {
                 throw new WebserviceInvalidParameterException('invite_members | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
             // check the institution is allowed
@@ -271,7 +271,7 @@ class mahara_institution_external extends external_api {
             $dbuser = self::checkuser($user);
 
             // Make sure auth is valid
-            if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
+            if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance, 'active', 1)) {
                 throw new WebserviceInvalidParameterException('remove_members | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
 
@@ -344,7 +344,7 @@ class mahara_institution_external extends external_api {
             $dbuser = self::checkuser($user);
 
             // Make sure auth is valid
-            if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
+            if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance, 'active', 1)) {
                 throw new WebserviceInvalidParameterException('decline_members | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
 

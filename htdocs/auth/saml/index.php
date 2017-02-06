@@ -263,7 +263,7 @@ function auth_saml_find_authinstance($saml_attributes) {
     $institutions = array();
 
     // find all the possible institutions/auth instances of type saml
-    $instances = recordset_to_array(get_recordset_sql("SELECT * FROM {auth_instance_config} aic, {auth_instance} ai WHERE ai.id = aic.instance AND ai.authname = 'saml' AND aic.field = 'institutionattribute'"));
+    $instances = recordset_to_array(get_recordset_sql("SELECT * FROM {auth_instance_config} aic, {auth_instance} ai WHERE ai.id = aic.instance AND ai.authname = 'saml' AND ai.active = 1 AND aic.field = 'institutionattribute'"));
     foreach ($instances as $row) {
         $institutions[]= $row->instance . ':' . $row->institution . ':' . $row->value;
         if (isset($saml_attributes[$row->value])) {
@@ -551,10 +551,10 @@ function login_test_all_user_authinstance($username, $password) {
     // internal, or ldap - definitely NOT none, saml, or xmlrpc
     $instances = array();
 
-    // all other candidtate auth_instances
+    // all other candidate auth_instances
     $sql = 'SELECT ai.* from {auth_instance} ai INNER JOIN {auth_remote_user} aru
                 ON ai.id = aru.authinstance
-                WHERE ai.authname NOT IN(\'saml\', \'xmlrpc\', \'none\') AND aru.localusr = ?';
+                WHERE ai.active = 1 AND ai.authname NOT IN(\'saml\', \'xmlrpc\', \'none\') AND aru.localusr = ?';
     $authinstances = get_records_sql_array($sql, array($user->id));
     foreach ($authinstances as $authinstance) {
         $instances[]= $authinstance->id;
@@ -562,7 +562,7 @@ function login_test_all_user_authinstance($username, $password) {
 
     // determine the internal authinstance ID associated with the base 'mahara'
     // 'no institution' - use this is a default fallback login attempt
-    $authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'internal');
+    $authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'internal', 'active', 1);
     $instances[]= $authinstance->id;
 
     // test each auth_instance candidate associated with this user

@@ -1601,6 +1601,7 @@ class PluginAuthLdap extends PluginAuth {
         'syncgroupsbyuserfield' => false,
         'syncgroupsuserattribute' => '',
         'syncgroupsusergroupnames' => '',
+        'active' => 1
     );
 
     public static function get_cron() {
@@ -1623,13 +1624,15 @@ class PluginAuthLdap extends PluginAuth {
             return;
         }
         foreach ($auths as $auth) {
-            /* @var $authobj AuthLdap */
-            $authobj = AuthFactory::create($auth->id);
-            // Each instance will decide for itself whether it should sync users and/or groups
-            // User sync needs to be called before group sync in order for new users to wind
-            // up in the correct groups
-            $authobj->sync_users();
-            $authobj->sync_groups();
+            if ($auth->active == '1') {
+                /* @var $authobj AuthLdap */
+                $authobj = AuthFactory::create($auth->id);
+                // Each instance will decide for itself whether it should sync users and/or groups
+                // User sync needs to be called before group sync in order for new users to wind
+                // up in the correct groups
+                $authobj->sync_users();
+                $authobj->sync_groups();
+            }
         }
     }
 
@@ -1682,6 +1685,7 @@ class PluginAuthLdap extends PluginAuth {
                     self::$default_config[$key] = $current_config[$key];
                 }
             }
+            self::$default_config['active'] = $default->active;
         } else {
             $default = new stdClass();
             $default->instancename = '';
@@ -1710,6 +1714,11 @@ class PluginAuthLdap extends PluginAuth {
             'authname' => array(
                 'type'  => 'hidden',
                 'value' => 'ldap',
+            ),
+            'active' => array(
+                'type'  => 'switchbox',
+                'title' => get_string('active', 'auth'),
+                'defaultvalue' => (int) self::$default_config['active'],
             ),
             'host_url' => array(
                 'type'  => 'text',

@@ -524,7 +524,7 @@ class PluginSearchInternal extends PluginSearch {
             $data = get_records_sql_assoc('
                 SELECT ' . $firstcols . ',
                     u.firstname, u.lastname, u.preferredname, u.username, u.email, u.staff, u.profileicon,
-                    u.lastlogin, u.active, NOT u.suspendedcusr IS NULL as suspended, au.instancename AS authname
+                    u.lastlogin, u.active, NOT u.suspendedcusr IS NULL as suspended, au.instancename AS authname, au.active
                 FROM {usr} u INNER JOIN {auth_instance} au ON u.authinstance = au.id ' . $join . $where . '
                 ORDER BY ' . $sort . ', u.id',
                 $values,

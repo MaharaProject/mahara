@@ -397,11 +397,12 @@ function webservice_provider_enabled_submit(Pieform $form, $values) {
     // reload/upgrade the web services configuration
     if ($enabled) {
         // ensure that we have a webservice auth_instance
-        $authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'webservice');
+        $authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'webservice', 'active', 1);
         if (empty($authinstance)) {
             $authinstance = (object)array(
                'instancename' => 'webservice',
                 'priority'     => 2,
+                'active'       => 1,
                 'institution'  => 'mahara',
                 'authname'     => 'webservice',
             );

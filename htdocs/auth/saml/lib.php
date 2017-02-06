@@ -296,6 +296,7 @@ class PluginAuthSaml extends PluginAuth {
         'institutionregex'      => 0,
         'remoteuser'            => 1,
         'loginlink'             => 0,
+        'active'                => 1
             );
 
     public static function can_be_disabled() {
@@ -525,18 +526,20 @@ class PluginAuthSaml extends PluginAuth {
             if ($current_config == false) {
                 $current_config = array();
             }
-
             foreach (self::$default_config as $key => $value) {
                 if (array_key_exists($key, $current_config)) {
                     self::$default_config[$key] = $current_config[$key];
                 }
             }
-            if(empty(self::$default_config['institutionvalue'])) {
+            if (empty(self::$default_config['institutionvalue'])) {
                 self::$default_config['institutionvalue'] = $institution;
             }
-        } else {
+            self::$default_config['active'] = $default->active;
+        }
+        else {
             $default = new stdClass();
             $default->instancename = '';
+            $default->active = 1;
         }
 
         // lookup the institution metadata
@@ -585,6 +588,11 @@ class PluginAuthSaml extends PluginAuth {
             'authname' => array(
                 'type'  => 'hidden',
                 'value' => 'saml',
+            ),
+            'active' => array(
+                'type'  => 'switchbox',
+                'title' => get_string('active', 'auth'),
+                'defaultvalue' => (int) self::$default_config['active'],
             ),
             'institutionidp' => array(
                 'type'  => 'textarea',
@@ -782,6 +790,7 @@ class PluginAuthSaml extends PluginAuth {
 
         $authinstance->institution  = $values['institution'];
         $authinstance->authname     = $values['authname'];
+        $authinstance->active       = (int) $values['active'];
         $authinstance->instancename = $values['authname'];
 
         if ($values['create']) {

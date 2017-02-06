@@ -587,7 +587,8 @@ class PluginAuthXmlrpc extends PluginAuth {
         'theyssoin'             => 0,
         'weimportcontent'       => 0,
         'parent'                => null,
-        'authloginmsg'          => ''
+        'authloginmsg'          => '',
+        'active'                => 1
     );
 
     public static function has_config() {
@@ -667,18 +668,21 @@ class PluginAuthXmlrpc extends PluginAuth {
                         $peer->findByWwwroot($current_config[$key]);
                         self::$default_config['wwwroot_orig'] = $current_config[$key];
                     }
-                } elseif (property_exists($default, $key)) {
+                }
+                else if (property_exists($default, $key)) {
                     self::$default_config[$key] = $default->{$key};
                 }
             }
-        } else {
+        }
+        else {
             $max_priority = get_field('auth_instance', 'MAX(priority)', 'institution', $institution);
             self::$default_config['priority'] = ++$max_priority;
         }
 
         if (empty($peer->application->name)) {
             self::$default_config['appname'] = key(current($applicationset));
-        } else {
+        }
+        else {
             self::$default_config['appname'] = $peer->application->name;
         }
 
@@ -690,6 +694,12 @@ class PluginAuthXmlrpc extends PluginAuth {
             ),
             'defaultvalue' => self::$default_config['instancename'],
             'help'   => true
+        );
+
+        $elements['actve'] = array(
+            'type'  => 'switchbox',
+            'title' => get_string('active', 'auth'),
+            'defaultvalue' => (int) self::$default_config['active'],
         );
 
         $elements['instance'] = array(
@@ -939,6 +949,7 @@ class PluginAuthXmlrpc extends PluginAuth {
         $authinstance->instancename = $values['instancename'];
         $authinstance->institution  = $values['institution'];
         $authinstance->authname     = $values['authname'];
+        $authinstance->active       = $values['active'];
 
         if ($values['create']) {
             $values['instance'] = insert_record('auth_instance', $authinstance, 'id', true);

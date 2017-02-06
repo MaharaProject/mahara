@@ -60,6 +60,7 @@ if ($institution && $plugin) {
         $authinstance->instancename = $plugin;
         $authinstance->institution  = $institution;
         $authinstance->authname     = $plugin;
+        $authinstance->active       = 1;
         $authinstance->id           = insert_record('auth_instance', $authinstance, 'id', true);
         json_reply(false, array('id' => $authinstance->id, 'name' => ucfirst($authinstance->authname), 'authname' => $authinstance->authname));
         exit;

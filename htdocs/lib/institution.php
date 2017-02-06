@@ -579,7 +579,7 @@ class Institution {
         // we can't find that, some other no institution auth.
         $authinstances = get_records_select_assoc(
             'auth_instance',
-            "institution IN ('mahara', ?)",
+            "institution IN ('mahara', ?) AND active = 1",
             array($this->name),
             "institution = 'mahara' DESC, authname = 'internal' DESC"
         );

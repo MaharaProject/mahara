@@ -110,7 +110,7 @@ class mahara_view_external extends external_api {
             $id = $dbuser->id;
         }
         else if (isset($user['remoteuser'])) {
-            $dbinstances = get_records_array('auth_instance', 'institution', $WEBSERVICE_INSTITUTION);
+            $dbinstances = get_records_array('auth_instance', 'institution', $WEBSERVICE_INSTITUTION, 'active', 1);
             $dbuser = false;
             foreach ($dbinstances as $dbinstance) {
                $user_factory = new User;
@@ -182,7 +182,7 @@ class mahara_view_external extends external_api {
                 continue;
             }
 
-            $auth_instance = get_record('auth_instance', 'id', $user->authinstance);
+            $auth_instance = get_record('auth_instance', 'id', $user->authinstance, 'active', 1);
             $USER->reanimate($user->id, $user->authinstance);
             require_once('view.php');
             $data = View::view_search((isset($u['query']) ? $u['query'] : null), null, (object) array('owner' => $USER->get('id')), null, null, 0, true, null, null, true);
@@ -218,12 +218,12 @@ class mahara_view_external extends external_api {
             }
             $userarray['institution'] = $auth_instance->institution;
             $userarray['auths'] = array();
-            $auths = get_records_sql_array('SELECT aru.remoteusername AS remoteusername, ai.authname AS authname FROM {auth_remote_user} aru
+            $auths = get_records_sql_array('SELECT aru.remoteusername AS remoteusername, ai.authname AS authname, ai.active FROM {auth_remote_user} aru
                                               INNER JOIN {auth_instance} ai ON aru.authinstance = ai.id
                                               WHERE ai.institution = ? AND aru.localusr = ?', array($WEBSERVICE_INSTITUTION, $user->id));
             if ($auths) {
                 foreach ($auths as $auth) {
-                    $userarray['auths'][]= array('auth' => $auth->authname, 'remoteuser' => $auth->remoteusername);
+                    $userarray['auths'][]= array('auth' => $auth->authname, 'remoteuser' => $auth->remoteusername, 'active' => $auth->active);
                 }
             }
 

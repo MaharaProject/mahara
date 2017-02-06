@@ -92,9 +92,9 @@ if (isset($key)) {
         }
         $registration->lastlogin = db_format_timestamp(time());
 
-        $authinstance = get_record('auth_instance', 'institution', $registration->institution, 'authname', $registration->authtype ? $registration->authtype : 'internal');
+        $authinstance = get_record('auth_instance', 'institution', $registration->institution, 'authname', $registration->authtype ? $registration->authtype : 'internal', 'active', 1);
         if (false == $authinstance) {
-            throw new ConfigException('No ' . ($registration->authtype ? $registration->authtype : 'internal') . ' auth instance for institution');
+            throw new ConfigException('No ' . ($registration->authtype ? $registration->authtype : 'internal') . ' active auth instance for institution');
         }
 
         if (!empty($registration->extra)) {

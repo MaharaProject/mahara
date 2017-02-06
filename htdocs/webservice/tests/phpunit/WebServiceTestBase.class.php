@@ -100,10 +100,15 @@ class WebServiceTestBase extends MaharaUnitTest {
         // clean out first
         $this->tearDown();
 
-        if (!$authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'webservice')) {
+        if ($authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'webservice')) {
+            // make sure it is active
+            update_record('auth_instance', array('active' => 1), array('id' => $authinstance->id));
+        }
+        else {
             $authinstance = new stdClass();
             $authinstance->instancename = 'webservice';
             $authinstance->institution = 'mahara';
+            $authinstance->active = 1;
             $authinstance->authname = 'webservice';
             $lastinstance = get_records_array('auth_instance', 'institution', 'mahara', 'priority DESC', '*', '0', '1');
             if ($lastinstance == false) {
@@ -236,6 +241,7 @@ class WebServiceTestBase extends MaharaUnitTest {
             $authinstance = (object)array(
                 'instancename' => 'internal',
                 'priority'     => 0,
+                'active'       => 1,
                 'institution'  => $newinstitution->name,
                 'authname'     => 'internal',
             );

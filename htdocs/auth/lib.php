@@ -72,6 +72,7 @@ abstract class Auth {
     protected $instancename;
     protected $priority;
     protected $authname;
+    protected $active;
     protected $config;
     protected $has_instance_config;
     protected $type;
@@ -109,6 +110,7 @@ abstract class Auth {
         $this->institution  = $instance->institution;
         $this->instancename = $instance->instancename;
         $this->priority     = $instance->priority;
+        $this->active       = $instance->active;
         $this->authname     = $instance->authname;
 
         // Return now if the plugin type doesn't require any config
@@ -534,7 +536,8 @@ function auth_get_auth_instances() {
             inst.name,
             inst.displayname,
             i.instancename,
-            i.authname
+            i.authname,
+            i.active
         FROM
             {institution} inst,
             {auth_instance} i
@@ -570,7 +573,8 @@ function auth_get_auth_instances_for_institutions($institutions) {
             inst.name,
             inst.displayname,
             i.instancename,
-            i.authname
+            i.authname,
+            i.active
         FROM
             {institution} inst,
             {auth_instance} i
@@ -611,6 +615,7 @@ function auth_get_auth_instances_for_institution($institution=null) {
                 i.instancename,
                 i.priority,
                 i.authname,
+                i.active,
                 a.requires_config,
                 a.requires_parent
             FROM
@@ -643,6 +648,7 @@ function auth_get_auth_instances_for_wwwroot($wwwroot) {
     $query = "  SELECT
                     ai.id,
                     ai.authname,
+                    ai.active,
                     i.id as institutionid,
                     i.displayname,
                     i.suspended
@@ -1378,8 +1384,12 @@ function auth_get_enabled_auth_plugins() {
                 {auth_installed} inst ON inst.name = ai.authname
             WHERE
                 i.suspended = 0 AND
-                inst.active = 1
-            ORDER BY authname';
+                inst.active = 1';
+    if (get_config('version') >= '2016111000') {
+        // we added a new column auth_instance.active so check for $version to avoid error messages on upgrade
+        $sql .= ' AND ai.active = 1';
+    }
+    $sql .= ' ORDER BY authname';
     $authplugins = get_column_sql($sql);
 
     $usableplugins = array();
@@ -1483,7 +1493,7 @@ function login_submit(Pieform $form, $values) {
             $authinstances = get_records_sql_array("
                 SELECT a.id, a.instancename, a.priority, a.authname, a.institution, i.suspended, i.displayname
                 FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
-                WHERE a.authname != 'internal'
+                WHERE a.authname != 'internal' AND a.active = 1
                 ORDER BY a.institution, a.priority, a.instancename", array());
 
             if ($authinstances == false) {
@@ -1677,12 +1687,13 @@ function ensure_user_account_is_active($user=null) {
     // make sure their authinstance is not set to the suspended/expired institution
     // otherwise they will not be able to login (administer via site).
     $authinstance = get_record_sql('
-        SELECT i.suspended, CASE WHEN i.expiry < NOW() THEN 1 ELSE 0 END AS expired, i.displayname
+        SELECT i.suspended, CASE WHEN i.expiry < NOW() THEN 1 ELSE 0 END AS expired, i.displayname, a.active
         FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
         WHERE a.id = ?', array($user->authinstance));
-    if ($authinstance->suspended || $authinstance->expired) {
+    if ($authinstance->suspended || $authinstance->expired || !$authinstance->active) {
         $sitename = get_config('sitename');
         $state = ($authinstance->suspended) ? 'suspended' : 'expired';
+        $state = ($authinstane->active) ? $state : 'inactive';
         throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institution' . $state, 'mahara', $authinstance->displayname, $sitename));
         return false;
     }
@@ -2119,6 +2130,7 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
                 {auth_instance} ai
             WHERE
                 ai.authname = ? AND
+                ai.active = 1 AND
                 ai.institution = i.name AND
                 i.registerallowed = 1';
     $institutions = get_records_sql_array($sql, array($authname));
@@ -2401,7 +2413,7 @@ function auth_register_submit(Pieform $form, $values) {
     // @todo the expiry date should be configurable
     if ($confirm = (get_config('requireregistrationconfirm') || get_field('institution', 'registerconfirm', 'name', $values['institution']))) {
         if (isset($values['authtype']) && $values['authtype'] != 'internal') {
-            $authinstance = get_record('auth_instance', 'institution', $values['institution'], 'authname', $values['authtype'] ? $values['authtype'] : 'internal');
+            $authinstance = get_record('auth_instance', 'institution', $values['institution'], 'authname', $values['authtype'] ? $values['authtype'] : 'internal', 'active', 1);
             $auth = AuthFactory::create($authinstance->id);
             $confirm = !$auth->weautocreateusers;
         }

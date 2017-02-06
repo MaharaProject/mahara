@@ -149,7 +149,7 @@ function mahara_external_atom_returns() {
 function webservice_validate_user($dbuser) {
     global $SESSION;
     if (!empty($dbuser)) {
-        $auth_instance = get_record('auth_instance', 'id', $dbuser->authinstance);
+        $auth_instance = get_record('auth_instance', 'id', $dbuser->authinstance, 'active', 1);
         if ($auth_instance->authname == 'webservice') {
             $memberships = count_records('usr_institution', 'usr', $dbuser->id);
             if ($memberships == 0) {
@@ -946,7 +946,7 @@ abstract class webservice_server implements webservice_server_interface {
                 throw new WebserviceAccessException(get_string('wrongusernamepassword', 'auth.webservice'));
             }
             // determine the internal auth instance
-            $auth_instance = get_record('auth_instance', 'institution', $ext_user->institution, 'authname', 'webservice');
+            $auth_instance = get_record('auth_instance', 'institution', $ext_user->institution, 'authname', 'webservice', 'active', 1);
             if (empty($auth_instance)) {
                 throw new WebserviceAccessException(get_string('wrongusernamepassword', 'auth.webservice'));
             }
@@ -974,7 +974,7 @@ abstract class webservice_server implements webservice_server_interface {
 
             // check user is member of configured OAuth institution
             $institutions = array_keys(load_user_institutions($this->oauth_token_details['user_id']));
-            $auth_instance = get_record('auth_instance', 'id', $user->authinstance);
+            $auth_instance = get_record('auth_instance', 'id', $user->authinstance, 'active', 1);
             $institutions[]= $auth_instance->institution;
             if (!in_array($this->oauth_token_details['institution'], $institutions)) {
                 throw new WebserviceAccessException(get_string('institutiondenied', 'auth.webservice'));

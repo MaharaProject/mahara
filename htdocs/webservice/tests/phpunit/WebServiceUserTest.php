@@ -63,7 +63,7 @@ class WebServiceUserTest extends WebServiceTestBase {
 
         $dbusers = get_records_sql_array('SELECT u.id AS id FROM {usr} u
                         INNER JOIN {auth_instance} ai ON u.authinstance = ai.id
-                        WHERE u.deleted = 0 AND ai.institution = \'mahara\'', array());
+                        WHERE u.deleted = 0 AND ai.institution = \'mahara\' AND ai.active = 1', array());
         $users_in = array();
         foreach ($dbusers as $dbuser) {
             if ($dbuser->id == 0) continue;
@@ -90,7 +90,7 @@ class WebServiceUserTest extends WebServiceTestBase {
         $function = 'mahara_user_get_users';
         $dbusers = get_records_sql_array('SELECT u.id AS id FROM {usr} u
                         INNER JOIN {auth_instance} ai ON u.authinstance = ai.id
-                        WHERE u.deleted = 0 AND ai.institution = \'mahara\'', array());
+                        WHERE u.deleted = 0 AND ai.institution = \'mahara\' AND ai.active = 1', array());
         $userids = array();
         foreach ($dbusers as $dbuser) {
             if ($dbuser->id == 0) continue;
@@ -194,7 +194,7 @@ class WebServiceUserTest extends WebServiceTestBase {
     function mahara_user_delete_users($client) {
         //Set test data
         //a full user: user1
-        if (!$authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'webservice')) {
+        if (!$authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'webservice', 'active', 1)) {
             throw new WebserviceInvalidParameterException('Invalid authentication type: mahara/webservce');
         }
         $institution = new Institution($authinstance->institution);
