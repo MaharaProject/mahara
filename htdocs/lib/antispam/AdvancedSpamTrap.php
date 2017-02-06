@@ -43,7 +43,7 @@ class AdvancedSpamTrap extends SimpleSpamTrap {
             $blacklists[] = 'dbl.spamhaus.org';
         }
         if (get_config('surbl')) {
-            $blacklists[] = 'multi.surbl.com';
+            $blacklists[] = 'multi.surbl.org';
         }
         // extract the hostname from the url
         preg_match('#://([^\s\'"<>()\.]*\.)*([^\s\'"<>()]+\.[a-zA-Z]+)/?#', $url, $match);
