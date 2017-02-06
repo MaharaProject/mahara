@@ -33,17 +33,41 @@ if ($collection) {
 $institution = $view->get('institution');
 View::set_nav($groupid, $institution);
 
-if ($groupid) {
-    $goto = 'groupviews.php?group=' . $groupid;
+//pressing the delete button from inside page view that belongs to a collection
+if ($collection) {
+    $views = $collection->get_viewids();
+    if (($key = array_search($viewid, $views)) !== false) {
+        unset($views[$key]);
+    }
+    if ($id = reset($views)) {
+        if ($collection->has_framework()) {
+            $goto = 'module/framework/matrix.php?id=' . $collection->get('id');
+        }
+        else {
+            $goto = 'view/view.php?id=' . $id;
+        }
+    }
+    else {
+        $goto = 'collection/index.php';
+        if ($groupid) {
+            $goto .= '?group=' . $groupid;
+        }
+        else if ($institution) {
+            $goto .= '?institution=' . $institution;
+        }
+    }
+}
+else if ($groupid) {
+    $goto = 'view/groupviews.php?group=' . $groupid;
 }
 else if ($institution) {
-    $goto = 'institutionviews.php?institution=' . $institution;
+    $goto = 'view/institutionviews.php?institution=' . $institution;
 }
 else {
     $query = get_querystring();
     // remove the id
     $query = preg_replace('/id=([0-9]+)\&/','',$query);
-    $goto = 'index.php?' . $query;
+    $goto = 'view/index.php?' . $query;
 }
 
 define('TITLE', get_string('deletespecifiedview', 'view', $view->get('title')));
@@ -58,7 +82,7 @@ $form = pieform(array(
             'type' => 'submitcancel',
             'class' => 'btn-default',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'view/' . $goto,
+            'goto' => get_config('wwwroot') . $goto,
         )
     ),
 ));
@@ -70,20 +94,19 @@ $smarty->assign('collectionnote', $collectionnote);
 $smarty->display('view/delete.tpl');
 
 function deleteview_submit(Pieform $form, $values) {
-    global $SESSION, $USER, $viewid, $groupid, $institution, $goto;
+    global $SESSION, $USER, $viewid, $groupid, $institution;
+    $submitelement = $form->get_element('submit');
     $view = new View($viewid, null);
     if (View::can_remove_viewtype($view->get('type')) || $USER->get('admin')) {
+        $collectionid = $view->collection_id();
         $view->delete();
+        if ($collection = new Collection($collectionid)) {
+            $collection->update_display_order();
+        }
         $SESSION->add_ok_msg(get_string('viewdeleted', 'view'));
     }
     else {
         $SESSION->add_error_msg(get_string('cantdeleteview', 'view'));
     }
-    if ($groupid) {
-        redirect('/view/groupviews.php?group='.$groupid);
-    }
-    if ($institution) {
-        redirect('/view/institutionviews.php?institution='.$institution);
-    }
-    redirect('/view/' . $goto);
+    redirect( $submitelement['goto']);
 }

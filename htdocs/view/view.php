@@ -346,6 +346,7 @@ if ($collection) {
     }
 }
 
+$smarty->assign('canremove', $can_edit);
 $smarty->assign('INLINEJAVASCRIPT', $javascript . $inlinejs);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
