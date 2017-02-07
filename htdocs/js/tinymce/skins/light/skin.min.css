@@ -26,3 +26,48 @@
 .mce-menu-item:hover .mce-text,.mce-menu-item.mce-selected .mce-text{color:#333}
 .mce-window .mce-container-body { background: #fff; }
 .mce-window .mce-foot .mce-container-body { background: #f3f3f3; }
+
+/* Adding fonts for table edit - Bug 1649319*/
+
+.mce-i-tablerowprops:before {
+    content: "\e604"
+}
+.mce-i-tablecellprops:before {
+    content: "\e605"
+}
+.mce-i-table2:before {
+    content: "\e606"
+}
+.mce-i-tablemergecells:before {
+    content: "\e607"
+}
+.mce-i-tableinsertcolbefore:before {
+    content: "\e608"
+}
+.mce-i-tableinsertcolafter:before {
+    content: "\e609"
+}
+.mce-i-tableinsertrowbefore:before {
+    content: "\e60a"
+}
+.mce-i-tableinsertrowafter:before {
+    content: "\e60b"
+}
+.mce-i-tablesplitcells:before {
+    content: "\e60d"
+}
+.mce-i-tabledelete:before {
+    content: "\e60e"
+}
+.mce-i-tableleftheader:before {
+    content: "\e62a"
+}
+.mce-i-tabletopheader:before {
+    content: "\e62b"
+}
+.mce-i-tabledeleterow:before {
+    content: "\e800"
+}
+.mce-i-tabledeletecol:before {
+    content: "\e801"
+}
