@@ -459,14 +459,14 @@ function institution_data_current($institution) {
         $data['views'] = 0;
     }
     else {
-        $data['viewids'] = get_column_sql('
+        $data['viewssql'] = '
                 SELECT id FROM {view}
                     WHERE owner IS NOT NULL AND owner IN (' . $membersquery . ')
                 UNION
                     SELECT id FROM {view}
-                    WHERE institution IS NOT NULL AND institution = ?'
-                , array_merge($membersqueryparams, array($institution)));
-        $data['views'] = count($data['viewids']);
+                    WHERE institution IS NOT NULL AND institution = ?';
+        $data['viewssqlparam'] = array_merge($membersqueryparams, array($institution));
+        $data['views'] = count_records_sql('SELECT COUNT(*) FROM (' . $data['viewssql'] . ') AS members',   $data['viewssqlparam']);
     }
     return $data;
 }
@@ -519,9 +519,9 @@ function institution_statistics($institution, $full=false) {
         else {
             $data['viewsperuser'] = get_field_sql("
                 SELECT (0.0 + COUNT(id)) / NULLIF(COUNT(DISTINCT \"owner\"), 0)
-                FROM {view}
-                WHERE id IN (" . join(',', array_fill(0, $data['views'], '?')) . ")
-            ", $data['viewids']);
+                        FROM {view}
+                        WHERE id IN (" . $data['viewssql'] . ")
+                    ", $data['viewssqlparam']);
             $data['viewsperuser'] = round($data['viewsperuser'], 1);
         }
         $data['strviewsperuser'] = get_string('viewsperuser', 'admin', $data['viewsperuser']);
@@ -1335,10 +1335,10 @@ function institution_view_statistics($limit, $offset, &$institutiondata) {
             FROM {block_instance} b
             JOIN {blocktype_installed} bi ON (b.blocktype = bi.name)
             JOIN {view} v ON (b.view = v.id AND v.type = 'portfolio')
-            WHERE v.id IN (" . join(',', array_fill(0, $institutiondata['views'], '?')) . ")
+            WHERE v.id IN (" . $institutiondata['viewssql'] . ")
             GROUP BY b.blocktype, langsection
             ORDER BY blocks DESC",
-            $institutiondata['viewids'], 0, $maxblocktypes
+            $institutiondata['viewssqlparam'], 0, $maxblocktypes
         ));
     }
     $smarty->assign('viewtypes', true);
@@ -1353,8 +1353,8 @@ function institution_view_stats_table($limit, $offset, &$institutiondata) {
     global $USER;
 
     if ($institutiondata['views'] != 0) {
-        $count = count_records_select('view', 'id IN (' . join(',', array_fill(0, $institutiondata['views'], '?')) . ') AND type != ?',
-                                        array_merge($institutiondata['viewids'], array('dashboard')));
+        $count = count_records_select('view', 'id IN (' . $institutiondata['viewssql'] . ') AND type != ?',
+                                        array_merge($institutiondata['viewssqlparam'], array('dashboard')));
     }
     else {
         $count = 0;
@@ -1387,9 +1387,9 @@ function institution_view_stats_table($limit, $offset, &$institutiondata) {
         "SELECT
             v.id, v.title, v.owner, v.group, v.institution, v.visits, v.type, v.ownerformat, v.urlid, v.template
         FROM {view} v
-        WHERE v.id IN (" . join(',', array_fill(0, $institutiondata['views'], '?')) . ") AND v.type != ?
+        WHERE v.id IN (" . $institutiondata['viewssql'] . ") AND v.type != ?
         ORDER BY v.visits DESC, v.title, v.id",
-        array_merge($institutiondata['viewids'], array('dashboard')),
+        array_merge($institutiondata['viewssqlparam'], array('dashboard')),
         $offset,
         $limit
     );
