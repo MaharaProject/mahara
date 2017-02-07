@@ -440,6 +440,14 @@
     width: 90%;
 }
 
+.authInstance .authitem {
+    padding:5px;
+    &.inactive {
+        background: $state-warning-bg;
+        color: $state-warning-text;
+    }
+}
+
 .btn-search.btn.btn-primary.admin-groups.button.btn {
     margin-left: -13px;
     margin-top: 2px;
