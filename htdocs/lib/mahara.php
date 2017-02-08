@@ -203,6 +203,9 @@ function ensure_upgrade_sanity() {
         $e->set_log_off();
         throw $e;
     }
+    if (!record_exists('usr', 'id', 0)) {
+        throw new ConfigSanityException(get_string('mahararootusermissing', 'error'));
+    }
 }
 
 /**
