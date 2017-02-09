@@ -924,7 +924,7 @@ var FileBrowser = (function($) {
             self.callback_feedback(data);  // add/update message
             if (data.maxuploadsize) {
                 // keep max upload size up to date
-                $('#' + self.id + '_userfile_maxuploadsize').append('(' + get_string('maxuploadsize') + ' ' + data.maxuploadsize + ')');
+                $('#' + self.id + '_userfile_maxuploadsize').text('(' + get_string('maxuploadsize') + ' ' + data.maxuploadsize + ')');
             }
         }
         // Clear the create folder form
