@@ -590,6 +590,7 @@ EOD;
      */
     public function create_collection($record) {
         // Validation
+        $sqljoin = $sqlwhere = null;
         switch ($record['ownertype']) {
             case 'institution':
                 if (empty($record['ownername'])) {
@@ -602,6 +603,8 @@ EOD;
                 else {
                     throw new SystemException("The institution '" . $record['ownername'] . "' does not exist.");
                 }
+                $sqljoin = 'INNER JOIN {institution} i ON i.name = v.institution';
+                $sqlwhere = 'AND i.displayname = ?';
                 break;
             case 'group':
                 if ($groupid = $this->get_group_id($record['ownername'])) {
@@ -610,6 +613,8 @@ EOD;
                 else {
                     throw new SystemException("The group '" . $record['ownername'] . "' does not exist.");
                 }
+                $sqljoin = 'INNER JOIN {group} g ON g.id = v.group';
+                $sqlwhere = 'AND g.name = ?';
                 break;
             case 'user':
             default:
@@ -619,6 +624,8 @@ EOD;
                 else {
                     throw new SystemException("The user '" . $record['ownername'] . "' does not exist.");
                 }
+                $sqljoin = 'INNER JOIN {usr} u ON u.id = v.owner';
+                $sqlwhere = 'AND u.username = ?';
                 break;
         }
         // Check if the given pages exist and belong to the collection's owner
@@ -631,12 +638,7 @@ EOD;
             if (!empty($viewtitles)) {
                 foreach ($viewtitles as $viewtitle) {
                     if (!empty($viewtitle) &&
-                        ! $view = get_record_sql('
-                            SELECT v.id
-                            FROM {view} v
-                                INNER JOIN {usr} u ON u.id = v.owner
-                            WHERE v.title = ?
-                                AND u.username = ?'
+                        ! $view = get_record_sql('SELECT v.id FROM {view} v ' . $sqljoin . ' WHERE v.title = ? ' . $sqlwhere
                             , array(trim($viewtitle), $record['ownername']))
                         ) {
                         throw new SystemException("The page '" . $viewtitle
