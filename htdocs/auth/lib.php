@@ -114,7 +114,7 @@ abstract class Auth {
         $this->institution  = $instance->institution;
         $this->instancename = $instance->instancename;
         $this->priority     = $instance->priority;
-        $this->active       = $instance->active;
+        $this->active       = (isset($instance->active) ? $instance->active : 1); // We need to check if column exists yet via upgrade and set a default if not
         $this->authname     = $instance->authname;
 
         // Return now if the plugin type doesn't require any config
