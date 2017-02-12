@@ -1501,6 +1501,7 @@ function site_warnings() {
         $warnings[] = get_string('noreplyaddressmissingorinvalid', 'error', get_config('wwwroot') . 'admin/site/options.php?fs=emailsettings');
     }
 
+    safe_require('auth', 'saml');
     if (PluginAuthSaml::is_active()) {
         // Check if the saml plugin config needs updating
         if (record_exists_select('auth_config', "plugin = ? AND field = ?", array('saml', 'simplesamlphplib'))) {
