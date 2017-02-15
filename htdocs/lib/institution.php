@@ -44,7 +44,7 @@ class Institution {
         'registerallowed' => 0,
         'registerconfirm' => 1,
         'theme' => null,
-        'defaultmembershipperiod' => 0,
+        'defaultmembershipperiod' => null,
         'maxuseraccounts' => null,
         'expiry' => null,
         'expirymailsent' => 0,
@@ -131,10 +131,12 @@ class Institution {
                 break;
 
             case 'id':
-            case 'defaultmembershipperiod':
             case 'maxuseraccounts':
             case 'showonlineusers':
                 $value = (int) $value;
+                break;
+            case 'defaultmembershipperiod':
+                $value = is_null($value) ? null : (int) $value;
                 break;
         }
 
