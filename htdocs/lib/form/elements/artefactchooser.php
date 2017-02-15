@@ -309,7 +309,7 @@ var ArtefactChooserData = (function($) {
           self.seenElementsContainer     = $('#seen-elements-container');
           self.selectedElementsContainer = $('#selected-elements-container');
 
-          if (self.seenElementsContainer) {
+          if (self.seenElementsContainer.length) {
               // Clear out the list of seen elements
               self.seenElementsContainer.empty();
           }
@@ -318,7 +318,7 @@ var ArtefactChooserData = (function($) {
               self.seenElementsContainer.insertAfter('#artefactchooser-body');
           }
 
-          if (self.selectedElementsContainer) {
+          if (self.selectedElementsContainer.length) {
               // Clear out the list of selected elements
               self.selectedElementsContainer.empty();
           }
@@ -340,8 +340,10 @@ var ArtefactChooserData = (function($) {
        * Connects checkboxes so when they're clicked we can deal with it
        */
       this.connectCheckboxes = function() {
-          $('#artefactchooser-body input.artefactid-checkbox').each(function() {
-              $(this).on('click', self.checkboxClicked.bind(null, checkBox));
+          $('#artefactchooser-body input.artefactid-checkbox').each(function(id, checkBox) {
+              $(this).on('click', function() {
+                  self.checkboxClicked(checkBox);
+              });
           });
       }
 
@@ -351,7 +353,7 @@ var ArtefactChooserData = (function($) {
        * page we've already seen)
        */
       this.scrapeForOnpage = function() {
-          $('artefactchooser-body input.artefactid-onpage').each(function(index, input) {
+          $('#artefactchooser-body input.artefactid-onpage').each(function(index, input) {
               var append = true;
               self.seenElementsContainer.children().each(function(id, seen) {
                   if (seen.value == input.value) {
@@ -372,9 +374,9 @@ var ArtefactChooserData = (function($) {
        * Find all hidden currently selected inputs, and move them to the selected container
        */
       this.scrapeForSelected = function() {
-          $('#artefactchooser-body input.artefactid-checkbox').each(function(input) {
-              if ($(input).prop('checked')) {
-                  self.ensureSelectedElement(input);
+          $('#artefactchooser-body input.artefactid-checkbox').each(function(id, checkBox) {
+              if ($(checkBox).prop('checked')) {
+                  self.ensureSelectedElement(checkBox);
               }
           });
       }
@@ -414,7 +416,7 @@ var ArtefactChooserData = (function($) {
        */
       this.ensureSelectedElement = function(element) {
           var append = true;
-          $(self.selectedElementsContainer.children().each(function(index, selected) {
+          $(self.selectedElementsContainer.children()).each(function(index, selected) {
               if (selected.name == element.name) {
                   return append = false;
               }
