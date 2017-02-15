@@ -4916,5 +4916,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017021500) {
+        log_debug('Bump cache version to fetch new favicon');
+        bump_cache_version();
+    }
+
     return $status;
 }
