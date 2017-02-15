@@ -84,6 +84,9 @@ $string['newviewaccessmessagenoownerviews'] = 'You have been added to the access
 $string['newcollectionaccesssubject'] = 'New access to collection "%s"';
 $string['newviewaccesssubject1'] = 'New access to page "%s"';
 $string['newviewaccesssubjectviews'] = 'New access to pages "%s"';
+$string['messageaccessfromto'] = 'Access to this page is restricted until %s and will end on %s.';
+$string['messageaccessfrom'] = 'Access to this page is restricted until %s.';
+$string['messageaccessto'] = 'Access to this page will end on %s.';
 
 $string['viewmodified'] = 'has changed their page';
 $string['ongroup'] = 'on group';
