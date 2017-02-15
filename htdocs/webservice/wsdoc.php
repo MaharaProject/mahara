@@ -107,8 +107,7 @@ function wsdoc_detailed_description_html($params, $indentlevel = 0) {
                     else if (!is_scalar($params->default)) {
                         $params->default = '&lt;' . gettype($params->default) . '&gt;';
                     }
-                    $required = '<span class="wsrequired">' . get_string('required', 'auth.webservice') . '</span> ' .
-                        '<span class="wsoptional">' . get_string('default', 'auth.webservice', $params->default) . '</span> ';
+                    $required = '<span class="wsoptional">' . get_string('default', 'auth.webservice', $params->default) . '</span> ';
                     break;
 
                 case VALUE_OPTIONAL:
@@ -117,8 +116,10 @@ function wsdoc_detailed_description_html($params, $indentlevel = 0) {
                         . '</span> ';
                     break;
 
-                // Don't need to print anything for a required param
                 case VALUE_REQUIRED:
+                    $required = '<span class="wsrequired">' . get_string('required', 'auth.webservice') . '</span> ';
+                    break;
+
                 default:
                     $required = '';
             }

@@ -52,7 +52,7 @@ else {
 
 list($html, $columns, $searchurl, $pagination) = build_webservice_log_search_results($search);
 
-$institutionselect = '';
+$institutionselect = false;
 if (count($institutions) > 1) {
     $selecttype = $USER->get('admin') ? 'institution' : 'institution_requested';
     $options = array('all' => get_string('All'));
@@ -80,66 +80,68 @@ $authtypeoptions = array('all' => get_string('All'));
 foreach ($authtypes as $authtype) {
     $authtypeoptions[$authtype] = $authtype;
 }
+$elements = array();
+$elements['userquery'] = array(
+    'type' => 'autocomplete',
+    'title' => get_string('userauth', 'auth.webservice'),
+    'defaultvalue' => !empty($userquery) ? $userquery : null,
+    'ajaxurl' => get_config('wwwroot') . 'webservice/admin/users.json.php',
+    'initfunction' => 'translate_ids_to_names',
+    'multiple' => true,
+    'ajaxextraparams' => array(),
+    'extraparams' => array(
+        'maximumSelectionLength' => 1
+    ),
+    'width' => '280px',
+);
+if ($institutionselect) {
+    $elements[$selecttype] = $institutionselect;
+}
+$elements['protocol'] = array(
+    'type' => 'select',
+    'title' => get_string('protocol', 'auth.webservice'),
+    'defaultvalue' => !empty($search->protocol) ? $search->protocol : 'all',
+    'options' => $protocoloptions,
+);
+$elements['authtype'] = array(
+    'type' => 'select',
+    'title' => get_string('sauthtype', 'auth.webservice'),
+    'defaultvalue' => !empty($search->authtype) ? $search->authtype : 'all',
+    'options' => $authtypeoptions,
+);
+$elements['functionquery'] = array(
+    'type' => 'autocomplete',
+    'title' => get_string('function', 'auth.webservice'),
+    'defaultvalue' => !empty($functionquery) ? $functionquery : '',
+    'ajaxurl' => get_config('wwwroot') . 'webservice/admin/functions.json.php',
+    'initfunction' => 'translate_ids_to_functions',
+    'multiple' => true,
+    'ajaxextraparams' => array(),
+    'extraparams' => array(
+        'maximumSelectionLength' => 1
+    ),
+    'width' => '280px',
+);
+$elements['onlyerrors'] = array(
+    'type' => 'switchbox',
+    'class' => 'last',
+    'title' => get_string('errors', 'auth.webservice'),
+    'defaultvalue' => $search->onlyerrors,
+);
+$elements['submit'] = array(
+    'type' => 'submit',
+    'class' => 'btn-primary',
+    'value' => get_string('go'),
+);
 
 $form = array(
     'name' => 'logsearchform',
     'method' => 'post',
     'successcallback' => 'logsearchform_submit',
     'renderer' => 'div',
-    'elements' => array(
-        'userquery' => array(
-            'type' => 'autocomplete',
-            'title' => get_string('userauth', 'auth.webservice'),
-            'defaultvalue' => !empty($userquery) ? $userquery : null,
-            'ajaxurl' => get_config('wwwroot') . 'webservice/admin/users.json.php',
-            'initfunction' => 'translate_ids_to_names',
-            'multiple' => true,
-            'ajaxextraparams' => array(),
-            'extraparams' => array(
-                'maximumSelectionLength' => 1
-            ),
-            'width' => '280px',
-        ),
-        $institutionselect,
-        'protocol' => array(
-            'type' => 'select',
-            'title' => get_string('protocol', 'auth.webservice'),
-            'defaultvalue' => !empty($search->protocol) ? $search->protocol : 'all',
-            'options' => $protocoloptions,
-        ),
-        'authtype' => array(
-            'type' => 'select',
-            'title' => get_string('sauthtype', 'auth.webservice'),
-            'defaultvalue' => !empty($search->authtype) ? $search->authtype : 'all',
-            'options' => $authtypeoptions,
-        ),
-        'functionquery' => array(
-            'type' => 'autocomplete',
-            'title' => get_string('function', 'auth.webservice'),
-            'defaultvalue' => !empty($functionquery) ? $functionquery : '',
-            'ajaxurl' => get_config('wwwroot') . 'webservice/admin/functions.json.php',
-            'initfunction' => 'translate_ids_to_functions',
-            'multiple' => true,
-            'ajaxextraparams' => array(),
-            'extraparams' => array(
-                'maximumSelectionLength' => 1
-            ),
-            'width' => '280px',
-        ),
-         'onlyerrors' => array(
-            'type' => 'switchbox',
-            'class' => 'last',
-            'title' => get_string('errors', 'auth.webservice'),
-            'defaultvalue' => $search->onlyerrors,
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'class' => 'btn-primary',
-            'value' => get_string('go'),
-        ),
-    ),
+    'elements' => $elements,
 );
-unset($form['elements'][0]);
+
 $form = pieform($form);
 $smarty = smarty(array('paginator'));
 setpageicon($smarty, 'icon-puzzle-piece');
