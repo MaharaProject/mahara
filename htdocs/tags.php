@@ -36,157 +36,149 @@ foreach (array('tags', 'tag', 'sort', 'type') as $v) {
 }
 
 $js = <<<EOF
-var p = null;
-var mytags_container = null;
-var inittags = {$str['tags']};
-var mytags = {};
+  jQuery(function($) {
+  var p = null;
+  var mytags_container = null;
+  var inittags = {$str['tags']};
+  var mytags = {};
 
-var params = {
-    'tag': {$str['tag']},
-    'sort': {$str['sort']},
-    'type': {$str['type']}
-};
+  var params = {
+      'tag': {$str['tag']},
+      'sort': {$str['sort']},
+      'type': {$str['type']}
+  };
 
-function sortTagAlpha(a, b) {
-    var aid = getNodeAttribute(a, 'id');
-    var bid = getNodeAttribute(b, 'id');
-    return aid.toLowerCase() < bid.toLowerCase() ? -1 : (aid.toLowerCase() > bid.toLowerCase() ? 1 : 0);
-}
+  function sortTagAlpha(a, b) {
+      var aid = $(a).prop('id');
+      var bid = $(b).prop('id');
+      return aid.toLowerCase() < bid.toLowerCase() ? -1 : (aid.toLowerCase() > bid.toLowerCase() ? 1 : 0);
+  }
 
-function sortTagFreq(a, b) {
-    var aid = getNodeAttribute(a, 'id');
-    var bid = getNodeAttribute(b, 'id');
-    return mytags[bid] - mytags[aid];
-}
+  function sortTagFreq(a, b) {
+    var aid = $(a).prop('id');
+    var bid = $(b).prop('id');
+      return mytags[bid] - mytags[aid];
+  }
 
-var sort_functions = {'alpha': sortTagAlpha, 'freq': sortTagFreq};
+  var sort_functions = {'alpha': sortTagAlpha, 'freq': sortTagFreq};
 
-function rewriteTagSortLink(elem) {
-    connect(elem, 'onclick', function(e) {
-        e.stop();
-        var href = getNodeAttribute(this, 'href');
-        var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        var elems = getElementsByTagAndClassName('a', 'tag', mytags_container);
-        elems.sort(sort_functions[params.ts]);
+  function rewriteTagSortLink(id, elem) {
+      $(elem).on('click', function(e) {
+          e.preventDefault();
+          var elems = $(mytags_container).find('a.tag');
+          elems.sort(sort_functions[getUrlParameter('ts', $(this).prop('href'))]);
 
-        // FF needs spaces in between each element for wrapping
-        replaceChildNodes(mytags_container, []);
-        forEach(elems, function (a) {
-            appendChildNodes(mytags_container, a, ' ');
-        });
+          // FF needs spaces in between each element for wrapping
+          $(mytags_container).empty();
+          elems.each(function () {
+              $(mytags_container).append(this, ' ')
+          });
 
-        forEach(getElementsByTagAndClassName('a', 'current-tab'), function(selected) {
-            removeElementClass(selected, 'current-tab');
-        });
-        addElementClass(this, 'current-tab');
+          $('a.current-tab').each(function() {
+              $(this).removeClass('current-tab');
+          });
+          $(this).addClass('current-tab');
 
-        return false;
-    });
-}
+          return false;
+      });
+  }
 
-function rewriteTagLink(elem, keep, replace) {
-    disconnectAll(elem);
-    connect(elem, 'onclick', function(e) {
-        e.stop();
-        var href = getNodeAttribute(this, 'href');
-        var hrefparams = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        var reqparams = {};
-        reqparams[replace] = hrefparams[replace];
-        for (var i = 0; i < keep.length; i++) {
-            if (params[keep[i]]) {
-                reqparams[keep[i]] = params[keep[i]];
-            }
-        }
+  function rewriteTagLink(elem, keep, replace) {
+      $(elem).off();
+      $(elem).on('click', function(e) {
+          e.preventDefault();
+          var reqparams = {};
+          reqparams[replace] = getUrlParameter('replace', $(this).prop('href'));
+          for (var i = 0; i < keep.length; i++) {
+              if (params[keep[i]]) {
+                  reqparams[keep[i]] = params[keep[i]];
+              }
+          }
 
-        sendjsonrequest(config.wwwroot + 'json/tagsearch.php', reqparams, 'POST', function(data) {
-            p.updateResults(data);
+          sendjsonrequest(config.wwwroot + 'json/tagsearch.php', reqparams, 'POST', function(data) {
+              p.updateResults(data);
 
-            if (data.data.tag != params.tag) {
+              if (data.data.tag != params.tag) {
 
-                // Update tag links in the My Tags list:
-                forEach(getElementsByTagAndClassName('a', 'selected', mytags_container), function(selected) {
-                    removeElementClass(selected, 'selected');
-                });
+                  // Update tag links in the My Tags list:
+                  $(mytags_container).find('a.selected', function() {
+                      $(this).removeClass('selected');
+                  });
 
-                // Mark the selected tag in the My Tags list:
-                if (data.data.tag) {
-                    addElementClass('tag:' + data.data.tagurl, 'selected');
-                }
+                  // Mark the selected tag in the My Tags list:
+                  if (data.data.tag) {
+                      $('[id="tag:' + data.data.tagurl + '""]').addClass('selected');
+                  }
 
-                // Replace the tag in the Search Results heading
-                var heading_tag = getFirstElementByTagAndClassName('a', 'tag', 'results_heading');
-                if (heading_tag) {
-                    setNodeAttribute(heading_tag, 'href', href);
-                    heading_tag.innerHTML = data.data.tagdisplay;
-                }
-                var edit_tag_link = getFirstElementByTagAndClassName('a', 'edit-tag', 'results_container');
-                if (edit_tag_link) {
-                    if (data.data.tag) {
-                        setNodeAttribute(edit_tag_link, 'href', config.wwwroot + 'edittags.php?tag=' + data.data.tagurl);
-                        removeElementClass(edit_tag_link, 'hidden');
-                    }
-                    else {
-                        addElementClass(edit_tag_link, 'hidden');
-                    }
-                }
+                  // Replace the tag in the Search Results heading
+                  var heading_tag = $('#results_heading a.tag').first();
+                  if (heading_tag.length) {
+                      heading_tag.prop('href', href);
+                      heading_tag.html(data.data.tagdisplay);
+                  }
+                  var edit_tag_link = $('#results_container a.edit-tag').first();
+                  if (edit_tag_link.length) {
+                      if (data.data.tag) {
+                          edit_tag_link.prop('href', config.wwwroot + 'edittags.php?tag=' + data.data.tagurl);
+                          edit_tag_link.removeClass('hidden');
+                      }
+                      else {
+                          edit_tag_link.addClass('hidden');
+                      }
+                  }
 
-                if (data.data.tag) {
-                    params.tag = data.data.tag;
-                }
-            }
+                  if (data.data.tag) {
+                      params.tag = data.data.tag;
+                  }
+              }
 
-            // Rewrite tag links in the results list:
-            forEach(getElementsByTagAndClassName('a', 'tag', 'results'), function (elem) {rewriteTagLink(elem, [], 'tag')});
+              // Rewrite tag links in the results list:
+              $('#results a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
 
-            // Change selected Sort By links above the Search results:
-            if (data.data.sort != params.sort) {
-                forEach(getElementsByTagAndClassName('a', null, 'results_sort'), function (a) {
-                    var href = getNodeAttribute(a, 'href');
-                    var hrefparams = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-                    if (hasElementClass(a, 'selected') && data.data.sort != hrefparams.sort) {
-                        removeElementClass(a, 'selected');
-                    }
-                    else if (!hasElementClass(a, 'selected') && data.data.sort == hrefparams.sort) {
-                        addElementClass(a, 'selected');
-                    }
-                });
-                params.sort = data.data.sort;
-            }
+              // Change selected Sort By links above the Search results:
+              if (data.data.sort != params.sort) {
+                  $('#results_sort a').each(function () {
+                      if ($(this).hasClass('selected') && data.data.sort != getUrlParameter('sort', $(this).prop('href'))) {
+                          $(this).removeClass('selected');
+                      }
+                      else if (!$(this).removeClass('selected') && data.data.sort == getUrlParameter('sort', $(this).prop('href'))) {
+                          $(this).addClass('selected');
+                      }
+                  });
+                  params.sort = data.data.sort;
+              }
 
-            // Change selected Filter By links above the Search results:
-            if (data.data.type != params.type) {
-                forEach(getElementsByTagAndClassName('a', null, 'results_filter'), function (a) {
-                    var href = getNodeAttribute(a, 'href');
-                    var hrefparams = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-                    if (hasElementClass(a, 'selected') && data.data.type != hrefparams.type) {
-                        removeElementClass(a, 'selected');
-                    }
-                    else if (!hasElementClass(a, 'selected') && data.data.type == hrefparams.type) {
-                        addElementClass(a, 'selected');
-                    }
-                });
-                params.type = data.data.type;
-            }
+              // Change selected Filter By links above the Search results:
+              if (data.data.type != params.type) {
+                  $('#results_filter a').each(function () {
+                      if ($(this).hasClass('selected') && data.data.type != getUrlParameter('type', $(this).prop('href'))) {
+                          $(this).removeClass('selected');
+                      }
+                      else if (!$(this).hasClass('selected') && data.data.type == getUrlParameter('type', $(this).prop('href'))) {
+                          $(this).addClass('selected');
+                      }
+                  });
+                  params.type = data.data.type;
+              }
 
-        });
-        return false;
-    });
-}
+          });
+          return false;
+      });
+  }
 
-addLoadEvent(function() {
-    forEach(inittags, function(t) {
-        mytags['tag:' + t.tagurl] = t.count;
-    });
-    forEach(getElementsByTagAndClassName('a', 'tag-sort'), rewriteTagSortLink);
+      $.each(inittags, function(i, tag) {
+          mytags['tag:' + tag.tagurl] = tag.count;
+      });
+      $('a.tag-sort').each(rewriteTagSortLink);
 
-    mytags_container = getFirstElementByTagAndClassName(null, 'mytags', 'main-column-container');
-    p = {$data->pagination_js}
-    forEach(getElementsByTagAndClassName('a', 'tag', mytags_container), function (elem) {rewriteTagLink(elem, [], 'tag')});
-    forEach(getElementsByTagAndClassName('a', 'tag', 'sb-tags'), function (elem) {rewriteTagLink(elem, [], 'tag')});
-    forEach(getElementsByTagAndClassName('a', 'tag', 'results'), function (elem) {rewriteTagLink(elem, [], 'tag')});
-    forEach(getElementsByTagAndClassName('a', null, 'results_sort'), function (elem) {rewriteTagLink(elem, ['tag', 'type'], 'sort')});
-    forEach(getElementsByTagAndClassName('a', null, 'results_filter'), function (elem) {rewriteTagLink(elem, ['tag', 'sort'], 'type')});
-});
+      mytags_container = $('#main-column-container .mytags').first();
+      p = {$data->pagination_js}
+      mytags_container.find('a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
+      $('#sb-tags a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
+      $('#results a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
+      $('#results_sort a').each(function () {rewriteTagLink(this, ['tag', 'type'], 'tag')});
+      $('#results_filter a').each(function () {rewriteTagLink(this, ['tag', 'sort'], 'tag')});
+  });
 EOF;
 
 $tagsortoptions = array();

@@ -108,7 +108,7 @@
                         </span>
 
                         {if $config.uploadagreement}
-                            <script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>
+                            <script>jQuery('#{$prefix}_userfile').prop('disabled', true);</script>
                         {/if}
                     </div>
 

@@ -124,7 +124,7 @@ return function(id, list, heading, script, extradata) {
                 }
                 queryData.setlimit = "1";
                 queryData.limit = setlimitselect.val();
-                queryData.extradata = serializeJSON(self.extraData);
+                queryData.extradata = JSON.stringify(self.extraData);
 
                 self.sendQuery(queryData);
             });
@@ -257,7 +257,7 @@ return function(id, list, heading, script, extradata) {
             var queryData = [];
             if (loc != -1) {
                 queryData = parseQueryString(a.href.substring(loc + 1, a.href.length));
-                queryData.extradata = serializeJSON(self.extraData);
+                queryData.extradata = JSON.stringify(self.extraData);
             }
 
             self.sendQuery(queryData, true);
@@ -290,8 +290,7 @@ function PaginatorProxy() {
      * Alerts any observers to a fired event. Called by paginator objects
      */
     this.alertObservers = function(eventName, data) {
-        forEach(self.observers, function(o) {
-            signal(o, eventName, data); // remove when signal/ Mochikit completely eliminated from the App
+        jQuery.each(self.observers, function(i, o) {
             jQuery(o).triggerHandler(eventName, data);
         });
     };

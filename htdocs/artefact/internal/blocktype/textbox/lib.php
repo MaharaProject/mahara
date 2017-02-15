@@ -210,7 +210,7 @@ jQuery('#chooseartefactlink').on('click', function(e) {
     // if the artefact chooser is hidden, use paginator p to populate it, then toggle its visibility
     if (jQuery('#instconf_artefactid_container').hasClass('hidden')) {
         var queryData = [];
-        queryData.extradata = serializeJSON(p.extraData);
+        queryData.extradata = JSON.stringify(p.extraData);
         p.sendQuery(queryData, true);
     }
     jQuery('#instconf_artefactid_container').toggleClass('hidden');
@@ -245,7 +245,7 @@ if (jQuery('#instconf_license').length) {
     jQuery('#instconf_license').removeClass('hidden');
 }
 if (jQuery('#instconf_license_advanced_container').length) {
-    removeElementClass(getFirstElementByTagAndClassName('div', null, 'instconf_license_advanced_container'), 'hidden');
+    jQuery('#instconf_license_advanced_container div').first().removeClass('hidden');
 }
 jQuery(function() {
     jQuery('#instconf_tags').on('change', function() {

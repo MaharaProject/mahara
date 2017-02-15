@@ -119,7 +119,7 @@ jQuery(function ($) {
     p = {$data['pagination_js']}
     $('#search_submit').on('click', function (event) {
         $('#messages').empty();
-        var params = {'query': $('#search_query').val(), 'extradata':serializeJSON({'page':'find'})};
+        var params = {'query': $('#search_query').val(), 'extradata':JSON.stringify({'page':'find'})};
         if ($('#search_filter').length) {
             params.filter = $('#search_filter').val();
         }

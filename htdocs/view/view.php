@@ -211,7 +211,7 @@ $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 if (is_plugin_active('externalvideo', 'blocktype')) {
     $javascript = array_merge($javascript, array((is_https() ? 'https:' : 'http:') . '//cdn.embedly.com/widgets/platform.js'));
 }
-$inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
+$inlinejs = "jQuery( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
 
 // If the view has comments turned off, tutors can still leave
 // comments if the view is submitted to their group.
@@ -296,7 +296,7 @@ $smarty = smarty(
 $javascript = <<<EOF
 var viewid = {$viewid};
 var showmore = {$showmore};
-addLoadEvent(function () {
+jQuery(function () {
     paginator = {$feedback->pagination_js}
 });
 

@@ -201,7 +201,7 @@ jQuery(function($) {
                       var queryData = [];
                       if (loc != -1) {
                           queryData = {
-                            extraData: serializeJSON(p.extraData),
+                            extraData: JSON.stringify(p.extraData),
                             search: $('#artefactchooser-searchfield').val()
                           }
                       }
