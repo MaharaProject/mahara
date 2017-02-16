@@ -110,7 +110,7 @@ function editcomposite_callback(form, data) {
 };
 EOF;
 
-$smarty = smarty();
+$smarty = smarty(array('js/switchbox.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('compositeform', $compositeform);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
