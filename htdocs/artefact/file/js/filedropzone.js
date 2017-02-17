@@ -155,18 +155,18 @@ jQuery(document).ready(function() {
         window[prefix].callback(window[prefix].form, data);
     });
 
-    j(document.body).bind('dragenter', function(ev) {
+    j(document.body).on('dragenter', function(ev) {
         ev.stopPropagation();
         ev.preventDefault();
     });
-    j('#file_dropzone_container').bind('dragover', function(ev) {
+    j('#file_dropzone_container').on('dragover', function(ev) {
         ev.stopPropagation();
         ev.preventDefault();
         ev.originalEvent.dataTransfer.dropEffect = 'copy';
         j('#file_dropzone_container').addClass('dragover');
         return false;
     });
-    j('#file_dropzone_container').bind('dragleave', function(ev) {
+    j('#file_dropzone_container').on('dragleave', function(ev) {
         ev.stopPropagation();
         ev.preventDefault();
         ev.originalEvent.dataTransfer.dropEffect = 'move';

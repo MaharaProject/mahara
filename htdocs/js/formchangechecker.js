@@ -145,7 +145,7 @@ function FormChangeChecker(formid) {
 
     this.bind = function() {
         if (jQuery('form#' + self.id)) {
-            jQuery('form#' + self.id + ' :input').bind('change.changechecker', function() {
+            jQuery('form#' + self.id + ' :input').on('change.changechecker', function() {
                 // Only update the state if there are changes of any form input, EXCEPT for
                 // - search input
                 // - upload file input
@@ -155,19 +155,19 @@ function FormChangeChecker(formid) {
                 }
                 self.state = FORM_CHANGED;
             });
-            jQuery('form#' + self.id + ' :input[type="radio"]').bind('click.changechecker', function() {
+            jQuery('form#' + self.id + ' :input[type="radio"]').on('click.changechecker', function() {
                 self.state = FORM_CHANGED;
             });
-            jQuery('form#' + self.id + ' :input.cancel').bind('click.changechecker', function() {
+            jQuery('form#' + self.id + ' :input.cancel').on('click.changechecker', function() {
                 self.reset();
             });
-            jQuery('form#' + self.id + ' :input.submit').bind('click.changechecker', function() {
+            jQuery('form#' + self.id + ' :input.submit').on('click.changechecker', function() {
                 self.state = FORM_SUBMITTED;
             });
-            jQuery('form#' + self.id + ' :input[type="file"]').bind('change.changechecker', function() {
+            jQuery('form#' + self.id + ' :input[type="file"]').on('change.changechecker', function() {
                 self.state = FORM_SUBMITTED;
             });
-            jQuery('form#' + self.id).bind('submit.changechecker', function() {
+            jQuery('form#' + self.id).on('submit.changechecker', function() {
                 self.state = FORM_SUBMITTED;
             });
         }
@@ -175,10 +175,10 @@ function FormChangeChecker(formid) {
 
     this.unbind = function() {
         if (jQuery('form#' + self.id)) {
-            jQuery('form#' + self.id + ' :input').unbind('change.changechecker');
-            jQuery('form#' + self.id + ' :input[type="radio"]').unbind('click.changechecker');
-            jQuery('form#' + self.id + ' :input.cancel').unbind('click.changechecker');
-            jQuery('form#' + self.id).unbind('submit.changechecker');
+            jQuery('form#' + self.id + ' :input').off('change.changechecker');
+            jQuery('form#' + self.id + ' :input[type="radio"]').off('click.changechecker');
+            jQuery('form#' + self.id + ' :input.cancel').off('click.changechecker');
+            jQuery('form#' + self.id).off('submit.changechecker');
         }
     }
 
