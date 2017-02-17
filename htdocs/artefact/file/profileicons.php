@@ -175,7 +175,7 @@ jQuery(function($) {
         $(form).find('input.checkbox').each(function () {
             var id = $(this).prop('name').match(/\d+/)[0];
             if ($(this).prop('checked')) {
-                var counts = $(this).prop('value').value.split(',', 3);
+                var counts = $(this).prop('value').split(',', 3);
                 var warn = '';
                 if (counts[0] > 0) {
                     warn += {$profileiconattachedtoportfolioitems} + ' ';
