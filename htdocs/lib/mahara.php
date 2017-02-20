@@ -2458,6 +2458,7 @@ function format_date($date, $formatkey='strftimedatetime', $notspecifiedkey='str
     }
     if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
         $fixedkey = str_replace('%e', '%#d', get_string($formatkey));
+        $fixedkey = str_replace('%l', '%#I', $fixedkey);
         return strftime($fixedkey, $date);
     }
     return strftime(get_string($formatkey), $date);
