@@ -3400,12 +3400,17 @@ class View {
                 }
             }
         }
+        $blogrelated = isset($data['blocktype']) &&
+            ($data['blocktype'] == 'blog' || $data['blocktype'] == 'blogpost'
+             || $data['blocktype'] == 'recentposts');
 
         $from = ' FROM {artefact} a ';
 
         if ($group) {
             // Get group-owned artefacts that the user has view
-            // permission on, and site-owned artefacts
+            // permission on, and site-owned artefacts.
+            // For blogs, blogposts and recentposts
+            // group owned and personal artefacts
             $from .= '
             LEFT OUTER JOIN (
                 SELECT
@@ -3420,7 +3425,12 @@ class View {
                     AND r.can_view = 1
             ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
 
-            $select = "(a.institution = 'mahara' OR ga.can_view = 1";
+            if ($blogrelated) {
+                $select = "(ga.can_view = 1";
+            }
+            else {
+                $select = "(a.institution = 'mahara' OR ga.can_view = 1";
+            }
 
             if (is_string($group)) {
                 $ph = array((int)$group, $user->get('id'));
@@ -3437,15 +3447,20 @@ class View {
                 }
             }
 
-            if (!empty($data['userartefactsallowed'])) {
+            if (!empty($data['userartefactsallowed']) || $blogrelated) {
                 $select .= ' OR a.owner = ?';
                 $ph[] = $user->get('id');
             }
             $select .= ')';
         }
         else if ($institution) {
-            // Site artefacts & artefacts owned by this institution
-            $select = "(a.institution = 'mahara' OR a.institution = ?)";
+          if ($blogrelated) {
+                $select = "(a.institution = ?)";
+            }
+            else {
+                // Site artefacts & artefacts owned by this institution
+                $select = "(a.institution = 'mahara' OR a.institution = ?)";
+            }
             $ph = array($institution);
         }
         else { // The view is owned by a normal user
@@ -3468,7 +3483,7 @@ class View {
                     FROM {group_member} m
                         JOIN {artefact} aa ON m.group = aa.group
                         JOIN {artefact_access_role} aar ON aar.role = m.role AND aar.artefact = aa.id
-                    WHERE m.member = ? AND aar.can_republish = 1
+                    WHERE m.member = ? AND aar.can_republish = 1 AND artefacttype NOT IN (\'blog\', \'blogpost\', \'recentposts\')
                     UNION
                     SELECT artefact FROM {artefact_access_usr} WHERE usr = ? AND can_republish = 1';
 
@@ -3480,7 +3495,7 @@ class View {
                 $institutions[] = 'mahara';
             }
 
-            if ($institutions) {
+            if ($institutions && !$blogrelated) {
                 $select .= '
                     UNION
                     SELECT id FROM {artefact} WHERE institution IN (' . join(',', array_fill(0, count($institutions), '?')) . ')';

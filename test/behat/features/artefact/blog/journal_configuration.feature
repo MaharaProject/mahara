@@ -95,6 +95,5 @@ Scenario: Creating a Journal entry
 
  And I follow "Recent journal entries" in the "div#blog" "css_element"
  And I press "Add"
- And I should see "by group Groupies"
  And I check "Admin User's Journal"
  And I press "Save"

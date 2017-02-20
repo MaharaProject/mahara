@@ -128,8 +128,8 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
                 $where = array($institution);
             }
             else if ($group) {
-                $sql .= " AND a.group = ?";
-                $where = array($group);
+                $sql .= " AND ( a.group = ? OR a.owner = ? )";
+                $where = array($group, $USER->get('id'));
             }
             else {
                 $sql .= " AND a.owner = ?";
