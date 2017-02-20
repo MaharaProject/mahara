@@ -118,7 +118,7 @@ function delete_blog_submit(Pieform $form, $values) {
     global $SESSION;
     require_once('embeddedimage.php');
     $blog = new ArtefactTypeBlog($values['delete']);
-    $blog->check_permission();
+    $blog->check_permission(true);
     $institution = $blog->get('institution');
     $group = $blog->get('group');
     if ($blog->get('locked')) {
