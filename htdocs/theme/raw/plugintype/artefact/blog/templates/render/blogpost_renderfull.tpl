@@ -1,7 +1,7 @@
 {**
 * This template displays a blog post.
 *}
-
+{if $published}
 <div id="blogpost-{$postid}" class="panel-body flush">
 
     {if $artefacttitle && $simpledisplay}
@@ -78,3 +78,8 @@
         </div>
     {/if}
 </div>
+{else}
+<div>
+{$notpublishedblogpost|safe}
+</div>
+{/if}
