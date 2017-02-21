@@ -105,6 +105,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
                 $canaddpost = true;
             }
 
+            $smarty->assign('alldraftposts', (isset($posts['alldraftposts']) ? $posts['alldraftposts'] : null));
             $smarty->assign('options', $configdata);
             $smarty->assign('description', $blog->get('description'));
             $smarty->assign('owner', $blog->get('owner'));
