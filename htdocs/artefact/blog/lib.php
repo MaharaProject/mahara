@@ -967,10 +967,16 @@ class ArtefactTypeBlogPost extends ArtefactType {
             if (isset($viewoptions['before'])) {
                 $from .= " AND a.ctime < '{$viewoptions['before']}'";
             }
+            $draftentries = count_records_sql('SELECT COUNT(*) ' . $from, array($id));
             $from .= ' AND bp.published = 1';
         }
 
         $results['count'] = count_records_sql('SELECT COUNT(*) ' . $from, array($id));
+
+        //check if all posts are drafts
+        if (isset($draftentries) && $draftentries > 0 && $results['count'] == 0) {
+            $results['alldraftposts'] = true;
+        }
 
         $data = get_records_sql_assoc('
             SELECT

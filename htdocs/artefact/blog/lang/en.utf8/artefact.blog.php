@@ -31,6 +31,7 @@ $string['attachedfilelistloaded'] = 'Attached file list loaded';
 $string['attachedfiles'] = 'Attached files';
 $string['attachment'] = 'Attachment';
 $string['attachments'] = 'Attachments';
+$string['alldraftposts'] = 'The journal entries have not been published yet.';
 $string['blogcopiedfromanotherview'] = 'Note: This block has been copied from another page. You may move it around or remove it, but you cannot change what %s is in it.';
 $string['blogdesc'] = 'Description';
 $string['blogdescdesc'] = 'e.g., ‘A record of Jill\'s experiences and reflections’.';
