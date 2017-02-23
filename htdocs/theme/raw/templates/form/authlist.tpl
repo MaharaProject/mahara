@@ -191,9 +191,10 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
 <div id="instanceList" class="listrow">
     {{foreach $instancelist instance}}
     <div class="authInstance" id="instanceDiv{{$instance->id}}">
+      <span class="authitem{{if $instance->active == 0}} inactive{{/if}}">
         <label class="authLabel">
             <a href="" onclick="editinstance({{$instance->id}},'{{$instance->authname}}'); return false;">
-            {{str tag="title" section="auth.`$instance->authname`"}}</a>
+            {{str tag="title" section="auth.`$instance->authname`"}}</a> {{if $instance->active == 0}} ({{get_string('off', 'mahara')}}){{/if}}
         </label>
         <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}
@@ -213,6 +214,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
                 <span class="sr-only">{{str tag=deleteitem}}</span>
             </a>
         </span>
+      </span>
     </div>
     {{/foreach}}
 </div>
