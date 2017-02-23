@@ -16,9 +16,9 @@ Scenario: Adding collection to group (Bug 1448807)
      | title | description| ownertype | ownername |
      | Site Page 01 | This is the page 01 of the site | group 01 | userA |
  When I log in as "userA" with password "Kupuhipa1"
- # And I choose "Pages and collections" in "Portfolio"
- And I go to "collection/index.php"
- And I follow "New collection"
+ And I choose "Pages and collections" in "Portfolio"
+ And I follow "Add"
+ And I click on "Collection" in the dialog
  And I set the following fields to these values:
  | Collection name * | The A team |
  And I press "Next: Edit collection pages"

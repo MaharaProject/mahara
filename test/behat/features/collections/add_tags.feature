@@ -53,7 +53,8 @@ Scenario: Adding tags to files (Bug 1426983)
    And I press "Save task"
    # Creating page 1 with a tag
    And I follow "Portfolio"
-   And I press "Create page"
+   And I follow "Add"
+   And I click on "Page" in the dialog
    And I set the following fields to these values:
    | Page title * | Test page 1   |
    And I fill in select2 input "editview_tags" with "page" and select "page"
@@ -61,7 +62,8 @@ Scenario: Adding tags to files (Bug 1426983)
    And I press "Save"
    And I follow "Portfolio"
    # Creating page 2 with a tag
-   And I press "Create page"
+   And I follow "Add"
+   And I click on "Page" in the dialog
    And I set the following fields to these values:
    | Page title *    | Testing page 2    |
    And I fill in select2 input "editview_tags" with "page" and select "page"

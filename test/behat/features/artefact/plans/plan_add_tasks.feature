@@ -89,7 +89,8 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
  Then I should see "Alien invasion"
  # Add the plan to a page
  And I choose "Pages and collections" in "Portfolio"
- And I press "Create page"
+ And I follow "Add"
+ And I click on "Page" in the dialog
  And I press "Save"
  And I wait "5" seconds
  And I expand "General" node

@@ -224,11 +224,9 @@ These list must take into account the sort option choosen in the block config (B
     And I jump to page "2" of the list "sharedviews_pagination"
     And I should not see "Page userA_01" in the "ul#sharedviewlist" "css_element"
     # Update the shared collection "Collection userA_06"
-    # And I choose "Pages and collections" in "Portfolio"
-    And I go to "collection/index.php"
-    # And I click on "Collection userA_06" panel menu
-    # And I click on "Edit" in "Collection userA_06" panel menu
-    And I click on "Edit \"Collection userA_06\""
+    And I choose "Pages and collections" in "Portfolio"
+    And I click on "Collection userA_06" panel menu
+    And I click on "Edit" in "Collection userA_06" panel menu
     And I set the field "Collection description" to "This is the collection 06 (updated)"
     And I press "Save"
     # Check if it is now in the first page of the list of shared collections

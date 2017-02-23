@@ -8,7 +8,8 @@ Scenario: Accessing annotation block (Bug 1443730)
  Given I log in as "admin" with password "Kupuhipa1"
  # Creating a page
  And I choose "Pages and collections" in "Portfolio"
- And I press "Create page"
+ And I follow "Add"
+ And I click on "Page" in the dialog
  And I fill in "My page is amazing" for "Page title *"
  And I press "Save"
 # Checking if annotation block is there

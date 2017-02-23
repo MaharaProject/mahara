@@ -34,9 +34,9 @@ I can create a new page from the site default portfolio page
     # Create a new portfolio page
     And I log in as "userA" with password "Kupuhipa1"
     And I choose "Portfolio"
-    And I should see "Pages"
-    And I should see "Create page"
-    And I press "Create page"
+    And I should see "Pages and collections"
+    And I follow "Add"
+    And I click on "Page" in the dialog
     And I should see "Edit title and description"
     And I click on "Edit content"
     Then I should see "Lorem Ipsum is simply dummy text of the printing and typesetting industry."

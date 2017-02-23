@@ -13,7 +13,8 @@ Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
  And I press "Update site options"
  And I should see "Site options have been updated."
  And I choose "Pages and collections" in "Configure site"
- And I press "Create page"
+ And I follow "Add"
+ And I click on "Page" in the dialog
  And I set the following fields to these values:
    | Page title | test |
    | Page description | testing |

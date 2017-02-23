@@ -23,6 +23,7 @@ $title = get_string('siteviewscollections', 'admin');
 define('TITLE', $title);
 
 $offset = param_integer('offset', 0);
+$urlparams = array();
 
 $templateviews = View::get_site_template_views();
 list($searchform, $data, $pagination) = View::views_by_owner(null, 'mahara');
@@ -56,7 +57,8 @@ EOF;
 }
 $js .= '});';
 
-$createviewform = pieform(create_view_form(null, 'mahara'));
+$urlparams['institution'] = 'mahara';
+$urlparamsstr = '&' . http_build_query($urlparams);
 
 $smarty = smarty(array('paginator'));
 setpageicon($smarty, 'icon-file-text');
@@ -64,6 +66,7 @@ setpageicon($smarty, 'icon-file-text');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $views);
 $smarty->assign('institution', 'mahara');
+$smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('sitetemplate', View::SITE_TEMPLATE);
 $smarty->assign('querystring', get_querystring());
 $smarty->assign('pagination', $pagination['html']);
@@ -71,5 +74,4 @@ $html = $smarty->fetch('view/indexresults.tpl');
 $smarty->assign('viewresults', $html);
 $smarty->assign('query', param_variable('query', null));
 $smarty->assign('searchform', $searchform);
-$smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');

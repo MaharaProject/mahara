@@ -10,7 +10,8 @@ Scenario: Create a page and secret URLs to copy (Bug 1426983)
     # Verifying log in was successful
     And I should see "Admin User"
     When I follow "Portfolio"
-    And I press "Create page"
+    And I follow "Add"
+    And I click on "Page" in the dialog
     And I fill in the following:
     | Page title    | Testing page 1 |
     And I press "Save"

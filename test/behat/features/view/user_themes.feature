@@ -15,7 +15,8 @@ Scenario: Activate page themes setting and edit a page (Bug 1591304)
  # Now edit a page
  And I follow "Return to site"
  And I follow "Portfolio"
- And I press "Create page"
+ And I follow "Add"
+ And I click on "Page" in the dialog
  And I press "Save"
  And I follow "Text"
  And I press "Add"

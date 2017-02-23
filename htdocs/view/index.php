@@ -46,7 +46,6 @@ EOF;
 }
 $js .= '});';
 
-$createviewform = pieform(create_view_form());
 $groupid = param_integer('group', 0);
 $institutionname = param_alphanum('institution', false);
 
@@ -62,5 +61,4 @@ $smarty->assign('viewresults', $html);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('query', param_variable('query', null));
 $smarty->assign('searchform', $searchform);
-$smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');

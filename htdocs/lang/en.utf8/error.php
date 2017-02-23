@@ -103,6 +103,7 @@ $string['youcannotviewthisusersprofile'] = 'You cannot view this user\'s profile
 $string['invalidlayoutselection'] = 'You tried to select a layout that doesn\'t exist.';
 $string['invalidnumrows'] = 'You have tried to create a layout with more than the allowed maximum number of rows. (This should not be possible; please notify your site\'s administrator.)';
 $string['previewimagegenerationfailed'] = 'Sorry, there was a problem generating the preview image.';
+$string['viewtemplatenotfound'] = 'Default page template not found.';
 
 $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe it has been deleted already?)";
 $string['artefactnotfound'] = 'Artefact with id %s not found';

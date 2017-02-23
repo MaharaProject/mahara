@@ -401,6 +401,25 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Click on a button in the modal dialog.
+     *
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in the dialog$/
+     * @throws ElementNotFoundException
+     */
+    public function i_click_on_in_dialog($link_or_button) {
+
+        // Find the dialog button.
+        $exception = new ElementNotFoundException($this->getSession(), 'dialog');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' modal-dialog ')]";
+        $rownode = $this->find('xpath', $xpath, $exception);
+
+        list($selector, $locator) = $this->transform_selector('link_or_button', $link_or_button);
+        $elementnode = $this->find($selector, $locator, false, $rownode);
+        $this->ensure_node_is_visible($elementnode);
+        $elementnode->click();
+    }
+
+    /**
      * Click on the bottom right menu elipsis inside a list panel containing the specified text.
      *
      * @When /^I click on "(?P<row_text_string>(?:[^"]|\\")*)" panel menu$/

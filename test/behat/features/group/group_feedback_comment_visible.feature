@@ -25,7 +25,8 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
  | Comment notifications | None |
  And I press "Save group"
  When I click on "Pages" in the ".right-text" "css_element"
- And I press "Create page"
+ And I follow "Add"
+ And I click on "Page" in the dialog
  And I set the following fields to these values:
  | Page title | Group Page 01 |
  And I press "Save"
