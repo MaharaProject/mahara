@@ -19,13 +19,13 @@ Background:
 Scenario: Testing that view access for views in collections are editable properly
     # Checking the right selected options display on view access
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio"
     And I follow "Edit \"Page 1\""
     And I follow "Share page"
     Then I should see "Collection One"
     And I should not see "Page 1"
     
-    And I choose "Pages" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio"
     And I follow "Edit \"Page 2\""
     And I follow "Share page"
     Then I should see "Page 2"

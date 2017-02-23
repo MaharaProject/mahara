@@ -19,7 +19,7 @@ define('SECTION_PAGE', 'siteviews');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 
-$title = get_string('siteviews', 'admin');
+$title = get_string('siteviewscollections', 'admin');
 define('TITLE', $title);
 
 $offset = param_integer('offset', 0);

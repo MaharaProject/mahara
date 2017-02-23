@@ -27,28 +27,31 @@ $groupid = $collection->get('group');
 $institutionname = $collection->get('institution');
 $urlparams = array();
 if (!empty($groupid)) {
-    define('MENUITEM', 'groups/collections');
+    define('MENUITEM', 'groups/views');
     define('GROUP', $groupid);
     define('SUBSECTIONHEADING', get_string('Collections', 'collection'));
+    $baseurl = get_config('wwwroot') . 'view/groupviews.php';
     $urlparams['group'] = $groupid;
 }
 else if (!empty($institutionname)) {
     if ($institutionname == 'mahara') {
         define('ADMIN', 1);
-        define('MENUITEM', 'configsite/collections');
+        define('MENUITEM', 'configsite/views');
+        $baseurl = get_config('wwwroot') . 'admin/site/views.php';
     }
     else {
         define('INSTITUTIONALADMIN', 1);
-        define('MENUITEM', 'manageinstitutions/institutioncollections');
+        define('MENUITEM', 'manageinstitutions/institutionviews');
+        $baseurl = get_config('wwwroot') . 'view/institutionviews.php';
     }
     $urlparams['institution'] = $institutionname;
 }
 else {
-    define('MENUITEM', 'myportfolio/collection');
+    define('MENUITEM', 'myportfolio/views');
+    $baseurl = get_config('wwwroot') . 'view/index.php';
 }
 define('TITLE', $collection->get('name'));
 
-$baseurl = get_config('wwwroot') . 'collection/index.php';
 if ($urlparams) {
     $baseurl .= '?' . http_build_query($urlparams);
 }

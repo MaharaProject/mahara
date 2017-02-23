@@ -2322,14 +2322,8 @@ function admin_nav() {
         'configsite/siteviews' => array(
             'path'   => 'configsite/siteviews',
             'url'    => 'admin/site/views.php',
-            'title'  => get_string('Views', 'view'),
+            'title'  => get_string('Viewscollections', 'view'),
             'weight' => 50,
-        ),
-        'configsite/collections' => array(
-            'path'   => 'configsite/collections',
-            'url'    => 'collection/index.php?institution=mahara',
-            'title'  => get_string('Collections', 'collection'),
-            'weight' => 60,
         ),
         'configsite/share' => array(
             'path'   => 'configsite/share',
@@ -2488,14 +2482,8 @@ function admin_nav() {
         'manageinstitutions/institutionviews' => array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
-            'title'  => get_string('Views', 'view'),
+            'title'  => get_string('Viewscollections', 'view'),
             'weight' => 60,
-        ),
-        'manageinstitutions/institutioncollections' => array(
-            'path'   => 'manageinstitutions/institutioncollections',
-            'url'    => 'collection/index.php?institution=1',
-            'title'  => get_string('Collections', 'collection'),
-            'weight' => 70,
         ),
         'manageinstitutions/share' => array(
             'path'   => 'manageinstitutions/share',
@@ -2706,14 +2694,8 @@ function institutional_admin_nav() {
         'manageinstitutions/institutionviews' => array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
-            'title'  => get_string('Views', 'view'),
+            'title'  => get_string('Viewscollections', 'view'),
             'weight' => 60,
-        ),
-        'manageinstitutions/institutioncollections' => array(
-            'path'   => 'manageinstitutions/institutioncollections',
-            'url'    => 'collection/index.php?institution=1',
-            'title'  => get_string('Collections', 'collection'),
-            'weight' => 70,
         ),
         'manageinstitutions/share' => array(
             'path'   => 'manageinstitutions/share',
@@ -2884,7 +2866,7 @@ function mahara_standard_nav() {
         'myportfolio/views' => array(
             'path' => 'myportfolio/views',
             'url' => 'view/index.php',
-            'title' => get_string('Views', 'view'),
+            'title' => get_string('Viewscollections', 'view'),
             'weight' => 10,
         ),
         'myportfolio/share' => array(
@@ -2911,12 +2893,6 @@ function mahara_standard_nav() {
             'url' => 'import/index.php',
             'title' => get_string('Import', 'import'),
             'weight' => 80,
-        ),
-        'myportfolio/collection' => array(
-            'path' => 'myportfolio/collection',
-            'url' => 'collection/index.php',
-            'title' => get_string('Collections', 'collection'),
-            'weight' => 20,
         ),
         'groups' => array(
             'path' => 'groups',

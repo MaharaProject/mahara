@@ -32,7 +32,7 @@ Feature: Mahara user permissions in institutions
     # Site admin can only share institution page with institution it belongs to
     Given I log in as "admin" with password "Kupuhipa1"
     And I follow "Administration"
-    And I choose "Pages" in "Institutions"
+    And I choose "Pages and collections" in "Institutions"
     And I follow "Inst One page"
     And I follow "Edit this page"
     And I follow "Share page"
@@ -47,7 +47,7 @@ Feature: Mahara user permissions in institutions
     # Institution admin can share institution page with any of the institutions they belong to
     Given I log in as "userB" with password "Kupuhipa2"
     And I follow "Administration"
-    And I choose "Pages" in "Institutions"
+    And I choose "Pages and collections" in "Institutions"
     And I follow "Inst One page"
     And I follow "Edit this page"
     And I follow "Share page"

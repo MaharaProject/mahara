@@ -966,7 +966,24 @@ class Collection {
             $redirecturl = '/collection/views.php';
         }
         else {
-            $redirecturl = '/collection/index.php';
+            if ($this->get('group')) {
+                // Group owned collection
+                $redirecturl = '/view/groupviews.php';
+            }
+            else if ($this->get('institution')) {
+                if ($this->get('institution') == 'mahara') {
+                    // Site owned collection
+                    $redirecturl = '/admin/site/views.php';
+                }
+                else {
+                    // Institution owned collection
+                    $redirecturl = '/view/institutionviews.php';
+                }
+            }
+            else {
+                // User owned collection
+                $redirecturl = '/view/index.php';
+            }
         }
         if ($urlparams) {
             $redirecturl .= '?' . http_build_query($urlparams);

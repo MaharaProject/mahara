@@ -34,7 +34,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Checking Notes submenu
     And I choose "Notes" in "Content"
     # Checking Portfolio Menu and submenu
-    And I choose "Collections" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio"
     And I choose "Shared by me" in "Portfolio"
     And I choose "Shared with me" in "Portfolio"
     And I choose "Export" in "Portfolio"
@@ -65,8 +65,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Menus" in "Configure site"
     And I choose "Networking" in "Configure site"
     And I choose "Licenses" in "Configure site"
-    And I choose "Pages" in "Configure site"
-    And I choose "Collections" in "Configure site"
+    And I choose "Pages and collections" in "Configure site"
     And I choose "Share" in "Configure site"
     And I choose "Files" in "Configure site"
     And I choose "Cookie Consent" in "Configure site"
@@ -91,8 +90,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Administrators" in "Institutions"
     And I choose "Admin notifications" in "Institutions"
     And I choose "Profile completion" in "Institutions"
-    And I choose "Pages" in "Institutions"
-    And I choose "Collections" in "Institutions"
+    And I choose "Pages and collections" in "Institutions"
     And I choose "Share" in "Institutions"
     And I choose "Files" in "Institutions"
     And I choose "Statistics" in "Institutions"

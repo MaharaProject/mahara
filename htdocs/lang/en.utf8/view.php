@@ -57,6 +57,7 @@ $string['templateportfoliodescription'] = 'Set up the default layout for the pag
 $string['artefacts'] = 'Artefacts';
 $string['groupviews'] = 'Group pages';
 $string['institutionviews'] = 'Institution pages';
+$string['institutionviewscollections'] = 'Institution pages and collections';
 $string['reallyaddaccesstoemptyview'] = 'Your page contains no blocks. Do you really want to give these users access to the page?';
 $string['viewdeleted'] = 'Page deleted';
 $string['viewsubmitted'] = 'Page submitted';
@@ -75,6 +76,7 @@ $string['views'] = 'pages';
 $string['viewsandcollections'] = 'pages and collections';
 $string['View'] = 'Page';
 $string['Views'] = 'Pages';
+$string['Viewscollections'] = 'Pages and collections';
 $string['viewsubmittedtogroup'] = 'This page has been submitted to <a href="%s">%s</a>.';
 $string['viewsubmittedtogroupon'] = 'This page was submitted to <a href="%s">%s</a> on %s.';
 $string['collectionsubmittedtogroup'] = 'This collection has been submitted to <a href="%s">%s</a>.';
@@ -242,6 +244,8 @@ $string['editblockspagedescription'] = '<p>Drag and drop content blocks from the
 $string['displayview'] = 'Display page';
 $string['editthisview'] = 'Edit this page';
 $string['expandcontract'] = 'Expand /   Contract list of block types';
+$string['returntoinstitutionpages'] = 'Return to institution pages';
+$string['returntositepages'] = 'Return to site pages';
 
 $string['success.addblocktype'] = 'Added block successfully';
 $string['err.addblocktype'] = 'Could not add the block to your page';

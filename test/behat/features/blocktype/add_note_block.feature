@@ -15,7 +15,7 @@ Given the following "users" exist:
 
     # Logging in as a user
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio"
     And I follow "Edit \"Page 1\""
     # Configuring the block
     And I expand "General" node

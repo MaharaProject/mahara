@@ -17,7 +17,8 @@ Scenario: Creating a collection AND adding pages
     # Verifying log in was successful
     And I should see "Admin User"
     # Create Test collection
-    And I choose "Collections" in "Portfolio"
+    # And I choose "Pages and collections" in "Portfolio"
+    And I go to "collection/index.php"
     And I follow "New collection"
     And I fill in the following:
         | Collection name | Test Collection |
@@ -45,13 +46,14 @@ Scenario: Creating a collection AND adding pages
     And I follow "Edit access"
     And I select "Registered users" from "accesslist[0][searchtype]"
     And I press "Save"
-    And I choose "Pages" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio"
     And I press "Create page"
     And I set the following fields to these values:
     | Page title | New page |
     | Page description | testing |
     And I press "Save"
-    And I choose "Collections" in "Portfolio"
+    # And I choose "Pages and collections" in "Portfolio"
+    And I go to "collection/index.php"
     And I follow "Manage pages"
     And I follow "All"
     And I wait "1" seconds

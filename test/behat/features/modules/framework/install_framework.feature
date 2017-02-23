@@ -57,13 +57,15 @@ Scenario: Installing framework module and activating for an institution
 
  # Adding framework to existing collection
  And I follow "Return to site"
- And I choose "Collections" in "Portfolio"
+ # And I choose "Pages and collections" in "Portfolio"
+ And I go to "collection/index.php"
  And I follow "Edit title and description"
  And I select "Title of your framework" from "SmartEvidence framework"
  And I press "Save"
  Then I should see "Collection saved successfully."
 
  # Testing the collection navigation and matrix carousel
+ And I go to "collection/index.php"
  And I follow "CollA"
  And I should see "You are on page 1/9"
  And I should see "by Admin User (admin)"
@@ -91,7 +93,8 @@ Scenario: Installing framework module and activating for an institution
  And I press "Save"
 
  # Re-click a matrix point to add some feedback
- And I choose "Collections" in "Portfolio"
+ # And I choose "Pages and collections" in "Portfolio"
+ And I go to "collection/index.php"
  And I follow "CollA"
  And I click on the matrix point "3,4"
  And I wait "1" seconds

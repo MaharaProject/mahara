@@ -102,6 +102,7 @@ $string['sitefilesdescription'] = 'Upload and administer files that can be put i
 $string['siteskins'] = 'Site skins';
 $string['siteskinsdescription'] = 'Create and administer page skins usable by all users on the site';
 $string['siteviews']          = 'Site pages';
+$string['siteviewscollections'] = 'Site pages and collections';
 $string['siteviewsdescription'] = 'Create and administer pages and page templates for the entire site';
 $string['networking']          = 'Networking';
 $string['networkingdescription'] = 'Configure networking for Mahara';

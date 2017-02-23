@@ -294,6 +294,7 @@ $string['backtofriendslist'] = 'Back to friends list';
 $string['findnewfriends'] = 'Find new friends';
 $string['Collections']    = 'Collections';
 $string['Views']          = 'Pages';
+$string['Viewscollections'] = 'Pages and collections';
 $string['Files']          = 'Files';
 $string['noviewstosee']   = 'None that you can see';
 $string['whymakemeyourfriend'] = 'This is why you should make me your friend:';

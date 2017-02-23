@@ -24,7 +24,7 @@ require_once(get_config('libroot') . 'group.php');
 $offset = param_integer('offset', 0);
 
 define('GROUP', param_integer('group'));
-define('SUBSECTIONHEADING', get_string('Views', 'view'));
+define('SUBSECTIONHEADING', get_string('Viewscollections', 'view'));
 $group = group_current_group();
 if (!is_logged_in() && !$group->public) {
     throw new AccessDeniedException();

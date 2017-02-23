@@ -15,7 +15,7 @@ Background:
 
 Scenario: Create Text block
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio"
     And I follow "Edit \"Page 1\""
     And I follow "Text"
     And I wait "1" seconds

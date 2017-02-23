@@ -26,7 +26,7 @@ Scenario: Adding a comment on a group page (Bug 1426983)
     Given I log in as "bob" with password "Kupuhipa1"
     And I follow "Groups"
     And I follow "Test group 1"
-    And I follow "Pages (tab)"
+    And I follow "Pages and collections (tab)"
     # And I click on "Pages"
     And I follow "Testing group page 01"
     And I fill in "Testing comment notifications" in editor "Message"

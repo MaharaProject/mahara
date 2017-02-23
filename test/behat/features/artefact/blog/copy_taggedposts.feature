@@ -37,7 +37,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I press "Save entry"
 
   # Add a taggedblogs block to a page
-  And I choose "Pages" in "Portfolio"
+  And I choose "Pages and collections" in "Portfolio"
   And I follow "Edit \"Page 01\""
   And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
   And I wait "1" seconds

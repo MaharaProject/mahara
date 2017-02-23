@@ -32,7 +32,7 @@ $s = institution_selector_for_page($institution,
 
 $institution = $s['institution'];
 
-define('TITLE', get_string('institutionviews', 'view'));
+define('TITLE', get_string('institutionviewscollections', 'view'));
 
 if ($institution === false) {
     $smarty = smarty();
