@@ -1,4 +1,5 @@
 {include file="header.tpl"}
+{if $canedit}
 <div class="btn-top-right btn-group btn-group-top">
     <a class="btn btn-default addpost" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">
         <span class="icon icon-lg icon-plus left" role="presentation" aria-hidden="true"></span>
@@ -11,6 +12,7 @@
     </a>
     {/if}
 </div>
+{/if}
 <div id="myblogs" class="myblogs view-container">
     <p id="blogdescription">
         {clean_html($blog->get('description'))|safe}
