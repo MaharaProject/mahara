@@ -3615,7 +3615,7 @@ class View {
             $collwhere .= ' AND v.template != ' . self::SITE_TEMPLATE;
         }
 
-        $order = $groupby = $emptycollgroupby = '';
+        $order = $groupby = $collgroupby = $emptycollgroupby = '';
         if (!empty($orderby)) {
             switch($orderby) {
                 case 'latestcreated':
@@ -3640,6 +3640,7 @@ class View {
                     $from .= $mcfromstr;
                     $collfrom .= $mcfromstr;
                     $groupby = ' GROUP BY v.id';
+                    $collgroupby = ' GROUP BY v.id, c.id';
                     $emptycollgroupby = ' GROUP BY c.id';
                     $order = 'commentcount DESC,';
                     break;
@@ -3708,6 +3709,7 @@ class View {
 
             if (!empty($groupby)) {
                 $groupby .= ', g.id, h.wwwroot';
+                $collgroupby .= ', g.id, h.wwwroot';
             }
             $sort = '
                 ORDER BY ' . $order . ' vtitle, vid';
@@ -3723,13 +3725,13 @@ class View {
                                                     SELECT COUNT(v.id) ' . $from . $where . $groupby . ') t1
                                                 UNION
                                                 SELECT COUNT(*) AS count FROM (
-                                                    SELECT COUNT(v.id) ' . $collfrom . $collwhere . $groupby . ') t2
+                                                    SELECT COUNT(v.id) ' . $collfrom . $collwhere . $collgroupby . ') t2
                                                 UNION
                                                 SELECT COUNT(*) AS count FROM (
                                                     SELECT COUNT(c.id) ' . $emptycollfrom . $emptycollwhere . $emptycollgroupby . ') t3
                                             ) t4', $values);
             $viewdata = get_records_sql_array($select . $from . $where . $groupby .
-                                              $collselect . $collfrom . $collwhere . $groupby .
+                                              $collselect . $collfrom . $collwhere . $collgroupby .
                                               $emptycollselect . $emptycollfrom . $emptycollwhere . $emptycollgroupby .
                                               $sort, $values, $offset, $limit);
         }
@@ -3894,8 +3896,9 @@ class View {
         $tag    = param_variable('tag', null);
 
         $searchoptions = array(
-            'titleanddescription' => get_string('titleanddescription', 'view'),
-            'tagsonly' => get_string('tagsonly', 'view'),
+            'titleanddescriptionandtags' => get_string('titleanddescription', 'view'),
+            'titleanddescription' => get_string('titleanddescriptionnotags', 'view'),
+            'tagsonly' => get_string('tagsonly1', 'view'),
         );
 
         if (!empty($tag)) {

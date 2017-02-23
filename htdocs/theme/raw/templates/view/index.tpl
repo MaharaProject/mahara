@@ -22,8 +22,11 @@
                 <div class="no-results">
                     {if $GROUP}
                         {str tag="noviewstosee" section="group"}
-                    {elseif $institution}{str tag="noviews" section="view"}
-                    {else}{str tag="youhavenoviews" section="view"}{/if}
+                    {elseif $institution}
+                        {str tag="noviews1" section="view"}
+                    {else}
+                        {str tag="youhavenoviews1" section="view"}
+                    {/if}
                 </div>
             {/if}
 

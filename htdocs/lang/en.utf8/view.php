@@ -89,12 +89,12 @@ $string['collectionsubmittedtogroup'] = 'This collection has been submitted to <
 $string['collectionsubmittedtogroupon'] = 'This collection was submitted to <a href="%s">%s</a> on %s.';
 $string['submittedpendingrelease'] = 'Pending release after archiving.';
 $string['nobodycanseethisview2'] = 'Only you can see this page.';
-$string['noviews'] = 'No pages.';
+$string['noviews1'] = 'No pages or collections.';
 $string['nviews'] = array(
     '1 page',
     '%s pages',
 );
-$string['youhavenoviews'] = 'You have no pages.';
+$string['youhavenoviews1'] = 'You don\'t have any pages or collections.';
 $string['youhaventcreatedanyviewsyet'] = "You have not created any pages yet.";
 $string['youhaveoneview'] = 'You have 1 page.';
 $string['youhaveviews']   = 'You have %s pages.';
@@ -433,7 +433,7 @@ $string['blockcopypermission'] = 'Block copy permission';
 $string['blockcopypermissiondesc'] = 'If you allow other users to copy this page, you may choose how this block will be copied';
 
 // Sort by
-$string['defaultsort'] = '';
+$string['defaultsort'] = 'Alphabetical';
 $string['latestcreated'] = 'Date created';
 $string['latestmodified'] = 'Last modified';
 $string['latestviewed'] = 'Last viewed';
@@ -451,8 +451,9 @@ $string['grouphomepagedescription'] = 'The group homepage contains the content t
 // Shared views
 $string['sharedwithme'] = 'Shared with me';
 $string['titleanddescription'] = 'Title, description, tags';
+$string['titleanddescriptionnotags'] = 'Title, description';
 $string['titleanddescriptionandtagsandowner'] = 'Title, description, tags, owner';
-$string['tagsonly'] = 'Tags only';
+$string['tagsonly1'] = 'Tags';
 $string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you. They may have been shared with you directly, shared with friends of the owner, or shared with one of your groups.';
 $string['sharedwith'] = 'Shared with';
 $string['sharewith'] = 'Share with';

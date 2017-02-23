@@ -10,6 +10,7 @@ Background:
      | Testing page 1 | Admin's page 01 | user | admin |
      | Testing page 2 | Admin's page 02 | user | admin |
      | Testing page 3 | Admin's page 03 | user | admin |
+     | A page 4 | Admin's page 04 | user | admin |
 
 Scenario: Creating a collection AND adding pages
     # Log in as "Admin" user
@@ -32,8 +33,12 @@ Scenario: Creating a collection AND adding pages
     And I should see "Testing page 1"
     And I should see "Testing page 2"
     And I should see "Testing page 3"
-      # Sort pages by Last modified
+    And I should see "A page 4"
+    # Sort pages by Last modified
     Then I follow "Portfolio"
+    And I select "Alphabetical" from "Sort by:"
+    And I press the key "Enter" in the "Search:" field
+    And "A page 4" "link" should appear before "Testing page 1" "link"
     And I select "Last modified" from "Sort by:"
     And I press the key "Enter" in the "Search:" field
     # Checking they are in the right order

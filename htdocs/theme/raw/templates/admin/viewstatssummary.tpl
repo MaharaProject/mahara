@@ -1,5 +1,5 @@
 {if $viewcount == 0}
-<p class="lead small-text">{str tag=noviews section=view}</p>
+<p class="lead small-text">{str tag=noviews1 section=view}</p>
 {/if}
 {if $blocktypecounts}
 <h4>{str tag=blockcountsbytype section=admin}: </h4>
