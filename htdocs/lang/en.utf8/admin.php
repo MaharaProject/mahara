@@ -1266,3 +1266,40 @@ $string['cli_pwreset_typo'] = 'Sorry, passwords do not match.';
 $string['cli_close_site_info'] = 'This command-line PHP script allows you to close your site to non-admin users, and open it again. (This is the same as pressing the "Close site" button on the Administration homepage.)';
 $string['cli_close_site_siteclosed'] = 'Site closed for maintenance.';
 $string['cli_close_site_siteopen'] = 'Site open.';
+
+// Languange update script
+$string['cli_backupdir_notwritable'] = 'Language backup directory "%s" is not writable.';
+$string['cli_langpack'] = 'List by language code eg "de,pt_BR,fr"';
+$string['cli_langpack_backup'] = 'Backup the language directory before updating (optional).';
+$string['cli_langpack_backup_done'] = 'Backup of language "%s" done';
+$string['cli_langpack_backup_failed'] = '*** WARNING *** Unable to make backup of "%s"';
+$string['cli_langpack_en'] = 'No need to update english langpack as the strings are defined in Mahara itself. You can set special lang strings in local/lang/';
+$string['cli_langpack_extract_done'] = 'Copied new "%s" langpack into place';
+$string['cli_langpack_extract_failed'] = '*** WARNING *** Unable to extract files from "%s"
+- reason: %s';
+$string['cli_langpack_info'] = 'To update your language packs via the command line.
+You can:
+1) Install / update langpacks by listing the languages by their code, eg de = German, fr = French like so
+   sudo -u www-data php admin/cli/sync_langpacks.php -l=de,fr
+
+This will make a backup of the existing language (if exists) into the dataroot langpacks_backup directory.
+
+2) If you don\'t want to make backups then add the -b=false flag, eg
+   sudo -u www-data php admin/cli/sync_langpacks.php -l=de,fr -b=false
+
+3) If you need to rollback the backups you can use the -r=true flag, eg
+   sudo -u www-data php admin/cli/sync_langpacks.php -l=de,fr -r=true
+
+It will ignore trying to update the \'en\' language as that is set within the Mahara system itself';
+$string['cli_langpack_missing'] = 'No langpacks specified';
+$string['cli_langpack_revert'] = 'Revert to last backed up version of language.';
+$string['cli_langdir_notwritable'] = 'Language directory "%s" is not writable.';
+$string['cli_language_make_backup'] = 'Make a backup? %s';
+$string['cli_language_status'] = 'Language "%s" already installed: %s';
+$string['cli_langpack_url'] = 'Language pack URL "%s"';
+$string['cli_langpack_url_failed'] = '*** WARNING *** Language pack for "%s" does not exist/can not be downloaded. Return code: %s';
+$string['cli_langpack_upload'] = 'Saving language pack "%s" to temp directory';
+$string['cli_restore_done'] = 'Restored backup of "%s" done';
+$string['cli_restore_warning'] = '*** WARNING *** Unable to restore backup of "%s"';
+$string['cli_tmpdir_notwritable'] = 'Temporary upload directory "%s" is not writable.';
+$string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for series "%s"';
