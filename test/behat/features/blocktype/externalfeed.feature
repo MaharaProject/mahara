@@ -17,7 +17,8 @@ Scenario: Add some externalfeed blocks
     # RSS or Atom format
     Given I log in as "userA" with password "Kupuhipa1"
     And I choose "Pages and collections" in "Portfolio"
-    And I follow "Edit \"Page 1\""
+    And I click on "Page 1" panel menu
+    And I click on "Edit" in "Page 1" panel menu
     And I expand "External" node
     And I wait "1" seconds
     And I follow "External feed"

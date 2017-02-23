@@ -7,9 +7,9 @@ Feature: Adding pages to a collection
 Background:
      Given the following "pages" exist:
      | title | description| ownertype | ownername |
-     | Testing page 1 | UserD's page 01 | user | admin  |
-     | Testing page 2 | UserD's page 02 | user | admin |
-     | Testing page 3 | UserA's page 01 | user | admin |
+     | Testing page 1 | Admin's page 01 | user | admin |
+     | Testing page 2 | Admin's page 02 | user | admin |
+     | Testing page 3 | Admin's page 03 | user | admin |
 
 Scenario: Creating a collection AND adding pages
     # Log in as "Admin" user
@@ -58,5 +58,5 @@ Scenario: Creating a collection AND adding pages
     And I follow "All"
     And I wait "1" seconds
     And I press "Add pages"
+    And I should see "1 page added to collection"
     And I follow "Done"
-    Then I should see "New page"

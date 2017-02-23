@@ -13,9 +13,11 @@ I can create a new page from the site default portfolio page
 
   Scenario: Add a text block into the site default portfolio page and create a new portfolio page (Bug 1488255)
     Given I log in as "admin" with password "Kupuhipa1"
-    When I go to "admin/site/views.php"
+    When I follow "Administration"
+    And I choose "Pages and collections" in "Configure site"
     And I should see "Page template"
-    And I click on "Edit content and layout" in "Page template" row
+    And I click on "Page template" panel menu
+    And I click on "Edit" in "Page template" panel menu
     And I should see "Drag blocks onto the page to add them. You can then also drag them around the page to change their position."
     # Add a text block
     And I follow "Text"

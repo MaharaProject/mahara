@@ -43,8 +43,8 @@ if ($institution === false) {
 list($searchform, $data, $pagination) = View::views_by_owner(null, $institution);
 
 $js = <<< EOF
-jQuery(function ($) {
-    p = {$pagination['javascript']}
+jQuery(function () {
+    {$pagination['javascript']}
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF
@@ -77,10 +77,11 @@ $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', $institution);
+$smarty->assign('sitetemplate', View::SITE_TEMPLATE);
 $smarty->assign('querystring', get_querystring());
+$smarty->assign('pagination', $pagination['html']);
 $html = $smarty->fetch('view/indexresults.tpl');
 $smarty->assign('viewresults', $html);
-$smarty->assign('pagination', $pagination['html']);
 $smarty->assign('query', param_variable('query', null));
 $smarty->assign('searchform', $searchform);
 $smarty->assign('createviewform', $createviewform);

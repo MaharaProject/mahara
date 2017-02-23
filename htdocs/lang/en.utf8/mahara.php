@@ -129,6 +129,7 @@ $string['firstpage'] = 'First page';
 $string['last']      = 'Last';
 $string['lastpage']  = 'Last page';
 $string['maxitemsperpage1']  = 'Results per page:';
+$string['showmore'] = 'Show more';
 
 $string['accept'] = 'Accept';
 $string['memberofinstitutions'] = 'Member of %s';
@@ -766,6 +767,7 @@ $string['filter'] = 'Filter';
 $string['expand'] = 'Expand';
 $string['collapse'] = 'Collapse';
 $string['more...'] = 'More...';
+$string['moreoptionsfor'] = 'More options for "%s"';
 $string['details'] = 'details';
 $string['nohelpfound'] = 'There was no help found for this item.';
 $string['nohelpfoundpage'] = 'There was no help found for this page.';

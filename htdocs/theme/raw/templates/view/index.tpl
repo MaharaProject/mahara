@@ -17,8 +17,7 @@
     {$searchform|safe}
 
     <div class="grouppageswrap view-container">
-        <div class="panel panel-default">
-            <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>
+
             {if $views}
                 <div id="myviews" class="list-group">
                 {$viewresults|safe}
@@ -31,9 +30,7 @@
                     {else}{str tag="youhavenoviews" section="view"}{/if}
                 </div>
             {/if}
-        </div>
+
     </div>
-    <div>
-        {$pagination|safe}
-    </div>
+
 {include file="footer.tpl"}

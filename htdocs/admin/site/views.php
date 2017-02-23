@@ -34,8 +34,8 @@ else {
 }
 
 $js = <<< EOF
-jQuery(function($) {
-    p = {$pagination['javascript']}
+jQuery(function() {
+    {$pagination['javascript']}
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF
@@ -64,12 +64,12 @@ setpageicon($smarty, 'icon-file-text');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $views);
 $smarty->assign('institution', 'mahara');
+$smarty->assign('sitetemplate', View::SITE_TEMPLATE);
 $smarty->assign('querystring', get_querystring());
+$smarty->assign('pagination', $pagination['html']);
 $html = $smarty->fetch('view/indexresults.tpl');
 $smarty->assign('viewresults', $html);
-$smarty->assign('pagination', $pagination['html']);
 $smarty->assign('query', param_variable('query', null));
-
 $smarty->assign('searchform', $searchform);
 $smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');

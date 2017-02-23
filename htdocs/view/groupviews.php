@@ -44,7 +44,6 @@ if (!$can_edit) {
     $setlimit = true;
     $limit = param_integer('limit', 0);
     $limit = user_preferred_limit($limit);
-    $offset = param_integer('offset', 0);
 
     $data = View::view_search(null, null, (object) array('group' => $group->id), null, $limit, $offset);
     // Add a copy view form for all templates in the list
@@ -54,16 +53,15 @@ if (!$can_edit) {
         }
     }
 
-    $pagination = build_pagination(array(
-        'url' => get_config('wwwroot') . 'view/groupviews.php?group='.$group->id,
+    $pagination = build_showmore_pagination(array(
         'count' => $data->count,
         'limit' => $limit,
         'offset' => $offset,
-        'setlimit' => $setlimit,
-        'datatable' => 'myviews',
+        'orderby' => $orderby,
+        'group' => $group->id,
+        'databutton' => 'showmorebtn',
         'jsonscript' => 'json/viewlist.php',
-        'jumplinks' => 6,
-        'numbersincludeprevnext' => 2,
+        'orderby' => 'atoz',
     ));
 }
 else {
@@ -72,7 +70,7 @@ else {
 }
 $js = <<< EOF
 jQuery(function ($) {
-    p = {$pagination['javascript']}
+    {$pagination['javascript']}
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF
@@ -109,6 +107,7 @@ if (!$can_edit) {
 else {
     $smarty->assign('query', param_variable('query', null));
     $smarty->assign('querystring', get_querystring());
+    $smarty->assign('sitetemplate', View::SITE_TEMPLATE);
     $smarty->assign('editlocked', $role == 'admin');
     $html = $smarty->fetch('view/indexresults.tpl');
     $smarty->assign('viewresults', $html);

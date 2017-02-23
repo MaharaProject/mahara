@@ -151,6 +151,7 @@ $string['nmembers'] = array(
 $string['memberrequests'] = 'Membership requests';
 $string['declinerequest'] = 'Decline request';
 $string['submittedviews'] = 'Submitted pages';
+$string['submitted'] = 'Submitted';
 $string['releaseview'] = 'Release page';
 $string['releasecollection'] = 'Release collection';
 $string['invite'] = 'Invite';

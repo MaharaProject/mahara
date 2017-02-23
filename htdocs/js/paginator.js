@@ -307,3 +307,24 @@ function PaginatorProxy() {
 
 // Create the paginator proxy
 var paginatorProxy = new PaginatorProxy();
+
+// 'Show more' pagination
+function pagination_showmore(btn) {
+    var params = {};
+    params.offset = parseInt(btn.data('offset'), 10);
+    params.orderby = btn.data('orderby');
+    if (btn.data('group').length) {
+        params.group = btn.data('group');
+    }
+    if (btn.data('institution').length) {
+        params.institution = btn.data('institution');
+    }
+    sendjsonrequest(config['wwwroot'] + btn.data('jsonscript'), params, 'POST', function(data) {
+        var btnid = btn.prop('id');
+        btn.parent().replaceWith(data.data.tablerows);
+        // we have a new 'showmore' button so wire it up
+        jQuery('#' + btnid).on('click', function() {
+            pagination_showmore(jQuery(this));
+        });
+    });
+}

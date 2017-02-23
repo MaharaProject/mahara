@@ -66,7 +66,6 @@ As an admin
      | A's Page 50 | UserA's page 02 | user | userA |
      | A's Page 51 | UserA's page 01 | user | userA |
   When I follow "Portfolio"
-  And I scroll to the id "searchresultsheading"
   And I follow "A's Page 01"
   And I follow "Edit this page"
   And I follow "Share page"

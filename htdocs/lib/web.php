@@ -4228,6 +4228,56 @@ function build_pagination($params) {
 }
 
 /**
+ * Builds 'Show more' pagination for HTML display.
+ *
+ * This pagination is for adding a 'Show more' button when more results exist
+ * rather than 'paging' the results so the page only loads certain amount
+ * at a time but the user can see all loaded results in one view.
+ *
+ * This function takes one array that contains the options to configure the
+ * pagination.
+ * Required include:
+ * - jsonscript: Relative path to json script to return subsequent results
+ * - count: The total number of results to paginate for
+ * - limit: How many to show per fetch from db
+ * - offset: At which result to begin fetch for results
+ * - orderby: What order the results will be returned in
+ * - databutton: The ID of the 'Show more' button
+ *
+ * Optional include:
+ * - group: Group id the pagination is for
+ * - institution: Institution name the pagination is for
+ */
+function build_showmore_pagination($params) {
+    // Bail if the required attributes are not present
+    $required = array('jsonscript', 'count', 'limit', 'offset', 'orderby', 'databutton');
+    foreach ($required as $option) {
+        if (!isset($params[$option])) {
+            throw new ParameterException('You must supply option "' . $option . '" to build_pagination');
+        }
+    }
+    $output = $js = '';
+    if ((int) $params['count'] > ((int) $params['offset'] + (int) $params['limit'])) {
+        // Need to add 'showmore' button
+        $output  = '<div class="showmore">' . "\n";
+        $output .= '    <div id="' . $params['databutton'] . '" class="btn btn-default"';
+        $output .= ' data-orderby="' . $params['orderby'] . '"';
+        $output .= ' data-offset="' . ((int) $params['offset'] + (int) $params['limit']) . '"';
+        $output .= ' data-group="' . (isset($params['group']) ? $params['group'] : '') . '"';
+        $output .= ' data-jsonscript="' . $params['jsonscript'] . '"';
+        $output .= ' data-institution="' . (isset($params['institution']) ? $params['institution'] : '') . '">';
+        $output .= get_string('showmore', 'mahara') . '</div>' . "\n";
+        $output .= '</div>';
+
+        $js  = 'jQuery("#' . $params['databutton'] . '").on("click", function() {';
+        $js .= '    pagination_showmore(jQuery(this));';
+        $js .= '});' . "\n";
+    }
+
+    return array('html' => $output, 'javascript' => $js);
+}
+
+/**
  * Used by build_pagination to build individual links. Shouldn't be used
  * elsewhere.
  *

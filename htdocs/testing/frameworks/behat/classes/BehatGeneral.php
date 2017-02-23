@@ -401,6 +401,92 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Click on the bottom right menu elipsis inside a list panel containing the specified text.
+     *
+     * @When /^I click on "(?P<row_text_string>(?:[^"]|\\")*)" panel menu$/
+     * @param string $rowtext The list/table row text
+     * @throws ElementNotFoundException
+     */
+    public function i_click_on_in_panel($rowtext) {
+
+        // The panel container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]";
+        $rownode = $this->find('xpath', $xpath, $exception);
+
+        // Click on the elipsis button for the panel
+        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.elipsis-right button')[0].click();";
+        $this->getSession()->executeScript($jscode);
+    }
+
+    /**
+     * Click on the bottom right collection menu inside a list panel containing the specified text.
+     *
+     * @When /^I click on "(?P<row_text_string>(?:[^"]|\\")*)" panel collection$/
+     * @param string $rowtext The list/table row text
+     * @throws ElementNotFoundException
+     */
+    public function i_click_on_in_panel_collection_box($rowtext) {
+
+        // The panel container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]";
+        $rownode = $this->find('xpath', $xpath, $exception);
+
+        // Click on the collection box for the panel
+        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.collnum')[0].click();";
+        $this->getSession()->executeScript($jscode);
+    }
+
+    /**
+     * Click on the link or button inside a panel menu containing the specified text.
+     *
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" panel menu$/
+     * @param string $link_or_button we look for
+     * @param string $rowtext The panel menu text
+     * @throws ElementNotFoundException
+     */
+    public function i_click_on_in_panel_menu($link_or_button, $rowtext) {
+
+        // The panel container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]";
+        $rownode = $this->find('xpath', $xpath, $exception);
+
+        // Click on the elipsis button for the panel
+        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.elipsis-right a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
+        $this->getSession()->executeScript($jscode);
+    }
+
+    /**
+     * Click on the link or button inside a panel collection list containing the specified text.
+     *
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" panel collection$/
+     * @param string $link_or_button we look for
+     * @param string $rowtext The panel menu text
+     * @throws ElementNotFoundException
+     */
+    public function i_click_on_in_panel_collection_menu($link_or_button, $rowtext) {
+
+        // The panel container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]";
+        $rownode = $this->find('xpath', $xpath, $exception);
+
+        // Click on the elipsis button for the panel
+        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find(\"a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")\")[0].click();";
+        $this->getSession()->executeScript($jscode);
+    }
+
+    /**
      * Click a row containing the specified text.
      *
      * @When /^I click the row "(?P<row_text_string>(?:[^"]|\\")*)"$/
@@ -423,6 +509,27 @@ class BehatGeneral extends BehatBase {
         // For some reasons, the Mink function click() and check() do not work
         // Using jQuery as a workaround
         $jscode = "jQuery(\"div.list-group-item:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ") a.outer-link\")[0].click();";
+        $this->getSession()->executeScript($jscode);
+    }
+
+    /**
+     * Click a panel header containing the specified text.
+     *
+     * @When /^I click the panel "(?P<row_text_string>(?:[^"]|\\")*)"$/
+     * @param string $rowtext the panel heading text
+     * @throws ElementNotFoundException
+     */
+    public function i_click_panel($rowtext) {
+
+        // The panel container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]" .
+            "//a[contains(concat(' ', normalize-space(@class), ' '), ' title-link ')]";
+        $rownode = $this->find('xpath', $xpath, $exception);
+
+        $jscode = "jQuery(\"div.panel h3 a.title-link:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\")[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 

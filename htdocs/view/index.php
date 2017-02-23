@@ -26,7 +26,7 @@ list($searchform, $data, $pagination) = View::views_by_owner();
 
 $js = <<< EOF
 jQuery(function ($) {
-    p = {$pagination['javascript']}
+    {$pagination['javascript']}
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF
@@ -47,14 +47,18 @@ EOF;
 $js .= '});';
 
 $createviewform = pieform(create_view_form());
+$groupid = param_integer('group', 0);
+$institutionname = param_alphanum('institution', false);
 
 $smarty = smarty(array('paginator'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
+$smarty->assign('sitetemplate', View::SITE_TEMPLATE);
 $smarty->assign('querystring', get_querystring());
-$html = $smarty->fetch('view/indexresults.tpl');
-$smarty->assign('viewresults', $html);
 $smarty->assign('pagination', $pagination['html']);
+$html = $smarty->fetch('view/indexresults.tpl');
+
+$smarty->assign('viewresults', $html);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('query', param_variable('query', null));
 $smarty->assign('searchform', $searchform);
