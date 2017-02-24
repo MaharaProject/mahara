@@ -106,11 +106,8 @@ jQuery(document).ready(function() {
         j('#file_dropzone_container').removeClass('dragover');
     });
 
-    myDropzone.on("selectedfiles", function(userfile) {
-        dropzone_uploadnumber = window[prefix].nextupload - current_drop_number;
-    });
-
     myDropzone.on("addedfile", function(userfile) {
+        dropzone_uploadnumber = window[prefix].nextupload - current_drop_number;
         current_drop_number ++;
         window[prefix].dragdrop = true;
         window[prefix].upload_presubmit_dropzone(userfile);
