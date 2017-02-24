@@ -36,7 +36,7 @@ foreach (array('tags', 'tag', 'sort', 'type') as $v) {
 }
 
 $js = <<<EOF
-  jQuery(function($) {
+jQuery(function($) {
   var p = null;
   var mytags_container = null;
   var inittags = {$str['tags']};
@@ -55,8 +55,8 @@ $js = <<<EOF
   }
 
   function sortTagFreq(a, b) {
-    var aid = $(a).prop('id');
-    var bid = $(b).prop('id');
+      var aid = $(a).prop('id');
+      var bid = $(b).prop('id');
       return mytags[bid] - mytags[aid];
   }
 
@@ -73,11 +73,16 @@ $js = <<<EOF
           elems.each(function () {
               $(mytags_container).append(this, ' ')
           });
-
-          $('a.current-tab').each(function() {
-              $(this).removeClass('current-tab');
+          // set all tabs to inactive
+          $('ul.nav-tabs li').each(function() {
+              $(this).removeClass('active');
+              $(this).find('a').removeClass('current-tab');
+              $(this).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
           });
+          // set current one to active
+          $(this).closest('li').addClass('active');
           $(this).addClass('current-tab');
+          $(this).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
 
           return false;
       });
@@ -88,10 +93,17 @@ $js = <<<EOF
       $(elem).on('click', function(e) {
           e.preventDefault();
           var reqparams = {};
-          reqparams[replace] = getUrlParameter('replace', $(this).prop('href'));
+          var currenthref = $(this).prop('href');
+
+          reqparams[replace] = getUrlParameter(replace, currenthref);
           for (var i = 0; i < keep.length; i++) {
               if (params[keep[i]]) {
-                  reqparams[keep[i]] = params[keep[i]];
+                  if (getUrlParameter(keep[i], currenthref)) {
+                      reqparams[keep[i]] = getUrlParameter(keep[i], currenthref);
+                  }
+                  else {
+                      reqparams[keep[i]] = params[keep[i]];
+                  }
               }
           }
 
@@ -101,19 +113,17 @@ $js = <<<EOF
               if (data.data.tag != params.tag) {
 
                   // Update tag links in the My Tags list:
-                  $(mytags_container).find('a.selected', function() {
-                      $(this).removeClass('selected');
-                  });
+                  $(mytags_container).find('a.selected').removeClass('selected');
 
                   // Mark the selected tag in the My Tags list:
                   if (data.data.tag) {
-                      $('[id="tag:' + data.data.tagurl + '""]').addClass('selected');
+                      $('[id="tag:' + data.data.tagurl + '"]').addClass('selected');
                   }
 
                   // Replace the tag in the Search Results heading
                   var heading_tag = $('#results_heading a.tag').first();
                   if (heading_tag.length) {
-                      heading_tag.prop('href', href);
+                      heading_tag.prop('href', currenthref);
                       heading_tag.html(data.data.tagdisplay);
                   }
                   var edit_tag_link = $('#results_container a.edit-tag').first();
@@ -134,14 +144,13 @@ $js = <<<EOF
 
               // Rewrite tag links in the results list:
               $('#results a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
-
               // Change selected Sort By links above the Search results:
               if (data.data.sort != params.sort) {
                   $('#results_sort a').each(function () {
                       if ($(this).hasClass('selected') && data.data.sort != getUrlParameter('sort', $(this).prop('href'))) {
                           $(this).removeClass('selected');
                       }
-                      else if (!$(this).removeClass('selected') && data.data.sort == getUrlParameter('sort', $(this).prop('href'))) {
+                      else if (!$(this).hasClass('selected') && data.data.sort == getUrlParameter('sort', $(this).prop('href'))) {
                           $(this).addClass('selected');
                       }
                   });
@@ -166,19 +175,20 @@ $js = <<<EOF
       });
   }
 
-      $.each(inittags, function(i, tag) {
-          mytags['tag:' + tag.tagurl] = tag.count;
-      });
-      $('a.tag-sort').each(rewriteTagSortLink);
-
-      mytags_container = $('#main-column-container .mytags').first();
-      p = {$data->pagination_js}
-      mytags_container.find('a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
-      $('#sb-tags a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
-      $('#results a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
-      $('#results_sort a').each(function () {rewriteTagLink(this, ['tag', 'type'], 'tag')});
-      $('#results_filter a').each(function () {rewriteTagLink(this, ['tag', 'sort'], 'tag')});
+  $.each(inittags, function(i, tag) {
+      mytags['tag:' + tag.tagurl] = tag.count;
   });
+  $('ul.nav-tabs a').each(rewriteTagSortLink);
+
+  mytags_container = $('#main-column-container .mytags').first();
+  p = {$data->pagination_js}
+
+  mytags_container.find('a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
+  $('#sb-tags a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
+  $('#results a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
+  $('#results_sort a').each(function () {rewriteTagLink(this, ['tag', 'type', 'sort'], 'tag')});
+  $('#results_filter a').each(function () {rewriteTagLink(this, ['tag', 'type', 'sort'], 'tag')});
+});
 EOF;
 
 $tagsortoptions = array();

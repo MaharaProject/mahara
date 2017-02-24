@@ -38,7 +38,7 @@
                     {/foreach}
                     <span class="icon icon-caret-down right" role="presentation" aria-hidden="true"></span>
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" id="results_filter">
                 {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
                     <li>
                         <a href="{$results->baseurl}{$results->queryprefix}sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>
