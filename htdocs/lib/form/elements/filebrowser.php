@@ -308,7 +308,7 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
         $userid = ($group || $institution) ? null : $USER->get('id');
     }
 
-    if ($user) {
+    if ($user || $userid) {
         $userid = $USER->get('id');
         $smarty->assign('owner', 'user');
         $smarty->assign('ownerid', $userid);

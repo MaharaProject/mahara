@@ -435,7 +435,7 @@ function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, se
 
 function contextualHelp(formName, helpName, pluginType, pluginName, page, section, ref) {
     var key;
-    var target = $(formName + '_' + helpName + '_container');
+    var target = jQuery('#' + formName + '_' + helpName + '_container');
     var url = config.wwwroot + 'json/help.php';
     var url_params = {
         'plugintype': pluginType,
