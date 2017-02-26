@@ -82,7 +82,7 @@ function pieform_element_authlist_js() {
     return <<<EOF
 // Since this menu is just a dummy selector, don't let it trigger the form change checker.
 jQuery(document).on('pieform_postinit', function(event, form) {
-    jQuery('form[name=' + form.data.name + ']').find('select#dummySelect').unbind('change.changechecker');
+    jQuery('form[name=' + form.data.name + ']').find('select#dummySelect').off('change.changechecker');
 });
 
 EOF;
