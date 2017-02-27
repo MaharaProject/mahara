@@ -50,15 +50,15 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
         <script type="application/javascript">
             function {$name}_toggle(x) {
                 var elements = [
-                    $('{$name}_hour'),
-                    $('{$name}_minute'),
-                    $('{$name}_day'),
-                    $('{$name}_month'),
-                    $('{$name}_year')
+                    $('#{$name}_hour'),
+                    $('#{$name}_minute'),
+                    $('#{$name}_day'),
+                    $('#{$name}_month'),
+                    $('#{$name}_year')
                 ];
-                for (var i in elements) {
-                    if (elements[i]) elements[i].disabled = !x.checked;
-                }
+                $.each(elements, function() {
+                    $(this).prop('disabled', !$(x).prop('checked'))
+                });
             }
         </script>
 EOF;

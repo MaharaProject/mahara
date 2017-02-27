@@ -95,11 +95,11 @@ function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
     $script = <<<EOJS
 <script type="application/javascript" language="javascript">
 function {$name}_change() {
-    if ($('{$formname}_{$name}_units').value == 'noenddate') {
-        $('{$formname}_{$name}').disabled = true;
+    if ($('#{$formname}_{$name}_units').val() == 'noenddate') {
+        $('#{$formname}_{$name}').prop('disabled', true);
     }
     else {
-        $('{$formname}_{$name}').disabled = false;
+        $('#{$formname}_{$name}').prop('disabled', false);
     }
 }
 </script>
