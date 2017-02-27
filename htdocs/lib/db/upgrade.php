@@ -4926,5 +4926,20 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {framework_evidence_statuses} SET name = REPLACE(name, 'criterium', 'criterion') WHERE name LIKE '%criterium'");
     }
 
+    if ($oldversion <  2017022700) {
+        log_debug('Put group categories in alphabetical order');
+        if ( $groupcategories = get_records_array('group_category') ) {
+            usort($groupcategories, function($a,$b) {
+                return strnatcasecmp($a->title, $b->title);
+            });
+            foreach ($groupcategories as $key => $gcategory) {
+                if ($key != $gcategory->displayorder) {
+                    $gcategory->displayorder = $key;
+                    update_record('group_category', $gcategory);
+                }
+            }
+        }
+    }
+
     return $status;
 }
