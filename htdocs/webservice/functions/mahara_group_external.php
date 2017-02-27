@@ -273,7 +273,7 @@ class mahara_group_external extends external_api {
         foreach ($params['groups'] as $group) {
             // Make sure that the group doesn't already exist
             if (!empty($group['id'])) {
-                if (!$dbgroup = get_record('group', 'id', $group['id'], 'deleted', 0)) {
+                if (!$dbgroup = get_group_by_id($group['id'])) {
                     throw new WebserviceInvalidParameterException('delete_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
                 }
             }
@@ -381,7 +381,7 @@ class mahara_group_external extends external_api {
         foreach ($params['groups'] as $group) {
             // Make sure that the group doesn't already exist
             if (!empty($group['id'])) {
-                if (!$dbgroup = get_record('group', 'id', $group['id'], 'deleted', 0)) {
+                if (!$dbgroup = get_group_by_id($group['id'])) {
                     throw new WebserviceInvalidParameterException('update_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
                 }
             }
@@ -562,7 +562,7 @@ class mahara_group_external extends external_api {
         foreach ($params['groups'] as $group) {
             // Make sure that the group doesn't already exist
             if (!empty($group['id'])) {
-                if (!$dbgroup = get_record('group', 'id', $group['id'], 'deleted', 0)) {
+                if (!$dbgroup = get_group_by_id($group['id'])) {
                     throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
                 }
             }
@@ -721,7 +721,7 @@ class mahara_group_external extends external_api {
         foreach ($params['groups'] as $group) {
             // Make sure that the group doesn't already exist
             if (!empty($group['id'])) {
-                if (!$dbgroup = get_record('group', 'id', $group['id'], 'deleted', 0)) {
+                if (!$dbgroup = get_groups_by_id($group['id'])) {
                     throw new WebserviceInvalidParameterException('get_groups_by_id | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
                 }
             }

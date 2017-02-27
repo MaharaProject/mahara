@@ -51,7 +51,7 @@ if ($institution = param_alphanum('institution', null)) {
     }
 }
 else if ($groupid = param_alphanum('group', null)) {
-    $group = get_record('group', 'id', $groupid, 'deleted', 0);
+    $group = get_group_by_id($groupid);
     $title = get_string('groupblogs', 'artefact.blog', $group->name);
 }
 else if ($id) {
@@ -59,7 +59,7 @@ else if ($id) {
     $institution = $institutionname = $blogobj->get('institution');
     $groupid = $blogobj->get('group');
     if ($groupid) {
-        $group = get_record('group', 'id', $groupid, 'deleted', 0);
+        $group = get_group_by_id($groupid);
     }
     $title = get_string('viewbloggroup', 'artefact.blog', $blogobj->get('title'));
     if ($institution && $institution != 'mahara') {

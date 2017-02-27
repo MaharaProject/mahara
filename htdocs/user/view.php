@@ -378,7 +378,7 @@ function invite_submit(Pieform $form, $values) {
 function addmember_submit(Pieform $form, $values) {
     global $USER, $SESSION, $userid;
 
-    $group = get_record('group', 'id', $values['group']);
+    $group = get_group_by_id($values['group'], true);
     $ctitle = $group->name;
     $adduser = get_record('usr', 'id', $userid);
 

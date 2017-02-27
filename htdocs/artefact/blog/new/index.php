@@ -42,7 +42,7 @@ if ($institutionname = param_alphanum('institution', null)) {
 }
 else if ($groupid = param_alphanum('group', null)) {
     require_once('group.php');
-    $group = get_record('group', 'id', $groupid, 'deleted', 0);
+    $group = get_group_by_id($groupid);
     $USER->reset_grouproles();
     if (!isset($USER->grouproles[$group->id])) {
         throw new AccessDeniedException(get_string('youarenotamemberof', 'artefact.blog', $group->name));

@@ -59,7 +59,7 @@ class PluginBlocktypeGroupMembers extends MaharaCoreBlocktype {
 
         // If the group has hidden membership, display nothing
         $usergroups = $USER->get('grouproles');
-        $group = defined('GROUP') && $groupid == GROUP ? group_current_group() : get_record('group', 'id', $groupid);
+        $group = defined('GROUP') && $groupid == GROUP ? group_current_group() : get_group_by_id($groupid, true);
         if ($group->hidemembersfrommembers === '1' && (!isset($usergroups[$groupid]) || $usergroups[$groupid] != 'admin')) {
             return '';
         }

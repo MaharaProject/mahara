@@ -15,7 +15,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'group.php');
 
 $id = param_integer('id');
-$group = get_record('group', 'id', $id);
+$group = get_group_by_id($id, true);
 
 $group = group_get_groupinfo_data($group);
 

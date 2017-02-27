@@ -233,7 +233,7 @@ class WebServiceGroupTest extends WebServiceTestBase {
 
         //search for them => TESTS they don't exists
         foreach (array($dbgroup1, $dbgroup2) as $group) {
-            $group = get_record('group', 'id', $group->id, 'deleted', 0);
+            $group = get_group_by_id($group->id);
             $this->assertTrue(empty($group));
         }
     }
@@ -326,10 +326,10 @@ class WebServiceGroupTest extends WebServiceTestBase {
         $params = array('groups' => $groups);
         $client->call($function, $params);
 
-        $dbgroup1 = get_record('group', 'id', $groupid1);
+        $dbgroup1 = get_group_by_id($groupid1, true);
         $dbgroupmembers1 = get_records_array('group_member', 'group', $dbgroup1->id);
 
-        $dbgroup2 = get_record('group', 'id', $groupid2);
+        $dbgroup2 = get_group_by_id($groupid2, true);
         $dbgroupmembers2 = get_records_array('group_member', 'group', $dbgroup2->id);
 
         // temporary hack untl group changes are sorted XXX
@@ -441,10 +441,10 @@ class WebServiceGroupTest extends WebServiceTestBase {
         $params = array('groups' => $groups);
         $client->call($function, $params);
 
-        $dbgroup1 = get_record('group', 'id', $groupid1);
+        $dbgroup1 = get_group_by_id($groupid1, true);
         $dbgroupmembers1 = get_records_array('group_member', 'group', $dbgroup1->id);
 
-        $dbgroup2 = get_record('group', 'id', $groupid2);
+        $dbgroup2 = get_group_by_id($groupid2, true);
         $dbgroupmembers2 = get_records_array('group_member', 'group', $dbgroup2->id);
 
         //compare DB group with the test data

@@ -57,7 +57,7 @@ $feedtype = param_alpha('type'); //g = group, f = forum, t = topic
 $id = param_integer('id');
 
 if ($feedtype == 'g') {
-    if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
+    if (!$group = get_group_by_id($id)) {
         generate_feed(error_feed(), error_post(get_string('groupnotfound', 'group', $id)));
         exit();
     }

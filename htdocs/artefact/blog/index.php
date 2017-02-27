@@ -69,7 +69,7 @@ if ($institution = param_alphanum('institution', null)) {
 }
 else if ($groupid = param_alphanum('group', null)) {
     $blogs->group = $groupid;
-    $group = get_record('group', 'id', $groupid, 'deleted', 0);
+    $group = get_group_by_id($groupid);
     define('TITLE', $group->name);
 }
 else {

@@ -23,7 +23,7 @@ $groupid = param_integer('id');
 $return = param_alphanum('return', null);
 
 // Check the group exists
-if (!get_record('group', 'id', $groupid)) {
+if (!get_group_by_id($groupid, true)) {
     throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 
