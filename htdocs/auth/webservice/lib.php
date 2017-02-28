@@ -64,6 +64,21 @@ class AuthWebservice extends AuthInternal {
         $validate = parent::validate_password($theysent, $wehave, $salt);
         return (!empty($validate)) ? true : false;
     }
+
+    /**
+     * Logout user and redirect to referring site
+     */
+    public function logout() {
+        global $USER, $SESSION;
+
+        if ($SESSION->get('logouturl')) {
+
+            $logouturl = $SESSION->get('logouturl');
+
+            $USER->logout();
+            redirect($logouturl);
+        }
+    }
 }
 
 /**

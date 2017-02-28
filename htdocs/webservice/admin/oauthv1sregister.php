@@ -22,7 +22,8 @@ require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthServer.php'
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthStore.php');
 OAuthStore::instance('Mahara');
 
-$server_id  = param_variable('edit', 0);
+$server_id  = param_integer('edit', 0);
+$config_server_id = param_integer('config', 0);
 $dbserver = get_record('oauth_server_registry', 'id', $server_id);
 
 $institutions = get_records_array('institution');
@@ -37,8 +38,12 @@ foreach ($services as $service) {
     $sopts[$service->id] = $service->name;
 }
 
+// we have a service config form
+if ($config_server_id) {
+    $form = webservice_server_config_form($config_server_id);
+}
 // we have an edit form
-if (!empty($dbserver)) {
+else if (!empty($dbserver)) {
     $form = webservice_server_edit_form($dbserver, $sopts, $iopts);
 }
 // else we have just the standard list
@@ -84,6 +89,12 @@ function webservices_server_submit(Pieform $form, $values) {
     $dbserver = get_record('oauth_server_registry', 'id', $values['token']);
     if ($dbserver) {
         if ($values['action'] == 'delete') {
+
+            delete_records_sql('
+                                DELETE FROM {oauth_server_config}
+                                WHERE oauthserverregistryid = ?
+                                ', array($dbserver->id));
+
             delete_records_sql('
                                 DELETE FROM {oauth_server_token}
                                 WHERE osr_id_ref = ?
@@ -93,6 +104,9 @@ function webservices_server_submit(Pieform $form, $values) {
         }
         else if ($values['action'] == 'edit') {
             redirect('/webservice/admin/oauthv1sregister.php?edit=' . $values['token']);
+        }
+        else if ($values['action'] == 'config') {
+            redirect('/webservice/admin/oauthv1sregister.php?config=' . $values['token']);
         }
     }
     redirect('/webservice/admin/oauthv1sregister.php');
@@ -283,7 +297,7 @@ function webservice_server_list_form($sopts, $iopts) {
                     u.email             as email,
                     consumer_key        as consumer_key,
                     consumer_secret     as consumer_secret,
-                    enabled             as enabled,
+                    osr.enabled         as enabled,
                     status              as status,
                     osr.ctime           as issue_date,
                     application_uri     as application_uri,
@@ -291,10 +305,13 @@ function webservice_server_list_form($sopts, $iopts) {
                     application_descr   as application_descr,
                     requester_name      as requester_name,
                     requester_email     as requester_email,
-                    callback_uri        as callback_uri
+                    callback_uri        as callback_uri,
+                    es.component        as component
             FROM {oauth_server_registry} osr
             JOIN {usr} u
-            ON osr.userid = u.id
+                ON osr.userid = u.id
+            JOIN {external_services} es
+                ON es.id = osr.externalserviceid
             ORDER BY application_title, username
             ', array());
     $form = '';
@@ -335,17 +352,11 @@ function webservice_server_list_form($sopts, $iopts) {
                                 'type'  => 'html',
                                 'value' => get_string('enabled'),
                             ),
-                            'calback_uri' => array(
+                            'institution' => array(
                                 'title' => ' ',
                                 'datatable' => true,
                                 'type'  => 'html',
-                                'value' => get_string('callback', 'auth.webservice'),
-                            ),
-                            'consumer_secret' => array(
-                                'title' => ' ',
-                                'datatable' => true,
-                                'type'  => 'html',
-                                'value' => get_string('consumer_secret', 'auth.webservice'),
+                                'value' => get_string('institution'),
                             ),
                             'actions' => array(
                                 'title' => ' ',
@@ -389,8 +400,8 @@ function webservice_server_list_form($sopts, $iopts) {
                 'class'        => 'text-center',
                 'key'        => $consumer->consumer_key,
             );
-            $form['elements']['id' . $consumer->id . '_calback_uri'] = array(
-                'value'        => $consumer->callback_uri,
+            $form['elements']['id' . $consumer->id . '_institution'] = array(
+                'value'        => institution_display_name($consumer->institution),
                 'type'         => 'html',
                 'key'        => $consumer->consumer_key,
             );
@@ -440,7 +451,46 @@ function webservice_server_list_form($sopts, $iopts) {
                 'key' => $consumer->consumer_key,
                 'class' => 'webserviceconfigcontrols btn-group icon-cell',
             );
+
+            // Check if service has extra settings
+            if ($consumer->component) {
+                list($moduletype, $module) = explode("/", $consumer->component);
+
+                $hasconfig = false;
+
+                if (safe_require_plugin($moduletype, $module)) {
+                    $classname = generate_class_name($moduletype, $module);
+                    if (is_callable(array($classname, 'has_oauth_service_config'))) {
+                        $hasconfig = call_static_method($classname, 'has_oauth_service_config');
+                    }
+                }
+
+                if ($hasconfig) {
+                    $form['elements']['id' . $consumer->id . '_actions']['value'] .=
+                        pieform(array(
+                            'name' => 'webservices_server_config_' . $consumer->id,
+                            'renderer' => 'div',
+                            'class' => 'form-as-button pull-left',
+                            'elementclasses' => false,
+                            'successcallback' => 'webservices_server_submit',
+                            'jsform' => false,
+                            'elements' => array(
+                                'token' => array('type' => 'hidden', 'value' => $consumer->id),
+                                'action' => array('type' => 'hidden', 'value' => 'config'),
+                                'submit' => array(
+                                    'type' => 'button',
+                                    'usebuttontag' => true,
+                                    'class' => 'btn-default btn-xs',
+                                    'value' => '<span class="icon icon-cog icon-lg " role="presentation" aria-hidden="true"></span><span class="sr-only">'.get_string('editspecific', 'mahara', $consumer->application_title).'</span>',
+                                    'elementtitle' => get_string('editspecific', 'mahara', $consumer->application_title),
+                                ),
+                            ),
+                        ));
+                }
+            }
+
         }
+
         $pieform = pieform_instance($form);
         $form = $pieform->build(false);
     }
@@ -503,4 +553,103 @@ function webservice_server_list_form($sopts, $iopts) {
     );
 
     return $form;
+}
+
+function webservice_server_config_form($serverid) {
+    global $USER, $THEME;
+
+    list($moduletype, $module) = get_module_from_serverid($serverid);
+
+    if (safe_require_plugin($moduletype, $module)) {
+
+        $elements = call_static_method(generate_class_name($moduletype, $module), 'get_oauth_service_config_options', $serverid);
+
+        $elements['submit'] = array(
+            'type'  => 'submitcancel',
+            'value' => array(get_string('save'), get_string('back')),
+            'goto'  => get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php',
+            'class' => 'btn-primary',
+        );
+
+        $elements['id'] = array(
+            'type'  => 'hidden',
+            'value' => $serverid,
+        );
+
+        $fieldset = array(
+            // fieldset for managing service function list
+            'token_details' => array(
+                    'type' => 'fieldset',
+                    'class' => 'with-padding',
+                    'elements' => array(
+                        'sflist' => array(
+                            'value' =>  pieform(array(
+                                'name' => 'oauthconfigoptions',
+                                'successcallback'  => 'webservice_server_config_submit',
+                                'elements' => $elements)),
+                        )
+                    ),
+                    'collapsible' => false,
+                ),
+        );
+
+        $form = array(
+            'name' => 'maincontainer',
+            'jsform' => false,
+            'elements' => $fieldset,
+        );
+
+        return $form;
+    }
+}
+
+function webservice_server_config_submit(Pieform $form, $values) {
+
+    $serverid = $values['id'];
+
+    list($moduletype, $module) = get_module_from_serverid($serverid);
+
+    if (safe_require_plugin($moduletype, $module)) {
+
+        call_static_method(generate_class_name($moduletype, $module), 'save_oauth_service_config_options', $serverid, $values);
+        redirect(get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php');
+    }
+
+    return false;
+}
+
+
+function update_oauth_server_config($serverid, $key, $value) {
+
+    $dbvalue = get_field('oauth_server_config', 'value', 'oauthserverregistryid', $serverid, 'field', $key);
+    if (false !== $dbvalue) {
+        if (($dbvalue == $value)
+            || set_field('oauth_server_config', 'value', $value, 'oauthserverregistryid', $serverid, 'field', $key)
+        ) {
+            return true;
+        }
+    }
+    else {
+        $config = new StdClass;
+        $config->oauthserverregistryid = $serverid;
+        $config->field = $key;
+        $config->value = $value;
+        $status = insert_record('oauth_server_config', $config);
+
+        return true;
+    }
+
+    return false;
+}
+
+function get_module_from_serverid($serverid) {
+
+    $consumer = get_record_sql('
+            SELECT es.id, es.component
+            FROM {oauth_server_registry} osr
+            JOIN {external_services} es
+                ON es.id = osr.externalserviceid
+            WHERE osr.id = ? ', array($serverid));
+
+    return explode("/", $consumer->component);
 }
