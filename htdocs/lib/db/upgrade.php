@@ -4943,5 +4943,16 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017030200) {
+        log_debug('Clean institution theme in view table');
+        if (!get_config('userscanchooseviewthemes')) {
+            execute_sql("
+                UPDATE {view}
+                SET theme = NULL
+                WHERE theme IS NOT NULL
+            ");
+        }
+    }
+
     return $status;
 }
