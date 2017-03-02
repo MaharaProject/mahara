@@ -46,8 +46,8 @@ function updateWYSIWYGText() {
 function updateSiteDefault(changed) {
     changedCheckbox = (changed) ? true : false;
     var editor = jQuery('#editsitepage_pagetext_container .mce-tinymce');
-    if (jQuery('#editsitepage_pageusedefault')[0] && $('editsitepage_pageusedefault').prop('checked') === true) {
-        jQuery(tinyMCE.activeEditor.getBody()).prop('contenteditable', false);
+    if (jQuery('#editsitepage_pageusedefault')[0] && jQuery('#editsitepage_pageusedefault').prop('checked') === true) {
+        tinyMCE.activeEditor.getBody().setAttribute('contenteditable', false);
         jQuery('#changecheckboxdiv').css({
           'display': 'block',
           'zIndex': '1',
@@ -59,12 +59,12 @@ function updateSiteDefault(changed) {
         });
     }
     else {
-      jQuery(tinyMCE.activeEditor.getBody()).prop('contenteditable', true);
-      jQuery('#changecheckboxdiv').css({
-        'display': 'none',
-        'width': '1px',
-        'height': '1px'
-      });
+        tinyMCE.activeEditor.getBody().setAttribute('contenteditable', true);
+        jQuery('#changecheckboxdiv').css({
+          'display': 'none',
+          'width': '1px',
+          'height': '1px'
+        });
     }
 }
 
@@ -95,7 +95,7 @@ function contentSaved(form, data) {
     updateSiteDefault(false);
 }
 
-jQuery.ready(function() {
+jQuery(window).load(function() {
   connectElements();
   // need to wait until tinyMCE editor is loaded before updating editor's text
   var checkExists = setInterval(function() {

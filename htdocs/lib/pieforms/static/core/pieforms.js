@@ -127,7 +127,8 @@ var PieformManager = (function($) {
             'onreply' : []   // when a response is received
         };
 
-        $(document).ready(self.init);
+        $(window).load(self.init);
+
     };
 }(jQuery));
 
