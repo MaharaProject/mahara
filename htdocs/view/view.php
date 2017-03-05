@@ -123,7 +123,7 @@ $submittedgroup = (int)$view->get('submittedgroup');
 if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to release the view
-    $submittedgroup = get_record('group', 'id', $submittedgroup);
+    $submittedgroup = get_group_by_id($submittedgroup, true);
     // If the view is part of a submitted collection, the whole
     // collection must be released at once.
     $releasecollection = !empty($collection) && $collection->get('submittedgroup') == $submittedgroup->id;

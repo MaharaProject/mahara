@@ -186,7 +186,7 @@ function group_role_can_edit_views($group, $role) {
  */
 function group_within_edit_window($group, $admin_always=true) {
     if (is_numeric($group)) {
-        $group = get_record('group', 'id', $group);
+        $group = get_group_by_id($group, true);
     }
 
     if ($admin_always && group_user_access($group->id) == 'admin') {
@@ -774,7 +774,7 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
     }
     else {
         $groupid = group_param_groupid($groupid);
-        $group = get_record('group', 'id', $groupid);
+        $group = get_group_by_id($groupid, true);
     }
 
     db_begin();
@@ -912,7 +912,7 @@ function group_user_can_leave($group, $userid=null) {
     $userid = optional_userid($userid);
 
     if (is_numeric($group)) {
-        if (!$group = get_record('group', 'id', $group, 'deleted', 0)) {
+        if (!$group = get_group_by_id($group)) {
             return false;
         }
     }
@@ -993,7 +993,7 @@ function group_update_members($groupid, $members, $lines_done = 0, $num_lines = 
 
     $groupid = group_param_groupid($groupid);
 
-    if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+    if (!$group = get_group_by_id($groupid)) {
         throw new NotFoundException("group_update_members: group not found: $groupid");
     }
 
@@ -1290,7 +1290,7 @@ function joingroup_submit(Pieform $form, $values) {
         $next = $values['returnto'];
     }
     else {
-        $next = group_homepage_url(get_record('group', 'id', $values['group']));
+        $next = group_homepage_url(get_group_by_id($values['group'], true));
     }
     redirect($next);
 }
@@ -1307,7 +1307,7 @@ function group_invite_submit(Pieform $form, $values) {
                 $next = $values['returnto'];
             }
             else {
-                $next = group_homepage_url(get_record('group', 'id', $values['group']));
+                $next = group_homepage_url(get_group_by_id($values['group'], true));
             }
             redirect($next);
         }
@@ -2527,7 +2527,7 @@ function group_quota_allowed($groupid, $bytes) {
     if (!is_numeric($bytes) || $bytes < 0) {
         throw new InvalidArgumentException('parameter must be a positive integer to add to the quota');
     }
-    if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+    if (!$group = get_group_by_id($groupid)) {
         throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
     }
     if ($group->quotaused + $bytes > $group->quota) {
@@ -2541,7 +2541,7 @@ function group_quota_add($groupid, $bytes) {
     if (!group_quota_allowed($groupid, $bytes)) {
         throw new QuotaExceededException('Adding ' . $bytes . ' bytes would exceed the group\'s quota');
     }
-    if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+    if (!$group = get_group_by_id($groupid)) {
         throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
     }
     $newquota = $group->quotaused + $bytes;
@@ -2555,7 +2555,7 @@ function group_quota_remove($groupid, $bytes) {
     if (!is_numeric($bytes) || $bytes < 0) {
         throw new InvalidArgumentException('parameter must be a positive integer to add to the quota');
     }
-    if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+    if (!$group = get_group_by_id($groupid)) {
         throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
     }
     $newquota = max(0, $group->quotaused - $bytes);
@@ -2745,7 +2745,7 @@ function group_get_membership_file_data($group_id, $file_format = 'csv', $mimety
         return $data;
     }
 
-    $group = get_record('group', 'id', $group_id);
+    $group = get_group_by_id($group_id, true);
 
     if (!$group) {
         return $data;
@@ -2968,3 +2968,30 @@ function new_group_name($name) {
     }
     return $title . $ext;
 }
+
+/**
+ *
+ * @param integer $groupid          ID of the group to check
+ * @param boolean $includedeleted   Whether to include deleted groups in result
+ * @param boolean $getrole          Whether to return the role in group of logged in user
+ * @param boolean $canedit          Whether to return if the user has create/edit permission in group
+ */
+function get_group_by_id($groupid, $includedeleted = false, $getrole = false, $canedit = false) {
+    $groupid = group_param_groupid($groupid);
+    if ($includedeleted) {
+        $group = get_record('group', 'id', $groupid);
+    }
+    else {
+        $group = get_record('group', 'id', $groupid, 'deleted', 0);
+    }
+    if (empty($group)) {
+       return false;
+    }
+    if ($getrole || $canedit) {
+        $group->role = group_user_access($group->id);
+    }
+    if ($canedit) {
+        $group->canedit = $group->role && group_role_can_edit_views($group, $group->role);
+    }
+    return $group;
+ }

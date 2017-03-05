@@ -45,7 +45,7 @@ if (!$blogpost) {
     $focuselement = 'title';
     $attachments = array();
     if ($blogobj->get('group')) {
-        $group = get_record('group', 'id', $blogobj->get('group'), 'deleted', 0);
+        $group = get_group_by_id($blogobj->get('group'));
         define('TITLE', $group->name);
         define('SUBSECTIONHEADING', $pagetitle);
     }
@@ -58,7 +58,7 @@ else {
     $blogpostobj->check_permission(true);
     $pagetitle = get_string('editblogpost', 'artefact.blog');
     if ($blogpostobj->get('group')) {
-        $group = get_record('group', 'id', $blogpostobj->get('group'), 'deleted', 0);
+        $group = get_group_by_id($blogpostobj->get('group'));
         define('SUBSECTIONHEADING', $pagetitle);
         define('TITLE', $group->name);
     }

@@ -89,7 +89,7 @@ else if ($view->get('type') == 'dashboard') {
 else if ($view->get('type') == 'grouphomepage') {
     $title = get_string('grouphomepage', 'view');
     if ($view->get('template') != View::SITE_TEMPLATE) {
-        $groupurl = group_homepage_url(get_record('group', 'id', $view->get('group')), false);
+        $groupurl = group_homepage_url(get_group_by_id($view->get('group'), true), false);
     }
     define('TITLE', $title);
 }

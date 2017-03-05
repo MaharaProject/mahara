@@ -426,7 +426,7 @@ class PluginArtefactFile extends PluginArtefact {
             }
         }
         else if ($group !== null) {
-            $groupdata = get_record('group', 'id', $group);
+            $groupdata = get_group_by_id($group, true);
 
             $groupdata->quotausedpercent = empty($groupdata->quota) ? 0 : (($groupdata->quotaused + $filesize ) / $groupdata->quota) * 100;
             $overlimit = false;

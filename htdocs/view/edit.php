@@ -79,7 +79,7 @@ if ($studentid !== '') {
 // have their own clean profiles or group homepages.
 if ($urlallowed = get_config('cleanurls') && $view->get('type') == 'portfolio' && !$institution) {
     if ($group) {
-        $groupdata = get_record('group', 'id', $group);
+        $groupdata = get_group_by_id($group, true);
         if ($urlallowed = !is_null($groupdata->urlid) && strlen($groupdata->urlid)) {
             $cleanurlbase = group_homepage_url($groupdata) . '/';
         }

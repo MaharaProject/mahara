@@ -852,7 +852,7 @@ class View {
 
     public function get_group_object() {
         if (!isset($this->groupobj)) {
-            $this->groupobj = get_record('group', 'id', $this->get('group'));
+            $this->groupobj = get_group_by_id($this->get('group'), true);
         }
         return $this->groupobj;
     }
@@ -3238,7 +3238,7 @@ class View {
                     $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '" class="artefactid-onpage">';
                 }
                 if (!empty($artefact->group)) {
-                    $groupobj = get_record('group', 'id', $artefact->group);
+                    $groupobj = get_group_by_id($artefact->group, true);
                     $artefact->groupname = $groupobj->name;
                     $artefact->groupurl = get_config('wwwroot') . 'group/view.php?id=' . $groupobj->id;
                 }
@@ -5780,7 +5780,7 @@ class View {
         else {
             if ($this->get('group')) {
                 if ($this->get('type') == 'grouphomepage') {
-                    $redirecturl = group_homepage_url(get_record('group', 'id', $this->get('group')));
+                    $redirecturl = group_homepage_url(get_group_by_id($this->get('group'), true));
                 }
                 else {
                     $redirecturl = '/view/groupviews.php?group='.$this->get('group');

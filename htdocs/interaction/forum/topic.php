@@ -43,7 +43,7 @@ if (!$topic) {
 
 define('GROUP', $topic->groupid);
 
-$group = get_record('group', 'id', $topic->groupid);
+$group = get_group_by_id($topic->groupid, true);
 $publicgroup = $group->public;
 $ineditwindow = group_within_edit_window($group);
 $feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=t&id=' . $topic->id;

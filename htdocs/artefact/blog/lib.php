@@ -252,7 +252,7 @@ class ArtefactTypeBlog extends ArtefactType {
             }
         }
         else if (!empty($this->group)) {
-            $group = get_record('group', 'id', $this->group, 'deleted', 0);
+            $group = get_group_by_id($this->group);
             $USER->reset_grouproles();
             if (!isset($USER->grouproles[$this->group])) {
                 throw new AccessDeniedException(get_string('youarenotamemberof', 'artefact.blog', $group->name));
@@ -793,7 +793,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
         }
         else if (!empty($this->group)) {
-            $group = get_record('group', 'id', $this->group, 'deleted', 0);
+            $group = get_group_by_id($this->group);
             $USER->reset_grouproles();
             if (!isset($USER->grouproles[$this->group])) {
                 throw new AccessDeniedException(get_string('youarenotamemberof', 'artefact.blog', $group->name));
