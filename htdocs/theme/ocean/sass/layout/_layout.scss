@@ -4,19 +4,6 @@ body {
     > .container {
         background-color: #fff;
     }
-    &.admin {
-        background-color: #555;
-        @media (max-width: $screen-sm-min) {
-            .container {
-                margin-top: 0;
-            }
-        }
-        .navbar-default {
-            &.dropdown-adminnav {
-                background: transparent;
-            }
-        }
-    }
 }
 
 .footer {
