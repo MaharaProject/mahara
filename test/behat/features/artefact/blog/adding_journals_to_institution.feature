@@ -133,7 +133,7 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   | Email * | test01@example.com |
   | Username * | userA |
   | Password * | KKJHH$$67686 |
-  And I press the key "Enter" in the "Username" field
+  And I press "Create user"
   # Logging in as new user
   And I follow "Log in as this user"
   And I follow "log in anyway"

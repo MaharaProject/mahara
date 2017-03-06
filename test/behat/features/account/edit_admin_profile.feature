@@ -15,6 +15,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Student ID | 1234     |
     | Display name  | Test Admin   |
     # Updating Contact information tab
+    And I scroll to the top
     And I follow "Contact information"
     And I press "Add email address"
     And I fill in the following:

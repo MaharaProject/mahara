@@ -41,7 +41,7 @@ Scenario: Enable/disable external resources in mahara pages
  | Block title | Text block with an external image |
  | Block content | <p><img title="Open source logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Opensource.svg/744px-Opensource.svg.png" alt="" width="300" /></p> |
  And I press "Save"
- And I scroll to the id "main-nav"
+ And I scroll to the top
  And I follow "Display page"
  Then I should see images in the block "Text block with an internal image"
  And I should see images in the block "Text block with an external image"

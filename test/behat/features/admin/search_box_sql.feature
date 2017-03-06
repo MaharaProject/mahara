@@ -10,7 +10,7 @@ Scenario: sql injection attempt on search field
   And I wait "1" seconds
   When I set the following fields to these values:
    | Search users | 'or 1=1;-- |
-  And I press the key "Enter" in the "Search users" field
+  And I press "Go"
   Then I should see "No search results found"
 
 
