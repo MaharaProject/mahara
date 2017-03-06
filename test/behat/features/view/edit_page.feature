@@ -66,7 +66,7 @@ Scenario: Clicking ID's (Bug 1428456)
  | Block title | Crime and punishment |
  | Block content | <p>On an exceptionally hot evening early in July a young man came out of the garret in which he lodged in S. Place and walked slowly, as though in hesitation, towards K. bridge...</p> |
  And I close the config dialog
- And I scroll to the id "main-column-container"
+ And I scroll to the top
 
  # Checking if we can change page layout
  When I follow "Edit layout"

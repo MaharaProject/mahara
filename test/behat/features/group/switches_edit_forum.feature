@@ -19,17 +19,17 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
  # Checking "Automatically subscribe users" switchbox is on by default
  And the "edit_interaction_autosubscribe" checkbox should be checked
  # Checking it can be turned off
- When I uncheck "edit_interaction_autosubscribe"
+ And I disable the switch "Automatically subscribe users"
  # Checking it can turn back on
- Then I check "edit_interaction_autosubscribe"
+ And I enable the switch "Automatically subscribe users"
  # Verifying that it did turn back on
  And the "edit_interaction_autosubscribe" checkbox should be checked
  # Checking off is the default setting on the close new topics checkbox
  And the "edit_interaction_closetopics" checkbox should not be checked
  # Checking it turns on
- And I check "edit_interaction_closetopics"
+ And I enable the switch "Close new topics"
  # Checking it turns back off
- And I uncheck "edit_interaction_closetopics"
+ And I disable the switch "Close new topics"
  And I press "Save"
  # And I add another forum
  And I follow "Forums"

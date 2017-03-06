@@ -29,7 +29,7 @@ Scenario: Create Text block
     And I wait "2" seconds
     Then I should see "Here is a new block" in the "div#column-container" element
     And I should see "Text block 1" in the "div#column-container" element
-    And I scroll to the id "main-column-container"
+    And I scroll to the top
     And I follow "Display page"
     Then I should see "Here is a new block"
     And I should see "Text block 1"

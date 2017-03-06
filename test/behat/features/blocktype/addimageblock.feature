@@ -30,6 +30,6 @@ Scenario: Create Image block
     And I set the field "Show description" to "1"
     And I press "Save"
     And I wait "2" seconds
-    And I scroll to the id "main-column-container"
+    And I scroll to the top
     And I follow "Display page"
     And I should see "Image1.jpg"

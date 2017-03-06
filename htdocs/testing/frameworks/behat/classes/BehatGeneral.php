@@ -58,10 +58,7 @@ class BehatGeneral extends BehatBase {
      * @Given /^I log out$/
      */
     public function i_logout() {
-        $this->visitPath("/");
-        $this->wait_until_the_page_is_ready();
-        $this->i_click_on("Show User Menu");
-        $this->i_follow_in_the("Logout", "//header//li[contains(concat(' ', normalize-space(@class), ' '), ' btn-logout ')]", "xpath_element");
+        $this->visitPath("/?logout");
     }
 
     /**
@@ -325,7 +322,7 @@ class BehatGeneral extends BehatBase {
         }
 
         $node = $this->get_selected_node('field', $nodeelement);
-
+        // Note: keyPres does not work with all drivers
         $node->keyPress($key_press);
     }
 

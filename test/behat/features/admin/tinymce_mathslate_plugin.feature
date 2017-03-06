@@ -24,6 +24,7 @@ Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
  And I choose "Pages and collections" in "Configure site" from administration menu
  And I follow "test"
  # Tinymce field adding a math equation
+ And I scroll to the id "feedbacktable"
  And I fill in "\\[\\alpha A\\beta B\\]" in editor "Message"
  And I press "Comment"
  And I wait "1" seconds
