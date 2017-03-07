@@ -4923,7 +4923,9 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2017022500) {
         log_debug('Fixing spelling mistake in SmartEvidence status for PTC matrix');
-        execute_sql("UPDATE {framework_evidence_statuses} SET name = REPLACE(name, 'criterium', 'criterion') WHERE name LIKE '%criterium'");
+        if (table_exists(new XMLDBTable('framework_evidence_statuses'))) {
+            execute_sql("UPDATE {framework_evidence_statuses} SET name = REPLACE(name, 'criterium', 'criterion') WHERE name LIKE '%criterium'");
+        }
     }
 
     return $status;
