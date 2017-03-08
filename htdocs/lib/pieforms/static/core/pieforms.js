@@ -147,6 +147,9 @@ var Pieform = (function($) {
             }
             $('#' + self.data.name).on('submit', self.processForm);
 
+            // this is custom event that is triggered by filebrowser.js on form submit
+            $('#' + self.data.name).on('onsubmit', self.processForm);
+
             self.connectSubmitButtons();
 
             // Hook for pieform elements that need to execute Javascript

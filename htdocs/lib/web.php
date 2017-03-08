@@ -223,6 +223,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                 if (!$found_tinymce) {
                     $found_tinymce = $check[$key];
                     $javascript_array[] = $wwwroot . 'artefact/file/js/filebrowser.js';
+                    $javascript_array[] = $jsroot . 'switchbox.js';
                     $javascript_array[] = $jsroot . 'tinymce/tinymce.js';
                     $stylesheets = array_merge($stylesheets, array_reverse(array_values($THEME->get_url('style/tinymceskin.css', true))));
                     $content_css = json_encode($THEME->get_url('style/tinymce.css'));

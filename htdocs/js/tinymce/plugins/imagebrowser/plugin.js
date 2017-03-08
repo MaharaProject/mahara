@@ -181,10 +181,8 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
 
             jQuery(browser).removeClass('hidden');
 
-            (function($) {
-                // configblock.javascript might use MochiKit so $ must have its default value
-                eval(configblock.data.javascript);
-            })(getElement);
+            // execute additional js for the config block
+            eval(configblock.data.javascript);
 
             if (deletebutton.length) {
                 deletebutton.focus();
