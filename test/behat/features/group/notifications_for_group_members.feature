@@ -29,7 +29,7 @@ Scenario: Adding a comment on a group page (Bug 1426983)
     And I follow "Pages and collections (tab)"
     # And I click on "Pages"
     And I follow "Testing group page 01"
-    And I fill in "Testing comment notifications" in editor "Message"
+    And I fill in "Testing comment notifications" in editor "Comment"
     And I press "Comment"
     # Log out as user 1
     And I log out

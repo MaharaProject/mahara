@@ -39,18 +39,18 @@ Scenario: Testing that views & collections are collated properly
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "C1" panel collection
     And I click on "P1A" in "C1" panel collection
-    And I fill in "I am on P1A" in editor "Message"
+    And I fill in "I am on P1A" in editor "Comment"
     And I press "Comment"
 
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "C1" panel collection
     And I click on "P1B" in "C1" panel collection
-    And I fill in "I am on P1B" in editor "Message"
+    And I fill in "I am on P1B" in editor "Comment"
     And I press "Comment"
 
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click the panel "P2"
-    And I fill in "I am on P2" in editor "Message"
+    And I fill in "I am on P2" in editor "Comment"
     And I press "Comment"
 
     When I log out

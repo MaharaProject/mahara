@@ -17,14 +17,18 @@ Background:
 Scenario: Adding and deleting public comments
     # Adding
     Given I go to portfolio page "page1"
+    # The label for message text area - anonymous users
+    And I should see "Comment"
     And I fill in "Name" with "Joe Anonymous"
     # No TinyMCE editor for anonymous users
-    And I fill in "Message" with "Public comment by anonymous user"
+    And I fill in "Comment" with "Public comment by anonymous user"
     And I enable the switch "Make public"
     And I press "Comment"
     And I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
-    And I fill in "Comment by page owner" in editor "Message"
+    # The label for message text area - logged in users
+    And I should see "Add comment"
+    And I fill in "Comment by page owner" in editor "Comment"
     And I press "Comment"
     Then I should see "Joe Anonymous"
     And I should see "Public comment by anonymous user"
@@ -59,7 +63,7 @@ Scenario: Comments update the page's mtime
 
     # Public comment updates page last updated
     And I go to portfolio page "page1"
-    And I fill in "Public comment" in editor "Message"
+    And I fill in "Public comment" in editor "Comment"
     And I press "Comment"
     And I choose "Dashboard" from main menu
     Then I should see "page1" in the ".bt-newviews" element
@@ -67,7 +71,7 @@ Scenario: Comments update the page's mtime
 
     # Private comment updates page last updated
     And I go to portfolio page "page2"
-    And I fill in "Private comment" in editor "Message"
+    And I fill in "Private comment" in editor "Comment"
     And I disable the switch "Make public"
     And I press "Comment"
     And I choose "Dashboard" from main menu

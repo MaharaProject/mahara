@@ -24,7 +24,7 @@ Scenario: Moderating a group comment when approve comments is turned on
     # Adding a comment to a group page as a non-group member
     Given I log in as "userC" with password "Kupuhipa1"
     And I go to portfolio page "Page1"
-    And I set the field "Message" to "This is a comment from userC"
+    And I set the field "Comment" to "This is a comment from userC"
     And I enable the switch "Make public"
     And I press "Comment"
     And I wait "1" seconds

@@ -31,10 +31,9 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
  | Page title | Group Page 01 |
  And I press "Save"
  And I follow "Display page"
- And I fill in "Adding a comment to this field. Student = Awesome!" in editor "Message"
+ And I fill in "Adding a comment to this field. Student = Awesome!" in editor "Comment"
  # Checking that the make public is on
- And the following fields match these values:
-  | Make public | 1 |
+ And I enable the switch "Make public"
  And I press "Comment"
  # Verifying that it saves
  Then I should see "Comment submitted"
