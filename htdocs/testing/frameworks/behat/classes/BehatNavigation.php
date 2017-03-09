@@ -59,13 +59,13 @@ class BehatNavigation extends BehatBase {
      * @param string $menuitemtext the title of menu item e.g. "Content", "Portfolio".
      * @return NodeElement
      */
-    protected function get_sub_menu_item_node($submenuitemtext, $menuitemtext) {
+    protected function get_sub_menu_item_node($submenuitemtext, $menuitemtext, $menu) {
 
         // Avoid problems with quotes.
         $submenuitemtextliteral = $this->escaper->escapeLiteral($submenuitemtext);
         $menuitemtextliteral = $this->escaper->escapeLiteral($menuitemtext);
         $exception = new ExpectationException('The sub menu item "' . $menuitemtext . ' not found or invisible in "', $this->getSession());
-        $xpath = "//nav[@id='main-nav']" .
+        $xpath = "//nav[@id='" . $menu . "']" .
             "//li[contains(normalize-space(.), " . $menuitemtextliteral .")]" .
             "//a[normalize-space(.)=" . $submenuitemtextliteral ."]";
         $node = $this->find('xpath', $xpath, $exception);
@@ -85,12 +85,34 @@ class BehatNavigation extends BehatBase {
     }
 
     /**
+     * Choose a sub menu item in admnistration menu item
+     *
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from Admin menu$/
+     */
+    public function i_choose_submenu_admin($menuitem, $mainmenuitem) {
+        $menuitemnode = $this->get_sub_menu_item_node($menuitem, $mainmenuitem, 'main-nav-admin');
+        $path = $menuitemnode->getAttribute('href');
+        $this->visitPath($path);
+    }
+
+    /**
+     * Choose a sub menu item in user menu item
+     *
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from User menu$/
+     */
+    public function i_choose_submenu_user($menuitem, $mainmenuitem) {
+        $menuitemnode = $this->get_sub_menu_item_node($menuitem, $mainmenuitem, 'main-nav-user');
+        $path = $menuitemnode->getAttribute('href');
+        $this->visitPath($path);
+    }
+
+    /**
      * Choose a sub menu item in a main menu item
      *
-     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)"$/
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from Main menu$/
      */
-    public function i_choose_submenu($menuitem, $mainmenuitem) {
-        $menuitemnode = $this->get_sub_menu_item_node($menuitem, $mainmenuitem);
+    public function i_choose_submenu_main($menuitem, $mainmenuitem) {
+        $menuitemnode = $this->get_sub_menu_item_node($menuitem, $mainmenuitem, 'main-nav');
         $path = $menuitemnode->getAttribute('href');
         $this->visitPath($path);
     }

@@ -15,6 +15,7 @@ And the following "users" exist:
 
 Scenario: Creating and accessing social media buttons (Bug 1448948)
  Given I log in as "userA" with password "Kupuhipa1"
+ And I click on "Show Menu"
  And I follow "Content"
  And I follow "Social media"
  And I follow "New social media account"
@@ -22,6 +23,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  | Social network * | Facebook URL |
  | Your URL or username * | https://www.facebook.com/wellingtonphoenixfc |
  And I press "Save"
+ And I click on "Show Menu"
  And I follow "Portfolio"
  And I follow "Add"
  And I click on "Page" in the dialog
@@ -43,11 +45,10 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  And I should see "Access rules were updated for 1 page"
- And I follow "Logout"
+ And I log out
  # Logging in as userB to try see the buttons
  Given I log in as "userB" with password "Kupuhipa1"
  And I wait "1" seconds
  And I follow "Open source is for winners"
  And I should see "Social Media"
  And I should see "Facebook"
-

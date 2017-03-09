@@ -2976,16 +2976,16 @@ function main_nav($type = null) {
                 $menu = admin_nav();
             }
         }
-        else if ($USER->is_institutional_admin()) {
-            $menutype = 'instadmin_nav';
-            if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
-                $menu = institutional_admin_nav();
-            }
-        }
         else if ($USER->get('staff')) {
             $menutype = 'staff_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = staff_nav();
+            }
+        }
+        else if ($USER->is_institutional_admin()) {
+            $menutype = 'instadmin_nav';
+            if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
+                $menu = institutional_admin_nav();
             }
         }
         else {

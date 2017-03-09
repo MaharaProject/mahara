@@ -16,7 +16,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    # Verifying log in was successful
    And I should see "Admin User"
    # Sending message 1
-   And I choose "Find friends" in "Groups"
+   And I choose "Find friends" in "Groups" from Main menu
    And I follow "Bob"
    And I follow "Send message"
    And I fill in the following:
@@ -24,7 +24,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    | Message   | This is a test message   |
    And I press "Send message"
    # Sending message 2
-   And I choose "Find friends" in "Groups"
+   And I choose "Find friends" in "Groups" from Main menu
    And I follow "Bob"
    And I follow "Send message"
    And I fill in the following:
@@ -32,14 +32,14 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    | Message   | This is a test message2   |
    And I press "Send message"
    # Sending message 3
-   And I choose "Find friends" in "Groups"
+   And I choose "Find friends" in "Groups" from Main menu
    And I follow "Bob"
    And I follow "Send message"
    And I fill in the following:
    | Subject   | Hi there3 |
    | Message   | This is a test message3   |
    And I press "Send message"
-   And I choose "Find friends" in "Groups"
+   And I choose "Find friends" in "Groups" from Main menu
    And I follow "Bob"
    And I follow "Request friendship"
    And I fill in the following:
@@ -49,13 +49,14 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    | Message   | Written with a pen, sealed with a kiss, if you are my friend, please answer me this |
    And I press "Request friendship"
    # Log out as "Admin" user
-   And I follow "Logout"
+   And I log out
    # Log in as user 1
    Then I log in as "Bob" with password "Kupuhipa1"
    # Confirming all messages has been received
    And I am on homepage
    And I wait "1" seconds
    And I should see "Hi there"
+   And I click on "Show User Menu"
    And I follow "mail"
    And I should see "Hi there"
    And I should see "Hi there2"

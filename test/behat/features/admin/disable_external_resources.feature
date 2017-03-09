@@ -17,9 +17,9 @@ Scenario: Enable/disable external resources in mahara pages
 # By default external resources are allowed in a page
  When I log in as "userA" with password "Kupuhipa1"
  # Upload an image
- And I choose "Files" in "Content"
+ And I choose "Files" in "Content" from Main menu
  And I attach the file "Image2.png" to "files_filebrowser_userfile"
- And I choose "Pages and collections" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio" from Main menu
  And I follow "Page 1"
  And I follow "Edit this page"
 
@@ -41,7 +41,7 @@ Scenario: Enable/disable external resources in mahara pages
  | Block title | Text block with an external image |
  | Block content | <p><img title="Open source logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Opensource.svg/744px-Opensource.svg.png" alt="" width="300" /></p> |
  And I press "Save"
- And I scroll to the id "main-nav"
+ And I scroll to the id "main-column-container"
  And I follow "Display page"
  Then I should see images in the block "Text block with an internal image"
  And I should see images in the block "Text block with an external image"
@@ -49,14 +49,13 @@ Scenario: Enable/disable external resources in mahara pages
 
 # Disable external resources and check if external images are displayed in pages
  When I log in as "admin" with password "Kupuhipa1"
- And I choose "Administration"
- And I choose "Site options" in "Configure site"
+ And I choose "Site options" in "Configure site" from Admin menu
  And I expand the section "Security settings"
  And I enable the switch "Disable external resources in user HTML"
  And I press "Update site options"
  And I log out
  And I log in as "userA" with password "Kupuhipa1"
- And I choose "Pages and collections" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio" from Main menu
  And I follow "Page 1"
  Then I should see images in the block "Text block with an internal image"
  And I should not see images in the block "Text block with an external image"

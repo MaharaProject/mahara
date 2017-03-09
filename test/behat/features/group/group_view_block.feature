@@ -94,14 +94,14 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Group Z"
     # Share pages and collections to the "Group Z"
     # Edit access for Page userA_01
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page userA_01" row
     And I set the select2 value "Page userA_01, Page userA_02, Page userA_03, Page userA_04, Page userA_05" for "editaccess_views"
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     # Edit access for Collection userA_01
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Collections" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Collection userA_01" row
     And I should not see "Collection userA_02" in the "ul.select2-selection__rendered" "css_element"
@@ -116,7 +116,7 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Group Z"
     # Share pages and collections to the "Group Z"
     # Edit access for pages
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I click on "Edit access" in "Page userB_01" row
     And I set the select2 value "Page userB_01, Page userB_02, Page userB_03, Page userB_04, Page userB_05, Page userB_06, Page userB_07" for "editaccess_views"
     And I select "Group Z" from "accesslist[0][searchtype]"
@@ -167,7 +167,7 @@ These list must take into account the sort option choosen in the block config (B
     # Check that we can see submitted pages before editing/saving the configuration for group pages block
     Given I log in as "userB" with password "Kupuhipa1"
     And I should see "Group Z"
-    And I choose "My groups" in "Groups"
+    And I choose "My groups" in "Groups" from Main menu
     And I follow "Group Z"
     And I select "Page userB_01" from "group_view_submission_form_2_options"
     And I press "Submit"
@@ -202,6 +202,7 @@ These list must take into account the sort option choosen in the block config (B
     And I press "Save"
     And I display the page
     # Check if it is now in the first page of the list of group pages
+    And I click on "Show Menu"
     And I follow "Groups"
     And I follow "Group Z"
     And I should see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
@@ -209,6 +210,7 @@ These list must take into account the sort option choosen in the block config (B
     And I jump to next page of the list "groupviews_pagination"
     And I should not see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
     # Update the shared page "Page userA_01"
+    And I click on "Show Menu"
     And I choose "Portfolio"
     And I click on "Page userA_01" panel menu
     And I click on "Edit" in "Page userA_01" panel menu
@@ -217,6 +219,7 @@ These list must take into account the sort option choosen in the block config (B
     And I press "Save"
     And I display the page
     # Check if it is now in the first page of the list of shared pages
+    And I click on "Show Menu"
     And I choose "Groups"
     And I follow "Group Z"
     And I should see "Page userA_01" in the "ul#sharedviewlist" "css_element"
@@ -224,12 +227,13 @@ These list must take into account the sort option choosen in the block config (B
     And I jump to page "2" of the list "sharedviews_pagination"
     And I should not see "Page userA_01" in the "ul#sharedviewlist" "css_element"
     # Update the shared collection "Collection userA_06"
-    And I choose "Pages and collections" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio" from Main menu
     And I click on "Collection userA_06" panel menu
     And I click on "Edit" in "Collection userA_06" panel menu
     And I set the field "Collection description" to "This is the collection 06 (updated)"
     And I press "Save"
     # Check if it is now in the first page of the list of shared collections
+    And I click on "Show Menu"
     And I choose "Groups"
     And I follow "Group Z"
     And I should see "Collection userA_06" in the "ul#sharedcollectionlist" "css_element"
@@ -275,20 +279,21 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Group W"
     # Share pages and collections to the standard "Group W"
     # Edit access for Page userC_01, Page userC_03, Page userC_04
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page userC_01" row
     And I set the select2 value "Page userC_01, Page userC_03, Page userC_04" for "editaccess_views"
     And I select "Group W" from "accesslist[0][searchtype]"
     And I press "Save"
     # Edit access for Collection userC_01, Collection userC_03, Collection userC_04
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Collections" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Collection userC_01" row
     And I set the select2 value "Collection userC_01, Collection userC_03, Collection userC_04" for "editaccess_collections"
     And I select "Group W" from "accesslist[0][searchtype]"
     And I press "Save"
     # Submit pages and collections to the "Group W" and "Group Z"
+    And I click on "Show Menu"
     And I choose "Groups"
     And I follow "Group W"
     And I select "Page userC_02" from "group_view_submission_form_3_options"
@@ -303,6 +308,7 @@ These list must take into account the sort option choosen in the block config (B
     And I select "Collection userC_03" from "group_view_submission_form_3_options"
     And I press "Submit"
     And I press "Yes"
+    And I click on "Show Menu"
     And I choose "Groups"
     And I follow "Group Z"
     And I select "Page userC_04" from "group_view_submission_form_2_options"
@@ -351,20 +357,21 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Group X"
     # Share pages and collections to the "Group X"
     # Edit access for Page userC_09, Page userC_11, Page userC_12
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page userC_09" row
     And I set the select2 value "Page userC_09, Page userC_11, Page userC_12" for "editaccess_views"
     And I select "Group X" from "accesslist[0][searchtype]"
     And I press "Save"
     # Edit access for Collection userC_05, Collection userC_07, Collection userC_08
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Collections" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Collection userC_05" row
     And I set the select2 value "Collection userC_05, Collection userC_07, Collection userC_08" for "editaccess_collections"
     And I select "Group X" from "accesslist[0][searchtype]"
     And I press "Save"
     # Submit pages and collections to the "Group X" and "Group Z"
+    And I click on "Show Menu"
     And I choose "Groups"
     And I follow "Group X"
     And I select "Page userC_10" from "group_view_submission_form_4_options"
@@ -379,6 +386,7 @@ These list must take into account the sort option choosen in the block config (B
     And I select "Collection userC_07" from "group_view_submission_form_4_options"
     And I press "Submit"
     And I press "Yes"
+    And I click on "Show Menu"
     And I choose "Groups"
     And I follow "Group Z"
     And I select "Page userC_12" from "group_view_submission_form_2_options"

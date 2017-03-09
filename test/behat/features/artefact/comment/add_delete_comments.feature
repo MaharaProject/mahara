@@ -60,6 +60,7 @@ Scenario: Comments update the page's mtime
     And I go to portfolio page "page1"
     And I fill in "Public comment" in editor "Message"
     And I press "Comment"
+    And I click on "Show Menu"
     And I follow "Dashboard"
     Then I should see "page1" in the ".bt-newviews" element
     And I should not see "page2" in the ".bt-newviews" element
@@ -69,6 +70,7 @@ Scenario: Comments update the page's mtime
     And I fill in "Private comment" in editor "Message"
     And I disable the switch "Make public"
     And I press "Comment"
+    And I click on "Show Menu"
     And I follow "Dashboard"
     Then I should see "page2" in the ".bt-newviews" element
     And I should not see "page1" in the ".bt-newviews" element

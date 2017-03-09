@@ -15,7 +15,7 @@ Background:
 
 Scenario: Create Image block
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages and collections" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio" from Main menu
     And I click on "Page 1" panel menu
     And I click on "Edit" in "Page 1" panel menu
     And I follow "Image"
@@ -30,6 +30,6 @@ Scenario: Create Image block
     And I set the field "Show description" to "1"
     And I press "Save"
     And I wait "2" seconds
-    And I scroll to the id "main-nav"
-    And I click on "Display page"
+    And I scroll to the id "main-column-container"
+    And I follow "Display page"
     And I should see "Image1.jpg"

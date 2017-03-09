@@ -10,8 +10,7 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     # Verifying log in as successful
     And I should see "Admin User"
     # Entering an external link
-    When I follow "Administration"
-    And I choose "Menus" in "Configure site"
+    And I choose "Menus" in "Configure site" from Admin menu
     And I select "Logged-in links and resources" from "Edit:"
     And I fill in "namenew" with "Test Menu Link"
     And I fill in "linkedtonew" with "https://mahara.org/"
@@ -20,11 +19,10 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     And I should see "Item saved"
     And I press "Save changes"
     # Verifying the link as been added successfully
-    And I follow "Return to site"
+    And I click on "Show Menu"
+    And I follow "Dashboard"
     Then I should see "Test Menu Link"
-    And I follow "Administration"
-    And I follow "Configure site"
-    And I choose "Menus" in "Configure site"
+    And I choose "Menus" in "Configure site" from Admin menu
     And I select "Logged-in links and resources" from "Edit:"
     #And I wait until the page is ready
     #And I press "Delete"
@@ -50,20 +48,19 @@ Scenario: Creating and deleting external links (Selenium 1426983)
 Scenario: Make sure blogs do not show in site file link options (Bug #1537426)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuhipa1"
-    When I follow "Administration"
 
     # I create a site journal
-    And I choose "Journals" in "Configure site"
+    And I choose "Journals" in "Configure site" from Admin menu
     And I follow "Create journal"
     And I fill in "Title" with "Site blog"
     And I press "Create journal"
 
     # I upload some site files
-    And I choose "Files" in "Configure site"
+    And I choose "Files" in "Configure site" from Admin menu
     And I attach the file "Image1.jpg" to "File"
 
     # Entering an external link
-    And I choose "Menus" in "Configure site"
+    And I choose "Menus" in "Configure site" from Admin menu
     And I select "Logged-in links and resources" from "Edit:"
     And I set the following fields to these values:
     | Site file | 1 |

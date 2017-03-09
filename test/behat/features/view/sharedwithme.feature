@@ -36,31 +36,31 @@ Background:
 Scenario: Testing that views & collections are collated properly
     # Putting some comments on the pages
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages and collections" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio" from Main menu
     And I click on "C1" panel collection
     And I click on "P1A" in "C1" panel collection
     And I fill in "I am on P1A" in editor "Message"
     And I press "Comment"
 
-    And I choose "Pages and collections" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio" from Main menu
     And I click on "C1" panel collection
     And I click on "P1B" in "C1" panel collection
     And I fill in "I am on P1B" in editor "Message"
     And I press "Comment"
 
-    And I choose "Pages and collections" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio" from Main menu
     And I click the panel "P2"
     And I fill in "I am on P2" in editor "Message"
     And I press "Comment"
 
     When I log out
     And I log in as "userB" with password "Kupuhipa1"
-    And I choose "Shared with me" in "Portfolio"
+    And I choose "Shared with me" in "Portfolio" from Main menu
 
     Then I should see "page P2"
     # I should see collections & individual pages
     And I should see "C1 (2 pages)"
-    # I should not see pages in collections 
+    # I should not see pages in collections
     And I should not see "page P1B"
     # I should see the latest comment from C1 only
     And I should see "I am on P1B"

@@ -9,6 +9,7 @@ Scenario: Create a page and secret URLs to copy (Bug 1426983)
     Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Admin User"
+    And I click on "Show Menu"
     When I follow "Portfolio"
     And I follow "Add"
     And I click on "Page" in the dialog
@@ -19,9 +20,9 @@ Scenario: Create a page and secret URLs to copy (Bug 1426983)
     And I should see "Page saved successfully"
     And I display the page
     # Navigating to shared by be to click button
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I click on "Edit secret URL access"
     And I press "New secret URL"
     # Verifying Secret URLs was created
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     Then I should see "1"

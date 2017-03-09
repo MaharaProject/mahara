@@ -6,8 +6,7 @@ So I can benefit from the use of different configuration changes
 
 Scenario: Turning switches on and off on the Add user page (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
- And I follow "Administration"
- And I choose "Add user" in "Users"
+ And I choose "Add user" in "Users" from Admin menu
  And I set the following fields to these values:
  | Site staff | 1 |
  | Site administrator | 1 |

@@ -16,6 +16,7 @@ Scenario: Create users and search for them (Bug 897586)
     # Verifying log in was successful
     And I should see "Bob Bobby"
     # Creating page one
+    And I click on "Show Menu"
     And I follow "Portfolio"
     And I follow "Add"
     And I click on "Page" in the dialog
@@ -25,6 +26,7 @@ Scenario: Create users and search for them (Bug 897586)
     # Verifying the page has been created
     And I should see "Page saved successfully"
     # Creating page two
+    And I click on "Show Menu"
     And I follow "Portfolio"
     And I follow "Add"
     And I click on "Page" in the dialog
@@ -40,12 +42,13 @@ Scenario: Create users and search for them (Bug 897586)
     And I press "Save"
     # Verifying that both of the pages have been shared
     And I should see "Access rules were updated for 2 pages."
-    And I follow "Logout"
+    And I log out
     # Log in as the second student user
     And I log in as "jen" with password "mahara1"
     # Verifying log in was successful
     And I should see "Jen Jenny"
     # Creating page three
+    And I click on "Show Menu"
     And I follow "Portfolio"
     And I follow "Add"
     And I click on "Page" in the dialog
@@ -55,6 +58,7 @@ Scenario: Create users and search for them (Bug 897586)
     # Verifying the page has been created
     And I should see "Page saved successfully"
     # Creating page 4
+    And I click on "Show Menu"
     And I follow "Portfolio"
     And I follow "Add"
     And I click on "Page" in the dialog
@@ -70,11 +74,10 @@ Scenario: Create users and search for them (Bug 897586)
     And I press "Save"
     # Verifying that both of the pages have been shared
     And I should see "Access rules were updated for 2 pages."
-    And I follow "Logout"
+    And I log out
     # Logging back in as admin to search for users on the shared with me page
     And I log in as "admin" with password "Kupuhipa1"
-    And I follow "Portfolio"
-    And I choose "Shared with me" in "Portfolio"
+    And I choose "Shared with me" in "Portfolio" from Main menu
     # Entering Bob name in the search box
     And I fill in the following:
     | Search: | Bob |

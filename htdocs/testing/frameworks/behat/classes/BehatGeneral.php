@@ -60,6 +60,7 @@ class BehatGeneral extends BehatBase {
     public function i_logout() {
         $this->visitPath("/");
         $this->wait_until_the_page_is_ready();
+        $this->i_click_on("Show User Menu");
         $this->i_follow_in_the("Logout", "//header//li[contains(concat(' ', normalize-space(@class), ' '), ' btn-logout ')]", "xpath_element");
     }
 

@@ -15,7 +15,7 @@ Background:
 
 Scenario: Create Text block
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages and collections" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio" from Main menu
     And I click on "Page 1" panel menu
     And I click on "Edit" in "Page 1" panel menu
     And I follow "Text"
@@ -29,7 +29,7 @@ Scenario: Create Text block
     And I wait "2" seconds
     Then I should see "Here is a new block" in the "div#column-container" element
     And I should see "Text block 1" in the "div#column-container" element
-    And I scroll to the id "main-nav"
-    And I click on "Display page"
+    And I scroll to the id "main-column-container"
+    And I follow "Display page"
     Then I should see "Here is a new block"
     And I should see "Text block 1"

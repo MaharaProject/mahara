@@ -23,6 +23,7 @@ Given the following "pages" exist:
 
 Scenario: Displaying shared pages in most recently updated order (Bug 1490569)
  Given I log in as "admin" with password "Kupuhipa1"
+ And I click on "Show Menu"
  And I follow "Groups"
  And I follow "testgroup"
  And I follow "Edit this page"
@@ -33,4 +34,3 @@ Scenario: Displaying shared pages in most recently updated order (Bug 1490569)
  And I click on "Save"
  Then "test Page 01" "text" should appear before "test Page 02" "text"
  And "test Page 03" "text" should appear after "test Page 02" "text"
-

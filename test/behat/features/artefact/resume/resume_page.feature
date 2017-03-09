@@ -17,7 +17,7 @@ Background:
 Scenario: Editing admin resume page (Bug 1426983)
     Given I log in as "userA" with password "Kupuhipa1"
     # Editing resume
-    When I choose "Résumé" in "Content"
+    When I choose "Résumé" in "Content" from Main menu
     And I follow "Introduction"
     And I fill in the following:
     | Date of birth   | 1970/01/07 |
@@ -92,8 +92,9 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "Move down" in "Test" row
     And I click on "Move up" in "Test" row
     # Adding Achievements
-    And I scroll to the id "main-nav"
+    And I scroll to the id "main-column-container"
     And I follow "Achievements"
+    And I wait "1" seconds
     And I press "addcertificationbutton"
     # Adding Certifications, accreditations and awards
     And I set the following fields to these values:
@@ -105,6 +106,8 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "Save"
     And I should see "Saved successfully"
     And I follow "Achievements"
+    And I wait "1" seconds
+    And I scroll to the id "resumewrap"
     And I press "addcertificationbutton"
     And I set the following fields to these values:
     | Date | 13/07/2017 |
@@ -162,7 +165,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I should see "Saved successfully"
     And I click on "Move down" in "Mr Membership" row
     And I click on "Move up" in "Mr Membership" row
-    And I scroll to the id "main-nav"
+    And I scroll to the id "main-column-container"
     And I follow "Goals and skills"
     And I should see "My goals"
     And I should see "My skills"
@@ -176,7 +179,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-nav"
+    And I scroll to the id "main-column-container"
     And I follow "Academic goals"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
@@ -187,7 +190,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-nav"
+    And I scroll to the id "main-column-container"
     And I follow "Career goals"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
@@ -231,14 +234,14 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-nav"
+    And I scroll to the id "main-column-container"
     And I follow "Interests"
     And I press "Edit"
     And I set the following fields to these values:
     | resumefieldform_interest | test |
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-nav"
+    And I scroll to the id "main-column-container"
     And I follow "License"
     And I set the following fields to these values:
     | License | Creative Commons Attribution 4.0 |
@@ -249,4 +252,4 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "Save"
     And I should see "Résumé saved"
     # Logging out and loggin in as as student user/ then ending
-    And I follow "Logout"
+    And I log out

@@ -13,21 +13,21 @@ Given the following "users" exist:
 
 Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  Given I log in as "admin" with password "Kupuhipa1"
- And I follow "Administration"
- And I choose "Add groups by CSV" in "Groups (Administer groups)"
+ And I choose "Add groups by CSV" in "Groups" from Admin menu
  # Attaching the groups via CSV
  And I attach the file "groups.csv" to "CSV file"
  When I press "Add groups by CSV"
  And I should see "Your CSV file was processed successfully."
- And I choose "Update group members by CSV" in "Groups (Administer groups)"
+ And I choose "Update group members by CSV" in "Groups" from Admin menu
  # Verify the warnings there
  And I should see "Every CSV file upload removes all existing group members, including group administrators, completely. Ensure that you have at least one administrator for each group in your CSV file."
  # Attaching the group members via CSV
  And I attach the file "groupmembers.csv" to "CSV file"
  And I press "Update group members by CSV"
- And I follow "Logout"
+ And I log out
  # Logging back in as a user
  And I log in as "userA" with password "Kupuhipa1"
+ And I click on "Show Menu"
  And I follow "Groups"
  And I follow "Group Two"
  # Editing the group
@@ -47,9 +47,10 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
      | group 01 | userB | This is group 01 | course | ON | ON | all | ON | ON | admin, userA | admin |
-  And I follow "Logout"
+  And I log out
  # Logging back in as a user
  And I log in as "userB" with password "Kupuhipa1"
+ And I click on "Show Menu"
  And I follow "Groups"
  And I follow "group 01"
  # Editing the group
@@ -60,9 +61,10 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  # Checking for regression errors
  And I should not see "Invalid argument supplied for foreach()"
  And I should see "Group saved successfully"
- And I follow "Logout"
+ And I log out
  # Logging in as Admin
  Given I log in as "admin" with password "Kupuhipa1"
+ And I click on "Show Menu"
  And I follow "Groups"
  And I follow "Group awesome sauce"
  # Making sure I cant edit a group I am not owner of

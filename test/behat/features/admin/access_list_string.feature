@@ -14,10 +14,9 @@ Background:
 
 Scenario: Accessing language string (Bug 1449350)
  Given I log in as "admin" with password "Kupuhipa1"
- And I follow "Administration"
+ And I click on "Show Administration Menu"
  And I follow "Users"
  And I check "selectusers_2"
  And I press "Get reports"
  When I press "Access list"
  Then I should not see "[[loggedin/view]]"
-
