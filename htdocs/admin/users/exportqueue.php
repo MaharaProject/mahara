@@ -123,6 +123,9 @@ if ($action = param_alphanum('action', null)) {
         foreach ($rowids as $rowid) {
             execute_sql('UPDATE {export_queue} SET starttime = NULL, ctime = NOW() WHERE id = ?', array($rowid));
         }
+        // And clear cron lock
+        // @TODO - use the actual cron_free function when cron/lib.php actually contains a cron class
+        delete_records('config', 'field', '_cron_lock_core_export_process_queue');
         $SESSION->add_ok_msg(get_string('exportqueuearchived', 'admin', count($rowids)));
     }
 }
