@@ -4504,7 +4504,7 @@ function xmldb_core_upgrade($oldversion=0) {
         log_debug('Add a "clearcaches" event');
         $e = new StdClass;
         $e->name = 'clearcaches';
-        insert_record('event_type', $e);
+        ensure_record_exists('event_type', $e, $e);
     }
 
     if ($oldversion < 2016062200) {
