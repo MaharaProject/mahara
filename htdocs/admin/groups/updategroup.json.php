@@ -23,29 +23,29 @@ $itemid   = param_variable('itemid');
 $data = new StdClass;
 $data->title = $name;
 
-if ($itemid == 'new') {
-    try {
-        $displayorders = get_records_array('group_category', '', '', '', 'displayorder');
-        $max = 0;
-        if ($displayorders) {
-            foreach ($displayorders as $r) {
-                $max = $r->displayorder >= $max ? $r->displayorder + 1 : $max;
-            }
-        }
-        $data->displayorder = $max;
-        $itemid = insert_record('group_category', $data, 'id', true);
+try {
+    if ($itemid == 'new') {
+        $data->displayorder = 0; //Place holder.
+        $itemid = insert_record('group_category',$data,'id',true);
     }
-    catch (Exception $e) {
-        json_reply('local',get_string('savefailed','admin'));
-    }
-}
-else {
-    $data->id = (int)$itemid;
-    try {
+    else {
+        $data->id = (int)$itemid;
         update_record('group_category', $data, 'id');
     }
-    catch (Exception $e) {
-        json_reply('local',get_string('savefailed','admin'));
+
+    $groupcategories = get_records_array('group_category');
+    usort($groupcategories,  function($a, $b) {
+        return strnatcasecmp($a->title, $b->title);
+    });
+
+    foreach ($groupcategories as $key => $gcategory) {
+        if ($key != $gcategory->displayorder) {
+            $gcategory->displayorder = $key;
+            update_record('group_category', $gcategory);
+        }
     }
+}
+catch (Exception $e) {
+    json_reply('local',get_string('savefailed','admin'));
 }
 json_reply(false, array('id' => (int)$itemid));
