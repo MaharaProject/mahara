@@ -199,3 +199,13 @@ The `raw` theme's Sass has been split into partials based on the purpose they se
 * `_custom.scss` - pieces of CSS that are too small to justify a component or a feature.
 
 * `_shame.scss` - a file for hotfixes, hacks, and anything that a developer doesn't have time to test or implement properly. This can also be a place for browser or environment specific fixes that may be able to be removed at a later date.
+
+### Theming components
+
+#### Fixed header and site messages
+
+Site messages such as masquerading information as well as database upgrades are displayed at the very top of the screen in Mahara pushing down all other content. Therefore, we need to ensure that the page header, which is in a fixed position, is set to be further down from the top of the view port.
+
+In order to do that, we use JavaScript to detect the number of possible site messages, see `theme.js`). When there is no site message, a class of "no-site-messages" is added to the header. If there is a site message, a class of "message-count-1" is added and so on with more than one message. The classes added by JavaScript are used for styling the header and main navigation (main-nav) with site message(s), see `_site-messages.scss` in the form folder. We use the Sass @for directive to generate rules for up to 5 messages. It calculates the top position of the header and the margin of an element directly following the header, in this case it is "main-nav".
+
+__IMPORTANT__ - If there are any changes to the header/navigation markup, you may need to amend the site message JavaScript and CSS. For example, if "main-nav" has been removed, then you will need to replace the ".main-nav" selector in the site messages styles with a class of an element that directly follows the header.
