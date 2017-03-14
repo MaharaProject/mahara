@@ -44,7 +44,14 @@ if ($config_server_id) {
 }
 // we have an edit form
 else if (!empty($dbserver)) {
-    $form = webservice_server_edit_form($dbserver, $sopts, $iopts);
+    $disabled = array();
+    list($moduletype, $module) = get_module_from_serverid($server_id);
+    safe_require_plugin($moduletype, $module);
+    $classname = generate_class_name($moduletype, $module);
+    if (is_callable(array($classname, 'disable_webservice_fields'))) {
+        $disabled = call_static_method($classname, 'disable_webservice_fields');
+    }
+    $form = webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled);
 }
 // else we have just the standard list
 else {
@@ -154,13 +161,12 @@ setpageicon($smarty, 'icon-puzzle-piece');
 safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
-
 $smarty->display('form.tpl');
 
 function webservice_main_submit(Pieform $form, $values) {
 }
 
-function webservice_server_edit_form($dbserver, $sopts, $iopts) {
+function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = array()) {
 
     $server_details =
         array(
@@ -209,12 +215,14 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         'title'        => get_string('application_uri', 'auth.webservice'),
         'defaultvalue' =>  $dbserver->application_uri,
         'type'         => 'text',
+        'disabled'     => (isset($disabled['application_uri']) ? true : false),
     );
 
     $server_details['elements']['callback_uri'] = array(
         'title'        => get_string('callback', 'auth.webservice'),
         'defaultvalue' =>  $dbserver->callback_uri,
         'type'         => 'text',
+        'disabled'     => (isset($disabled['callback_uri']) ? true : false),
     );
 
     $server_details['elements']['institution'] = array(
@@ -650,6 +658,8 @@ function get_module_from_serverid($serverid) {
             JOIN {external_services} es
                 ON es.id = osr.externalserviceid
             WHERE osr.id = ? ', array($serverid));
-
-    return explode("/", $consumer->component);
+    if (substr_count($consumer->component, '/') > 0) {
+        return explode("/", $consumer->component);
+    }
+    return array('auth', 'webservice');
 }
