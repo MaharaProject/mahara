@@ -343,10 +343,10 @@ h4.list-group-item-heading {
         &.site-template {
             background: repeating-linear-gradient(
                 -45deg,
-                #ddd,
-                #ddd 10px,
-                #ccc 10px,
-                #ccc 20px
+                #f1f1f1,
+                #f1f1f1 10px,
+                #f9f9f9 10px,
+                #f9f9f9 20px
             ) !important;
         }
     }
@@ -449,13 +449,13 @@ h4.list-group-item-heading {
 
             .collnum-arrow {
                 display: none;
-                margin-left: 11px;
+                margin-left: 16px;
             }
 
             button.moremenu {
               border: 0;
               background-color: transparent;
-              margin-left: 10px;
+              margin-left: 15px;
               display: inline-block;
               color: $text-color;
             }
@@ -466,6 +466,7 @@ h4.list-group-item-heading {
               }
               .collnum-arrow {
                 display: inline-block;
+                cursor: pointer;
               }
             }
 

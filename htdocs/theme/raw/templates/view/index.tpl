@@ -38,15 +38,15 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">
-                        <span class="icon icon-lg icon-flag text-danger prs"></span>
+                        <span class="icon icon-lg icon-plus prs"></span>
                         {str tag=confirmaddtitle section=view}
                     </h4>
                 </div>
                 <div class="modal-body">
                     <p>{str tag=confirmadddesc section=view}</p>
                     <div class="btn-group">
-                        <button id="add-collection-button" type="button" class="btn btn-default"><span class="icon icon-folder-open text-success"></span> {str tag=Collection section=collection}</button>
-                        <button id="add-view-button" type="button" class="btn btn-default"><span class="icon icon-file-text text-success"></span> {str tag=view}</button>
+                        <button id="add-collection-button" type="button" class="btn btn-default"><span class="icon icon-folder-open"></span> {str tag=Collection section=collection}</button>
+                        <button id="add-view-button" type="button" class="btn btn-default"><span class="icon icon-file-text"></span> {str tag=view}</button>
                     </div>
                 </div>
             </div>
