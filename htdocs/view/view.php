@@ -236,10 +236,16 @@ $commentoptions->view = $view;
 $feedback = ArtefactTypeComment::get_comments($commentoptions);
 
 // Set up theme
+// if the view theme is set in view table
 $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($view);
 }
+// if it's another users view, it should be displayed with the other users institution theme
+else if ($owner && $owner != $USER->get('id')) {
+    $THEME = new Theme($owner);
+}
+
 $headers = array();
 $headers[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/smoothness/jquery-ui.min.css') . '">';
 $headers = array_merge($headers, $view->get_all_blocktype_css());

@@ -82,6 +82,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   # allow the ajax to load
   And I wait "1" seconds
   And I follow "Page 01"
+  And I scroll to the base of id "copyview-button"
   And I follow "Copy"
   And I press "Save"
   Then I should see "Journal entries with tags \"blog\", \"one\" but not tag \"two\""

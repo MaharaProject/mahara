@@ -560,36 +560,6 @@ class View {
             if (isset($viewdata['type']) && $viewdata['type'] != 'portfolio' && get_record('view', 'owner', $viewdata['owner'], 'type', $viewdata['type'])) {
                 $viewdata['type'] = 'portfolio';
             }
-
-            // Try to create the view with the owner's default theme if that theme is set by an
-            // institution (i.e. if it's different from the site theme)
-            //
-            // This needs to be modified if users are ever allowed to change their own theme
-            // preference.  Currently it's okay because users' themes are forced on them by
-            // the site or institution default, but if some users are allowed to change their
-            // own theme pref, we should create those users' views without a theme.
-            if (!get_config('userscanchooseviewthemes') && !isset($viewdata['theme'])
-                && (!isset($viewdata['type']) || $viewdata['type'] != 'dashboard')) {
-                global $USER;
-                if ($viewdata['owner'] == $USER->get('id')) {
-                    $owner = $USER;
-                }
-                else {
-                    $owner = new User();
-                    $owner->find_by_id($viewdata['owner']);
-                }
-                $ownerthemedata = $owner->get('institutiontheme');
-                $themeoptions = get_all_themes();
-                $ownertheme = (isset($ownerthemedata->basename) && array_key_exists($ownerthemedata->basename, $themeoptions)) ? $ownerthemedata->basename : null;
-                if ($accounttheme = $owner->get_account_preference('theme')) {
-                    $accountthemeparts = explode('/', $accounttheme);
-                    $ownertheme = $accountthemeparts[0];
-                }
-
-                if ($ownertheme && $ownertheme != get_config('theme') && $ownertheme != 'custom') {
-                    $viewdata['theme'] = $ownertheme;
-                }
-            }
         }
 
         if (isset($viewdata['group'])) {
