@@ -1,6 +1,6 @@
 <?php
 /*
- @version   v5.20.5  10-Aug-2016
+ @version   v5.20.9  21-Dec-2016
  @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
  @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license.
@@ -131,8 +131,11 @@ class ADODB_postgres64 extends ADOConnection{
 
 	function ServerInfo()
 	{
+		if (isset($this->version)) return $this->version;
+
 		$arr['description'] = $this->GetOne("select version()");
 		$arr['version'] = ADOConnection::_findvers($arr['description']);
+		$this->version = $arr;
 		return $arr;
 	}
 
@@ -669,9 +672,7 @@ class ADODB_postgres64 extends ADOConnection{
 		while ($row = $rs->FetchRow()) {
 			$columns = array();
 			foreach (explode(' ', $row[2]) as $col) {
-                if (isset($col_names[$col])) {
-                    $columns[] = $col_names[$col];
-                }
+				$columns[] = $col_names[$col];
 			}
 
 			$indexes[$row[0]] = array(
