@@ -76,19 +76,19 @@
                         <span class="state-label on" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.on section=pieforms}</span>
                         <span class="state-label off" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.off section=pieforms}<span>
                     </label>
-                    </div>
                 </div>
+            </div>
                 <script type="application/javascript">Switchbox.computeWidth("{$prefix}_edit_allowcomments");</script>
-            </div>
-        <div>
-        <div class="submitcancel form-group">
-            <input type="submit" class="submit btn btn-primary" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
-            <input type="submit" class="cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
         </div>
         <div>
-            <div id="{$prefix}_edit_messages">
+            <div class="submitcancel form-group">
+                <input type="submit" class="submit btn btn-primary" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
+                <input type="submit" class="cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
             </div>
-        </div>
+            <div>
+                <div id="{$prefix}_edit_messages">
+                </div>
+            </div>
         </div>
     </td>
 </tr>
