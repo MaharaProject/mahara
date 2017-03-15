@@ -60,23 +60,35 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
             $count = 0;
             $limit = 1000;
             for ($i = 0; $i <= $total; $i += $limit) {
+                switch ($type) {
+                    case 'employmenthistory':
+                        $description = 'positiondescription';
+                        break;
+                    case 'educationhistory':
+                        $description = 'qualdescription';
+                        break;
+                    default:
+                        $description = 'description';
+                }
                 $sql = "
-                    SELECT r.id, r.description
+                    SELECT r.id, r." . $description . "
                     FROM {artefact_resume_" . $type . "} r
                     ORDER BY r.id";
                 $resumes = get_records_sql_array($sql, array(), $i, $limit);
-                foreach ($resumes as $item) {
-                    // Escape HTML tags in "description"
-                    $item->description = hsc($item->description);
-                    set_field('artefact_resume_' . $type, 'description', $item->description, 'id', $item->id);
-                    $count += $limit;
-                }
-                if (($count % $limit) == 0 || $count >= $total) {
-                    if ($count > $total) {
-                        $count = $total;
+                if ($resumes) {
+                    foreach ($resumes as $item) {
+                        // Escape HTML tags in "description"
+                        $item->{$description} = hsc($item->{$description});
+                        set_field('artefact_resume_' . $type, $description, $item->{$description}, 'id', $item->id);
+                        $count += $limit;
                     }
-                    log_debug("$count/$total");
-                    set_time_limit(30);
+                    if (($count % $limit) == 0 || $count >= $total) {
+                        if ($count > $total) {
+                            $count = $total;
+                        }
+                        log_debug("$count/$total");
+                        set_time_limit(30);
+                    }
                 }
             }
         }
