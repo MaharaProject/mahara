@@ -78,7 +78,7 @@
         <div id="book-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="collapse resume-content">
             {if $row->description}
             <p class="content-text">
-                {$row->description}
+                {$row->description|safe}
             </p>
             {/if}
 

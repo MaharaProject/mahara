@@ -577,6 +577,10 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
         return true;
     }
 
+    public static function is_wysiwyg() {
+        return false;
+    }
+
     public function can_have_attachments() {
         return true;
     }
@@ -1248,6 +1252,10 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
         ";
     }
 
+    public static function is_wysiwyg() {
+        return true;
+    }
+
     public static function get_tablerenderer_title_js_string() {
         return " row.jobtitle + ': ' + row.employer";
     }
@@ -1303,10 +1311,10 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 'size' => 50,
             ),
             'positiondescription' => array(
-                'type' => 'textarea',
+                'type' => 'wysiwyg',
                 'rows' => 10,
                 'cols' => 50,
-                'resizable' => false,
+                'rules' => array('maxlength' => 65536),
                 'title' =>  get_string('positiondescription', 'artefact.resume'),
             ),
             'attachments' => array(
@@ -1386,6 +1394,10 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
         ";
     }
 
+    public static function is_wysiwyg() {
+        return true;
+    }
+
     public static function get_tablerenderer_title_js_string() {
         return " formatQualification(row.qualname, row.qualtype, row.institution)";
     }
@@ -1461,10 +1473,10 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                 'size' => 50,
             ),
             'qualdescription' => array(
-                'type' => 'textarea',
+                'type' => 'wysiwyg',
                 'rows' => 10,
                 'cols' => 50,
-                'resizable' => false,
+                'rules' => array('maxlength' => 65536),
                 'title' => get_string('qualdescription', 'artefact.resume'),
             ),
             'attachments' => array(
@@ -1566,6 +1578,10 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
         ";
     }
 
+    public static function is_wysiwyg() {
+        return true;
+    }
+
     public static function get_tablerenderer_title_js_string() {
         return "row.title";
     }
@@ -1603,10 +1619,10 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                 'size' => 20,
             ),
             'description' => array(
-                'type' => 'textarea',
+                'type' => 'wysiwyg',
                 'rows' => 10,
                 'cols' => 50,
-                'resizable' => false,
+                'rules' => array('maxlength' => 65536),
                 'title' => get_string('description'),
             ),
             'attachments' => array(
@@ -1681,6 +1697,10 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
         ";
     }
 
+    public static function is_wysiwyg() {
+        return true;
+    }
+
     public static function get_tablerenderer_title_js_string() {
         return "row.title + ' (' + row.contribution + ')'";
     }
@@ -1733,10 +1753,10 @@ EOF;
                 'size' => 50,
             ),
             'description' => array(
-                'type' => 'textarea',
+                'type' => 'wysiwyg',
                 'rows' => 10,
                 'cols' => 50,
-                'resizable' => false,
+                'rules' => array('maxlength' => 65536),
                 'title' => get_string('detailsofyourcontribution', 'artefact.resume'),
             ),
             'attachments' => array(
@@ -1817,6 +1837,10 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
         ";
     }
 
+    public static function is_wysiwyg() {
+        return true;
+    }
+
     public static function get_tablerenderer_title_js_string() {
         return "row.title";
     }
@@ -1859,10 +1883,10 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                 'size' => 50,
             ),
             'description' => array(
-                'type' => 'textarea',
+                'type' => 'wysiwyg',
                 'rows' => 10,
                 'cols' => 50,
-                'resizable' => false,
+                'rules' => array('maxlength' => 65536),
                 'title' => get_string('description', 'artefact.resume'),
             ),
             'attachments' => array(

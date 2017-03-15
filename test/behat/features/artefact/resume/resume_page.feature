@@ -34,7 +34,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I follow "Education and employment"
     # Adding Education history
     And I press "addeducationhistorybutton"
-    And I fill in the following:
+    And I set the following fields to these values:
      | addeducationhistory_startdate | 1 Jan 2009 |
      | addeducationhistory_enddate | 2 Dec 2010 |
      | addeducationhistory_institution | something |
@@ -48,7 +48,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "addeducationhistory_submit"
     And I should see "Saved successfully"
     And I press "addeducationhistorybutton"
-    And I fill in the following:
+    And I set the following fields to these values:
      | addeducationhistory_startdate | 1 Jan 2009 |
      | addeducationhistory_enddate | 2 Dec 2010 |
      | addeducationhistory_institution | this is an institution |
@@ -64,7 +64,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "Move up" in "something" row
     # Adding an Employment history
     And I press "addemploymenthistorybutton"
-    And I fill in the following:
+    And I set the following fields to these values:
      | addemploymenthistory_startdate | 1 Jan 2009  |
      | addemploymenthistory_enddate | 02 Dec 2010 |
      | addemploymenthistory_employer | Test |
@@ -77,7 +77,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "addemploymenthistory_submit"
     Then I should see "Saved successfully"
     And I press "addemploymenthistorybutton"
-    And I fill in the following:
+    And I set the following fields to these values:
      | addemploymenthistory_startdate | 1 Jan 2009  |
      | addemploymenthistory_enddate | 02 Dec 2010 |
      | addemploymenthistory_employer | asdhgol |
