@@ -42,7 +42,7 @@
                                 </button>
                                 <span class="collnum-arrow icon icon-chevron-down"></span>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                {if $view.collid}
+                                {if $view.collid && !$view.submittedto}
                                     <li>
                                         <a href="{$WWWROOT}collection/views.php?id={$view.collid}" title="{str tag=manageviews section=collection}">
                                             <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>

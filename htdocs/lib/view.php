@@ -3814,7 +3814,8 @@ class View {
                             }
                             else if ($av->group) {
                                 $av->displayname = $av->groupname;
-                                if ($data['submittedstatus'] != 0 && $av->group == $data['submitgroupid']) {
+                                // A submitted view/collection adds 'admin' role access to group
+                                if (!empty($data['submittedstatus']) && $av->group == $data['submitgroupid'] && $av->role == 'admin') {
                                     $av->displayname .= ' (' . get_string('submitted', 'group') . ')';
                                 }
                                 else if (!empty($av->role)) {

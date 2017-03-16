@@ -524,7 +524,7 @@ h4.list-group-item-heading {
                     position: relative;
                 }
                 &.seperator {
-                    border-bottom: 1px solid #aaa;
+                    border-bottom: 1px solid $dropdown-border;
                 }
             }
         }

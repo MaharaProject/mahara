@@ -663,6 +663,8 @@ EOD;
         else if (!empty($record['owner'])) {
             $data->owner = $record['owner'];
         }
+        $data->navigation = 1;
+        $data->submittedstatus = 0;
         $collection = new Collection(0, $data);
         $collection->commit();
         // Add views to the collection
