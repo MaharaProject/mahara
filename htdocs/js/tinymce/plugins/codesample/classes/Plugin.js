@@ -21,23 +21,37 @@ define("tinymce/codesampleplugin/Plugin", [
 	"tinymce/codesampleplugin/Dialog",
 	"tinymce/codesampleplugin/Utils"
 ], function(Env, PluginManager, Prism, Dialog, Utils) {
-	var addedCss, trimArg = Utils.trimArg;
+	var addedInlineCss, trimArg = Utils.trimArg;
 
 	PluginManager.add('codesample', function(editor, pluginUrl) {
-		var $ = editor.$;
+		var $ = editor.$, addedCss;
 
 		if (!Env.ceFalse) {
 			return;
 		}
 
+		// Todo: use a proper css loader here
 		function loadCss() {
-			var linkElm;
+			var linkElm, contentCss = editor.settings.codesample_content_css;
 
-			if (!addedCss) {
+			if (editor.inline && addedInlineCss) {
+				return;
+			}
+
+			if (!editor.inline && addedCss) {
+				return;
+			}
+
+			if (editor.inline) {
+				addedInlineCss = true;
+			} else {
 				addedCss = true;
+			}
+
+			if (contentCss !== false) {
 				linkElm = editor.dom.create('link', {
 					rel: 'stylesheet',
-					href: pluginUrl + '/css/prism.css'
+					href: contentCss ? contentCss : pluginUrl + '/css/prism.css'
 				});
 
 				editor.getDoc().getElementsByTagName('head')[0].appendChild(linkElm);
@@ -82,7 +96,12 @@ define("tinymce/codesampleplugin/Plugin", [
 		});
 
 		editor.addCommand('codesample', function() {
-			Dialog.open(editor);
+			var node = editor.selection.getNode();
+			if (editor.selection.isCollapsed() || Utils.isCodeSample(node)) {
+				Dialog.open(editor);
+			} else {
+				editor.formatter.toggle('code');
+			}
 		});
 
 		editor.addButton('codesample', {

@@ -80,7 +80,7 @@
 
 			target[fragments[fragments.length - 1]] = modules[id];
 		}
-		
+
 		// Expose private modules for unit tests
 		if (exports.AMDLC_TESTS) {
 			privateModules = exports.privateModules || {};
@@ -1098,18 +1098,23 @@ define("tinymce/codesampleplugin/Dialog", [
 ], function(DOMUtils, Utils, Prism) {
 	var DOM = DOMUtils.DOM;
 
-	var languages = [
-		{text: 'HTML/XML', value: 'markup'},
-		{text: 'JavaScript', value: 'javascript'},
-		{text: 'CSS', value: 'css'},
-		{text: 'PHP', value: 'php'},
-		{text: 'Ruby', value: 'ruby'},
-		{text: 'Python', value: 'python'},
-		{text: 'Java', value: 'java'},
-		{text: 'C', value: 'c'},
-		{text: 'C#', value: 'csharp'},
-		{text: 'C++', value: 'cpp'}
-	];
+	function getLanguages(editor) {
+		var defaultLanguages = [
+			{text: 'HTML/XML', value: 'markup'},
+			{text: 'JavaScript', value: 'javascript'},
+			{text: 'CSS', value: 'css'},
+			{text: 'PHP', value: 'php'},
+			{text: 'Ruby', value: 'ruby'},
+			{text: 'Python', value: 'python'},
+			{text: 'Java', value: 'java'},
+			{text: 'C', value: 'c'},
+			{text: 'C#', value: 'csharp'},
+			{text: 'C++', value: 'cpp'}
+		];
+
+		var customLanguages = editor.settings.codesample_languages;
+		return customLanguages ? customLanguages : defaultLanguages;
+	}
 
 	function insertCodeSample(editor, language, code) {
 		editor.undoManager.transact(function() {
@@ -1164,9 +1169,11 @@ define("tinymce/codesampleplugin/Dialog", [
 		open: function(editor) {
 			editor.windowManager.open({
 				title: "Insert/Edit code sample",
-				minWidth: Math.min(DOM.getViewPort().w, 800),
-				minHeight: Math.min(DOM.getViewPort().h, 650),
-				layout: 'fit',
+				minWidth: Math.min(DOM.getViewPort().w, editor.getParam('codesample_dialog_width', 800)),
+				minHeight: Math.min(DOM.getViewPort().h, editor.getParam('codesample_dialog_height', 650)),
+				layout: 'flex',
+				direction: 'column',
+				align: 'stretch',
 				body: [
 					{
 						type: 'listbox',
@@ -1174,7 +1181,7 @@ define("tinymce/codesampleplugin/Dialog", [
 						label: 'Language',
 						maxWidth: 200,
 						value: getCurrentLanguage(editor),
-						values: languages
+						values: getLanguages(editor)
 					},
 
 					{
@@ -1186,7 +1193,8 @@ define("tinymce/codesampleplugin/Dialog", [
 						flex: 1,
 						style: 'direction: ltr; text-align: left',
 						classes: 'monospace',
-						value: getCurrentCode(editor)
+						value: getCurrentCode(editor),
+						autofocus: true
 					}
 				],
 				onSubmit: function(e) {
@@ -1222,23 +1230,37 @@ define("tinymce/codesampleplugin/Plugin", [
 	"tinymce/codesampleplugin/Dialog",
 	"tinymce/codesampleplugin/Utils"
 ], function(Env, PluginManager, Prism, Dialog, Utils) {
-	var addedCss, trimArg = Utils.trimArg;
+	var addedInlineCss, trimArg = Utils.trimArg;
 
 	PluginManager.add('codesample', function(editor, pluginUrl) {
-		var $ = editor.$;
+		var $ = editor.$, addedCss;
 
 		if (!Env.ceFalse) {
 			return;
 		}
 
+		// Todo: use a proper css loader here
 		function loadCss() {
-			var linkElm;
+			var linkElm, contentCss = editor.settings.codesample_content_css;
 
-			if (!addedCss) {
+			if (editor.inline && addedInlineCss) {
+				return;
+			}
+
+			if (!editor.inline && addedCss) {
+				return;
+			}
+
+			if (editor.inline) {
+				addedInlineCss = true;
+			} else {
 				addedCss = true;
+			}
+
+			if (contentCss !== false) {
 				linkElm = editor.dom.create('link', {
 					rel: 'stylesheet',
-					href: pluginUrl + '/css/prism.css'
+					href: contentCss ? contentCss : pluginUrl + '/css/prism.css'
 				});
 
 				editor.getDoc().getElementsByTagName('head')[0].appendChild(linkElm);
@@ -1283,7 +1305,12 @@ define("tinymce/codesampleplugin/Plugin", [
 		});
 
 		editor.addCommand('codesample', function() {
-			Dialog.open(editor);
+			var node = editor.selection.getNode();
+			if (editor.selection.isCollapsed() || Utils.isCodeSample(node)) {
+				Dialog.open(editor);
+			} else {
+				editor.formatter.toggle('code');
+			}
 		});
 
 		editor.addButton('codesample', {
@@ -1296,4 +1323,4 @@ define("tinymce/codesampleplugin/Plugin", [
 });
 
 expose(["tinymce/codesampleplugin/Prism","tinymce/codesampleplugin/Utils","tinymce/codesampleplugin/Dialog","tinymce/codesampleplugin/Plugin"]);
-})(this);
+})(window);
