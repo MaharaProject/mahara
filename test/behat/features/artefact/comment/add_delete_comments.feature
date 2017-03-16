@@ -12,6 +12,7 @@ Background:
     Given the following "permissions" exist:
      | title | accesstype | accessname | allowcomments | approvecomments |
      | page1 | public | public | 1 | 0 |
+     | page2 | loggedin | loggedin | 1 | 0 |
 
 Scenario: Adding and deleting public comments
     # Adding
@@ -48,7 +49,7 @@ Scenario: Adding and deleting public comments
     And I should not see "Comment removed"
 
 Scenario: Comments update the page's mtime
-    Given I log in as "pageowner" with password "password"
+    Given I log in as "admin" with password "Kupuhipa1"
 
     # Set New Views to only show me the most recently updated page
     And I follow "Edit dashboard"
