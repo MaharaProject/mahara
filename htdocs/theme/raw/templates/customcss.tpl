@@ -1,6 +1,64 @@
 {* this template powers the css that is stored in the database for the configurable theme *}
+.navbar-default {
+    background-color: {$data.background};
+    border-color: {$data.background};
+}
 
-.header.navbar,
+.navbar-toggle .icon {
+    color: {$data.backgroundfg};
+}
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+}
+.navbar-default .navbar-collapse {
+    border-color: transparent;
+}
+.navbar-toggle:hover,
+.navbar-toggle:focus {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAhEFWvh1jAAAAA1JREFUCNdjYGBgcAAAAEUAQT9reqQAAAAASUVORK5CYII=') {$data.background};
+}
+
+.navbar-main .navbar-nav > li > a {
+    color: {$data.navfg};
+    background-color: {$data.navbg};
+    border-color: transparent;
+}
+.navbar-main .navbar-nav > li > a:hover,
+.navbar-main .navbar-nav > li > a:focus {
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+.navbar-main .navbar-nav > li.active > a {
+    font-weight: bold;
+}
+
+.navbar-toggle.navbar-showchildren .icon {
+    color: {$data.navfg};
+}
+
+.navbar-main .navbar-nav > .active .navbar-showchildren,
+.navbar-toggle.navbar-showchildren:hover,
+.navbar-toggle.navbar-showchildren:focus {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAhEFWvh1jAAAAA1JREFUCNdjYGBgcAAAAEUAQT9reqQAAAAASUVORK5CYII=') {$data.background};
+}
+
+.navbar-toggle.navbar-showchildren:hover .icon,
+.navbar-toggle.navbar-showchildren:focus .icon {
+    color: {$data.navfg};
+}
+
+.navbar-main .child-nav > li > a {
+    color: {$data.navbg};
+    background-color: {$data.navfg};
+}
+
+.navbar-main .child-nav > li > a:hover,
+.navbar-main .child-nav > li > a:focus {
+    color: #333;
+    background-color: #f9f9f9;
+}
+
 .modal-docked .modal-header,
 .modal-header {
     background: {$data.background};
@@ -9,17 +67,6 @@
 .dashboard-widget-container .circle-bg,
 .dashboard-widget-container .logged-in .widget-detail {
     background-color: #666;
-}
-
-.navbar.header {
-    border-color: {$data.background};
-}
-
-@media (max-width: 767px) {
-    .top-nav.navbar-nav {
-        /* 1px alpha channel black to darken by 25% */
-        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAhEFWvh1jAAAAA1JREFUCNdjYGBgcAAAAEUAQT9reqQAAAAASUVORK5CYII=') {$data.background};
-    }
 }
 
 .dashboard-widget-container .widget-heading {
@@ -51,9 +98,6 @@ a.panel-footer:hover .icon.pull-right,
 .modal-header .close:hover .times,
 .search-toggle {
     color: {$data.backgroundfg};
-}
-.navbar-default .navbar-toggle .icon-bar {
-    background-color: {$data.backgroundfg};
 }
 .close {
     text-shadow: none;
@@ -138,83 +182,6 @@ a.btn-primary {
     border-color: {$data.background};
 }
 
-
-.main-nav {
-    background: {$data.navbg};
-}
-.main-nav li a,
-.main-nav li a:link,
-.main-nav li a:visited,
-.main-nav li a:active,
-.main-nav li a:hover,
-.main-nav li a:focus,
-.navbar-inverse .navbar-nav > li > a:focus,
-.navbar-inverse .navbar-nav > li > a:hover,
-.navbar-inverse .navbar-link,
-.navbar-inverse .navbar-link:hover,
-.navbar-inverse .navbar-link:focus {
-    color: {$data.navfg};
-}
-
-.main-nav .dropdown-nav-home li a,
-.main-nav .dropdown-nav-home li a:link {
-    color: {$data.link};
-}
-
-.main-nav .dropdown-nav-home li a:active,
-.main-nav .dropdown-nav-home li a:hover,
-.main-nav .dropdown-nav-home li a:focus {
-    color: #555 !important;
-}
-
-.main-nav .nav > li a:hover,
-.main-nav .nav > li a:focus,
-.main-nav .nav > li a:active {
-    color: {$data.navfg};
-    background-color: rgba(223,223,223,.5);
-}
-
-.navbar-default .navbar-text.navbar-link,
-.navbar-default .navbar-text.navbar-link:hover,
-.navbar-default .navbar-text.navbar-link:focus {
-    color: {$data.navfg};
-}
-
-@media (max-width: 767px) {
-    .navbar-inverse .navbar-nav > .active > a,
-    .navbar-inverse .navbar-nav > .active > a:focus,
-    .navbar-inverse .navbar-nav > .active > a:hover,
-    .navbar-showchildren.collapsed .icon {
-        color: {$data.navfg};
-    }
-
-    .main-nav .child-nav a {
-        color: #333 !important;
-    }
-
-    .main-nav .nav > li > a {
-        border-top-color: transparent;
-        border-bottom-color: transparent;
-    }
-}
-
-#sub-nav.navbar-default .navbar-nav > .active > a,
-#sub-nav.navbar-default .navbar-nav > .active > a:link,
-#sub-nav.navbar-default .navbar-nav > .active > a:visited {
-    background: {$data.background};
-    color: {$data.backgroundfg};
-    border-radius: 3px;
-}
-
-#sub-nav.navbar-default .navbar-nav > .active > a:active,
-#sub-nav.navbar-default .navbar-nav > .active > a:hover {
-    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAhMnva5W6gAAAA1JREFUCNdj+P//vz0ACTsDPd3TBh4AAAAASUVORK5CYII=') {$data.background};
-}
-#sub-nav.navbar-default .navbar-nav > li > a:focus,
-#sub-nav.navbar-default .navbar-nav > li > a:hover {
-    background: #f9f9f9;
-}
-
 a.admin-site {
     color: {$data.backgroundfg};
 }
@@ -227,19 +194,6 @@ a.admin-site {
 }
 .arrow-bar .arrow:after {
     border-left-color: #DBDBDB;
-}
-
-header.header .header-search-form .form-control {
-    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAic6ZYLJxAAAAA1JREFUCNdj+P//vzwACRsDHRWss5MAAAAASUVORK5CYII=') {$data.background};
-    border: 1px solid #ccc;
-    color: {$data.backgroundfg};
-}
-header.header .header-search-form .form-control:focus {
-    background-color: {$data.backgroundfg};
-    color: {$data.background};
-}
-.header .header-search-form .input-group-btn {
-    border-left: 1px solid #ccc;
 }
 
 .admin .arrow-bar {

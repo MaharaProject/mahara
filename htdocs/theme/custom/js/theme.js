@@ -121,14 +121,14 @@ jQuery(function($) {
      * Initialise masonry for thumbnail gallery
      */
     function initThumbnailMasonry() {
-         $('.js-masonry.thumbnails').masonry({
-             itemSelector: '.thumb'
-         });
+        $('.js-masonry.thumbnails').masonry({
+            itemSelector: '.thumb'
+        });
      }
 
     function initUserThumbnailMasonry() {
         $('.js-masonry.user-thumbnails').masonry({
-             itemSelector: '.user-icon'
+            itemSelector: '.user-icon'
         });
     }
 
@@ -202,6 +202,25 @@ jQuery(function($) {
         }
     }
 
+    // Checks background color of header
+    function isDark(color) {
+        var match = /rgb\((\d+).*?(\d+).*?(\d+)\)/.exec(color);
+        return ( match[1] & 255 )
+                + ( match[2] & 255 )
+                + ( match[3] & 255 )
+                < 3 * 256 / 2;
+    }
+
+    function displayCorrectLogo() {
+        var headerBgColour = $('.navbar-default').css("background-color");
+        if (isDark(headerBgColour)) {
+            $('.logo img').attr('src', config.wwwroot + 'theme/raw/images/site-logo-light.png');
+        }
+        else {
+            $('.logo img').attr('src', config.wwwroot + 'theme/raw/images/site-logo-dark.png');
+        }
+    }
+
     $(window).on('resize colresize', function(){
         carouselHeight();
         initThumbnailMasonry();
@@ -227,13 +246,24 @@ jQuery(function($) {
         }
     });
 
+    $('.navbar-main .navbar-collapse.collapse').on('show.bs.collapse', function(event) {
+        event.stopPropagation();
+        $('.navbar-collapse.collapse.in').collapse('hide');
+    });
+
+    $('.navbar-main .child-nav.collapse').on('show.bs.collapse', function(event) {
+        event.stopPropagation();
+        $('.child-nav.collapse.in').collapse('hide');
+    });
+
     affixSize();
     siteMessages();
     focusOnOpen();
     resetOnCollapse();
     attachTooltip();
     calculateObjectVideoAspectRatio();
-    responsiveObjectVideo()
+    responsiveObjectVideo();
+    displayCorrectLogo();
 
     if ($('.js-dropdown-group').length > 0) {
         attachInputDropdown();
@@ -245,30 +275,4 @@ jQuery(function($) {
 
     $(".js-select2 select").select2({});
 
-});
-
-
-
-
-// Checks background color of header
-function isDark( color ) {
-    var match = /rgb\((\d+).*?(\d+).*?(\d+)\)/.exec(color);
-    return ( match[1] & 255 )
-         + ( match[2] & 255 )
-         + ( match[3] & 255 )
-           < 3 * 256 / 2;
-}
-
-jQuery(function($) {
-"use strict";
-
-    // If the background is dark, use light logo, otherwise use dark logo
-    $(document).ready(function() {
-        if (isDark($('.navbar.header').css("background-color"))) {
-            $('.logo img').attr('src', config.wwwroot + 'theme/raw/images/site-logo-light.png');
-        }
-        else {
-            $('.logo img').attr('src', config.wwwroot + 'theme/raw/images/site-logo-dark.png');
-        }
-    });
 });
