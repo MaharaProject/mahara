@@ -1,0 +1,11 @@
+tinymce4-mathslate tinymce plugin
+=================================
+
+Website: https://github.com/dthies/tinymce4-mathslate
+Version: 1.1
+
+Changes:
+
+ * Adjusting the config.json options for uppercase Greek letters
+ * Adding the 'aria-hidden="true"' to presentation icons
+ * Removed target=_blank links

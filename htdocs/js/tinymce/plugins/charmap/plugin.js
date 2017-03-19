@@ -342,7 +342,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 			}
 		}
 
-		gridHtml = '<table role="presentation" cellspacing="0" class="mce-charmap"><tbody>';
+		gridHtml = '<table role="presentation" aria-hidden="true" cellspacing="0" class="mce-charmap"><tbody>';
 
 		var charmap = getCharMap();
 		var width = Math.min(charmap.length, 25);

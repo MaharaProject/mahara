@@ -149,7 +149,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 					'<td colspan="' + cols[type] + '" class="mce-custom-color-btn">' +
 						'<div id="' + id + '-c" class="mce-widget mce-btn mce-btn-small mce-btn-flat" ' +
 							'role="button" tabindex="-1" aria-labelledby="' + id + '-c" style="width: 100%">' +
-							'<button type="button" role="presentation" tabindex="-1">' + tinymce.translate('Custom...') + '</button>' +
+							'<button type="button" role="presentation" aria-hidden="true" tabindex="-1">' + tinymce.translate('Custom...') + '</button>' +
 						'</div>' +
 					'</td>' +
 				'</tr>'

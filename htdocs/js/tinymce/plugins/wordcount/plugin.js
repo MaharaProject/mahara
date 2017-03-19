@@ -524,7 +524,7 @@ define("tinymce.wordcount.Plugin", [
 ], function(PluginManager, Delay, WordGetter) {
 	PluginManager.add('wordcount', function(editor) {
 		var getTextContent = function(editor) {
-			return editor.removed ? '' : editor.getBody().innerText;
+			return editor.removed ? '' : (editor.getBody().innerText || editor.getBody().textContent);
 		};
 
 		var getCount = function() {
