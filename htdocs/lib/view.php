@@ -40,6 +40,7 @@ class View {
     private $institutionobj;
     private $numcolumns; // Obsolete - need to leave for upgrade purposes. This can be deleted once we no longer need to support direct upgrades from 15.10 and earlier.
     private $columnsperrow; // assoc array of rows set and get using view_rows_columns db table
+    private $oldcolumnsperrow; // for when we change stuff
     private $numrows;
     private $layout;
     private $theme;
@@ -310,12 +311,11 @@ class View {
         $this->columns = array();
         $this->dirtyrows = array();
         $this->dirtycolumns = array();
-
+        $this->oldcolumnsperrow = $this->get('columnsperrow');
         // set only for existing views - _create provides default value
         // Ignore if the constructor is called with deleted set to true
-        if (empty($this->columnsperrow) && empty($this->deleted)) {
-            $this->columnsperrow = get_records_assoc('view_rows_columns', 'view', $this->get('id'), 'row', 'row, columns');
-            if (empty($this->columnsperrow)) {
+        if (empty($this->deleted)) {
+            if ($this->columnsperrow === false || ($this->numrows > 0 && count($this->columnsperrow) != $this->numrows)) {
                 // if we are missing the info for some reason we will give the page it's layout back
                 // this can happen in MySQL when many users are copying the same page
                 if ($this->layout) {
@@ -326,9 +326,12 @@ class View {
                         WHERE viewlayout = ?", array($this->layout))) {
                             $default = array();
                             foreach ($rowscols as $row) {
-                                insert_record('view_rows_columns', (object) array(
+                                $vrc = (object) array(
                                     'view' => $this->get('id'),
-                                    'row' => $row->row, 'columns' => $row->columns));
+                                    'row' => $row->row,
+                                    'columns' => $row->columns
+                                );
+                                ensure_record_exists('view_rows_columns', $vrc, $vrc);
                                 $default[$row->row] = $row;
                             }
                     }
@@ -342,9 +345,12 @@ class View {
                         // Layout not specified so use the view type default layout
                         $default = array();
                         foreach ($rowscols as $row) {
-                            insert_record('view_rows_columns', (object) array(
+                            $vrc = (object) array(
                                 'view' => $this->get('id'),
-                                'row' => $row->row, 'columns' => $row->columns));
+                                'row' => $row->row,
+                                'columns' => $row->columns
+                            );
+                            ensure_record_exists('view_rows_columns', $vrc, $vrc);
                             $default[$row->row] = $row;
                         }
                 }
@@ -768,7 +774,19 @@ class View {
             }
         }
 
-        if (isset($this->columnsperrow)) {
+        $columnsperrowchanged = (!empty($this->oldcolumnsperrow)) ? array_udiff($this->oldcolumnsperrow, $this->columnsperrow, function($oa, $ob) {
+            $rows = $oa->row - $ob->row;
+            $columns = $oa->columns - $ob->columns;
+            if ($rows != 0) {
+                return $rows;
+            }
+            else if ($columns != 0) {
+                return $columns;
+            }
+            return 0;
+        }) : false;
+
+        if (isset($this->columnsperrow) && $columnsperrowchanged) {
             delete_records('view_rows_columns', 'view', $this->get('id'));
             foreach ($this->get_columnsperrow() as $viewrow) {
                 insert_record('view_rows_columns', (object)array( 'view' => $this->get('id'), 'row' => $viewrow->row, 'columns' => $viewrow->columns));
