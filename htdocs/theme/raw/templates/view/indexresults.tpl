@@ -6,6 +6,7 @@
                     {if ($.foreach.loopidx.index +1) % 2 == 0} lasthalf{/if}
                     {if $view.collid}panel-collection{else}panel-view{/if}
                     {if $view.template == $sitetemplate} site-template{/if}">
+                    {if $view.collid}<div class="panel panel-default panel-stack{if $view.submittedto} panel-warning{/if}"><div class="panel panel-default panel-stack{if $view.submittedto} panel-warning{/if}">{/if}
                         <h3 class="panel-heading has-link">
                             <a class="title-link title" href="{$view.fullurl}" title="{$view.displaytitle}">
                                 {$view.displaytitle}
@@ -34,10 +35,63 @@
                         </div>
                         <div class="panel-footer">
                             {* Note: This is positioned relative to base of panel-quarter *}
+                            <div class="elipsis-right">
+                                <button class="dropdown-toggle moremenu" type="button" data-toggle="dropdown" aria-expanded="false" title="{str tag='more...' section='mahara'}">
+                                    <span class="icon icon-ellipsis-v link-indicator" role="presentation" aria-hidden="true"></span>
+                                    <span class="sr-only">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
+                                </button>
+                                <span class="collnum-arrow icon icon-chevron-down"></span>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                {if $view.collid}
+                                    <li>
+                                        <a href="{$WWWROOT}collection/views.php?id={$view.collid}" title="{str tag=manageviews section=collection}">
+                                            <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
+                                            <span class="sr-only">{str(tag=manageviewsspecific section=collection arg1=$view.displaytitle)|escape:html|safe}</span>
+                                            {str tag="manage" section="collection"}
+                                        </a>
+                                    </li>
+                                {/if}
+                                {if !$view.submittedto && (!$view.locked || $editlocked)}
+                                    <li>
+                                    {if $view.collid}
+                                        <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">
+                                    {else}
+                                        <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}">
+                                    {/if}
+                                            <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
+                                            <span class="sr-only">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
+                                            {str tag="edit" section="mahara"}
+                                        </a>
+                                    </li>
+                                {/if}
+                                {if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}
+                                    <li>
+                                    {if $view.collid}
+                                        <a href="{$WWWROOT}collection/delete.php?id={$view.collid}" title="{str tag=deletecollection section=collection}">
+                                    {else}
+                                        <a href="{$WWWROOT}view/delete.php?id={$view.id}&{$querystring}" title="{str tag=deletethisview section=view}">
+                                    {/if}
+                                             <span class="icon icon-trash text-danger left" role="presentation" aria-hidden="true"></span>
+                                             <span class="sr-only">{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}</span>
+                                             {str tag="delete" section="mahara"}
+                                        </a>
+                                    </li>
+                                {/if}
+                                <li class="view-details">
+                                    <span>{str tag=Created section=mahara} {format_date(strtotime($view.vctime), 'strftimerecentyear')}</span>
+                                    <span>{str tag=modified section=mahara} {format_date(strtotime($view.vmtime), 'strftimerecentyear')}</span>
+                                    {if $view.submittedto}
+                                        <span>{$view.submittedto|clean_html|safe}</span>
+                                    {/if}
+                                </li>
+                                </ul>{* hamburger buttons *}
+                            </div>
+
                             <div class="dropdown-toggle access-list">
                                 {if $view.accesslist || $view.manageaccess}
                                     <a href="#" data-toggle="dropdown" aria-expanded="false" title="{str tag='manageaccess' section='view'}">
                                         <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock-alt{/if}"></span>
+                                        <span class="collnum-arrow icon icon-chevron-down"></span>
                                         <span class="sr-only">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-left" role="menu">
@@ -89,65 +143,18 @@
                                     </ul>
                                 {/if}
                             </div>
-                            <div class="elipsis-right">
-                                <button class="btn btn-default dropdown-toggle btn-top-right moremenu" type="button" data-toggle="dropdown" aria-expanded="false" title="{str tag='more...' section='mahara'}">
-                                    <span class="icon icon-ellipsis-v pull-right link-indicator" role="presentation" aria-hidden="true"></span>
-                                    <span class="sr-only">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                {if $view.collid}
-                                    <li>
-                                        <a href="{$WWWROOT}collection/views.php?id={$view.collid}" title="{str tag=manageviews section=collection}">
-                                            <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
-                                            <span class="sr-only">{str(tag=manageviewsspecific section=collection arg1=$view.displaytitle)|escape:html|safe}</span>
-                                            {str tag="manage" section="collection"}
-                                        </a>
-                                    </li>
-                                {/if}
-                                {if !$view.submittedto && (!$view.locked || $editlocked)}
-                                    <li>
-                                    {if $view.collid}
-                                        <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">
-                                    {else}
-                                        <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}">
-                                    {/if}
-                                            <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
-                                            <span class="sr-only">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
-                                            {str tag="edit" section="mahara"}
-                                        </a>
-                                    </li>
-                                {/if}
-                                {if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}
-                                    <li>
-                                    {if $view.collid}
-                                        <a href="{$WWWROOT}collection/delete.php?id={$view.collid}" title="{str tag=deletecollection section=collection}">
-                                    {else}
-                                        <a href="{$WWWROOT}view/delete.php?id={$view.id}&{$querystring}" title="{str tag=deletethisview section=view}">
-                                    {/if}
-                                             <span class="icon icon-trash text-danger left" role="presentation" aria-hidden="true"></span>
-                                             <span class="sr-only">{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}</span>
-                                             {str tag="delete" section="mahara"}
-                                        </a>
-                                    </li>
-                                {/if}
-                                <li class="view-details">
-                                    <span>{str tag=Created section=mahara} {format_date(strtotime($view.vctime), 'strftimerecentyear')}</span>
-                                    <span>{str tag=modified section=mahara} {format_date(strtotime($view.vmtime), 'strftimerecentyear')}</span>
-                                    {if $view.submittedto}
-                                        <span>{$view.submittedto|clean_html|safe}</span>
-                                    {/if}
-                                </li>
-                                </ul>{* hamburger buttons *}
-                            </div>
+
                             {if $view.collid}
-                                <div class="dropdown-toggle collection-list list-{if $view.numviews lte 1}small{elseif $view.numviews lte 10}medium{else}large{/if}" title="{str tag='numviewsincollection' section='collection' arg1='$view.numviews'}">
+                                <div class="dropdown-toggle collection-list list-{if $view.numviews lte 1}small{elseif $view.numviews lte 10}medium{else}large{/if}" title="{str tag='numviewsincollection' section='collection' arg1='$view.numviews'}" title="{str tag='numviewsincollection' section='collection' arg1='$view.numviews'}">
                                     {if $view.numviews > 0}
                                     <a href="#" data-toggle="dropdown" aria-expanded="false">
                                         <span class="collnum">{$view.numviews}</span>
                                         <span class="collnum-arrow icon icon-chevron-down"></span>
+                                        <span class="icon icon-file">{if $view.numviews > 1}<span class="icon-stack">{if $view.numviews > 10}<span class="icon-stack"></span>{/if}</span>{/if}</span>
                                     </a>
                                     {else}
                                         <span class="collnum">{$view.numviews}</span>
+                                        <span class="icon icon-file">
                                     {/if}
                                     {if $view.collid && $view.collviews > 0}
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -171,7 +178,9 @@
                                     {/if}
                                 </div>
                             {/if}
+
                         </div>
+                    {if $view.collid}</div></div>{/if}
                     </div>
                 {/foreach}
                 {$pagination|safe}
