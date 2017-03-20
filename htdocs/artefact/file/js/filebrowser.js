@@ -66,7 +66,7 @@ var FileBrowser = (function($) {
               'type': 'hidden',
               'name': self.id + '_upload',
               'id' : self.id + '_upload',
-              'value':0
+              'value': 0
           }).insertAfter($('#' + self.id + '_uploadnumber'));
         }
         self.upload_connectbuttons();
@@ -81,7 +81,8 @@ var FileBrowser = (function($) {
                 });
                 if (this.checked) {
                     $('#'+ self.id + '_userfile').prop('disabled', false); // setNodeAttribute to false doesn't work here.
-                } else {
+                }
+                else {
                     $('#'+ self.id + '_userfile').prop('disabled', true);
                 }
             });
@@ -104,16 +105,18 @@ var FileBrowser = (function($) {
         return !$.isEmptyObject($('#' + self.id + '_userfile').val());
     };
 
+    this.add_upload_message = function (messageType, filename) {
+        self.nextupload++;
+        var message = $(makeMessage($('<span>').addClass('icon icon-spinner icon-pulse'), messageType));
+        message.append(' ' + get_string('uploadingfiletofolder', 'artefact.file', filename, self.foldername));
+        message.prop('id', 'uploadstatusline' + self.nextupload);
+        message.appendTo('#' + self.id + '_upload_messages');
+        $('#' + self.id + '_uploadnumber').val(self.nextupload);
+    };
+
     this.upload_presubmit_dropzone = function (e) {
         // Display upload status
-        self.nextupload++;
-        var message = makeMessage($('<div>').append(
-            $('<span>', {'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
-            get_string('uploadingfiletofolder','artefact.file',e.name,self.foldername)
-            ), 'info');
-        $(message).prop('id', 'uploadstatusline' + self.nextupload);
-        $('#' + self.id + '_upload_messages').append(message);
-        $('#' + self.id + '_uploadnumber').val(self.nextupload);
+        self.add_upload_message('info', e.name);
         return true;
     };
 
@@ -121,18 +124,10 @@ var FileBrowser = (function($) {
         // Display upload status
         if ($('#' + self.id + '_userfile').prop('files')) {
             for (var i = 0; i < $('#' + self.id + '_userfile').prop('files').length; ++ i) {
-                self.nextupload++;
                 var localname = $('#' + self.id + '_userfile').prop('files')[i].name;
-                var a1, a2;
-                var message = makeMessage($('<div>').append(
-                  $('<span>', {'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
-                  get_string('uploadingfiletofolder','artefact.file',localname,self.foldername)
-                ), 'ok');
-                $(message).prop('id', 'uploadstatusline' + self.nextupload);
-                $('#' + self.id + '_upload_messages').append(message);
+                self.add_upload_message('ok', localname);
             }
         }
-        $('#' + self.id+'_uploadnumber').val(self.nextupload);
         return true;
     };
 
@@ -149,13 +144,14 @@ var FileBrowser = (function($) {
         // $(self.id + '_userfile').value = ''; // Won't work in IE
         $('#' + self.id + '_userfile_container').empty().append(
             $('<input>', {
-            'type':'file',
-            'class':'file',
-            'id':self.id+'_userfile',
-            'name':'userfile[]',
-            'multiple':'',
-            'size':40
-        }));
+                'type':'file',
+                'class':'file',
+                'id':self.id+'_userfile',
+                'name':'userfile[]',
+                'multiple':'',
+                'size':40
+            })
+        );
         $('#' + self.id + '_userfile').on('change', self.upload_submit);
         $('#' + self.id + '_upload').val(0);
         return false;
@@ -177,7 +173,7 @@ var FileBrowser = (function($) {
             message = get_string('foldernamerequired');
         }
         else {
-            name = name.value;
+            name = name.value.trim();
             if (name == '') {
                 message = get_string('foldernamerequired');
             }
@@ -224,7 +220,7 @@ var FileBrowser = (function($) {
     this.callback_feedback = function (data) {
         var infoclass = 'info';
         if (data.problem) {
-            infoclass = 'active';
+            infoclass = 'warning';
         }
         else if (data.error) {
             infoclass = 'error';
@@ -520,6 +516,10 @@ var FileBrowser = (function($) {
             self.createfolder_is_connected = true;
         }
         if (self.config.select) {
+            if (self.config.selectone) {
+                var selectedid = Object.keys(self.selecteddata)[0];
+                self.add_to_selected_list(selectedid);
+            }
             self.connect_select_buttons();
         }
         self.connect_link_modal();
@@ -539,7 +539,7 @@ var FileBrowser = (function($) {
             if (elemid != moveid) {
                 var displaytitle = title.find('.display-title').html();
                 if (typeof displaytitle !== 'undefined') {
-                    var link = $('<a>').attr('href', '#').html(get_string('moveto', 'artefact.file', displaytitle));
+                    var link = $('<a>').prop('href', '#').html(get_string('moveto', 'artefact.file', displaytitle));
                     link.on('click keydown', function(e) {
                         if ((e.type === 'click' || e.keyCode === 32) && !e.isDefaultPrevented()) {
                             self.setfocus = 'changefolder:' + elemid;
@@ -557,7 +557,7 @@ var FileBrowser = (function($) {
             wrapper.append($('<span>').html(get_string_ajax('nofolderformove', 'artefact.file')));
         }
 
-        var cancellink = $('<a>').attr('href', '#').html(get_string('cancel'));
+        var cancellink = $('<a>').prop('href', '#').html(get_string('cancel'));
         cancellink.on('click keydown', function(e) {
             if ((e.type === 'click' || e.keyCode === 32) && !e.isDefaultPrevented()) {
                 wrapper.remove();
@@ -688,7 +688,7 @@ var FileBrowser = (function($) {
         var elem = document.getElementById(self.id + '_filelist').getElementsByClassName('js-file-select'),
             i;
 
-        for(var i = 0; i<elem.length; i = i + 1) {
+        for (var i = 0; i < elem.length; i = i + 1) {
 
             elem[i].addEventListener('click', function(e){
 
@@ -723,19 +723,23 @@ var FileBrowser = (function($) {
     };
 
     this.update_metadata_to_selected_list = function () {
-        $('#' + self.id + '_filelist button btn-default').each(function () {
+        $('#' + self.id + '_filelist button.editable').each(function () {
             var id = this.name.replace(/.*_edit\[(\d+)\]$/, '$1');
             var row = $(this).closest('tr');
-            var newtitle = row.find('span.display-title').first();
+            var newtitle = row.find('a').first();
             var newdescription =  row.find('td.filedescription').first();
             if (self.selecteddata[id]) {
-                var hiddeninput = $('#' + self.id + '_selected[' + id + ']');
+                var hiddeninput = $('#' + self.id + '_selected\\[' + id + '\\]');
+                var legend2update = hiddeninput.closest('fieldset').find('legend h4 span.file-name');
+                if (legend2update.length) {
+                    legend2update.html(' - ' + newtitle.html());
+                }
                 var row2update = hiddeninput.closest('tr');
-                var filetitle = row2update.closest('a');
+                var filetitle = row2update.find('a');
                 if (filetitle.length) {
                     filetitle.html(newtitle.html());
                 }
-                var filedesc = row2update.closest('td.filedescription');
+                var filedesc = row2update.find('td.filedescription');
                 if (filedesc) {
                     filedesc.html(newdescription.html());
                 }
@@ -786,7 +790,7 @@ var FileBrowser = (function($) {
         }
         // Check if the file to add was already in the selected list
         var existed = false;
-        for (i = 0; i < rows.length; i++) {
+        for (var i = 0; i < rows.length; i++) {
             var r = $(rows[i]);
             var rowbutton = r.find('button.button');
             var rowid = rowbutton.prop('name').replace(/.*_unselect\[(\d+)\]$/, '$1');
@@ -801,7 +805,7 @@ var FileBrowser = (function($) {
             }
         }
         if (!existed) {
-            var remove = $('<button>', {'class': 'btn btn-default btn-xs text-small button submit unselect',
+            var remove = $('<button>', {'class': 'btn btn-link text-small button submit unselect',
                                             'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')});
             remove.append(
                 $('<span>', {'class': 'icon icon-times icon-lg text-danger left'}),
@@ -820,7 +824,8 @@ var FileBrowser = (function($) {
             fileIconImg = '';
             if (self.filedata[id].icon.length) {
                 fileIconImg = $('<img>', {'src':self.filedata[id].icon});
-            } else {
+            }
+            else {
                 fileIconImg = $('<span>', {'class': 'icon icon-' + self.filedata[id].artefacttype + ' icon-lg'});
             }
 
@@ -867,7 +872,8 @@ var FileBrowser = (function($) {
         if (document.createEvent) {
             e = document.createEvent("HTMLEvents");
             e.initEvent(eventName, true, true);
-        } else {
+        }
+        else {
             e = document.createEventObject();
             e.eventType = eventName;
         }
@@ -876,7 +882,8 @@ var FileBrowser = (function($) {
         e.data = data;
         if (document.createEvent) {
             element.dispatchEvent(e);
-        } else {
+        }
+        else {
             element.fireEvent("on" + e.eventType, e);
         }
     }
@@ -889,7 +896,7 @@ var FileBrowser = (function($) {
       // Display the list
       var rows = $('#' + self.id + '_selectlist tbody').first().find('tr');
       var rcount = 0;
-      for (i = 0; i < rows.length; i++) {
+      for (var i = 0; i < rows.length; i++) {
           var r = $(rows[i]);
           var rowbutton = r.find('button.button').first();
           var rowid = rowbutton.prop('name').replace(/.*_unselect\[(\d+)\]$/, '$1');
