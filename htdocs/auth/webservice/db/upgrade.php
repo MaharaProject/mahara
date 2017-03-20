@@ -578,6 +578,18 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         change_field_notnull($table, $field, false);
     }
 
+    if ($oldversion < 2017030600) {
+
+        $table = new XMLDBTable('oauth_server_config');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('oauthserverregistryid', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, null);
+        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, null, null, null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('oauthserverregistryidfk', XMLDB_KEY_FOREIGN, array('oauthserverregistryid'), 'oauth_server_registry', array('id'));
+        create_table($table);
+    }
+
     // sweep for webservice updates everytime
     $status = external_reload_webservices();
 

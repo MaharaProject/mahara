@@ -188,8 +188,11 @@ class webservice_rest_server extends webservice_base_server {
             $this->token = isset($this->parameters['wstoken']) ? trim($this->parameters['wstoken']) : null;
             unset($this->parameters['wstoken']);
         }
-        $this->functionname = isset($this->parameters['wsfunction']) ? trim($this->parameters['wsfunction']) : null;
-        unset($this->parameters['wsfunction']);
+
+        $wsfuncparam = isset($this->parameters['custom_wsfunction']) ? 'custom_wsfunction': 'wsfunction';
+
+        $this->functionname = isset($this->parameters[$wsfuncparam]) ? trim($this->parameters[$wsfuncparam]) : null;
+        unset($this->parameters[$wsfuncparam]);
     }
 
     /**

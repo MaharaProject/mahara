@@ -582,6 +582,11 @@ class external_api {
                     if ($subdesc->required == VALUE_DEFAULT) {
                         $result[$key] = $subdesc->default;
                     }
+
+                    if ($subdesc->required == VALUE_OPTIONAL) {
+                        $result[$key] = null;
+                    }
+
                 }
                 else {
                     try {
@@ -906,7 +911,7 @@ abstract class webservice_server implements webservice_server_interface {
      * @return void
      */
     protected function authenticate_user() {
-        global $USER, $SESSION, $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER;
+        global $USER, $SESSION, $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER, $WEBSERVICE_OAUTH_SERVERID;
         if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
             $this->auth = 'USER';
             //we check that authentication plugin is enabled
@@ -972,18 +977,32 @@ abstract class webservice_server implements webservice_server_interface {
             // get the user - the user that authorised the token
             $user = $this->authenticate_by_token(EXTERNAL_TOKEN_OAUTH1);
 
-            // check user is member of configured OAuth institution
-            $institutions = array_keys(load_user_institutions($this->oauth_token_details['user_id']));
-            $auth_instance = get_record('auth_instance', 'id', $user->authinstance, 'active', 1);
-            $institutions[]= $auth_instance->institution;
-            if (!in_array($this->oauth_token_details['institution'], $institutions)) {
-                throw new WebserviceAccessException(get_string('institutiondenied', 'auth.webservice'));
+            $is_site_admin = false;
+
+            foreach (get_site_admins() as $site_admin) {
+                if ($site_admin->id == $user->id) {
+                    $is_site_admin = true;
+                    break;
+                }
+            }
+
+            if (!$is_site_admin) {
+
+                // check user is member of configured OAuth institution
+                $institutions = array_keys(load_user_institutions($this->oauth_token_details['user_id']));
+                $auth_instance = get_record('auth_instance', 'id', $user->authinstance, 'active', 1);
+                $institutions[]= $auth_instance->institution;
+                if (!in_array($this->oauth_token_details['institution'], $institutions)) {
+                    throw new WebserviceAccessException(get_string('institutiondenied', 'auth.webservice'));
+                }
             }
 
             // set the global for the web service users defined institution
             $WEBSERVICE_INSTITUTION = $this->oauth_token_details['institution'];
             // set the note of the OAuth service owner
             $WEBSERVICE_OAUTH_USER = $this->oauth_token_details['service_user'];
+            // set the OAuth server id
+            $WEBSERVICE_OAUTH_SERVERID = $this->oauth_token_details['id'];
         }
         else {
             $this->auth = 'OTHER';
