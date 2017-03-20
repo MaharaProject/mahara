@@ -19,7 +19,7 @@ Scenario: Enable/disable external resources in mahara pages
  # Upload an image
  And I choose "Files" in "Content"
  And I attach the file "Image2.png" to "files_filebrowser_userfile"
- And I choose "Pages" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio"
  And I follow "Page 1"
  And I follow "Edit this page"
 
@@ -56,7 +56,7 @@ Scenario: Enable/disable external resources in mahara pages
  And I press "Update site options"
  And I log out
  And I log in as "userA" with password "Kupuhipa1"
- And I choose "Pages" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio"
  And I follow "Page 1"
  Then I should see images in the block "Text block with an internal image"
  And I should not see images in the block "Text block with an external image"

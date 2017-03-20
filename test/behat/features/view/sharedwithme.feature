@@ -36,18 +36,20 @@ Background:
 Scenario: Testing that views & collections are collated properly
     # Putting some comments on the pages
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages" in "Portfolio"
-    And I follow "P1A"
+    And I choose "Pages and collections" in "Portfolio"
+    And I click on "C1" panel collection
+    And I click on "P1A" in "C1" panel collection
     And I fill in "I am on P1A" in editor "Message"
     And I press "Comment"
 
-    And I choose "Pages" in "Portfolio"
-    And I follow "P1B"
+    And I choose "Pages and collections" in "Portfolio"
+    And I click on "C1" panel collection
+    And I click on "P1B" in "C1" panel collection
     And I fill in "I am on P1B" in editor "Message"
     And I press "Comment"
 
-    And I choose "Pages" in "Portfolio"
-    And I follow "P2"
+    And I choose "Pages and collections" in "Portfolio"
+    And I click the panel "P2"
     And I fill in "I am on P2" in editor "Message"
     And I press "Comment"
 

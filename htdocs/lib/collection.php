@@ -863,6 +863,9 @@ class Collection {
             View::update_view_access($viewconfig, $viewids);
         }
 
+        // Now that we have added views to the collection we need to update the collection modified date
+        $this->mtime = db_format_timestamp(time());
+        $this->commit();
         db_commit();
 
         return $count;
@@ -889,6 +892,10 @@ class Collection {
         // Secret url records belong to the collection, so remove them from the view.
         // @todo: add user message to whatever calls this.
         delete_records_select('view_access', 'view = ? AND token IS NOT NULL', array($view));
+
+        // Now that we have removed views from the collection we need to update the collection modified date
+        $this->mtime = db_format_timestamp(time());
+        $this->commit();
 
         db_commit();
     }
@@ -966,7 +973,24 @@ class Collection {
             $redirecturl = '/collection/views.php';
         }
         else {
-            $redirecturl = '/collection/index.php';
+            if ($this->get('group')) {
+                // Group owned collection
+                $redirecturl = '/view/groupviews.php';
+            }
+            else if ($this->get('institution')) {
+                if ($this->get('institution') == 'mahara') {
+                    // Site owned collection
+                    $redirecturl = '/admin/site/views.php';
+                }
+                else {
+                    // Institution owned collection
+                    $redirecturl = '/view/institutionviews.php';
+                }
+            }
+            else {
+                // User owned collection
+                $redirecturl = '/view/index.php';
+            }
         }
         if ($urlparams) {
             $redirecturl .= '?' . http_build_query($urlparams);

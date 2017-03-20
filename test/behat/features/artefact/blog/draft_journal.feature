@@ -56,7 +56,8 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
 
  # Display tagged journals in block
  When I follow "Portfolio"
- And I follow "Edit \"Journal page\""
+ And I click on "Journal page" panel menu
+ And I click on "Edit" in "Journal page" panel menu
  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
  And I wait "1" seconds
  And I follow "Tagged journal entries" in the "div#blog" "css_element"

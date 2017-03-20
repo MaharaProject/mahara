@@ -198,7 +198,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-nav"
+    And I scroll to the base of id "skills_edit_personalskill"
     And I follow "Personal skills"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
@@ -209,7 +209,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-nav"
+    And I scroll to the base of id "skills_edit_academicskill"
     And I follow "Academic skills"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
@@ -220,7 +220,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-nav"
+    And I scroll to the base of id "skills_edit_workskill"
     And I follow "Work skills"
     And I set the following fields to these values:
     | Description | whateve ry askdf |

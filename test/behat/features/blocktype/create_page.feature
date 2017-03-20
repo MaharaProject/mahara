@@ -11,7 +11,8 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I should see "Admin User"
     # Navigating to Portfolio to create a page
     And I follow "Portfolio"
-    And I press "Create page"
+    And I follow "Add"
+    And I click on "Page" in the dialog
     And I fill in the following:
     | Page title | Test view |
     And I press "Save"

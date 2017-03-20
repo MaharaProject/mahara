@@ -23,7 +23,8 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  | Your URL or username * | https://www.facebook.com/wellingtonphoenixfc |
  And I press "Save"
  And I follow "Portfolio"
- And I press "Create page"
+ And I follow "Add"
+ And I click on "Page" in the dialog
  And I set the following fields to these values:
  | Page title * | Open source is for winners |
  And I press "Save"

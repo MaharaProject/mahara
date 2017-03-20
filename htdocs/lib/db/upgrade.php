@@ -4954,5 +4954,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017031600) {
+        log_debug('Clear menu cache for new menu items');
+        clear_menu_cache();
+    }
+
     return $status;
 }

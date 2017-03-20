@@ -69,6 +69,7 @@ $string['editviewaccess'] = 'Edit page access';
 $string['editaccess'] = 'Edit collection access';
 $string['emptycollectionnoeditaccess'] = 'You cannot edit access to empty collections. Add some pages first.';
 $string['emptycollection'] = 'Empty collection';
+$string['manage'] = 'Manage';
 $string['manageviews'] = 'Manage pages';
 $string['manageviewsspecific'] = 'Manage pages in "%s"';
 $string['name'] = 'Collection name';
@@ -88,6 +89,10 @@ $string['smartevidence'] = 'SmartEvidence';
 $string['update'] = 'Update';
 $string['usecollectionname'] = 'Use collection name?';
 $string['usecollectionnamedesc'] = 'If you wish to use the collection name instead of the block title, leave this checked.';
+$string['numviewsincollection'] = array(
+    '%s page in collection',
+    '%s pages in collection',
+);
 $string['viewsaddedtocollection1'] = array(
     '%s page added to collection.',
     '%s pages added to collection.',

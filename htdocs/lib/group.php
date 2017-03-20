@@ -1908,14 +1908,8 @@ function group_get_menu_tabs() {
     $menu['views'] = array(
         'path' => 'groups/views',
         'url' => 'view/groupviews.php?group='.$group->id,
-        'title' => get_string('Views', 'group'),
+        'title' => get_string('Viewscollections', 'group'),
         'weight' => 50,
-    );
-    $menu['collections'] = array(
-        'path' => 'groups/collections',
-        'url' => 'collection/index.php?group='.$group->id,
-        'title' => get_string('Collections', 'group'),
-        'weight' => 60,
     );
     if (group_role_can_edit_views($group, $role)) {
         $menu['share'] = array(

@@ -13,16 +13,18 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     | First name | test first name |
     | Last name | test last name |
     And I press "Save profile"
-    And I choose "Pages" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio"
     # Creating a page
-    And I press "Create page"
+    And I follow "Add"
+    And I click on "Page" in the dialog
     And I set the field "Page title" to "test page name 1"
     And I press "Save"
     # Verifying it saved
     And I should see "Page saved successfully"
     # Creating a collection
-    And I choose "Collections" in "Portfolio"
-    And I follow "New collection"
+    And I choose "Pages and collections" in "Portfolio"
+    And I follow "Add"
+    And I click on "Collection" in the dialog
     And I set the field "Collection name" to "test collection name"
     And the "Page navigation bar" checkbox should be checked
     And I press "Next: Edit collection pages"
@@ -35,7 +37,8 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And the "test page name 1" checkbox should be checked
     And I press "Add pages"
     And I follow "Done"
-    And I hover "Delete collection" "link"
+    And I click on "test collection name" panel menu
+    And I should see "Delete"
     And I go to the homepage
     And I choose "Export" in "Portfolio"
     And I move backward one page

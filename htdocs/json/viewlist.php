@@ -16,7 +16,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 
 $offset = param_integer('offset', 0);
-$limit = param_integer('limit', 0);
+$limit = param_integer('limit', 12);
 $setlimit = param_boolean('setlimit', false);
 $groupid = param_integer('group', null);
 $institution = param_alpha('institution', null);
@@ -53,16 +53,14 @@ if (!empty($groupid)) {
             }
         }
 
-       $pagination = build_pagination(array(
-            'url' => get_config('wwwroot') . 'view/groupviews.php?group=' . $group->id,
+       $pagination = build_showmore_pagination(array(
             'count' => $data->count,
             'limit' => $limit,
             'offset' => $offset,
-            'setlimit' => $setlimit,
-            'datatable' => 'myviews',
+            'orderby' => $orderby,
+            'group' => $groupid,
+            'databutton' => 'showmorebtn',
             'jsonscript' => 'json/viewlist.php',
-            'jumplinks' => 6,
-            'numbersincludeprevnext' => 2,
         ));
     }
     else {
@@ -73,7 +71,7 @@ if (!empty($groupid)) {
 else if (!empty($institution)) {
     if ($institution == 'mahara') {
         define('ADMIN', 1);
-        $templateviews = View::get_template_views();
+        $templateviews = View::get_site_template_views();
         list($searchform, $data, $pagination) = View::views_by_owner(null, 'mahara');
         if ($data->data && $offset == '0') {
             $data->data = array_merge($templateviews, $data->data);
@@ -90,6 +88,8 @@ else {
 
 $smarty = smarty_core();
 $smarty->assign('views', $data->data);
+$smarty->assign('sitetemplate', View::SITE_TEMPLATE);
+$smarty->assign('pagination', $pagination['html']);
 if ($groupid && !$can_edit) {
     $html = $smarty->fetch('view/indexgroupresults.tpl');
     $smarty->assign('viewresults', $html);
@@ -105,7 +105,6 @@ json_reply(false, array(
     'message' => null,
     'data' => array(
         'tablerows' => $html,
-        'pagination' => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
         'count' => $data->count,
         'results' => $data->count . ' ' . ($data->count == 1 ? get_string('result') : get_string('results')),

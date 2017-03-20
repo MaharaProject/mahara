@@ -26,13 +26,14 @@ $offset = param_integer('offset', 0);
 if ($institution == 'mahara') {
     redirect('/admin/site/views.php');
 }
+$urlparams = array();
 
 $s = institution_selector_for_page($institution,
                                    get_config('wwwroot') . 'view/institutionviews.php');
 
 $institution = $s['institution'];
 
-define('TITLE', get_string('institutionviews', 'view'));
+define('TITLE', get_string('institutionviewscollections', 'view'));
 
 if ($institution === false) {
     $smarty = smarty();
@@ -43,8 +44,8 @@ if ($institution === false) {
 list($searchform, $data, $pagination) = View::views_by_owner(null, $institution);
 
 $js = <<< EOF
-jQuery(function ($) {
-    p = {$pagination['javascript']}
+jQuery(function () {
+    {$pagination['javascript']}
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF
@@ -68,7 +69,11 @@ $js .= <<< EOF
 {$s['institutionselectorjs']}
 EOF;
 
-$createviewform = pieform(create_view_form(null, $institution));
+$urlparamsstr = '';
+if (!empty($institution)) {
+    $urlparams['institution'] = $institution;
+    $urlparamsstr = '&' . http_build_query($urlparams);
+}
 
 $smarty = smarty(array('paginator'));
 setpageicon($smarty, 'icon-university');
@@ -77,11 +82,12 @@ $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', $institution);
+$smarty->assign('urlparamsstr', $urlparamsstr);
+$smarty->assign('sitetemplate', View::SITE_TEMPLATE);
 $smarty->assign('querystring', get_querystring());
+$smarty->assign('pagination', $pagination['html']);
 $html = $smarty->fetch('view/indexresults.tpl');
 $smarty->assign('viewresults', $html);
-$smarty->assign('pagination', $pagination['html']);
 $smarty->assign('query', param_variable('query', null));
 $smarty->assign('searchform', $searchform);
-$smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');

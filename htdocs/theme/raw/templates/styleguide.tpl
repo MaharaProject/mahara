@@ -28,7 +28,7 @@ This button has padding on the right of the icon due to the plus class.
 ```
 <button class="btn-default button btn">
     <span class="icon icon-plus icon-lg left" role="presentation"></span>
-    {str tag=createview section=view}
+    {str tag=add section=mahara}
 </button>
 ```
 </section>

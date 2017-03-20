@@ -49,34 +49,37 @@ if ($collection->is_submitted()) {
 $urlparams = array();
 if (!empty($groupid)) {
     require_once('group.php');
-    define('MENUITEM', 'groups/collections');
+    define('MENUITEM', 'groups/views');
     define('GROUP', $groupid);
     $group = group_current_group();
     define('TITLE', $group->name . ' - ' . get_string('editcollection', 'collection'));
+    $baseurl = get_config('wwwroot') . 'view/groupviews.php';
     $urlparams['group'] = $groupid;
 }
 else if (!empty($institutionname)) {
     if ($institutionname == 'mahara') {
         define('ADMIN', 1);
-        define('MENUITEM', 'configsite/collections');
+        define('MENUITEM', 'configsite/views');
+        $baseurl = get_config('wwwroot') . 'admin/site/views.php';
     }
     else {
         define('INSTITUTIONALADMIN', 1);
-        define('MENUITEM', 'manageinstitutions/institutioncollections');
+        define('MENUITEM', 'manageinstitutions/institutionviews');
+        $baseurl = get_config('wwwroot') . 'view/institutionviews.php';
     }
     define('TITLE', get_string('editcollection', 'collection'));
     $urlparams['institution'] = $institutionname;
 }
 else {
-    define('MENUITEM', 'myportfolio/collection');
+    define('MENUITEM', 'myportfolio/views');
     define('TITLE', get_string('editcollection', 'collection'));
+    $baseurl = get_config('wwwroot') . 'view/index.php';
 }
 
 if (!$USER->can_edit_collection($collection)) {
     throw new AccessDeniedException(get_string('canteditcollection', 'collection'));
 }
 
-$baseurl = get_config('wwwroot') . 'collection/index.php';
 if ($urlparams) {
     $baseurl .= '?' . http_build_query($urlparams);
 }

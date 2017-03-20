@@ -19,6 +19,11 @@ $string['editcontentandlayout']   = 'Edit content and layout';
 $string['editlayout']             = 'Edit layout';
 $string['editaccess']             = 'Edit access';
 $string['editaccessfor']          = 'Edit access (ID %s)';
+$string['manageaccess']           = 'Manage access';
+$string['manageaccessfor']        = 'Manage access for "%s"';
+$string['managekeys']             = 'Manage secret URLs';
+$string['managekeysfor']          = 'Manage secret URLs for "%s"';
+$string['accessrulesfor']         = 'Access rules for "%s"';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';
 $string['title']                  = 'Page title';
@@ -57,6 +62,7 @@ $string['templateportfoliodescription'] = 'Set up the default layout for the pag
 $string['artefacts'] = 'Artefacts';
 $string['groupviews'] = 'Group pages';
 $string['institutionviews'] = 'Institution pages';
+$string['institutionviewscollections'] = 'Institution pages and collections';
 $string['reallyaddaccesstoemptyview'] = 'Your page contains no blocks. Do you really want to give these users access to the page?';
 $string['viewdeleted'] = 'Page deleted';
 $string['viewsubmitted'] = 'Page submitted';
@@ -70,23 +76,25 @@ $string['accessbetweendates3'] = 'Nobody can see this page before %s or after %s
 $string['artefactsinthisview'] = 'Artefacts in this page';
 $string['whocanseethisview'] = 'Who can see this page';
 $string['view'] = 'page';
+$string['panelmenu'] = 'Menu';
 $string['vieworcollection'] = 'page or collection';
 $string['views'] = 'pages';
 $string['viewsandcollections'] = 'pages and collections';
 $string['View'] = 'Page';
 $string['Views'] = 'Pages';
+$string['Viewscollections'] = 'Pages and collections';
 $string['viewsubmittedtogroup'] = 'This page has been submitted to <a href="%s">%s</a>.';
 $string['viewsubmittedtogroupon'] = 'This page was submitted to <a href="%s">%s</a> on %s.';
 $string['collectionsubmittedtogroup'] = 'This collection has been submitted to <a href="%s">%s</a>.';
 $string['collectionsubmittedtogroupon'] = 'This collection was submitted to <a href="%s">%s</a> on %s.';
 $string['submittedpendingrelease'] = 'Pending release after archiving.';
 $string['nobodycanseethisview2'] = 'Only you can see this page.';
-$string['noviews'] = 'No pages.';
+$string['noviews1'] = 'No pages or collections.';
 $string['nviews'] = array(
     '1 page',
     '%s pages',
 );
-$string['youhavenoviews'] = 'You have no pages.';
+$string['youhavenoviews1'] = 'You don\'t have any pages or collections.';
 $string['youhaventcreatedanyviewsyet'] = "You have not created any pages yet.";
 $string['youhaveoneview'] = 'You have 1 page.';
 $string['youhaveviews']   = 'You have %s pages.';
@@ -242,6 +250,8 @@ $string['editblockspagedescription'] = '<p>Drag and drop content blocks from the
 $string['displayview'] = 'Display page';
 $string['editthisview'] = 'Edit this page';
 $string['expandcontract'] = 'Expand /   Contract list of block types';
+$string['returntoinstitutionpages'] = 'Return to institution pages';
+$string['returntositepages'] = 'Return to site pages';
 
 $string['success.addblocktype'] = 'Added block successfully';
 $string['err.addblocktype'] = 'Could not add the block to your page';
@@ -391,6 +401,8 @@ $string['copyview'] = 'Copy page';
 $string['createemptyview'] = 'Create empty page';
 $string['copyaview'] = 'Copy a page';
 $string['copyvieworcollection'] = 'Copy a page or collection';
+$string['confirmaddtitle'] = 'Create a page or collection';
+$string['confirmadddesc'] = 'Please choose which you would like to create:';
 $string['confirmcopytitle'] = 'Confirm copying';
 $string['confirmcopydesc'] = 'Please choose which you would like to copy:';
 $string['Untitled'] = 'Untitled';
@@ -421,7 +433,7 @@ $string['blockcopypermission'] = 'Block copy permission';
 $string['blockcopypermissiondesc'] = 'If you allow other users to copy this page, you may choose how this block will be copied';
 
 // Sort by
-$string['defaultsort'] = '';
+$string['defaultsort'] = 'Alphabetical';
 $string['latestcreated'] = 'Date created';
 $string['latestmodified'] = 'Last modified';
 $string['latestviewed'] = 'Last viewed';
@@ -439,8 +451,9 @@ $string['grouphomepagedescription'] = 'The group homepage contains the content t
 // Shared views
 $string['sharedwithme'] = 'Shared with me';
 $string['titleanddescription'] = 'Title, description, tags';
+$string['titleanddescriptionnotags'] = 'Title, description';
 $string['titleanddescriptionandtagsandowner'] = 'Title, description, tags, owner';
-$string['tagsonly'] = 'Tags only';
+$string['tagsonly1'] = 'Tags';
 $string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you. They may have been shared with you directly, shared with friends of the owner, or shared with one of your groups.';
 $string['sharedwith'] = 'Shared with';
 $string['sharewith'] = 'Share with';

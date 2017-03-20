@@ -17,8 +17,9 @@ Scenario: Open badges block
     # party site we can't currently test that part and ship the details in this test
     # So all we can do is check that the block exists and saves to a page
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages" in "Portfolio"
-    And I follow "Edit \"Page 1\""
+    And I choose "Pages and collections" in "Portfolio"
+    And I click on "Page 1" panel menu
+    And I click on "Edit" in "Page 1" panel menu
     And I expand "External" node
     And I wait "1" seconds
     And I follow "Open Badges"

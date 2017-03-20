@@ -9,11 +9,9 @@
      | username | password | email | firstname | lastname | institution | authname | role |
      | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
   When I log in as "userA" with password "Kupuhipa1"
-  And I choose "Pages" in "Portfolio"
+  And I choose "Pages and collections" in "Portfolio"
   And I click on "Help"
   And I should see "A page contains a selection of artefacts"
-  And I choose "Collections" in "Portfolio"
-  And I click on "Help"
   And I should see "A collection is a set of pages that are linked to one another and have the same access permissions."
   And I choose "Shared by me" in "Portfolio"
   And I click on "Help"

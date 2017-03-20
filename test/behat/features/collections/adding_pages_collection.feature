@@ -7,9 +7,10 @@ Feature: Adding pages to a collection
 Background:
      Given the following "pages" exist:
      | title | description| ownertype | ownername |
-     | Testing page 1 | UserD's page 01 | user | admin  |
-     | Testing page 2 | UserD's page 02 | user | admin |
-     | Testing page 3 | UserA's page 01 | user | admin |
+     | Testing page 1 | Admin's page 01 | user | admin |
+     | Testing page 2 | Admin's page 02 | user | admin |
+     | Testing page 3 | Admin's page 03 | user | admin |
+     | A page 4 | Admin's page 04 | user | admin |
 
 Scenario: Creating a collection AND adding pages
     # Log in as "Admin" user
@@ -17,8 +18,9 @@ Scenario: Creating a collection AND adding pages
     # Verifying log in was successful
     And I should see "Admin User"
     # Create Test collection
-    And I choose "Collections" in "Portfolio"
-    And I follow "New collection"
+    And I choose "Pages and collections" in "Portfolio"
+    And I follow "Add"
+    And I click on "Collection" in the dialog
     And I fill in the following:
         | Collection name | Test Collection |
         | Collection description | Test |
@@ -31,8 +33,12 @@ Scenario: Creating a collection AND adding pages
     And I should see "Testing page 1"
     And I should see "Testing page 2"
     And I should see "Testing page 3"
-      # Sort pages by Last modified
+    And I should see "A page 4"
+    # Sort pages by Last modified
     Then I follow "Portfolio"
+    And I select "Alphabetical" from "Sort by:"
+    And I press the key "Enter" in the "Search:" field
+    And "A page 4" "link" should appear before "Testing page 1" "link"
     And I select "Last modified" from "Sort by:"
     And I press the key "Enter" in the "Search:" field
     # Checking they are in the right order
@@ -45,16 +51,18 @@ Scenario: Creating a collection AND adding pages
     And I follow "Edit access"
     And I select "Registered users" from "accesslist[0][searchtype]"
     And I press "Save"
-    And I choose "Pages" in "Portfolio"
-    And I press "Create page"
+    And I choose "Pages and collections" in "Portfolio"
+    And I follow "Add"
+    And I click on "Page" in the dialog
     And I set the following fields to these values:
     | Page title | New page |
     | Page description | testing |
     And I press "Save"
-    And I choose "Collections" in "Portfolio"
-    And I follow "Manage pages"
+    And I choose "Pages and collections" in "Portfolio"
+    And I click on "Test Collection" panel menu
+    And I click on "Manage" in "Test Collection" panel menu
     And I follow "All"
     And I wait "1" seconds
     And I press "Add pages"
+    And I should see "1 page added to collection"
     And I follow "Done"
-    Then I should see "New page"

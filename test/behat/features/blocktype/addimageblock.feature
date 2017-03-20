@@ -15,8 +15,9 @@ Background:
 
 Scenario: Create Image block
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages" in "Portfolio"
-    And I follow "Edit \"Page 1\""
+    And I choose "Pages and collections" in "Portfolio"
+    And I click on "Page 1" panel menu
+    And I click on "Edit" in "Page 1" panel menu
     And I follow "Image"
     And I wait "1" seconds
     And I press "Add"

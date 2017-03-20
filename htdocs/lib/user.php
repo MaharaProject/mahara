@@ -243,7 +243,7 @@ function expected_account_preferences() {
                  'licensedefault' => '',
                  'viewsperpage' => 20,
                  'itemsperpage' => 10,
-                 'orderpagesby' => 'atoz',
+                 'orderpagesby' => 'latestmodified',
                  );
 }
 

@@ -100,8 +100,9 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I should see "Journal entry saved"
   And I should see "Spongebob"
   # Creating a site page
-  And I choose "Pages" in "Configure site"
-  And I press "Create"
+  And I choose "Pages and collections" in "Configure site"
+  And I follow "Add"
+  And I click on "Page" in the dialog
   And I set the following fields to these values:
   | Page title | Square pants |
   | Page description | hsdfhjkl78695t 8677y8 |

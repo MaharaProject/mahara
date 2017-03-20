@@ -48,12 +48,17 @@ if ($collection) {
         }
     }
     else {
-        $goto = 'collection/index.php';
+        $goto = 'view/index.php';
         if ($groupid) {
-            $goto .= '?group=' . $groupid;
+            $goto = 'view/groupviews.php?group=' . $groupid;
         }
         else if ($institution) {
-            $goto .= '?institution=' . $institution;
+            if ($institution == 'mahara') {
+                $goto = 'admin/site/views.php';
+            }
+            else {
+                $goto .= 'view/institutionviews.php?institution=' . $institution;
+            }
         }
     }
 }
@@ -61,7 +66,12 @@ else if ($groupid) {
     $goto = 'view/groupviews.php?group=' . $groupid;
 }
 else if ($institution) {
-    $goto = 'view/institutionviews.php?institution=' . $institution;
+    if ($institution == 'mahara') {
+        $goto = 'admin/site/views.php';
+    }
+    else {
+        $goto = 'view/institutionviews.php?institution=' . $institution;
+    }
 }
 else {
     $query = get_querystring();

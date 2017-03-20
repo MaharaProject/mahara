@@ -20,6 +20,41 @@ require_once(get_config('docroot') . 'blocktype/lib.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 
+$new = param_boolean('new', 0);
+$viewid = param_integer('id', false);
+if ($new && $viewid === false) {
+    // Use the site default portfolio page to create a new page
+    // cribbed from createview_submit()
+    $sitedefaultviewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'portfolio');
+    if (!empty($sitedefaultviewid)) {
+        $artefactcopies = array();
+        $values = array();
+        $groupid = param_integer('group', 0);
+        $institutionname = param_alphanum('institution', false);
+        if (!empty($groupid)) {
+            $values['group'] = $groupid;
+        }
+        else if (!empty($institutionname)) {
+            $values['institution'] = $institutionname;
+        }
+
+        list($view, $template, $copystatus) = View::create_from_template($values, $sitedefaultviewid, null, true, false, $artefactcopies);
+        if (isset($copystatus['quotaexceeded'])) {
+            $SESSION->add_error_msg(get_string('viewcreatewouldexceedquota', 'view'));
+            redirect(get_config('wwwroot') . 'view/index.php');
+        }
+    }
+    else {
+         throw new ConfigSanityException(get_string('viewtemplatenotfound', 'error'));
+    }
+
+    $goto = get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id');
+    if (!empty($values)) {
+        $goto .= '&' . http_build_query($values);
+    }
+    redirect($goto);
+}
+
 $view = new View(param_integer('id'));
 
 if (!$USER->can_edit_view($view)) {

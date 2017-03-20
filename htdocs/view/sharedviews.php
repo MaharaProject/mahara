@@ -28,7 +28,7 @@ $queryparams = array();
 
 $searchoptions = array(
     'titleanddescriptionanduser' => get_string('titleanddescriptionandtagsandowner', 'view'),
-    'tagsonly' => get_string('tagsonly', 'view'),
+    'tagsonly' => get_string('tagsonly1', 'view'),
 );
 if (!empty($tag)) {
     $searchtype = 'tagsonly';

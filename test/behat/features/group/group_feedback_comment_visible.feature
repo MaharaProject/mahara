@@ -25,7 +25,8 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
  | Comment notifications | None |
  And I press "Save group"
  When I click on "Pages" in the ".right-text" "css_element"
- And I press "Create page"
+ And I follow "Add"
+ And I click on "Page" in the dialog
  And I set the following fields to these values:
  | Page title | Group Page 01 |
  And I press "Save"
@@ -44,7 +45,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
  Then I should see "group 01"
  When I follow "group 01"
  Then I should see "About | group 01"
- When I click on "Pages" in the "ul.nav-inpage" "css_element"
- Then I should see "Group Page 01" in the "h3.title" "css_element"
- When I click on "Group Page 01" in the "div.list-group-item" "css_element"
+ When I follow "Pages and collections (tab)"
+ Then I should see "Group Page 01" in the "h3.panel-heading" "css_element"
+ And I click the panel "Group Page 01"
  Then I should see "Adding a comment to this field. Student = Awesome!" in the "div.comment-text" "css_element"

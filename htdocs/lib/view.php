@@ -3571,44 +3571,78 @@ class View {
         return self::can_remove_viewtype($this->type);
     }
 
-    public static function get_myviews_data($limit=5, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null) {
+    public static function get_myviews_data($limit=12, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null) {
         global $USER;
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
 
         $select = '
-            SELECT v.id, v.title, v.description, v.type, v.mtime, v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid';
+            SELECT v.id, v.id AS vid, v.title, v.title AS vtitle, v.description, v.type,  v.ctime as vctime, v.mtime as vmtime, v.atime as vatime,
+            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS collid';
+        $collselect = '
+            UNION
+            SELECT v.id, v.id AS vid, v.title, c.name AS vtitle, c.description, v.type, c.ctime as vctime, c.mtime as vmtime, v.atime as vatime,
+            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits,
+                   (SELECT COUNT(*) FROM {collection_view} cv WHERE cv.collection = c.id) AS numviews, c.id AS collid';
+        $emptycollselect = '
+            UNION
+            SELECT null as id, null as vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
+            c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null as vvisits, 0 AS numviews, c.id AS collid';
+
         $from = '
-            FROM {view} v';
+            FROM {view} v
+            LEFT OUTER JOIN {collection_view} cv on cv.view = v.id';
+        $collfrom = '
+            FROM {view} v
+            LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
+            LEFT OUTER JOIN {collection} c ON cv.collection = c.id';
+        $emptycollfrom = '
+            FROM {collection} c';
+
         $where = '
-            WHERE ' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution));
+            WHERE cv.collection IS NULL AND v.' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution));
+        $collwhere = '
+            WHERE cv.collection IS NOT NULL AND v.' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution)) . '
+            AND v.id IN (
+              SELECT view FROM {collection_view} WHERE collection = c.id AND displayorder = 0
+            )';
+        $emptycollwhere = '
+            WHERE c.' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution)) . '
+            AND NOT EXISTS (SELECT * FROM {collection_view} cv WHERE c.id = cv.collection)';
 
         // We use institution='mahara' and template=2 for the default site template
         if (isset($institution) && $institution === 'mahara') {
             $where .= ' AND v.template != ' . self::SITE_TEMPLATE;
+            $collwhere .= ' AND v.template != ' . self::SITE_TEMPLATE;
         }
 
-        $order = '';
-        $groupby = '';
+        $order = $groupby = $collgroupby = $emptycollgroupby = '';
         if (!empty($orderby)) {
             switch($orderby) {
                 case 'latestcreated':
-                    $order = 'v.ctime DESC,';
+                    $order = 'vctime DESC,';
                     break;
                 case 'latestmodified':
-                    $order = 'v.mtime DESC,';
+                    $order = 'vmtime DESC,';
                     break;
                 case 'latestviewed':
-                    $order = 'v.atime DESC,';
+                    $order = 'vatime DESC,';
                     break;
                 case 'mostvisited':
-                    $order = 'v.visits DESC,';
+                    $order = 'vvisits DESC,';
                     break;
                 case 'mostcomments':
-                    $select .= ', COUNT(DISTINCT acc.artefact) AS commentcount';
-                    $from .= '
+                    $mcstr = ', COUNT(DISTINCT acc.artefact) AS commentcount';
+                    $select .= $mcstr;
+                    $collselect .= $mcstr;
+                    $emptycollselect .= ', 0 AS commentcount';
+                    $mcfromstr = '
                         LEFT OUTER JOIN {artefact_comment_comment} acc ON (v.id = acc.onview AND acc.hidden=0)';
+                    $from .= $mcfromstr;
+                    $collfrom .= $mcfromstr;
                     $groupby = ' GROUP BY v.id';
-                    $order = 'COUNT(DISTINCT acc.artefact) DESC,';
+                    $collgroupby = ' GROUP BY v.id, c.id';
+                    $emptycollgroupby = ' GROUP BY c.id';
+                    $order = 'commentcount DESC,';
                     break;
                 default:
                     $order = '';
@@ -3616,56 +3650,118 @@ class View {
         }
 
         $sort = '
-            ORDER BY ' . $order . ' v.title, v.id';
-        $values = array();
+            ORDER BY ' . $order . ' vtitle, vid';
+
+        $values = $collvalues = $emptycollvalues = array();
 
         if ($tag) { // Filter by the tag
-            $from .= "
+            $tagstr = "
                 INNER JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
+            $colltagstr = "
+                INNER JOIN {collection_tag} ct ON (ct.collection = c.id AND ct.tag = ?)";
+            $from .= $tagstr;
+            $collfrom .= $tagstr . $colltagstr;
+            $emptycollfrom .= $colltagstr;
             $values[] = $tag;
+            array_push($collvalues, $tag, $tag);
+            $emptycollvalues[] = $tag;
         }
         else if ($query != '') { // Include matches on the title, description or tag
-            $from .= "
+            $tagstr = "
                 LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
+            $colltagstr = "
+                LEFT JOIN {collection_tag} ct ON (ct.collection = c.id AND ct.tag = ?)";
+            $from .= $tagstr;
+            $collfrom .= $tagstr . $colltagstr;
+            $emptycollfrom .= $colltagstr;
             $like = db_ilike();
-            $where .= "
+            $tagwhere = "
                 AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' OR vt.tag = ?)";
+            $colltagwhere = "
+                AND (c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%' OR ct.tag = ?)";
+            $where .= $tagwhere;
+            $collwhere .= $tagwhere . $colltagwhere;
+            $emptycollwhere .= $colltagwhere;
             array_push($values, $query, $query, $query, $query);
+            array_push($collvalues, $query, $query, $query, $query,$query, $query, $query, $query);
+            array_push($collvalues, $query, $query, $query, $query);
         }
 
         if ($groupid && group_user_access($groupid) != 'admin') {
-            $where .=  " AND v.type != 'grouphomepage'";
-        }
-        else if ($groupid && group_user_access($groupid) == 'admin') {
-             $sort = ' ORDER BY ' . $order . ' v.type = \'grouphomepage\' desc, v.title, v.id';
+            $groupstr = " AND v.type != 'grouphomepage'";
+            $where .= $groupstr;
+            $collwhere .= $groupstr;
         }
         if ($userid) {
-            $select .= ',v.submittedtime, v.submittedstatus,
+            $selectstr = ',v.submittedtime, v.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
                 h.wwwroot AS submithostwwwroot, h.name AS submithostname';
-            $from .= '
+            $select .= $selectstr;
+            $collselect .= $selectstr;
+            $emptycollselect .= ', c.submittedtime, c.submittedstatus,
+                NULL AS submitgroupid, NULL AS submitgroupname, NULL AS submitgroupurlid,
+                NULL AS submithostwwwroot, NULL AS submithostname';
+            $fromstr = '
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)';
+            $from .= $fromstr;
+            $collfrom .= $fromstr;
+
             if (!empty($groupby)) {
                 $groupby .= ', g.id, h.wwwroot';
+                $collgroupby .= ', g.id, h.wwwroot';
             }
             $sort = '
-                ORDER BY ' . $order . ' v.type = \'portfolio\', v.type, v.title, v.id';
+                ORDER BY ' . $order . ' vtitle, vid';
         }
+
+        $values = array_merge($values, $collvalues, $emptycollvalues);
 
         // When using group by we need to get the count of how many rows are returned
         // and not the count value of the first row returned.
         if (!empty($groupby)) {
-            $count = count_records_sql('SELECT COUNT(*) FROM (SELECT COUNT(v.id) ' . $from . $where . $groupby . ') AS count', $values);
+            $count = get_records_sql_array('SELECT SUM(count) AS count FROM (
+                                                SELECT COUNT(*) AS count FROM (
+                                                    SELECT COUNT(v.id) ' . $from . $where . $groupby . ') t1
+                                                UNION
+                                                SELECT COUNT(*) AS count FROM (
+                                                    SELECT COUNT(v.id) ' . $collfrom . $collwhere . $collgroupby . ') t2
+                                                UNION
+                                                SELECT COUNT(*) AS count FROM (
+                                                    SELECT COUNT(c.id) ' . $emptycollfrom . $emptycollwhere . $emptycollgroupby . ') t3
+                                            ) t4', $values);
+            $viewdata = get_records_sql_array($select . $from . $where . $groupby .
+                                              $collselect . $collfrom . $collwhere . $collgroupby .
+                                              $emptycollselect . $emptycollfrom . $emptycollwhere . $emptycollgroupby .
+                                              $sort, $values, $offset, $limit);
         }
         else {
-            $count = count_records_sql('SELECT COUNT(v.id) ' . $from . $where, $values);
+            $count = get_records_sql_array('SELECT SUM(t.numresults) AS count FROM (
+                                                SELECT COUNT(v.id) AS numresults ' . $from . $where . '
+                                                UNION
+                                                SELECT COUNT(v.id) AS numresults ' . $collfrom . $collwhere . '
+                                                UNION
+                                                SELECT COUNT(c.id) AS numresults ' . $emptycollfrom . $emptycollwhere . ') t', $values);
+            $viewdata = get_records_sql_array($select . $from . $where . $collselect . $collfrom . $collwhere . $emptycollselect . $emptycollfrom . $emptycollwhere . $groupby . $sort, $values, $offset, $limit);
         }
-        $viewdata = get_records_sql_assoc($select . $from . $where . $groupby . $sort, $values, $offset, $limit);
-        View::get_extra_view_info($viewdata, false);
+        $count = $count[0]->count;
 
+        View::get_extra_view_info($viewdata, false);
+        View::get_extra_collection_info($viewdata, false, 'collid');
+
+        require_once('collection.php');
         if ($viewdata) {
             foreach ($viewdata as $id => &$data) {
+                $data['uniqueid'] = 'u' . $data['id'] . '_' . $data['collid'];
+                if (!empty($data['collid'])) {
+                    $collobj = new Collection($data['collid']);
+                    $data['displaytitle'] = $collobj->get('name');
+                    $data['collviews'] = $collobj->views();
+                    if ($collobj->has_framework()) {
+                        $data['framework'] = $collobj->collection_nav_framework_option();
+                    }
+                }
+
                 $data['removable'] = self::can_remove_viewtype($data['type']);
                 if (!empty($data['submittedstatus'])) {
                     $status = $data['submittedstatus'];
@@ -3687,6 +3783,53 @@ class View {
                     }
                     if ($status == self::PENDING_RELEASE) {
                         $data['submittedto'] .= ' ' . get_string('submittedpendingrelease', 'view');
+                    }
+                }
+
+                // get the access rules for this view/collection
+                if (!empty($data['id']) && $data['type'] != 'dashboard') {
+                    $ua = new stdClass();
+                    $ua->displayname = get_string('manageaccess', 'view');
+                    $ua->accessibilityname = get_string('manageaccessfor', 'view', $data['vtitle']);
+                    $ua->accesstype = 'managesharing';
+
+                    $uk = new stdClass();
+                    $uk->displayname = get_string('managekeys', 'view');
+                    $uk->accessibilityname = get_string('managekeysfor', 'view', $data['vtitle']);
+                    $uk->accesstype = 'managekeys';
+                    $data['manageaccess'] = array($ua, $uk);
+
+                    if ($accesslist = get_records_sql_array('
+                        SELECT va.*, g.name AS groupname, g.grouptype, i.displayname AS institutionname
+                        FROM {view_access} va
+                        LEFT JOIN {group} g ON g.id = va.group
+                        LEFT JOIN {institution} i on i.name = va.institution
+                        WHERE va.view = ?
+                        ORDER BY token DESC, accesstype IS NULL ASC, accesstype ASC, usr, "group", institution', array($data['id']))) {
+                        // Use the special sorting so that we get all the 'public' access rules at the top of the list
+                        // then access rules where some groups of people can see it and lastly specified users/friends
+                        foreach ($accesslist as $ak => $av) {
+                            if ($av->usr) {
+                                $av->displayname = display_name($av->usr);
+                            }
+                            else if ($av->group) {
+                                $av->displayname = $av->groupname;
+                                // A submitted view/collection adds 'admin' role access to group
+                                if (!empty($data['submittedstatus']) && $av->group == $data['submitgroupid'] && $av->role == 'admin') {
+                                    $av->displayname .= ' (' . get_string('submitted', 'group') . ')';
+                                }
+                                else if (!empty($av->role)) {
+                                    $av->displayname .= ' (' . get_string($av->role, 'grouptype.' . $av->grouptype) . ')';
+                                }
+                            }
+                            else if ($av->institution) {
+                                $av->displayname = $av->institutionname;
+                            }
+                            $data['accesslist'][$ak] = $av;
+                        }
+                    }
+                    else {
+                        $data['accesslist'] = false;
                     }
                 }
             }
@@ -3740,10 +3883,8 @@ class View {
     public static function views_by_owner($group=null, $institution=null) {
         global $USER;
 
-        // Pagination configuration
-        $setlimit = true;
-        $limit = param_integer('limit', 0);
-        $limit = user_preferred_limit($limit);
+        // 'Show more' pagination configuration
+        $limit = param_integer('limit', 12);
         $offset = param_integer('offset', 0);
         // load default page order from user settings as default and overwrite, if changed
         $usersettingorderby = get_account_preference($USER->get('id'), 'orderpagesby');
@@ -3756,8 +3897,9 @@ class View {
         $tag    = param_variable('tag', null);
 
         $searchoptions = array(
-            'titleanddescription' => get_string('titleanddescription', 'view'),
-            'tagsonly' => get_string('tagsonly', 'view'),
+            'titleanddescriptionandtags' => get_string('titleanddescription', 'view'),
+            'titleanddescription' => get_string('titleanddescriptionnotags', 'view'),
+            'tagsonly' => get_string('tagsonly1', 'view'),
         );
 
         if (!empty($tag)) {
@@ -3793,10 +3935,6 @@ class View {
                             'defaultvalue' => $searchtype,
                         )
                     )
-                ),
-                'setlimit' => array(
-                    'type' => 'hidden',
-                    'value' => $setlimit
                 ),
                 'orderbygroup' => array (
                     'type' => 'fieldset',
@@ -3839,16 +3977,15 @@ class View {
 
         $url = self::get_myviews_url($group, $institution, $query, $tag, $orderby);
 
-        $pagination = build_pagination(array(
-            'url'    => $url,
+        $pagination = build_showmore_pagination(array(
             'count'  => $data->count,
             'limit'  => $limit,
-            'setlimit' => $setlimit,
             'offset' => $offset,
-            'datatable' => 'myviews',
+            'orderby' => $orderby,
+            'group' => $group,
+            'institution' => $institution,
+            'databutton' => 'showmorebtn',
             'jsonscript' => 'json/viewlist.php',
-            'jumplinks' => 6,
-            'numbersincludeprevnext' => 2,
         ));
 
         return array($searchform, $data, $pagination);
@@ -5124,7 +5261,18 @@ class View {
             $owners = array();
             $groups = array();
             $institutions = array();
-            foreach ($viewdata as $v) {
+            $viewids = array();
+
+            foreach ($viewdata as $k=> $v) {
+                if (!is_object($v)) {
+                    $v = (object) $v;
+                }
+                if (is_null($v->id)) {
+                    continue;
+                }
+                else {
+                    $viewids[] = $v->id;
+                }
                 if (!empty($v->owner) && !isset($owners[$v->owner])) {
                     $owners[$v->owner] = (int)$v->owner;
                 }
@@ -5136,7 +5284,7 @@ class View {
                 }
             }
 
-            $viewidlist = join(',', array_map('intval', array_keys($viewdata)));
+            $viewidlist = join(',', array_map('intval', $viewids));
             if ($getartefacts) {
                 $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
                     FROM {view_artefact} va
@@ -5166,7 +5314,17 @@ class View {
                 $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
                 if ($tags) {
                     foreach ($tags as &$tag) {
-                        $viewdata[$tag->view]->tags[] = $tag->tag;
+                        if (isset($viewdata[$tag->view])) {
+                            $viewdata[$tag->view]->tags[] = $tag->tag;
+                        }
+                        else {
+                            // Need to find the views to add it to
+                            foreach ($viewdata as $k => $v) {
+                                if ($v->id == $tag->view) {
+                                    $viewdata[$k]->tags[] = $tag->tag;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -5203,6 +5361,13 @@ class View {
             $needsubdomain = get_config('cleanurlusersubdomains');
 
             foreach ($viewdata as &$v) {
+                if (!is_object($v)) {
+                    $v = (object) $v;
+                }
+                if (is_null($v->id)) {
+                    $v = (array)$v;
+                    continue;
+                }
                 $v->anonymous = FALSE;
                 if (!empty($v->owner)) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
@@ -5240,13 +5405,20 @@ class View {
      * @param array a list of collections $collectiondata
      * @return array updated collection data
      */
-    public static function get_extra_collection_info(&$collectiondata, $gettags=true) {
+    public static function get_extra_collection_info(&$collectiondata, $gettags=true, $useid = 'id') {
         if ($collectiondata) {
             // Get view owner details for display
             $owners = array();
             $groups = array();
             $institutions = array();
+
             foreach ($collectiondata as $c) {
+                if (!is_object($c)) {
+                    $c = (object) $c;
+                }
+                if (empty($c->{$useid})) {
+                    continue;
+                }
                 if (!empty($c->owner) && !isset($owners[$c->owner])) {
                     $owners[$c->owner] = (int)$c->owner;
                 }
@@ -5298,6 +5470,13 @@ class View {
             $needsubdomain = get_config('cleanurlusersubdomains');
 
             foreach ($collectiondata as &$c) {
+                if (!is_object($c)) {
+                    $c = (object) $c;
+                }
+                if (empty($c->{$useid})) {
+                    $c = (array)$c;
+                    continue;
+                }
                 if (!empty($c->owner)) {
                     $c->sharedby = display_name($owners[$c->owner]);
                     $c->user = $owners[$c->owner];
@@ -5310,21 +5489,31 @@ class View {
                 else if (!empty($c->institution)) {
                     $c->sharedby = $institutions[$c->institution]->displayname;
                 }
+
                 $c = (array)$c;
 
                 // Now that we have the owner & group records, create a temporary Collection object
                 // so that we can use get_url method.
                 require_once(get_config('libroot') . 'collection.php');
 
-                $collection = new Collection(0, $c);
-                $c['url'] = $collection->get_url(false);
-                $c['fullurl'] = $needsubdomain ? $collection->get_url(true, false, $firstview) : ($wwwroot . $c['url']);
+                if (!empty($c[$useid])) {
+                    $collection = new Collection($c[$useid]);
+                }
+                else {
+                    $collection = new Collection(0, $c);
+                }
 
-                // HACK: Find out whether this collection is anonymous
-                // (based on whether its first view is anonymous)
-                if (!empty($c->owner)) {
-                    $c['anonymous'] = $firstview->anonymous;
-                    $c['staff_or_admin'] = $firstview->is_staff_or_admin_for_page();
+                $views = $collection->views();
+                if (!empty($views)) {
+                    $c['url'] = $collection->get_url(false);
+                    $c['fullurl'] = $needsubdomain ? $collection->get_url(true, false, $firstview) : ($wwwroot . $c['url']);
+
+                    // HACK: Find out whether this collection is anonymous
+                    // (based on whether its first view is anonymous)
+                    if (!empty($c->owner)) {
+                        $c['anonymous'] = $firstview->anonymous;
+                        $c['staff_or_admin'] = $firstview->is_staff_or_admin_for_page();
+                    }
                 }
             }
         }

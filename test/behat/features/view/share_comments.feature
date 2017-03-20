@@ -20,12 +20,13 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  #Creating a page to share with group
  When I follow "Portfolio"
  Then I should see "Pages"
- When I press "createview_submit"
+ And I follow "Add"
+ And I click on "Page" in the dialog
  Then I should see "No title"
  When I set the following fields to these values:
  | editview_title | Group page1 |
  And I wait "5" seconds
- Then I press "editview_submit"
+ Then I press "Save"
  Then I should see "Page saved successfully"
 
  # Sharing Page

@@ -33,8 +33,9 @@ Feature: Mahara users can create their blogs
   And I scroll to the base of id "editpost_tags_container"
   And I fill in select2 input "editpost_tags" with "blogentry" and select "blogentry"
   And I press "Save entry"
-  And I choose "Pages" in "Portfolio"
-  And I press "Create page"
+  And I choose "Pages and collections" in "Portfolio"
+  And I follow "Add"
+  And I click on "Page" in the dialog
   And I press "Save"
   And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
   And I wait "1" seconds

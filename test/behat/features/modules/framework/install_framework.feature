@@ -57,14 +57,16 @@ Scenario: Installing framework module and activating for an institution
 
  # Adding framework to existing collection
  And I follow "Return to site"
- And I choose "Collections" in "Portfolio"
- And I follow "Edit title and description"
+ And I choose "Pages and collections" in "Portfolio"
+ And I click on "CollA" panel menu
+ And I click on "Edit" in "CollA" panel menu
  And I select "Title of your framework" from "SmartEvidence framework"
  And I press "Save"
  Then I should see "Collection saved successfully."
 
  # Testing the collection navigation and matrix carousel
- And I follow "CollA"
+ And I choose "Pages and collections" in "Portfolio"
+ And I click the panel "CollA"
  And I should see "You are on page 1/9"
  And I should see "by Admin User (admin)"
  And I press "Next" in the "table#tablematrix" "css_element"
@@ -91,8 +93,8 @@ Scenario: Installing framework module and activating for an institution
  And I press "Save"
 
  # Re-click a matrix point to add some feedback
- And I choose "Collections" in "Portfolio"
- And I follow "CollA"
+ And I choose "Pages and collections" in "Portfolio"
+ And I click the panel "CollA"
  And I click on the matrix point "3,4"
  And I wait "1" seconds
  And I fill in "This is annotation feedback" in editor "Feedback"

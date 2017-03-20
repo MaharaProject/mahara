@@ -75,7 +75,7 @@ Scenario: Creating a Journal entry
  And I press "Save entry"
 
  # Adding journal blocks to a page
- And I choose "Pages" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio"
  And I follow "Page 01"
  And I follow "Edit this page"
  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"

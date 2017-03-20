@@ -181,8 +181,10 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Group Z"
     And I follow "Group Z (Administrator)"
     And I should see "Page userB_01"
-    And I follow "Pages" in the "ul.nav-inpage" "css_element"
-    And I click on "Edit \"Group homepage\""
+    And I follow "Pages and collections (tab)"
+    And I click on "Group homepage" panel menu
+    And I click on "Edit" in "Group homepage" panel menu
+
     And I scroll to the id "column-container"
     And I configure the block "Group pages"
     And I set the following fields to these values:
@@ -192,8 +194,9 @@ These list must take into account the sort option choosen in the block config (B
     And I press "Save"
     And I display the page
     # Update the group page "Page Group Z_06"
-    And I follow "Pages" in the "ul.nav-inpage" "css_element"
-    And I click on "Edit \"Page Group Z_06\""
+    And I follow "Pages and collections (tab)"
+    And I click on "Page Group Z_06" panel menu
+    And I click on "Edit" in "Page Group Z_06" panel menu
     And I follow "Edit title and description"
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
     And I press "Save"
@@ -207,8 +210,8 @@ These list must take into account the sort option choosen in the block config (B
     And I should not see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
     # Update the shared page "Page userA_01"
     And I choose "Portfolio"
-    And I scroll to the id "searchresultsheading"
-    And I click on "Edit \"Page userA_01\""
+    And I click on "Page userA_01" panel menu
+    And I click on "Edit" in "Page userA_01" panel menu
     And I follow "Edit title and description"
     And I set the field "Page description" to "<p>This is the page 01 (updated)</p>"
     And I press "Save"
@@ -221,8 +224,9 @@ These list must take into account the sort option choosen in the block config (B
     And I jump to page "2" of the list "sharedviews_pagination"
     And I should not see "Page userA_01" in the "ul#sharedviewlist" "css_element"
     # Update the shared collection "Collection userA_06"
-    And I choose "Collections" in "Portfolio"
-    And I click on "Edit \"Collection userA_06\""
+    And I choose "Pages and collections" in "Portfolio"
+    And I click on "Collection userA_06" panel menu
+    And I click on "Edit" in "Collection userA_06" panel menu
     And I set the field "Collection description" to "This is the collection 06 (updated)"
     And I press "Save"
     # Check if it is now in the first page of the list of shared collections

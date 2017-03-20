@@ -17,7 +17,8 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Bob Bobby"
     # Creating page one
     And I follow "Portfolio"
-    And I press "Create page"
+    And I follow "Add"
+    And I click on "Page" in the dialog
     And I fill in the following:
     | Page title | Testing page 1 |
     And I press "Save"
@@ -25,7 +26,8 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Page saved successfully"
     # Creating page two
     And I follow "Portfolio"
-    And I press "Create page"
+    And I follow "Add"
+    And I click on "Page" in the dialog
     And I fill in the following:
     | Page title | Testing page 2 |
     And I press "Save"
@@ -45,7 +47,8 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Jen Jenny"
     # Creating page three
     And I follow "Portfolio"
-    And I press "Create page"
+    And I follow "Add"
+    And I click on "Page" in the dialog
     And I fill in the following:
     | Page title | Testing page 3 |
     And I press "Save"
@@ -53,7 +56,8 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Page saved successfully"
     # Creating page 4
     And I follow "Portfolio"
-    And I press "Create page"
+    And I follow "Add"
+    And I click on "Page" in the dialog
     And I fill in the following:
     | Page title | Testing page 4 |
     And I press "Save"

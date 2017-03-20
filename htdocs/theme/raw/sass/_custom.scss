@@ -465,3 +465,11 @@
         margin-left: 100px;
     }
 }
+
+// fix responsive layout for pages and collections grid where sidebar overlaps
+.grouppageswrap.view-container:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
