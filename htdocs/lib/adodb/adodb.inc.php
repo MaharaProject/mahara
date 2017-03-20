@@ -14,7 +14,7 @@
 /**
 	\mainpage
 
-	@version   v5.20.5  10-Aug-2016
+	@version   v5.20.9  21-Dec-2016
 	@copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
 	@copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
 
@@ -36,6 +36,21 @@
 
 if (!defined('_ADODB_LAYER')) {
 	define('_ADODB_LAYER',1);
+
+	// The ADOdb extension is no longer maintained and effectively unsupported
+	// since v5.04. The library will not function properly if it is present.
+	if(defined('ADODB_EXTENSION')) {
+		$msg = "Unsupported ADOdb Extension (v" . ADODB_EXTENSION . ") detected! "
+			. "Disable it to use ADOdb";
+
+		$errorfn = defined('ADODB_ERROR_HANDLER') ? ADODB_ERROR_HANDLER : false;
+		if ($errorfn) {
+			$conn = false;
+			$errorfn('ADOdb', basename(__FILE__), -9999, $msg, null, null, $conn);
+		} else {
+			die($msg . PHP_EOL);
+		}
+	}
 
 	//==============================================================================================
 	// CONSTANT DEFINITIONS
@@ -216,7 +231,7 @@ if (!defined('_ADODB_LAYER')) {
 		/**
 		 * ADODB version as a string.
 		 */
-		$ADODB_vers = 'v5.20.5  10-Aug-2016';
+		$ADODB_vers = 'v5.20.9  21-Dec-2016';
 
 		/**
 		 * Determines whether recordset->RecordCount() is used.
@@ -416,7 +431,7 @@ if (!defined('_ADODB_LAYER')) {
 	var $database = '';			/// Name of database to be used.
 	var $host = ''; 			/// The hostname of the database server
 	var $user = ''; 			/// The username which is used to connect to the database server.
-    private $password = '';     /// Password for the username. This is required for __wakeup
+  private $password = '';     /// Password for the username. This is required for __wakeup
 	var $debug = false; 		/// if set to true will output sql statements
 	var $maxblobsize = 262144; 	/// maximum size of blobs or large text fields (262144 = 256K)-- some db's die otherwise like foxpro
 	var $concat_operator = '+'; /// default concat operator -- change to || for Oracle/Interbase
@@ -1141,7 +1156,7 @@ if (!defined('_ADODB_LAYER')) {
 					);
 					return false;
 				}
-				
+
 				// clean memory
 				unset($element0);
 
@@ -4960,3 +4975,4 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 	}
 
 }
+?>

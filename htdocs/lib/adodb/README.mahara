@@ -2,7 +2,7 @@ adodb
 -----
 
 Website: http://adodb.sourceforge.net/
-Version: 5.20.5
+Version: 5.20.9
 
 Modifications:
 
@@ -10,6 +10,15 @@ Modifications:
 - check for Postgres 8.1 (c6dfccadfae432147fff99fa15b0985dcae7e503)
 - Check for valid columns in adodb postgres64 driver MetaIndexes fn (b87d9961020a8d52a2eaf709a9197520b3c6b65b)
 - add __wakeup to connection object (417077459037550239fe9b09bd20b50d4c19b57f)
-- Deleted many files we're not using, including tests, docs, other drivers, other error langs
-- Modified session variable setting from $_SESSION to $SESSION->set/get due to sessions now normally being closed.
-- Moved the define ADODB_ASSOC_CASE_* calls as they are needed by ADONewConnection
+- Deleted many files we're not using, including tests, docs, other drivers, other error langs (9d44b44a2ae1923c9a07105e6932cda1af30b099)
+- Modified session variable setting from $_SESSION to $SESSION->set/get due to sessions now normally being closed. (f9818ff606bbe6ec00b34eab23d1743870407b48)
+- Moved the define ADODB_ASSOC_CASE_* calls as they are needed by ADONewConnection (741aa7d2150d22e9206ffa1fd8a93e3f4d697324)
+
+- Bug 1619036: Fix a bug when determine if an array is associative (606317195f8f3a8cdf9bc448c537b8c3708d75d7)
+- Removing the obsolete adodb-mysql.inc.php (2f19a42ddd6af732e40b1aae9359ee80e28f9111)
+- Adding back adodb-mysqli.inc.php (ac9e5527b3071447d6ee49ec2420f71f901dd167)
+- escaping names when showing table / index (08939ca25acddff39b132e4bd823668b98447947)
+- other files removed:
+  composer.json docs/ drivers/adodb-ads.inc.php drivers/adodb-oci8quercus.inc.php
+  drivers/adodb-pdo_sqlsrv.inc.php
+  any files from lang/ not adodb-en (the only one we use)

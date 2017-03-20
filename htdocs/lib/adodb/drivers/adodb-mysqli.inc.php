@@ -1,6 +1,6 @@
 <?php
 /*
-@version   v5.20.5  10-Aug-2016
+@version   v5.20.9  21-Dec-2016
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
 @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license.
@@ -579,10 +579,10 @@ class ADODB_mysqli extends ADOConnection {
 
 		if ($ADODB_FETCH_MODE == ADODB_FETCH_ASSOC || $this->fetchMode == ADODB_FETCH_ASSOC) $associative = true;
 
-		if ( !empty($owner) ) {
-			$table = "$owner.$table";
-		}
-		$a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE %s', $table));
+	    if ( !empty($owner) ) {
+	       $table = "$owner.$table";
+	    }
+	    $a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE `%s`', $table));
 		if ($associative) {
 			$create_sql = isset($a_create_table["Create Table"]) ? $a_create_table["Create Table"] : $a_create_table["Create View"];
 		} else $create_sql = $a_create_table[1];
