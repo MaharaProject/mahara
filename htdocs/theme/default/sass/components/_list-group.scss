@@ -1,9 +1,14 @@
 .list-group-item-link {
     a {
-        color: $theme-primary-color;
+        color: $link-color;
         &:hover {
-            color: lighten($theme-primary-color, 5%);
-            background-color: rgba(250, 255, 234, 0.3);
+            color: $link-hover-color;
+            background-color: rgba(#9db577, 0.1);
         }
     }
+}
+
+.list-group-item-heading {
+  font-family: $font-family-sans-serif;
+  font-weight: 700;
 }

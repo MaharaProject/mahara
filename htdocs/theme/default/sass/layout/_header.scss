@@ -1,59 +1,34 @@
 .header {
-    background-image: url(../images/header-bkgd.png);
-    background-repeat: repeat-x;
-    background-position: left top;
-    background-color: #FFFFFF;
-    top: 0;
+    background: #FFFFFF url(../images/header-bkgd.png) repeat-x center 60px;
 
     .logo-area {
         .logo {
             @media (max-width: $screen-xs-min) {
-                width: 23px;
+                width: 25px;
+                height: 45px;
                 overflow-x: hidden;
+                background: url(../images/site-logo-mobile.png) no-repeat 0 0;
             }
         }
         img {
             @media (max-width: $screen-xs-min) {
-                width: 150px;
-                max-width: 150px;
+                display: none;
             }
         }
     }
 
     .admin-title {
-        font-family: $font-family-serif;
+        margin-top: 10px;
+        font-weight: 300;
         font-size: $font-size-large;
-        margin-top: 8px;
 
         @media (max-width: $screen-sm-min) {
             display: none;
         }
-
-        a {
-            color: $theme-primary-color;
-            &:hover {
-                text-decoration: none;
-                color: darken($theme-primary-color, 5%);
-            }
-        }
     }
 
-    + .container {
-        // resets margin if there are no site-messages
-        margin-top: 0;
-
-        @media (max-width: $screen-sm-min) {
-            // resets margin as site-messages are hidden
-            margin-top: 0 !important;
-        }
-    }
-}
-.header-search-form {
-    .text {
-        border-radius: 3px 0 0 3px;
-    }
-    .input-group-btn {
-        border-radius: 0 3px 3px 0;
-        float: right;
+    &.navbar {
+        border-bottom: 0;
+        min-height: 64px;
     }
 }

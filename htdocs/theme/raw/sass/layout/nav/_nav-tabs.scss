@@ -17,7 +17,7 @@
             }
             &:hover,
             &:focus {
-                color: $link-color;
+                color: darken($link-color, 5%);
                 border: 1px solid transparent;
                 border-bottom: 3px solid $nav-tabs-link-hover-border-color;
                 background: lighten($gray-lighter, 3%);

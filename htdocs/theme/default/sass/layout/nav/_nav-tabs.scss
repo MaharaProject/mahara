@@ -1,31 +1,33 @@
 .nav-tabs {
-    border-bottom: 2px solid $theme-primary-color;
+    border-bottom: 2px solid #bc9f54;
     &.nav {
         li > a {
+            font-weight: 400;
             border: 0;
-                border-bottom: 1px solid $theme-primary-color;
+            border-bottom: 1px solid #bc9f54;
+            color: #423017;
+
             &:focus,
             &:hover {
                 border: 0;
-                border-bottom: 1px solid $theme-primary-color;
+                border-bottom: 1px solid #bc9f54;
+                background-color: lighten(#bc9f54, 35%);
+                color: #423017;
             }
         }
         .active > a {
-            background-color: $theme-primary-color;
-            color: #FFFFFF;
+            background-color: lighten(#bc9f54, 25%);
+            color: #423017;
             border: 0;
-                border-bottom: 1px solid $theme-primary-color;
+            border-bottom: 1px solid #bc9f54;
+
             &:focus,
             &:hover {
-                background-color: lighten($theme-primary-color, 5%);
-                color: #FFFFFF;
+                background-color: lighten(#bc9f54, 10%);
+                color: #423017;
                 border: 0;
-                border-bottom: 1px solid $theme-primary-color;
+                border-bottom: 1px solid #bc9f54;
             }
         }
     }
-}
-.tab-content {
-    padding: 20px;
-    background-color: lighten(#f1f6eb, 2%);
 }

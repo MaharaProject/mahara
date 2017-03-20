@@ -18,12 +18,17 @@
     }
 }
 
-.user-panel {
-    > .panel-default {
-        border: 0;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    }
-    .panel .list-group {
-        border: 0;
-    }
+.sidebar {
+  .user-panel {
+      > .panel-default {
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+          .panel-heading {
+            background-color: #2e3a1c;
+          }
+      }
+      .panel .list-group {
+          border: 0;
+      }
+  }
 }

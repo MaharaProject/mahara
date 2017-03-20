@@ -14,10 +14,6 @@
         @media (max-width: $screen-md-min) {
             margin: 0;
         }
-        .btn {
-            @include gradient-vertical($start-color: #FFFFFF, $end-color: #ececec, $start-percent: 10%, $end-percent: 100%);
-            border-top: 1px solid #dddddd;
-        }
     }
 
     // removing left/right padding in panel headings
@@ -25,8 +21,12 @@
     > .panel-heading {
         padding-left: 0;
         padding-right: 0;
+        border-bottom-color: #9db577;
     }
 
+    > .panel-heading {
+      font-family: $font-family-sans-serif;
+    }
 
     // removing left/right padding in panel body
     > .panel-body {

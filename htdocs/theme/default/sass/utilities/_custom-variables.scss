@@ -1,21 +1,21 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow compoanent variables
-$arrow-color: #84a421;
-$arrow-text-color: #fff;
-$arrow-link-color: #fff;
-$arrow-link-hover-color: $arrow-color;
-$arrow-link-active-color: #333;
+$arrow-color: lighten(#bc9f54, 25%);
+$arrow-text-color: #333333;
+$arrow-link-color: #423017;
+$arrow-link-hover-color: #423017;
+$arrow-link-active-color: #333333;
 
 // color for the secondary title in sections (cf. groups)
 $section-heading-color: #999;
 $admin-title-color: $brand-primary;
 $admin-title-bg: $brand-primary;
 
-$dashboard-widget-bg: #d4dfae;
-$dashboard-widget-color: #5f751c;
+$dashboard-widget-bg: #2e3a1c;
+$dashboard-widget-color: #FFFFFF;
 
 $help-icon-color: #5b8fc8;
 $rss-icon-color: #FE6500;
 
-$theme-primary-color-light: lighten(#93be42, 5%);
+$theme-primary-color-light: #799152;

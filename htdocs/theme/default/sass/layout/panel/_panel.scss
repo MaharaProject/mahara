@@ -1,7 +1,13 @@
 .panel {
     border-radius: 0;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
     border: 0;
+    box-shadow: none;
+
+    &.panel-quarter {
+      .panel-stack {
+        border: 1px solid #ddd;
+      }
+    }
 
     small {
         font-size: 11px;
@@ -13,4 +19,15 @@
             font-size: 11px;
         }
     }
+}
+
+.sidebar {
+  .panel {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.panel-quarter .panel-heading a {
+  font-family: $font-family-sans-serif;
+  font-weight: 300;
 }

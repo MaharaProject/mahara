@@ -197,9 +197,7 @@
 
 .progress-bar {
     position: relative;
-    background-color: darken($brand-primary, 5%);
     &.small-progress span {
-        color: $text-color;
         display: block;
         left: 100%;
         padding-left: 5px;
@@ -472,4 +470,3 @@
   content: "";
   display: table;
 }
-

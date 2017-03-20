@@ -2,10 +2,10 @@
 .collapsible legend h3,
 .panel-heading {
     a:not(.secondary-link) {
-        color: $theme-primary-color;
+        color: $link-color;
         &.collapsed {
             background-color: transparent;
-            color: $theme-primary-color;
+            color: $link-hover-color;
         }
         &:hover, &:focus {
             background-color: none;
@@ -30,9 +30,7 @@
     }
 
     .text-midtone {
-        color: #eef3e9;
-        font-size: 11px;
-        margin-top: 5px;
+        color: #FFFFFF;
     }
 }
 

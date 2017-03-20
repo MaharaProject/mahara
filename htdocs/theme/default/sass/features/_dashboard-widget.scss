@@ -32,8 +32,8 @@ $logged-in-height-mobile: 125px;
         h2 {
             margin: 5px 0 3px;
             text-align: center;
-            color: $theme-accent-color;
-            font-weight: 400;
+            color: #FFFFFF;
+            font-weight: 700;
 
             @media (max-width: $screen-sm-min ) {
                 font-size: 18px;
@@ -45,7 +45,7 @@ $logged-in-height-mobile: 125px;
             margin: 0 16px;
             font-size: 13px;
             text-align: center;
-            color: $text-color;
+            color: #FFFFFF;
 
             @media (max-width: $screen-sm-min ) {
                 display: none;
@@ -53,7 +53,7 @@ $logged-in-height-mobile: 125px;
         }
 
         a {
-            color: $link-color;
+            color: #FFFFFF;
         }
     }
 
@@ -72,7 +72,7 @@ $logged-in-height-mobile: 125px;
         }
 
         .icon {
-            color: #84a421;
+            color: #9db577;
             padding-top:16px;
             font-size: 72px;
 
@@ -102,7 +102,7 @@ $logged-in-height-mobile: 125px;
         p {
             margin-top: 10px;
             margin-bottom: 0;
-            color: $text-color;
+            color: #333333;
 
             @media (max-width: $screen-sm-min ) {
                 font-size: 12px;
@@ -155,8 +155,8 @@ $logged-in-height-mobile: 125px;
             h2 {
                 margin: 5px 0 3px;
                 text-align: center;
-                color: $theme-accent-color;
-                font-weight: 400;
+                color: #FFFFFF;
+                font-weight: 700;
 
                 @media (max-width: $screen-sm-min ) {
                     font-size: 18px;
@@ -164,7 +164,7 @@ $logged-in-height-mobile: 125px;
                 }
             }
             p {
-                color: $text-color;
+                color: #FFFFFF;
                 margin: 0 16px;
             }
         }
@@ -177,7 +177,7 @@ $logged-in-height-mobile: 125px;
             vertical-align: middle;
             display: block;
             z-index: 2;
-            background-color: #84a421;
+            background-color: #423017;
             height: $logged-in-height;
             width: $logged-in-height;
             border-radius: 50%;
@@ -192,7 +192,7 @@ $logged-in-height-mobile: 125px;
 
             p {
                 margin-top: 0;
-                color: #fff;
+                color: #FFFFFF;
                 display: table-cell;
                 vertical-align: middle;
                 height: $logged-in-height;
@@ -225,7 +225,7 @@ $logged-in-height-mobile: 125px;
             }
             p {
                 margin-top: 0;
-                color: #fff;
+                color: #FFFFFF;
                 display: table-cell;
                 vertical-align: middle;
                 height: $logged-in-height;

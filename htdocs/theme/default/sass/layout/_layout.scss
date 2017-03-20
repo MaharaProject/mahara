@@ -7,38 +7,4 @@ body {
     @media (max-width: $screen-sm-min - 1) {
         padding-top: 0;
     }
-
-    .middle-container-wrap {
-        .main-content {
-            background-color: #ffffff;
-            padding-top: 25px;
-            @media screen and (min-width: $screen-sm-min) {
-                margin-top: 30px;
-                margin-bottom: 30px;
-            }
-            .main {
-                padding-top: 0;
-            }
-        }
-    }
-
-    &.admin {
-        background-color: lighten($brand-default, 2%);
-        .container {
-            margin-top: 0px;
-        }
-        .main-nav {
-            .container {
-                margin-top: 0px;
-            }
-        }
-        .main-content {
-            background-color: transparent;
-            margin-top: 0;
-            padding-top: 20px;
-        }
-    }
-    .sidebar {
-        padding-top: 0px;
-    }
 }

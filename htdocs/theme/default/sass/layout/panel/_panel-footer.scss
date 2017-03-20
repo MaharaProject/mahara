@@ -1,8 +1,8 @@
 a.panel-footer {
-    color: $theme-primary-color;
+    color: $link-color;
     &:focus,
     &:hover {
         background-color: #f1f6eb;
-        color: lighten($theme-primary-color, 5%);
+        color: $link-hover-color;
     }
 }

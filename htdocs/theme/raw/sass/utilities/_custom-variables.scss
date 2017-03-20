@@ -1,7 +1,7 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow component variables
-$arrow-color: lighten(desaturate($brand-primary, 80%), 55%) !default;
+$arrow-color: lighten($brand-primary, 55%) !default;
 $arrow-text-color: $text-color !default;
 $arrow-link-color: $link-color !default;
 $arrow-link-hover-color: $text-color !default;

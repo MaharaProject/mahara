@@ -1,13 +1,19 @@
 .header {
     .navbar-toggle {
-        @include gradient-vertical($start-color: #FFFFFF, $end-color: #ececec, $start-percent: 10%, $end-percent: 100%);
-        border-color: #dddddd;
-        color: #676767;
+        margin-top: 6px;
+        margin-bottom: 10px;
+        border-color: $link-color;
+        background-color: $link-color;
+        color: #FFFFFF;
 
         &:focus,
         &:hover {
-            @include gradient-vertical($start-color: #ececec, $end-color: #ececec, $start-percent: 10%, $end-percent: 100%);
-            color: #333333;
+          border-color: $link-hover-color;
+          background-color: $link-hover-color;
+        }
+
+        .icon-bar {
+          background-color: #FFFFFF;
         }
     }
     .navbar-nav {

@@ -1,4 +1,10 @@
 .top-nav.navbar-nav {
+    @media (max-width: $screen-sm-min) {
+        background-color: transparent;
+        position: relative;
+        margin: 2px 3px 0 0;
+    }
+
     .login-link + .language-form {
         float: none;
         @media (min-width: $screen-xs-min) {
@@ -15,10 +21,12 @@
 
     > li {
         > a {
+          font-size: 12px;
+
             &:focus,
             &:hover {
-                color: lighten($theme-primary-color, 8%);
                 background-color: transparent;
+                color: $link-hover-color;
             }
         }
         &:last-child {
