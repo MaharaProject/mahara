@@ -194,6 +194,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I should see "Saved successfully"
     And I scroll to the top
     And I follow "Career goals"
+    And I wait "1" seconds
     And I set the following fields to these values:
     | Description | whateve ry askdf |
     And I press "Add a file"
