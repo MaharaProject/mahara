@@ -16,8 +16,7 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     # Verifying log in was successful
     And I should see "Admin User"
     # Creating Testing group 1
-    And I click on "Show Menu"
-    And I follow "Groups"
+    And I choose "Groups" from main menu
     And I follow "Create group"
     And I fill in "Group name" with "Testing Group 1"
     And I select "Course: Member, Tutor, Admin" from "Roles"
@@ -29,7 +28,7 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     # Verifying log in was successful
     And I should see "Bob Bobby"
     # Joining Testing group 1
-    And I choose "Find groups" in "Groups" from Main menu
+    And I choose "Find groups" in "Groups" from main menu
     And I press "Join this group"
     # Log out as user 1
     And I log out
@@ -38,15 +37,14 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     #Verifying log in was successful
     And I should see "Jen Jenny"
     # Joining Testing group 1
-    And I choose "Find groups" in "Groups" from Main menu
+    And I choose "Find groups" in "Groups" from main menu
     And I press "Join this group"
     # Log out as user 2
     And I log out
     # Log in as "Admin" user
     And I log in as "admin" with password "Kupuhipa1"
     # Going to Groups and setting it to sort by
-    And I click on "Show Menu"
-    And I follow "Groups"
+    And I choose "Groups" from main menu
     And I follow "Testing Group 1"
     And I follow "Members" in the ".arrow-bar" "css_element"
     # Verifying they are out of order first

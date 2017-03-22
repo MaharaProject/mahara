@@ -22,8 +22,8 @@ Given the following "users" exist:
 Scenario: Checking menu items are available as a student (Bug 1467368)
  Given I log in as "userA" with password "Kupuhipa1"
  # Checking the main menu navigation headings
- And I click on "Show Menu"
- When I follow "Dashboard"
+ When I click on "Show Menu"
+ And I follow "Dashboard"
  Then I should not see "Administration" in the "#main-nav-admin" "css_element"
  And I should not see "Site information" in the "#main-nav-admin" "css_element"
  And I click on "Show Menu"

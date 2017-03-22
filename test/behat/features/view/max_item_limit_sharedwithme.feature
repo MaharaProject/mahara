@@ -70,7 +70,7 @@ Background:
 
 Scenario: Making sure that the max items per page drop down limits to correct amount of pages (Bug 1409369)
   Given I log in as "userA" with password "Kupuhipa1"
-  And I choose "Pages and collections" in "Portfolio" from Main menu
+  And I choose "Pages and collections" in "Portfolio" from main menu
   And I select "atoz" from "orderby"
   And I scroll to the base of id "searchviews_submit"
   And I press "searchviews_submit"
@@ -83,7 +83,7 @@ Scenario: Making sure that the max items per page drop down limits to correct am
   And I press "Save"
   And I log out
   And I log in as "userB" with password "Kupuhipa1"
-  And I choose "Shared with me" in "Portfolio" from Main menu
+  And I choose "Shared with me" in "Portfolio" from main menu
   And I check "Registered users"
   And I check "Public"
   And I select "title" from "sort"

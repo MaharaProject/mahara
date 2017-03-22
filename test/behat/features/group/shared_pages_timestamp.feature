@@ -23,8 +23,7 @@ Given the following "pages" exist:
 
 Scenario: Displaying shared pages in most recently updated order (Bug 1490569)
  Given I log in as "admin" with password "Kupuhipa1"
- And I click on "Show Menu"
- And I follow "Groups"
+ And I choose "Groups" from main menu
  And I follow "testgroup"
  And I follow "Edit this page"
  And I scroll to the id "column-container"

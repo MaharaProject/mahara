@@ -17,7 +17,7 @@ Background:
 Scenario: Creating a Journal, publishing a draft, using tagged entry block
  # Create draft entry
  Given I log in as "userA" with password "Kupuhipa1"
- When I choose "Journals" in "Content" from Main menu
+ When I choose "Journals" in "Content" from main menu
  And I follow "New entry"
  And I set the following fields to these values:
  | Title * | My diary entry one |
@@ -55,8 +55,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I should not see "mildred"
 
  # Display tagged journals in block
- And I click on "Show Menu"
- When I follow "Portfolio"
+ And I choose "Portfolio" from main menu
  And I click on "Journal page" panel menu
  And I click on "Edit" in "Journal page" panel menu
  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"

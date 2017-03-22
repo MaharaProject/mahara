@@ -15,16 +15,14 @@ And the following "users" exist:
 
 Scenario: Creating and accessing social media buttons (Bug 1448948)
  Given I log in as "userA" with password "Kupuhipa1"
- And I click on "Show Menu"
- And I follow "Content"
+ And I choose "Content" from main menu
  And I follow "Social media"
  And I follow "New social media account"
  And I set the following fields to these values:
  | Social network * | Facebook URL |
  | Your URL or username * | https://www.facebook.com/wellingtonphoenixfc |
  And I press "Save"
- And I click on "Show Menu"
- And I follow "Portfolio"
+ And I choose "Portfolio" from main menu
  And I follow "Add"
  And I click on "Page" in the dialog
  And I set the following fields to these values:

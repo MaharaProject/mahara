@@ -50,7 +50,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     # Verifying log in was successful
     And I should see "Bob Bobby"
     # Navigating to notification settings
-    And I choose "Notifications" in "Settings" from User menu
+    And I choose "Notifications" in "Settings" from user menu
     # Verifying the "None" option is not available for the following notifications
     And the "System message" field should not contain "None"
     And the "Message from other users" field should not contain "None"

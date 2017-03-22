@@ -10,7 +10,7 @@ Feature: Mahara users can create their blogs
 
  Scenario: Create blogs
   Given I log in as "userA" with password "Kupuhipa1"
-  And I choose "Settings" in "Setting" from User menu
+  And I choose "Settings" in "Setting" from user menu
   And I fill in the following:
     | tagssideblockmaxtags | 10 |
   And I enable the switch "Multiple journals"
@@ -33,7 +33,7 @@ Feature: Mahara users can create their blogs
   And I scroll to the base of id "editpost_tags_container"
   And I fill in select2 input "editpost_tags" with "blogentry" and select "blogentry"
   And I press "Save entry"
-  And I choose "Pages and collections" in "Portfolio" from Main menu
+  And I choose "Pages and collections" in "Portfolio" from main menu
   And I follow "Add"
   And I click on "Page" in the dialog
   And I press "Save"

@@ -14,7 +14,7 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   # log in as admin
   Given I log in as "admin" with password "Kupuhipa1"
   # Make sure more than one site journal can be created
-  When I choose "Journals" in "Configure site" from Admin menu
+  When I choose "Journals" in "Configure site" from administration menu
   And I follow "Create journal"
   And I should see "New site journal:"
   And I set the following fields to these values:
@@ -30,7 +30,7 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   Then I should see "Site journal 2"
 
   # Make sure more than one institution journal can be created
-  When I choose "Journals" in "Institutions" from Admin menu
+  When I choose "Journals" in "Institutions" from administration menu
   And I follow "Create journal"
   And I should see "New \"Institution One\" journal:"
   And I set the following fields to these values:
@@ -84,7 +84,7 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
 Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   Given I log in as "admin" with password "Kupuhipa1"
   # Creating a site wide journal
-  And I choose "Journals" in "Configure site" from Admin menu
+  And I choose "Journals" in "Configure site" from administration menu
   And I follow "Create journal"
   And I set the following fields to these values:
   | Title * | Site journal 1 |
@@ -98,7 +98,7 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I should see "Journal entry saved"
   And I should see "Spongebob"
   # Creating a site page
-  And I choose "Pages and collections" in "Configure site" from Admin menu
+  And I choose "Pages and collections" in "Configure site" from administration menu
   And I follow "Add"
   And I click on "Page" in the dialog
   And I set the following fields to these values:
@@ -125,7 +125,7 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   | Copy for new user | 1 |
   And I press "Save"
   # Needs to add new user now to see if they get copy of page
-  And I choose "Add user" in "Users" from Admin menu
+  And I choose "Add user" in "Users" from administration menu
   And I set the following fields to these values:
   | First name * | Pete |
   | Last name * | Mc |
@@ -137,12 +137,9 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I follow "Log in as this user"
   And I follow "log in anyway"
   # Checking I can see the page ...
-  And I click on "Show Menu"
-  And I follow "Portfolio"
+  And I choose "Portfolio" from main menu
   Then I should see "Square pants"
   # ... and the journal
-  And I click on "Show Menu"
-  When I follow "Content"
-  And I choose "Journals" in "Content" from Main menu
+  And I choose "Journals" in "Content" from main menu
   And I follow "Copy of Site journal 1"
   Then I should see "Spongebob"

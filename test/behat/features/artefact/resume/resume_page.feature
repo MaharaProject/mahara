@@ -17,7 +17,7 @@ Background:
 Scenario: Editing admin resume page (Bug 1426983)
     Given I log in as "userA" with password "Kupuhipa1"
     # Editing resume
-    When I choose "Résumé" in "Content" from Main menu
+    When I choose "Résumé" in "Content" from main menu
     And I follow "Introduction"
     And I fill in the following:
     | Date of birth   | 1970/01/07 |

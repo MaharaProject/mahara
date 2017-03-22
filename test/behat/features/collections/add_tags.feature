@@ -11,7 +11,7 @@ Scenario: Adding tags to files (Bug 1426983)
    # Verifying log in was successful
    And I should see "Admin User"
    # Creating a folder with a  tag
-   When I choose "Files" in "Content" from Main menu
+   When I choose "Files" in "Content" from main menu
    And I set the following fields to these values:
    | Create folder | folder1 |
    # Pressing create folder button
@@ -23,7 +23,7 @@ Scenario: Adding tags to files (Bug 1426983)
    And I fill in select2 input "files_filebrowser_edit_tags" with "folder" and select "folder"
    And I press "Save changes"
    #Creating a Journal with tag
-   And I choose "Journals" in "Content" from Main menu
+   And I choose "Journals" in "Content" from main menu
    And I follow "New entry"
    And I set the following fields to these values:
    | Title *  | Journal one  |
@@ -33,7 +33,7 @@ Scenario: Adding tags to files (Bug 1426983)
    And I fill in select2 input "editpost_tags" with "test" and select "test"
    And I press "Save entry"
    # Creating a Plan with a tag
-   And I choose "Plans" in "Content" from Main menu
+   And I choose "Plans" in "Content" from main menu
    And I follow "New plan"
    And I fill in the following:
    | Title *  | Plan 9 from outer space  |
@@ -52,8 +52,7 @@ Scenario: Adding tags to files (Bug 1426983)
    And I fill in select2 input "addtasks_tags" with "test" and select "test"
    And I press "Save task"
    # Creating page 1 with a tag
-   And I click on "Show Menu"
-   And I follow "Portfolio"
+   And I choose "Portfolio" from main menu
    And I follow "Add"
    And I click on "Page" in the dialog
    And I set the following fields to these values:
@@ -61,8 +60,7 @@ Scenario: Adding tags to files (Bug 1426983)
    And I fill in select2 input "editview_tags" with "page" and select "page"
    And I fill in select2 input "editview_tags" with "test" and select "test"
    And I press "Save"
-   And I click on "Show Menu"
-   And I follow "Portfolio"
+   And I choose "Portfolio" from main menu
    # Creating page 2 with a tag
    And I follow "Add"
    And I click on "Page" in the dialog

@@ -10,8 +10,7 @@ Scenario: Creating groups and deleting them (Selenium)
     # Verifying log in was successful
     And I should see "Admin User"
     # Creating 4 types of groups
-    And I click on "Show Menu"
-    When I follow "Groups"
+    And I choose "Groups" from main menu
     And I follow "Create group"
     And I fill in "Group name" with "Admin Test Group"
     And I disable the switch "Open"
@@ -19,8 +18,7 @@ Scenario: Creating groups and deleting them (Selenium)
     And I press "Save group"
     # Verifying group saved
     And I should see "Group saved successfully"
-    And I click on "Show Menu"
-    And I follow "Groups"
+    And I choose "Groups" from main menu
     And I follow "Create group"
     And I fill in "Group name" with "Admin VIP Group"
     And I disable the switch "Open"
@@ -28,15 +26,13 @@ Scenario: Creating groups and deleting them (Selenium)
     And I press "Save group"
     # Verifing group saved
     And I should see "Group saved successfully"
-    And I click on "Show Menu"
-    And I follow "Groups"
+    And I choose "Groups" from main menu
     And I follow "Create group"
     And I fill in "Group name" with "Public discussion"
     And I press "Save group"
     # Verifing group saved
     And I should see "Group saved successfully"
-    And I click on "Show Menu"
-    And I follow "Groups"
+    And I choose "Groups" from main menu
     And I follow "Create group"
     And I fill in "Group name" with "Controlled groups"
     And I disable the switch "Open"
@@ -45,8 +41,7 @@ Scenario: Creating groups and deleting them (Selenium)
     # Verifing group saved
     And I should see "Group saved successfully"
     # Deleting groups and verifying they are deleted
-    And I click on "Show Menu"
-    Then I follow "Groups"
+    And I choose "Groups" from main menu
     And I follow "Admin Test Group"
     And I follow "Delete \"Admin Test Group\""
     And I press "Yes"

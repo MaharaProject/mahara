@@ -6,7 +6,7 @@
 
 Scenario:Injecting sql in groups search field
   Given I log in as "admin" with password "Kupuhipa1"
-  And I choose "My groups" in "Groups" from Main menu
+  And I choose "My groups" in "Groups" from main menu
   And I click on "Create group"
   And I set the following fields to these values:
   | Group name | <script>alert(1);</script> |
@@ -15,7 +15,7 @@ Scenario:Injecting sql in groups search field
   | Hide group | Off |
   And I press "Save group"
   And I should see "Group saved successfully"
-  And I choose "Administer groups" in "Groups" from Admin menu
+  And I choose "Administer groups" in "Groups" from administration menu
   When I set the following fields to these values:
    | search_query | <script>alert(1);</script> |
   And I press "search_submit"

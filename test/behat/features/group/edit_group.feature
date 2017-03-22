@@ -13,12 +13,12 @@ Given the following "users" exist:
 
 Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  Given I log in as "admin" with password "Kupuhipa1"
- And I choose "Add groups by CSV" in "Groups" from Admin menu
+ And I choose "Add groups by CSV" in "Groups" from administration menu
  # Attaching the groups via CSV
  And I attach the file "groups.csv" to "CSV file"
  When I press "Add groups by CSV"
  And I should see "Your CSV file was processed successfully."
- And I choose "Update group members by CSV" in "Groups" from Admin menu
+ And I choose "Update group members by CSV" in "Groups" from administration menu
  # Verify the warnings there
  And I should see "Every CSV file upload removes all existing group members, including group administrators, completely. Ensure that you have at least one administrator for each group in your CSV file."
  # Attaching the group members via CSV
@@ -27,8 +27,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I log out
  # Logging back in as a user
  And I log in as "userA" with password "Kupuhipa1"
- And I click on "Show Menu"
- And I follow "Groups"
+ And I choose "Groups" from main menu
  And I follow "Group Two"
  # Editing the group
  And I follow "Edit \"Group Two\" Settings"
@@ -50,8 +49,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
   And I log out
  # Logging back in as a user
  And I log in as "userB" with password "Kupuhipa1"
- And I click on "Show Menu"
- And I follow "Groups"
+ And I choose "Groups" from main menu
  And I follow "group 01"
  # Editing the group
  And I follow "Edit \"group 01\" Settings"
@@ -64,8 +62,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I log out
  # Logging in as Admin
  Given I log in as "admin" with password "Kupuhipa1"
- And I click on "Show Menu"
- And I follow "Groups"
+ And I choose "Groups" from main menu
  And I follow "Group awesome sauce"
  # Making sure I cant edit a group I am not owner of
  And I should not see "Edit this page"

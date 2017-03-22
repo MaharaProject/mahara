@@ -8,7 +8,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     # Log in
     Given I log in as "admin" with password "Kupuhipa1"
     # Updating Profile
-    When I choose "Profile" in "Content" from Main menu
+    When I choose "Profile" in "Content" from main menu
     And I fill in the following:
     | First name | Test     |
     | Last name | Admin     |
@@ -41,11 +41,10 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Your URL or username | https://twitter.com/MaharaProject |
     And I press "Save"
     # Verifying the settings held, navitgating to dashboard page to check
-    And I click on "Show Menu"
-    Then I follow "Dashboard"
+    And I choose "Dashboard" from main menu
     And I should see "Test Admin"
     # Resetting/Editing details
-    And I choose "Profile" in "Content" from Main menu
+    And I choose "Profile" in "Content" from main menu
     And I follow "About me"
     And I fill in the following:
     | First name   | Admin  |
@@ -72,15 +71,14 @@ Scenario: Editing admin profile page (Bug: 1426983)
     And I press "Save profile"
     And I should see "Profile saved successfully"
     # Verifying changes has been made navigating to dashboard page to checked
-    And I click on "Show Menu"
-    Then I follow "Dashboard"
+    And I choose "Dashboard" from main menu
     And I should see "Admin User"
 
 Scenario: Editing admin profile picture (Bug: 1578000)
     # Log in
     Given I log in as "admin" with password "Kupuhipa1"
     # Add new profile picture
-    When I choose "Profile pictures" in "Content" from Main menu
+    When I choose "Profile pictures" in "Content" from main menu
     And I attach the file "Image2.png" to "Profile picture"
     And I fill in the following:
     | Image title | New avatar |

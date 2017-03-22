@@ -24,8 +24,7 @@ Background:
 
 Scenario: Adding a comment on a group page (Bug 1426983)
     Given I log in as "bob" with password "Kupuhipa1"
-    And I click on "Show Menu"
-    And I follow "Groups"
+    And I choose "Groups" from main menu
     And I follow "Test group 1"
     And I follow "Pages and collections (tab)"
     # And I click on "Pages"
@@ -40,7 +39,6 @@ Scenario: Adding a comment on a group page (Bug 1426983)
     And I wait "1" seconds
     Then I should see "New comment on Testing group page 01"
     # Checking notifications also appear in my inbox
-    And I click on "Show User Menu"
-    And I follow "mail"
+    And I choose "mail" from user menu by id
     And I follow "New comment on Testing group page 01"
     And I should see "Testing comment notifications"

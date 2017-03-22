@@ -13,8 +13,7 @@ I can create a new page from the site default portfolio page
 
   Scenario: Add a text block into the site default portfolio page and create a new portfolio page (Bug 1488255)
     Given I log in as "admin" with password "Kupuhipa1"
-    And I click on "Show Administration Menu"
-    And I choose "Pages and collections" in "Configure site" from Admin menu
+    And I choose "Pages and collections" in "Configure site" from administration menu
     And I should see "Page template"
     And I click on "Page template" panel menu
     And I click on "Edit" in "Page template" panel menu
@@ -33,8 +32,7 @@ I can create a new page from the site default portfolio page
     And I should see "Login"
     # Create a new portfolio page
     And I log in as "userA" with password "Kupuhipa1"
-    And I click on "Show Menu"
-    And I choose "Portfolio"
+    And I choose "Portfolio" from main menu
     And I should see "Pages and collections"
     And I follow "Add"
     And I click on "Page" in the dialog

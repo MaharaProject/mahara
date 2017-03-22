@@ -10,7 +10,7 @@ Scenario: Create users by csv (Bug 1426983)
     # Verifying log in was successful
     And I should see "Admin User"
     # Adding Users by CVS
-    And I choose "Add users by CSV" in "Users" from Admin menu
+    And I choose "Add users by CSV" in "Users" from administration menu
     And I attach the file "UserCSV.csv" to "CSV file"
     And I disable the switch "Force password change"
     And I disable the switch "Email users about their account"
@@ -19,7 +19,7 @@ Scenario: Create users by csv (Bug 1426983)
     And I should see "New users added: 4."
 
     # Check that we can delete a user after upload (Bug #1558864)
-    And I choose "User search" in "Users" from Admin menu
+    And I choose "User search" in "Users" from administration menu
     And I follow "kevin01"
     And I follow "Suspend or delete this user"
     And I scroll to the id "delete"

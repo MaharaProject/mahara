@@ -8,8 +8,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
 
  #Logging in and Creating a group
  Given I log in as "admin" with password "Kupuhipa1"
- And I click on "Show Menu"
- Then I follow "Groups"
+ And I choose "Groups" from main menu
  Then I should see "My groups"
  When I follow "Create group"
  Then I should see "Create group"
@@ -19,8 +18,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  Then I should see "Group saved successfully"
 
  #Creating a page to share with group
- And I click on "Show Menu"
- When I follow "Portfolio"
+ And I choose "Portfolio" from main menu
  Then I should see "Pages"
  And I follow "Add"
  And I click on "Page" in the dialog
@@ -38,8 +36,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  | accesslist[0][searchtype] | Test Group1 |
   And I press "Save"
 
- And I click on "Show Menu"
- When I follow "Portfolio"
+ When I choose "Portfolio" from main menu
  And I follow "Group page1"
  And I follow "Edit this page"
  When I follow "Share page"
@@ -50,8 +47,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  And I scroll to the id "editaccess_submit_container"
  And I press "Save"
 
- And I click on "Show Menu"
- When I follow "Portfolio"
+ When I choose "Portfolio" from main menu
  And I follow "Group page1"
  And I follow "Edit this page"
  When I follow "Share page"

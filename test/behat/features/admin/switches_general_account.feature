@@ -7,7 +7,7 @@ I need to be able to switch switches back and forth
 Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
  # In the adding users area
- When I choose "Add user" in "Users" from Admin menu
+ When I choose "Add user" in "Users" from administration menu
  And I press "General account options"
  # Changing the switches to their opposite setting
  And I set the following fields to these values:
@@ -25,7 +25,7 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  | password    | mahara1  |
  And I press "Create user"
  # In the Admin block adding users by CSV area
- And I choose "Add users by CSV" in "Users" from Admin menu
+ And I choose "Add users by CSV" in "Users" from administration menu
  And I follow "General account options"
  # Changing the switches to the opposite setting
  And I set the following fields to these values:

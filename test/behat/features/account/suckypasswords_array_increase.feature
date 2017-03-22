@@ -11,8 +11,7 @@ Background:
 
 Scenario: Admin can't change password to anything on suckypasswords list (Bug #844457)
  Given I log in as "admin" with password "Kupuhipa1"
- And I click on "Show User Menu"
- And I follow "Settings"
+ And I choose "Settings" from user menu
  And I fill in "Current password" with "Kupuhipa1"
  And I fill in "New password" with "abc123"
  And I fill in "Confirm password" with "abc123"
@@ -37,8 +36,7 @@ Scenario: Admin can't change password to anything on suckypasswords list (Bug #8
 
 Scenario: Student can't change password to anything on suckypasswords list (Bug #844457)
  Given I log in as "userA" with password "Kupuhipa1"
- And I click on "Show User Menu"
- And I follow "Settings"
+ And I choose "Settings" from user menu
  And I fill in "Current password" with "Kupuhipa1"
  And I fill in "New password" with "abc123"
  And I fill in "Confirm password" with "abc123"

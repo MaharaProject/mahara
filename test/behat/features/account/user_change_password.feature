@@ -17,7 +17,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | Institution name   | Institution One  |
     And I press "Submit"
     # Creating user 1
-    And I choose "Add user" in "Users" from Admin menu
+    And I choose "Add user" in "Users" from administration menu
     And I fill in the following:
     | firstname   | bob  |
     | lastname    | bobby    |
@@ -28,7 +28,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     And I enable the switch "Institution administrator"
     And I press "Create user"
     # Creating user 2
-    And I choose "Add user" in "Users" from Admin menu
+    And I choose "Add user" in "Users" from administration menu
     And I fill in the following:
     | firstname   | Jen  |
     | lastname    | Jenny    |
@@ -48,7 +48,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     # Verifying password was changed successfully
     And I should see "Your new password has been saved"
     # Changing password
-    And I choose "Settings" in "Settings" from User menu
+    And I choose "Settings" in "Settings" from user menu
     And I fill in the following:
     | Current password   | mahara2 |
     | New password   | mahara3 |
@@ -67,7 +67,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     # Verifying password was changed
     And I should see "Your new password has been saved"
     # Changing password
-    And I choose "Settings" in "Settings" from User menu
+    And I choose "Settings" in "Settings" from user menu
     And I fill in the following:
     | Current password   | mahara2 |
     | New password   | mahara3 |

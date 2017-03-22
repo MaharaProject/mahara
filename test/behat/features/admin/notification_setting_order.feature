@@ -6,7 +6,7 @@
 
  Scenario: Admin logs in and checks notification settings (Bug 1388682)
   Given I log in as "admin" with password "Kupuhipa1"
-  And I choose "Site options" in "Configure site" from Admin menu
+  And I choose "Site options" in "Configure site" from administration menu
   And I click on "Notification settings"
   Then I should see "Contact us"
   And I should see "Comment"

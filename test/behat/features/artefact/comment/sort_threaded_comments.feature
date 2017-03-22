@@ -71,7 +71,6 @@ Scenario: Threaded comments should be displayed in correct order
     # Reply to a comment
     And I scroll to the base of id "feedback_pagination"
     And I follow "1"
-    And I click on "Show Menu"
     And I click on "Reply" in "Comment #1" row
     And I fill in "Comment #1/1" in editor "Message"
     And I press "Comment"

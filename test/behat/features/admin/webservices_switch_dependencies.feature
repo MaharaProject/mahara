@@ -6,7 +6,7 @@ So I can benefit from the mahara/moodle cross over.
 
 Scenario: Testing web service admin page on/off switches, and checking test client page is accessible (Bug 1431540)
  Given I log in as "admin" with password "Kupuhipa1"
- And I choose "Configuration" in "Web services" from Admin menu
+ And I choose "Configuration" in "Web services" from administration menu
  # Toggle Web service requester master switch
  And I disable the switch "Allow outgoing web service requests:"
  And I enable the switch "Allow outgoing web service requests:"
@@ -20,7 +20,7 @@ Scenario: Testing web service admin page on/off switches, and checking test clie
  # Turning a protocol on
  And I enable the switch "SOAP:"
  # Navigating to the test client page to see it's accessible
- And I choose "Test client" in "Web services" from Admin menu
+ And I choose "Test client" in "Web services" from administration menu
  Then I should see "This is the interactive test client facility for web services."
  And I should not see "Select elements should have at least one option"
  And I should not see "The web service authentication plugin is disabled."

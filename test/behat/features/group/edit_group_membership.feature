@@ -28,7 +28,7 @@ And the following "groups" exist:
 Scenario: Check modal is working for the "Edit group memebership" on find friends page (Bug 1513265)
    # Log in as "Admin" user
    Given I log in as "admin" with password "Kupuhipa1"
-   And I choose "Find friends" in "Groups" from Main menu
+   And I choose "Find friends" in "Groups" from main menu
    And I follow "2" in the "div#friendslist_pagination" "css_element"
    And I follow "Edit group membership"
    Then I should see "Apply changes"

@@ -11,7 +11,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     # Verifying log in was successful
     And I should see "Admin User"
     # Creating folder 1
-    When I choose "Files" in "Content" from Main menu
+    When I choose "Files" in "Content" from main menu
     And I fill in "Folder1" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
     And I wait "1" seconds

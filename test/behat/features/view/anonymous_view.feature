@@ -24,7 +24,7 @@ Scenario: Testing that views & collections are collated properly
 
     # Make page anonymous
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages and collections" in "Portfolio" from Main menu
+    And I choose "Pages and collections" in "Portfolio" from main menu
     And I follow "Page 1"
     And I follow "Edit this page"
     And I follow "Edit title and description"

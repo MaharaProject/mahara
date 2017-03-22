@@ -6,7 +6,7 @@ I need to be able to enable it via a switch
 
 Scenario: Turning the switches on and off on Cookie consent page (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
- And I choose "Cookie Consent" in "Configure site" from Admin menu
+ And I choose "Cookie Consent" in "Configure site" from administration menu
  And I set the following fields to these values:
  | Enable Cookie Consent | 1 |
  And I press "Save changes"

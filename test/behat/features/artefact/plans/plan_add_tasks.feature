@@ -5,7 +5,7 @@ In order to test the pagination of the plan
 
 Scenario: Creating a plan with 11 tasks (Bug #1503036)
  Given I log in as "admin" with password "Kupuhipa1"
- And I choose "Plans" in "Content" from Main menu
+ And I choose "Plans" in "Content" from main menu
  And I follow "New plan"
  And I fill in the following:
  | Title *  | Plan 9 from outer space  |
@@ -88,7 +88,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
  And I follow "Next page"
  Then I should see "Alien invasion"
  # Add the plan to a page
- And I choose "Pages and collections" in "Portfolio" from Main menu
+ And I choose "Pages and collections" in "Portfolio" from main menu
  And I follow "Add"
  And I click on "Page" in the dialog
  And I press "Save"

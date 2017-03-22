@@ -24,20 +24,20 @@ Feature: Mahara user permissions in institutions
   Scenario: Register to an institution
     # Member can register to an institution
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Institution membership" in "Groups" from Main menu
+    And I choose "Institution membership" in "Groups" from main menu
     Then I should see "Request membership of an institution"
     And I log out
 
   Scenario: Site admin vs institution admin when sharing institution page
     # Site admin can only share institution page with institution it belongs to
     Given I log in as "admin" with password "Kupuhipa1"
-    And I choose "Pages and collections" in "Institutions" from Admin menu
+    And I choose "Pages and collections" in "Institutions" from administration menu
     And I follow "Inst One page"
     And I follow "Edit this page"
     And I follow "Share page"
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should not contain "Institution Two"
-    And I choose "User search" in "Users" from Admin menu
+    And I choose "User search" in "Users" from administration menu
     And I follow "userB"
     And I press "Add user to institution"
     Then I should see "User added to institution \"Institution Two\"."
@@ -45,7 +45,7 @@ Feature: Mahara user permissions in institutions
 
     # Institution admin can share institution page with any of the institutions they belong to
     Given I log in as "userB" with password "Kupuhipa2"
-    And I choose "Pages and collections" in "Institutions" from Admin menu
+    And I choose "Pages and collections" in "Institutions" from administration menu
     And I follow "Inst One page"
     And I follow "Edit this page"
     And I follow "Share page"
@@ -55,7 +55,7 @@ Feature: Mahara user permissions in institutions
 
     # Add new member to institution via Institution -> Member's page
     Given I log in as "admin" with password "Kupuhipa1"
-    And I choose "Members" in "Institutions" from Admin menu
+    And I choose "Members" in "Institutions" from administration menu
     And I select "People who have not requested institution membership yet" from "Users to display:"
     And I wait until the page is ready
     And I select "userC" from "Non-members"

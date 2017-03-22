@@ -9,8 +9,7 @@ Background:
      | username | password | email | firstname | lastname | institution | authname | role |
      | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
  Given I log in as "admin" with password "Kupuhipa1"
- And I click on "Show Administration Menu"
- And I follow "Users"
+ And I choose "Users" from administration menu
  And I follow "Pete"
  And I follow "Send message"
  And I fill in the following:
@@ -19,8 +18,7 @@ Background:
  And I press "Send message"
  And I log out
  Given I log in as "userA" with password "Kupuhipa1"
- And I click on "Show User Menu"
- When I follow "mail"
+ And I choose "mail" from user menu by id
  And I follow "Hi there"
  And I wait "1" seconds
  And I follow "Reply"
@@ -32,18 +30,15 @@ Background:
 Scenario: Selection options to filter messages (Bug 1433342)
  # First check what options an admin has
  Given I log in as "admin" with password "Kupuhipa1"
- And I click on "Show User Menu"
- When I follow "mail"
+ And I choose "mail" from user menu by id
  And the "Activity type:" select box should contain all "Administration messages | Comment | Contact us | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content | Objectionable content in forum | Repeat virus upload | System message | Virus flag release | Watchlist"
  And I log out
 
  # Then check what options a normal user has
  Given I log in as "userA" with password "Kupuhipa1"
- And I click on "Show Menu"
- And I follow "Groups"
+ And I choose "Groups" from main menu
  And I follow "Create group"
  And I fill in "Group name" with "Jurassic Park"
  And I press "Save group"
- And I click on "Show User Menu"
- When I follow "mail"
+ And I choose "mail" from user menu by id
  And the "Activity type:" select box should contain all "Comment | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content in forum | System message | Watchlist"

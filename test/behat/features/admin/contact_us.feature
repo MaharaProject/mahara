@@ -18,6 +18,5 @@ Scenario: Checking that admin user can view messages in their mail sent from Con
  And I trigger cron
  And I go to the homepage
  And I log in as "admin" with password "Kupuhipa1"
- And I click on "Show User Menu"
- And I click on "mail"
+ And I choose "mail" from user menu by id
  Then I should see "New contact us"

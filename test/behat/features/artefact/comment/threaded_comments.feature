@@ -91,8 +91,7 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
     And I should see "Private reply by pageowner"
     And I should see "Private counter-reply by pagecommenter"
     # pagecommenter should receive a notification about pageowner's reply even though they unwatched the page
-    And I click on "Show User Menu"
-    And I follow "mail"
+    And I choose "mail" from user menu by id
     And I follow "New comment on page1"
     And I should see "Private reply by pageowner"
 

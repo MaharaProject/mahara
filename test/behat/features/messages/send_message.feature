@@ -15,8 +15,7 @@ Scenario: Selecting select2 option via ajax (Bug #1520011)
     # Log in as an Admin user
     Given I log in as "admin" with password "Kupuhipa1"
     # Send a message
-    And I click on "Show User Menu"
-    And I follow "mail"
+    And I choose "mail" from user menu by id
     And I follow "Compose"
     And I fill in select2 input "sendmessage_recipients" with "userA" and select "Andrea Andrews (userA)"
     And I set the following fields to these values:

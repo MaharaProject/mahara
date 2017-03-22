@@ -15,7 +15,7 @@ Given the following "users" exist:
 
     # Logging in as a user
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages and collections" in "Portfolio" from Main menu
+    And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Page 1" panel menu
     And I click on "Edit" in "Page 1" panel menu
     # Configuring the block
@@ -31,7 +31,7 @@ Scenario: Adding and deleting a Note block (Bug 1424512)
     And I should see "Note block 1"
     # Verifying the Note block saved
     And I display the page
-    And I choose "Notes" in "Content" from Main menu
+    And I choose "Notes" in "Content" from main menu
     And I should see "Note block 1"
     # Verifying the Note block can be deleted
     And I delete the "Note block 1" row
@@ -45,6 +45,6 @@ Scenario: Adding an attachment to a note
     And I should see "Upload of Image2.png complete"
     And I press "Save"
     # Verifying the attachment saved
-    And I choose "Notes" in "Content" from Main menu
+    And I choose "Notes" in "Content" from main menu
     And I follow "Note block 1"
     And I should see "Image2.png"

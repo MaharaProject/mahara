@@ -12,15 +12,14 @@ Background:
 Scenario: Wall post notifications
 The wall post must generate a notification (Bug 547333)
     Given I log in as "userB" with password "Kupuhipa1"
-    And I go to "/user/find.php"
+    And I choose "Find friends" in "Groups" from main menu
     And I follow "Pete Mc"
     And I scroll to the base of id "wall-wrap"
     And I set the field "Post" to "Hello"
     And I press "Post"
     And I log out
     And I log in as "userA" with password "Kupuhipa1"
-    And I click on "Show User Menu"
-    And I follow "mail"
+    And I choose "mail" from user menu by id
     Then I should see "New post on your wall"
     When I click on "New post on your wall"
     Then I should see "Hello"

@@ -27,23 +27,20 @@ Scenario: Create groups and limit display on profile page (Bug 1426983)
     # Verifying log in was successful
     And I should see "Pete"
     # Creating several groups to test
-    And I click on "Show Menu"
-    And I choose "Groups"
+    And I choose "Groups" from main menu
     And I follow "Create group"
     And I set the following fields to these values:
     | Group name | Testing Group 11 |
     | Group description | This is group 11 |
     And I press "Save group"
     # Changing the amount of groups seen in My groups block
-    And I click on "Show Menu"
-    When I choose "Portfolio"
+    And I choose "Portfolio" from main menu
     And I follow "Profile page"
     And I follow "Edit this page"
     And I configure the block "My groups"
     And I set the following fields to these values:
     | Maximum number of groups to display | 3 |
     And I press "Save"
-    And I click on "Show Menu"
-    And I choose "Portfolio"
+    And I choose "Portfolio" from main menu
     And I follow "Profile page"
     And I should see "11 groups"

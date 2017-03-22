@@ -37,15 +37,23 @@ class BehatNavigation extends BehatBase {
      *
      * @throws ExpectationException if node not found.
      * @param string $menuitemtext the title of menu item e.g. "Dashboard", "Content".
+     * @param string $menu the type of menu to look in e.g. "admin", "user".
+     * @param string $byid find the menu item based on an id e.g. "mail" for "? unread" messages link to inbox
      * @return NodeElement
      */
-    protected function get_main_menu_item_node($menuitemtext) {
+    protected function get_main_menu_item_node($menuitemtext, $menu, $byid = false) {
 
         // Avoid problems with quotes.
         $nodetextliteral = $this->escaper->escapeLiteral($menuitemtext);
-        $exception = new ExpectationException('The menu item "' . $menuitemtext . ' not found or invisible in "', $this->getSession());
-        $xpath = "//nav[@id='main-nav']" .
-            "//a[normalize-space(.)=" . $nodetextliteral ."]";
+        $exception = new ExpectationException('The menu item ' . ($byid ? 'with id ' : '') . '"' . $menuitemtext . '" not found or invisible in "' . $menu . '"', $this->getSession());
+        if ($byid) {
+            $xpath = "//nav[@id='" . $menu . "']" .
+              "//a[@id='" . $menuitemtext . "']";
+        }
+        else {
+            $xpath = "//nav[@id='" . $menu . "']" .
+              "//a[normalize-space(.)=" . $nodetextliteral ."]";
+        }
         $node = $this->find('xpath', $xpath, $exception);
 
         return $node;
@@ -57,6 +65,7 @@ class BehatNavigation extends BehatBase {
      * @throws ExpectationException if node not found or invisible.
      * @param string $submenuitemtext the title of submenu item e.g. "Profile", "Pages".
      * @param string $menuitemtext the title of menu item e.g. "Content", "Portfolio".
+     * @param string $menu the type of menu to look in e.g. "admin", "user".
      * @return NodeElement
      */
     protected function get_sub_menu_item_node($submenuitemtext, $menuitemtext, $menu) {
@@ -64,7 +73,8 @@ class BehatNavigation extends BehatBase {
         // Avoid problems with quotes.
         $submenuitemtextliteral = $this->escaper->escapeLiteral($submenuitemtext);
         $menuitemtextliteral = $this->escaper->escapeLiteral($menuitemtext);
-        $exception = new ExpectationException('The sub menu item "' . $menuitemtext . ' not found or invisible in "', $this->getSession());
+        $exception = new ExpectationException('The sub menu item "' . $menuitemtext . '" not found or invisible in "' . $menu . '"', $this->getSession());
+
         $xpath = "//nav[@id='" . $menu . "']" .
             "//li[contains(normalize-space(.), " . $menuitemtextliteral .")]" .
             "//a[normalize-space(.)=" . $submenuitemtextliteral ."]";
@@ -74,12 +84,45 @@ class BehatNavigation extends BehatBase {
     }
 
     /**
-     * Choose a main menu item
+     * Choose a main menu item from Main menu
      *
-     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)"$/
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" from main menu$/
      */
-    public function i_choose_menu($menuitem) {
-        $menuitemnode = $this->get_main_menu_item_node($menuitem);
+    public function i_choose_menu_main($menuitem) {
+        $menuitemnode = $this->get_main_menu_item_node($menuitem, 'main-nav');
+        $path = $menuitemnode->getAttribute('href');
+        $this->visitPath($path);
+    }
+
+    /**
+     * Choose a main menu item from Admin menu
+     *
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" from administration menu$/
+     */
+    public function i_choose_menu_admin($menuitem) {
+        $menuitemnode = $this->get_main_menu_item_node($menuitem, 'main-nav-admin');
+        $path = $menuitemnode->getAttribute('href');
+        $this->visitPath($path);
+    }
+
+    /**
+     * Choose a main menu item from user menu
+     *
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" from user menu$/
+     */
+    public function i_choose_menu_user($menuitem) {
+        $menuitemnode = $this->get_main_menu_item_node($menuitem, 'main-nav-user');
+        $path = $menuitemnode->getAttribute('href');
+        $this->visitPath($path);
+    }
+
+    /**
+     * Choose a main menu item from user menu by id
+     *
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" from user menu by id$/
+     */
+    public function i_choose_menu_user_by_id($menuitem) {
+        $menuitemnode = $this->get_main_menu_item_node($menuitem, 'main-nav-user', true);
         $path = $menuitemnode->getAttribute('href');
         $this->visitPath($path);
     }
@@ -87,7 +130,7 @@ class BehatNavigation extends BehatBase {
     /**
      * Choose a sub menu item in admnistration menu item
      *
-     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from Admin menu$/
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from administration menu$/
      */
     public function i_choose_submenu_admin($menuitem, $mainmenuitem) {
         $menuitemnode = $this->get_sub_menu_item_node($menuitem, $mainmenuitem, 'main-nav-admin');
@@ -98,7 +141,7 @@ class BehatNavigation extends BehatBase {
     /**
      * Choose a sub menu item in user menu item
      *
-     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from User menu$/
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from user menu$/
      */
     public function i_choose_submenu_user($menuitem, $mainmenuitem) {
         $menuitemnode = $this->get_sub_menu_item_node($menuitem, $mainmenuitem, 'main-nav-user');
@@ -109,7 +152,7 @@ class BehatNavigation extends BehatBase {
     /**
      * Choose a sub menu item in a main menu item
      *
-     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from Main menu$/
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from main menu$/
      */
     public function i_choose_submenu_main($menuitem, $mainmenuitem) {
         $menuitemnode = $this->get_sub_menu_item_node($menuitem, $mainmenuitem, 'main-nav');

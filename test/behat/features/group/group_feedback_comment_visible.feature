@@ -18,8 +18,7 @@ Given the following "groups" exist:
 
 Scenario: As a user leaving a public comment on a group page (Bug 1509129)
  Given I log in as "userA" with password "Kupuhipa1"
- And I click on "Show Menu"
- And I choose "Groups"
+ And I choose "Groups" from main menu
  # Changing the settings of the block to change comment notification
  And I click on "Settings" in the "div.groupuserstatus" "css_element"
  And I set the following fields to these values:

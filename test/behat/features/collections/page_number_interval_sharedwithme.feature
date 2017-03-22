@@ -34,7 +34,7 @@
      | A's Page 20 | UserA's page 20 | user | userA |
      | A's Page 21 | UserA's page 21 | user | userA |
      | A's Page 22 | UserA's page 22 | user | userA |
-  And I choose "Portfolio"
+  And I choose "Portfolio" from main menu
   And I click the panel "A's Page 01"
   And I follow "Edit this page"
   And I follow "Share page"
@@ -43,7 +43,7 @@
   And I press "editaccess_submit"
   And I log out
   And I log in as "userB" with password "Kupuhipa1"
-  And I choose "Shared with me" in "Portfolio" from Main menu
+  And I choose "Shared with me" in "Portfolio" from main menu
   And I check "Registered users"
   And I check "Public"
   And I select "title" from "sort"

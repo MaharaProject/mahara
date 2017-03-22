@@ -21,8 +21,7 @@ Given the following "pages" exist:
 Scenario: Copying a group page retains title (Bug 1519374)
  # Make the group page copyable
  Given I log in as "userA" with password "Kupuhipa1"
- And I click on "Show Menu"
- When I follow "Groups"
+ When I choose "Groups" from main menu
  And I follow "testgroup"
  And I follow "Share" in the "ul.nav-inpage" "css_element"
  And I click on "Edit access" in "Test Page" row

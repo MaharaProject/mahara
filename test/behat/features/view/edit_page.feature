@@ -6,8 +6,7 @@ I need to be able to click on delete and config of a block
 
 Scenario: Clicking ID's (Bug 1428456)
  Given I log in as "admin" with password "Kupuhipa1"
- And I click on "Show Menu"
- And I follow "Portfolio"
+ And I choose "Portfolio" from main menu
  And I follow "Profile page"
  And I follow "Edit this page"
 
