@@ -118,7 +118,8 @@
             color: $navbar-inverse-link-active-color;
             &:hover,
             &:focus {
-                color: $text-color;
+                background-color: $navbar-inverse-link-hover-bg;
+                color: $navbar-inverse-link-hover-color;
             }
         }
     }
