@@ -13,27 +13,14 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
     | title | description | ownertype | ownername |
     | Page UserA_01 | Page 01 | user | UserA |
 
+  And the following "journalposts" exist:
+    | owner | ownertype | title | entry | blog | tags | draft |
+    | UserA | user | Entry one | This is journal entry one | | blog,one | 0 |
+    | UserA | user | Entry two | This is journal entry two | | blog,two | 0 |
+    | UserB | user | UserB entry | This is a journal entry for UserB | | blog,one | 0 |
+
  Scenario: Create blogs
   Given I log in as "UserA" with password "Kupuhipa1"
-  # Create tagged blog entries
-  When I choose "Journals" in "Content" from main menu
-  And I follow "New entry"
-  And I set the following fields to these values:
-  | Title | Entry one |
-  | Entry | This is journal entry one |
-  And I scroll to the base of id "editpost_tags_container"
-  And I fill in select2 input "editpost_tags" with "blog" and select "blog"
-  And I fill in select2 input "editpost_tags" with "one" and select "one"
-  And I press "Save entry"
-  And I follow "New entry"
-  And I set the following fields to these values:
-  | Title | Entry two |
-  | Entry | This is journal entry two |
-  And I scroll to the base of id "editpost_tags_container"
-  And I fill in select2 input "editpost_tags" with "blog" and select "blog"
-  And I fill in select2 input "editpost_tags" with "two" and select "two"
-  And I press "Save entry"
-
   # Add a taggedblogs block to a page
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I click on "Page UserA_01" panel menu
@@ -64,16 +51,6 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   # Copy the page as another user
   And I log out
   Given I log in as "UserB" with password "Kupuhipa1"
-  And I choose "Journals" in "Content" from main menu
-  And I follow "New entry"
-  And I set the following fields to these values:
-  | Title | UserB entry |
-  | Entry | This is a journal entry for UserB |
-  And I scroll to the base of id "editpost_tags_container"
-  And I fill in select2 input "editpost_tags" with "blog" and select "blog"
-  And I fill in select2 input "editpost_tags" with "one" and select "one"
-  And I press "Save entry"
-  And I go to the homepage
   And I scroll to the id "view"
   And I follow "Page UserA_01"
   And I scroll to the base of id "copyview-button"
