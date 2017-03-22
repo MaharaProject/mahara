@@ -1,0 +1,54 @@
+// Display tags styles
+
+.tags {
+    a,
+    a.tag {
+        color: $link-color;
+    }
+}
+
+
+// Tag result page
+.mytags {
+    margin-top: 25px;
+    .tagfreq.badge {
+        color: inherit;
+        border: 1px solid $brand-primary;
+        background-color: transparent;
+    }
+    .tag {
+        margin-right: 10px;
+    }
+}
+.mytags .selected,
+.tag-results .selected {
+    font-weight: bold;
+    color: $gray;
+    .badge {
+        border: 1px solid transparent;
+        color: #ffffff;
+        background-color: $gray;
+    }
+}
+.tag-results .btn-top-right {
+    margin-right: -1px;
+    margin-top: -41px;
+}
+.tag-filters {
+    @extend .clearfix;
+    background-color: #f5f5f5;
+    padding: 10px 15px;
+}
+
+//Edit tag page
+.tag-action-description {
+        color: $gray-light;
+        font-style: italic;
+        font-size: $font-size-base - 1;
+        max-width: 90%;
+        display: block;
+        padding-top: 10px;
+        margin-top: 25px;
+        margin-left: 30px;
+        margin-bottom: 15px;
+}

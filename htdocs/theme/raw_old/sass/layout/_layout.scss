@@ -1,0 +1,139 @@
+/*
+ * Base structure
+ */
+body {
+    max-width: 100%;
+    @media (min-width: 768px) {
+        padding-top: 65px; // Move down content because we have a fixed navbar on desktop/tablet that is 50px tall
+    }
+    &.admin {
+        background-color: lighten($brand-default, 2%);
+    }
+    .main {
+        margin: 0px 0 20px;
+        padding-top: 20px;
+        padding-bottom: 0;
+        @media (min-width: $screen-sm-min) {
+            padding-bottom:50px;
+        }
+    }
+}
+
+.main {
+    max-width: 100%;
+}
+
+.content-main {
+    @media (min-width: 768px) {
+        margin-left: 250px;
+    }
+}
+
+.sidebar {
+    padding-top: 0;
+    @media (min-width: $screen-sm-min) {
+        padding-top: 30px;
+    }
+}
+
+// Expose a section of the page
+.expose {
+    background-color: $brand-default;
+    margin-bottom: 40px;
+    margin-top: -109px;
+    padding: 40px 0px 20px;
+}
+
+.subpage {
+    clear:both;
+}
+
+.wallpost {
+    &:first-child {
+        margin-top: 20px;
+    }
+    p {
+        margin-bottom: 0;
+    }
+}
+
+.columns3,
+.columns4,
+.columns5 {
+    .wallpost .panel-heading {
+        font-size: 12px;
+        padding-right:40px;
+        h4 {
+            font-size: 12px;
+        }
+    }
+}
+
+.viewfooter {
+    clear: both;
+}
+
+// Needed to clear the float when dropzone is visible
+.blocktype {
+  &.ui-draggable:before {
+    display: none;
+  }
+}
+
+.blockinstance {
+  clear: both;
+  .list-group{
+    margin-bottom: 0;
+  }
+}
+
+// Limit the width of external media
+// to fit the width of the column
+.mediaplayer-container iframe {
+    width: 100%;
+}
+
+.progress-container {
+    padding-top: 20px;
+}
+
+.section-import {
+    padding-top: 30px;
+}
+
+.btn-group-top + .lead,
+.btn-action-list + .view-description,
+.btn-group-top + .view-description,
+.toolbar + .lead {
+    clear: both;
+    margin-top: 15px;
+    @media (min-width: $screen-xs-min) {
+        margin-top: 60px;
+    }
+}
+
+.btn-action-list + .view-container,
+.btn-group-top + .view-container {
+    margin-top: 60px;
+}
+
+.view-container {
+    margin-top: 30px;
+    clear: both;
+}
+
+.view-description {
+    margin-top: 15px;
+    @media (min-width: $screen-xs-min) {
+        margin-top: 30px;
+    }
+}
+
+.postlist {
+    margin-top: 20px;
+}
+
+.forumfooter {
+    margin: 15px 0;
+}
+

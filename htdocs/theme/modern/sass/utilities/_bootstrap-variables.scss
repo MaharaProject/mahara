@@ -351,7 +351,7 @@ $grid-columns:              12;
 $grid-gutter-width:         30px;
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
-$grid-float-breakpoint:     $screen-sm-min;
+$grid-float-breakpoint:     10000px;
 //** Point at which the navbar begins collapsing.
 $grid-float-breakpoint-max: ($grid-float-breakpoint - 1);
 
@@ -381,23 +381,23 @@ $container-lg:                 $container-large-desktop;
 //##
 
 // Basics of a navbar
-$navbar-height:                    50px;
+$navbar-height:                    60px;
 $navbar-margin-bottom:             $line-height-computed;
 $navbar-border-radius:             $border-radius-base;
 $navbar-padding-horizontal:        floor(($grid-gutter-width / 2));
 $navbar-padding-vertical:          (($navbar-height - $line-height-computed) / 2);
-$navbar-collapse-max-height:       340px;
+$navbar-collapse-max-height:       none;
 
-$navbar-default-color:             #777;
+$navbar-default-color:             #FFF;
 $navbar-default-bg:                $brand-primary;
-$navbar-default-border:            lighten($brand-primary,60%);
+$navbar-default-border:            darken($brand-primary, 3%);
 
 // Navbar links
 $navbar-default-link-color:                #FFF;
 $navbar-default-link-hover-color:          #FFF;
-$navbar-default-link-hover-bg:             lighten($brand-primary, 10%);
-$navbar-default-link-active-color:         #555;
-$navbar-default-link-active-bg:            #F1F1F1;
+$navbar-default-link-hover-bg:             darken($brand-primary, 3%);
+$navbar-default-link-active-color:         #FFF;
+$navbar-default-link-active-bg:            $navbar-default-link-hover-bg;
 $navbar-default-link-disabled-color:       #ccc;
 $navbar-default-link-disabled-bg:          transparent;
 
@@ -407,23 +407,23 @@ $navbar-default-brand-hover-color:         darken($navbar-default-brand-color, 1
 $navbar-default-brand-hover-bg:            transparent;
 
 // Navbar toggle
-$navbar-default-toggle-hover-bg:           #ddd;
-$navbar-default-toggle-icon-bar-bg:        #888;
-$navbar-default-toggle-border-color:       #ddd;
+$navbar-default-toggle-hover-bg:           $theme-accent-color;
+$navbar-default-toggle-icon-bar-bg:        $navbar-default-link-color;
+$navbar-default-toggle-border-color:       $theme-accent-color;
 
 
 // Inverted navbar
 // Reset inverted navbar basics
 $navbar-inverse-color:                      #fff;
-$navbar-inverse-bg:                         $brand-primary;
-$navbar-inverse-border:                     darken($navbar-inverse-bg, 5%);
+$navbar-inverse-bg:                         $theme-accent-color;
+$navbar-inverse-border:                     $navbar-inverse-bg;
 
 // Inverted navbar links
 $navbar-inverse-link-color:                 #FFFFFF;
 $navbar-inverse-link-hover-color:           #FFFFFF;
-$navbar-inverse-link-hover-bg:              lighten( $brand-primary, 10%);
+$navbar-inverse-link-hover-bg:              darken($navbar-inverse-bg, 2%);
 $navbar-inverse-link-active-color:          $text-color;
-$navbar-inverse-link-active-bg:             #fff;
+$navbar-inverse-link-active-bg:             $navbar-inverse-link-hover-bg;
 $navbar-inverse-link-disabled-color:        #444;
 $navbar-inverse-link-disabled-bg:           transparent;
 
@@ -433,8 +433,8 @@ $navbar-inverse-brand-hover-color:          $navbar-inverse-link-hover-color;
 $navbar-inverse-brand-hover-bg:             transparent;
 
 // Inverted navbar toggle
-$navbar-inverse-toggle-hover-bg:            #333;
-$navbar-inverse-toggle-icon-bar-bg:         #fff;
+$navbar-inverse-toggle-hover-bg:            $theme-accent-color;
+$navbar-inverse-toggle-icon-bar-bg:         $theme-accent-color;
 $navbar-inverse-toggle-border-color:        #333;
 
 //== Navs

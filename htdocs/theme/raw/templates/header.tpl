@@ -15,7 +15,7 @@
         {if $USERMASQUERADING}
             <div class="site-message alert alert-warning" role="alert">
                 <span class="icon icon-lg icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span>
-                <span>{$masqueradedetails}</span> 
+                <span>{$masqueradedetails}</span>
                 <a href="{$becomeyoulink}">{$becomeyouagain}</a>
             </div>
         {/if}
@@ -38,41 +38,55 @@
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
         </div>
     {/if}
-    <header class="header navbar navbar-default navbar-fixed-top no-site-messages">
-        <div class="container">
-            {if $MAINNAV}
-             <!-- Brand and toggle get grouped for better mobile display -->
-                <button type="button" class="menu-toggle navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-main">
-                    <span class="sr-only">{str tag="show"} {str tag="menu"}</span>
-                    <span class="icon-bar" role="presentation"></span>
-                    <span class="icon-bar" role="presentation"></span>
-                    <span class="icon-bar" role="presentation"></span>
-                </button>
-            {/if}
-            {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
-            <button type="button" class="navbar-toggle search-toggle collapsed" data-toggle="collapse" data-target=".navbar-form">
-                <span class="icon icon-search" role="presentation" aria-hidden="true"></span>
-                <span class="nav-title sr-only">{str tag="show"} {str tag="search"}</span>
-            </button>
-            {/if}
-            <div id="logo-area" class="logo-area">
-                <a href="{$WWWROOT}" class="logo">
-                    <img src="{$sitelogo}" alt="{$sitename}">
-                </a>
-                {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
-                    <div class="admin-title">
-                        <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
-                    </div>
-                {/if}
-                <div id="loading-box" class="loading-box" style='display:none'></div>
+    <header class="header navbar-fixed-top no-site-messages">
+        <div class="navbar navbar-default navbar-main">
+            <div class="container">
+                <div class="nav-toggle-area">
+                    {if $MAINNAV}
+                        <button class="main-nav-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main" aria-expanded="false" aria-controls="nav-main">
+                            <span class="sr-only">{str tag="show"} {str tag="menu"}</span>
+                            <span class="icon icon-bars icon-lg" role="presentation" aria-hidden="true"></span>
+                        </button>
+                    {/if}
+                    {if $MAINNAVADMIN}
+                        <button class="admin-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main-admin" aria-expanded="false" aria-controls="nav-main-admin">
+                            <span class="sr-only">{str tag="show"} {str tag="adminmenu"}</span>
+                            <span class="icon icon-wrench icon-large" role="presentation" aria-hidden="true"></span>
+                        </button>
+                    {/if}
+                    {if $LOGGEDIN}
+                        <a href="{profile_url($USER)}" class="user-icon">
+                            <img src="{profile_icon_url user=$USER maxheight=25 maxwidth=25}">
+                        </a>
+                        <button class="user-toggle navbar-toggle" role="button" data-toggle="collapse" data-target=".nav-main-user" aria-expanded="false" aria-controls="nav-main-user">
+                            <span class="sr-only">{str tag="show"} {str tag="usermenu"}</span>
+                            <span class="icon icon-chevron-down collapsed"></span>
+                        </button>
+                    {/if}
+                    <!-- HIDE WHEN ON DESKTOP -->
+                    {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
+                    <button class="search-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
+                        <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
+                        <span class="nav-title sr-only">{str tag="show"} {str tag="search"}</span>
+                    </button>
+                    {/if}
+                </div>
+                <div id="logo-area" class="logo-area">
+                    <a href="{$WWWROOT}" class="logo">
+                        <img src="{$sitelogo}" alt="{$sitename}">
+                    </a>
+                    {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
+                        <div class="admin-title">
+                            <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
+                        </div>
+                    {/if}
+                    <div id="loading-box" class="loading-box" style='display:none'></div>
+                </div>
+                {include file="header/topright.tpl"}
+                {include file="header/navigation.tpl"}
             </div>
-            {include file="header/topright.tpl"}
-
         </div>
     </header>
-
-    {include file="header/navigation.tpl"}
-
 
     <div class="container main-content">
         <div class="row">

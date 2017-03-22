@@ -1,0 +1,43 @@
+/**
+ * CSS rules for the multirecipient artefact plugin
+ *
+ * @author     David Ballhausen, Tobias Zeuch
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+
+ * This file is distributed under the same terms as Mahara itself
+ */
+/*
+.ui-autocomplete-category {
+    font-weight: bold;
+    padding: .2em .4em;
+    margin: .8em 0 .2em;
+    line-height: 1.5;
+}
+
+#sendmessage .select2-choices, #sendmessage .text, #sendmessage textarea {
+    width: 400px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#messagethread td.profilepicturecolumn {
+    width: 20px;
+}
+
+#messagethread td div.subjectdiv {
+    -ms-word-break: break-all;
+    word-break: break-all;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+}
+
+#activitylist tr.unread {
+    font-weight: bold;
+}
+
+.userlist img.togglebtn, .userlist span.recipientlist {
+    float: left;
+    margin-right: 2px;
+}*/

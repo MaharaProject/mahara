@@ -1,45 +1,16 @@
-.menu-toggle {
-    &:before {
-        border-left: 1px solid #FFF;
-    }
-}
-
-.search-toggle {
-    color: #FFFFFF;
-}
-
-.navbar-toggle {
-    margin-right: 0;
-    margin-top: 0;
-}
-
-.header {
-    .navbar-toggle {
-        margin-top: 7px;
-    }
-}
 .navbar-showchildren {
-    background-color: transparent;
-    border-radius: 3px 3px 0 0;
-    color: #FFF;
-    height: 37px;
+    .icon {
+        color: $navbar-inverse-toggle-icon-bar-bg;
+    }
     &:hover,
     &:focus {
         .icon {
-            background-color: transparent;
-            color: #FFF;
+            color: $navbar-inverse-toggle-icon-bar-bg;;
         }
     }
-    .icon {
-        color: #FFF;
-    }
-    &.collapsed {
-        height: auto;
-    }
-}
-
-.adminnav {
-    .navbar-showchildren {
-        height: 35px;
+    .active & {
+        .icon {
+                color: $navbar-inverse-toggle-icon-bar-bg;;
+        }
     }
 }

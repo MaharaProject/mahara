@@ -1,0 +1,34 @@
+// Display objects in panels differently
+.panel-body {
+    ul:not(.profile-info) {
+        font-size: 0.9em;
+        &:not(.list-unstyled):not(.unstyled):not(.select2-selection__rendered) {
+            padding-left: 20px;
+            margin: 0 0 20px;
+            &.select2-choices {
+                margin-bottom: 0;
+            }
+        }
+    }
+    .sidebar & .form-group,
+    .login-panel & .form-group {
+        padding: 8px 0 8px 0;
+    }
+    .form-group.login{
+        padding: 0;
+        .form-group {
+            padding: 0;
+        }
+    }
+    > .panel-footer,
+    form .panel-footer {
+        clear:both;
+        margin: 15px -15px -15px; //alter padding for panel footers inside panel-body (needed for some forms) c.f. login form
+    }
+    .collapse & {
+        padding-bottom: 0;
+    }
+    &.flush {
+        padding: 15px 0 0 0;
+    }
+}

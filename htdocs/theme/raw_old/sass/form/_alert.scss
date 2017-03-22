@@ -1,0 +1,44 @@
+.text-right .alert {
+    text-align: left;
+    float: left;
+}
+.alert {
+    h1, h2, h3, h4, h5, h6 {
+        margin-top: 0;
+        margin-bottom: 14px;
+        color: inherit;
+    }
+    ul {
+        padding-left: 20px;
+    }
+    .table {
+        margin-top:10px;
+        color: inherit;
+        background-color: rgba(#fff, 0.75);
+        >thead{
+            color: inherit;
+        }
+        >thead>tr>th {
+            color: inherit;
+            vertical-align: bottom;
+            border-bottom: 1px solid rgba(#666, 0.05);
+        }
+        >thead>tr>th,
+        >thead>tr>td,
+        >tbody>tr>th,
+        >tbody>tr>td,
+        >tfoot>tr>th,
+        >tfoot>tr>td {
+            border-top: 1px solid $alert-info-border;
+            &:first-child {
+                padding-left:0;
+            }
+        }
+    }
+}
+
+.alert-default {
+    background-color: rgba(#fff, 0.4);
+    border: 1px solid darken($brand-default, 5%);
+    color: #555;
+}

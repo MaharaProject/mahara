@@ -1,0 +1,256 @@
+legend {
+    border-bottom: 0;
+    margin-bottom: 0;
+}
+
+input + label {
+    font-weight: normal;
+}
+
+input[type=text],
+input[type=password],
+textarea,
+select {
+    .modal & {
+        width: auto;
+        max-width: 100%;
+    }
+}
+
+label,
+.pseudolabel {
+    @extend .control-label;
+    max-width: 100%;
+    padding-right: 10px;
+    font-weight: normal;
+    .form-condensed & {
+        min-width: 100px;
+        &.pseudolabel {
+            min-width: 265px;
+        }
+    }
+    &.input-inline {
+        display: inline;
+    }
+    &.sr-only {
+        min-width: 0;
+        width:0;
+    }
+    .topic & {
+        font-weight: 300;
+    }
+    .form-inline & {
+        min-width: 0;
+    }
+    &.btn,
+    .col-md-2 {
+        min-width: 0;
+    }
+
+    .column-layout &,
+    .column &{
+        min-width: 0;
+    }
+
+    @media (min-width: $screen-sm-min) {
+        min-width: 265px;
+    }
+
+    .with-label-widthauto & {
+        min-width: auto;
+    }
+}
+
+.pseudolabel {
+    vertical-align: top;
+    padding-right: 10px;
+    display: inline-block;
+}
+
+.checkbox .with-label {
+    padding-left: 17px;
+}
+
+.stacked-label {
+    display: inline-block;
+    @media (min-width: $screen-sm-min) {
+        width:200px;
+    }
+}
+
+.pieform-fieldset {
+    .html {
+        &:not(tr) {
+            @include clearfix;
+        }
+    }
+}
+
+.as-panel form {
+    margin-top:0;
+}
+
+.main table form {
+    margin:0;
+}
+
+.wysiwyg label,
+.textarea label {
+    vertical-align: top;
+}
+.radio label,
+.checkbox label {
+    margin-top: 0;
+}
+
+.radio-aligned {
+    display: inline-block;
+}
+.no-radio {
+    margin-left: 16px;
+}
+
+// for multiselect buttons
+.select-col {
+    width : 100px;
+}
+
+.align-with-input {
+    display: inline-block;
+    margin-left: 0;
+    @media (min-width: $screen-sm-min) {
+        margin-left: 265px;
+    }
+}
+
+textarea {
+    resize: none;
+}
+
+textarea.resizable {
+    resize: vertical;
+}
+
+.form-inline {
+    position: relative;
+    label {
+        display: block;
+    }
+    .form-group {
+        padding: 0;
+        border-bottom: 0px none;
+    }
+    &.form-inline-align-bottom .form-group{
+        vertical-align: bottom;
+    }
+    &.form-short {
+        select, input:not(.submit) {
+            max-width:100%;
+        }
+        .form-group:not(.submit) {
+            width: 60%;
+        }
+    }
+}
+
+.form-inline-align-bottom a {
+    vertical-align: bottom;
+}
+
+.form-control.file {
+    padding: 0;
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+}
+
+.form-control:disabled {
+    color: #aaa;
+}
+
+.form-message-inline  {
+    vertical-align: top;
+}
+
+.hasDatepickerwrapper input[type="text"],
+.hasDatepickerwrapperacl input[type="text"] {
+    position: relative;
+}
+.hasDatepicker {
+    padding-right: 20px;
+}
+.hasDatepickerwrapper:after {
+    font-family: "FontAwesome";
+    font-size: 16px;
+    content: "\f073";
+    color: lighten($text-color, 20%);
+    position:relative;
+    right: 20px;
+}
+.hasDatepickerwrapperacl:after {
+    font-family: "FontAwesome";
+    font-size: 16px;
+    content: "\f073";
+    color: lighten($text-color, 20%);
+    right: 10px;
+    position: absolute;
+    font-size: 16px;
+    top: 3px;
+}
+.date-picker {
+    position: relative;
+    input.form-control {
+        width: 100%;
+        max-width:100%;
+        z-index: 1;
+        position:relative;
+        &:not(:disabled) {
+            background-color: transparent;
+        }
+        &:disabled {
+            opacity: 0.5;
+        }
+    }
+}
+
+.select2.select2-container .select2-selection {
+    min-height: $input-height-base; // make select2 look more like a regular select
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    color: $input-color;
+    &.select2-selection--multiple {
+        &:after {
+            content: "\f002";
+            color: lighten($text-color, 50%);
+            font-family: FontAwesome;
+            font-size: 1em;
+            display:inline-block;
+            position:absolute;
+            right: 12px;
+            top: 7px;
+        }
+    }
+}
+
+.select2 {
+    min-width: 200px;
+}
+
+.select2-dropdown .select2-search {
+    position: relative;
+    &:after {
+        content: "\f002";
+        color: lighten($text-color, 50%);
+        font-family: FontAwesome;
+        font-size: 1em;
+        display:inline-block;
+        position:absolute;
+        right: 12px;
+        top: 8px;
+    }
+}
+
+.select2.select2-container--default .select2-selection--single .select2-selection__rendered,
+.select2.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    line-height: 34px;
+}

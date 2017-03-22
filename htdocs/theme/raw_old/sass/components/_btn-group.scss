@@ -1,0 +1,72 @@
+//
+// Extenstion to Button groups so we can use forms as buttons
+// --------------------------------------------------
+
+.btn-group .form-as-button:first-child:not(.last) {
+    .btn {
+        @include border-right-radius(0);
+        border-right-width: 0;
+    }
+}
+
+.btn-group .form-as-button ~ .form-as-button {
+    .btn {
+        @include border-left-radius(0);
+    }
+}
+
+.btn-group .form-as-button {
+    div:first-child {
+        display: inline-block;
+    }
+    div.first {
+        .btn {
+            display: inline-block;
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+    }
+    div.last {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        .action-list-copy & {
+            margin-left: -4px;
+        }
+        .btn {
+            border-left: 0;
+            display: inline-block;
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 3px !important;
+            border-bottom-right-radius: 3px !important;
+        }
+    }
+}
+
+// Btn-group works when there are multiple elements eg a, form, button
+.group-item:not(:first-child),
+.btn-group-item:not(:first-child) {
+    margin-left: -1px;
+}
+
+.group-item,
+.btn-group-item {
+    &.btn,
+    .btn {
+        border-right-width: 1px !important; // Overriding standard styling above
+        padding-top: 3px !important; // Override standard btn padding
+    }
+    &:only-of-type .btn {
+        border-radius: 3px !important;
+    }
+}
+
+.btn-group.only-button .btn {
+    border-bottom-right-radius: 3px !important;
+    border-right-width: 1px !important;
+}
+
+.btn-group.only-button-top .btn {
+    border-top-right-radius: 3px !important;
+}

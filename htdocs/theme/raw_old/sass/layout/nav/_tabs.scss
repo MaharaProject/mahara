@@ -1,0 +1,16 @@
+.tab-content {
+    padding-top: 20px;
+    .admin-edit-users & {
+        padding: 20px 0 15px 0;
+    }
+}
+
+.admin {
+    .tab-content {
+        padding: 10px;
+        background-color: #fff;
+        .panel-secondary {
+            border: none;
+        }
+    }
+}

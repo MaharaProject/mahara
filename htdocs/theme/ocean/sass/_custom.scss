@@ -27,34 +27,6 @@ a,
     border-left: 0;
     background-color: transparent;
 }
-
-// admin view - kept all together here for this theme
-body.admin {
-    .navbar { // _navbar.scss
-        margin-bottom: 0px;
-    }
-    .navbar-default {
-        background-color: $gray;
-
-        &.minor-nav { // minor-nav.scss
-            background-color: transparent;
-        }
-    }
-
-    .main {
-        padding-top: 20px;
-    }
-}
-.header { // _header.scss
-    .admin-title {
-        background-color: transparent;
-        padding-left: 5px;
-        &:before,
-        &:after {
-            display: none;
-        }
-    }
-}
 .loading-inner {
     background: transparent;
     .icon-spinner {

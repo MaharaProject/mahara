@@ -1,9 +1,7 @@
 .header {
-    background: #FFFFFF url(../images/header-bkgd.png) repeat-x center 60px;
-
     .logo-area {
         .logo {
-            @media (max-width: $screen-xs-min) {
+            @media (max-width: $screen-xs-min - 1) {
                 width: 25px;
                 height: 45px;
                 overflow-x: hidden;
@@ -11,24 +9,14 @@
             }
         }
         img {
-            @media (max-width: $screen-xs-min) {
+            @media (max-width: $screen-xs-min - 1) {
                 display: none;
             }
         }
     }
 
     .admin-title {
-        margin-top: 10px;
         font-weight: 300;
         font-size: $font-size-large;
-
-        @media (max-width: $screen-sm-min) {
-            display: none;
-        }
-    }
-
-    &.navbar {
-        border-bottom: 0;
-        min-height: 64px;
     }
 }

@@ -1,0 +1,14 @@
+.skiplink {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: $zindex-navbar-fixed + 1;
+    max-width: 200px;
+
+    > a.btn {
+        &:not(:focus) {
+            padding: 0;
+        }
+    }
+}   

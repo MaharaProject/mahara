@@ -1,0 +1,154 @@
+$transition: 0.1s ease-in 0s;
+$height: 28px;
+$indicator-horizontal-margin : 9px;
+$indicator-size: 10px;
+$label-font-size: 14px;
+
+$indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
+
+.switchbox.form-group {
+    > label {
+        vertical-align: bottom;
+        line-height: $height;
+    }
+}
+
+
+.form-switch {
+    display: inline-block;
+    .switch {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        position: relative;
+        overflow: hidden;
+        width: 60px; // Overridden with inline styles
+        input {
+            @extend .sr-only;
+
+            &:focus {
+                + .switch-label {
+                   @include tab-focus;
+                   outline-color: #66afe9;
+                   .switch-inner:before,
+                   .switch-inner:after {
+                        background-color: darken($brand-default, 5%);
+                   }
+                }
+            }
+        }
+    }
+
+    .switch-label {
+        border-radius: 3px;
+        display: block;
+        overflow: hidden;
+        cursor: pointer;
+        padding: 0;
+        min-width: 0;
+        margin: 0;
+
+        &:hover {
+            .switch-inner:before,
+            .switch-inner:after {
+                background-color: darken($brand-default, 5%);
+           }
+        }
+    }
+
+    input:disabled + .switch-label {
+        opacity: 0.6;
+        cursor: default;
+
+        &:hover {
+            .switch-inner:before,
+            .switch-inner:after {
+                background-color: $brand-default;
+           }
+        }
+    }
+
+    .switch-inner {
+        @include transition(margin $transition);
+        display: block;
+        width: 200%;
+        margin-left: -100%;
+
+        &:before,
+        &:after {
+            @include box-sizing(border-box);
+            @include box-shadow(none);
+            content: '';
+            background-color: $brand-default;
+            border: 1px solid $btn-default-border;
+            display: block;
+            float: left;
+            width: 50%;
+            height: $height;
+            padding: 0;
+        }
+    }
+
+    input:checked + .switch-label .switch-inner {
+        margin-left: 0;
+    }
+
+
+    .switch-indicator {
+        @include transition(all $transition);
+        border-radius: 50%;
+        display: block;
+        width: $indicator-size;
+        height: $indicator-size;
+        margin: -($indicator-size / 2) $indicator-horizontal-margin 0;
+        margin-right: $indicator-horizontal-margin + $indicator-total-width;
+        background: rgba($brand-danger, 0.8);
+        border: 1px solid rgba(darken($brand-danger, 5%), 0.8);
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 100%;
+        transform: none;
+    }
+
+    input:checked + .switch-label .switch-indicator {
+        left: 100%;
+        right: 0;
+        transform: translateX(#{-$indicator-total-width});
+        background-color: rgba($brand-success, 0.8);
+        border: 1px solid rgba(darken($brand-success, 5%), 0.8);
+
+        ~ .off {
+            transform: translateX(#{-$indicator-total-width}) translateX(100%);
+        }
+
+        ~ .on {
+            transform: none;
+        }
+    }
+
+    .state-label {
+        @include transition(all $transition);
+        white-space: nowrap;
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: $height;
+        width: 100%;
+        padding: 0 $indicator-horizontal-margin;
+        font-size: $label-font-size;
+        line-height: $height;
+        backface-visibility: hidden;
+        &.off {
+            padding-left: $indicator-total-width;
+            transform: none;
+        }
+
+        &.on {
+            padding-right: $indicator-total-width;
+            transform: translateX(#{$indicator-total-width}) translateX(-100%);
+        }
+    }
+}

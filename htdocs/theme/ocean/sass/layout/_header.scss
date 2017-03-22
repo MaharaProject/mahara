@@ -2,11 +2,6 @@
     top: 0;
 
     .admin-title {
-        margin: 13px 10px 5px 0;
-        @media (max-width: $screen-sm-min) {
-            clear: both;
-            margin-top: 10px;
-        }
         .admin-site {
             color: #FFFFFF;
             font-family: $font-family-serif;
@@ -19,13 +14,9 @@
     }
 
     + .container {
-        // if container is directly after header, then it will need a margin
-        margin-top: 70px;
-        @media (min-width: $screen-xs-min) {
-            margin-top: 0;
-        }
+        margin-top: 0;
         @media (min-width: $screen-sm-min) {
-             margin-top: 50px;
+            margin-top: 50px;
         }
     }
 }

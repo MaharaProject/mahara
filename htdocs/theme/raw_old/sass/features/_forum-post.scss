@@ -1,0 +1,51 @@
+.forum-post-container {
+    padding: 10px 0;
+}
+
+.forum-post {
+    border-left: 5px solid $brand-default;
+    padding-left: 15px;
+    .forumpostleft {
+        min-width: 120px;
+    }
+    .title {
+        margin: 0;
+
+    }
+    .editstopost {
+        padding-top: 10px;
+    }
+}
+
+.forum-post-btns {
+    a {
+        color: #333;
+        margin-left: 20px;
+    }
+}
+
+// Report as objectionable forum post
+.reportedaction {
+    margin-top: 10px;
+    .form-group.submit {
+        padding: 0 0 10px 0;
+    }
+    // Overriding normal hover and focus
+    // background colour as the collapsible
+    // is inside alert box
+    .collapsible a {
+        &:focus,
+        &:hover {
+            background: #f9f9f9 !important;
+        }
+    }
+}
+
+.deletedpost {
+    margin-top: 0;
+    font-style: italic;
+    padding: 5px 10px;
+    color: #666;
+    background: #F4F4F4;
+    border-radius: 5px;
+}

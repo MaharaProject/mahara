@@ -1,0 +1,180 @@
+$logged-in-height: 90px;
+$logged-in-height-mobile: 100px;
+
+
+.dashboard-widget-container {
+    @include clearfix;
+    margin-top: $grid-gutter-width;
+
+    .remove-widgets {
+        font-size: $font-size-small - 2;
+    }
+    .hide-info{
+        clear: both;
+    }
+
+    .widget-heading {
+        @include clearfix;
+        padding: 13px 15px;
+        height: $logged-in-height;
+        border-top: 3px solid $dashboard-widget-color;
+        background-color: darken($dashboard-widget-bg, 3%);
+
+        @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+            height: $logged-in-height-mobile;
+            padding: 7px 15px;
+        }
+
+        h2 {
+            margin: 5px 0 3px;
+            font-weight: bold;
+        }
+
+        p {
+            margin: 0;
+            font-size: $font-size-small;
+            color: #555;
+        }
+        a {
+            color: $link-color;
+        }
+    }
+
+    .circle-bg {
+        margin-right: 10px;
+        border-radius: 50%;
+        position: relative;
+        float: left;
+        background-color: $dashboard-widget-color;
+        width: 60px;
+        height: 60px;
+        text-align:center;
+
+        .icon {
+            color: #fff;
+            padding-top:16px;
+            font-size: 30px;
+            &.icon-user {
+                padding-left:0; // the only one that is actually centered by defualt
+            }
+        }
+    }
+
+    .widget-detail {
+        padding: 10px 15px;
+        border: 1px solid $gray-lighter;
+
+        p {
+            margin-bottom: 0;
+            color: $text-color;
+        }
+    }
+
+    .thumbnail-widget {
+        position: relative;
+        display: block;
+        margin-bottom: 10px;
+        @media (min-width: $screen-sm-min ) {
+            float:left;
+            width: 10 / 3 * 10%;
+            padding-left: 2%;
+            &.first {
+                padding-left: 0;
+            }
+        }
+    }
+
+    .logged-in {
+        text-decoration: none;
+        height: $logged-in-height;
+        overflow:hidden;
+
+        @media (max-width: $screen-sm-min) {
+            height: auto;
+        }
+
+        .widget-heading {
+            @include clearfix;
+            border-radius: $border-radius-base;
+
+            @media (max-width: $screen-sm-min) {
+                border-radius: $border-radius-base $border-radius-base 0 0;
+            }
+
+            h2 {
+                margin: 5px 0 3px;
+                font-weight: bold;
+            }
+
+            p {
+                margin: 0;
+                font-size: $font-size-small;
+                color: $link-color;
+            }
+        }
+
+        .widget-detail {
+            @include transition(0.03s);
+            border-radius: $border-radius-base;
+            opacity:0;
+            margin-top: -$logged-in-height * 2;
+            border: none;
+            font-weight: bold;
+            position: relative;
+            display: inline-block;
+            z-index: 2;
+            background-color: $dashboard-widget-color;
+            height: $logged-in-height;
+            margin-right: 15px;
+            vertical-align: top;
+            width:100%;
+            @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+                margin-top: -$logged-in-height-mobile * 2;
+                height: $logged-in-height-mobile;
+            }
+            @media (max-width: $screen-sm-min) {
+                border-radius: 0 0 $border-radius-base $border-radius-base;
+                margin-top: 0;
+                border: 1px solid $gray-lighter;
+                background-color: #fff;
+                font-weight: normal;
+                opacity: 1;
+            }
+            p {
+                color: #fff;
+
+                @media (max-width: $screen-sm-min) {
+                    color:#333;
+                }
+            }
+        }
+    }
+
+    .logged-in:hover {
+        .widget-heading {
+            @media (max-width: $screen-sm-min) {
+                background: darken($gray-lighter, 10%);
+            }
+        }
+        .widget-detail {
+            @include transition(0.3s);
+            opacity: 1;
+            margin-top: -$logged-in-height;
+            @media  (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+                margin-top: -$logged-in-height-mobile;
+            }
+            @media (max-width: $screen-sm-min) {
+                margin-top: 0;
+                p {
+                    color: $link-color;
+                }
+            }
+        }
+    }
+}
+
+.dashboard-editable {
+    margin-top: $grid-gutter-width;
+    padding: ($grid-gutter-width - 10) 0;
+    border-top: 1px solid #ccc;
+}

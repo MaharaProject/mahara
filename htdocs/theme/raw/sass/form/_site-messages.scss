@@ -25,9 +25,6 @@
 @for $i from 1 through 5 {
     .header.message-count-#{$i} {
         top: 33px * $i;
-        + .main-nav {
-            margin-top: $i * 32px;
-        }
 
         ~ .container {
             .toolbar-affix.affix {
@@ -36,9 +33,6 @@
         }
         @media (max-width: $screen-sm-min - 1) {
             top: 0;
-            + .main-nav {
-                margin-top: $i * 0px;
-            }
         }
     }
 }

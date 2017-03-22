@@ -225,6 +225,16 @@ jQuery(function($) {
         }
     });
 
+    $('.navbar-main .navbar-collapse.collapse').on('show.bs.collapse', function(event) {
+        event.stopPropagation();
+        $('.navbar-collapse.collapse.in').collapse('hide');
+    });
+
+    $('.navbar-main .child-nav.collapse').on('show.bs.collapse', function(event) {
+        event.stopPropagation();
+        $('.child-nav.collapse.in').collapse('hide');
+    });
+
     affixSize();
     siteMessages();
     focusOnOpen();
@@ -242,5 +252,6 @@ jQuery(function($) {
     }
 
     $(".js-select2 select").select2({});
+
 
 });

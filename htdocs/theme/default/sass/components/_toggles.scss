@@ -1,24 +1,8 @@
-.header {
-    .navbar-toggle {
-        margin-top: 6px;
-        margin-bottom: 10px;
-        border-color: $link-color;
-        background-color: $link-color;
-        color: #FFFFFF;
-
-        &:focus,
-        &:hover {
-          border-color: $link-hover-color;
-          background-color: $link-hover-color;
-        }
-
-        .icon-bar {
-          background-color: #FFFFFF;
-        }
-    }
-    .navbar-nav {
-        .navbar-toggle {
-            margin-top: 0;
-        }
+.navbar-toggle {
+    background-color: $link-color;
+    &:hover,
+    &:focus {
+        border-color: $link-hover-color;
+        background-color: $link-hover-color;
     }
 }

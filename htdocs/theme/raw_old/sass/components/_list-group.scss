@@ -1,0 +1,318 @@
+// // modifications for list elements such a list of pages, collections
+
+// Left panel
+.list-group {
+    margin-bottom: 0;
+    a {
+        // color: inherit;
+        &.tag {
+            display:inline-block;
+            @extend .text-success;
+        }
+        &.text-success {
+             @extend .text-success;
+        }
+        &.text-link {
+            @extend .text-link;
+        }
+
+    }
+    .panel &,
+    .panel-body & {
+        margin-bottom: 0;
+    }
+    .user-panel & {
+        min-height: 41px;
+    }
+
+    .list-nested {
+        margin: 5px -15px 0;
+        > li > a {
+            padding: 3px 15px;
+        }
+        small {
+            @extend .text-midtone;
+        }
+    }
+    &.list-group-unbordered {
+        li {
+            border:0;
+            padding: 5px 7px;
+        }
+        .small {
+            padding: 0;
+            a {
+                padding: 5px 0;
+            }
+        }
+    }
+    &.list-group-lite .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+
+    &.attachment-incontent {
+        border-left: 1px solid #ddd; // Full Journal attachment list block
+    }
+}
+
+
+.list-group-item-heading {
+    font-family: $font-family-serif;
+    font-weight: 300;
+    a {
+        &:hover {
+            color: $link-color;
+            &.inner-link {
+                text-decoration: underline;
+            }
+            .metadata {
+                color: $link-color;
+            }
+        }
+        &.collapsible {
+            display: block;
+        }
+    }
+}
+
+h4.list-group-item-heading {
+    font-size: $font-size-base + 1;
+}
+
+.list-group-item h5 {
+    font-size: $font-size-base + 1;
+}
+
+.list-group-item-warning {
+    .list-group-item-heading {
+        color: $state-warning-text;
+
+    }
+}
+
+// Sidebar notification item styles
+.list-group-item-profile-notification {
+    word-wrap: normal;
+    word-break: break-all;
+    white-space: normal;
+    &:first-child {
+        padding-right: 80px;
+    }
+}
+
+// Attachment list
+.list-group-item-link {
+    padding: 0;
+    a {
+        @extend .text-default;
+        font-size: $font-size-small;
+        display: block;
+        padding: 10px 15px;
+        &:hover {
+            background: darken(#f0f0f0, 0.5%);
+            text-decoration: none;
+            color: darken($link-color, 5%);
+        }
+        small {
+            color: $link-color;
+        }
+        .file-icon {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            margin-right: 5px;
+        }
+        .file-title {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .file-size {
+            float: right;
+            color: darken($brand-default, 40%);
+        }
+    }
+
+    // Online user link see onlineusers.tpl
+    .online-user {
+        position: relative;
+        padding-left: 50px;
+        min-height: 50px;
+
+        .user-icon {
+            position: absolute;
+            left: 20px;
+            top: 15px;
+        }
+    }
+}
+
+// list-group-item with btn-group
+.list-group-item {
+    &.draft,
+    &.list-group-item-warning {
+        @extend .list-group-item-warning;
+    }
+    &.published {
+        background: #fefefe;
+    }
+    &.flush {
+        padding: 10px 0;
+    }
+    &.list-group-item-heading {
+        margin-bottom: 0;
+    }
+    .list-group-item-heading {
+        float: none;
+        @media (min-width: $screen-sm-min) {
+            float: left;
+        }
+        .panel & {
+            float: none;
+        }
+    }
+    .list-group-item-controls {
+        float: none;
+        @media (min-width: $screen-sm-min) {
+            float: right;
+        }
+        // For planlist page
+        .btn-group-top {
+            margin-top: 0;
+            float:none;
+            @media (min-width: $screen-sm-min) {
+                margin-top: 5px;
+            }
+            @media (min-width: $screen-md-min) {
+                margin-top: -10px;
+            }
+        }
+    }
+    .list-group-item-detail {
+        margin: 10px 0;
+    }
+    .btn-title {
+        padding-left: 5px;
+        @media (max-width: $screen-sm-min) {
+            @include sr-only;
+        }
+    }
+    .usericon-heading {
+        @extend .clearfix;
+        padding-bottom: 8px;
+        .user-icon {
+            display: block;
+            margin: 0 10px 0 0;
+            &.small-icon {
+                width: 35px;
+                height: 35px;
+            }
+        }
+        .list-group-item-heading {
+            margin: 0;
+            width: 50%;
+            &.middle {
+                margin: 10px 0;
+            }
+        }
+        .list-group-item-heading + .btn {
+            margin-top: 10px;
+        }
+    }
+    .post-heading {
+        @extend .clearfix;
+        margin: 10px 0;
+    }
+}
+
+.list-group-item-default{
+    background-color: rgba($brand-default, 0.5);
+}
+
+.list-group-item-text {
+    margin-top: 5px;
+}
+
+// Modifiy for list-groups in panels
+.panel > .block {
+    > .list-group {
+        margin-bottom: 0;
+    }
+    .list-group {
+        .list-group-item {
+            border-radius: 0;
+        }
+        &:last-child .list-group-item:last-child{
+            border-bottom: 0;
+            border-bottom-right-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
+    }
+}
+
+.grouppages .list-group-item {
+    h5 {
+        font-size: $font-size-base;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .detail {
+        padding-top: 8px;
+    }
+    + .pagination-container {
+        padding-top: 10px;
+    }
+}
+
+.panel-heading + .block > .list-group .list-group-item:first-child {
+    border-top-width: 0;
+}
+
+.section-import {
+    .list-group-item .list-group,
+    .fieldset-body .list-group {
+        padding-top: 10px;
+        margin-bottom: 0;
+        .list-group-item:last-child {
+            border-bottom: 0;
+        }
+    }
+}
+
+.annotation-feedback {
+    border-top: 1px solid #ddd !important;
+}
+
+.feedback.modal {
+    .btn-group-top.comment-item-buttons {
+        margin-top: -10px;
+    }
+}
+
+.column-list {
+    -moz-column-count: 3;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
+    @media (max-width: $screen-sm-min) {
+        -moz-column-count: 2;
+        -moz-column-gap: 20px;
+        -webkit-column-count: 2;
+        -webkit-column-gap: 20px;
+        column-count: 2;
+        column-gap: 20px;
+    }
+}
+
+.column-list li {
+    list-style-position: inside;
+    span.help {
+        font-size: inherit;
+        .icon {
+            font-size: 16px;
+        }
+    }
+}

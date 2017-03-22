@@ -349,7 +349,7 @@ $grid-columns:              12;
 $grid-gutter-width:         30px;
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
-$grid-float-breakpoint:     $screen-sm-min;
+$grid-float-breakpoint:     10000px;
 //** Point at which the navbar begins collapsing.
 $grid-float-breakpoint-max: ($grid-float-breakpoint - 1);
 
@@ -379,7 +379,7 @@ $container-lg:                 $container-large-desktop;
 //##
 
 // Basics of a navbar
-$navbar-height:                    50px;
+$navbar-height:                    60px;
 $navbar-margin-bottom:             $line-height-computed;
 $navbar-border-radius:             $border-radius-base;
 $navbar-padding-horizontal:        floor(($grid-gutter-width / 2));
@@ -388,11 +388,11 @@ $navbar-collapse-max-height:       340px;
 
 $navbar-default-color:             #FFFFFF;
 $navbar-default-bg:                $brand-primary;
-$navbar-default-border:            $brand-primary;
+$navbar-default-border:            darken($brand-primary, 2%);
 
 // Navbar links
 $navbar-default-link-color:                #FFFFFF;
-$navbar-default-link-hover-color:          #b2e8ff;
+$navbar-default-link-hover-color:          #FFFFFF;
 $navbar-default-link-hover-bg:             #0591ce;
 $navbar-default-link-active-color:         #555;
 $navbar-default-link-active-bg:            #F1F1F1;
@@ -405,15 +405,15 @@ $navbar-default-brand-hover-color:         lighten($navbar-default-brand-color, 
 $navbar-default-brand-hover-bg:            transparent;
 
 // Navbar toggle
-$navbar-default-toggle-hover-bg:           #ddd;
-$navbar-default-toggle-icon-bar-bg:        #888;
-$navbar-default-toggle-border-color:       #ddd;
+$navbar-default-toggle-hover-bg:           darken($brand-primary, 5%);
+$navbar-default-toggle-icon-bar-bg:        #FFF;
+$navbar-default-toggle-border-color:       darken($brand-primary, 5%);
 
 
 // Inverted navbar
 // Reset inverted navbar basics
 $navbar-inverse-color:                      #fff;
-$navbar-inverse-bg:                         $brand-primary;
+$navbar-inverse-bg:                         darken($brand-primary, 5%);
 $navbar-inverse-border:                     darken($navbar-inverse-bg, 5%);
 
 // Inverted navbar links
@@ -431,8 +431,8 @@ $navbar-inverse-brand-hover-color:          $navbar-inverse-link-hover-color;
 $navbar-inverse-brand-hover-bg:             $navbar-inverse-link-hover-bg;
 
 // Inverted navbar toggle
-$navbar-inverse-toggle-hover-bg:            #333;
-$navbar-inverse-toggle-icon-bar-bg:         #fff;
+$navbar-inverse-toggle-hover-bg:            darken($navbar-inverse-bg, 2%);
+$navbar-inverse-toggle-icon-bar-bg:         #FFF;
 $navbar-inverse-toggle-border-color:        #333;
 
 

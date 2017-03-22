@@ -4,7 +4,6 @@
 // General customisation and component files go here...
 @import "../layout/footer";
 @import "../layout/header";
-@import "../layout/layout";
 @import "../layout/profile-block";
 
 // Panels are a very commonly used layout component
@@ -15,11 +14,7 @@
 @import "../layout/panel/panel-secondary";
 
 // Navigation
-@import "../layout/nav/main-nav";
-@import "../layout/nav/minor-nav";
 @import "../layout/nav/nav-tabs";
-@import "../layout/nav/navbar";
-@import "../layout/nav/top-nav";
 
 // Components - small reusable design elements
 @import "../components/arrow-bar";
