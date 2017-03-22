@@ -33,7 +33,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I should see "Résumé saved"
     And I follow "Education and employment"
     # Adding Education history
-    And I press "addeducationhistorybutton"
+    And I press "Add education history"
     And I set the following fields to these values:
      | addeducationhistory_startdate | 1 Jan 2009 |
      | addeducationhistory_enddate | 2 Dec 2010 |
@@ -47,7 +47,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     # Saving the changes
     And I click on "addeducationhistory_submit"
     And I should see "Saved successfully"
-    And I press "addeducationhistorybutton"
+    And I press "Add education history"
     And I set the following fields to these values:
      | addeducationhistory_startdate | 1 Jan 2009 |
      | addeducationhistory_enddate | 2 Dec 2010 |
@@ -63,7 +63,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "Move down" in "something" row
     And I click on "Move up" in "something" row
     # Adding an Employment history
-    And I press "addemploymenthistorybutton"
+    And I press "Add employment history"
     And I set the following fields to these values:
      | addemploymenthistory_startdate | 1 Jan 2009  |
      | addemploymenthistory_enddate | 02 Dec 2010 |
@@ -76,7 +76,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     # Verifying it saved
     And I click on "addemploymenthistory_submit"
     Then I should see "Saved successfully"
-    And I press "addemploymenthistorybutton"
+    And I press "Add employment history"
     And I set the following fields to these values:
      | addemploymenthistory_startdate | 1 Jan 2009  |
      | addemploymenthistory_enddate | 02 Dec 2010 |
@@ -92,10 +92,10 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "Move down" in "Test" row
     And I click on "Move up" in "Test" row
     # Adding Achievements
-    And I scroll to the id "main-column-container"
+    And I scroll to the top
     And I follow "Achievements"
-    And I wait "1" seconds
-    And I press "addcertificationbutton"
+    And I scroll to the base of id "addcertificationbutton"
+    And I click on "Add certifications, accreditations and awards"
     # Adding Certifications, accreditations and awards
     And I set the following fields to these values:
     | Date | 12/07/2017 |
@@ -105,10 +105,8 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I attach the file "Image2.png" to "Attach file"
     And I press "Save"
     And I should see "Saved successfully"
-    And I follow "Achievements"
-    And I wait "1" seconds
-    And I scroll to the id "resumewrap"
-    And I press "addcertificationbutton"
+    And I scroll to the base of id "addcertificationbutton"
+    And I click on "Add certifications, accreditations and awards"
     And I set the following fields to these values:
     | Date | 13/07/2017 |
     | Title | dfgfdsg |
@@ -120,7 +118,8 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "Move down" in "Cert" row
     And I click on "Move up" in "Cert" row
     # Adding Books and publications
-    And I click on "addbookbutton"
+    And I scroll to the base of id "addbookbutton"
+    And I click on "Add books and publications"
     And I set the following fields to these values:
     | addbook_date | 13/07/2017 |
     | addbook_title | Book1 |
@@ -130,7 +129,8 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I attach the file "Image2.png" to "addbook_attachments_files_0"
     And I click on "addbook_submit"
     And I should see "Saved successfully"
-    And I click on "addbookbutton"
+    And I scroll to the base of id "addbookbutton"
+    And I click on "Add books and publications"
     And I set the following fields to these values:
     | addbook_date | 20/06/2018 |
     | addbook_title | dfgjj |
@@ -143,7 +143,8 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "Move down" in "Book1" row
     And I click on "Move up" in "Book1" row
     # Adding Professional memberships
-    And I press "addmembershipbutton"
+    And I scroll to the base of id "addmembershipbutton"
+    And I press "Add professional membership"
     And I set the following fields to these values:
     | addmembership_startdate | 13/07/2017 |
     | addmembership_enddate | 14/09/2018 |
@@ -153,7 +154,8 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I attach the file "Image2.png" to "addmembership_attachments_files_0"
     And I click on "addmembership_submit"
     And I should see "Saved successfully"
-    And I press "addmembershipbutton"
+    And I scroll to the base of id "addmembershipbutton"
+    And I press "Add professional membership"
     And I set the following fields to these values:
     | addmembership_startdate | 15/07/2017 |
     | addmembership_enddate | 29/09/2018 |
@@ -165,7 +167,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I should see "Saved successfully"
     And I click on "Move down" in "Mr Membership" row
     And I click on "Move up" in "Mr Membership" row
-    And I scroll to the id "main-column-container"
+    And I scroll to the top
     And I follow "Goals and skills"
     And I should see "My goals"
     And I should see "My skills"
@@ -179,7 +181,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-column-container"
+    And I scroll to the top
     And I follow "Academic goals"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
@@ -190,7 +192,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-column-container"
+    And I scroll to the top
     And I follow "Career goals"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
@@ -234,14 +236,14 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-column-container"
+    And I scroll to the top
     And I follow "Interests"
     And I press "Edit"
     And I set the following fields to these values:
     | resumefieldform_interest | test |
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the id "main-column-container"
+    And I scroll to the top
     And I follow "License"
     And I set the following fields to these values:
     | License | Creative Commons Attribution 4.0 |
