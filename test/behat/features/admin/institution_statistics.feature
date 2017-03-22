@@ -17,9 +17,8 @@ Background:
 
 Scenario: Viewing user statistics
  Given I log in as "admin" with password "Kupuhipa1"
- And I follow "Administration"
  # Users without an institution
- When I choose "Statistics" in "Institutions"
+ When I choose "Statistics" in "Institutions" from Admin menu
  Then I should see "Institution statistics for 'Institution One'"
  And I should see "Users 1"
  # Users with an institution

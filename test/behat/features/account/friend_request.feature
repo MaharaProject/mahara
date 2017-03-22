@@ -11,8 +11,7 @@ Given the following "users" exist:
 
 Scenario: Sending friend requests from student to admin (Bug 1440908)
 Given I log in as "admin" with password "Kupuhipa1"
-And I follow "Administration"
-And I choose "User search" in "Users"
+And I choose "User search" in "Users" from Admin menu
 And I follow "Pete"
 And I follow "Log in as userA"
 And I follow "Admin User"
@@ -22,6 +21,7 @@ And I press "Request friendship"
 And I follow "Become Admin User again"
 And I am on homepage
 # In my inbox block I'll see "New friend request"
+And I click on "Show User Menu"
 And I follow "Inbox:"
 And I expand the section "New friend request"
 # Clicking on the notification title to expand it
@@ -31,6 +31,7 @@ And I press "Approve request"
 And I should see "Accepted friend request"
 And I follow "Log in as userA"
 # In userA's inbox block I'll see a "Friend request accepted" notification
+And I click on "Show User Menu"
 And I follow "Inbox:"
 And I expand the section "Friend request accepted"
 # Expanding it shows me another "More..." link which takes me to the inbox

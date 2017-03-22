@@ -16,7 +16,7 @@ Background:
 Scenario: Turning on and of switches in Journal configuration block (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
  # Navigating to switchbox in Journal block
- And I choose "Journals" in "Content"
+ And I choose "Journals" in "Content" from Main menu
  And I follow "New entry"
  And I press "Save entry"
  And I should see "There was an error with submitting this form. Please check the marked fields and try again."
@@ -25,7 +25,7 @@ Scenario: Turning on and of switches in Journal configuration block (Bug 1431569
 Scenario: Creating a Journal entry
  Given I log in as "admin" with password "Kupuhipa1"
  # Navigating to switchbox in Journal block
- And I choose "Journals" in "Content"
+ And I choose "Journals" in "Content" from Main menu
  And I follow "New entry"
  And I set the following fields to these values:
  | Title * | Story of my life |
@@ -61,7 +61,7 @@ Scenario: Creating a Journal entry
  And I press "Save entry"
 
  # Adding journal entry to group 'Groupies'
- When I choose "My groups" in "Groups"
+ When I choose "My groups" in "Groups" from Main menu
  And I follow "Groupies"
  And I follow "Journals" in the "div.arrow-bar" "css_element"
  And I follow "Create journal"
@@ -75,7 +75,7 @@ Scenario: Creating a Journal entry
  And I press "Save entry"
 
  # Adding journal blocks to a page
- And I choose "Pages and collections" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio" from Main menu
  And I follow "Page 01"
  And I follow "Edit this page"
  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"

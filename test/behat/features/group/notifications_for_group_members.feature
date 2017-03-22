@@ -24,6 +24,7 @@ Background:
 
 Scenario: Adding a comment on a group page (Bug 1426983)
     Given I log in as "bob" with password "Kupuhipa1"
+    And I click on "Show Menu"
     And I follow "Groups"
     And I follow "Test group 1"
     And I follow "Pages and collections (tab)"
@@ -32,13 +33,14 @@ Scenario: Adding a comment on a group page (Bug 1426983)
     And I fill in "Testing comment notifications" in editor "Message"
     And I press "Comment"
     # Log out as user 1
-    And I follow "Logout"
+    And I log out
     # Log in as "Admin" user
     When I log in as "admin" with password "Kupuhipa1"
     # Checking notification display on the dashboard
     And I wait "1" seconds
     Then I should see "New comment on Testing group page 01"
     # Checking notifications also appear in my inbox
+    And I click on "Show User Menu"
     And I follow "mail"
     And I follow "New comment on Testing group page 01"
     And I should see "Testing comment notifications"

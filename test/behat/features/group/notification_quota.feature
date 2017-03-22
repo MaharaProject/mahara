@@ -15,7 +15,7 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     # Verifying log in was successful
     And I should see "Admin User"
     # Modifying user quota quota to 2MB
-    And I follow "Administration"
+    And I click on "Show Administration Menu"
     And I follow "Extensions"
     And I go to "admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=file&type=file"
     And I follow "Default user quota"
@@ -30,18 +30,19 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     # Verifying changes were made
     And I should see "Settings saved"
     # Log out as "Admin user"
-    And follow "Logout"
+    And I log out
     # Log in as user 1
     When I log in as "bob" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Bob Bobby"
     # Upload files to reach quota threshold of 50%
-    And I choose "Files" in "Content"
+    And I choose "Files" in "Content" from Main menu
     And I attach the file "Image1.jpg" to "File"
     And I attach the file "Image2.png" to "File"
     And I attach the file "Image3.png" to "File"
     # Verifying notification for reaching user quota threshold have been received
     And I am on homepage
+    And I click on "Show User Menu"
     And I follow "mail"
     # Regression testing for previous errors
     And I should not see "Call stack"

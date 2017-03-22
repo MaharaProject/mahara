@@ -6,7 +6,7 @@ I need to expand all the fieldsets
 
 Scenario: Expanding all the fieldsets
  Given I log in as "admin" with password "Kupuhipa1"
-When I follow "Administration"
+ And I click on "Show Administration Menu"
  And I follow "Configure site"
  Then I expand all fieldsets
  And I should see "Event log expiry"

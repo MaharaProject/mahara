@@ -12,11 +12,10 @@ Given the following "users" exist:
 
 Scenario: Turning master switch on
  Given I log in as "admin" with password "Kupuhipa1"
- And I follow "Administration"
- And I choose "Configuration" in "Web services"
+ And I choose "Configuration" in "Web services" from Admin menu
  # Turning the master switch on
  And I enable the switch "Accept incoming web service requests:"
- When I go to "/webservice/testclient.php"
+ And I choose "Test client" in "Web services" from Admin menu
  And I should not see "The web service authentication plugin is disabled"
  And I log out
  # Logging in as student to try turn switch on

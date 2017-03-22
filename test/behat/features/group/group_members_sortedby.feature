@@ -16,37 +16,39 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     # Verifying log in was successful
     And I should see "Admin User"
     # Creating Testing group 1
+    And I click on "Show Menu"
     And I follow "Groups"
     And I follow "Create group"
     And I fill in "Group name" with "Testing Group 1"
     And I select "Course: Member, Tutor, Admin" from "Roles"
     And I press "Save group"
     # Log out as "Admin user"
-    And I follow "Logout"
+    And I log out
     # Log in as user 1
     And I log in as "bob" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Bob Bobby"
     # Joining Testing group 1
-    And I choose "Find groups" in "Groups"
+    And I choose "Find groups" in "Groups" from Main menu
     And I press "Join this group"
     # Log out as user 1
-    And I follow "Logout"
+    And I log out
     # Log in as user 2
     And I log in as "jen" with password "Kupuhipa1"
     #Verifying log in was successful
     And I should see "Jen Jenny"
     # Joining Testing group 1
-    And I choose "Find groups" in "Groups"
+    And I choose "Find groups" in "Groups" from Main menu
     And I press "Join this group"
     # Log out as user 2
-    And I follow "Logout"
+    And I log out
     # Log in as "Admin" user
     And I log in as "admin" with password "Kupuhipa1"
     # Going to Groups and setting it to sort by
+    And I click on "Show Menu"
     And I follow "Groups"
     And I follow "Testing Group 1"
-    And I follow "Members"
+    And I follow "Members" in the ".arrow-bar" "css_element"
     # Verifying they are out of order first
     And "Bob Bobby (bob)" "link" should appear before "Jen Jenny (jen)" "link"
     And I select "Name Z to A" from "sorted by:"

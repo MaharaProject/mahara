@@ -9,9 +9,7 @@ Scenario: Error Message For Deleted Wall Post (Bug 1255222)
  Given the following "users" exist:
 | username | password | email | firstname | lastname | institution | authname | role |
 | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
-And I follow "Logout"
+And I log out
 And I log in as "userA" with password "Kupuhipa1"
  When I go to "/blocktype/wall/wall.php?id=9999"
  Then I should not see "$[[blockinstancenotfound/error]]"
-
-

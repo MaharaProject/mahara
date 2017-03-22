@@ -10,6 +10,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Verifying log in was successful
     And I should see "Admin User"
     # Checking Content Menu
+    And I click on "Show Menu"
     When I follow "Content"
     # Checking About me tabs
     And I follow "Contact information"
@@ -17,96 +18,98 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I follow "General"
     And I follow "About me"
     # Checking Profile picture submenu
-    And I choose "Profile pictures" in "Content"
+    And I choose "Profile pictures" in "Content" from Main menu
     # Checking Files Submenu
-    And I choose "Files" in "Content"
+    And I choose "Files" in "Content" from Main menu
     # Checking Journal submenu
-    And I choose "Journals" in "Content"
+    And I choose "Journals" in "Content" from Main menu
     # Checking Resume submenu and tabs
-    And I choose "Résumé" in "Content"
+    And I choose "Résumé" in "Content" from Main menu
     And I follow "Education and employment"
     And I follow "Achievements"
     And I follow "Goals and skills"
     And I follow "Interests"
     And I follow "Introduction"
     # Checking Plans submenu
-    And I choose "Plans" in "Content"
+    And I choose "Plans" in "Content" from Main menu
     # Checking Notes submenu
-    And I choose "Notes" in "Content"
+    And I choose "Notes" in "Content" from Main menu
     # Checking Portfolio Menu and submenu
-    And I choose "Pages and collections" in "Portfolio"
-    And I choose "Shared by me" in "Portfolio"
-    And I choose "Shared with me" in "Portfolio"
-    And I choose "Export" in "Portfolio"
-    And I choose "Import" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio" from Main menu
+    And I choose "Shared by me" in "Portfolio" from Main menu
+    And I choose "Shared with me" in "Portfolio" from Main menu
+    And I choose "Export" in "Portfolio" from Main menu
+    And I choose "Import" in "Portfolio" from Main menu
     # Checking Groups Menus and submenu
-    And I choose "Find groups" in "Groups"
-    And I choose "My friends" in "Groups"
-    And I choose "Find friends" in "Groups"
-    And I choose "Institution membership" in "Groups"
-    And I choose "Topics" in "Groups"
+    And I choose "Find groups" in "Groups" from Main menu
+    And I choose "My friends" in "Groups" from Main menu
+    And I choose "Find friends" in "Groups" from Main menu
+    And I choose "Institution membership" in "Groups" from Main menu
+    And I choose "Topics" in "Groups" from Main menu
     # Checking messages
+    And I click on "Show User Menu"
     And I follow "mail"
-    And I follow "Inbox"
+    And I follow "Inbox" in the ".arrow-bar" "css_element"
     And I follow "Sent"
     And I follow "Compose"
     # Checking Homepage
+    And I click on "Show Menu"
     And I follow "Dashboard"
     # Checking Administration
-    And I follow "Administration"
     # Checking Admin home Menu and submenu
-    And I choose "Register" in "Admin home"
-    And I choose "Site statistics" in "Admin home"
+    And I choose "Register" in "Admin home" from Admin menu
+    And I choose "Site statistics" in "Admin home" from Admin menu
     And I follow "Logins"
-    And I choose "Overview" in "Admin home"
+    And I choose "Overview" in "Admin home" from Admin menu
     # Checking Configure site Menu and submenu
-    And I choose "Site options" in "Configure site"
-    And I choose "Static pages" in "Configure site"
-    And I choose "Menus" in "Configure site"
-    And I choose "Networking" in "Configure site"
-    And I choose "Licenses" in "Configure site"
-    And I choose "Pages and collections" in "Configure site"
-    And I choose "Share" in "Configure site"
-    And I choose "Files" in "Configure site"
-    And I choose "Cookie Consent" in "Configure site"
+    And I choose "Site options" in "Configure site" from Admin menu
+    And I choose "Static pages" in "Configure site" from Admin menu
+    And I choose "Menus" in "Configure site" from Admin menu
+    And I choose "Networking" in "Configure site" from Admin menu
+    And I choose "Licenses" in "Configure site" from Admin menu
+    And I choose "Pages and collections" in "Configure site" from Admin menu
+    And I choose "Share" in "Configure site" from Admin menu
+    And I choose "Files" in "Configure site" from Admin menu
+    And I choose "Cookie Consent" in "Configure site" from Admin menu
     # Checking Users Menu and submenu
-    And I choose "User search" in "Users"
-    And I choose "Suspended and expired users" in "Users"
-    And I choose "Site staff" in "Users"
-    And I choose "Site administrators" in "Users"
-    And I choose "Export queue" in "Users"
-    And I choose "Add user" in "Users"
-    And I choose "Add users by CSV" in "Users"
+    And I choose "User search" in "Users" from Admin menu
+    And I choose "Suspended and expired users" in "Users" from Admin menu
+    And I choose "Site staff" in "Users" from Admin menu
+    And I choose "Site administrators" in "Users" from Admin menu
+    And I choose "Export queue" in "Users" from Admin menu
+    And I choose "Add user" in "Users" from Admin menu
+    And I choose "Add users by CSV" in "Users" from Admin menu
     # Checking Groups
-    And I choose "Group categories" in "Groups (Administer groups)"
-    And I choose "Archived submissions" in "Groups (Administer groups)"
-    And I choose "Add groups by CSV" in "Groups (Administer groups)"
-    And I choose "Update group members by CSV" in "Groups (Administer groups)"
-    And I choose "Administer groups" in "Groups (Administer groups)"
+    And I choose "Group categories" in "Groups" from Admin menu
+    And I choose "Archived submissions" in "Groups" from Admin menu
+    And I choose "Add groups by CSV" in "Groups" from Admin menu
+    And I choose "Update group members by CSV" in "Groups" from Admin menu
+    And I choose "Administer groups" in "Groups" from Admin menu
     # Checking Institutions Menu and submenus
-    And I choose "Static pages" in "Institutions"
-    And I choose "Members" in "Institutions"
-    And I choose "Staff" in "Institutions"
-    And I choose "Administrators" in "Institutions"
-    And I choose "Admin notifications" in "Institutions"
-    And I choose "Profile completion" in "Institutions"
-    And I choose "Pages and collections" in "Institutions"
-    And I choose "Share" in "Institutions"
-    And I choose "Files" in "Institutions"
-    And I choose "Statistics" in "Institutions"
-    And I choose "Pending registrations" in "Institutions"
+    And I choose "Static pages" in "Institutions" from Admin menu
+    And I choose "Members" in "Institutions" from Admin menu
+    And I choose "Staff" in "Institutions" from Admin menu
+    And I choose "Administrators" in "Institutions" from Admin menu
+    And I choose "Admin notifications" in "Institutions" from Admin menu
+    And I choose "Profile completion" in "Institutions" from Admin menu
+    And I choose "Pages and collections" in "Institutions" from Admin menu
+    And I choose "Share" in "Institutions" from Admin menu
+    And I choose "Files" in "Institutions" from Admin menu
+    And I choose "Statistics" in "Institutions" from Admin menu
+    And I choose "Pending registrations" in "Institutions" from Admin menu
     # Checking Extensions Menu and submenu
-    And I choose "Plugin administration" in "Extensions"
-    And I choose "HTML filters" in "Extensions"
-    And I choose "Allowed iframe sources" in "Extensions"
-    And I choose "Clean URLs" in "Extensions"
+    And I choose "Plugin administration" in "Extensions" from Admin menu
+    And I choose "HTML filters" in "Extensions" from Admin menu
+    And I choose "Allowed iframe sources" in "Extensions" from Admin menu
+    And I choose "Clean URLs" in "Extensions" from Admin menu
     # Checking Web services Menu and submenu
-    And I choose "Configuration" in "Web services"
-    And I choose "OAuth" in "Web services"
-    And I choose "Logs" in "Web services"
-    And I choose "Test client" in "Web services"
-    And I choose "Application connections" in "Web services"
-    And I choose "Connection manager" in "Web services"
+    And I choose "Configuration" in "Web services" from Admin menu
+    And I choose "OAuth" in "Web services" from Admin menu
+    And I choose "Logs" in "Web services" from Admin menu
+    And I choose "Test client" in "Web services" from Admin menu
+    And I choose "Application connections" in "Web services" from Admin menu
+    And I choose "Connection manager" in "Web services" from Admin menu
     # The test should be completed once if Return to site works successfully
-    And I follow "Return to site"
+    And I click on "Show Menu"
+    And I follow "Dashboard"
     And I should see "Admin User"

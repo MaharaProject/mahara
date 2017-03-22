@@ -18,7 +18,7 @@ Scenario: Creating a collection AND adding pages
     # Verifying log in was successful
     And I should see "Admin User"
     # Create Test collection
-    And I choose "Pages and collections" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio" from Main menu
     And I follow "Add"
     And I click on "Collection" in the dialog
     And I fill in the following:
@@ -35,6 +35,7 @@ Scenario: Creating a collection AND adding pages
     And I should see "Testing page 3"
     And I should see "A page 4"
     # Sort pages by Last modified
+    And I click on "Show Menu"
     Then I follow "Portfolio"
     And I select "Alphabetical" from "Sort by:"
     And I press the key "Enter" in the "Search:" field
@@ -47,18 +48,18 @@ Scenario: Creating a collection AND adding pages
     And "Testing page 2" "link" should appear before "Testing page 3" "link"
 
     # Sharing the collection then adding in a new page
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Edit access"
     And I select "Registered users" from "accesslist[0][searchtype]"
     And I press "Save"
-    And I choose "Pages and collections" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio" from Main menu
     And I follow "Add"
     And I click on "Page" in the dialog
     And I set the following fields to these values:
     | Page title | New page |
     | Page description | testing |
     And I press "Save"
-    And I choose "Pages and collections" in "Portfolio"
+    And I choose "Pages and collections" in "Portfolio" from Main menu
     And I click on "Test Collection" panel menu
     And I click on "Manage" in "Test Collection" panel menu
     And I follow "All"

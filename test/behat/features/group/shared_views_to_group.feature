@@ -44,14 +44,14 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I should see "Pete"
     And I should see "Group Z"
     # Edit access for Page 01
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page 01" row
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I set the field "accesslist[0][startdate]" to "2015/06/15 03:00"
     And I press "Save"
     # Edit access for Page 02
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page 02" row
     And I select "Group Z" from "accesslist[0][searchtype]"
@@ -60,7 +60,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I should see "The end date for 'group' access cannot be in the past."
     And I press "Cancel"
     # Edit access for Page 03
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page 03" row
     And I follow "Advanced options"
@@ -68,20 +68,20 @@ The list of shared pages must take into account of access date (Bug 1374163)
       | Access start date/time | 2015/06/15 00:00 |
     And I press "Save"
     # Edit access for Page 05
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page 05" row
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     # Edit access for Collection 01
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I click on "Edit access" in "Collection 01" row
     And I set the select2 value "Collection 01" for "editaccess_collections"
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I set the field "accesslist[0][startdate]" to "2015/06/15 03:00"
     And I press "Save"
     # Edit access for Collection 03
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I click on "Edit access" in "Collection 03" row
     And I set the select2 value "Collection 03" for "editaccess_collections"
     And I follow "Advanced options"
@@ -89,12 +89,13 @@ The list of shared pages must take into account of access date (Bug 1374163)
       | Access start date/time | 2015/06/15 00:00 |
     And I press "Save"
     # Edit access for Collection 05
-    And I choose "Shared by me" in "Portfolio"
+    And I choose "Shared by me" in "Portfolio" from Main menu
     And I click on "Edit access" in "Collection 05" row
     And I set the select2 value "Collection 05" for "editaccess_collections"
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     # Check the list of shared pages to group "Group Z"
+    And I click on "Show Menu"
     And I choose "Groups"
     And I follow "Group Z"
     And I should see "Page 05"

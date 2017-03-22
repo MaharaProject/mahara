@@ -6,6 +6,7 @@ I need to be able to click on delete and config of a block
 
 Scenario: Clicking ID's (Bug 1428456)
  Given I log in as "admin" with password "Kupuhipa1"
+ And I click on "Show Menu"
  And I follow "Portfolio"
  And I follow "Profile page"
  And I follow "Edit this page"
@@ -29,6 +30,7 @@ Scenario: Clicking ID's (Bug 1428456)
  And I press "Save"
  Then I should see "Robert Cohn"
 
+ And I scroll to the base of id "content-editor-foldable"
  And I follow "Text"
  And I press "Add"
  And I wait "1" seconds
@@ -65,7 +67,7 @@ Scenario: Clicking ID's (Bug 1428456)
  | Block title | Crime and punishment |
  | Block content | <p>On an exceptionally hot evening early in July a young man came out of the garret in which he lodged in S. Place and walked slowly, as though in hesitation, towards K. bridge...</p> |
  And I close the config dialog
- And I scroll to the id "main-nav"
+ And I scroll to the id "main-column-container"
 
  # Checking if we can change page layout
  When I follow "Edit layout"

@@ -6,9 +6,8 @@ I need to be able to switch switches back and forth
 
 Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
- And I follow "Administration"
  # In the adding users area
- When I choose "Add user" in "Users"
+ When I choose "Add user" in "Users" from Admin menu
  And I press "General account options"
  # Changing the switches to their opposite setting
  And I set the following fields to these values:
@@ -26,7 +25,7 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  | password    | mahara1  |
  And I press "Create user"
  # In the Admin block adding users by CSV area
- And I choose "Add users by CSV" in "Users"
+ And I choose "Add users by CSV" in "Users" from Admin menu
  And I follow "General account options"
  # Changing the switches to the opposite setting
  And I set the following fields to these values:
@@ -40,7 +39,7 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  And I disable the switch "Email users about their account"
  And I press "Add users by CSV"
  # Navigating to the account index
- And I follow "Logout"
+ And I log out
  Then I log in as "bob01" with password "Mahara1"
  And I go to "account/index.php"
  And I should not see "Undefined index:"

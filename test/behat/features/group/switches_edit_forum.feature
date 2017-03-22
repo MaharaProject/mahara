@@ -6,7 +6,7 @@ Feature: Switching switch on and off when editing a forum
 
 Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
- And I choose "My groups" in "Groups"
+ And I choose "My groups" in "Groups" from Main menu
  And I follow "Create group"
  And I set the following fields to these values:
  | Group name | Turtles |

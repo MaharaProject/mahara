@@ -16,7 +16,7 @@ Scenario: Adding collection to group (Bug 1448807)
      | title | description| ownertype | ownername |
      | Site Page 01 | This is the page 01 of the site | group 01 | userA |
  When I log in as "userA" with password "Kupuhipa1"
- And I choose "Pages and collections" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio" from Main menu
  And I follow "Add"
  And I click on "Collection" in the dialog
  And I set the following fields to these values:
@@ -27,11 +27,12 @@ Scenario: Adding collection to group (Bug 1448807)
  And I press "Add pages"
  And I wait until the page is ready
  And I follow "Done"
- And I choose "Shared by me" in "Portfolio"
+ And I choose "Shared by me" in "Portfolio" from Main menu
  And I follow "Edit access"
  And I select "group 01" from "accesslist[0][searchtype]"
  And I press "Save"
  Then I should see "Access rules were updated for 1 page"
+ And I click on "Show Menu"
  And I follow "Groups"
  And I follow "group 01"
  And I should see "Updated" in the "#sharedcollectionlist" element

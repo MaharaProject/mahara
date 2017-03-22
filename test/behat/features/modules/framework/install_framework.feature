@@ -32,15 +32,14 @@ Background:
 
 Scenario: Installing framework module and activating for an institution
  Given I log in as "admin" with password "Kupuhipa1"
- And I follow "Administration"
- And I choose "Plugin administration" in "Extensions"
+ And I choose "Plugin administration" in "Extensions" from Admin menu
  Then I should see "smartevidence"
  And I should see "Hide" in the "form#activate_module_framework" "css_element"
  # Also make sure the annotation blocktype plugin is active
  And I press "Show" in the "form#activate_blocktype_annotation" "css_element"
 
  # Make sure we have a matrix config form
- And I choose "SmartEvidence" in "Extensions"
+ And I choose "SmartEvidence" in "Extensions" from Admin menu
  And I follow "Add framework"
  And I attach the file "example.matrix" to "Matrix file"
  And I press "Upload matrix"
@@ -49,15 +48,14 @@ Scenario: Installing framework module and activating for an institution
  Then I should see "Title of your framework"
 
  # Activate smartevidence in an institution
- And I choose "Institutions" in "Institutions"
+ And I choose "Institutions" in "Institutions" from Admin menu
  And I click on "Edit" in "No Institution" row
  And I enable the switch "Allow SmartEvidence"
  And I press "Submit"
  Then I should see "Institution updated successfully."
 
  # Adding framework to existing collection
- And I follow "Return to site"
- And I choose "Pages and collections" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio" from Main menu
  And I click on "CollA" panel menu
  And I click on "Edit" in "CollA" panel menu
  And I select "Title of your framework" from "SmartEvidence framework"
@@ -65,7 +63,7 @@ Scenario: Installing framework module and activating for an institution
  Then I should see "Collection saved successfully."
 
  # Testing the collection navigation and matrix carousel
- And I choose "Pages and collections" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio" from Main menu
  And I click the panel "CollA"
  And I should see "You are on page 1/9"
  And I should see "by Admin User (admin)"
@@ -93,7 +91,7 @@ Scenario: Installing framework module and activating for an institution
  And I press "Save"
 
  # Re-click a matrix point to add some feedback
- And I choose "Pages and collections" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio" from Main menu
  And I click the panel "CollA"
  And I click on the matrix point "3,4"
  And I wait "1" seconds

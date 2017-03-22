@@ -10,7 +10,7 @@ Scenario: Creating an institution (selenium test)
     # Verifying log in successful
     And I should see "Admin User"
     # Creating an Institution
-    When I follow "Administration"
+    And I click on "Show Administration Menu"
     And I follow "Institutions"
     And I press "Add institution"
     And I fill in the following:

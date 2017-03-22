@@ -6,8 +6,7 @@ So I can benefit from the use of group categories
 
  Scenario: Turning switches on and off on group categories page (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
- And I follow "Administration"
- And I choose "Group categories" in "Groups (Administer groups)"
+ And I choose "Group categories" in "Groups" from Admin menu
  # Flicking the switch to the opposite setting
  And I set the following fields to these values:
  | Enable group categories | 1 |

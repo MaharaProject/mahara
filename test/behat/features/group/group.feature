@@ -16,7 +16,7 @@ Feature: Mahara users can participate in groups
       | group 01 | userA | This is group 01 | standard | ON | ON | all | ON | ON | userB, userC | userD |
   Scenario: Join a group
     Given I log in as "userE" with password "Kupuhipa1"
-    When I go to "group/find.php"
+    And I choose "Find groups" in "Groups" from Main menu
     Then I should see "group 01"
     When I click on "group 01"
     Then I should see "About"

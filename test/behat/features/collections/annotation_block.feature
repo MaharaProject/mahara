@@ -7,7 +7,7 @@ Feature: Annotation block is off by default
 Scenario: Accessing annotation block (Bug 1443730)
  Given I log in as "admin" with password "Kupuhipa1"
  # Creating a page
- And I choose "Pages and collections" in "Portfolio"
+ And I choose "Pages and collections" in "Portfolio" from Main menu
  And I follow "Add"
  And I click on "Page" in the dialog
  And I fill in "My page is amazing" for "Page title *"
@@ -17,8 +17,7 @@ Scenario: Accessing annotation block (Bug 1443730)
  And I should not see "Annotation"
  And I display the page
 # Navigating to admin block to turn it on
- And I follow "Administration"
- And I choose "Plugin administration" in "Extensions"
+ And I choose "Plugin administration" in "Extensions" from Admin menu
  And I press "activate_blocktype_annotation_submit"
  And I am on homepage
 # Editing page to enable annotation block

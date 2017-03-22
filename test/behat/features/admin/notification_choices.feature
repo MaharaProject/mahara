@@ -15,7 +15,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     # Verifying log in was successful
     And I should see "Admin User"
     # Navigating to notification settings
-    When I follow "Administration"
+    When I click on "Show Administration Menu"
     And I follow "Configure site"
     And I follow "Notification settings"
     # Verifying "None" option is not available for these notifications
@@ -44,14 +44,13 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     And I select "None" from "Objectionable content in forum"
     And I press "Update site options"
     # Log out as "Admin User"
-    And I follow "Logout"
+    And I log out
     # Logging in as user1
     Then I log in as "bob" with password "mahara1"
     # Verifying log in was successful
     And I should see "Bob Bobby"
     # Navigating to notification settings
-    And I follow "Settings"
-    And I follow "Notifications"
+    And I choose "Notifications" in "Settings" from User menu
     # Verifying the "None" option is not available for the following notifications
     And the "System message" field should not contain "None"
     And the "Message from other users" field should not contain "None"

@@ -12,7 +12,6 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
  And I expand all fieldsets
  # Changing all the switches from their default settings
  And I set the following fields to these values:
-| Drop-down navigation | 1 |
 | Show homepage / dashboard information | 0 |
 | Send weekly updates? | 1 |
 | Users can choose page themes | 1 |
@@ -51,4 +50,3 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
 | Custom licenses | 1 |
 | Mobile uploads | 1 |
 And I press "Update site options"
-

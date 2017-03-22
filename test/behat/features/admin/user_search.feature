@@ -11,8 +11,7 @@ Background:
 
 Scenario: Testing functions for user search page (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
- And I follow "Administration"
- And I choose "User search" in "Users"
+ And I choose "User search" in "Users" from Admin menu
  And I follow "Advanced options"
  And I follow "P" in the "div#firstnamelist" "css_element"
  And I follow "userA"

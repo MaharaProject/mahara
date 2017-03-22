@@ -10,8 +10,7 @@ Feature: Mahara users can change their account settings
 
   Scenario: Change notifications
     Given I log in as "userA" with password "Kupuhipa1"
-    And I follow "Settings"
-    And I follow "Notifications"
+    And I choose "Notifications" in "Settings" from User menu
     And I select "Email" from "activity_viewaccess"
     When I press "Save"
     And I should see "Preferences saved"

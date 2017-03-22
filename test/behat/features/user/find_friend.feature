@@ -17,7 +17,7 @@ Background:
 Scenario: Find users in your institution and outside your institution
     # Log in as a user
     Given I log in as "bob" with password "mahara1"
-    And I choose "Find friends" in "Groups"
+    And I choose "Find friends" in "Groups" from Main menu
     And I wait "1" seconds
 
     # Searching within my own institution, I should only find users in my institution

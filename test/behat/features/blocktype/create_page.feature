@@ -10,6 +10,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # Verifying log in was successful
     And I should see "Admin User"
     # Navigating to Portfolio to create a page
+    And I click on "Show Menu"
     And I follow "Portfolio"
     And I follow "Add"
     And I click on "Page" in the dialog

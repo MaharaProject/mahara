@@ -10,6 +10,7 @@ Scenario: Moving pages within a group (Bug 1426983)
     # Verifying log in was successful
     And I should see "Admin user"
     # Creating a group
+    And I click on "Show Menu"
     When I follow "Groups"
     And I follow "Create group"
     And I set the following fields to these values:
@@ -45,5 +46,5 @@ Scenario: Moving pages within a group (Bug 1426983)
     And I follow "Testing topic 1"
     And I should see "Testing moving topic"
     And I should see "Posts: 1"
+    And I click on "Show Menu"
     And I follow "Groups"
-

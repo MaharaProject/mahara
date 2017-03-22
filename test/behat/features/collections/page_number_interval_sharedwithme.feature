@@ -34,16 +34,16 @@
      | A's Page 20 | UserA's page 20 | user | userA |
      | A's Page 21 | UserA's page 21 | user | userA |
      | A's Page 22 | UserA's page 22 | user | userA |
-  And I follow "Portfolio"
+  And I choose "Portfolio"
   And I click the panel "A's Page 01"
   And I follow "Edit this page"
   And I follow "Share page"
   And I set the select2 value "A's Page 01, A's Page 02, A's Page 03, A's Page 04, A's Page 05, A's Page 06, A's Page 07, A's Page 08, A's Page 09, A's Page 10, A's Page 11, A's Page 12, A's Page 13, A's Page 14, A's Page 15, A's Page 16, A's Page 17, A's Page 18, A's Page 19, A's Page 20, A's Page 21" for "editaccess_views"
   And I select "Public" from "accesslist[0][searchtype]"
   And I press "editaccess_submit"
-  And I follow "Logout"
+  And I log out
   And I log in as "userB" with password "Kupuhipa1"
-  And I choose "Shared with me" in "Portfolio"
+  And I choose "Shared with me" in "Portfolio" from Main menu
   And I click on "Advanced options"
   And I click on "Select all"
   And I select "title" from "sort"

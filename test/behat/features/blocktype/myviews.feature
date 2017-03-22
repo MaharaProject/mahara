@@ -20,6 +20,7 @@ Background:
 Scenario: Testing that views & collections are collated properly in the "My portfolios" block
     Given I log in as "userA" with password "Kupuhipa1"
     # I should see collections & individual pages
+    And I scroll to the id "column-container"
     And I should see "C1" in the "div.list-group-item" "css_element"
     And I should see "(2 pages)" in the "div.list-group-item" "css_element"
     And I should see "page P2" in the "div.bt-myviews" "css_element"

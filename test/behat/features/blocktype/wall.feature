@@ -19,6 +19,7 @@ The wall post must generate a notification (Bug 547333)
     And I press "Post"
     And I log out
     And I log in as "userA" with password "Kupuhipa1"
+    And I click on "Show User Menu"
     And I follow "mail"
     Then I should see "New post on your wall"
     When I click on "New post on your wall"

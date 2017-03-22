@@ -16,7 +16,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
  Scenario: Create blogs
   Given I log in as "userA" with password "Kupuhipa1"
   # Create tagged blog entries
-  When I choose "Journals" in "Content"
+  When I choose "Journals" in "Content" from Main menu
   And I follow "New entry"
   And I set the following fields to these values:
   | Title | Entry one |
@@ -37,7 +37,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I press "Save entry"
 
   # Add a taggedblogs block to a page
-  And I choose "Pages and collections" in "Portfolio"
+  And I choose "Pages and collections" in "Portfolio" from Main menu
   And I click on "Page 01" panel menu
   And I click on "Edit" in "Page 01" panel menu
   And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
@@ -69,7 +69,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   # Copy the page as another user
   And I log out
   Given I log in as "userB" with password "Kupuhipa1"
-  And I choose "Journals" in "Content"
+  And I choose "Journals" in "Content" from Main menu
   And I follow "New entry"
   And I set the following fields to these values:
   | Title | userB entry |

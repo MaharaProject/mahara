@@ -6,8 +6,7 @@ So I can have different settings for each institution
 
 Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
- And I follow "Administration"
- And I choose "Institutions" in "Institutions"
+ And I choose "Institutions" in "Institutions" from Admin menu
  And I press "Add institution"
  And I set the following fields to these values:
  | Institution name * | Team Awesome |
@@ -33,4 +32,3 @@ Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
  | Email disabled | 1 |
  | Social media | 1 |
 And I press "Submit"
-
