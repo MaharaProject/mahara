@@ -44,8 +44,8 @@
   And I log out
   And I log in as "userB" with password "Kupuhipa1"
   And I choose "Shared with me" in "Portfolio" from Main menu
-  And I click on "Advanced options"
-  And I click on "Select all"
+  And I check "Registered users"
+  And I check "Public"
   And I select "title" from "sort"
   And I press "search_submit"
   And I should see "Results per page:"

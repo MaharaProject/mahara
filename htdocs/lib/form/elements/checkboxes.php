@@ -19,7 +19,7 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
 
     $result = '';
 
-    if (count($element['elements']) > 1) {
+    if (empty($element['hideselectorbuttons']) && count($element['elements']) > 1) {
         $id = hsc($form->get_name() . '_' . $element['name']) . '_container';
         $result .= '<div class="btn-group"><a href="" class="btn btn-default btn-xs" onclick="pieform_element_checkboxes_update(\'' . $id . '\', true); return false;">' . get_string('selectall') . '</a>'
             . '&nbsp;'

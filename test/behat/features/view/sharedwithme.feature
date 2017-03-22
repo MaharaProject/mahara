@@ -68,8 +68,7 @@ Scenario: Testing that views & collections are collated properly
     And I should see "I am on P2"
 
     # Allow user to see institution/group pages
-    When I follow "Advanced options"
-    And I check "Registered users"
+    When I check "Registered users"
     And I press "Search"
     Then I should see "iPage"
     And I should see "gPage"

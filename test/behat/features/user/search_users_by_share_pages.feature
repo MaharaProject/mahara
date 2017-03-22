@@ -81,10 +81,7 @@ Scenario: Create users and search for them (Bug 897586)
     # Entering Bob name in the search box
     And I fill in the following:
     | Search: | Bob |
-    And I follow "Advanced options"
-    # Searching for public pages
-    And I fill in the following:
-    | Public | 1 |
+    And I check "Public"
     And I press "search_submit"
     # Veryfing I have seen Bobs pages
     Then I should see "page 1"

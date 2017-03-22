@@ -128,18 +128,13 @@ $searchform = pieform(array(
 
         'advanced' => array(
             'type'        => 'fieldset',
-            'legend'      => get_string('moreoptions', 'view'),
-            'class'       => 'advanced last as-link link-expand-right',
-            'collapsible' => true,
-            'collapsed'   => true,
             'elements'    => array(
                 'share' => array(
-                    'class' => 'fullwidth',
                     'type'         => 'checkboxes',
                     'class'        => 'stacked',
-                    'title'        => get_string('sharedwith', 'view') . ': ',
                     'elements'     => $shareoptions,
                     'labelwidth'   => 0,
+                    'hideselectorbuttons' => true,
                 ),
             ),
         ),
