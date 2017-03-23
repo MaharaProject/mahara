@@ -1,8 +1,9 @@
-<div id="{{$id}}-container" data-rating="{{$value}}">{{if !$readonly}}<input type=hidden name="rating" id="{{$id}}">{{/if}}</div>
+<div id="{{$id}}_wrapper" data-rating="{{$value}}"></div>
+{{if !$readonly}}<input type=hidden name="rating" id="{{$id}}">{{/if}}
 
 <script type="application/javascript">
 jQuery(document).ready(function() {
-    jQuery("#{{$id}}-container").rating('create', {
+    jQuery("#{{$id}}_wrapper").rating('create', {
         coloron:'{{$colouron}}',
         coloroff:'{{$colouroff}}',
         glyph:'icon-{{$icon}}',
