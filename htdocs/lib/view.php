@@ -3524,7 +3524,7 @@ class View {
         }
 
         if (isset($data['blocktype']) && $data['blocktype'] == 'blogpost') {
-                $from .= ' INNER JOIN artefact_blog_blogpost abb on a.id = abb.blogpost ';
+                $from .= ' INNER JOIN {artefact_blog_blogpost} abb on a.id = abb.blogpost ';
                 $select .= ' AND abb.published = 1 ';
         }
 
