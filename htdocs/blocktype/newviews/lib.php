@@ -34,7 +34,7 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
         require_once('view.php');
         $configdata = $instance->get('configdata');
         $nviews = isset($configdata['limit']) ? intval($configdata['limit']) : 5;
-
+        $view = $instance->get_view();
         $sort = array(array('column' => 'mtime', 'desc' => true));
         $views = View::view_search(
                 null, // $query
@@ -50,7 +50,7 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
                 null, // $accesstypes
                 null, // $tag
                 null, // $viewid
-                null, // $excludeowner
+                $view->get('owner'), // $excludeowner
                 true // $groupbycollection
         );
         $smarty = smarty_core();
