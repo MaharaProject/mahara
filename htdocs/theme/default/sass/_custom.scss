@@ -1,34 +1,6 @@
-// blog post headings
-.myblogs {
-    h1 {
-        border-bottom: 0;
-        padding-bottom: 0;
-    }
-    .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
-        font-weight: 700;
-    }
-    .list-group-item-heading {
-        font-weight: 300;
-    }
-}
-
 // viewfooter
 .viewfooter {
-    padding: 15px !important;
+    padding: 15px;
     background-color: #f7f7f7;
     border-radius: 10px;
-    margin-top: 20px;
-    h3:first-child {
-        margin-top: 0;
-    }
-    h4:first-child {
-        margin-top: 0;
-    }
-    .pieform {
-        .files {
-            .btn {
-                margin-left: 0; // fixes the attach file btn alignment
-            }
-        }
-    }
 }

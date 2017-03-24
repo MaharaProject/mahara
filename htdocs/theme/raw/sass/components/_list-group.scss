@@ -581,6 +581,11 @@ h4.list-group-item-heading {
 
         a {
             display: block;
+
+            &:focus,
+            &:hover {
+              text-decoration: none;
+            }
         }
 
         &.list-small {

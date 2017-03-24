@@ -6,17 +6,3 @@
 form#filter {
     background-colour: lighten($brand-primary, 80%);
 }
-
-
-
-// fix for set width on labels
-#languageselect_lang_container {
-  label {
-    text-align: right;
-    color: #FFF;
-  }
-  .picker {
-    margin-right: 4px;
-    border-radius: 4px;
-  }
-}

@@ -33,20 +33,3 @@ a,
         color: #fff;
     }
 }
-
-
-// headings in journals
-.myblogs {
-    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-        font-family: $font-family-sans-serif;
-        font-weight: 700;
-    }
-    h1 {
-        border-bottom: 0;
-        padding-bottom: 0;
-        font-size: 30px;
-    }
-    .list-group-item-heading {
-        font-family: $font-family-serif;
-    }
-}

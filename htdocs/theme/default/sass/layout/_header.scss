@@ -6,24 +6,9 @@
         height: 5px;
         background-image: url(../images/header-bkgd.png);
     }
-    .logo-area {
-        .logo {
-            @media (max-width: $screen-xs-min - 1) {
-                width: 25px;
-                height: 45px;
-                overflow-x: hidden;
-                background: url(../images/site-logo-mobile.png) no-repeat 0 0;
-            }
-        }
-        img {
-            @media (max-width: $screen-xs-min - 1) {
-                display: none;
-            }
-        }
-    }
 
     .admin-title {
         font-weight: 300;
-        font-size: $font-size-large;
+        font-size: 16px;;
     }
 }

@@ -25,7 +25,7 @@ h1 {
 
 // Add padding if there is no navigation
 .header + .container h1 {
-    padding-top: 20px;
+    padding-top: 10px;
 }
 
 .page-header {
@@ -282,4 +282,36 @@ pre {
             font-style: italic;
         }
     }
+}
+
+/* headings in html entered by user neutralised */
+.myblogs,
+.content-text,
+.panel-body,
+#resumefieldform_coverletterdisplay_container,
+#resumefieldform_interestdisplay_container,
+.note-name div,
+.view-description,
+.forum-post .postedits,
+.mce-content-body {
+  h1, h2, h3, h4, h5, h6  {
+    font-family: $font-family-base;
+    font-weight: bold;
+    color: $text-color;
+
+    /* but not some titles */
+    &.list-group-item-heading,
+    &.title {
+      font-family: $headings-font-family;
+      font-weight: $headings-font-weight;
+      color: $headings-color;
+    }
+  }
+
+  /* remove border bottom, padding and margin for h1 */
+  h1 {
+    border-bottom: 0;
+    padding: 0 !important;
+    margin-bottom: 10px;
+  }
 }

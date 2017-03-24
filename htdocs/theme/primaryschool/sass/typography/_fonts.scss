@@ -1,41 +1,12 @@
-$font-path: '../fonts';
-
-$thin: 100, normal;
-$light: 300, normal;
-$lightItalic: 300, italic;
-$regular: normal, normal;
-$italic: normal, italic;
-$bold: 700, bold;
-
-$opensans: (
-    OpenSansLight: $light,
-    OpenSansLightItalic: $lightItalic,
-    OpenSansRegular: $regular,
-    OpenSansItalic: $italic,
-    OpenSansBold: $bold
-);
-
-@each $fontname, $style in $opensans {
-    @font-face {
-        font-family: 'Open Sans';
-        src: url('#{$font-path}/opensans/#{$fontname}.eot');
-        src: url('#{$font-path}/opensans/#{$fontname}.eot') format('embedded-opentype'),
-             url('#{$font-path}/opensans/#{$fontname}.woff2') format('woff2'),
-             url('#{$font-path}/opensans/#{$fontname}.woff') format('woff'),
-             url('#{$font-path}/opensans/#{$fontname}.ttf') format('truetype'),
-             url('#{$font-path}/opensans/#{$fontname}.svg##{$fontname}') format('svg');
-        font-weight: nth($style, 1);
-        font-style:  nth($style, 2);
-    }
-}
-
 @font-face {
     font-family: 'GoodDog';
-    src: url('#{$font-path}/GoodDog/GoodDog-webfont.eot');
-    src: url('#{$font-path}/GoodDog/GoodDog-webfont.eot') format('embedded-opentype'),
-         url('#{$font-path}/GoodDog/GoodDog-webfont.woff') format('woff'),
-         url('#{$font-path}/GoodDog/GoodDog-webfont.ttf') format('truetype'),
-         url('#{$font-path}/GoodDog/GoodDog-webfont.svg#GoodDog-webfont') format('svg');
+    src: url('../fonts/GoodDog/GoodDog-webfont.eot');
+    src: url('../fonts/GoodDog/GoodDog-webfont.eot?#iefix') format('embedded-opentype'),
+	       url('../fonts/GoodDog/GoodDog-webfont.woff2') format('woff2'),
+         url('../fonts/GoodDog/GoodDog-webfont.svg#GoodDog-webfont') format('svg'),
+         url('../fonts/GoodDog/GoodDog-webfont.otf') format('opentype'),
+         url('../fonts/GoodDog/GoodDog-webfont.ttf') format('truetype'),
+         url('../fonts/GoodDog/GoodDog-webfont.woff') format('woff');
     font-weight: normal;
     font-style:  normal;
 }

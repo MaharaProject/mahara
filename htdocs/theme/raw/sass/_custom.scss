@@ -195,6 +195,15 @@
     display: inline-block;
 }
 
+.login-related-links {
+  .register-link{
+    padding-right: 2px;
+  }
+  .forgotpass-link {
+    padding-left: 5px;
+  }
+}
+
 .progress-bar {
     position: relative;
     &.small-progress span {
@@ -428,6 +437,10 @@
         }
     }
 }
+#manage-skins-btn {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
 
 #auth_config_institutionidp {
     width: 90%;
@@ -469,4 +482,8 @@
   clear: both;
   content: "";
   display: table;
+}
+
+.notification-parent .bulk-actions label.btn-default {
+  padding-bottom: 3px;
 }

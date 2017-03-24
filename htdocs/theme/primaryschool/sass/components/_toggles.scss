@@ -5,12 +5,12 @@
     &:hover,
     &:focus {
         .icon {
-            color: $navbar-inverse-toggle-icon-bar-bg;;
+            color: $navbar-inverse-toggle-icon-bar-bg;
         }
     }
     .active & {
         .icon {
-                color: $navbar-inverse-toggle-icon-bar-bg;;
+            color: $navbar-inverse-toggle-icon-bar-bg;
         }
     }
 }

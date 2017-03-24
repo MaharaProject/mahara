@@ -15,9 +15,10 @@
                 <span class="sr-only">{str section='activity' tag='selectall'}</span>
             </label>
 
-            <button class="btn btn-default" type="button" data-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
                 {str section='admin' tag='bulkactions'}
-
+            </button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <span class="caret"></span>
             </button>
 

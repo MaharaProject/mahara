@@ -59,9 +59,9 @@ $body-bg:               #fff !default;
 $text-color:            $theme-text-color !default;
 
 //** Global textual link color.
-$link-color:            lighten($theme-primary-color-dark, 5%) !default;
+$link-color:            $theme-primary-color !default;
 //** Link hover color set via `darken()` or `lighten()` function.
-$link-hover-color:      lighten($theme-primary-color-dark, 15%) !default;
+$link-hover-color:      darken($theme-primary-color, 5%) !default;
 //** Link hover decoration.
 $link-hover-decoration: underline !default;
 
@@ -181,8 +181,8 @@ $btn-default-bg:                 #F9F9F9 !default;
 $btn-default-border:             #ccc !default;
 
 $btn-primary-color:              #fff !default;
-$btn-primary-bg:                 darken($brand-primary, 5%) !default;
-$btn-primary-border:             darken($brand-primary, 8%) !default;
+$btn-primary-bg:                 $brand-primary !default;
+$btn-primary-border:             darken($brand-primary, 5%) !default;
 
 $btn-success-color:              #fff !default;
 $btn-success-bg:                 $brand-success !default;

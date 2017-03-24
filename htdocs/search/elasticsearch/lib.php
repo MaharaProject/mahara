@@ -142,7 +142,7 @@ class PluginSearchElasticsearch extends PluginSearch {
                         ),
                         'submit' => array(
                             'type' => 'button',
-                            'class' => 'btn-primary input-group-btn',
+                            'class' => 'btn-default input-group-btn',
                             'usebuttontag' => true,
                             'value' => '<span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('go') . '</span>',
                         )

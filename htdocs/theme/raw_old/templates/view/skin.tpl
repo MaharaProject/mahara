@@ -1,10 +1,5 @@
 {include file="header.tpl"}
 
-<a class="btn btn-lg btn-default btn-with-heading" href="{$WWWROOT}skin/index.php">
-    <span class="icon icon-magic icon-flip-horizontal icon-lg left" role="presentation" aria-hidden="true"></span>
-    {str tag=manageskins section=skin}
-</a>
-
 {include file="view/editviewtabs.tpl" selected='skin' new=$new issiteview=$issiteview}
 
 <div class="subpage">
@@ -70,7 +65,12 @@
                 </div>
             </div>
 
-
+            <div id="manage-skins-btn">
+                <a class="btn btn-default" href="{$WWWROOT}skin/index.php">
+                  <span class="icon icon-magic icon-flip-horizontal icon-lg left" role="presentation" aria-hidden="true"></span>
+                  {str tag=manageskins section=skin}
+                </a>
+            </div>
 
         </div>
         <div class="col-md-9">

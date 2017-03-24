@@ -1,7 +1,13 @@
-@import "../form/form";
-@import "../components/user-icon";
-@import "../components/btn";
-@import "../components/arrow-bar";
+@import "../typography/fonts";
+
 @import "../layout/panel/panel";
 @import "../layout/panel/panel-heading";
 @import "../layout/panel/panel-secondary";
+
+@import "../form/form";
+
+@import "../components/arrow-bar";
+@import "../components/btn";
+@import "../components/user-icon";
+
+@import "../features/dashboard-widget";

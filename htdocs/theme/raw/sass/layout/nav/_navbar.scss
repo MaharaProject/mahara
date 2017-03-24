@@ -14,14 +14,21 @@
     .login-link a {
         margin-left: 15px;
         padding: 7px 15px;
+        color: $navbar-default-link-color;
+
+        &:focus,
+        &:hover {
+          color: $navbar-default-link-hover-color;
+          background-color: $navbar-default-link-hover-bg;
+        }
     }
 }
 
 // Header search form
 .navbar-form.navbar-collapse {
-    padding: 15px 0 15px 15px;
+    padding: 15px;
     margin-bottom: 0;
-    border-bottom-width: 0;
+    border: 0;
     @media (min-width: $screen-sm-min) {
         position: absolute;
         display: block;
@@ -48,11 +55,17 @@
             float: left;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
-            border-left: 0;
+            border-left: 1px solid $btn-default-border;
             margin-left: -1px;
             @media (min-width: $screen-sm-min) {
                 float: right;
             }
         }
     }
+}
+
+.navbar-default {
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
 }

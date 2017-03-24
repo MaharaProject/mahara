@@ -1,0 +1,41 @@
+.navbar-main {
+    border: 0;
+
+    .navbar-nav {
+        > li > a {
+            color: #FFFFFF;
+            background-color: $theme-primary-color;
+            border-color: $link-hover-color;
+            &:hover,
+            &:focus {
+                color: #FFFFFF;
+            }
+            @media (min-width: $screen-sm-min) {
+                border-color: $link-hover-color;
+            }
+        }
+        .navbar-toggle {
+            color: #FFFFFF;
+            background-color: $link-hover-color;
+
+            &:hover,
+            &:focus {
+              background-color: $link-hover-color;
+              color: #FFFFFF;
+            }
+
+            &.collapsed {
+              background-color: transparent;
+              &:hover,
+              &:focus {
+                background-color: $link-hover-color;
+                color: #FFFFFF;
+              }
+            }
+        }
+
+        .active > a {
+          font-weight: bold;
+        }
+    }
+}

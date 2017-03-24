@@ -1,30 +1,66 @@
 // Primary Nav
 // overriding/additional styles for theme
+.navbar-toggle {
+    &.navbar-showchildren {
+        background-color: $navbar-inverse-bg;
+        color: $gray-dark;
+        &:focus,
+        &:hover {
+            .icon {
+                color: #FFFFFF;
+            }
+        }
+        &.collapsed {
+            background-color: transparent;
+            color: #FFFFFF;
+        }
+    }
+}
+.active {
+    .navbar-showchildren.collapsed {
+        .icon {
+            color: #FFFFFF;
+        }
+    }
+}
 
 body.admin {
     .navbar-default {
         background-color: lighten($gray, 7%);
-        border-color: lighten($gray, 7%);;
-    }
-    .navbar-toggle {
-        border-color: $gray;
-    }
-}
-
-// Tweak mene toggle styles
-.navbar-showchildren {
-    .icon {
-        color: $navbar-inverse-toggle-icon-bar-bg;
-    }
-    &:hover,
-    &:focus {
-        .icon {
-            color: $navbar-inverse-toggle-icon-bar-bg;
+        border-color: lighten($gray, 7%);
+        .navbar-toggle {
+            &:focus,
+            &:hover {
+                background-color: darken($gray, 2%);
+            }
+        }
+        .navbar-collapse {
+            border-color: lighten($gray, 7%);
         }
     }
-    .active & {
-        .icon {
-            color: $gray;
+    .navbar-main {
+        .navbar-nav > li > a {
+            border-color: lighten($gray, 10%);
+            background-color: lighten($gray, 7%);
+            &:focus,
+            &:hover {
+                background-color: darken($gray, 9%);
+            }
+        }
+        .navbar-showchildren {
+            background-color: lighten($gray, 60%);
+            color: $gray-dark;
+            &.collapsed {
+              background-color: transparent;
+              color: #FFFFFF;
+            }
+        }
+        .child-nav li > a {
+            background-color: lighten($gray, 60%);
+            &:focus,
+            &:hover {
+                background-color: lighten($gray, 58%);
+            }
         }
     }
 }

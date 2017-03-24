@@ -4,7 +4,7 @@
     .user-icon {
         padding: 0;
         position: absolute;
-        margin: 7px 0 7px 9px;
+        margin: 4px 0 5px 9px;
         z-index: 3;
         left: 45px;
         display: block;
@@ -19,12 +19,23 @@
     margin: 0;
     border-color: $navbar-default-toggle-border-color;
     border-left-width: 0;
-    border-radius: 0;
+    border-radius: 3px;
     min-width: 45px;
     color: $navbar-default-toggle-icon-bar-bg;
+    padding: 6px 10px;
+    background-color: $navbar-default-toggle-hover-bg;
+
     &:hover,
     &:focus {
         background-color: $navbar-default-toggle-hover-bg;
+    }
+
+    &.collapsed {
+        background-color: transparent;
+        &:hover,
+        &:focus {
+            background-color: $navbar-default-toggle-hover-bg;
+        }
     }
 
     &.search-toggle {
@@ -32,12 +43,13 @@
             display: none;
         }
         .icon {
-            color: $navbar-default-link-hover-color;
+            color: $navbar-default-link-color;
         }
     }
 
     &.user-toggle {
-        padding-left: 45px;
+        padding-left: 40px;
+        background-color: transparent;
         @media (min-width: $screen-sm-min) {
             border-left-width: 1px;
         }

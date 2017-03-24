@@ -388,7 +388,7 @@ $navbar-collapse-max-height:       340px;
 
 $navbar-default-color:             #FFFFFF;
 $navbar-default-bg:                $brand-primary;
-$navbar-default-border:            darken($brand-primary, 2%);
+$navbar-default-border:            transparent;
 
 // Navbar links
 $navbar-default-link-color:                #FFFFFF;
@@ -407,7 +407,7 @@ $navbar-default-brand-hover-bg:            transparent;
 // Navbar toggle
 $navbar-default-toggle-hover-bg:           darken($brand-primary, 5%);
 $navbar-default-toggle-icon-bar-bg:        #FFF;
-$navbar-default-toggle-border-color:       darken($brand-primary, 5%);
+$navbar-default-toggle-border-color:       transparent;
 
 
 // Inverted navbar
@@ -418,10 +418,10 @@ $navbar-inverse-border:                     darken($navbar-inverse-bg, 5%);
 
 // Inverted navbar links
 $navbar-inverse-link-color:                 #FFF;
-$navbar-inverse-link-hover-color:           $brand-primary;
-$navbar-inverse-link-hover-bg:              #FFF;
-$navbar-inverse-link-active-color:          #000;
-$navbar-inverse-link-active-bg:             #fff;
+$navbar-inverse-link-hover-color:           #FFFFFF;
+$navbar-inverse-link-hover-bg:              darken($navbar-inverse-bg, 5%);
+$navbar-inverse-link-active-color:          #FFFFFF;
+$navbar-inverse-link-active-bg:             darken($brand-primary, 6%);
 $navbar-inverse-link-disabled-color:        #444;
 $navbar-inverse-link-disabled-bg:           transparent;
 

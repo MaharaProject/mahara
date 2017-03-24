@@ -16,10 +16,10 @@ $opensans: (
 );
 
 $robotoslab: (
-    RobotoSlab-Thin: $thin,
-    RobotoSlab-Light: $light,
-    RobotoSlab-Regular: $regular,
-    RobotoSlab-Bold: $bold
+    robotoslab-thin: $thin,
+    robotoslab-light: $light,
+    robotoslab-regular: $regular,
+    robotoslab-bold: $bold
 );
 
 
@@ -27,11 +27,12 @@ $robotoslab: (
     @font-face {
         font-family: 'Open Sans';
         src: url('#{$font-path}/opensans/#{$fontname}.eot');
-        src: url('#{$font-path}/opensans/#{$fontname}.eot') format('embedded-opentype'),
+        src: url('#{$font-path}/opensans/#{$fontname}.eot?#iefix') format('embedded-opentype'),
              url('#{$font-path}/opensans/#{$fontname}.woff2') format('woff2'),
-             url('#{$font-path}/opensans/#{$fontname}.woff') format('woff'),
+             url('#{$font-path}/opensans/#{$fontname}.svg##{$fontname}') format('svg'),
+             url('#{$font-path}/opensans/#{$fontname}.otf') format('opentype'),
              url('#{$font-path}/opensans/#{$fontname}.ttf') format('truetype'),
-             url('#{$font-path}/opensans/#{$fontname}.svg##{$fontname}') format('svg');
+             url('#{$font-path}/opensans/#{$fontname}.woff') format('woff');
         font-weight: nth($style, 1);
         font-style:  nth($style, 2);
     }
@@ -40,7 +41,13 @@ $robotoslab: (
 @each $fontname, $style in $robotoslab {
     @font-face {
         font-family: 'Roboto Slab';
-        src: url('#{$font-path}/robotoslab/#{$fontname}.ttf') format('truetype');
+        src: url('#{$font-path}/robotoslab/#{$fontname}.eot');
+        src: url('#{$font-path}/robotoslab/#{$fontname}.eot?#iefix') format('embedded-opentype'),
+             url('#{$font-path}/robotoslab/#{$fontname}.woff2') format('woff2'),
+             url('#{$font-path}/robotoslab/#{$fontname}.svg##{$fontname}') format('svg'),
+             url('#{$font-path}/robotoslab/#{$fontname}.otf') format('opentype'),
+             url('#{$font-path}/robotoslab/#{$fontname}.ttf') format('truetype'),
+             url('#{$font-path}/robotoslab/#{$fontname}.woff') format('woff');
         font-weight: nth($style, 1);
         font-style:  nth($style, 2);
     }

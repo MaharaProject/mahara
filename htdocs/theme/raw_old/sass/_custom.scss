@@ -195,15 +195,22 @@
     display: inline-block;
 }
 
+.login-related-links {
+  .register-link{
+    padding-right: 2px;
+  }
+  .forgotpass-link {
+    padding-left: 5px;
+  }
+}
+
 .form-group .select2-container .select2-selection .select2-search input[type=search] {
     width: 100% !important;
 }
 
 .progress-bar {
     position: relative;
-    background-color: darken($brand-primary, 5%);
     &.small-progress span {
-        color: $text-color;
         display: block;
         left: 100%;
         padding-left: 5px;
@@ -435,6 +442,10 @@
         }
     }
 }
+#manage-skins-btn {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
 
 #auth_config_institutionidp {
     width: 90%;
@@ -461,4 +472,8 @@
     @media (min-width: $screen-lg-min) {
         margin-left: 100px;
     }
+}
+
+.notification-parent .bulk-actions label.btn-default {
+  padding-bottom: 3px;
 }

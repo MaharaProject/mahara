@@ -9,7 +9,7 @@
 
     <div id="notifications" class="notification-parent"  data-requesturl="indexout.json.php">
 
-        <div class="btn-group pull-leftbulk-actions" role="group">
+        <div class="btn-group pull-left bulk-actions" role="group">
             <label class="btn btn-default" for="selectall">
                 <input type="checkbox" name="selectall" id="selectall" data-togglecheckbox="tocheck">
                 <span class="sr-only">{str section='activity' tag='selectall'}</span>

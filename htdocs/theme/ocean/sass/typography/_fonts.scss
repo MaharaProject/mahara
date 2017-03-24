@@ -2,11 +2,12 @@
 @font-face {
     font-family: 'Osvaldo';
     src: url('../fonts/osvaldo/osvaldo-regular.eot');
-    src: url('../fonts/osvaldo/osvaldo-regular.eot') format('embedded-opentype'),
+    src: url('../fonts/osvaldo/osvaldo-regular.eot?#iefix') format('embedded-opentype'),
          url('../fonts/osvaldo/osvaldo-regular.woff2') format('woff2'),
-         url('../fonts/osvaldo/osvaldo-regular.woff') format('woff'),
+         url('../fonts/osvaldo/osvaldo-regular.svg#osvaldo') format('svg'),
+         url('../fonts/osvaldo/osvaldo-regular.otf') format('opentype'),
          url('../fonts/osvaldo/osvaldo-regular.ttf') format('truetype'),
-         url('../fonts/osvaldo/osvaldo-regular.svg#osvaldo') format('svg');
+         url('../fonts/osvaldo/osvaldo-regular.woff') format('woff');
     font-weight: normal;
     font-style:  normal;
 }

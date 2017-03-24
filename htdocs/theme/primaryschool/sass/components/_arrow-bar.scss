@@ -1,21 +1,4 @@
 .arrow-bar {
-    .nav-inpage {
-        &.nav {
-            > li {
-                > a {
-                    margin-bottom: 9px;
-                }
-            }
-        }
-    }
-
-    .arrow {
-        width: auto;
-        @media (max-width: $screen-md-min) {
-            width: auto;
-        }
-    }
-
     // to theme the Résumé nav red
     &.resume {
         background-color: lighten(#ca0238, 5%);
@@ -23,7 +6,7 @@
         .arrow {
             background-color: #ca0238;
             &:after {
-                border-left: 14px solid #ca0238;
+                border-left-color: #ca0238;
             }
         }
         .nav-inpage {
@@ -43,12 +26,12 @@
         .arrow {
             background-color: #799323;
             &:after {
-                border-left: 14px solid #799323;
+                border-left-color: #799323;
             }
         }
         .nav-inpage {
             &.nav > li {
-                &.active > a, 
+                &.active > a,
                 &.active > button,  {
                     color: #799323;
                 }

@@ -13,26 +13,3 @@
       font-family: $font-family-sans-serif;
     }
 }
-
-.panel-success {
-  a.panel-footer {
-    color: darken($state-success-bg, 10%);
-    background-color: lighten($state-success-bg, 40%);
-    border-top-color: lighten($state-success-bg, 40%);
-    &:hover {
-      background-color: lighten($state-success-bg, 45%);
-      color: darken($state-success-bg, 10%);
-    } 
-  }
-}
-.panel-info {
-  a.panel-footer {
-    color: darken($state-info-bg, 10%);
-    background-color: lighten($state-info-bg, 40%);
-    border-top-color: lighten($state-info-bg, 40%);
-    &:hover {
-      background-color: lighten($state-info-bg, 45%);
-      color: darken($state-success-bg, 30%);
-    } 
-  }
-}

@@ -78,4 +78,12 @@ body:not(.admin) .navbar.minor-nav {
             }
         }
     }
+
+    .navbar-text {
+      @media (max-width: $screen-sm-min - 1) {
+        display: block;
+        padding: 10px 14px;
+        margin: 0;
+      }
+    }
 }
