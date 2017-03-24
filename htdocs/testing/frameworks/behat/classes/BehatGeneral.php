@@ -1228,6 +1228,25 @@ class BehatGeneral extends BehatBase {
         $this->i_accept_confirm_popup();
         $this->wait_until_the_page_is_ready();
     }
+/**
+ * Scroll to top of page
+ *
+ * @When I scroll to the top
+ *
+ */
+    public function i_scroll_to_top() {
+        $function = <<<JS
+          (function(){
+              window.scrollTo(0,0);
+          })()
+JS;
+        try {
+            $this->getSession()->executeScript($function);
+        }
+        catch(Exception $e) {
+            throw new \Exception("scrollToTop failed");
+        }
+    }
 
 /**
  * Scroll element into view and align top of element with the top of the visible area.

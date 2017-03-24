@@ -40,6 +40,7 @@
             <span class="show-form">
                 {str tag='add'}
                 <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
+                <span class="accessible-hidden sr-only">{str tag='addmembership' section='artefact.resume'}</span>
             </span>
             <span class="hide-form">
                 {str tag='cancel'}
