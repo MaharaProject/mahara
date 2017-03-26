@@ -12,7 +12,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/findfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('findfriends'));
+define('TITLE', get_string('findpeople'));
 require_once('searchlib.php');
 safe_require('search', 'internal');
 define('SECTION_PLUGINTYPE', 'core');

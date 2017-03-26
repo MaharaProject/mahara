@@ -43,7 +43,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Checking Groups Menus and submenu
     And I choose "Find groups" in "Groups" from main menu
     And I choose "My friends" in "Groups" from main menu
-    And I choose "Find friends" in "Groups" from main menu
+    And I choose "Find people" in "Groups" from main menu
     And I choose "Institution membership" in "Groups" from main menu
     And I choose "Topics" in "Groups" from main menu
     # Checking messages

@@ -54,7 +54,7 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  Then I should see "My groups" in the ".groups" "css_element"
  And I should see "Find groups" in the ".groups" "css_element"
  And I should see "My friends" in the ".groups" "css_element"
- And I should see "Find friends" in the ".groups" "css_element"
+ And I should see "Find people" in the ".groups" "css_element"
  And I should see "Institution membership" in the ".groups" "css_element"
  And I should see "Topics" in the ".groups" "css_element"
 

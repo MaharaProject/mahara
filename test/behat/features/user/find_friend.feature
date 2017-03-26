@@ -1,6 +1,6 @@
 @javascript @core @core_user @core_portfolio @friends
-Feature: Searching for users in the "Find friends" page
-    In order to search by name on the "Find friends" page
+Feature: Searching for users in the "Find people" page
+    In order to search by name on the "Find people" page
     So I can befriend them or send them messages
 
 Background:
@@ -17,7 +17,7 @@ Background:
 Scenario: Find users in your institution and outside your institution
     # Log in as a user
     Given I log in as "bob" with password "mahara1"
-    And I choose "Find friends" in "Groups" from main menu
+    And I choose "Find people" in "Groups" from main menu
     And I wait "1" seconds
 
     # Searching within my own institution, I should only find users in my institution

@@ -2933,7 +2933,7 @@ function mahara_standard_nav() {
         'groups/findfriends' => array(
             'path' => 'groups/findfriends',
             'url' => 'user/find.php',
-            'title' => get_string('findfriends'),
+            'title' => get_string('findpeople'),
             'weight' => 40,
         ),
         'groups/institutionmembership' => array(
