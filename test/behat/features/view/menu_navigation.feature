@@ -115,7 +115,7 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "Update group members by CSV" in the ".managegroups" "css_element"
 # Checking the sub navigation in Institutions
  When I press "Show Menu" in the ".manageinstitutions" "css_element"
- Then I should see "Institutions" in the ".manageinstitutions" "css_element"
+ Then I should see "Settings" in the ".manageinstitutions" "css_element"
  And I should see "Static pages" in the ".manageinstitutions" "css_element"
  And I should see "Members" in the ".manageinstitutions" "css_element"
  And I should see "Staff" in the ".manageinstitutions" "css_element"

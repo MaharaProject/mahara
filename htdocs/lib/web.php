@@ -2451,7 +2451,7 @@ function admin_nav() {
         'manageinstitutions/institutions' => array(
             'path'   => 'manageinstitutions/institutions',
             'url'    => 'admin/users/institutions.php',
-            'title'  => get_string('Institutions', 'admin'),
+            'title'  => get_string('settings', 'admin'),
             'weight' => 10,
         ),
         'manageinstitutions/sitepages' => array(
