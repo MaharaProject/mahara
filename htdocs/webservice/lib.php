@@ -1030,6 +1030,10 @@ abstract class webservice_server implements webservice_server_interface {
             return $user;
         }
 
+        if (empty($this->token)) {
+            // log failed login attempts
+            throw new WebserviceAccessException(get_string('invalidtokennotsupplied', 'auth.webservice'));
+        }
 
         $token = get_record('external_tokens', 'token', $this->token);
         if (!$token) {

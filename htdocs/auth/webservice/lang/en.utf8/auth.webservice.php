@@ -144,6 +144,7 @@ $string['owner'] = 'Owner';
 $string['servicename'] = 'Service';
 $string['generate'] = 'Generate token';
 $string['invalidtoken'] = 'Invalid token selected';
+$string['invalidtokennotsuppied'] = 'Invalid token selected or none supplied';
 $string['token'] = 'Token';
 $string['tokenid'] = 'Token "%s"';
 $string['invaliduserselected'] = 'Invalid user selected';
