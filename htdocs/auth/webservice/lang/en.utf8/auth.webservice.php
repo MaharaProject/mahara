@@ -220,10 +220,10 @@ $string['unabletoruntestclient'] = 'Web service test client needs to be run unde
 //oauth server registry
 $string['accesstokens'] = 'OAuth access tokens';
 $string['notokens'] = 'You have no application tokens';
-$string['oauth'] = 'OAuth';
+$string['externalapps'] = 'External apps';
 $string['oauth1'] = 'OAuth1.x';
-$string['oauthv1sregister'] = 'OAuth service registration';
-$string['userapplications'] = 'OAuth consumer keys';
+$string['externalappsregister'] = 'Registration of external apps';
+$string['userapplications1'] = 'Settings for external applications';
 $string['accessto'] = 'Access to';
 $string['application'] = 'Application';
 $string['callback'] = 'Callback URI';

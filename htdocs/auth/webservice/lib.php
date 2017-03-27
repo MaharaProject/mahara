@@ -125,7 +125,7 @@ class PluginAuthWebservice extends PluginAuth {
             'webservices/oauthconfig' => array(
                 'path'   => 'webservices/oauthconfig',
                 'url'    => 'webservice/admin/oauthv1sregister.php',
-                'title'  => get_string('oauth', 'auth.webservice'),
+                'title'  => get_string('externalapps', 'auth.webservice'),
                 'weight' => 40,
             ),
             'webservices/logs' => array(
