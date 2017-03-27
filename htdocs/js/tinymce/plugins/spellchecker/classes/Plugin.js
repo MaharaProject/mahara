@@ -52,6 +52,18 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			return items;
 		}
 
+		// draw back if power version is requested and registered
+		if (/(^|[ ,])tinymcespellchecker([, ]|$)/.test(settings.plugins) && PluginManager.get('tinymcespellchecker')) {
+			/*eslint no-console:0 */
+			if (typeof console !== "undefined" && console.log) {
+				console.log(
+					"Spell Checker Pro is incompatible with Spell Checker plugin! " +
+					"Remove 'spellchecker' from the 'plugins' option."
+				);
+			}
+			return;
+		}
+
 		var languagesString = settings.spellchecker_languages ||
 			'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,' +
 			'German=de,Italian=it,Polish=pl,Portuguese=pt_BR,' +
@@ -160,16 +172,9 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		}
 
 		function defaultSpellcheckCallback(method, text, doneCallback, errorCallback) {
-			var data = {method: method}, postData = '';
+			var data = {method: method, lang: settings.spellchecker_language}, postData = '';
 
-			if (method == "spellcheck") {
-				data.text = text;
-				data.lang = settings.spellchecker_language;
-			}
-
-			if (method == "addToDictionary") {
-				data.word = text;
-			}
+			data[method == "addToDictionary" ? "word" : "text"] = text;
 
 			Tools.each(data, function(value, key) {
 				if (postData) {

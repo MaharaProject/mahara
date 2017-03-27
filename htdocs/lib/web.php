@@ -273,7 +273,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
     theme: "modern",
-    plugins: "tooltoggle,textcolor,visualblocks,wordcount,link,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin}",
+    plugins: "tooltoggle,textcolor,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin}",
     skin: 'light',
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},

@@ -25,17 +25,22 @@ define("tinymce/pasteplugin/Plugin", [
 	PluginManager.add('paste', function(editor) {
 		var self = this, clipboard, settings = editor.settings;
 
+		function isUserInformedAboutPlainText() {
+			return userIsInformed || editor.settings.paste_plaintext_inform === false;
+		}
+
 		function togglePlainTextPaste() {
 			if (clipboard.pasteFormat == "text") {
-				this.active(false);
 				clipboard.pasteFormat = "html";
+				editor.fire('PastePlainTextToggle', {state: false});
 			} else {
 				clipboard.pasteFormat = "text";
-				this.active(true);
+				editor.fire('PastePlainTextToggle', {state: true});
 
-				if (!userIsInformed) {
+				if (!isUserInformedAboutPlainText()) {
 					var message = editor.translate('Paste is now in plain text mode. Contents will now ' +
-						'be pasted as plain text until you toggle this option off.');
+					'be pasted as plain text until you toggle this option off.');
+
 					editor.notificationManager.open({
 						text: message,
 						type: 'info'
@@ -44,6 +49,27 @@ define("tinymce/pasteplugin/Plugin", [
 					userIsInformed = true;
 				}
 			}
+
+			editor.focus();
+		}
+
+		function stateChange() {
+			var self = this;
+
+			self.active(clipboard.pasteFormat === 'text');
+
+			editor.on('PastePlainTextToggle', function (e) {
+				self.active(e.state);
+			});
+		}
+
+		// draw back if power version is requested and registered
+		if (/(^|[ ,])powerpaste([, ]|$)/.test(settings.plugins) && PluginManager.get('powerpaste')) {
+			/*eslint no-console:0 */
+			if (typeof console !== "undefined" && console.log) {
+				console.log("PowerPaste is incompatible with Paste plugin! Remove 'paste' from the 'plugins' option.");
+			}
+			return;
 		}
 
 		self.clipboard = clipboard = new Clipboard(editor);
@@ -77,7 +103,7 @@ define("tinymce/pasteplugin/Plugin", [
 		});
 
 		// Block all drag/drop events
-		if (editor.paste_block_drop) {
+		if (editor.settings.paste_block_drop) {
 			editor.on('dragend dragover draggesture dragdrop drop drag', function(e) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -95,18 +121,21 @@ define("tinymce/pasteplugin/Plugin", [
 			});
 		}
 
+		editor.addCommand('mceTogglePlainTextPaste', togglePlainTextPaste);
+
 		editor.addButton('pastetext', {
 			icon: 'pastetext',
 			tooltip: 'Paste as text',
 			onclick: togglePlainTextPaste,
-			active: self.clipboard.pasteFormat == "text"
+			onPostRender: stateChange
 		});
 
 		editor.addMenuItem('pastetext', {
 			text: 'Paste as text',
 			selectable: true,
 			active: clipboard.pasteFormat,
-			onclick: togglePlainTextPaste
+			onclick: togglePlainTextPaste,
+			onPostRender: stateChange
 		});
 	});
 });

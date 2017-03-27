@@ -2,18 +2,27 @@ TinyMCE
 ========
 
 Website: http://tinymce.moxiecode.com/
-Version: 4.3.3
+Version: 4.5.5
 
 Based on development version
 
 Changes:
 
- * Added all of the language packs
+ * Added all of the language packs (original commit: 259a86431ad1140e15288d39702cea885c08f3fe)
  * Removed all .min.js and .dev.js files
  * Removed all files in 'classes' directory since they're packaged into tinymce.js
- * Removed all .less files from skin
- * Added code to spellchecker/spellchecker.rpc to use $CFG->spellcheckerengine
- * Adjusted the charmap plugin to contain Māori macrons
- * Adding the 'aria-hidden="true"' to presentation icons
- * Bug 1605110: Modified the "table" plugin to style the table through CSS instead of HTML attributes
+ * Removed all .less files from skin (original commit: 442ade4e7c7cf991a4001ab8f7cc9d15e2b25890)
+ * Added code to spellchecker/spellchecker.rpc to use $CFG->spellcheckerengine (original commit: a42e68b43e4a63db19569facae61898af1b86d3f)
+ * Adding the 'aria-hidden="true"' to presentation icons (original commit: 4ac89c31a719a9f63be6555c4d1a094fd2b09d0e)
+ * Bug 1605110: Modified the "table" plugin to style the table through CSS instead of HTML attributes (original commit: 63f91a7ea8bd60c102e257c05678cc6d55e21683)
  * Add TinyMCE imagebrowser plugin: plugins/imagebrowser/plugin.js
+ * Removed
+   plugins/layer removed in v4.5.0
+   plugins/media/moxieplayer.swf	removed in v4.5.0
+   tinymce.jquery.js removed in v4.3.4
+
+ * Added
+  plugins/imagebrowser (originally added in commit 36bc9f7d26076d74ebc6cd0672441eed8ed9cd2d)
+	plugins/mathslate (originally added in commit 325cdfac3dfba40efbbad8cd306dcfb385674709)
+	plugins/tooltoggle (originally added in commit 2c490a70bfff677c0b95c0565d39162c8c9bc10d)
+  skins/light (we use it but it's not included in new versions any more)

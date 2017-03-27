@@ -32,12 +32,14 @@ define("tinymce/pasteplugin/Clipboard", [
 	"tinymce/dom/RangeUtils",
 	"tinymce/util/VK",
 	"tinymce/pasteplugin/Utils",
+	"tinymce/pasteplugin/SmartPaste",
 	"tinymce/util/Delay"
-], function(Env, RangeUtils, VK, Utils, Delay) {
+], function(Env, RangeUtils, VK, Utils, SmartPaste, Delay) {
 	return function(editor) {
 		var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;
 		var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
 		var mceInternalUrlPrefix = 'data:text/mce-internal,';
+		var uniqueId = Utils.createIdGenerator("mceclip");
 
 		/**
 		 * Pastes the specified HTML. This means that the HTML is filtered and then
@@ -66,7 +68,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 
 				if (!args.isDefaultPrevented()) {
-					editor.insertContent(html, {merge: editor.settings.paste_merge_formats !== false, data: {paste: true}});
+					SmartPaste.insertContent(editor, html);
 				}
 			}
 		}
@@ -281,56 +283,6 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 
 		/**
-		 * Some Windows 10/Edge versions will return a double encoded string. This checks if the
-		 * content has this odd encoding and decodes it.
-		 */
-		function decodeEdgeData(data) {
-			var i, out, fingerprint, code;
-
-			// Check if data is encoded
-			fingerprint = [25942, 29554, 28521, 14958];
-			for (i = 0; i < fingerprint.length; i++) {
-				if (data.charCodeAt(i) != fingerprint[i]) {
-					return data;
-				}
-			}
-
-			// Decode UTF-16 to UTF-8
-			out = '';
-			for (i = 0; i < data.length; i++) {
-				code = data.charCodeAt(i);
-
-				/*eslint no-bitwise:0*/
-				out += String.fromCharCode((code & 0x00FF));
-				out += String.fromCharCode((code & 0xFF00) >> 8);
-			}
-
-			// Decode UTF-8
-			return decodeURIComponent(escape(out));
-		}
-
-		/**
-		 * Extracts HTML contents from within a fragment.
-		 */
-		function extractFragment(data) {
-			var idx, startFragment, endFragment;
-
-			startFragment = '<!--StartFragment-->';
-			idx = data.indexOf(startFragment);
-			if (idx !== -1) {
-				data = data.substr(idx + startFragment.length);
-			}
-
-			endFragment = '<!--EndFragment-->';
-			idx = data.indexOf(endFragment);
-			if (idx !== -1) {
-				data = data.substr(0, idx);
-			}
-
-			return data;
-		}
-
-		/**
 		 * Gets various content types out of a datatransfer object.
 		 *
 		 * @param {DataTransfer} dataTransfer Event fired on paste.
@@ -352,14 +304,8 @@ define("tinymce/pasteplugin/Clipboard", [
 
 				if (dataTransfer.types) {
 					for (var i = 0; i < dataTransfer.types.length; i++) {
-						var contentType = dataTransfer.types[i],
-							data = dataTransfer.getData(contentType);
-
-						if (contentType == 'text/html') {
-							data = extractFragment(decodeEdgeData(data));
-						}
-
-						items[contentType] = data;
+						var contentType = dataTransfer.types[i];
+						items[contentType] = dataTransfer.getData(contentType);
 					}
 				}
 			}
@@ -378,12 +324,65 @@ define("tinymce/pasteplugin/Clipboard", [
 			return getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
 		}
 
+		function hasHtmlOrText(content) {
+			return hasContentType(content, 'text/html') || hasContentType(content, 'text/plain');
+		}
+
+		function getBase64FromUri(uri) {
+			var idx;
+
+			idx = uri.indexOf(',');
+			if (idx !== -1) {
+				return uri.substr(idx + 1);
+			}
+
+			return null;
+		}
+
+		function isValidDataUriImage(settings, imgElm) {
+			return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
+		}
+
+		function pasteImage(rng, reader, blob) {
+			if (rng) {
+				editor.selection.setRng(rng);
+				rng = null;
+			}
+
+			var dataUri = reader.result;
+			var base64 = getBase64FromUri(dataUri);
+
+			var img = new Image();
+			img.src = dataUri;
+
+			// TODO: Move the bulk of the cache logic to EditorUpload
+			if (isValidDataUriImage(editor.settings, img)) {
+				var blobCache = editor.editorUpload.blobCache;
+				var blobInfo, existingBlobInfo;
+
+				existingBlobInfo = blobCache.findFirst(function(cachedBlobInfo) {
+					return cachedBlobInfo.base64() === base64;
+				});
+
+				if (!existingBlobInfo) {
+					blobInfo = blobCache.create(uniqueId(), blob, base64);
+					blobCache.add(blobInfo);
+				} else {
+					blobInfo = existingBlobInfo;
+				}
+
+				pasteHtml('<img src="' + blobInfo.blobUri() + '">');
+			} else {
+				pasteHtml('<img src="' + dataUri + '">');
+			}
+		}
+
 		/**
 		 * Checks if the clipboard contains image data if it does it will take that data
 		 * and convert it into a data url image and paste that image at the caret location.
 		 *
 		 * @param  {ClipboardEvent} e Paste/drop event object.
-		 * @param  {DOMRange} rng Optional rng object to move selection to.
+		 * @param  {DOMRange} rng Rng object to move selection to.
 		 * @return {Boolean} true/false if the image data was found or not.
 		 */
 		function pasteImageData(e, rng) {
@@ -392,23 +391,16 @@ define("tinymce/pasteplugin/Clipboard", [
 			function processItems(items) {
 				var i, item, reader, hadImage = false;
 
-				function pasteImage(reader) {
-					if (rng) {
-						editor.selection.setRng(rng);
-						rng = null;
-					}
-
-					pasteHtml('<img src="' + reader.result + '">');
-				}
-
 				if (items) {
 					for (i = 0; i < items.length; i++) {
 						item = items[i];
 
 						if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
+							var blob = item.getAsFile ? item.getAsFile() : item;
+
 							reader = new FileReader();
-							reader.onload = pasteImage.bind(null, reader);
-							reader.readAsDataURL(item.getAsFile ? item.getAsFile() : item);
+							reader.onload = pasteImage.bind(null, rng, reader, blob);
+							reader.readAsDataURL(blob);
 
 							e.preventDefault();
 							hadImage = true;
@@ -551,6 +543,10 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 			}
 
+			var getLastRng = function() {
+				return lastRng || editor.selection.getRng();
+			};
+
 			editor.on('paste', function(e) {
 				// Getting content from the Clipboard can take some time
 				var clipboardTimer = new Date().getTime();
@@ -567,7 +563,7 @@ define("tinymce/pasteplugin/Clipboard", [
 					return;
 				}
 
-				if (pasteImageData(e)) {
+				if (!hasHtmlOrText(clipboardContent) && pasteImageData(e, getLastRng())) {
 					removePasteBin();
 					return;
 				}
@@ -604,38 +600,49 @@ define("tinymce/pasteplugin/Clipboard", [
 				draggingInternally = e.type == 'dragstart';
 			});
 
+			function isPlainTextFileUrl(content) {
+				var plainTextContent = content['text/plain'];
+				return plainTextContent ? plainTextContent.indexOf('file://') === 0 : false;
+			}
+
 			editor.on('drop', function(e) {
-				var rng = getCaretRangeFromEvent(e);
+				var dropContent, rng;
+
+				rng = getCaretRangeFromEvent(e);
 
 				if (e.isDefaultPrevented() || draggingInternally) {
 					return;
 				}
 
-				if (pasteImageData(e, rng)) {
+				dropContent = getDataTransferItems(e.dataTransfer);
+
+				if ((!hasHtmlOrText(dropContent) || isPlainTextFileUrl(dropContent)) && pasteImageData(e, rng)) {
 					return;
 				}
 
 				if (rng && editor.settings.paste_filter_drop !== false) {
-					var dropContent = getDataTransferItems(e.dataTransfer);
 					var content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
 
 					if (content) {
 						e.preventDefault();
 
-						editor.undoManager.transact(function() {
-							if (dropContent['mce-internal']) {
-								editor.execCommand('Delete');
-							}
+						// FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
+						Delay.setEditorTimeout(editor, function() {
+							editor.undoManager.transact(function() {
+								if (dropContent['mce-internal']) {
+									editor.execCommand('Delete');
+								}
 
-							editor.selection.setRng(rng);
+								editor.selection.setRng(rng);
 
-							content = Utils.trimHtml(content);
+								content = Utils.trimHtml(content);
 
-							if (!dropContent['text/html']) {
-								pasteText(content);
-							} else {
-								pasteHtml(content);
-							}
+								if (!dropContent['text/html']) {
+									pasteText(content);
+								} else {
+									pasteHtml(content);
+								}
+							});
 						});
 					}
 				}
@@ -650,6 +657,7 @@ define("tinymce/pasteplugin/Clipboard", [
 
 		self.pasteHtml = pasteHtml;
 		self.pasteText = pasteText;
+		self.pasteImageData = pasteImageData;
 
 		editor.on('preInit', function() {
 			registerEventHandlers();
