@@ -45,7 +45,32 @@ if (!empty($groupid)) {
         $limit = user_preferred_limit($limit);
         $offset = param_integer('offset', 0);
 
-        $data = View::view_search(null, null, (object) array('group' => $group->id), null, $limit, $offset);
+        $data = View::view_search(null, null, (object) array('group' => $group->id), null, $limit, $offset,
+                                                 true, null, null, false, null, null,
+                                                 null, null, true);
+        $viewdata = $data->data;
+        View::get_extra_view_info($viewdata, false);
+        View::get_extra_collection_info($viewdata, false, 'collid');
+        require_once('collection.php');
+        if ($viewdata) {
+            foreach ($viewdata as $id => &$item) {
+                $item['uniqueid'] = 'u' . $item['id'] . '_' . $item['collid'];
+                $item['vctime'] = $item['ctime'];
+                $item['vmtime'] = $item['mtime'];
+                if (!empty($item['collid'])) {
+                    $collobj = new Collection($item['collid']);
+                    $item['displaytitle'] = $collobj->get('name');
+                    $item['collviews'] = $collobj->views();
+                    $item['numviews'] = $item['numpages'];
+                    if ($collobj->has_framework()) {
+                        $item['framework'] = $collobj->collection_nav_framework_option();
+                    }
+                }
+            }
+        }
+
+        $data->data  = $viewdata;
+
         // Add a copy view form for all templates in the list
         foreach ($data->data as &$v) {
             if ($v['template']) {
@@ -57,7 +82,7 @@ if (!empty($groupid)) {
             'count' => $data->count,
             'limit' => $limit,
             'offset' => $offset,
-            'orderby' => $orderby,
+            'orderby' => 'atoz',
             'group' => $groupid,
             'databutton' => 'showmorebtn',
             'jsonscript' => 'json/viewlist.php',
@@ -91,9 +116,7 @@ $smarty->assign('views', $data->data);
 $smarty->assign('sitetemplate', View::SITE_TEMPLATE);
 $smarty->assign('pagination', $pagination['html']);
 if ($groupid && !$can_edit) {
-    $html = $smarty->fetch('view/indexgroupresults.tpl');
-    $smarty->assign('viewresults', $html);
-    $smarty->display('view/groupviews.tpl');
+    $smarty->assign('noedit', true);
 }
 else if ($groupid) {
     $smarty->assign('editlocked', $role == 'admin');

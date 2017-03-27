@@ -42,7 +42,7 @@
                                 </button>
                                 <span class="collnum-arrow icon icon-chevron-down"></span>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                {if $view.collid && !$view.submittedto}
+                                {if $view.collid && !$view.submittedto && !$noedit}
                                     <li>
                                         <a href="{$WWWROOT}collection/views.php?id={$view.collid}" title="{str tag=manageviews section=collection}">
                                             <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
@@ -51,7 +51,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if !$view.submittedto && (!$view.locked || $editlocked)}
+                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked)}
                                     <li>
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">
@@ -64,7 +64,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}
+                                {if !$view.submittedto && $view.removable && !$noedit && (!$view.locked || $editlocked)}
                                     <li>
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/delete.php?id={$view.collid}" title="{str tag=deletecollection section=collection}">
