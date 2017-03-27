@@ -43,22 +43,22 @@
             <div class="container">
                 <div class="nav-toggle-area">
                     {if $MAINNAV}
-                        <button class="main-nav-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main" aria-expanded="false" aria-controls="nav-main">
+                        <button class="main-nav-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main" aria-expanded="false" aria-controls="nav-main" title='{str tag="mainmenu"}'>
                             <span class="sr-only">{str tag="show"} {str tag="menu"}</span>
                             <span class="icon icon-bars icon-lg" role="presentation" aria-hidden="true"></span>
                         </button>
                     {/if}
                     {if $MAINNAVADMIN}
-                        <button class="admin-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main-admin" aria-expanded="false" aria-controls="nav-main-admin">
+                        <button class="admin-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main-admin" aria-expanded="false" aria-controls="nav-main-admin" title='{str tag="adminmenu"}'>
                             <span class="sr-only">{str tag="show"} {str tag="adminmenu"}</span>
                             <span class="icon icon-wrench icon-large" role="presentation" aria-hidden="true"></span>
                         </button>
                     {/if}
                     {if $LOGGEDIN}
-                        <a href="{profile_url($USER)}" class="user-icon">
+                        <a href="{profile_url($USER)}" class="user-icon" title='{str tag="profilepage"}'>
                             <img src="{profile_icon_url user=$USER maxheight=25 maxwidth=25}">
                         </a>
-                        <button class="user-toggle navbar-toggle" role="button" data-toggle="collapse" data-target=".nav-main-user" aria-expanded="false" aria-controls="nav-main-user">
+                        <button class="user-toggle navbar-toggle" role="button" data-toggle="collapse" data-target=".nav-main-user" aria-expanded="false" aria-controls="nav-main-user" title='{str tag="usermenu"}'>
                             <span class="sr-only">{str tag="show"} {str tag="usermenu"}</span>
                             <span class="icon icon-chevron-down collapsed"></span>
                         </button>
