@@ -85,6 +85,9 @@ $string['admin'] = 'Admin';
 $string['menu'] = 'Menu';
 $string['adminmenu'] = 'Administration Menu';
 $string['usermenu'] = 'User Menu';
+// nav tool tips
+$string['profilepage'] = "Profile page";
+$string['mainmenu'] = "Main menu";
 
 $string['at'] = 'at';
 $string['From'] = 'From';
