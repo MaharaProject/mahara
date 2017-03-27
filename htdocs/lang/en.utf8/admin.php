@@ -113,6 +113,7 @@ $string['staffusers'] = 'Staff users';
 $string['staffusersdescription'] = 'Assign users staff permissions';
 $string['adminusers'] = 'Admin users';
 $string['adminusersdescription'] = 'Assign site administrator access rights';
+$string['settings']   = 'Settings';
 $string['institution']   = 'Institution';
 $string['institutions']   = 'institutions';
 $string['Institutions']   = 'Institutions';

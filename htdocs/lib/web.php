@@ -2451,7 +2451,7 @@ function admin_nav() {
         'manageinstitutions/institutions' => array(
             'path'   => 'manageinstitutions/institutions',
             'url'    => 'admin/users/institutions.php',
-            'title'  => get_string('Institutions', 'admin'),
+            'title'  => get_string('settings', 'admin'),
             'weight' => 10,
         ),
         'manageinstitutions/sitepages' => array(
@@ -2933,7 +2933,7 @@ function mahara_standard_nav() {
         'groups/findfriends' => array(
             'path' => 'groups/findfriends',
             'url' => 'user/find.php',
-            'title' => get_string('findfriends'),
+            'title' => get_string('findpeople'),
             'weight' => 40,
         ),
         'groups/institutionmembership' => array(

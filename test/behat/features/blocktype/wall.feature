@@ -12,7 +12,7 @@ Background:
 Scenario: Wall post notifications
 The wall post must generate a notification (Bug 547333)
     Given I log in as "userB" with password "Kupuhipa1"
-    And I choose "Find friends" in "Groups" from main menu
+    And I choose "Find people" in "Groups" from main menu
     And I follow "Pete Mc"
     And I scroll to the base of id "wall-wrap"
     And I set the field "Post" to "Hello"

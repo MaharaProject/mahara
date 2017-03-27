@@ -1,7 +1,7 @@
 @javascript @core core_messages
 Feature: Edit group membership
    In order to edit group membership
-   As an admin I can edit membership via the 'Find friends' page
+   As an admin I can edit membership via the 'Find people' page
 
 Background:
 Given the following "users" exist:
@@ -25,10 +25,10 @@ And the following "groups" exist:
      | GroupB | admin | This is group B | standard | ON | ON | all | ON | ON | User3, User4 |  |
 
 
-Scenario: Check modal is working for the "Edit group memebership" on find friends page (Bug 1513265)
+Scenario: Check modal is working for the "Edit group memebership" on find people page (Bug 1513265)
    # Log in as "Admin" user
    Given I log in as "admin" with password "Kupuhipa1"
-   And I choose "Find friends" in "Groups" from main menu
+   And I choose "Find people" in "Groups" from main menu
    And I follow "2" in the "div#friendslist_pagination" "css_element"
    And I follow "Edit group membership"
    Then I should see "Apply changes"
