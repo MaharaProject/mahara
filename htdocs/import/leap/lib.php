@@ -124,15 +124,31 @@ class PluginImportLeap extends PluginImport {
         ;
         libxml_before(false);
         require_once('file.php');
-        if (!$this->xml = simplexml_load_string(
-                preg_replace(xml_filter_regex(), '', file_get_contents($this->filename)),
-                'SimpleXMLElement',
-                $options
-        )) {
-            // TODO: bail out in a much nicer way...
+        libxml_use_internal_errors(true);
+        $raw_contents = file_get_contents($this->filename);
+
+        // failing on &nbsp; so let's replace them!
+        $cooked_contents = preg_replace('/&nbsp;/', ' ', $raw_contents);
+        $sxe = simplexml_load_string(
+            preg_replace(xml_filter_regex(), '', $cooked_contents),
+            'SimpleXMLElement',
+            $options
+        );
+        if ($sxe === false) {
+            $msg = [];
+            $msg[] = 'FATAL: XML not well formed';
+            foreach (libxml_get_errors() as $error) {
+                $msg[] = $error->message;
+            }
+            // uncomment for even more data
+            // $msg[] = 'INPUT';
+            // $msg[] = $cooked_contents;
+
             libxml_after();
-            throw new ImportException($this, "FATAL: XML file is not well formed! Please consult Mahara's error log for more information");
+            $msgString = implode("\n", $msg);
+            throw new ImportException($this, $msgString);
         }
+        $this->xml = $sxe;
         libxml_after();
 
         $this->namespaces = array_flip($this->xml->getDocNamespaces());
