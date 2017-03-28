@@ -314,7 +314,7 @@ function pieform_element_select_get_options($element) {
 function pieform_element_select_get_inlinejs() {
     return <<<EOF
     function pieform_select_other(el) {
-        var element = $(el);
+        var element = jQuery(el);
         var other = jQuery('#' + element.id + '_other');
         if (element.value == 'other') {
             other.removeClass('hidden');
