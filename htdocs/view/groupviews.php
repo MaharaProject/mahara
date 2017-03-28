@@ -58,7 +58,6 @@ if (!$can_edit) {
         'count' => $data->count,
         'limit' => $limit,
         'offset' => $offset,
-        'orderby' => $orderby,
         'group' => $group->id,
         'databutton' => 'showmorebtn',
         'jsonscript' => 'json/viewlist.php',

@@ -380,6 +380,7 @@ class ArtefactTypeBlog extends ArtefactType {
             $sql .= ' AND b.group = ?';
             $values = array($group);
             $count = (int)get_field('artefact', 'COUNT(*)', 'group', $group, 'artefacttype', 'blog');
+            $groupdata = get_group_by_id($group, false, true, true);
         }
         else {
             $sql .= ' AND b.owner = ?';
@@ -394,6 +395,7 @@ class ArtefactTypeBlog extends ArtefactType {
             if (!$r->locked) {
                 $r->deleteform = ArtefactTypeBlog::delete_form($r->id, $r->title);
             }
+            $r->canedit = (!empty($groupdata) ? $groupdata->canedit : true);
         }
 
         return array($count, $result);
@@ -982,7 +984,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             SELECT
                 a.id, a.title, a.description, a.author, a.authorname, ' .
                 db_format_tsfield('a.ctime', 'ctime') . ', ' . db_format_tsfield('a.mtime', 'mtime') . ',
-                a.locked, bp.published, a.allowcomments ' . $from . '
+                a.locked, bp.published, a.allowcomments, a.group ' . $from . '
             ORDER BY bp.published ASC, a.ctime DESC, a.id DESC',
             array($id),
             $offset, $limit
@@ -1046,6 +1048,11 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 safe_require('artefact', 'file');
                 $post->description = ArtefactTypeFolder::append_view_url($post->description, $viewoptions['viewid']);
             }
+
+            if (isset($post->group)) {
+                $group = get_group_by_id($post->group, false, true, true);
+            }
+            $post->canedit = (isset($group) ? $group->canedit : true);
         }
 
         $results['data'] = array_values($data);

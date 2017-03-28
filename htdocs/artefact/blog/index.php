@@ -69,7 +69,7 @@ if ($institution = param_alphanum('institution', null)) {
 }
 else if ($groupid = param_alphanum('group', null)) {
     $blogs->group = $groupid;
-    $group = get_group_by_id($groupid);
+    $group = get_group_by_id($groupid, false, true, true);
     define('TITLE', $group->name);
 }
 else {
@@ -101,6 +101,7 @@ $smarty = smarty(array('paginator'));
 $smarty->assign('blogs', $blogs);
 $smarty->assign('institutionname', $institutionname);
 $smarty->assign('group', $groupid);
+$smarty->assign('canedit', (!empty($group) ? $group->canedit : true));
 $js = '';
 if ($blogs->pagination_js) {
     $js .= 'jQuery(function() {' . $blogs->pagination_js . '});';
@@ -117,7 +118,7 @@ function delete_blog_submit(Pieform $form, $values) {
     global $SESSION;
     require_once('embeddedimage.php');
     $blog = new ArtefactTypeBlog($values['delete']);
-    $blog->check_permission();
+    $blog->check_permission(true);
     $institution = $blog->get('institution');
     $group = $blog->get('group');
     if ($blog->get('locked')) {

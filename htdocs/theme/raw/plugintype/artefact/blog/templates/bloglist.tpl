@@ -22,12 +22,14 @@
         </a>
     </div>
 
+    {if $blog->canedit}
     <div class="panel-footer has-form">
         <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-default btn-sm">
             <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag=addpostspecific arg1=$blog->title section=artefact.blog |escape:html|safe}</span>
             {str tag=addpost section=artefact.blog}
         </a>
+
         <div class="btn-group pull-right">
             {if $blog->locked}
                 <span class="text-small">{str tag=submittedforassessment section=view}</span>
@@ -37,8 +39,9 @@
                 <span class="sr-only">{str tag=editspecific arg1=$blog->title}</span>
             </a>
             {$blog->deleteform|safe}
-            {/if}
         </div>
+        {/if}
     </div>
+    {/if}
 </div>
 {/foreach}

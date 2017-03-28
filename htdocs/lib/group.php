@@ -589,6 +589,8 @@ function group_update($new, $create=false) {
     // Institution cannot be updated (yet)
     unset($new->institution);
 
+    $update_blog_access = ($new->editroles != $old->editroles);
+
     foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'allowarchives', 'editroles',
         'hidden', 'hidemembers', 'hidemembersfrommembers', 'groupparticipationreports') as $f) {
         if (!isset($new->$f)) {
@@ -688,6 +690,38 @@ function group_update($new, $create=false) {
         array_merge(array($new->id), $allowedroles)
     );
 
+    // When the group type changes, make sure the access for tutors
+    // to the group artefacts are updated
+    if ($old->grouptype != $new->grouptype) {
+        if ($new->grouptype == 'course') {
+            $ids = get_records_select_array('artefact',
+                      '"group" = ' . $new->id . ' AND artefacttype IN (\'blog\', \'blogpost\')',
+                      null, '', 'id');
+            $access = ($old->editroles == 'all' || $old->editroles == 'notmember');
+            db_begin();
+            foreach ($ids as $i => $artefact) {log_debug($artefact->id);
+                insert_record('artefact_access_role', (object) array(
+                    'artefact'      => $artefact->id,
+                    'role'          => 'tutor',
+                    'can_view'      => 1,
+                    'can_edit'      => (int) $access,
+                    'can_republish' => (int) $access,
+                ));
+            }
+            db_commit();
+        }
+        else { //grouptype = standard
+            $query = 'DELETE FROM {artefact_access_role}
+                      WHERE role = \'tutor\'
+                      AND  artefact IN (
+                          SELECT a.id FROM {artefact} a
+                          WHERE a.group = ?
+                          AND a.artefacttype IN (\'blog\', \'blogpost\')
+                      )';
+            execute_sql($query, array($new->id));
+        }
+    }
+
     // When a group changes from public -> private or vice versa, set the
     // appropriate access permissions on the group homepage view.
     if ($old->public != $new->public) {
@@ -707,6 +741,35 @@ function group_update($new, $create=false) {
                 'accesstype' => 'public',
                 'ctime'      => db_format_timestamp(time()),
             ));
+        }
+    }
+
+    // When the create/edit permissions change, update permissions on journal and posts
+    if ($update_blog_access) {
+        $edit_access = array();
+        if ($old->editroles == 'all') {
+            $edit_access['member'] = 0;
+        }
+        else if ($old->editroles == 'admin') {
+            $edit_access['tutor'] = 1;
+        }
+        if ($new->editroles == 'all') {
+            $edit_access['member'] = 1;
+        }
+        else if ($new->editroles == 'admin') {
+            $edit_access['tutor'] = 0;
+        }
+
+        foreach ($edit_access as $role => $value) {
+            $query = 'UPDATE {artefact_access_role}
+                      SET can_edit = ?, can_republish = ?
+                      WHERE role = \'' . $role . '\'
+                      AND artefact IN (
+                          SELECT a.id FROM {artefact} a
+                          WHERE a.group = ?
+                          AND a.artefacttype IN (\'blog\', \'blogpost\')
+                      )';
+            execute_sql($query, array($value, $value, $new->id));
         }
     }
 
