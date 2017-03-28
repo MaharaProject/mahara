@@ -252,7 +252,6 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         /* Keyed by the file type descriptions from the artefact_file_mime_types table */
         return array(
             'mp3'       => 'html5audio',
-            'swf'       => 'flash',
             'flv'       => 'html5video',
             'quicktime' => 'qt',
             'wmv'       => 'wmp',
@@ -264,11 +263,6 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
             'ogv'       => 'html5video',
             'webm'      => 'html5video',
             '3gp'       => 'html5video',
-            /* commenting out for now
-            'ram'   => 'real_player',
-            'rm'    => 'real_player',
-            'rpm'   => 'real_player',
-            */
         );
     }
 
@@ -391,87 +385,6 @@ abstract class MaharaMediaPlayer {
      */
     public static function get_js_initjs(ArtefactType $artefact, BlockInstance $block, $width, $height) { return false; }
 }
-
-
-/**
- * Flash browser plugin (used only for playing actual Flash files, i.e. ".swf" files)
- */
-class MaharaMediaPlayer_flash extends MaharaMediaPlayer {
-
-    /**
-     * Calculates some items shared by the JS and the HTML
-     *
-     * @param ArtefactType $artefact
-     * @param BlockInstance $block
-     * @return array
-     */
-    protected static function get_unique_id(ArtefactType $artefact, BlockInstance $block) {
-        return 'blocktype_internalmedia_flash_' . parent::get_unique_id($artefact, $block);
-    }
-
-    public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height) {
-        $id = self::get_unique_id($artefact, $block);
-        $html =  '<span class="blocktype_internalmedia_mp3" id="' . $id . '">('
-               . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>';
-        return $html;
-
-    }
-
-    public static function get_js_initjs(ArtefactType $artefact, BlockInstance $block, $width, $height) {
-        $id = self::get_unique_id($artefact, $block);
-        $url = PluginBlocktypeInternalmedia::get_download_link($artefact, $block);
-        $swfheight = $height+20;
-
-        return <<<JS
-    var so = new SWFObject("{$url}&embedded=1","player","{$width}","{$swfheight}","7");
-    so.addParam("allowfullscreen","false");
-    so.addVariable("displayheight","{$height}");
-    so.addVariable("type", "swf");
-    so.addVariable("height", "{$height}");
-    so.addVariable("width", "{$width}");
-    so.addVariable("wmode", "transparent");
-    so.addParam("play", "true");
-    so.addParam("allowscriptaccess", "never");
-    so.addParam("allownetworking", "never");
-    so.write("{$id}");
-JS;
-    }
-
-    public static function get_js_library() {
-        return 'swfobject.js';
-    }
-}
-
-// /**
-//  * RealMedia browser plugin
-//  */
-// class MaharaMediaPlayer_real extends MaharaMediaPlayer {
-//     public static function get_html($artefact, $block, $width, $height) {
-
-//         $url = PluginBlocktypeInternalmedia::get_download_link($artefact, $block);
-
-//         $mimetype = $artefact->get('filetype');
-//         $autostart = 'false';
-
-//         return '<span class="blocktype_internalmedia_real">
-//     <object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="240" height="180">
-//         <param name="src" value="' . $url . '">
-//         <param name="autostart" value="' . $autostart . '">
-//         <param name="controls" value="imagewindow">
-//         <param name="console" value="video">
-//         <param name="loop" value="true">
-//         <embed src="' . $url . '" width=240" height="180" loop="true" type="' . $mimetype . '" controls="imagewindow" console="video" autostart="' . $autostart . '">
-//     </object><br>
-//     <object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="240" height="30">
-//         <param name="src" value="' . $url . '">
-//         <param name="autostart" value="' . $autostart . '">
-//         <param name="controls" value="ControlPanel">
-//         <param name="console" value="video">
-//         <embed src="' . $url . '" width="240" height="30" controls="ControlPanel" type="' . $mimetype . '" console="video" autostart="' . $autostart . '">
-//     </object>
-// </span>';
-//     }
-// }
 
 /**
  * Windows Media Player browser plugin

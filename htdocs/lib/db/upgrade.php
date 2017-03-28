@@ -5086,5 +5086,16 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql($sql);
     }
 
+    if ($oldversion < 2017090400) {
+        if ($data = get_config_plugin('blocktype', 'internalmedia', 'enabledtypes')) {
+            $types = unserialize($data);
+            if (($key = array_search('swf', $types)) !== false) {
+                unset($types[$key]);
+                $typestr = serialize($types);
+                set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', $typestr);
+            }
+        }
+    }
+
     return $status;
 }
