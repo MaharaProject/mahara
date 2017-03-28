@@ -35,7 +35,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Add"
     And I press "Save"
     # Adding external media block - but cancel out
-    And I expand "External" node
+    And I expand "External" node in the "div#content-editor-foldable" "css_element"
     And I wait "1" seconds
     And I follow "External media"
     And I press "Add"

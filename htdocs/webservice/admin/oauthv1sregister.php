@@ -16,7 +16,7 @@ define('SECTION_PAGE', 'oauth');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
-define('SUBSECTIONHEADING', get_string('oauthv1sregister', 'auth.webservice'));
+define('SUBSECTIONHEADING', get_string('externalappsregister', 'auth.webservice'));
 
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthServer.php');
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthStore.php');
@@ -531,7 +531,7 @@ function webservice_server_list_form($sopts, $iopts) {
         // fieldset for managing service function list
         'register_server' => array(
             'type' => 'fieldset',
-            'legend' => get_string('userapplications', 'auth.webservice'),
+            'legend' => get_string('userapplications1', 'auth.webservice'),
             'elements' => array(
                 'sflist' => array(
                     'type' => 'html',

@@ -105,7 +105,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Clean URLs" in "Extensions" from administration menu
     # Checking Web services Menu and submenu
     And I choose "Configuration" in "Web services" from administration menu
-    And I choose "OAuth" in "Web services" from administration menu
+    And I choose "External apps" in "Web services" from administration menu
     And I choose "Logs" in "Web services" from administration menu
     And I choose "Test client" in "Web services" from administration menu
     And I choose "Application connections" in "Web services" from administration menu
