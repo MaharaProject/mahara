@@ -1574,13 +1574,16 @@ function delete_user($userid) {
     delete_records('usr_account_preference', 'usr', $userid);
     delete_records('usr_activity_preference', 'usr', $userid);
     delete_records('usr_infectedupload', 'usr', $userid);
-    delete_records('framework_assessment_feedback', 'usr', $userid);
     delete_records('usr_institution', 'usr', $userid);
     delete_records('usr_institution_request', 'usr', $userid);
     delete_records('usr_password_request', 'usr', $userid);
     delete_records('usr_watchlist_view', 'usr', $userid);
     delete_records('view_access', 'usr', $userid);
     delete_records('usr_login_data', 'usr', $userid);
+
+    if (is_plugin_active('framework', 'module')) {
+        delete_records('framework_assessment_feedback', 'usr', $userid);
+    }
 
     // Remove the user's views & artefacts
     $viewids = get_column('view', 'id', 'owner', $userid);
