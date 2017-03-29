@@ -125,9 +125,8 @@ $width-sm: 90%;
 
     &.active,
     &.in {
-        @include transition(visibility 0s 0.2s);
+        @include transition(visibility 0s 0.01s);
         visibility: visible;
-        transition: visibility 0s 0.2s;
         .modal-dialog {
             @include transition(right 0.3s ease-in-out);
             right: 0;
