@@ -78,8 +78,8 @@ class XMLDBmysqli extends XMLDBGenerator {
     /**
      * Creates one new XMLDBmysqli
      */
-    function XMLDBmysqli() {
-        parent::XMLDBGenerator();
+    function __construct() {
+        parent::__construct();
         global $CFG;
         $this->prefix = '';
         $this->reserved_words = $this->getReservedWords();

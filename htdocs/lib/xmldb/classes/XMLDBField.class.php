@@ -41,8 +41,8 @@ class XMLDBField extends XMLDBObject {
     /**
      * Creates one new XMLDBField
      */
-    function XMLDBField($name) {
-        parent::XMLDBObject($name);
+    function __construct($name) {
+        parent::__construct($name);
         $this->type = NULL;
         $this->length = NULL;
         $this->unsigned = false;

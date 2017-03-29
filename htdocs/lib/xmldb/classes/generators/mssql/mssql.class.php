@@ -75,8 +75,8 @@ class XMLDBmssql extends XMLDBgenerator {
     /**
      * Creates one new XMLDBmssql
      */
-    function XMLDBmssql() {
-        parent::XMLDBgenerator();
+    function __construct() {
+        parent::__construct();
         $this->prefix = '';
         $this->reserved_words = $this->getReservedWords();
     }

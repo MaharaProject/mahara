@@ -34,8 +34,8 @@ class XMLDBFile extends XMLDBObject {
     /**
      * Constructor of the XMLDBFile
      */
-    function XMLDBFile ($path) {
-        parent::XMLDBObject($path);
+    function __construct($path) {
+        parent::__construct($path);
         $this->path = $path;
         $this->xmldb_structure = NULL;
     }

@@ -34,8 +34,8 @@ class XMLDBIndex extends XMLDBObject {
     /**
      * Creates one new XMLDBIndex
      */
-    function XMLDBIndex($name) {
-        parent::XMLDBObject($name);
+    function __construct($name) {
+        parent::__construct($name);
         $this->unique = false;
         $this->fields = array();
     }

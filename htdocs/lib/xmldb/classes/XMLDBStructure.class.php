@@ -36,8 +36,8 @@ class XMLDBStructure extends XMLDBObject {
     /**
      * Creates one new XMLDBStructure
      */
-    function XMLDBStructure($name) {
-        parent::XMLDBObject($name);
+    function __construct($name) {
+        parent::__construct($name);
         $this->path = NULL;
         $this->version = NULL;
         $this->tables = array();

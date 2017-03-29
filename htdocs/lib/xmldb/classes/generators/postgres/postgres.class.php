@@ -60,8 +60,8 @@ class XMLDBpostgres extends XMLDBgenerator {
     /**
      * Creates one new XMLDBpostgres
      */
-    function XMLDBpostgres() {
-        parent::XMLDBgenerator();
+    function __construct() {
+        parent::__construct();
         $this->prefix = '';
         $this->reserved_words = $this->getReservedWords();
     }
