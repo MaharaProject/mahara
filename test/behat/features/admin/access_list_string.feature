@@ -1,4 +1,5 @@
 @javascript @core @core_administration
+
 Feature: Broken string in user accesslist report
 In order to make sure user can read the strings
 As an admin
@@ -14,8 +15,7 @@ Background:
 
 Scenario: Accessing language string (Bug 1449350)
  Given I log in as "admin" with password "Kupuhipa1"
- And I click on "Show Administration Menu"
- And I follow "Users"
+ And I choose "User search" in "Users" from administration menu
  And I check "selectusers_2"
  And I press "Get reports"
  When I press "Access list"

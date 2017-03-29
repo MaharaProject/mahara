@@ -543,7 +543,7 @@ function edituser_site_submit(Pieform $form, $values) {
                 try {
                     if ($authobj->user_exists($values['username'])) {
                         // set an error message if it is already in use
-                        $SESSION->add_error_msg(get_string('usernameexists', 'account'));
+                        $SESSION->add_error_msg(get_string('usernameexists1', 'account'));
                     }
                 } catch (AuthUnknownUserException $e) {
                     // update the username otherwise

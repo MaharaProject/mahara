@@ -135,7 +135,7 @@ try {
         }
         else {
             // mysql
-            throw new ConfigSanityException(get_string('mysqlmodulenolongersupported', 'error'));
+            throw new ConfigSanityException(get_string('mysqlmodulenolongersupported1', 'error'));
         }
     }
 

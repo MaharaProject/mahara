@@ -12,15 +12,15 @@
 defined('INTERNAL') || die();
 
 $string['autoconfiguredesc'] = 'Automatically enable settings and configurations needed for the mobile apps API.';
-$string['autoconfiguretitle'] = 'Auto-configure mobile apps API?';
+$string['autoconfiguretitle'] = 'Auto-configure mobile apps API';
 $string['configstep'] = 'Conguration item';
 $string['configstepstatus'] = 'Status';
-$string['manualtokensdesc'] = 'Users can generate webservice access tokens manually in order to copy and paste them into an app. Normally, an app should be able to generate the tokens for users automatically. However, some auth plugins may not allow for that.';
+$string['manualtokensdesc'] = 'Users can generate web service access tokens manually in order to copy and paste them into an app. Normally, an app should be able to generate the tokens for users automatically. However, some authentication plugins may not allow for that.';
 $string['manualtokenstitle'] = 'Manual token generation';
 $string['mobileapiserviceexists'] = 'Mobile API service group is registered';
 $string['mobileapiserviceconfigured'] = 'Mobile API service enabled, "%s" disabled, "%s" enabled';
-$string['noticeenabled'] = 'The Mahara mobile apps API is currently enabled.';
-$string['noticenotenabled'] = 'The Mahara mobile apps API is <b>not</b> currently enabled.';
+$string['noticeenabled'] = 'The Mahara mobile apps API is enabled.';
+$string['noticenotenabled'] = 'The Mahara mobile apps API is <b>not</b> enabled.';
 $string['notreadylabel'] = 'Not ready';
 $string['readylabel'] = 'Ready';
 $string['restprotocolenabled'] = 'REST protocol enabled';

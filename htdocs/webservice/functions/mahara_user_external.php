@@ -245,7 +245,7 @@ class mahara_user_external extends external_api {
         foreach ($params['users'] as $user) {
             // Make sure that the username doesn't already exist
             if (get_record('usr', 'username', $user['username'])) {
-                throw new WebserviceInvalidParameterException(get_string('usernameexists', 'auth.webservice', $user['username']));
+                throw new WebserviceInvalidParameterException(get_string('usernameexists1', 'auth.webservice', $user['username']));
             }
 
             // check the institution is allowed

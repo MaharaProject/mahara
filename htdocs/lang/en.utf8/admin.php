@@ -1149,8 +1149,8 @@ $string['selectedusers'] = 'Selected users';
 $string['remoteuser'] = 'Remote username';
 $string['userreports'] = 'User reports';
 $string['userreportsdescription'] = 'View or download information about the users you selected on the search page.';
-$string['unabletodeleteself'] = 'Unable to bulk delete yourself';
-$string['unabletodeletealladmins'] = 'Not allowed to bulk delete all the site admins';
+$string['unabletodeleteself1'] = 'You are not allowed to delete yourself.';
+$string['unabletodeletealladmins1'] = 'You are not allowed to delete all site administrators.';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';
@@ -1270,41 +1270,40 @@ $string['cli_close_site_siteclosed'] = 'Site closed for maintenance.';
 $string['cli_close_site_siteopen'] = 'Site open.';
 
 // Languange update script
-$string['cli_backupdir_notwritable'] = 'Language backup directory "%s" is not writable.';
-$string['cli_langpack'] = 'List by language code eg "de,pt_BR,fr"';
-$string['cli_langpack_backup'] = 'Backup the language directory before updating (optional).';
+$string['cli_backupdir_notwritable'] = 'The language backup directory "%s" is not writable.';
+$string['cli_langpack'] = 'List by language code, e.g. "de,pt_BR,fr".';
+$string['cli_langpack_backup'] = 'Optional: Back up the language directory before updating.';
 $string['cli_langpack_backup_done'] = 'Backup of language "%s" done';
 $string['cli_langpack_backup_failed'] = '*** WARNING *** Unable to make backup of "%s"';
-$string['cli_langpack_en'] = 'No need to update english langpack as the strings are defined in Mahara itself. You can set special lang strings in local/lang/';
+$string['cli_langpack_en'] = 'You do not need to update the English langpack as the strings are defined in Mahara itself. You can set special lang strings in local/lang/.';
 $string['cli_langpack_extract_done'] = 'Copied new "%s" langpack into place';
-$string['cli_langpack_extract_failed'] = '*** WARNING *** Unable to extract files from "%s"
-- reason: %s';
+$string['cli_langpack_extract_failed'] = '*** WARNING *** Unable to extract files from "%s". Reason: %s';
 $string['cli_langpack_info'] = 'To update your language packs via the command line.
 You can:
-1) Install / update langpacks by listing the languages by their code, eg de = German, fr = French like so
+1) Install or update langpacks by listing the languages by their code, e.g. de = German, fr = French:
    sudo -u www-data php admin/cli/sync_langpacks.php -l=de,fr
 
-This will make a backup of the existing language (if exists) into the dataroot langpacks_backup directory.
+This will make a backup of the existing language (if it already exists) into the dataroot langpacks_backup directory.
 
-2) If you don\'t want to make backups then add the -b=false flag, eg
+2) If you don\'t want to make backups, then add the -b=false flag:
    sudo -u www-data php admin/cli/sync_langpacks.php -l=de,fr -b=false
 
-3) If you need to rollback the backups you can use the -r=true flag, eg
+3) If you need to rollback the backups, you can use the -r=true flag:
    sudo -u www-data php admin/cli/sync_langpacks.php -l=de,fr -r=true
 
-It will ignore trying to update the \'en\' language as that is set within the Mahara system itself';
+It will ignore trying to update the \'en\' language as that is set within Mahara itself.';
 $string['cli_langpack_missing'] = 'No langpacks specified';
-$string['cli_langpack_revert'] = 'Revert to last backed up version of language.';
-$string['cli_langdir_notwritable'] = 'Language directory "%s" is not writable.';
+$string['cli_langpack_revert'] = 'Revert to last backed up version of the language.';
+$string['cli_langdir_notwritable'] = 'The language directory "%s" is not writable.';
 $string['cli_language_make_backup'] = 'Make a backup? %s';
-$string['cli_language_status'] = 'Language "%s" already installed: %s';
+$string['cli_language_status'] = 'The language "%s" is already installed: %s';
 $string['cli_langpack_url'] = 'Language pack URL "%s"';
-$string['cli_langpack_url_failed'] = '*** WARNING *** Language pack for "%s" does not exist/can not be downloaded. Return code: %s';
+$string['cli_langpack_url_failed'] = '*** WARNING *** Language pack for "%s" does not exist or cannot be downloaded. Return code: %s';
 $string['cli_langpack_upload'] = 'Saving language pack "%s" to temp directory';
 $string['cli_restore_done'] = 'Restored backup of "%s" done';
 $string['cli_restore_warning'] = '*** WARNING *** Unable to restore backup of "%s"';
-$string['cli_tmpdir_notwritable'] = 'Temporary upload directory "%s" is not writable.';
+$string['cli_tmpdir_notwritable'] = 'The temporary upload directory "%s" is not writable.';
 $string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for series "%s"';
 
-$string['withselectedcontentexport'] = 'Re-queue items into export queue';
-$string['withselectedcontentdelete'] = 'Delete selected items from export queue';
+$string['withselectedcontentexport'] = 'Re-queue items into the export queue';
+$string['withselectedcontentdelete'] = 'Delete selected items from the export queue';

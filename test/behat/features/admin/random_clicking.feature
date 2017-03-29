@@ -10,7 +10,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Verifying log in was successful
     And I should see "Admin User"
     # Checking Content Menu
-    And I click on "Show Menu"
+    And I click on "Show main menu"
     When I follow "Content"
     # Checking About me tabs
     And I follow "Contact information"
@@ -47,22 +47,22 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Institution membership" in "Groups" from main menu
     And I choose "Topics" in "Groups" from main menu
     # Checking messages
-    # And I click on "Show User Menu" # problem with chrome driver clicking on user icon instead
+    # And I click on "Show user menu" # problem with chrome driver clicking on user icon instead
     # And I follow "mail"
     And I choose "mail" from user menu by id
     And I follow "Inbox" in the ".arrow-bar" "css_element"
     And I follow "Sent"
     And I follow "Compose"
     # Checking Homepage
-    And I click on "Show Menu"
+    And I click on "Show main menu"
     And I follow "Dashboard"
     # Checking Administration
-    # Checking Admin home Menu and submenu
+    # Checking admin home menu and submenu
     And I choose "Register" in "Admin home" from administration menu
     And I choose "Site statistics" in "Admin home" from administration menu
     And I follow "Logins"
     And I choose "Overview" in "Admin home" from administration menu
-    # Checking Configure site Menu and submenu
+    # Checking Configure site menu and submenu
     And I choose "Site options" in "Configure site" from administration menu
     And I choose "Static pages" in "Configure site" from administration menu
     And I choose "Menus" in "Configure site" from administration menu
@@ -111,6 +111,6 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Application connections" in "Web services" from administration menu
     And I choose "Connection manager" in "Web services" from administration menu
     # The test should be completed once if Return to site works successfully
-    And I click on "Show Menu"
+    And I click on "Show main menu"
     And I follow "Dashboard"
     And I should see "Admin User"

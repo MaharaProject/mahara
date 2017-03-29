@@ -150,7 +150,7 @@ class module_lti_launch extends external_api {
                 // Make sure that the username doesn't already exist
                 if (get_record('usr', 'username', $user->email)) {
                     $USER->logout();
-                    throw new WebserviceInvalidParameterException(get_string('usernameexists', 'module.lti', $user->email));
+                    throw new WebserviceInvalidParameterException(get_string('usernameexists1', 'module.lti', $user->email));
                 }
 
                 $user->username = $user->email;
