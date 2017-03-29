@@ -934,8 +934,8 @@ class ArtefactTypeComment extends ArtefactType {
         }
         $form['elements']['message'] = array(
             'type'  => 'wysiwyg',
-            'title' => get_string('message'),
-            'class' => 'hide-label',
+            'title' => get_string('Comment', 'artefact.comment'),
+            'class' => ($USER->is_logged_in() ? 'hide-label' : ''),
             'rows'  => 5,
             'cols'  => 80,
             'rules' => array('maxlength' => 8192),
