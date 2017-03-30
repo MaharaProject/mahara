@@ -34,6 +34,8 @@
                 attr = $(this).attr('data-rating');
                 if (attr === undefined || attr === false) { $(this).attr('data-rating',settings.value); }
             });
+            // Clear out old ratings
+            this.empty();
 
             // Add 'no rating' glyph
             this.append('<span title="' + get_string('removerating', 'artefact.comment') + '" tabindex="0" data-value="0" class="ratingicon icon ' + settings.offglyph + '" style="' + style + '" aria-hidden="false"></span>');
@@ -69,7 +71,7 @@
         function paint(div) {
             rating = parseInt(div.attr('data-rating'));
             // If there is an input in the div lets set it's value
-            div.find("input").val(rating);
+            div.parent().find("input").val(rating);
             div.find("span.ratingicon").each(function() {
                 // Now paint the glyphs
                 var rating = parseInt($(this).parent().attr('data-rating'));
