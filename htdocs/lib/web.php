@@ -4770,7 +4770,7 @@ function display_icon($type, $id = false) {
             break;
     }
 
-    $html = '<span class="' . $image . '" class="displayicon" title="' . get_string($type) . '"';
+    $html = '<span class="' . $image . 'displayicon" title="' . get_string($type) . '"';
     if ($id) {
         $html .= ' id="' . $id . '"';
     }
