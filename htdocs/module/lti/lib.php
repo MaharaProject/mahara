@@ -161,4 +161,13 @@ class PluginModuleLti extends PluginModule {
         return update_oauth_server_config($serverid, 'autocreateusers', (int)$values['autocreateusers']);
     }
 
+    // Disable form fields that are not needed by this plugin
+    // @return array of fields not needed with key the field name
+    public static function disable_webservice_fields() {
+        $fields = array (
+            'application_uri' => 1,
+            'callback_uri' => 1
+        );
+        return $fields;
+    }
 }
