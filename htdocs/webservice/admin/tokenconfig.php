@@ -36,7 +36,7 @@ $token_details =
         'name'             => 'allocate_webservice_tokens',
         'successcallback'  => 'allocate_webservice_tokens_submit',
         'validatecallback' => 'allocate_webservice_tokens_validate',
-        'jsform'           => true,
+        'jsform'           => false,
         'renderer'         => 'div',
         'elements'   => array(
                         'tokenid' => array(
@@ -158,6 +158,7 @@ $elements = array(
                     'value' =>     pieform($token_details),
                 )
             ),
+            'class' => 'form-group-nested',
         ),
     );
 
@@ -166,14 +167,14 @@ $form = array(
     'id' => 'maintable',
     'class' => 'form-group-nested',
     'name' => 'tokenconfig',
-    'jsform' => true,
+    'jsform' => false,
     'successcallback' => 'allocate_webservice_tokens_submit',
     'validatecallback' => 'allocate_webservice_tokens_validate',
     'elements' => $elements,
 );
 
-
-$form = pieform($form);
+$pieform = pieform_instance($form);
+$form = $pieform->build(false);
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
