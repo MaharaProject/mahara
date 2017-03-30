@@ -479,6 +479,29 @@ function build_admin_user_search_results($search, $offset, $limit) {
         );
     }
 
+    $customcols = get_config_plugin('artefact', 'internal', 'profileadminusersearch');
+    if ($customcols) {
+        $customcolsarray = explode(',', $customcols);
+        foreach ($customcolsarray as $k => $v) {
+            if (!array_key_exists($v, $cols)) {
+                safe_require('artefact', 'internal');
+                $classname = 'ArtefactType' . ucfirst($v);
+                $pluginname = get_field('artefact_installed_type', 'plugin', 'name', $v);
+
+                $cols[$v] = array(
+                    'name'     => ($pluginname) ? get_string($v, 'artefact.' . $pluginname) : get_string($v, 'mahara'),
+                    'sort'     => true,
+                );
+
+                // check if this is a local profile icon and has it's own display info
+                if (is_callable(array($classname, 'usersearch_column_structure'))) {
+                    $out = call_static_method($classname, 'usersearch_column_structure');
+                    $cols[$v] = $out;
+                }
+            }
+        }
+    }
+
     $cols['authname'] = array(
             'name'     => get_string('authentication'),
             'sort'     => true,
@@ -489,8 +512,6 @@ function build_admin_user_search_results($search, $offset, $limit) {
         'sort'      => true,
         'template'  => 'strftimedatetime.tpl',
     );
-
-
 
     if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
         unset($cols['email']);

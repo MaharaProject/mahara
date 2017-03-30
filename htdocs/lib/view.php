@@ -3550,6 +3550,22 @@ class View {
             'SELECT ' . $cols . $from . ' WHERE ' . $select . $sortorder, $selectph, $offset, $limit
         );
         $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $from . ' WHERE ' . $select, $countph);
+        // If our profile artefact is saving it's data to a special place
+        if (!empty($data['artefacttypes'])) {
+            safe_require('artefact', 'internal');
+            foreach ($data['artefacttypes'] as $type) {
+                $classname = 'ArtefactType' . ucfirst($type);
+                if (is_callable(array($classname, 'get_special_data'))) {
+                    $customprofile = call_static_method($classname, 'get_special_data', $user);
+                    if ($customprofile) {
+                        $customprofile->artefacttype = $type;
+                        $customprofile->title = $customprofile->{$type};
+                        $artefacts[] = $customprofile;
+                        $totalartefacts++;
+                    }
+                }
+            }
+        }
 
         return array($artefacts, $totalartefacts);
     }

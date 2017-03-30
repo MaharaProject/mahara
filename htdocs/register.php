@@ -128,6 +128,10 @@ if (isset($key)) {
             }
         }
 
+        if (function_exists('local_register_create')) {
+            local_register_create($user, $registration);
+        }
+
         create_user($user, $profilefields);
 
         // If the institution is 'mahara' then don't do anything
@@ -184,7 +188,7 @@ if (isset($key)) {
         $USER->reanimate($user->id, $authinstance->id);
 
         if (function_exists('local_post_register')) {
-            local_post_register($registration);
+            local_post_register($registration, $user);
         }
 
         $SESSION->add_ok_msg(get_string('registrationcomplete', 'mahara', get_config('sitename')));

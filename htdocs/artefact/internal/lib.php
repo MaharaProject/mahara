@@ -10,11 +10,14 @@
  */
 
 defined('INTERNAL') || die();
+if (file_exists(get_config('docroot') . 'local/lib/artefact_internal.php')) {
+    include_once(get_config('docroot') . 'local/lib/artefact_internal.php');
+}
 
 class PluginArtefactInternal extends PluginArtefact {
 
     public static function get_artefact_types() {
-        return array(
+        $types = array(
             'firstname',
             'lastname',
             'studentid',
@@ -37,10 +40,15 @@ class PluginArtefactInternal extends PluginArtefact {
             'html',
             'socialprofile',
         );
+        if (class_exists('PluginArtefactInternalLocal', false)) {
+            $localtypes = PluginArtefactInternalLocal::get_artefact_types();
+            $types = array_merge($types, $localtypes);
+        }
+        return $types;
     }
 
     public static function get_profile_artefact_types() {
-        return array(
+        $types = array(
             'firstname',
             'lastname',
             'studentid',
@@ -62,10 +70,15 @@ class PluginArtefactInternal extends PluginArtefact {
             'industry',
             'socialprofile',
         );
+        if (class_exists('PluginArtefactInternalLocal', false)) {
+            $localtypes = PluginArtefactInternalLocal::get_profile_artefact_types();
+            $types = array_merge($types, $localtypes);
+        }
+        return $types;
     }
 
     public static function get_contactinfo_artefact_types() {
-        return array(
+        $types = array(
             'email',
             'officialwebsite',
             'personalwebsite',
@@ -80,6 +93,11 @@ class PluginArtefactInternal extends PluginArtefact {
             'faxnumber',
             'socialprofile',
         );
+        if (class_exists('PluginArtefactInternalLocal', false)) {
+            $localtypes = PluginArtefactInternalLocal::get_contactinfo_artefact_types();
+            $types = array_merge($types, $localtypes);
+        }
+        return $types;
     }
 
     public static function get_block_types() {
@@ -480,6 +498,10 @@ class ArtefactTypeProfile extends ArtefactType {
             );
         }
         $out = array_merge($out, $social);
+        if (class_exists('ArtefactTypeProfileLocal', false)) {
+            $localfields = ArtefactTypeProfileLocal::get_all_fields();
+            $out = array_merge($out, $localfields);
+        }
         return $out;
     }
 
@@ -522,11 +544,50 @@ class ArtefactTypeProfile extends ArtefactType {
         return array_merge($m, $alwaysm);
     }
 
+    public static function get_adminusersearch_fields() {
+        $m = array();
+        $all = self::get_all_fields();
+        $alwaysm = self::get_always_mandatory_fields();
+        if ($man = get_config_plugin('artefact', 'internal', 'profileadminusersearch')) {
+            $mandatory = explode(',', $man);
+        }
+        else {
+            $mandatory = array();
+        }
+        // If socialprofile is disabled, we need to remove any fields that may
+        // have been selected when it was enabled.
+        // If socialprofile is enabled, we need to remove any fields that my
+        // have been selected when it was disabled.
+        $need_to_update = false;
+        foreach ($mandatory as $mf) {
+            if (isset($all[$mf])) {
+                $m[$mf] = $all[$mf];
+            }
+            else {
+                $need_to_update = true;
+            }
+        }
+        if ($need_to_update) {
+            // We need to save the config settings for the mandatory fields for the plugin.
+            set_config_plugin('artefact', 'internal', 'profileadminusersearch', join(',', array_keys($m)));
+        }
+        return array_merge($m, $alwaysm);
+    }
+
     public static function get_always_mandatory_fields() {
         return array(
             'firstname' => 'text',
             'lastname'  => 'text',
             'email'     => 'emaillist',
+        );
+    }
+
+    public static function get_always_adminusersearchable_fields() {
+        return array(
+            'firstname'       => 'text',
+            'lastname'        => 'text',
+            'preferredname'   => 'text',
+            'email'           => 'emaillist',
         );
     }
 
@@ -612,6 +673,18 @@ class ArtefactTypeProfile extends ArtefactType {
             );
         }
 
+        $adminusersearch = self::get_adminusersearch_fields();
+        $alwaysadminusersearch = self::get_always_adminusersearchable_fields();
+        $adminusersearchfields = array();
+        foreach (array_keys($allmandatory) as $field) {
+            $adminusersearchfields[$field] = array(
+                'title'        => get_string($field, 'artefact.internal'),
+                'value'        => $field,
+                'defaultvalue' => isset($alwaysadminusersearch[$field]) || isset($adminusersearch[$field]),
+                'disabled'     => isset($alwaysadminusersearch[$field]),
+            );
+        }
+
         $form = array(
             'elements'   => array(
                 'mandatory' =>  array(
@@ -634,6 +707,16 @@ class ArtefactTypeProfile extends ArtefactType {
                     'options'      => $allsearchable, // Only the keys are used by validateoptions
                     'rules'        => array('validateoptions' => true),
                 ),
+                'adminusersearch' => array(
+                    'title'        => get_string('adminusersearchfields', 'artefact.internal'),
+                    'description'  => get_string('adminusersearchfieldsdescription', 'artefact.internal'),
+                    'help'         => true,
+                    'class'        => 'stacked',
+                    'type'         => 'checkboxes',
+                    'elements'     => $adminusersearchfields,
+                    'options'      => $allmandatory, // Only the keys are used by validateoptions
+                    'rules'        => array('validateoptions' => true),
+                ),
             ),
         );
 
@@ -645,6 +728,8 @@ class ArtefactTypeProfile extends ArtefactType {
         set_config_plugin('artefact', 'internal', 'profilemandatory', join(',', $mandatory));
         $searchable = array_merge(array_keys(self::get_always_searchable_fields()), $values['searchable']);
         set_config_plugin('artefact', 'internal', 'profilepublic', join(',', $searchable));
+        $adminusersearch = array_merge(array_keys(self::get_always_adminusersearchable_fields()), $values['adminusersearch']);
+        set_config_plugin('artefact', 'internal', 'profileadminusersearch', join(',', $adminusersearch));
     }
 
     public static function get_links($id) {

@@ -419,6 +419,25 @@ class PluginSearchInternal extends PluginSearch {
      */
     public static function admin_search_user($query_string, $constraints, $offset, $limit,
                                              $sortfield, $sortdir) {
+
+        $firstcols = 'u.id';
+        $join = '';
+        $where = 'WHERE u.id <> 0 AND u.deleted = 0';
+
+        // Add in info for custom artefact internal columns if the data exists
+        $customcols = get_config_plugin('artefact', 'internal', 'profileadminusersearch');
+        if ($customcols) {
+            $customcolsarray = explode(',', $customcols);
+            safe_require('artefact', 'internal');
+            $default = ArtefactTypeProfile::get_always_adminusersearchable_fields();
+            foreach ($customcolsarray as $k => $v) {
+                if (!array_key_exists($v, $default)) {
+                    $firstcols .= ', a' . $k . '.title AS ' . $v;
+                    $join .= 'LEFT JOIN {artefact} a' . $k . ' ON (a' . $k . '.owner = u.id AND a' . $k . '.artefacttype = \'' . $v . '\') ';
+               }
+            }
+        }
+
         $sort = 'TRUE';
         if (preg_match('/^[a-zA-Z_0-9"]+$/', $sortfield)) {
             $sort = $sortfield;
@@ -429,8 +448,7 @@ class PluginSearchInternal extends PluginSearch {
                 $sort .= ' DESC';
             }
         }
-        $join = '';
-        $where = 'WHERE u.id <> 0 AND u.deleted = 0';
+
         $values = array();
 
         // Get the correct keyword for case insensitive LIKE
@@ -458,7 +476,6 @@ class PluginSearchInternal extends PluginSearch {
             $values = array_pad($values, count($values) + $valuecount, $term);
         }
 
-        $firstcols = 'u.id';
         if (!empty($constraints)) {
             foreach ($constraints as $f) {
                 switch ($f['field']) {
@@ -532,14 +549,16 @@ class PluginSearchInternal extends PluginSearch {
                 $limit);
 
             if ($data) {
+                $users = array_keys($data);
                 $inst = get_records_select_array('usr_institution',
-                                                 'usr IN (' . join(',', array_keys($data)) . ')',
+                                                 'usr IN (' . join(',', $users) . ')',
                                                  null, '', 'usr,institution');
                 if ($inst) {
                     foreach ($inst as $i) {
                         $data[$i->usr]->institutions[] = $i->institution;
                     }
                 }
+
                 foreach ($data as &$item) {
                     $item->username = display_username($item);
                     $item = (array)$item;
