@@ -81,7 +81,7 @@
                 </select>
             </div>
             <span class="picker input-short{% if (!o.presets.role) { %} hidden{% } %}">
-                <select data-roles="grouproles" name="accesslist[{%=o.id%}][role]" class="form-control input-small select" {% if (o.presets.role) { %}disabled{% } %}>
+                <select data-roles="grouproles" name="accesslist[{%=o.id%}][role]" class="form-control input-small select">
                     {% if (o.presets.role) { %}<option value="{%=o.presets.role%}" selected>{%=o.presets.roledisplay%}</option>{% } %}
                 </select>
             </span>
