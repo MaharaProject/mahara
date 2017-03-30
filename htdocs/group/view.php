@@ -101,12 +101,12 @@ $smarty = smarty(
     )
 );
 
-
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewcontent', $viewcontent);
 $smarty->assign('group', $group);
 $smarty->assign('editwindow', $editwindow);
+$smarty->assign('cancopy', group_can_create_groups());
 $smarty->assign('returnto', 'view');
 $smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
 $smarty->assign('headingclass', 'page-header');
