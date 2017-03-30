@@ -35,8 +35,8 @@ class XMLDBTable extends XMLDBObject {
     /**
      * Creates one new XMLDBTable
      */
-    function XMLDBTable($name) {
-        parent::XMLDBObject($name);
+    function __construct($name) {
+        parent::__construct($name);
         $this->fields = array();
         $this->keys = array();
         $this->indexes = array();

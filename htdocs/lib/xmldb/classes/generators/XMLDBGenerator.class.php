@@ -131,7 +131,7 @@ class XMLDBgenerator {
     /**
      * Creates one new XMLDBGenerator
      */
-    function XMLDBgenerator() {
+    function __construct() {
         global $CFG;
         $this->prefix = '';
         $this->reserved_words = $this->getReservedWords();

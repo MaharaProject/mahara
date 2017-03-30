@@ -41,7 +41,7 @@ class XMLDBObject {
     /**
      * Creates one new XMLDBObject
      */
-    function XMLDBObject($name) {
+    function __construct($name) {
         $this->name = $name;
         $this->comment = NULL;
         $this->previous = NULL;

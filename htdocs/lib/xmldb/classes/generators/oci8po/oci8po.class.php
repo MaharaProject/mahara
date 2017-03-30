@@ -62,8 +62,8 @@ class XMLDBoci8po extends XMLDBgenerator {
     /**
      * Creates one new XMLDBoci8po
      */
-    function XMLDBoci8po() {
-        parent::XMLDBgenerator();
+    function __construct() {
+        parent::__construct();
         $this->prefix = '';
         $this->reserved_words = $this->getReservedWords();
     }

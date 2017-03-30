@@ -35,7 +35,7 @@ class XMLDBodbc_mssql extends XMLDBmssql {
     /**
      * Creates one new XMLDBmssql
      */
-    function XMLDBodbc_mssql() {
-        XMLDBmssql::XMLDBmssql();
+    function __construct() {
+        parent::__construct();
     }
 }

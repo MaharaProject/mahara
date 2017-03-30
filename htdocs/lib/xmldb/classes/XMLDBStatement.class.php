@@ -37,8 +37,8 @@ class XMLDBStatement extends XMLDBObject {
     /**
      * Creates one new XMLDBStatement
      */
-    function XMLDBStatement($name) {
-        parent::XMLDBObject($name);
+    function __construct($name) {
+        parent::__construct($name);
         $this->table     = NULL;
         $this->type      = XMLDB_STATEMENT_INCORRECT;
         $this->sentences = array();
