@@ -2851,6 +2851,7 @@ function mahara_standard_nav() {
     global $SESSION;
 
     $exportenabled = (plugins_installed('export') && !$SESSION->get('handheld_device')) ? TRUE : FALSE;
+    $importenabled = (plugins_installed('import') && !$SESSION->get('handheld_device')) ? TRUE : FALSE;
 
     $menu = array(
         'home' => array(
@@ -2904,6 +2905,7 @@ function mahara_standard_nav() {
             'url' => 'import/index.php',
             'title' => get_string('Import', 'import'),
             'weight' => 80,
+            'ignore' => !$importenabled,
         ),
         'groups' => array(
             'path' => 'groups',
