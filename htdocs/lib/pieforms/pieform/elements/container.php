@@ -37,6 +37,9 @@
  */
 function pieform_element_container(Pieform $form, $element) {/*{{{*/
     $result = "";
+    if (isset($element['title'])) {
+      $result .= '<h4>' . $element['title'] . '</h4>';
+    }
     foreach ($element['elements'] as $subname => $subelement) {
         $result .= "\t" . pieform_render_element($form, $subelement);
     }

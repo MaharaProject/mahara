@@ -97,7 +97,7 @@ class FormRendererMultiColumnTable {/*{{{*/
             if ($datatable) {
                 $toggle = 1 - $toggle;
                 $data['settings']['class'] .= ' r' . $toggle;
-            } 
+            }
 
             $result .= "\t<tr";
 
@@ -154,7 +154,7 @@ class FormRendererMultiColumnTable {/*{{{*/
                 $result .= "\t<td></td>\n\t";
             }
             if (!$datatable) {
-                $result .= "</thead></tr><tbody\n";
+                $result .= "</tr></thead><tbody>\n";
              } else {
                 $result .= "</tr>\n";
             }

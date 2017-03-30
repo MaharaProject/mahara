@@ -530,15 +530,15 @@ function webservice_server_list_form($sopts, $iopts) {
     $elements = array(
         // fieldset for managing service function list
         'register_server' => array(
-            'type' => 'fieldset',
-            'legend' => get_string('userapplications1', 'auth.webservice'),
+            'type' => 'container',
+            'title' => get_string('userapplications1', 'auth.webservice'),
+            'isformgroup' => false,
             'elements' => array(
                 'sflist' => array(
                     'type' => 'html',
                     'value' => $form,
                 )
             ),
-            'collapsible' => false,
         ),
     );
 
