@@ -1253,6 +1253,13 @@ class BlockInstance {
             $js .= $configjs;
         }
 
+        $js .= "
+            jQuery(function ($) {
+                $('#instconf_title').change(function() {
+                    $('#instconf_retractable').prop('disabled', ($('#instconf_title').prop('value') == ''));
+                });
+            });";
+
         // We need to load any dynamic css required for the pieform. We do this
         // by checking for an api function that has been added especially for
         // the purpose, but that is not part of Pieforms. Maybe one day later
