@@ -33,5 +33,10 @@ $role = group_user_access($groupid, $userid);
 if (!($USER->get('admin') || $role == 'admin')) {
     throw new AccessDeniedException();
 }
+// Check the site setting for create groups - as copying is essentially creating a group
+$cancopy = group_can_create_groups();
+if (!$cancopy) {
+    throw new AccessDeniedException();
+}
 
 group_copy($groupid, $return);
