@@ -20,7 +20,7 @@
                 {if $item.submenu}
                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle {if !$item.selected}collapsed{/if}" data-toggle="collapse" data-parent="nav" data-target="#childmenu-{$dwoo.foreach.menu.index}">
                     <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                    <span class="nav-title sr-only">{str tag="show"} {str tag="menu"}</span>
+                    <span class="nav-title sr-only">{str tag="showmenu" section="mahara" arg1="$item.title"}</span>
                 </button>
                 {/if}
                 {if $item.submenu}
@@ -72,7 +72,7 @@
             {if $item.submenu}
             <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle {if !$item.selected}collapsed{/if}" data-toggle="collapse" data-parent="navadmin" data-target="#adminchildmenu-{$dwoo.foreach.menu.index}">
                 <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                <span class="nav-title sr-only">{str tag="show"} {str tag="menu"}</span>
+                <span class="nav-title sr-only">{str tag="showmenu" section="mahara" arg1="$item.title"}</span>
             </button>
             {/if}
             {if $item.submenu}
@@ -133,7 +133,7 @@
             {if $item.submenu}
             <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle {if !$item.selected}collapsed{/if}" data-toggle="collapse" data-parent="navuser" data-target="#userchildmenu-{$dwoo.foreach.menu.index}">
                  <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                 <span class="nav-title sr-only">{str tag="show"} {str tag="menu"}</span>
+                 <span class="nav-title sr-only">{str tag="showmenu" section="mahara" arg1="$item.title"}</span>
             </button>
             {/if}
             {if $item.submenu}

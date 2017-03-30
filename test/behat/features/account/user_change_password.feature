@@ -7,11 +7,10 @@ Feature: Creating users and an institution enrolling users and changing their pa
 Scenario: Creating an Institution assigning users and changing their passwords
     # Log in as Admin
     Given I log in as "admin" with password "Kupuhipa1"
-    # Verifying log in was successful
+    # Verifying login was successful
     And I should see "Admin User"
     # Creating an Institution
-    And I click on "Show Administration Menu"
-    And I follow "Institutions"
+    And I choose "Settings" in "Institutions" from administration menu
     And I press "Add institution"
     And I fill in the following:
     | Institution name   | Institution One  |

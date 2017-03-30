@@ -250,8 +250,8 @@ $string['editblockspagedescription'] = '<p>Drag and drop content blocks from the
 $string['displayview'] = 'Display page';
 $string['editthisview'] = 'Edit this page';
 $string['expandcontract'] = 'Expand /   Contract list of block types';
-$string['returntoinstitutionpages'] = 'Return to institution pages';
-$string['returntositepages'] = 'Return to site pages';
+$string['returntoinstitutionportfolios'] = 'Return to institution pages and collections';
+$string['returntositeportfolios'] = 'Return to site pages and collections';
 
 $string['success.addblocktype'] = 'Added block successfully';
 $string['err.addblocktype'] = 'Could not add the block to your page';

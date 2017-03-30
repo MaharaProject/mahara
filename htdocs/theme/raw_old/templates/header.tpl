@@ -43,7 +43,7 @@
             {if $MAINNAV}
              <!-- Brand and toggle get grouped for better mobile display -->
                 <button type="button" class="menu-toggle navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-main">
-                    <span class="sr-only">{str tag="show"} {str tag="menu"}</span>
+                    <span class="sr-only">{str tag="showmainmenu"}</span>
                     <span class="icon-bar" role="presentation"></span>
                     <span class="icon-bar" role="presentation"></span>
                     <span class="icon-bar" role="presentation"></span>
@@ -52,7 +52,7 @@
             {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
             <button type="button" class="navbar-toggle search-toggle collapsed" data-toggle="collapse" data-target=".navbar-form">
                 <span class="icon icon-search" role="presentation" aria-hidden="true"></span>
-                <span class="nav-title sr-only">{str tag="show"} {str tag="search"}</span>
+                <span class="nav-title sr-only">{str tag="showsearch"}</span>
             </button>
             {/if}
             <div id="logo-area" class="logo-area">

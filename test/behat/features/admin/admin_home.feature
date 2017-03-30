@@ -1,4 +1,5 @@
 @javascript @core @core_administration
+
 Feature: The admin homepage
 Test the forms on the admin homepage
 As an admin
@@ -6,8 +7,7 @@ So I can make sure I can close/open site or clear cache
 
 Scenario: Closing the site
  Given I log in as "admin" with password "Kupuhipa1"
- And I click on "Show Administration Menu"
- And I follow "Admin home"
+ And I choose "Admin home" from administration menu
  # Verifying I'm on the right page
  And I should see "Register your Mahara site"
  And I scroll to the base of id "close_site"

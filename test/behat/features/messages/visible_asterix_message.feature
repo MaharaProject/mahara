@@ -9,8 +9,7 @@
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
-  And I click on "Show Administration Menu"
-  And I follow "Users"
+ And I choose "User search" in "Users" from administration menu
   And I follow "Pete"
   And I follow "Send message"
   Then I should see "Recipients *"

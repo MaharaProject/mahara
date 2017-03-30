@@ -12,17 +12,17 @@
 defined('INTERNAL') || die();
 
 $string['autoconfiguredesc'] = 'Automatically enable settings and configurations needed for LTI.';
-$string['autoconfiguretitle'] = 'Auto-configure LTI?';
-$string['autocreateusers'] = 'Auto-create users?';
-$string['autocreationnotenabled'] = 'Auto-creation of user accounts not enabled';
+$string['autoconfiguretitle'] = 'Auto-configure LTI';
+$string['autocreateusers'] = 'Auto-create users';
+$string['autocreationnotenabled'] = 'Auto-creation of user accounts is not enabled';
 $string['configstep'] = 'Conguration item';
 $string['configstepstatus'] = 'Status';
-$string['ltiserviceexists'] = 'LTI service group is registered';
-$string['noticeenabled'] = 'The LTI API is currently enabled.';
-$string['noticenotenabled'] = 'The LTI API is <b>not</b> currently enabled.';
+$string['ltiserviceexists'] = 'The LTI service group is registered.';
+$string['noticeenabled'] = 'The LTI API is enabled.';
+$string['noticenotenabled'] = 'The LTI API is <b>not</b> enabled.';
 $string['oauthprotocolenabled'] = 'OAuth protocol enabled';
 $string['restprotocolenabled'] = 'REST protocol enabled';
-$string['usernameexists'] = 'Username already exists "%s"';
-$string['webserviceauthdisabled'] = 'Webservice auth is not enabled for this institution';
+$string['usernameexists1'] = 'Username "%s" already exists.';
+$string['webserviceauthdisabled'] = 'Web service authentication is not enabled for this institution';
 $string['webserviceproviderenabled'] = 'Incoming web service requests allowed';
-$string['institutiondenied'] = 'Access to \'%s\' denied. Please contact your institution admin.';
+$string['institutiondenied'] = 'Access to \'%s\' is denied. Please contact your institution administrator.';

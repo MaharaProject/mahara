@@ -1408,13 +1408,13 @@ class ActivityTypeViewAccess extends ActivityType {
         $accessdates = activity_get_viewaccess_user_dates($this->view, $user->id);
         $accessdatemessage = '';
         if (!empty($accessdates['mindate']) && !empty($accessdates['maxdate'])) {
-            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessfromto', 'activity', $accessdates['mindate'], $accessdates['maxdate']);
+            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessfromto1', 'activity', $accessdates['mindate'], $accessdates['maxdate']);
         }
         else if (!empty($accessdates['mindate'])) {
-            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessfrom', 'activity', $accessdates['mindate']);
+            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessfrom1', 'activity', $accessdates['mindate']);
         }
         else if (!empty($accessdates['maxdate'])) {
-            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessto', 'activity', $accessdates['maxdate']);
+            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessto1', 'activity', $accessdates['maxdate']);
         }
         else {
             $accessdatemessage = false;

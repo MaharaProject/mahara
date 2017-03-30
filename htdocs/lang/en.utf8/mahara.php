@@ -26,6 +26,7 @@ $string['moveitemup']  = 'Move up';
 $string['moveitemdown']  = 'Move down';
 $string['edit']    = 'Edit';
 $string['editspecific']    = 'Edit "%s"';
+$string['managespecific'] = 'Manage "%s"';
 $string['connectspecific']    = 'Connect "%s"';
 $string['editing'] = 'Editing';
 $string['settingsspecific'] = 'Settings for "%s"';
@@ -83,11 +84,16 @@ $string['tab'] = 'tab';
 $string['selected'] = 'selected';
 $string['admin'] = 'Admin';
 $string['menu'] = 'Menu';
-$string['adminmenu'] = 'Administration Menu';
-$string['usermenu'] = 'User Menu';
+$string['adminmenu'] = 'Administration menu';
+$string['usermenu'] = 'User menu';
 // nav tool tips
 $string['profilepage'] = "Profile page";
 $string['mainmenu'] = "Main menu";
+$string['showmainmenu'] = "Show main menu";
+$string['showadminmenu'] = "Show administration menu";
+$string['showusermenu'] = "Show user menu";
+$string['showsearch'] = "Show search";
+$string['showmenu'] = "Show menu for %s";
 
 $string['at'] = 'at';
 $string['From'] = 'From';
@@ -253,8 +259,8 @@ $string['accesstotallydenied_institutionsuspended'] = 'Your institution %s has b
 Please contact your institution for help.';
 $string['accesstotallydenied_institutionexpired'] = 'Your institution %s has expired. Until it is unexpired, you will not be able to log in to %s.
 Please contact your institution for help.';
-$string['accesstotallydenied_institutioninactive'] = 'Your institution %s authenticcation method is inactive. Until it is made active, you will not be able to log in to %s.
-Please contact your institution for help.';
+$string['accesstotallydenied_institutioninactive'] = 'The authentication method for institution "%s" is inactive. Until it is made active, you will not be able to log in to %s.
+Please contact your institution administrator for help.';
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section.';
 $string['accountdeleted'] = 'Sorry, your account has been deleted. You can <a href="%scontact.php">contact the site administrator</a>.';
 $string['accountexpired'] = 'Sorry, your account has expired. You can <a href="%scontact.php">contact the site administrator</a> to have it reactivated.';

@@ -15,8 +15,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     # Verifying log in was successful
     And I should see "Admin User"
     # Navigating to notification settings
-    When I click on "Show Administration Menu"
-    And I follow "Configure site"
+    And I choose "Site options" in "Configure site" from administration menu
     And I follow "Notification settings"
     # Verifying "None" option is not available for these notifications
     And the "System message" field should not contain "None"
