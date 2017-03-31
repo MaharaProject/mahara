@@ -11,7 +11,7 @@
  */
 
 $services = array(
-    'Mahara LTI integration' => array(
+    'LTI integration' => array(
         'shortname' => 'maharalti',
         'functions' => [
             'module_lti_launch',
@@ -30,7 +30,7 @@ $functions = array(
     'module_lti_launch' => array(
         'classname' => 'module_lti_launch',
         'methodname' => 'launch',
-        'description' => "Launch and LTI activity",
+        'description' => "Launch an LTI activity",
         'type' => 'write',
     ),
 );
