@@ -932,7 +932,7 @@ class User {
                     return (object) array(
                         'basename'    => $institution->theme,
                         'headerlogo'  => $institution->logo,
-                        'stylesheets' => $stylesheets,
+                        'stylesheets' => array_unique($stylesheets),
                         'institutionname' => $iid,
                     );
                 }
@@ -946,7 +946,9 @@ class User {
         }
         if ($this->institutiontheme) {
             // No theme set so use 'sitedefault'
-            $this->institutiontheme->altname = 'sitedefault';
+            $instobj = $this->institutiontheme;
+            $instobj->altname = 'sitedefault';
+            $this->set('institutiontheme', $instobj);
         }
         return $this->institutiontheme;
     }

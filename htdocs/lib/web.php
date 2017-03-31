@@ -107,7 +107,6 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
         }
     }
 
-
     $stylesheets = append_version_number($stylesheets);
 
     return $stylesheets;
