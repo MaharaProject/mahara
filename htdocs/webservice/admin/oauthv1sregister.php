@@ -84,6 +84,17 @@ function webservices_add_application_submit(Pieform $form, $values) {
         redirect('/webservice/admin/oauthv1sregister.php');
     }
     else {
+        // New application added - now check that institution has 'webservices' auth
+        // Get auth priority we need for the ensure_record_exists function
+        $priorities  = get_record_sql("SELECT MAX(priority) AS maxpriority, (
+                                           SELECT priority FROM {auth_instance}
+                                           WHERE institution = ? AND authname = 'webservice') AS webservicepriority
+                                      FROM {auth_instance} WHERE institution = ?", array($values['institution'], $values['institution']));
+        $priority = is_null($priorities->webservicepriority) ? $priorities->maxpriority + 1 : $priorities->webservicepriority;
+        if (!ensure_record_exists('auth_instance', (object) array('institution' => $values['institution'], 'authname' => 'webservice'),
+                                                   (object) array('institution' => $values['institution'], 'authname' => 'webservice', 'active' => 1, 'priority' => $priority, 'instancename' => 'webservice'))) {
+            $SESSION->add_error_msg(get_string('setauthinstancefailed', 'auth.webservice', institution_display_name($values['institution'])));
+        }
         redirect('/webservice/admin/oauthv1sregister.php?edit=' . $c->id);
     }
 
