@@ -27,6 +27,5 @@ Scenario: Make Text Block Retractable
     Then I click on "Display page"
     Then I should see "Here is a new block"
     Then I should see "Text Block 1"
-    # This next instruction is counterintuitive, as it actually collapes the node
-    And I expand "Text Block 1" node
+    And I collapse "Text Block 1" node
     And I should not see "Here is a new block"
