@@ -8,7 +8,7 @@
                     {if $view.template == $sitetemplate} site-template{/if}">
                     {if $view.collid}<div class="panel panel-default panel-stack{if $view.submittedto} panel-warning{/if}"><div class="panel panel-default panel-stack{if $view.submittedto} panel-warning{/if}">{/if}
                         <h3 class="panel-heading has-link">
-                            <a class="title-link title" href="{$view.fullurl}" title="{$view.displaytitle}">
+                            <a class="title-link title" href="{if $view.numviews > 0}{$view.fullurl}{else}{$WWWROOT}collection/views.php?id={$view.collid}{/if}" title="{$view.displaytitle}">
                                 {$view.displaytitle}
                             </a>
                         </h3>
