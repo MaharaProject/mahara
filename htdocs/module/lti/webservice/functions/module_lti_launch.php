@@ -72,6 +72,10 @@ class module_lti_launch extends external_api {
                 'custom_canvas_user_id' => new external_value(PARAM_TEXT, 'LTI custom_canvas_user_id', VALUE_OPTIONAL),
                 'custom_canvas_user_login_id' => new external_value(PARAM_TEXT, 'LTI custom_canvas_user_login_id', VALUE_OPTIONAL),
                 'custom_canvas_workflow_state' => new external_value(PARAM_TEXT, 'LTI custom_canvas_workflow_state', VALUE_OPTIONAL),
+
+                // Blackboard specific LTI params
+                'ext_launch_id' => new external_value(PARAM_TEXT, 'Blackboard ext_launch_id', VALUE_OPTIONAL),
+                'ext_launch_presentation_css_url' => new external_value(PARAM_URL, 'Blackboard ext_launch_presentation_css_url', VALUE_OPTIONAL),
             )
         );
     }
