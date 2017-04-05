@@ -17,7 +17,7 @@
                     {if $viewsform}
                     {$viewsform|safe}
                     {/if}
-                    <div id="nopagetoadd"class="no-results lead text-small {if $viewsform} hidden{/if}">
+                    <div id="nopagetoadd" class="no-results lead text-small {if $viewsform} hidden{/if}">
                         {str tag=noviewsavailable section=collection}
                     </div>
                 </div>
