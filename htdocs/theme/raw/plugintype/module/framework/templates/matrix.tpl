@@ -35,9 +35,11 @@
     {/foreach}
   </tr>
   {foreach from=$standards key=sk item=standard}
-    <tr class="standard">
+    <tr class="standard{if $standard->settingstate == 'closed'} collapsed{/if}" data-standard="{$standard->id}" data-collection="{$collectionid}"
+        data-toggle="collapse" aria-expanded="{if $standard->settingstate == 'closed'}false{else}true{/if}">
         <td colspan="{$viewcount + 2}">
             <div class="shortname-container">
+                <span class="icon icon-chevron-down collapse-indicator right pull-right"></span>
                 <h3>{$standard->name}</h3>
                 <div class="matrixtooltip popover hidden">
                     <h3 class="popover-title">{$standard->name}</h3>
@@ -51,7 +53,7 @@
     {if $standard->options}
         {foreach from=$standard->options key=ok item=option}
         {if $option->children}
-        <tr class="matrixlevel{$option->level}">
+        <tr class="matrixlevel{$option->level} examplefor{$standard->id}{if $standard->settingstate == 'closed'} hidden{/if}">
             <td colspan="{$viewcount + 2}" class="code">
                 <div class="shortname-container">
                     {for name=foo from=0 to=$option->level step=1}
@@ -69,7 +71,7 @@
             </td>
         </tr>
         {else}
-        <tr class="matrixlevel{$option->level}">
+        <tr class="matrixlevel{$option->level} examplefor{$standard->id}{if $standard->settingstate == 'closed'} hidden{/if}">
             <td class="code">
                 <div class="shortname-container">
                     {for name=foo2 from=0 to=$option->level step=1}
