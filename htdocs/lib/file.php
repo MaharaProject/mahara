@@ -36,14 +36,17 @@ define('BYTESERVING_BOUNDARY', 'm1i2k3e40516'); //unique string constant
  *                         there are none.
  */
 function serve_file($path, $filename, $mimetype, $options=array()) {
-    $dataroot = realpath(get_config('dataroot'));
-    $path = realpath($path);
     $options = array_merge(array(
         'lifetime' => 86400
     ), $options);
 
-    if (!get_config('insecuredataroot') && substr($path, 0, strlen($dataroot)) != $dataroot) {
-        throw new AccessDeniedException();
+    if (!is_using_external_filesystem()) {
+        $dataroot = realpath(get_config('dataroot'));
+        $localpath = realpath($path);
+
+        if (!get_config('insecuredataroot') && substr($localpath, 0, strlen($dataroot)) != $dataroot) {
+            throw new AccessDeniedException();
+        }
     }
 
     if (!file_exists($path)) {
@@ -172,7 +175,7 @@ function readfile_chunked($filename, $retbytes=true) {
     $chunksize = 1 * (1024 * 1024); // 1MB chunks - must be less than 2MB!
     $buffer = '';
     $cnt =0;
-    $handle = fopen($filename, 'rb');
+    $handle = get_file_handle($filename, 'rb');
     if ($handle === false) {
         return false;
     }
@@ -199,7 +202,7 @@ function readfile_chunked($filename, $retbytes=true) {
  */
 function byteserving_send_file($filename, $mimetype, $ranges) {
     $chunksize = 1 * (1024 * 1024); // 1MB chunks - must be less than 2MB!
-    $handle = fopen($filename, 'rb');
+    $handle = get_file_handle($filename, 'rb');
     if ($handle === false) {
         die;
     }
@@ -252,6 +255,29 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
     }
 }
 
+/**
+ * Return file handle.
+ *
+ * @param string $path A file path.
+ * @param string $mode Parameter specifies the type of access you require to the stream. E.g. "r", "rb".
+ *
+ * @return resource
+ */
+function get_file_handle($path, $mode) {
+    if (is_using_external_filesystem()) {
+        $externalfilesystem = ArtefactTypeFileBase::get_external_filesystem_instance();
+        $handle = $externalfilesystem->get_file_handle($path, $mode);
+
+        if (!is_resource($handle) || get_resource_type($handle) != 'stream') {
+            $handle = false;
+        }
+    }
+    else {
+        $handle = fopen($path, $mode);
+    }
+
+    return $handle;
+}
 
 /**
  * Given a file path, guesses the mime type of the file using the
@@ -502,6 +528,14 @@ function get_dataroot_image_path($path, $id, $size=null) {
 
     // Work out the location of the original image
     $originalimage = $imagepath . '/originals/' . ($id % 256) . "/$id";
+
+    // We have to have an original image locally to be able to build preview,
+    // because image functions like getimagesize do not work with stream wrappers
+    // So if the original image is not readable, try to download it from an external system (if enabled).
+    if (!is_readable($originalimage) && is_using_external_filesystem()) {
+        $image = artefact_instance_from_id($id);
+        $image->ensure_local();
+    }
 
     // If the original has been deleted, then don't show any image, even a cached one.
     // delete_image only deletes the original, not any cached ones, so we have
@@ -958,4 +992,13 @@ function xml_filter_regex() {
     . '\x{B0000}-\x{BFFFD}\x{C0000}-\x{CFFFD}\x{D0000}-\x{DFFFD}\x{E0000}-\x{EFFFD}\x{F0000}-\x{FFFFD}\x{100000}-\x{10FFFD}'
     .']/u';
     return $regex;
+}
+
+/**
+ * Check if we are using external file system.
+ *
+ * @return bool
+ */
+function is_using_external_filesystem() {
+    return get_config('externalfilesystem', false);
 }

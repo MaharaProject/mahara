@@ -155,6 +155,7 @@ function zip_process_contents(&$zip, $foldercontent, $path) {
                 $files = array_merge($files, zip_process_directory($zip, $content->id, $path . $content->title . '/'));
             }
             else {
+                $item->ensure_local();
                 $files[] = array($item->get_path(), $path . $item->download_title());
             }
         }

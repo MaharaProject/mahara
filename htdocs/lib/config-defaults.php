@@ -740,3 +740,14 @@ $cfg->openbadgedisplayer_source = '{"backpack":"https://backpack.openbadges.org/
     "sp" : ["' . $cfg->dataroot . '/customattributemap/customname2oid.php"]
  }';
 */
+
+/**
+ * @global array $cfg->externalfilesystem
+ * A configuration data for an external file system
+ */
+/*
+ $cfg->externalfilesystem = '{
+    "includefilepath" : "module/objectfs/classes/s3_file_system.php",
+    "class" : "s3_file_system",
+ }';
+*/
