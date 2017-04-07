@@ -52,6 +52,31 @@ Scenario: Adding and deleting public comments
     Then I should not see "Comment by page owner"
     And I should not see "Comment removed"
 
+
+Scenario: Add comments block to page
+    Given I go to portfolio page "page1"
+    # The label for message text area - anonymous users
+    And I should see "Comment"
+    And I fill in "Name" with "Joe Anonymous"
+    # No TinyMCE editor for anonymous users
+    And I fill in "Comment" with "Public comment by anonymous user"
+    And I enable the switch "Make comment public"
+    And I press "Comment"
+    Given I log in as "pageowner" with password "password"
+    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I click on "page1" panel menu
+    And I click on "Edit" in "page1" panel menu
+    And I wait "1" seconds
+    # Add a comments block so that comments will now be at the top of the page
+    And I expand "General" node
+    And I wait "1" seconds
+    And I follow "Comments" in the "div#general" "css_element"
+    And I press "Add"
+    Then I should see "Comments for this page will be displayed here rather than at the bottom of the page."
+    And I display the page
+    Then I should see "Joe Anonymous"
+    And I should see "Public comment by anonymous user"
+
 Scenario: Comments update the page's mtime
     Given I log in as "admin" with password "Kupuhipa1"
 
