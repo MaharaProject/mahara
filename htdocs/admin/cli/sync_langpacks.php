@@ -151,6 +151,13 @@ foreach ($langpacks as $lang) {
             $cli->cli_print(get_string('cli_langpack_backup_done', 'admin', $lang));
         }
 
+        // We can't use dots in our filename as it confuses PharData as to what bit is an extension
+        $filenameclean = substr($filename, 0, stripos($filename, '.tar.gz'));
+        $filenameclean = str_replace('.', '_', $filenameclean) . '.tar.gz';
+
+        rename($tmpdir . '/' . $filename, $tmpdir . '/' . $filenameclean);
+        $filename = $filenameclean;
+
         // extract contents of langpack into langpacks dir
         $filenametmp = substr($filename, 0, stripos($filename, '.gz'));
         // Try to decompress the langpack file
