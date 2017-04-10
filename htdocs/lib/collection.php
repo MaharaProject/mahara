@@ -276,6 +276,7 @@ class Collection {
             $data->owner = $userid;
         }
         $data->framework = $colltemplate->get('framework');
+        $data->submittedstatus = 0;
 
         $collection = self::save($data);
 
