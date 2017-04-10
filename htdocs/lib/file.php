@@ -765,21 +765,26 @@ function rmdirr($dirname)
         return unlink($dirname);
     }
 
-    // Loop through the folder
-    $dir = dir($dirname);
-    while (false !== $entry = $dir->read()) {
-        // Skip pointers
-        if ($entry == '.' || $entry == '..') {
-            continue;
+    // Directory sanity check - because the results of function file_exists are cached
+    // we can end up here with the dir already deleted on load-balanced machines
+    if (is_dir($dirname) && is_readable($dirname)) {
+        // Loop through the folder
+        $dir = dir($dirname);
+        while (false !== $entry = $dir->read()) {
+            // Skip pointers
+            if ($entry == '.' || $entry == '..') {
+                continue;
+            }
+            // Recurse
+            rmdirr($dirname . '/' . $entry);
         }
-
-        // Recurse
-        rmdirr($dirname . '/' . $entry);
+        // Clean up
+        $dir->close();
+        return rmdir($dirname);
     }
-
-    // Clean up
-    $dir->close();
-    return rmdir($dirname);
+    else {
+        return false;
+    }
 }
 
 /**
