@@ -148,7 +148,11 @@
                                 <div class="dropdown-toggle collection-list list-{if $view.numviews lte 1}small{elseif $view.numviews lte 10}medium{else}large{/if}" title="{str tag='numviewsincollection' section='collection' arg1='$view.numviews'}" title="{str tag='numviewsincollection' section='collection' arg1='$view.numviews'}">
                                     {if $view.numviews > 0}
                                     <a href="#" data-toggle="dropdown" aria-expanded="false">
-                                        <span class="collnum">{$view.numviews}</span>
+                                        <span class="collnum">{if $view.framework}
+                                                                {$view.numviews + 1}
+                                                              {else}
+                                                                {$view.numviews}
+                                                              {/if}</span>
                                         <span class="collnum-arrow icon icon-chevron-down"></span>
                                         <span class="icon icon-file">{if $view.numviews > 1}<span class="icon-stack">{if $view.numviews > 10}<span class="icon-stack"></span>{/if}</span>{/if}</span>
                                     </a>
