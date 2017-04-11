@@ -5358,7 +5358,7 @@ class View {
                     }
                 }
             }
-            if ($gettags) {
+            if ($gettags && !empty($viewidlist)) {
                 $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
                 if ($tags) {
                     foreach ($tags as &$tag) {
