@@ -43,7 +43,9 @@ if (!$collection->has_framework()) {
         $smarty->assign('error', get_string('accessdeniednoframework', 'module.framework'));
         if ($collection->get('navigation')) {
             $views = $collection->get('views');
-            $smarty->assign('firstviewlink', get_string('firstviewlink', 'module.framework', $views['views'][0]->fullurl));
+            if ($views) {
+                $smarty->assign('firstviewlink', get_string('firstviewlink', 'module.framework', $views['views'][0]->fullurl));
+            }
         }
         $smarty->display('module:framework:noviewmatrix.tpl');
         exit;
