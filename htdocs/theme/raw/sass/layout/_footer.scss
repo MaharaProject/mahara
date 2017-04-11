@@ -25,4 +25,21 @@
             padding: 10px;
         }
     }
+    &.upgrade-footer {
+        .mahara-logo {
+            @media (min-width: $screen-sm-min) {
+                float: left;
+            }
+        }
+        .release-info {
+            margin: 10px 0;
+            @media (min-width: $screen-sm-min) {
+                float: right;
+            }
+        }
+    }
+}
+
+.mahara-footer-logo {
+    height: 37px;
 }

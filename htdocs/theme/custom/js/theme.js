@@ -202,7 +202,9 @@ jQuery(function($) {
         }
     }
 
-    // Checks background color of header
+    /*
+     * Check background color of header and returns boolean.
+     */
     function isDark(color) {
         var match = /rgb\((\d+).*?(\d+).*?(\d+)\)/.exec(color);
         return ( match[1] & 255 )
@@ -211,13 +213,24 @@ jQuery(function($) {
                 < 3 * 256 / 2;
     }
 
+    /*
+     * Display appropriate Mahara logo depending on the header background.
+     *
+     * Return if user uploaded custom logo as we assume that the colour
+     */
     function displayCorrectLogo() {
-        var headerBgColour = $('.navbar-default').css("background-color");
+        var headerBgColour = $('.navbar-default.navbar-main').css("background-color");
+        var headerLogo = $('.header .logo > img');
+
+        if (headerLogo.data('customlogo')) {
+            return;
+        }
+
         if (isDark(headerBgColour)) {
-            $('.logo img').attr('src', config.wwwroot + 'theme/raw/images/site-logo-light.png');
+            headerLogo.attr('src', config.wwwroot + 'theme/raw/images/site-logo-light.svg');
         }
         else {
-            $('.logo img').attr('src', config.wwwroot + 'theme/raw/images/site-logo-dark.png');
+            headerLogo.attr('src', config.wwwroot + 'theme/raw/images/site-logo-dark.svg');
         }
     }
 

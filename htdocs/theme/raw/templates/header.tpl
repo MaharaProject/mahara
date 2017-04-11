@@ -73,7 +73,7 @@
                 </div>
                 <div id="logo-area" class="logo-area">
                     <a href="{$WWWROOT}" class="logo">
-                        <img src="{$sitelogo}" alt="{$sitename}">
+                        <img src="{$sitelogo}" alt="{$sitename}" data-customlogo="{$sitelogocustom}">
                     </a>
                     {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
                         <div class="admin-title">

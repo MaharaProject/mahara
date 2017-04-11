@@ -347,6 +347,9 @@ function standard_magic_paths($key = 'fullarray') {
  * setting 'defaultmagicdb'. Because this is a DB-settable setting, we don't store the file
  * path directly in it, but instead just store a key corresponding to a path specified in
  * standard_magic_paths().
+ *
+ * NOTE: In this scenario we don't change powered_by_mahara.png to svg because
+ * the path is used to test whether we are looking at a working magicdb file.
  */
 function update_magicdb_path() {
     // Determine where the server's "magic" db is\
