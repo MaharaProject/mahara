@@ -129,11 +129,13 @@ if (!empty($invited)) {
             'name' => '_confirminvite_' . $i,
             'title' => get_string('youhavebeeninvitedtojoin', 'mahara',
                                   $institutions[$i]->displayname),
+            'class' => 'btn-default',
             'value' => get_string('joininstitution')
         );
         $elements[] = array(
             'type' => 'submit',
             'name' => '_declineinvite_' . $i,
+            'class' => 'btn-default',
             'value' => get_string('decline')
         );
         unset($institutions[$i]);
