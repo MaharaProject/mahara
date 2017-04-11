@@ -26,3 +26,5 @@ $string['usernameexists1'] = 'Username "%s" already exists.';
 $string['webserviceauthdisabled'] = 'Web service authentication is not enabled for this institution';
 $string['webserviceproviderenabled'] = 'Incoming web service requests allowed';
 $string['institutiondenied'] = 'Access to \'%s\' is denied. Please contact your institution administrator.';
+$string['notreadylabel'] = 'Not ready';
+$string['readylabel'] = 'Ready';
