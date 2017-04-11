@@ -601,6 +601,9 @@ EOF;
        $sitename = 'Mahara';
     }
     $smarty->assign('sitename', $sitename);
+
+    $sitelogocustom = (int) (get_field('institution', 'logo', 'name', 'mahara') || $THEME->headerlogo);
+    $smarty->assign('sitelogocustom', $sitelogocustom);
     $sitelogo = $THEME->header_logo();
     $sitelogo = append_version_number($sitelogo);
     $smarty->assign('sitelogo', $sitelogo);
@@ -963,11 +966,6 @@ class Theme {
     public $rightcolumnbgcolor  = '#fff';
 
     /**
-     * If the theme can use the svg image file format.
-     */
-    public $usesvg  = false;
-
-    /**
      * Initialises a theme object based on the theme 'hint' passed.
      *
      * If arg is a string, it's taken to be a theme name. If it's a user
@@ -1291,12 +1289,7 @@ class Theme {
     public function get_image_url($filename, $plugindirectory = '') {
 
         $loc = '';
-        $extensions = array('png', 'gif', 'jpg');
-
-        // Only use the svg image file format if the theme allow it.
-        if ($this->usesvg) {
-            array_unshift($extensions, 'svg');
-        }
+        $extensions = array('svg', 'png', 'gif', 'jpg');
 
         // Check for all images extension in the correct order.
         foreach ($extensions as $ext) {
