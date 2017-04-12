@@ -26,13 +26,20 @@
     .header.message-count-#{$i} {
         top: 33px * $i;
 
+        @media (max-width: $screen-sm-min - 1) {
+            top: 0;
+        }
+
         ~ .container {
             .toolbar-affix.affix {
                 margin-top: $i * 33px;
             }
         }
-        @media (max-width: $screen-sm-min - 1) {
-            top: 0;
+
+        + .main-content {
+            @media (min-width: $screen-sm-min) {
+                margin-top: $i * 33px;
+            }
         }
     }
 }
