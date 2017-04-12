@@ -16,3 +16,13 @@ body {
         }
     }
 }
+
+@for $i from 1 through 5 {
+    .header.message-count-#{$i} {
+        + .main-content {
+            @media (min-width: $screen-sm-min) {
+                margin-top: ($i * 33px) + 40px;
+            }
+        }
+    }
+}
