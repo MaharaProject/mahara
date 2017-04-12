@@ -220,5 +220,7 @@ if (isset($addfeedbackform)) {
 $smarty->assign('objectionform', $objectionform);
 $smarty->assign('notrudeform', $notrudeform);
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
+$smarty->assign('viewtitle', $view->get('title'));
+$smarty->assign('viewdisplaytitle', $view->display_title(true, true, $view->display_author()));
 
 $smarty->display('artefact/artefact.tpl');

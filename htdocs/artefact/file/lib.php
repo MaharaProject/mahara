@@ -1259,6 +1259,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     public function render_self($options) {
+        global $USER;
+
         require_once('license.php');
         $options['id'] = $this->get('id');
 
@@ -1272,10 +1274,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
 
         $smarty = smarty_core();
-       // $smarty->assign('iconpath', $this->get_icon($options));
+        // $smarty->assign('iconpath', $this->get_icon($options));
         $smarty->assign('downloadpath', $downloadpath);
         $smarty->assign('filetype', $filetype);
-        $smarty->assign('ownername', $this->display_owner());
+        if ($USER->is_logged_in()) {
+            $smarty->assign('ownername', $this->display_owner());
+        }
         $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
         $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
         $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
