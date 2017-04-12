@@ -29,7 +29,7 @@
         {if $file.description}
         <div class="file-description">
             <p class="text-small">
-                {$file.description|safe|add_http|clean_html}
+                {$file.description|safe|clean_html}
             </p>
         </div>
         <script type="application/javascript">
