@@ -124,19 +124,15 @@ $invited = get_column('usr_institution_request', 'institution', 'usr', $USER->id
 if (!empty($invited)) {
     $elements = array();
     foreach ($invited as $i) {
-        $elements[] = array(
-            'type' => 'submit',
-            'name' => '_confirminvite_' . $i,
+        $elements[$i] = array(
+            'type' => 'multisubmit',
+            'name' => 'invite_' . $i,
+            'options' => array('confirm', 'decline'),
+            'primarychoice' => 'confirm',
             'title' => get_string('youhavebeeninvitedtojoin', 'mahara',
                                   $institutions[$i]->displayname),
             'class' => 'btn-default',
-            'value' => get_string('joininstitution')
-        );
-        $elements[] = array(
-            'type' => 'submit',
-            'name' => '_declineinvite_' . $i,
-            'class' => 'btn-default',
-            'value' => get_string('decline')
+            'value' => array(get_string('joininstitution'), get_string('decline'))
         );
         unset($institutions[$i]);
     }
@@ -147,31 +143,32 @@ if (!empty($invited)) {
         'pluginname'  => 'account',
         'elements'    => $elements
     ));
-} else {
+}
+else {
     $invitedform = null;
 }
 
 function confirminvite_submit(Pieform $form, $values) {
     global $USER;
     foreach ($values as $k => $v) {
-        if (preg_match('/^\_confirminvite\_([a-z0-9]+)$/', $k, $m)) {
+        if (preg_match('/^invite\_([a-z0-9]+)$/', $k, $m)) {
             $institution = $m[1];
-            if (count_records('usr_institution_request', 'usr', $USER->id,
-                              'institution', $institution, 'confirmedinstitution', 1)) {
-                $USER->join_institution($institution);
+            if ($v == 'confirm') {
+                if (count_records('usr_institution_request', 'usr', $USER->id,
+                                  'institution', $institution, 'confirmedinstitution', 1)) {
+                    $USER->join_institution($institution);
+                    break;
+                }
+            }
+            else if ($v == 'decline') {
+                delete_records('usr_institution_request', 'usr', $USER->id,
+                               'institution', $institution, 'confirmedinstitution', 1);
                 break;
             }
-        }
-        if (preg_match('/^\_declineinvite\_([a-z0-9]+)$/', $k, $m)) {
-            $institution = $m[1];
-            delete_records('usr_institution_request', 'usr', $USER->id,
-                           'institution', $institution, 'confirmedinstitution', 1);
-            break;
         }
     }
     redirect(get_config('wwwroot') . 'account/institutions.php');
 }
-
 
 
 foreach ($institutions as $k => $i) {
