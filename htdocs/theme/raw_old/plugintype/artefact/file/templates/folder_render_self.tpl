@@ -50,7 +50,7 @@
                 {/if}
                 {if $child->description}
                 <p class="file-description text-small text-midtone">
-                    {$child->description|safe|add_http|clean_html}
+                    {$child->description|safe|clean_html}
                 </p>
                 <script type="application/javascript">
                 jQuery(".file-description a").addClass('inner-link');
