@@ -198,6 +198,16 @@ This button is used to show there are more options available. An example can be 
 </section>
 
 <section data-markdown data-category="navigation">
+### Main navigation
+The Mahara navigation is displayed in collapsible format with drop-down menus. The navigation is 
+split up into main navigation, administration navigation and user navigation each having their own 
+icons and drop-down menus.
+
+Please see <a class="follow" href="https://wiki.mahara.org/wiki/Customising/Themes/17.04">Mahara Wiki</a> for more
+details on navigation styles.
+</section>
+
+<section data-markdown data-category="navigation">
 ### Pagination
 The pagination has "Previous" and "Next" buttons.
 ```
@@ -653,7 +663,6 @@ This is a normal table, e.g. found in a forum.
                 <p class="postdetail">
                     Item 2
                 </p>
-                </span>
             </td>
             <td class="text-center">Item 3</td>
         </tr>
@@ -1741,8 +1750,9 @@ Used as icon for a system notification.
 
       });
 
-      // prevent example clicks going elsewhere
-      $j('[data-markdown] a').click(function(event) {
+      // prevent example clicks going elsewhere unless it is a link
+      // we do want a user to follow, eg help info
+      $j('[data-markdown] a:not(.follow)').click(function(event) {
           event.preventDefault();
       });
 
