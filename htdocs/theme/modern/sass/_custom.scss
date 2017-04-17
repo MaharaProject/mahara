@@ -1,13 +1,3 @@
-// Generic custom css (anything longer than a screen view should have its own component file)
-body {
-  &.admin {
-    h1 {
-      border-bottom: none;
-      margin-bottom: 10px;
-    }
-  }
-}
-
 .icon {
   &.text-danger,
   &.text-success,
