@@ -194,6 +194,41 @@ class ArtefactTypeBlog extends ArtefactType {
         return false;
     }
 
+    public function display_title($maxlen=null) {
+        global $USER;
+        $title = $this->get('title');
+        // Check if we are displaying title to anonymous user
+        // And the blog we are showing is the default one named
+        // after the user.
+        if (!$USER->is_logged_in()) {
+            $owner = new User;
+            $owner->find_by_id($this->get('owner'));
+            if (preg_match('/^' . preg_quote($owner->get('firstname') . ' ' . $owner->get('lastname') . '/'), $title)) {
+                $title = get_string('Blog', 'artefact.blog');
+            }
+        }
+        if ($maxlen) {
+            return str_shorten_text($title, $maxlen, true);
+        }
+        return $title;
+    }
+
+    public function display_postedby($date, $by) {
+        global $USER;
+
+        if (!is_numeric($date)) {
+            // convert any formatted dates back to time
+            $date = strtotime($date);
+        }
+
+        if ($USER->is_logged_in()) {
+            return get_string('postedbyon', 'artefact.blog', $by, format_date($date));
+        }
+        else {
+            return get_string('postedon', 'artefact.blog') . ' ' . format_date($date);
+        }
+    }
+
     /**
      * This function updates or inserts the artefact.  This involves putting
      * some data in the artefact table (handled by parent::commit()), and then
@@ -877,9 +912,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
             $smarty->assign('postid', $this->get('id'));
         }
-        $smarty->assign('postedbyon', get_string('postedbyon', 'artefact.blog',
-                                                 display_name($this->owner),
-                                                 format_date($this->ctime)));
+        $smarty->assign('postedbyon', ArtefactTypeBlog::display_postedby($this->ctime, display_name($this->owner)));
         if ($this->ctime != $this->mtime) {
             $smarty->assign('updatedon', get_string('updatedon', 'artefact.blog') . ' ' . format_date($this->mtime));
         }
@@ -951,6 +984,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param array
      */
     public static function get_posts($id, $limit, $offset, $viewoptions=null) {
+        global $USER;
 
         $results = array(
             'limit'  => $limit,
@@ -1025,7 +1059,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
             else {
                 $by = $post->author ? display_default_name($post->author) : $post->authorname;
-                $post->postedby = get_string('postedbyon', 'artefact.blog', $by, format_date($post->ctime));
+                $post->postedby = ArtefactTypeBlog::display_postedby($post->ctime, $by);
                 // Get comment counts
                 if (!empty($viewoptions['countcomments'])) {
                     safe_require('artefact', 'comment');
