@@ -449,6 +449,7 @@ $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
 $string['cannotremovedefaultemail'] = 'You cannot remove your primary email address.';
 $string['emailtoolong'] = 'Email addresses cannot be longer than 255 characters.';
+$string['emailinvalid'] = 'Email address invalid.';
 $string['mustspecifyoldpassword'] = 'You must specify your current password.';
 $string['Site'] = 'Site';
 $string['maildisabled'] = 'Email disabled';

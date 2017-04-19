@@ -475,6 +475,7 @@ $smarty = smarty(array(), array(), array(
     'mahara' => array(
         'cannotremovedefaultemail',
         'emailtoolong',
+        'emailinvalid',
         'tabs',
         'tab',
         'selected',
