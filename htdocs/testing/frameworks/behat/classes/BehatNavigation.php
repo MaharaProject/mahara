@@ -179,6 +179,15 @@ class BehatNavigation extends BehatBase {
     }
 
     /**
+     * Collapse the selected node that matches the text.
+     *
+     * @Given /^I collapse "(?P<element_string>(?:[^"]|\\")*)" node$/
+     */
+    public function i_collapse_node($element) {
+        $this->i_expand_node($element);
+    }
+
+    /**
      * Expands the selected node that matches the text which is located inside the second element.
      *
      * @Given /^I expand "(?P<element_string>(?:[^"]|\\")*)" node in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
