@@ -20,15 +20,18 @@
     var {{$name}}_newref = null;
 
     function {{$name}}_addedemail() {
-        jQuery("#{{$name}}_newrefinput").remove();
-        jQuery("#{{$name}}_newref").remove();
-        var newEmail = {{$name}}_newrefinput.value;
+        // Are jQuery objects here so can deal with them directly
+        var newEmail = {{$name}}_newrefinput.val();
+
         if (typeof(newEmail) == 'string' && newEmail.length > 0) {
             if (newEmail.length > 255) {
                 alert(get_string('emailtoolong'));
             }
+            else if (newEmail.indexOf("@") == -1 || newEmail.indexOf(".") == -1) {
+                alert(get_string('emailinvalid'));
+            }
             else {
-                var email = {{$name}}_newrefinput.value;
+                var email = newEmail;
                 jQuery('#{{$name}}_list').append(jQuery('<div>', {'class': 'unsent'}).append(
                     jQuery('<input>', {'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
                     ' ',
@@ -43,10 +46,12 @@
                     var form = jQuery(this).closest('form')[0];
                     formchangemanager.setFormState(form, FORM_CHANGED);
                 }
+                {{$name}}_newrefinput.remove();
+                {{$name}}_newref.remove();
+                {{$name}}_newrefinput = null;
+                {{$name}}_newref = null;
             }
         }
-        {{$name}}_newrefinput = null;
-        {{$name}}_newref = null;
     }
 
     function {{$name}}_new() {
@@ -77,14 +82,11 @@
     }
 
     function {{$name}}_remove(x) {
-        var div = x.parentNode;
+        var delbtn = jQuery(x);
+        var div = delbtn.closest('div');
+        var radio = div.find('[type=radio]');
 
-        var radio = filter(
-                function(elem) { return jQuery(elem).prop('type') === 'radio'; },
-                jQuery(div).find('input')
-        );
-
-        if (radio[0] && radio[0].checked) {
+        if (radio.length && radio.is(':checked')) {
             alert(get_string('cannotremovedefaultemail'));
             return;
         }
@@ -94,7 +96,7 @@
             formchangemanager.setFormState(form, FORM_CHANGED);
         }
 
-        jQuery(x.parentNode).remove();
+        div.remove();
     }
 </script>
 <div id="{{$name}}_list" class="{{$name}}-list email-list">
