@@ -1726,10 +1726,12 @@ class PublicKey {
         if ($this->credentials == false) {
             throw new CryptException(get_string('errornotvalidsslcertificate', 'auth'), 1);
             return false;
-        } elseif ($this->credentials['subject']['CN'] != $this->wwwroot) {
+        }
+        else if ($this->credentials['subject']['CN'] !== substr($this->wwwroot, 0, 64)) {
             throw new CryptException(get_string('errorcertificateinvalidwwwroot', 'auth', $this->credentials['subject']['CN'], $this->wwwroot), 1);
             return false;
-        } else {
+        }
+        else {
             return $this->credentials;
         }
     }
