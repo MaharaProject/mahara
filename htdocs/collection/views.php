@@ -41,9 +41,10 @@ if ($accesschanged = $SESSION->get('pageaccesschanged')) {
     $alertstr = get_string('viewsaddedtocollection1', 'collection', $SESSION->get('pagesadded')) . ' ' . $alertstr;
     $hassecreturl = $SESSION->get('hassecreturl');
     $alertstr .= ($hassecreturl) ? ' ' . get_string('viewaddedsecreturl', 'collection') : '';
+    $closestr = get_string('Close', 'mahara');
     $inlinejs = <<<EOF
 jQuery(function($) {
-    var message = $('<div id="changestatusline" class="alert alert-dismissible alert-warning" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p>$alertstr</p></div>');
+    var message = $('<div id="changestatusline" class="alert alert-dismissible alert-warning" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="$closestr"><span aria-hidden="true">&times;</span></button><p>$alertstr</p></div>');
     $('#messages').append(message);
 });
 EOF;
@@ -162,7 +163,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
         'elements' => $elements,
     ));
 }
-$noviewsavailable = get_string('noviewsavailable', 'collection');
+
 $smarty = smarty(array('jquery','js/jquery/jquery-ui/js/jquery-ui.min.js','js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'manage-collection-pages'));
 setpageicon($smarty, 'icon-folder-open');
 
