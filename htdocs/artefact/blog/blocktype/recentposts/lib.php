@@ -108,17 +108,22 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $USER;
 
         $result = '';
         $mostrecent = self::get_blog_posts_in_block($instance);
         if ($mostrecent) {
-            // format the dates
+            // format the dates and blog title
+            safe_require('artefact', 'blog');
             foreach ($mostrecent as &$data) {
                 $data->displaydate = format_date($data->ctime);
                 if ($data->ctime != $data->mtime) {
                     $data->updateddate = format_date($data->mtime);
                 }
+                $blog = new ArtefactTypeBlog($data->parent);
+                $data->parenttitle = $blog->display_title();
             }
+
             $smarty = smarty_core();
             $smarty->assign('mostrecent', $mostrecent);
             $smarty->assign('view', $instance->get('view'));
@@ -131,7 +136,6 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
 
                 $blogs = array();
                 if ($selectedblogs = get_records_sql_array('SELECT id, title FROM {artefact}'. $wherestm, $recentpostconfigdata['artefactids'])) {
-                    safe_require('artefact', 'blog');
                     foreach ($selectedblogs as $selectedblog) {
                         $blog = new ArtefactTypeBlog($selectedblog->id);
                         if (ArtefactTypeBlog::can_edit_blog($blog, $blog->get('institution'), $blog->get('group'))) {

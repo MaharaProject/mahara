@@ -213,8 +213,9 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             safe_require('artefact', 'comment');
             foreach ($results as $result) {
                 $dataobject["artefact"] = $result->parent;
-                $result->postedbyon = get_string('postedbyon', 'artefact.blog', display_default_name($result->owner), format_date(strtotime($result->ctime)));
                 $result->displaydate= format_date(strtotime($result->ctime));
+                $result->postedbyon = ArtefactTypeBlog::display_postedby($result->ctime, display_default_name($result->owner));
+
                 if ($result->ctime != $result->mtime) {
                     $result->updateddate= format_date(strtotime($result->mtime));
                 }
@@ -246,7 +247,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
 
             // check if the user viewing the page is the owner of the selected tag
             $owner = $results[0]->owner;
-            if ($USER->id != $owner) {
+            if ($USER->is_logged_in() && $USER->id != $owner) {
                 $viewownerdisplay = get_user_for_display($owner);
             }
             $smarty->assign('tagsin', $tagsin);
