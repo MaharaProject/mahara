@@ -95,10 +95,10 @@ $personalinformationform = pieform(array(
                         ? $personalinformation->get_composite('gender') : null),
                     'options' => array(
                         '' => get_string('gendernotspecified', 'artefact.resume'),
-                        'female' => get_string('female', 'artefact.resume'),
-                        'male'   => get_string('male', 'artefact.resume'),
+                        'female' => get_string('woman', 'artefact.resume'),
+                        'male'   => get_string('man', 'artefact.resume'),
                     ),
-                    'title' => get_string('gender', 'artefact.resume'),
+                    'title' => get_string('gender1', 'artefact.resume'),
                 ),
                 'maritalstatus' => array(
                     'type' => 'text',
