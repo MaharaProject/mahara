@@ -602,7 +602,10 @@ EOF;
     }
     $smarty->assign('sitename', $sitename);
 
-    $sitelogocustom = (int) (get_field('institution', 'logo', 'name', 'mahara') || $THEME->headerlogo);
+    $sitelogocustom = false;
+    if (get_config('installed')) {
+        $sitelogocustom = (int) (get_field('institution', 'logo', 'name', 'mahara') || $THEME->headerlogo);
+    }
     $smarty->assign('sitelogocustom', $sitelogocustom);
     $sitelogo = $THEME->header_logo();
     $sitelogo = append_version_number($sitelogo);
