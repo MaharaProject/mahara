@@ -926,6 +926,18 @@ class ArtefactTypeCountry extends ArtefactTypeProfileField {
         $countries = getoptions_country();
         return (isset($countries[$entry_content['title']]) ? $countries[$entry_content['title']] : '');
     }
+    /**
+     * Format value for display
+     */
+    function format_result($raw) {
+        return get_string("country.{$raw}");
+    }
+    /**
+     * Use custom template for display on User -> Search page
+     */
+    function usersearch_column_structure() {
+        return array('name' => 'country', 'sort' => true, 'template' => 'admin/users/searchcountrycolumn.tpl');
+    }
 }
 class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}
 class ArtefactTypeBusinessnumber extends ArtefactTypeProfileField {}
