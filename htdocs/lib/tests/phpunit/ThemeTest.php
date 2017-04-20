@@ -39,15 +39,13 @@ class ThemeTest extends MaharaUnitTest {
     public function test_get_image_url() {
 
         // Test the use of SVG image.
-        $this->theme->usesvg = true;
         $expectedsvg = $this->theme->get_url('images/site-logo.svg');
         $actualsvg = $this->theme->get_image_url('site-logo');
         $this->AssertEquals($expectedsvg, $actualsvg);
-        $this->theme->usesvg = false;
 
         // Test the use of PNG image.
-        $expectedpng = $this->theme->get_url('images/site-logo.png');
-        $actualpng = $this->theme->get_image_url('site-logo');
+        $expectedpng = $this->theme->get_url('images/no_userphoto.png');
+        $actualpng = $this->theme->get_image_url('no_userphoto');
         $this->AssertEquals($expectedpng, $actualpng);
 
         // Test the use of GIF image.
