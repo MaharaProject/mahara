@@ -25,7 +25,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     | Citizenship | NZ |
     | Visa status | Worker |
     And I set the following fields to these values:
-    | Female | 1 |
+    | Woman | 1 |
     And I fill in the following:
     | Marital status | It's complicated |
     # Saving the information

@@ -14,13 +14,13 @@
                 <FIELD NAME="gender" TYPE="char" LENGTH="6" ENUM="true" ENUMVALUES="'female', 'male'" NOTNULL="false"/>
                 <FIELD NAME="maritalstatus" TYPE="text" NOTNULL="false" />
             </FIELDS>
-            <KEYS> 
+            <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="artefact" />
                 <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
-            </KEYS>                                              
+            </KEYS>
         </TABLE>
-        <TABLE NAME="artefact_resume_employmenthistory"> 
-            <FIELDS> 
+        <TABLE NAME="artefact_resume_employmenthistory">
+            <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="startdate" TYPE="text" NOTNULL="true" />
@@ -36,8 +36,8 @@
                 <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="artefact_resume_educationhistory"> 
-            <FIELDS> 
+        <TABLE NAME="artefact_resume_educationhistory">
+            <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="startdate" TYPE="text" NOTNULL="true" />
