@@ -1,5 +1,8 @@
 // Core variables and mixins
+
+// Libraries (Please, do not amend content of these folders)
 @import "../lib/font-awesome/font-awesome";
+@import "../lib/select2/core";
 
 @import "mixins";
 @import "classes"; // Custom utility classes
@@ -91,7 +94,7 @@
 
 // Supporting sass for library code
 @import "../lib/meter.scss"; // progress bar (old/ported)
-@import "../lib/select2";
+@import "../lib/mahara-select2";
 @import "../lib/star";
 @import "../lib/tinymce";
 @import "../lib/draggable";

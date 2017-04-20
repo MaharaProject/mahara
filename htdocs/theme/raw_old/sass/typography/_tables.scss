@@ -1,5 +1,5 @@
 .table>thead>tr>th {
-    border-color: #ccc;
+    border-color: $table-border-color;
     &.active {
         background: lighten($table-bg-active, 3%);
     }

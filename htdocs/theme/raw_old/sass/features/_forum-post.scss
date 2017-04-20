@@ -19,7 +19,7 @@
 
 .forum-post-btns {
     a {
-        color: #333;
+        color: $theme-text-color;
         margin-left: 20px;
     }
 }
@@ -36,7 +36,7 @@
     .collapsible a {
         &:focus,
         &:hover {
-            background: #f9f9f9 !important;
+            background: darken($panel-default-heading-bg, 1%) !important;
         }
     }
 }
@@ -45,7 +45,7 @@
     margin-top: 0;
     font-style: italic;
     padding: 5px 10px;
-    color: #666;
-    background: #F4F4F4;
+    color: $theme-text-midtone-color;
+    background: $gray-lighter;
     border-radius: 5px;
 }

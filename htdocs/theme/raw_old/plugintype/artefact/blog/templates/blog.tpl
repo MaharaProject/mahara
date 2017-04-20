@@ -1,4 +1,7 @@
 <div class="blog">
+    {if $alldraftposts}
+        {str tag='alldraftposts' section='artefact.blog'}
+    {/if}
     {if ($editing && $canaddpost)}
         <a class="panel-footer" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}">
             <span class="icon icon-plus text-success left" role="presentation" aria-hidden="true"></span>

@@ -45,7 +45,6 @@
         @extend .icon-minus-circle;
         color: rgba($text-color, 0.4);
     }
-
 }
 .star-rating {
     &.star-rating-hover,
@@ -57,7 +56,7 @@
     &.star-rating-off {
         a {
             @extend .icon-star-o;
-             color: #bebebe;
+             color: $gray-light;
         }
     }
     &.heart-rating-hover,
@@ -69,7 +68,7 @@
     &.heart-rating-off {
         a {
             @extend .icon-heart-o;
-            color: #bebebe;
+            color: $gray-light;
         }
     }
     &.thumbs-up-rating-hover,
@@ -81,7 +80,7 @@
     &.thumbs-up-rating-off {
         a {
             @extend .icon-thumbs-o-up;
-            color: #bebebe;
+            color: $gray-light;
         }
     }
     &.check-circle-rating-hover,
@@ -93,7 +92,7 @@
     &.check-circle-rating-off {
         a {
             @extend .icon-check-circle-o;
-            color: #bebebe;
+            color: $gray-light;
         }
     }
 }
@@ -114,7 +113,7 @@
     padding: 10px 0 0 10px;
 }
 .ratingicon:hover {
-    color: #417005 !important;
+    color: $brand-success !important;
 }
 
 #pluginconfig_ratingexample_container > div,

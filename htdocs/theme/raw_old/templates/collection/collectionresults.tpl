@@ -1,14 +1,14 @@
         {foreach from=$collections item=collection}
-            <div class="list-group-item {cycle values='r0,r1'} {if $collection->submitinfo}list-group-item-warning{/if}">
+            <div class="list-group-item collection-item {if $collection->submitinfo}list-group-item-warning{/if}">
                 {if $collection->views[0]->view}
                    <a href="{if $collection->frameworkname}{$collection->fullurl}{else}{$collection->views[0]->fullurl}{/if}" class="outer-link"><span class="sr-only">{$collection->name}</span></a>
                 {/if}
                  <div class="row">
                     <div class="col-md-9">
 
-                        <h3 class="title list-group-item-heading" title="{str tag=emptycollection section=collection}">
+                        <h2 class="title list-group-item-heading" title="{str tag=emptycollection section=collection}">
                             {$collection->name}
-                        </h3>
+                        </h2>
                         <div class="detail">{$collection->description}</div>
 
                         <div class="detail">

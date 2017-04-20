@@ -9,13 +9,13 @@
         display:block;
         content:"";
         height:20px;
-        border-right:1px solid #ccc;
-        border-left:1px solid rgb(255, 255, 255);
+        border-right:1px solid $navbar-default-toggle-border-color;
+        border-left:1px solid #fff;
     }
 }
 
 .search-toggle {
-    color: rgb(119, 119, 119);
+    color: $navbar-default-toggle-icon-bar-bg;
     line-height: 13px;
     height: 34px;
     margin-right: 0;
@@ -49,13 +49,13 @@
             color: lighten($navbar-inverse-bg, 35%);
         }
         .icon {
-            color: #555;
+            color: $navbar-default-link-hover-color;
         }
     }
     .icon {
         transform: rotate(-180deg);
         transition-duration: 0.3s;
-        color: #aaa;
+        color: $navbar-default-link-color;
     }
     &.collapsed {
         background-color: transparent;

@@ -56,6 +56,17 @@
                 <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
             </a>
             {/if}
+            {if $institution}
+                {if $institution == 'mahara'}
+                    <a class="btn btn-default" href="{$WWWROOT}admin/site/views.php">
+                    {str tag=returntositepages section=view}
+                {else}
+                    <a class="btn btn-default" href="{$WWWROOT}view/institutionviews.php?institution={$institution}">
+                    {str tag=returntoinstitutionpages section=view}
+                {/if}
+                <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
+            </a>
+            {/if}
         </div>
 
     {elseif $block}

@@ -119,7 +119,7 @@
                         <span class="dull text-muted">{str tag=Submitted section=view}</span>
                     {elseif !$file->isparent}
                         {if !isset($file->can_edit) || $file->can_edit !== 0}
-                        <button name="{$prefix}_edit[{$file->id}]" class="btn btn-default btn-xs" title="{str tag=edit}">
+                        <button name="{$prefix}_edit[{$file->id}]" class="btn btn-default btn-xs editable" title="{str tag=edit}">
                             <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                             {if $file->artefacttype == 'folder'}
                                 <span class="sr-only">{str tag=editfolderspecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
