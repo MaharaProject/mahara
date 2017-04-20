@@ -64,7 +64,7 @@
             <input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1"/>
             <input type="hidden" name="MAX_FILE_SIZE" value="{$phpmaxfilesize}" />
             <div id="{$prefix}_upload_messages"></div>
-            <h3 class="title">{str tag='uploadfile' section='artefact.file'}</h3>
+            <h2 class="title">{str tag='uploadfile' section='artefact.file'}</h2>
 
             <div class="row">
                 {if $config.uploadagreement || $licenseform}
@@ -100,7 +100,7 @@
                         </label>
 
                         <span id="{$prefix}_userfile_container">
-                            <input type="file" class="file"  {$accepts|safe} id="{$prefix}_userfile" name="userfile[]" multiple size="20" />
+                            <input type="file" class="file"  {$accepts|safe} {if $capturedevice} capture="{$capturedevice}"{/if} id="{$prefix}_userfile" name="userfile[]" multiple size="20" />
                         </span>
 
                         <span id="{$prefix}_userfile_maxuploadsize" class="file-description">
@@ -108,7 +108,7 @@
                         </span>
 
                         {if $config.uploadagreement}
-                            <script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>
+                            <script>jQuery('#{$prefix}_userfile').prop('disabled', true);</script>
                         {/if}
                     </div>
 

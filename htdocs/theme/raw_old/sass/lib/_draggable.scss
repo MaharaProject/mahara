@@ -1,6 +1,6 @@
 .drag-default-button {
     @extend .btn-default; // Button like styling for drag element
-    background-color: #ffffff;
+    background-color: #fff;
     border-color: $list-group-border;
 }
 
@@ -19,7 +19,7 @@
 
     &:before {
         box-sizing: border-box;
-        color: #777;
+        color: $gray-light;
         opacity: 0.7;
         content: "";
         font-family: FontAwesome;
@@ -62,11 +62,11 @@
     float: left;
     margin-right: 10px;
     height: 100%;
-    color: rgba(#555, 0.4);
+    color: rgba($gray, 0.4);
 }
 
 .icon-drag-current {
-    border: 1px dashed #ccc;
+    border: 1px dashed darken($panel-default-border, 5%);
     min-width: 200px;
 }
 
@@ -85,7 +85,7 @@
 
 // Droppable area background indicator
 .block-drop-on {
-    background: darken($panel-default-heading-bg, 5%) ;
+    background: darken($panel-default-heading-bg, 5%);
 }
 
 .drag-handle,

@@ -32,7 +32,7 @@
     <input type="hidden" name="sesskey" value="{$USER->get('sesskey')}">
     </form>
 
-    <h3>{str tag="uploadprofileicon" section="artefact.file"}</h3>
+    <h2>{str tag="uploadprofileicon" section="artefact.file"}</h2>
     <p class="lead">
         {str tag="profileiconsiconsizenotice" section="artefact.file" args=$imagemaxdimensions}
     </p>

@@ -26,7 +26,7 @@
     color: $gray;
     .badge {
         border: 1px solid transparent;
-        color: #ffffff;
+        color: #fff;
         background-color: $gray;
     }
 }
@@ -36,19 +36,19 @@
 }
 .tag-filters {
     @extend .clearfix;
-    background-color: #f5f5f5;
+    background-color: darken($panel-default-heading-bg, 1%);
     padding: 10px 15px;
 }
 
 //Edit tag page
 .tag-action-description {
-        color: $gray-light;
-        font-style: italic;
-        font-size: $font-size-base - 1;
-        max-width: 90%;
-        display: block;
-        padding-top: 10px;
-        margin-top: 25px;
-        margin-left: 30px;
-        margin-bottom: 15px;
+    color: $theme-text-lighttone-color;
+    font-style: italic;
+    font-size: $font-size-base - 1;
+    max-width: 90%;
+    display: block;
+    padding-top: 10px;
+    margin-top: 25px;
+    margin-left: 30px;
+    margin-bottom: 15px;
 }

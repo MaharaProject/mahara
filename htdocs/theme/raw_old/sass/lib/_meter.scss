@@ -11,7 +11,7 @@
 }
 
 .meter-outline {
-    background: none repeat scroll 0 0 #fff;
+    background: none repeat scroll 0 0 $progress-bar-color;
     border: 1px solid;
     position: relative;
     padding: 20px;
@@ -23,31 +23,29 @@
 .meter-wrap {
     left: 25%;
     border: 1px solid;
-    background-color: #d4d4d4;
+    background-color: $progress-bg;
     top: 50%;
 }
 
 .meter-wrap, .meter-value, .meter-text {
-    /* The width and height of your image */
+    // The width and height of your image
     height: 30px;
 }
 
 .meter-wrap, .meter-value {
-    /* background: #bdbdbd url(/path/to/your-image.png) top left no-repeat; */
+    // background: #bdbdbd url(/path/to/your-image.png) top left no-repeat;
 }
 
 .meter-value {
-    background-color: #cff253;
+    background-color: $progress-bar-bg;
 }
 
 .meter-text {
     position: absolute;
     left:0;
-
     padding-top: 5px;
-
     text-align: center;
     width: 100%;
     font-weight: bold;
-    font-color: #000;
+    color: $text-color;
 }

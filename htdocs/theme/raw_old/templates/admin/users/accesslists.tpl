@@ -12,7 +12,7 @@
       {if !$user->views && !$user->collections}
       <tr class="{cycle values='r0,r1'}">
         <td><a href="{profile_url($user)}">{$user|display_name:null:true:true}</a></td>
-        <td colspan=3>{str tag=noviews section=view}</td>
+        <td colspan=3>{str tag=noviews1 section=view}</td>
       </tr>
       {else}
         {foreach from=$user->views item=item}

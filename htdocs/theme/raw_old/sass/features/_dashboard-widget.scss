@@ -33,7 +33,7 @@ $logged-in-height-mobile: 100px;
         p {
             margin: 0;
             font-size: $font-size-small;
-            color: #555;
+            color: $gray;
         }
         a {
             color: $link-color;
@@ -176,5 +176,5 @@ $logged-in-height-mobile: 100px;
 .dashboard-editable {
     margin-top: $grid-gutter-width;
     padding: ($grid-gutter-width - 10) 0;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid $btn-default-border;
 }

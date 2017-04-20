@@ -48,31 +48,48 @@
     </a>
     {/if}
 
-    {if $LOGGEDIN && !$userisowner}
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag="more..."}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
         <li>
-            <a id="toggle_watchlist_link" class="watchlist" href="">
-                {if $viewbeingwatched}
-                <span class="icon icon-eye-slash left" role="presentation" aria-hidden="true"></span>
-                {str tag=removefromwatchlist section=view}
-                {else}
-                <span class="icon icon-eye left" role="presentation" aria-hidden="true"></span>
-                {str tag=addtowatchlist section=view}
-                {/if}
+            <a title="{str tag=print section=view}" id="print_link" href="#" onclick="window.print(); return false;">
+                <span class="icon icon-print left" role="presentation" aria-hidden="true"></span>
+                {str tag=print section=view}
             </a>
         </li>
-        <li>
-            <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
-                <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
-                {str tag=reportobjectionablematerial}
-            </a>
-        </li>
+        {if $LOGGEDIN}
+            {if !$userisowner}
+            <li>
+                <a id="toggle_watchlist_link" class="watchlist" href="">
+                    {if $viewbeingwatched}
+                   <span class="icon icon-eye-slash left" role="presentation" aria-hidden="true"></span>
+                    {str tag=removefromwatchlist section=view}
+                    {else}
+                    <span class="icon icon-eye left" role="presentation" aria-hidden="true"></span>
+                    {str tag=addtowatchlist section=view}
+                   {/if}
+                </a>
+            </li>
+            <li>
+                <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
+                    <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                    {str tag=reportobjectionablematerial}
+                </a>
+            </li>
+            {/if}
+            {if $userisowner || $canremove}
+                <li>
+                  <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
+                      <span class="icon icon-lg icon-trash text-danger" role="presentation" aria-hidden="true"></span>
+                      <span class="sr-only">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
+                      {str tag=deletethisview section=view}
+                  </a>
+                </li>
+            {/if}
+        {/if}
     </ul>
-    {/if}
 </div>
 
 <div class="with-heading text-small">
