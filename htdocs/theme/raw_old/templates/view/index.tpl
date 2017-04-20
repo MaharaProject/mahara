@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-
+    {if !$noedit}
     <div class="btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
       <a id="addview-button" class="btn btn-default" href="{$WWWROOT}view/edit.php?new=1{$urlparamsstr}">
           <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
@@ -10,6 +10,7 @@
           {str section=mahara tag=copy}
       </a>
     </div>
+    {/if}
     {$searchform|safe}
 
     <div class="grouppageswrap view-container">
