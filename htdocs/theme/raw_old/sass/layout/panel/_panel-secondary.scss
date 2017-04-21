@@ -5,7 +5,7 @@
         @include box-shadow(none);
     }
     .admin & {
-        border-color: #ddd;
+        border-color: $panel-default-border;
     }
     > .panel-heading {
         font-family: $font-family-serif;

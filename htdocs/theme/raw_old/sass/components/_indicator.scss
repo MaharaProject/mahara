@@ -19,7 +19,7 @@
 
 //dash
 .collapse-indicator {
-    color: #aaa;
+    color: $navbar-default-link-color;
     font-size: 13px;
     display: block;
     transition-duration: 0.3s;
@@ -30,11 +30,11 @@
         font-size: 11px;
     }
     .collapsed & {
-        color: #aaa;
+        color: $navbar-default-link-color;
     }
     a:hover &,
     a:focus & {
-        color: #555;
+        color: $navbar-default-link-hover-color;
     }
     .collapsed ~ & {
         transform: rotate(180deg);
@@ -46,12 +46,12 @@
 a[data-toggle="collapse"] {
     &:hover .collapse-indicator,
     &:focus .collapse-indicator{
-        color: #555;
+        color: $navbar-default-link-hover-color;
     }
     .collapse-indicator {
         transform: rotate(-180deg);
         transition-duration: 0.3s;
-        color: #aaa;
+        color: $navbar-default-link-color;
         margin-top: 5px;
         line-height: 13px;
         height: auto;
@@ -79,13 +79,13 @@ a[data-toggle="collapse"] {
 [data-toggle="collapse"].outer-link {
     &.collapsed {
         ~ .collapse-indicator {
-            color: #aaa;
+            color: $navbar-default-link-color;
         }
     }
     &:hover,
     &:focus {
         ~ .collapse-indicator {
-            color: #555;
+            color: $navbar-default-link-hover-color;
         }
     }
 }

@@ -20,7 +20,7 @@
                 color: darken($link-color, 5%);
                 border: 1px solid transparent;
                 border-bottom: 3px solid $nav-tabs-link-hover-border-color;
-                background: #f9f9f9;
+                background: lighten($gray-lighter, 3%);
             }
         }
     }

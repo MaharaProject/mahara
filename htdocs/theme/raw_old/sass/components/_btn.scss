@@ -71,12 +71,12 @@
             display: inline-block;
         }
         &:hover {
-            color: #222;
+            color: $gray-darker;
             background: $gray-lighter;
             text-decoration: none;
 
             .icon {
-                color: #777;
+                color: $gray-light;
             }
         }
     }
@@ -201,9 +201,9 @@ td.action-list-copy {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         border-top: 0;
-        background: rgba(#ccc, 0.8);
+        background: lighten($btn-default-bg, 0.8);
         &:hover {
-            background: rgba(#ddd, 1);
+            background: rgba($btn-default-bg, 1);
         }
     }
 }
@@ -269,14 +269,14 @@ td.action-list-copy {
             }
             &.last {
                 border-bottom-radius: 3px;
-                background-color: #F9F9F9
+                background-color: $btn-default-bg;
             }
         }
         // To override btn-primary colour
         .btn-primary {
             color: $gray-dark;
             background: darken($brand-default, 10%);
-            border-color: #adadad;
+            border-color: $btn-default-border;
         }
     }
     label {

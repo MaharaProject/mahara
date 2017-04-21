@@ -20,7 +20,7 @@
 }
 
 .form-group {
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid $list-group-border;
     margin: 0;
     padding: 20px 0;
     position: relative;
@@ -32,7 +32,7 @@
             padding-bottom: 0;
         }
         &.input-pair ~ .input-pair {
-            border-left: 1px solid #eaeaea;
+            border-left: 1px solid $list-group-border;
             padding-left: 20px;
             margin-left: 15px;
             padding-top: 0;
@@ -308,7 +308,7 @@
             margin: 0;
         }
         &.htmldescription {
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid $list-group-border;
         }
     }
     &.double {
@@ -431,7 +431,7 @@
     }
 
     .modal .fieldset & {
-        border-bottom: 1px solid #f0f0f0;;
+        border-bottom: 1px solid $list-group-border;;
     }
 
     &.wysiwyg {
@@ -548,7 +548,7 @@
     }
 
     &.top-line {
-        border-top: 1px solid #f0f0f0;
+        border-top: 1px solid $list-group-border;
     }
 
     input[type=text].secondary-textbox {
@@ -565,16 +565,16 @@
 
 // Style placeholder text
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color: #777 !important;
+    color: $gray-light !important;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color: #777 !important;
+   color: $gray-light !important;
    opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color: #777 !important;
+   color: $gray-light !important;
    opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color: #777 !important;
+   color: $gray-light !important;
 }

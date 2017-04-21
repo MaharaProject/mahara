@@ -7,8 +7,7 @@
         min-width: 20px;
         max-width: 100%;
         &.input-short {
-            //width: 100px;
-            max-width: 170px;
+            max-width: 200px;
             .select2 {
                 width: auto !important; // js is doing some weird calculations and getting the width wrong. Override inline js
                 min-width:150px;

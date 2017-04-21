@@ -1,0 +1,123 @@
+// Mahara specific select2 styles
+// overriding select2 default styles which is included in _index.scss
+
+.select2 {
+    min-width: 200px;
+}
+
+.select2.select2-container .select2-selection {
+    min-height: $input-height-base; // make select2 look more like a regular select
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    color: $input-color;
+    &.select2-selection--multiple {
+        &:after {
+            content: "\f002";
+            color: lighten($text-color, 50%);
+            font-family: FontAwesome;
+            font-size: 1em;
+            display:inline-block;
+            position:absolute;
+            right: 12px;
+            top: 7px;
+        }
+    }
+}
+
+.select2.select2-container--default .select2-selection--single .select2-selection__rendered,
+.select2.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    line-height: 34px;
+}
+
+.form-group .select2-container .select2-selection .select2-search input[type=search] {
+    width: 100% !important;
+}
+
+.select2-container--default {
+    .select2-selection--multiple {
+        border: 1px solid $input-border;
+        border-radius: $border-radius-base;
+
+        &:focus {
+            border: 1px solid $input-border-focus;
+        }
+
+        .select2-selection__choice {
+            color: $text-color;
+            border-radius: $border-radius-base;
+            background-color: $brand-default;
+        }
+
+        .select2-selection__choice__remove {
+            color: $theme-text-midtone-color;
+            background-color: transparent;
+            border: none;
+            padding: 0 3px;
+            &:hover {
+                color: $theme-text-color;
+            }
+        }
+
+        .select2-selection__choice__readonly {
+            display: none;
+        }
+    }
+
+    &.select2-container--focus .select2-selection--multiple {
+        border: 1px solid $input-border;
+    }
+
+    .select2-dropdown {
+        border-color: $input-border;
+
+        .select2-search {
+            position: relative;
+            &:after {
+                content: "\f002";
+                color: lighten($text-color, 50%);
+                font-family: FontAwesome;
+                font-size: 1em;
+                display:inline-block;
+                position:absolute;
+                right: 12px;
+                top: 8px;
+            }
+        }
+
+        .select2-results__option--highlighted[aria-selected] {
+            background-color: $btn-success-bg;
+            color: $btn-success-color;
+        }
+    }
+}
+
+// Styles for select2 in forms
+// overriding select2 default styles
+.select2-container-multi {
+    max-width: 85% !important;
+    display: inline-block;
+    @media (min-width: $screen-sm-min) {
+        width: 420px !important;
+    }
+    @media (min-width: $screen-lg-min) {
+        width: 500px !important;
+    }
+    &.select2-dropdown-open {
+        .select2-choices {
+            border-radius: 4px 4px 0 0;
+        }
+    }
+    .select2-choices {
+        @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075) inset);
+        border-radius: 4px;
+        background-image: none;
+        width: 100%;
+        .select2-search-choice {
+            border: none;
+        }
+    }
+}
+
+.select2-container.select2-container--default.select2-container--open {
+    z-index: 2001;
+}

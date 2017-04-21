@@ -50,12 +50,12 @@
 .layoutthumb {
     rect.layout1 {
         fill: darken($panel-default-heading-bg, 10%);
-        stroke: #ccc;
+        stroke: $panel-default-border;
     }
 
     rect.layout0 {
         fill: darken($panel-default-heading-bg, 15%);
-        stroke: #ccc;
+        stroke: $panel-default-border;
     }
 
     svg {
@@ -204,10 +204,6 @@
   }
 }
 
-.form-group .select2-container .select2-selection .select2-search input[type=search] {
-    width: 100% !important;
-}
-
 .progress-bar {
     position: relative;
     &.small-progress span {
@@ -310,7 +306,6 @@
 // Editgroup membership modal
 // see editgroupmemship.tpl
 .editgroup-container {
-    border-bottom: 1px solid #f9f9f9;
     padding-bottom: 20px;
     margin-bottom: 20px;
     &:last-child {
@@ -343,7 +338,7 @@
         position: relative;
         top: -3px;
         margin-left: 3px;
-        color: #888;
+        color: $gray-light;
     }
     .asc > a::after {
         content: '\f0dd';
@@ -356,7 +351,7 @@
 }
 
 .containobjectionable {
-    background-color: #FEE7E7;
+    background-color: $state-danger-bg;
 }
 
 .permissions-table {
@@ -408,7 +403,7 @@
 // Remove the link colour from a comment that has an attachement
 @media (min-width: 992px) {
     .viewfooter .comment-item .comment-attachment .panel.collapsible h4 a.collapsed {
-        color: #333;
+        color: $text-color;
     }
 }
 
@@ -451,6 +446,14 @@
     width: 90%;
 }
 
+.authInstance .authitem {
+    padding:5px;
+    &.inactive {
+        background: $state-warning-bg;
+        color: $state-warning-text;
+    }
+}
+
 .btn-search.btn.btn-primary.admin-groups.button.btn {
     margin-left: -13px;
     margin-top: 2px;
@@ -472,6 +475,13 @@
     @media (min-width: $screen-lg-min) {
         margin-left: 100px;
     }
+}
+
+// fix responsive layout for pages and collections grid where sidebar overlaps
+.grouppageswrap.view-container:after {
+  clear: both;
+  content: "";
+  display: table;
 }
 
 .notification-parent .bulk-actions label.btn-default {

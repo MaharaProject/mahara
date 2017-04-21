@@ -10,10 +10,10 @@
 }
 
 .mce-panel.mce-tinymce {
-    background: #F9F9F9;
+    background: $panel-default-heading-bg;
     border: 0;
     .mce-panel {
-        background: #F9F9F9;
+        background: $panel-default-heading-bg;
     }
 
     .mce-statusbar.mce-container{

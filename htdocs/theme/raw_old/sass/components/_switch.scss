@@ -30,7 +30,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
             &:focus {
                 + .switch-label {
                    @include tab-focus;
-                   outline-color: #66afe9;
+                   outline-color: $brand-info;
                    .switch-inner:before,
                    .switch-inner:after {
                         background-color: darken($brand-default, 5%);

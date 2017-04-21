@@ -26,16 +26,16 @@
                 font-size: 1.2em;
                 cursor: pointer;
                 &.begun {
-                    color: #5b9aa9;
+                    color: $assessment-begun-color;
                 }
                 &.incomplete {
-                    color: $brand-danger;
+                    color: $assessment-incomplete-color;
                 }
                 &.partial {
-                    color: $brand-warning;
+                    color: $assessment-partial-color;
                 }
                 &.completed {
-                    color: $brand-success;
+                    color: $assessment-completed-color;
                 }
                 &.dot {
                     font-size: 0.8em;
@@ -126,20 +126,20 @@
     }
 }
 .assessment {
-    color: #333;
+    color: $gray-dark;
 
     .assessmentfeedback {
         &.begun {
-            color: #5b9aa9;
+            color: $assessment-begun-color;
         }
         &.incomplete {
-            color: $brand-danger;
+            color: $assessment-incomplete-color;
         }
         &.partial {
-            color: $brand-warning;
+            color: $assessment-partial-color;
         }
         &.completed {
-            color: $brand-success;
+            color: $assessment-completed-color;
         }
     }
 }
