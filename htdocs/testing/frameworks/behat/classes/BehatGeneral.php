@@ -434,7 +434,7 @@ class BehatGeneral extends BehatBase {
         $rownode = $this->find('xpath', $xpath, $exception);
 
         // Click on the elipsis button for the panel
-        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.elipsis-right button')[0].click();";
+        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.page-controls .moremenu')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
@@ -455,7 +455,7 @@ class BehatGeneral extends BehatBase {
         $rownode = $this->find('xpath', $xpath, $exception);
 
         // Click on the collection box for the panel
-        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.collnum')[0].click();";
+        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.collection-list')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
@@ -477,7 +477,7 @@ class BehatGeneral extends BehatBase {
         $rownode = $this->find('xpath', $xpath, $exception);
 
         // Click on the elipsis button for the panel
-        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.elipsis-right a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
+        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.page-controls a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
