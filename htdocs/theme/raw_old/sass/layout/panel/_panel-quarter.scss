@@ -1,0 +1,192 @@
+// Styles for the new page/collection layout
+
+.panel-collection,
+.panel-view {
+    width: 50%;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 30px;
+    height: 200px;
+    @media (min-width: $screen-sm-min) {
+        width: 25%;
+    }
+
+    .site-template {
+        background: repeating-linear-gradient(
+            -45deg,
+            #f1f1f1,
+            #f1f1f1 10px,
+            #f9f9f9 10px,
+            #f9f9f9 20px
+            ) !important;
+    }
+
+    .panel-default {
+        position: relative;
+        height: 100%;
+        border: 1px solid $panel-default-border;
+        box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    }
+
+    .panel-heading {
+        background-color: transparent;
+        border-bottom-color: transparent;
+        .title-link {
+            padding: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: $font-family-serif;
+        }
+    }
+
+    .panel-body {
+        padding: 5px;
+    }
+
+    .panel-footer {
+        width: 100%;
+        padding: 0;
+        border-top: 0;
+        position: absolute;
+        bottom: 0;
+
+        .dropdown-toggle {
+            min-width: 35px;
+            min-width: 40px;
+            text-decoration: none;
+            color: $text-color;
+            .open-indicator {
+                display: none;
+            }
+            &[aria-expanded="true"] {
+                .open-indicator {
+                    display: inline-block;
+                }
+                .page-count,
+                .icon-stack,
+                .close-indicator {
+                    display: none;
+                }
+            }
+        }
+
+        .dropdown-menu {
+            top: 100%;
+            width: 200%; // to allow it to expand to almost 2 panel blocks wide
+            max-height: 200px;
+            overflow: auto;
+            padding: 0;
+            margin: 0;
+            min-width: auto;
+            a {
+                white-space: normal;
+                background-color: $dropdown-bg;
+                padding: 5px;
+
+                &:hover {
+                    background-color: $dropdown-link-hover-bg;
+                }
+            }
+            .icon {
+                position: absolute;
+                padding-top: 5px;
+            }
+            .link-text {
+                display: inline-block;
+                padding-left: 20px;
+                position: relative;
+            }
+            .seperator {
+                border-bottom: 1px solid $dropdown-border;
+            }
+        }
+    }
+
+    .page-controls {
+        float: right;
+        .dropdown-menu {
+            width: auto;
+            max-height: none;
+            > li > a {
+                padding: 5px 10px;
+            }
+            .view-details {
+                padding: 5px 10px;
+                font-size: $font-size-small;
+                border-top: 1px solid $dropdown-border;
+            }
+        }
+    }
+    .page-access {
+        float: left;
+    }
+    .collection-list {
+        float: right;
+
+        .dropdown-toggle {
+            position: relative;
+        }
+        .icon-file {
+            position: relative;
+        }
+        .collection-indicator {
+            position: absolute;
+            border-right: 1px solid $text-color;
+            border-bottom: 1px solid $text-color;
+            width: 12px;
+            height: 12px;
+
+            &.few {
+                top: 4px;
+                left: 2px;
+            }
+
+            &.many {
+                top: 6px;
+                left: 4px;
+            }
+        }
+    }
+
+    .panel-warning {
+        background-color: $state-warning-bg;
+        color: $state-warning-text;
+        border-color: $state-warning-border;
+    }
+}
+
+.panel-collection {
+    position: relative;
+    .collection-stack.panel-warning {
+        &:before,
+        &:after {
+            background-color: $state-warning-bg;
+        }
+    }
+    .collection-stack {
+        &:before,
+        &:after {
+            content: "";
+            display: block;
+            height: 200px;
+            width: calc(100% - 30px);
+            margin: 15px;
+            position: absolute;
+            border-radius: $panel-border-radius;
+            border: 1px solid $panel-default-border;
+        }
+        &:before {
+            top: -13px;
+            left: 3px;
+            z-index: -1;
+        }
+        &:after {
+            top: -11px;
+            left: 6px;
+            z-index: -2;
+            box-shadow: 4px 4px 3px rgba(0,0,0,.25);
+        }
+    }
+}

@@ -16,7 +16,7 @@
     <div class="grouppageswrap view-container">
 
             {if $views}
-                <div id="myviews" class="list-group">
+                <div id="myviews" class="row">
                 {$viewresults|safe}
                 </div>
             {else}

@@ -10,20 +10,3 @@
         margin-left:0;
     }
 }
-
-.panel-quarter {
-    width: 22%;
-    float: left;
-    margin-left: 4%;
-    height: 200px;
-    &.firstquarter {
-        margin-left:0;
-    }
-    @media (max-width: $screen-sm-min) {
-        width: 48%;
-        margin-left: 4%;
-        &.firsthalf {
-            margin-left:0;
-        }
-    }
-}
