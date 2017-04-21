@@ -3605,7 +3605,23 @@ class View {
         return self::can_remove_viewtype($this->type);
     }
 
-    public static function get_myviews_data($limit=12, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null) {
+    /**
+     * Given a query text and fields where to search in,
+     * returns the list of views owned by the user (group or institution) matching those parameters.
+     *
+     * @param int $limit Sets the LIMIT value in sql query
+     * @param int $offset Sets the OFFSET value in sql query
+     * @param string $query Text to search for
+     * @param string $tag Text to search for in the tags. Not used anymore, we use $query instead
+     * @param int $groupid Contains the group, if searching in group pages ans collections
+     * @param string $institution Contains the institution, if searching in institution pages and collections
+     * @param string $searchin Fields to search in
+     *        values: tagsonly, titleanddescription, titleanddescriptionandtags
+     * @param string $orderby Sets the order of the results
+     *        values: latestcreated, latestmodified, latestviewed, mostvisited, mostcomments
+     * @return object containing views matching the query and their count
+     */
+    public static function get_myviews_data($limit=12, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null, $searchin=null) {
         global $USER;
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
 
@@ -3614,8 +3630,9 @@ class View {
             v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS collid';
         $collselect = '
             UNION
-            SELECT v.id, v.id AS vid, v.title, c.name AS vtitle, c.description, v.type, c.ctime as vctime, c.mtime as vmtime, v.atime as vatime,
-            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits,
+            SELECT (SELECT view FROM {collection_view} cvid WHERE cvid.collection = c.id AND displayorder = 0) as id,
+            null AS vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
+            c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null AS vvisits,
                    (SELECT COUNT(*) FROM {collection_view} cv WHERE cv.collection = c.id) AS numviews, c.id AS collid';
         $emptycollselect = '
             UNION
@@ -3637,7 +3654,7 @@ class View {
         $collwhere = '
             WHERE cv.collection IS NOT NULL AND v.' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution)) . '
             AND v.id IN (
-              SELECT view FROM {collection_view} WHERE collection = c.id AND displayorder = 0
+              SELECT view FROM {collection_view} WHERE collection = c.id
             )';
         $emptycollwhere = '
             WHERE c.' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution)) . '
@@ -3674,7 +3691,7 @@ class View {
                     $from .= $mcfromstr;
                     $collfrom .= $mcfromstr;
                     $groupby = ' GROUP BY v.id';
-                    $collgroupby = ' GROUP BY v.id, c.id';
+                    $collgroupby = ' GROUP BY c.id';
                     $emptycollgroupby = ' GROUP BY c.id';
                     $order = 'commentcount DESC,';
                     break;
@@ -3688,37 +3705,62 @@ class View {
 
         $values = $collvalues = $emptycollvalues = array();
 
-        if ($tag) { // Filter by the tag
-            $tagstr = "
-                INNER JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
-            $colltagstr = "
-                INNER JOIN {collection_tag} ct ON (ct.collection = c.id AND ct.tag = ?)";
-            $from .= $tagstr;
-            $collfrom .= $tagstr . $colltagstr;
-            $emptycollfrom .= $colltagstr;
-            $values[] = $tag;
-            array_push($collvalues, $tag, $tag);
-            $emptycollvalues[] = $tag;
-        }
-        else if ($query != '') { // Include matches on the title, description or tag
-            $tagstr = "
-                LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
-            $colltagstr = "
-                LEFT JOIN {collection_tag} ct ON (ct.collection = c.id AND ct.tag = ?)";
-            $from .= $tagstr;
-            $collfrom .= $tagstr . $colltagstr;
-            $emptycollfrom .= $colltagstr;
-            $like = db_ilike();
-            $tagwhere = "
-                AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' OR vt.tag = ?)";
-            $colltagwhere = "
-                AND (c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%' OR ct.tag = ?)";
-            $where .= $tagwhere;
-            $collwhere .= $tagwhere . $colltagwhere;
-            $emptycollwhere .= $colltagwhere;
-            array_push($values, $query, $query, $query, $query);
-            array_push($collvalues, $query, $query, $query, $query,$query, $query, $query, $query);
-            array_push($collvalues, $query, $query, $query, $query);
+        if (!empty($searchin) && $query != '') {
+            switch($searchin) {
+                case 'tagsonly':
+                    $tagstr = "
+                        LEFT JOIN {view_tag} vt ON (vt.view = v.id)";
+                    $colltagstr = "
+                        LEFT JOIN {collection_tag} ct ON (ct.collection = c.id)";
+                    $from .= $tagstr;
+                    $collfrom .= $tagstr . $colltagstr;
+                    $emptycollfrom .= $colltagstr;
+                    $values[] = $query;
+
+                    $tagwhere = "vt.tag = ?";
+                    $colltagwhere = "ct.tag = ?";
+                    $where .= "
+                        AND " . $tagwhere;
+                    $collwhere .= "
+                        AND (" . $tagwhere . " OR " . $colltagwhere . ")";
+                    $emptycollwhere .= "
+                        AND " . $colltagwhere;
+                    array_push($collvalues, $query, $query);
+                    $emptycollvalues[] = $query;
+                    break;
+                case 'titleanddescription':
+                    // Include matches on the title or description
+                    $like = db_ilike();
+                    $tagwhere = "
+                        (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%')";
+                    $colltagwhere = "
+                        (c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%')";
+                    $where .= ' AND ' . $tagwhere;
+                    $collwhere .= ' AND (' . $tagwhere .' OR '. $colltagwhere . ')';
+                    $emptycollwhere .= ' AND ' . $colltagwhere;
+                    array_push($collvalues, $query, $query,$query, $query, $query, $query, $query, $query);
+                    break;
+                case 'titleanddescriptionandtags':
+                    // Include matches on the title, description or tag
+                    $tagstr = "
+                        LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
+                    $colltagstr = "
+                        LEFT JOIN {collection_tag} ct ON (ct.collection = c.id AND ct.tag = ?)";
+                    $from .= $tagstr;
+                    $collfrom .= $tagstr . $colltagstr;
+                    $emptycollfrom .= $colltagstr;
+                    $like = db_ilike();
+                    $tagwhere = "
+                        (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' OR vt.tag = ?)";
+                    $colltagwhere = "
+                        (c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%' OR ct.tag = ?)";
+                    $where .= ' AND ' . $tagwhere;
+                    $collwhere .= ' AND (' . $tagwhere . ' OR ' . $colltagwhere . ')';
+                    $emptycollwhere .= ' AND ' . $colltagwhere;
+                    array_push($values, $query, $query, $query, $query);
+                    array_push($collvalues, $query, $query, $query, $query,$query, $query, $query, $query);
+                    array_push($collvalues, $query, $query, $query, $query);
+            }
         }
 
         if ($groupid && group_user_access($groupid) != 'admin') {
@@ -3727,23 +3769,21 @@ class View {
             $collwhere .= $groupstr;
         }
         if ($userid) {
-            $selectstr = ',v.submittedtime, v.submittedstatus,
+            $select .= ',v.submittedtime, v.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
                 h.wwwroot AS submithostwwwroot, h.name AS submithostname';
-            $select .= $selectstr;
-            $collselect .= $selectstr;
-            $emptycollselect .= ', c.submittedtime, c.submittedstatus,
+            $selectstr = ', c.submittedtime, c.submittedstatus,
                 NULL AS submitgroupid, NULL AS submitgroupname, NULL AS submitgroupurlid,
                 NULL AS submithostwwwroot, NULL AS submithostname';
+            $collselect .= $selectstr;
+            $emptycollselect .= $selectstr;
             $fromstr = '
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)';
             $from .= $fromstr;
-            $collfrom .= $fromstr;
 
             if (!empty($groupby)) {
                 $groupby .= ', g.id, h.wwwroot';
-                $collgroupby .= ', g.id, h.wwwroot';
             }
             $sort = '
                 ORDER BY ' . $order . ' vtitle, vid';
@@ -3757,10 +3797,10 @@ class View {
             $count = get_records_sql_array('SELECT SUM(count) AS count FROM (
                                                 SELECT COUNT(*) AS count FROM (
                                                     SELECT COUNT(v.id) ' . $from . $where . $groupby . ') t1
-                                                UNION
+                                                UNION ALL
                                                 SELECT COUNT(*) AS count FROM (
-                                                    SELECT COUNT(v.id) ' . $collfrom . $collwhere . $collgroupby . ') t2
-                                                UNION
+                                                    SELECT COUNT(c.id) ' . $collfrom . $collwhere . $collgroupby . ') t2
+                                                UNION ALL
                                                 SELECT COUNT(*) AS count FROM (
                                                     SELECT COUNT(c.id) ' . $emptycollfrom . $emptycollwhere . $emptycollgroupby . ') t3
                                             ) t4', $values);
@@ -3772,11 +3812,15 @@ class View {
         else {
             $count = get_records_sql_array('SELECT SUM(t.numresults) AS count FROM (
                                                 SELECT COUNT(v.id) AS numresults ' . $from . $where . '
-                                                UNION
-                                                SELECT COUNT(v.id) AS numresults ' . $collfrom . $collwhere . '
-                                                UNION
+                                                UNION ALL
+                                                SELECT COUNT(id) AS numresults FROM (
+                                                  SELECT DISTINCT c.id ' . $collfrom . $collwhere . ') t1
+                                                UNION ALL
                                                 SELECT COUNT(c.id) AS numresults ' . $emptycollfrom . $emptycollwhere . ') t', $values);
-            $viewdata = get_records_sql_array($select . $from . $where . $collselect . $collfrom . $collwhere . $emptycollselect . $emptycollfrom . $emptycollwhere . $groupby . $sort, $values, $offset, $limit);
+            $viewdata = get_records_sql_array($select . $from . $where .
+                                              $collselect . $collfrom . $collwhere .
+                                              $emptycollselect . $emptycollfrom . $emptycollwhere . $groupby .
+                                              $sort, $values, $offset, $limit);
         }
         $count = $count[0]->count;
 
@@ -3876,14 +3920,14 @@ class View {
         );
     }
 
-    public static function get_myviews_url($group=null, $institution=null, $query=null, $tag=null, $orderby=null) {
+    public static function get_myviews_url($group=null, $institution=null, $query=null, $searchin=null, $orderby=null) {
         $queryparams = array();
 
-        if (!empty($tag)) {
-            $queryparams[] = 'tag=' . urlencode($tag);
-        }
-        else if ($query != '') {
+        if ($query != '') {
             $queryparams[] =  'query=' . urlencode($query);
+        }
+        if (!empty($searchin)) {
+            $queryparams[] = 'searchin=' . urldecode($searchin);
         }
         if (!empty($orderby)) {
             $queryparams[] = 'orderby=' . urlencode($orderby);
@@ -3927,8 +3971,13 @@ class View {
             set_account_preference($USER->get('id'), 'orderpagesby', $orderby);
         }
 
+        $usersettingsearchin = get_account_preference($USER->get('id'), 'searchinfields');
+        $searchin = param_variable('searchin', $usersettingsearchin);
+        if ($usersettingsearchin !== $searchin) {
+            set_account_preference($USER->get('id'), 'searchinfields', $searchin);
+        }
+
         $query  = param_variable('query', null);
-        $tag    = param_variable('tag', null);
 
         $searchoptions = array(
             'titleanddescriptionandtags' => get_string('titleanddescription', 'view'),
@@ -3936,15 +3985,7 @@ class View {
             'tagsonly' => get_string('tagsonly1', 'view'),
         );
 
-        if (!empty($tag)) {
-            $searchtype = 'tagsonly';
-            $searchdefault = $tag;
-            $query = null;
-        }
-        else {
-            $searchtype = 'titleanddescription';
-            $searchdefault = $query;
-        }
+        $searchdefault = $query;
 
         $searchform = array(
             'name' => 'searchviews',
@@ -3966,7 +4007,7 @@ class View {
                             'class' => 'dropdown-connect js-dropdown-connect searchviews-type',
                             'type'         => 'select',
                             'options'      => $searchoptions,
-                            'defaultvalue' => $searchtype,
+                            'defaultvalue' => $searchin,
                         )
                     )
                 ),
@@ -4007,9 +4048,9 @@ class View {
 
         $searchform = pieform($searchform);
 
-        $data = self::get_myviews_data($limit, $offset, $query, $tag, $group, $institution, $orderby);
+        $data = self::get_myviews_data($limit, $offset, $query, null, $group, $institution, $orderby, $searchin);
 
-        $url = self::get_myviews_url($group, $institution, $query, $tag, $orderby);
+        $url = self::get_myviews_url($group, $institution, $query, $searchin, $orderby);
 
         $pagination = build_showmore_pagination(array(
             'count'  => $data->count,
@@ -6781,17 +6822,13 @@ function createview_cancel_submit(Pieform $form, $values) {
 function searchviews_submit(Pieform $form, $values) {
     $tag = $query = null;
     if ($values['query'] != '') {
-        if ($values['type'] == 'tagsonly') {
-            $tag = $values['query'];
-        }
-        else {
-            $query = $values['query'];
-        }
+        $query = $values['query'];
     }
+    $searchin = isset($values['type']) ? $values['type'] : null;
     $orderby = isset($values['orderby']) ? $values['orderby'] : null;
     $group = isset($values['group']) ? $values['group'] : null;
     $institution = isset($values['institution']) ? $values['institution'] : null;
-    redirect(View::get_myviews_url($group, $institution, $query, $tag, $orderby));
+    redirect(View::get_myviews_url($group, $institution, $query, $searchin, $orderby));
 }
 
 /**
