@@ -153,7 +153,7 @@ if (is_plugin_active('externalvideo', 'blocktype')) {
 $inlinejs = "jQuery( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
 require_once('pieforms/pieform/elements/select.php');
 $inlinejs .= pieform_element_select_get_inlinejs();
-
+$inlinejs .= "jQuery(window).on('pageupdated', {}, function() { dock.init(jQuery(document)); });";
 // The form for adding blocks via the keyboard
 $addform = pieform(array(
     'name' => 'addblock',
