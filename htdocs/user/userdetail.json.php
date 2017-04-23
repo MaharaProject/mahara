@@ -15,7 +15,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 $id = param_integer('id');
 $user = get_record('usr', 'id', $id, 'deleted', 0);
-$user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
+$user->introduction = get_field('artefact', 'description', 'artefacttype', 'introduction', 'owner', $id);
 
 $smarty = smarty_core();
 $smarty->assign('user', $user);
