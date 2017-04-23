@@ -15,8 +15,7 @@ echo $form_tag;
                 <div class="form-group">
                     <label><?php echo $elements[$field]['labelhtml']; ?></label>
                     <?php echo $elements[$field]['html']; ?>
-
-                    <?php if ($elements[$field]['error']) { ?>
+                    <?php if (isset($elements[$field]['error'])) { ?>
                         <p class="text-danger"><?php echo $elements[$field]['error']; ?></p>
                     <?php } ?>
                 </div>
@@ -31,7 +30,7 @@ echo $form_tag;
                     <input type="radio" name="createmethod" class="ic"<?php if (isset($_POST['createmethod']) && $_POST['createmethod'] == 'leap2a') { ?> checked="checked"<?php } ?> id="uploadleap" value="leap2a"> <label for="uploadleap"><?php echo get_string('uploadleap2afile', 'admin'); ?></label> <?php echo get_help_icon('core', 'admin', 'adduser', 'leap2afile'); ?>
                 </div>
                 <?php echo $elements['leap2afile']['html']; ?>
-                <?php if ($elements['leap2afile']['error']) { ?>
+                <?php if (isset($elements['leap2afile']['error'])) { ?>
                     <div class="errmsg"><?php echo $elements['leap2afile']['error']; ?></div>
                 <?php } ?>
             </div>
@@ -93,7 +92,9 @@ echo $form_tag;
                     $accountprefs = array_keys(general_account_prefs_form_elements($accountprefs));
                     $fieldset_elements = array();
                     foreach ($accountprefs as $p) {
-                    $fieldset_elements[] = $elements[$p];
+                        if (isset($elements[$p])) {
+                            $fieldset_elements[] = $elements[$p];
+                        }
                     }
 
                     $accountoptions_fieldset = array(
