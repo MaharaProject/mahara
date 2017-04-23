@@ -378,8 +378,8 @@ function group_create($data) {
 
     if (!empty($data['institution']) && $data['institution'] != 'mahara') {
         global $USER;
-        if (!$USER->can_edit_institution($data['institution'])) {
-            throw new AccessDeniedException("group_create: cannot create a group in this institution");
+        if (!$USER->can_edit_institution($data['institution'], true)) {
+            $data['institution'] = 'mahara';
         }
     }
     else {
