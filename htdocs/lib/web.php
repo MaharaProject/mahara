@@ -3325,27 +3325,6 @@ function hsc ($text) {
 }
 
 /**
- * Returns a string of full formatted URLs
- *  www.something -> http://www.something
- *  something.[com|org] -> http://www.something.[com|org]
- *
- * @param string $urls
- * @return string      The full formatted URLs
- */
-function add_http ($urls) {
-    $reg_exUrl = "/(\.*|(http|https|ftp|ftps)\:\/\/)([a-zA-Z0-9\-\.]+)\.[a-zA-Z]{2,3}(\/\S*)?/i";
-
-    if (preg_match_all($reg_exUrl, $urls, $m)) {
-        for ($i=0; $i < count($m[0]); $i++) {
-            if (empty($m[1][$i])) {
-                $urls = preg_replace("~{$m[0][$i]}~", "http://$0", $urls);
-            }
-        }
-    }
-    return $urls;
-}
-
-/**
  * Builds the pieform for the search field in the page header
  */
 function header_search_form() {
