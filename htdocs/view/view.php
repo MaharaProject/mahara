@@ -330,6 +330,9 @@ jQuery(function($) {
     });
 });
 
+jQuery(window).on('pageupdated', {}, function() {
+    dock.init(jQuery(document));
+});
 EOF;
 
 // collection top navigation
