@@ -1231,6 +1231,16 @@ EOF;
         return $compositeforms;
     }
 
+    public function get_license_artefact() {
+        $pi = get_record('artefact',
+                         'artefacttype', $this->artefacttype,
+                         'owner', $this->owner);
+        if (!$pi)
+            return null;
+
+        require_once(get_config('docroot') . 'artefact/lib.php');
+        return artefact_instance_from_id($pi->id);
+    }
 }
 
 class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
