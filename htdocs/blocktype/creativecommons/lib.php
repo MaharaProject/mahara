@@ -42,7 +42,8 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
             return '';
         }
 
-        $licensetype = reset(preg_grep('/^([a-z\-]+)$/', array($configdata['license'])));
+        $greparray = preg_grep('/^([a-z\-]+)$/', array($configdata['license']));
+        $licensetype = reset($greparray);
         if (isset($configdata['version'])) {
             $licenseversion = get_string('version' . $configdata['version'], 'blocktype.creativecommons');
         }
