@@ -1,3 +1,36 @@
+16.10.3 (2017-04-26)
+- Bug 1648927: Deleting an institution sets group shortname/institution to null
+- Bug 1649319: Editing a table - editor's icons are not being displayed
+- Bug 1649732: MySql fallback not working in 16.10
+- Bug 1650995: Alter how Auth SAML pairs idp metadata to an institution
+- Bug 1651011: Issue upgrading Mahara site to 17.04dev
+- Bug 1653030: PluginAuthSaml error after upgrade
+- Bug 1655456: Sharing collection with a group not showing on group homepage list
+- Bug 1656078: Missing introduction in members list on groups
+- Bug 1656974: SmartEvidence framework assment feedback not working
+- Bug 1657559: Be able to click the chevron for retractable blocks
+- Bug 1662999: Missing wallpost notification help text
+- Bug 1664582: Journal comments can't be viewed on a page
+- Bug 1666102: group member can delete journal
+- Bug 1648679: Find all Errors in code: Only variables should be passed by reference
+- Bug 1650954: New View() fails if called with deleted parameter set
+- Bug 1650963: Hide Saml setup warnings if plugin is not active
+- Bug 1653180: Fix the logo for Facebook
+- Bug 1654894: Creating a new institution is not setting $newinstitution->defaultmembershipperiod as null but rather as '0'
+- Bug 1656699: Fix lang string for Practicing Teacher Criteria SmartEvidence
+- Bug 1656934: Upload new Mahara logo to all themes
+- Bug 1656998: SmartEvidence not available when in multiple institutions
+- Bug 1658389: Show group "Copy" button only when permission to create groups
+- Bug 1658393: Can't copy group created by CSV when not an admin
+- Bug 1662367: False positives in antispam checking
+- Bug 1681377: Author link in wrong color for portfolio submissions
+- Bug 1683098: Introduction not displayed in owner preview
+- Bug 1684079: Achievements in Résumé result in an error in a portfolio page
+- Bug 1656957: Run behat in docker and skip the composer update step
+- Bug 1660177: SimpleSamlPHP missing modules warning needs php7 vs php5 error messages
+- Bug 1660502: Deleting a theme brakes profile page theme for new users
+- Bug 1686226: License block - Only variables should be passed by reference
+
 16.10.2 (2016-12-29)
 - Bug 1652995: Phpmailer security update (v5.2.21)
 - Bug 1651018: Undefined variable: type in Content screen. Prod mode=true
