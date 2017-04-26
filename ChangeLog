@@ -1,3 +1,8 @@
+15.04.12 (2017-04-26)
+- Bug 1653180: Fix the logo for Facebook
+- Bug 1656934: Upload new Mahara logo to all themes
+- Bug 1662367: False positives in antispam checking
+
 15.04.11 (2016-12-29)
 - Bug 1652995: Phpmailer security update (v5.2.21)
 
