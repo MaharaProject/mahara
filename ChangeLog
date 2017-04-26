@@ -1,3 +1,17 @@
+16.04.6 (2017-04-26)
+- Bug 1649319     Editing a table - editor's icons are not being displayed
+- Bug 1655456     Sharing collection with a group not showing on group homepage list
+- Bug 1657559     Be able to click the chevron for retractable blocks
+- Bug 1664582     Journal comments can't be viewed on a page
+- Bug 1666102     group member can delete journal
+- Bug 1648679     Find all Errors in code: Only variables should be passed by reference
+- Bug 1653180     Fix the logo for Facebook
+- Bug 1654894     Creating a new institution is not setting $newinstitution->defaultmembershipperiod as null but rather as '0'
+- Bug 1656934     Upload new Mahara logo to all themes
+- Bug 1662367     False positives in antispam checking
+- Bug 1681377     Author link in wrong color for portfolio submissions
+- Bug 1656957     Run behat in docker and skip the composer update step
+
 16.04.5 (2016-12-29)
 - Bug 1652995: Phpmailer security update (v5.2.21)
 - Bug 1540534: Page comment moderation doesn't affect artefact comments
