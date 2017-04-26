@@ -3773,18 +3773,23 @@ class View {
             $select .= ',v.submittedtime, v.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
                 h.wwwroot AS submithostwwwroot, h.name AS submithostname';
-            $selectstr = ', c.submittedtime, c.submittedstatus,
+            $collselect .= ', c.submittedtime, c.submittedstatus,
+                g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
+                h.wwwroot AS submithostwwwroot, h.name AS submithostname';
+            $emptycollselect .= ', c.submittedtime, c.submittedstatus,
                 NULL AS submitgroupid, NULL AS submitgroupname, NULL AS submitgroupurlid,
                 NULL AS submithostwwwroot, NULL AS submithostname';
-            $collselect .= $selectstr;
-            $emptycollselect .= $selectstr;
+
             $fromstr = '
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)';
+
             $from .= $fromstr;
+            $collfrom .= $fromstr;
 
             if (!empty($groupby)) {
                 $groupby .= ', g.id, h.wwwroot';
+                $collgroupby .= ', g.id, h.wwwroot';
             }
             $sort = '
                 ORDER BY ' . $order . ' vtitle, vid';
@@ -3829,6 +3834,7 @@ class View {
         View::get_extra_collection_info($viewdata, false, 'collid');
 
         require_once('collection.php');
+        require_once('group.php');
         if ($viewdata) {
             foreach ($viewdata as $id => &$data) {
                 $data['uniqueid'] = 'u' . $data['id'] . '_' . $data['collid'];
