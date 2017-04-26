@@ -1,3 +1,238 @@
+17.04.0 (2017-04-27)
+- Bug 1652995: Phpmailer security update (v5.2.21)
+- Bug 1685041: Page templates are in the wrong layout
+- Bug 1686501: Submitted collection causes unknown $url error on pages/collections list
+- Bug 1486309: Call stack errors on site statistics
+- Bug 1535164: Read messages are not getting set to read
+- Bug 1540534: Page comment moderation doesn't affect artefact comments
+- Bug 1557160: PHP error when releasing and archiving submissions
+- Bug 1565199: Journals that you can't add entries to appear in drop-down for "Add new entry" in "Recent journal entries" block
+- Bug 1600126: Group shortname should be unique across the entier site not just per institution
+- Bug 1603206: Anonymously placed comments end up with system user
+- Bug 1606509: Anonymouse users should not be able to have URLs linked in comments
+- Bug 1619036: ADODB error when edit page layout
+- Bug 1631808: Simplesamlphp support for clustered memcache session store
+- Bug 1632913: Artefact comments not exported in Leap2A properly
+- Bug 1636087: iframe source icon not present in table for 16.10 upgrade
+- Bug 1636090: Execution timeout during 16.10 upgrade when fixing broken user data
+- Bug 1636599: Infinite redirect loop with journals page
+- Bug 1636854: Parse error: syntax error, unexpected ''login_submitted''
+- Bug 1636866: auth/saml/lib.php breaks PHP 5.4 compatability
+- Bug 1637287: Group members should not receive group membership request notifications
+- Bug 1638687: Blank page when creating collection
+- Bug 1639096: Don't display submitted pages in 'shared with group' sections is broken for pagination
+- Bug 1642389: Deleting a group with collections submission does not really release them
+- Bug 1647220: Error messages on Institution statistics
+- Bug 1647885: Not all file types and mime types get populated on install/upgrade
+- Bug 1648927: Deleting an institution sets group shortname/institution to null
+- Bug 1649319: Editing a table - editor's icons are not being displayed
+- Bug 1649732: MySql fallback not working in 16.10
+- Bug 1650995: Alter how Auth SAML pairs idp metadata to an institution
+- Bug 1651011: Issue upgrading Mahara site to 17.04dev
+- Bug 1651018: Undefined variable: type in Content screen. Prod mode=true
+- Bug 1653030: PluginAuthSaml error after upgrade
+- Bug 1655456: Sharing collection with a group not showing on group homepage list
+- Bug 1656078: Missing introduction in members list on groups
+- Bug 1656974: SmartEvidence framework assment feedback not working
+- Bug 1657559: Be able to click the chevron for retractable blocks
+- Bug 1662999: Missing wallpost notification help text
+- Bug 1663439: [WAR] 76 (auth/lib.php:117) Undefined property: stdClass::$active
+- Bug 1664582: Journal comments can't be viewed on a page
+- Bug 1665161: javascript error when adding journal block in page
+- Bug 1665493: Switchbox error in resume section
+- Bug 1666099: can add a draft journal entry to a page
+- Bug 1666102: group member can delete journal
+- Bug 1666685: group member with no permission can see edit/delete buttons in journal group screen
+- Bug 1667101: Profile icons page throws js error
+- Bug 1667466: The 'static pages' form is broken in 17.04
+- Bug 1670900: Can't uploadimage from within TinyMCE
+- Bug 1672737: Entries missing from view_rows_columns
+- Bug 1672867: update ADOdb library to 5.20.9
+- Bug 1672873: PHPMailer security update 5.2.22
+- Bug 1672893: TinyMCE library - upgrade to version 4.5.x
+- Bug 1674518: Theme updates for Mahara 17.04
+- Bug 1674801: Share to group admins only gets removed on subsquent sharing updates
+- Bug 1675213: Comment ratings show up twice
+- Bug 1676223: Need to check that webservice token is supplied before checking if it is in db and is unique
+- Bug 1676230: group member sees p&c as a list, not boxes
+- Bug 1676570: Need tool tip for new Navigation Menu
+- Bug 1676659: "Edit" button for files & folders doesn't work under Content -> Files
+- Bug 1677038: cant delete a user when smartevidence is not installed
+- Bug 1677087: General lang string review for Mahara 17.04
+- Bug 1677092: Date format is wrong for page access
+- Bug 1677406: External apps screen table not responsive
+- Bug 1677716: Problems with webservices forms
+- Bug 1679864: Pages and collections search form 'searchtype' not being sticky
+- Bug 1681169: The cli sync_langpacks.php returns an error
+- Bug 1681283: Link for empty collection doesn't go anywhere for 17.04 pages and collections
+- Bug 1681289: Copying a collection displays a warning message
+- Bug 1681293: Allow Blackboard specific LTI parameters
+- Bug 1681588: Unable to add Email address on contact information
+- Bug 1681604: Header messages don't push content down sufficiently
+- Bug 1681629: Search on "Pages and collections" doesn't work for collections
+- Bug 1681974: Image block showing 'http://' as part of description
+- Bug 1683224: If you aren't allowed to create / edit a page in a group, don't show the "Add" and "Copy" buttons
+- Bug 1684267: Old raw theme missing some templates
+- Bug 692769: Clean up the Print stylesheet
+- Bug 799028: Show time frame in which a portfolio is accessible
+- Bug 946724: Institution admin can set notification preferences for admin messages he doesn't get
+- Bug 1122602: Warnings when adding a site image file into a group view
+- Bug 1181696: Renaming image gallery files doesn't reorder them
+- Bug 1221708: Moodle URL not added to page access email
+- Bug 1259756: All form elements need labels
+- Bug 1421022: Hide the Portfolio -> Import tab if no import plugins are enabled
+- Bug 1467252: Display problem with Switchbox when label strings aren't the same length as "On" & "Off"
+- Bug 1529718: Anonymous comment area needs a label for the "Comment" text field
+- Bug 1541183: MNet does not support peers with URL longer than 64 characters
+- Bug 1581907: Style guide improvements for Mahara 16.10
+- Bug 1594298: MNet site name is hidden behind profile icon
+- Bug 1603658: "Other license (enter URL)" does not work
+- Bug 1603825: "Collapsible" block setting doesn't work if block has no title.
+- Bug 1606735: Accessibility - Inconsistent heading levels
+- Bug 1607743: Page themes don't work with configurable theme
+- Bug 1619474: Styleguide should have code in the part that can be copied
+- Bug 1622858: Can't access user notifications settings in mobile layout
+- Bug 1628839: forum notification mails sent to system user
+- Bug 1631807: Problem when editing the content on IE11
+- Bug 1631810: Updates to the connection manager
+- Bug 1632917: Page created in wrong institution theme
+- Bug 1633311: JS error in Firefox when editing annotation blocks
+- Bug 1633808: Error messages when on web services logs
+- Bug 1636061: Group short name displayed rather than group name in "Recent journal entries" block
+- Bug 1636064: Access date for individual in wrong date format
+- Bug 1638733: Static pages gives js error
+- Bug 1639049: Ensure dummy admin email is changed on old upgrade
+- Bug 1640308: Bad auth instance slows down login for all institutions
+- Bug 1640837: Leap2A package content not fully imported
+- Bug 1642745: Error: Only variables should be passed by reference
+- Bug 1643365: LeapImportArtefactPlugin warning when extending class adds parameters in method
+- Bug 1644646: Move the search from the nav bar to the top in the Default theme
+- Bug 1644649: Bad call to count_records_sql() for collection views
+- Bug 1644675: Eliminate MochiKit from PieForms
+- Bug 1645188: Comment ratings are not accessible - aria-hidden still present
+- Bug 1645455: Autocomplete searchbox shows html when deleting item
+- Bug 1646284: Warning messages while deleting the groups
+- Bug 1647234: Eliminate MochiKit from Account
+- Bug 1648089: The pop-up help window pops up when the content is too long
+- Bug 1648628: Eliminate MochiKit from Artefacts
+- Bug 1648636: Connection manager, add connection with empty string error
+- Bug 1648679: Find all Errors in code: Only variables should be passed by reference
+- Bug 1648837: Select2 selector not UI problems
+- Bug 1648850: The title for the notifications overlaps the Compose button
+- Bug 1648858: The file list overflow incorrectly with mobile devices
+- Bug 1649176: Eliminate MochiKit from Auth, BlockType and Index.php
+- Bug 1649177: Declaration issuesfor PHP7 on CLI install
+- Bug 1649435: Eliminate MochiKit from Theme
+- Bug 1649741: Eliminate MochiKit from Views
+- Bug 1649757: SSL keypair commonname too long
+- Bug 1650092: Eliminate MochiKit from Mahara Libs
+- Bug 1650414: Eliminate MochiKit from Mahara/JS folder
+- Bug 1650954: New View() fails if called with deleted parameter set
+- Bug 1650962: Error: Undefined variable:institutions
+- Bug 1650963: Hide Saml setup warnings if plugin is not active
+- Bug 1651022: Fatal error in Inst./Statisctic screen when too many members
+- Bug 1651911: jQuery alter .bind()/.unbind() to .on()/.off()
+- Bug 1651913: Top info messages should not be pushing content incorrectly
+- Bug 1653180: Fix the logo for Facebook
+- Bug 1654894: Creating a new institution is not setting $newinstitution->defaultmembershipperiod as null but rather as '0'
+- Bug 1655150: remove Zend Mail class Zend_Log_Writer_Mail not used
+- Bug 1656699: Fix lang string for Practicing Teacher Criteria SmartEvidence
+- Bug 1656731: Warnings with elasticsearch and php 7
+- Bug 1656934: Upload new Mahara logo to all themes
+- Bug 1656998: SmartEvidence not available when in multiple institutions
+- Bug 1658389: Show group "Copy" button only when permission to create groups
+- Bug 1658393: Can't copy group created by CSV when not an admin
+- Bug 1659708: behat test for text block
+- Bug 1660101: Search box in configurable theme needs better outline
+- Bug 1660103: Configurable theme: "Done" button on collection manage screen w/ wrong text color
+- Bug 1660455: behat test for image block
+- Bug 1662367: False positives in antispam checking
+- Bug 1663409: Behat unable to add pages to group/institution collections as background step
+- Bug 1664061: Dropzone success messages out of sync
+- Bug 1665481: change sharing rules for journals
+- Bug 1667525: Rename "Find friends" to "Find people"
+- Bug 1667539: Change "Institutions" in 2nd level navigation to "Settings"
+- Bug 1668118: behat test for retractable blocks
+- Bug 1668131: group editability dates disabled
+- Bug 1668492: page theme brakes when changing theme settings in institution
+- Bug 1670885: format_date function returns false (Windows)
+- Bug 1671656: behat test for pdf block
+- Bug 1674046: Add wakeup support to adodb (again)
+- Bug 1674047: Deleting unnecessary files from ADOdb
+- Bug 1674048: Check for valid columns in adodb postgres64 driver MetaIndexes fn
+- Bug 1675207: "Block copy permissions" slide in faster than rest of the modal
+- Bug 1675223: Use custom site name for LTI
+- Bug 1676106: Change "OAuth" to "External apps" in "Web services"
+- Bug 1676596: leap 2a import fails on 'nbsp;' entity
+- Bug 1677063: PHP7 deprecated constructor for xmldb
+- Bug 1677928: Change LTI language string from "Mahara LTI integration" to "LTI integration"
+- Bug 1678668: Adding Web service external app ensures 'webservice' auth method set for institution
+- Bug 1680640: The alignmnet of buttons are improper when a member is invited to join Institution
+- Bug 1681579: Put the Mahara logo into the themes as SVG file
+- Bug 1681633: Lang strings in LTI plugin missing
+- Bug 1681934: Count SmartEvidence overview page on "Pages and collections"
+- Bug 1681961: Bad link on can't show matrix page
+- Bug 1683202: Custom profile field for country doesn't display real name in "User search"
+- Bug 1683219: Modern theme is missing the line above buttons in admin area
+- Bug 1683561: Update style guide for Mahara 17.04
+- Bug 1684079: Achievements in Résumé result in an error in a portfolio page
+- Bug 1684333: Change the "Gender" question to a more inclusive one
+- Bug 1451263: Minor design fixes to mahara 17.04
+- Bug 1487299: All edit and delete buttons should contain the name of what they manage
+- Bug 1528991: Indent second line of notification in Inbox
+- Bug 1563143: Breakage around dropzone error hander callbacks
+- Bug 1619051: File extraction success screen 'continue' link hard to spot
+- Bug 1626281: Allow the js lang strings to have their section set when doing variable replacement
+- Bug 1627420: Update Readme file for Mahara 16.10
+- Bug 1639665: Need to have the Site options email settings password field be 'stars'
+- Bug 1642076: Group admin manage page search button not working
+- Bug 1644644: Eliminate Mochikit from keyboardNavigation.js
+- Bug 1646291: Default no user icon not been found if using get profile icon by id
+- Bug 1647856: Update submission release language string for more clarity
+- Bug 1648128: Unnecessary scroll bars on ajax spinner with ie11
+- Bug 1648131: The bottom margin of the first file picker is different of the other filepickers
+- Bug 1648870: The plan tasks list completed icons are not aligned correctly
+- Bug 1648878: The share page secret urls icon are not correctly aligned
+- Bug 1656957: Run behat in docker and skip the composer update step
+- Bug 1660177: SimpleSamlPHP missing modules warning needs php7 vs php5 error messages
+- Bug 1660234: Image block image needs an alt tag value containing file name
+- Bug 1660502: Deleting a theme brakes profile page theme for new users
+- Bug 1661464: move collections tests out of artefact folder
+- Bug 1661465: Behat tests for notes blocks should be in the blocktype folder
+- Bug 1661467: behat tests for notes blocks need consolidating
+- Bug 1663436: Configurable theme logo incorrect
+- Bug 1665518: missing webfonts in raw theme
+- Bug 1672865: Update Zend framework to 1.12.20
+- Bug 1681587: A hardcoded lang string in collection views and a not used lang variable
+- Bug 1686226: License block - Only variables should be passed by reference
+- Bug 920252: List group categories alphabetically
+- Bug 989195: Allow HTML in Résumé fields
+- Bug 1033073: Hide group tutors
+- Bug 1381228: Problem with journal entry only showing creation date and not modified date
+- Bug 1385037: Support for mobile media-capture form tags
+- Bug 1478734: Alter the file uploader to use jQuery
+- Bug 1493199: Show only other people's portfolios in "Latest changes..." block
+- Bug 1496676: Add OpenSans as default font into TinyMCE
+- Bug 1516981: Show friend portfolio activity on your dashboard
+- Bug 1531697: Be able to inherit from a child theme
+- Bug 1579145: Ability to include live link on image description
+- Bug 1625863: Adding cli for langpacks
+- Bug 1634591: Show last updated date and time when seeing a portfolio page
+- Bug 1636286: Check during installation / upgrade that root user exists
+- Bug 1637371: Make core themes consistent in the way they are set up
+- Bug 1640893: Add StudentID field to SAML auth
+- Bug 1646229: Eliminate MochiKit: admin section - js
+- Bug 1650980: Allow the size of folder contents to show in the file browser list
+- Bug 1657565: Create app-style navigation for Mahara
+- Bug 1660808: Remove MochiKit Libraries from Mahara
+- Bug 1661125: Add custom profile fields
+- Bug 1661139: Page screen should show "..." button with option to delete page
+- Bug 1665448: Make a blank local/themes/style/style.css file
+- Bug 1667181: Combine pages and collections lists so that we can find things easier
+- Bug 1667799: Need a get_group_by_id() function
+- Bug 1668472: Mahara to support LTI (phase 1)
+- Bug 1674808: Remove "Advanced options" for "Shared with me"
+
 17.04rc2 (2017-04-24)
 
 17.04rc1 (2017-03-31)
