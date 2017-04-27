@@ -24,4 +24,4 @@ Scenario: Create a page and secret URLs to copy (Bug 1426983)
     And I press "New secret URL"
     # Verifying Secret URLs was created
     And I choose "Shared by me" in "Portfolio" from main menu
-    Then I should see "1"
+    Then I should see "1" in the "td.secreturls" "css_element"
