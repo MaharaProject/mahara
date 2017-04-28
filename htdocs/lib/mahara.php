@@ -2859,10 +2859,23 @@ function can_view_view($view, $user_id=null) {
 /**
  * Return the view associated with a given token, and set the
  * appropriate access cookie.
+ *
+ * @param int $token the token string to check on
+ * @param bool $visible Switch between setting an mnet or secreturl cookie
+ *
+ * @return object Containing viewid,        // the id of first view
+                             collectionid,  // the id of collection (if exists)
+                             gotomatrix     // go to the collection matrix page on first arrival
  */
 function get_view_from_token($token, $visible=true) {
+    // Set up object to return
+    $result = new stdClass();
+    $result->viewid = null;
+    $result->collectionid = null;
+    $result->gotomatrix = false;
+
     if (!$token) {
-        return false;
+        return $result;
     }
     $viewids = get_column_sql('
         SELECT "view"
@@ -2874,23 +2887,30 @@ function get_view_from_token($token, $visible=true) {
         ', array($token, (int)$visible)
     );
     if (empty($viewids)) {
-        return false;
+        return $result;
     }
+
     if (count($viewids) > 1) {
-        // if any of the views are in collection(s), pick one of the ones
-        // with the lowest displayorder.
+        // if any of the views are in collection(s), either pick the view
+        // with the lowest displayorder or if there is a matrix page go to that.
         $order = get_records_sql_array('
-            SELECT cv.view, collection
+            SELECT cv.view, cv.collection, c.framework
             FROM {collection_view} cv
+            JOIN {collection} c ON c.id = cv.collection
             WHERE cv.view IN (' . join(',', $viewids) . ')
             ORDER BY displayorder, collection',
             array()
         );
         if ($order) {
             if ($token != get_cookie('caccess:'.$order[0]->collection)) {
+                if (!empty($order[0]->framework)) {
+                    $result->gotomatrix = true;
+                }
                 set_cookie('caccess:'.$order[0]->collection, $token, 0, true);
             }
-            return $order[0]->view;
+            $result->viewid = $order[0]->view;
+            $result->collectionid = $order[0]->collection;
+            return $result;
         }
     }
     $viewid = $viewids[0];
@@ -2900,7 +2920,8 @@ function get_view_from_token($token, $visible=true) {
     if ($visible && $token != get_cookie('viewaccess:'.$viewid)) {
         set_cookie('viewaccess:'.$viewid, $token, 0, true);
     }
-    return $viewid;
+    $result->viewid = $viewid;
+    return $result;
 }
 
 /**
