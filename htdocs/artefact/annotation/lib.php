@@ -946,7 +946,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $smarty->assign('annotationfeedbackcount', $annotationfeedbackcount);
         $smarty->assign('annotationfeedback', $annotationfeedback);
 
-        if ($annotationartefact->get('allowcomments')) {
+        if ($annotationartefact->get('allowcomments') && is_logged_in()) {
             $form = ArtefactTypeAnnotationfeedback::add_annotation_feedback_form($annotationartefact, $view, null, $blockid, false, $annotationartefact->get('approvecomments'));
             // Replace the submit/cancel with just a submit button
             $submit = array(

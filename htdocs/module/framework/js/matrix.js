@@ -56,6 +56,10 @@ jQuery(function($) {
         params.view = $(this).data("view");
         params.option = $(this).data("option");
         sendjsonrequest('matrixpoint.json.php', params, 'POST', function(data) {
+            var hastinymce = false;
+            if (typeof tinyMCE !== 'undefined') {
+                hastinymce = true;
+            }
             function show_se_desc(id) {
                 $("#instconf_smartevidencedesc_container div:not(.description)").addClass('hidden');
                 $("#option_" + id).removeClass('hidden');
@@ -86,9 +90,11 @@ jQuery(function($) {
                         params.blockconfig = $('#instconf_blockconfig').val();
                         editmatrix_update(params);
                     }
-                    tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                    if (hastinymce) {
+                        tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                    }
                     feedbacktextarea = $("#addfeedbackmatrix textarea");
-                    if (feedbacktextarea.length) {
+                    if (feedbacktextarea.length && hastinymce) {
                         tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
                     }
                     hide_dock();
@@ -109,21 +115,25 @@ jQuery(function($) {
                         params.blockconfig = $('#instconf_blockconfig').val();
                         editmatrix_update(params);
                     }
-                    tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                    if (hastinymce) {
+                        tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                    }
                     feedbacktextarea = $("#addfeedbackmatrix textarea");
-                    if (feedbacktextarea.length) {
+                    if (feedbacktextarea.length && hastinymce) {
                         tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
                     }
                     hide_dock();
                 }
             });
-            tinyMCE.idCounter=0;
-            if ($("#instconf_text").length) {
-                tinyMCE.execCommand('mceAddEditor', false, "instconf_text");
-            }
-            if ($("#addfeedbackmatrix").length) {
-                textareaid = $("#addfeedbackmatrix textarea").attr('id');
-                tinyMCE.execCommand('mceAddEditor', false, textareaid);
+            if (hastinymce) {
+                tinyMCE.idCounter=0;
+                if ($("#instconf_text").length) {
+                    tinyMCE.execCommand('mceAddEditor', false, "instconf_text");
+                }
+                if ($("#addfeedbackmatrix").length) {
+                    textareaid = $("#addfeedbackmatrix textarea").attr('id');
+                    tinyMCE.execCommand('mceAddEditor', false, textareaid);
+                }
             }
             // Only allow the point selected to be active in the 'Standard' dropdown
             $("#instconf_smartevidence option:not(:selected)").prop('disabled', true);
@@ -146,7 +156,7 @@ jQuery(function($) {
                     if (item.name == 'tags[]') {
                         tags.push(item.value);
                     }
-                    else if (item.name == 'text') {
+                    else if (item.name == 'text' && hastinymce) {
                         values[item.name] = tinyMCE.get('instconf_text').getContent();
                     }
                     else {
@@ -158,7 +168,9 @@ jQuery(function($) {
                 values['view'] = params.view;
                 values['option'] = params.option;
                 values['action'] = 'update';
-                tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                if (hastinymce) {
+                    tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                }
                 editmatrix_update(values);
                 hide_dock();
             });
@@ -180,9 +192,11 @@ jQuery(function($) {
                     values['option'] = params.option;
                     values['action'] = 'evidence';
                     editmatrix_update(values);
-                    tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                    if (hastinymce) {
+                        tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                    }
                     feedbacktextarea = $("#addfeedbackmatrix textarea");
-                    if (feedbacktextarea.length) {
+                    if (feedbacktextarea.length && hastinymce) {
                         tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
                     }
                     hide_dock();
@@ -238,8 +252,10 @@ jQuery(function($) {
                     $("#matrixfeedbacklist").html('<ul class="annotationfeedbacktable list-group list-group-lite list-unstyled"></div>');
                 }
                 $("#matrixfeedbacklist .annotationfeedbacktable").html(results.data.tablerows);
-                textareaid = $("#addfeedbackmatrix textarea").attr('id');
-                tinyMCE.get(textareaid).setContent('');
+                if (hastinymce) {
+                    textareaid = $("#addfeedbackmatrix textarea").attr('id');
+                    tinyMCE.get(textareaid).setContent('');
+                }
             }
         });
     }
