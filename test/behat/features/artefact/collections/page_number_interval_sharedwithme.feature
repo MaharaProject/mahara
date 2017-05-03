@@ -4,12 +4,12 @@
   As a student
   So I can navigate more efficiently through a large amount of pages.
 
- Scenario: Checking the jump list of the paginagtor (Bug 1409370)
+ Background:
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
      | userB | Kupuhipa1 | test02@example.com | Simon | Mc | mahara | internal | member |
-  And I log in as "userA" with password "Kupuhipa1"
+
   And the following "pages" exist:
      | title | description| ownertype | ownername |
      | A's Page 01 | UserA's page 01 | user | userA |
@@ -34,6 +34,9 @@
      | A's Page 20 | UserA's page 20 | user | userA |
      | A's Page 21 | UserA's page 21 | user | userA |
      | A's Page 22 | UserA's page 22 | user | userA |
+
+ Scenario: Checking the jump list of the paginagtor (Bug 1409370)
+  Given I log in as "userA" with password "Kupuhipa1"
   And I follow "Portfolio"
   And I click the row "A's Page 01"
   And I follow "Edit this page"
