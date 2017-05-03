@@ -388,7 +388,11 @@ class BehatGeneral extends BehatBase {
             " or contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'list-group-item', ' ')))" .
             " and contains(normalize-space(.), " . $rowtextliteral . ")]" .
             "|" .
-            "//tr[contains(normalize-space(.), " . $rowtextliteral . ")]";
+            "//tr[contains(normalize-space(.), " . $rowtextliteral . ")]" .
+            "|" .
+            "//li[(contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'list-group-item', ' ')))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]";
+
         $rownode = $this->find('xpath', $xpath, $exception);
 
         // Looking for the element DOM node inside the specified row.
