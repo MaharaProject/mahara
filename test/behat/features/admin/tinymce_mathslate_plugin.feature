@@ -18,7 +18,6 @@ Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
    | Page title | test |
    | Page description | testing |
  And I press "Save"
- And I should see "Page saved successfully"
  And I wait "1" seconds
  And I choose "Pages" in "Configure site"
  And I follow "test"
