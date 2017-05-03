@@ -672,7 +672,7 @@ $cfg->ajaxifyblocks = true;
  * @global string $cfg->mathjaxpath Determines the path to CDN or server-local installation of MathJax.js.
  * If MathJax is enabled, use to configure path to MathJax.
  */
-$cfg->mathjaxpath = '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&delayStartupUntil=configured';
+$cfg->mathjaxpath = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML&delayStartupUntil=configured';
 
 /**
  * @global string $cfg->mathjaxconfig Determines MathJax configuration options.

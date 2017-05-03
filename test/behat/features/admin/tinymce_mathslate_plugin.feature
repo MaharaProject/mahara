@@ -10,7 +10,6 @@ Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
  And I follow "General settings"
  And I enable the switch "Enable MathJax"
  And I press "Update site options"
- And I should see "Site options have been updated."
  And I choose "Pages and collections" in "Configure site" from administration menu
  And I follow "Add"
  And I click on "Page" in the dialog
@@ -18,7 +17,6 @@ Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
    | Page title | test |
    | Page description | testing |
  And I press "Save"
- And I should see "Page saved successfully"
  And I wait "1" seconds
  And I choose "Pages and collections" in "Configure site" from administration menu
  And I follow "test"
