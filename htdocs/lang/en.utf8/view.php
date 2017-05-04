@@ -250,6 +250,7 @@ $string['editblockspagedescription'] = '<p>Drag and drop content blocks from the
 $string['displayview'] = 'Display page';
 $string['editthisview'] = 'Edit this page';
 $string['expandcontract'] = 'Expand /   Contract list of block types';
+$string['returntoviews'] = 'Return to pages and collections';
 $string['returntoinstitutionportfolios'] = 'Return to institution pages and collections';
 $string['returntositeportfolios'] = 'Return to site pages and collections';
 
