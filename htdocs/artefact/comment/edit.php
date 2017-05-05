@@ -70,7 +70,7 @@ else {
 }
 $elements['ispublic'] = array(
     'type'  => 'switchbox',
-    'title' => get_string('makepublic', 'artefact.comment'),
+    'title' => get_string('makecommentpublic', 'artefact.comment'),
     'defaultvalue' => !$comment->get('private'),
 );
 if (get_config('licensemetadata')) {
