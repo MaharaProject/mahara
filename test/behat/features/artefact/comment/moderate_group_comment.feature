@@ -25,7 +25,7 @@ Scenario: Moderating a group comment when approve comments is turned on
     Given I log in as "userC" with password "Kupuhipa1"
     And I go to portfolio page "Page1"
     And I set the field "Comment" to "This is a comment from userC"
-    And I enable the switch "Make public"
+    And I enable the switch "Make comment public"
     And I press "Comment"
     And I wait "1" seconds
     Then I should see "You have requested that this comment be made public." in the ".feedbacktable" "css_element"
@@ -41,4 +41,4 @@ Scenario: Moderating a group comment when approve comments is turned on
     Given I log in as "userA" with password "Kupuhipa1"
     And I go to portfolio page "Page1"
     Then I should see "This is a comment from userC"
-    And I press "Make public"
+    And I press "Make comment public"
