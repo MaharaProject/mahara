@@ -19,17 +19,15 @@ Background:
 Scenario: Testing that view access for views in collections are editable properly
     # Checking the right selected options display on view access
     Given I log in as "userA" with password "Kupuhipa1"
-    And I choose "Pages and collections" in "Portfolio" from main menu
-    And I click on "Collection One" panel collection
-    And I click on "Page 1" in "Collection One" panel collection
-    And I follow "Edit this page"
-    And I follow "Share page"
+
+    And I choose "Shared by me" in "Portfolio" from main menu
+    Then I should see "Collection One"
+    And I follow "Edit access"
     Then I should see "Collection One"
     And I should not see "Page 1"
-    
-    And I choose "Pages and collections" in "Portfolio" from main menu
-    And I click on "Page 2" panel menu
-    And I click on "Edit" in "Page 2" panel menu
-    And I follow "Share page"
+
+    And I choose "Shared by me" in "Portfolio" from main menu
+    And I follow "Pages"
+    Then I click on "Edit access" in "Page 2" row
     Then I should see "Page 2"
     And I should not see "Collection One"

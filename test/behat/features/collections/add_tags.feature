@@ -57,8 +57,8 @@ Scenario: Adding tags to files (Bug 1426983)
    And I click on "Page" in the dialog
    And I set the following fields to these values:
    | Page title * | Test page 1   |
-   And I fill in select2 input "editview_tags" with "page" and select "page"
-   And I fill in select2 input "editview_tags" with "test" and select "test"
+   And I fill in select2 input "settings_tags" with "page" and select "page"
+   And I fill in select2 input "settings_tags" with "test" and select "test"
    And I press "Save"
    And I choose "Portfolio" from main menu
    # Creating page 2 with a tag
@@ -66,8 +66,8 @@ Scenario: Adding tags to files (Bug 1426983)
    And I click on "Page" in the dialog
    And I set the following fields to these values:
    | Page title *    | Testing page 2    |
-   And I fill in select2 input "editview_tags" with "page" and select "page"
-   And I fill in select2 input "editview_tags" with "test" and select "test"
+   And I fill in select2 input "settings_tags" with "page" and select "page"
+   And I fill in select2 input "settings_tags" with "test" and select "test"
    And I press "Save"
    # Creating a Note with a tag
    And I expand "General" node

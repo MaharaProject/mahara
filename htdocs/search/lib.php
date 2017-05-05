@@ -209,7 +209,7 @@ abstract class PluginSearch extends Plugin implements IPluginSearch {
                             '_default'                        => $wwwroot . 'view/view.php?id=' . $result['id'],
                             // TODO: these are certainly broken!
                             get_string('editviewinformation') => $wwwroot . 'view/editmetadata.php?viewid=' . $result['id'],
-                            get_string('editview')            => $wwwroot . 'view/edit.php?viewid=' . $result['id'],
+                            get_string('editview')            => $wwwroot . 'view/editlyout.php?viewid=' . $result['id'],
                             get_string('editaccess')          => $wwwroot . 'view/editaccess.php?viewid=' . $result['id'],
                         );
                         break;

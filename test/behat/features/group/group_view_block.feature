@@ -196,7 +196,7 @@ These list must take into account the sort option choosen in the block config (B
     And I follow "Pages and collections (tab)"
     And I click on "Page Group Z_06" panel menu
     And I click on "Edit" in "Page Group Z_06" panel menu
-    And I follow "Edit title and description"
+    And I follow "Settings" in the "#toolbar-buttons" "css_element"
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
     And I press "Save"
     And I display the page
@@ -211,7 +211,7 @@ These list must take into account the sort option choosen in the block config (B
     And I choose "Portfolio" from main menu
     And I click on "Page userA_01" panel menu
     And I click on "Edit" in "Page userA_01" panel menu
-    And I follow "Edit title and description"
+    And I follow "Settings" in the "#toolbar-buttons" "css_element"
     And I set the field "Page description" to "<p>This is the page 01 (updated)</p>"
     And I press "Save"
     And I display the page

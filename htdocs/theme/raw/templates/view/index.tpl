@@ -1,7 +1,7 @@
 {include file="header.tpl"}
     {if !$noedit}
     <div class="btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
-        <a id="addview-button" class="btn btn-default" href="{$WWWROOT}view/edit.php?new=1{$urlparamsstr}">
+        <a id="addview-button" class="btn btn-default" href="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}">
             <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
             {str section=mahara tag=add}
         </a>
@@ -69,7 +69,7 @@
     });
     $j("#add-collection-button").on('click', function() {
         // redirect to the collection section
-        var url = addurl.replace(/view\/edit/, 'collection/edit');
+        var url = addurl.replace(/view\/editlayout/, 'collection/edit');
         window.location = url;
     });
 

@@ -38,6 +38,10 @@
     }
 }
 
+.wysiwyg.view-description {
+    width: 70%;
+}
+
 .toolbar-affix.affix {
     position: fixed;
     top: 70px;
@@ -437,13 +441,18 @@
         }
     }
 }
-#manage-skins-btn {
+.manage-skins-btn {
   margin-top: 10px;
   margin-bottom: 20px;
 }
 
 #auth_config_institutionidp {
     width: 90%;
+}
+
+.defaultskin {
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 .authInstance .authitem {
@@ -501,78 +510,7 @@
 /***********************************
 SIDEBLOCKS
 ***********************************/
-#sb-switchtheme form{
-    padding:20px;
-}
-#sb-switchtheme .submit.btn.btn-primary{
-    display:block;
-    margin:0 auto;
-    margin-top:15px;
-}
-#viewtheme-select {
-    display:block;
-    margin:0 auto;
-}
 
-/* Boutons institutions*/
-.list-group-item.bouton-instit-theme {
-    border: 0px !important;
-    width: 100%;
-    text-align: left;
-}
-#sb-switchtheme form {
-    padding: 0 !important;
-    width: 100% !important;
-}
-
-/* Pages */
-.col-md-12.lesboutons {
-    z-index: 999;
-}
-.theorder1866 > img {
-    width: 10%;
-}
-.btn-group.btn-toolbar {
-    .editviews {
-        img {
-            width: 16px;
-        }
-    }
-}
-
-.col-md-12.lesboutons {
-    margin-bottom: 10px;
-    margin-top: 10px;
-    padding: 0;
-}
-.col-md-12.lesboutons .col-collapse-offset.col-with-collapse, .col-md-12.lesboutons #enregistrer {
-    margin-left: 0;
-    padding-left: 0;
-}
-.col-md-12.lesboutons #afficher {
-    margin-right: 0;
-    padding-right: 0;
-}
 .accessurl-title {
     padding-top: 30px !important;
-}
-.pageshare.editthepage .btn-group.btn-toolbar.btn-group-top.col-md-12 {
-    margin-top: -30px;
-}
-.modifiertoutensemble {
-    padding-bottom: 20px;
-}
-.modifiertoutensemble > label {
-    display: block;
-    padding-top: 20px;
-}
-.modifiertoutensemble .mce-tinymce {
-    width: 100% !important;
-}
-.modifiertoutensemble .select2.select2-container.select2-container--default {
-    margin-top: 20px;
-}
-#dialoginst {
-    padding: 5px;
-    z-index: 9999;
 }

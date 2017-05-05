@@ -47,13 +47,14 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I select "Others will get a copy of the block configuration" from "Block copy permission"
   And I press "Save"
   And I scroll to the id "main-nav"
-  And I follow "Share page"
+  And I follow "Share" in the "#toolbar-buttons" "css_element"
   And I follow "Advanced options"
   And I enable the switch "Allow copying"
   And I select "Public" from "accesslist[0][searchtype]"
   And I press "Save"
 
   # Copy the page as same user
+  And I choose "Pages and collections" in "Portfolio" from main menu
   And I follow "Page 01"
   And I follow "Copy"
   And I press "Save"

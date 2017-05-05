@@ -21,8 +21,6 @@ require_once(get_config('libroot') . 'collection.php');
 require_once(get_config('libroot') . 'antispam.php');
 require_once(get_config('libroot') . 'group.php');
 
-define('SUBSECTIONHEADING', get_string('share'));
-
 $collection = null;
 if ($collectionid = param_integer('collection', null)) {
     $collection = new Collection($collectionid);
@@ -39,6 +37,15 @@ else {
 }
 
 $view = new View($viewid);
+
+$new = param_boolean('new', 0);
+if ($new) {
+    define('VIEWTITLE', get_string('notitle', 'view'));
+}
+else {
+    define('VIEWTITLE', $view->get('title'));
+}
+define('SUBSECTIONHEADING', VIEWTITLE);
 
 if (empty($collection)) {
     $collection = $view->get_collection();
@@ -66,6 +73,7 @@ $form = array(
     'class' => 'form-simple stacked block-relative',
     'plugintype' => 'core',
     'pluginname' => 'view',
+    'presubmitcallback' => 'beforeFormStartProcessing',
     'viewid' => $view->get('id'),
     'userview' => (int) $view->get('owner'),
     'elements' => array(
@@ -75,72 +83,6 @@ $form = array(
         ),
     )
 );
-
-// Create select options to allow the user to apply these access rules to
-// any of their views/collections.
-// For institution views, force edit access of one view at a time for now.  Editing multiple
-// institution views requires doing some tricky stuff with the 'copy for new users/groups'
-// options, and there's not much room for the 'Share' tab in the admin area anyway
-if ($view->get('type') != 'profile') {
-    list($collections, $views) = View::get_views_and_collections(
-        $view->get('owner'), $group, $institution, false, false
-    );
-}
-
-if (!empty($collections) || !empty($views)) {
-    $form['elements']['subjectgroup'] = array(
-        'type' => 'fieldset',
-        'class' => 'with-heading',
-        'renderelementsonly' => true
-    );
-}
-
-if (!empty($collections)) {
-    $defaultvalues = array();
-    $data = array();
-    foreach ($collections as &$c) {
-        $data[$c['id']] = $c['name'];
-        if ($collectionid == $c['id'] || !empty($c['match'])) {
-            $defaultvalues[$c['id']] = $c['id'];
-        }
-    }
-
-    $form['elements']['subjectgroup']['elements']['collections'] = array(
-        'type'         => 'select',
-        'title'        => get_string('Collections', 'collection'),
-        'class'     =>  'js-select2 text-inline input-pair',
-        'isSelect2' => true,
-        'multiple' => true,
-        'options' => $data,
-        'defaultvalue' => $defaultvalues,
-        'defaultvaluereadonly' => true,
-        'collapseifoneoption' => false,
-    );
-}
-
-if (!empty($views)) {
-    $defaultvalues = array();
-    $data = array();
-    foreach ($views as &$v) {
-        $data[$v['id']] =  $v['name'];
-
-        if ($viewid == $v['id'] || !empty($v['match'])) {
-            $defaultvalues[$v['id']] = $v['id'];
-        }
-    }
-
-    $form['elements']['subjectgroup']['elements']['views'] = array(
-        'type'         => 'select',
-        'title'        => get_string('views'),
-        'class'     =>  'js-select2 text-inline input-pair',
-        'isSelect2' => true,
-        'multiple' => true,
-        'options' => $data,
-        'defaultvalue' => $defaultvalues,
-        'defaultvaluereadonly' => true,
-        'collapseifoneoption' => false,
-    );
-}
 
 if ($view->get('type') == 'profile') {
     // Make sure all the user's institutions have access to profile view
@@ -162,7 +104,7 @@ $allowcomments = $view->get('allowcomments');
 
 $form['elements']['more'] = array(
     'type' => 'fieldset',
-    'class' => $view->get('type') == 'profile' ? ' hidden' : 'last form-condensed as-link link-expand-right with-heading',
+    'class' => $view->get('type') == 'profile' ? ' hidden' : 'last with-heading',
     'collapsible' => true,
     'collapsed' => true,
     'legend' => get_string('moreoptions', 'view'),
@@ -243,19 +185,20 @@ else {
         'defaultvalue' => $view->get('template') && $view->get('retainview'),
     );
     $js .= <<< EOF
-function update_retainview() {
-    if ($('accessurl_template').checked) {
-        removeElementClass($('accessurl_retainview_container'), 'hidden');
-    }
-    else {
-        addElementClass($('accessurl_retainview_container'), 'hidden');
-        $('accessurl_retainview').checked = false;
-        update_loggedin_access();
-    }
-};
-addLoadEvent(function() {
+jQuery(function($) {
+    function update_retainview() {
+        if ($('#accessurl_template').prop('checked')) {
+            $('#accessurl_retainview_container').removeClass('hidden');
+        }
+        else {
+            $('#accessurl_retainview_container').addClass('hidden');
+            $('#accessurl_retainview').prop('checked',false);
+            update_loggedin_access();
+        }
+    };
     update_retainview();
-    connect('accessurl_template', 'onclick', update_retainview);
+
+    $('#accessurl_template').on('click', update_retainview);
 });
 EOF;
     $js .= "function update_loggedin_access() {}\n";
@@ -267,28 +210,30 @@ if (!$allowcomments) {
 $allowcomments = json_encode((int) $allowcomments);
 
 $js .= <<<EOF
-var allowcomments = {$allowcomments};
-function update_comment_options() {
-    allowcomments = $('accessurl_allowcomments').checked;
-    if (allowcomments) {
-        removeElementClass($('accessurl_approvecomments'), 'hidden');
-        removeElementClass($('accessurl_approvecomments_container'), 'hidden');
-        forEach(getElementsByTagAndClassName(null, 'commentcolumn', 'accesslisttable'), function (elem) {
-            addElementClass(elem, 'hidden');
-        });
+jQuery(function($) {
+    var allowcomments = {$allowcomments};
+    function update_comment_options() {
+        allowcomments = $('#accessurl_allowcomments').prop('checked');
+        if (allowcomments) {
+            $('#accessurl_approvecomments').removeClass('hidden');
+            $('#accessurl_approvecomments_container').removeClass('hidden');
+            $('#accesslisttable .commentcolumn').each(function () {
+                $(this).addClass('hidden');
+            });
+        }
+        else {
+
+            $('#accessurl_approvecomments_container').addClass('hidden');
+            $('#accesslisttable .commentcolumn').each(function () {
+                $(this).removeClass('hidden');
+            });
+        }
     }
-    else {
-        addElementClass($('accessurl_approvecomments_container'), 'hidden');
-        forEach(getElementsByTagAndClassName(null, 'commentcolumn', 'accesslisttable'), function (elem) {
-            removeElementClass(elem, 'hidden');
-        });
-    }
-}
-addLoadEvent(function() {
-    connect('accessurl_allowcomments', 'onclick', update_comment_options);
+    $('#accessurl_allowcomments').on('click', update_comment_options);
     update_comment_options();
 });
 EOF;
+
 
 $form['elements']['more']['elements']['overrides'] = array(
     'type' => 'html',
@@ -450,7 +395,7 @@ function accessurl_cancel_submit() {
 }
 
 function accessurl_submit(Pieform $form, $values) {
-    global $SESSION, $institution, $collections, $views, $view;
+    global $SESSION, $institution, $view;
 
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
@@ -472,8 +417,6 @@ function accessurl_submit(Pieform $form, $values) {
         'accesslist'      => $values['accesslist'],
     );
 
-    $toupdate = array();
-
     if ($institution) {
         if (isset($values['copynewuser'])) {
             $viewconfig['copynewuser'] = (int) $values['copynewuser'];
@@ -488,57 +431,45 @@ function accessurl_submit(Pieform $form, $values) {
             $viewconfig['copynewgroups'] = $createfor;
         }
     }
-    if (isset($values['collections'])) {
-        foreach ($values['collections'] as $cid) {
-            if (!isset($collections[$cid])) {
-                throw new UserException(get_string('accessurlinvalidviewset', 'view'));
-            }
-            $toupdate = array_merge($toupdate, array_keys($collections[$cid]['views']));
-        }
-    }
 
-    if (isset($values['views'])) {
-        foreach ($values['views'] as $viewid) {
-            if (!isset($views[$viewid])) {
-                throw new UserException(get_string('accessurlinvalidviewset', 'view'));
-            }
-            $toupdate[] = $viewid;
-        }
+    $toupdate = array();
+    if ($collection = $view->get_collection()) {
+      $views = isset($collection->views()['views']) ? $collection->views()['views'] : null;
+      foreach ($views as $v) {
+          $toupdate[] = $v->view;
+      }
     }
-    else if ($view->get('type') == 'profile') {
-        // Force default Advanced options
-        $felements = $form->get_property('elements');
-        if (!empty($felements['more']['elements'])) {
-            foreach (array_keys($felements['more']['elements']) as $ename) {
-                if (property_exists($view, $ename)) {
-                    $viewconfig[$ename] = $view->get($ename);
+    else {
+        $toupdate[] = $view->get('id');
+        if ($view->get('type') == 'profile') {
+            // Force default Advanced options
+            $felements = $form->get_property('elements');
+            if (!empty($felements['more']['elements'])) {
+                foreach (array_keys($felements['more']['elements']) as $ename) {
+                    if (property_exists($view, $ename)) {
+                        $viewconfig[$ename] = $view->get($ename);
+                    }
                 }
             }
         }
-
-        $toupdate[] = $view->get('id');
     }
 
-    if (!empty($toupdate)) {
-        View::update_view_access($viewconfig, $toupdate);
+    View::update_view_access($viewconfig, $toupdate);
 
-        if ($view->get('type') == 'profile') {
-            // Ensure the user's institutions are still added to the access list
-            $view->add_owner_institution_access();
+    if ($view->get('type') == 'profile') {
+        // Ensure the user's institutions are still added to the access list
+        $view->add_owner_institution_access();
 
-            if (get_config('loggedinprofileviewaccess')) {
-                // Force logged-in user access
-                $viewaccess = new stdClass;
-                $viewaccess->accesstype = 'loggedin';
-                $view->add_access($viewaccess);
-            }
+        if (get_config('loggedinprofileviewaccess')) {
+            // Force logged-in user access
+            $viewaccess = new stdClass;
+            $viewaccess->accesstype = 'loggedin';
+            $view->add_access($viewaccess);
         }
     }
 
-    $SESSION->add_ok_msg(get_string('updatedaccessfornumviews1', 'view', count($toupdate)));
-
     if ($view->get('owner')) {
-        redirect('/view/index.php');
+        redirect(get_config('wwwroot') . '/view/blocks.php?id=' . $view->get('id'));
     }
     if ($view->get('group')) {
         redirect(get_config('wwwroot') . '/group/shareviews.php?group=' . $view->get('group'));
@@ -552,47 +483,7 @@ function accessurl_submit(Pieform $form, $values) {
 $form = pieform($form);
 
 // Antox code
-function editview_submit(Pieform $form, $values) {
-    global $new, $view, $SESSION, $urlallowed;
-
-    $view->set('title', $values['title']);
-    if (trim($values['description']) !== '') {
-        // Add or update embedded images in the view description
-        require_once('embeddedimage.php');
-        $view->set('description', EmbeddedImage::prepare_embedded_images($values['description'], 'description', $view->get('id')));
-    }
-    else {
-        // deleting description
-        $view->set('description', '');
-    }
-    $view->set('tags', $values['tags']);
-    if (isset($values['locked'])) {
-        $view->set('locked', (int)$values['locked']);
-    }
-    if (isset($values['ownerformat']) && $view->get('owner')) {
-        $view->set('ownerformat', $values['ownerformat']);
-    }
-    if (isset($values['anonymise'])) {
-        $view->set('anonymise', (int)$values['anonymise']);
-    }
-    if (isset($values['urlid'])) {
-        $view->set('urlid', strlen($values['urlid']) == 0 ? null : $values['urlid']);
-    }
-    else if ($new && $urlallowed) {
-        // Generate one automatically based on the title
-        $desired = generate_urlid($values['title'], get_config('cleanurlviewdefault'), 3, 100);
-        $ownerinfo = (object) array('owner' => $view->get('owner'), 'group' => $view->get('group'));
-        $view->set('urlid', View::new_urlid($desired, $ownerinfo));
-    }
-    $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
-    $view->commit();
-    redirect('/view/blocks.php?id=' . $view->get('id'));
-}
 $displaylink = $view->get_url();
-
-if (isset($new)) {
-    $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
-}
 // End
 
 // URLS
@@ -626,7 +517,6 @@ if (!$records) {
 }
 
 $tokens = array();
-$js = '';
 
 for ($i = 0; $i < count($records); $i++) {
     $r =& $records[$i];
@@ -709,9 +599,9 @@ for ($i = 0; $i < count($records); $i++) {
 // Only add the call if there is any zclip setup to be done.
 $count = count($records);
 if ($count) {
-    $js = <<<EOF
+    $js .= <<<EOF
 jQuery(function($) {
-    $(document).ready(function() {
+      $(document).ready(function() {
             for (i = 0; i < {$count}; i++) {
                 var element = document.getElementById("copytoclipboard-" + i);
                 try {
@@ -812,7 +702,8 @@ function newurl_submit(Pieform $form, $values) {
 
     if ($collection) {
         $collection->new_token();
-        $viewid = reset($collection->get_viewids());
+        $views = $collection->get_viewids();
+        $viewid = reset($views);
     }
     else {
         View::new_token($viewid);
@@ -862,6 +753,8 @@ $smarty->assign('form', $form);
 $smarty->assign('shareurl', $shareurl);
 $smarty->assign('group', $group);
 $smarty->assign('institution', $institution);
+$smarty->assign('collectionid', $collectionid);
+$smarty-> assign('collectiontitle', ($collection ? $collection->get('name') : null));
 // Antox code
 $smarty->assign('editurls', $editurls);
 $smarty->assign('viewid', $view->get('id'));
@@ -872,4 +765,3 @@ $smarty->assign('onprobation', $onprobation);
 $smarty->assign('newform', $newform);
 // end
 $smarty->display('view/accessurl.tpl');
-

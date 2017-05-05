@@ -27,11 +27,11 @@ Scenario: Testing that views & collections are collated properly
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I follow "Page 1"
     And I follow "Edit this page"
-    And I follow "Edit title and description"
+    And I follow "Settings" in the "#toolbar-buttons" "css_element"
     And I set the following fields to these values:
     | Anonymise | 1 |
     And I press "Save"
-    And I follow "Share page"
+    And I follow "Share" in the "#toolbar-buttons" "css_element"
     And I select "Registered users" from "accesslist[0][searchtype]"
     And I press "Save"
     And I log out
