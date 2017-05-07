@@ -243,7 +243,7 @@ if ($viewtheme && $THEME->basename != $viewtheme) {
 }
 // if it's another users view, it should be displayed with the other users institution theme
 else if ($owner && $owner != $USER->get('id')) {
-    $THEME = new Theme($owner);
+    $THEME = new Theme((int)$owner);
 }
 
 $headers = array();
