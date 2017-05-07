@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-$string['aboutdefaultcontent'] = '<h1>About</h1>
+$string['aboutdefaultcontent'] = '<h2>About us</h2>
 <p><i>Add text about your organisation or the installation here</i></p>
 
 <p><strong>[<i>Name of your installation here</i>]</strong> is powered by <a href="https://mahara.org">Mahara</a>. Mahara is provided freely as open source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify Mahara provided you agree to:</p>
@@ -36,9 +36,7 @@ $string['loggedouthomedefaultcontent'] = '<h1>Welcome</h1>
 <p>For more information you can read <a href="about.php">About</a> [<i>please ensure you also edit this page</i>] or alternatively please feel free to <a href="contact.php">contact us</a>.</p>
 
 <p><i>You can edit this text via %s</i></p>';
-$string['privacydefaultcontent'] = '<h1>Privacy statement</h1>
-
-<h2>Introduction</h2>
+$string['privacydefaultcontent'] = '<h2>Introduction</h2>
 
 <p>[<i>This is a default privacy statement for your legal department to edit</i>].</p>
 
@@ -75,9 +73,7 @@ $string['privacydefaultcontent'] = '<h1>Privacy statement</h1>
 <h2>Contact</h2>
 
 <p>If you have any questions regarding this statement or believe we have not adhered to the above criteria, please <a href="contact.php">contact us</a> and we will use all reasonable efforts to remedy the issue.</p>';
-$string['termsandconditionsdefaultcontent'] = '<h1>Terms and conditions</h1>
-
-<p>[<i>This is a default terms and conditions statement for your legal department to edit</i>].</p>
+$string['termsandconditionsdefaultcontent'] = '<p>[<i>This is a default terms and conditions statement for your legal department to edit</i>].</p>
 
 <p>By using [<i>name of site</i>] you are agreeing to the terms and conditions given below.</p>
 
