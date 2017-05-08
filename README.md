@@ -103,7 +103,6 @@ You can still use Mahara on older browsers, but may not have all functionality
 available.
 
 For Mahara 17.04, the supported browser versions are:
-// TODO: Review list of browsers closer to the release date.
  * Firefox - 48.0
  * Chrome - 51.0
  * Safari - 9.1
