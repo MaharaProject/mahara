@@ -464,7 +464,14 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
                 continue;
             }
             if ($field == 'gender' && !empty($value)) {
-                $value = get_string($value, 'artefact.resume');
+                // lang strings changed so need to make changes to deal with new lang string identifiers
+                $field .= '1';
+                if ($value == 'male') {
+                    $value = get_string('man', 'artefact.resume');
+                }
+                else if ($value == 'female') {
+                    $value = get_string('woman', 'artefact.resume');
+                }
             }
             if ($field == 'dateofbirth' && !empty($value)) {
                 $value = format_date($value+3600, 'strftimedate');
