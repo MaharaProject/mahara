@@ -6,7 +6,7 @@ So I can configure the site to the way the client wants
 
 Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
- And I go to "admin/site/options.php"
+ And I choose "Site options" in "Configure site" from administration menu
  # Verifying I'm on the right page
  And I should see "Here you can set some global options that will apply by default throughout the entire site."
  And I expand all fieldsets
@@ -50,3 +50,11 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
 | Custom licenses | 1 |
 | Mobile uploads | 1 |
 And I press "Update site options"
+
+Scenario: Setting default account lifetime
+ Given I log in as "admin" with password "Kupuhipa1"
+ And I choose "Site options" in "Configure site" from administration menu
+ And I expand all fieldsets
+ And I select "Weeks" from "siteoptions_defaultaccountlifetime_units"
+ And I fill in "10" for "siteoptions_defaultaccountlifetime"
+ And I press "Update site options"
