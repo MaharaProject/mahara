@@ -3353,8 +3353,11 @@ class View {
                 else {
                     $sortorder .= ', ';
                 }
-
-                $sortorder .= $field['fieldname'] . ' ' . $order;
+                $fieldname = $field['fieldname'];
+                if (!empty($field['fieldvalue'])) {
+                    $fieldname .= " = '" . $field['fieldvalue'] . "'";
+                }
+                $sortorder .= $fieldname . ' ' . $order;
             }
         }
 

@@ -260,7 +260,18 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
      * are listed in the profile screen
      */
     public static function artefactchooser_get_sort_order() {
-        return '';
+        safe_require('artefact', 'internal');
+        $artefacttypes = array_diff(PluginArtefactInternal::get_profile_artefact_types(), array('email'));
+        if (!get_record('blocktype_installed', 'active', 1, 'name', 'socialprofile')) {
+            $artefacttypes = array_diff($artefacttypes, array('socialprofile'));
+        }
+        $sortorder = array();
+        foreach ($artefacttypes as $type) {
+            $sortorder[] = array('fieldname' => 'artefacttype',
+                                 'fieldvalue' => $type,
+                                 'order' => 'DESC');
+        }
+        return $sortorder;
     }
 
     public static function rewrite_blockinstance_config(View $view, $configdata) {
