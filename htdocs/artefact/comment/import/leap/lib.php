@@ -237,7 +237,7 @@ class LeapImportComment extends LeapImportArtefactPlugin {
         if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importer->get('importertransport')->get('importid'), 'comment'))) {
             foreach ($entry_requests as $entry_request) {
                 $entry = $importer->get_entry_by_id($entry_request->entryid);
-                self::setup_relationships($entry, $importer);
+                self::setup_relationships($entry, $importer, null, array());
             }
         }
     }
