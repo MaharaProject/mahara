@@ -670,9 +670,10 @@ EOF;
         $smarty->assign('MAINNAV', main_nav());
         $mainnavsubnav = $SELECTEDSUBNAV;
         $smarty->assign('RIGHTNAV', right_nav());
-        if (!$mainnavsubnav && $dropdownmenu) {
-            // In drop-down navigation, the submenu is only usable if its parent is one of the top-level menu
-            // items.  But if the submenu comes from something in right_nav (settings), it's unreachable.
+        if (!$mainnavsubnav) {
+            // The submenu is only usable if its parent is one of the top-level menu items.
+            // But if the submenu comes from something in right_nav (settings), it's unreachable
+            // via dropdowns / mobile layout.
             // Turning the submenu into SUBPAGENAV group-style tabs makes it usable.
             $smarty->assign('SUBPAGENAV', $SELECTEDSUBNAV);
         }
