@@ -4959,5 +4959,21 @@ function xmldb_core_upgrade($oldversion=0) {
         clear_menu_cache();
     }
 
+    if ($oldversion < 2017051100) {
+        if ($records = get_records_sql_assoc("SELECT aa.annotation, va.view
+                                              FROM {artefact_annotation} aa
+                                              JOIN {view_artefact} va ON va.artefact = aa.annotation
+                                              WHERE aa.view != va.view", array())) {
+            log_debug('Fix artefact_annotation table data for copied collections');
+            foreach ($records as $record) {
+                $data = (object)array(
+                    'annotation'    => $record->annotation,
+                    'view'          => $record->view,
+                );
+                update_record('artefact_annotation', $data, 'annotation');
+            }
+        }
+    }
+
     return $status;
 }
