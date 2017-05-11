@@ -20,6 +20,7 @@ var UserSearch = (function($) {
           self.rewriteHeaders();
           self.rewriteInitials();
           self.rewriteQueryButton();
+          self.rewriteQueryField();
           self.rewriteCheckboxes();
           self.rewriteLoggedInFilter();
           self.rewriteDuplicateEmailFilter();
@@ -106,18 +107,30 @@ var UserSearch = (function($) {
 
       this.rewriteQueryButton = function() {
           $('#query-button').click(function() {
-              pager.params.offset = 0;
-              pager.params.query = $('#query').val();
-              var institution = $('#institution');
-              if (institution) {
-                  pager.params.institution = institution.val();
+              self.submitUserQuery();
+          });
+      };
+
+      this.submitUserQuery = function() {
+          pager.params.offset = 0;
+          pager.params.query = $('#query').val();
+          var institution = $('#institution');
+          if (institution) {
+              pager.params.institution = institution.val();
+          }
+          var institution_requested = $('#institution_requested');
+          if (institution_requested) {
+              pager.params.institution_requested = institution_requested.val();
+          }
+          pager.sendQuery();
+          return false;
+      };
+
+      this.rewriteQueryField = function() {
+          $('#query').on('keypress', function(event) {
+              if (event.keyCode == 13) {
+                  self.submitUserQuery();
               }
-              var institution_requested = $('#institution_requested');
-              if (institution_requested) {
-                  pager.params.institution_requested = institution_requested.val();
-              }
-              pager.sendQuery();
-              return false;
           });
       };
 
