@@ -141,8 +141,10 @@ else {
                 }
 
                 if (!$imagevisible && $groupid) {
-                    // check for public embedded image
-                    if (!group_user_access($groupid)){
+                    // Check if group description is viewable
+                    require_once('view.php');
+                    $view = group_get_homepage_view($groupid);
+                    if (!can_view_view($view->get('id'))) {
                         throw new AccessDeniedException(get_string('accessdenied', 'error'));
                     }
                     $imagevisible = EmbeddedImage::can_see_embedded_image($fileid, 'group', $groupid);
