@@ -955,6 +955,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 'class' => 'btn-default'
             );
             $form['elements']['submit'] = $submit;
+            // Dont use the 'Processing...' bit on the submit button
+            $form['presubmitcallback'] = '';
             // Remove the 'assessment' option as we want that independent of submitting feedback here
             unset($form['elements']['assessment']);
             $addannotationfeedbackform = pieform($form);
