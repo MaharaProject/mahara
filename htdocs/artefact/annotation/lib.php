@@ -274,6 +274,23 @@ class ArtefactTypeAnnotation extends ArtefactType {
         return $url;
     }
 
+    public function update_artefact_references(&$view, &$template, &$artefactcopies, $oldid) {
+        parent::update_artefact_references($view, $template, $artefactcopies, $oldid);
+        // If we have some artefact mapping data
+        if (isset($artefactcopies[$oldid]->newid)) {
+            if ($viewid = get_field('view_artefact', 'view', 'artefact', $artefactcopies[$oldid]->newid, 'view', $view->get('id'))) {
+                // And the mapping data relates to this particular view (useful if in collection)
+                // Attach copies of the annotation artefact to correct view in artefact_annotation table.
+                $data = (object)array(
+                    'annotation'    => $artefactcopies[$oldid]->newid,
+                    'view'          => $view->get('id'),
+                    'artefact'      => $this->get('artefact'),
+                );
+                update_record('artefact_annotation', $data, 'annotation');
+            }
+        }
+    }
+
     public function commit() {
         if (empty($this->dirty)) {
             return;
