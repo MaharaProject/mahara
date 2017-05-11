@@ -431,13 +431,13 @@ function editaccess_validate(Pieform $form, $values) {
             }
             // $values['startdate'] and $values['stopdate'] from override
             // check if there is a conflict
-            if (($item['startdate'] && $values['startdate'] && $item['startdate'] < $values['startdate'])
+            if ((!empty($item['startdate']) && !empty($values['startdate']) && $item['startdate'] < $values['startdate'])
                 ||
-                ($item['stopdate'] && $values['stopdate'] && $values['stopdate'] < $item['stopdate'])
+                (!empty($item['stopdate']) && !empty($values['stopdate']) && $values['stopdate'] < $item['stopdate'])
                 ||
-                ($item['stopdate'] && $values['startdate'] && $item['stopdate'] < $values['startdate'])
+                (!empty($item['stopdate']) && !empty($values['startdate']) && $item['stopdate'] < $values['startdate'])
                 ||
-                ($item['startdate'] && $values['stopdate'] && $values['stopdate'] < $item['startdate'])
+                (!empty($item['startdate']) && !empty($values['stopdate']) && $values['stopdate'] < $item['startdate'])
             ) {
                 $SESSION->add_error_msg(get_string('overrideconflict', 'view', $accesstypestrings[$item['type']]));
                 break;
