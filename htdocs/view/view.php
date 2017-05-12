@@ -45,16 +45,20 @@ $mnettoken = $SESSION->get('mnetuser') ? param_alphanum('mt', null) : null;
 
 // access key for logged out users
 $usertoken = (is_null($mnettoken) && get_config('allowpublicviews')) ? param_alphanum('t', null) : null;
-
+$viewtoken = null;
 if ($mnettoken) {
-    if (!$viewid = get_view_from_token($mnettoken, false)) {
+    $viewtoken = get_view_from_token($mnettoken, false);
+    if (!$viewtoken->viewid) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
     }
+    $viewid = $viewtoken->viewid;
 }
 else if ($usertoken) {
-    if (!$viewid = get_view_from_token($usertoken, true)) {
+    $viewtoken = get_view_from_token($usertoken, true);
+    if (!$viewtoken->viewid) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
     }
+    $viewid = $viewtoken->viewid;
 }
 else if ($pageurl = param_alphanumext('page', null)) {
     if ($profile = param_alphanumext('profile', null)) {
@@ -119,6 +123,10 @@ if ($viewtype == 'profile' || $viewtype == 'dashboard' || $viewtype == 'grouphom
 define('TITLE', $view->get('title'));
 
 $collection = $view->get('collection');
+// Do we need to redirect to the matrix page on first visit via token access?
+if ($viewtoken && $viewtoken->gotomatrix && $collection && $collection->has_framework()) {
+    redirect($collection->get_framework_url($collection, true));
+}
 $submittedgroup = (int)$view->get('submittedgroup');
 if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
     // The user is a tutor of the group that this view has

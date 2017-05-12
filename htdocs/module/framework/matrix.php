@@ -10,6 +10,7 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'framework');
