@@ -1,5 +1,5 @@
                 {foreach from=$views item=view name=loopidx}
-                <div class="{if $view.collid}panel-collection{else}panel-view{/if}">
+                <div class="panel-quarter {if $view.collid}panel-collection{else}panel-view{/if}">
                     <div class="panel panel-default {if $view.submittedto} panel-warning {/if}
                     {if $view.template == $sitetemplate} site-template{/if}">
                         <h3 class="panel-heading has-link">
@@ -91,7 +91,7 @@
                                         <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock-alt{/if} close-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
                                     </a>
-                                    <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                    <ul class="dropdown-menu" role="menu">
                                         {foreach from=$view.manageaccess item=manageitem}
                                         <li>
                                             {if $manageitem->accesstype == 'managesharing'}
@@ -163,7 +163,7 @@
                                     </button>
                                     {/if}
                                     {if $view.collid && $view.collviews > 0}
-                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                    <ul class="dropdown-menu" role="menu">
                                         {if $view.framework}
                                         <li>
                                             <a href="{$view.framework->fullurl}">

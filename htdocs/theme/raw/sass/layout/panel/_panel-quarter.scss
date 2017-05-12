@@ -190,3 +190,23 @@
         }
     }
 }
+
+// Make collection list dropdown align right on the right most panel
+.panel-quarter {
+    &:nth-child(even) .collection-list .dropdown-menu,
+    &:nth-child(even) .page-access .dropdown-menu {
+        right: 0;
+        left: auto;
+        @media (min-width: $screen-sm-min) {
+            left: 0;
+            right: auto;
+        }
+    }
+    &:nth-child(4n) .collection-list .dropdown-menu,
+    &:nth-child(4n) .page-access .dropdown-menu {
+        @media (min-width: $screen-sm-min) {
+            right: 0;
+            left: auto;
+        }
+    }
+}
