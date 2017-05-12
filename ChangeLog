@@ -1,3 +1,21 @@
+17.04.1 (2017-05-12)
+- Bug 1686336: SmartEvidence matrix page not accessible via secret URL
+- Bug 1686833: Gender lang string is misssing
+- Bug 1686885: Site options - Event log expiry field not enabled
+- Bug 1688126: MathJax not working
+- Bug 1688693: All portfolios of others are shown in the "Default" theme rather than the site or institution theme
+- Bug 1689923: Problems adding annotation comments to SmartEvidence in 17.04 via matrix page
+- Bug 1689931: Problem with leaving feedback on copied SE collection annotation
+- Bug 1681291: Unable to import leap2a file
+- Bug 1681987: Artefact display page showing owner's name to anonymous viewer
+- Bug 1683098: Introduction not displayed in owner preview
+- Bug 1683551: Footer headings are showing up twice
+- Bug 1686259: Refactor pages and collection template and styles
+- Bug 1686843: Table styles on Resume block
+- Bug 1687356: Social media: Extra field shouldn't be shown unless for "Other"
+- Bug 1687494: Allow the pressing of 'enter' button to do search in Admin -> User search form
+- Bug 1688165: Image not shown in group description if not a member of a group
+
 17.04.0 (2017-04-27)
 - Bug 1652995: Phpmailer security update (v5.2.21)
 - Bug 1685041: Page templates are in the wrong layout
