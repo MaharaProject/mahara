@@ -16,6 +16,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .tagexcluded {
+    background: #ffd9d9 !important;
+  }
 }
 
 .select2-search--inline {
