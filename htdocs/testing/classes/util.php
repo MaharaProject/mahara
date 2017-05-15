@@ -634,7 +634,7 @@ abstract class TestingUtil {
      * @param bool $displayprogress
      */
     protected static function drop_database($displayprogress = false) {
-
+        global $CFG;
         // Drop triggers
         try {
             db_drop_trigger('update_unread_insert', 'notification_internal_activity');
@@ -730,7 +730,9 @@ abstract class TestingUtil {
         if (is_mysql()) {
             execute_sql('SET foreign_key_checks = 1');
         }
-
+        // Reset info so we install rather than update if calling install_site straight after
+        $CFG->installed = false;
+        $CFG->version = 0;
     }
 
     /**
