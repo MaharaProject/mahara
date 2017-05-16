@@ -33,7 +33,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
  And I follow "Display page"
  And I fill in "Adding a comment to this field. Student = Awesome!" in editor "Comment"
  # Checking that the make public is on
- And I enable the switch "Make public"
+ And I enable the switch "Make comment public"
  And I press "Comment"
  # Verifying that it saves
  Then I should see "Comment submitted"

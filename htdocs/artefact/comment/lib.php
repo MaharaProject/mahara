@@ -948,7 +948,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
         $form['elements']['ispublic'] = array(
             'type'  => 'switchbox',
-            'title' => get_string('makepublic', 'artefact.comment'),
+            'title' => get_string('makecommentpublic', 'artefact.comment'),
             'defaultvalue' => !$defaultprivate,
         );
         if (get_config('licensemetadata')) {
@@ -1003,7 +1003,7 @@ class ArtefactTypeComment extends ArtefactType {
                     'usebuttontag' => true,
                     'class' => 'btn-link btn-xs',
                     'name'  => 'make_public_submit',
-                    'value' => '<span class="icon icon-lock text-default left" role="presentation" aria-hidden="true"></span>' . get_string('makepublic', 'artefact.comment'),
+                    'value' => '<span class="icon icon-lock text-default left" role="presentation" aria-hidden="true"></span>' . get_string('makecommentpublic', 'artefact.comment'),
                 ),
             ),
         );

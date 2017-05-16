@@ -22,7 +22,7 @@ Scenario: Adding and deleting public comments
     And I fill in "Name" with "Joe Anonymous"
     # No TinyMCE editor for anonymous users
     And I fill in "Comment" with "Public comment by anonymous user"
-    And I enable the switch "Make public"
+    And I enable the switch "Make comment public"
     And I press "Comment"
     And I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
@@ -72,7 +72,7 @@ Scenario: Comments update the page's mtime
     # Private comment updates page last updated
     And I go to portfolio page "page2"
     And I fill in "Private comment" in editor "Comment"
-    And I disable the switch "Make public"
+    And I disable the switch "Make comment public"
     And I press "Comment"
     And I choose "Dashboard" from main menu
     Then I should see "page2" in the ".bt-newviews" element
