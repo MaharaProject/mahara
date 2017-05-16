@@ -608,6 +608,8 @@ function webservice_server_config_form($serverid) {
                         'sflist' => array(
                             'value' =>  pieform(array(
                                 'name' => 'oauthconfigoptions',
+                                'plugintype' => $moduletype,
+                                'pluginname' => $module,
                                 'successcallback'  => 'webservice_server_config_submit',
                                 'elements' => $elements)),
                         )

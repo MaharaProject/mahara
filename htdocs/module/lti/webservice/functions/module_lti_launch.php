@@ -145,6 +145,7 @@ class module_lti_launch extends external_api {
 
         // Auto create user if auth allowed
         $canautocreate = get_field('oauth_server_config', 'value', 'oauthserverregistryid', $WEBSERVICE_OAUTH_SERVERID, 'field', 'autocreateusers');
+        $parentauthid = get_field('oauth_server_config', 'value', 'oauthserverregistryid', $WEBSERVICE_OAUTH_SERVERID, 'field', 'parentauth');
 
         if (!$userid) {
             if ($canautocreate) {
@@ -154,7 +155,7 @@ class module_lti_launch extends external_api {
                 $user->password = sha1(uniqid('', true));
                 $user->firstname = $params['lis_person_name_given'];
                 $user->lastname = $params['lis_person_name_family'];
-                $user->authinstance = $authinstanceid;
+                $user->authinstance = !empty($parentauthid) ? $parentauthid : $authinstanceid;
 
                 // Make sure that the username doesn't already exist
                 if (get_record('usr', 'username', $user->email)) {
@@ -168,6 +169,15 @@ class module_lti_launch extends external_api {
 
                 $updateremote = false;
                 $updateuser = false;
+
+                if ($parentauthid) {
+                    $authremoteuser = new StdClass;
+                    $authremoteuser->authinstance = $parentauthid;
+                    $authremoteuser->remoteusername = $user->username;
+                    $authremoteuser->localusr = $user->id;
+
+                    insert_record('auth_remote_user', $authremoteuser);
+                }
             }
             else {
                 $USER->logout();
@@ -180,6 +190,7 @@ class module_lti_launch extends external_api {
             $user->email = $params['lis_person_contact_email_primary'];
             $user->firstname = $params['lis_person_name_given'];
             $user->lastname = $params['lis_person_name_family'];
+            $user->authinstance = !empty($parentauthid) ? $parentauthid : $authinstanceid;
             unset($user->password);
 
             $profilefields = new StdClass;
