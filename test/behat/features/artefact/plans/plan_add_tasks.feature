@@ -92,9 +92,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
  And I follow "Add"
  And I click on "Page" in the dialog
  And I press "Save"
- And I wait "5" seconds
  And I expand "General" node
- And I wait "1" seconds
  And I follow "Plans" in the "div#general" "css_element"
  And I press "Add"
  And I set the following fields to these values:

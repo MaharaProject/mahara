@@ -53,6 +53,12 @@
         },
         {{$extraparams|safe}}
     });
+    jQuery("#{{$id}}").on('select2:select', function(e) {
+        window.pageIsRendering = false;
+    });
+    jQuery("#{{$id}}").on('select2:unselect', function(e) {
+        window.pageIsRendering = false;
+    });
 {{if !$inblockconfig}}
     });
 {{/if}}

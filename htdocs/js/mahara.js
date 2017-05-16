@@ -230,30 +230,17 @@ function displayMessage(message, type, hideprevmsg) {
     jQuery('#messages').append(message);
 
     if (hideprevmsg || typeof(hideprevmsg) === 'undefined') {
-        isPageRendering = true;
         oldmessage.fadeOut(200, function() {
             $j(this).remove();
-            isPageRendering = false;
         });
     }
 }
 
 /**
- * This variable determines the completeness of a json request
- * = true if the request is still in progress
- */
-var isRequestStillProcessing = false;
-
-/**
- * This variable determines the completeness of a page rendering
- * = true if the rendering is still in progress
- */
-var isPageRendering = false;
-
-/**
  * Display a nice little loading notification
  */
 function processingStart(msg) {
+    window.isRequestProcessing = true;
     if (!msg) {
         msg = get_string('loading');
     }
@@ -265,8 +252,6 @@ function processingStart(msg) {
         '</div>'
     );
     jQuery('.loading-box .loading-message').text(msg);
-
-    isRequestStillProcessing = true;
 }
 
 /**
@@ -275,8 +260,8 @@ function processingStart(msg) {
 function processingStop() {
     setTimeout(function() {
         jQuery('.loading-box').addClass('hidden');
-        isRequestStillProcessing = false;
     }, 100); //give users enough time to see the loading indicator
+    window.isRequestProcessing = false;
 }
 
 /**
@@ -338,6 +323,7 @@ function sendjsonrequest(url, data, method, successcallback, errorcallback, quie
     request.done(function(data) {
         var error = data.error;
 
+        // It may take a while to render the page after AJAX requests
         if (typeof(data.message) === 'object' && data.message !== null) {
             data = data.message;
         }

@@ -19,9 +19,10 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  Given I log in as "userA" with password "Kupuhipa1"
  When I choose "Journals" in "Content" from main menu
  And I follow "New entry"
- And I set the following fields to these values:
+ And I fill in the following:
  | Title * | My diary entry one |
- | Entry | I love my mum |
+ And I set the following fields to these values:
+ | Entry * | I love my mum |
  | Draft | 1 |
  | Allow comments | 0 |
  And I scroll to the base of id "editpost_tags_container"
@@ -36,8 +37,9 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
 
  # Add another entry
  And I follow "New entry"
- And I set the following fields to these values:
+ And I fill in the following:
  | Title * | My diary entry two |
+ And I set the following fields to these values:
  | Entry | I love my dad |
  | Draft | 0 |
  | Allow comments | 0 |
@@ -48,7 +50,6 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
 
  # Remove tag from first journal and save
  Given I click on "Edit" in "My diary entry one" row
- And I wait "1" seconds
  And I clear value "mildred (1)" from select2 field "editpost_tags"
  And I press "Save entry"
  Then I should see "Journal entry saved"
@@ -59,10 +60,8 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I click on "Journal page" panel menu
  And I click on "Edit" in "Journal page" panel menu
  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
- And I wait "1" seconds
  And I follow "Tagged journal entries" in the "div#blog" "css_element"
  And I press "Add"
- And I wait "1" seconds
  And I fill in select2 input "instconf_tagselect" with "george" and select "george"
  And I press "Save"
  Then I should see "My diary entry two"

@@ -14,12 +14,10 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     When I choose "Files" in "Content" from main menu
     And I fill in "Folder1" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
-    And I wait "1" seconds
     And I follow "Folder1"
     # Creating subfolder inside Folder1
     And I fill in "Subfolder" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
-    And I wait "1" seconds
     # Uploading Image to Folder1
     And I attach the file "Image1.jpg" to "File"
     # Confirming upload was successful
@@ -29,21 +27,17 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     # Creating Folder2
     And I fill in "Folder2" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
-    And I wait "1" seconds
     And I follow "Folder2"
     # Creatign Subfolder2
     And I fill in "Subfolder2" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
-    And I wait "1" seconds
     And I follow "Subfolder2"
     And I attach the file "Image3.png" to "File"
     # Confirming upload was successful
     And I should see "Upload of Image3.png to Subfolder2 complete"
     # Check the modal preview works
     And I follow "Image3.png"
-    And I wait "1" seconds
     And I press "Close"
-    And I wait "1" seconds
     # Confirming deletion of upload
     And I delete the "Image3.png" row
     And I should see "Image Image3.png deleted"

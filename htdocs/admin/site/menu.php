@@ -266,11 +266,9 @@ jQuery(function($) {
   }
 
   function changemenu() {
-      isPageRendering = true;
       selectedmenu = $('#menuselect').val();
       getitems();
       getadminfiles();
-      isPageRendering = false;
   }
 
   var selectedmenu = 'loggedoutmenu';

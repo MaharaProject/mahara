@@ -20,21 +20,16 @@ Scenario: Add some externalfeed blocks
     And I click on "Page 1" panel menu
     And I click on "Edit" in "Page 1" panel menu
     And I expand "External" node
-    And I wait "1" seconds
     And I follow "External feed"
     And I press "Add"
-    And I wait "1" seconds
     Then I should see "URL of a valid RSS or ATOM feed"
-    And I set the field "Feed location" to "http://www.apple.com/main/rss/hotnews/hotnews.rss"
+    And I fill in "Feed location" with "http://www.apple.com/main/rss/hotnews/hotnews.rss"
     And I press "Save"
-    And I wait "2" seconds
     Then I should see "provided by Apple."
     And I follow "External feed"
     And I press "Add"
-    And I wait "1" seconds
-    And I set the field "Feed location" to "http://php.net/feed.atom"
-    And I set the field "Items to show" to "2"
+    And I fill in "Feed location" with "http://php.net/feed.atom"
+    And I fill in "Items to show" with "2"
     And I enable the switch "Show feed items in full"
     And I press "Save"
-    And I wait "2" seconds
     Then I should see "PHP.net"

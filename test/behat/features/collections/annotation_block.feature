@@ -24,7 +24,6 @@ Scenario: Accessing annotation block (Bug 1443730)
  And follow "My page is amazing"
  And I follow "Edit"
  And I expand "General" node
- And I wait "2" seconds
  And I follow "Annotation"
  And I press "Add"
  And I press "Save"

@@ -36,7 +36,6 @@ Scenario: Adding a comment on a group page (Bug 1426983)
     # Log in as "Admin" user
     When I log in as "admin" with password "Kupuhipa1"
     # Checking notification display on the dashboard
-    And I wait "1" seconds
     Then I should see "New comment on Testing group page 01"
     # Checking notifications also appear in my inbox
     And I choose "mail" from user menu by id

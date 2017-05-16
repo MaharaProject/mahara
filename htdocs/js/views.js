@@ -214,6 +214,13 @@
 
 
     function attachAccordion(){
+        // Update the status of a collapsible block category by adding/removing class 'expanded'
+        $j('div#content-editor-foldable div.block-category-title').on('click', function() {
+            // Collapse all other expanded category
+            $j(this).parent().find('div.expanded').toggleClass('expanded');
+            $j(this).toggleClass('expanded');
+        });
+
         contentEditor.find('.btn-accordion').accordion({
             icons: false,
             heightStyle: 'content',
@@ -221,7 +228,10 @@
             active: false,
             header: ".block-category-title",
             activate: function(event, ui) {
-                var active = $(this).find('.ui-state-active');
+                // When all animation is off ($j.fx.off == true)
+                // We can not rely on the class 'ui-state-active' as it is only
+                // added when accordion widget animation functions are activated
+                var active = $(this).find('.expanded');
                 if (active.length) {
                     var category = active.next('div'),
                         categoryid = category.attr('id'),
@@ -244,6 +254,7 @@
                 }
             }
         });
+
     }
 
     function attachToolbarToggle (){

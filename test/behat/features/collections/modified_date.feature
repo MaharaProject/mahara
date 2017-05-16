@@ -25,7 +25,6 @@ Scenario: Adding collection to group (Bug 1448807)
  And I set the following fields to these values:
  | Site Page 01 | 1 |
  And I press "Add pages"
- And I wait until the page is ready
  And I follow "Done"
  And I choose "Shared by me" in "Portfolio" from main menu
  And I follow "Edit access"

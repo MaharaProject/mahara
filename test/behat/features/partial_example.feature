@@ -17,7 +17,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     # Creating a page
     And I follow "Add"
     And I click on "Page" in the dialog
-    And I set the field "Page title" to "test page name 1"
+    And I fill in "Page title" with "test page name 1"
     And I press "Save"
     # Verifying it saved
     And I should see "Page saved successfully"
@@ -25,7 +25,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I follow "Add"
     And I click on "Collection" in the dialog
-    And I set the field "Collection name" to "test collection name"
+    And I fill in "Collection name" with "test collection name"
     And the "Page navigation bar" checkbox should be checked
     And I press "Next: Edit collection pages"
     # Adding pages to the collection
@@ -42,7 +42,6 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I go to the homepage
     And I choose "Export" in "Portfolio" from main menu
     And I move backward one page
-    And I wait "3" seconds
     And I move forward one page
     And I choose "Profile" in "Content" from main menu
     And the "First name" field should not contain "Jinelle"

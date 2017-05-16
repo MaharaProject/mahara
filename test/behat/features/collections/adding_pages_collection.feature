@@ -27,7 +27,6 @@ Scenario: Creating a collection AND adding pages
     # Adding page 1, 2 & 3 to the collection
     And I press "Next: Edit collection pages"
     And I follow "All"
-    And I wait "1" seconds
     Then I press "Add pages"
     # Verifying that the pages were added
     And I should see "Testing page 1"
@@ -42,7 +41,6 @@ Scenario: Creating a collection AND adding pages
     And I select "Last modified" from "Sort by:"
     And I press the key "Enter" in the "Search:" field
     # Checking they are in the right order
-    And I wait "1" seconds
     And "Testing page 1" "link" should appear before "Testing page 2" "link"
     And "Testing page 2" "link" should appear before "Testing page 3" "link"
 
@@ -62,7 +60,6 @@ Scenario: Creating a collection AND adding pages
     And I click on "Test Collection" panel menu
     And I click on "Manage" in "Test Collection" panel menu
     And I follow "All"
-    And I wait "1" seconds
     And I press "Add pages"
     And I should see "1 page added to collection"
     And I follow "Done"

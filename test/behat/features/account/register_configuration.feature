@@ -1,4 +1,4 @@
-@javascript @core @core_account
+@javascript @core
 Feature: Registration procedure
 In order to check that a person can register
 As an admin

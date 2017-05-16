@@ -14,7 +14,7 @@ Background:
      | username | password | email | firstname | lastname | institution | authname | role |
      | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
 
-Scenario: Editing admin resume page (Bug 1426983)
+Scenario: Editing admin resume page (Bug 1426983)q
     Given I log in as "userA" with password "Kupuhipa1"
     # Editing resume
     When I choose "Résumé" in "Content" from main menu
@@ -46,6 +46,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I attach the file "Image2.png" to "Attach file"
     # Saving the changes
     And I click on "addeducationhistory_submit"
+    And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I press "Add education history"
     And I set the following fields to these values:
@@ -59,6 +60,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I scroll to the base of id "addeducationhistory_attachments_list"
     And I attach the file "Image2.png" to "Attach file"
     And I click on "addeducationhistory_submit"
+    And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "something" row
     And I click on "Move up" in "something" row
@@ -98,22 +100,24 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "Add certifications, accreditations and awards"
     # Adding Certifications, accreditations and awards
     And I set the following fields to these values:
-    | Date | 12/07/2017 |
-    | Title | Cert |
-    | Description | somethings |
+    | addcertification_date | 12/07/2017 |
+    | addcertification_title | Cert |
+    | addcertification_description | somethings |
     And I scroll to the base of id "addcertification_attachments_list"
     And I attach the file "Image2.png" to "Attach file"
     And I press "Save"
+    And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I scroll to the base of id "addcertificationbutton"
     And I click on "Add certifications, accreditations and awards"
     And I set the following fields to these values:
-    | Date | 13/07/2017 |
-    | Title | dfgfdsg |
-    | Description | alfksjgaasd |
+    | addcertification_date | 13/07/2017 |
+    | addcertification_title | dfgfdsg |
+    | addcertification_description | alfksjgaasd |
     And I scroll to the base of id "addcertification_attachments_list"
     And I attach the file "Image2.png" to "Attach file"
     And I press "Save"
+    And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "Cert" row
     And I click on "Move up" in "Cert" row
@@ -128,6 +132,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I scroll to the base of id "addbook_attachments_list"
     And I attach the file "Image2.png" to "addbook_attachments_files_0"
     And I click on "addbook_submit"
+    And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I scroll to the base of id "addbookbutton"
     And I click on "Add books and publications"
@@ -139,6 +144,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I scroll to the base of id "addbook_attachments_list"
     And I attach the file "Image2.png" to "addbook_attachments_files_0"
     And I click on "addbook_submit"
+    And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "Book1" row
     And I click on "Move up" in "Book1" row
@@ -153,6 +159,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I scroll to the base of id "addmembership_attachments_list"
     And I attach the file "Image2.png" to "addmembership_attachments_files_0"
     And I click on "addmembership_submit"
+    And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I scroll to the base of id "addmembershipbutton"
     And I press "Add professional membership"
@@ -164,6 +171,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I scroll to the base of id "addmembership_attachments_list"
     And I attach the file "Image2.png" to "addmembership_attachments_files_0"
     And I click on "addmembership_submit"
+    And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "Mr Membership" row
     And I click on "Move up" in "Mr Membership" row
@@ -172,13 +180,10 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I should see "My goals"
     And I should see "My skills"
     And I follow "Personal goals"
-    And I set the following fields to these values:
-    | Description | whateve ry askdf |
+    And I set the field "Description" to "whateve ry askdf"
     And I press "Add a file"
-    And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
-    And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
@@ -186,22 +191,17 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I set the following fields to these values:
     | Description | whateve ry askdf |
     And I press "Add a file"
-    And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
-    And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
     And I follow "Career goals"
-    And I wait "1" seconds
     And I set the following fields to these values:
     | Description | whateve ry askdf |
     And I press "Add a file"
-    And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
-    And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_personalskill"
@@ -209,10 +209,8 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I set the following fields to these values:
     | Description | whateve ry askdf |
     And I press "Add a file"
-    And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
-    And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_academicskill"
@@ -220,10 +218,8 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I set the following fields to these values:
     | Description | whateve ry askdf |
     And I press "Add a file"
-    And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
-    And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_workskill"
@@ -231,25 +227,23 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I set the following fields to these values:
     | Description | whateve ry askdf |
     And I press "Add a file"
-    And I wait "1" seconds
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
-    And I wait "1" seconds
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
     And I follow "Interests"
     And I press "Edit"
     And I set the following fields to these values:
-    | resumefieldform_interest | test |
+    | Interest | test |
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
     And I follow "License"
-    And I set the following fields to these values:
-    | License | Creative Commons Attribution 4.0 |
+    And I fill in the following:
+    | License | http://creativecommons.org/licenses/by/4.0/ |
     And I follow "Advanced licensing"
-    And I set the following fields to these values:
+    And I fill in the following:
     | Licensor| test1 |
     | Original URL | something here |
     And I press "Save"

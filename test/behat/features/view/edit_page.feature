@@ -13,7 +13,6 @@ Scenario: Clicking ID's (Bug 1428456)
  # Checking if we can add a block
  And I follow "Text"
  And I press "Add"
- And I wait "1" seconds
  And I set the following fields to these values:
  | Block title | Ulysses |
  | Block content | <p>Stately, plump Buck Mulligan came from the stairhead, bearing a bowl of lather on which a mirror and a razor lay crossed ...</p> |
@@ -22,7 +21,6 @@ Scenario: Clicking ID's (Bug 1428456)
  And I reload the page
  And I follow "Text"
  And I press "Add"
- And I wait "1" seconds
  And I set the following fields to these values:
  | Block title | The Sun Also Rises |
  | Block content | <p>Robert Cohn was once middleweight boxing champion of Princeton. Do not think that I am very much impressed by that as a boxing title, but it meant a lot to Cohn...</p> |
@@ -32,7 +30,6 @@ Scenario: Clicking ID's (Bug 1428456)
  And I scroll to the base of id "content-editor-foldable"
  And I follow "Text"
  And I press "Add"
- And I wait "1" seconds
  And I set the following fields to these values:
  | Block title | 1984 |
  | Block content | <p>It was a bright cold day in April, and the clocks were striking thirteen. Winston Smith, his chin nuzzled into his breast in an effort to escape the vile wind...</p> |
@@ -61,7 +58,6 @@ Scenario: Clicking ID's (Bug 1428456)
  # without it causing 'unsaved changes' popup when navigating away
  And I follow "Text"
  And I press "Add"
- And I wait "1" seconds
  And I set the following fields to these values:
  | Block title | Crime and punishment |
  | Block content | <p>On an exceptionally hot evening early in July a young man came out of the garret in which he lodged in S. Place and walked slowly, as though in hesitation, towards K. bridge...</p> |
@@ -72,10 +68,8 @@ Scenario: Clicking ID's (Bug 1428456)
  When I follow "Edit layout"
  And I follow "Create custom layout"
  And I press "Add a row"
- And I wait "1" seconds
  And I select "25 - 50 - 25" from "selectcollayoutrow_2"
  And I press "Add a row"
- And I wait "1" seconds
  And I select "5" from "selectnumcolsrow_3"
  And I select "20 - 20 - 20 - 20 - 20" from "selectcollayoutrow_3"
  And I press "Add a row"

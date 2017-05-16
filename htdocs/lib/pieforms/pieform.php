@@ -988,7 +988,14 @@ class Pieform {/*{{{*/
             exit;
         }
         echo <<<EOF
-<html><head><script type="application/javascript">function sendResult() { parent.pieformHandlers["{$this->name}"]($result); }</script></head><body onload="sendResult(); "></body></html>
+<html>
+    <head><script type="application/javascript">
+        function sendResult() {
+            parent.pieformHandlers["{$this->name}"]($result);
+        }
+    </script></head>
+    <body onload="sendResult();"></body>
+</html>
 EOF;
         exit;
     }/*}}}*/

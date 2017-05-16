@@ -57,7 +57,6 @@ Feature: Mahara user permissions in institutions
     Given I log in as "admin" with password "Kupuhipa1"
     And I choose "Members" in "Institutions" from administration menu
     And I select "People who have not requested institution membership yet" from "Users to display:"
-    And I wait until the page is ready
     And I select "userC" from "Non-members"
     And I press "Turn selected non-members into invited"
     And I press "Add members"

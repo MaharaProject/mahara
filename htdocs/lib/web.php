@@ -269,6 +269,17 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $pagestrings['mahara'] = isset($pagestrings['mahara']) ? $pagestrings['mahara'] : array();
                     $pagestrings['mahara'][] = 'attachedimage';
 
+                    $tinymceinitbehatsetup = '';
+                    $tinymcebehatsetup = '';
+                    if (defined('BEHAT_TEST')) {
+                        $tinymceinitbehatsetup = 'window.isEditorInitializing = false;';
+                        $tinymcebehatsetup = <<<EOF
+        ed.on('PreInit', function(ed) {
+            window.isEditorInitializing = true;
+        });
+EOF;
+                    }
+
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
     theme: "modern",
@@ -318,7 +329,9 @@ tinyMCE.init({
     cache_suffix: '?v={$CFG->cacheversion}',
     {$extramceconfig}
     setup: function(ed) {
+        {$tinymcebehatsetup}
         ed.on('init', function(ed) {
+        {$tinymceinitbehatsetup}
             if (typeof(editor_to_focus) == 'string' && ed.editorId == editor_to_focus) {
                 ed.focus();
             }
@@ -511,6 +524,12 @@ EOF;
     $javascript_array[] = $jsroot . 'mahara.js';
     $javascript_array[] = $jsroot . 'formchangechecker.js';
     $javascript_array[] = $jsroot . 'textareamaxlengthchecker.js';
+
+    // Load some event handler functions for checking if all AJAX requests have completed
+    // when running behat tests
+    if (defined('BEHAT_TEST')) {
+        $javascript_array[] = get_config('wwwroot') . 'testing/frameworks/behat/page_status.js';
+    }
 
     foreach ($jsstrings['mahara'] as $section => $tags) {
         foreach ($tags as $tag) {

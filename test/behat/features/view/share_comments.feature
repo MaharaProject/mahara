@@ -25,7 +25,6 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  Then I should see "No title"
  When I set the following fields to these values:
  | editview_title | Group page1 |
- And I wait "5" seconds
  Then I press "Save"
  Then I should see "Page saved successfully"
 
@@ -34,7 +33,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  Then I should see "Edit access"
  When I set the following fields to these values:
  | accesslist[0][searchtype] | Test Group1 |
-  And I press "Save"
+ And I press "Save"
 
  When I choose "Portfolio" from main menu
  And I follow "Group page1"

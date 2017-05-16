@@ -53,11 +53,9 @@
   And I press "search_submit"
   And I should see "Results per page:"
   And I select "1" from "limit"
-  And I wait until the page is ready
   And I should see "1"
   And I should see "2"
   And I should see "3"
   And I follow "3"
-  And I wait "1" seconds
   And I should see "4"
   And I should see "5"

@@ -20,7 +20,6 @@ Background:
  Given I log in as "userA" with password "Kupuhipa1"
  And I choose "mail" from user menu by id
  And I follow "Hi there"
- And I wait "1" seconds
  And I follow "Reply"
  And I fill in the following:
  | Reply   | Hi yourself |

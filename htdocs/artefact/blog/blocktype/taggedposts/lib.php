@@ -408,34 +408,6 @@ EOF;
 
     }
 
-    public static function get_instance_config_javascript(BlockInstance $instance) {
-        return <<<EOF
-          jQuery(function($) {
-              $('#instconf_tagselect').on('change', function() {
-                  // Need a small delay so that MultipleSelection.prototype.update will
-                  // fire before updatetagbuttons
-                  setTimeout(updatetagbuttons, 1000);
-              });
-
-              updatetagbuttons();
-
-              function updatetagbuttons() {
-                  $('#instconf_tagselect_container ul button').on('click', function(e) {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      var li = $(this).parent();
-                      var new_data = jQuery.grep($('#instconf_tagselect').select2('data'), function (value) {
-                          if (value['id'] == li[0].title) {
-                              $("#instconf_tagselect option[value='" + value['id'] + "']").remove();
-                              $('#instconf_tagselect').trigger('change');
-                          }
-                      });
-                  });
-              }
-          });
-EOF;
-    }
-
     public static function instance_config_validate(Pieform $form, $values) {
 
         if (empty($values['tagselect'])) {
