@@ -59,8 +59,6 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Checking Administration
     # Checking admin home menu and submenu
     And I choose "Register" in "Admin home" from administration menu
-    And I choose "Site statistics" in "Admin home" from administration menu
-    And I follow "Logins"
     And I choose "Overview" in "Admin home" from administration menu
     # Checking Configure site menu and submenu
     And I choose "Site options" in "Configure site" from administration menu
@@ -97,6 +95,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Share" in "Institutions" from administration menu
     And I choose "Files" in "Institutions" from administration menu
     And I choose "Statistics" in "Institutions" from administration menu
+    And I follow "Logins"
     And I choose "Pending registrations" in "Institutions" from administration menu
     # Checking Extensions Menu and submenu
     And I choose "Plugin administration" in "Extensions" from administration menu

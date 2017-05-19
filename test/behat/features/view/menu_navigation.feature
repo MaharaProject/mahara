@@ -66,8 +66,6 @@ Scenario: Checking menu items are available as site staff (Bug 1467368)
  And I click on "Show administration menu"
  And I follow "User search"
  And I click on "Show administration menu"
- And I follow "Site statistics"
- And I click on "Show administration menu"
  Then I follow "Institution statistics"
 
 
@@ -85,7 +83,6 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  When I press "Show menu for Admin home"
  Then I should see "Overview" in the ".adminhome" "css_element"
  And I should see "Register" in the ".adminhome" "css_element"
- And I should see "Site statistics" in the ".adminhome" "css_element"
 # Checking the sub navigation in Configure site
  When I press "Show menu for Configure site"
  Then I should see "Site options" in the ".configsite" "css_element"

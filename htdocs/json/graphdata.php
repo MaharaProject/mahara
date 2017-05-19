@@ -20,8 +20,9 @@ if (!defined('CRON')) {
     json_headers();
 
     $validtypes = array('Line', 'Bar', 'Radar', 'PolarArea', 'Pie', 'Doughnut');
-    $type = ucfirst(param_alphanum('type', false));
-    if (!in_array($type, $validtypes)) {
+    $search_array = array_combine(array_map('strtolower', $validtypes), $validtypes);
+    $type = strtolower(param_alphanum('type', false));
+    if (empty($search_array[$type])) {
         json_reply('missingparameter', '\'' . $type . '\' is not a valid graph type');
     }
     $graph = param_alphanumext('graph', null);
@@ -31,13 +32,13 @@ if (!defined('CRON')) {
     $extradata = json_decode($extradata);
 
     require_once(get_config('libroot') . 'graph.php');
-    require_once(get_config('libroot') . 'registration.php');
+    require_once(get_config('libroot') . 'statistics.php');
 
     if (!function_exists($graph) || !in_array($graph, allowed_graph_functions())) {
         json_reply('invalidparameter', 'Cannot call graph function \'' . $graph . '\'');
     }
     else {
-        $data = ($extradata) ? $graph($type, $extradata) : $graph($type);
+        $data = ($extradata) ? $graph($search_array[$type], $extradata) : $graph($search_array[$type]);
         if (empty($data)) {
             $data['empty'] = true;
             json_reply(false, array('data' => $data));

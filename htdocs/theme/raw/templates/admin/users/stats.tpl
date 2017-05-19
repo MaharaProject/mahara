@@ -14,7 +14,7 @@
 {/if}
   <table class="table">
     <tr>
-        <th>{str tag=institutioncreated section=admin}</th>
+        <th>{str tag=institutioncreated$showall section=admin}</th>
         <td>
             {$institutiondata.installdate}
         </td>
@@ -47,7 +47,12 @@
             <small>{$institutiondata.strviewsperuser}</small>
         <td>
     {/if}
-
+    {if $institutiondata.dbsize}
+    <tr>
+        <th>{str tag=databasesize section=admin}</th>
+        <td>{$institutiondata.dbsize|display_size}</td>
+    </tr>
+    {/if}
     {if $institutiondata.diskusage}
     <tr>
         <th>{str tag=diskusage section=admin}</th>
@@ -55,4 +60,20 @@
             {$institutiondata.diskusage|display_size}
         </td>
     {/if}
-</table>
+    {if $showall}
+    <tr>
+        <th>{str tag=maharaversion section=admin}</th>
+        <td>{$institutiondata.release}{if $institutiondata.strlatestversion} ({$institutiondata.strlatestversion|clean_html|safe}){/if}</td>
+    </tr>
+    <tr>
+        <th>{str tag=Cron section=admin}</th>
+        <td>{if $institutiondata.cronrunning}{str tag=runningnormally section=admin}{else}
+                {if $institutiondata.siteclosedbyadmin}
+                    {str tag=cronnotrunningsiteclosed1 section=admin}
+                {else}
+                    {str tag=cronnotrunning2 section=admin}
+                {/if}
+            {/if}</td>
+    </tr>
+    {/if}
+  </table>

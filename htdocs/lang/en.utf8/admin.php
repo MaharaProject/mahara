@@ -266,8 +266,7 @@ $string['reopensitedetail'] = 'Your site is closed. Site administrators may stay
 // Statistics
 $string['siteinformation'] = 'Site information';
 $string['viewfullsitestatistics'] = 'View full site statistics';
-$string['sitestatistics'] = 'Site statistics';
-$string['siteinstalled'] = 'Site installed';
+$string['institutioncreated_all'] = 'Site installed';
 $string['databasesize'] = 'Database size';
 $string['diskusage'] = 'Disk usage';
 $string['maharaversion'] = 'Mahara version';
@@ -1307,3 +1306,5 @@ $string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for serie
 
 $string['withselectedcontentexport'] = 'Re-queue items into the export queue';
 $string['withselectedcontentdelete'] = 'Delete selected items from the export queue';
+
+$string['statisticsforallinstitutions'] = 'Statistics for all institutions';
