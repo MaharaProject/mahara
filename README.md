@@ -21,11 +21,11 @@ The best ways of obtaining support are:
 
 For detailed installation instructions, see the installation page on our wiki:
 
- * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Installing_Mahara
+ * [System Administrator Guide](https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Installing_Mahara)
 
 The basic installation instructions are:
 
- 1. Create a Postgres or MySQL database for Mahara.
+ 1. Create a Postgres or MySQL database for Mahara (System Administrator Guide contains important information regarding encoding and such).
  2. Copy the Mahara files under "htdocs" into your web root.
  3. Create a Mahara "dataroot" directory outside of your web root.
  4. Copy htdocs/config-dist.php to config.php.
