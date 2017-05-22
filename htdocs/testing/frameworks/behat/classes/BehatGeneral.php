@@ -1087,6 +1087,29 @@ class BehatGeneral extends BehatBase {
         $this->visitPath("/view/view.php?id={$view->id}");
     }
 
+
+    /**
+     * Visit a Mahara group Page with the specified Group name
+     *
+     * @Given /^I go to group "([^"]*)"$/
+     */
+    public function i_go_to_group($name) {
+        // Find the page's ID number
+        //get_records_array takes: ($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='')
+        $groups = get_records_array('group', 'name', $name, '', 'id');
+        if (!$groups) {
+            throw new Exception(sprintf('Invalid group name. No group found with name "%s".', $name));
+        }
+        if (count($groups) > 1) {
+            throw new Exception(sprintf('Invalid group name. More than one group with name "%s".', $name));
+        }
+
+        $group = reset($groups);
+
+        // success
+        $this->visitPath("/group/view.php?id={$group->id}");
+    }
+
     /**
      * Expand a collapsible section containing the specified text.
      *
