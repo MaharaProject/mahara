@@ -19,11 +19,11 @@ The best ways of obtaining support are:
 
 # INSTALLATION
 
-For detailed installation instructions, see the installation page on our wiki:
+For detailed installation instructions see the installation page on our wiki:
 
  * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Installing_Mahara
 
-The basic installation instructions are:
+The following is a check list of the steps you need to take. Please refer to the installation instructions for the details:
 
  1. Create a Postgres or MySQL database for Mahara.
  2. Copy the Mahara files under "htdocs" into your web root.
