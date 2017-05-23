@@ -1869,6 +1869,9 @@ function handle_event($event, $data) {
         );
     }
     else if (is_object($data)) {
+        if (isset($data->password)) {
+            unset($data->password);
+        }
         $data = (array)$data;
     }
     else if (is_numeric($data)) {
