@@ -4565,5 +4565,29 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016033129) {
+        if ($records = get_records_sql_array("SELECT event, data, time FROM {event_log} WHERE event = ?", array('createuser'))) {
+            log_debug('Remove sensitive data from event_log');
+            $count = 0;
+            $limit = 1000;
+            $total = count($records);
+            foreach ($records as $record) {
+                $data = json_decode($record->data);
+                if (isset($data->password)) {
+                    unset($data->password);
+                    $cleandata = json_encode($data);
+                    $record->data = $cleandata;
+                    update_record('event_log', $record, array('event', 'time'));
+                    set_field('usr', 'passwordchange', 1, 'username', $data->username);
+                }
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
