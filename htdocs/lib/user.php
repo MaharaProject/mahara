@@ -2509,7 +2509,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     reset_password($user, false, $quickhash);
 
     $createuser = clone $user;
-    handle_event('createuser', $createuser);
+    handle_event('createuser', $createuser, array('password'));
     db_commit();
     return $user->id;
 }
@@ -2617,7 +2617,7 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array(), $
  */
 function add_user_to_autoadd_groups($eventdata) {
     require_once('group.php');
-    $userid = $eventdata['id'];
+    $userid = is_object($eventdata) ? $eventdata->id : $eventdata['id'];
     if ($autoaddgroups = get_column('group', 'id', 'usersautoadded', true)) {
         foreach ($autoaddgroups as $groupid) {
             if (!group_user_access($groupid, $userid)) {

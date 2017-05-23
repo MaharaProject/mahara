@@ -865,6 +865,10 @@ class BlockInstance {
         return '';
     }
 
+    public function to_stdclass() {
+        return (object)get_object_vars($this);
+    }
+
     /**
      * Builds the HTML for the block, inserting the blocktype content at the
      * appropriate place
@@ -1397,9 +1401,15 @@ class BlockInstance {
             $this->dirty = false;
             return;
         }
-
+        $ignorefields = array('order', 'dirty',
+            'ignoreconfigdata' => array('retractable',
+                'removeoncancel',
+                'sure',
+                'retractedonload'
+            )
+        );
         //Propagate the deletion of the block
-        handle_event('deleteblockinstance', $this);
+        handle_event('deleteblockinstance', $this, $ignorefields);
 
         db_begin();
         safe_require('blocktype', $this->get('blocktype'), 'lib.php', 'require_once', true);

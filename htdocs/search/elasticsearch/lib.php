@@ -997,6 +997,11 @@ class PluginSearchElasticsearch extends PluginSearch {
         return ElasticsearchPseudotype_all::search($query_string, $limit, $offset, $options, $mainfacetterm, $USER);
     }
 
+    public static function search_events ($options=array(), $limit = 10, $offset = 0) {
+        global $USER;
+        return ElasticsearchType_event_log::search($options, $limit, $offset, $USER);
+    }
+
     public static function search_user($query_string, $limit, $offset = 0, $data=array()) {
         return PluginSearchInternal::search_user($query_string, $limit, $offset, $data);
     }
@@ -1322,60 +1327,6 @@ class ElasticsearchFilterAcl
             $this->params['should'][] = $elasticaFilterUsr;
         }
 
-        /*
-        //    No ACL          (artefacts that don't implement ACL)
-        $elasticaFilterNoACL = new \Elastica\Filter\Missing('access.general');
-        $this->addFilter($elasticaFilterNoACL);
-
-        //    GENERAL         (public - loggedin - friends)
-        //        public
-        $elasticaFilterGeneral = new \Elastica\Filter\Term(array('access.general' => 'public'));
-        $this->addFilter($elasticaFilterGeneral);
-
-        //        loggedin
-        if ($this->user->is_logged_in()) {
-            $elasticaFilterGeneral = new \Elastica\Filter\Term(array('access.general' => 'loggedin'));
-            $this->addFilter($elasticaFilterGeneral);
-
-            //        friends: pass a list of friends => check if access.general = friends and the owner is a friend of the current user
-            if ($friends = $this->getFriendsList()) {
-                $elasticaFilterAnd  = new \Elastica\Filter\BoolAnd();
-                $elasticaFilterGeneral = new \Elastica\Filter\Term(array('access.general' => 'friends'));
-                $elasticaFilterAnd->addFilter($elasticaFilterGeneral);
-                $elasticaFilterGeneral = new \Elastica\Filter\Terms('owner', $friends);
-                $elasticaFilterAnd->addFilter($elasticaFilterGeneral);
-                $this->addFilter($elasticaFilterAnd);
-            }
-
-        }
-
-        //    INSTITUTIONS     (array of institutions that have access to the artefact)
-        $user_institutions = array_keys($this->user->get('institutions'));
-        if ($user_institutions && count($user_institutions) > 0) {
-            $elasticaFilterInstitutions = new \Elastica\Filter\Terms('access.institutions', $user_institutions);
-            $this->addFilter($elasticaFilterInstitutions);
-        }
-
-        //     GROUPS             (array of groups that have access to the artefact) groups [all/admin/member]
-        if ($groups = $this->getGroupsList()) {
-            $roles = $this->getExistingRoles();
-            foreach($roles AS $role){
-                if (isset($groups[$role]) && count($groups[$role])) {
-                    $elasticaFilterGroup[$role] = new \Elastica\Filter\Terms('access.groups.'.$role, $groups[$role]);
-                    $this->addFilter($elasticaFilterGroup[$role]);
-                }
-            }
-        }
-        //     USRS             (array of user ids that have access to the artefact)
-        if ($this->user->is_logged_in()) {
-            // if owner
-            $elasticaFilterOwner = new \Elastica\Filter\Term(array('owner' => $this->user->get('id')));
-            $this->addFilter($elasticaFilterOwner);
-            // in access.usrs list
-            $elasticaFilterUsr = new \Elastica\Filter\Term(array('access.usrs' => $this->user->get('id')));
-            $this->addFilter($elasticaFilterUsr);
-        }
-        */
     }
 
     public function get_params() {

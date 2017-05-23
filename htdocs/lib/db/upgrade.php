@@ -5018,11 +5018,6 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2017052900) {
-        log_debug('Clear menu cache for removal of menu items');
-        clear_menu_cache();
-    }
-
     if ($oldversion < 2017061200) {
         log_debug('Add new logoxs column in institution table for small logos');
         $table = new XMLDBTable('institution');
@@ -5094,6 +5089,178 @@ function xmldb_core_upgrade($oldversion=0) {
                 $typestr = serialize($types);
                 set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', $typestr);
             }
+        }
+    }
+
+    if ($oldversion < 2017090800) {
+        log_debug('Clear menu cache for removal of menu items');
+        clear_menu_cache();
+    }
+
+    if ($oldversion < 2017090800) {
+        log_debug('Add new fields to "event_log" table');
+        // Instead of recording event resource id information in the 'data' json blob
+        // we will add it to it's own columns for easier searching / faster retrieval
+        // We will record if necessary the resourcetype/resourceid (and parenttype/parentid if necessary)
+        // And for elasticsearch we will need to add an id column to the table and change 'time' to 'ctime'.
+
+        $table = new XMLDBTable('event_log');
+        $field = new XMLDBField('id');
+        if (!field_exists($table, $field)) {
+            log_debug('Making a temp copy and adding id column');
+            execute_sql('CREATE TEMPORARY TABLE {temp_event_log} AS SELECT DISTINCT * FROM {event_log}', array());
+            if (is_mysql()) {
+                // We've disabled the db_start() method for our MySQL driver, but since we're truncating event_log,
+                // we really should start a transaction manually at least.
+                execute_sql('START TRANSACTION');
+            }
+            execute_sql('TRUNCATE {event_log}', array());
+
+            if (is_mysql()) {
+                // MySQL requires the auto-increment column to be a primary key right away.
+                execute_sql('ALTER TABLE {event_log} ADD id BIGINT(10) NOT NULL auto_increment PRIMARY KEY FIRST');
+            }
+            else {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+                add_field($table, $field);
+            }
+            // Add 'ctime' field and drop 'time' field
+            $field = new XMLDBField('ctime');
+            $field->setAttributes(XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+            add_field($table, $field);
+            $field = new XMLDBField('time');
+            drop_field($table, $field);
+
+            log_debug('Adding back in the event_log information');
+            // We will do in chuncks for large sites.
+            $count = 0;
+            $x = 0;
+            $limit = 1000;
+            $total = count_records('temp_event_log');
+            for ($i = 0; $i <= $total; $i += $limit) {
+                if (is_postgres()) {
+                    $limitsql = ' OFFSET ' . $i . ' LIMIT ' . $limit;
+                }
+                else {
+                    $limitsql = ' LIMIT ' . $i . ',' . $limit;
+                }
+                execute_sql('INSERT INTO {event_log} (usr, realusr, ctime, event, data) SELECT usr, realusr, time, event, data FROM {temp_event_log}' . $limitsql, array());
+                $count += $limit;
+                if (($count % ($limit *10)) == 0 || $count >= $total) {
+                    if ($count > $total) {
+                        $count = $total;
+                    }
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+                set_time_limit(30);
+            }
+            if (is_mysql()) {
+                execute_sql('COMMIT');
+            }
+            execute_sql('DROP TABLE {temp_event_log}', array());
+
+            if (!is_mysql()) {
+                log_debug('Adding primary key index to event_log.id column');
+                $key = new XMLDBKey('primary');
+                $key->setAttributes(XMLDB_KEY_PRIMARY, array('id'));
+                add_key($table, $key);
+            }
+        }
+
+        $field = new XMLDBField('resourceid');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        add_field($table, $field);
+
+        $field = new XMLDBField('resourcetype');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+        add_field($table, $field);
+
+        $field = new XMLDBField('parentresourceid');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        add_field($table, $field);
+
+        $field = new XMLDBField('parentresourcetype');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+        add_field($table, $field);
+
+        log_debug('Adjust existing "event_log" data to fit new table structure');
+        // As there can be very many rows we need to do the adjusting in chuncks
+        $count = 0;
+        $limit = 10000;
+        $chunk = 5000;
+        $total = count_records_select('event_log', 'data != ?', array('{}'));
+        if ($total > 0) {
+            for ($i = 0; $i <= $total; $i += $chunk) {
+                $results = get_records_sql_array("SELECT event, data FROM {event_log}", array(), $count, $chunk);
+                foreach ($results as $result) {
+                    $data = json_decode($result->data);
+                    $where = clone $result;
+                    switch ($result->event) {
+                        case 'saveview':
+                        case 'deleteview':
+                            $result->resourceid = $data->id;
+                            $result->resourcetype = 'view';
+                            break;
+                        case 'userjoinsgroup':
+                            $result->resourceid = $data->group;
+                            $result->resourcetype = 'group';
+                            break;
+                        case 'creategroup':
+                            $result->resourceid = $data->id;
+                            $result->resourcetype = 'group';
+                            break;
+                        case 'saveartefact':
+                        case 'deleteartefact':
+                        case 'deleteartefacts':
+                            $result->resourceid = $data->id;
+                            $result->resourcetype = $data->artefacttype;
+                            break;
+                        case 'blockinstancecommit':
+                        case 'deleteblockinstance':
+                            $result->resourceid = $data->id;
+                            $result->resourcetype = $data->blocktype;
+                            break;
+                        case 'addfriend':
+                        case 'removefriend':
+                            $result->resourceid = $data->friend;
+                            $result->resourcetype = 'friend';
+                            break;
+                        case 'addfriendrequest':
+                            $result->resourceid = $data->owner;
+                            $result->resourcetype = 'friend';
+                            break;
+                        case 'removefriendrequest':
+                            $result->resourceid = $data->requester;
+                            $result->resourcetype = 'friend';
+                            break;
+                    }
+                    update_record('event_log', $result, $where);
+                }
+                $count += $chunk;
+                if (($count % $limit) == 0 || $count >= $total) {
+                    if ($count > $total) {
+                        $count = $total;
+                    }
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+
+        log_debug('Add new logging events');
+        $newevents = array('createview',
+                           'createcollection',
+                           'updatecollection',
+                           'deletecollection',
+                           'addsubmission',
+                           'releasesubmission',
+                           'updateviewaccess');
+        foreach ($newevents as $newevent) {
+            $event = (object)array(
+                'name' => $newevent,
+            );
+            ensure_record_exists('event_type', $event, $event);
         }
     }
 

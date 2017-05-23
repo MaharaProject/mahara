@@ -99,14 +99,24 @@ class Collection {
     public static function save($data) {
         if (array_key_exists('id', $data)) {
             $id = $data['id'];
+            $state = 'updatecollection';
         }
         else {
             $id = 0;
+            $state = 'createcollection';
         }
         $collection = new Collection($id, $data);
         $collection->set('mtime', time());
         $collection->commit();
-
+        $views = $collection->get('views');
+        $viewids = array();
+        foreach ($views as $view) {
+            $viewids[] = $view->view;
+        }
+        $eventdata = array('id' => $collection->get('id'),
+                           'name' => $collection->get('name'),
+                           'viewids' => $viewids);
+        handle_event($state, $eventdata);
         return $collection; // return newly created Collections id
     }
 
@@ -147,7 +157,10 @@ class Collection {
         if ($viewids) {
             delete_records_select('view_access', 'view IN (' . join(',', $viewids) . ') AND token IS NOT NULL');
         }
-
+        $data = array('id' => $this->id,
+                      'name' => $this->name,
+                      'viewids' => $viewids);
+        handle_event('deletecollection', $data);
         db_commit();
     }
 
@@ -1136,6 +1149,11 @@ class Collection {
         View::_db_release($viewids, $this->owner, $this->submittedgroup);
         db_commit();
 
+        handle_event('releasesubmission', array('releaseuser' => $releaseuser,
+                                                'id' => $this->get('id'),
+                                                'groupname' => $this->submittedgroup,
+                                                'eventfor' => 'collection'));
+
         // We don't send out notifications about the release of remote-submitted Views & Collections
         // (though I'm not sure why)
         // if the method is called in an upgrade and we dont have a release user
@@ -1263,6 +1281,11 @@ class Collection {
         $this->commit();
         db_commit();
 
+        handle_event('addsubmission', array('id' => $this->id,
+                                            'eventfor' => 'collection',
+                                            'name' => $this->name,
+                                            'group' => ($group) ? $group->id : null,
+                                            'groupname' => ($group) ? $group->name : null));
         if ($group) {
             activity_occurred(
                 'groupmessage',
@@ -1330,7 +1353,10 @@ class Collection {
             $todb->ctime = $access->ctime;
             insert_record('view_access', $todb);
         }
-
+        handle_event('updateviewaccess', array('id' => $this->id,
+                                               'eventfor' => 'collection',
+                                               'viewids' => $viewids,
+                                               'rules' => array($todb)));
         return $access;
     }
 

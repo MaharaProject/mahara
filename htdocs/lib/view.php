@@ -515,10 +515,13 @@ class View {
             $obj->usr   = $template->get('owner');
             $obj->group = $template->get('group');
             insert_record('view_access', $obj);
+            handle_event('updateviewaccess', array('id' => $view->get('id'),
+                                                   'eventfor' => 'view',
+                                                   'viewids' => $view->get('id'),
+                                                   'rules' => array($obj)));
         }
 
         db_commit();
-
         return array(
             $view,
             $template,
@@ -609,6 +612,7 @@ class View {
 
         $view = new View(0, $data);
         $view->commit();
+
         if (isset($viewdata['group']) &&
             (empty($viewdata['type']) || (!empty($viewdata['type']) && $viewdata['type'] != 'grouphomepage'))
            ) {
@@ -619,12 +623,16 @@ class View {
             $beforeusers[$userid] = get_record('usr', 'id', $userid);
 
             // By default, group views should be visible to the group
-            insert_record('view_access', (object) array(
+            $newaccess = (object) array(
                 'view'  => $view->get('id'),
                 'group' => $viewdata['group'],
                 'ctime' => db_format_timestamp(time()),
-            ));
-
+            );
+            insert_record('view_access', $newaccess);
+            handle_event('updateviewaccess', array('id' => $viewdata['group'],
+                                                   'eventfor' => 'group',
+                                                   'viewids' => $view->get('id'),
+                                                   'rules' => array($newaccess)));
             // Notify group members
             $accessdata = new StdClass;
             $accessdata->view = $view->get('id');
@@ -759,9 +767,11 @@ class View {
                 throw new SystemException(get_string('onlonlyyoneprofileviewallowed', 'error'));
             }
             $this->id = insert_record('view', $fordb, 'id', true);
+            handle_event('createview', $this->id);
         }
         else {
             update_record('view', $fordb, 'id');
+            handle_event('saveview', $this->id);
         }
 
         if (isset($this->tags)) {
@@ -867,7 +877,9 @@ class View {
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('view_visit','view',$this->id);
+        $eventdata = array('id' => $this->id);
         if ($collection = $this->get_collection()) {
+            $eventdata['collection'] = $collection->get('id');
             $collection->remove_view($this->id);
         }
         delete_records('usr_watchlist_view','view',$this->id);
@@ -878,7 +890,7 @@ class View {
                 $bi->delete();
             }
         }
-        handle_event('deleteview', $this->id);
+        handle_event('deleteview', $eventdata);
         delete_records('view_rows_columns', 'view', $this->id);
         delete_records('view','id',$this->id);
         if (!empty($this->owner) && $this->is_submitted()) {
@@ -1296,6 +1308,7 @@ class View {
              * @todo: merge overlapping date ranges.
              */
             $time = time();
+            $accessrecords = array();
             foreach ($accessdata as $item) {
 
                 if (!empty($item['stopdate']) && $item['stopdate'] < $time) {
@@ -1367,9 +1380,16 @@ class View {
                 if (array_search($accessrecord, $accessdata_added) === false) {
                     $accessrecord->view = $this->get('id');
                     insert_record('view_access', $accessrecord);
+                    $accessrecords[] = $accessrecord;
                     unset($accessrecord->view);
                     $accessdata_added[] = $accessrecord;
                 }
+            }
+            if (!empty($accessrecords)) {
+                handle_event('updateviewaccess', array('id' => $this->get('id'),
+                                                       'eventfor' => 'view',
+                                                       'viewids' => !empty($viewids) ? $viewids : $this->get('id'),
+                                                       'rules' => $accessrecords));
             }
         }
 
@@ -1388,7 +1408,6 @@ class View {
         }
 
         activity_occurred('viewaccess', $data);
-        handle_event('saveview', $this->get('id'));
 
         db_commit();
         return $accessdata_added;
@@ -1466,14 +1485,20 @@ class View {
         );
 
         if ($firstviewaccess) {
+            $accessrecords = array();
             foreach ($toupdate as $id) {
                 foreach ($firstviewaccess as &$a) {
                     $a->view = $id;
                     $a->ctime = db_format_timestamp(time());
                     unset($a->id);
                     insert_record('view_access', $a);
+                    $accessrecords[] = $a;
                 }
             }
+            handle_event('updateviewaccess', array('id' => $this->id,
+                                                   'eventfor' => 'view',
+                                                   'viewids' => $toupdate,
+                                                   'rules' => $accessrecords));
         }
         db_commit();
     }
@@ -1492,6 +1517,10 @@ class View {
             $access->ctime = db_format_timestamp(time());
         }
         ensure_record_exists('view_access', $whereobject, $access);
+        handle_event('updateviewaccess', array('id' => $this->id,
+                                               'eventfor' => 'view',
+                                               'viewids' => $this->id,
+                                               'rules' => array($access)));
     }
 
     public function add_owner_institution_access($instnames=array()) {
@@ -1520,6 +1549,11 @@ class View {
                     $vaccess->ctime = db_format_timestamp(time());
 
                     insert_record('view_access', $vaccess);
+                    handle_event('updateviewaccess', array('id' => $this->id,
+                                                           'eventfor' => 'view',
+                                                           'viewids' => $this->id,
+                                                           'institution' => $i,
+                                                           'rules' => array($vaccess)));
                 }
             }
             db_commit();
@@ -1572,6 +1606,12 @@ class View {
 
         $ownerlang = get_user_language($this->get('owner'));
         $url = $this->get_url(false);
+
+        handle_event('releasesubmission', array('releaseuser' => $releaseuser,
+                                                'id' => $this->get('id'),
+                                                'groupname' => $submitinfo['name'],
+                                                'eventfor' => 'view'));
+
         require_once('activity.php');
         activity_occurred('maharamessage',
             array(
@@ -2501,7 +2541,6 @@ class View {
         }
         $this->set('layout', null);
         $this->commit();
-
         $currentrowcolumns = $columnsperrow[$values['row']]->columns;
         for ($i = $values['before']; $i <= $currentrowcolumns; $i++) {
             $this->dirtycolumns[$values['row']][$i] = 1;
@@ -2797,7 +2836,6 @@ class View {
                 }
                 $this->set('theme', $theme);
                 $this->commit();
-                handle_event('saveview', $this->get('id'));
             }
         }
     }
@@ -5902,6 +5940,10 @@ class View {
             $data->token = get_random_key(20);
         }
         insert_record('view_access', $data);
+        handle_event('updateviewaccess', array('id' => $viewid,
+                                               'eventfor' => 'view',
+                                               'viewids' => $viewid,
+                                               'rules' => array($data)));
         return $data;
     }
 
@@ -6517,7 +6559,11 @@ class View {
         $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
 
         self::_db_submit(array($this->id), $group);
-
+        handle_event('addsubmission', array('id' => $this->id,
+                                            'eventfor' => 'view',
+                                            'name' => $this->title,
+                                            'group' => $group->id,
+                                            'groupname' => $group->name));
         activity_occurred(
             'groupmessage',
             array(
@@ -6586,6 +6632,7 @@ class View {
         execute_sql($sql, $params);
 
         if ($group) {
+            $accessrecords = array();
             foreach ($group->roles as $role) {
                 foreach ($viewids as $viewid) {
                     $accessrecord = (object) array(
@@ -6598,8 +6645,13 @@ class View {
                         'ctime'           => db_format_timestamp(time()),
                     );
                     ensure_record_exists('view_access', $accessrecord, $accessrecord);
+                    $accessrecords[] = $accessrecord;
                 }
             }
+            handle_event('updateviewaccess', array('id' => $groupid,
+                                                   'eventfor' => 'group',
+                                                   'viewids' => $viewids,
+                                                   'rules' => $accessrecords));
         }
 
         ArtefactType::update_locked($userid);

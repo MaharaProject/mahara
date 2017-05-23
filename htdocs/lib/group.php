@@ -539,12 +539,16 @@ function group_create($data) {
             }
         }
     }
-
-    insert_record('view_access', (object) array(
+    $newaccess = (object) array(
         'view'       => $homepage->get('id'),
         'accesstype' => $data['public'] ? 'public' : 'loggedin',
         'ctime'      => db_format_timestamp(time()),
-    ));
+    );
+    insert_record('view_access', $newaccess);
+    handle_event('updateviewaccess', array('id' => $id,
+                                           'eventfor' => 'group',
+                                           'viewids' => $homepage->get('id'),
+                                           'rules' => array($newaccess)));
     handle_event('creategroup', $data);
     db_commit();
 
@@ -728,20 +732,26 @@ function group_update($new, $create=false) {
     if ($old->public != $new->public) {
         if ($old->public && !$new->public) {
             delete_records('view_access', 'view', $homepageid, 'accesstype', 'public');
-            insert_record('view_access', (object) array(
+            $newaccess = (object) array(
                 'view'       => $homepageid,
                 'accesstype' => 'loggedin',
                 'ctime'      => db_format_timestamp(time()),
-            ));
+            );
+            insert_record('view_access', $newaccess);
         }
         else if (!$old->public && $new->public) {
             delete_records('view_access', 'view', $homepageid, 'accesstype', 'loggedin');
-            insert_record('view_access', (object) array(
+            $newaccess = (object) array(
                 'view'       => $homepageid,
                 'accesstype' => 'public',
                 'ctime'      => db_format_timestamp(time()),
-            ));
+            );
+            insert_record('view_access', $newaccess);
         }
+        handle_event('updateviewaccess', array('id' => $new->id,
+                                           'eventfor' => 'group',
+                                           'viewids' => $homepageid,
+                                           'rules' => array($newaccess)));
     }
 
     // When the create/edit permissions change, update permissions on journal and posts
@@ -971,6 +981,9 @@ function group_add_user($groupid, $userid, $role=null, $method='internal') {
     insert_record('group_member', $gm);
     delete_records('group_member_request', 'group', $groupid, 'member', $userid);
     delete_records('group_member_invite', 'group', $groupid, 'member', $userid);
+
+    $gm->id = $gm->group;
+    $gm->eventfor = 'group';
     handle_event('userjoinsgroup', $gm);
     db_commit();
     global $USER;

@@ -667,6 +667,10 @@ function editurl_submit(Pieform $form, $values) {
             $whereobject->view = $id;
             update_record('view_access', $access, $whereobject);
         }
+        handle_event('updateviewaccess', array('id' => $collection ? $collection : $viewid,
+                                               'eventfor' => $collection ? 'collection' : 'view',
+                                               'viewids' => $viewids,
+                                               'rules' => array($access)));
         $message = get_string('secreturlupdated', 'view');
         $form->reply(PIEFORM_OK, $message);
     }

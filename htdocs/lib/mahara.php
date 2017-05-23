@@ -1851,7 +1851,7 @@ function blocktype_artefactplugin($blocktype) {
 /**
  * Fires an event which can be handled by different parts of the system
  */
-function handle_event($event, $data) {
+function handle_event($event, $data, $ignorefields = array()) {
     global $USER;
     static $event_types = array(), $coreevents_cache = array(), $eventsubs_cache = array();
 
@@ -1865,25 +1865,87 @@ function handle_event($event, $data) {
         throw new SystemException("Invalid event");
     }
 
-    if ($data instanceof ArtefactType) {
-        // leave $data alone, but convert for the event log
-        $logdata = $data->to_stdclass();
+    // leave $data alone, but convert for the event log
+    if (is_object($data)) {
+        $logdata = clone $data;
     }
-    else if ($data instanceof BlockInstance) {
-        // leave $data alone, but convert for the event log
-        $logdata = array(
-            'id' => $data->get('id'),
-            'blocktype' => $data->get('blocktype'),
-        );
-    }
-    else if (is_object($data)) {
-        if (isset($data->password)) {
-            unset($data->password);
+    else {
+        if (is_numeric($data)) {
+            $logdata = $data = array('id' => $data);
+        }
+        else {
+            $logdata = $data;
         }
         $data = (array)$data;
     }
-    else if (is_numeric($data)) {
-        $data = array('id' => $data);
+    $refid = $reftype = $parentrefid = $parentreftype = null;
+    // Need to set dirty to false for all the classes with destructors
+    if ($logdata instanceof View) {
+        $logdata->set('dirty', false);
+        // Move the id / view off to dedicated columns for easier searching
+        $logdata = $logdata->to_stdclass();
+        $refid = $logdata->id;
+        unset($logdata->id);
+        $reftype = 'view';
+    }
+    else if ($logdata instanceof ArtefactType) {
+        $logdata->set('dirty', false);
+        // Move the id / atefacttype off to dedicated columns for easier searching
+        $logdata = $logdata->to_stdclass();
+        $refid = $logdata->id;
+        unset($logdata->id);
+        $reftype = $logdata->artefacttype;
+        unset($logdata->artefacttype);
+    }
+    else if ($logdata instanceof BlockInstance) {
+        $logdata->set('dirty', false);
+        // Remove data from configdata that we don't need to log
+        $configdata = $logdata->get('configdata');
+        if (isset($ignorefields['ignoreconfigdata'])) {
+            $ignore = $ignorefields['ignoreconfigdata'];
+            if (!empty($ignore) && is_array($ignore)) {
+                foreach ($ignore as $item) {
+                    unset($configdata[$item]);
+                }
+            }
+            unset($ignorefields['ignoreconfigdata']);
+        }
+        $logdata = $logdata->to_stdclass();
+        $logdata->configdata = $configdata;
+        // Move the id / blocktype and parent id / view off to dedicated columns for easier searching
+        $refid = $logdata->id;
+        unset($logdata->id);
+        $reftype = $logdata->blocktype;
+        unset($logdata->blocktype);
+        $parentrefid = $logdata->view;
+        unset($logdata->view);
+        $parentreftype = 'view';
+    }
+    else if (is_object($logdata)) {
+        // Try to set id / type from stdclass object to dedicated column if 'eventfor' indicated
+        // eg. event = creategroup would have eventfor = group
+        $logdata = (object)get_object_vars($logdata);
+        if (isset($logdata->id) && isset($logdata->eventfor)) {
+            $refid = $logdata->id;
+            $reftype = $logdata->eventfor;
+            unset($logdata->eventfor);
+        }
+        $data = (array)$data;
+    }
+    else {
+        $refid = !empty($logdata['id']) ? $logdata['id'] : null;
+        $reftype = !empty($logdata['eventfor']) ? $logdata['eventfor'] : null;
+        unset($logdata['eventfor']);
+    }
+
+    // Then remove any unwanted items
+    if (is_object($logdata)) {
+        foreach ($logdata as $key => $field) {
+            if (in_array($key, $ignorefields) || empty($field)) {
+                unset($logdata->{$key});
+            }
+        }
+        $logdata = (array)$logdata;
     }
 
     $parentuser = $USER->get('parentuser');
@@ -1894,8 +1956,12 @@ function handle_event($event, $data) {
             'usr'      => $USER->get('id'),
             'realusr'  => $parentuser ? $parentuser->id : $USER->get('id'),
             'event'    => $event,
-            'data'     => json_encode(isset($logdata) ? $logdata : $data),
-            'time'     => db_format_timestamp(time()),
+            'data'     => json_encode($logdata),
+            'ctime'    => db_format_timestamp(time()),
+            'resourceid' => $refid,
+            'resourcetype' => $reftype,
+            'parentresourceid' => $parentrefid,
+            'parentresourcetype' => $parentreftype,
         );
         insert_record('event_log', $logentry);
     }
@@ -4284,7 +4350,7 @@ function cron_event_log_expire() {
     if ($expiry = get_config('eventlogexpiry')) {
         delete_records_select(
             'event_log',
-            'time < CURRENT_DATE - INTERVAL ' .
+            'ctime < CURRENT_DATE - INTERVAL ' .
                 (is_postgres() ? "'" . $expiry . " seconds'" : $expiry . ' SECOND')
         );
 

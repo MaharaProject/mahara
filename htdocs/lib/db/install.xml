@@ -310,11 +310,16 @@
         </TABLE>
         <TABLE NAME="event_log">
             <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="realusr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="time" TYPE="datetime" NOTNULL="true"  />
                 <FIELD NAME="event" TYPE="char" LENGTH="255" NOTNULL="false"  />
                 <FIELD NAME="data" TYPE="text" LENGTH="big" NOTNULL="false"  />
+                <FIELD NAME="resourcetype" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="resourceid" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="parentresourcetype" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="parentresourceid" TYPE="int" LENGTH="10" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
