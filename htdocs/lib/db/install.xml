@@ -77,6 +77,7 @@
                 to create the tables first, then the keys. The foreign key will be created
                 during the postinst phase. -->
                 <FIELD NAME="logo" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="logoxs" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="style" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="licensemandatory" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="licensedefault" TYPE="char" LENGTH="255" NOTNULL="false"/>

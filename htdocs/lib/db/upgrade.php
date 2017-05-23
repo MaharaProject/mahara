@@ -5005,5 +5005,15 @@ function xmldb_core_upgrade($oldversion=0) {
         clear_menu_cache();
     }
 
+    if ($oldversion < 2017061200) {
+        log_debug('Add new logoxs column in institution table for small logos');
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('logoxs');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+            add_field($table, $field);
+        }
+    }
+
     return $status;
 }

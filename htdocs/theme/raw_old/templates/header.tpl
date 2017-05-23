@@ -40,6 +40,17 @@
     {/if}
     <header class="header navbar navbar-default navbar-fixed-top no-site-messages">
         <div class="container">
+            <div id="logo-area" class="logo-area">
+                <a href="{$WWWROOT}" class="logo {if $sitelogosmall}change-to-small{/if} ">
+                    <img src="{$sitelogo}" alt="{$sitename}">
+                </a>
+                {if $sitelogosmall}
+                    <a href="{$WWWROOT}" class="logoxs">
+                        <img src="{$sitelogosmall}" alt="{$sitename}">
+                    </a>
+                {/if}
+                <div id="loading-box" class="loading-box" style='display:none'></div>
+            </div>
             {if $MAINNAV}
              <!-- Brand and toggle get grouped for better mobile display -->
                 <button type="button" class="menu-toggle navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-main">
@@ -55,12 +66,7 @@
                 <span class="nav-title sr-only">{str tag="showsearch"}</span>
             </button>
             {/if}
-            <div id="logo-area" class="logo-area">
-                <a href="{$WWWROOT}" class="logo">
-                    <img src="{$sitelogo}" alt="{$sitename}">
-                </a>
-                <div id="loading-box" class="loading-box" style='display:none'></div>
-            </div>
+
             {include file="header/topright.tpl"}
 
         </div>

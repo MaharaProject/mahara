@@ -628,7 +628,10 @@ EOF;
     $smarty->assign('sitelogocustom', $sitelogocustom);
     $sitelogo = $THEME->header_logo();
     $sitelogo = append_version_number($sitelogo);
+    $sitelogosmall = $THEME->header_logo_small();
+    $sitelogosmall = ($sitelogosmall ? append_version_number($sitelogosmall) : null);
     $smarty->assign('sitelogo', $sitelogo);
+    $smarty->assign('sitelogosmall', $sitelogosmall);
     $smarty->assign('sitelogo4facebook', $THEME->facebook_logo());
     $smarty->assign('sitedescription4facebook', get_string('facebookdescription', 'mahara'));
 
@@ -933,6 +936,11 @@ class Theme {
     public $headerlogo;
 
     /**
+     * A user may have had the small header logo added by an institution
+     */
+    public $headerlogosmall;
+
+    /**
      * Additional stylesheets to display after the basename theme's stylesheets
      */
     public $addedstylesheets;
@@ -1143,6 +1151,9 @@ class Theme {
         if (!empty($themedata->headerlogo)) {
             $this->headerlogo = $themedata->headerlogo;
         }
+        if (!empty($themedata->headerlogosmall)) {
+            $this->headerlogosmall = $themedata->headerlogosmall;
+        }
         if (!empty($themedata->stylesheets)) {
             $this->addedstylesheets = $themedata->stylesheets;
         }
@@ -1290,6 +1301,25 @@ class Theme {
             }
         }
         return $this->get_image_url('site-logo');
+    }
+
+    /**
+     * Displaying of the small header logo of an institution
+     * false will be returned if no small logo for the institution or site small logo is found
+     */
+    public function header_logo_small() {
+        if (!empty($this->headerlogosmall)) {
+            return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $this->headerlogosmall;
+        }
+        else {
+            require_once('ddl.php');
+            $table = new XMLDBTable('institution');
+            $field = new XMLDBField('logoxs');
+            if (field_exists($table, $field) && $sitelogosmallid = get_field('institution', 'logoxs', 'name', 'mahara')) {
+                return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $sitelogosmallid;
+            }
+        }
+        return false;
     }
 
     public function facebook_logo() {

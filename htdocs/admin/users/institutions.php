@@ -401,7 +401,7 @@ if ($institution || $add) {
     $elements['logo'] = array(
         'type'        => 'file',
         'title'       => get_string('Logo', 'admin'),
-        'description' => get_string('logodescription', 'admin'),
+        'description' => get_string('logodescription1', 'admin'),
         'maxfilesize' => get_max_upload_size(false),
     );
     if (!empty($data->logo)) {
@@ -416,6 +416,27 @@ if ($institution || $add) {
             'description' => get_string('deletelogodescription2', 'admin'),
         );
     }
+
+    // logo-xs
+    $elements['logoxs'] = array(
+        'type'        => 'file',
+        'title'       => get_string('Logosmall', 'admin'),
+        'description' => get_string('logoxsdescription', 'admin'),
+        'maxfilesize' => get_max_upload_size(false),
+    );
+    if (!empty($data->logoxs)) {
+        $logoxsurl = get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $data->logoxs;
+        $elements['logoxshtml'] = array(
+            'type'        => 'html',
+            'value'       => '<img src="' . $logoxsurl . '" alt="' . get_string('Logosmall', 'admin') . '">',
+        );
+        $elements['deletelogoxs'] = array(
+            'type'        => 'switchbox',
+            'title'       => get_string('deletelogoxs', 'admin'),
+            'description' => get_string('deletelogoxsdescription2', 'admin'),
+        );
+    }
+
     if (empty($data->name) || $data->name != 'mahara') {
         if (!empty($data->style)) {
             $customtheme = get_records_menu('style_property', 'style', $data->style, '', 'field,value');
@@ -731,6 +752,38 @@ function institution_validate(Pieform $form, $values) {
         }
     }
 
+    // Check uploaded small logo
+    if (!empty($values['logoxs'])) {
+        require_once('file.php');
+        require_once('uploadmanager.php');
+        $um = new upload_manager('logoxs');
+        if ($error = $um->preprocess_file()) {
+            $form->set_error('logoxs', $error);
+            return false;
+        }
+
+        $imageinfo = getimagesize($values['logoxs']['tmp_name']);
+        if (!$imageinfo || !is_image_type($imageinfo[2])) {
+            $form->set_error('logoxs', get_string('filenotimage'));
+            return false;
+        }
+
+        // Check the file isn't greater than the max allowable size
+        $width          = $imageinfo[0];
+        $height         = $imageinfo[1];
+        $imagemaxwidth  = get_config('imagemaxwidth');
+        $imagemaxheight = get_config('imagemaxheight');
+        if ($width > $imagemaxwidth || $height > $imagemaxheight) {
+            $form->set_error('logoxs', get_string('profileiconimagetoobig', 'artefact.file', $width, $height, $imagemaxwidth, $imagemaxheight));
+        }
+        else {
+            $ratio = $width / $height;
+            if ($ratio != 1) {
+                $form->set_error('logoxs', get_string('profileiconxsnotsquare', 'artefact.file'));
+            }
+        }
+    }
+
     if (!empty($values['lang']) && $values['lang'] != 'sitedefault' && !array_key_exists($values['lang'], get_languages())) {
         $form->set_error('lang', get_string('institutionlanginvalid', 'admin'));
     }
@@ -966,7 +1019,7 @@ function institution_submit(Pieform $form, $values) {
         delete_records('style', 'id', $oldinstitution->style);
     }
 
-    // Set the logo after updating the institution, because the institution
+    // Set the logos after updating the institution, because the institution
     // needs to exist before it can own the logo artefact.
     if (!empty($values['logo'])) {
         safe_require('artefact', 'file');
@@ -1008,6 +1061,49 @@ function institution_submit(Pieform $form, $values) {
 
     if (!empty($values['deletelogo'])) {
         execute_sql("UPDATE {institution} SET logo = NULL WHERE name = ?", array($institution));
+    }
+
+    //small logo
+    if (!empty($values['logoxs'])) {
+        safe_require('artefact', 'file');
+
+        // Entry in artefact table
+        $data = (object) array(
+            'institution' => $institution,
+            'title'       => 'logoxs',
+            'description' => 'Institution small logo',
+            'note'        => $values['logoxs']['name'],
+            'size'        => $values['logoxs']['size'],
+        );
+
+        $imageinfo      = getimagesize($values['logoxs']['tmp_name']);
+        $data->width    = $imageinfo[0];
+        $data->height   = $imageinfo[1];
+        $data->filetype = $imageinfo['mime'];
+        $artefact = new ArtefactTypeProfileIcon(0, $data);
+        if (preg_match("/\.([^\.]+)$/", $values['logoxs']['name'], $saved)) {
+            $artefact->set('oldextension', $saved[1]);
+        }
+        $artefact->commit();
+
+        $id = $artefact->get('id');
+
+        // Move the file into the correct place.
+        $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($id % 256) . '/';
+        check_dir_exists($directory);
+        move_uploaded_file($values['logoxs']['tmp_name'], $directory . $id);
+
+        // Delete the old small logo
+        if (!empty($oldinstitution->logoxs)) {
+            $oldlogo = new ArtefactTypeProfileIcon($oldinstitution->logoxs);
+            $oldlogo->delete();
+        }
+
+        set_field('institution', 'logoxs', $id, 'name', $institution);
+    }
+
+    if (!empty($values['deletelogoxs'])) {
+        execute_sql("UPDATE {institution} SET logoxs = NULL WHERE name = ?", array($institution));
     }
 
     delete_records('institution_locked_profile_field', 'name', $institution);
