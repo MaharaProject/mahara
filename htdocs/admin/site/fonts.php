@@ -22,7 +22,7 @@ require_once(get_config('libroot') . 'skin.php');
 define('TITLE', get_string('sitefonts', 'skin'));
 
 if (!get_config('skins')) {
-    throw new FeatureNotEnabledException();
+    throw new AccessDeniedException(get_string('pluginnotenabled', 'mahara', 'skins'));
 }
 
 $fontpreview  = !is_null($SESSION->get('fontpreview')) ? $SESSION->get('fontpreview') : 21;
