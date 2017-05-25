@@ -1,3 +1,10 @@
+17.04.2 (2017-05-25)
+- Bug 1690232: Can't click the "Comments" link in a retractable block
+- Bug 1692749: User passwords being saved in database event_log as plain text
+- Bug 1625389: Error message when sharing profile page with public
+- Bug 1690687: Excluded tagged entries are not styled differently now
+- Bug 1651592: Navigating to fonts in admin throws an error
+
 17.04.1 (2017-05-12)
 - Bug 1686336: SmartEvidence matrix page not accessible via secret URL
 - Bug 1686833: Gender lang string is misssing
