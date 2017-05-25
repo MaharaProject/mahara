@@ -161,12 +161,14 @@ jQuery(function($) {
                     if (setmax !== undefined) {
                         settarget.datetimepicker( "option", "maxDate", selectedDate);
                     }
+                    if ((setmin !== undefined || setmax !== undefined ) && selectedDate !== "") {
+                        formchangemanager.setFormStateById('editaccess', FORM_CHANGED);
+                    }
                 }
             });
         }
 
         function formatSelect2Results (data) {
-
             if (data.loading) {
                 return data.text;
             }
@@ -186,6 +188,9 @@ jQuery(function($) {
         }
 
         function formatSelect2Selected (data) {
+            if (data._resultId !== undefined) {
+                formchangemanager.setFormStateById('editaccess', FORM_CHANGED);
+            }
             if (data.grouptype !== undefined) {
                 return '<span data-grouptype="'+ data.grouptype + '">'+ data.name + '</span>';
             }
@@ -264,6 +269,7 @@ jQuery(function($) {
                 if($(self).attr('data-roles').length > 0) {
                     showRoleSelect(e, self);
                 }
+                formchangemanager.setFormStateById('editaccess', FORM_CHANGED);
             });
         }
 
@@ -334,6 +340,7 @@ jQuery(function($) {
                 e.preventDefault();
                 if (!$(this).hasClass('icon-placeholder')) {
                     clearRow(this);
+                    formchangemanager.setFormStateById('editaccess', FORM_CHANGED);
                 }
             });
         }
@@ -351,6 +358,7 @@ jQuery(function($) {
                     row.find('.js-hide-empty').removeClass('hidden');
                     addNewRow(shareoptions, {empty: true});
                 }
+                formchangemanager.setFormStateById('editaccess', FORM_CHANGED);
             });
         }
 
