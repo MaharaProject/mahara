@@ -1,3 +1,7 @@
+15.04.13 (2017-05-25)
+- Bug 1686860: Account settings sub menus not shown in mobile in 16.10
+- Bug 1692749: User passwords being saved in database event_log as plain text
+
 15.04.12 (2017-04-26)
 - Bug 1653180: Fix the logo for Facebook
 - Bug 1656934: Upload new Mahara logo to all themes
