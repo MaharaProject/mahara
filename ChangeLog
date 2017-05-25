@@ -1,3 +1,13 @@
+16.10.4 (2017-05-25)
+- Bug 1692749: User passwords being saved in database event_log as plain text
+- Bug 1677038: cant delete a user when smartevidence is not installed
+- Bug 1686336: SmartEvidence matrix page not accessible via secret URL
+- Bug 1686860: Account settings sub menus not shown in mobile in 16.10
+- Bug 1688126: MathJax not working
+- Bug 1689931: Problem with leaving feedback on copied SE collection annotation
+- Bug 1690232: Can't click the "Comments" link in a retractable block
+- Bug 1666099: can add a draft journal entry to a page
+
 16.10.3 (2017-04-26)
 - Bug 1648927: Deleting an institution sets group shortname/institution to null
 - Bug 1649319: Editing a table - editor's icons are not being displayed
