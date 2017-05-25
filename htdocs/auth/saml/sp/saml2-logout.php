@@ -51,4 +51,9 @@ require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/auto
 require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
 SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
 
+// Bug #1693426: destroy mahara session when Single Logout is initiated by IdP
+if ($USER->is_logged_in()) {
+    $USER->logout();
+}
+
 require('../extlib/simplesamlphp/modules/saml/www/sp/saml2-logout.php');
