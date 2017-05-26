@@ -38,6 +38,10 @@
  Scenario: Checking the jump list of the paginagtor (Bug 1409370)
   Given I log in as "userA" with password "Kupuhipa1"
   And I choose "Portfolio" from main menu
+  # make sure Page 1 is displayed by ordering alphabetically
+  # (Note: Show more button does not seem to be clickable using current steps)
+  And I select "atoz" from "orderby"
+  And I press "searchviews_submit"
   And I click the panel "A's Page 01"
   And I follow "Edit this page"
   And I follow "Share page"
