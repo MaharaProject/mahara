@@ -2105,9 +2105,11 @@ class View {
      * adds a block with the given type to a view
      *
      * @param array $values parameters for this function
-     *                      blocktype => string name of blocktype to add
-     *                      column    => int column to add to
-     *                      order     => position in column
+     *                      blocktype  => string name of blocktype to add
+     *                      column     => int column to add to
+     *                      order      => position in column
+     *                      returndata => return the rendered HTML for the block, or
+     *                                    the id of the block if 'returndata' = 'id'
      *
      */
     public function addblocktype($values) {
@@ -2149,7 +2151,10 @@ class View {
         $bi->commit();
         $this->dirtycolumns[$values['row']][$values['column']] = 1;
 
-        if ($values['returndata']) {
+        if ($values['returndata'] === 'id') {
+            return $bi->get('id');
+        }
+        else if ($values['returndata']) {
             // Return new block rendered in both configure mode and (editing) display mode
             $result = array(
                 'display' => $bi->render_editing(false, true),
