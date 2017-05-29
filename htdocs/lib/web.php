@@ -1344,10 +1344,25 @@ class Theme {
         $extensions = array('svg', 'png', 'gif', 'jpg');
 
         // Check for all images extension in the correct order.
+        $temps = array();
         foreach ($extensions as $ext) {
             $temploc = $this->_get_path("images/$filename.$ext", false, $plugindirectory, '', false);
-            if (is_readable(get_config('docroot') . $temploc)) {
-                $loc = $temploc;
+            $temps["images/$filename.$ext"] = $temploc;
+        }
+        // Now check for which image exists by theme order
+        $inheritance = $this->inheritance;
+        array_unshift($inheritance, 'local'); // Add local dir to be checked first
+        foreach ($inheritance as $theme) {
+            foreach ($temps as $key => $temploc) {
+                $pluginpath = $plugindirectory ? 'plugintype/' . $plugindirectory . '/' : '';
+                $tplfile = 'theme/' . $theme . '/' . $pluginpath . $key;
+                if ($temploc == $tplfile && is_readable(get_config('docroot') . $temploc)) {
+                    $loc = $temploc;
+                    break;
+                }
+            }
+            if ($loc != '') {
+                // we've found a valid file in the theme
                 break;
             }
         }
