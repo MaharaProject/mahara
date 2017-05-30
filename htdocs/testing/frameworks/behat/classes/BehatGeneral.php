@@ -1376,4 +1376,33 @@ JS;
         );
     }
 
+    /**
+      * Pauses the scenario until the user presses a key. Useful when debugging a scenario locally
+      * but not meant for automated runs.
+      *
+      * @Then /^(?:|I )insert breakpoint$/
+      */
+
+    public function i_insert_breakpoint() {
+
+         fwrite(STDOUT, "\n\033[s    \033[93m[Breakpoint] Press \033[1;93m[RETURN]\033[0;93m to continue...\033[0m\n");
+         while (fgets(STDIN, 1024) == '') {
+         }
+
+         fwrite(STDOUT, "\033[u");
+         return;
+     }
+
+     /**
+     * Echos a line to the console to indicate where the test has reached in a scenario.
+     * For debugging tests without using a breakpoint. Ok for automated runs.
+     *
+     * @Then /^(?:\I )echo the line "([^"]*)"$/
+     */
+
+     public function i_echo_the_line($text){
+
+        fwrite(STDOUT, "\n\033[93m DEBUG: $text\033[0m\n\n");
+      }
+
 }
