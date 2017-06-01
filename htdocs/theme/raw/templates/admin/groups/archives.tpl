@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<form class="form-inline pieform form with-heading" action="{$WWWROOT}admin/groups/archive.php" method="post">
+<form class="form-inline pieform form with-heading" action="{$WWWROOT}admin/groups/archives.php" method="post">
     {if $search->sortby}
     <input type="hidden" name="sortby" id="sortby" value="{$search->sortby}">
     {/if}
