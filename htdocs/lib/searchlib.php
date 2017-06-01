@@ -692,13 +692,13 @@ function build_admin_export_queue_results($search, $offset, $limit) {
         'exportselect' => array(
             'headhtml' => get_string('requeue', 'export') . '<br><div class="btn-group" role="group"><a class="btn btn-xs btn-default" href="" id="selectallexport">' . get_string('All') . '</a>&nbsp;<a class="btn btn-xs btn-default" href="" id="selectnoneexport">' . get_string('none') . '</a></div>',
             'template' => 'admin/users/searchselectcolumnexport.tpl',
-            'class'    => 'nojs-hidden-table-cell with-checkbox',
+            'class'    => 'nojs-hidden-table-cell with-selectall',
             'accessible' => get_string('bulkselect'),
         ),
         'deleteselect' => array(
             'headhtml' => get_string('delete') . '<br><div class="btn-group" role="group"><a class="btn btn-xs btn-default" href="" id="selectalldelete">' . get_string('All') . '</a>&nbsp;<a class="btn btn-xs btn-default" href="" id="selectnonedelete">' . get_string('none') . '</a></div>',
             'template' => 'admin/users/searchselectcolumnexportdelete.tpl',
-            'class'    => 'nojs-hidden-table-cell with-checkbox',
+            'class'    => 'nojs-hidden-table-cell with-selectall',
             'accessible' => get_string('bulkselect'),
         ),
     );
