@@ -18,9 +18,8 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I choose "Content" from main menu
  And I follow "Social media"
  And I follow "New social media account"
- And I set the following fields to these values:
- | Social network * | Facebook URL |
- | Your URL or username * | https://www.facebook.com/wellingtonphoenixfc |
+ And I select "Facebook URL" from "Social network"
+ And I fill in "https://www.facebook.com/wellingtonphoenixfc" for "Your URL or username"
  And I press "Save"
  And I choose "Portfolio" from main menu
  And I follow "Add"
