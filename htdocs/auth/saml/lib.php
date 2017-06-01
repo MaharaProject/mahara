@@ -185,7 +185,10 @@ class AuthSaml extends Auth {
                     throw new AccessDeniedException();
                 }
             }
-            if ($isremote) {
+            if ($isremote && !empty($email) && $this->config['loginlink']) {
+                $user->find_by_email_address($email);
+            }
+            else if ($isremote) {
                 $user->find_by_instanceid_username($this->instanceid, $remoteuser, $isremote);
             }
             else {

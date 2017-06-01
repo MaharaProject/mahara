@@ -160,6 +160,53 @@ class User {
     }
 
     /**
+     * Populates this object with the user record identified by the given
+     * email address. Checks in all the places email can be recorded.
+     *
+     * @throws AuthUnknownUserException If the user cannot be found. Note that
+     *                                  deleted users _can_ be found
+     * @throws UserException If there are more than one user found.
+     */
+    public function find_by_email_address($email) {
+
+        if (!is_string($email)) {
+            throw new InvalidArgumentException('email parameter must be a string to create a User object');
+        }
+
+        $email = strtolower($email);
+        $sql = 'SELECT
+                    u.*,
+                    ' . db_format_tsfield('expiry') . ',
+                    ' . db_format_tsfield('lastlogin') . ',
+                    ' . db_format_tsfield('lastlastlogin') . ',
+                    ' . db_format_tsfield('lastaccess') . ',
+                    ' . db_format_tsfield('suspendedctime') . ',
+                    ' . db_format_tsfield('ctime') . '
+                FROM
+                    {usr} u
+                WHERE u.id IN (
+                    SELECT u.id FROM {usr} u
+                    JOIN {artefact} a ON a.owner = u.id
+                    JOIN {artefact_internal_profile_email} ae ON (ae.owner = u.id and ae.artefact = a.id)
+                    WHERE a.artefacttype = ? AND (LOWER(u.email) = ? OR LOWER(a.title) = ?) GROUP BY u.id
+                )';
+
+        $user = get_record_sql($sql, array('email', $email, $email));
+
+        if (false == $user) {
+            throw new AuthUnknownUserException("User with email \"$email\" is not known");
+        }
+
+        if (count($user) > 1) {
+            throw new UserException("More than one user with email \"$email\" found");
+        }
+
+        $this->populate($user);
+        $this->reset_institutions();
+        return $this;
+    }
+
+    /**
      * Finds details for a user given a username and their authentication
      * instance.
      *
