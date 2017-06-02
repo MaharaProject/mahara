@@ -5,13 +5,13 @@
             <span class="icon icon-lg icon-cogs"></span>
             <span class="btn-title">{str tag=settings section=view}</span>
         </a>
-    <a class="btn btn-default editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}view/blocks.php?id={$viewid}{if $new}&new=1{/if}" title="{str tag=editcontent section=view}">
+    <a class="btn btn-default editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}view/blocks.php?id={$viewid}{if $new}&new=1{/if}" title="{str tag=editcontent1 section=view}">
         <span class="icon icon-lg icon-pencil" aria-hidden="true" role="presentation"></span>
         <span class="btn-title">{str tag=editcontent1 section=view}</span>
     </a>
 
     {if $edittitle || $viewtype == 'share'}
-        <a class="btn btn-default editviews editshare {if $selected == 'share'}active{/if}" href="{$WWWROOT}view/accessurl.php?id={$viewid}{if $collectionid}&collection={$collectionid}{/if}{if $new}&new=1{/if}"  title="{str tag=shareview section=view}">
+        <a class="btn btn-default editviews editshare {if $selected == 'share'}active{/if}" href="{$WWWROOT}view/accessurl.php?id={$viewid}{if $collectionid}&collection={$collectionid}{/if}{if $new}&new=1{/if}"  title="{str tag=shareview1 section=view}">
             <span class="icon icon-lg icon-unlock-alt" aria-hidden="true" role="presentation"></span>
            <span class="btn-title">{str tag=shareview1 section=view}</span>
         </a>

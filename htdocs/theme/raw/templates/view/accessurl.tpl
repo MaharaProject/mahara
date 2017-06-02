@@ -4,20 +4,21 @@
 
 <div id="accessurl-container">
 
-{if $collectionid}
-    <label>{str tag=pagepartofcollection section=view arg1=$collectiontitle}</label>
-{/if}
-
-<h2 class="accessurl-title">{str tag=secreturls section=view}</h2>
-
-<!-- Url -->
-<div class="btn-top-right btn-group">
-    {$newform|safe}
-</div>
-
 <div class="view-container">
+    {if $collectionid}
+        <label>{str tag=pagepartofcollection section=view arg1=$collectiontitle}</label>
+    {/if}
+    <h2>{str tag=secreturls section=view}</h2>
+
+    <!-- Url -->
+    {if $newform != null}
+    <div class="accessurl-button">
+        {$newform|safe}
+    </div>
+    {/if}
+
     {if !$allownew}
-    <div class="message info">
+    <div class="alert alert-info">
         {if $onprobation}
             {str tag=publicaccessnotallowedforprobation section=view}
         {else}

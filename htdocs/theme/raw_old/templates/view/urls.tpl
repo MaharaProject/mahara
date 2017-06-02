@@ -6,7 +6,7 @@
 
 <div class="view-container">
     {if !$allownew}
-    <div class="message info">
+    <div class="alert alert-info">
         {if $onprobation}
             {str tag=publicaccessnotallowedforprobation section=view}
         {else}
