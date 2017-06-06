@@ -26,20 +26,6 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     And I delete the link and resource menu item "Test Menu Link"
     And I should see "Item deleted"
     And I press "Save changes"
-    # Flicking the switches to the opposite
-    And I enable the switch "Terms and conditions"
-    And I disable the following switches:
-     | Privacy statement |
-     | About |
-     | Contact us |
-    And I press "Save changes"
-    # Checking the switches held the setting
-    And the following fields match these values:
-     | Terms and conditions | 1 |
-     | Privacy statement | 0 |
-     | About | 0 |
-     | Contact us | 0 |
-
 
 Scenario: Make sure blogs do not show in site file link options (Bug #1537426)
     # Log in as "Admin" user
