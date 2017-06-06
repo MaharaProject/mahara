@@ -326,12 +326,14 @@ class View {
                         WHERE viewlayout = ?", array($this->layout))) {
                             $default = array();
                             foreach ($rowscols as $row) {
-                                $vrc = (object) array(
-                                    'view' => $this->get('id'),
-                                    'row' => $row->row,
-                                    'columns' => $row->columns
-                                );
-                                ensure_record_exists('view_rows_columns', $vrc, $vrc);
+                                if ($this->get('id')) {
+                                    $vrc = (object) array(
+                                        'view' => $this->get('id'),
+                                        'row' => $row->row,
+                                        'columns' => $row->columns
+                                    );
+                                    ensure_record_exists('view_rows_columns', $vrc, $vrc);
+                                }
                                 $default[$row->row] = $row;
                             }
                     }
@@ -345,20 +347,24 @@ class View {
                         // Layout not specified so use the view type default layout
                         $default = array();
                         foreach ($rowscols as $row) {
-                            $vrc = (object) array(
-                                'view' => $this->get('id'),
-                                'row' => $row->row,
-                                'columns' => $row->columns
-                            );
-                            ensure_record_exists('view_rows_columns', $vrc, $vrc);
+                            if ($this->get('id')) {
+                                $vrc = (object) array(
+                                    'view' => $this->get('id'),
+                                    'row' => $row->row,
+                                    'columns' => $row->columns
+                                );
+                                ensure_record_exists('view_rows_columns', $vrc, $vrc);
+                            }
                             $default[$row->row] = $row;
                         }
                 }
                 else {
                     // Layout not known so make it 1 row / 3 cols
-                    insert_record('view_rows_columns', (object) array(
-                        'view' => $this->get('id'),
-                        'row' => 1, 'columns' => 3));
+                    if ($this->get('id')) {
+                        insert_record('view_rows_columns', (object) array(
+                            'view' => $this->get('id'),
+                            'row' => 1, 'columns' => 3));
+                    }
                     $default = self::default_columnsperrow();
                 }
                 $this->columnsperrow = $default;
