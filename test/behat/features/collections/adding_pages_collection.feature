@@ -50,12 +50,16 @@ Scenario: Creating a collection AND adding pages
     And I choose "Export" in "Portfolio" from main menu
     And I select the radio "Standalone HTML website"
     And I select the radio "Just some of my pages"
-    And I wait "1" seconds
+    And I scroll to the base of id "whatviewsselection"
     And I should see "Pages to export"
     And I select the radio "Just some of my collections"
+    #give time to display the section
     And I wait "1" seconds
+    And I scroll to the id "whatcollections"
+
     And I should see "Collections to export"
     And I select the radio "All my data"
+    #give time to hide the sections
     And I wait "1" seconds
     And I should not see "Pages to export"
     And I should not see "Collections to export"
