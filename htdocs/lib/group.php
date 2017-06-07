@@ -724,8 +724,8 @@ function group_update($new, $create=false) {
 
     // When a group changes from public -> private or vice versa, set the
     // appropriate access permissions on the group homepage view.
+    $homepageid = get_field('view', 'id', 'type', 'grouphomepage', 'group', $new->id);
     if ($old->public != $new->public) {
-        $homepageid = get_field('view', 'id', 'type', 'grouphomepage', 'group', $new->id);
         if ($old->public && !$new->public) {
             delete_records('view_access', 'view', $homepageid, 'accesstype', 'public');
             insert_record('view_access', (object) array(
@@ -771,6 +771,23 @@ function group_update($new, $create=false) {
                       )';
             execute_sql($query, array($value, $value, $new->id));
         }
+    }
+
+    // If 'Allow submissions' is changed we need to update the 'Group pages' block
+    // to reflect the change
+    $cansubmitto = 0;
+    if (isset($new->submittableto) && !empty($new->submittableto)) {
+        $cansubmitto = 1;
+    }
+    $groupview = get_record_sql("SELECT bi.id, bi.configdata
+                                 FROM {block_instance} bi
+                                 INNER JOIN {view} v ON v.id = bi.view
+                                 WHERE bi.blocktype = 'groupviews'
+                                 AND v.id = ?", array($homepageid));
+    if ($groupview) {
+        $configdata = unserialize($groupview->configdata);
+        $configdata['showsubmitted'] = $cansubmitto;
+        set_field('block_instance', 'configdata', serialize($configdata), 'id', $groupview->id);
     }
 
     db_commit();

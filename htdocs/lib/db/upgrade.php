@@ -5015,5 +5015,34 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017062000) {
+        if ($records = get_records_sql_array("SELECT bi.id AS blockid
+                                              FROM {group} g
+                                              JOIN {view} v ON (v.group = g.id AND v.type = 'grouphomepage')
+                                              JOIN {block_instance} bi ON (bi.view = v.id AND bi.blocktype = 'groupviews')
+                                              WHERE g.submittableto = 1
+                                              AND bi.configdata NOT LIKE '%showsubmitted%'", array())) {
+            safe_require('blocktype', 'groupviews');
+            log_debug('Update submittable groups to display submissions in block by default');
+            // We can only update those blocks where a decision hasn't yet been made rather than include blocks
+            // that have showsubmitted set to false as that may be a valid choice by the group administrator.
+            $count = 0;
+            $limit = 1000;
+            $total = count($records);
+            foreach ($records as $record) {
+                $bi = new BlockInstance($record->blockid);
+                $configdata = $bi->get('configdata');
+                $configdata['showsubmitted'] = 1;
+                $bi->set('configdata', $configdata);
+                $bi->commit();
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
