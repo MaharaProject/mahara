@@ -5000,5 +5000,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017052900) {
+        log_debug('Clear menu cache for removal of menu items');
+        clear_menu_cache();
+    }
+
     return $status;
 }

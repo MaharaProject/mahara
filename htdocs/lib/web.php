@@ -2301,12 +2301,6 @@ function admin_nav() {
             'title'  => get_string('register'),
             'weight' => 20,
         ),
-        'adminhome/statistics' => array(
-            'path'   => 'adminhome/statistics',
-            'url'    => 'admin/statistics.php',
-            'title'  => get_string('sitestatistics', 'admin'),
-            'weight' => 30,
-        ),
         'configsite' => array(
             'path'   => 'configsite',
             'url'    => 'admin/site/options.php',
@@ -2747,21 +2741,6 @@ function institutional_admin_nav() {
             'weight' => 110,
         ),
     );
-    if ($USER->get('staff')) {
-        $ret['adminhome'] = array(
-            'path'   => 'adminhome',
-            'url'    => 'admin/statistics.php',
-            'title'  => get_string('site', 'admin'),
-            'weight' => 40,
-            'accesskey' => 'a',
-        );
-        $ret['adminhome/statistics'] = array(
-            'path'   => 'adminhome/statistics',
-            'url'    => 'admin/statistics.php',
-            'title'  => get_string('statistics', 'admin'),
-            'weight' => 10,
-        );
-    };
 
     // enable plugins to augment the institution admin menu structure
     foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {
@@ -2794,13 +2773,6 @@ function staff_nav() {
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
             'accesskey' => 'u',
-        ),
-        'statistics' => array(
-            'path'   => 'statistics',
-            'url'    => 'admin/statistics.php',
-            'title'  => get_string('sitestatistics', 'admin'),
-            'weight' => 20,
-            'accesskey' => 's',
         ),
         'institutionalstatistics' => array(
             'path'   => 'statistics',

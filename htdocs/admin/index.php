@@ -17,7 +17,7 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(__FILE__)).'/init.php');
-require(get_config('libroot') . 'registration.php');
+require(get_config('libroot') . 'statistics.php');
 if (get_config('installed')) {
     define('TITLE', get_string('administration', 'admin'));
     validate_theme(get_config('theme'));
@@ -26,7 +26,6 @@ else {
     define('TITLE', get_string('installation', 'admin'));
 }
 require(get_config('libroot') . 'upgrade.php');
-require_once(get_config('libroot') . 'registration.php');
 
 $upgrades = check_upgrades();
 

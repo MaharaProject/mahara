@@ -4085,7 +4085,7 @@ function cron_institution_registration_data() {
  * Cronjob to save weekly site data locally
  */
 function cron_site_data_weekly() {
-    require_once(get_config('libroot') . 'registration.php');
+    require_once(get_config('libroot') . 'statistics.php');
     $current = site_data_current();
     $time = db_format_timestamp(time());
 
@@ -4107,7 +4107,7 @@ function cron_site_data_weekly() {
 }
 
 function cron_site_data_daily() {
-    require_once(get_config('libroot') . 'registration.php');
+    require_once(get_config('libroot') . 'statistics.php');
     $current = site_data_current();
     $time = db_format_timestamp(time());
 
@@ -4191,7 +4191,7 @@ function cron_site_data_daily() {
 }
 
 function cron_institution_data_weekly() {
-    require_once(get_config('libroot') . 'registration.php');
+    require_once(get_config('libroot') . 'statistics.php');
     foreach (get_column('institution', 'name') as $institution) {
         $current = institution_data_current($institution);
         $time = db_format_timestamp(time());
@@ -4214,7 +4214,7 @@ function cron_institution_data_weekly() {
 }
 
 function cron_institution_data_daily() {
-    require_once(get_config('libroot') . 'registration.php');
+    require_once(get_config('libroot') . 'statistics.php');
     foreach (get_column('institution', 'name') as $institution) {
         $current = institution_data_current($institution);
         $time = db_format_timestamp(time());

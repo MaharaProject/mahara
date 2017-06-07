@@ -840,7 +840,18 @@ class Institution {
     }
 }
 
-function get_institution_selector($includedefault = true, $assumesiteadmin=false, $includesitestaff=false, $includeinstitutionstaff=false) {
+/**
+ * Returns an institution dropdown selector
+ *
+ * @param bool $includedefault           To include the 'mahara' institution in list
+ * @param bool $assumesiteadmin          To call this function like you had site admin privileges
+ * @param bool $includesitestaff         To allow site staff to see dropdown like the site admin would
+ * @param bool $includeinstitutionstaff  To allow institution staff to see dropdown like institution admin would
+ * @param bool $allselector              To add an 'all' option to the dropdown where it makes sense, eg in institution statistics page
+ *
+ * @return null or array suitable for pieform element
+ */
+function get_institution_selector($includedefault = true, $assumesiteadmin=false, $includesitestaff=false, $includeinstitutionstaff=false, $allselector=false) {
     global $USER;
 
     if (($assumesiteadmin || $USER->get('admin')) || ($includesitestaff && $USER->get('staff'))) {
@@ -883,6 +894,9 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
     }
 
     $options = array();
+    if ($allselector) {
+        $options['all'] = get_string('Allinstitutions', 'mahara');
+    }
     foreach ($institutions as $i) {
         $options[$i->name] = $i->displayname;
     }
