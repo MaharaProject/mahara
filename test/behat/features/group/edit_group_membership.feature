@@ -1,4 +1,4 @@
-@javascript @core core_messages
+@javascript @core @core_messages
 Feature: Edit group membership
    In order to edit group membership
    As an admin I can edit membership via the 'Find people' page
