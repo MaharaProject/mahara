@@ -44,6 +44,7 @@ $string['alltypes'] = 'All types';
 $string['nodelete'] = 'No notifications to delete';
 $string['youroutboxisempty'] = 'Your outbox is empty.';
 $string['yourinboxisempty'] = 'Your inbox is empty.';
+$string['noresultsfound'] = 'No messages found matching your search criteria.';
 
 $string['markedasread'] = 'Marked your notifications as read';
 $string['failedtomarkasread'] = 'Failed to mark your notifications as read';

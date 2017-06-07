@@ -76,6 +76,42 @@ $paginationjavascript = <<<JAVASCRIPT
 // NOTE: most js is in the notification.js file, but we found
 // this part much more difficult to relocate
 
+function toggleMessageDisplay(table, id) {
+    var messages = jQuery('#message-' + table + '-' + id);
+    if (messages.length <= 0) {
+        return;
+    }
+    var rows = messages.parents("tr");
+    if (rows.length > 0) {
+        if (jQuery(rows[0]).find(".messagedisplaylong.hidden").length > 0) {
+            jQuery(rows[0]).find(".messagedisplaylong").removeClass("hidden");
+            jQuery(rows[0]).find(".messagedisplayshort").addClass("hidden");
+        }
+        else {
+            jQuery(rows[0]).find(".messagedisplaylong").addClass("hidden");
+            jQuery(rows[0]).find(".messagedisplayshort").removeClass("hidden");
+        }
+    }
+}
+
+function changeactivitytype() {
+    var delallform = document.forms['delete_all_notifications'];
+    delallform.elements['type'].value = this.options[this.selectedIndex].value;
+    var params = {'type': this.options[this.selectedIndex].value};
+    sendjsonrequest('indexout.json.php', params, 'GET', function(data) {
+        jQuery("#activitylist span.countresults").remove();
+        jQuery("#activitylist th").each(function() {
+                var link = jQuery(this).find('a');
+                if (link.length >= 1) {
+                    var headertext = link.text().trim();
+                    jQuery(this).html(headertext);
+                }
+            });
+        jQuery("input#search").val('');
+        paginator.updateResults(data);
+    });
+}
+
 jQuery(function($) {
   // We want the paginator to tell us when a page gets changed.
   function PaginatorData() {
@@ -157,7 +193,13 @@ function delete_all_notifications_submit() {
     redirect(get_config('wwwroot') . 'module/multirecipientnotification/outbox.php?type=' . $type);
 }
 
-$smarty = smarty(array('paginator'));
+
+$extrastylesheets = $THEME->get_url('style.css', false, 'module/multirecipientnotification');
+$smarty = smarty(array(
+    'paginator'
+    ),
+    array('<link rel="stylesheet" type="text/css" href="'.$extrastylesheets.'">')
+);
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
 
@@ -166,15 +208,27 @@ $smarty->assign('INLINEJAVASCRIPT', $paginationjavascript);
 // show urls and titles
 define('NOTIFICATION_SUBPAGE', 'outbox');
 $smarty->assign('SUBPAGENAV', PluginModuleMultirecipientnotification::submenu_items());
+$searchtext = param_variable('search', null);
+$searcharea = param_variable('searcharea', null);
 
-if (param_variable('search', null)!==null) {
-    $smarty->assign('searchtext', param_variable('search'));
-    $searchresults = get_message_search(param_variable('search'), null, $type, 0, 9999999, "outbox.php", $USER->get('id'));
-    $smarty->assign('all_count', $searchresults['ALL_data']['count']);
-    $smarty->assign('usr_count', $searchresults['User']['count']);
-    $smarty->assign('sub_count', $searchresults['Subject']['count']);
-    $smarty->assign('mes_count', $searchresults['Message']['count']);
+$searchdata = new stdClass();
+$searchdata->searchtext = $searchtext;
+$searchdata->searcharea = $searcharea;
+$searchdata->searchurl = 'outbox.php?type=' . $type . '&search=' . $searchtext . '&searcharea=';
+$searchdata->all_count = 0;
+$searchdata->sender_count = 0;
+$searchdata->recipient_count = 0;
+$searchdata->sub_count = 0;
+$searchdata->mes_count = 0;
+if ($searchtext !== null) {
+    $searchresults = get_message_search($searchtext, $type, 0, 9999999, "outbox.php", $USER->get('id'));
+    $searchdata->all_count = $searchresults['All_data']['count'];
+    $searchdata->sender_count = $searchresults['Sender']['count'];
+    $searchdata->recipient_count = $searchresults['Recipient']['count'];
+    $searchdata->sub_count = $searchresults['Subject']['count'];
+    $searchdata->mes_count = $searchresults['Message']['count'];
 }
+$smarty->assign('searchdata', $searchdata);
 $smarty->assign('deleteall', $deleteall);
 $smarty->assign('activitylist', $activitylist);
 

@@ -10,7 +10,9 @@
  *
  */
 
+
 require_once(dirname(__FILE__) . '/multirecipientnotification.php');
+require_once(dirname(__FILE__) . '/multirecipientnotificationsearch.php');
 
 /**
  * returns an object containing a list of ids of notifications the user has
@@ -27,60 +29,73 @@ function activitylistin($type='all', $limit=10, $offset=0) {
     global $USER;
     $result = new stdClass();
     $userid = $USER->get('id');
+    $searchtext = param_variable('search', null);
+    $searcharea = param_variable('searcharea', 'All_data');
 
-    $typesql = '';
-    if ($type != 'all') {
-        // Treat as comma-separated list of activity type names
-        $types = explode(',', preg_replace('/[^a-z,]+/', '', $type));
-        if ($types) {
-            $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
-            if (in_array('adminmessages', $types)) {
-                $typesql = '(' . $typesql . ' OR at.admin = 1)';
-            }
-            $typesql = ' AND ' . $typesql;
-        }
-    }
-
-    $notificationtargetcolumn = 'usr';
-    $notificationtargetrole = 'recipient';
-
-    if (is_postgres()) {
-        $readsqlstr = 'CAST(b.read AS INT)';
+    if (isset($searchtext) AND $searchtext !== null) {
+        $type = param_variable('type', 'all');
+        $searchresults = get_message_search($searchtext, $type, $offset, $limit, "inbox.php", $userid);
+        $result->msgidrecords = $searchresults[$searcharea]['data'];
+        $result->count = $searchresults[$searcharea]['count'];
+        $result->search = true;
     }
     else {
-        $readsqlstr = 'b.read';
+        $typesql = '';
+        if ($type != 'all') {
+            // Treat as comma-separated list of activity type names
+            $types = explode(',', preg_replace('/[^a-z,]+/', '', $type));
+            if ($types) {
+                $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
+                if (in_array('adminmessages', $types)) {
+                    $typesql = '(' . $typesql . ' OR at.admin = 1)';
+                }
+                $typesql = ' AND ' . $typesql;
+            }
+        }
+
+        $notificationtargetcolumn = 'usr';
+        $notificationtargetrole = 'recipient';
+
+        if (is_postgres()) {
+            $readsqlstr = 'CAST(b.read AS INT)';
+        }
+        else {
+            $readsqlstr = 'b.read';
+        }
+
+        $msgidquery = "
+            (
+            SELECT a.id, a.read, a.ctime, 'notification_internal_activity' AS msgtable, subject
+            FROM {notification_internal_activity} AS a
+            INNER JOIN {activity_type} AS at ON a.type = at.id
+            WHERE a." . $notificationtargetcolumn . " = ?
+            " . $typesql . "
+            )
+            UNION
+            (
+            SELECT a.id, " . $readsqlstr . ", a.ctime, 'module_multirecipient_notification' AS msgtable, subject
+            FROM {module_multirecipient_notification} AS a
+            INNER JOIN {module_multirecipient_userrelation} AS b
+                ON a.id = b.notification
+            INNER JOIN {activity_type} AS at ON a.type = at.id
+            WHERE b.usr = ?
+            AND b.deleted = '0'
+            AND b.role = '" . $notificationtargetrole . "'
+            " . $typesql . "
+            )";
+
+        $countquery = 'SELECT COUNT(*) FROM (' . $msgidquery . ') AS dummytable';
+        $result->count = count_records_sql($countquery, array($userid, $userid));
+
+        $msgidquery .= "
+        ORDER BY \"read\" ASC, ctime DESC, subject ASC";
+        $result->msgidrecords = get_records_sql_array($msgidquery, array($userid, $userid), $offset, $limit);
+        $result->search = false;
     }
-
-    $msgidquery = "
-        (
-        SELECT a.id, a.read, a.ctime, 'notification_internal_activity' AS msgtable, subject
-        FROM {notification_internal_activity} AS a
-        INNER JOIN {activity_type} AS at ON a.type = at.id
-        WHERE a." . $notificationtargetcolumn . " = ?
-        " . $typesql . "
-        )
-        UNION
-        (
-        SELECT a.id, " . $readsqlstr . ", a.ctime, 'module_multirecipient_notification' AS msgtable, subject
-        FROM {module_multirecipient_notification} AS a
-        INNER JOIN {module_multirecipient_userrelation} AS b
-            ON a.id = b.notification
-        INNER JOIN {activity_type} AS at ON a.type = at.id
-        WHERE b.usr = ?
-        AND b.deleted = '0'
-        AND b.role = '" . $notificationtargetrole . "'
-        " . $typesql . "
-        )";
-
-    $countquery = 'SELECT COUNT(*) FROM (' . $msgidquery . ') AS dummytable';
-    $result->count = count_records_sql($countquery, array($userid, $userid));
-
-    $msgidquery .= "
-    ORDER BY \"read\" ASC, ctime DESC, subject ASC";
-    $result->msgidrecords = get_records_sql_array($msgidquery, array($userid, $userid), $offset, $limit);
 
     if (!is_array($result->msgidrecords)) {
         $result->msgidrecords = array();
+        $result->count = 0;
     }
     return $result;
 }
@@ -388,6 +403,83 @@ function activityblocklistin($type='all', $limit=10, $offset=0) {
 }
 
 /**
+ * returns an object containing a list of ids of notifications the user has
+ * sent and the tables where to find the dataelements. Also returns the
+ * count of the found notifications
+ *
+ * @param string $type
+ * @param int $limit
+ * @param int $offset
+ * @return \stdClass
+ */
+function activitylistout($type='all', $limit=10, $offset=0) {
+    global $USER;
+    $result = new stdClass();
+    $userid = $USER->get('id');
+    $searchtext = param_variable('search', null);
+    $searcharea = param_variable('searcharea', 'All_data');
+
+    if (isset($searchtext) AND $searchtext !== null) {
+        $type = param_variable('type', 'all');
+        $searchresults = get_message_search($searchtext, $type, $offset, $limit, "outbox.php", $userid);
+        $result->msgidrecords = $searchresults[$searcharea]['data'];
+        $result->count = $searchresults[$searcharea]['count'];
+        $result->search = true;
+    }
+    else {
+        $typesql = '';
+        if ($type != 'all') {
+            // Treat as comma-separated list of activity type names
+            $types = explode(',', preg_replace('/[^a-z,]+/', '', $type));
+            if ($types) {
+                $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
+                if (in_array('adminmessages', $types)) {
+                    $typesql = '(' . $typesql . ' OR at.admin = 1)';
+                }
+                $typesql = ' AND ' . $typesql;
+            }
+        }
+        $notificationtargetcolumn = 'from';
+        $notificationtargetrole = 'sender';
+
+        $msgidquery = "
+            (
+            SELECT a.id, a.ctime, 'notification_internal_activity' AS msgtable, subject
+            FROM {notification_internal_activity} AS a
+            INNER JOIN {activity_type} AS at ON a.type = at.id
+            WHERE a." . $notificationtargetcolumn . " = ?
+            " . $typesql . "
+            AND at.name != 'newpost'
+            )
+            UNION
+            (
+            SELECT a.id, a.ctime, 'module_multirecipient_notification' AS msgtable, subject
+            FROM {module_multirecipient_notification} AS a
+            INNER JOIN {module_multirecipient_userrelation} AS b
+                ON a.id = b.notification
+            INNER JOIN {activity_type} AS at ON a.type = at.id
+            WHERE b.usr = ?
+            AND b.deleted = '0'
+            AND b.role = '" . $notificationtargetrole . "'
+            " . $typesql . "
+            )";
+        $countquery = 'SELECT COUNT(*) FROM (' . $msgidquery . ') AS dummytable';
+        $result->count = count_records_sql($countquery, array($userid, $userid));
+
+        $msgidquery .= "
+        ORDER BY ctime DESC, subject ASC";
+        $result->msgidrecords = get_records_sql_array($msgidquery, array($userid, $userid), $offset, $limit);
+        $result->search = false;
+    }
+
+    if (!is_array($result->msgidrecords)) {
+        $result->msgidrecords = array();
+        $result->count = 0;
+    }
+    return $result;
+}
+
+/**
  * creates a result-array with the number, limit, offset and notification-type(s)
  * of the returned htmlrepresentation of the notifications in the outbox, as well
  * as the html representation itself. The return array has the following format:
@@ -410,55 +502,15 @@ function activityblocklistin($type='all', $limit=10, $offset=0) {
  */
 function activitylistout_html($type='all', $limit=10, $offset=0) {
     global $USER;
-
     $userid = $USER->get('id');
-
-    $typesql = '';
-    if ($type != 'all') {
-        // Treat as comma-separated list of activity type names
-        $types = explode(',', preg_replace('/[^a-z,]+/', '', $type));
-        if ($types) {
-            $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
-            if (in_array('adminmessages', $types)) {
-                $typesql = '(' . $typesql . ' OR at.admin = 1)';
-            }
-            $typesql = ' AND ' . $typesql;
-        }
-    }
-    $notificationtargetcolumn = 'from';
-    $notificationtargetrole = 'sender';
-
-    $msgidquery = "
-        (
-        SELECT a.id, a.ctime, 'notification_internal_activity' AS msgtable
-        FROM {notification_internal_activity} AS a
-        INNER JOIN {activity_type} AS at ON a.type = at.id
-        WHERE a." . $notificationtargetcolumn . " = ?
-        " . $typesql . "
-        AND at.name != 'newpost'
-        )
-        UNION
-        (
-        SELECT a.id, a.ctime, 'module_multirecipient_notification' AS msgtable
-        FROM {module_multirecipient_notification} AS a
-        INNER JOIN {module_multirecipient_userrelation} AS b
-            ON a.id = b.notification
-        INNER JOIN {activity_type} AS at ON a.type = at.id
-        WHERE b.usr = ?
-        AND b.deleted = '0'
-        AND b.role = '" . $notificationtargetrole . "'
-        " . $typesql . "
-        )";
-
-        $countquery = 'SELECT COUNT(*) FROM (' . $msgidquery . ') AS dummytable';
-        $count = count_records_sql($countquery, array($userid, $userid));
+    $activitylist = activitylistout($type, $limit, $offset);
 
     $pagination = build_pagination(array(
         'id'         => 'activitylist_pagination',
         'url'        => get_config('wwwroot') . 'module/multirecipientnotification/outbox.php?type=' . hsc($type),
         'jsonscript' => 'module/multirecipientnotification/indexout.json.php',
         'datatable'  => 'activitylist',
-        'count'      => $count,
+        'count'      => $activitylist->count,
         'limit'      => $limit,
         'offset'     => $offset,
         'jumplinks'  =>  6,
@@ -467,7 +519,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
     ));
 
     $result = array(
-        'count'         => $count,
+        'count'         => $activitylist->count,
         'limit'         => $limit,
         'offset'        => $offset,
         'type'          => $type,
@@ -476,19 +528,11 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
         'pagination_js' => $pagination['javascript'],
     );
 
-    if ($count < 1) {
+    if ($activitylist->count < 1) {
        return $result;
     }
 
-    $records = array();
-        $msgidquery .= "
-    ORDER BY ctime DESC";
-        $msgidrecords = get_records_sql_array($msgidquery, array($userid, $userid), $offset, $limit);
-    if (!is_array($msgidrecords)) {
-        $msgidrecords = array();
-    }
-
-    foreach ($msgidrecords as $msgidrecord ) {
+    foreach ($activitylist->msgidrecords as $msgidrecord ) {
         if ($msgidrecord->msgtable == 'notification_internal_activity') {
             $recordsarray = get_records_sql_array("SELECT a.*, at.name AS type, at.plugintype, at.pluginname
                                       FROM {notification_internal_activity} a

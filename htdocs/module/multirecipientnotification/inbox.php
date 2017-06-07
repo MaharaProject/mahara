@@ -92,6 +92,23 @@ $paginationjavascript = <<<JAVASCRIPT
 
 // NOTE: most js is in the notification.js file, but we found
 // this part much more difficult to relocate
+function changeactivitytype() {
+    var delallform = document.forms['delete_all_notifications'];
+    delallform.elements['type'].value = this.options[this.selectedIndex].value;
+    var params = {'type': this.options[this.selectedIndex].value};
+    sendjsonrequest('indexin.json.php', params, 'GET', function(data) {
+        jQuery("#activitylist span.countresults").remove();
+        jQuery("#activitylist th").each(function() {
+                var link = jQuery(this).find('a');
+                if (link.length >= 1) {
+                    var headertext = link.text().trim();
+                    jQuery(this).html(headertext);
+                }
+            });
+        jQuery("input#search").val('');
+        paginator.updateResults(data);
+    });
+}
 
 jQuery(function($) {
 // We want the paginator to tell us when a page gets changed.
@@ -225,6 +242,27 @@ $smarty->assign('INLINEJAVASCRIPT', $paginationjavascript);
 define('NOTIFICATION_SUBPAGE', 'inbox');
 $smarty->assign('SUBPAGENAV', PluginModuleMultirecipientnotification::submenu_items());
 
+$searchtext = param_variable('search', null);
+$searcharea = param_variable('searcharea', null);
+
+$searchdata = new stdClass();
+$searchdata->searchtext = $searchtext;
+$searchdata->searcharea = $searcharea;
+$searchdata->searchurl = 'inbox.php?type=' . $type . '&search=' . $searchtext . '&searcharea=';
+$searchdata->all_count = 0;
+$searchdata->sender_count = 0;
+$searchdata->recipient_count = 0;
+$searchdata->sub_count = 0;
+$searchdata->mes_count = 0;
+if ($searchtext !== null) {
+    $searchresults = get_message_search($searchtext, $type, 0, null, "inbox.php", $USER->get('id'));
+    $searchdata->all_count = $searchresults['All_data']['count'];
+    $searchdata->sender_count = $searchresults['Sender']['count'];
+    $searchdata->recipient_count = $searchresults['Recipient']['count'];
+    $searchdata->sub_count = $searchresults['Subject']['count'];
+    $searchdata->mes_count = $searchresults['Message']['count'];
+}
+$smarty->assign('searchdata', $searchdata);
 $smarty->assign('deleteall', $deleteall);
 $smarty->assign('activitylist', $activitylist);
 
