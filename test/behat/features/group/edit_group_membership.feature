@@ -31,4 +31,9 @@ Scenario: Check modal is working for the "Edit group memebership" on find people
    And I choose "Find people" in "Groups" from main menu
    And I follow "2" in the "div#friendslist_pagination" "css_element"
    And I follow "Edit group membership"
-   Then I should see "Apply changes"
+   # allow the modal to open
+   And I wait "1" seconds
+   And I check "GroupA"
+   And I follow "Apply changes"
+   And I scroll to the top
+   Then I should see "Invite sent"
