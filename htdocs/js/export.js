@@ -14,11 +14,9 @@ jQuery(function($) {
     $('#whatviewsselection').removeClass('hidden');
 
     var containers = {
-        'views': {'container': $('#whatviews'), 'visible': false}
+        'views': {'container': $('#whatviews'), 'visible': false},
+        'collections': {'container': $('#whatcollections'), 'visible': false}
     };
-    if ($('#whatcollections').length) {
-        containers.collections = {'container': $('#whatcollections')[0], 'visible': false};
-    }
 
     var radios = [];
 
