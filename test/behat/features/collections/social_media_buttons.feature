@@ -44,5 +44,6 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  # Logging in as userB to try see the buttons
  Given I log in as "userB" with password "Kupuhipa1"
  And I follow "Open source is for winners"
+ And I wait "1" seconds
  And I should see "Social Media"
  And I should see "Facebook"
