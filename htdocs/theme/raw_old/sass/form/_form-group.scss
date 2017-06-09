@@ -404,9 +404,9 @@
 
     .form-control {
         display: inline-block;
+        max-width: calc(100% - 30px);
         @media (min-width: $screen-sm-min) {
             width: 370px;
-            max-width: 85%;
             .columns3 &,
             .form-inline & {
                 max-width:100%;
@@ -457,15 +457,16 @@
     }
 
     &.radio {
-        .pseudolabel {
-            @media (max-width: $screen-sm-min) {
-                min-width: auto;
-            }
-        }
         .pseudolabel,
         .radio-wrapper {
-            @media (min-width: $screen-sm-min) {
-                display: table-cell;
+            max-width: calc(100% - 30px);
+            display: inline-block;
+        }
+        .pseudolabel {
+            @media (max-width: $screen-sm-min - 1) {
+                display: block;
+                min-width: auto;
+                max-width: none;
             }
         }
         .modal-docked & {
