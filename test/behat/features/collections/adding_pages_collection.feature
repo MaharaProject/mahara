@@ -44,6 +44,17 @@ Scenario: Creating a collection AND adding pages
     And "Testing page 1" "link" should appear before "Testing page 2" "link"
     And "Testing page 2" "link" should appear before "Testing page 3" "link"
 
+    # Exporting pages and collections
+    And I choose "Export" in "Portfolio" from main menu
+    And I select the radio "Standalone HTML website"
+    And I select the radio "Just some of my pages"
+    And I should see "Pages to export"
+    And I select the radio "Just some of my collections"
+    And I should see "Collections to export"
+    And I select the radio "All my data"
+    And I should not see "Pages to export"
+    And I should not see "Collections to export"
+
     # Sharing the collection then adding in a new page
     And I choose "Shared by me" in "Portfolio" from main menu
     And I follow "Edit access"
