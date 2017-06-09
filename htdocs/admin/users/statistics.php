@@ -12,6 +12,7 @@
 define('INTERNAL', 1);
 define('INSTITUTIONALSTAFF', 1);
 define('MENUITEM', 'manageinstitutions/statistics');
+define('STATISTICSMENU', 1);
 
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
 require(get_config('libroot') . 'statistics.php');
@@ -56,50 +57,229 @@ $institutionselector = pieform(array(
     )
 ));
 
-$showall = ($institution == 'all') ? true : false;
-if ($showall) {
-    define('TITLE', get_string('statisticsforallinstitutions', 'admin'));
-    $icon = 'icon-area-chart';
+if ($usersparam = param_variable('users', null)) {
+    $newuserids = is_array($usersparam) ? array_map('intval', $usersparam) : null;
+    $SESSION->set('usersforstats', $newuserids);
+}
+
+define('PAGEHEADINGARROW', get_string('reports', 'statistics'));
+$type = param_alpha('type', 'users');
+$subtype = param_alpha('subtype', '');
+
+// Work out the title for the report
+$reporttype = get_string('peoplereports', 'statistics');
+if ($subtype && $subtype !== $type) {
+    if (string_exists($type . $subtype . 'reports', 'statistics')) {
+        $reporttype = get_string($type . $subtype . 'reports', 'statistics');
+    }
 }
 else {
-    define('TITLE', get_string('institutionstatisticsfor', 'admin', get_field('institution', 'displayname', 'name', $institution)));
-    $icon = 'icon-university';
+    if (string_exists($type . 'reports', 'statistics')) {
+        $reporttype = get_string($type . 'reports', 'statistics');
+    }
 }
 
-$type = param_alpha('type', 'users');
+define('SUBSECTIONHEADING', $reporttype);
+$subtype = !empty($subtype) ? $subtype : $type;
+
+$showall = ($institution == 'all') ? true : false;
+if ($showall) {
+    define('TITLE', get_string('Allinstitutions', 'mahara'));
+}
+else {
+    define('TITLE', get_field('institution', 'displayname', 'name', $institution));
+}
+
+$start = param_variable('start', null);
+$end = param_variable('end', null);
+$start = $start ? format_date(strtotime($start), 'strftimew3cdate') : null;
+$end = $end ? format_date(strtotime($end), 'strftimew3cdate') : null;
+
 $extraparams = new stdClass();
 $extraparams->type = $type;
+$extraparams->subtype = $subtype;
+$extraparams->institution = $institution;
 $extraparams->offset = param_integer('offset', 0);
 $extraparams->limit  = param_integer('limit', 10);
-$extraparams->sort = param_alphanumext('sort', 'displayname');
-$extraparams->sortdesc = param_boolean('sortdesc');
-$extraparams->start = param_alphanumext('start', null);
-$extraparams->end = param_alphanumext('end', null);
+$extraparams->extra = array('sort' => param_alphanumext('sort', ''),
+                            'sortdesc' => param_boolean('sortdesc'),
+                            'start' => $start,
+                            'end' => $end,
+                            'columns' => array(), // will be filled by the $type statistics function
+                      );
 
-list($subpages, $institutiondata, $subpagedata) = display_statistics($institution, $type, $extraparams);
-
+$jsondatestart = !empty($start) ? "'" . $start ."'" : 'null';
+$jsondateend = !empty($end) ? "'" . $end . "'" : 'null';
+$extrajson = json_encode($extraparams->extra);
 $wwwroot = get_config('wwwroot');
-$js = <<< EOF
-jQuery(function ($) {
-    {$subpagedata['table']['pagination_js']}
 
-    function reloadStats() {
-        window.location.href = '{$wwwroot}admin/users/statistics.php?institution='+$('#usertypeselect_institution').val() +'&type={$type}';
+// Need to handle the pieform submission for the 'configure report' here
+// This also populates the needed 'calendar' element headdata
+// TODO - look to see if we need the ajax fetching of the config form or can we prepopulate the page with it?
+$pieform = pieform_instance(report_config_form($extraparams));
+
+
+$js = <<<JS
+
+var opts = {'id':'statistics_table_container',
+            'type':'{$type}',
+            'subtype':'{$subtype}',
+            'extradata':'{$extrajson}',
+            'institution':'{$institution}',
+            'offset':{$extraparams->offset},
+            'limit':{$extraparams->limit},
+            'start':{$jsondatestart},
+            'end':{$jsondateend},
+           };
+
+function show_stats_config() {
+    sendjsonrequest(config['wwwroot'] + 'admin/users/statsconfig.json.php', opts, 'POST', function(data) {
+        $('#modal-configs .modal-body').empty();
+        $('#modal-configs .modal-body').append(data.data.html);
+        $("#cancel_reportconfigform_submit").on('click', function(e) {
+            e.preventDefault();
+            $("#modal-configs").modal("hide");
+        });
+    });
+}
+
+function update_table_headers(data) {
+    var headers = (data) ? data.tableheadings : null;
+    var activeheaders = (data) ? data.data.activeheadings : null;
+    var limit = (data) ? data.extraparams.limit : null;
+    if (headers) {
+        var newhtml = '';
+        $.each(headers, function(i, heading) {
+            if (heading.selected) {
+                newhtml += heading.html;
+            }
+        });
+
+        $('#statistics_table thead tr').html(newhtml);
     }
+    $('#statistics_table thead tr').find('a').each(function (i, a) {
+        $(a).off('click');
+        $(a).on('click', function(e) {
+            e.preventDefault();
+            var loc = a.href.indexOf('?');
+            var queryData = [];
+            var extraData = {};
+            if (loc != -1) {
+                queryData = parseQueryString(a.href.substring(loc + 1, a.href.length));
+                queryData.limit = limit;
+                // move the ones we need in extradata to there
+                extraData.sort = queryData.sort;
+                extraData.sortdesc = queryData.sortdesc || false;
+                extraData.columns = [];
+                if (activeheaders) {
+                    for (x in activeheaders) {
+                        extraData.columns.push(x);
+                    }
+                }
+                queryData.extradata = JSON.stringify(extraData);
+            }
+            p.sendQuery(queryData, true);
+        });
+    });
+}
+
+$(document).on('pageupdated', function(e, data) {
+    // Update the table header links
+    $('#statistics_table thead tr').find('a').off('click');
+    update_table_headers(data);
+});
+
+jQuery(function ($) {
+    // JS Code to deal with the report configuration modal
+    // This fetches the form for choosing the results with filters, eg time frame
+
+    // We need to show/hide modal explicitly so the on 'show.bs.modal' fires allowing
+    // us to do ajax call for form as modal opens
+    $('#configbtn').click(function() {
+        $("#modal-configs").modal("show");
+    });
+    $("#modal-configs").on('show.bs.modal', function () {
+        show_stats_config();
+    });
+    $("#modal-configs .close").on('click', function () {
+        $("#modal-configs").modal("hide");
+    });
 
     $('#usertypeselect_institution').on('change', reloadStats);
+
+    $('.btn.filter').on('click', function() {
+        var filteropt = $(this);
+        var filteroptid = filteropt.prop('id');
+        sendjsonrequest(config['wwwroot'] + 'json/stats_setting.php', {'setting':filteroptid}, 'POST', function(data) {
+            filteropt.parent().hide();
+            $('#statistics_table th a:first').trigger('click');
+        });
+    });
+
+    $('#messages .alert-success').delay(1000).hide("slow");
+    update_table_headers(null);
 });
-EOF;
+
+function reloadStats() {
+    window.location.href = '{$wwwroot}admin/users/statistics.php?institution=' + $('#usertypeselect_institution').val() + '&type={$type}&subtype={$subtype}';
+}
+
+JS;
+
+if ($type == 'information' && (empty($subtype) || $subtype == 'information')) {
+    if ($institution == 'all') {
+        $institutiondata = site_statistics(true);
+    }
+    else {
+        $institutiondata = institution_statistics($institution, true);
+    }
+    $subpagedata = false;
+    $subpages = false;
+    $subpagination = '';
+}
+else {
+    list($subpages, $subpagedata) = display_statistics($institution, $type, $extraparams);
+    $subpagination = !empty($subpagedata['table']) ? $subpagedata['table']['pagination_js'] : false;
+    $institutiondata = false;
+    if ($subpagination) {
+        $js .= <<<JS
+jQuery(function ($) {
+    // JS Code to deal with the columns selector
+    // This fetches the results and displays only the selected columns
+    $('#reportconfig input').on('click', function() {
+        var selected = [];
+        // Get all checked boxes
+        $('#reportconfig input:checked').each(function() {
+            selected.push($(this).attr('name'));
+        });
+
+        var obj = JSON.parse(opts.extradata);
+        obj['columns'] = selected;
+        opts.extradata = JSON.stringify(obj);
+        opts.offset = $('form.form-pagination input.currentoffset').val();
+        opts.limit = $('#setlimitselect').val();
+
+        sendjsonrequest(config.wwwroot + 'admin/users/statistics.json.php', opts, 'POST', function (data) {
+            p.updateResults(data);
+        });
+    });
+
+    p = {$subpagination}
+    p.extraData = $extrajson;
+});
+JS;
+    }
+}
 
 $smarty = smarty(array('paginator','js/chartjs/Chart.min.js'));
-setpageicon($smarty, $icon);
-
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('institutiondata', $institutiondata);
 $smarty->assign('type', $type);
 $smarty->assign('subpages', $subpages);
 $smarty->assign('showall', ($showall ? '_all' : ''));
 $smarty->assign('subpagedata', $subpagedata);
-
+if (isset($subpagedata['table']) && isset($subpagedata['table']['settings'])) {
+    $smarty->assign('reportsettings', get_report_settings($subpagedata['table']['settings']));
+}
 $smarty->assign('institutionselector', $institutionselector);
 $smarty->display('admin/users/statistics.tpl');

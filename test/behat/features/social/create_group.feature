@@ -45,5 +45,5 @@ Scenario: Creating a group and adding users to it (Selenium)
     And I should see "Public discussion"
     # Check if the group report page is there
     And I follow "Public discussion"
-    And I follow "Report"
+    And I follow "Report" in the ".arrow-bar" "css_element"
     Then I should see "There are no pages shared with this group yet"

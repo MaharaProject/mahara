@@ -5534,6 +5534,9 @@ class View {
                 $v['displaytitle'] = $view->display_title_editing();
                 $v['url'] = $view->get_url(false);
                 $v['fullurl'] = $needsubdomain ? $view->get_url(true) : ($wwwroot . $v['url']);
+                if ($view->id) {
+                    $v['collection'] = $view->get_collection();
+                }
             }
         }
     }

@@ -67,6 +67,7 @@ function site_statistics($full=false) {
     $data['diskusage']   = get_field('site_data', 'value', 'type', 'disk-usage');
     $data['cronrunning'] = !record_exists_select('cron', 'nextrun IS NULL OR nextrun < CURRENT_DATE');
     $data['siteclosedbyadmin'] = get_config('siteclosedbyadmin');
+    $data['institution'] = 'all';
 
     if ($latestversion = get_config('latest_version')) {
         $data['latest_version'] = $latestversion;
@@ -192,16 +193,655 @@ function institution_statistics($institution, $full=false) {
     return($data);
 }
 
-function user_statistics($limit, $offset, &$sitedata) {
-    $data = array();
-    $data['tableheadings'] = array(
-        array('name' => get_string('date')),
-        array('name' => get_string('Loggedin', 'admin'), 'class' => 'center'),
-        array('name' => get_string('Created'), 'class' => 'center'),
-        array('name' => get_string('Total'), 'class' => 'center'),
+function get_heading_html($heading) {
+    $smarty = smarty_core();
+    $smarty->assign('heading', $heading);
+    return $smarty->fetch('admin/users/statsheading.tpl');
+}
+
+function get_active_columns(&$data, $extra) {
+    $activeheadings = array();
+    foreach ($data['tableheadings'] as $key => $heading) {
+        $data['tableheadings'][$key]['selected'] = in_array($heading['id'], $extra['columns']);
+        // make sure the required ones are always selected
+        if (!empty($data['tableheadings'][$key]['required'])) {
+            $data['tableheadings'][$key]['selected'] = true;
+        }
+        if ($data['tableheadings'][$key]['selected']) {
+            $activeheadings[$data['tableheadings'][$key]['id']] = $data['tableheadings'][$key]['name'];
+            // To add the accessibility info
+            $data['tableheadings'][$key]['sr'] = get_string('sortby') . ' ' . get_string('ascending');
+            if (!empty($extra['sortdesc']) && $extra['sort'] == $heading['id']) {
+                $data['tableheadings'][$key]['sr'] = get_string('sortby') . ' ' . get_string('descending');
+            }
+            $data['tableheadings'][$key]['html'] = get_heading_html($data['tableheadings'][$key]);
+        }
+    }
+    // Make sure the all active columns are selected
+    return $activeheadings;
+}
+
+function userdetails_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array(
+              'id' => 'firstname', 'required' => true,
+              'name' => get_string('firstname'),
+              'class' => format_class($extra, 'firstname'),
+              'link' => format_goto($urllink . '&sort=firstname', $extra, array('sort'), 'firstname')
+        ),
+        array(
+              'id' => 'lastname', 'required' => true,
+              'name' => get_string('lastname'),
+              'class' => format_class($extra, 'lastname'),
+              'link' => format_goto($urllink . '&sort=lastname', $extra, array('sort'), 'lastname')
+        ),
+        array(
+              'id' => 'email', 'required' => true,
+              'name' => get_string('email'),
+              'class' => format_class($extra, 'email'),
+              'link' => format_goto($urllink . '&sort=email', $extra, array('sort'), 'email')
+        ),
+        array(
+              'id' => 'studentid', 'required' => true,
+              'name' => get_string('studentid'),
+              'class' => format_class($extra, 'studentid'),
+              'link' => format_goto($urllink . '&sort=studentid', $extra, array('sort'), 'studentid')
+        ),
+        array(
+              'id' => 'displayname', 'required' => true,
+              'name' => get_string('displayname'),
+              'class' => format_class($extra, 'displayname'),
+              'link' => format_goto($urllink . '&sort=displayname', $extra, array('sort'), 'displayname')
+        ),
+        array(
+              'id' => 'username', 'required' => true,
+              'name' => get_string('username'),
+              'class' => format_class($extra, 'username'),
+              'link' => format_goto($urllink . '&sort=username', $extra, array('sort'), 'username')
+        ),
+        array(
+              'id' => 'remotename', 'required' => true,
+              'name' => get_string('remoteuser', 'admin'),
+              'class' => format_class($extra, 'remotename'),
+              'link' => format_goto($urllink . '&sort=remotename', $extra, array('sort'), 'remotename')
+        ),
+        array(
+              'id' => 'lastlogin', 'required' => true,
+              'name' => get_string('lastlogin', 'admin'),
+              'class' => format_class($extra, 'lastlogin'),
+              'link' => format_goto($urllink . '&sort=lastlogin', $extra, array('sort'), 'lastlogin')
+        ),
     );
-    $data['table'] = user_stats_table($limit, $offset);
-    $data['tabletitle'] = get_string('userstatstabletitle', 'admin');
+}
+
+function userdetails_statistics($limit, $offset, $extra, $institution = null) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=userdetails';
+    if ($institution) {
+        $urllink .= '&institution=' . $institution;
+    }
+    $data['tableheadings'] = userdetails_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = userdetails_stats_table($limit, $offset, $extra, $institution, $urllink);
+    $data['table']['activeheadings'] = $activeheadings;
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink) {
+    global $USER, $SESSION;
+
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    $users = $SESSION->get('usersforstats');
+
+    $fromsql = " FROM {usr} u";
+    $wheresql = " WHERE u.deleted = 0 AND id != 0";
+    $where = array();
+    if ($institution) {
+        $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
+        $where = array($institution);
+    }
+    if ($users) {
+        $wheresql .= " AND u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+    }
+    if ($start) {
+        $wheresql .= " AND u.ctime >= DATE(?) AND u.ctime <= DATE(?)";
+        $where[] = $start;
+        $where[] = $end;
+    }
+    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . $wheresql, $where);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => $urllink,
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+        'extradata' => $extra,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
+    $result['settings']['users'] = count($users);
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "lastlogin":
+        case "displayname":
+        case "username":
+        case "email":
+        case "remotename":
+        case "studentid":
+            $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT (u.firstname, ' ', u.lastname)";
+            break;
+        case "lastname":
+            $orderby = " u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "firstname":
+        default:
+            $orderby = " u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+    }
+
+    $sql = "SELECT u.id, u.firstname, u.lastname, u.username, u.preferredname AS displayname,
+            u.lastlogin, u.email, u.studentid, u.ctime,
+            (SELECT remoteusername FROM {auth_remote_user} aru WHERE aru.localusr = u.id LIMIT 1) AS remotename
+            " . $fromsql . $wheresql . "
+            ORDER BY " . $orderby . "
+            LIMIT $limit
+            OFFSET $offset";
+    $data = get_records_sql_array($sql, $where);
+    $daterange = array_map(function ($obj) { return $obj->ctime; }, $data);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    foreach ($data as $item) {
+        $item->profileurl = profile_url($item->id);
+        $item->lastlogin = $item->lastlogin ? format_date(strtotime($item->lastlogin)) : ' ';
+    }
+
+    $csvfields = array('firstname', 'lastname', 'email', 'studentid',
+                       'displayname', 'username', 'remotename', 'lastlogin');
+    $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
+    $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
+
+    $result['tablerows'] = $smarty->fetch('admin/users/userdetailsstats.tpl');
+
+    return $result;
+}
+
+function useractivity_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array(
+              'id' => 'firstname', 'required' => true,
+              'name' => get_string('firstname'),
+              'class' => format_class($extra, 'firstname'),
+              'link' => format_goto($urllink . '&sort=firstname', $extra, array('sort'), 'firstname')
+        ),
+        array(
+              'id' => 'lastname', 'required' => true,
+              'name' => get_string('lastname'),
+              'class' => format_class($extra, 'lastname'),
+              'link' => format_goto($urllink . '&sort=lastname', $extra, array('sort'), 'lastname')
+        ),
+        array(
+              'id' => 'displayname',
+              'name' => get_string('displayname'),
+              'class' => format_class($extra, 'displayname'),
+              'link' => format_goto($urllink . '&sort=displayname', $extra, array('sort'), 'displayname')
+        ),
+        array(
+              'id' => 'username',
+              'name' => get_string('username'),
+              'class' => format_class($extra, 'username'),
+              'link' => format_goto($urllink . '&sort=username', $extra, array('sort'), 'username')
+        ),
+        array(
+              'id' => 'artefacts', 'required' => true,
+              'name' => get_string('artefacts'),
+              'class' => format_class($extra, 'artefacts'),
+              'link' => format_goto($urllink . '&sort=artefacts', $extra, array('sort'), 'artefacts')
+        ),
+        array(
+              'id' => 'pages', 'required' => true,
+              'name' => get_string('Views', 'view'),
+              'class' => format_class($extra, 'pages'),
+              'link' => format_goto($urllink . '&sort=pages', $extra, array('sort'), 'pages')
+        ),
+        array(
+              'id' => 'collections', 'required' => true,
+              'name' => get_string('Collections', 'collection'),
+              'class' => format_class($extra, 'collections'),
+              'link' => format_goto($urllink . '&sort=collections', $extra, array('sort'), 'collections')
+        ),
+        array(
+              'id' => 'groups', 'required' => true,
+              'name' => get_string('groups'),
+              'class' => format_class($extra, 'groups'),
+              'link' => format_goto($urllink . '&sort=groups', $extra, array('sort'), 'groups')
+        ),
+        array(
+              'id' => 'logins', 'required' => true,
+              'name' => get_string('logins'),
+              'class' => format_class($extra, 'logins'),
+              'link' => format_goto($urllink . '&sort=logins', $extra, array('sort'), 'logins')
+        ),
+        array(
+              'id' => 'actions',
+              'name' => get_string('actions', 'statistics'),
+              'class' => format_class($extra, 'actions'),
+              'link' => format_goto($urllink . '&sort=actions', $extra, array('sort'), 'actions')
+        ),
+        array(
+              'id' => 'lastlogin', 'required' => true,
+              'name' => get_string('lastlogin', 'admin'),
+              'class' => format_class($extra, 'lastlogin'),
+              'link' => format_goto($urllink . '&sort=lastlogin', $extra, array('sort'), 'lastlogin')
+        ),
+        array(
+              'id' => 'lastactivity',
+              'name' => get_string('lastactivity', 'statistics'),
+              'class' => format_class($extra, 'lastactivity'),
+              'link' => format_goto($urllink . '&sort=lastactivity', $extra, array('sort'), 'lastactivity')
+        ),
+    );
+}
+
+function useractivity_statistics($limit, $offset, $extra, $institution = null) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=useractivity';
+    if ($institution) {
+        $urllink .= '&institution=' . $institution;
+    }
+    $data['tableheadings'] = useractivity_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = useractivity_stats_table($limit, $offset, $extra, $institution, $urllink);
+    $data['table']['activeheadings'] = $activeheadings;
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+function useractivity_stats_table($limit, $offset, $extra, $institution, $urllink) {
+    global $USER, $SESSION;
+
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    $users = $SESSION->get('usersforstats');
+
+    $fromsql = " FROM {usr} u";
+    $wheresql = " WHERE u.deleted = 0 AND id != 0";
+    $where = array();
+    if ($institution) {
+        $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
+        $where = array($institution);
+    }
+    if ($users) {
+        $wheresql .= " AND u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+    }
+    if ($start) {
+        $wheresql .= " AND u.ctime >= DATE(?) AND u.ctime <= DATE(?)";
+        $where[] = $start;
+        $where[] = $end;
+    }
+    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . $wheresql, $where);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => $urllink,
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+        'extradata' => $extra,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
+    $result['settings']['users'] = count($users);
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "lastactivity":
+        case "lastlogin":
+        case "actions":
+        case "logins":
+        case "groups":
+        case "collections":
+        case "pages":
+        case "artefacts":
+        case "displayname":
+        case "username":
+            $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT (u.firstname, ' ', u.lastname)";
+            break;
+        case "lastname":
+            $orderby = " u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "firstname":
+        default:
+            $orderby = " u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+    }
+
+    $sql = "SELECT u.id, u.firstname, u.lastname, u.username, u.preferredname AS displayname,
+            u.lastlogin, u.ctime,
+            (SELECT COUNT(*) FROM {artefact} a WHERE a.owner = u.id) AS artefacts,
+            (SELECT COUNT(*) FROM {view} v WHERE v.owner = u.id) AS pages,
+            (SELECT COUNT(*) FROM {collection} c WHERE c.owner = u.id) AS collections,
+            (SELECT COUNT(*) FROM {group_member} gm WHERE gm.member = u.id) AS groups,
+            (SELECT COUNT(*) FROM {usr_login_data} uld WHERE uld.usr = u.id) AS logins,
+            'N/A' AS actions,
+            'N/A' AS lastactivity
+            " . $fromsql . $wheresql . "
+            ORDER BY " . $orderby . "
+            LIMIT $limit
+            OFFSET $offset";
+    $data = get_records_sql_array($sql, $where);
+    $daterange = array_map(function ($obj) { return $obj->ctime; }, $data);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    foreach ($data as $item) {
+        $item->profileurl = profile_url($item->id);
+        $item->lastlogin = $item->lastlogin ? format_date(strtotime($item->lastlogin)) : ' ';
+    }
+
+    $csvfields = array('firstname', 'lastname', 'displayname', 'username',
+                       'artefacts', 'pages', 'collections', 'groups', 'logins',
+                       'actions', 'lastlogin', 'lastactivity');
+    $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'useractivitystatistics.csv', 'text/csv');
+    $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
+
+    $result['tablerows'] = $smarty->fetch('admin/users/useractivitystats.tpl');
+
+    return $result;
+}
+
+function collaboration_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array(
+              'id' => 'user', 'required' => true,
+              'name' => get_string('user', 'statistics'),
+              'class' => format_class($extra, 'user'),
+              'link' => format_goto($urllink . '&sort=user', $extra, array('sort'), 'user')
+        ),
+        array(
+              'id' => 'comments', 'required' => true,
+              'name' => get_string('Comments', 'artefact.comment'),
+              'class' => format_class($extra, 'comments'),
+              'link' => format_goto($urllink . '&sort=comments', $extra, array('sort'), 'comments')
+        ),
+        array(
+              'id' => 'annotations',
+              'name' => get_string('Annotations', 'artefact.annotation'),
+              'class' => format_class($extra, 'annotations'),
+              'link' => format_goto($urllink . '&sort=annotations', $extra, array('sort'), 'annotations')
+        ),
+        array(
+              'id' => 'usershare', 'required' => true,
+              'name' => get_string('usershare', 'statistics'),
+              'class' => format_class($extra, 'usershare'),
+              'link' => format_goto($urllink . '&sort=usershare', $extra, array('sort'), 'usershare')
+        ),
+        array(
+              'id' => 'groupshare', 'required' => true,
+              'name' => get_string('groupshare', 'statistics'),
+              'class' => format_class($extra, 'groupshare'),
+              'link' => format_goto($urllink . '&sort=groupshare', $extra, array('sort'), 'groupshare')
+        ),
+        array(
+              'id' => 'institutionshare', 'required' => true,
+              'name' => get_string('institutionshare', 'statistics'),
+              'class' => format_class($extra, 'institutionshare'),
+              'link' => format_goto($urllink . '&sort=institutionshare', $extra, array('sort'), 'institutionshare')
+        ),
+        array(
+              'id' => 'loggedinshare', 'required' => true,
+              'name' => get_string('loggedinshare', 'statistics'),
+              'class' => format_class($extra, 'loggedinshare'),
+              'link' => format_goto($urllink . '&sort=loggedinshare', $extra, array('sort'), 'loggedinshare')
+        ),
+        array(
+              'id' => 'publicshare', 'required' => true,
+              'name' => get_string('publicshare', 'statistics'),
+              'class' => format_class($extra, 'publicshare'),
+              'link' => format_goto($urllink . '&sort=publicshare', $extra, array('sort'), 'publicshare')
+        ),
+        array(
+              'id' => 'secretshare', 'required' => true,
+              'name' => get_string('secretshare', 'statistics'),
+              'class' => format_class($extra, 'secretshare'),
+              'link' => format_goto($urllink . '&sort=secretshare', $extra, array('sort'), 'secretshare')
+        ),
+        array(
+              'id' => 'friendshare',
+              'name' => get_string('friendshare', 'statistics'),
+              'class' => format_class($extra, 'friendshare'),
+              'link' => format_goto($urllink . '&sort=friendshare', $extra, array('sort'), 'friendshare')
+        ),
+    );
+}
+
+function collaboration_statistics($limit, $offset, $extra, $institution = null) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=collaboration';
+    if ($institution) {
+        $urllink .= '&institution=' . $institution;
+    }
+    $data['tableheadings'] = collaboration_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = collaboration_stats_table($limit, $offset, $extra, $institution, $urllink);
+    $data['table']['activeheadings'] = $activeheadings;
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+function collaboration_stats_table($limit, $offset, $extra, $institution, $urllink) {
+    global $USER;
+
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+
+    $fromsql = " FROM {usr} u";
+    $wheresql = " WHERE u.deleted = 0 AND id != 0";
+    $where = array();
+    if ($institution) {
+        $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
+        $where = array($institution);
+    }
+    if ($start) {
+        $wheresql .= " AND u.ctime >= DATE(?) AND u.ctime <= DATE(?)";
+        $where[] = $start;
+        $where[] = $end;
+    }
+    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . $wheresql, $where);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => $urllink,
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+        'extradata' => $extra,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
+    if ($count < 1) {
+        return $result;
+    }
+
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "comments":
+        case "annotations":
+        case "usershare":
+        case "groupshare":
+        case "institutionshare":
+        case "loggedinshare":
+        case "publicshare":
+        case "secretshare":
+        case "friendshare":
+            $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT (u.firstname, ' ', u.lastname)";
+            break;
+        case "user":
+        default:
+            $orderby = " u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+    }
+
+    $sql = "SELECT u.id, u.username, u.ctime,
+             (SELECT COUNT(*) FROM {view} v JOIN {artefact_comment_comment} acc ON (acc.onview = v.id AND v.owner = u.id)) AS comments,
+             (SELECT COUNT(*) FROM {view} v JOIN {artefact_annotation} aa ON (aa.view = v.id AND v.owner = u.id)
+                JOIN {artefact_annotation_feedback} aaf ON (aaf.onannotation = aa.annotation)) AS annotations,
+             (SELECT COUNT(*) FROM {view} v JOIN {view_access} va ON (va.view = v.id AND v.owner = u.id) WHERE va.usr IS NOT NULL) AS usershare,
+             (SELECT COUNT(*) FROM {view} v JOIN {view_access} va ON (va.view = v.id AND v.owner = u.id) WHERE va.group IS NOT NULL) AS groupshare,
+             (SELECT COUNT(*) FROM {view} v JOIN {view_access} va ON (va.view = v.id AND v.owner = u.id) WHERE va.institution IS NOT NULL) AS institutionshare,
+             (SELECT COUNT(*) FROM {view} v JOIN {view_access} va ON (va.view = v.id AND v.owner = u.id) WHERE va.accesstype = 'loggedin') AS loggedinshare,
+             (SELECT COUNT(*) FROM {view} v JOIN {view_access} va ON (va.view = v.id AND v.owner = u.id) WHERE va.accesstype = 'public') AS publicshare,
+             (SELECT COUNT(*) FROM {view} v JOIN {view_access} va ON (va.view = v.id AND v.owner = u.id) WHERE va.token IS NOT NULL) AS secretshare,
+             (SELECT COUNT(*) FROM {view} v JOIN {view_access} va ON (va.view = v.id AND v.owner = u.id) WHERE va.accesstype = 'friends') AS friendshare
+            " . $fromsql . $wheresql . "
+            ORDER BY " . $orderby . "
+            LIMIT $limit
+            OFFSET $offset";
+    $data = get_records_sql_array($sql, $where);
+    $daterange = array_map(function ($obj) { return $obj->ctime; }, $data);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    foreach ($data as $item) {
+        $item->displayname = display_name($item->id);
+        $item->profileurl = profile_url($item->id);
+    }
+
+    $csvfields = array('displayname', 'comments', 'annotations', 'usershare', 'groupshare',
+                       'institutionshare', 'loggedinshare', 'publicshare', 'secretshare',
+                       'friendshare');
+    $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'collaborationstatistics.csv', 'text/csv');
+    $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
+
+    $result['tablerows'] = $smarty->fetch('admin/users/collaborationstats.tpl');
+
+    return $result;
+}
+
+function user_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array(
+              'id' => 'date', 'required' => true,
+              'name' => get_string('date'),
+              'class' => format_class($extra, 'date'),
+              'link' => format_goto($urllink . '&sort=date', $extra, array('sort'), 'date')
+        ),
+        array(
+              'id' => 'loggedin', 'required' => true,
+              'name' => get_string('Loggedin', 'admin'),
+              'class' => format_class($extra, 'loggedin'),
+              'link' => format_goto($urllink . '&sort=loggedin', $extra, array('sort'), 'loggedin')
+        ),
+        array(
+              'id' => 'created', 'required' => true,
+              'name' => get_string('Created'),
+              'class' => format_class($extra, 'created'),
+//              'link' => format_goto($urllink . '&sort=created', $extra, array('sort'), 'created')
+        ),
+        array(
+              'id' => 'total', 'required' => true,
+              'name' => get_string('Total'),
+              'class' => format_class($extra, 'total'),
+              'link' => format_goto($urllink . '&sort=total', $extra, array('sort'), 'total')
+        ),
+    );
+}
+
+function user_statistics($limit, $offset, &$sitedata, $extra) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=users';
+    $data['tableheadings'] = user_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = user_stats_table($limit, $offset, $extra);
+    $data['table']['activeheadings'] = $activeheadings;
 
     $maxfriends = get_records_sql_array("
         SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, SUM(f.friends) AS friends
@@ -296,10 +936,19 @@ function user_statistics($limit, $offset, &$sitedata) {
     return $data;
 }
 
-function user_stats_table($limit, $offset) {
+function user_stats_table($limit, $offset, $extra) {
     global $USER;
 
-    $count = count_records('site_data', 'type', 'user-count-daily');
+    $start = !empty($extra['start']) ? $extra['start'] : date('Y-m-d', strtotime("-1 months"));
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+
+    if ($start) {
+        $where = "type = ? AND ctime >= DATE(?) AND ctime <= DATE(?)";
+        $count = count_records_select('site_data', $where, array('user-count-daily', $start, $end));
+    }
+    else {
+        $count = count_records('site_data', 'type', 'user-count-daily');
+    }
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
@@ -310,6 +959,7 @@ function user_stats_table($limit, $offset) {
         'limit' => $limit,
         'offset' => $offset,
         'setlimit' => true,
+        'extradata' => $extra,
     ));
 
     $result = array(
@@ -319,56 +969,78 @@ function user_stats_table($limit, $offset) {
         'pagination_js' => $pagination['javascript'],
     );
 
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
     if ($count < 1) {
         return $result;
     }
 
     $day = is_postgres() ? "to_date(t.ctime::text, 'YYYY-MM-DD')" : 'DATE(t.ctime)'; // TODO: make work on other databases?
 
-    $daterange = get_record_sql(
-        "SELECT
-            MIN($day) AS mindate,
-            MAX($day) AS maxdate
-        FROM (
-            SELECT ctime
-            FROM {site_data}
-            WHERE type = ?
-            ORDER BY ctime DESC
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "total":
+            $rangesql = " type = 'user-count-daily'";
+            $ordersql = " ORDER BY type = 'loggedin-users-daily' DESC";
+            $ordersql .= ", value " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+            $ordersql .= ", ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+            break;
+        case "loggedin":
+            $rangesql = " type = 'loggedin-users-daily'";
+            $ordersql = " ORDER BY type = 'loggedin-users-daily' DESC";
+            $ordersql .= ", value " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+            $ordersql .= ", ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+            break;
+        case "date":
+        default:
+            $rangesql = " type = 'user-count-daily'";
+            $ordersql = " ORDER BY type = 'user-count-daily' " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+            $ordersql .= ", ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+    }
+
+    // Get the min/max daterange within supplied date range
+    $rangewhere = array();
+    if ($start) {
+        $rangesql .= " AND ctime >= DATE(?) AND ctime <= DATE(?)";
+        $rangewhere[] = $start;
+        $rangewhere[] = $end;
+    }
+
+    $sql = "SELECT $day AS date
+            FROM {site_data} t
+            WHERE " . $rangesql . $ordersql . "
             LIMIT $limit
-            OFFSET $offset
-        ) t",
-        array('user-count-daily')
-    );
+            OFFSET $offset";
+    $dateranges = get_records_sql_array($sql, $rangewhere);
+    $daterange = array();
+    foreach ($dateranges as $d) {
+        $daterange[] = $d->date;
+    }
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
 
     $dayinterval = is_postgres() ? "'1 day'" : '1 day';
 
     $day = is_postgres() ? "to_date(ctime::text, 'YYYY-MM-DD')" : 'DATE(ctime)';
 
-    $userdata = get_records_sql_array(
-        "SELECT ctime, type, \"value\", $day AS date
+    $usersql = "SELECT ctime, type, \"value\", $day AS date
         FROM {site_data}
-        WHERE type IN (?,?) AND ctime >= ? AND ctime < (date(?) + INTERVAL $dayinterval)
-        ORDER BY type = ? DESC, ctime DESC",
-        array('user-count-daily', 'loggedin-users-daily', $daterange->mindate, $daterange->maxdate, 'user-count-daily')
-    );
+        WHERE type IN (?,?) AND $day IN (" . join(',', array_map('db_quote', $daterange)) . ")" . $ordersql;
+    $userdata = get_records_sql_array($usersql, array('user-count-daily', 'loggedin-users-daily'));
 
-    $userscreated = get_records_sql_array(
-        "SELECT $day AS cdate, COUNT(id) AS users
+    $userscreatedsql = "SELECT $day AS cdate, COUNT(id) AS users
         FROM {usr}
-        WHERE NOT ctime IS NULL AND ctime >= ? AND ctime < (date(?) + INTERVAL $dayinterval)
-        GROUP BY cdate",
-        array($daterange->mindate, $daterange->maxdate)
-    );
+        WHERE ctime IS NOT NULL AND $day IN (" . join(',', array_map('db_quote', $daterange)) . ")
+        GROUP BY cdate";
 
-    $data = array();
+    $userscreated = get_records_sql_array($userscreatedsql, array());
+
+    $data = array_fill_keys($daterange, array());
 
     if ($userdata) {
         foreach ($userdata as &$r) {
             if ($r->type == 'user-count-daily') {
-                $data[$r->date] = array(
-                    'date'  => $r->date,
-                    'total' => $r->value,
-                );
+                $data[$r->date]['date'] = $r->date;
+                $data[$r->date]['total'] = $r->value;
             }
             else if ($r->type == 'loggedin-users-daily' && isset($data[$r->date])) {
                 $data[$r->date]['loggedin'] = $r->value;
@@ -386,26 +1058,33 @@ function user_stats_table($limit, $offset) {
     $csvfields = array('date', 'loggedin', 'created', 'total');
     $USER->set_download_file(generate_csv($data, $csvfields), 'userstatistics.csv', 'text/csv');
     $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
 
     $smarty = smarty_core();
     $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
     $result['tablerows'] = $smarty->fetch('admin/userstats.tpl');
 
     return $result;
 }
 
-function institution_user_statistics($limit, $offset, &$institutiondata) {
+function institution_user_statistics($limit, $offset, &$institutiondata, $extra) {
 
     $data = array();
     $data['institution'] = $institutiondata['institution'];
-    $data['tableheadings'] = array(
-        array('name' => get_string('date')),
-        array('name' => get_string('Loggedin', 'admin'), 'class' => 'center'),
-        array('name' => get_string('Joined', 'group'), 'class' => 'center'),
-        array('name' => get_string('Total'), 'class' => 'center'),
-    );
-    $data['table'] = institution_user_stats_table($limit, $offset, $institutiondata);
-    $data['tabletitle'] = get_string('userstatstabletitle', 'admin');
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $data['institution'] . '&type=users&subtype=users';
+
+    $data['tableheadings'] = user_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = institution_user_stats_table($limit, $offset, $institutiondata, $extra);
+    $data['table']['activeheadings'] = $activeheadings;
 
     if (!$institutiondata['users']) {
         $data['strmaxfriends'] = get_string('statsnofriends', 'admin');
@@ -525,10 +1204,19 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
     return $data;
 }
 
-function institution_user_stats_table($limit, $offset, &$institutiondata) {
+function institution_user_stats_table($limit, $offset, &$institutiondata, $extra) {
     global $USER;
 
-    $count = count_records('institution_data', 'type', 'user-count-daily', 'institution', $institutiondata['name']);
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+
+    if ($start) {
+        $where = "type = ? AND institution = ? AND ctime >= DATE(?) AND ctime <= DATE(?)";
+        $count = count_records_select('institution_data', $where, array('user-count-daily', $institutiondata['name'], $start, $end));
+    }
+    else {
+        $count = count_records('institution_data', 'type', 'user-count-daily', 'institution', $institutiondata['name']);
+    }
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
@@ -540,6 +1228,7 @@ function institution_user_stats_table($limit, $offset, &$institutiondata) {
         'offset' => $offset,
         'extradata' => array('institution' => $institutiondata['name']),
         'setlimit' => true,
+        'extradata' => $extra,
     ));
 
     $result = array(
@@ -548,58 +1237,80 @@ function institution_user_stats_table($limit, $offset, &$institutiondata) {
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
     );
-
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
     if ($count < 1) {
         return $result;
     }
 
     $day = is_postgres() ? "to_date(t.ctime::text, 'YYYY-MM-DD')" : 'DATE(t.ctime)'; // TODO: make work on other databases?
 
-    $daterange = get_record_sql(
-        "SELECT
-            MIN($day) AS mindate,
-            MAX($day) AS maxdate
-        FROM (
-            SELECT ctime
-            FROM {institution_data}
-            WHERE type = ? AND institution = ?
-            ORDER BY ctime DESC
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "total":
+            $rangesql = " type = 'user-count-daily'";
+            $ordersql = " ORDER BY type = 'loggedin-users-daily' DESC";
+            $ordersql .= ", value " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+            $ordersql .= ", ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+            break;
+        case "loggedin":
+            $rangesql = " type = 'loggedin-users-daily'";
+            $ordersql = " ORDER BY type = 'loggedin-users-daily' DESC";
+            $ordersql .= ", value " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+            $ordersql .= ", ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+            break;
+        case "date":
+        default:
+            $rangesql = " type = 'user-count-daily'";
+            $ordersql = " ORDER BY type = 'user-count-daily' " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+            $ordersql .= ", ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+    }
+
+    // Get the min/max daterange within supplied date range
+    $rangesql .= " AND institution = ?";
+    $rangewhere = array($institutiondata['name']);
+    if ($start) {
+        $rangesql .= " AND ctime >= DATE(?) AND ctime <= DATE(?)";
+        $rangewhere[] = $start;
+        $rangewhere[] = $end;
+    }
+
+    $sql = "SELECT $day AS date
+            FROM {institution_data} t
+            WHERE " . $rangesql . $ordersql . "
             LIMIT $limit
-            OFFSET $offset
-        ) t",
-        array('user-count-daily', $institutiondata['name'])
-    );
+            OFFSET $offset";
+    $dateranges = get_records_sql_array($sql, $rangewhere);
+    $daterange = array();
+    foreach ($dateranges as $d) {
+        $daterange[] = $d->date;
+    }
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
 
     $dayinterval = is_postgres() ? "'1 day'" : '1 day';
 
     $day = is_postgres() ? "to_date(ctime::text, 'YYYY-MM-DD')" : 'DATE(ctime)';
 
-    $userdata = get_records_sql_array(
-        "SELECT ctime, type, \"value\", $day AS date
+    $usersql = "SELECT ctime, type, \"value\", $day AS date
         FROM {institution_data}
-        WHERE type IN (?,?) AND institution = ? AND ctime >= ? AND ctime < (date(?) + INTERVAL $dayinterval)
-        ORDER BY type = ? DESC, ctime DESC",
-        array('user-count-daily', 'loggedin-users-daily', $institutiondata['name'], $daterange->mindate, $daterange->maxdate, 'user-count-daily')
-    );
+        WHERE type IN (?,?) AND institution = ? AND $day IN (" . join(',', array_map('db_quote', $daterange)) . ")" . $ordersql;
+    $userdata = get_records_sql_array($usersql, array('user-count-daily', 'loggedin-users-daily', $institutiondata['name']));
 
-    $userscreated = get_records_sql_array(
-        "SELECT $day as cdate, COUNT(usr) AS users
+    $userscreatedsql = "SELECT $day as cdate, COUNT(usr) AS users
         FROM {usr_institution}
         WHERE institution = ?
-        AND NOT ctime IS NULL AND ctime >= ? AND ctime < (date(?) + INTERVAL $dayinterval)
-        GROUP BY cdate",
-        array($institutiondata['name'], $daterange->mindate, $daterange->maxdate)
-    );
+        AND ctime IS NOT NULL AND $day IN (" . join(',', array_map('db_quote', $daterange)) . ")
+        GROUP BY cdate";
 
-    $data = array();
+    $userscreated = get_records_sql_array($userscreatedsql, array($institutiondata['name']));
+
+    $data = array_fill_keys($daterange, array());
 
     if ($userdata) {
         foreach ($userdata as &$r) {
             if ($r->type == 'user-count-daily') {
-                $data[$r->date] = array(
-                    'date'  => $r->date,
-                    'total' => $r->value,
-                );
+                $data[$r->date]['date'] = $r->date;
+                $data[$r->date]['total'] = $r->value;
             }
             else if ($r->type == 'loggedin-users-daily' && isset($data[$r->date])) {
                 $data[$r->date]['loggedin'] = $r->value;
@@ -615,11 +1326,18 @@ function institution_user_stats_table($limit, $offset, &$institutiondata) {
     }
 
     $csvfields = array('date', 'loggedin', 'created', 'total');
-    $USER->set_download_file(generate_csv($data, $csvfields), 'userstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($data, $csvfields), $institutiondata['name'] . 'userstatistics.csv', 'text/csv');
     $result['csv'] = true;
+
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
 
     $smarty = smarty_core();
     $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
     $result['tablerows'] = $smarty->fetch('admin/userstats.tpl');
 
     return $result;
@@ -627,40 +1345,93 @@ function institution_user_stats_table($limit, $offset, &$institutiondata) {
 
 
 function user_institution_graph($type = null) {
-    // Draw a bar graph showing the number of users in each institution
+    // Draw a pie graph showing the number of users in each institution
     require_once(get_config('libroot') . 'institution.php');
 
     $institutions = Institution::count_members(false, true);
     if (count($institutions) > 1) {
         $dataarray = array();
         foreach ($institutions as &$i) {
-            $dataarray[$i->displayname][get_string('institution')] = $i->members;
+            $dataarray[$i->displayname] = $i->members;
         }
         arsort($dataarray);
         // Truncate to avoid trying to fit too many results onto graph
-        $dataarray = array_slice($dataarray, 0, 12, true);
-
-        $data['graph'] = ($type) ? $type : 'bar';
+        $newdataarray = array_slice($dataarray, 0, 9, true);
+        // And place the rest as an 'All Other' piece
+        $others = array_diff_assoc($dataarray, $newdataarray);
+        if (!empty($others)) {
+            $newdataarray[get_string('allothers', 'admin')] = 0;
+            foreach ($others as $o) {
+                $newdataarray[get_string('allothers', 'admin')] += $o;
+            }
+        }
+        $data['graph'] = ($type) ? $type : 'pie';
         $data['graph_function_name'] = 'user_institution_graph';
         $data['title'] = get_string('institutionmembers','admin');
-        $data['labels'] = array_keys($dataarray[$i->displayname]);
-        $data['data'] = $dataarray;
+        $data['labels'] = array_keys($dataarray);
+        $data['data'] = $newdataarray;
+
         return $data;
     }
 }
 
-function group_statistics($limit, $offset) {
+function group_statistics($limit, $offset, $extra) {
     $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=groups&subtype=groups';
     $data['tableheadings'] = array(
-        array('name' => '#'),
-        array('name' => get_string('Group', 'group')),
-        array('name' => get_string('Members', 'group'), 'class' => 'center'),
-        array('name' => get_string('Views', 'view'), 'class' => 'center'),
-        array('name' => get_string('nameplural', 'interaction.forum'), 'class' => 'center'),
-        array('name' => get_string('Posts', 'interaction.forum'), 'class' => 'center'),
+        array('id' => 'rownum', 'name' => '#'),
+        array('id' => 'id',
+              'name' => get_string('ID', 'admin'),
+              'class' => format_class($extra, 'id'),
+              'link' => format_goto($urllink . '&sort=id', $extra, array('sort'), 'id')
+        ),
+        array('id' => 'group', 'required' => true,
+              'name' => get_string('Group', 'group'),
+              'class' => format_class($extra, 'group'),
+              'link' => format_goto($urllink . '&sort=group', $extra, array('sort'), 'group')
+        ),
+        array('id' => 'members', 'required' => true,
+              'name' => get_string('Members', 'group'),
+              'class' => format_class($extra, 'members'),
+              'link' => format_goto($urllink . '&sort=members', $extra, array('sort'), 'members')
+        ),
+        array('id' => 'views', 'required' => true,
+              'name' => get_string('Views', 'view'),
+              'class' => format_class($extra, 'views'),
+              'link' => format_goto($urllink . '&sort=views', $extra, array('sort'), 'views')
+        ),
+        array('id' => 'groupcomments',
+              'name' => get_string('groupcomments', 'statistics'),
+              'class' => format_class($extra, 'groupcomments'),
+              'link' => format_goto($urllink . '&sort=groupcomments', $extra, array('sort'), 'groupcomments')
+        ),
+        array('id' => 'sharedviews',
+              'name' => get_string('sharedviews', 'view'),
+              'class' => format_class($extra, 'sharedviews'),
+              'link' => format_goto($urllink . '&sort=sharedviews', $extra, array('sort'), 'sharedviews')
+        ),
+        array('id' => 'sharedcomments',
+              'name' => get_string('sharedcomments', 'statistics'),
+              'class' => format_class($extra, 'sharedcomments'),
+              'link' => format_goto($urllink . '&sort=sharedcomments', $extra, array('sort'), 'sharedcomments')
+        ),
+        array('id' => 'forums', 'required' => true,
+              'name' => get_string('nameplural', 'interaction.forum'),
+              'class' => format_class($extra, 'forums'),
+              'link' => format_goto($urllink . '&sort=forums', $extra, array('sort'), 'forums')
+        ),
+        array('id' => 'posts', 'required' => true,
+              'name' => get_string('Posts', 'interaction.forum'),
+              'class' => format_class($extra, 'posts'),
+              'link' => format_goto($urllink . '&sort=posts', $extra, array('sort'), 'posts')
+        ),
     );
-    $data['table'] = group_stats_table($limit, $offset);
-    $data['tabletitle'] = get_string('groupstatstabletitle', 'admin');
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = group_stats_table($limit, $offset, $extra);
+    $data['table']['activeheadings'] = $activeheadings;
 
     $smarty = smarty_core();
     $smarty->assign('grouptypecounts', get_records_sql_array("
@@ -684,10 +1455,18 @@ function group_statistics($limit, $offset) {
     return $data;
 }
 
-function group_stats_table($limit, $offset) {
+function group_stats_table($limit, $offset, $extra) {
     global $USER;
 
-    $count = count_records('group', 'deleted', 0);
+    $start = !empty($extra['start']) ? $extra['start'] : date('Y-m-d', strtotime("-1 months"));
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    if ($start) {
+        $where = "ctime >= DATE(?) AND ctime <= DATE(?)";
+        $count = count_records_select('group', $where, array($start, $end));
+    }
+    else {
+        $count = count_records('group', 'deleted', 0);
+    }
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
@@ -698,6 +1477,7 @@ function group_stats_table($limit, $offset) {
         'limit' => $limit,
         'offset' => $offset,
         'setlimit' => true,
+        'extradata' => $extra,
     ));
 
     $result = array(
@@ -707,13 +1487,42 @@ function group_stats_table($limit, $offset) {
         'pagination_js' => $pagination['javascript'],
     );
 
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
     if ($count < 1) {
         return $result;
     }
 
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "members":
+            $ordersql = " mc.members " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "views":
+            $ordersql = " vc.views " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "forums":
+            $ordersql = " fc.forums " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "posts":
+            $ordersql = " pc.posts IS NULL " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ",
+                          pc.posts " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "group":
+        default:
+            $ordersql = " g.name " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+    }
+    $rangesql = '';
+    $rangewhere = array();
+    if ($start) {
+        $rangesql = " AND ctime >= DATE(?) AND ctime <= DATE(?)";
+        $rangewhere[] = $start;
+        $rangewhere[] = $end;
+    }
+
     $groupdata = get_records_sql_array(
         "SELECT
-            g.id, g.name, g.urlid, mc.members, vc.views, fc.forums, pc.posts
+            g.id, g.name, g.urlid, g.ctime, mc.members, vc.views, fc.forums, pc.posts
         FROM {group} g
             LEFT JOIN (
                 SELECT gm.group, COUNT(gm.member) AS members
@@ -741,15 +1550,31 @@ function group_stats_table($limit, $offset) {
                 GROUP BY ii.group
             ) pc ON g.id = pc.group
         WHERE
-            g.deleted = 0
+            g.deleted = 0 " . $rangesql . "
         ORDER BY
-            mc.members IS NULL, mc.members DESC, g.name, g.id",
-        array(),
+            " . $ordersql . ", g.name, g.id",
+        $rangewhere,
         $offset,
         $limit
     );
 
-    $csvfields = array('id', 'name', 'members', 'views', 'forums', 'posts');
+    foreach ($groupdata as $key => $group) {
+        // Add in the elasticsearch data if needed
+        if (get_config('searchplugin') == 'elasticsearch') {
+            // TODO
+        }
+        else {
+            $group->groupcomments = get_string('notdisplayed', 'statistics');
+            $group->sharedviews = get_string('notdisplayed', 'statistics');
+            $group->sharedcomments = get_string('notdisplayed', 'statistics');
+        }
+    }
+
+    $daterange = array_map(function ($obj) { return $obj->ctime; }, $groupdata);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    $csvfields = array('id', 'name', 'members', 'views', 'groupcomments', 'sharedviews',
+                       'sharedcomments', 'forums', 'posts');
     $USER->set_download_file(generate_csv($groupdata, $csvfields), 'groupstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
@@ -759,8 +1584,14 @@ function group_stats_table($limit, $offset) {
             $group->homeurl = group_homepage_url($group);
         }
     }
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
     $smarty = smarty_core();
     $smarty->assign('data', $groupdata);
+    $smarty->assign('columns', $columnkeys);
     $smarty->assign('offset', $offset);
     $result['tablerows'] = $smarty->fetch('admin/groupstats.tpl');
 
@@ -807,17 +1638,67 @@ function group_type_graph_render($type = null) {
     return $data;
 }
 
-function view_statistics($limit, $offset) {
-    $data = array();
-    $data['tableheadings'] = array(
-        array('name' => '#'),
-        array('name' => get_string('view')),
-        array('name' => get_string('Owner', 'view')),
-        array('name' => get_string('Visits'), 'class' => 'center'),
-        array('name' => get_string('Comments', 'artefact.comment'), 'class' => 'center'),
+function view_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array('id' => 'view', 'required' => true,
+              'name' => get_string('view'),
+              'class' => format_class($extra, 'view'),
+              'link' => format_goto($urllink . '&sort=view', $extra, array('sort'), 'view')
+        ),
+        array('id' => 'collection', 'required' => true,
+              'name' => get_string('Collection', 'collection'),
+              'class' => format_class($extra, 'collection'),
+              'link' => format_goto($urllink . '&sort=collection', $extra, array('sort'), 'collection')
+        ),
+        array('id' => 'owner', 'required' => true,
+              'name' => get_string('Owner', 'view'),
+              'class' => format_class($extra, 'owner'),
+              'link' => format_goto($urllink . '&sort=owner', $extra, array('sort'), 'owner')
+        ),
+        array('id' => 'created',
+              'name' => get_string('Created'),
+              'class' => format_class($extra, 'created'),
+              'link' => format_goto($urllink . '&sort=created', $extra, array('sort'), 'created')
+        ),
+        array('id' => 'modified',
+              'name' => get_string('lastmodified', 'statistics'),
+              'class' => format_class($extra, 'modified'),
+              'link' => format_goto($urllink . '&sort=modified', $extra, array('sort'), 'modified')
+        ),
+        array('id' => 'visited',
+              'name' => get_string('lastvisited', 'statistics'),
+              'class' => format_class($extra, 'visited'),
+              'link' => format_goto($urllink . '&sort=visited', $extra, array('sort'), 'visited')
+        ),
+        array('id' => 'blocks',
+              'name' => get_string('blocks'),
+              'class' => format_class($extra, 'blocks'),
+              'link' => format_goto($urllink . '&sort=blocks', $extra, array('sort'), 'blocks')
+        ),
+        array('id' => 'visits', 'required' => true,
+              'name' => get_string('Visits'),
+              'class' => format_class($extra, 'visits'),
+              'link' => format_goto($urllink . '&sort=visits', $extra, array('sort'), 'visits')
+        ),
+        array('id' => 'comments', 'required' => true,
+              'name' => get_string('Comments', 'artefact.comment'),
+              'class' => format_class($extra, 'comments'),
+              'link' => format_goto($urllink . '&sort=comments', $extra, array('sort'), 'comments')
+        ),
     );
-    $data['table'] = view_stats_table($limit, $offset);
-    $data['tabletitle'] = get_string('viewstatstabletitle', 'admin');
+}
+
+function view_statistics($limit, $offset, $extra) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=pageactivity';
+    $data['tableheadings'] = view_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = view_stats_table($limit, $offset, $extra);
+    $data['table']['activeheadings'] = $activeheadings;
 
     $smarty = smarty_core();
     $maxblocktypes = 5;
@@ -841,10 +1722,20 @@ function view_statistics($limit, $offset) {
     return $data;
 }
 
-function view_stats_table($limit, $offset) {
+function view_stats_table($limit, $offset, $extra) {
     global $USER;
 
-    $count = count_records_select('view', '(owner != 0 OR owner IS NULL) AND type != ?', array('dashboard'));
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    require_once('view.php');
+    $where = "(v.owner != 0 OR v.owner IS NULL) AND v.type != ? AND v.template != ?";
+    $values = array('dashboard', View::SITE_TEMPLATE);
+    if ($start) {
+        $where .= " AND v.ctime >= DATE(?) AND v.ctime <= DATE(?)";
+        $values[] = $start;
+        $values[] = $end;
+    }
+    $count = count_records_sql("SELECT COUNT(*) FROM {view} v WHERE " . $where, $values);
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
@@ -855,6 +1746,7 @@ function view_stats_table($limit, $offset) {
         'limit' => $limit,
         'offset' => $offset,
         'setlimit' => true,
+        'extradata' => $extra,
     ));
 
     $result = array(
@@ -863,29 +1755,62 @@ function view_stats_table($limit, $offset) {
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
     );
-
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
     if ($count < 1) {
         return $result;
     }
 
-    $viewdata = get_records_sql_assoc(
-        "SELECT
-            v.id, v.title, v.owner, v.group, v.institution, v.visits, v.type,
-            v.ownerformat, v.urlid, v.template
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "view":
+            $orderby = " v.title " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.id";
+            break;
+        case "collection":
+            $orderby = " c.name " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.id";
+            break;
+        case "comments":
+        case "owner":
+        case "blocks":
+            $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            break;
+        case "created":
+            $orderby = " v.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            break;
+        case "modified":
+            $orderby = " m.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            break;
+        case "visited":
+            $orderby = " a.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            break;
+        case "visits":
+        default:
+            $orderby = " v.visits " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+    }
+
+    $sql = "SELECT v.id, v.title, v.owner, v.group, v.institution, c.name,
+            CASE
+                WHEN v.owner IS NOT NULL
+                THEN (SELECT CONCAT(firstname, ' ', lastname) FROM {usr} WHERE id = v.owner)
+                WHEN v.group IS NOT NULL
+                THEN (SELECT name FROM {group} WHERE id = v.group)
+                ELSE (SELECT displayname FROM {institution} WHERE name = v.institution)
+            END AS displayname,
+            v.visits, v.type, v.ownerformat, v.urlid, v.template,
+            v.ctime, v.mtime, v.atime,
+            (SELECT COUNT(*) FROM {block_instance} WHERE view = v.id) AS blocks,
+            (SELECT COUNT(*) FROM {artefact_comment_comment} WHERE onview = v.id) AS comments
         FROM {view} v
-        WHERE (v.owner != 0 OR \"owner\" IS NULL) AND v.type != ?
-        ORDER BY v.visits DESC, v.title, v.id",
-        array('dashboard'),
-        $offset,
-        $limit
-    );
+        LEFT JOIN {collection_view} cv ON cv.view = v.id
+        LEFT JOIN {collection} c ON c.id = cv.collection
+        WHERE " . $where . "
+        ORDER BY " . $orderby;
+
+    $viewdata = get_records_sql_assoc($sql, $values, $offset, $limit);
 
     require_once('view.php');
     require_once('group.php');
     View::get_extra_view_info($viewdata, false, false);
-
-    safe_require('artefact', 'comment');
-    $comments = ArtefactTypeComment::count_comments(array_keys($viewdata));
 
     foreach ($viewdata as &$v) {
         $v = (object) $v;
@@ -902,15 +1827,26 @@ function view_stats_table($limit, $offset) {
                 $v->ownerurl = get_config('wwwroot') . 'institution/index.php?institution=' . $v->institution;
             }
         }
-        $v->comments = isset($comments[$v->id]) ? (int) $comments[$v->id]->comments : 0;
+        if ($v->collection) {
+            $v->collectiontitle = $v->collection->get('name');
+        }
     }
 
-    $csvfields = array('title', 'displaytitle', 'fullurl', 'owner', 'group', 'institution', 'ownername', 'ownerurl', 'visits', 'type', 'comments');
+    $daterange = array_map(function ($obj) { return $obj->ctime; }, $viewdata);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    $csvfields = array('displaytitle', 'fullurl', 'collectiontitle','ownername', 'ownerurl',
+                       'ctime', 'mtime', 'atime', 'blocks', 'visits', 'comments');
     $USER->set_download_file(generate_csv($viewdata, $csvfields), 'viewstatistics.csv', 'text/csv');
     $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
 
     $smarty = smarty_core();
     $smarty->assign('data', $viewdata);
+    $smarty->assign('columns', $columnkeys);
     $smarty->assign('offset', $offset);
     $result['tablerows'] = $smarty->fetch('admin/viewstats.tpl');
 
@@ -955,17 +1891,16 @@ function view_type_graph_render($type = null) {
     return $data;
 }
 
-function institution_view_statistics($limit, $offset, &$institutiondata) {
+function institution_view_statistics($limit, $offset, &$institutiondata, $extra) {
     $data = array();
-    $data['tableheadings'] = array(
-        array('name' => '#'),
-        array('name' => get_string('view')),
-        array('name' => get_string('Owner', 'view')),
-        array('name' => get_string('Visits'), 'class' => 'center'),
-        array('name' => get_string('Comments', 'artefact.comment'), 'class' => 'center'),
-    );
-    $data['table'] = institution_view_stats_table($limit, $offset, $institutiondata);
-    $data['tabletitle'] = get_string('viewstatstabletitle', 'admin');
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['institution'] . '&type=users&subtype=pageactivity';
+    $data['tableheadings'] = view_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = institution_view_stats_table($limit, $offset, $institutiondata, $extra);
+    $data['table']['activeheadings'] = $activeheadings;
 
     $smarty = smarty_core();
     $maxblocktypes = 5;
@@ -993,12 +1928,23 @@ function institution_view_statistics($limit, $offset, &$institutiondata) {
     return $data;
 }
 
-function institution_view_stats_table($limit, $offset, &$institutiondata) {
+function institution_view_stats_table($limit, $offset, &$institutiondata, $extra) {
     global $USER;
 
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
     if ($institutiondata['views'] != 0) {
-        $count = count_records_select('view', 'id IN (' . $institutiondata['viewssql'] . ') AND type != ?',
-                                        array_merge($institutiondata['viewssqlparam'], array('dashboard')));
+        $start = !empty($extra['start']) ? $extra['start'] : null;
+        $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+
+        $where = 'id IN (' . $institutiondata['viewssql'] . ') AND type != ?';
+        $values = array_merge($institutiondata['viewssqlparam'], array('dashboard'));
+        if ($start) {
+            $where .= " AND ctime >= DATE(?) AND ctime <= DATE(?)";
+            $values[] = $start;
+            $values[] = $end;
+        }
+        $count = count_records_select('view', $where, $values);
     }
     else {
         $count = 0;
@@ -1012,7 +1958,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata) {
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
-        'extradata' => array('institution' => $institutiondata['name']),
+        'extradata' => $extra,
         'setlimit' => true,
     ));
 
@@ -1022,28 +1968,56 @@ function institution_view_stats_table($limit, $offset, &$institutiondata) {
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
     );
-
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
     if ($count < 1) {
         return $result;
     }
 
-    $viewdata = get_records_sql_assoc(
-        "SELECT
-            v.id, v.title, v.owner, v.group, v.institution, v.visits, v.type, v.ownerformat, v.urlid, v.template
-        FROM {view} v
-        WHERE v.id IN (" . $institutiondata['viewssql'] . ") AND v.type != ?
-        ORDER BY v.visits DESC, v.title, v.id",
-        array_merge($institutiondata['viewssqlparam'], array('dashboard')),
-        $offset,
-        $limit
-    );
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "view":
+            $orderby = " v.title " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.id";
+            break;
+        case "comments":
+        case "owner":
+        case "blocks":
+            $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            break;
+        case "created":
+            $orderby = " v.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            break;
+        case "modified":
+            $orderby = " m.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            break;
+        case "visited":
+            $orderby = " a.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            break;
+        case "visits":
+            default:
+            $orderby = " v.visits " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+    }
+
+    $sql = "SELECT v.id, v.title, v.owner, v.group, v.institution,
+            CASE
+                WHEN v.owner IS NOT NULL
+                THEN (SELECT CONCAT(firstname, ' ', lastname) FROM {usr} WHERE id = v.owner)
+                WHEN v.group IS NOT NULL
+                THEN (SELECT name FROM {group} WHERE id = v.group)
+                ELSE (SELECT displayname FROM {institution} WHERE name = v.institution)
+            END AS displayname,
+            v.visits, v.type, v.ownerformat, v.urlid, v.template,
+            v.ctime, v.mtime, v.atime,
+            (SELECT COUNT(*) FROM {block_instance} WHERE view = v.id) AS blocks,
+            (SELECT COUNT(*) FROM {artefact_comment_comment} WHERE onview = v.id) AS comments
+        FROM {view} v WHERE " . $where . "
+        ORDER BY " . $orderby;
+
+    $viewdata = get_records_sql_assoc($sql, $values, $offset, $limit);
 
     require_once('view.php');
     require_once('group.php');
     View::get_extra_view_info($viewdata, false, false);
-
-    safe_require('artefact', 'comment');
-    $comments = ArtefactTypeComment::count_comments(array_keys($viewdata));
 
     foreach ($viewdata as &$v) {
         $v = (object) $v;
@@ -1060,15 +2034,24 @@ function institution_view_stats_table($limit, $offset, &$institutiondata) {
                 $v->ownerurl = get_config('wwwroot') . 'institution/index.php?institution=' . $v->institution;
             }
         }
-        $v->comments = isset($comments[$v->id]) ? (int) $comments[$v->id]->comments : 0;
+        $v->name = ($v->collection) ? $v->collection->get('name') : null;
+        $v->collectiontitle = $v->name;
     }
 
-    $csvfields = array('title', 'displaytitle', 'fullurl', 'owner', 'group', 'institution', 'ownername', 'ownerurl', 'visits', 'type', 'comments');
-    $USER->set_download_file(generate_csv($viewdata, $csvfields), 'viewstatistics.csv', 'text/csv');
+    $daterange = array_map(function ($obj) { return $obj->ctime; }, $viewdata);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+    $csvfields = array('displaytitle', 'fullurl', 'collectiontitle', 'ownername', 'ownerurl',
+                       'ctime', 'mtime', 'atime', 'blocks', 'visits', 'comments');
+    $USER->set_download_file(generate_csv($viewdata, $csvfields), $institutiondata['name'] . 'viewstatistics.csv', 'text/csv');
     $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
 
     $smarty = smarty_core();
     $smarty->assign('data', $viewdata);
+    $smarty->assign('columns', $columnkeys);
     $smarty->assign('offset', $offset);
     $result['tablerows'] = $smarty->fetch('admin/viewstats.tpl');
 
@@ -1178,37 +2161,64 @@ function institution_user_type_graph($type = null, $institutiondata) {
     return $data;
 }
 
-function content_statistics($limit, $offset) {
-    $data = array();
-    $data['tableheadings'] = array(
-        array('name' => '#'),
-        array('name' => get_string('name')),
-        array('name' => get_string('modified')),
-        array('name' => get_string('Total'), 'class' => 'center'),
+function content_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array('id' => 'name', 'required' => true,
+              'name' => get_string('name'),
+              'class' => format_class($extra, 'name'),
+              'link' => format_goto($urllink . '&sort=name', $extra, array('sort'), 'name')
+        ),
+        array('id' => 'modified', 'required' => true,
+              'name' => get_string('modified'),
+              'class' => format_class($extra, 'modified'),
+//              'link' => format_goto($urllink . '&sort=modified', $extra, array('sort'), 'modified')
+        ),
+        array('id' => 'total', 'required' => true,
+              'name' => get_string('Total'),
+              'class' => format_class($extra, 'total'),
+              'link' => format_goto($urllink . '&sort=total', $extra, array('sort'), 'total')
+        ),
     );
-    $data['table'] = content_stats_table($limit, $offset);
-    $data['tabletitle'] = get_string('contentstatstabletitle', 'admin');
+}
+
+function content_statistics($limit, $offset, $extra) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=content&subtype=content';
+    $data['tableheadings'] = content_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = content_stats_table($limit, $offset, $extra);
+    $data['table']['activeheadings'] = $activeheadings;
 
     $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
     return $data;
 }
 
-function content_stats_table($limit, $offset) {
+function content_stats_table($limit, $offset, $extra) {
     global $USER;
 
-    $dates = get_records_array('site_registration', '', '', 'time DESC', '*', 0, 2);
-
-    if ($dates) {
-        $count = count_records_select('site_registration_data', 'registration_id = ? AND value ' . (is_postgres() ? '~ E' : 'REGEXP ') . '\'^[0-9]+$\' AND field NOT LIKE \'%version\'', array($dates[0]->id));
+    $start = !empty($extra['start']) ? $extra['start'] : date('Y-m-d', strtotime("-1 months"));
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    $values = array();
+    $fromsql = "FROM {site_registration} sr
+                JOIN {site_registration_data} sd ON sd.registration_id = sr.id";
+    if ($start) {
+        $fromsql .= " WHERE sr.time >= DATE(?) AND sr.time <= DATE(?)";
+        $values[] = $start;
+        $values[] = $end;
     }
     else {
-        $count = 0;
+        $fromsql .= " WHERE sr.id IN (SELECT id FROM {site_registration} ORDER BY time DESC LIMIT 2)";
     }
+    $fromsql .= " AND sd.value " . (is_postgres() ? '~ E' : 'REGEXP ') . "'^[0-9]+$'
+                  AND sd.field NOT LIKE '%version'";
+    $regdata = get_records_sql_array("SELECT DISTINCT sr.id, sr.time " . $fromsql . " ORDER BY sr.time DESC", $values);
 
-    // Show all the stats, is a smallish number
-    $limit = $count;
-    $offset = 0;
+    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . " AND sr.id = " . $regdata[0]->id, $values);
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
@@ -1218,6 +2228,8 @@ function content_stats_table($limit, $offset) {
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
+        'extradata' => $extra,
+        'setlimit' => true,
     ));
 
     $result = array(
@@ -1226,35 +2238,48 @@ function content_stats_table($limit, $offset) {
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
     );
-
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
     if ($count < 1) {
         return $result;
     }
 
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "total":
+            if (is_mysql()) {
+                $cast = " (sd.value + 0) ";
+            }
+            else {
+                $cast = " CAST(sd.value AS INTEGER) ";
+            }
+            $ordersql = $cast . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "name":
+        default:
+            $ordersql = " sd.field " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+    }
     $contentdata = get_records_sql_assoc(
-        "SELECT
-            field, value
-        FROM {site_registration_data}
-        WHERE registration_id = ?
-        AND value " . (is_postgres() ? "~ E" : "REGEXP ") . "'^[0-9]+$'
-        AND field NOT LIKE '%version'
-        ORDER BY field",
-        array($dates[0]->id),
+        "SELECT sd.field, sd.value " . $fromsql . "
+        AND sr.id = " . $regdata[0]->id . "
+        ORDER BY " . $ordersql,
+        $values,
         $offset,
         $limit
     );
 
-    if (count($dates) > 1) {
-        $lastweeks = get_records_sql_assoc(
-            "SELECT
-                field, value
-            FROM {site_registration_data}
-            WHERE registration_id = ?
-            ORDER BY field",
-            array($dates[1]->id)
+    $daterange = array_map(function ($obj) { return $obj->time; }, $regdata);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    if (count($regdata) > 1) {
+        $firstweeks = get_records_sql_assoc(
+            "SELECT sd.field, sd.value " . $fromsql . "
+            AND sr.id = " . end($regdata)->id . "
+            ORDER BY sd.field",
+            $values
         );
         foreach ($contentdata as &$d) {
-            $d->modified = $d->value - (isset($lastweeks[$d->field]->value) ? $lastweeks[$d->field]->value : 0);
+            $d->modified = $d->value - (isset($firstweeks[$d->field]->value) ? $firstweeks[$d->field]->value : 0);
         }
     }
     else {
@@ -1266,47 +2291,63 @@ function content_stats_table($limit, $offset) {
     $csvfields = array('field', 'modified', 'value');
     $USER->set_download_file(generate_csv($contentdata, $csvfields), 'contentstatistics.csv', 'text/csv');
     $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
 
     $smarty = smarty_core();
     $smarty->assign('data', $contentdata);
+    $smarty->assign('columns', $columnkeys);
     $smarty->assign('offset', $offset);
     $result['tablerows'] = $smarty->fetch('admin/contentstats.tpl');
 
     return $result;
 }
 
-function institution_content_statistics($limit, $offset, &$institutiondata) {
+function institution_content_statistics($limit, $offset, &$institutiondata, $extra) {
     $data = array();
-    $data['tableheadings'] = array(
-        array('name' => '#'),
-        array('name' => get_string('name')),
-        array('name' => get_string('modified')),
-        array('name' => get_string('Total'), 'class' => 'center'),
-    );
-    $data['table'] = institution_content_stats_table($limit, $offset, $institutiondata);
-    $data['tabletitle'] = get_string('contentstatstabletitle', 'admin');
+
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['name'] . '&type=content&subtype=content';
+    $data['tableheadings'] = content_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = institution_content_stats_table($limit, $offset, $institutiondata, $extra);
+    $data['table']['activeheadings'] = $activeheadings;
 
     $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
     return $data;
 }
 
-function institution_content_stats_table($limit, $offset, &$institutiondata) {
+function institution_content_stats_table($limit, $offset, &$institutiondata, $extra) {
     global $USER;
 
-    $dates = get_records_array('institution_registration', 'institution', $institutiondata['name'], 'time DESC', '*', 0, 2);
-
-    if ($dates) {
-        $count = count_records('institution_registration_data', 'registration_id', $dates[0]->id);
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    $values = array();
+    $fromsql = "FROM {institution_registration} sr
+                JOIN {institution_registration_data} sd ON sd.registration_id = sr.id";
+    if ($start) {
+        $fromsql .= " WHERE sr.time >= DATE(?) AND sr.time <= DATE(?)";
+        $values[] = $start;
+        $values[] = $end;
     }
     else {
-        $count = 0;
+        $fromsql .= " WHERE sr.id IN (SELECT id FROM {institution_registration} WHERE institution = ? ORDER BY time DESC LIMIT 2)";
+        $values[] = $institutiondata['name'];
+    }
+    $fromsql .= " AND sr.institution = ?";
+    $values[] = $institutiondata['name'];
+    $regdata = get_records_sql_array("SELECT DISTINCT sr.id, sr.time " . $fromsql . " ORDER BY sr.time DESC", $values);
+
+    if ($regdata === false) {
+        return array('count' => 0);
     }
 
-    if ($count > 1) {
-        // remove one as it is userloggedin, which is a psuedostat
-        $count --;
-    }
+    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . " AND sr.id = " . $regdata[0]->id . " AND sd.field != 'usersloggedin'", $values);
 
     // Show all the stats, is a smallish number
     $limit = $count;
@@ -1320,7 +2361,7 @@ function institution_content_stats_table($limit, $offset, &$institutiondata) {
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
-        'extradata' => array('institution' => $institutiondata['name']),
+        'extradata' => $extra,
     ));
 
     $result = array(
@@ -1329,33 +2370,50 @@ function institution_content_stats_table($limit, $offset, &$institutiondata) {
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
     );
-
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
     if ($count < 1) {
         return $result;
     }
 
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "total":
+            if (is_mysql()) {
+                $cast = " sd.value ";
+            }
+            else {
+                $cast = " CAST(sd.value AS INTEGER) ";
+            }
+            $ordersql = $cast . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "name":
+        default:
+            $ordersql = " sd.field " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+    }
     $contentdata = get_records_sql_assoc(
-        "SELECT
-            field, value
-        FROM {institution_registration_data}
-        WHERE registration_id = ? AND field != ?
-        ORDER BY field",
-        array($dates[0]->id, 'usersloggedin'),
+        "SELECT sd.field, sd.value " . $fromsql . "
+        AND sr.id = " . $regdata[0]->id . "
+        AND sd.field != 'usersloggedin'
+        ORDER BY " . $ordersql,
+        $values,
         $offset,
         $limit
     );
 
-    if (count($dates) > 1) {
-        $lastweeks = get_records_sql_assoc(
-            "SELECT
-                field, value
-            FROM {institution_registration_data}
-            WHERE registration_id = ?
-            ORDER BY field",
-            array($dates[1]->id)
+    $daterange = array_map(function ($obj) { return $obj->time; }, $regdata);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    if (count($regdata) > 1) {
+        $firstweeks = get_records_sql_assoc(
+            "SELECT sd.field, sd.value " . $fromsql . "
+            AND sr.id = " . end($regdata)->id . "
+            AND sd.field != 'usersloggedin'
+            ORDER BY " . $ordersql,
+            $values
         );
         foreach ($contentdata as &$d) {
-            $d->modified = $d->value - (isset($lastweeks[$d->field]->value) ? $lastweeks[$d->field]->value : 0);
+            $d->modified = $d->value - (isset($firstweeks[$d->field]->value) ? $firstweeks[$d->field]->value : 0);
         }
     }
     else {
@@ -1364,241 +2422,401 @@ function institution_content_stats_table($limit, $offset, &$institutiondata) {
         }
     }
     if (isset($contentdata['count_members'])) {
-        $contentdata['count_members']->modified = get_field('institution_registration_data', 'value', 'registration_id', $dates[0]->id, 'field', 'usersloggedin');
+        $contentdata['count_members']->modified = get_field('institution_registration_data', 'value', 'registration_id', $regdata[0]->id, 'field', 'usersloggedin');
     }
 
     $csvfields = array('field', 'modified', 'value');
-    $USER->set_download_file(generate_csv($contentdata, $csvfields), 'contentstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($contentdata, $csvfields), $institutiondata['name'] . 'contentstatistics.csv', 'text/csv');
     $result['csv'] = true;
+
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
 
     $smarty = smarty_core();
     $smarty->assign('data', $contentdata);
     $smarty->assign('offset', $offset);
+    $smarty->assign('columns', $columnkeys);
     $smarty->assign('institution', $institutiondata['name']);
     $result['tablerows'] = $smarty->fetch('admin/contentstats.tpl');
 
     return $result;
 }
 
-function historical_statistics($limit, $offset, $field) {
-    $data = array();
-    $data['tableheadings'] = array(
-        array('name' => get_string('date')),
-        array('name' => get_string('modified'), 'class' => 'center'),
-        array('name' => get_string('Total'), 'class' => 'center'),
-    );
-    $data['table'] = historical_stats_table($limit, $offset, $field);
-    $data['tabletitle'] = get_string('historicalstatstabletitle', 'admin', get_string($field, 'statistics'));
-
-    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
-
-    return $data;
-}
-
-function historical_stats_table($limit, $offset, $field) {
-    global $USER;
-
-    $count = count_records_sql(
-        "SELECT COUNT(*)
-        FROM {site_registration} sr
-        JOIN {site_registration_data} srd
-            ON (srd.registration_id = sr.id)
-        WHERE srd.field = ?",
-        array($field)
-    );
-
-    $pagination = build_pagination(array(
-        'id' => 'stats_pagination',
-        'url' => get_config('wwwroot') . 'admin/users/statistics.php?type=historical',
-        'jsonscript' => 'admin/users/statistics.json.php',
-        'datatable' => 'statistics_table',
-        'count' => $count,
-        'limit' => $limit,
-        'offset' => $offset,
-        'extradata' => array('field' => $field),
-        'setlimit' => true,
-    ));
-
-    $result = array(
-        'count'         => $count,
-        'tablerows'     => '',
-        'pagination'    => $pagination['html'],
-        'pagination_js' => $pagination['javascript'],
-    );
-
-    if ($count < 1) {
-        return $result;
-    }
-
-    $registrationdata = get_records_sql_array(
-        "SELECT
-            sr.time, srd.field, srd.value
-        FROM {site_registration} sr
-        JOIN {site_registration_data} srd
-            ON (srd.registration_id = sr.id)
-        WHERE srd.field = ?
-        ORDER BY sr.time DESC",
-        array($field),
-        $offset,
-        $limit
-    );
-
-    if ($registrationdata) {
-        $registrationdata[count($registrationdata) - 1]->modified = $registrationdata[count($registrationdata) - 1]->value;
-    }
-    for ($i = count($registrationdata) - 2; $i >= 0; -- $i) {
-        $registrationdata[$i]->modified = $registrationdata[$i]->value - $registrationdata[$i + 1]->value;
-    }
-
-    $csvfields = array('time', 'field', 'modified', 'value');
-    $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'registrationstatistics.csv', 'text/csv');
-    $result['csv'] = true;
-
-    $smarty = smarty_core();
-    $smarty->assign('data', $registrationdata);
-    $smarty->assign('offset', $offset);
-    $result['tablerows'] = $smarty->fetch('admin/historicalstats.tpl');
-
-    return $result;
-}
-
-function institution_historical_statistics($limit, $offset, $field, &$institutiondata) {
-    $data = array();
-    $data['tableheadings'] = array(
-        array('name' => get_string('date')),
-        array('name' => get_string('modified'), 'class' => 'center'),
-        array('name' => get_string('Total'), 'class' => 'center'),
-    );
-    $data['table'] = institution_historical_stats_table($limit, $offset, $field, $institutiondata);
-    $data['tabletitle'] = get_string('historicalstatstabletitle', 'admin', get_string($field, 'statistics'));
-
-    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
-
-    return $data;
-}
-
-function institution_historical_stats_table($limit, $offset, $field, &$institutiondata) {
-    global $USER;
-
-    $count = count_records_sql(
-        "SELECT COUNT(*)
-        FROM {institution_registration} ir
-        JOIN {institution_registration_data} ird
-            ON (ird.registration_id = ir.id)
-        WHERE ir.institution = ? AND ird.field = ?",
-        array($institutiondata['name'], $field)
-    );
-
-    $pagination = build_pagination(array(
-        'id' => 'stats_pagination',
-        'url' => get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['name'] . '&type=historical',
-        'jsonscript' => 'admin/users/statistics.json.php',
-        'datatable' => 'statistics_table',
-        'count' => $count,
-        'limit' => $limit,
-        'offset' => $offset,
-        'extradata' => array('institution' => $institutiondata['name'], 'field' => $field),
-        'setlimit' => true,
-    ));
-
-    $result = array(
-        'count'         => $count,
-        'tablerows'     => '',
-        'pagination'    => $pagination['html'],
-        'pagination_js' => $pagination['javascript'],
-    );
-
-    if ($count < 1) {
-        return $result;
-    }
-
-    $registrationdata = get_records_sql_array(
-        "SELECT
-            ir.id, ir.time, ird.field, ird.value
-        FROM {institution_registration} ir
-        JOIN {institution_registration_data} ird
-            ON (ird.registration_id = ir.id)
-        WHERE ir.institution = ? AND ird.field = ?
-        ORDER BY ir.time DESC",
-        array($institutiondata['name'], $field),
-        $offset,
-        $limit
-    );
-
-    if ($field == 'count_members') {
-        foreach ($registrationdata as &$d) {
-            $d->modified = get_field('institution_registration_data', 'value', 'registration_id', $d->id, 'field', 'usersloggedin');
-        }
-    }
-    else {
-        if ($registrationdata) {
-            $registrationdata[count($registrationdata) - 1]->modified = $registrationdata[count($registrationdata) - 1]->value;
-        }
-        for ($i = count($registrationdata) - 2; $i >= 0; -- $i) {
-            $registrationdata[$i]->modified = $registrationdata[$i]->value - $registrationdata[$i + 1]->value;
-        }
-    }
-
-    $csvfields = array('time', 'field', 'modified', 'value');
-    $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'registrationstatistics.csv', 'text/csv');
-    $result['csv'] = true;
-
-    $smarty = smarty_core();
-    $smarty->assign('data', $registrationdata);
-    $smarty->assign('offset', $offset);
-    $result['tablerows'] = $smarty->fetch('admin/historicalstats.tpl');
-
-    return $result;
-}
-
-function institution_comparison_statistics($limit, $offset, $sort, $sortdesc) {
-    $data = array();
-    $data['tableheadings'] = array(
+function masquerading_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
         array(
+              'id' => 'user', 'required' => true,
+              'name' => get_string('user', 'statistics'),
+              'class' => format_class($extra, 'user'),
+              'link' => format_goto($urllink . '&sort=user', $extra, array('sort'), 'user')
+        ),
+        array(
+              'id' => 'reason',
+              'name' => get_string('masqueradereason', 'admin'),
+              'class' => format_class($extra, 'reason'),
+        ),
+        array(
+              'id' => 'masquerader',
+              'name' => get_string('masquerader', 'admin'),
+              'class' => format_class($extra, 'masquerader'),
+              'link' => format_goto($urllink . '&sort=masquerader', $extra, array('sort'), 'masquerader')
+        ),
+        array(
+              'id' => 'date', 'required' => true,
+              'name' => get_string('masqueradetime', 'admin'),
+              'class' => format_class($extra, 'date'),
+              'link' => format_goto($urllink . '&sort=date', $extra, array('sort'), 'date')
+        ),
+    );
+}
+
+function masquerading_statistics($limit, $offset, $extra, $institution = null) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=masquerading';
+    if ($institution) {
+        $urllink .= '&institution=' . $institution;
+    }
+    $data['tableheadings'] = masquerading_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = masquerading_stats_table($limit, $offset, $extra, $institution, $urllink);
+    $data['table']['activeheadings'] = $activeheadings;
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+function masquerading_stats_table($limit, $offset, $extra, $institution, $urllink) {
+    global $USER, $SESSION;
+
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    $users = $SESSION->get('usersforstats');
+
+    $fromsql = " FROM {usr} u JOIN {event_log} e ON e.usr = u.id ";
+    $wheresql = " WHERE u.id != 0 AND e.event = 'loginas'";
+    $where = array();
+    if ($institution) {
+        $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
+        $where = array($institution);
+    }
+    if ($users) {
+        $wheresql .= " AND (e.usr IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+        $wheresql .= "   OR e.realusr IN (" . join(',', array_map('db_quote', array_values($users))) . "))";
+    }
+    if ($start) {
+        $wheresql .= " AND e.time >= DATE(?) AND e.time <= DATE(?)";
+        $where[] = $start;
+        $where[] = $end;
+    }
+    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . $wheresql, $where);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => $urllink,
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+        'extradata' => $extra,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
+    $result['settings']['users'] = count($users);
+    if ($count < 1) {
+        return $result;
+    }
+
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "masquerader":
+        case "user":
+            $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", date";
+            break;
+        case "date":
+        default:
+            $orderby = " date " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+    }
+
+    $sql = "SELECT u.id AS user, e.data, e.time AS date, e.realusr AS masquerader
+            " . $fromsql . $wheresql . "
+            ORDER BY " . $orderby . "
+            LIMIT $limit
+            OFFSET $offset";
+    $data = get_records_sql_array($sql, $where);
+    $daterange = array_map(function ($obj) { return $obj->date; }, $data);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    foreach ($data as $item) {
+        $jsondata = json_decode($item->data);
+        $item->reason = $jsondata->reason;
+        $item->userurl = profile_url($item->user);
+        $item->user = display_name($item->user);
+        $item->masqueraderurl = profile_url($item->masquerader);
+        $item->masquerader = display_name($item->masquerader);
+        $item->date = format_date(strtotime($item->date));
+    }
+
+    $csvfields = array('user', 'reason', 'masquerader', 'masqueraderurl', 'date');
+    $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'masqueradingstatistics.csv', 'text/csv');
+    $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
+    $result['tablerows'] = $smarty->fetch('admin/users/loginaslog.tpl');
+
+    return $result;
+}
+
+function accesslist_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array(
+              'id' => 'owner', 'required' => true,
+              'name' => get_string('owner', 'view'),
+              'class' => format_class($extra, 'owner'),
+              'link' => format_goto($urllink . '&sort=owner', $extra, array('sort'), 'owner')
+        ),
+        array(
+              'id' => 'views', 'required' => true,
+              'name' => get_string('View', 'view') . '/' . get_string('Collection', 'collection'),
+              'class' => format_class($extra, 'views'),
+              'link' => format_goto($urllink . '&sort=views', $extra, array('sort'), 'views')
+        ),
+        array(
+              'id' => 'numviews', 'required' => true,
+              'name' => get_string('Views', 'view'),
+              'class' => format_class($extra, 'numviews'),
+              'link' => format_goto($urllink . '&sort=numviews', $extra, array('sort'), 'numviews')
+        ),
+        array(
+              'id' => 'accessrules', 'required' => true,
+              'name' => get_string('accesslist', 'view'),
+              'class' => format_class($extra, 'accessrules'),
+        ),
+    );
+}
+
+function accesslist_statistics($limit, $offset, $extra, $institution = null) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=accesslist';
+    if ($institution) {
+        $urllink .= '&institution=' . $institution;
+    }
+    $data['tableheadings'] = accesslist_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = accesslist_stats_table($limit, $offset, $extra, $institution, $urllink);
+    $data['table']['activeheadings'] = $activeheadings;
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink) {
+    global $USER, $SESSION;
+
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    $users = $SESSION->get('usersforstats');
+
+    $fromsql = " FROM (
+        SELECT u.id AS userid, CONCAT(u.firstname, ' ', u.lastname) AS displayname, cv.view AS viewid, c.id AS collectionid,
+            (SELECT COUNT(*) FROM {collection_view} WHERE collection = c.id) AS views,
+            c.name AS title, c.ctime AS vctime
+        FROM {usr} u JOIN {collection} c ON c.owner = u.id
+        JOIN {collection_view} cv ON cv.collection = c.id
+        WHERE cv.displayorder = 0
+        UNION
+        SELECT u.id AS userid, CONCAT(u.firstname, ' ', u.lastname) AS displayname, v.id AS viewid, NULL AS collectionid,
+            1 AS views, v.title, v.ctime AS vctime
+        FROM {usr} u JOIN {view} v ON v.owner = u.id
+        LEFT JOIN {collection_view} cv ON cv.view = v.id
+        WHERE cv.collection IS NULL AND v.type !='dashboard'
+        UNION
+        SELECT u.id AS userid, CONCAT(u.firstname, ' ', u.lastname) AS displayname, NULL AS viewid, NULL AS collectionid,
+            0 AS views, NULL as title, u.ctime AS vctime
+        FROM {usr} u LEFT JOIN {view} v ON v.owner = u.id
+        WHERE v.id IS NULL
+    ) AS t";
+    $wheresql = " WHERE userid != 0";
+    $where = array();
+    if ($institution) {
+        $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = userid AND ui.institution = ?)";
+        $where = array($institution);
+    }
+    if ($users) {
+        $wheresql .= " AND userid IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+    }
+    if ($start) {
+        $wheresql .= " AND vctime >= DATE(?) AND vctime <= DATE(?)";
+        $where[] = $start;
+        $where[] = $end;
+    }
+    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . $wheresql, $where);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => $urllink,
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+        'extradata' => $extra,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
+    $result['settings']['users'] = count($users);
+    if ($count < 1) {
+        return $result;
+    }
+
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "numviews":
+            $orderby = " views " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "views":
+            $orderby = " title " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "owner":
+        default:
+            $orderby = " displayname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+    }
+    $sql = "SELECT userid, displayname, viewid, collectionid, views, title, vctime
+            " . $fromsql . $wheresql . "
+            ORDER BY " . $orderby . "
+            LIMIT $limit
+            OFFSET $offset";
+    $data = get_records_sql_array($sql, $where);
+    $daterange = array_map(function ($obj) { return $obj->vctime; }, $data);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    foreach ($data as $item) {
+        $item->userurl = profile_url($item->userid);
+        if ($item->views < 1) {
+            $item->title = get_string('noviews1', 'view');
+        }
+        $item->access = get_records_sql_array("
+            SELECT *, 0 AS secreturls
+            FROM {view_access} WHERE view = ? AND token IS NULL
+            UNION
+            SELECT *, (SELECT COUNT(*) FROM {view_access} va2 WHERE token IS NOT NULL AND va2.view = va.view) AS secreturls
+            FROM {view_access} va WHERE va.view = ? AND va.token IS NOT NULL",
+            array($item->viewid, $item->viewid));
+        $item->hasaccessrules = !empty($item->access);
+    }
+
+    $csvfields = array('displayname', 'userurl', 'title', 'views', 'hasaccessrules');
+    $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'accessstatistics.csv', 'text/csv');
+    $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
+    $result['tablerows'] = $smarty->fetch('admin/users/accesslists.tpl');
+
+    return $result;
+}
+
+function institution_comparison_statistics($limit, $offset, $extra) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=information&subtype=comparisons';
+    $data['tableheadings'] = array(
+        array('id' => 'rownum', 'name' => '#'),
+        array(
+            'id' => 'institution', 'required' => true,
             'name' => get_string('institution'),
-            'class' => 'search-results-sort-column' . ($sort == 'displayname' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/users/statistics.php?type=institutions&sort=displayname&sortdesc=' . ($sort == 'displayname' ? !$sortdesc : false) . '&limit=' . $limit . '&offset=' . $offset
+            'class' => format_class($extra, 'institution'),
+            'link' => format_goto($urllink . '&sort=institution', $extra, array('sort'), 'institution')
         ),
         array(
+            'id' => 'members', 'required' => true,
             'name' => get_string('members'),
-            'class' => 'search-results-sort-column' . ($sort == 'count_members' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/users/statistics.php?type=institutions&sort=count_members&sortdesc=' . ($sort == 'count_members' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+            'class' => format_class($extra, 'members'),
+            'link' => format_goto($urllink . '&sort=members', $extra, array('sort'), 'members')
         ),
         array(
+            'id' => 'views', 'required' => true,
             'name' => get_string('views'),
-            'class' => 'search-results-sort-column' . ($sort == 'count_views' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/users/statistics.php?type=institutions&sort=count_views&sortdesc=' . ($sort == 'count_views' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+            'class' => format_class($extra, 'views'),
+            'link' => format_goto($urllink . '&sort=views', $extra, array('sort'), 'views')
         ),
         array(
+            'id' => 'blocks', 'required' => true,
             'name' => get_string('blocks'),
-            'class' => 'search-results-sort-column' . ($sort == 'count_blocks' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/users/statistics.php?type=institutions&sort=count_blocks&sortdesc=' . ($sort == 'count_blocks' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+            'class' => format_class($extra, 'blocks'),
+            'link' => format_goto($urllink . '&sort=blocks', $extra, array('sort'), 'blocks')
         ),
         array(
+            'id' => 'artefacts', 'required' => true,
             'name' => get_string('artefacts'),
-            'class' => 'search-results-sort-column' . ($sort == 'count_artefacts' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/users/statistics.php?type=institutions&sort=count_artefacts&sortdesc=' . ($sort == 'count_artefacts' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+            'class' => format_class($extra, 'artefacts'),
+            'link' => format_goto($urllink . '&sort=artefacts', $extra, array('sort'), 'artefacts')
         ),
         array(
+            'id' => 'posts', 'required' => true,
             'name' => get_string('posts'),
-            'class' => 'search-results-sort-column' . ($sort == 'count_interaction_forum_post' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/users/statistics.php?type=institutions&sort=count_interaction_forum_post&sortdesc=' . ($sort == 'count_interaction_forum_post' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+            'class' => format_class($extra, 'posts'),
+            'link' => format_goto($urllink . '&sort=posts', $extra, array('sort'), 'posts')
         ),
     );
-    $data['table'] = institution_comparison_stats_table($limit, $offset, $sort, $sortdesc);
-    $data['tabletitle'] = get_string('institutionstatstabletitle', 'admin');
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = institution_comparison_stats_table($limit, $offset, $extra);
+    $data['table']['activeheadings'] = $activeheadings;
 
     $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
     return $data;
 }
 
-function institution_comparison_stats_table($limit, $offset, $sort, $sortdesc) {
+function institution_comparison_stats_table($limit, $offset, $extra) {
     global $USER;
 
     $count = count_records_sql(
-            "SELECT COUNT(DISTINCT institution)
-            FROM {institution_registration}"
+        "SELECT COUNT(DISTINCT institution)
+        FROM {institution_registration}"
     );
 
     $pagination = build_pagination(array(
@@ -1609,8 +2827,8 @@ function institution_comparison_stats_table($limit, $offset, $sort, $sortdesc) {
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
-        'extradata' => array('sort' => $sort, 'sortdesc' => $sortdesc),
         'setlimit' => true,
+        'extradata' => $extra,
     ));
 
     $result = array(
@@ -1619,79 +2837,60 @@ function institution_comparison_stats_table($limit, $offset, $sort, $sortdesc) {
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
     );
-
+    $result['settings']['start'] = get_field_sql("SELECT MIN(ctime) FROM {usr}");
+    $result['settings']['end'] = date('Y-m-d', strtotime('now'));
     if ($count < 1) {
         return $result;
     }
 
-    if ($sort == 'displayname') {
-        if (is_postgres()) {
-            $institutions = get_records_sql_array(
-                    "SELECT tmp.id, tmp.institution AS name, i.displayname
-                    FROM (SELECT DISTINCT ON (institution)
-                        id, institution
-                        FROM {institution_registration}
-                        ORDER BY institution, time DESC
-                    ) tmp
-                    JOIN {institution} i ON (tmp.institution = i.name)
-                    ORDER BY i.displayname " . ($sortdesc ? 'DESC' : 'ASC') . "
-                    LIMIT ? OFFSET ?",
-                    array($limit, $offset)
-            );
-        }
-        else {
-            $institutions = get_records_sql_array(
-                    "SELECT tmp.id, tmp.institution AS name, i.displayname
-                    FROM (SELECT ir.id, ir.institution
-                        FROM {institution_registration} ir
-                        JOIN (SELECT institution, MAX(time) AS time
-                            FROM {institution_registration}
-                            GROUP BY institution
-                        ) inn ON (inn.institution = ir.institution AND inn.time = ir.time)
-                    ) tmp
-                    JOIN {institution} i ON (tmp.institution = i.name)
-                    ORDER BY i.displayname " . ($sortdesc ? 'DESC' : 'ASC') . "
-                    LIMIT ? OFFSET ?",
-                    array($limit, $offset)
-            );
-        }
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "members":
+        case "views":
+        case "artefacts":
+        case "blocks":
+            $sortby = 'count_' . $sorttype;
+            break;
+        case "posts":
+            $sortby = 'count_interaction_forum_post';
+            break;
+        case "institution":
+        default:
+            $sortby = 'displayname';
+    }
+
+    if ($sortby == 'displayname') {
+        $orderby = " i.displayname ";
+        $wheresql = '';
+        $where = array($limit, $offset);
     }
     else {
         if (is_postgres()) {
-            $institutions = get_records_sql_array(
-                    "SELECT tmp.id, tmp.institution AS name, i.displayname
-                    FROM (SELECT DISTINCT ON (ir.institution)
-                        ir.id, ir.institution, ird.value
-                        FROM {institution_registration} ir
-                        JOIN {institution_registration_data} ird ON (ir.id = ird.registration_id)
-                        WHERE ird.field = ?
-                        ORDER BY ir.institution, ir.time DESC
-                    ) tmp
-                    JOIN {institution} i ON (tmp.institution = i.name)
-                    ORDER BY tmp.value::int " . ($sortdesc ? 'DESC' : 'ASC') . "
-                    LIMIT ? OFFSET ?",
-                    array($sort, $limit, $offset)
-            );
+            $orderby = " CAST(tmp.value AS INTEGER) ";
         }
         else {
-            $institutions = get_records_sql_array(
-                    "SELECT tmp.id, tmp.institution AS name, i.displayname
-                    FROM (SELECT ir.id, ir.institution, ird.value
-                        FROM {institution_registration} ir
-                        JOIN (SELECT institution, MAX(time) AS time
-                            FROM {institution_registration}
-                            GROUP BY institution
-                        ) inn ON (inn.institution = ir.institution AND inn.time = ir.time)
-                        JOIN {institution_registration_data} ird ON (ir.id = ird.registration_id)
-                        WHERE ird.field = ?
-                    ) tmp
-                    JOIN {institution} i ON (tmp.institution = i.name)
-                    ORDER BY (tmp.value + 0) " . ($sortdesc ? 'DESC' : 'ASC') . "
-                    LIMIT ? OFFSET ?",
-                    array($sort, $limit, $offset)
-            );
+            $orderby = " (tmp.value + 0) ";
         }
+        $wheresql = " JOIN {institution_registration_data} ird ON (ir.id = ird.registration_id)
+                      WHERE ird.field = ?";
+        $where = array($sortby, $limit, $offset);
     }
+
+    $institutions = get_records_sql_array(
+        "SELECT tmp.id, tmp.institution AS name, i.displayname
+         FROM (SELECT ir.id, ir.institution " . ($sortby != 'displayname' ? ",ird.value" : '') . "
+               FROM {institution_registration} ir
+               JOIN (SELECT institution, MAX(time) AS time
+                     FROM {institution_registration}
+                     GROUP BY institution
+                    ) inn ON (inn.institution = ir.institution AND inn.time = ir.time)
+                    " . $wheresql . "
+               ) tmp
+               JOIN {institution} i ON (tmp.institution = i.name)
+               ORDER BY " . $orderby . ($extra['sortdesc'] ? 'DESC' : 'ASC') . "
+               LIMIT ? OFFSET ?",
+               $where
+    );
 
     $registrationdata = array();
     foreach ($institutions as $i) {
@@ -1712,9 +2911,14 @@ function institution_comparison_stats_table($limit, $offset, $sort, $sortdesc) {
     $csvfields = array('name', 'count_members', 'count_views', 'count_blocks', 'count_artefacts', 'count_interaction_forum_post');
     $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'institutionstatistics.csv', 'text/csv');
     $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
 
     $smarty = smarty_core();
     $smarty->assign('data', $registrationdata);
+    $smarty->assign('columns', $columnkeys);
     $smarty->assign('offset', $offset);
     $result['tablerows'] = $smarty->fetch('admin/comparisonstats.tpl');
 
@@ -1808,41 +3012,47 @@ function graph_institution_data_daily(&$institutiondata) {
  *
  * @param int $limit     Limit results
  * @param int $offset    Starting offset
- * @param string $sort   DB Column to sort by
- * @param string/int $sortdesc  The direction to sort the $sort column by
- * @param string $start  The start date to filter results by - format 'YYYY-MM-DD HH:MM:SS'
- * @param string $end    The end date to filter results by - format 'YYYY-MM-DD HH:MM:SS'
+ * @param array $extra   Array can contain keys for:
+ *                       $sort : Database column to sort by
+ *                       $sortdesc : The direction to sort the $sort column by
+ *                       $start : The start date to filter results by - format 'YYYY-MM-DD'
+ *                       $end : The end date to filter results by - format 'YYYY-MM-DD'
+ *                       $institution : The name of institution
  *
  * @results array Results containing the html / pagination data
  */
-function institution_logins_statistics($limit, $offset, $sort, $sortdesc, $start=null, $end=null) {
-    // If no start/end dates provided then default to the previous full month
-    $start = ($start) ? $start : date('Y-m-d H:i:s', mktime(0,0,0,date('n')-1,1,date('Y')));  // first day of previous month
-    $end   = ($end) ? $end : date('Y-m-d H:i:s', mktime(23,59,59,date('n'),0,date('Y'))); // last day of previous month
-    $startday = date('Y-m-d', strtotime($start));
-    $endday = date('Y-m-d', strtotime($end));
+function institution_logins_statistics($limit, $offset, $extra) {
 
     $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=information&subtype=logins';
     $data['tableheadings'] = array(
+        array('id' => 'rownum', 'name' => '#'),
         array(
+            'id' => 'institution', 'required' => true,
             'name' => get_string('institution'),
-            'class' => 'search-results-sort-column' . ($sort == 'displayname' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/users/statistics.php?type=logins&sort=displayname&sortdesc=' . ($sort == 'displayname' ? !$sortdesc : false) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $startday . '&end=' . $endday
+            'class' => format_class($extra, 'displayname'),
+            'link' => format_goto($urllink . '&sort=displayname', $extra, array('sort'), 'displayname')
         ),
         array(
+            'id' => 'logins', 'required' => true,
             'name' => get_string('logins', 'statistics'),
-            'class' => 'search-results-sort-column' . ($sort == 'count_logins' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/users/statistics.php?type=logins&sort=count_logins&sortdesc=' . ($sort == 'count_logins' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $startday . '&end=' . $endday
+            'class' => format_class($extra, 'count_logins'),
+            'link' => format_goto($urllink . '&sort=count_logins', $extra, array('sort'), 'count_logins')
         ),
         array(
+            'id' => 'activeusers', 'required' => true,
             'name' => get_string('activeusers', 'statistics'),
-            'class' => 'search-results-sort-column' . ($sort == 'count_active' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/users/statistics.php?type=logins&sort=count_active&sortdesc=' . ($sort == 'count_active' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $startday . '&end=' . $endday
+            'class' => format_class($extra, 'count_active'),
+            'link' => format_goto($urllink . '&sort=count_active', $extra, array('sort'), 'count_active')
         ),
     );
-    $data['table'] = institution_logins_stats_table($limit, $offset, $sort, $sortdesc, $start, $end);
-    $data['tabletitle'] = get_string('institutionloginstabletitle', 'admin');
-    $data['tablesubtitle'] = get_string('institutionloginstablesubtitle', 'admin', format_date(strtotime($start), 'strftimedate'), format_date(strtotime($end), 'strftimedate'));
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = institution_logins_stats_table($limit, $offset, $extra);
+    $data['table']['activeheadings'] = $activeheadings;
+
     $data['help'] = get_help_icon('core','statistics',null,null,null,'statisticslogins');
 
     $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
@@ -1855,28 +3065,29 @@ function institution_logins_statistics($limit, $offset, $sort, $sortdesc, $start
  *
  * @param int $limit     Limit results
  * @param int $offset    Starting offset
- * @param string $sort   DB Column to sort by
- * @param string/int $sortdesc  The direction to sort the $sort column by
- * @param string $start  The start date to filter results by - format 'YYYY-MM-DD HH:MM:SS'
- * @param string $end    The end date to filter results by - format 'YYYY-MM-DD HH:MM:SS'
+ * @param array $extra  - See institution_logins_statistics() for parameters
  *
  * @results array Results containing the html / pagination data
  */
-function institution_logins_stats_table($limit, $offset, $sort, $sortdesc, $start, $end) {
+function institution_logins_stats_table($limit, $offset, $extra) {
     global $USER;
 
-    $rawdata = users_active_data(null, null, $sort, $sortdesc, $start, $end);
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+
+    $rawdata = users_active_data($limit, $offset, $extra);
     $count = ($rawdata) ? count($rawdata) : 0;
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
-        'url' => get_config('wwwroot') . 'admin/users/statistics.php?type=logins&start=' . date('Y-m-d', strtotime($start)) . '&end=' . date('Y-m-d', strtotime($end)),
+        'url' => get_config('wwwroot') . 'admin/users/statistics.php?type=information&subtype=logins',
         'jsonscript' => 'admin/users/statistics.json.php',
         'datatable' => 'statistics_table',
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
         'setlimit' => true,
+        'extradata' => $extra,
     ));
 
     $result = array(
@@ -1885,7 +3096,8 @@ function institution_logins_stats_table($limit, $offset, $sort, $sortdesc, $star
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
     );
-
+    $result['settings']['start'] = ($start) ? $start : date('Y-m-d', strtotime("-1 months"));
+    $result['settings']['end'] = $end;
     if ($count < 1) {
         return $result;
     }
@@ -1893,10 +3105,16 @@ function institution_logins_stats_table($limit, $offset, $sort, $sortdesc, $star
     $csvfields = array('name', 'displayname', 'count_logins', 'count_active');
     $USER->set_download_file(generate_csv($rawdata, $csvfields), 'userloginstatistics.csv', 'text/csv');
     $result['csv'] = true;
+    $columnkeys = array();
+        foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
 
     $data = array_slice($rawdata, $offset, $limit);
     $smarty = smarty_core();
     $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
     $result['tablerows'] = $smarty->fetch('admin/userloginsummary.tpl');
 
     return $result;
@@ -1906,19 +3124,19 @@ function institution_logins_stats_table($limit, $offset, $sort, $sortdesc, $star
  * Get records of how many users have their last login fall within a certain time period.
  * Group the results by institution.
  *
- * @param string $start   The start of the time period - format 'YYYY-MM-DD HH:II:SS'
- * @param string $end     The end of the time period - format 'YYYY-MM-DD HH:II:SS'
- * @param string $institution  Restrict the results to a particular institution.
+ * @param int $limit     Limit results
+ * @param int $offset    Starting offset
+ * @param array $extra  - See institution_logins_statistics() for parameters
  *
  * @result int $count The total count of 'users per institution' rows
  * @result array $results The count of users per institution
  */
-function users_active_data($limit=0, $offset=0, $sort='displayname', $sortdesc='DESC', $start = null, $end = null, $institution = null) {
-    if (!$start) {
-        $start = db_format_timestamp(strtotime("-1 months"));
+function users_active_data($limit=0, $offset=0, $extra) {
+    if (empty($extra['start'])) {
+        $extra['start'] = db_format_timestamp(strtotime("-1 months"));
     }
-    if (!$end) {
-        $end = db_format_timestamp(time());
+    if (empty($extra['end'])) {
+        $extra['end'] = db_format_timestamp(time());
     }
 
     $sql = "SELECT CASE WHEN i.name IS NOT NULL THEN i.name ELSE 'mahara' END AS name,
@@ -1927,13 +3145,16 @@ function users_active_data($limit=0, $offset=0, $sort='displayname', $sortdesc='
             FROM {usr_login_data} u
             LEFT JOIN {usr_institution} ui ON ui.usr = u.usr
             LEFT JOIN {institution} i ON i.name = ui.institution
-            WHERE (u.ctime >= ? AND u.ctime <= ?)";
-    $where = array($start, $end);
-    if ($institution) {
+            WHERE (u.ctime >= DATE(?) AND u.ctime <= DATE(?))";
+    $where = array($extra['start'], $extra['end']);
+    if (!empty($extra['institution'])) {
         $sql .= " AND i.name = ?";
-        $where[] = $institution;
+        $where[] = $extra['institution'];
     }
-    $sql .= " GROUP BY i.name, i.displayname ORDER BY " . $sort . " " . ($sortdesc ? 'DESC' : 'ASC');
+    $sql .= " GROUP BY i.name, i.displayname";
+    if (!empty($extra['sort'])) {
+        $sql .= " ORDER BY " . $extra['sort'] . " " . ($extra['sortdesc'] ? 'DESC' : 'ASC');
+    }
 
     $results = get_records_sql_array($sql, $where, $offset, $limit);
     return $results;
@@ -1947,26 +3168,25 @@ function users_active_data($limit=0, $offset=0, $sort='displayname', $sortdesc='
  * @param string $type         Type of report needs to match one of the $allowedtypes within function
  * @param object $extra        Object containing extra parameters needed to return statisics
  *
- * @result array ($allowedtypes, $institutiondata, $data) Return - allowedtypes to be used as subpages,
-                                                                 - the data for the instituion
-                                                                 - the data for the subpage from type chosen
+ * @result array ($allowedtypes, $data) Return - allowedtypes to be used as subpages,
+ *                                                               - the data for the subpage from type chosen
  */
 function display_statistics($institution, $type, $extra = null) {
     global $USER;
 
+    $subtype = isset($extra->subtype) ? $extra->subtype : null;
+    $allowedtypes = array('users', 'groups', 'content', 'information');
     if ($institution == 'all') {
         if (!$USER->get('admin') && !$USER->get('staff')) {
             throw new AccessDeniedException("Institution::statistics | " . get_string('accessdenied', 'auth.webservice'));
         }
         $showall = true;
-        $allowedtypes = array('users', 'groups', 'views', 'content', 'historical', 'institutions', 'logins');
     }
     else {
         if (!$USER->get('admin') && !$USER->get('staff') && !$USER->is_institutional_admin($institution) && !$USER->is_institutional_staff($institution)) {
             throw new AccessDeniedException("Institution::statistics | " . get_string('accessdenied', 'auth.webservice'));
         }
         $showall = false;
-        $allowedtypes = array('users', 'views', 'content', 'historical');
     }
 
     if (!in_array($type, $allowedtypes)) {
@@ -1974,54 +3194,381 @@ function display_statistics($institution, $type, $extra = null) {
     }
 
     if ($showall) {
-        if ($type == 'historical') {
-            $field = isset($extra->field) ? $extra->field : 'count_usr';
-        }
         $institutiondata = site_statistics(true);
         $institutiondata['institution'] = 'all';
         switch ($type) {
-         case 'logins':
-            $data = institution_logins_statistics($extra->limit, $extra->offset, $extra->sort, $extra->sortdesc, $extra->start, $extra->end);
-            break;
-         case 'institutions':
-            $data = institution_comparison_statistics($extra->limit, $extra->offset, $extra->sort, $extra->sortdesc);
-            break;
-         case 'historical':
-            $data = historical_statistics($extra->limit, $extra->offset, $field);
+         case 'information':
+            if ($subtype == 'comparisons') {
+                $data = institution_comparison_statistics($extra->limit, $extra->offset, $extra->extra);
+            }
+            else if ($subtype == 'logins') {
+                $data = institution_logins_statistics($extra->limit, $extra->offset, $extra->extra);
+            }
             break;
          case 'content':
-            $data = content_statistics($extra->limit, $extra->offset);
+            $data = content_statistics($extra->limit, $extra->offset, $extra->extra);
             break;
          case 'groups':
-            $data = group_statistics($extra->limit, $extra->offset);
-            break;
-         case 'views':
-            $data = view_statistics($extra->limit, $extra->offset);
+            $data = group_statistics($extra->limit, $extra->offset, $extra->extra);
             break;
          case 'users':
          default:
-            $data = user_statistics($extra->limit, $extra->offset, $institutiondata);
+            if ($subtype == 'accesslist') {
+                $data = accesslist_statistics($extra->limit, $extra->offset, $extra->extra, null);
+            }
+            else if ($subtype == 'masquerading') {
+                if (!in_array(get_config('eventloglevel'), array('masq', 'all'))) {
+                    $data = array('notvalid_errorstring' => get_string('masqueradingnotloggedwarning', 'admin', get_config('wwwroot')));
+                }
+                else {
+                    $data = masquerading_statistics($extra->limit, $extra->offset, $extra->extra, null);
+                }
+            }
+            else if ($subtype == 'pageactivity') {
+                $data = view_statistics($extra->limit, $extra->offset, $extra->extra);
+            }
+            else if ($subtype == 'useractivity') {
+                $data = useractivity_statistics($extra->limit, $extra->offset, $extra->extra, null);
+            }
+            else if ($subtype == 'userdetails') {
+                $data = userdetails_statistics($extra->limit, $extra->offset, $extra->extra, null);
+            }
+            else if ($subtype == 'collaboration') {
+                $data = collaboration_statistics($extra->limit, $extra->offset, $extra->extra, null);
+            }
+            else {
+                $data = user_statistics($extra->limit, $extra->offset, $institutiondata, $extra->extra);
+            }
         }
     }
     else {
-        if ($type == 'historical') {
-            $field = isset($extra->field) ? $extra->field : 'count_members';
-        }
         $institutiondata = institution_statistics($institution, true);
         switch ($type) {
-         case 'historical':
-            $data = institution_historical_statistics($extra->limit, $extra->offset, $field, $institutiondata);
+         case 'information':
+            if ($subtype == 'comparisons') {
+                $data = array('notvalid_errorstring' => get_string('nocomparisondataperinstitution', 'statistics'));
+            }
+            else if ($subtype == 'logins') {
+                $data = array('notvalid_errorstring' => get_string('nologinsdataperinstitution', 'statistics'));
+            }
             break;
          case 'content':
-            $data = institution_content_statistics($extra->limit, $extra->offset, $institutiondata);
+            $data = institution_content_statistics($extra->limit, $extra->offset, $institutiondata, $extra->extra);
             break;
-         case 'views':
-            $data = institution_view_statistics($extra->limit, $extra->offset, $institutiondata);
+         case 'groups':
+                $data = array('notvalid_errorstring' => get_string('nogroupdataperinstitution', 'statistics'));
             break;
          case 'users':
          default:
-            $data = institution_user_statistics($extra->limit, $extra->offset, $institutiondata);
+            if ($subtype == 'accesslist') {
+                $data = accesslist_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+            }
+            else if ($subtype == 'masquerading') {
+                if (!in_array(get_config('eventloglevel'), array('masq', 'all'))) {
+                    $data = array('notvalid_errorstring' => get_string('masqueradingnotloggedwarning', 'admin', get_config('wwwroot')));
+                }
+                else {
+                    $data = masquerading_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+                }
+            }
+            else if ($subtype == 'pageactivity') {
+                $data = institution_view_statistics($extra->limit, $extra->offset, $institutiondata, $extra->extra);
+            }
+            else if ($subtype == 'useractivity') {
+                $data = useractivity_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+            }
+            else if ($subtype == 'userdetails') {
+                $data = userdetails_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+            }
+            else if ($subtype == 'collaboration') {
+                $data = collaboration_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+            }
+            else {
+                $data = institution_user_statistics($extra->limit, $extra->offset, $institutiondata, $extra->extra);
+            }
         }
     }
-    return array($allowedtypes, $institutiondata, $data);
+
+    return array($allowedtypes, $data);
+}
+
+/**
+ * Returns a datastructure describing the tabs that appear on the statistics page
+ *
+ * @return array
+ */
+function statistics_get_menu_tabs() {
+    global $USER;
+    static $menu;
+
+    $institution = param_alphanum('institution', null);
+    $inst = ($institution) ? '&institution=' . $institution : '';
+    $siteadminstaff = ($USER->get('admin') || $USER->get('staff'));
+    $menu = array(
+        'users' => array(
+            'path' => 'admin/users/statistics',
+            'url' => 'admin/users/statistics.php?type=users' . $inst,
+            'title' => get_string('People', 'admin'),
+            'weight' => 20
+        ),
+        'groups' => array(
+            'path' => 'admin/users/statistics',
+            'url' => 'admin/users/statistics.php?type=groups' . $inst,
+            'title' => get_string('Groups', 'admin'),
+            'weight' => 30
+        ),
+        'content' => array(
+            'path' => 'admin/users/statistics',
+            'url' => 'admin/users/statistics.php?type=content' . $inst,
+            'title' => get_string('Content', 'admin'),
+            'weight' => 40
+        ),
+        'information' => array(
+            'path' => 'admin/users/statistics',
+            'url' => 'admin/users/statistics.php?type=information' . $inst,
+            'title' => get_string('Institution', 'admin'),
+            'weight' => 50
+        ),
+    );
+
+    $selected = param_alphanumext('type', 'users');
+    $menu[$selected]['selected'] = true;
+
+    // Sort the menu items by weight
+    uasort($menu, "sort_menu_by_weight");
+
+    return $menu;
+}
+
+/**
+ * Return the form array for the config report modal
+ * That we can turn into a pieform object
+ *
+ * @param object $extra  The parameters in play with the reports
+ *
+ * @return $form        A pieform structured form array
+ */
+function report_config_form($extra) {
+    $type = isset($extra->type) ? $extra->type : null;
+    $subtype = isset($extra->subtype) ? $extra->subtype : $type;
+
+    $form = array(
+        'name'            => 'reportconfigform',
+        'method'          => 'post',
+        'plugintype'      => 'core',
+        'pluginname'      => 'admin',
+        'renderer'        => 'div',
+        'class'           => 'form-as-button pull-left',
+        'elements'   => array(
+            'type' => array(
+                'type' => 'hidden',
+                'value' => $type,
+            ),
+            'institution' => array(
+                'type' => 'hidden',
+                'value' => $extra->institution,
+            ),
+        )
+    );
+
+    if (!empty($extra->extra) && isset($extra->extra['users'])) {
+        $form['elements']['users'] = array(
+            'type'     => 'hidden',
+            'value'    => (array)$extra->extra['users'],
+        );
+    }
+
+    if ($type === 'users' || $type === 'information') {
+        $subtypes = get_report_subtypes($extra);
+        $form['elements']['subtype'] = array(
+            'type' => 'select',
+            'title' => get_string('reporttype', 'statistics'),
+            'defaultvalue' => $subtype,
+            'options' => $subtypes,
+        );
+    }
+    $form['elements']['start'] = array(
+        'type' => 'calendar',
+        'title' => get_string('From') . ':',
+        'class' => 'form-inline in-modal',
+        'defaultvalue' => !empty($extra->extra) && isset($extra->extra['start']) ? strtotime($extra->extra['start']) : strtotime('-1 month'),
+        'caloptions' => array(
+            'showsTime' => false,
+        ),
+    );
+    $form['elements']['end'] = array(
+        'type' => 'calendar',
+        'title' => get_string('To') . ':',
+        'class' => 'form-inline in-modal',
+        'defaultvalue' => !empty($extra->extra) && isset($extra->extra['end']) ? strtotime($extra->extra['end']) : strtotime('now'),
+        'caloptions' => array(
+            'showsTime' => false,
+        ),
+    );
+
+    $form['elements']['submit'] = array(
+        'type'  => 'submitcancel',
+        'class' => 'btn-primary',
+        'value' => array(get_string('submit'), get_string('cancel')),
+        'goto'  => format_goto(get_config('wwwroot') . 'admin/users/statistics.php?type=' . $type . '&subtype=' . $subtype . '&institution=' . $extra->institution, $extra->extra, array('sort', 'sortdesc')),
+    );
+
+    return $form;
+}
+
+function format_goto($url, $data, $ignore=array(), $currentsort=null) {
+    static $allowed_keys = array('id', 'start', 'end', 'users', 'sort', 'sortdesc');
+
+    if (strpos($url, '?') === false) {
+        $firstjoin = '?';
+    }
+    else {
+        $firstjoin = '&';
+    }
+
+    if (is_array($data)) {
+        $count = 0;
+        foreach ($data as $key => $value) {
+            // To allow the resorting of the columns
+            if ($key == 'sortdesc') {
+               if (isset($data['sort']) && $data['sort'] == $currentsort) {
+                   $value = !$value;
+               }
+               else {
+                   $value = true;
+               }
+            }
+
+            if (in_array($key, $allowed_keys) && !empty($value) && !in_array($key, $ignore)) {
+                if (is_object($value)) {
+                    $value = (array)$value;
+                }
+                if (is_array($value)) {
+                    foreach ($value as $k => $v) {
+                        if ($count < 1) {
+                            $url .= $firstjoin . hsc($key) . '=' . hsc($v);
+                        }
+                        else {
+                            $url .= '&' . hsc($key) . '=' . hsc($v);
+                        }
+                        $count++;
+                    }
+                }
+                else {
+                    if ($count < 1) {
+                        $url .= $firstjoin . hsc($key) . '=' . hsc($value);
+                    }
+                    else {
+                        $url .= '&' . hsc($key) . '=' . hsc($value);
+                    }
+                    $count++;
+                }
+            }
+        }
+    }
+
+    return $url;
+}
+
+/**
+ * To generate the correct class for the sortable column heading
+ *
+ * @param   array   $extra        Array containing current sort and sortdesc information
+ * @param   string  $column       The column the class info is to generated for
+ * @param   string  $class        Pass in any extra classes needed
+ *
+ * @return  string  $class        Containing the CSS classes
+ */
+function format_class($extra, $column, $class = 'search-results-sort-column') {
+    if (isset($extra['sort']) && $extra['sort'] == $column) {
+        if (isset($extra['sortdesc']) && !empty($extra['sortdesc'])) {
+            $class .= ' desc';
+        }
+        else {
+            $class .= ' asc';
+        }
+    }
+
+    return $class;
+}
+
+function reportconfigform_cancel_submit(Pieform $form) {
+    $submitelement = $form->get_element('submit');
+    redirect($submitelement['goto']);
+}
+
+function reportconfigform_submit(Pieform $form, $values) {
+    $submitelement = $form->get_element('submit');
+    $form->reply(PIEFORM_OK, array(
+        'message' => get_string('applyingfilters', 'statistics'),
+        'goto' => $submitelement['goto'],
+        )
+    );
+}
+
+/**
+ * Get report subtypes for this report type
+ * E.g. 'pages' for 'people'
+ */
+function get_report_subtypes($extra) {
+    global $USER;
+
+    switch ($extra->type) {
+        case 'groups':
+            $options = array('groups' => get_string('Groups', 'admin'));
+            break;
+        case 'content':
+            $options = array('content' => get_string('Content', 'admin'));
+            break;
+        case 'information':
+            if (!empty($extra->institution) && $extra->institution != 'all') {
+                $options = array('information' => get_string('Information', 'admin'));
+            }
+            else {
+                $options = array('information' => get_string('Institutions', 'admin'),
+                                 'comparisons' => get_string('reportinstitutioncomparison', 'statistics'),
+                                 'logins' => get_string('logins', 'statistics'),
+                                 );
+            }
+            break;
+        case 'users':
+        default:
+            $options = array('collaboration' => get_string('reportcollaboration', 'statistics'),
+                             'users' => get_string('peoplereports', 'statistics'),
+                             'pageactivity' => get_string('reportpageactivity', 'statistics'),
+                             'useractivity' => get_string('reportuseractivity', 'statistics'),
+                             'accesslist' => get_string('reportaccesslist', 'statistics'),
+                             'masquerading' => get_string('reportmasquerading', 'statistics'),
+                             'userdetails' => get_string('reportuserdetails', 'statistics'),
+                             );
+            break;
+    }
+    asort($options);
+    return $options;
+}
+
+/**
+ * Get report settings string to display what reportform settings are in play
+ */
+function get_report_settings($settings) {
+    $str = '';
+    if (!empty($settings['start'])) {
+        $str .= "<div>";
+        $str .= get_string('timeframe', 'statistics') . format_date(strtotime($settings['start']), 'strftimedate');
+        if (!empty($settings['end'])) {
+            $str .= ' - ';
+            $str .= format_date(strtotime($settings['end']), 'strftimedate');
+        }
+        $str .= "</div>\n";
+    }
+    if (!empty($settings['users'])) {
+        $str .= "<div>";
+        $str .= get_string('selectednusers', 'admin', $settings['users']);
+        $str .= ' <button class="btn btn-default filter" id="removeuserfilter" title="' . get_string('removefilter', 'statistics') . '">
+                     <span class="times">×</span>
+                     <span class="sr-only">' . get_string('removefilter', 'statistics') . '</span>
+                 </button>';
+        $str .= "</div>\n";
+    }
+    return $str;
 }

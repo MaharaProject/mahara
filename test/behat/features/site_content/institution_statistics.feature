@@ -18,10 +18,5 @@ Background:
 Scenario: Viewing user statistics
  Given I log in as "admin" with password "Kupuhipa1"
  # Users without an institution
- When I choose "Statistics" in "Institutions" from administration menu
- Then I should see "Statistics for all institutions"
- And I should see "Site installed"
- # Users with an institution
- When I select "No Institution" from "usertypeselect_institution"
- Then I should see "Institution statistics for 'No Institution'"
- And I should see "Users 3"
+ When I choose "Reports" in "Institutions" from administration menu
+ Then I should see "People overview"

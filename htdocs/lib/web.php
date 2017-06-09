@@ -649,6 +649,10 @@ EOF;
             $smarty->assign('PAGEHEADING', TITLE);
         }
     }
+    // If we want the arrow menu title to be different to the page
+    if (defined('PAGEHEADINGARROW')) {
+        $smarty->assign('PAGEHEADINGARROW', PAGEHEADINGARROW);
+    }
 
     if (defined('SUBSECTIONHEADING')) {
         $smarty->assign('SUBSECTIONHEADING', SUBSECTIONHEADING);
@@ -745,6 +749,10 @@ EOF;
                 $smarty->assign('PAGEHEADING', $group->name);
             }
         }
+    }
+    if (defined('STATISTICSMENU') && $USER->is_logged_in()) {
+        require_once('statistics.php');
+        $smarty->assign('SUBPAGENAV', statistics_get_menu_tabs());
     }
 
     // ---------- sideblock stuff ----------
@@ -868,7 +876,7 @@ EOF;
             local_sideblocks_update($sideblocks);
         }
 
-        usort($sideblocks, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
+        usort($sideblocks, "sort_menu_by_weight");
 
         // Place all sideblocks on the right. If this structure is munged
         // appropriately, you can put blocks on the left. In future versions of
@@ -2565,7 +2573,7 @@ function admin_nav() {
         'manageinstitutions/statistics' => array(
             'path'   => 'manageinstitutions/statistics',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('statistics', 'admin'),
+            'title'  => get_string('reports', 'statistics'),
             'weight' => 100,
         ),
         'manageinstitutions/pendingregistrations' => array(
@@ -2777,7 +2785,7 @@ function institutional_admin_nav() {
         'manageinstitutions/statistics' => array(
             'path'   => 'manageinstitutions/statistics',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('statistics', 'admin'),
+            'title'  => get_string('reports', 'statistics'),
             'weight' => 100,
         ),
         'manageinstitutions/pendingregistrations' => array(
@@ -2823,7 +2831,7 @@ function staff_nav() {
         'institutionalstatistics' => array(
             'path'   => 'statistics',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('institutionstatistics', 'admin'),
+            'title'  => get_string('institutionreports', 'admin'),
             'weight' => 30,
             'accesskey' => 'i',
         ),
@@ -2864,7 +2872,7 @@ function institutional_staff_nav() {
         'institutionalstatistics' => array(
             'path'   => 'statistics',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('institutionstatistics', 'admin'),
+            'title'  => get_string('institutionreports', 'admin'),
             'weight' => 20,
             'accesskey' => 'i',
         ),
@@ -4252,6 +4260,7 @@ function build_pagination($params) {
         $js .= "new Paginator($id, $datatable, $heading, $jsonscript, $extradata);";
     }
     else {
+        $extradata = null;
         $js .= "new Paginator($id, null, null, null, null);";
     }
 

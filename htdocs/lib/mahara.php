@@ -5036,3 +5036,23 @@ function no_accents($str) {
     );
     return strtr($str, $accents);
 }
+
+/**
+ * Sort menu by the weight value
+ * Centralise the custom value_compare_function for the usort of various menus
+ */
+function sort_menu_by_weight($a, $b) {
+    // Only items with a "weight" component need to get sorted. Ones without weight can go first.
+    if (!array_key_exists('weight', $a)) {
+        return -1;
+    }
+    if (!array_key_exists('weight', $b)) {
+        return 1;
+    }
+    $aweight = $a['weight'];
+    $bweight = $b['weight'];
+    if ($aweight == $bweight) {
+        return 0;
+    }
+    return ($aweight < $bweight) ? -1 : 1;
+}

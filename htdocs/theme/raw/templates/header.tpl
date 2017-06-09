@@ -105,7 +105,11 @@
                         <div class="arrow-bar {$item.subnav.class}">
                             <span class="arrow hidden-xs">
                                 <span class="text">
-                                {if isset($PAGEHEADING)}{$PAGEHEADING}{/if}
+                                {if isset($PAGEHEADINGARROW)}
+                                    {$PAGEHEADINGARROW}
+                                {elseif isset($PAGEHEADING)}
+                                    {$PAGEHEADING}
+                                {/if}
                                 </span>
                             </span>
                             <span class="right-text">

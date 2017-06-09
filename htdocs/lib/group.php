@@ -1590,6 +1590,15 @@ function group_get_role_info($groupid) {
     return $roles;
 }
 
+function group_display_name($groupid) {
+    return hsc(get_field('group', 'name', 'id', $groupid));
+}
+
+function group_display_role($groupid, $role) {
+    $roles = group_get_role_info($groupid);
+    return $roles[$role]->display;
+}
+
 function group_get_default_artefact_permissions($groupid) {
     $permissions = array();
     $records = get_records_sql_array('
@@ -2043,23 +2052,7 @@ function group_get_menu_tabs() {
     }
 
     // Sort the menu items by weight
-    uasort($menu, function($a, $b){
-
-        // Only items with a "weight" component need to get sorted. Ones without weight can go first.
-        if (!array_key_exists('weight', $a)) {
-            return -1;
-        }
-        if (!array_key_exists('weight', $b)) {
-            return 1;
-        }
-
-        $aweight = $a['weight'];
-        $bweight = $b['weight'];
-        if ($aweight == $bweight) {
-            return 0;
-        }
-        return ($aweight < $bweight) ? -1 : 1;
-    });
+    uasort($menu, "sort_menu_by_weight");
 
     return $menu;
 }

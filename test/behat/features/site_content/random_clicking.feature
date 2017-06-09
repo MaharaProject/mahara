@@ -94,8 +94,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Pages and collections" in "Institutions" from administration menu
     And I choose "Share" in "Institutions" from administration menu
     And I choose "Files" in "Institutions" from administration menu
-    And I choose "Statistics" in "Institutions" from administration menu
-    And I follow "Logins"
+    And I choose "Reports" in "Institutions" from administration menu
     And I choose "Pending registrations" in "Institutions" from administration menu
     # Checking Extensions Menu and submenu
     And I choose "Plugin administration" in "Extensions" from administration menu

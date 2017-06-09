@@ -24,6 +24,7 @@ $string['coredata'] = 'core data';
 $string['coredatasuccess'] = 'Successfully installed core data';
 $string['fromversion'] = 'From version';
 $string['information'] = 'Information';
+$string['Information'] = 'Information';
 $string['installingplugin'] = 'Installing %s';
 $string['installsuccess'] = 'Successfully installed version ';
 $string['toversion'] =  'To version';
@@ -263,7 +264,7 @@ $string['Open'] = 'Open';
 $string['reopensite'] = 'Reopen site';
 $string['reopensitedetail'] = 'Your site is closed. Site administrators may stay logged in until an upgrade is detected.';
 
-// Statistics
+// Statistics / Reports
 $string['siteinformation'] = 'Site information';
 $string['viewfullsitestatistics'] = 'View full site statistics';
 $string['institutioncreated_all'] = 'Site installed';
@@ -303,9 +304,6 @@ $string['blockcountsbytype'] = 'Most frequently used blocks in portfolio pages';
 $string['uptodate'] = 'up to date';
 $string['latestversionis'] = 'latest version is <a href="%s">%s</a>';
 $string['viewsbytype'] = 'Pages by type';
-$string['userstatstabletitle'] = 'Daily user statistics';
-$string['groupstatstabletitle'] = 'Biggest groups';
-$string['viewstatstabletitle'] = 'Most popular pages';
 $string['institutionloginstabletitle'] = 'Active institutions';
 $string['institutionloginstablesubtitle'] = 'For %s - %s';
 $string['visitedtimesrank'] = 'visited %s times, ranked number %s';
@@ -319,16 +317,17 @@ $string['exportgroupscsv'] = 'Export groups in CSV format';
 $string['exportgroupmembershipscsv'] = 'Export group membership in CSV format';
 $string['exportgroupmembershipscsvspecific'] = 'Export group membership in CSV format for "%s"';
 
-// Institution statistics
-$string['statistics'] = 'Statistics';
-$string['institutionstatistics'] = 'Institution statistics';
+// Institution statistics / reports
+$string['nostatistics'] = 'There are currently no statistiscs to display for this institution';
+// $string['institutionstatistics'] = 'Institution statistics';
+$string['institutionreports'] = 'Institution reports';
 $string['institutionstatisticsfor'] = 'Institution statistics for \'%s\'';
 $string['institutioncreated'] = 'Institution created';
-
-// Registration statistics
-$string['contentstatstabletitle'] = 'Content statistics for the current week';
-$string['historicalstatstabletitle'] = 'Historical statistics for field \'%s\'';
-$string['institutionstatstabletitle'] = 'Comparison of institution statistics';
+$string['People'] = 'People';
+$string['Groups'] = 'Groups';
+$string['Content'] = 'Content';
+$string['configurereport'] = 'Configure report';
+$string['Columns'] = 'Columns';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';
@@ -1149,6 +1148,10 @@ $string['bulkprobationpointssuccess'] = array(
     1 => 'Set probation points to %2$d for %1$d users'
 );
 $string['selectedusers'] = 'Selected users';
+$string['selectednusers'] = array(
+    0 => '1 user selected',
+    1 => '%s users selected',
+);
 $string['remoteuser'] = 'Remote username';
 $string['userreports'] = 'User reports';
 $string['userreportsdescription'] = 'View or download information about the users you selected on the search page.';
@@ -1310,5 +1313,4 @@ $string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for serie
 
 $string['withselectedcontentexport'] = 'Re-queue items into the export queue';
 $string['withselectedcontentdelete'] = 'Delete selected items from the export queue';
-
-$string['statisticsforallinstitutions'] = 'Statistics for all institutions';
+$string['allothers'] = 'All others';

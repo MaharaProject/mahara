@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Hugh Davenport <hugh@catalyst.net.nz
+ * @author     Catalyst IT Ltd
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -29,31 +29,31 @@ if (empty($institution)) {
         $institution = 'mahara';
     }
 }
-$start = param_variable('start', null);
-$end = param_variable('end', null);
-$start = $start ? format_date(strtotime($start), 'strftimew3cdate') : null;
-$end = $end ? format_date(strtotime($end), 'strftimew3cdate') : null;
-if (empty($extradata->start) && !empty($start)) {
-    $extradata->start = $start;
-}
-if (empty($extradata->end) && !empty($end)) {
-    $extradata->end = $end;
-}
-
 $type = param_alpha('type', 'users');
 $subtype = param_alpha('subtype', $type);
 $extraparams = new stdClass();
 $extraparams->type = $type;
 $extraparams->subtype = $subtype;
+$extraparams->institution = $institution;
 $extraparams->offset = param_integer('offset', 0);
 $extraparams->limit  = param_integer('limit', 10);
 $extraparams->sort = isset($extradata->sort) ? $extradata->sort : 'displayname';
 $extraparams->sortdesc = isset($extradata->sortdesc) ? true : false;
-$extraparams->start = $start;
-$extraparams->end = $end;
+$extraparams->start = param_alphanumext('start', null);
+$extraparams->end = param_alphanumext('end', null);
 $extraparams->field = isset($extradata->field) ? $extradata->field : (($institution == 'all') ? 'count_usr' : 'count_members');
 $extraparams->extra = (array)$extradata;
 
-list($subpages, $subpagedata) = display_statistics($institution, $type, $extraparams);
+$formarray = report_config_form($extraparams);
+$form = $formarray ? pieform($formarray) : '';
 
-json_reply(false, (object) array('message' => false, 'data' => $subpagedata['table'], 'tableheadings' => $subpagedata['tableheadings'], 'extraparams' => $extraparams));
+$reportinfo = get_string('reportdesc' . $subtype, 'statistics');
+
+$smarty = smarty_core();
+$smarty->assign('form', $form);
+$smarty->assign('reportinformation', $reportinfo);
+
+$html = $smarty->fetch('admin/users/statsconfig.tpl');
+
+$data['html'] = $html;
+json_reply(false, (object) array('message' => false, 'data' => $data));
