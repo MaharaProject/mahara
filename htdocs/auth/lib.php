@@ -2430,6 +2430,12 @@ function auth_register_submit(Pieform $form, $values) {
     global $SESSION;
 
     safe_require('auth', 'internal');
+    // We need to sanitize the $values to avoid hacking vectors
+    // There should not be any HTML/JS in the fields so we clean it with htmlpurifier
+    // Then remove even the safe html tags
+    foreach ($values as $key => $value) {
+        $values[$key] = strip_tags(clean_html($value));
+    }
     $values['key'] = get_random_key();
     $values['lang'] = $SESSION->get('lang');
 
