@@ -233,6 +233,16 @@ class BehatHooks extends BehatBase {
 //     }
 
     /**
+     * @BeforeScenario
+     *
+     * @param BeforeScenarioScope $scope
+     *
+     */
+    public function setUpTestEnvironment($scope) {
+        $this->currentScenario = $scope->getScenario();
+    }
+
+    /**
      * Wait for JS to complete after finishing the step.
      *
      * With this we ensure that there are not AJAX calls
@@ -279,6 +289,24 @@ class BehatHooks extends BehatBase {
         if (!empty($CFG->behat_faildump_path) &&
                 $scope->getTestResult()->getResultCode() === 99) {
             $this->take_contentdump($scope);
+        }
+
+        // if test has failed, and is not an api test, get screenshot
+
+        if (!$scope->getTestResult()->isPassed()) {
+            // create filename string
+
+            $featureFolder = preg_replace('/\W/', '', $scope->getFeature()->getTitle());
+            $scenarioName = $this->currentScenario->getTitle();
+            $fileName = preg_replace('/\W/', '', $scenarioName) . '.png';
+
+            // create screenshots directory if it doesn't exist
+            if (!file_exists($CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder)) {
+                mkdir($CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder, $CFG->directorypermissions, true);
+            }
+
+            // For Selenium2 Driver you can use:
+            file_put_contents($CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder . '/' . $fileName, $this->getSession()->getDriver()->getScreenshot());
         }
     }
 
@@ -490,4 +518,3 @@ class BehatHooks extends BehatBase {
     }
 
 }
-

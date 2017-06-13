@@ -139,7 +139,7 @@ try {
             // Update behat and dependencies using composer
             testing_update_dependencies();
         }
-
+        BehatConfigManager::update_config_file();
         // Other possible actions we may need to take.
         switch ($statuscode) {
             case BEHAT_MAHARA_EXITCODE_NOTINSTALLED:

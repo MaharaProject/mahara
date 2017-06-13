@@ -150,7 +150,10 @@ class BehatConfigManager {
             'default' => array(
                 'autoload' => array($basedir . DIRECTORY_SEPARATOR . 'classes'),
                 'formatters' => array(
-                    'progress' => true
+                    'progress' => true,
+                    'html' => array(
+                      'output_path' => '%paths.base%/html_results/'
+                    ),
                 ),
                 'extensions' => array(
                     'Behat\MinkExtension' => array(
@@ -163,6 +166,14 @@ class BehatConfigManager {
                         ),
                         'goutte' => null,
                      ),
+                     'emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension' => array(
+                       'name' => 'html',
+                       'renderer' => 'Twig,Behat2',
+                       'file_name' => 'index',
+                       'print_args' => 'true',
+                       'print_outp' => 'true',
+                       'loop_break' => 'true'
+                     )
                 ),
                 'suites' => $suites
             )

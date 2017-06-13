@@ -2,8 +2,10 @@
 
 # Get action and Mahara dir
 ACTION=$1
+REPORT=$3
 SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
 MAHARAROOT=`dirname $( dirname $( dirname "$SCRIPTPATH" ))`
+BEHATROOT=`grep -v '^//\|^#' $MAHARAROOT/htdocs/config.php | grep behat_dataroot | grep -o "['\"].*['\"];" | sed "s/['\";]//g"`
 SERVER=0
 test -z $SELENIUM_PORT && export SELENIUM_PORT=4444
 test -z $PHP_PORT && export PHP_PORT=8000
@@ -27,6 +29,11 @@ function is_selenium_running {
 function cleanup {
     echo "Shutdown Selenium"
     curl -o /dev/null --silent http://localhost:${SELENIUM_PORT}/selenium-server/driver/?cmd=shutDownSeleniumServer
+
+    if [[ $REPORT ]]
+    then
+        xdg-open file://${BEHATROOT}/behat/html_results/index.html
+    fi
 
     if [[ $SERVER ]]
     then
@@ -66,7 +73,7 @@ then
     PERFORM=$2
     php htdocs/testing/frameworks/behat/cli/util.php --$PERFORM
 
-elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" -o "$ACTION" = "rundebug" -o "$ACTION" = "runfresh" -o $ACTION = 'rundebugheadless' ]
+elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" -o "$ACTION" = "rundebug" -o "$ACTION" = "runfresh" -o "$ACTION" = "rundebugheadless" ] && [ "$2" != "html" ]
 then
 
     if [[ $2 == @* ]]; then
@@ -138,11 +145,19 @@ then
     BEHATCONFIGFILE=`php htdocs/testing/frameworks/behat/cli/util.php --config`
     echo "Run Behat..."
 
-
+    #added html format for html report
     OPTIONS=''
-    if [ $ACTION = 'rundebug' -o $ACTION = 'rundebugheadless' ]
+    if [[ $REPORT == 'html' ]]
+      then
+      if [ "$ACTION" = "rundebug" -o "$ACTION" = "rundebugheadless" ]
+      then
+          OPTIONS=$OPTIONS" --format=pretty --format=html"
+      else
+          OPTIONS=$OPTIONS" --format=progress --format=html"
+      fi
+    elif [ "$ACTION" = "rundebug" -o "$ACTION" = "rundebugheadless" ]
     then
-        OPTIONS=$OPTIONS" --format=pretty"
+          OPTIONS=$OPTIONS" --format=pretty"
     fi
 
     if [ "$TAGS" ]; then
@@ -186,6 +201,13 @@ else
     echo ""
     echo "# Run in headless mode with extra debug output:"
     echo "mahara_behat rundebugheadless"
+    echo ""
+    echo "# To run html report option, add html as the third command line argument."
+    echo "# Ex 1. To run selected tests:"
+    echo "mahara_behat runheadless example.feature html"
+    echo "# Ex 2. To run the whole suite:"
+    echo "mahara_behat runheadless null html"
+    echo "# If running linux, the report will open automatically, otherwise you'll find it in your behat dataroot"
     echo ""
     echo "# Enable test site:"
     echo "mahara_behat action enable"
