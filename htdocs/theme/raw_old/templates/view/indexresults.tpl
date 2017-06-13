@@ -146,7 +146,11 @@
                                     {if $view.numviews > 0}
                                     <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false">
                                         <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
-                                        <span class="page-count">{$view.numviews}</span>
+                                        <span class="page-count">{if $view.framework}
+                                                                    {$view.numviews + 1}
+                                                                 {else}
+                                                                    {$view.numviews}
+                                                                 {/if}</span>
                                         <span class="icon icon-file close-indicator" role="presentation" aria-hidden="true">
                                             {if $view.numviews > 1}
                                             <span class="collection-indicator few"></span>
