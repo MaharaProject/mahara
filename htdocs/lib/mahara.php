@@ -3743,7 +3743,7 @@ function progressbar_sideblock($preview=false) {
         // Set user's first institution in case that institution isn't
         // set yet or user is not member of currently set institution.
         if (!$institution || !array_key_exists($institution, $institutions)) {
-            $institution = key(array_slice($institutions, 0, 1));
+            $institution = get_institution_by_current_theme();
         }
     }
     else {

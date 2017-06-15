@@ -1108,3 +1108,26 @@ function plugin_institution_prefs_submit(Pieform $form, $values, Institution $in
         call_static_method(generate_class_name($i->plugintype, $i->name), 'institutionprefs_submit', $form, $values, $institution);
     }
 }
+
+/**
+ * Get current institution by theme.
+ * If the user account theme is set use that otherwise use
+ * the first institution the user belongs to.
+ *
+ * @return $string Name of institution
+ */
+function get_institution_by_current_theme() {
+    global $USER;
+    $usrtheme = $USER->get_account_preference('theme');
+    if ($usrtheme) {
+        $list = (explode('/', $usrtheme));
+        if (count($list) > 1 && !empty($list[1])) {
+            return $list[1];
+        }
+    }
+    $institutions = $USER->institutions;
+    if (!empty($institutions)) {
+        return key(array_slice($institutions, 0, 1));
+    }
+    return 'mahara';
+}
