@@ -3628,6 +3628,17 @@ function clean_html($text, $xhtml=false) {
     $config->set('Attr.EnableID', true);
     $config->set('Attr.IDPrefix', 'user_');
 
+    // Allow base64 images via the 'data' option
+    // need to set all the allowed schemes for this to work
+    $config->set('URI.AllowedSchemes', array('http' => true,
+                                             'https' => true,
+                                             'mailto' => true,
+                                             'ftp' => true,
+                                             'nntp' => true,
+                                             'news' => true,
+                                             'tel' => true,
+                                             'data' => true));
+
     $customfilters = get_htmlpurifier_custom_filters();
     if (!empty($customfilters)) {
         $config->set('Filter.Custom', $customfilters);
