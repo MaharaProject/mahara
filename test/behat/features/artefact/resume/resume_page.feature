@@ -94,7 +94,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     And I click on "Move down" in "Test" row
     And I click on "Move up" in "Test" row
     # Adding Achievements
-    And I scroll to the top
+    And I scroll to the base of id "messages"
     And I follow "Achievements"
     And I scroll to the base of id "addcertificationbutton"
     And I click on "Add certifications, accreditations and awards"
