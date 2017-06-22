@@ -201,7 +201,10 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
                 'width' => '100%',
                 'height' => $height . 'px',
                 'defaultvalue' => $text,
-                'rules' => array('maxlength' => 65536),
+                'rules' => array(
+                    'maxlength' => 65536,
+                    'required' => true
+                ),
             ),
             'annotationreadonlymsg' => array(
                 'type' => 'html',
@@ -455,7 +458,6 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
                 });
             }
         });
-
 EOF;
     }
 }

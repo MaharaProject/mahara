@@ -27,8 +27,17 @@ Scenario: Accessing annotation block (Bug 1443730)
  And I follow "Annotation"
  And I press "Add"
  And I press "Save"
+# Checking empty annotation message
+ And I am on homepage
+ And follow "My page is amazing"
+ And I follow "Edit"
+ And I expand "General" node
+ And I follow "Annotation"
+ And I press "Add"
+ And I press "Save"
+ And I should see "This field is required"
 # Checking that the block saved by using the one thing on the page that changed.
- And I display the page
+ And I am on homepage
+ And follow "My page is amazing"
  And I should see "Annotation"
  And I should see "My page is amazing"
-
