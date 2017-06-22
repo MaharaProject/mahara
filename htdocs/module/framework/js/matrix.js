@@ -163,16 +163,25 @@ jQuery(function($) {
                         values[item.name] = item.value;
                     }
                 });
-                values['tags'] = tags.join();
-                values['framework'] = params.framework;
-                values['view'] = params.view;
-                values['option'] = params.option;
-                values['action'] = 'update';
-                if (hastinymce) {
-                    tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+
+                if (values["text"].length == 0) {
+                    if ($("#instconf_text").parent().find('.errmsg').length == 0) {
+                        $("#instconf_text").parent().append('<div class="errmsg"><span>' + get_string_ajax('annotationempty', 'artefact.annotation') + '</span></div>');
+                    }
+                    $('#instconf button.submitcancel.submit').prop("disabled", false);
                 }
-                editmatrix_update(values);
-                hide_dock();
+                else {
+                    values['tags'] = tags.join();
+                    values['framework'] = params.framework;
+                    values['view'] = params.view;
+                    values['option'] = params.option;
+                    values['action'] = 'update';
+                    if (hastinymce) {
+                        tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                    }
+                    editmatrix_update(values);
+                    hide_dock();
+                }
             });
             // When we are saving the annotation feedback form - changing the evidence status
             $('#annotationfeedback').on('submit', function(se) {
