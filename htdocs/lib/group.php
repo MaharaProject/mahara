@@ -1487,20 +1487,17 @@ function group_view_submission_form($groupid) {
         'autofocus' => false,
         'successcallback' => 'group_view_submission_form_submit',
         'elements' => array(
-            'text1' => array(
-                'type' => 'html',
-                'class' => 'forassessment text-inline text-small',
-                'value' => get_string('forassessment1', 'view'),
-            ),
             'inputgroup' => array(
                 'type' => 'fieldset',
                 'class' => 'input-group',
                 'elements' => array(
                     'options' => array(
                         'type' => 'select',
+                        'title' => get_string('forassessment1', 'view'),
                         'collapseifoneoption' => false,
                         'optgroups' => $optgroups,
                         'options' => $options,
+                        'class' => 'forassessment text-inline text-small',
                     ),
                     'submit' => array(
                         'type' => 'button',

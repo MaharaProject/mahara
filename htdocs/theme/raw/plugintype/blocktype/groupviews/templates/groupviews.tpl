@@ -118,7 +118,28 @@
     {/if}
     <hr />
 {/if}
-
+{if $nosubmissions}
+    <h4 class="title list-group-item-heading">
+        {str tag="nosubmissionsfrom" section="view"}:
+    </h4>
+    <ul id="nosubmissionslist" class="list-group grouppages">
+        {$nosubmissions.tablerows|safe}
+    </ul>
+    {if $nosubmissions.pagination}
+        <div id="nosubmissions_page_container" class="hidden pagination-container">
+            {$nosubmissions.pagination|safe}
+        </div>
+    {/if}
+    {if $nosubmissions.pagination_js}
+    <script>
+        jQuery(function($) {literal}{{/literal}
+            {$nosubmissions.pagination_js|safe}
+            $('#nosubmissions_page_container').removeClass('hidden');
+        {literal}}{/literal});
+    </script>
+    {/if}
+    <hr />
+{/if}
 
 {if $mysubmitted || $group_view_submission_form}
     <h4 class="title list-group-item-heading">

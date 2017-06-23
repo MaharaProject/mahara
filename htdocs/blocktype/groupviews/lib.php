@@ -68,6 +68,8 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                 'count' => $items['count'],
                 'limit' => $items['limit'],
                 'offset' => $items['offset'],
+                'jumplinks'  => (!empty($pagination['jumplinks']) ? $pagination['jumplinks'] : 0),
+                'numbersincludeprevnext' => (!empty($pagination['numbersincludeprevnext']) ? $pagination['numbersincludeprevnext'] : 1),
                 'numbersincludefirstlast' => false,
                 'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
                 'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
@@ -78,6 +80,8 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $USER;
+
         $configdata = $instance->get('configdata');
         if (!isset($configdata['showgroupviews'])) {
             // If not set, use default
@@ -163,6 +167,22 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         }
         if (!$editing && isset($data['group_view_submission_form'])) {
             $dwoo->assign('group_view_submission_form', $data['group_view_submission_form']);
+        }
+        // Get members who have no submitted work - only show to those allowed to see submitted work
+        if (!empty($configdata['showsubmitted']) && group_user_can_assess_submitted_views($groupid, $USER->get('id')) && isset($data['nosubmissions'])) {
+            $nosubmissions = $data['nosubmissions'];
+            $pagination = array(
+                'baseurl'    => $baseurl,
+                'id'         => 'nosubmissions_pagination',
+                'datatable'  => 'nosubmissionslist',
+                'jsonscript' => 'blocktype/groupviews/nosubmissions.json.php',
+                'jumplinks'  => 6,
+                'numbersincludeprevnext' => 3,
+                'resultcounttextsingular' => get_string('member', 'group'),
+                'resultcounttextplural'   => get_string('members', 'group'),
+            );
+            self::render_items($nosubmissions, 'blocktype:groupviews:nosubmissions.tpl', $configdata, $pagination);
+            $dwoo->assign('nosubmissions', $nosubmissions);
         }
 
         return $dwoo->fetch('blocktype:groupviews:groupviews.tpl');
@@ -373,6 +393,16 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                     'limit'  => $limit,
                     'offset' => 0,
                 );
+
+                // Display a list of members who are yet to submit views to the group
+                $nosubmissions = self::find_members_without_submissions($group->id);
+
+                $data['nosubmissions'] = array(
+                    'data'   => array_slice($nosubmissions, 0, $limit),
+                    'count'  => count($nosubmissions),
+                    'limit'  => $limit,
+                    'offset' => 0,
+                );
             }
 
         }
@@ -394,6 +424,32 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         }
         $data['group'] = $group;
         return $data;
+    }
+
+    /**
+     * Return list of members that have not submitted any pages/collections to the group
+     *
+     * @param integer $groupid The group to check
+     *
+     * @return array $members
+     */
+    public static function find_members_without_submissions($groupid) {
+        if ($nosubmissions = get_records_sql_array("SELECT u.id FROM {usr} u JOIN {group_member} gm ON gm.member = u.id
+                                                    WHERE gm.group = ? AND u.deleted = 0 AND gm.member NOT IN (
+                                                        SELECT DISTINCT m.member FROM {group} g
+                                                        JOIN {group_member} m ON m.group = g.id
+                                                        JOIN {view} v ON v.owner = m.member
+                                                        WHERE g.id = ?
+                                                        AND g.submittableto = 1
+                                                        AND v.submittedgroup = g.id
+                                                    ) ORDER BY u.lastname, u.firstname", array($groupid, $groupid))) {
+            foreach ($nosubmissions as $member) {
+                $member->displayname = display_name($member->id);
+                $member->url = profile_url($member->id);
+            }
+            return $nosubmissions;
+        }
+        return array();
     }
 
     public static function get_instance_title() {

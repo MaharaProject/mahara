@@ -105,6 +105,7 @@ $string['nosharedviewsyet'] = 'There are no pages shared with this group yet';
 $string['viewssharedtogroupbyothers'] = 'Pages shared with this group by others';
 $string['submissionstogroup'] = 'Submissions to this group';
 $string['nosubmittedviewscollectionsyet'] = 'There are no pages or collections submitted to this group yet';
+$string['nosubmissionsfrom'] = 'Members without a submission to the group';
 $string['submittogroup'] = 'Submit a page or collection to this group';
 $string['yoursubmissions'] = 'You have submitted';
 $string['youhavesubmitted'] = 'You have submitted <a href="%s">%s</a> to this group';
