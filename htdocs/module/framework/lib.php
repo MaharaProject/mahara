@@ -59,10 +59,6 @@ class PluginModuleFramework extends PluginModule {
             if (!is_plugin_active('annotation', 'blocktype')) {
                  set_field('blocktype_installed', 'active', 1, 'name', 'annotation');
             }
-            require_once('file.php');
-            if (!@rmdirr($matricesdir)) {
-                log_warn(get_string('manuallyremovematrices', 'module.framework', $matricesdir), true, false);
-            }
         }
     }
 
