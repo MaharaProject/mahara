@@ -30,8 +30,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I expand "Personal info" node
  And I follow "Social media"
  And I press "Add"
- And I set the following fields to these values:
- | Facebook (Social media) | 1 |
+ And I check "Facebook (Social media)"
  And I follow "Display settings"
  And the field "buttons with icons and text" matches value "1"
  And I press "Save"
@@ -44,6 +43,6 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  # Logging in as userB to try see the buttons
  Given I log in as "userB" with password "Kupuhipa1"
  And I follow "Open source is for winners"
- And I wait "1" seconds
+ And I scroll to the base of id "messages"
  And I should see "Social Media"
  And I should see "Facebook"
