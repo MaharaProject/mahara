@@ -68,6 +68,12 @@ if (!can_view_view($view->get('id'))) {
 $frameworkid = $collection->get('framework');
 $framework = new Framework($frameworkid);
 $standards = $framework->standards();
+// Set the sections being open/closed based on session info
+$settings = !empty($SESSION->get('matrixsettings')) ? $SESSION->get('matrixsettings') : array();
+foreach ($standards['standards'] as $standard) {
+    $settingstate = isset($settings[$collectionid][$standard->id]) ? $settings[$collectionid][$standard->id] : 'open';
+    $standard->settingstate = $settingstate;
+}
 
 define('TITLE', $collection->get('name'));
 
@@ -141,6 +147,7 @@ EOF;
 
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('maintitle', $collection->get('name'));
+$smarty->assign('collectionid', $collection->get('id'));
 $smarty->assign('owner', $owner);
 $smarty->assign('PAGEHEADING', null);
 $smarty->assign('name', $framework->get('name'));

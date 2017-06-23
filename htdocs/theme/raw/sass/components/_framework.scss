@@ -5,6 +5,7 @@
     tr {
         &.standard {
             background: darken($table-bg-accent, 2%) !important;
+            cursor: pointer;
         }
     }
 

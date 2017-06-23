@@ -271,4 +271,30 @@ jQuery(function($) {
             $(this).find('.popover').addClass('hidden');
         }
     );
+
+    // Allow for the expand/collapse of the standards
+    $('tr.standard').off(); // clear any existing click state
+    $('tr.standard').on('click', function() {
+        var section = $(this);
+        var id = section.data('standard');
+        var state = null;
+        if (section.attr('aria-expanded') === 'true') {
+            section.attr('aria-expanded', 'false');
+            section.addClass('collapsed');
+            state = 'closed';
+        }
+        else {
+            section.attr('aria-expanded', 'true');
+            section.removeClass('collapsed');
+            state = 'open';
+        }
+        var params = {};
+        params.section = id;
+        params.state = state;
+        params.collection = section.data('collection');
+        sendjsonrequest('matrixstate.json.php', params, 'POST', function(data) {
+            // Use json request to set the info to session
+        });
+        $('tr.examplefor' + id).toggle('600', 'swing').removeClass('hidden');
+    });
 });
