@@ -4909,5 +4909,31 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016090226) {
+        log_debug('Update view positions in collections again for new fix when deleting views in collections');
+        $sql = 'SELECT collection, COUNT(*) - 1 AS count, MAX(displayorder) AS maxposition
+                FROM {collection_view}
+                GROUP BY collection
+                HAVING COUNT(*) - 1 != MAX(displayorder)';
+
+        $collections = get_records_sql_array($sql);
+
+        if ($collections) {
+            require_once(get_config('libroot') . 'collection.php');
+            $count = 0;
+            $limit = 1000;
+            $total = count($collections);
+            foreach ($collections as $collectiondata) {
+                $collection = new Collection($collectiondata->collection);
+                $collection->update_display_order();
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
