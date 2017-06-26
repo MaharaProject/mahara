@@ -17,3 +17,4 @@ Changes:
  * Adding the 'aria-hidden="true"' to presentation icons
  * Bug 1605110: Modified the "table" plugin to style the table through CSS instead of HTML attributes
  * Add TinyMCE imagebrowser plugin: plugins/imagebrowser/plugin.js
+ * Bug 1699074: Added code from TinyMCE bug fix TINY-929 for allowing an image to have a linked URL
