@@ -2306,7 +2306,7 @@ function admin_nav() {
             'url'    => 'admin/site/options.php',
             'title'  => get_string('configsite', 'admin'),
             'weight' => 20,
-            'accesskey' => 'c',
+            'accesskey' => 's',
         ),
         'configsite/siteoptions' => array(
             'path'   => 'configsite/siteoptions',
@@ -2417,7 +2417,7 @@ function admin_nav() {
             'title'  => get_string('groups', 'admin'),
             'accessibletitle' => get_string('administergroups', 'admin'),
             'weight' => 40,
-            'accesskey' => 'g',
+            'accesskey' => 'r',
         ),
         'managegroups/groups' => array(
             'path'   => 'managegroups/groups',
