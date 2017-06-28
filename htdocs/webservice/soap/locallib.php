@@ -286,9 +286,9 @@ class webservice_soap_server extends webservice_zend_server {
         if (!empty($this->publickey)) {
             // A singleton provides our site's SSL info
             require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
-            $HTTP_RAW_POST_DATA = file_get_contents('php://input');
+            $rawHTTPdata = file_get_contents('php://input');
             $openssl = OpenSslRepo::singleton();
-            $payload                 = $HTTP_RAW_POST_DATA;
+            $payload                 = $rawHTTPdata;
             $this->payload_encrypted = false;
             $this->payload_signed    = false;
 
