@@ -71,6 +71,9 @@
                 }
             }
         }
+        .dropdown-toggle:focus {
+            outline: 1px dotted $theme-text-lighttone-color;
+        }
 
         .dropdown-menu {
             top: 100%;
