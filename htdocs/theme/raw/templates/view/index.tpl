@@ -33,11 +33,11 @@
 
     </div>
     {* Modal form *}
-    <div class="modal fade" id="addview-form">
+    <div tabindex="0" class="modal fade" id="addview-form">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="btn close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">
                         <span class="icon icon-lg icon-plus prs"></span>
                         {str tag=confirmaddtitle section=view}
@@ -73,6 +73,12 @@
         window.location = url;
     });
 
+    $('.modal').on('shown.bs.modal', function() {
+        $('#add-collection-button').focus();
+    });
+    $('.modal').on('hidden.bs.modal', function() {
+        $('#addview-button').focus();
+    });
     </script>
 
 {include file="footer.tpl"}
