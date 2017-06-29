@@ -6,6 +6,7 @@
 
     .logo-area,
     .logo,
+    .logoxs,
     .admin-title,
     .loading-box {
         float: left;
@@ -17,6 +18,27 @@
             height: 45px;
         }
     }
+
+    .logo.change-to-small {
+        img {
+            @media (max-width: 415px) {
+              display: none;
+            }
+        }
+    }
+
+    .logoxs {
+        padding: 6px 0;
+        margin-right: 15px;
+        img {
+            display: none;
+            @media (max-width: 415px) {
+              display: inherit;
+              height: 48px;
+            }
+        }
+    }
+
     .admin-title {
         margin: 15px 10px 5px 0;
         @media (max-width: $screen-sm-min - 1) {

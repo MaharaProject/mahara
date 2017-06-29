@@ -283,6 +283,7 @@ $string['onlyfiveprofileicons'] = 'You may upload only five profile pictures.';
 $string['or'] = 'or';
 $string['profileiconuploadexceedsquota'] = 'Uploading this profile picture would exceed your disk quota. Try deleting some files you have uploaded.';
 $string['profileiconimagetoobig'] = 'The picture you uploaded was too big (%sx%s pixels). It must not be larger than %sx%s pixels.';
+$string['profileiconxsnotsquare'] = 'The picture you uploaded for the small logo does not have the correct dimensions. Please upload a square logo.';
 $string['uploadingfile'] = 'uploading file...';
 $string['uploadprofileicon'] = 'Upload profile picture';
 $string['uploadedprofileicon'] = 'Uploaded profile picture';

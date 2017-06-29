@@ -871,6 +871,7 @@ class User {
         $staffinstitutions = array();
         $themename = get_config('theme');
         $headerlogo = null;
+        $headerlogosmall = null;
         $stylesheets = array();
         $themeinstitution = null;
         foreach ($institutions as $name => $i) {
@@ -895,6 +896,7 @@ class User {
         if (!is_null($themeinstitution)) {
             $themename  = $institutions[$themeinstitution]->theme;
             $headerlogo = $institutions[$themeinstitution]->logo;
+            $headerlogosmall = $institutions[$themeinstitution]->logoxs;
             if ($institutions[$themeinstitution]->style) {
                 $stylesheet = get_config('wwwroot') . 'style.php?id=' . $institutions[$themeinstitution]->style;
                 if ($nocachecss) {
@@ -906,6 +908,7 @@ class User {
         $this->institutiontheme = (object) array(
             'basename'    => $themename,
             'headerlogo'  => $headerlogo,
+            'headerlogosmall'  => $headerlogosmall,
             'stylesheets' => $stylesheets,
             'institutionname' => $themeinstitution,
         );
@@ -932,6 +935,7 @@ class User {
                     return (object) array(
                         'basename'    => $institution->theme,
                         'headerlogo'  => $institution->logo,
+                        'headerlogosmall' => $institution->logoxs,
                         'stylesheets' => array_unique($stylesheets),
                         'institutionname' => $iid,
                     );

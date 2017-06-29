@@ -41,6 +41,22 @@
     <header class="header navbar-fixed-top no-site-messages">
         <div class="navbar navbar-default navbar-main">
             <div class="container">
+                <div id="logo-area" class="logo-area">
+                    <a href="{$WWWROOT}" class="logo {if $sitelogosmall}change-to-small{/if} ">
+                        <img src="{$sitelogo}" alt="{$sitename}" data-customlogo="{$sitelogocustom}">
+                    </a>
+                    {if $sitelogosmall}
+                        <a href="{$WWWROOT}" class="logoxs">
+                            <img src="{$sitelogosmall}" alt="{$sitename}">
+                        </a>
+                    {/if}
+                    {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
+                        <div class="admin-title">
+                            <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
+                        </div>
+                    {/if}
+                    <div id="loading-box" class="loading-box" style='display:none'></div>
+                </div>
                 <div class="nav-toggle-area">
                     {if $MAINNAV}
                         <button class="main-nav-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main" aria-expanded="false" aria-controls="nav-main" title='{str tag="mainmenu"}'>
@@ -71,17 +87,7 @@
                     </button>
                     {/if}
                 </div>
-                <div id="logo-area" class="logo-area">
-                    <a href="{$WWWROOT}" class="logo">
-                        <img src="{$sitelogo}" alt="{$sitename}" data-customlogo="{$sitelogocustom}">
-                    </a>
-                    {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
-                        <div class="admin-title">
-                            <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
-                        </div>
-                    {/if}
-                    <div id="loading-box" class="loading-box" style='display:none'></div>
-                </div>
+
                 {include file="header/topright.tpl"}
                 {include file="header/navigation.tpl"}
             </div>
