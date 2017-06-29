@@ -1298,7 +1298,9 @@ class PluginSearchInternal extends PluginSearch {
       $newtable = array_diff($table, $exclude);
 
       // Use a regexp to select all entities in one pass, to avoid decoding double-escaped entities twice.
-      return preg_replace('/&(#x?)?([A-Za-z0-9]+);/e', '_decode_entities("$1", "$2", "$0", $newtable, $exclude)', $text);
+      return preg_replace_callback('/&(#x?)?([A-Za-z0-9]+);/', function (array $matches) use ($newtable, $exclude) {
+          return PluginSearchInternal::_decode_entities($matches[1], $matches[2], $matches[0], $newtable, $exclude);
+      }, $text);
     }
 
     /**
