@@ -66,7 +66,7 @@ $config = array (
      * Setup the following parameters to match the directory of your installation.
      * See the user manual for more details.
      */
-    'baseurlpath'           => 'simplesaml/',
+    'baseurlpath'           => get_config('wwwroot') . 'auth/saml/sp/',
     'certdir'               => 'cert/',
     'loggingdir'            => '/tmp/',
     'datadir'               => 'data/',
