@@ -4755,30 +4755,32 @@ function can_use_skins($userid = null, $managesiteskin=false, $issiteview=false)
  *
  * @param string $type  Type of icon image to show
  * @param string $id    Optional id to add to the image
+ * @param string $title Optional title string to add to the image
  *
  * @return string    An <img> tag of the icon we want
  */
-function display_icon($type, $id = false) {
+function display_icon($type, $id = false, $title = "") {
     global $THEME;
-
     switch ($type) {
         case 'on':
         case 'yes':
         case 'success':
         case 'true':
         case 'enabled':
-            $image = 'icon icon-lg icon-check text-success';
+        case 'enabledspecific':
+            $image = 'icon icon-lg icon-check text-success ';
             break;
         case 'off':
         case 'no':
         case 'fail':
         case 'false':
         case 'disabled':
-            $image = 'icon icon-lg icon-times text-danger';
+        case 'disabledspecific':
+            $image = 'icon icon-lg icon-times text-danger ';
             break;
     }
-
-    $html = '<span class="' . $image . 'displayicon" title="' . get_string($type) . '"';
+    $title = empty($title) ? get_string($type) : hsc($title);
+    $html = '<span class="' . $image . 'displayicon" title="' . $title . '"';
     if ($id) {
         $html .= ' id="' . $id . '"';
     }

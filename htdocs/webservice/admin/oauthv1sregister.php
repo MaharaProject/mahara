@@ -414,7 +414,11 @@ function webservice_server_list_form($sopts, $iopts) {
                 'key'        => $consumer->consumer_key,
             );
             $form['elements']['id' . $consumer->id . '_enabled'] = array(
-                'value' => (($consumer->enabled == 1) ? display_icon('enabled') : display_icon('disabled')),
+                'value' => (
+                            ($consumer->enabled == 1) ?
+                             display_icon('enabledspecific', false, get_string('enabledspecific', 'mahara', $consumer->application_title)) :
+                             display_icon('disabledspecific', false, get_string('disabledspecific', 'mahara', $consumer->application_title))
+                           ),
                 'type'         => 'html',
                 'class'        => 'text-center',
                 'key'        => $consumer->consumer_key,
