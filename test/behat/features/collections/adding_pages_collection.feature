@@ -54,7 +54,6 @@ Scenario: Creating a collection AND adding pages
     And I should see "Pages to export"
     And I select the radio "Just some of my collections"
     And I wait "1" seconds
-    And I scroll to the base of id "includefeedback"
     And I should see "Collections to export"
     And I select the radio "All my data"
     And I wait "1" seconds
