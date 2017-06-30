@@ -24,12 +24,12 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  And I click on "Page" in the dialog
  Then I should see "No title"
  When I set the following fields to these values:
- | editview_title | Group page1 |
+ | settings_title | Group page1 |
  Then I press "Save"
  Then I should see "Page saved successfully"
 
  # Sharing Page
- When I follow "Share page"
+ When I follow "Share" in the "#toolbar-buttons" "css_element"
  Then I should see "Edit access"
  When I set the following fields to these values:
  | accesslist[0][searchtype] | Test Group1 |
@@ -38,24 +38,28 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  When I choose "Portfolio" from main menu
  And I follow "Group page1"
  And I follow "Edit this page"
- When I follow "Share page"
- And I scroll to the base of id "editaccess_more_container"
+ When I follow "Share" in the "#toolbar-buttons" "css_element"
+ And I scroll to the base of id "accessurl_more_open"
  And I should see "Advanced options" in the "legend" "css_element"
  And I follow "Advanced options" in the "legend" "css_element"
  And I disable the switch "Allow comments"
- And I scroll to the id "editaccess_submit_container"
+ And I scroll to the id "accessurl_submit_container"
  And I press "Save"
 
  When I choose "Portfolio" from main menu
  And I follow "Group page1"
  And I follow "Edit this page"
- When I follow "Share page"
- And I scroll to the base of id "editaccess_more_container"
+ When I follow "Share" in the "#toolbar-buttons" "css_element"
+ And I scroll to the base of id "accessurl_more_open"
  And I check "accesslist[0][allowcomments]"
  And I press "Save"
  Then I should see "Share"
 
  # Checking if checked option worked
- When I click on "Edit access" in "Group page1" row
+ When I choose "Portfolio" from main menu
+ And I follow "Group page1"
+ And I follow "Edit this page"
+ When I follow "Share" in the "#toolbar-buttons" "css_element"
  Then I should see "Edit access"
+ And I expand the section "Advanced options"
  And the "accesslist[0][allowcomments]" checkbox should be checked

@@ -12,7 +12,7 @@
                 </a>
             </li>
             <li role="presentation" aria-hidden="true">
-                <a href="#pages-tab" aria-controls="profile" role="tab" data-toggle="tab">
+                <a href="#pages-tab" aria-controls="profile" role="tab" data-toggle="tab" title={str tag=Views section=view}>
                     {str tag=Views section=view}
                 </a>
             </li>

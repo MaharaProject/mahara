@@ -67,7 +67,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  Then I should see "My diary entry two"
  And I go to portfolio page "Journal page"
  And I follow "Edit this page"
- And I follow "Share page"
+ And I follow "Share" in the "#toolbar-buttons" "css_element"
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  And I log out

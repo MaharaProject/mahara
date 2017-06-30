@@ -312,8 +312,9 @@ class Skin {
 
 
     /**
-     * Returns data about available skins. Tightly coupled with view/skin.php, which uses it to
-     * display the skins picker
+     * Returns data about available skins.
+     * Tightly coupled with get_skin_elements() function in view/editlayout.php,
+     * which uses it to display the skins picker
      * @param int $limit
      * @param int $offset
      * @param string $filter Should be: all, public, user, or site

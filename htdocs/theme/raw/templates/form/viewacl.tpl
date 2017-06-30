@@ -121,8 +121,8 @@ jQuery(function($) {
         // does not work properly on Microsoft Edge
         // This is a workaround
         // It will check if the required select is not empty and remove the attribute 'required'
-        $j('#editaccess_submit').click(function(e) {
-            $j('#editaccess select:required').each(function() {
+        $j('#{{$formname}}_submit').click(function(e) {
+            $j('#{{$formname}} select:required').each(function() {
                 if ($j(this).val()) {
                     $j(this).prop("required", false);
                 }
@@ -162,7 +162,7 @@ jQuery(function($) {
                         settarget.datetimepicker( "option", "maxDate", selectedDate);
                     }
                     if ((setmin !== undefined || setmax !== undefined ) && selectedDate !== "") {
-                        formchangemanager.setFormStateById('editaccess', FORM_CHANGED);
+                        formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
                     }
                 }
             });
@@ -189,7 +189,7 @@ jQuery(function($) {
 
         function formatSelect2Selected (data) {
             if (data._resultId !== undefined) {
-                formchangemanager.setFormStateById('editaccess', FORM_CHANGED);
+                formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
             }
             if (data.grouptype !== undefined) {
                 return '<span data-grouptype="'+ data.grouptype + '">'+ data.name + '</span>';
@@ -269,7 +269,7 @@ jQuery(function($) {
                 if($(self).attr('data-roles').length > 0) {
                     showRoleSelect(e, self);
                 }
-                formchangemanager.setFormStateById('editaccess', FORM_CHANGED);
+                formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
             });
         }
 
@@ -340,7 +340,7 @@ jQuery(function($) {
                 e.preventDefault();
                 if (!$(this).hasClass('icon-placeholder')) {
                     clearRow(this);
-                    formchangemanager.setFormStateById('editaccess', FORM_CHANGED);
+                    formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
                 }
             });
         }
@@ -358,7 +358,7 @@ jQuery(function($) {
                     row.find('.js-hide-empty').removeClass('hidden');
                     addNewRow(shareoptions, {empty: true});
                 }
-                formchangemanager.setFormStateById('editaccess', FORM_CHANGED);
+                formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
             });
         }
 
@@ -533,7 +533,7 @@ jQuery(function($) {
         }
 
         function attachCommentEvents(newrow) {
-            if ($('#editaccess_allowcomments').prop('checked') === true) {
+            if ($('#{{$formname}}_allowcomments').prop('checked') === true) {
                 // Hide the per row comment options
                 newrow.find('.commentcolumn').addClass('hidden');
             }

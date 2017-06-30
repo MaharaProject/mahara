@@ -33,6 +33,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I check "Facebook (Social media)"
  And I follow "Display settings"
  And the field "buttons with icons and text" matches value "1"
+ And I scroll to the base of id "instconf"
  And I press "Save"
  And I go to "/view/share.php"
  And I click on "Edit access" in "Open source is for winners" row

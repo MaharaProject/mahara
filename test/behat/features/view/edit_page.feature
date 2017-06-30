@@ -66,7 +66,7 @@ Scenario: Clicking ID's (Bug 1428456)
 
  # Checking if we can change page layout
  When I follow "Edit layout"
- And I follow "Create custom layout"
+ And I scroll to the id "createcustomlayoutpane"
  And I press "Add a row"
  And I select "25 - 50 - 25" from "selectcollayoutrow_2"
  And I press "Add a row"
@@ -76,4 +76,4 @@ Scenario: Clicking ID's (Bug 1428456)
  And I press "Create new layout"
  Then I should see "4 rows"
  And I press "Save"
- Then I should see "Page layout changed"
+ Then I should see "Page saved successfully"

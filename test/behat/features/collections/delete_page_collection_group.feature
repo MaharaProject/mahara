@@ -33,7 +33,7 @@ Scenario: When a collection is shared and a page is deleted from the collection 
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I follow "Collection 01"
     And I follow "Edit this page"
-    And I follow "Share page"
+    And I follow "Share"
     And I select "Group Y" from "accesslist[0][searchtype]"
     And I press "Save"
     # Delete a page from the collection

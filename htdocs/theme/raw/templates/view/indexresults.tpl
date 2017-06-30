@@ -104,14 +104,8 @@
                                         {foreach from=$view.manageaccess item=manageitem}
                                         <li>
                                             {if $manageitem->accesstype == 'managesharing'}
-                                            <a href="{$WWWROOT}view/access.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
+                                            <a class="seperator" href="{$WWWROOT}view/accessurl.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
                                                 <span class="icon {if $view.locked}icon-lock{else}icon-unlock-alt{/if} left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$manageitem->displayname}</span>
-                                                <span class="sr-only">{$manageitem->accessibilityname}</span>
-                                            </a>
-                                            {elseif $manageitem->accesstype == 'managekeys'}
-                                            <a class="seperator" href="{$WWWROOT}view/urls.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
-                                                <span class="icon icon-key left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{$manageitem->displayname}</span>
                                                 <span class="sr-only">{$manageitem->accessibilityname}</span>
                                             </a>
@@ -120,7 +114,7 @@
                                         {/foreach}
                                         {foreach from=$view.accesslist item=accessitem}
                                         <li>
-                                            <a href="{$WWWROOT}view/{if $accessitem->token}urls.php{else}access.php{/if}?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
+                                            <a href="{$WWWROOT}view/accessurl.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
                                             {if $accessitem->accesstype == 'loggedin'}
                                                 <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{str tag="registeredusers" section="view"}</span>

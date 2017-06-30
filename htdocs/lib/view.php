@@ -2690,7 +2690,7 @@ class View {
         if ($dbcolumns != 0) {
             db_rollback();
             $SESSION->add_error_msg(get_string('changecolumnlayoutfailed', 'view'));
-            redirect(get_config('wwwroot') . 'view/layout.php?id=' . $this->get('id') . ($new ? '&new=1' : ''));
+            redirect(get_config('wwwroot') . 'view/editlayout.php?id=' . $this->get('id') . ($new ? '&new=1' : ''));
         }
 
         $this->set('numrows', $this->get('numrows') - 1);
@@ -3892,11 +3892,7 @@ class View {
                     $ua->accessibilityname = get_string('manageaccessfor', 'view', $data['vtitle']);
                     $ua->accesstype = 'managesharing';
 
-                    $uk = new stdClass();
-                    $uk->displayname = get_string('managekeys', 'view');
-                    $uk->accessibilityname = get_string('managekeysfor', 'view', $data['vtitle']);
-                    $uk->accesstype = 'managekeys';
-                    $data['manageaccess'] = array($ua, $uk);
+                    $data['manageaccess'] = array($ua);
 
                     if ($accesslist = get_records_sql_array('
                         SELECT va.*, g.name AS groupname, g.grouptype, i.displayname AS institutionname
@@ -6766,7 +6762,7 @@ function createview_submit(Pieform $form, $values) {
         }
     }
 
-    redirect(get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id'));
+    redirect(get_config('wwwroot') . 'view/editlayout.php?new=1&id=' . $view->get('id'));
 }
 
 /**
@@ -6826,7 +6822,7 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
                                         $copystatus['artefacts'],
                                         $template->get('title'))
                              );
-        redirect(get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id'));
+        redirect(get_config('wwwroot') . 'view/editlayout.php?new=1&id=' . $view->get('id'));
     }
 }
 

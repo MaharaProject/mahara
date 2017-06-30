@@ -74,9 +74,8 @@ Scenario: Making sure that the max items per page drop down limits to correct am
   And I select "atoz" from "orderby"
   And I scroll to the base of id "searchviews_submit"
   And I press "searchviews_submit"
-  And I click on "A's Page 01" panel menu
-  And I click on "Edit" in "A's Page 01" panel menu
-  And I follow "Share page"
+  And I choose "Shared by me" in "Portfolio" from main menu
+  And I click on "Edit access" in "A's Page 01" row
   And I set the select2 value "A's Page 01, A's Page 02, A's Page 03, A's Page 04, A's Page 05, A's Page 06, A's Page 07, A's Page 08, A's Page 09, A's Page 10, A's Page 11, A's Page 12, A's Page 13, A's Page 14, A's Page 15, A's Page 16, A's Page 17, A's Page 18, A's Page 19, A's Page 20, A's Page 21, A's Page 22, A's Page 23, A's Page 24, A's Page 25, A's Page 26, A's Page 27, A's Page 28, A's Page 29, A's Page 30, A's Page 31, A's Page 32, A's Page 33, A's Page 34, A's Page 35, A's Page 36, A's Page 37, A's Page 38, A's Page 39, A's Page 40, A's Page 41, A's Page 42, A's Page 43, A's Page 44, A's Page 45, A's Page 46, A's Page 47, A's Page 48, A's Page 49, A's Page 50, A's Page 51" for "editaccess_views"
   And I select "Public" from "accesslist[0][searchtype]"
   And I press "Save"

@@ -37,14 +37,8 @@
 
  Scenario: Checking the jump list of the paginagtor (Bug 1409370)
   Given I log in as "userA" with password "Kupuhipa1"
-  And I choose "Portfolio" from main menu
-  # make sure Page 1 is displayed by ordering alphabetically
-  # (Note: Show more button does not seem to be clickable using current steps)
-  And I select "atoz" from "orderby"
-  And I press "searchviews_submit"
-  And I click the panel "A's Page 01"
-  And I follow "Edit this page"
-  And I follow "Share page"
+  And I choose "Shared by me" in "Portfolio" from main menu
+  And I click on "Edit access" in "A's Page 01" row
   And I set the select2 value "A's Page 01, A's Page 02, A's Page 03, A's Page 04, A's Page 05, A's Page 06, A's Page 07, A's Page 08, A's Page 09, A's Page 10, A's Page 11, A's Page 12, A's Page 13, A's Page 14, A's Page 15, A's Page 16, A's Page 17, A's Page 18, A's Page 19, A's Page 20, A's Page 21" for "editaccess_views"
   And I select "Public" from "accesslist[0][searchtype]"
   And I press "editaccess_submit"

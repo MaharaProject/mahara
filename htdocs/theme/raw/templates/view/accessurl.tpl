@@ -1,10 +1,22 @@
 {include file="header.tpl"}
 
-<div class="btn-top-right btn-group btn-group-top">
-    {$newform|safe}
-</div>
+{include file="view/editviewtabs.tpl" selected='share' new=$new issiteview=$issiteview}
+
+<div id="accessurl-container">
 
 <div class="view-container">
+    {if $collectionid}
+        <label>{str tag=pagepartofcollection section=view arg1=$collectiontitle}</label>
+    {/if}
+    <h2>{str tag=secreturls section=view}</h2>
+
+    <!-- Url -->
+    {if $newform != null}
+    <div class="accessurl-button">
+        {$newform|safe}
+    </div>
+    {/if}
+
     {if !$allownew}
     <div class="alert alert-info">
         {if $onprobation}
@@ -20,6 +32,7 @@
         <h2 class="panel-heading">
             {str tag=secreturls section=view}
         </h2>
+
         <div class="secreturls list-group">
             {foreach from=$editurls item=item name=urls}
                 <div class="{cycle values='r0,r1' advance=false} list-group-item">
@@ -50,8 +63,20 @@
                 </div>
             {/foreach}
         </div>
+
     </div>
     {/if}
+
+</div>
+
+<div class="pageshare">
+
+    <h2 class="access-title">{str tag=sharedwithothers section=view}</h2>
+    <!-- Access -->
+    {$form|safe}
+
+</div>
+
 </div>
 
 {include file="footer.tpl"}

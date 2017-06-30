@@ -38,6 +38,10 @@
     }
 }
 
+.wysiwyg.view-description {
+    width: 70%;
+}
+
 .toolbar-affix.affix {
     position: fixed;
     top: 70px;
@@ -437,13 +441,18 @@
         }
     }
 }
-#manage-skins-btn {
+.manage-skins-btn {
   margin-top: 10px;
   margin-bottom: 20px;
 }
 
 #auth_config_institutionidp {
     width: 90%;
+}
+
+.defaultskin {
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 .authInstance .authitem {
@@ -491,4 +500,17 @@
 .forassessment label {
   display: inline-block !important;
   margin-top: -25px;
+}
+
+/*
+* NEW CSS
+* Antonella De Chiara - Eticeo Santé
+*/
+
+/***********************************
+SIDEBLOCKS
+***********************************/
+
+.accessurl-button {
+    margin-bottom: 15px;
 }

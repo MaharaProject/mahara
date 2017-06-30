@@ -62,17 +62,19 @@ function pieform_element_calendar(Pieform $form, $element) {
     $result = '<span class="hasDatepickerwrapper"><input type="text"'
         . $form->element_attributes($element)
         . ' value="' . $value . '"></span>';
-    $result .= '<script type="application/javascript">
-        var input = jQuery("input#' . $id . '");';
+    $result .= '
+        <script type="application/javascript">
+        var input_' . $id . ' = jQuery("input#' . $id . '");
+        ';
     if (!empty($options['showsTime'])) {
-        $result .= 'input.datetimepicker({';
+        $result .= 'input_' . $id . '.datetimepicker({';
     }
     else {
-        $result .= 'input.datepicker({';
+        $result .= 'input_' . $id . '.datepicker({';
     }
     $result .= ' onSelect: function(date) {
                      if (typeof formchangemanager !== \'undefined\') {
-                         var form = input.closest(\'form\')[0];
+                         var form = input_' . $id . '.closest(\'form\')[0];
                          formchangemanager.setFormState(form, FORM_CHANGED);
                      }
                  },';

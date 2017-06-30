@@ -74,7 +74,7 @@ if ($blockid = param_integer('blockconfig', 0)) {
 }
 
 $view->set_edit_nav();
-$state = get_string('editcontent', 'view');
+$state = get_string('editcontent1', 'view');
 
 if ($view->get('type') == 'profile') {
     $profile = true;

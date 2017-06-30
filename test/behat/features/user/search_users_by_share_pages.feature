@@ -34,7 +34,8 @@ Scenario: Create users and search for them (Bug 897586)
     # Verifying the page has been created
     And I should see "Page saved successfully"
     # Sharing both of the pages that have been created
-    And I follow "Share page"
+    And I choose "Shared by me" in "Portfolio" from main menu
+    And I click on "Edit access" in "Testing page 1" row
     And I set the select2 value "Testing page 1, Testing page 2" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
@@ -64,7 +65,8 @@ Scenario: Create users and search for them (Bug 897586)
     # Verifying the page has been created
     And I should see "Page saved successfully"
     # Sharing both of the pages Jen created
-    And I follow "Share page"
+    And I choose "Shared by me" in "Portfolio" from main menu
+    And I click on "Edit access" in "Testing page 3" row
     And I set the select2 value "Testing page 3, Testing page 4" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
