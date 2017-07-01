@@ -46,6 +46,7 @@ class AuthLdap extends Auth {
         $this->config['starttls'] = 0;
         $this->config['updateuserinfoonlogin'] = 0;
         $this->config['weautocreateusers'] = 1;
+        $this->config['loginlink'] = false;
         $this->config['firstnamefield' ] = '';
         $this->config['surnamefield'] = '';
         $this->config['emailfield'] = '';
@@ -380,7 +381,17 @@ class AuthLdap extends Auth {
         $attributes['preferredname'] = $this->config['preferrednamefield'];
 
         $userinfo = $this->get_userinfo_ldap($username, $attributes);
-
+        // Check if we can link this login to an existing account via email value
+        if ($this->config['loginlink'] === true && !empty($userinfo['email'])) {
+            $user = new User();
+            try {
+                $user->find_by_email_address($userinfo['email']);
+                return $user;
+            }
+            catch (AuthUnknownUserException $e) {
+                // Skip non-existent users
+            }
+        }
         return (object)$userinfo;
     }
 
@@ -1575,6 +1586,7 @@ class PluginAuthLdap extends PluginAuth {
         'starttls'          => 0,
         'updateuserinfoonlogin' => 0,
         'weautocreateusers' => 1,
+        'loginlink'         => 0,
         'firstnamefield'    => '',
         'surnamefield'      => '',
         'emailfield'        => '',
@@ -1804,6 +1816,12 @@ class PluginAuthLdap extends PluginAuth {
                 'type'         => 'switchbox',
                 'title' => get_string('weautocreateusers', 'auth.ldap'),
                 'defaultvalue' => self::$default_config['weautocreateusers'],
+                'help'  => true,
+            ),
+            'loginlink' => array(
+                'type'         => 'switchbox',
+                'title' => get_string('loginlink', 'auth.ldap'),
+                'defaultvalue' => self::$default_config['loginlink'],
                 'help'  => true,
             ),
             'firstnamefield' => array(
