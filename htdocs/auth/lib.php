@@ -419,7 +419,9 @@ function auth_setup () {
     // reset the password clearing the session from usr_session.
     $sessionexists = get_record('usr_session', 'usr', $USER->id, 'session', $USER->get('sessionid'));
     $parentuser = $USER->get('parentuser');
-    if (($sessionlogouttime && isset($_GET['logout'])) || ($sessionexists === false && $USER->get('sessionid') != '' && empty($parentuser))) {
+    if (($sessionlogouttime && isset($_GET['logout']))
+       || ($sessionexists === false && $USER->get('sessionid') != '' && empty($parentuser))
+       || ($sessionexists && isset($sessionexists->useragent) && $sessionexists->useragent != $_SERVER['HTTP_USER_AGENT'])) {
         // Call the authinstance' logout hook
         $authinstance = $SESSION->get('authinstance');
         if ($authinstance) {
