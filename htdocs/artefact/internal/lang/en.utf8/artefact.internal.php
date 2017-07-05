@@ -99,6 +99,16 @@ If this email belongs to you, but you have not requested adding it to your %s ac
 
 %s
 EOF;
+$string['newemailalert_subject'] = 'New email address added to your %s account';
+$string['newemailalert_body'] = <<<EOF
+Hello %s,
+
+You have added the email addresses to your user account in %s:
+
+%s
+
+If you have not requested this change in your %s account, please <a href="%scontact.php">contact the site administrator</a>.
+EOF;
 
 $string['validationemailwillbesent'] = 'A validation email will be sent when you save your profile.';
 $string['validationemailsent'] = 'A validation email has been sent.';

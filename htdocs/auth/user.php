@@ -1909,12 +1909,17 @@ class LiveUser extends User {
 
     private function store_sessionid() {
         $sessionid = $this->get('sessionid');
-        delete_records('usr_session', 'session', $sessionid);
+        delete_records('usr_session', 'usr', $this->get('id'));
+        $useragent = 'unknown';
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            $useragent = $_SERVER['HTTP_USER_AGENT'];
+        }
         insert_record('usr_session', (object) array(
             'usr' => $this->get('id'),
             'session' => $sessionid,
             'ctime' => db_format_timestamp(time()),
             'mtime' => db_format_timestamp(time()),
+            'useragent' => $useragent,
         ));
     }
 

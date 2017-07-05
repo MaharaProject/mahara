@@ -228,6 +228,7 @@
                 <FIELD NAME="session" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"/>
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="useragent" TYPE="text" LENGTH="small" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="session" />
