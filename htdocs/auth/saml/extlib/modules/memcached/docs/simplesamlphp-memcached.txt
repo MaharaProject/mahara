@@ -1,0 +1,21 @@
+Memcached Store module
+=======================
+
+<!--
+    This file is written in Markdown syntax.
+    For more information about how to use the Markdown syntax, read here:
+    http://daringfireball.net/projects/markdown/syntax
+-->
+
+
+<!-- {{TOC}} -->
+
+Introduction
+------------
+
+Use PHP7.0 Memcached instead of Memcache
+
+The module can be specified as the Store in config/config.php
+with the following setting:
+
+'store.type' => 'memcached:Store',
