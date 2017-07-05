@@ -260,6 +260,7 @@ function profileform_submit(Pieform $form, $values) {
     $email_errors = array();
 
     $lockedfields = locked_profile_fields();
+    $alertuserofnewemail = array();
 
     foreach ($element_list as $element => $type) {
 
@@ -285,6 +286,8 @@ function profileform_submit(Pieform $form, $values) {
                 $key_url_decline = $key_url . '&decline=1';
 
                 try {
+                    $alertuserofnewemail[] = $email;
+
                     $sitename = get_config('sitename');
                     email_user(
                         (object)array(
@@ -316,6 +319,33 @@ function profileform_submit(Pieform $form, $values) {
                         'expiry'   => db_format_timestamp(time() + 86400),
                     )
                 );
+            }
+
+            // alert user that new email addresses have been added
+            if (!empty($alertuserofnewemail)) {
+                $emails = implode(', ', $alertuserofnewemail);
+                try {
+                    $sitename = get_config('sitename');
+                    email_user(
+                        (object)array(
+                            'id'            => $USER->get('id'),
+                            'username'      => $USER->get('username'),
+                            'firstname'     => $USER->get('firstname'),
+                            'lastname'      => $USER->get('lastname'),
+                            'preferredname' => $USER->get('preferredname'),
+                            'admin'         => $USER->get('admin'),
+                            'staff'         => $USER->get('staff'),
+                            'email'         => $profilefields['email']['default'],
+                        ),
+                        null,
+                        get_string('newemailalert_subject', 'artefact.internal', $sitename),
+                        get_string('newemailalert_body_text', 'artefact.internal', $USER->get('firstname'), $sitename, $emails, $sitename, get_config('wwwroot')),
+                        get_string('newemailalert_body_html', 'artefact.internal', hsc($USER->get('firstname')), hsc($sitename), hsc($emails), hsc($sitename), get_config('wwwroot'))
+                    );
+                }
+                catch (EmailException $e) {
+                    $email_errors[] = $profilefields['email']['default'];
+                }
             }
 
             // remove old addresses
@@ -388,10 +418,7 @@ function profileform_submit(Pieform $form, $values) {
                 $USER->commit();
             }
         }
-        else if ($element == 'maildisabled') {
-            continue;
-        }
-        else if ($element == 'socialprofile') {
+        else if (in_array($element, array('maildisabled', 'socialprofile'))) {
             continue;
         }
         else {
