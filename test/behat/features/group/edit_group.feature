@@ -64,5 +64,5 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Groups" from main menu
  And I follow "Group awesome sauce"
- # Making sure I cant edit a group I am not owner of
+ # Making sure I can't edit a group I am not owner of
  And I should not see "Edit this page"

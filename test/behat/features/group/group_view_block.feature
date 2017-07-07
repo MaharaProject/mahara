@@ -86,7 +86,7 @@ Background:
 
 Scenario: The list of group pages, shared/submitted pages and collections should
 be displayed page by page and sorted by "page title (A-Z)" or "most recently updated".
-These list must take into account the sort option choosen in the block config (Bug 1457246)
+These list must take into account the sort option chosen in the block config (Bug 1457246)
     # Log in as a normal user
     Given I log in as "userA" with password "Kupuhipa1"
     # Verifying log in was successful

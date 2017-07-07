@@ -21,6 +21,6 @@ Scenario: Turning master switch on
  # Logging in as student to try turn switch on
  When I log in as "userA" with password "Kupuhipa1"
  Then I should see "Pete Mc"
- # Checking the student cant access the link
+ # Checking the student can't access the link
  And "Administration" "link" should not be visible
  And "Web services" "link" should not be visible
