@@ -12,3 +12,8 @@
     color: $state-danger-text;
   }
 }
+
+// Lighten the Administration link in the menu bar in the admin area
+div.admin-title a {
+  color:#4DB1D6;
+}
