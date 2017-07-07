@@ -102,7 +102,7 @@ $string['viewsaddedtocollection1different'] = array(
     '%s pages added to collection. The shared access has changed for all pages in the collection.',
 );
 $string['viewsaddedaccesschanged'] = 'Access permissions have changed for the following pages:';
-$string['viewaddedsecreturl'] = 'Available publically via secret URL';
+$string['viewaddedsecreturl'] = 'Available publicly via secret URL';
 $string['viewcollection'] = 'View collection details';
 $string['viewcount'] = 'Pages';
 $string['viewremovedsuccessfully'] = 'Page removed successfully.';
