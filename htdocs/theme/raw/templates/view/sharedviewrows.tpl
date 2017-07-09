@@ -15,9 +15,12 @@
           {else}
             {$view.sharedby}
           {/if}
-        <span class="postedon text-midtone"> - {$view.mtime|strtotime|format_date:'strftimerecentyear'}</span>
-        </div>
-        {/if}
+        <span class="postedon text-midtone"> - {if $view.mtime == $view.ctime}
+                    {str tag=Created}
+                {else}
+                    {str tag=Updated}
+                {/if}
+                {$view.mtime|strtotime|format_date:'strftimedate'}
         <div class="detail">{$view.description|str_shorten_html:70:true|strip_tags|safe}</div>
         {if $view.tags}<div class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
       </td>
