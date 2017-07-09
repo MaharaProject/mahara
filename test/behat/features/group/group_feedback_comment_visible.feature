@@ -1,6 +1,6 @@
 @javascript @core @core_artefact @core_group
 Feature: Commenting on a group page
-    In order to be able to verify I commented publically on a group page
+    In order to be able to verify I commented publicly on a group page
     As a user
     So leave a comment and it appears in the right place
 
@@ -42,7 +42,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     And I should see "Adding a comment to this field. Student = Awesome!"
     And I log out
     And I log in as "userB" with password "Kupuhipa1"
-    # Needs to navigate to see the comment and check it can be seen publically
+    # Needs to navigate to see the comment and check it can be seen publicly
     Then I should see "group 01"
     When I follow "group 01"
     Then I should see "About | group 01"

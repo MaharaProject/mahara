@@ -4,7 +4,7 @@ In order to check that a person can register
 As an admin
 So people can have access to their Mahara
 
- Scenario: Registering as a new student and checking swtich can flick back and forth (Bug 1431569)
+ Scenario: Registering as a new student and checking switch can flick back and forth (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
  And the following "institutions" exist:
  | name | displayname | registerallowed | registerconfirm |
