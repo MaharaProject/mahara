@@ -5084,10 +5084,11 @@ function is_valid_serialized_skin_attribute($sobj) {
 
 /*
  * Crear all Mahara chaches.
+ * @param   bool   $clearsessiondirs  Optional to clear sessions. Useful during upgrade when session structure changes
  *
  * @return bool True if success, false otherwise.
  */
-function clear_all_caches() {
+function clear_all_caches($clearsessiondirs = false) {
     require_once(get_config('libroot') . 'file.php');
 
     try {
@@ -5098,6 +5099,13 @@ function clear_all_caches() {
         $dwoo_dir = get_config('dataroot') . 'dwoo';
         if (check_dir_exists($dwoo_dir) && !rmdirr($dwoo_dir)) {
             throw new SystemException('Can not remove dwoo directory ' . $dwoo_dir);
+        }
+
+        if ($clearsessiondirs) {
+            $session_dir = get_config('dataroot') . 'sessions';
+            if (check_dir_exists($session_dir) && !rmdirr($session_dir)) {
+                throw new SystemException('Can not remove session directory ' . $session_dir);
+            }
         }
 
         handle_event('clearcaches', array());

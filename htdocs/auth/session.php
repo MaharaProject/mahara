@@ -52,7 +52,12 @@ class Session {
         // See more at http://php.net/manual/en/session.security.php
         ini_set('session.use_cookies', true);
         ini_set('session.use_only_cookies', true);
-        ini_set('session.hash_bits_per_character', 4);
+        if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
+            ini_set('session.sid_bits_per_character', 5);
+        }
+        else {
+            ini_set('session.hash_bits_per_character', 4);
+        }
         ini_set('session.gc_divisor', 1000);
 
         if (get_config('session_timeout')) {
@@ -71,7 +76,12 @@ class Session {
         ini_set('session.gc_maxlifetime', $session_timeout);
 
         ini_set('session.use_trans_sid', false);
-        ini_set('session.hash_function', 'sha256'); // stronger hash functions are sha384 and sha512
+        if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
+            ini_set('session.sid_length', 32);
+        }
+        else {
+            ini_set('session.hash_function', 'sha256'); // stronger hash functions are sha384 and sha512
+        }
         if (version_compare(PHP_VERSION, '5.5.2') > 0) {
             ini_set('session.use_strict_mode', true);
         }
@@ -82,6 +92,10 @@ class Session {
         if (!is_dir("$sessionpath/0")) {
             // Create three levels of directories, named 0-9, a-f
             $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+            if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
+                $characters = array_merge($characters, array('g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+                                                             'o', 'p', 'q', 'r', 's', 't', 'u', 'v'));
+            }
             foreach ($characters as $c1) {
                 check_dir_exists("$sessionpath/$c1");
                 foreach ($characters as $c2) {
