@@ -4976,7 +4976,13 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2017052300) {
-        if ($records = get_records_sql_array("SELECT event, data, time FROM {event_log} WHERE event = ?", array('createuser'))) {
+        // These are the records with passwords in the data.
+        if ($records = get_records_sql_array("SELECT event, data, time
+                                          FROM {event_log}
+                                          WHERE event = ?
+                                          AND POSITION(',\"password\":\"\",' IN data) = 0
+                                         ", array('createuser'))
+        ) {
             log_debug('Remove sensitive data from event_log');
             $count = 0;
             $limit = 1000;
@@ -4997,6 +5003,18 @@ function xmldb_core_upgrade($oldversion=0) {
                     set_time_limit(30);
                 }
             }
+        }
+        // These are the records with empty passwords in the data.
+        // No need for them to reset the password.
+        $wheresql = " WHERE event = ?
+            AND POSITION(',\"password\":\"\",' IN data) > 0";
+        $sql_count = "SELECT COUNT(*)
+                  FROM {event_log}" . $wheresql;
+        if ($count = get_field_sql($sql_count, array('createuser'))) {
+            $sql = "UPDATE {event_log}
+                SET data = REPLACE(data, ',\"password\":\"\"', '')" . $wheresql;
+            execute_sql($sql, array('createuser'));
+            log_debug("$count records also cleaned up");
         }
     }
 
