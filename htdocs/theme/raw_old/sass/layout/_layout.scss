@@ -6,9 +6,7 @@ body {
     @media (min-width: 768px) {
         padding-top: 65px; // Move down content because we have a fixed navbar on desktop/tablet that is 50px tall
     }
-    &.admin {
-        background-color: lighten($brand-default, 2%);
-    }
+
     .main {
         margin: 0px 0 20px;
         padding-top: 20px;
