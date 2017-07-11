@@ -25,10 +25,12 @@
         <td>{list_tags owner=$owner tags=$tags}</td>
     </tr>
     {/if}
+    {if $ownername}
     <tr>
         <th>{str tag=Owner section=artefact.file}:</th>
         <td>{$ownername}</td>
     </tr>
+    {/if}
     <tr>
         <th>{str tag=Created section=artefact.file}:</th>
         <td>{$created}</td>
