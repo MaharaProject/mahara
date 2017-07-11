@@ -696,7 +696,7 @@ class PluginAuthXmlrpc extends PluginAuth {
             'help'   => true
         );
 
-        $elements['actve'] = array(
+        $elements['active'] = array(
             'type'  => 'switchbox',
             'title' => get_string('active', 'auth'),
             'defaultvalue' => (int) self::$default_config['active'],
