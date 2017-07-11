@@ -209,6 +209,9 @@ table.table tr {
             float:left;
         }
     }
+    .with-selectall {
+        min-width: 110px;
+    }
 }
 
 .table > thead > tr.th-has-shared > th {
