@@ -280,6 +280,7 @@ $string['erroroptionalparamarray'] = 'The web service description parameter name
 $string['errorresponsemissingkey'] = 'Error in response: Missing following required key in a single structure: %s';
 $string['errorscalartype'] = 'Scalar type expected, array or object received.';
 $string['errorunexpectedkey'] = 'Unexpected keys (%s) detected in parameter array.';
+$string['errorunexpectedcustomkey'] = 'Unexpected custom keys (%s) detected in parameter array. They are being ignored by Mahara. This message is informational only so you can review the parameters and are aware that they are being ignored.';
 $string['execute'] = 'Execute';
 $string['expires'] = 'Expires';
 $string['externalservice'] = 'External service';

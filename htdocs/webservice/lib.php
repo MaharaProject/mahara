@@ -601,10 +601,21 @@ class external_api {
             if (!empty($params)) {
                 //list all unexpected keys
                 $keys = '';
+                $customkeys = '';
                 foreach ($params as $key => $value) {
-                    $keys .= $key . ',';
+                    if (substr($key, 0, 7) === "custom_") {
+                        $customkeys .= $key . ',';
+                    }
+                    else {
+                        $keys .= $key . ',';
+                    }
                 }
-                throw new WebserviceInvalidParameterException(get_string('errorunexpectedkey', 'auth.webservice', $keys));
+                if (!empty($customkeys) && !get_config('productionmode')) {
+                    log_info(get_string('errorunexpectedcustomkey', 'auth.webservice', $customkeys));
+                }
+                if (!empty($keys)) {
+                    throw new WebserviceInvalidParameterException(get_string('errorunexpectedkey', 'auth.webservice', $keys));
+                }
             }
             return $result;
 
