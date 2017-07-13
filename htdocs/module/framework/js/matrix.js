@@ -47,7 +47,7 @@ jQuery(function($) {
     });
 
     var cellx = celly = 0;
-    $('#tablematrix td.mid span:not(.disabled)').on('click', function(e) {
+    $('#tablematrix td.mid span.icon:not(.disabled)').on('click', function(e) {
         e.preventDefault();
         cellx = $(this).closest('td').index();
         celly = $(this).closest('tr').index();
@@ -66,175 +66,209 @@ jQuery(function($) {
             }
 
             dock.show($('#configureblock'), true, false);
-            var newpagemodal = $('#configureblock');
-            newpagemodal.find('.blockinstance-header').html(data.data.form.title);
-            newpagemodal.find('.blockinstance-content').html(data.data.form.content);
-            newpagemodal.find('form').each(function() {
-                formchangemanager.add($(this).attr('id'));
-            });
-            deletebutton = newpagemodal.find('.deletebutton');
-            // Lock focus to the newly opened dialog
-            deletebutton.focus();
-            deletebutton.off('click'); // Remove any previous click event
-            deletebutton.on('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                var confirm = null;
-                if (typeof formchangemanager !== 'undefined') {
-                    confirm = formchangemanager.confirmLeavingForm();
-                }
-                if (confirm === null || confirm === true) {
-                    if (data.data.form.isnew) {
-                        // need to delete empty annotation on cancel
-                        params.action = 'delete';
-                        params.blockconfig = $('#instconf_blockconfig').val();
-                        editmatrix_update(params);
-                    }
-                    if (hastinymce) {
-                        tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
-                    }
-                    feedbacktextarea = $("#addfeedbackmatrix textarea");
-                    if (feedbacktextarea.length && hastinymce) {
-                        tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
-                    }
-                    hide_dock();
-                }
-            });
-            cancelbutton = newpagemodal.find('.submitcancel.cancel');
-            cancelbutton.off('click'); // Remove any previous click event
-            cancelbutton.on('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                var confirm = null;
-                if (typeof formchangemanager !== 'undefined') {
-                    confirm = formchangemanager.confirmLeavingForm();
-                }
-                if (confirm === null || confirm === true) {
-                    if (data.data.form.isnew) {
-                        params.action = 'delete';
-                        params.blockconfig = $('#instconf_blockconfig').val();
-                        editmatrix_update(params);
-                    }
-                    if (hastinymce) {
-                        tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
-                    }
-                    feedbacktextarea = $("#addfeedbackmatrix textarea");
-                    if (feedbacktextarea.length && hastinymce) {
-                        tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
-                    }
-                    hide_dock();
-                }
-            });
-            if (hastinymce) {
-                tinyMCE.idCounter=0;
-                if ($("#instconf_text").length) {
-                    tinyMCE.execCommand('mceAddEditor', false, "instconf_text");
-                }
-                if ($("#addfeedbackmatrix").length) {
-                    textareaid = $("#addfeedbackmatrix textarea").attr('id');
-                    tinyMCE.execCommand('mceAddEditor', false, textareaid);
-                }
-            }
-            // Only allow the point selected to be active in the 'Standard' dropdown
-            $("#instconf_smartevidence option:not(:selected)").prop('disabled', true);
-            // block title will be overwritten with framework choice so make it disabled
-            $("#instconf_title").attr('disabled', true);
-            // Set up evidence choices and show/hide related descriptions
-            $("#instconf_smartevidence").select2();
 
-            show_se_desc($("#instconf_smartevidence").val());
-            $("#instconf_smartevidence").on('change', function() {
-                show_se_desc($(this).val());
-            });
-            // When we are saving the annotation block config form
-            $('#instconf').on('submit', function(se) {
-                se.preventDefault();
-                var sdata = $("#instconf :input").serializeArray();
-                var values = {};
-                var tags = new Array();
-                sdata.forEach(function(item, index) {
-                    if (item.name == 'tags[]') {
-                        tags.push(item.value);
+            // delay processing so animation can complete smoothly
+            setTimeout(function() {
+                var newpagemodal = $('#configureblock');
+                newpagemodal.find('.blockinstance-header').html(data.data.form.title);
+                newpagemodal.find('.blockinstance-content').html(data.data.form.content);
+                newpagemodal.find('form').each(function() {
+                    formchangemanager.add($(this).attr('id'));
+                });
+                deletebutton = newpagemodal.find('.deletebutton');
+                // Lock focus to the newly opened dialog
+                deletebutton.focus();
+                deletebutton.off('click'); // Remove any previous click event
+                deletebutton.on('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var confirm = null;
+                    if (typeof formchangemanager !== 'undefined') {
+                        confirm = formchangemanager.confirmLeavingForm();
                     }
-                    else if (item.name == 'text' && hastinymce) {
-                        values[item.name] = tinyMCE.get('instconf_text').getContent();
-                    }
-                    else {
-                        values[item.name] = item.value;
+                    if (confirm === null || confirm === true) {
+                        if (data.data.form.isnew) {
+                            // need to delete empty annotation on cancel
+                            params.action = 'delete';
+                            params.blockconfig = $('#instconf_blockconfig').val();
+                            editmatrix_update(params);
+                        }
+                        if (hastinymce) {
+                            tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                        }
+                        feedbacktextarea = $("#addfeedbackmatrix textarea");
+                        if (feedbacktextarea.length && hastinymce) {
+                            tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
+                        }
+                        hide_dock();
+                        //focus on matrix annotation
+                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').focus();
                     }
                 });
+                cancelbutton = newpagemodal.find('.submitcancel.cancel');
+                cancelbutton.off('click'); // Remove any previous click event
+                cancelbutton.on('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var confirm = null;
+                    if (typeof formchangemanager !== 'undefined') {
+                        confirm = formchangemanager.confirmLeavingForm();
+                    }
+                    if (confirm === null || confirm === true) {
+                        if (data.data.form.isnew) {
+                            params.action = 'delete';
+                            params.blockconfig = $('#instconf_blockconfig').val();
+                            editmatrix_update(params);
+                        }
+                        if (hastinymce) {
+                            tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                        }
+                        feedbacktextarea = $("#addfeedbackmatrix textarea");
+                        if (feedbacktextarea.length && hastinymce) {
+                            tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
+                        }
+                        hide_dock();
+                        //focus on matrix annotation
+                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').focus();
+                    }
+                });
+                if (hastinymce) {
+                    tinyMCE.idCounter=0;
+                    if ($("#instconf_text").length) {
+                        tinyMCE.execCommand('mceAddEditor', false, "instconf_text");
+                    }
+                    if ($("#addfeedbackmatrix").length) {
+                        textareaid = $("#addfeedbackmatrix textarea").attr('id');
+                        tinyMCE.execCommand('mceAddEditor', false, textareaid);
+                    }
+                }
+                // Only allow the point selected to be active in the 'Standard' dropdown
+                $("#instconf_smartevidence option:not(:selected)").prop('disabled', true);
+                // block title will be overwritten with framework choice so make it disabled
+                $("#instconf_title").attr('disabled', true);
+                // Set up evidence choices and show/hide related descriptions
+                $("#instconf_smartevidence").select2();
 
-                if (values["text"].length == 0) {
-                    if ($("#instconf_text").parent().find('.errmsg').length == 0) {
-                        $("#instconf_text").parent().append('<div class="errmsg"><span>' + get_string_ajax('annotationempty', 'artefact.annotation') + '</span></div>');
+                show_se_desc($("#instconf_smartevidence").val());
+                $("#instconf_smartevidence").on('change', function() {
+                    show_se_desc($(this).val());
+                });
+
+                // When we are saving the annotation block config form
+                $('#instconf').on('submit', function(se) {
+                    se.preventDefault();
+                    var sdata = $("#instconf :input").serializeArray();
+                    var values = {};
+                    var tags = new Array();
+                    sdata.forEach(function(item, index) {
+                        if (item.name == 'tags[]') {
+                            tags.push(item.value);
+                        }
+                        else if (item.name == 'text' && hastinymce) {
+                            values[item.name] = tinyMCE.get('instconf_text').getContent();
+                        }
+                        else {
+                            values[item.name] = item.value;
+                        }
+                    });
+
+                    if (values["text"].length == 0) {
+                        if ($("#instconf_text").parent().find('.errmsg').length == 0) {
+                            $("#instconf_text").parent().append('<div class="errmsg"><span>' + get_string_ajax('annotationempty', 'artefact.annotation') + '</span></div>');
+                        }
+                        $('#instconf button.submitcancel.submit').prop("disabled", false);
                     }
-                    $('#instconf button.submitcancel.submit').prop("disabled", false);
-                }
-                else {
-                    values['tags'] = tags.join();
-                    values['framework'] = params.framework;
-                    values['view'] = params.view;
-                    values['option'] = params.option;
-                    values['action'] = 'update';
-                    if (hastinymce) {
-                        tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                    else {
+                        values['tags'] = tags.join();
+                        values['framework'] = params.framework;
+                        values['view'] = params.view;
+                        values['option'] = params.option;
+                        values['action'] = 'update';
+                        if (hastinymce) {
+                            tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                        }
+                        editmatrix_update(values);
+                        hide_dock();
+                        //focus on matrix annotation
+                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').focus();
                     }
-                    editmatrix_update(values);
-                    hide_dock();
-                }
-            });
-            // When we are saving the annotation feedback form - changing the evidence status
-            $('#annotationfeedback').on('submit', function(se) {
-                se.preventDefault();
-                var confirm = null;
-                if (typeof formchangemanager !== 'undefined') {
-                    confirm = formchangemanager.confirmLeavingForm();
-                }
-                if (confirm === null || confirm === true) {
-                    var sdata = $("#annotationfeedback :input").serializeArray();
+                });
+                // When we are saving the annotation feedback form - changing the evidence status
+                $('#annotationfeedback').on('submit', function(se) {
+                    se.preventDefault();
+                    var confirm = null;
+                    if (typeof formchangemanager !== 'undefined') {
+                        confirm = formchangemanager.confirmLeavingForm();
+                    }
+                    if (confirm === null || confirm === true) {
+                        var sdata = $("#annotationfeedback :input").serializeArray();
+                        var values = {};
+                        sdata.forEach(function(item, index) {
+                            values[item.name] = item.value;
+                        });
+                        values['framework'] = params.framework;
+                        values['view'] = params.view;
+                        values['option'] = params.option;
+                        values['action'] = 'evidence';
+                        editmatrix_update(values);
+                        if (hastinymce) {
+                            tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                        }
+                        feedbacktextarea = $("#addfeedbackmatrix textarea");
+                        if (feedbacktextarea.length && hastinymce) {
+                            tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
+                        }
+                        hide_dock();
+                        //focus on matrix annotation
+                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').focus();
+                    }
+                });
+                // When we are saving the annotation feedback form - adding new feedback
+                $('#addfeedbackmatrix').on('submit', function(se) {
+                    se.preventDefault();
+                    var sdata = $("#addfeedbackmatrix :input").serializeArray();
                     var values = {};
                     sdata.forEach(function(item, index) {
                         values[item.name] = item.value;
                     });
-                    values['framework'] = params.framework;
-                    values['view'] = params.view;
-                    values['option'] = params.option;
-                    values['action'] = 'evidence';
-                    editmatrix_update(values);
-                    if (hastinymce) {
-                        tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+
+                    textareaid = $("#addfeedbackmatrix textarea").attr('id');
+                    if (values['message'].length == 0) {
+                        // add error message
+                        $("#" + textareaid).parent().append('<div class="errmsg"><span>' +
+                            get_string_ajax('annotationfeedbackempty', 'artefact.annotation') +
+                            '</span></div>');
                     }
-                    feedbacktextarea = $("#addfeedbackmatrix textarea");
-                    if (feedbacktextarea.length && hastinymce) {
-                        tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
+                    else {
+                        values['framework'] = params.framework;
+                        values['view'] = params.view;
+                        values['option'] = params.option;
+                        values['action'] = 'feedback';
+                        editmatrix_update(values);
                     }
-                    hide_dock();
-                }
-            });
-            // When we are saving the annotation feedback form - adding new feedback
-            $('#addfeedbackmatrix').on('submit', function(se) {
-                se.preventDefault();
-                var sdata = $("#addfeedbackmatrix :input").serializeArray();
-                var values = {};
-                sdata.forEach(function(item, index) {
-                    values[item.name] = item.value;
                 });
 
-                textareaid = $("#addfeedbackmatrix textarea").attr('id');
-                if (values['message'].length == 0) {
-                    // add error message
-                    $("#" + textareaid).parent().append('<div class="errmsg"><span>' +
-                        get_string_ajax('annotationfeedbackempty', 'artefact.annotation') +
-                        '</span></div>');
+                // Modals can have different components, we need to define which
+                // is the last clickable element
+                var last;
+                // if there is a list of feedbacks, choose the last one
+                if (newpagemodal.find('#matrixfeedbacklist a').length) {
+                    last = newpagemodal.find('#matrixfeedbacklist a').last();
                 }
+                // if there is a feedback section, choose the submit button
+                else if ($('#addfeedbackmatrix').length) {
+                    last = $('#addfeedbackmatrix').find('.submit.btn');
+                }
+                // if no feedback section and there is a cancel button, choose it
+                else if (newpagemodal.find('.submitcancel.cancel').length) {
+                    last = newpagemodal.find('.submitcancel.cancel');
+                }
+                // no clickable elements then tabbing stays in delete button
                 else {
-                    values['framework'] = params.framework;
-                    values['view'] = params.view;
-                    values['option'] = params.option;
-                    values['action'] = 'feedback';
-                    editmatrix_update(values);
+                    last = newpagemodal.find('.deletebutton');
                 }
-            });
+                keytabbinginadialog(newpagemodal, newpagemodal.find('.deletebutton'), last);
+            }, 200);
         });
     });
 
@@ -248,13 +282,13 @@ jQuery(function($) {
         params = data;
         sendjsonrequest('matrixpoint.json.php', params, 'POST', function(results) {
             if (results.data.class) {
-                $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span')
+                $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon')
                   .attr('class', results.data.class)
                   .attr('title', results.data.title)
                   .data('option', results.data.option)
                   .data('view', results.data.view).empty();
-                var completed = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount').text(), 10);
-                $('#tablematrix tr:eq(' + celly + ') td.completedcount').text(completed + results.data.completed);
+                var completed = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount span:nth-child(2)').text(), 10);
+                $('#tablematrix tr:eq(' + celly + ') td.completedcount span:nth-child(2)').text(completed + results.data.completed);
             }
             if (results.data.tablerows) {
                 if ($("#matrixfeedbacklist").has(".annotationfeedbacktable").length == 0) {
@@ -272,12 +306,39 @@ jQuery(function($) {
     carousel_matrix();
 
     // show / hide tooltips for standard elements
-    $('td.code div, tr.standard div').hover(
+    $('tr.standard div').hover(
         function() {
             $(this).find('.popover').removeClass('hidden');
         },
         function() {
             $(this).find('.popover').addClass('hidden');
+        }
+    );
+
+    // Make each standard (row heading description) show when
+    // clicking the name or pressing enter key
+    // Hide it when leaving
+
+    $('td.code div').click(
+        function () {
+            if ($(this).find('.popover').hasClass('hidden')) {
+                $(this).find('.popover').removeClass('hidden');
+            }
+            else {
+                $(this).find('.popover').addClass('hidden');
+            }
+        }
+    );
+
+    $('td.code div').keyup(function(event) {
+        if (event.keyCode == 13) {
+          $(this).click();
+        }
+    });
+
+    $('td.code div').focusout(
+        function() {
+            $(this).closest('div').find('.popover').addClass('hidden');
         }
     );
 
@@ -303,6 +364,16 @@ jQuery(function($) {
         params.collection = section.data('collection');
         sendjsonrequest('matrixstate.json.php', params, 'POST', function(data) {
             // Use json request to set the info to session
+            var description = data.settings.description;
+            var container = section.find('.shortname-container');
+            if (state == 'closed') {
+                container.find('.sr-only.action').html(description.close);
+                container.find('.sr-only.status').html(description.sectioncollapsed);
+            }
+            else {
+                container.find('.sr-only.action').html(description.open);
+                container.find('.sr-only.status').html('');
+            }
         });
         $('tr.examplefor' + id).toggle('600', 'swing').removeClass('hidden');
     });

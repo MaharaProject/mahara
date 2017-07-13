@@ -103,6 +103,7 @@ Scenario: Installing framework module and activating for an institution
  Given  I log in as "userA" with password "Kupuhipa1"
  And I follow "CollA"
  And I click on the matrix point "3,4"
+ And I wait "1" seconds
  And I select "Partially meets the standard" from "Assessment"
  And I press "Save"
  Then I should see "SmartEvidence updated"

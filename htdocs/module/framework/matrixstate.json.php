@@ -26,7 +26,7 @@ $collectionid = param_integer('collection');
 $state = param_alphanum('state', 'open');
 form_validate(param_variable('sesskey', null));
 
-if ($frameworkid = get_record_sql("SELECT fs.framework FROM {framework_standard} fs
+if ($frameworksection = get_record_sql("SELECT fs.framework, fs.shortname FROM {framework_standard} fs
                                    JOIN {collection} c on c.framework = fs.framework
                                    WHERE fs.id = ? and c.id = ?", array($sectionid, $collectionid))) {
     if (isset($_SESSION['matrixsettings'])) {
@@ -35,7 +35,12 @@ if ($frameworkid = get_record_sql("SELECT fs.framework FROM {framework_standard}
     else {
         $matrixsettings = array();
     }
+    $title = isset($frameworksection->shortname) ? hsc($frameworksection->shortname) : '';
+
     $matrixsettings[$collectionid][$sectionid] = $state;
+    $matrixsettings['description']['open'] = get_string('collapsesection', 'module.framework', $title);
+    $matrixsettings['description']['close'] = get_string('uncollapsesection', 'module.framework', $title);
+    $matrixsettings['description']['sectioncollapsed'] = get_string('collapsedsection','module.framework');
     $SESSION->set('matrixsettings', $matrixsettings);
     json_reply(false, (object) array('settings' => $matrixsettings));
 }

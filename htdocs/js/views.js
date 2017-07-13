@@ -358,24 +358,6 @@
         });
     }
 
-    /**
-     * Make sure the previous/next key tabbing will move within the dialog
-     */
-    function keytabbinginadialog(dialog, firstelement, lastelement) {
-        firstelement.keydown(function(e) {
-            if (e.keyCode === $j.ui.keyCode.TAB && e.shiftKey) {
-                lastelement.focus();
-                e.preventDefault();
-            }
-        });
-        lastelement.keydown(function(e) {
-            if (e.keyCode === $j.ui.keyCode.TAB && !e.shiftKey) {
-                firstelement.focus();
-                e.preventDefault();
-            }
-        });
-    }
-
     function startAddBlock(element) {
         var addblockdialog = $('#addblock');
         addblockdialog.modal('show');

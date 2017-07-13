@@ -77,7 +77,7 @@ foreach ($standards['standards'] as $standard) {
 
 define('TITLE', $collection->get('name'));
 
-$javascript = array('js/collection-navigation.js', 'tinymce', 'module/framework/js/matrix.js');
+$javascript = array('js/collection-navigation.js', 'tinymce', 'module/framework/js/matrix.js', 'js/jquery/jquery-ui/js/jquery-ui.min.js');
 
 // Set up theme
 $viewtheme = $view->get('theme');
