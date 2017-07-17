@@ -299,16 +299,18 @@ class Institution {
             $user = get_record('usr', 'id', $user);
         }
 
-        if ($lang = get_account_preference($user->id, 'lang')) {
-            // The user has a preset lang preference so we will use this
+        $lang = get_account_preference($user->id, 'lang');
+        if ($lang == 'default') {
+            // The user does not have a preset lang preference so we will use the institution if it has one.
+            $institution_lang = !empty($this->configs['lang']) ? $this->configs['lang'] : 'default';
+            if ($institution_lang != 'default') {
+                $lang = $institution_lang;
+            }
+            else {
+                $lang = get_config('lang');
+            }
         }
-        else if ($this->lang != 'default') {
-            // The user hasn't been added yet, so we have to manually use this institution's lang
-            $lang = $this->lang;
-        }
-        else {
-            $lang = get_user_language($user->id);
-        }
+
         $userinst = new StdClass;
         $userinst->institution = $this->name;
         $studentid = get_field('usr_institution_request', 'studentid', 'usr', $user->id,
