@@ -422,7 +422,7 @@ class Institution {
                 'messagetype' => 'request',
                 'username' => $user->username,
                 'fullname' => $user->firstname . ' ' . $user->lastname,
-                'institution' => (object)array('name' => $this->name, 'displayname' => $this->displayname),
+                'institution' => (object)array('name' => $this->name, 'displayname' => $this->displayname, 'language' => $this->lang),
             );
             db_begin();
             if (!get_config('usersallowedmultipleinstitutions')) {
@@ -508,7 +508,7 @@ class Institution {
         activity_occurred('institutionmessage', (object) array(
             'messagetype' => 'invite',
             'users' => array($userid),
-            'institution' => (object)array('name' => $this->name, 'displayname' => $this->displayname),
+            'institution' => (object)array('name' => $this->name, 'displayname' => $this->displayname, 'language' => $this->lang),
         ));
         handle_event('updateuser', $userid);
         db_commit();
