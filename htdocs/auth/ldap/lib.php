@@ -1619,7 +1619,7 @@ class PluginAuthLdap extends PluginAuth {
      * Synchronize users and groups with the LDAP server
      */
     public static function auth_ldap_sync_cron() {
-        $auths = get_records_array('auth_instance', 'authname', 'ldap', 'id', 'id');
+        $auths = get_records_array('auth_instance', 'authname', 'ldap', 'id', 'id, active');
         if (!$auths) {
             return;
         }
