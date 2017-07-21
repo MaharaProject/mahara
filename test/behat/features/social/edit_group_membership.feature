@@ -29,7 +29,7 @@ Scenario: Check modal is working for the "Edit group memebership" on find people
    # Log in as "Admin" user
    Given I log in as "admin" with password "Kupuhipa1"
    And I choose "Find people" in "Groups" from main menu
-   And I follow "2" in the "div#friendslist_pagination" "css_element"
+   And I follow "2" in the "Find people results" property
    And I follow "Edit group membership"
    # allow the modal to open
    And I wait "1" seconds

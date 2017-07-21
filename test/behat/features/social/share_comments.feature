@@ -29,7 +29,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  Then I should see "Page saved successfully"
 
  # Sharing Page
- When I follow "Share" in the "#toolbar-buttons" "css_element"
+ When I follow "Share" in the "Toolbar buttons" property
  Then I should see "Edit access"
  When I set the following fields to these values:
  | accesslist[0][searchtype] | Test Group1 |
@@ -38,10 +38,9 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  When I choose "Portfolio" from main menu
  And I follow "Group page1"
  And I follow "Edit this page"
- When I follow "Share" in the "#toolbar-buttons" "css_element"
+ When I follow "Share" in the "Toolbar buttons" property
  And I scroll to the base of id "accessurl_more_open"
- And I should see "Advanced options" in the "legend" "css_element"
- And I follow "Advanced options" in the "legend" "css_element"
+ And I follow "Advanced options"
  And I disable the switch "Allow comments"
  And I scroll to the id "accessurl_submit_container"
  And I press "Save"
@@ -49,7 +48,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  When I choose "Portfolio" from main menu
  And I follow "Group page1"
  And I follow "Edit this page"
- When I follow "Share" in the "#toolbar-buttons" "css_element"
+ When I follow "Share" in the "Toolbar buttons" property
  And I scroll to the base of id "accessurl_more_open"
  And I check "accesslist[0][allowcomments]"
  And I press "Save"
@@ -59,7 +58,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  When I choose "Portfolio" from main menu
  And I follow "Group page1"
  And I follow "Edit this page"
- When I follow "Share" in the "#toolbar-buttons" "css_element"
+ When I follow "Share" in the "Toolbar buttons" property
  Then I should see "Edit access"
  And I expand the section "Advanced options"
  And the "accesslist[0][allowcomments]" checkbox should be checked

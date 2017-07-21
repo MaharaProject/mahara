@@ -34,9 +34,9 @@ Scenario: Installing framework module and activating for an institution
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Plugin administration" in "Extensions" from administration menu
  Then I should see "smartevidence"
- And I should see "Hide" in the "form#activate_module_framework" "css_element"
+ And I should see "Hide" in the "smartevidence" property
  # Also make sure the annotation blocktype plugin is active
- And I press "Show" in the "form#activate_blocktype_annotation" "css_element"
+ And I press "Show" in the "annotation" property
 
  # Make sure we have a matrix config form
  And I choose "SmartEvidence" in "Extensions" from administration menu
@@ -67,9 +67,9 @@ Scenario: Installing framework module and activating for an institution
  And I click the panel "Collection admin_01"
  And I should see "You are on page 1/9"
  And I should see "by Admin User (admin)"
- And I press "Next" in the "table#tablematrix" "css_element"
+ And I press "Next" in the "matrix table" property
  Then I should see "Page admin_06"
- And I press "Prev" in the "table#tablematrix" "css_element"
+ And I press "Prev" in the "matrix table" property
  Then I should not see "Page admin_06"
 
  # Click on a matrix point to add an annotation

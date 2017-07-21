@@ -25,8 +25,8 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I click on "Page UserA_01" panel menu
   And I click on "Edit" in "Page UserA_01" panel menu
-  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
-  And I follow "Tagged journal entries" in the "div#blog" "css_element"
+  And I expand "Journals" node in the "blocktype sidebar" property
+  And I follow "Tagged journal entries" in the "blocktype sidebar" property
   And I press "Add"
   And I fill in select2 input "instconf_tagselect" with "blog" and select "blog"
   And I fill in select2 input "instconf_tagselect" with "one" and select "one"
@@ -34,7 +34,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I select "Others will get a copy of the block configuration" from "Block copy permission"
   And I press "Save"
   And I scroll to the id "main-nav"
-  And I follow "Share" in the "#toolbar-buttons" "css_element"
+  And I follow "Share" in the "Toolbar buttons" property
   And I follow "Advanced options"
   And I enable the switch "Allow copying"
   And I select "Public" from "accesslist[0][searchtype]"

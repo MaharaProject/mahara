@@ -63,7 +63,7 @@ Scenario: Creating a Journal entry
  # Adding journal entry to group 'GroupA'
  When I choose "My groups" in "Groups" from main menu
  And I follow "GroupA"
- And I follow "Journals" in the "div.arrow-bar" "css_element"
+ And I follow "Journals" in the "Arrow-bar nav" property
  And I follow "Create journal"
  And I fill in "Title *" with "My group journal"
  And I press "Create journal"
@@ -77,8 +77,8 @@ Scenario: Creating a Journal entry
  And I choose "Pages and collections" in "Portfolio" from main menu
  And I follow "Page admin_01"
  And I follow "Edit this page"
- And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
- And I follow "Tagged journal entries" in the "div#blog" "css_element"
+ And I expand "Journals" node in the "blocktype sidebar" property
+ And I follow "Tagged journal entries" in the "blocktype sidebar" property
  And I press "Add"
  And I scroll to the base of id "instconf_tagselect_container"
  And I fill in select2 input "instconf_tagselect" with "one" and select "one"
@@ -91,7 +91,7 @@ Scenario: Creating a Journal entry
  And I clear value "one" from select2 field "instconf_tagselect"
  And I press "Save"
 
- And I follow "Recent journal entries" in the "div#blog" "css_element"
+ And I follow "Recent journal entries" in the "blocktype sidebar" property
  And I press "Add"
  And I check "Admin User's Journal"
  And I press "Save"

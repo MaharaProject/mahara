@@ -40,37 +40,31 @@ The list of shared pages must take into account of access date (Bug 1374163)
     Given I log in as "UserA" with password "Kupuhipa1"
     # Edit access for Page 01
     And I choose "Shared by me" in "Portfolio" from main menu
-    And I follow "Pages" in the "div#main-column-container" "css_element"
+    And I follow "Pages"
     And I click on "Edit access" in "Page UserA_01" row
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I fill in "accesslist[0][startdate]" with "2015/06/15 03:00"
     And I press "Save"
+    # Edit access for Page UserA_02
+    And I choose "Shared by me" in "Portfolio" from main menu
     And I follow "Pages"
-    And I should see "GroupA"
-    # Edit access for Page 02
-    And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page UserA_02" row
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I fill in "accesslist[0][stopdate]" with "2015/04/15 02:50"
     And I press "Save"
     And I should see "The end date for 'group' access cannot be in the past."
     And I press "Cancel"
-    # Edit access for Page 02
-    #And I follow "Pages" in the "div#main-column-container" "css_element"
-    #And I click on "Edit access" in "Page UserA_02" row
-    #And I select "GroupA" from "accesslist[0][searchtype]"
-    #And I fill in "accesslist[0][startdate]" with "2015/06/15 03:00"
-    #And I fill in "accesslist[0][stopdate]" with "+2 days" date in the format "Y/m/d"
-    #And I press "Save"
-    # Edit access for Page 03
-    And I follow "Pages" in the "div#main-column-container" "css_element"
+    # Edit access for Page UserA_03
+    And I choose "Shared by me" in "Portfolio" from main menu
+    And I follow "Pages"
     And I click on "Edit access" in "Page UserA_03" row
     And I follow "Advanced options"
     And I fill in the following:
       | Access start date/time | 2015/06/15 00:00 |
     And I press "Save"
-    # Edit access for Page 05
-    And I follow "Pages" in the "div#main-column-container" "css_element"
+    # Edit access for Page UserA_05
+    And I choose "Shared by me" in "Portfolio" from main menu
+    And I follow "Pages"
     And I click on "Edit access" in "Page UserA_05" row
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"

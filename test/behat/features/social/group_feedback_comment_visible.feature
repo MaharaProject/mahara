@@ -22,11 +22,11 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     Given I log in as "UserA" with password "Kupuhipa1"
     And I choose "Groups" from main menu
     # Changing the settings of the block to change comment notification
-    And I click on "Settings" in the "div.groupuserstatus" "css_element"
+    And I click on "Settings" in "Group A" row
     And I set the following fields to these values:
     | Comment notifications | None |
     And I press "Save group"
-    When I click on "Pages and collections" in the ".right-text" "css_element"
+    When I click on "Pages and collections" in the "Arrow-bar nav" property
     And I follow "Add"
     And I click on "Page" in the dialog
     And I set the following fields to these values:
@@ -47,9 +47,9 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     When I follow "GroupA"
     Then I should see "About | GroupA"
     When I follow "Pages and collections (tab)"
-    Then I should see "Group Page 01" in the "h3.panel-heading" "css_element"
+    Then I should see "Group Page 01" in the "Pages and Collections boxes" property
     And I click the panel "Group Page 01"
-    Then I should see "Adding a comment to this field. Student = Awesome!" in the "div.comment-text" "css_element"
+    Then I should see "Adding a comment to this field. Student = Awesome!" in the "Comment text" property
 
 # As part of consolidating behat tests, this scenario has been added.
 # Original feature title: Sending notification message when someone leaves a comment in a group page

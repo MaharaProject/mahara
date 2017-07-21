@@ -34,7 +34,7 @@ Scenario: Public comment by page owner, public reply by third party
     And I go to portfolio page "Page AdminA_01"
     And I click on "Reply" in "Public comment by AdminA" row
     # I should see a preview of the reply-to comment below the feedback form
-    And I should see "Public comment by AdminA" in the ".commentreplyview" "css_element"
+    And I should see "Public comment by AdminA" in the "Comment preview" property
     And I fill in "Public reply by AdminB" in editor "Comment"
     When I press "Comment"
     Then I should see "Public comment by AdminA"
@@ -58,7 +58,7 @@ Scenario: Public comment by non-owner, owner can private reply, another non-owne
     And I go to portfolio page "Page AdminA_01"
     And I click on "Reply" in "Public comment by AdminB" row
     # I should not be able to make a private reply to a comment by someone other than the page owner
-    And I should see "Public" in the "#add_feedback_form_ispublic_container" "css_element"
+    And I should see "Public" in the "Make comment public status" property
     When I fill in "Public reply by AdminC" in editor "Comment"
     And I press "Comment"
     Then I should see "Public comment by AdminB"
@@ -78,7 +78,7 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
     And I go to portfolio page "Page AdminA_01"
     And I click on "Reply" in "Private comment by AdminB" row
     # There should be no option to make a public reply to a private comment
-    And I should see "Private" in the "#add_feedback_form_ispublic_container" "css_element"
+    And I should see "Private" in the "Make comment public status" property
     And I fill in "Private reply by AdminA" in editor "Comment"
     And I press "Comment"
     And I log out
@@ -109,7 +109,7 @@ Scenario: No private replies to anonymous comments
     And I go to portfolio page "Page AdminA_01"
     And I click on "Reply" in "Public comment by anonymous user" row
     # I should not be able to make a private reply to a comment by someone other than the page owner
-    Then I should see "Public" in the "#add_feedback_form_ispublic_container" "css_element"
+    Then I should see "Public" in the "Make comment public status" property
     And I fill in "Public reply by AdminB" in editor "Comment"
     And I press "Comment"
     And I should see "Public comment by anonymous user"

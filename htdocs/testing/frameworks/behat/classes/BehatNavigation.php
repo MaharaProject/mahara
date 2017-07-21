@@ -191,13 +191,24 @@ class BehatNavigation extends BehatBase {
      * Expands the selected node that matches the text which is located inside the second element.
      *
      * @Given /^I expand "(?P<element_string>(?:[^"]|\\")*)" node in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
+     * @Given I expand :element node in the :property property
      * @param string $element we look for
      * @param string $nodeelement Element we look in
      * @param string $nodeselectortype The type of selector where we look in
+     * @param string $property we look for
      */
-    public function i_expand_node_in_the($element, $nodeelement, $nodeselectortype) {
+    public function i_expand_node_in_the($element = null, $nodeelement = null, $nodeselectortype = null, $property = null) {
         if (!$this->running_javascript()) {
             return true;
+        }
+        if ($property) {
+          $css_locator = get_property($property);
+          if (!$css_locator) {
+                   throw new ExpectationException('"A property called $property was not found in the properties.php file. Check that file or try passing a css locator directly"',
+                   $this->getSession());
+          }
+          $nodeelement = $css_locator[0];
+          $nodeselectortype = $css_locator[1];
         }
         $node = $this->get_node_in_container('text', $element, $nodeselectortype, $nodeelement);
         // Check if the node is a link.

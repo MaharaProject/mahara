@@ -50,7 +50,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # And I click on "Show user menu" # problem with chrome driver clicking on user icon instead
     # And I follow "mail"
     And I choose "mail" from user menu by id
-    And I follow "Inbox" in the ".arrow-bar" "css_element"
+    And I follow "Inbox" in the "Arrow-bar nav" property
     And I follow "Sent"
     And I follow "Compose"
     # Checking Homepage

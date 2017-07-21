@@ -22,7 +22,7 @@ Scenario:
     # Configuring the block
     And I expand "Media" node
     And I wait "1" seconds
-    And I follow "Some HTML" in the "div#fileimagevideo" "css_element"
+    And I follow "Some HTML" in the "blocktype sidebar" property
     And I press "Add"
     And I follow "File"
     And I attach the file "test_html.html" to "File"

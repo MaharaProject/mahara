@@ -189,7 +189,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I set the field "Description" to "Become a certified diver"
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
+    And I press "Close" in the "Upload dialog" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
@@ -198,7 +198,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     | Description | Become tenured professor |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
+    And I press "Close" in the "Upload dialog" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
@@ -207,7 +207,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
+    And I press "Close" in the "Upload dialog" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_personalskill"
@@ -216,7 +216,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
+    And I press "Close" in the "Upload dialog" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_academicskill"
@@ -225,7 +225,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
+    And I press "Close" in the "Upload dialog" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_workskill"
@@ -234,7 +234,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
+    And I press "Close" in the "Upload dialog" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top

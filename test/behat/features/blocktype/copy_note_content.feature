@@ -16,13 +16,13 @@ Scenario: Use content from another note (Bug 1710988)
   And I follow "Page 1"
   And I follow "Edit this page"
   And I expand "General" node
-  And I follow "Note" in the "div#general" "css_element"
+  And I follow "Note" in the "blocktype sidebar" property
   And I press "Add"
   And I set the following fields to these values:
   | Block title | Note block 1 |
   | Block content | This is a test |
   And I press "Save"
-  And I follow "Note" in the "div#general" "css_element"
+  And I follow "Note" in the "blocktype sidebar" property
   And I press "Add"
   And I follow "Use content from another note"
   And I select the radio "Note block 1"

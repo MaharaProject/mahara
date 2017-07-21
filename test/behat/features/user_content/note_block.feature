@@ -21,17 +21,16 @@ Scenario: Adding and deleting a Note block (Bug 1424512)
     And I click on "Edit" in "Page UserA_01" panel menu
     # Configuring the block
     And I expand "General" node
-    And I follow "Note" in the "div#general" "css_element"
+    And I follow "Note" in the "blocktype sidebar" property
     And I press "Add"
     And I set the following fields to these values:
     | Block title | Note block 1 |
     | Block content | This is a test |
     #Adding an attachment to a note and attaching a file to it.
-    And I follow "Attachments" in the "div#instconf_artefactfieldset_container" "css_element"
     And I attach the file "Image2.png" to "userfile[]"
     And I press "Save"
     #Add a second note to the page
-    And I follow "Note" in the "div#general" "css_element"
+    And I follow "Note" in the "blocktype sidebar" property
     And I press "Add"
     And I follow "Use content from another note"
     And I select the radio "Note block 1"

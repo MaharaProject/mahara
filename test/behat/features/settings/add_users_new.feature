@@ -28,7 +28,7 @@ Background:
   And I press "General account options"
   And I set the following fields to these values:
   | Multiple journals | 1 |
-  And I press "×" in the "div.modal-header" "css_element"
+  And I press "×" in the "Options dialog" property
   And I press "Create user"
   Then I should see "New user account created successfully"
   And I expand "Institution settings - Institution One" node
@@ -44,8 +44,8 @@ Background:
   And I wait "1" seconds
   And I should see "Administrator of Institution One"
   And I click on "Show administration menu"
-  And I should see "Groups" in the "#main-nav-admin" "css_element"
-  And I should not see "Extensions" in the "#main-nav-admin" "css_element"
+  And I should see "Groups" in the "Administration menu" property
+  And I should not see "Extensions" in the "Administration menu" property
  #Checking  multiple journals
   And I choose "Journals" in "Content" from main menu
   And I should see "Create journal"
@@ -53,8 +53,8 @@ Background:
  #login as staff user
   Given I log in as "StaffA" with password "Kupuhipa1"
   And I click on "Show administration menu"
-  And I should see "Reports" in the "#main-nav-admin" "css_element"
-  And I should not see "Groups" in the "#main-nav-admin" "css_element"
+  And I should see "Reports" in the "Administration menu" property
+  And I should not see "Groups" in the "Administration menu" property
  #Site admin role already tested in menu_navigation.feature file
 
 Scenario: Create users by csv (Bug 1426983)

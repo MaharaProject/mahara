@@ -15,6 +15,7 @@
  */
 
 require_once(__DIR__ . '/BehatBase.php');
+require_once(__DIR__ . '/properties.php');
 
 use Behat\Mink\Exception\ExpectationException as ExpectationException,
     Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException,
@@ -751,6 +752,69 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+    * Generic function to take any step that needs to look up the properties
+    * file with the syntax "in the <> property" and gets the css locator
+    * from the properties.php file.
+    * Then uses a switch to get the correct function.
+    *
+    * @Then /^I (?P<step_funct>.*) "(?P<text_string>(?:[^"]|\\")*)" in the "(?P<property_string>(?:[^"]|\\")*)" property$/
+    * @Then /^I (?P<step_funct>.*) "(?P<text_string>(?:[^"]|\\")*)" in the
+    * "(?P<property_string>(?:[^"]|\\")*)" property in "(?P<location_string>(?:[^"]|\\")*)"$/
+    * @param string $step_funct
+    * @param string $text
+    * @param string $property
+    * @param string $location
+    */
+   public function get_property_call_funct($step_funct, $text, $property, $location = null) {
+     $css_locator = get_property($property, $location);
+     // get_property returns null if locator not found
+     if (!$css_locator) {
+            throw new ExpectationException('"A property called "' . $property . '" was not found in the properties.php file. Check that file or try passing a css locator directly"',
+            $this->getSession());
+     }
+     else {
+       // switch covers steps in BehatGeneral that pass a css_locator
+       switch ($step_funct) {
+         case "click on":
+             $funct = "i_click_on_in_the";
+             break;
+         case "follow":
+             $funct = "i_follow_in_the";
+             break;
+         case "press":
+             $funct = "i_press_in_the";
+             break;
+         case "should see":
+             $funct = "assert_element_contains_text";
+             break;
+         case "should not see":
+             $funct = "assert_element_not_contains_text";
+             break;
+         }
+      $this->$funct($text, $css_locator[0], $css_locator[1]);
+     }
+   }
+
+     /**
+     * @Then /^I should see "(?P<text_string>(?:[^"]|\\")*)" in the
+     * "(?P<property_string>(?:[^"]|\\")*)" property in "(?P<location_string>(?:[^"]|\\")*)"$/
+     * @param string $text
+     * @param string $property
+     * @param string $location
+     */
+    public function should_see_property_in_location($text, $property, $location) {
+
+      $css_locator = get_property_in_location($property, $location);
+      if (!$css_locator) {
+             throw new ExpectationException('"A property called $property was not found in the properties.php file. Check that file or try passing a css locator directly"',
+                      $this->getSession());
+      }
+      else {
+        $this->assert_element_contains_text($text, $css_locator[0], $css_locator[1]);
+      }
+    }
+
+    /**
      * Checks, that the specified element contains the specified text. When running Javascript tests it also considers that texts may be hidden.
      *
      * @Then /^I should see "(?P<text_string>(?:[^"]|\\")*)" in the "(?P<element_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
@@ -761,7 +825,6 @@ class BehatGeneral extends BehatBase {
      * @param string $selectortype The type of element where we are looking in.
      */
     public function assert_element_contains_text($text, $element, $selectortype) {
-
         // Getting the container where the text should be found.
         $container = $this->get_selected_node($selectortype, $element);
 
