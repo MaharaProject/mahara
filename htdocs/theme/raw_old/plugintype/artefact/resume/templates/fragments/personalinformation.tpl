@@ -1,9 +1,9 @@
 <div class="panel-body flush">
-    <table class="resumepersonalinfo fullwidth panel-body flush">
+    <table class="table resumepersonalinfo profile-info">
     {foreach from=$fields key='field' item='value'}
         {if $value}
         <tr>
-            <th class="onethirdwidth">{$field}</th>
+            <th>{$field}</th>
             <td>{$value}</td>
         </tr>
         {/if}

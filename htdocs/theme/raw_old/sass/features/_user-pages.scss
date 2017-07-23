@@ -58,19 +58,4 @@
     .feedcontent h6 {
         font-size: $font-size-h3;
     }
-
-    table {
-        border-spacing: 0;
-        border-color: $table-border-color;
-        border-width: 1px;
-    }
-
-    table,
-    table td {
-        border-style: solid;
-    }
-
-    table td {
-        padding:2px 5px;
-    }
 }
