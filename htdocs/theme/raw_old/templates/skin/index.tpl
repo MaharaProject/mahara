@@ -26,7 +26,7 @@
         <div class="panel panel-default">
             <h2 class="panel-heading {if $skin.metadata} has-link {/if}">
                 <a href="" type="button" title="{str tag='viewmetadata' section='skin'}" class="title-link" data-toggle="modal" data-target="#skindata-modal-{$skin.id}" aria-labelledby="skin-info">
-                    {$skin.title|escape}
+                    {$skin.title|escape|safe}
                     <span class="icon icon-info-circle pull-right link-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=viewmetadataspecific section=skin arg1=$skin.title}
