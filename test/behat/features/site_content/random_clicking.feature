@@ -58,6 +58,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I follow "Dashboard"
     # Checking Administration
     # Checking admin home menu and submenu
+    And I choose "Admin home" from administration menu
     And I choose "Register" in "Admin home" from administration menu
     And I choose "Overview" in "Admin home" from administration menu
     # Checking Configure site menu and submenu
@@ -94,8 +95,9 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Pages and collections" in "Institutions" from administration menu
     And I choose "Share" in "Institutions" from administration menu
     And I choose "Files" in "Institutions" from administration menu
-    And I choose "Reports" in "Institutions" from administration menu
     And I choose "Pending registrations" in "Institutions" from administration menu
+    # Checking Reports menu
+    And I choose "Reports" from administration menu
     # Checking Extensions Menu and submenu
     And I choose "Plugin administration" in "Extensions" from administration menu
     And I choose "HTML filters" in "Extensions" from administration menu

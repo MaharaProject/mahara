@@ -174,7 +174,7 @@
                         {str tag=withselectedusersreports section=admin}
                     </button>
                     <input type="hidden" name="type" value="users">
-                    <input type="hidden" name="subtype" value="useractivity">
+                    <input type="hidden" name="subtype" value="userdetails">
                 </form>
             </div>
             <div id="nousersselected" class="hidden error alert alert-danger">

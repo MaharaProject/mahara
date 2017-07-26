@@ -11,8 +11,7 @@
 
 define('INTERNAL', 1);
 define('INSTITUTIONALSTAFF', 1);
-define('MENUITEM', 'manageinstitutions/statistics');
-define('STATISTICSMENU', 1);
+define('MENUITEM', 'reports');
 
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
 require(get_config('libroot') . 'statistics.php');
@@ -24,15 +23,19 @@ if (!is_logged_in()) {
 
 $institution = param_alphanum('institution', null);
 $notallowed = false;
-if (!empty($institution)) {
-    $staffstats = get_config('staffstats');
-    if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) && (!$USER->is_institutional_staff($institution) || ($USER->is_institutional_staff($institution) && empty($staffstats)))) {
-        $notallowed = true;
-    }
+
+$allstaffstats = get_config('staffstats');
+$userstaffstats = get_config('staffreports'); // The old 'Users/access list/masquerading' reports from users section
+
+if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
+    (!$USER->is_institutional_staff($institution) ||
+     ($USER->is_institutional_staff($institution) && empty($allstaffstats) && empty($userstaffstats)))) {
+    $notallowed = true;
 }
 
 if (!$notallowed) {
-    $institutionelement = get_institution_selector(true, false, true, get_config('staffstats'), ($USER->get('admin') || $USER->get('staff')));
+    // Get the institution selector to worl out what institutions they are allowed to see
+    $institutionelement = get_institution_selector(true, false, true, ($allstaffstats || $userstaffstats), ($USER->get('admin') || $USER->get('staff')));
 }
 
 if (empty($institutionelement) || $notallowed) {
@@ -49,14 +52,6 @@ else if (!empty($institution)) {
     $institutionelement['defaultvalue'] = $institution;
 }
 
-$institutionselector = pieform(array(
-    'name' => 'usertypeselect',
-    'class' => 'form-inline',
-    'elements' => array(
-        'institution' => $institutionelement,
-    )
-));
-
 if ($usersparam = param_variable('users', null)) {
     $newuserids = is_array($usersparam) ? array_map('intval', $usersparam) : null;
     $SESSION->set('usersforstats', $newuserids);
@@ -65,6 +60,14 @@ if ($usersparam = param_variable('users', null)) {
 define('PAGEHEADINGARROW', get_string('reports', 'statistics'));
 $type = param_alpha('type', 'users');
 $subtype = param_alpha('subtype', '');
+
+if (isset($institution)) {
+    if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
+        $USER->is_institutional_staff($institution) && empty(get_config('staffstats')) && !empty(get_config('staffreports'))) {
+        // we need to give them the correct default report
+        $subtype = !empty($subtype) ? $subtype : 'userdetails';
+    }
+}
 
 // Work out the title for the report
 $reporttype = get_string('peoplereports', 'statistics');
@@ -95,6 +98,9 @@ $end = param_variable('end', null);
 $start = $start ? format_date(strtotime($start), 'strftimew3cdate') : null;
 $end = $end ? format_date(strtotime($end), 'strftimew3cdate') : null;
 
+$activecolumns = $SESSION->get('columnsforstats');
+$activecolumns = !empty($activecolumns) ? $activecolumns : array();
+
 $extraparams = new stdClass();
 $extraparams->type = $type;
 $extraparams->subtype = $subtype;
@@ -105,7 +111,7 @@ $extraparams->extra = array('sort' => param_alphanumext('sort', ''),
                             'sortdesc' => param_boolean('sortdesc'),
                             'start' => $start,
                             'end' => $end,
-                            'columns' => array(), // will be filled by the $type statistics function
+                            'columns' => $activecolumns,
                       );
 
 $jsondatestart = !empty($start) ? "'" . $start ."'" : 'null';
@@ -116,7 +122,7 @@ $wwwroot = get_config('wwwroot');
 // Need to handle the pieform submission for the 'configure report' here
 // This also populates the needed 'calendar' element headdata
 // TODO - look to see if we need the ajax fetching of the config form or can we prepopulate the page with it?
-$pieform = pieform_instance(report_config_form($extraparams));
+$pieform = pieform_instance(report_config_form($extraparams, $institutionelement));
 
 
 $js = <<<JS
@@ -140,6 +146,15 @@ function show_stats_config() {
             e.preventDefault();
             $("#modal-configs").modal("hide");
         });
+        // The institution selector can be a hidden field if only 1 choice
+        // So we need to make sure the field is a select field and not a hidden one
+        var instselect = $('#reportconfigform_institution');
+        if (instselect.is('select')) {
+            instselect.select2({
+                dropdownParent: $("#modal-configs"),
+                width: '100%'
+            });
+        }
     });
 }
 
@@ -157,7 +172,7 @@ function update_table_headers(data) {
 
         $('#statistics_table thead tr').html(newhtml);
     }
-    $('#statistics_table thead tr').find('a').each(function (i, a) {
+    $('#statistics_table thead tr').find('a.col_head_link').each(function (i, a) {
         $(a).off('click');
         $(a).on('click', function(e) {
             e.preventDefault();
@@ -167,6 +182,7 @@ function update_table_headers(data) {
             if (loc != -1) {
                 queryData = parseQueryString(a.href.substring(loc + 1, a.href.length));
                 queryData.limit = limit;
+                queryData.offset = 0;
                 // move the ones we need in extradata to there
                 extraData.sort = queryData.sort;
                 extraData.sortdesc = queryData.sortdesc || false;
@@ -205,8 +221,6 @@ jQuery(function ($) {
         $("#modal-configs").modal("hide");
     });
 
-    $('#usertypeselect_institution').on('change', reloadStats);
-
     $('.btn.filter').on('click', function() {
         var filteropt = $(this);
         var filteroptid = filteropt.prop('id');
@@ -218,11 +232,14 @@ jQuery(function ($) {
 
     $('#messages .alert-success').delay(1000).hide("slow");
     update_table_headers(null);
-});
 
-function reloadStats() {
-    window.location.href = '{$wwwroot}admin/users/statistics.php?institution=' + $('#usertypeselect_institution').val() + '&type={$type}&subtype={$subtype}';
-}
+    if ($('.statinfoblock').length > 0) {
+        var maxHeight = Math.max.apply(null, $(".statinfoblock").map(function () {
+            return $(this).height();
+        }).get());
+        $('.statinfoblock').css('height', maxHeight + 'px');
+    }
+});
 
 JS;
 
@@ -244,23 +261,16 @@ else {
     if ($subpagination) {
         $js .= <<<JS
 jQuery(function ($) {
-    // JS Code to deal with the columns selector
-    // This fetches the results and displays only the selected columns
-    $('#reportconfig input').on('click', function() {
-        var selected = [];
-        // Get all checked boxes
-        $('#reportconfig input:checked').each(function() {
-            selected.push($(this).attr('name'));
-        });
-
+    // JS Code to deal with the download CSV button
+    // We want the CSV to return all results for time period rather than the current paginated page
+    // So we want to do this asynchronistically
+    $('#csvdownload').on('click', function(e) {
+        e.preventDefault();
         var obj = JSON.parse(opts.extradata);
-        obj['columns'] = selected;
+        obj['csvdownload'] = true;
         opts.extradata = JSON.stringify(obj);
-        opts.offset = $('form.form-pagination input.currentoffset').val();
-        opts.limit = $('#setlimitselect').val();
-
         sendjsonrequest(config.wwwroot + 'admin/users/statistics.json.php', opts, 'POST', function (data) {
-            p.updateResults(data);
+            window.location = config.wwwroot + 'download.php';
         });
     });
 
@@ -281,5 +291,4 @@ $smarty->assign('subpagedata', $subpagedata);
 if (isset($subpagedata['table']) && isset($subpagedata['table']['settings'])) {
     $smarty->assign('reportsettings', get_report_settings($subpagedata['table']['settings']));
 }
-$smarty->assign('institutionselector', $institutionselector);
 $smarty->display('admin/users/statistics.tpl');

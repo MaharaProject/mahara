@@ -250,6 +250,7 @@ table.table tr {
 }
 
 // Unset border top on the first row of the table
+.table>tbody>tr:first-child>th,
 .table>tbody>tr:first-child>td {
     border-top-width: 0;
 }

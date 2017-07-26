@@ -39,6 +39,9 @@ if (empty($extradata->start) && !empty($start)) {
 if (empty($extradata->end) && !empty($end)) {
     $extradata->end = $end;
 }
+$activecolumns = $SESSION->get('columnsforstats');
+$activecolumns = !empty($activecolumns) ? $activecolumns : array();
+$extradata->columns = $activecolumns;
 
 $type = param_alpha('type', 'users');
 $subtype = param_alpha('subtype', $type);
@@ -56,4 +59,9 @@ $extraparams->extra = (array)$extradata;
 
 list($subpages, $subpagedata) = display_statistics($institution, $type, $extraparams);
 
-json_reply(false, (object) array('message' => false, 'data' => $subpagedata['table'], 'tableheadings' => $subpagedata['tableheadings'], 'extraparams' => $extraparams));
+if (!empty($extradata) && !empty($extradata->csvdownload)) {
+    json_reply(false, (object) array('message' => false, 'data' => 'downloadready'));
+}
+else {
+    json_reply(false, (object) array('message' => false, 'data' => $subpagedata['table'], 'tableheadings' => $subpagedata['tableheadings'], 'extraparams' => $extraparams));
+}

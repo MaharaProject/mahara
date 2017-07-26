@@ -1297,6 +1297,10 @@ function display_username($user=null) {
         $user = new StdClass;
         $user->username = $USER->get('username');
     }
+    // if cached (non $USER) $user object is missing username
+    if (empty($user->username)) {
+        $user->username = get_field('usr', 'username', 'id', $user->id);
+    }
 
     if (strlen($user->username) > MAX_USERNAME_DISPLAY) {
         return substr($user->username, 0, MAX_USERNAME_DISPLAY).'...';

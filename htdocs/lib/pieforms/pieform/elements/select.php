@@ -64,6 +64,14 @@
  *
  * - "height" (deprecated): How tall to make this select element in pixels. Better to do this with CSS.
  *
+ * The select field can also be turned into a Select2 field via having the select2.js library loaded in page
+ * and adding the following to the array:
+ * - 'class' => 'js-select2'
+ * - 'isSelect2' => true,
+ *
+ * You can also make the default read only via
+ * - 'defaultvaluereadonly' => true,
+ *
  * @todo Currently, putting a junk defaultvalue/value for a multiple select
  * does not trigger any kind of error, it should perhaps trigger a
  * Pieform::info

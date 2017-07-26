@@ -1,7 +1,7 @@
 {foreach from=$data item=item}
   <tr class="{cycle values='r0,r1'}">
     {if $columns.rownum}<td>{$offset + $dwoo.foreach.default.iteration}</td>{/if}
-    {if $columns.user}<td><a href="{$item->profileurl}">{$item->displayname}</a></td>{/if}
+    {if $columns.date}<td>{$item->date}</td>{/if}
     {if $columns.comments}<td>{$item->comments}</td>{/if}
     {if $columns.annotations}<td>{$item->annotations}</td>{/if}
     {if $columns.usershare}<td>{$item->usershare}</td>{/if}

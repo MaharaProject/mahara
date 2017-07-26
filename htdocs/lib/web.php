@@ -649,10 +649,6 @@ EOF;
             $smarty->assign('PAGEHEADING', TITLE);
         }
     }
-    // If we want the arrow menu title to be different to the page
-    if (defined('PAGEHEADINGARROW')) {
-        $smarty->assign('PAGEHEADINGARROW', PAGEHEADINGARROW);
-    }
 
     if (defined('SUBSECTIONHEADING')) {
         $smarty->assign('SUBSECTIONHEADING', SUBSECTIONHEADING);
@@ -749,10 +745,6 @@ EOF;
                 $smarty->assign('PAGEHEADING', $group->name);
             }
         }
-    }
-    if (defined('STATISTICSMENU') && $USER->is_logged_in()) {
-        require_once('statistics.php');
-        $smarty->assign('SUBPAGENAV', statistics_get_menu_tabs());
     }
 
     // ---------- sideblock stuff ----------
@@ -2570,23 +2562,23 @@ function admin_nav() {
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 90,
         ),
-        'manageinstitutions/statistics' => array(
-            'path'   => 'manageinstitutions/statistics',
-            'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('reports', 'statistics'),
-            'weight' => 100,
-        ),
         'manageinstitutions/pendingregistrations' => array(
             'path'   => 'manageinstitutions/pendingregistrations',
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
-            'weight' => 110,
+            'weight' => 100,
+        ),
+        'reports' => array(
+            'path'   => 'reports',
+            'url'    => 'admin/users/statistics.php',
+            'title'  => get_string('reports', 'statistics'),
+            'weight' => 60,
         ),
         'configextensions' => array(
             'path'   => 'configextensions',
             'url'    => 'admin/extensions/plugins.php',
             'title'  => get_string('Extensions', 'admin'),
-            'weight' => 60,
+            'weight' => 70,
             'accesskey' => 'e',
         ),
         'configextensions/pluginadmin' => array(
@@ -2782,17 +2774,17 @@ function institutional_admin_nav() {
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 90,
         ),
-        'manageinstitutions/statistics' => array(
-            'path'   => 'manageinstitutions/statistics',
-            'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('reports', 'statistics'),
-            'weight' => 100,
-        ),
         'manageinstitutions/pendingregistrations' => array(
             'path'   => 'manageinstitutions/pendingregistrations',
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
-            'weight' => 110,
+            'weight' => 100,
+        ),
+        'reports' => array(
+            'path'   => 'reports',
+            'url'    => 'admin/users/statistics.php',
+            'title'  => get_string('reports', 'statistics'),
+            'weight' => 40,
         ),
     );
 
@@ -2828,10 +2820,10 @@ function staff_nav() {
             'weight' => 10,
             'accesskey' => 'u',
         ),
-        'institutionalstatistics' => array(
-            'path'   => 'statistics',
+        'reports' => array(
+            'path'   => 'reports',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('institutionreports', 'admin'),
+            'title'  => get_string('reports', 'statistics'),
             'weight' => 30,
             'accesskey' => 'i',
         ),
@@ -2869,10 +2861,10 @@ function institutional_staff_nav() {
             'weight' => 10,
             'accesskey' => 'u',
         ),
-        'institutionalstatistics' => array(
-            'path'   => 'statistics',
+        'reports' => array(
+            'path'   => 'reports',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('institutionreports', 'admin'),
+            'title'  => get_string('reports', 'statistics'),
             'weight' => 20,
             'accesskey' => 'i',
         ),

@@ -165,14 +165,14 @@ $siteoptionform = array(
                 'staffreports' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('staffuserreports', 'admin'),
-                    'description'  => get_string('staffuserreportsdescription1', 'admin'),
+                    'description'  => get_string('staffuserreportsdescription2', 'admin'),
                     'defaultvalue' => get_config('staffreports'),
                     'disabled'     => in_array('staffreports', $OVERRIDDEN),
                 ),
                 'staffstats' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('staffuserstats', 'admin'),
-                    'description'  => get_string('staffuserstatsdescription1', 'admin'),
+                    'description'  => get_string('staffuserstatsdescription2', 'admin'),
                     'defaultvalue' => get_config('staffstats'),
                     'disabled'     => in_array('staffstats', $OVERRIDDEN),
                 ),
@@ -751,6 +751,14 @@ $siteoptionform = array(
                     'disabled'     => in_array('eventlogexpiry', $OVERRIDDEN),
                     'class'        => 'double'
                 ),
+                'eventlogenhancedsearch' => array(
+                    'type'         => 'switchbox',
+                    'title'        => get_string('eventlogenhancedsearch', 'admin'),
+                    'description'  => get_string('eventlogenhancedsearchdescription', 'admin'),
+                    'defaultvalue' => get_config('eventlogenhancedsearch'),
+                    'help'         => true,
+                    'disabled'     => (get_config('searchplugin') != 'elasticsearch' || in_array('eventlogenhancedsearch', $OVERRIDDEN)),
+                ),
             ),
         ),
     )
@@ -797,7 +805,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
-        'eventloglevel', 'eventlogexpiry', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',
+        'eventloglevel', 'eventlogexpiry', 'eventlogenhancedsearch', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',
     );
     if (get_config('dropdownmenuenabled')) {
       $fields = array_merge($fields, array('dropdownmenu'));
@@ -846,7 +854,10 @@ function siteoptions_submit(Pieform $form, $values) {
         // Ensure allowpublicprofiles is set as well
         $values['allowpublicprofiles'] = 1;
     }
-
+    // Can only set advanced event log searching if search plugin is elasticsearch
+    if (!empty($values['eventlogenhancedsearch']) && $values['searchplugin'] != 'elasticsearch') {
+        $values['eventlogenhancedsearch'] = false;
+    }
     $oldsearchplugin = get_config('searchplugin');
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

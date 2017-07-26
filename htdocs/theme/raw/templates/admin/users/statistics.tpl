@@ -7,32 +7,11 @@
 </div>
 <div class="reportsettings">{$reportsettings|safe}</div>
 <div class="clearfix"></div>
-{if $subpagedata && $subpagedata.tableheadings}
-    <div class="collapsible reportconfig pull-right">
-        <div class="title panel-heading js-heading">
-            <a data-toggle="collapse" href="#reportconfig" aria-expanded="false" class="outer-link collapsed"></a>
-            {str tag="Columns" section="admin"}
-            <span class="icon icon-chevron-up collapse-indicator pull-right inner-link" role="presentation" aria-hidden="true"></span>
-        </div>
-        <div class="block collapse options" id="reportconfig">
-        {foreach from=$subpagedata.tableheadings item=heading}
-            <div class="with-label-widthauto">
-            <label class="reportcol">
-                <input name="{$heading.id}" id="report-column-{$heading.id}" type="checkbox" {if $heading.selected}checked{/if} {if $heading.required}disabled{/if}>
-                {$heading.name}
-            </label>
-            </div>
-        {/foreach}
-        </div>
-    </div>
-{/if}
 {if $institutiondata || $subpagedata}
     <div>
     {if $institutiondata}
         <div class="subpage panel-body row">
-            <div class="panel panel-info">
-                {include file='admin/users/stats.tpl' cron=1}
-            </div>
+        {include file='admin/users/stats.tpl' cron=1}
         </div>
     {/if}
     {if $subpagedata && $subpagedata.notvalid_errorstring}
@@ -60,7 +39,7 @@
                             {$subpagedata.table.pagination|safe}
                         </div>
                         {if $subpagedata.table.csv}
-                            <a href="{$WWWROOT}download.php" class="csv-button pull-right" title="{str tag="exportstatsascsv" section="admin"}">
+                            <a href="{$WWWROOT}download.php" id="csvdownload" class="csv-button pull-right" title="{str tag="exportstatsascsv" section="admin"}">
                             <span class="icon icon-download" role="presentation" aria-hidden="true"></span>
                             <span>{str tag="Download" section="admin"}</span></a>
                         {/if}

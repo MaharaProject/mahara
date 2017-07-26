@@ -305,7 +305,7 @@ $string['reportdesccontent'] = '<ul>
 </ul>';
 
 // Institution reports
-$string['informationreports'] = 'Institution information';
+$string['informationreports'] = 'Information overview';
 $string['reportdescinformation'] = '<ul>
 <li>Creation date</li>
 <li>Number of users</li>
@@ -370,3 +370,12 @@ $string['friendshare'] = 'Friends';
 $string['actions'] = 'Actions';
 $string['lastactivity'] = 'Last activity';
 $string['removefilter'] = 'Remove filter';
+$string['collaborationdate'] = 'w.c. %s';
+$string['needadvancedanalytics'] = 'You need enhanced analytics enabled for this report. Please see the "Logging settings" under "Configure site" for more information.';
+$string['Overview'] = 'Overview';
+$string['weeklytrend'] = 'Growth trend';
+$string['groupinfo'] = 'Groups overview';
+$string['usersinfo'] = 'Users overview';
+$string['viewsinfo'] = 'Views overview';
+$string['usersbyinstitution'] = 'Users by institutions';
+$string['groupsbytype'] = 'Groups by type';

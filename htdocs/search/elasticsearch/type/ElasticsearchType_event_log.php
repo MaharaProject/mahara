@@ -158,6 +158,10 @@ class ElasticsearchType_event_log extends ElasticsearchType {
 
         $results = $client->search($params);
         $result['totalresults'] = $results['hits']['total'];
+        if ($limit < 1) {
+            // We are just wanting the count of results so return now
+            return $result;
+        }
 
         //      2 - Apply filters and retrieve final results
         // ------------------------------------------------------------------------------------------

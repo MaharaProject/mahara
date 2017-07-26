@@ -506,39 +506,27 @@
     margin-bottom: 15px;
 }
 
-.reportconfig {
-    .title {
-        padding-right: 0;
-        padding-bottom: 3px;
+#reportconfigform {
+    fieldset {
+        margin-top: 10px;
+    }
+    .checkbox.form-group {
+        padding: 10px 0;
+    }
+}
 
-        a.outerlink {
-            padding: 8px 6px;
-        }
-        span {
-            padding: 0 5px;
-        }
-    }
-    .reportcol input[type=checkbox] {
-        vertical-align: bottom;
-    }
-    .options {
-        position: absolute;
-        z-index: 4;
-        background: #fff;
-        padding: 10px;
-        min-width: 200px;
-        margin-top: -2px;
-        right: 15px;
-        @include box-shadow(0 5px 10px rgba(0,0,0,.2));
-        border: 1px solid $panel-default-border;
-    }
-}
-.subpage.statistics {
-    padding-top: 0;
-    & h3 {
-        margin-top: 0;
-    }
-}
 .reportsettings {
     margin-top: -5px;
+}
+
+.statinfoblock {
+    width: 360px;
+
+    h3 {
+        margin-top: 0;
+    }
+
+    float: left;
+    margin-right: 15px;
+    padding: 5px;
 }
