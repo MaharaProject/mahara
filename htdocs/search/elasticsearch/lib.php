@@ -11,25 +11,45 @@
 defined('INTERNAL') || die();
 // Required because we use the PluginSearchInternal class for some functions
 require_once(get_config('docroot') . 'search/internal/lib.php');
+require_once(get_config('libroot') . '/elasticsearch/autoload.php');
 
-function __autoload_elastica ($class) {
+use Elasticsearch\ClientBuilder;
 
-    if (substr($class, 0, 8) == 'Elastica') {
-        $file = get_config('libroot') . 'elastica/lib/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) {
-            require_once($file);
-        }
-    }
-    else if (substr($class, 0, 18) == 'ElasticsearchType_') {
+function __autoload_elasticsearchtypes ($class) {
+    if (substr($class, 0, 18) == 'ElasticsearchType_') {
         $file = __DIR__ . '/type/' . $class . '.php';
         if (file_exists($file)) {
             require_once($file);
         }
     }
 }
-spl_autoload_register('__autoload_elastica');
+spl_autoload_register('__autoload_elasticsearchtypes', true);
 
-defined('INTERNAL') || die();
+/**
+ * Temporary, remove after debugging is done (or move to a general lib
+ * that is included everywhere, if needed).
+ *
+ * when using syslog, the output in the log has newlines escaped
+ * (instead of an ASCII linefeed you get a backslash and a literal n).
+ * If using tail, you would do, e.g.,
+ *    tail -F error.log | sed "s/\\\n/\\n/g"
+ *
+ * or if you need a file, copy that text out of the error log, pass
+ * it through sed as above, redirect to a file, and edit the file.
+ *
+ * @param mixed $var -- any variable
+ */
+function var_dump_error($var) {
+  if ( is_array( $var ) ) {
+    $var=print_r($var, true);
+  }
+  else {
+      $var;
+  }
+    error_log($var);
+    flush();
+}
+
 
 /**
  * The internal search plugin which searches against the
@@ -60,7 +80,7 @@ class PluginSearchElasticsearch extends PluginSearch {
      * parsed query string.
      *
      * @return boolean
-     */
+     */        // log contents of the result of var_dump( $object )
     public static function can_process_raw_group_search_user_queries() {
         // We're just going to pass our data on to PluginSearchInternal, and that needs the raw query
         return true;
@@ -89,7 +109,7 @@ class PluginSearchElasticsearch extends PluginSearch {
     }
 
     /**
-     * This function determines whether the plugin is currently available to be chosen
+     * This function determines whether the plugin is current        // log contents of the result of var_dump( $object )ly available to be chosen
      * as the sitewide search plugin (i.e. get_config('searchplugin'))
      */
     public static function is_available_for_site_setting() {
@@ -119,7 +139,7 @@ class PluginSearchElasticsearch extends PluginSearch {
         return true;
     }
 
-    /**
+    /**        // log contents of the result of var_dump( $object )
      * Generates the search form used in the page headers
      * @return string
      */
@@ -406,8 +426,13 @@ class PluginSearchElasticsearch extends PluginSearch {
             insert_record('config', (object) array('field' => '_cron_lock_search_elasticsearch_cron', 'value' => $start));
 
             self::reset_all_searchtypes();
+
+            error_log("finished resetting.");
+
             // Send the first batch of records to the elasticsearch server now, for instant gratification
             self::index_queued_items();
+
+            error_log("finished indexing queued items");
 
             // free the cron lock
             delete_records('config', 'field', '_cron_lock_search_elasticsearch_cron', 'value', $start);
@@ -486,6 +511,7 @@ class PluginSearchElasticsearch extends PluginSearch {
         foreach ($enabledtypes as $type) {
             ElasticsearchIndexing::create_triggers($type);
             ElasticsearchIndexing::requeue_searchtype_contents($type);
+            error_log("setting mapping for $type");
             self::set_mapping($type);
         }
     }
@@ -560,34 +586,34 @@ class PluginSearchElasticsearch extends PluginSearch {
         // usr,interaction_instance,interaction_forum_post,view,group,artefact
         $ES_class = 'ElasticsearchType_' . $type;
         if ($ES_class::$mappingconf === false) {
+            error_log("mapping $type: returning false");
             return false;
         }
 
-        $elasticaClient = self::make_client();
-        $elasticaIndex = $elasticaClient->getIndex(self::get_write_indexname());
-        $elasticaAnalyzer = get_config_plugin('search', 'elasticsearch', 'analyzer');
-        if (!isset($elasticaAnalyzer)) {
-            $elasticaAnalyzer = 'mahara_analyzer';
-        }
+        $ESClient = self::make_client();
+        $ESAnalyzer = get_config_plugin('search', 'elasticsearch', 'analyzer');
 
-        // Load type
-        $elasticaType = $elasticaIndex->getType($type);
+        $mappingparams = array(
+                'index' => PluginSearchElasticsearch::get_write_indexname(),
+                'type' => $type,
+                'body' => array(
+                        $type => array(
+                                '_source' => array(
+                                        'enabled' => true
+                                ),
+                                '_all' => array(
+                                        'analyzer'  => $ESAnalyzer,
+                        'search_analyzer' => $ESAnalyzer,
+                        'store' => 'yes',
+                        'enabled' => true
+                                ),
+                                'properties' => $ES_class::$mappingconf
+                        )
+                )
+        );
 
-        // Define mapping
-        $mapping = new \Elastica\Type\Mapping();
-        $mapping->setType($elasticaType);
-        // we use mahara_analyzer created through elastica
-        $mapping->setParam('index_analyzer', $elasticaAnalyzer);
-        $mapping->setParam('search_analyzer', $elasticaAnalyzer);
-
-        // Define boost field
-        //$mapping->setParam('_boost', array('name' => '_boost', 'null_value' => 1.0));
-
-        // Set mapping
-        $mapping->setProperties($ES_class::$mappingconf);
-
-        // Send mapping to type
-        $mapping->send();
+        // Set mapping on index type.
+        $ESClient->indices()->putMapping($mappingparams);
     }
 
 
@@ -635,12 +661,15 @@ class PluginSearchElasticsearch extends PluginSearch {
             return;
         }
 
-        $elasticaClient = self::make_client();
+        $ESClient = self::make_client();
+        /*
         $indexname = self::get_write_indexname();
         $elasticaIndex = $elasticaClient->getIndex($indexname);
+        */
         $artefacttypesmap_array = self::elasticsearchartefacttypesmap_to_array();
 
         if ($records) {
+            // TODO: translate preprocess_queued_items also.
             list($documents, $deletions) = self::preprocess_queued_items($records, $artefacttypesmap_array);
 
             // Delete in bulk
@@ -652,8 +681,19 @@ class PluginSearchElasticsearch extends PluginSearch {
                 log_info("  {$delcount} deletions to index in bulk...");
                 self::send_queued_items_in_bulk(
                     $deletions,
-                    function($records, $type) use ($elasticaClient, $indexname) {
-                        return $elasticaClient->deleteIds($records, $indexname, $type);
+                    function($records, $type) use ($ESClient) {
+                        $params = array();
+                        foreach ($records as $record) {
+                            $params['body'][] = [
+                                    'delete' => [
+                                            '_index' => PluginSearchElasticsearch::get_write_indexname(),
+                                            '_type'  => $type,
+                                            '_id'    => $record,
+                                    ],
+                            ];
+                        }
+
+                    return $ESClient->bulk($params);
                     },
                     $requestlimit
                 );
@@ -665,10 +705,23 @@ class PluginSearchElasticsearch extends PluginSearch {
                     $doccount += count($docs);
                 }
                 log_info("  {$doccount} documents to index in bulk...");
+                // TODO: translate send_queued_items also.
                 self::send_queued_items_in_bulk(
                     $documents,
-                    function($records, $type) use ($elasticaClient, $elasticaIndex) {
-                        return $elasticaClient->addDocuments($records, $elasticaIndex);
+                    function($records, $type) use ($ESClient) {
+                        $params = array();
+                        foreach ($records as $record) {
+                            $params['body'][] = [
+                                'index' => [
+                                    '_index' => PluginSearchElasticsearch::get_write_indexname(),
+                                    '_type'  => $type,
+                                    '_id'    => $record['id'],
+                                ],
+                            ];
+                            $params['body'][] = (array)$record['body'];
+                        }
+
+                        return $ESClient->bulk($params);
                     },
                     $requestlimit
                 );
@@ -689,10 +742,15 @@ class PluginSearchElasticsearch extends PluginSearch {
                 log_info("  {$delcount} deletions to index individually...");
                 self::send_queued_items_individually(
                     $deletions,
-                    function($record, $type) use ($elasticaClient, $indexname) {
-                        return $elasticaClient->deleteIds(array($record), $indexname, $type);
-                    },
-                    $requestlimit
+                    function($record, $type) use ($ESClient) {
+                        $params = array(
+                                'index' => PluginSearchElasticsearch::get_write_indexname(),
+                                'type'  => $type,
+                                'id'    => $record,
+                        );
+
+                        return $ESClient->delete($params);
+                    }
                 );
             }
 
@@ -705,16 +763,22 @@ class PluginSearchElasticsearch extends PluginSearch {
                 log_info("  {$doccount} documents to index individually...");
                 self::send_queued_items_individually(
                     $documents,
-                    function($record, $type) use ($elasticaClient, $elasticaIndex) {
-                        return $elasticaClient->addDocuments(array($record), $elasticaIndex);
-                    },
-                    $requestlimit
+                    function($record, $type) use ($ESClient) {
+                        $params = array(
+                            'index' => PluginSearchElasticsearch::get_write_indexname(),
+                            'type'  => $type,
+                            'id'    => $record['id'],
+                            'body'  => (array)$record['body'],
+                        );
+
+                        return $ESClient->index($params);
+                    }
                 );
             }
         }
 
         // Refresh Index
-        $elasticaIndex->refresh();
+        $ESClient->indices()->refresh(array('index' => PluginSearchElasticsearch::get_write_indexname()));
     }
 
     /**
@@ -752,7 +816,12 @@ class PluginSearchElasticsearch extends PluginSearch {
             }
             // Add item for bulk index
             else {
-                $documents[$record->type][$record->id] = new \Elastica\Document($record->itemid, $item->getMapping(), $record->type);
+                $documents[$record->type][$record->id] = array(
+                    'index' => PluginSearchElasticsearch::get_write_indexname(),
+                    'type'  => $record->type,
+                    'id'    => $record->itemid,
+                    'body'  => $item->getMapping(),
+                );
             }
         }
         return array(
@@ -803,8 +872,13 @@ class PluginSearchElasticsearch extends PluginSearch {
                     }
                     $response = $processfunction($requestdocs, $type);
 
-                    if ($response->hasError()) {
-                        log_warn("Error from Elasticsearch trying to send bulk request at time {$time}: " . $response->getError());
+                    $ESError=false;
+                    if ( isset( $response['errors'] ) ) {
+                        $ESError=$response['errors'];
+                    }
+
+                    if (!empty($ESError)) {
+                        log_warn("Error from Elasticsearch trying to send bulk request at time {$time}: " . $ESError);
                         $errorcount++;
                     }
                     else {
@@ -832,7 +906,7 @@ class PluginSearchElasticsearch extends PluginSearch {
      * key being the matching record in the search_elasticsearch_queue table.
      * @param callback $processfunction A callback function  to bulk-request each slice of documetns
      */
-    private static function send_queued_items_individually($documents, $processfunction, $requestlimit) {
+    private static function send_queued_items_individually($documents, $processfunction) {
         $uploadcount = 0;
         $errorcount = 0;
 
@@ -854,10 +928,14 @@ class PluginSearchElasticsearch extends PluginSearch {
                         log_info("    uploads: {$uploadcount}; errors: {$errorcount}");
                     }
                     $response = $processfunction($doc, $type);
+                    $ESError=false;
+                    if ( isset( $response['errors'] ) ) {
+                        $ESError=$response['errors'];
+                    }
 
-                    if ($response->hasError()) {
+                    if ( !empty( $ESError ) ) {
                         $errorcount++;
-                        log_warn("Error from Elasticsearch trying to send individual record {$queueid}: " . $response->getError());
+                        log_warn("Error from Elasticsearch trying to send individual record {$queueid}: " . $ESError);
                     }
                     else {
                         // No errors! Go ahead and delete it from the queue
@@ -920,18 +998,28 @@ class PluginSearchElasticsearch extends PluginSearch {
     * @return \Elastica\Client
     */
    public static function make_client() {
-       $config = array();
-       $config['host'] = get_config_plugin('search', 'elasticsearch', 'host');
-       $config['port'] = get_config_plugin('search', 'elasticsearch', 'port');
+       $host = get_config_plugin('search', 'elasticsearch', 'host');
+       $port = get_config_plugin('search', 'elasticsearch', 'port');
+
+       $credentials="";
        if ($username = get_config_plugin('search', 'elasticsearch', 'username')) {
            $password = get_config_plugin('search', 'elasticsearch', 'password');
            // Thank you Wikipedia: http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
            $authheader = 'Basic ' . base64_encode("{$username}:{$password}");
            $config['headers'] = array('Authorization'=>$authheader);
+           $credentials = "{$username}:{$password}@";
        }
-       return new \Elastica\Client($config);
-   }
 
+       // for future support of https
+       $httpstr = "http://";
+       $host = array($httpstr . $credentials . $host . ':' . $port);
+
+       $clientBuilder = ClientBuilder::create();
+       $clientBuilder->setHosts($host);
+       $client = $clientBuilder->build();
+
+       return $client;
+   }
 
    /**
     * Return the name of the index to use for writing. Basically, this is bypassindexname
@@ -1100,15 +1188,115 @@ class PluginSearchElasticsearch extends PluginSearch {
 /**
  *    This class encapsulates the ACL filters
  */
-class ElasticsearchFilterAcl extends \Elastica\Filter\BoolOr
+class ElasticsearchFilterAcl
 {
-
     private $user;
+    private $params = array();
 
     public function __construct($user) {
-
         $this->user = $user;
 
+        // GENERAL         (public - loggedin - friends)
+        // public
+        $elasticaFilterGeneral = array(
+                'term' => array(
+                        'access.general' => 'public',
+                ),
+        );
+        $this->params['should'][] = $elasticaFilterGeneral;
+
+        // loggedin
+        if ($this->user->is_logged_in()) {
+            $elasticaFilterGeneral = array(
+                    'term' => array(
+                            'access.general' => 'loggedin',
+                    ),
+            );
+            $this->params['should'][] = $elasticaFilterGeneral;
+
+            // friends: pass a list of friends => check if access.general = friends and the owner is a friend of the current user
+            if ($friends = $this->getFriendsList()) {
+                $elasticaFilterGeneral = array(
+                        'bool' => array(
+                                'must' => array(
+                                        array(
+                                                'term' => array(
+                                                        'access.general' => 'friends',
+                                                ),
+                                        ),
+                                        array(
+                                                'terms' => array(
+                                                        'owner' => $friends,
+                                                ),
+                                        ),
+                                ),
+                        ),
+                );
+                $this->params['should'][] = $elasticaFilterGeneral;
+            }
+
+            if ($members = $this->getMembersList()) {
+                // All groups: pass a list of groups => check if access.general = groups
+                //                                      and the owner is a member of the same group as the current user.
+
+                $elasticaFilterGeneral = array(
+                        'bool' => array(
+                                'must' => array(
+                                        array(
+                                                'term' => array(
+                                                        'access.general' => 'groups',
+                                                ),
+                                        ),
+                                        array(
+                                                'terms' => array(
+                                                        'owner' => $members,
+                                                ),
+                                        ),
+                                ),
+                        ),
+                );
+                $this->params['should'][] = $elasticaFilterGeneral;
+            }
+
+            //    INSTITUTIONS     (array of institutions that have access to the artefact)
+            $user_institutions = array_keys($this->user->get('institutions'));
+            if ($user_institutions && count($user_institutions) > 0) {
+                $elasticaFilterInstitutions = array(
+                        'terms' => array(
+                                'access.institutions' => $user_institutions,
+                        ),
+                );
+                $this->params['should'][] = $elasticaFilterInstitutions;
+            }
+
+            // GROUPS (array of groups that have access to the artefact)
+            if ($groups = $this->getGroupsList()) {
+                $elasticaFilterGroup = [];
+                foreach ($groups as $group) {
+                    $elasticaFilterGroup[] = array('term' => array('access.groups' => $group));
+                }
+                $this->params['should'][] = $elasticaFilterGroup;
+            }
+
+            // USRS (array of user ids that have access to the artefact)
+            // if owner
+            $elasticaFilterOwner = array(
+                    'term' => array(
+                            'owner' => $this->user->get('id'),
+                    ),
+            );
+            $this->params['should'][] = $elasticaFilterOwner;
+
+            // in access.usrs list
+            $elasticaFilterUsr = array(
+                    'term' => array(
+                            'access.usrs' => $this->user->get('id'),
+                    ),
+            );
+            $this->params['should'][] = $elasticaFilterUsr;
+        }
+
+        /*
         //    No ACL          (artefacts that don't implement ACL)
         $elasticaFilterNoACL = new \Elastica\Filter\Missing('access.general');
         $this->addFilter($elasticaFilterNoACL);
@@ -1161,9 +1349,11 @@ class ElasticsearchFilterAcl extends \Elastica\Filter\BoolOr
             $elasticaFilterUsr = new \Elastica\Filter\Term(array('access.usrs' => $this->user->get('id')));
             $this->addFilter($elasticaFilterUsr);
         }
+        */
+    }
 
-
-
+    public function get_params() {
+       return $this->params;
     }
 
     private function getFriendsList(){
@@ -1194,6 +1384,19 @@ class ElasticsearchFilterAcl extends \Elastica\Filter\BoolOr
         }
         return $roles;
     }
+
+    /** NEW: from totara.  Might not be needed in mahara? **/
+    private function getMembersList() {
+        $list = get_column_sql('SELECT DISTINCT gm2.member FROM {group_member} gm1
+                               JOIN {group_member} gm2 ON gm1.group = gm2.group
+                               WHERE gm1.member = ? AND gm2.member <> ?',
+                array($this->user->get('id'), $this->user->get('id')));
+        if (!empty($list)) {
+            return $list;
+        }
+        return array();
+    }
+
 }
 
 
@@ -1456,13 +1659,218 @@ class ElasticsearchPseudotype_all
             return $result;
         }
 
+        // These access parameters will be applied to each ES query.
+        $accessfilter = new ElasticsearchFilterAcl($USER);
+
+        $accessparams = $accessfilter->get_params();
+
+        //      1 - Get the list of content types
+        // ------------------------------------------------------------------------------------------
+        $records = array();
+        $searchfield = '_all';
+        if ($result['tagsonly'] === true) {
+            $searchfield = 'tags';
+        }
+
+        $must=array(
+            'match' => array(
+                $searchfield => $query_string,
+                  'mainfacetterm' => $mainfacetterm,
+                )
+        );
+
+        if ( $result['selected'] ) {
+            unset($must['match']['mainfacetterm']);
+        }
+
+        $client = PluginSearchElasticsearch::make_client();
+        $params = array(
+                'index' => PluginSearchElasticsearch::get_write_indexname(),
+                'body'  => array(
+                'size'  => 0, // we only want aggregations, because content types.
+                        'query' => array(
+                                'bool' => array(
+                                        'must'   => array(
+                                                'match' => array(
+                                                        $searchfield => $query_string,
+                                                ),
+                                        ),
+                                        'filter' => array('bool' => $accessparams),
+                                ),
+                        ),
+                        'aggs'  => array(
+                                'ContentType' => array(
+                                        'terms' => array(
+                            'field' => 'mainfacetterm',
+                                        ),
+                                ),
+                        ),
+                ),
+        );
+
+        var_dump_error($params);
+
+        $results = $client->search($params);
+
+        $facets = self::processAggregations($results['aggregations']['ContentType']['buckets']);
+
+        // no matching documents.  return immediately.
+        if (count($facets) == 0) {
+            return $result;
+        }
+
+        //array_walk($result['content-filter'], 'self::processTabs', $facets);
+        array_walk($result['facets'], 'self::processTabs', $facets);
+
+        /*  This is from yulia's code.  Don't use this, it's different from what mahara does.
+         * instead replicate below what mahara does.
+        if ($result['content-filter-selected'] === false) {
+            $result['content-filter-selected'] = self::getSelectedAggregations($result['content-filter']);
+        }*/
+
+        $selectedFacet = false;
+        if ( $result['selected'] ) {
+            $selectedFacet = $result['selected'];
+        }
+
+        $result['facetByTerm'] = array();
+        // something we can lookup by term
+        foreach ($result['facets'] as $k=>$v) {
+            $result['facetByTerm'][$v['term']] = $v['count'];
+        }
+
+        // should not happen, facets with no count aren't selectable in the UI.
+        // but protect against this anyway (curl, etc).
+        if ( $selectedFacet && $result['facetByTerm'][$selectedFacet] <= 0 ) {
+            $selectedFacet = self::getSelectedFacet($result['facets']);
+        }
+
+
+        var_dump_error($params);
+        var_dump_error("===================");
+        var_dump_error($selectedFacet);
+
+        $result['totalresults'] = $results['hits']['total'];
+        // Prepend "Everything" option to the beginning of the reduced content filter.
+        array_unshift($result['content-filter'],
+                array('term'    => "all",
+                        'count'   => $results['hits']['total'],
+                        'display' => get_string('Everything', 'search'),
+                )
+                );
+
+        //      2 - Apply filters and retrieve final results
+        // ------------------------------------------------------------------------------------------
+        $sort = explode('_', $result['sort']);
+        if ($sort[0] == 'score') {
+            $sort[0] = '_score';
+        }
+        $sorting = array(
+                array($sort[0] => array('order' => (isset($sort[1]) ? $sort[1] : 'desc'))),
+                array('_score' => array('order' => 'desc'))
+        );
+
+        $filter = array(array('bool' => $accessparams)); // Apply the same access restrictions.
+        if ($result['content-filter-selected'] != 'all') {
+            $filter[] = array(
+                    'term' => array(
+                            'contenttype' => $result['content-filter-selected'],
+                    ),
+            );
+        }
+        // Apply Owner filter if different from "all".
+        if ($result['owner-filter-selected'] != 'all') {
+            $uid = $user->get('id');
+            if ($result['owner-filter-selected'] == 'connections') {
+                $friends = get_userfriends($uid);
+                $filter[] = array(
+                        'terms' => array(
+                                'owner' => $friends,
+                        ),
+                );
+            }
+            else {
+                $filter[] = array(
+                        'term' => array(
+                                'owner' => $uid,
+                        ),
+                );
+            }
+        }
+
+        $params = array(
+                'index' => PluginSearchElasticsearch::get_write_indexname(),
+                'body'  => array(
+                        'from'  => $offset,
+                        'size'  => $limit,
+                        'sort'  => $sorting,
+                        'query' => array(
+                                'bool' => array(
+                                        'must'   => array(
+                                                'match' => array(
+                                                        $searchfield => $query_string,
+                                                ),
+                                        ),
+                                        'filter' => $filter,
+                                ),
+                        ),
+                        'highlight' => array(
+                                'require_field_match' => false,
+                                'pre_tags'            => array('<span class="search-highlight">'),
+                                'post_tags'           => array('</span>'),
+                                'number_of_fragments' => 0, // Returns an entire highlighted field.
+                                'fields'              => array(
+                                        '*' => new \stdClass(),
+                                ),
+                        ),
+                ),
+        );
+
+        $results = $client->search($params);
+
+        $result['count'] = $results['hits']['total'];
+
+        foreach ($results['hits']['hits'] as $hit) {
+            $tmp = array();
+            $tmp['type'] = $hit['_type'];
+          $ES_class = 'ElasticsearchType_' . $tmp['type'];
+
+            // Store highlighted fields if there is any
+            $tmp['highlight'] = array();
+            if (!empty($hit['highlight'])) {
+                $tmp['highlight'] = $hit['highlight'];
+            }
+
+            $tmp = $tmp + $hit['_source'];
+            // Get all the data from the DB table
+            $dbrec = $ES_class::getRecordDataById($tmp['type'], $tmp['id'], $tmp['highlight']);
+            if ($dbrec) {
+                $tmp['db'] = $dbrec;
+                $tmp['db']->deleted = false;
+            }
+            else {
+                // If the record has been deleted, so just pass the cached data
+                // from the search result. Let the template decide how to handle it.
+                $tmp['db'] = (object) $tmp;
+                $tmp['db']->deleted = true;
+            }
+            $records[] = $tmp;
+        }
+
+        $result['data'] = $records;
+
+        return $result;
+
+        /*
         //      1- Get main facet
         // ------------------------------------------------------------------------------------------
 
         $records = array();
 
         $elasticaClient = PluginSearchElasticsearch::make_client();
-        $elasticaIndex = $elasticaClient->getIndex(get_config_plugin('search', 'elasticsearch', 'indexname'));
+
+        // TODO: should that be, in fact, the bypassindexname if that's in use?  or always just the base indexname?
+        $elasticaIndex = PluginSearchElasticsearch::get_write_indexname();
 
         $elasticaQueryString = new \Elastica\Query\QueryString();
         $elasticaAnalyzer = get_config_plugin('search', 'elasticsearch', 'analyzer');
@@ -1483,7 +1891,7 @@ class ElasticsearchPseudotype_all
 
         // Apply ACL filters
         $elasticaFilterACL   = new ElasticsearchFilterAcl($USER);
-        $elasticaFilterAnd->addFilter($elasticaFilterACL);
+        $elasticaFilterAnd->addFilter($elasticaFilterACL); ESclient", "/home/gerald/code/mahara3/htdocs/search/elasticsea...", 1983, array(size 2)) at /home/gerald/code/mahara3/htdocs/search/elasticsearch/lib.php
         $elasticaFilteredQuery = new \Elastica\Query\Filtered($elasticaQueryString, $elasticaFilterAnd);
         $elasticaQuery->setQuery($elasticaFilteredQuery);
 
@@ -1531,7 +1939,7 @@ class ElasticsearchPseudotype_all
         if ($sort[0] == 'score') {
             $sort[0] = '_score';
         }
-        // set the second column to sort by the score (to break any 'ties').
+        // set the second column to sort b ESclient", "/home/gerald/code/mahara3/htdocs/search/elasticsea...", 1983, array(size 2)) at /home/gerald/code/mahara3/htdocs/search/elasticsearch/lib.phpy the score (to break any 'ties').
         $elasticaQuery->setSort(array(
             array($sort[0] => array('order' => (isset($sort[1]) ? $sort[1] : 'desc'))),
             array('_score' => array('order' => 'desc')),
@@ -1566,7 +1974,7 @@ class ElasticsearchPseudotype_all
             }
             $elasticaFilterAnd->addFilter($elasticaFilterOwner);
         }
-        // Apply license filter if different from "all"
+        // Apply license filter if different from "all" ESclient", "/home/gerald/code/mahara3/htdocs/search/elasticsea...", 1983, array(size 2)) at /home/gerald/code/mahara3/htdocs/search/elasticsearch/lib.php
         if ($result['license'] != 'all') {
             $elasticaFilterLicense = new \Elastica\Filter\Term(array('license' => $result['license']));
             $elasticaFilterAnd->addFilter($elasticaFilterLicense);
@@ -1602,9 +2010,30 @@ class ElasticsearchPseudotype_all
         $result['data'] = $records;
 
         return $result;
+
+        */
     }
 
-    public static function process_facets($data) {
+    /**
+     * Combine search results into aggregated structure.
+     *
+     * @param $data
+     *
+     * @return array
+     */
+    public static function processAggregations($data) {
+        // $data is $results['aggregations']['ContentType']['buckets'];
+
+        $tmp = array();
+        foreach ($data as $value) {
+            $tmp[$value['key']] = $value['doc_count'];
+        }
+
+        return $tmp;
+    }
+
+    /*
+     *     public static function process_facets($data) {
         $tmp = array();
         foreach ($data as $key => $value) {
             $tmp[$value['term']] = $value['count'];
@@ -1612,19 +2041,61 @@ class ElasticsearchPseudotype_all
         return $tmp;
     }
 
-    public static function process_tabs(&$item, $key, $data) {
+
+     */
+
+    /**
+     * Return filter options from results.
+     *
+     * @param $item
+     * @param $key
+     * @param $data
+     */
+    public static function processTabs(&$item, $key, $data) {
+        if (isset($data[$item['term']])) {
+            $item['count'] = $data[$item['term']];
+        }
+    }
+    /*
+     *     public static function process_tabs(&$item, $key, $data) {
         if (isset($data[$item['term']])) {
             $item['count'] = $data[$item['term']];
         }
     }
 
-    public static function get_selected_facet($data) {
+     */
+
+    /**
+     * Return aggregations that are not empty
+     *
+     * @param $data
+     *
+     * @return mixed
+     */
+    public static function getSelectedAggregations($data) {
         foreach ($data as $key => $value) {
             if ($value['count'] > 0) {
                 return $value['term'];
             }
         }
     }
+
+    /**
+     * Return the first entry in $data which has a non-zero count.
+     *
+     *  @param $data - an array with term, count and display keys.
+     *  @return a facet name.
+     */
+
+
+    public static function getSelectedFacet($data) {
+        foreach ($data as $key => $value) {
+            if ($value['count'] > 0) {
+                return $value['term'];
+            }
+        }
+    }
+
 }
 
 
@@ -1641,11 +2112,19 @@ class ElasticsearchIndexing {
      * exists.
      */
     public static function create_index() {
-        $esclient = PluginSearchElasticsearch::make_client();
-        $elasticaIndex = $esclient->getIndex(PluginSearchElasticsearch::get_write_indexname());
-        // Create the index, deleting it first if it already exists
-        $elasticaIndex->create(
-            array(
+        // Drop the index if it already exists.
+        $params = array('index' => PluginSearchElasticsearch::get_write_indexname());
+        $ESClient = PluginSearchElasticsearch::make_client();
+
+        if ($ESClient->indices()->exists($params)) {
+            $ESClient->indices()->delete($params);
+        }
+
+        // Create the index.
+        $params = array(
+            'index' => PluginSearchElasticsearch::get_write_indexname(),
+            'body'  => array(
+                'settings' => array(
 // Uncomment the following if you want to overwrite the number of shards/replicas set by ElasticSearch's
 // default, or the settings specified in elasticsearch.yml file.
 //                'number_of_shards' => 5,
@@ -1658,12 +2137,36 @@ class ElasticsearchIndexing {
                             'filter' => array('standard', 'lowercase', 'stop', 'maharaSnowball'),
                             'char_filter' => array('maharaHtml'),
                         ),
+                        /*
+                        'nGram_analyzer'      => array(
+                            'type'        => 'custom',
+                            'tokenizer'   => 'whitespace',
+                            'filter'      => array('lowercase', 'stop', 'socialNgram'), // order is important
+                            'char_filter' => array('socialHtml'),
+                        ),
+                        */
+                        'whitespace_analyzer' => array(
+                            'type'      => 'custom',
+                            'tokenizer' => 'whitespace',
+                            'filter'    => array('lowercase', 'stop'),
+                        ),
                     ),
                     'filter' => array(
                         'maharaSnowball' => array(
                             'type' => 'snowball',
                             'language' => 'English',
-                        )
+                        ),
+                        /*
+                        'maharaNgram' => array(
+                            'type'        => 'edge_ngram', // Search beginning of the word.
+                            'min_gram'    => 3, // Start at 3 because our minimum search is 3 characters.
+                            'max_gram'    => 20,
+                            'token_chars' => array(
+                                    'letter',
+                                    'digit',
+                            ),
+                        ),
+                        */
                     ),
                     'char_filter' => array(
                         'maharaHtml' => array(
@@ -1674,7 +2177,13 @@ class ElasticsearchIndexing {
                 )
             ),
             true
+          )
         );
+
+        error_log("beore create");
+        $ESClient->indices()->create($params);
+        error_log("after create");
+
     }
 
     /**
