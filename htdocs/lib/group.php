@@ -699,7 +699,7 @@ function group_update($new, $create=false) {
                       null, '', 'id');
             $access = ($old->editroles == 'all' || $old->editroles == 'notmember');
             db_begin();
-            foreach ($ids as $i => $artefact) {log_debug($artefact->id);
+            foreach ($ids as $i => $artefact) {
                 insert_record('artefact_access_role', (object) array(
                     'artefact'      => $artefact->id,
                     'role'          => 'tutor',
@@ -1226,7 +1226,8 @@ function group_get_join_form($name, $groupid, $returnto='view') {
             ),
             'group' => array(
                 'type' => 'hidden',
-                'value' => $groupid
+                'value' => $groupid,
+                'sesskey' => true,
             ),
             'returnto' => array(
                 'type' => 'hidden',
