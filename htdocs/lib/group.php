@@ -1150,7 +1150,8 @@ function group_get_join_form($name, $groupid, $returnto='view') {
             ),
             'group' => array(
                 'type' => 'hidden',
-                'value' => $groupid
+                'value' => $groupid,
+                'sesskey' => true,
             ),
             'returnto' => array(
                 'type' => 'hidden',
