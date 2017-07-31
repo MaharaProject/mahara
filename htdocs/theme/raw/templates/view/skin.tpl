@@ -24,7 +24,7 @@
                 <ul class="metadata unstyled">
                     {if $currentskin}
                         <li class="title">
-                            <span class="h4 text-midtone">{$currenttitle|safe}</span>
+                            <span class="h4 text-midtone">{$currenttitle}</span>
                         </li>
                     {/if}
                     {if $currentmetadata}
@@ -85,7 +85,7 @@
                             <a onClick = "change_skin({$viewid}, {$skin->id})">
                                 <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="thumbnail" width="180" alt="{$skin->title}"/>
                                  <div class="lead text-center text-small">
-                                {$skin->title|safe}
+                                {$skin->title}
                                 </div>
                             </a>
                         </div>
@@ -106,7 +106,7 @@
                             <a onClick = "change_skin({$viewid}, {$skin->id})">
                                 <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="thumbnail" width="180" alt="{$skin->title}"/>
                                  <div class="lead text-center text-small">
-                                {$skin->title|safe}
+                                {$skin->title}
                                 </div>
                             </a>
                         </div>
@@ -127,7 +127,7 @@
                             <a onClick="change_skin({$viewid}, {$skin->id})">
                                 <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="thumbnail" width="180" alt="{$skin->title}"/>
                                  <div class="lead text-center text-small">
-                                {$skin->title|safe}
+                                {$skin->title}
                                 </div>
                             </a>
                         </div>

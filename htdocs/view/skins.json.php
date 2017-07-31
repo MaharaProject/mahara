@@ -69,7 +69,6 @@ $favorskins  = Skin::get_favorite_skins();
 $siteskins   = Skin::get_site_skins();
 $defaultskin = Skin::get_default_skin();
 
-
 $smarty = smarty_core();
 $smarty->assign('saved', $saved);
 $smarty->assign('incompatible', $incompatible);
