@@ -39,7 +39,7 @@ if (!$blogpost) {
 
     $title = '';
     $description = '';
-    $tags = explode(",", $tagselect);
+    $tags = array_map('trim', explode(",", $tagselect));
     $checked = '';
     $pagetitle = get_string('newblogpost', 'artefact.blog', get_field('artefact', 'title', 'id', $blog));
     $focuselement = 'title';
