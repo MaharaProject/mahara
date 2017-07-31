@@ -33,7 +33,7 @@
                     <img class="thumbnail" src="{$WWWROOT}skin/thumb.php?id={$currentskin}" alt="{$currenttitle}">
                     <ul class="metadata unstyled">
                         <li class="title">
-                            <span class="h4 text-midtone">{$currenttitle|safe}</span>
+                            <span class="h4 text-midtone">{$currenttitle}</span>
                         </li>
                         {if $currentmetadata}
                             <li class="metadisplayname">
@@ -88,7 +88,7 @@
                                 <a href="{$WWWROOT}view/skin.php?id={$viewid}&skin={$skin->id}">
                                     <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="thumbnail" width="180" alt="{$skin->title}"/>
                                      <div class="lead text-center text-small">
-                                    {$skin->title|safe}
+                                    {$skin->title}
                                     </div>
                                 </a>
                             </div>
@@ -109,7 +109,7 @@
                                 <a href="{$WWWROOT}view/skin.php?id={$viewid}&skin={$skin->id}">
                                     <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="thumbnail" width="180" alt="{$skin->title}"/>
                                      <div class="lead text-center text-small">
-                                    {$skin->title|safe}
+                                    {$skin->title}
                                     </div>
                                 </a>
                             </div>
@@ -130,7 +130,7 @@
                                 <a href="{$WWWROOT}view/skin.php?id={$viewid}&skin={$skin->id}">
                                     <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="thumbnail" width="180" alt="{$skin->title}"/>
                                      <div class="lead text-center text-small">
-                                    {$skin->title|safe}
+                                    {$skin->title}
                                     </div>
                                 </a>
                             </div>
