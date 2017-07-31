@@ -386,7 +386,6 @@ class Skin {
         );
     }
 
-
     /**
      * Gets all site skins
      * @return array
