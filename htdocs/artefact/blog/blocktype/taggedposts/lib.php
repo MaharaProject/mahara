@@ -96,6 +96,8 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             $limit = isset($configdata['count']) ? (int) $configdata['count'] : 10;
 
             foreach ($tagrecords as $tag) {
+                //tag is encoded in the db if it has special characters
+                $tag->tag = htmlspecialchars_decode($tag->tag);
                 if ($tag->tagtype == PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE) {
                     $tagsin[] = $tag->tag;
                 }
@@ -270,14 +272,14 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             if ($key > 0) {
                 $tagstr .= ', ';
             }
-            $tagstr .= ($viewownerdisplay) ? '"' . $tag . '"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . $tag . '&sort=name&type=text">' . $tag . '</a>"';
+            $tagstr .= ($viewownerdisplay) ? '"' . $tag . '"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($tag) . '&sort=name&type=text">' . hsc($tag) . '</a>"';
         }
         if (!empty($tagsout)) {
             foreach ($tagsout as $key => $tag) {
                 if ($key > 0) {
                     $tagomitstr .= ', ';
                 }
-                $tagomitstr .= ($viewownerdisplay) ? '"' . $tag . '"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . $tag . '&sort=name&type=text">' . $tag . '</a>"';
+                $tagomitstr .= ($viewownerdisplay) ? '"' . $tag . '"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($tag) . '&sort=name&type=text">' . hsc($tag) . '</a>"';
             }
         }
         if (empty($tagsin)) {
@@ -338,10 +340,10 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             if ($tagrecords) {
                 foreach ($tagrecords as $tag) {
                     if ($tag->tagtype == PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE) {
-                        $tagselect[] = hsc($tag->tag);
+                        $tagselect[] = $tag->tag;
                     }
                     else {
-                        $tagselect[] = '-' . hsc($tag->tag);
+                        $tagselect[] = '-' . $tag->tag;
                     }
                 }
             }
@@ -353,7 +355,7 @@ function (item, container) {
     if (item.id[0] == "-") {
         container.addClass("tagexcluded");
         if (!item.text.match(/sr\-only/)) {
-            return '<span class="sr-only">{$excludetag}</span>' + item.text;
+            return '<span class="sr-only">{$excludetag}</span>' + jQuery('<div>').text(item.text).html();
         }
     }
     return item.text;
@@ -376,7 +378,14 @@ EOF;
                 'extraparams'   => array(
                         'templateSelection' => "$formatSelection",
                         // We'll escape the text on the PHP side, so select2 doesn't need to
-                        'escapeMarkup' => 'function(textToEscape) { return textToEscape; }',
+                        'escapeMarkup' => 'function(textToEscape) {
+                            if (textToEscape.match(/sr\-only/)) {
+                                return textToEscape;
+                            }
+                            else {
+                                return jQuery("<div>").text(textToEscape).html();
+                            }
+                        }',
                 ),
             );
             $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'taggedposts');
@@ -409,6 +418,10 @@ EOF;
 
     }
 
+    public static function delete_instance(BlockInstance $instance) {
+        delete_records('blocktype_taggedposts_tags', 'block_instance', $instance->get('id'));
+    }
+
     public static function instance_config_validate(Pieform $form, $values) {
 
         if (empty($values['tagselect'])) {
@@ -439,7 +452,7 @@ EOF;
                 }
                 $todb = new stdClass();
                 $todb->block_instance = $instance->get('id');
-                $todb->tag = $tag;
+                $todb->tag = htmlspecialchars_decode($tag);
                 $todb->tagtype = $value;
                 insert_record('blocktype_taggedposts_tags', $todb);
             }

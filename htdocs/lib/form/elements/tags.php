@@ -50,7 +50,7 @@ function translate_tags_to_names(array $ids) {
             $results[] = (object) array('id' => $id, 'text' => display_tag($id, $alltags['tags']));
         }
         else {
-            $results[] = (object) array('id' => $id, 'text' => hsc($id));
+            $results[] = (object) array('id' => $id, 'text' => $id);
         }
     }
     return $results;
