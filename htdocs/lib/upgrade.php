@@ -801,6 +801,7 @@ function core_install_lastcoredata_defaults() {
     $user->lastname = 'User';
     $user->email = 'admin@example.org';
     $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
+    $user->ctime = db_format_timestamp(time());
     $user->id = insert_record('usr', $user, 'id', true);
     set_profile_field($user->id, 'email', $user->email);
     set_profile_field($user->id, 'firstname', $user->firstname);

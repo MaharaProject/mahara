@@ -5062,5 +5062,17 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017071100) {
+        log_debug('Fix up missing creation time for users');
+        // Guess their creation time from their earliest view
+        if ($results = get_records_sql_array("SELECT u.id, (
+                SELECT MIN(v.ctime) FROM {view} v WHERE v.owner = u.id)
+           AS starttime FROM {usr} u WHERE u.deleted = 0 AND u.ctime IS NULL AND u.id != 0")) {
+            foreach ($results as $result) {
+                execute_sql("UPDATE {usr} SET ctime = ? WHERE id = ?", array($result->starttime, $result->id));
+            }
+        }
+    }
+
     return $status;
 }
