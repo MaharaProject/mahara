@@ -1230,7 +1230,7 @@ function install_view_layout_defaults() {
 
     // Fetch all the existing layouts so we can check below whether each default already exists
     $oldlayouts = array();
-    $layoutrecs = get_records_assoc('view_layout', 'iscustom', '0', '', 'id, rows, iscustom');
+    $layoutrecs = get_records_assoc('view_layout', 'iscustom', '0', '', 'id, "rows", iscustom');
     if ($layoutrecs) {
         foreach ($layoutrecs as $rec) {
             $rows = get_records_sql_assoc(
