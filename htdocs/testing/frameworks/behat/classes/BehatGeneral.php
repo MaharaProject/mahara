@@ -1262,10 +1262,11 @@ class BehatGeneral extends BehatBase {
         $function = <<<JS
           (function(){
               window.scrollTo(0,0);
+              return 1;
           })()
 JS;
         try {
-            $this->getSession()->executeScript($function);
+            $this->getSession()->wait(5000, $function);
         }
         catch(Exception $e) {
             throw new \Exception("scrollToTop failed");
@@ -1283,10 +1284,11 @@ JS;
           (function(){
               var elem = document.getElementById("$id");
               elem.scrollIntoView(true);
+              return 1;
           })()
 JS;
         try {
-            $this->getSession()->executeScript($function);
+            $this->getSession()->wait(5000, $function);
         }
         catch(Exception $e) {
             throw new \Exception("scrollIntoView failed");
@@ -1304,10 +1306,11 @@ JS;
           (function(){
               var elem = document.getElementById("$id");
               elem.scrollIntoView(false);
+              return 1;
           })()
 JS;
         try {
-            $this->getSession()->executeScript($function);
+            $this->getSession()->wait(5000, $function);
         }
         catch(Exception $e) {
             throw new \Exception("scrollIntoView failed");
