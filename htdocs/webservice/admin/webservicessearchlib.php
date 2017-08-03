@@ -219,7 +219,7 @@ function get_log_search_results($search) {
     if (!empty($data)) {
         foreach ($data as $row) {
             $row->timelogged = format_date($row->timelogged, 'strftimedatetime');
-            $row->institution = institution_display_name($row->institution);
+            $row->institution = !empty($row->institution) ? institution_display_name($row->institution) : get_string('institutionunknown', 'auth.webservice');
             $results['data'][] = (array) $row;
         }
     }
