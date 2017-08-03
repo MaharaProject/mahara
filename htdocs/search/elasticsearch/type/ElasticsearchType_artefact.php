@@ -80,36 +80,34 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                             ),
                             // array of groups that have access to the artefact - empty (all), member, admin
                             'groups' => array (
-                                    'type' => 'integer',
-                                    'index' => 'not_analyzed',
+                                    'type' => 'object',
                                     'include_in_all' => FALSE,
-                                    'copy_to' => 'group',
-                            /*
-                            // list of groups for which both members and admins have access to the artefact
-                            'all' =>  array(
-                                    'type' => 'int',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => FALSE
-                                    ),
-                            // list of groups for which only admins have access to the artefact
-                            'admin' =>  array(
-                                    'type' => 'int',
-                                    'index' => 'not_analyzed',
-                                            'include_in_all' => FALSE
-                                    ),
-                            // list of groups for which only members have access to the artefact
-                            'member' =>  array(
-                                    'type' => 'int',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => FALSE
-                                    ),
-                            // list of groups for which only tutors have access to the artefact
-                            'tutor' =>  array(
-                                    'type' => 'int',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => FALSE
-                                    ),
-                            */
+                                    'properties' => array (
+                                        'all' => array (
+                                            'type' => 'integer',
+                                            'index' => 'not_analyzed',
+                                            'copy_to' => 'group',
+                                            'include_in_all' => false
+                                        ),
+                                        'admin' => array (
+                                            'type' => 'integer',
+                                            'index' => 'not_analyzed',
+                                            'copy_to' => 'group',
+                                            'include_in_all' => false
+                                        ),
+                                        'member' => array (
+                                            'type' => 'integer',
+                                            'index' => 'not_analyzed',
+                                            'copy_to' => 'group',
+                                            'include_in_all' => false
+                                        ),
+                                        'tutor' => array (
+                                            'type' => 'integer',
+                                            'index' => 'not_analyzed',
+                                            'copy_to' => 'group',
+                                            'include_in_all' => false
+                                        )
+                                    )
                             ),
                             'group' => array (
                                     'type' => 'integer'
@@ -397,11 +395,10 @@ class ElasticsearchType_artefact extends ElasticsearchType {
             $record_views = array ();
             foreach ( $views as $view ) {
                 if (isset ( $view->id )) {
-                    $record_views [$view->id] = $view->title;
+                    $record_views[$view->id] = $view->title;
                 }
             }
-
-            $record_views = self::views_by_artefact_acl_filter ( $record_views );
+            $record_views = self::views_by_artefact_acl_filter($record_views);
             $record->views = $record_views;
         }
 
@@ -432,10 +429,14 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                     $size = intval ( $record->width * 80 / $record->height ) . 'x80';
                 }
             }
-            $record->thumb = ArtefactTypeImage::get_icon ( array (
-                    'id' => $id,
-                    'size' => $size
-            ) );
+            $vars = array (
+                'id' => $id,
+                'size' => $size
+            );
+            if (!empty($record->views)) {
+                $vars['viewid'] = key($record->views); // use first view we are can see
+            }
+            $record->thumb = ArtefactTypeImage::get_icon ($vars);
         }
 
         return $record;
@@ -489,6 +490,7 @@ class ElasticsearchType_artefact extends ElasticsearchType {
         global $USER;
 
         $acl = new ElasticsearchFilterAcl ( $USER );
+
         $filter = [
                 "bool" => [
                         "must" => [
@@ -523,11 +525,13 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                 )
         );
 
-        /*
-         * $pretty = json_encode ( $params, JSON_PRETTY_PRINT );
-         * var_dump_error ( $pretty );
-         */
-
         $results = $client->search ( $params );
+        $valid = array();
+        if (!empty($results['hits'])) {
+            foreach($results['hits']['hits'] as $item) {
+                $valid[$item['_source']['id']] = $views[$item['_source']['id']];
+            }
+        }
+        return $valid;
     }
 }

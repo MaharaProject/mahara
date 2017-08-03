@@ -11,7 +11,13 @@
                 {$record->name}
             </a>
         </h3>
-        <p class="groupdesc">{$record->description|str_shorten_html:140:true|safe}</p>
+        <p class="groupdesc">
+            {if $record->highlight}
+                {$record->highlight|safe}
+            {else}
+                {$record->description|str_shorten_html:140:true|safe}
+           {/if}
+        </p>
         {if $record->groupadmins}
         <div class="groupadmin text-small">
             <strong>{str tag=groupadmins section=group}:</strong>

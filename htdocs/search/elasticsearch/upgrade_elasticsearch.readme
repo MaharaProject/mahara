@@ -1,0 +1,127 @@
+How to upgrade your Mahara elasticsearch server from 1.7.x to 5.x
+-----------------------------------------------------------------
+
+Now that Mahara uses the 5.x version of the elasticsearch server you
+will need to upgrade. The following steps should get you to where you
+need to be. For more information see:
+https://www.elastic.co/guide/en/elasticsearch/reference/current/reindex-upgrade.html
+
+We normally can not jump from 1.7.x to 5.x directly as our current
+index will not work. However, seeing as we can rebuild an index via
+Mahara administration interface we can drop the index and rebuilding it later.
+
+This will mean the search will be temporarily unavailable while it
+reindexes.
+
+Steps for doing the upgrade on a linux based server
+
+Step 1:
+-------
+A good thing to do first up is do a search on your site and make note of the
+results so that you can compare this with the same search done after upgrade.
+
+Then we need to fetch the package we will be installing so create a dir to hold
+the deb packages, eg
+
+ cd ~/ && mkdir elasticsearch_packages && cd elasticsearch_packages
+
+Then fetch the elasticsearch version you want, eg
+
+ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.5.1.deb
+
+Step 2:
+-------
+Check that the elasticserver is currently running, normally this is on
+port 9200
+
+ curl -XGET 'http://localhost:9200'
+
+It should return some info including version number, eg 1.7.3, then
+also check the health of the cluster
+
+ curl -XGET 'localhost:9200/_cat/health?pretty'
+
+Make sure status is 'green' before we begin. If it is not sort out any
+problems so it returns 'green'.
+
+Step 3:
+-------
+Install the downloaded version .deb package, eg
+
+ sudo dpkg -i elasticsearch-5.5.1.deb
+
+It should output something like:
+Unpacking elasticsearch (5.5.1) over (1.7.3) ...
+Setting up elasticsearch (5.5.1) ...
+
+Step 4:
+-------
+You elasticsearch will still be running on the old version so now is
+the time to delete the current index you are using, if you don't know the
+index you are using you can list indices via
+
+ curl -XGET 'localhost:9200/_cat/indices?pretty'
+
+To delete the index called 'mahara' for example you go
+
+ curl -XDELETE 'localhost:9200/mahara'
+
+Once that is done check health
+
+ curl -XGET 'localhost:9200/_cat/health?pretty'
+
+Make sure status is still 'green'
+
+Step 5:
+-------
+We need to stop / start the service to get it using the new 5.5.1
+version
+
+ sudo -i service elasticsearch stop
+ sudo -i service elasticsearch start
+
+Wait a few seconds for it to start up then
+
+ curl -XGET 'http://localhost:9200'
+
+It should return some info including version number 5.5.1
+If the elasticsearch server does not come up then check the
+elasticsearch logs to see what went wrong
+
+ tail -n100 /var/log/elasticsearch/elasticsearch.log
+
+Then check status of cluster again:
+curl -XGET 'localhost:9200/_cluster/health?pretty'
+
+Make sure status is still 'green'. Once the elasticsearch server is up
+again we will need to reindex the site.
+
+Step 6:
+-------
+Go to Mahara site in browser and go to Administration -> Extensions.
+Under "Plugin type: search" configure the elasticsearch plugin.
+Find and click 'Reset' in index reset section and that will begin the
+re-indexing process.
+
+Once re-indexing has finished do a search to make sure things are all working
+again as expected. Do a search on the site and compare to one you did
+in step 1 - the results should be the same
+
+
+Troubleshooting:
+----------------
+If you find the status of the cluster is 'yellow' it probably means the
+cluster is unbalanced so we check to see if there are any unassigned shards.
+
+ curl -XGET 'localhost:9200/_cat/shards?pretty'
+
+If you are using only 1 node and there are unassigned replica shards
+for an index we can turn them off, eg for 'mahara' index
+
+ curl -XPUT 'localhost:9200/mahara/_settings' -H 'Content-Type: application/json' -d' { "number_of_replicas": 0 }'
+
+If you are finding that elasticsearch is not starting up again and you see
+"failed to read local state, exiting..." in elasticsearch.log you might need to delete the
+elasticsearch data directory.
+
+In Ubuntu/Debian this can be found at /var/lib/elasticsearch/

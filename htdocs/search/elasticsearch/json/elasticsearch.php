@@ -48,6 +48,7 @@ try {
 catch (ParameterException $e) {
     json_reply('missingparameter','Missing parameter \'query\'');
 }
+
 $query = PluginSearchElasticsearch::clean_query($query);
 $data = PluginSearchElasticsearch::search_all($query, $limit, $offset, $options, $mainfacetterm);
 $data['query'] = $query;

@@ -56,7 +56,11 @@
         </div>
         {/if}
         <div class="detail">
-            {$record->description|str_shorten_html:100:true|safe}
+            {if $record->highlight}
+                {$record->highlight|safe}
+            {else}
+                {$record->description|str_shorten_html:140:true|safe}
+            {/if}
         </div>
         <!-- TAGS -->
         {if $record->tags|count gt 0}

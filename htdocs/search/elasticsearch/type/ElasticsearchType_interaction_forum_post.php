@@ -30,10 +30,34 @@ class ElasticsearchType_interaction_forum_post extends ElasticsearchType {
                     'include_in_all' => FALSE,
                     'properties' => array (
                             'groups' => array (
-                                    'type' => 'integer',
-                                    'index' => 'not_analyzed',
-                                    'copy_to' => 'group',
-                                    'include_in_all' => false
+                                'type' => 'object',
+                                'include_in_all' => FALSE,
+                                'properties' => array (
+                                    'all' => array (
+                                        'type' => 'integer',
+                                        'index' => 'not_analyzed',
+                                        'copy_to' => 'group',
+                                        'include_in_all' => false
+                                    ),
+                                    'admin' => array (
+                                        'type' => 'integer',
+                                        'index' => 'not_analyzed',
+                                        'copy_to' => 'group',
+                                        'include_in_all' => false
+                                    ),
+                                    'member' => array (
+                                        'type' => 'integer',
+                                        'index' => 'not_analyzed',
+                                        'copy_to' => 'group',
+                                        'include_in_all' => false
+                                    ),
+                                    'tutor' => array (
+                                        'type' => 'integer',
+                                        'index' => 'not_analyzed',
+                                        'copy_to' => 'group',
+                                        'include_in_all' => false
+                                    )
+                                )
                             ),
                             'group' => array (
                                     'type' => 'integer'

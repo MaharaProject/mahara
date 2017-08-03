@@ -40,10 +40,16 @@ class ElasticsearchType_group extends ElasticsearchType {
                                     'include_in_all' => FALSE
                             ),
                             'groups' => array (
-                                    'type' => 'integer',
-                                    'index' => 'not_analyzed',
-                                    'copy_to' => 'group',
-                                    'include_in_all' => false
+                                    'type' => 'object',
+                                    'include_in_all' => FALSE,
+                                    'properties' => array (
+                                          'member' => array (
+                                             'type' => 'integer',
+                                             'index' => 'not_analyzed',
+                                             'copy_to' => 'group',
+                                             'include_in_all' => false
+                                          )
+                                     )
                             ),
                             'group' => array (
                                     'type' => 'integer'

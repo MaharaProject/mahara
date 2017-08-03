@@ -60,10 +60,34 @@ class ElasticsearchType_block_instance extends ElasticsearchType {
                             ),
                             // array of groups that have access to the artefact - empty (all), member, admin, tutor
                             'groups' => array (
-                                    'type' => 'integer',
-                                    'index' => 'not_analyzed',
-                                    'copy_to' => 'group',
-                                    'include_in_all' => FALSE
+                                'type' => 'object',
+                                'include_in_all' => FALSE,
+                                'properties' => array (
+                                    'all' => array (
+                                        'type' => 'integer',
+                                        'index' => 'not_analyzed',
+                                        'copy_to' => 'group',
+                                        'include_in_all' => false
+                                    ),
+                                    'admin' => array (
+                                        'type' => 'integer',
+                                        'index' => 'not_analyzed',
+                                        'copy_to' => 'group',
+                                        'include_in_all' => false
+                                    ),
+                                    'member' => array (
+                                        'type' => 'integer',
+                                        'index' => 'not_analyzed',
+                                        'copy_to' => 'group',
+                                        'include_in_all' => false
+                                    ),
+                                    'tutor' => array (
+                                        'type' => 'integer',
+                                        'index' => 'not_analyzed',
+                                        'copy_to' => 'group',
+                                        'include_in_all' => false
+                                    )
+                                )
                             ),
                             'group' => array (
                                     'type' => 'integer'
