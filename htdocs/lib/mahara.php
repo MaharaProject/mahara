@@ -286,14 +286,22 @@ function ensure_internal_plugins_exist() {
 
 /**
  * Check to see whether a language string is present in the
- * lang files.
+ * lang files. when checking the lang string we don't care about extra arguments so we use
+ * the _return_string_unchanged rather than format_langstring function.
  *
  * @param string $identifier
  * @param string $section
  * @return boolean
  */
 function string_exists($identifier, $section = 'mahara') {
-    return get_string($identifier, $section) !== '[[' . $identifier . '/' . $section . ']]';
+    // Because we don't need to perform parameter replacement to test if string exists
+    // we can use a simple pass-through for the $replacefunc argument.
+    $string = get_string_location($identifier, $section, array(), '_return_string_unchanged');
+    return $string !== '[[' . $identifier . '/' . $section . ']]';
+}
+
+function _return_string_unchanged($string, $args, $lang='en.utf8') {
+    return $string;
 }
 
 function get_string($identifier, $section='mahara') {
