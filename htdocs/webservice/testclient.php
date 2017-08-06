@@ -344,11 +344,13 @@ function testclient_parameters($paramdescription, $paramstring) {
  * @param array ref $inputs
  * @param array $parts
  * @param string $value
+ * @param string $type
  */
-function testclient_build_inputs(&$inputs, $parts, $value) {
+function testclient_build_inputs(&$inputs, $parts, $value, $type=null) {
     $part = array_shift($parts);
+
     if (empty($parts)) {
-        if (!empty($value)) {
+        if ((trim($type) == 'int' && $value == '0') || !empty($value)) {
             $inputs[$part] = $value;
         }
         return;
@@ -361,7 +363,7 @@ function testclient_build_inputs(&$inputs, $parts, $value) {
     if (!isset($inputs[$part])) {
         $inputs[$part] = array();
     }
-    testclient_build_inputs($inputs[$part], $parts, $value);
+    testclient_build_inputs($inputs[$part], $parts, $value, $type);
 }
 
 /**
@@ -391,7 +393,7 @@ function testclient_submit(Pieform $form, $values) {
                 }
                 else {
                     $parts = explode('_', $name);
-                    testclient_build_inputs($inputs, $parts, $values[$name]);
+                    testclient_build_inputs($inputs, $parts, $values[$name], $var['type']);
                 }
             }
         }
