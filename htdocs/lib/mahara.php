@@ -300,8 +300,18 @@ function string_exists($identifier, $section = 'mahara') {
     return $string !== '[[' . $identifier . '/' . $section . ']]';
 }
 
-function _return_string_unchanged($string, $args, $lang='en.utf8') {
+function _return_string_unchanged($string, $args=array(), $lang='en.utf8') {
     return $string;
+}
+
+/**
+ * Find out the number of expected arguments if $identifier for get_string() is
+ * passed in by a variable. Eg in webservices error handling.
+ */
+function count_string_args($identifier, $section = 'mahara') {
+    $string = get_string_location($identifier, $section, array(), '_return_string_unchanged');
+    preg_match_all('/[^\%]\%[^\%]/', $string, $matches);
+    return count($matches[0]);
 }
 
 function get_string($identifier, $section='mahara') {

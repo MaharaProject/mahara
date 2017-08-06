@@ -2259,13 +2259,19 @@ class WebserviceException extends MaharaException {
         $this->errorcode = rtrim($errorcode, '0123456789');
 
         if (string_exists($errorcode, 'auth.webservice')) {
-            $message = get_string($errorcode, 'auth.webservice');
+            $count = count_string_args($errorcode, 'auth.webservice');
+            if ($count) {
+                $message = get_string($errorcode, 'auth.webservice', $debuginfo);
+            }
+            else {
+                $message = get_string($errorcode, 'auth.webservice');
+            }
         }
         else {
             $message = $errorcode;
         }
 
-        if ($debuginfo) {
+        if ($debuginfo && !$count) {
             $message .= ' : ' . $debuginfo;
         }
 
