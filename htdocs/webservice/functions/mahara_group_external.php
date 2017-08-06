@@ -47,6 +47,10 @@ class mahara_group_external extends external_api {
 
         $group_types = group_get_grouptypes();
         $group_edit_roles = array_keys(group_get_editroles_options());
+        $notifyroles = array(get_string('none', 'admin')) + group_get_editroles_options(true);
+        foreach ($notifyroles as $key => $role) {
+            $group_notify_roles[] = $key . ' = ' . $role;
+        }
         return new external_function_parameters(
         array(
                 'groups' => new external_multiple_structure(
@@ -58,14 +62,19 @@ class mahara_group_external extends external_api {
                                         'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
                                         'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types)),
                                         'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
-                                        'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(',', $group_edit_roles), VALUE_OPTIONAL),
+                                        'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(', ', $group_edit_roles), VALUE_OPTIONAL),
                                         'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators', VALUE_DEFAULT, '0'),
                                         'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave', VALUE_DEFAULT, '0'),
                                         'request'         => new external_value(PARAM_BOOL, 'Request - Users can send membership requests to group administrators', VALUE_DEFAULT, '0'),
                                         'submitpages'     => new external_value(PARAM_BOOL, 'Submit pages - Members can submit pages to the group', VALUE_DEFAULT),
                                         'public'          => new external_value(PARAM_BOOL, 'Public group', VALUE_DEFAULT),
-                                        'viewnotify'      => new external_value(PARAM_BOOL, 'Shared page notifications', VALUE_DEFAULT),
+                                        'viewnotify'      => new external_value(PARAM_INT, 'Shared page notifications allowed: ' . implode(', ', $group_notify_roles), VALUE_DEFAULT),
+                                        'feedbacknotify'  => new external_value(PARAM_INT, 'Comment notifications allowed: ' . implode(', ', $group_notify_roles), VALUE_DEFAULT),
                                         'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users', VALUE_DEFAULT),
+                                        'hidden'          => new external_value(PARAM_BOOL, 'Hide group', VALUE_DEFAULT),
+                                        'hidemembers'     => new external_value(PARAM_BOOL, 'Hide membership', VALUE_DEFAULT),
+                                        'hidemembersfrommembers' => new external_value(PARAM_BOOL, 'Hide membership', VALUE_DEFAULT),
+                                        'groupparticipationreports' => new external_value(PARAM_BOOL, 'Participation report', VALUE_DEFAULT),
                                         'members'         => new external_multiple_structure(
                                                                 new external_single_structure(
                                                                     array(
@@ -201,8 +210,8 @@ class mahara_group_external extends external_api {
 
             // check for the rest
             foreach (array('category', 'open', 'controlled', 'request', 'submitpages', 'editroles',
-                           'hidemembers', 'invitefriends', 'suggestfriends', 'hidden', 'quota',
-                           'hidemembersfrommembers', 'public', 'usersautoadded', 'viewnotify',) as $attr) {
+                           'hidemembers', 'invitefriends', 'suggestfriends', 'hidden', 'quota', 'groupparticipationreports',
+                           'hidemembersfrommembers', 'public', 'usersautoadded', 'viewnotify', 'feedbacknotify') as $attr) {
                 if (isset($group[$attr]) && $group[$attr] !== false && $group[$attr] !== null && strlen("" . $group[$attr])) {
                     $create[$attr] = $group[$attr];
                 }
@@ -329,6 +338,10 @@ class mahara_group_external extends external_api {
 
         $group_types = group_get_grouptypes();
         $group_edit_roles = array_keys(group_get_editroles_options());
+        $notifyroles = array(get_string('none', 'admin')) + group_get_editroles_options(true);
+        foreach ($notifyroles as $key => $role) {
+            $group_notify_roles[] = $key . ' = ' . $role;
+        }
         return new external_function_parameters(
                     array(
                         'groups' =>
@@ -342,14 +355,19 @@ class mahara_group_external extends external_api {
                                             'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
                                             'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types), VALUE_OPTIONAL),
                                             'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
-                                            'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(',', $group_edit_roles), VALUE_OPTIONAL),
+                                            'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(', ', $group_edit_roles), VALUE_OPTIONAL),
                                             'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators', VALUE_DEFAULT),
                                             'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave', VALUE_DEFAULT),
                                             'request'         => new external_value(PARAM_BOOL, 'Request - Users can send membership requests to group administrators', VALUE_DEFAULT),
                                             'submitpages'     => new external_value(PARAM_BOOL, 'Submit pages - Members can submit pages to the group', VALUE_DEFAULT),
                                             'public'          => new external_value(PARAM_BOOL, 'Public group', VALUE_DEFAULT),
-                                            'viewnotify'      => new external_value(PARAM_BOOL, 'Shared page notifications', VALUE_DEFAULT),
+                                            'viewnotify'      => new external_value(PARAM_INT, 'Shared page notifications allowed: ' . implode(', ', $group_notify_roles), VALUE_DEFAULT),
+                                            'feedbacknotify'  => new external_value(PARAM_INT, 'Comment notifications allowed: ' . implode(', ', $group_notify_roles), VALUE_DEFAULT),
                                             'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users', VALUE_DEFAULT),
+                                            'hidden'          => new external_value(PARAM_BOOL, 'Hide group', VALUE_DEFAULT),
+                                            'hidemembers'     => new external_value(PARAM_BOOL, 'Hide membership', VALUE_DEFAULT),
+                                            'hidemembersfrommembers' => new external_value(PARAM_BOOL, 'Hide membership', VALUE_DEFAULT),
+                                            'groupparticipationreports' => new external_value(PARAM_BOOL, 'Participation report', VALUE_DEFAULT),
                                             'members'         => new external_multiple_structure(
                                                                     new external_single_structure(
                                                                         array(
@@ -488,8 +506,8 @@ class mahara_group_external extends external_api {
             foreach (array('name', 'description', 'grouptype', 'category', 'editroles',
                            'open', 'controlled', 'request', 'submitpages', 'quota',
                            'hidemembers', 'invitefriends', 'suggestfriends',
-                           'hidden', 'hidemembersfrommembers',
-                           'usersautoadded', 'public', 'viewnotify') as $attr) {
+                           'hidden', 'hidemembersfrommembers', 'groupparticipationreports',
+                           'usersautoadded', 'public', 'viewnotify', 'feedbacknotify') as $attr) {
                 if (isset($group[$attr]) && $group[$attr] !== false && $group[$attr] !== null && strlen("" . $group[$attr])) {
                     $newvalues->{$attr} = $group[$attr];
                 }
@@ -721,7 +739,7 @@ class mahara_group_external extends external_api {
         foreach ($params['groups'] as $group) {
             // Make sure that the group doesn't already exist
             if (!empty($group['id'])) {
-                if (!$dbgroup = get_groups_by_id($group['id'])) {
+                if (!$dbgroup = get_group_by_id($group['id'])) {
                     throw new WebserviceInvalidParameterException('get_groups_by_id | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
                 }
             }
@@ -770,7 +788,12 @@ class mahara_group_external extends external_api {
                         'submitpages'    => (isset($dbgroup->submitpages) ? $dbgroup->submitpages : 0),
                         'public'         => $dbgroup->public,
                         'viewnotify'     => $dbgroup->viewnotify,
+                        'feedbacknotify' => $dbgroup->feedbacknotify,
                         'usersautoadded' => $dbgroup->usersautoadded,
+                        'hidden'         => $dbgroup->hidden,
+                        'hidemembers'    => $dbgroup->hidemembers,
+                        'hidemembersfrommembers' => $dbgroup->hidemembersfrommembers,
+                        'groupparticipationreports' => $dbgroup->groupparticipationreports,
                         'members'        => $members,
             );
         }
@@ -786,6 +809,10 @@ class mahara_group_external extends external_api {
     public static function get_groups_by_id_returns() {
         $group_types = group_get_grouptypes();
         $group_edit_roles = array_keys(group_get_editroles_options());
+        $notifyroles = array(get_string('none', 'admin')) + group_get_editroles_options(true);
+        foreach ($notifyroles as $key => $role) {
+            $group_notify_roles[] = $key . ' = ' . $role;
+        }
         return new external_multiple_structure(
                     new external_single_structure(
                         array(
@@ -796,14 +823,19 @@ class mahara_group_external extends external_api {
                                 'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups'),
                                 'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types)),
                                 'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category'),
-                                'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(',', $group_edit_roles)),
+                                'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(', ', $group_edit_roles)),
                                 'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators'),
                                 'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave'),
                                 'request'         => new external_value(PARAM_BOOL, 'Request - Users can send membership requests to group administrators'),
                                 'submitpages'     => new external_value(PARAM_BOOL, 'Submit pages - Members can submit pages to the group'),
                                 'public'          => new external_value(PARAM_BOOL, 'Public group'),
-                                'viewnotify'      => new external_value(PARAM_BOOL, 'Shared page notifications'),
+                                'viewnotify'      => new external_value(PARAM_INT, 'Shared page notifications'),
+                                'feedbacknotify'  => new external_value(PARAM_INT, 'Comment notifications'),
                                 'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users'),
+                                'hidden'          => new external_value(PARAM_BOOL, 'Hide group'),
+                                'hidemembers'     => new external_value(PARAM_BOOL, 'Hide membership'),
+                                'hidemembersfrommembers' => new external_value(PARAM_BOOL, 'Hide membership'),
+                                'groupparticipationreports' => new external_value(PARAM_BOOL, 'Participation report'),
                                 'members'         => new external_multiple_structure(
                                                         new external_single_structure(
                                                             array(
