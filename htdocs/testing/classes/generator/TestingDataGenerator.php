@@ -219,7 +219,7 @@ EOD;
             $record['authname'] = 'internal';
         }
         if (!$auth = get_record('auth_instance', 'institution', $record['institution'], 'authname', $record['authname'], 'active', 1)) {
-            throw new SystemException("The authentication method authname" . $record['authname'] . " for institution '" . $record['institution'] . "' does not exist.");
+            throw new SystemException("The authentication method authname " . $record['authname'] . " for institution '" . $record['institution'] . "' does not exist.");
         }
         $record['authinstance'] = $auth->id;
         // Don't exceed max user accounts for the institution
@@ -377,6 +377,11 @@ EOD;
         if (!empty($record['editwindowstart']) && !empty($record['editwindowend']) && ($record['editwindowstart'] >= $record['editwindowend'])) {
             throw new SystemException('Invalid group editability setting. ' . get_string('editwindowendbeforestart', 'group'));
         }
+        if (!empty($record['institution'])) {
+            if (!get_field('institution', 'id', 'name', $record['institution'])) {
+                throw new SystemException('Invalid institution for group - Institution with short name "' . $record['institution'] . '" does not exist');
+            }
+        }
         $group_data = array(
                 'id'             => null,
                 'name'           => $record['name'],
@@ -392,7 +397,7 @@ EOD;
                 'usersautoadded' => 0,
                 'viewnotify'     => GROUP_ROLES_ALL,
                 'submittableto'  => isset($record['submittableto']) ? $record['submittableto'] : 0,
-                'allowarchives'  =>  isset($record['allowarchives']) ? $record['allowarchives'] : 0,
+                'allowarchives'  => isset($record['allowarchives']) ? $record['allowarchives'] : 0,
                 'editroles'      => isset($record['editroles']) ? $record['editroles'] : 'all',
                 'hidden'         => 0,
                 'hidemembers'    => 0,
@@ -409,6 +414,11 @@ EOD;
         // Create a new group
         db_begin();
         $group_data['id'] = group_create($group_data);
+        // Because group_create expects user to be logged in to check if they can create a group for a particular institution
+        // we will make it for 'mahara' institution and then adjust it here
+        if (!empty($record['institution'])) {
+            set_field('group', 'institution', $record['institution'], 'id', $group_data['id']);
+        }
         db_commit();
 
         $this->groupcount++;
@@ -497,7 +507,16 @@ EOD;
                 'authname'     => 'internal',
         );
         insert_record('auth_instance', $authinstance);
-
+        if (!empty($record['authname'])) {
+            $authinstance = (object)array(
+                'instancename' => $record['authname'],
+                'priority'     => 1,
+                'active'       => 1,
+                'institution'  => $newinstitution->name,
+                'authname'     => $record['authname'],
+            );
+            insert_record('auth_instance', $authinstance);
+        }
         // We need to add the default lines to the site_content table for this institution
         // We also need to set the institution to be using default static pages to begin with
         // so that using custom institution pages is an opt-in situation

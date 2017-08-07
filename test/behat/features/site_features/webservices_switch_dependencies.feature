@@ -1,4 +1,4 @@
-@javascript @core @core_administration
+@javascript @core @core_administration @core_webservices
 Feature: Accessing the webservices test client page
 In order to be able to access the webservies menus successfully
 As an admin

@@ -69,6 +69,7 @@ class BehatDataGenerators extends BehatBase {
                 'members'          => 'text',
                 'staff'            => 'text',
                 'admins'           => 'text',
+                'institution'      => 'text',
             ),
             'required' => array('name', 'owner'),
         ),
@@ -95,6 +96,7 @@ class BehatDataGenerators extends BehatBase {
                 'members'          => 'text',
                 'staff'            => 'text',
                 'admins'           => 'text',
+                'authname'         => 'string',
             ),
             'required' => array('name', 'displayname')
         ),
