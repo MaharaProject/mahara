@@ -3166,17 +3166,7 @@ class View {
             return array($result, $pagination, 0, 0, array());
         }
 
-        $search = '';
-        if (!empty($data['search']) && param_boolean('s')) {
-            $search = param_variable('search', '');
-            // Maybe later, depending on performance - don't search if there's
-            // not enough characters. Prompts should be added to the UI too.
-            //if (strlen($search) < 3) {
-            //    $search = '';
-            //}
-        }
-
-        $data['search'] = $search;
+        $data['search'] = param_variable('search', '');
         $data['offset'] -= $data['offset'] % $data['limit'];
 
         safe_require('blocktype', $data['blocktype']);
