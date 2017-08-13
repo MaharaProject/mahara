@@ -722,3 +722,15 @@ $cfg->openbadgedisplayer_source = '{"backpack":"https://backpack.openbadges.org/
  * Specify the name of the session handler.
  */
 // $cfg->ssphpsessionhandler = 'memcached';
+
+
+/**
+ * @global array $cfg->saml_custommappingfile
+ * A list of paths to custom attribute mapping files for SimpleSAMLphp IDP and SP
+ */
+/*
+ $cfg->saml_custommappingfile = '{
+    "idp" : ["' . $CFG->docroot . 'auth/saml/extlib/simplesamlphp/attributemap/name2oid.php"],
+    "sp" : ["' . $cfg->dataroot . '/customattributemap/customname2oid.php"]
+ }';
+*/

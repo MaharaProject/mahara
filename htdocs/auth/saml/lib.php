@@ -27,6 +27,46 @@ class AuthSaml extends Auth {
         return $path;
     }
 
+    /**
+    * Loads and merges in a file with an attribute map.
+    *
+    * @param string $filepath  Path of attribute map file.
+    * @param array $mapping Array where the attributes from the file should be added
+    */
+    private static function custom_loadmapfile($filepath, $mapping = array()) {
+        if (!is_readable($filepath)) {
+            throw new Exception(get_string('attributemapfilenotfound', 'auth.saml', $filepath));
+        }
+        $attributemap = NULL;
+        include($filepath);
+        if (!is_array($attributemap)) {
+            throw new Exception(get_string('attributemapfilenotamap', 'auth.saml', $filepath));
+        }
+
+        $mapping = array_merge_recursive($mapping, $attributemap);
+        return $mapping;
+    }
+
+/*
+* Loads all mappings in the files into an array with 'class' => 'core:AttributeMap'
+*
+* @param filepaths array Paths to files that contain a mapping array
+*/
+    public static function get_attributemappings($filepaths= array()) {
+
+          $configparameter = array(
+              'class' => 'core:AttributeMap',
+          );
+
+          $attributemap = array();
+          foreach ($filepaths as $key => $filepath) {
+                //get the $attributemap array in the file
+                $attributemap = self::custom_loadmapfile($filepath, $attributemap);
+          }
+
+          return array_merge($attributemap, $configparameter);
+    }
+
     public static function get_certificate_path() {
         check_dir_exists(get_config('dataroot') . 'certificate/');
         return get_config('dataroot') . 'certificate/';
