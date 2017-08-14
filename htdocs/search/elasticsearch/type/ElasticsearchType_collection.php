@@ -27,6 +27,11 @@ class ElasticsearchType_collection extends ElasticsearchType
                     'type' => 'string',
                     'include_in_all' => TRUE
             ),
+            'tags'      =>  array(
+                    'type' => 'string',
+                    'index_name' => 'tag',
+                    'include_in_all' => TRUE
+            ),
             // the owner can be owner (user), group, or institution
             'owner'         =>  array(
                     'type' => 'long',
@@ -124,6 +129,7 @@ class ElasticsearchType_collection extends ElasticsearchType
                 'id'            => NULL,
                 'name'          => NULL,
                 'description'   => NULL,
+                'tags'          => NULL,
                 'owner'         => NULL,
                 'group'         => NULL,
                 'institution'   => NULL,
@@ -141,7 +147,15 @@ class ElasticsearchType_collection extends ElasticsearchType
         if (!$record) {
             return false;
         }
-
+        $tags = get_records_array ('collection_tag', 'collection', $id);
+        if ($tags != false) {
+            foreach ($tags as $tag) {
+                $record->tags [] = $tag->tag;
+            }
+        }
+        else {
+            $record->tags = null;
+        }
         // Access: get view_access info
         $access = self::collection_access_records($id);
         $accessObj = self::access_process($access);
@@ -188,7 +202,16 @@ class ElasticsearchType_collection extends ElasticsearchType
             }
             $record->views = $record_views;
         }
-
+        // Tags
+        $tags = get_records_array('collection_tag', 'collection', $id);
+        if ($tags != false) {
+            foreach ($tags as $tag) {
+                $record->tags [] = $tag->tag;
+            }
+        }
+        else {
+            $record->tags = null;
+        }
         return $record;
 
     }
