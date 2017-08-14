@@ -20,7 +20,9 @@
         <div class="createdby">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname|safe`</a>'}</div>
     {/if}
     <div class="detail">{$record->description|str_shorten_html:140:true|safe}</div>
-    <div class="tags"><strong>{str tag=pages section=search.elasticsearch}:</strong>
+    <!-- PAGES -->
+    <div class="tags">
+        <strong>{str tag=pages section=search.elasticsearch}:</strong>
         {if $record->views}
             {foreach from=$record->views key=id item=view name=foo}
                 <a href="{$WWWROOT}view/view.php?id={$id}">{$view}</a>{if !$.foreach.foo.last}, {/if}
@@ -29,4 +31,13 @@
             {str tag=none section=search.elasticsearch}
         {/if}
     </div>
+    <!-- TAGS -->
+    {if $record->tags|count gt 0}
+        <div class="tags">
+            <strong>{str tag=tags section=search.elasticsearch}:</strong>
+            {foreach from=$record->tags item=tag name=tags}
+                <a href="{$WWWROOT}search/elasticsearch/index.php?query={$tag}&tagsonly=true">{$tag}</a>{if !$.foreach.tags.last}, {/if}
+            {/foreach}
+        </div>
+    {/if}
 {/if}
