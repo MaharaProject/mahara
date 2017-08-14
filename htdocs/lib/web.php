@@ -678,6 +678,7 @@ EOF;
     }
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
+    $smarty->assign('loggedout', !$USER->is_logged_in());
     $publicsearchallowed = false;
     $searchplugin = get_config('searchplugin');
     if ($searchplugin) {

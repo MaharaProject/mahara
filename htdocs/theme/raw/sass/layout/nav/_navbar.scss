@@ -63,6 +63,21 @@
         }
     }
 }
+// Allowing the public search to sit in right place
+// when lang selector exists or not
+.loggedout .navbar-form.navbar-collapse {
+    @media (min-width: $screen-sm-min) {
+        right: 0px;
+        margin-right: 15px;
+
+        &.with-langform {
+            right: 270px;
+        }
+        &.with-langform-login {
+            right: 370px;
+        }
+    }
+}
 
 .navbar-default {
     border-left: 0;
