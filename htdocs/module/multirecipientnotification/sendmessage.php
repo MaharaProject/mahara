@@ -205,6 +205,7 @@ $form = pieform(array(
         return data.text;
     }
 }',
+                    'renderresult' => true,
             ),
             'ajaxextraparams' => array(),
             'rules' => array('required' => true),

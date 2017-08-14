@@ -101,6 +101,8 @@ function pieform_element_autocomplete(Pieform $form, $element) {
         }
     }
 
+    $renderresult = isset($element['extraparams']['renderresult']) ? $element['extraparams']['renderresult'] : null;
+
     $smarty->assign('id', $form->get_name() . '_' . $element['id']);
     $smarty->assign('name', $element['name']);
     $smarty->assign('initvalues', $initvalues);
@@ -115,6 +117,7 @@ function pieform_element_autocomplete(Pieform $form, $element) {
     $smarty->assign('hint', empty($element['hint']) ? get_string('defaulthint') : $element['hint']);
     $smarty->assign('extraparams', $extraparams);
     $smarty->assign('inblockconfig', !empty($element['inblockconfig']) ? 'true' : 'false');
+    $smarty->assign('renderresult', $renderresult);
     if (isset($element['description'])) {
         $smarty->assign('describedby', $form->element_descriptors($element));
     }
