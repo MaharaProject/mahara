@@ -201,7 +201,7 @@ jQuery(function($) {
                       var queryData = [];
                       if (loc != -1) {
                           queryData = {
-                            extraData: JSON.stringify(p.extraData),
+                            extradata: JSON.stringify(p.extraData),
                             search: $('#artefactchooser-searchfield').val()
                           }
                       }
