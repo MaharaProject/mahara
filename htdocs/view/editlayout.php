@@ -496,7 +496,7 @@ function get_skin_elements() {
     $snippet->assign('currenttitle', $currentskin->title);
     $snippet->assign('currentmetadata', (!empty($currentskin->metadata)) ? $currentskin->metadata : null);
     $snippet->assign('userskins', $userskins);
-    $snippet->assign('favorskins', $favorskins);
+    $snippet->assign('favorskins',$favorskins);
     $snippet->assign('siteskins', $siteskins);
     $snippet->assign('defaultskin', $defaultskin);
     $snippet->assign('viewid', $view->get('id'));
