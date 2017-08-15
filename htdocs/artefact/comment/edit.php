@@ -138,7 +138,7 @@ function edit_comment_submit(Pieform $form, $values) {
         }
         else if (!empty($group)) {
             $group_admins = group_get_admin_ids($group);
-            // TODO: need to notify the group admins bug #1197197
+            edit_comment_notify($view, $comment->get('author'), $group_admins);
         }
     }
 
@@ -150,6 +150,10 @@ function edit_comment_submit(Pieform $form, $values) {
 
 function edit_comment_notify($view, $author, $owner) {
     global $comment, $SESSION;
+
+    if (!is_array($owner)) {
+        $owner = array($owner);
+    }
 
     $data = (object) array(
         'subject'   => false,
@@ -170,12 +174,20 @@ function edit_comment_notify($view, $author, $owner) {
                 'section' => 'artefact.comment',
             ),
         ),
-        'users'     => array($owner),
+        'users'     => $owner,
         'url'       => $comment->get_view_url($view->get('id'), true, false),
+
     );
     if (!empty($owner)) {
-        $SESSION->add_ok_msg(get_string('makepublicrequestsent', 'artefact.comment', display_name($owner)));
+        if (count($owner) > 1) {
+            $displayname = get_string('groupadmins', 'artefact.comment');
+        }
+        else {
+            $displayname = display_name($owner[0]);
+        }
+        $SESSION->add_ok_msg(get_string('makepublicrequestsent', 'artefact.comment', $displayname));
     }
+
     activity_occurred('maharamessage', $data);
 }
 
