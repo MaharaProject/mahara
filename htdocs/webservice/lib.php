@@ -1918,7 +1918,7 @@ abstract class webservice_base_server extends webservice_server {
         global $USER;
 
         if (empty($this->functionname)) {
-            throw new WebserviceInvalidParameterException(get_string('missingfuncname', 'webservice'));
+            throw new WebserviceInvalidParameterException(get_string('missingfuncname', 'auth.webservice'));
         }
 
         // function must exist
