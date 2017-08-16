@@ -185,7 +185,7 @@ jQuery(function($) {
                   $(searchA.parentNode).addClass('active');
 
                   $('#artefactchooser-searchfield').on('keypress', function(e) {
-                      if (e.key().code == 13) { // enter pressed - submitting form
+                      if (e.keycode == 13) { // enter pressed - submitting form
                           e.preventDefault();
                           $('#artefactchooser-searchsubmit').triggerHandler('click', true);
                       }
@@ -253,15 +253,15 @@ var ArtefactChooserSelect = (function($) {
       /**
        * Update artefact data & connect radios to the selectjscallback
        */
-      this.pageChanged = function(data) {
+      this.pageChanged = function(ev, data) {
           self.artefacts = data.artefactdata;
           self.connectRadios(data);
       }
 
       this.connectRadios = function(data) {
-          $('#{$datatable} input').on('click', function(id, radio) {
-              if (self.artefacts[radio.value]) {
-                  {$element['selectjscallback']}(self.artefacts[radio.value]);
+          $('#{$datatable} input').on('click', function(data) {
+              if (self.artefacts[data.target.value]) {
+                  {$element['selectjscallback']}(self.artefacts[data.target.value]);
               }
           });
       }
@@ -398,7 +398,7 @@ var ArtefactChooserData = (function($) {
       /**
        * When a pagination link is clicked, update the list of seen inputs
        */
-      this.pageChanged = function(data) {
+      this.pageChanged = function(ev, data) {
           self.scrapeForOnpage();
           if ($.inArray(data.offset, self.seenOffsets) == -1) {
               self.scrapeForSelected();
