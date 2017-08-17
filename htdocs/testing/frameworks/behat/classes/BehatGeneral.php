@@ -1341,7 +1341,7 @@ JS;
 /**
  * Check if images exist in the block given its title
  *
- * @Then I should see images in the block :blocktitle
+ * @Then I should see images within the block :blocktitle
  *
  */
     public function i_should_see_images_block($blocktitle) {
@@ -1381,9 +1381,53 @@ JS;
     }
 
 /**
+ * Check if text exist in the block given its title
+ *
+ * @Then I should see :text in the block :blocktitle
+ *
+ */
+    public function i_should_see_text_in_block($text, $blocktitle) {
+        // Find the block.
+        $blocktitleliteral = $this->escaper->escapeLiteral($blocktitle);
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' column-content ')]" .
+                     "/div[contains(@id,'blockinstance_')" .
+                         " and contains(h3, " . $blocktitleliteral . ")]" .
+                     "//div[contains(normalize-space(.), " . $textliteral . ")]";
+        // Wait until it finds the text inside the block title.
+        try {
+            $blocktext = $this->find_all('xpath', $xpath);
+        }
+        catch (ElementNotFoundException $e) {
+            throw new ExpectationException('The block with title ' . $blocktitleliteral . ' containing ' . $textliteral . ' was not found', $this->getSession());
+        }
+
+        // If we are not running javascript we have enough with the
+        // element existing as we can't check if it is visible.
+        if (!$this->running_javascript()) {
+            return;
+        }
+
+        // We also check the element visibility when running JS tests.
+        $this->spin(
+            function($context, $args) {
+
+                foreach ($args['nodes'] as $node) {
+                    if ($node->isVisible()) {
+                        return true;
+                    }
+                }
+
+                throw new ExpectationException('The block with title ' . $args['text'] . ' was not visible', $context->getSession());
+            },
+            array('nodes' => $blocktext, 'text' => $blocktitleliteral)
+        );
+    }
+
+/**
  * Check if images does not exist in the block given its title
  *
- * @Then I should not see images in the block :blocktitle
+ * @Then I should not see images within the block :blocktitle
  *
  */
     public function i_should_not_see_images_block($blocktitle) {
@@ -1420,6 +1464,50 @@ JS;
                 throw new ExpectationException('The block with title ' . $args['text'] . ' was not visible', $context->getSession());
             },
             array('nodes' => $blockimages, 'text' => $blocktitleliteral)
+        );
+    }
+
+/**
+ * Check if text exist in the block given its title
+ *
+ * @Then I should not see :text in the block :blocktitle
+ *
+ */
+    public function i_should_not_see_text_in_block($text, $blocktitle) {
+        // Find the block.
+        $blocktitleliteral = $this->escaper->escapeLiteral($blocktitle);
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' column-content ')]" .
+                     "/div[contains(@id,'blockinstance_')" .
+                         " and contains(h3, " . $blocktitleliteral . ")]" .
+                     "//div[count(descendant::*[contains(normalize-space(.), " . $textliteral . ")]) = 0]";
+        // Wait until it finds the text inside the block title.
+        try {
+            $blocktext = $this->find_all('xpath', $xpath);
+        }
+        catch (ElementNotFoundException $e) {
+            throw new ExpectationException('The block with title ' . $blocktitleliteral . ' containing ' . $textliteral . ' was found', $this->getSession());
+        }
+
+        // If we are not running javascript we have enough with the
+        // element existing as we can't check if it is visible.
+        if (!$this->running_javascript()) {
+            return;
+        }
+
+        // We also check the element visibility when running JS tests.
+        $this->spin(
+            function($context, $args) {
+
+                foreach ($args['nodes'] as $node) {
+                    if ($node->isVisible()) {
+                        return true;
+                    }
+                }
+
+                throw new ExpectationException('The block with title ' . $args['text'] . ' was not visible', $context->getSession());
+            },
+            array('nodes' => $blocktext, 'text' => $blocktitleliteral)
         );
     }
 
