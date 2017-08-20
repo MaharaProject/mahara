@@ -1206,11 +1206,13 @@ function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=fal
  * @param string $table The database table to be checked against.
  * @param array $dataobject An object with contents equal to fieldname=>fieldvalue. Must have an entry for 'id' to map to the table specified.
  * @param mixed $where defines the WHERE part of the upgrade. Can be string (key) or array (keys) or hash (keys/values).
+ * @param string $primarykey The primary key of the table we are updating (almost always "id")
+ * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
  * If the first two, values are expected to be in $dataobject.
  * @return bool
  * @throws SQLException
  */
-function update_record($table, $dataobject, $where=null) {
+function update_record($table, $dataobject, $where=null, $primarykey=false, $returnpk=false) {
 
     global $db;
 
@@ -1316,6 +1318,11 @@ function update_record($table, $dataobject, $where=null) {
     try {
         $stmt = $db->Prepare($sql);
         $rs = $db->Execute($stmt, array_merge($setclausevalues, $wherevalues));
+        if ($returnpk) {
+            $primarykey = $primarykey ? $primarykey : 'id';
+            $returnsql = 'SELECT ' . $primarykey . ' FROM ' . db_table_name($table) . ' WHERE ' . $whereclause;
+            return get_field_sql($returnsql, $wherevalues);
+        }
         return true;
     }
     catch (ADODB_Exception $e) {
