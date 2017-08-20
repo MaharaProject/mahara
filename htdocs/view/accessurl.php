@@ -665,12 +665,16 @@ function editurl_submit(Pieform $form, $values) {
         foreach ($viewids as $id) {
             $access->view = $id;
             $whereobject->view = $id;
-            update_record('view_access', $access, $whereobject);
+            $vaid = update_record('view_access', $access, $whereobject, 'id', true);
+            handle_event('updateviewaccess', array(
+                'id' => $vaid,
+                'eventfor' => 'token',
+                'parentid' => $id,
+                'parenttype' => 'view',
+                'rules' => $access)
+            );
         }
-        handle_event('updateviewaccess', array('id' => $collection ? $collection : $viewid,
-                                               'eventfor' => $collection ? 'collection' : 'view',
-                                               'viewids' => $viewids,
-                                               'rules' => array($access)));
+
         $message = get_string('secreturlupdated', 'view');
         $form->reply(PIEFORM_OK, $message);
     }

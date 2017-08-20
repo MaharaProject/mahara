@@ -38,7 +38,8 @@ class ElasticsearchType_event_log extends ElasticsearchType {
                     'include_in_all' => FALSE
             ),
             'resourcetype' => array (
-                    'type' => 'text',
+                    'type' => 'keyword',
+                    'index' => 'not_analyzed',
                     'include_in_all' => TRUE
             ),
             'parentresourceid' => array (
@@ -46,14 +47,54 @@ class ElasticsearchType_event_log extends ElasticsearchType {
                     'include_in_all' => FALSE
             ),
             'parentresourcetype' => array (
-                    'type' => 'text',
+                    'type' => 'keyword',
+                    'index' => 'not_analyzed',
                     'include_in_all' => TRUE
+            ),
+            'ownerid' => array (
+                    'type' => 'integer',
+                    'include_in_all' => FALSE
+            ),
+            'ownertype' => array (
+                    'type' => 'keyword',
+                    'index' => 'not_analyzed',
+                    'include_in_all' => FALSE
             ),
             'ctime' => array (
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
                     'include_in_all' => FALSE
-            )
+            ),
+            'yearweek' => array (
+                    'type' => 'keyword',
+                    'index' => 'not_analyzed',
+                    'include_in_all' => FALSE
+            ),
+            'createdbyuser' => array (
+                    'type' => 'boolean',
+                    'index' => 'not_analyzed',
+                    'include_in_all' => FALSE
+            ),
+            'firstname' => array (
+                    'type' => 'keyword',
+                    'index' => 'not_analyzed',
+                    'include_in_all' => FALSE
+            ),
+            'lastname' => array (
+                    'type' => 'keyword',
+                    'index' => 'not_analyzed',
+                    'include_in_all' => FALSE
+            ),
+            'username' => array (
+                    'type' => 'keyword',
+                    'index' => 'not_analyzed',
+                    'include_in_all' => FALSE
+            ),
+            'displayname' => array (
+                    'type' => 'keyword',
+                    'index' => 'not_analyzed',
+                    'include_in_all' => FALSE
+            ),
     );
     public static $mainfacetterm = 'Event';
     public static $secfacetterm = 'Log';
@@ -73,18 +114,50 @@ class ElasticsearchType_event_log extends ElasticsearchType {
                 'resourcetype' => NULL,
                 'parentresourceid' => NULL,
                 'parentresourcetype' => NULL,
+                'ownerid' => NULL,
+                'ownertype' => NULL,
+                'yearweek' => NULL,
+                'createdbyuser' => NULL,
+                'firstname' => NULL,
+                'lastname' => NULL,
+                'username' => NULL,
+                'displayname' => NULL,
         );
 
         parent::__construct ( $data );
     }
+
     public static function getRecordById($type, $id, $map = null) {
         $record = parent::getRecordById ( $type, $id );
         if (! $record) {
             return false;
         }
         $record->secfacetterm = self::$secfacetterm;
+        $record->yearweek = date('Y_W', strtotime($record->ctime));
+        $user = get_record('usr', 'id', $record->usr);
+        $record->username = $user->username;
+        $record->firstname = $user->firstname;
+        $record->lastname = $user->lastname;
+        $record->displayname = $user->preferredname;
+        $record->createdbyuser = FALSE;
+        if ($record->usr === $record->realusr) {
+            // A non-masquerading event
+            if (in_array($record->event, array('createview', 'createcollection', 'creategroup', 'saveartefact'))) {
+                $data = json_decode($record->data);
+                if ($record->event == 'createview' && isset($data->viewtype) && $data->viewtype == 'portfolio') {
+                    $record->createdbyuser = TRUE;
+                }
+                else if ($record->event == 'saveartefact' && ($data->ctime == $data->mtime)) {
+                    $record->createdbyuser = TRUE;
+                }
+                else {
+                    $record->createdbyuser = TRUE;
+                }
+            }
+        }
         return $record;
     }
+
     public static function getRecordDataById($type, $id) {
         global $USER;
 
@@ -124,9 +197,12 @@ class ElasticsearchType_event_log extends ElasticsearchType {
         $matching = array(
             'match_all' => new \stdClass()
         );
-        // Use provided filters and range otherwise default to all event_log rows
+        // Use provided query, filters and range otherwise default to all event_log rows
+        $matching = (!empty($options['query']) && is_array($options['query'])) ? $options['query'] : $matching;
         $filters = (!empty($options['filters']) && is_array($options['filters'])) ? $options['filters'] : array('term' => array('secfacetterm' => 'Log'));
         $range = (!empty($options['range']) && is_array($options['range'])) ? $options['range'] : array('range' => array('id' => array('gte' => 1)));
+        $sort = (!empty($options['sort']) && is_array($options['sort'])) ? $options['sort'] : array('ctime' => 'desc');
+        $aggs = (!empty($options['aggs']) && is_array($options['aggs'])) ? $options['aggs'] : array('EventType' => array('terms' => array('field' => 'event')));
 
         $client = PluginSearchElasticsearch::make_client();
         $params = array(
@@ -146,18 +222,18 @@ class ElasticsearchType_event_log extends ElasticsearchType {
                         ),
                     ),
                 ),
-                'aggs'  => array(
-                    'EventType' => array(
-                        'terms' => array(
-                            'field' => 'event',
-                        ),
-                    ),
+                'sort' => array(
+                    $sort,
                 ),
+                'aggs' => $aggs,
             ),
         );
 
         $results = $client->search($params);
         $result['totalresults'] = $results['hits']['total'];
+        if ($result['totalresults'] > 0) {
+            $result['aggregations'] = $results['aggregations'];
+        }
         if ($limit < 1) {
             // We are just wanting the count of results so return now
             return $result;
@@ -225,4 +301,35 @@ class ElasticsearchType_event_log extends ElasticsearchType {
         return $result;
     }
 
+    /**
+     * Combine search aggregation results into aggregated array structure.
+     * To return the count of particular buckets and their sub buckets
+     *
+     * @param array    $aggmap   The array to hold the mappings
+     * @param array    $data     The array containing the elasticaseach result bucket information
+     * @param bool     $all      To also return a total count key called 'all'
+     * @param array    $buckets  Names of buckets in their nested order
+     * @param string   $key      The name of the key to display in $aggmap
+     *
+     * @return array   $aggmap
+     */
+    public static function process_aggregations(&$aggmap, $data, $all = false, $buckets=array(), $key='') {
+
+        $countall = 0;
+        $bucket = array_shift($buckets);
+        if (!empty($data[$bucket]['buckets'])) {
+            foreach ($data[$bucket]['buckets'] as $value) {
+                $aggmap[$key . $value['key']] = $value['doc_count'];
+                if ($all) {
+                    $countall += $value['doc_count'];
+                }
+                if (!empty($buckets)) {
+                    self::process_aggregations($aggmap, $value, $all, $buckets, $key . $value['key'] . '|');
+                }
+            }
+        }
+        if ($all) {
+            $tmp['all'] = $countall;
+        }
+    }
 }

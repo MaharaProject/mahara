@@ -514,11 +514,14 @@ class View {
             $obj->ctime = db_format_timestamp(time());
             $obj->usr   = $template->get('owner');
             $obj->group = $template->get('group');
-            insert_record('view_access', $obj);
-            handle_event('updateviewaccess', array('id' => $view->get('id'),
-                                                   'eventfor' => 'view',
-                                                   'viewids' => $view->get('id'),
-                                                   'rules' => array($obj)));
+            $vaid = insert_record('view_access', $obj, 'id', true);
+            handle_event('updateviewaccess', array(
+                'id' => $vaid,
+                'eventfor' => (!empty($template->get('group')) ? 'group' : 'user'),
+                'parentid' => $view->get('id'),
+                'parenttype' => 'view',
+                'rules' => $obj)
+            );
         }
 
         db_commit();
@@ -628,11 +631,14 @@ class View {
                 'group' => $viewdata['group'],
                 'ctime' => db_format_timestamp(time()),
             );
-            insert_record('view_access', $newaccess);
-            handle_event('updateviewaccess', array('id' => $viewdata['group'],
-                                                   'eventfor' => 'group',
-                                                   'viewids' => $view->get('id'),
-                                                   'rules' => array($newaccess)));
+            $vaid = insert_record('view_access', $newaccess, 'id', true);
+            handle_event('updateviewaccess', array(
+                'id' => $vaid,
+                'eventfor' => 'group',
+                'parentid' => $view->get('id'),
+                'parenttype' => 'view',
+                'rules' => $newaccess)
+            );
             // Notify group members
             $accessdata = new StdClass;
             $accessdata->view = $view->get('id');
@@ -767,11 +773,11 @@ class View {
                 throw new SystemException(get_string('onlonlyyoneprofileviewallowed', 'error'));
             }
             $this->id = insert_record('view', $fordb, 'id', true);
-            handle_event('createview', $this->id);
+            handle_event('createview', array('id' => $this->id, 'eventfor' => 'view', 'viewtype' => $this->type));
         }
         else {
             update_record('view', $fordb, 'id');
-            handle_event('saveview', $this->id);
+            handle_event('saveview', array('id' => $this->id, 'eventfor' => 'view', 'viewtype' => $this->type));
         }
 
         if (isset($this->tags)) {
@@ -877,7 +883,7 @@ class View {
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('view_visit','view',$this->id);
-        $eventdata = array('id' => $this->id);
+        $eventdata = array('id' => $this->id, 'eventfor' => 'view');
         if ($collection = $this->get_collection()) {
             $eventdata['collection'] = $collection->get('id');
             $collection->remove_view($this->id);
@@ -1308,7 +1314,6 @@ class View {
              * @todo: merge overlapping date ranges.
              */
             $time = time();
-            $accessrecords = array();
             foreach ($accessdata as $item) {
 
                 if (!empty($item['stopdate']) && $item['stopdate'] < $time) {
@@ -1379,17 +1384,17 @@ class View {
 
                 if (array_search($accessrecord, $accessdata_added) === false) {
                     $accessrecord->view = $this->get('id');
-                    insert_record('view_access', $accessrecord);
-                    $accessrecords[] = $accessrecord;
+                    $vaid = insert_record('view_access', $accessrecord, 'id', true);
+                    handle_event('updateviewaccess', array(
+                        'id' => $vaid,
+                        'eventfor' => $item['type'],
+                        'parentid' => $accessrecord->view,
+                        'parenttype' => 'view',
+                        'rules' => $accessrecord)
+                    );
                     unset($accessrecord->view);
                     $accessdata_added[] = $accessrecord;
                 }
-            }
-            if (!empty($accessrecords)) {
-                handle_event('updateviewaccess', array('id' => $this->get('id'),
-                                                       'eventfor' => 'view',
-                                                       'viewids' => !empty($viewids) ? $viewids : $this->get('id'),
-                                                       'rules' => $accessrecords));
             }
         }
 
@@ -1485,22 +1490,40 @@ class View {
         );
 
         if ($firstviewaccess) {
-            $accessrecords = array();
             foreach ($toupdate as $id) {
                 foreach ($firstviewaccess as &$a) {
                     $a->view = $id;
                     $a->ctime = db_format_timestamp(time());
                     unset($a->id);
-                    insert_record('view_access', $a);
-                    $accessrecords[] = $a;
+                    $vaid = insert_record('view_access', $a, 'id', true);
+                    handle_event('updateviewaccess', array(
+                        'id' => $vaid,
+                        'eventfor' => self::eventfor($a),
+                        'parentid' => $id,
+                        'parenttype' => 'view',
+                        'rules' => $a)
+                    );
                 }
             }
-            handle_event('updateviewaccess', array('id' => $this->id,
-                                                   'eventfor' => 'view',
-                                                   'viewids' => $toupdate,
-                                                   'rules' => $accessrecords));
         }
         db_commit();
+    }
+
+    public static function eventfor($access) {
+        // Work out what event this access is for
+        if (!empty($access->token)) {
+            return 'token';
+        }
+        if (!empty($access->institution)) {
+            return 'institution';
+        }
+        if (!empty($access->group)) {
+            return 'group';
+        }
+        if (!empty($access->usr)) {
+            return 'user';
+        }
+        return $access->accesstype;
     }
 
     public function add_access($access) {
@@ -1516,11 +1539,14 @@ class View {
         if (!isset($access->ctime)) {
             $access->ctime = db_format_timestamp(time());
         }
-        ensure_record_exists('view_access', $whereobject, $access);
-        handle_event('updateviewaccess', array('id' => $this->id,
-                                               'eventfor' => 'view',
-                                               'viewids' => $this->id,
-                                               'rules' => array($access)));
+        $vaid = ensure_record_exists('view_access', $whereobject, $access, 'id', true);
+        handle_event('updateviewaccess', array(
+            'id' => $vaid,
+            'eventfor' => self::eventfor($access),
+            'parentid' => $this->id,
+            'parenttype' => 'view',
+            'rules' => $access)
+        );
     }
 
     public function add_owner_institution_access($instnames=array()) {
@@ -1548,12 +1574,14 @@ class View {
                     $vaccess->approvecomments = 1;
                     $vaccess->ctime = db_format_timestamp(time());
 
-                    insert_record('view_access', $vaccess);
-                    handle_event('updateviewaccess', array('id' => $this->id,
-                                                           'eventfor' => 'view',
-                                                           'viewids' => $this->id,
-                                                           'institution' => $i,
-                                                           'rules' => array($vaccess)));
+                    $vaid = insert_record('view_access', $vaccess, 'id', true);
+                    handle_event('updateviewaccess', array(
+                        'id' => $vaid,
+                        'eventfor' => 'institution',
+                        'parentid' => $this->id,
+                        'parenttype' => 'view',
+                        'rules' => $vaccess)
+                    );
                 }
             }
             db_commit();
@@ -5942,11 +5970,14 @@ class View {
         while (record_exists('view_access', 'token', $data->token)) {
             $data->token = get_random_key(20);
         }
-        insert_record('view_access', $data);
-        handle_event('updateviewaccess', array('id' => $viewid,
-                                               'eventfor' => 'view',
-                                               'viewids' => $viewid,
-                                               'rules' => array($data)));
+        $vaid = insert_record('view_access', $data, 'id', true);
+        handle_event('updateviewaccess', array(
+            'id' => $vaid,
+            'eventfor' => 'token',
+            'parentid' => $viewid,
+            'parenttype' => 'view',
+            'rules' => $data)
+        );
         return $data;
     }
 
@@ -6635,7 +6666,6 @@ class View {
         execute_sql($sql, $params);
 
         if ($group) {
-            $accessrecords = array();
             foreach ($group->roles as $role) {
                 foreach ($viewids as $viewid) {
                     $accessrecord = (object) array(
@@ -6647,14 +6677,16 @@ class View {
                         'approvecomments' => 0,
                         'ctime'           => db_format_timestamp(time()),
                     );
-                    ensure_record_exists('view_access', $accessrecord, $accessrecord);
-                    $accessrecords[] = $accessrecord;
+                    $vaid = ensure_record_exists('view_access', $accessrecord, $accessrecord);
+                    handle_event('updateviewaccess', array(
+                        'id' => $vaid,
+                        'eventfor' => 'group',
+                        'parentid' => $viewid,
+                        'parenttype' => 'view',
+                        'rules' => $accessrecord)
+                    );
                 }
             }
-            handle_event('updateviewaccess', array('id' => $groupid,
-                                                   'eventfor' => 'group',
-                                                   'viewids' => $viewids,
-                                                   'rules' => $accessrecords));
         }
 
         ArtefactType::update_locked($userid);

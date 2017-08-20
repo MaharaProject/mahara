@@ -894,7 +894,8 @@ function core_install_firstcoredata_defaults() {
         'deletecollection',
         'addsubmission',
         'releasesubmission',
-        'updateviewaccess'
+        'updateviewaccess',
+        'sharedcommenttogroup'
     );
 
     foreach ($eventtypes as $et) {

@@ -544,11 +544,14 @@ function group_create($data) {
         'accesstype' => $data['public'] ? 'public' : 'loggedin',
         'ctime'      => db_format_timestamp(time()),
     );
-    insert_record('view_access', $newaccess);
-    handle_event('updateviewaccess', array('id' => $id,
-                                           'eventfor' => 'group',
-                                           'viewids' => $homepage->get('id'),
-                                           'rules' => array($newaccess)));
+    $vaid = insert_record('view_access', $newaccess, 'id', true);
+    handle_event('updateviewaccess', array(
+        'id' => $vaid,
+        'eventfor' => $data['public'] ? 'public' : 'loggedin',
+        'parentid' => $homepage->get('id'),
+        'parenttype' => 'view',
+        'rules' => $newaccess)
+    );
     handle_event('creategroup', $data);
     db_commit();
 
@@ -737,7 +740,14 @@ function group_update($new, $create=false) {
                 'accesstype' => 'loggedin',
                 'ctime'      => db_format_timestamp(time()),
             );
-            insert_record('view_access', $newaccess);
+            $vaid = insert_record('view_access', $newaccess, 'id', true);
+            handle_event('updateviewaccess', array(
+                'id' => $vaid,
+                'eventfor' => 'loggedin',
+                'parentid' => $homepageid,
+                'parenttype' => 'view',
+                'rules' => $newaccess)
+            );
         }
         else if (!$old->public && $new->public) {
             delete_records('view_access', 'view', $homepageid, 'accesstype', 'loggedin');
@@ -746,12 +756,15 @@ function group_update($new, $create=false) {
                 'accesstype' => 'public',
                 'ctime'      => db_format_timestamp(time()),
             );
-            insert_record('view_access', $newaccess);
+            $vaid = insert_record('view_access', $newaccess, 'id', true);
+            handle_event('updateviewaccess', array(
+                'id' => $vaid,
+                'eventfor' => 'public',
+                'parentid' => $homepageid,
+                'parenttype' => 'view',
+                'rules' => $newaccess)
+            );
         }
-        handle_event('updateviewaccess', array('id' => $new->id,
-                                           'eventfor' => 'group',
-                                           'viewids' => $homepageid,
-                                           'rules' => array($newaccess)));
     }
 
     // When the create/edit permissions change, update permissions on journal and posts

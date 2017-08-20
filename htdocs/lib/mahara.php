@@ -1896,6 +1896,17 @@ function handle_event($event, $data, $ignorefields = array()) {
         unset($logdata->id);
         $reftype = $logdata->artefacttype;
         unset($logdata->artefacttype);
+        $parentrefid = $refid;
+        $parentreftype = 'artefact';
+        if ($reftype == 'comment') {
+            if (isset($logdata->onview)) {
+                $parentrefid = $logdata->onview;
+                $parentreftype = 'view';
+            }
+            if (isset($logdata->onartefact)) {
+                $parentrefid = $logdata->onartefact;
+            }
+        }
     }
     else if ($logdata instanceof BlockInstance) {
         $logdata->set('dirty', false);
@@ -1929,6 +1940,12 @@ function handle_event($event, $data, $ignorefields = array()) {
             $refid = $logdata->id;
             $reftype = $logdata->eventfor;
             unset($logdata->eventfor);
+            if (isset($logdata->parentid) && isset($logdata->parenttype)) {
+                $parentrefid = $logdata->parentid;
+                $parentreftype = $logdata->parenttype;
+                unset($logdata->parentid);
+                unset($logdata->parenttype);
+            }
         }
         $data = (array)$data;
     }
@@ -1936,6 +1953,12 @@ function handle_event($event, $data, $ignorefields = array()) {
         $refid = !empty($logdata['id']) ? $logdata['id'] : null;
         $reftype = !empty($logdata['eventfor']) ? $logdata['eventfor'] : null;
         unset($logdata['eventfor']);
+        if (isset($logdata['parentid']) && isset($logdata['parenttype'])) {
+            $parentrefid = $logdata['parentid'];
+            $parentreftype = $logdata['parenttype'];
+            unset($logdata['parentid']);
+            unset($logdata['parenttype']);
+        }
     }
 
     // Then remove any unwanted items
@@ -1963,7 +1986,37 @@ function handle_event($event, $data, $ignorefields = array()) {
             'parentresourceid' => $parentrefid,
             'parentresourcetype' => $parentreftype,
         );
+        // find out who 'owns' the event
+        list ($ownerid, $ownertype) = event_find_owner_type($logentry);
+        $logentry->ownerid = $ownerid;
+        $logentry->ownertype = $ownertype;
         insert_record('event_log', $logentry);
+        // If we are adding a comment to a page that is shared to a group
+        // we need to add a 'sharedcommenttogroup' event
+        if ($reftype == 'comment') {
+            if (!empty($logdata['onartefact'])) {
+                $commenttype = 'artefact';
+                $commenttypeid = $logdata['onartefact'];
+                $wheresql = " IN (SELECT view FROM {view_artefact} WHERE " . $commenttype . " = ?) ";
+            }
+            else {
+                $commenttype = 'view';
+                $commenttypeid = $logdata['onview'];
+                $wheresql = " = ? ";
+            }
+            if ($groupids = get_records_sql_array("SELECT \"group\" FROM {view_access}
+                                                WHERE view " . $wheresql . "
+                                                AND \"group\" IS NOT NULL", array($commenttypeid))) {
+                foreach ($groupids as $groupid) {
+                    $logentry->event = 'sharedcommenttogroup';
+                    $logentry->data = null;
+                    $logentry->ownerid = $groupid->group;
+                    $logentry->ownertype = 'group';
+                    insert_record('event_log', $logentry);
+                }
+            }
+        }
+        // @TODO If we are sharing a page to a group that contains existing comments do we count these are sharedcomments?
     }
 
     if (empty($coreevents_cache)) {
@@ -2015,6 +2068,46 @@ function handle_event($event, $data, $ignorefields = array()) {
             }
         }
     }
+}
+
+/**
+ * Find out who / what owns the event
+ *
+ * @param obj $event  event_log database record
+ *
+ * @return array  An array of ($id, $type)
+ */
+function event_find_owner_type($event) {
+    $ownerid = null;
+    $ownertype = null;
+    $record = null;
+    $validtypes = array('view', 'collection', 'artefact');
+    if (!empty($event->parentresourcetype) && in_array($event->parentresourcetype, $validtypes)) {
+        $record = get_record($event->parentresourcetype, 'id', $event->parentresourceid);
+    }
+    else if (!empty($event->resourcetype) && in_array($event->resourcetype, $validtypes)) {
+        $record = get_record($event->resourcetype, 'id', $event->resourceid);
+    }
+
+    if ($record) {
+        if (!empty($record->institution)) {
+            $ownerid = get_field('institution', 'id', 'name', $record->institution);
+            $ownertype = 'institution';
+        }
+        if (!empty($record->group)) {
+            $ownerid = $record->group;
+            $ownertype = 'group';
+        }
+        if (!empty($record->owner)) {
+            $ownerid = $record->owner;
+            $ownertype = 'user';
+        }
+    }
+    else if (!empty($event->resourcetype) && in_array($event->resourcetype, array('group', 'user', 'institution'))) {
+        $ownerid = $event->resourceid;
+        $ownertype = $event->resourcetype;
+    }
+    return array($ownerid, $ownertype);
 }
 
 /**

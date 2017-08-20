@@ -748,7 +748,7 @@ function useractivity_statistics_headers($extra, $urllink) {
               'id' => 'lastactivity',
               'name' => get_string('lastactivity', 'statistics'),
               'class' => format_class($extra, 'lastactivity'),
-              'link' => format_goto($urllink . '&sort=lastactivity', $extra, array('sort'), 'lastactivity')
+//              'link' => format_goto($urllink . '&sort=lastactivity', $extra, array('sort'), 'lastactivity')
         ),
     );
 }
@@ -784,7 +784,7 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
     $users = $SESSION->get('usersforstats');
 
     $fromsql = " FROM {usr} u";
-    $wheresql = " WHERE u.deleted = 0 AND id != 0 AND u.lastlogin IS NOT NULL";
+    $wheresql = " WHERE id != 0 AND u.lastlogin IS NOT NULL";
     $where = array();
     if ($institution) {
         $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
@@ -794,11 +794,19 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
         $wheresql .= " AND u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
     }
     if ($start) {
-        $wheresql .= " AND u.ctime >= DATE(?) AND u.ctime <= DATE(?)";
+        $wheresql .= " AND EXISTS(SELECT usr FROM {usr_login_data} uld
+                                  WHERE uld.usr = u.id
+                                  AND uld.ctime >= DATE(?) AND uld.ctime <= DATE(?)
+                                  LIMIT 1)";
         $where[] = $start;
         $where[] = $end;
     }
-    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . $wheresql, $where);
+    $count = 0;
+    $usrids = get_records_sql_assoc("SELECT id, username " . $fromsql . $wheresql, $where);
+    if (!empty($usrids)) {
+        $usrids = array_keys($usrids);
+        $count = count($usrids);
+    }
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
@@ -828,79 +836,176 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
     }
 
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    $sortorder = "1";
+    $sortdesc = !empty($extra['sortdesc']) ? 'desc' : 'asc';
+    $sortdirection = '';
+    $sortname = null;
+
     switch ($sorttype) {
-        case "lastactivity":
         case "lastlogin":
+            $sortdirection = array('LastActivity' => $sortdesc);
+            break;
+        case "lastactivity":
+            $sortdirection = array('LastLogin' => $sortdesc);
+            break;
         case "actions":
+            $sortdirection = array('EventTypeCount' => $sortdesc);
+            break;
         case "logins":
+            $sortorder = "doc.event.value == 'login' ? 1 : 0";
+            $sortdirection = array('EventTypeCount' => $sortdesc);
+            break;
         case "groups":
+            $sortorder = "doc.event.value == 'creategroup' ? 1 : 0";
+            $sortdirection = array('EventTypeCount' => $sortdesc);
+            break;
         case "collections":
+            $sortorder = "doc.event.value == 'createcollection' ? 1 : 0";
+            $sortdirection = array('EventTypeCount' => $sortdesc);
+            break;
         case "pages":
+            $sortorder = "doc.event.value == 'createview' ? 1 : 0";
+            $sortdirection = array('EventTypeCount' => $sortdesc);
+            break;
         case "artefacts":
+            $sortorder = "doc.event.value == 'saveartefact' ? 1 : 0";
+            $sortdirection = array('EventTypeCount' => $sortdesc);
+            break;
         case "displayname":
+            $sortname = 'preferredname';
+            break;
         case "username":
-            $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT (u.firstname, ' ', u.lastname)";
+            $sortname = 'username';
             break;
         case "lastname":
-            $orderby = " u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $sortname = 'lastname';
             break;
         case "firstname":
         default:
-            $orderby = " u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $sortname = 'firstname';
     }
 
-    $sql = "SELECT u.id, u.firstname, u.lastname, u.username, u.preferredname AS displayname,
-            u.lastlogin, u.ctime,
-            (SELECT COUNT(*) FROM {artefact} a WHERE a.owner = u.id) AS artefacts,
-            (SELECT COUNT(*) FROM {view} v WHERE v.owner = u.id) AS pages,
-            (SELECT COUNT(*) FROM {collection} c WHERE c.owner = u.id) AS collections,
-            (SELECT COUNT(*) FROM {group_member} gm WHERE gm.member = u.id) AS groups,
-            (SELECT COUNT(*) FROM {usr_login_data} uld WHERE uld.usr = u.id) AS logins,
-            'N/A' AS actions,
-            'N/A' AS lastactivity
-            " . $fromsql . $wheresql . "
-            ORDER BY " . $orderby;
-    if (empty($extra['csvdownload'])) {
-        $sql .= " LIMIT $limit OFFSET $offset";
-    }
-    $data = get_records_sql_array($sql, $where);
-    $daterange = array_map(function ($obj) { return $obj->ctime; }, $data);
-    $result['settings']['start'] = ($start) ? $start : min($daterange);
+    $result['settings']['start'] = $start;
 
-    foreach ($data as $item) {
-        $item->profileurl = profile_url($item->id);
-        $item->lastlogin = $item->lastlogin ? format_date(strtotime($item->lastlogin)) : ' ';
-        // Add in the elasticsearch data if needed
-        if (get_config('searchplugin') == 'elasticsearch') {
-            safe_require('search', 'elasticsearch');
-            $options = array(
-                'filters' => array(
-                    'term' => array(
-                        'usr' => $item->id
+    // Add in the elasticsearch data if needed
+    $aggmap = array();
+    if (get_config('searchplugin') == 'elasticsearch') {
+        safe_require('search', 'elasticsearch');
+        $options = array(
+            'query' => array(
+                'terms' => array(
+                    'usr' => $usrids
+                ),
+            ),
+            'range' => array(
+                'range' => array(
+                    'ctime' => array(
+                        'gte' => $result['settings']['start'] . ' 00:00:00',
+                        'lte' => $result['settings']['end'] . ' 23:59:59'
+                    )
+                )
+            ),
+            'aggs' => array(
+                'UsrId' => array(
+                    'terms' => array(
+                        'field' => 'usr',
+                        'order' => $sortdirection,
+                        'size' => $count,
+                     ),
+                     'aggs' => array(
+                        'EventType' => array(
+                            'terms' => array(
+                                'field' => 'event',
+                                'min_doc_count' => 0,
+                            ),
+                        ),
+                        'EventTypeCount' => array(
+                            'sum' => array(
+                                'script' => array(
+                                    'inline' => $sortorder,
+                                ),
+                            ),
+                        ),
+                        'LastLogin' => array(
+                            'max' => array(
+                                'script' => array(
+                                    'inline' => "doc.event.value == 'login' ? doc.ctime.value : 0",
+                                ),
+                            ),
+                        ),
+                        'LastActivity' => array(
+                            'max' => array(
+                                'script' => array(
+                                    'inline' => "doc.id.value",
+                                ),
+                            ),
+                        ),
                     ),
                 ),
-                'range' => array(
-                    'range' => array(
-                        'ctime' => array(
-                            'gte' => $result['settings']['start'] . ' 00:00:00',
-                            'lte' => $result['settings']['end'] . ' 23:59:59'
-                        )
-                    )
-                ),
-                'sort' => array(
-                    'ctime' => 'desc'
-                )
-            );
-            $plugin = 'elasticsearch';
-            $actions = call_static_method(generate_class_name('search', $plugin), 'search_events', $options, 1, 0);
-            $item->actions = $actions['totalresults'];
-            $item->lastactivity = $actions['data'][0]['event'];
+            ),
+        );
+        if (empty($sortdirection)) { unset($options['aggs']['UsrId']['terms']['order']); }
+        $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
+        if ($aggregates['totalresults'] > 0) {
+            foreach ($aggregates['aggregations']['UsrId']['buckets'] as $k => $usr) {
+                $user = new User();
+                $user->find_by_id($usr['key']);
+                $aggregates['aggregations']['UsrId']['buckets'][$k]['firstname'] = $user->get('firstname');
+                $aggregates['aggregations']['UsrId']['buckets'][$k]['lastname'] = $user->get('lastname');
+                $aggregates['aggregations']['UsrId']['buckets'][$k]['username'] = $user->get('username');
+                $aggregates['aggregations']['UsrId']['buckets'][$k]['preferredname'] = $user->get('preferredname');
+            }
+            if (!empty($sortname)) {
+                usort($aggregates['aggregations']['UsrId']['buckets'], function ($a, $b) use ($sortname) {
+                    return strnatcmp($a[$sortname], $b[$sortname]);
+                });
+                if ($sortdesc == 'desc') {
+                    $aggregates['aggregations']['UsrId']['buckets'] = array_reverse($aggregates['aggregations']['UsrId']['buckets']);
+                }
+            }
+            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('UsrId', 'EventType'));
         }
     }
+
+    $data = array();
+    if ($aggregates['totalresults'] > 0) {
+        foreach ($aggregates['aggregations']['UsrId']['buckets'] as $item) {
+            $obj = new stdClass();
+            $obj->id = $item['key'];
+            $obj->firstname = $item['firstname'];
+            $obj->lastname = $item['lastname'];
+            $obj->username = $item['username'];
+            $obj->displayname = $item['preferredname'];
+            $obj->ctime = null;
+            $obj->artefacts = !empty($aggmap[$item['key'] . '|saveartefact']) ? $aggmap[$item['key'] . '|saveartefact'] : 0;
+            $obj->pages = !empty($aggmap[$item['key'] . '|createview']) ? $aggmap[$item['key'] . '|createview'] : 0;
+            $obj->collections = !empty($aggmap[$item['key'] . '|createcollection']) ? $aggmap[$item['key'] . '|createcollection'] : 0;
+            $obj->groups = !empty($aggmap[$item['key'] . '|creategroup']) ? $aggmap[$item['key'] . '|creategroup'] : 0;
+            $obj->logins = !empty($aggmap[$item['key'] . '|login']) ? $aggmap[$item['key'] . '|login'] : 0;
+            $obj->lastactivity = get_field('event_log', 'event', 'id', $item['LastActivity']['value']);
+            $obj->profileurl = profile_url($item['key']);
+            $date = $item['LastLogin']['value'] / 1000; // convert from UTC milliseconds
+            $timezone = new DateTimeZone(date_default_timezone_get()); // get timezone we are in
+            $offsettime = $timezone->getOffset(new DateTime("now")); // work out offset in seconds
+            if ($offset < 0) {
+                $date -= $offsettime;
+            }
+            if ($offset > 0) {
+                $date += $offsettime;
+            }
+            $obj->lastlogin = $item['LastLogin']['value'] ? date('d F Y, H:i a', $date) : '';
+            $obj->actions = $item['doc_count'];
+            $data[] = $obj;
+        }
+    }
+    if (empty($extra['csvdownload'])) {
+        $data = array_slice($data, $offset, $limit, true);
+    }
+
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('firstname', 'lastname', 'displayname', 'username',
                            'artefacts', 'pages', 'collections', 'groups', 'logins',
-                           'actions', 'lastlogin', 'lastactivity');
+                          'actions', 'lastlogin', 'lastactivity');
         $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'useractivitystatistics.csv', 'text/csv');
     }
     $result['csv'] = true;
@@ -1029,6 +1134,7 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
         $daterange[date("Y_W", $from)] = date('Y-m-d', $from);
         $from = $from + (7 * 24 * 60 * 60); // Break down the range by weeks
     }
+    $daterange[date("Y_W", $to)] = date('Y-m-d', $to);
 
     $count = count($daterange);
 
@@ -1058,70 +1164,56 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
     }
 
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
-    switch ($sorttype) {
-        case "comments":
-        case "annotations":
-        case "usershare":
-        case "groupshare":
-        case "institutionshare":
-        case "loggedinshare":
-        case "publicshare":
-        case "secretshare":
-        case "friendshare":
-            $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT(EXTRACT(YEAR FROM va.ctime), '_', EXTRACT(WEEK FROM va.ctime)) ASC";
-            break;
-        case "date":
-        default:
-            $orderby = " CONCAT(EXTRACT(YEAR FROM va.ctime), '_', EXTRACT(WEEK FROM va.ctime)) " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+
+    $aggmap = array();
+    if (get_config('searchplugin') == 'elasticsearch') {
+        safe_require('search', 'elasticsearch');
+        $options = array(
+            'range' => array(
+                'range' => array(
+                    'ctime' => array(
+                        'gte' => $start . ' 00:00:00',
+                        'lt' => $end . ' 00:00:00'
+                    )
+                )
+            ),
+            'sort' => array(
+                'ctime' => 'desc'
+            ),
+            'aggs' => array(
+                'YearWeek' => array(
+                    'terms' => array(
+                        'field' => 'yearweek',
+                    ),
+                    'aggs' => array(
+                        'EventType' => array(
+                            'terms' => array(
+                                'field' => 'event',
+                            ),
+                            'aggs' => array(
+                                'ResourceType' => array(
+                                    'terms' => array(
+                                        'field' => 'resourcetype',
+                                    ),
+                                    'aggs' => array(
+                                        'ParentResourceType' => array(
+                                            'terms' => array(
+                                                'field' => 'parentresourcetype',
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        );
+        $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
+        if ($aggregates['totalresults'] > 0) {
+            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('YearWeek', 'EventType', 'ResourceType', 'ParentResourceType'));
+        }
     }
-
-    $fromsql = " FROM {view_access} va
-                 JOIN {view} v ON v.id = va.view
-                 LEFT JOIN {usr} u ON u.id = v.owner
-                 LEFT JOIN (
-                   SELECT onview, SUM(sumcomments) AS comments FROM
-                     (SELECT acc.onview, COUNT(acc.artefact) AS sumcomments
-                      FROM {artefact_comment_comment} acc
-                      GROUP BY acc.artefact, acc.onview) AS sub
-                   GROUP BY onview) AS dt
-                 ON dt.onview = va.view
-                 LEFT JOIN (
-                   SELECT view, SUM(sumannotations) AS annotations FROM
-                     (SELECT aa.view, COUNT(*) AS sumannotations
-                      FROM {artefact_annotation} aa
-                      JOIN {artefact_annotation_feedback} aaf ON (aaf.onannotation = aa.annotation)
-                      GROUP BY aa.view) AS sub
-                   GROUP BY view) AS da
-                 ON da.view = va.view";
-    $wheresql = " WHERE u.deleted != 1 AND u.id != 0";
-    $where = array();
-    if ($institution) {
-        $fromsql .= " JOIN {usr_institution} ui ON ui.usr = u.id";
-        $wheresql .= " AND (ui.institution = ? OR va.institution = ?)";
-        $where = array($institution, $institution);
-    }
-    if ($start) {
-        $wheresql .= " AND va.ctime >= DATE(?) AND va.ctime <= DATE(?)";
-        $where[] = $start;
-        $where[] = $end;
-    }
-
-    $sql = "SELECT CONCAT(EXTRACT(YEAR FROM va.ctime), '_', EXTRACT(WEEK FROM va.ctime)) AS yearweek,
-            SUM(CASE WHEN comments IS NOT NULL THEN comments ELSE 0 END) AS comments,
-            SUM(CASE WHEN annotations IS NOT NULL THEN annotations ELSE 0 END) AS annotations,
-            SUM(CASE WHEN va.usr IS NOT NULL THEN 1 ELSE 0 END) AS usershare,
-            SUM(CASE WHEN va.group IS NOT NULL THEN 1 ELSE 0 END) AS groupshare,
-            SUM(CASE WHEN va.institution IS NOT NULL THEN 1 ELSE 0 END) AS institutionshare,
-            SUM(CASE WHEN va.accesstype = 'loggedin' THEN 1 ELSE 0 END) AS loggedinshare,
-            SUM(CASE WHEN va.accesstype = 'public' THEN 1 ELSE 0 END) AS publicshare,
-            SUM(CASE WHEN va.token IS NOT NULL THEN 1 ELSE 0 END) AS secretshare,
-            SUM(CASE WHEN va.accesstype = 'friends' THEN 1 ELSE 0 END) AS friendshare
-            " . $fromsql . $wheresql . "
-            GROUP BY CONCAT(EXTRACT(YEAR FROM va.ctime), '_', EXTRACT(WEEK FROM va.ctime))
-            ORDER BY " . $orderby;
-
-    $collabdata = get_records_sql_assoc($sql, $where);
-
     $result['settings']['start'] = ($start) ? $start : min($daterange);
 
     $rawdata = array();
@@ -1135,23 +1227,17 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
         $obj = new StdClass();
         $obj->date = get_string('collaborationdate', 'statistics', format_date(strtotime($year . "W" . $week . '1'), 'strfdaymonthyearshort'));
         $obj->yearweek = $k;
-        $obj->comments = 0;
-        $obj->annotations = 0;
-        $obj->usershare = 0;
-        $obj->groupshare = 0;
-        $obj->institutionshare = 0;
-        $obj->loggedinshare = 0;
-        $obj->publicshare = 0;
-        $obj->secretshare = 0;
-        $obj->friendshare = 0;
-        $rawdata[$k] = $obj;
-    }
+        $obj->comments = !empty($aggmap[$k . '|saveartefact|comment']) ? $aggmap[$k . '|saveartefact|comment'] : 0;
+        $obj->annotations = !empty($aggmap[$k . '|saveartefact|annotation']) ? $aggmap[$k . '|saveartefact|annotation'] : 0;
+        $obj->usershare = !empty($aggmap[$k . '|updateviewaccess|user']) ? $aggmap[$k . '|updateviewaccess|user'] : 0;
+        $obj->groupshare = !empty($aggmap[$k . '|updateviewaccess|group']) ? $aggmap[$k . '|updateviewaccess|group'] : 0;
+        $obj->institutionshare = !empty($aggmap[$k . '|updateviewaccess|institution']) ? $aggmap[$k . '|updateviewaccess|institution'] : 0;
+        $obj->loggedinshare = !empty($aggmap[$k . '|updateviewaccess|loggedin']) ? $aggmap[$k . '|updateviewaccess|loggedin'] : 0;
+        $obj->publicshare = !empty($aggmap[$k . '|updateviewaccess|public']) ? $aggmap[$k . '|updateviewaccess|public'] : 0;
+        $obj->secretshare = !empty($aggmap[$k . '|updateviewaccess|token']) ? $aggmap[$k . '|updateviewaccess|token'] : 0;
+        $obj->friendshare = !empty($aggmap[$k . '|updateviewaccess|friends']) ? $aggmap[$k . '|updateviewaccess|friends'] : 0;
 
-    if ($collabdata) {
-        foreach ($collabdata as $k => $v) {
-            $v->date = $rawdata[$k]->date;
-            $rawdata[$k] = $v;
-        }
+        $rawdata[$k] = $obj;
     }
 
     // if sorting by something other than date
@@ -1695,6 +1781,99 @@ function group_stats_table($limit, $offset, $extra) {
     }
 
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    $sortdesc = !empty($extra['sortdesc']) ? 'desc' : 'asc';
+    switch ($sorttype) {
+        case "groupcomments":
+            $sortdirection = array('EventTypeCount' => $sortdesc);
+            $sortorder = "(doc.event.value == 'saveartefact' && doc.resourcetype.value == 'comment' && doc.ownertype.value == 'group') ? 1 : 0";
+            break;
+        case "sharedviews":
+            $sortdirection = array('EventTypeCount' => $sortdesc);
+            $sortorder = "(doc.event.value == 'updateviewaccess' && doc.resourcetype.value == 'group' && doc.ownertype.value == 'user') ? 1 : 0";
+            break;
+        case "sharedcomments":
+            $sortdirection = array('EventTypeCount' => $sortdesc);
+            $sortorder = "(doc.event.value == 'sharedcommenttogroup' && doc.resourcetype.value == 'comment' && doc.ownertype.value == 'group') ? 1 : 0";
+            break;
+        default:
+            $sortdirection = '';
+            $sortorder = "1";
+    }
+
+    $aggmap = array();
+    // Add in the elasticsearch data if needed
+    if (get_config('searchplugin') == 'elasticsearch') {
+        safe_require('search', 'elasticsearch');
+        $options = array(
+            'query' => array(
+                'multi_match' => array(
+                    'query' => 'group',
+                    'fields' => array(
+                        'ownertype', 'resourcetype'
+                    )
+                ),
+            ),
+            'range' => array(
+                'range' => array(
+                    'ctime' => array(
+                        'gte' => $start . ' 00:00:00',
+                        'lte' => $end . ' 23:59:59'
+                    )
+                )
+            ),
+            'aggs' => array(
+                'GroupId' => array(
+                    'terms' => array(
+                        'field' => 'ownerid',
+                        'order' => $sortdirection,
+                        'size' => $count,
+                    ),
+                    'aggs' => array(
+                        'EventTypeCount' => array(
+                            'sum' => array(
+                                'script' => array(
+                                    'inline' => $sortorder,
+                                ),
+                            ),
+                        ),
+                        'EventType' => array(
+                            'terms' => array(
+                                'field' => 'event',
+                                'min_doc_count' => 0,
+                            ),
+                            'aggs' => array(
+                                'ResourceType' => array(
+                                    'terms' => array(
+                                        'field' => 'resourcetype',
+                                    ),
+                                    'aggs' => array(
+                                        'OwnerType' => array(
+                                            'terms' => array(
+                                                'field' => 'ownertype',
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        );
+        if (empty($sortdirection)) {
+            unset($options['aggs']['GroupId']['terms']['order']);
+        }
+        $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
+        $groupids = array();
+        if ($aggregates['totalresults'] > 0) {
+            $groups = array_slice($aggregates['aggregations']['GroupId']['buckets'], $offset, $limit, true);
+            foreach($groups as $k => $g) {
+                $groupids[$k] = $g['key'];
+            }
+            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('GroupId', 'EventType', 'ResourceType', 'OwnerType'));
+        }
+    }
+
     switch ($sorttype) {
         case "members":
             $ordersql = " mc.members " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
@@ -1712,6 +1891,8 @@ function group_stats_table($limit, $offset, $extra) {
         case "group":
         default:
             $ordersql = " g.name " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+
+
     }
     $rangesql = '';
     $rangewhere = array();
@@ -1720,9 +1901,10 @@ function group_stats_table($limit, $offset, $extra) {
         $rangewhere[] = $start;
         $rangewhere[] = $end;
     }
+    if (!empty($sortdirection) && empty($extra['csvdownload']) && !empty($groupids)) {
+        $rangesql .= " AND g.id IN(" . join(',', array_map('db_quote', array_values($groupids))) . ")";
+    }
 
-    $sqloffset = empty($extra['csvdownload']) ? $offset : null;
-    $sqllimit = empty($extra['csvdownload']) ? $limit : null;
     $sql = "SELECT
             g.id, g.name, g.urlid, g.ctime, mc.members, vc.views, fc.forums, pc.posts
         FROM {group} g
@@ -1761,11 +1943,22 @@ function group_stats_table($limit, $offset, $extra) {
     else {
         $groupdata = get_records_sql_array($sql, $rangewhere, $offset, $limit);
     }
-
+    if (!empty($sortdirection) && !empty($groupids)) {
+        $groupidkeys = array_flip($groupids);
+        usort($groupdata, function ($a, $b) use ($groupidkeys) {
+            $posA = $groupidkeys[$a->id];
+            $posB = $groupidkeys[$b->id];
+            if ($posA == $posB) {
+                return 0;
+            }
+            return ($posA < $posB) ? -1 : 1;
+        });
+    }
     foreach ($groupdata as $key => $group) {
-        // Add in the elasticsearch data if needed
-        if (get_config('searchplugin') == 'elasticsearch') {
-            // TODO
+        if (!empty($aggmap)) {
+            $group->groupcomments = !empty($aggmap[$group->id . '|saveartefact|comment|group']) ? $aggmap[$group->id . '|saveartefact|comment|group'] : 0;
+            $group->sharedviews = !empty($aggmap[$group->id . '|updateviewaccess|group|user']) ? $aggmap[$group->id . '|updateviewaccess|group|user'] : 0;
+            $group->sharedcomments = !empty($aggmap[$group->id . '|sharedcommenttogroup|comment|group']) ? $aggmap[$group->id . '|sharedcommenttogroup|comment|group'] : 0;
         }
         else {
             $group->groupcomments = get_string('notdisplayed', 'statistics');
@@ -2692,7 +2885,7 @@ function masquerading_stats_table($limit, $offset, $extra, $institution, $urllin
         $wheresql .= "   OR e.realusr IN (" . join(',', array_map('db_quote', array_values($users))) . "))";
     }
     if ($start) {
-        $wheresql .= " AND e.time >= DATE(?) AND e.time <= DATE(?)";
+        $wheresql .= " AND e.ctime >= DATE(?) AND e.ctime <= DATE(?)";
         $where[] = $start;
         $where[] = $end;
     }
@@ -2734,7 +2927,7 @@ function masquerading_stats_table($limit, $offset, $extra, $institution, $urllin
             $orderby = " date " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
     }
 
-    $sql = "SELECT u.id AS user, e.data, e.time AS date, e.realusr AS masquerader
+    $sql = "SELECT u.id AS user, e.data, e.ctime AS date, e.realusr AS masquerader
             " . $fromsql . $wheresql . "
             ORDER BY " . $orderby;
     if (empty($extra['csvdownload'])) {

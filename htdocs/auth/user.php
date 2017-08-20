@@ -1699,6 +1699,14 @@ class LiveUser extends User {
 
         // Record the successful login in the usr_login_data table
         insert_record('usr_login_data', (object) array('usr' => $user->id, 'ctime' => db_format_timestamp($time)));
+        if (get_config('eventloglevel') == 'all') {
+            // if we are doing fill event logging also record it there as the records
+            // in usr_login_data is deleted when usr is deleted but event_log data stays
+            insert_record('event_log', (object) array('usr' => $user->id,
+                                                      'realusr' => $user->id,
+                                                      'event' => 'login',
+                                                      'ctime' => db_format_timestamp($time)));
+        }
 
         // If user has chosen a language while logged out, save it as their lang pref.
         $sessionlang = $this->SESSION->get('lang');

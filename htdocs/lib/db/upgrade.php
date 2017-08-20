@@ -5184,6 +5184,14 @@ function xmldb_core_upgrade($oldversion=0) {
         $field->setAttributes(XMLDB_TYPE_CHAR, 255);
         add_field($table, $field);
 
+        $field = new XMLDBField('ownerid');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        add_field($table, $field);
+
+        $field = new XMLDBField('ownertype');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+        add_field($table, $field);
+
         log_debug('Adjust existing "event_log" data to fit new table structure');
         // As there can be very many rows we need to do the adjusting in chuncks
         $count = 0;
@@ -5235,6 +5243,9 @@ function xmldb_core_upgrade($oldversion=0) {
                             $result->resourcetype = 'friend';
                             break;
                     }
+                    list ($ownerid, $ownertype) = event_find_owner_type($result);
+                    $result->ownerid = $ownerid;
+                    $result->ownertype = $ownertype;
                     update_record('event_log', $result, $where);
                 }
                 $count += $chunk;
@@ -5255,7 +5266,8 @@ function xmldb_core_upgrade($oldversion=0) {
                            'deletecollection',
                            'addsubmission',
                            'releasesubmission',
-                           'updateviewaccess');
+                           'updateviewaccess',
+                           'sharedcommenttogroup');
         foreach ($newevents as $newevent) {
             $event = (object)array(
                 'name' => $newevent,
