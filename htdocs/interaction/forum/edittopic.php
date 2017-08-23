@@ -67,7 +67,7 @@ $membership = user_can_access_forum((int)$forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 $admintutor = (bool) group_get_user_admintutor_groups();
 
-if (!$membership || ($forumconfig['createtopicusers']->value == 'moderators' && !$moderator)) {
+if (!$membership || (isset($forumconfig['createtopicusers']) && $forumconfig['createtopicusers']->value == 'moderators' && !$moderator)) {
     throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
 }
 

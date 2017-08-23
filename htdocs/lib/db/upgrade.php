@@ -5074,5 +5074,17 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017082900) {
+        log_debug('Fix missing property in group Forums');
+        $sql = "INSERT INTO {interaction_forum_instance_config} (forum,field,value)
+            SELECT DISTINCT forum, 'createtopicusers', 'members'
+            FROM {interaction_forum_instance_config}
+            WHERE forum NOT IN (
+                SELECT DISTINCT forum FROM {interaction_forum_instance_config}
+                WHERE field = 'createtopicusers'
+            )";
+        execute_sql($sql);
+    }
+
     return $status;
 }
