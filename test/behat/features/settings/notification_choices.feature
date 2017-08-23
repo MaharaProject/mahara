@@ -7,7 +7,7 @@ I need to go to Notifications settings and see multiple options available
 Background:
     Given the following "users" exist:
     | username  | password  | email | firstname | lastname  | institution   | authname  | role  |
-    | Bob   | mahara1   | bob@example.org   | Bob   | Bobby | mahara    | internal  | member    |
+    | UserA   | Kupuhipa1   | UserA@example.org   | Angela   | User | mahara    | internal  | member    |
 
 Scenario: Confirm that multiple notification choices are available (Bug #1299993)
     # Log in as admin
@@ -45,9 +45,9 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     # Log out as "Admin User"
     And I log out
     # Logging in as user1
-    Then I log in as "bob" with password "mahara1"
+    Then I log in as "UserA" with password "Kupuhipa1"
     # Verifying log in was successful
-    And I should see "Bob Bobby"
+    And I should see "Angela User"
     # Navigating to notification settings
     And I choose "Notifications" in "Settings" from user menu
     # Verifying the "None" option is not available for the following notifications

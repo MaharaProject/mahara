@@ -6,23 +6,23 @@ Feature: Edit group membership
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | User1 | Kupuhipa1 | test01@example.org | User | 1 | mahara | internal | member |
-     | User2 | Kupuhipa1 | test02@example.org | User | 2 | mahara | internal | member |
-     | User3 | Kupuhipa1 | test03@example.org | User | 3 | mahara | internal | member |
-     | User4 | Kupuhipa1 | test04@example.org | User | 4 | mahara | internal | member |
-     | User5 | Kupuhipa1 | test05@example.org | User | 5 | mahara | internal | member |
-     | User6 | Kupuhipa1 | test06@example.org | User | 6 | mahara | internal | member |
-     | User7 | Kupuhipa1 | test07@example.org | User | 7 | mahara | internal | member |
-     | User8 | Kupuhipa1 | test08@example.org | User | 8 | mahara | internal | member |
-     | User9 | Kupuhipa1 | test09@example.org | User | 9 | mahara | internal | member |
-     | User10 | Kupuhipa1 | test10@example.org | User | 10 | mahara | internal | member |
-     | User11 | Kupuhipa1 | test011@example.org | User | 11 | mahara | internal | member |
-     | User12 | Kupuhipa1 | test012@example.org | User | 12 | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserC | Kupuhipa1 | UserC@example.org |Cecilia | User | mahara | internal | member |
+     | UserD | Kupuhipa1 | UserD@example.org | Dmitri | User | mahara | internal | member |
+     | UserE | Kupuhipa1 | UserE@example.org | Evonne | User | mahara | internal | member |
+     | UserF | Kupuhipa1 | UserF@example.org | Fergus | User | mahara | internal | member |
+     | UserG | Kupuhipa1 | UserG@example.org | Gabi | User | mahara | internal | member |
+     | UserH | Kupuhipa1 | UserH@example.org | Hugo |User | mahara | internal | member |
+     | UserI | Kupuhipa1 | UserI@example.org | Iria | User | mahara | internal | member |
+     | UserJ | Kupuhipa1 | UserJ@example.org | Julius |User | mahara | internal | member |
+     | UserK | Kupuhipa1 | UserK@example.org | Kristina | User | mahara | internal | member |
+     | UserL | Kupuhipa1 | UserL@example.org | Liam | User | mahara | internal | member |
 
 And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-     | GroupA | admin | This is group A | standard | ON | ON | all | ON | ON | User1, User2 |  |
-     | GroupB | admin | This is group B | standard | ON | ON | all | ON | ON | User3, User4 |  |
+     | GroupA | admin | GroupA owned by admin | standard | ON | ON | all | ON | ON | UserA, UserB |  |
+     | GroupB | admin | GroupB owned by admin | standard | ON | ON | all | ON | ON | UserC, UserD |  |
 
 
 Scenario: Check modal is working for the "Edit group memebership" on find people page (Bug 1513265)

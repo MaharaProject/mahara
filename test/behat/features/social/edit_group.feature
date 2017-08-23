@@ -8,8 +8,11 @@ Background:
 
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
-
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+And the following "groups" exist:
+     | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
+     | GroupA | UserB | GroupA owned by UserB | course | ON | ON | all | ON | ON | admin, UserA | admin |
 
 Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  Given I log in as "admin" with password "Kupuhipa1"
@@ -26,7 +29,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I press "Update group members by CSV"
  And I log out
  # Logging back in as a user
- And I log in as "userA" with password "Kupuhipa1"
+ And I log in as "UserA" with password "Kupuhipa1"
  And I choose "Groups" from main menu
  And I follow "Group Two"
  # Editing the group
@@ -38,21 +41,11 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I should see "Group saved successfully"
 
  Scenario: Editing groups as a user not via CSV
- # Logging in as admin to set the background
- Given I log in as "admin" with password "Kupuhipa1"
- And the following "users" exist:
-     | username | password | email | firstname | lastname | institution | authname | role |
-     | userB | Kupuhipa1 | test02@example.org | Pete | Mc | mahara | internal | member |
- And the following "groups" exist:
-     | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-     | group 01 | userB | This is group 01 | course | ON | ON | all | ON | ON | admin, userA | admin |
-  And I log out
- # Logging back in as a user
- And I log in as "userB" with password "Kupuhipa1"
+ Given I log in as "UserB" with password "Kupuhipa1"
  And I choose "Groups" from main menu
- And I follow "group 01"
+ And I follow "GroupA"
  # Editing the group
- And I follow "Edit \"group 01\" Settings"
+ And I follow "Edit \"GroupA\" Settings"
  And I fill in the following:
  | Group name | Group awesome sauce |
  Then I press "Save group"

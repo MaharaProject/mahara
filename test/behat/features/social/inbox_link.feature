@@ -7,27 +7,27 @@ Feature: Clicking on Inbox
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Andrea | Andrews | mahara | internal | member |
-     | userB | Kupuhipa1 | test02@example.org | Barry | Bishop | mahara | internal | member |
-     | userC | Kupuhipa1 | test03@example.org | Catriona | Carson | mahara | internal | member |
-     | userD | Kupuhipa1 | test04@example.org | Doug | Davies | mahara | internal | member |
-     | userE | Kupuhipa1 | test05@example.org | Elise | Edwards | mahara | internal | member |
-     | userF | Kupuhipa1 | test06@example.org | Fred | Flintstone | mahara | internal | member |
-     | userG | Kupuhipa1 | test07@example.org | Gillian | Granger | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
+     | UserD | Kupuhipa1 | UserD@example.org | Dmitri | User | mahara | internal | member |
+     | UserE | Kupuhipa1 | UserE@example.org | Evonne | User | mahara | internal | member |
+     | UserF | Kupuhipa1 | UserF@example.org | Fergus | User | mahara | internal | member |
+     | UserG | Kupuhipa1 | UserG@example.org | Gabi | User | mahara | internal | member |
 
 And the following "messages" exist:
      | emailtype | to | from | subject | messagebody | read | url | urltext |
-     | friendrequest | userA | userB | New friend request | Friend request from Barry | 1 | user/view.php?id=[from] | Requests |
-     | friendrequest | userA | userC | New friend request | Friend request from Catriona | 1 | user/view.php?id=[from] | Requests |
-     | friendrequest | userA | userD | New friend request | Friend request from Doug | 1 | user/view.php?id=[from] | Requests |
-     | friendrequest | userA | userE | New friend request | Friend request from Elise | 1 | user/view.php?id=[from] | Requests |
-     | friendrequest | userA | userF | New friend request | Friend request from Fred | 1 | user/view.php?id=[from] | Requests |
-     | friendrequest | userA | userG | New friend request | Friend request from Gillian | 1 | user/view.php?id=[from] | Requests |
-     | friendaccept | userG | userA | Friend request accepted | Friend request accepted from Andrea | 1 | user/view.php?id=[to] | |
+     | friendrequest | UserA | UserB | New friend request | Friend request from Bob | 1 | user/view.php?id=[from] | Requests |
+     | friendrequest | UserA | UserC | New friend request | Friend request from Cecilia | 1 | user/view.php?id=[from] | Requests |
+     | friendrequest | UserA | UserD | New friend request | Friend request from Dmitri | 1 | user/view.php?id=[from] | Requests |
+     | friendrequest | UserA | UserE | New friend request | Friend request from Evonne | 1 | user/view.php?id=[from] | Requests |
+     | friendrequest | UserA | UserF | New friend request | Friend request from Fergus | 1 | user/view.php?id=[from] | Requests |
+     | friendrequest | UserA | UserG | New friend request | Friend request from Gabi | 1 | user/view.php?id=[from] | Requests |
+     | friendaccept | UserG | UserA | Friend request accepted | Friend request accepted from Angela | 1 | user/view.php?id=[to] | |
 
 Scenario: Clicking on the Inbox link on the right menu (Bug 1427019)
    # Log in as users
-   Given I log in as "userA" with password "Kupuhipa1"
+   Given I log in as "UserA" with password "Kupuhipa1"
    # Navigating to the Inbox via the 'more' link in the Inbox block
    And I follow "More"
    # Verifying that you do not see a page full of error messages

@@ -7,29 +7,29 @@ To see that they display in the most recently updated order
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Tuesd@y1 | test01@example.org | Test | B | mahara | internal | member |
-     | userB | Tuesd@y2 | test02@example.org | Test | C | mahara | internal | member |
-     | userC | Tuesd@y3 | test03@example.org | Test | A | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
 
 Given the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-     | testgroup | admin | This is group 01 | standard | ON | ON | all | ON | ON | userA, userB, userC |  |
+     | GroupA | admin | GroupA owned by admin | standard | ON | ON | all | ON | ON | UserA, UserB, UserC |  |
 
 Given the following "pages" exist:
-     | title | description| ownertype | ownername |
-     | test Page 01 | This is the page 1 | group | testgroup |
-     | test Page 02 | This is the page 2 | group | testgroup |
-     | test Page 03 | This is the page 3 | group | testgroup |
+     | title | description | ownertype | ownername |
+     | Page GroupA_01 | Page 01 | group | GroupA |
+     | Page GroupA_02 | Page 02 | group | GroupA |
+     | Page GroupA_03 | Page 03 | group | GroupA |
 
 Scenario: Displaying shared pages in most recently updated order (Bug 1490569)
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Groups" from main menu
- And I follow "testgroup"
+ And I follow "GroupA"
  And I follow "Edit this page"
  And I scroll to the id "column-container"
  And I configure the block "Group portfolios"
  When I set the following fields to these values:
    | Sort shared pages and collections by | Most recently updated |
  And I click on "Save"
- Then "test Page 01" "text" should appear before "test Page 02" "text"
- And "test Page 03" "text" should appear after "test Page 02" "text"
+ Then "Page GroupA_01" "text" should appear before "Page GroupA_02" "text"
+ And "Page GroupA_03" "text" should appear after "Page GroupA_02" "text"

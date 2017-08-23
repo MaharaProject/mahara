@@ -4,19 +4,19 @@ Feature: Writing and deleting comments
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | pageowner | password | test01@example.org | Paige | Owner | mahara | internal | admin |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | admin |
     Given the following "pages" exist:
      | title | description | ownertype | ownername |
-     | page1 | page1 | user | pageowner |
-     | page2 | page2 | user | pageowner |
+     | Page UserA_01 | Page 01 | user | UserA |
+     | Page UserA_02 | Page 02 | user | UserA |
     Given the following "permissions" exist:
      | title | accesstype | accessname | allowcomments | approvecomments |
-     | page1 | public | public | 1 | 0 |
-     | page2 | loggedin | loggedin | 1 | 0 |
+     | Page UserA_01 | public | public | 1 | 0 |
+     | Page UserA_02 | loggedin | loggedin | 1 | 0 |
 
 Scenario: Adding and deleting public comments
     # Adding
-    Given I go to portfolio page "page1"
+    Given I go to portfolio page "Page UserA_01"
     # The label for message text area - anonymous users
     And I should see "Comment"
     And I fill in "Name" with "Joe Anonymous"
@@ -24,8 +24,8 @@ Scenario: Adding and deleting public comments
     And I fill in "Comment" with "Public comment by anonymous user"
     And I enable the switch "Make comment public"
     And I press "Comment"
-    And I log in as "pageowner" with password "password"
-    And I go to portfolio page "page1"
+    And I log in as "UserA" with password "Kupuhipa1"
+    And I go to portfolio page "Page UserA_01"
     # The label for message text area - logged in users
     And I should see "Add comment"
     And I fill in "Comment by page owner" in editor "Comment"
@@ -48,13 +48,13 @@ Scenario: Adding and deleting public comments
     # longer needed for context.
     Given I delete the "Comment by page owner" row
     # Reload the page to get rid of the status message
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page UserA_01"
     Then I should not see "Comment by page owner"
     And I should not see "Comment removed"
 
 
 Scenario: Add comments block to page
-    Given I go to portfolio page "page1"
+    Given I go to portfolio page "Page UserA_01"
     # The label for message text area - anonymous users
     And I should see "Comment"
     And I fill in "Name" with "Joe Anonymous"
@@ -62,10 +62,10 @@ Scenario: Add comments block to page
     And I fill in "Comment" with "Public comment by anonymous user"
     And I enable the switch "Make comment public"
     And I press "Comment"
-    Given I log in as "pageowner" with password "password"
+    Given I log in as "UserA" with password "Kupuhipa1"
     And I choose "Pages and collections" in "Portfolio" from main menu
-    And I click on "page1" panel menu
-    And I click on "Edit" in "page1" panel menu
+    And I click on "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" panel menu
     And I wait "1" seconds
     # Add a comments block so that comments will now be at the top of the page
     And I expand "General" node
@@ -87,18 +87,18 @@ Scenario: Comments update the page's mtime
     And I press "Save"
 
     # Public comment updates page last updated
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page UserA_01"
     And I fill in "Public comment" in editor "Comment"
     And I press "Comment"
     And I choose "Dashboard" from main menu
-    Then I should see "page1" in the ".bt-newviews" element
-    And I should not see "page2" in the ".bt-newviews" element
+    Then I should see "Page UserA_01" in the ".bt-newviews" element
+    And I should not see "Page UserA_02" in the ".bt-newviews" element
 
     # Private comment updates page last updated
-    And I go to portfolio page "page2"
+    And I go to portfolio page "Page UserA_02"
     And I fill in "Private comment" in editor "Comment"
     And I disable the switch "Make comment public"
     And I press "Comment"
     And I choose "Dashboard" from main menu
-    Then I should see "page2" in the ".bt-newviews" element
-    And I should not see "page1" in the ".bt-newviews" element
+    Then I should see "Page UserA_02" in the ".bt-newviews" element
+    And I should not see "Page UserA_01" in the ".bt-newviews" element

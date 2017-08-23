@@ -8,19 +8,19 @@ For security reason, I can enable/disable the setting "Disable external resource
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
     And the following "pages" exist:
-      | title | description| ownertype | ownername |
-      | Page 1 | This is the page | user | userA |
+      | title | description | ownertype | ownername |
+      | Page UserA_01 | Page 01| user | UserA |
 
 Scenario: Enable/disable external resources in mahara pages
 # By default external resources are allowed in a page
- When I log in as "userA" with password "Kupuhipa1"
+ When I log in as "UserA" with password "Kupuhipa1"
  # Upload an image
  And I choose "Files" in "Content" from main menu
  And I attach the file "Image2.png" to "files_filebrowser_userfile"
  And I choose "Pages and collections" in "Portfolio" from main menu
- And I follow "Page 1"
+ And I follow "Page UserA_01"
  And I follow "Edit this page"
 
  # Add a "Text" block with an image from file area
@@ -54,8 +54,8 @@ Scenario: Enable/disable external resources in mahara pages
  And I enable the switch "Disable external resources in user HTML"
  And I press "Update site options"
  And I log out
- And I log in as "userA" with password "Kupuhipa1"
+ And I log in as "UserA" with password "Kupuhipa1"
  And I choose "Pages and collections" in "Portfolio" from main menu
- And I follow "Page 1"
+ And I follow "Page UserA_01"
  Then I should see images in the block "Text block with an internal image"
  And I should not see images in the block "Text block with an external image"

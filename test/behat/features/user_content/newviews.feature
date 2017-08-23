@@ -6,32 +6,32 @@ Feature: Looking at the "Latest Pages" (newviews) block on my dashboard
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
-     | userB | Kupuhipa1 | test02@example.org | Son | Nguyen | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
     And the following "pages" exist:
-      | title | description| ownertype | ownername |
-      | Shared page | This is a page that is shared with me| user | userA |
-      | Private page | This is a page shared with no one | user | userA |
-      | C1P1 | Page 1 in Collection 1 | user | userA |
-      | C1P2 | Page 2 in Collection 1 | user | userA |
-      | C2P1 | Page 1 in Collection 2 | user | userA |
-      | C2P2 | Page 2 in Collection 2 | user | userA |
+      | title | description | ownertype | ownername |
+      | Page UserA_01 | Page 01 | user | UserA |
+      | Page UserA_02 | Page 02 | user | UserA |
+      | Page UserA_03 | Page 03 | user | UserA |
+      | Page UserA_04 | Page 04 | user | UserA |
+      | Page UserA_05 | Page 05 | user | UserA |
+      | Page UserA_06 | Page 06 | user | UserA |
     And the following "collections" exist:
-      | title | description| ownertype | ownername | pages |
-      | Shared Collection 01 | This is the collection 01 | user | userA | C1P1, C1P2 |
-      | Private Collection 02 | This is the collection 02 | user | userA | C2P1, C2P2 |
+      | title | description | ownertype | ownername | pages |
+      | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_03, Page UserA_04 |
+      | Collection UserA_02 | Collection 02 | user | UserA | Page UserA_05, Page UserA_06 |
     And the following "permissions" exist:
       | title | accesstype |
-      | Shared page | public |
-      | Shared Collection 01 | public |
+      | Page UserA_01 | public |
+      | Collection UserA_01 | public |
 
 Scenario: Share pages and collections to a group.
 The list of shared pages must take into account of access date (Bug 1374163)
-    And I log in as "userB" with password "Kupuhipa1"
-    Then I should see "Shared page" in the "div.bt-newviews" "css_element"
-    And I should see "Shared Collection 01" in the "div.bt-newviews" "css_element"
+    And I log in as "UserB" with password "Kupuhipa1"
+    Then I should see "Page UserA_01" in the "div.bt-newviews" "css_element"
+    And I should see "Collection UserA_01" in the "div.bt-newviews" "css_element"
     # I shouldn't see the pages I didn't share
-    And I should not see "Private page" in the "div.bt-newviews" "css_element"
-    And I should not see "Private Collection 02" in the "div.bt-newviews" "css_element"
+    And I should not see "Page UserA_02" in the "div.bt-newviews" "css_element"
+    And I should not see "Collection UserA_02" in the "div.bt-newviews" "css_element"
     # I shouldn't see the individual pages in a collection
-    And I should not see "C1P1" in the "div.bt-newviews" "css_element"
+    And I should not see "Page UserA_03" in the "div.bt-newviews" "css_element"

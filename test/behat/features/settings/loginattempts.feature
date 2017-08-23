@@ -7,28 +7,28 @@ So I can prevent dictionary attacks on my passwords
 Background:
   Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
+    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
   And I am on homepage
   And I follow "Lost username / password"
 
 Scenario: Too many bad password attempts
   # I should not see any error message on the first 5 attempts
-  When I log in as "userA" with password "wrongpassword"
-  And I log in as "userA" with password "wrongpassword"
-  And I log in as "userA" with password "wrongpassword"
-  And I log in as "userA" with password "wrongpassword"
-  And I log in as "userA" with password "wrongpassword"
+  When I log in as "UserA" with password "wrongpassword"
+  And I log in as "UserA" with password "wrongpassword"
+  And I log in as "UserA" with password "wrongpassword"
+  And I log in as "UserA" with password "wrongpassword"
+  And I log in as "UserA" with password "wrongpassword"
   Then I should not see "You have exceeded the maximum login attempts."
   And I should see "Login"
 
   # I've failed 5 times. Now even if I log in with the correct password I'm locked out.
-  When I log in as "userA" with password "Kupuhipa1"
+  When I log in as "UserA" with password "Kupuhipa1"
   Then I should see "You have exceeded the maximum login attempts."
   And I should see "Login"
 
   # The cron should reset the limit, allowing me to log in again
   When I trigger the cron
-  And I log in as "userA" with password "Kupuhipa1"
+  And I log in as "UserA" with password "Kupuhipa1"
   # I'm logged in!
   Then I should see "Dashboard"
   And I log out
@@ -37,12 +37,12 @@ Scenario: Too many bad password attempts
   And I follow "Lost username / password"
 
 Scenario: Asking for a username reminder (Bug 1460911)
-  When I fill in "Email address or username" with "test01@example.org"
+  When I fill in "Email address or username" with "UserA@example.org"
   And I press "Send request"
   Then I should see "You should receive an email shortly with a link you can use to change the password for your account."
 
 Scenario: Asking for a password reset (Bug 1460911)
-  When I fill in "Email address or username" with "userA"
+  When I fill in "Email address or username" with "UserA"
   And I press "Send request"
   Then I should see "You should receive an email shortly with a link you can use to change the password for your account."
 
@@ -52,7 +52,7 @@ Scenario: Trying a username or password that doesn't exist (Bug 1460911)
   Then I should see "The email address or username you entered does not match any users for this site"
 
 Scenario: Student can't change password to anything on suckypasswords list (Bug #844457)
-  Given I log in as "userA" with password "Kupuhipa1"
+  Given I log in as "UserA" with password "Kupuhipa1"
   And I choose "Settings" from user menu
   And I fill in "Current password" with "Kupuhipa1"
   And I fill in "New password" with "abc123"

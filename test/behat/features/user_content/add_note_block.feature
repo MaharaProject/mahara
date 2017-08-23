@@ -7,17 +7,17 @@ Feature: Adding a Note to a page
 Background:
 Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
+    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
 
     And the following "pages" exist:
-    | title | description| ownertype | ownername |
-    | Page 1 | page P1 | user | userA |
+    | title | description | ownertype | ownername |
+    | Page UserA_01 | Page 01| user | UserA |
 
     # Logging in as a user
-    Given I log in as "userA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuhipa1"
     And I choose "Pages and collections" in "Portfolio" from main menu
-    And I click on "Page 1" panel menu
-    And I click on "Edit" in "Page 1" panel menu
+    And I click on "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" panel menu
     # Configuring the block
     And I expand "General" node
     And I follow "Note" in the "div#general" "css_element"

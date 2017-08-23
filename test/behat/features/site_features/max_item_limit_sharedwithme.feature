@@ -11,76 +11,76 @@ Background:
 
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
-     | userB | Kupuhipa1 | test02@example.org | Simon | Mc | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
 
   And the following "pages" exist:
-     | title | description| ownertype | ownername |
-     | A's Page 01 | This is my page 01 | user | userA |
-     | A's Page 02 | This is my page 02 | user | userA |
-     | A's Page 03 | This is my page 03 | user | userA |
-     | A's Page 04 | This is my page 04 | user | userA |
-     | A's Page 05 | This is my page 05 | user | userA |
-     | A's Page 06 | This is my page 06 | user | userA |
-     | A's Page 07 | This is my page 07 | user | userA |
-     | A's Page 08 | This is my page 08 | user | userA |
-     | A's Page 09 | This is my page 09 | user | userA |
-     | A's Page 10 | This is my page 10 | user | userA |
-     | A's Page 11 | This is my page 11 | user | userA |
-     | A's Page 12 | This is my page 12 | user | userA |
-     | A's Page 13 | This is my page 13 | user | userA |
-     | A's Page 14 | This is my page 14 | user | userA |
-     | A's Page 15 | This is my page 15 | user | userA |
-     | A's Page 16 | This is my page 16 | user | userA |
-     | A's Page 17 | This is my page 17 | user | userA |
-     | A's Page 18 | This is my page 18 | user | userA |
-     | A's Page 19 | This is my page 19 | user | userA |
-     | A's Page 20 | This is my page 20 | user | userA |
-     | A's Page 21 | This is my page 21 | user | userA |
-     | A's Page 22 | This is my page 22 | user | userA |
-     | A's Page 23 | This is my page 23 | user | userA |
-     | A's Page 24 | This is my page 24 | user | userA |
-     | A's Page 25 | This is my page 25 | user | userA |
-     | A's Page 26 | This is my page 26 | user | userA |
-     | A's Page 27 | This is my page 27 | user | userA |
-     | A's Page 28 | This is my page 28 | user | userA |
-     | A's Page 29 | This is my page 29 | user | userA |
-     | A's Page 30 | This is my page 30 | user | userA |
-     | A's Page 31 | This is my page 31 | user | userA |
-     | A's Page 32 | This is my page 32 | user | userA |
-     | A's Page 33 | This is my page 33 | user | userA |
-     | A's Page 34 | This is my page 34 | user | userA |
-     | A's Page 35 | This is my page 35 | user | userA |
-     | A's Page 36 | This is my page 36 | user | userA |
-     | A's Page 37 | This is my page 37 | user | userA |
-     | A's Page 38 | This is my page 38 | user | userA |
-     | A's Page 39 | This is my page 39 | user | userA |
-     | A's Page 40 | This is my page 40 | user | userA |
-     | A's Page 41 | This is my page 41 | user | userA |
-     | A's Page 42 | This is my page 42 | user | userA |
-     | A's Page 43 | This is my page 43 | user | userA |
-     | A's Page 44 | This is my page 44 | user | userA |
-     | A's Page 45 | This is my page 45 | user | userA |
-     | A's Page 46 | This is my page 46 | user | userA |
-     | A's Page 47 | This is my page 47 | user | userA |
-     | A's Page 48 | This is my page 48 | user | userA |
-     | A's Page 49 | This is my page 49 | user | userA |
-     | A's Page 50 | This is my page 50 | user | userA |
-     | A's Page 51 | This is my page 51 | user | userA |
+     | title | description | ownertype | ownername |
+     | Page UserA_01 | Page 01 | user | UserA |
+     | Page UserA_02 | Page 02 | user | UserA |
+     | Page UserA_03 | Page 03 | user | UserA |
+     | Page UserA_04 | Page 04 | user | UserA |
+     | Page UserA_05 | Page 05 | user | UserA |
+     | Page UserA_06 | Page 06 | user | UserA |
+     | Page UserA_07 | Page 07 | user | UserA |
+     | Page UserA_08 | Page 08 | user | UserA |
+     | Page UserA_09 | Page 09 | user | UserA |
+     | Page UserA_10 | Page 10 | user | UserA |
+     | Page UserA_11 | Page 11 | user | UserA |
+     | Page UserA_12 | Page 12 | user | UserA |
+     | Page UserA_13 | Page 13 | user | UserA |
+     | Page UserA_14 | Page 14 | user | UserA |
+     | Page UserA_15 | Page 15 | user | UserA |
+     | Page UserA_16 | Page 16 | user | UserA |
+     | Page UserA_17 | Page 17 | user | UserA |
+     | Page UserA_18 | Page 18 | user | UserA |
+     | Page UserA_19 | Page 19 | user | UserA |
+     | Page UserA_20 | Page 20 | user | UserA |
+     | Page UserA_21 | Page 21 | user | UserA |
+     | Page UserA_22 | Page 22 | user | UserA |
+     | Page UserA_23 | Page 23 | user | UserA |
+     | Page UserA_24 | Page 24 | user | UserA |
+     | Page UserA_25 | Page 25 | user | UserA |
+     | Page UserA_26 | Page 26 | user | UserA |
+     | Page UserA_27 | Page 27 | user | UserA |
+     | Page UserA_28 | Page 28 | user | UserA |
+     | Page UserA_29 | Page 29 | user | UserA |
+     | Page UserA_30 | Page 30 | user | UserA |
+     | Page UserA_31 | Page 31 | user | UserA |
+     | Page UserA_32 | Page 32 | user | UserA |
+     | Page UserA_33 | Page 33 | user | UserA |
+     | Page UserA_34 | Page 34 | user | UserA |
+     | Page UserA_35 | Page 35 | user | UserA |
+     | Page UserA_36 | Page 36 | user | UserA |
+     | Page UserA_37 | Page 37 | user | UserA |
+     | Page UserA_38 | Page 38 | user | UserA |
+     | Page UserA_39 | Page 39 | user | UserA |
+     | Page UserA_40 | Page 40 | user | UserA |
+     | Page UserA_41 | Page 41 | user | UserA |
+     | Page UserA_42 | Page 42 | user | UserA |
+     | Page UserA_43 | Page 43 | user | UserA |
+     | Page UserA_44 | Page 44 | user | UserA |
+     | Page UserA_45 | Page 45 | user | UserA |
+     | Page UserA_46 | Page 46 | user | UserA |
+     | Page UserA_47 | Page 47 | user | UserA |
+     | Page UserA_48 | Page 48 | user | UserA |
+     | Page UserA_49 | Page 49 | user | UserA |
+     | Page UserA_50 | Page 50 | user | UserA |
+     | Page UserA_51 | Page 51 | user | UserA |
 
 Scenario: Making sure that the max items per page drop down limits to correct amount of pages (Bug 1409369)
-  Given I log in as "userA" with password "Kupuhipa1"
+  Given I log in as "UserA" with password "Kupuhipa1"
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I select "atoz" from "orderby"
   And I scroll to the base of id "searchviews_submit"
   And I press "searchviews_submit"
   And I choose "Shared by me" in "Portfolio" from main menu
-  And I click on "Edit access" in "A's Page 01" row
-  And I set the select2 value "A's Page 01, A's Page 02, A's Page 03, A's Page 04, A's Page 05, A's Page 06, A's Page 07, A's Page 08, A's Page 09, A's Page 10, A's Page 11, A's Page 12, A's Page 13, A's Page 14, A's Page 15, A's Page 16, A's Page 17, A's Page 18, A's Page 19, A's Page 20, A's Page 21, A's Page 22, A's Page 23, A's Page 24, A's Page 25, A's Page 26, A's Page 27, A's Page 28, A's Page 29, A's Page 30, A's Page 31, A's Page 32, A's Page 33, A's Page 34, A's Page 35, A's Page 36, A's Page 37, A's Page 38, A's Page 39, A's Page 40, A's Page 41, A's Page 42, A's Page 43, A's Page 44, A's Page 45, A's Page 46, A's Page 47, A's Page 48, A's Page 49, A's Page 50, A's Page 51" for "editaccess_views"
+  And I click on "Edit access" in "Page UserA_01" row
+  And I set the select2 value "Page UserA_01, Page UserA_02, Page UserA_03, Page UserA_04, Page UserA_05, Page UserA_06, Page UserA_07, Page UserA_08, Page UserA_09, Page UserA_10, Page UserA_11, Page UserA_12, Page UserA_13, Page UserA_14, Page UserA_15, Page UserA_16, Page UserA_17, Page UserA_18, Page UserA_19, Page UserA_20, Page UserA_21, Page UserA_22, Page UserA_23, Page UserA_24, Page UserA_25, Page UserA_26, Page UserA_27, Page UserA_28, Page UserA_29, Page UserA_30, Page UserA_31, Page UserA_32, Page UserA_33, Page UserA_34, Page UserA_35, Page UserA_36, Page UserA_37, Page UserA_38, Page UserA_39, Page UserA_40, Page UserA_41, Page UserA_42, Page UserA_43, Page UserA_44, Page UserA_45, Page UserA_46, Page UserA_47, Page UserA_48, Page UserA_49, Page UserA_50, Page UserA_51" for "editaccess_views"
   And I select "Public" from "accesslist[0][searchtype]"
   And I press "Save"
   And I log out
-  And I log in as "userB" with password "Kupuhipa1"
+  And I log in as "UserB" with password "Kupuhipa1"
   And I choose "Shared with me" in "Portfolio" from main menu
   And I check "Registered users"
   And I check "Public"
@@ -88,14 +88,14 @@ Scenario: Making sure that the max items per page drop down limits to correct am
   And I press "search_submit"
   Then I should see "Results per page:"
   And I select "1" from "limit"
-  And I should see "A's Page 01"
-  And I should not see "A's Page 02"
+  And I should see "Page UserA_01"
+  And I should not see "Page UserA_02"
   And I select "10" from "limit"
-  And I should see "A's Page 10"
-  And I should not see "A's Page 11"
+  And I should see "Page UserA_10"
+  And I should not see "Page UserA_11"
   And I select "20" from "limit"
-  And I should see "A's Page 20"
-  And I should not see "A's Page 21"
+  And I should see "Page UserA_20"
+  And I should not see "Page UserA_21"
   And I select "50" from "limit"
-  And I should see "A's Page 50"
-  And I should not see "A's Page 51"
+  And I should see "Page UserA_50"
+  And I should not see "Page UserA_51"

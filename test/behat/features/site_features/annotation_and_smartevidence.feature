@@ -6,15 +6,15 @@ Feature: Annotation via smart evnidence map
 
 Background:
     Given the following "pages" exist:
-    | title | description| ownertype | ownername |
-    | Page 01 | Admin's page 01 | user | admin |
-    | Page 02 | Admin's page 02 | user | admin |
-    | Page 03 | Admin's page 03 | user | admin |
-    | Page 04 | Admin's page 04 | user | admin |
+    | title | description | ownertype | ownername |
+    | Page admin_01 | Page 01 | user | admin |
+    | Page admin_02 | Page 02 | user | admin |
+    | Page admin_03 | Page 03 | user | admin |
+    | Page admin_04 | Page 04 | user | admin |
 
     And the following "collections" exist:
-    | title | description| ownertype | ownername | pages |
-    | Test collection | This is the collection 01 | user | admin | Page 01, Page 02, Page 03, Page 04 |
+    | title | description | ownertype | ownername | pages |
+    | Collection admin_01 | Collection 01 | user | admin | Page admin_01, Page admin_02, Page admin_03, Page admin_04 |
 
 Scenario: Accessing annotation block
  Given I log in as "admin" with password "Kupuhipa1"
@@ -38,11 +38,11 @@ Scenario: Accessing annotation block
 
  # Update 'Test collection' to have smart evidence
  And I choose "Pages and collections" in "Portfolio" from main menu
- And I click on "Test collection" panel menu
- And I click on "Edit" in "Test collection" panel menu
+ And I click on "Collection admin_01" panel menu
+ And I click on "Edit" in "Collection admin_01" panel menu
  And I select "Title of your framework" from "SmartEvidence framework"
  And I press "Save"
- And follow "Test collection"
+ And follow "Collection admin_01"
 
  # Click the matrix point and test empty annotation message
  And I click on the matrix point "3,4"

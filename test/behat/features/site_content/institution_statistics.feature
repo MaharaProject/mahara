@@ -11,9 +11,9 @@ Background:
  | insttwo | Institution Two | ON | ON |
  And the following "users" exist:
  | username | password | email | firstname | lastname | institution | authname | role |
- | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
- | userB | Kupuhipa1 | test02@example.org | Miles | Morales | instone | internal | member |
- | userC | Kupuhipa1 | test03@example.org | Jessica | Jones | mahara | internal | member |
+ | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+ | UserB | Kupuhipa1 | UserB@example.org | Bob | User | instone | internal | member |
+ | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
 
 Scenario: Viewing user statistics
  Given I log in as "admin" with password "Kupuhipa1"

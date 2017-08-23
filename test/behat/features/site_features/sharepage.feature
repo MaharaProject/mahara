@@ -7,27 +7,25 @@ add a page to a collection.
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
     And the following "pages" exist:
-      | title | description| ownertype | ownername |
-      | Page 1 | This is the page in collection | user | userA |
-      | Page 2 | This is the solo page | user | userA |
+      | title | description | ownertype | ownername |
+      | Page UserA_01 | Page 01 | user | UserA |
+      | Page UserA_02 | Page 02 | user | UserA |
     And the following "collections" exist:
-      | title | description| ownertype | ownername | pages |
-      | Collection One | collection C1 | user | userA | Page 1 |
+      | title | description | ownertype | ownername | pages |
+      | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_01 |
 
 Scenario: Testing that view access for views in collections are editable properly
     # Checking the right selected options display on view access
-    Given I log in as "userA" with password "Kupuhipa1"
-
+    Given I log in as "UserA" with password "Kupuhipa1"
     And I choose "Shared by me" in "Portfolio" from main menu
-    Then I should see "Collection One"
+    Then I should see "Collection UserA_01"
     And I follow "Edit access"
-    Then I should see "Collection One"
-    And I should not see "Page 1"
-
+    Then I should see "Collection UserA_01"
+    And I should not see "Page UserA_01"
     And I choose "Shared by me" in "Portfolio" from main menu
     And I follow "Pages"
-    Then I click on "Edit access" in "Page 2" row
-    Then I should see "Page 2"
-    And I should not see "Collection One"
+    Then I click on "Edit access" in "Page UserA_02" row
+    Then I should see "Page UserA_02"
+    And I should not see "Collection UserA_01"

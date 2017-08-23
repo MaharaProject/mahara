@@ -7,17 +7,17 @@ So I can filter messages
 Background:
  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Users" from administration menu
- And I follow "Pete"
+ And I follow "Angela"
  And I follow "Send message"
  And I fill in the following:
  | Subject   | Hi there |
  | Message   | This is a test message |
  And I press "Send message"
  And I log out
- Given I log in as "userA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuhipa1"
  And I choose "mail" from user menu by id
  And I follow "Hi there"
  And I follow "Reply"
@@ -34,7 +34,7 @@ Scenario: Selection options to filter messages (Bug 1433342)
  And I log out
 
  # Then check what options a normal user has
- Given I log in as "userA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuhipa1"
  And I choose "Groups" from main menu
  And I follow "Create group"
  And I fill in "Group name" with "Jurassic Park"

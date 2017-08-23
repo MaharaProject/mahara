@@ -7,33 +7,33 @@ So I can see group page and check the title
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Test | B | mahara | internal | member |
-     | userB | Kupuhipa1 | test02@example.org | Test | C | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
 
 Given the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-     | testgroup | admin | This is group 01 | standard | ON | ON | all | ON | ON | userA, userB |  |
+     | GroupA | admin | Group A owned by admin | standard | ON | ON | all | ON | ON | UserA, UserB |  |
 
 Given the following "pages" exist:
-     | title | description| ownertype | ownername |
-     | Test Page | This is the page 1 | group | testgroup |
+     | title | description | ownertype | ownername |
+     | Page GroupA_01 | Page 1 | group | GroupA |
 
 Scenario: Copying a group page retains title (Bug 1519374)
  # Make the group page copyable
- Given I log in as "userA" with password "Kupuhipa1"
- When I go to group "testgroup"
+ Given I log in as "UserA" with password "Kupuhipa1"
+ When I go to group "GroupA"
  And I follow "Share" in the "ul.nav-inpage" "css_element"
- And I click on "Edit access" in "Test Page" row
+ And I click on "Edit access" in "Page GroupA_01" row
  And I follow "Advanced options"
  And I set the following fields to these values:
  | Allow copying | 1 |
  And I press "Save"
  And I log out
 
- Given I log in as "userB" with password "Kupuhipa1"
+ Given I log in as "UserB" with password "Kupuhipa1"
  And I am on homepage
- When I follow "Test Page"
+ When I follow "Page GroupA_01"
  And I follow "Copy"
  And the following fields match these values:
- | Page title | Test Page |
+ | Page title | Page GroupA_01 |
  Then I press "Save"

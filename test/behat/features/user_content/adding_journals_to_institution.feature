@@ -124,8 +124,8 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I fill in the following:
   | First name * | Pete |
   | Last name * | Mc |
-  | Email * | test01@example.org |
-  | Username * | userA |
+  | Email * | UserA@example.org |
+  | Username * | UserA |
   | Password * | KKJHH$$67686 |
   And I press "Create user"
   # Logging in as new user

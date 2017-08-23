@@ -6,12 +6,12 @@ So I can benefit from the different settings
 
 Background:
   Given the following "pages" exist:
-  | title | description| ownertype | ownername |
-  | Page 01 | admins page 01 | admin | admin |
+  | title | description | ownertype | ownername |
+  | Page admin_01 | Page 01 | admin | admin |
 
   And the following "groups" exist:
   | name | owner | description | grouptype | open | invitefriends | editroles |
-  | Groupies | admin | This is group for groupies | standard | ON | OFF | all |
+  | GroupA | admin | GroupA owned by admin | standard | ON | OFF | all |
 
 Scenario: Turning on and of switches in Journal configuration block (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
@@ -60,9 +60,9 @@ Scenario: Creating a Journal entry
  And I fill in select2 input "editpost_tags" with "test" and select "test"
  And I press "Save entry"
 
- # Adding journal entry to group 'Groupies'
+ # Adding journal entry to group 'GroupA'
  When I choose "My groups" in "Groups" from main menu
- And I follow "Groupies"
+ And I follow "GroupA"
  And I follow "Journals" in the "div.arrow-bar" "css_element"
  And I follow "Create journal"
  And I fill in "Title *" with "My group journal"
@@ -75,7 +75,7 @@ Scenario: Creating a Journal entry
 
  # Adding journal blocks to a page
  And I choose "Pages and collections" in "Portfolio" from main menu
- And I follow "Page 01"
+ And I follow "Page admin_01"
  And I follow "Edit this page"
  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
  And I follow "Tagged journal entries" in the "div#blog" "css_element"

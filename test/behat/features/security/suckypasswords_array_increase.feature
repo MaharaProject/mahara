@@ -7,7 +7,7 @@ Feature: Suckypasswords Test increase of array size
 Background:
  Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
+    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
 
 Scenario: Admin can't change password to anything on suckypasswords list (Bug #844457)
  Given I log in as "admin" with password "Kupuhipa1"
@@ -35,7 +35,7 @@ Scenario: Admin can't change password to anything on suckypasswords list (Bug #8
  And I log out
 
 Scenario: Student can't change password to anything on suckypasswords list (Bug #844457)
- Given I log in as "userA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuhipa1"
  And I choose "Settings" from user menu
  And I fill in "Current password" with "Kupuhipa1"
  And I fill in "New password" with "abc123"

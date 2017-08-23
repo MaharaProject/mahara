@@ -7,19 +7,19 @@ Feature: Commenting on a group page
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
-     | userB | Kupuhipa1 | test02@example.org | Rachel | Mc | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
 
 Given the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-     | group 01 | userA | This is group 01 | standard | ON | ON | all | OFF | OFF | userB |   |
+     | GroupA | UserA | Group A owned by UserA | standard | ON | ON | all | OFF | OFF | UserB |   |
 
 Given the following "pages" exist:
-      | title | description| ownertype | ownername |
-      | Testing group page 01 | This is the page 01 of the group 01 | group | group 01 |
+      | title | description | ownertype | ownername |
+      | Page GroupA_01 | Page 01 | group | GroupA |
 
 Scenario: As a user leaving a public comment on a group page (Bug 1509129)
-    Given I log in as "userA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuhipa1"
     And I choose "Groups" from main menu
     # Changing the settings of the block to change comment notification
     And I click on "Settings" in the "div.groupuserstatus" "css_element"
@@ -41,11 +41,11 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     Then I should see "Comment submitted"
     And I should see "Adding a comment to this field. Student = Awesome!"
     And I log out
-    And I log in as "userB" with password "Kupuhipa1"
+    And I log in as "UserB" with password "Kupuhipa1"
     # Needs to navigate to see the comment and check it can be seen publicly
-    Then I should see "group 01"
-    When I follow "group 01"
-    Then I should see "About | group 01"
+    Then I should see "GroupA"
+    When I follow "GroupA"
+    Then I should see "About | GroupA"
     When I follow "Pages and collections (tab)"
     Then I should see "Group Page 01" in the "h3.panel-heading" "css_element"
     And I click the panel "Group Page 01"
@@ -54,22 +54,22 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
 # As part of consolidating behat tests, this scenario has been added.
 # Original feature title: Sending notification message when someone leaves a comment in a group page
 Scenario: Adding a comment on a group page (Bug 1426983) and verifying the notification message.
-    Given I log in as "userA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuhipa1"
     And I choose "Groups" from main menu
-    And I follow "group 01"
+    And I follow "GroupA"
     And I follow "Pages and collections (tab)"
     # And I click on "Pages"
-    And I follow "Testing group page 01"
+    And I follow "Page GroupA_01"
     And I fill in "Testing comment notifications" in editor "Comment"
     And I press "Comment"
     # Log out as user 1
     And I log out
     # Log in as  admin
-    When I log in as "userB" with password "Kupuhipa1"
+    When I log in as "UserB" with password "Kupuhipa1"
     # Checking notification display on the dashboard
     And I wait "1" seconds
-    Then I should see "New comment on Testing group page 01"
+    Then I should see "New comment on Page GroupA_01"
     # Checking notifications also appear in my inbox
     And I choose "mail" from user menu by id
-    And I follow "New comment on Testing group page 01"
+    And I follow "New comment on Page GroupA_01"
     And I should see "Testing comment notifications"

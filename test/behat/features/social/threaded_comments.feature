@@ -7,114 +7,117 @@ Feature: Threaded comments
 Background:
     Given the following "institutions" exist:
      | name | displayname | commentthreaded | allowinstitutionpublicviews |
-     | instone | inst1 | 1 | 1 |
+     | instone | Institution One | 1 | 1 |
+
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | pageowner | password | test01@example.org | Paige | Owner | instone | internal | admin |
-     | pagecommenter | password | test02@example.org | Paget | Commenter | mahara | internal | admin |
-     | pagewatcher | password | test03@example.org | Pagey | Follower | mahara | internal | admin |
+     | AdminA | Kupuhipa1 | AdminA@example.org | Page | Owner | instone | internal | admin |
+     | AdminB | Kupuhipa1 | AdminB@example.org | Page | Commenter | mahara | internal | admin |
+     | AdminC | Kupuhipa1 | AdminC@example.org | Page | Follower | mahara | internal | admin |
+
     Given the following "pages" exist:
      | title | description | ownertype | ownername |
-     | page1 | page1 | user | pageowner |
+     | Page AdminA_01 | Page 01 | user | AdminA |
+
     Given the following "permissions" exist:
      | title | accesstype | accessname | allowcomments | approvecomments |
-     | page1 | public | public | 1 | 0 |
+     | Page AdminA_01 | public | public | 1 | 0 |
 
 Scenario: Public comment by page owner, public reply by third party
-    Given I log in as "pageowner" with password "password"
-    And I go to portfolio page "page1"
-    And I fill in "Public comment by pageowner" in editor "Comment"
+    Given I log in as "AdminA" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
+    And I fill in "Public comment by AdminA" in editor "Comment"
     And I enable the switch "Make comment public"
     And I press "Comment"
     And I log out
-    And I log in as "pagecommenter" with password "password"
-    And I go to portfolio page "page1"
-    And I click on "Reply" in "Public comment by pageowner" row
+    And I log in as "AdminB" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
+    And I click on "Reply" in "Public comment by AdminA" row
     # I should see a preview of the reply-to comment below the feedback form
-    And I should see "Public comment by pageowner" in the ".commentreplyview" "css_element"
-    And I fill in "Public reply by pagecommenter" in editor "Comment"
+    And I should see "Public comment by AdminA" in the ".commentreplyview" "css_element"
+    And I fill in "Public reply by AdminB" in editor "Comment"
     When I press "Comment"
-    Then I should see "Public comment by pageowner"
-    And I should see "Public reply by pagecommenter"
+    Then I should see "Public comment by AdminA"
+    And I should see "Public reply by AdminB"
 
 Scenario: Public comment by non-owner, owner can private reply, another non-owner cannot private reply
-    Given I log in as "pagecommenter" with password "password"
-    And I go to portfolio page "page1"
-    And I fill in "Public comment by pagecommenter" in editor "Comment"
+    Given I log in as "AdminB" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
+    And I fill in "Public comment by AdminB" in editor "Comment"
     And I enable the switch "Make comment public"
     And I press "Comment"
     And I log out
-    And I log in as "pageowner" with password "password"
-    And I go to portfolio page "page1"
-    And I click on "Reply" in "Public comment by pagecommenter" row
+    And I log in as "AdminA" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
+    And I click on "Reply" in "Public comment by AdminB" row
     And I disable the switch "Make comment public"
-    And I fill in "Private reply by pageowner" in editor "Comment"
+    And I fill in "Private reply by AdminA" in editor "Comment"
     And I press "Comment"
     And I log out
-    And I log in as "pagewatcher" with password "password"
-    And I go to portfolio page "page1"
-    And I click on "Reply" in "Public comment by pagecommenter" row
+    And I log in as "AdminC" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
+    And I click on "Reply" in "Public comment by AdminB" row
     # I should not be able to make a private reply to a comment by someone other than the page owner
     And I should see "Public" in the "#add_feedback_form_ispublic_container" "css_element"
-    When I fill in "Public reply by pagewatcher" in editor "Comment"
+    When I fill in "Public reply by AdminC" in editor "Comment"
     And I press "Comment"
-    Then I should see "Public comment by pagecommenter"
-    And I should not see "Private reply by pageowner"
-    And I should see "Public reply by pagewatcher"
+    Then I should see "Public comment by AdminB"
+    And I should not see "Private reply by AdminA"
+    And I should see "Public reply by AdminC"
 
 Scenario: Private comment by commenter, private reply by page owner, private counter-reply by page commenter
-    Given I log in as "pagecommenter" with password "password"
-    And I go to portfolio page "page1"
-    And I fill in "Private comment by pagecommenter" in editor "Comment"
+    Given I log in as "AdminB" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
+    And I fill in "Private comment by AdminB" in editor "Comment"
     And I disable the switch "Make comment public"
     And I press "Comment"
     And I press "More..."
     And I follow "Remove page from watchlist"
     And I log out
-    And I log in as "pageowner" with password "password"
-    And I go to portfolio page "page1"
-    And I click on "Reply" in "Private comment by pagecommenter" row
+    And I log in as "AdminA" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
+    And I click on "Reply" in "Private comment by AdminB" row
     # There should be no option to make a public reply to a private comment
     And I should see "Private" in the "#add_feedback_form_ispublic_container" "css_element"
-    And I fill in "Private reply by pageowner" in editor "Comment"
+    And I fill in "Private reply by AdminA" in editor "Comment"
     And I press "Comment"
     And I log out
-    And I log in as "pagecommenter" with password "password"
-    And I go to portfolio page "page1"
-    # I should be able to see the pageowner's private reply to my private comment
-    # (An exception to the general rule that only the pageowner can see private comments)
-    And I should see "Private reply by pageowner"
-    And I click on "Reply" in "Private reply by pageowner" row
-    And I fill in "Private counter-reply by pagecommenter" in editor "Comment"
+    And I log in as "AdminB" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
+    # I should be able to see the AdminA's private reply to my private comment
+    # (An exception to the general rule that only the AdminA can see private comments)
+    And I should see "Private reply by AdminA"
+    And I click on "Reply" in "Private reply by AdminA" row
+    And I fill in "Private counter-reply by AdminB" in editor "Comment"
     When I press "Comment"
-    Then I should see "Private comment by pagecommenter"
-    And I should see "Private reply by pageowner"
-    And I should see "Private counter-reply by pagecommenter"
-    # pagecommenter should receive a notification about pageowner's reply even though they unwatched the page
+    Then I should see "Private comment by AdminB"
+    And I should see "Private reply by AdminA"
+    And I should see "Private counter-reply by AdminB"
+    # AdminB should receive a notification about AdminA's reply even though they unwatched the page
     And I choose "mail" from user menu by id
-    And I follow "New comment on page1"
-    And I should see "Private reply by pageowner"
+    And I follow "New comment on Page AdminA_01"
+    And I should see "Private reply by AdminA"
 
 Scenario: No private replies to anonymous comments
-    Given I go to portfolio page "page1"
+    Given I go to portfolio page "Page AdminA_01"
     And I fill in "Name" with "Anonymous User"
     # No WYSIWYG editor for anonymous users
     And I fill in "Comment" with "Public comment by anonymous user"
     And I enable the switch "Make comment public"
     And I press "Comment"
-    When I log in as "pagecommenter" with password "password"
-    And I go to portfolio page "page1"
+    When I log in as "AdminB" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
     And I click on "Reply" in "Public comment by anonymous user" row
     # I should not be able to make a private reply to a comment by someone other than the page owner
     Then I should see "Public" in the "#add_feedback_form_ispublic_container" "css_element"
-    And I fill in "Public reply by pagecommenter" in editor "Comment"
+    And I fill in "Public reply by AdminB" in editor "Comment"
     And I press "Comment"
     And I should see "Public comment by anonymous user"
-    And I should see "Public reply by pagecommenter"
+    And I should see "Public reply by AdminB"
 
 Scenario: No replies to deleted comments
-    Given I log in as "pageowner" with password "password"
-    And I go to portfolio page "page1"
+    Given I log in as "AdminA" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "I will delete this comment" in editor "Comment"
     And I enable the switch "Make comment public"
     When I press "Comment"
@@ -124,8 +127,8 @@ Scenario: No replies to deleted comments
     Then I should not see "Reply"
 
 Scenario: Deleted comments
-    Given I log in as "pageowner" with password "password"
-    And I go to portfolio page "page1"
+    Given I log in as "AdminA" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
     # Create a tree of comments like so:
     #
     # * Comment #1

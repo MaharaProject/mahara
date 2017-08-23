@@ -7,16 +7,16 @@ I need to have a journal
 Background:
  Given the following "users" exist:
  | username | password | email | firstname | lastname | institution | authname | role |
- | userA | Kupuhipa1 | test01@example.org | Andrea | Andrews | mahara | internal | member |
- | userB | Kupuhipa1 | test02@example.org | Britta | Briggs | mahara | internal | member |
+ | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+ | UserB | Kupuhipa1 | UserB@example.org | Britta | Briggs | mahara | internal | member |
 
  And the following "pages" exist:
- | title | description| ownertype | ownername |
- | Journal page | Page to contain the tagged journal block | user | userA |
+ | title | description | ownertype | ownername |
+ | Page UserA_01 | Page 01 | user | UserA |
 
 Scenario: Creating a Journal, publishing a draft, using tagged entry block
  # Create draft entry
- Given I log in as "userA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuhipa1"
  When I choose "Journals" in "Content" from main menu
  And I follow "New entry"
  And I fill in the following:
@@ -57,21 +57,21 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
 
  # Display tagged journals in block
  And I choose "Portfolio" from main menu
- And I click on "Journal page" panel menu
- And I click on "Edit" in "Journal page" panel menu
+ And I click on "Page UserA_01" panel menu
+ And I click on "Edit" in "Page UserA_01" panel menu
  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
  And I follow "Tagged journal entries" in the "div#blog" "css_element"
  And I press "Add"
  And I fill in select2 input "instconf_tagselect" with "george" and select "george"
  And I press "Save"
  Then I should see "My diary entry two"
- And I go to portfolio page "Journal page"
+ And I go to portfolio page "Page UserA_01"
  And I follow "Edit this page"
  And I follow "Share" in the "#toolbar-buttons" "css_element"
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  And I log out
- And I log in as "userB" with password "Kupuhipa1"
- And I go to portfolio page "Journal page"
+ And I log in as "UserB" with password "Kupuhipa1"
+ And I go to portfolio page "Page UserA_01"
  Then I should see "My diary entry two"
  And I should not see "My diary entry one"

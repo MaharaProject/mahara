@@ -7,31 +7,31 @@ Feature: Displaying multiple groups on a page
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
     And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-     | Testing Group 1 | userA | This is group 01 | standard | ON | OFF | all | ON | ON | admin |  |
-     | Testing Group 2 | userA | This is group 02 | standard | ON | OFF | all | ON | ON | admin |  |
-     | Testing Group 3 | userA | This is group 03 | standard | ON | OFF | all | ON | ON | admin |  |
-     | Testing Group 4 | userA | This is group 04 | standard | ON | OFF | all | ON | ON | admin |  |
-     | Testing Group 5 | userA | This is group 05 | standard | ON | OFF | all | ON | ON | admin |  |
-     | Testing Group 6 | userA | This is group 06 | standard | ON | OFF | all | ON | ON | admin |  |
-     | Testing Group 7 | userA | This is group 07 | standard | ON | OFF | all | ON | ON | admin |  |
-     | Testing Group 8 | userA | This is group 08 | standard | ON | OFF | all | ON | ON | admin |  |
-     | Testing Group 9 | userA | This is group 09 | standard | ON | OFF | all | ON | ON | admin |  |
-     | Testing Group 10 | userA | This is group 10 | standard | ON | OFF | all | ON | ON | admin |  |
+     | GroupA | UserA | GroupA owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
+     | GroupB | UserA | GroupB owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
+     | GroupC | UserA | GroupC owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
+     | GroupD | UserA | GroupD owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
+     | GroupE | UserA | GroupE owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
+     | GroupF | UserA | GroupF owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
+     | GroupG | UserA | GroupG owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
+     | GroupH | UserA | GroupH owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
+     | GroupI | UserA | GroupI owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
+     | GroupJ | UserA | GroupJ owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
 
 Scenario: Create groups and limit display on profile page (Bug 1426983)
     # Log in as a normal user
-    Given I log in as "userA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuhipa1"
     # Verifying log in was successful
-    And I should see "Pete"
+    And I should see "Angela"
     # Creating several groups to test
     And I choose "Groups" from main menu
     And I follow "Create group"
     And I set the following fields to these values:
-    | Group name | Testing Group 11 |
-    | Group description | This is group 11 |
+    | Group name | GroupK |
+    | Group description | GroupA owned by UserA |
     And I press "Save group"
     # Changing the amount of groups seen in My groups block
     And I choose "Portfolio" from main menu

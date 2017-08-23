@@ -7,21 +7,21 @@ So I have fast access to them
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
     And the following "pages" exist:
-      | title | description| ownertype | ownername |
-      | P1A | page P1A | user | userA |
-      | P1B | page P1B | user | userA |
-      | P2 | page P2 | user | userA |
+      | title | description | ownertype | ownername |
+      | Page UserA_01 | page P1A | user | UserA |
+      | Page UserA_02 | page P1B | user | UserA |
+      | Page UserA_03 | page P2 | user | UserA |
     And the following "collections" exist:
-      | title | description| ownertype | ownername | pages |
-      | C1 | collection C1 | user | userA | P1A, P1B |
+      | title | description | ownertype | ownername | pages |
+      | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_01, Page UserA_02 |
 
 Scenario: Testing that views & collections are collated properly in the "My portfolios" block
-    Given I log in as "userA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuhipa1"
     # I should see collections & individual pages
     And I scroll to the id "column-container"
-    And I should see "C1" in the "div.list-group-item" "css_element"
+    And I should see "Collection UserA_01" in the "div.list-group-item" "css_element"
     And I should see "(2 pages)" in the "div.list-group-item" "css_element"
-    And I should see "page P2" in the "div.bt-myviews" "css_element"
-    Then I should not see "page P1A" in the "div.bt-myviews" "css_element"
+    And I should see "Page UserA_03" in the "div.bt-myviews" "css_element"
+    Then I should not see "Page UserA_01" in the "div.bt-myviews" "css_element"

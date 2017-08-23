@@ -8,50 +8,50 @@ Feature: Mahara users submit pages / colelctions to a group
   Background:
     Given the following "users" exist:
       | username | password | email | firstname | lastname | institution | authname | role |
-      | groupAdmin | Kupuhipa1 | grpadmin@example.org | Group | Admin | mahara | internal | admin |
-      | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
-      | userB | Kupuhipa1 | test02@example.org | Son | Nguyen | mahara | internal | member |
-      | userC | Kupuhipa1 | test03@example.org | Jack | Smith | mahara | internal | member |
+      | groupAdmin | Kupuhipa1 | groupAdmin@example.org | Group | Admin | mahara | internal | admin |
+      | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+      | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+      | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
 
     And the following "groups" exist:
       | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-      | Group one | groupAdmin | This is group 01 | standard | ON | ON | all | ON | OFF | userA, userB, userC | |
+      | GroupA | groupAdmin | GroupA owned by groupAdmin | standard | ON | ON | all | ON | OFF | UserA, UserB, UserC | |
 
     And the following "pages" exist:
-      | title | description| ownertype | ownername |
-      | Page userA_01 | This is the page 01 | user | userA |
-      | Page userA_02 | This is the page 02 | user | userA |
-      | Page userA_03 | This is the page 03 | user | userA |
-      | Page userB_01 | This is the page 04 | user | userB |
-      | Page userB_02 | This is the page 05 | user | userB |
-      | Page userC_01 | This is the page 06 | user | userC |
-      | Page userC_02 | This is the page 07 | user | userC |
+      | title | description | ownertype | ownername |
+      | Page UserA_01 | Page 01| user | UserA |
+      | Page UserA_02 | Page 02 | user | UserA |
+      | Page UserA_03 | Page 03 | user | UserA |
+      | Page UserB_01 | Page 04 | user | UserB |
+      | Page UserB_02 | Page 05 | user | UserB |
+      | Page UserC_01 | Page 06 | user | UserC |
+      | Page UserC_02 | Page 07 | user | UserC |
 
     And the following "collections" exist:
-      | title | description| ownertype | ownername | pages |
-      | Collection userA_01 | This is the collection 01 | user | userA | Page userA_01, Page userA_02 |
-      | Collection userA_02 | This is the collection 02 | user | userA | Page userA_03 |
-      | Collection userB_01 | This is the collection 03 | user | userB | Page userB_01 |
-      | Collection userC_01 | This is the collection 05 | user | userC | Page userC_01 |
+      | title | description | ownertype | ownername | pages |
+      | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_01, Page UserA_02 |
+      | Collection UserA_02 | Collection 02 | user | UserA | Page UserA_03 |
+      | Collection UserB_01 | Collection 03 | user | UserB | Page UserB_01 |
+      | Collection UserC_01 | Collection 05 | user | UserC | Page UserC_01 |
 
   Scenario: Group users submit content to the group and group admin checks who is still to submit content
     # UserA submits a collection to the group
-    Given I log in as "userA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuhipa1"
     And I choose "Find groups" in "Groups" from main menu
-    When I click on "Group one"
+    When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
-    And I select "Collection userA_01" from "Submit for assessment"
+    And I select "Collection UserA_01" from "Submit for assessment"
     And I press "Submit"
     And I press "Yes"
     Then I should see "Collection submitted"
     And I log out
 
     # UserB submits a page to the group
-    Given I log in as "userB" with password "Kupuhipa1"
+    Given I log in as "UserB" with password "Kupuhipa1"
     And I choose "Find groups" in "Groups" from main menu
-    When I click on "Group one"
+    When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
-    And I select "Page userB_02" from "Submit for assessment"
+    And I select "Page UserB_02" from "Submit for assessment"
     And I press "Submit"
     And I press "Yes"
     Then I should see "Page submitted"
@@ -60,6 +60,6 @@ Feature: Mahara users submit pages / colelctions to a group
     # UserC didn't submit anything so should appear on the need to do submissions list
     Given I log in as "groupAdmin" with password "Kupuhipa1"
     And I choose "Find groups" in "Groups" from main menu
-    When I click on "Group one"
+    When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
-    Then I should see "Jack Smith" in the "ul#nosubmissionslist" "css_element"
+    Then I should see "Cecilia User" in the "ul#nosubmissionslist" "css_element"

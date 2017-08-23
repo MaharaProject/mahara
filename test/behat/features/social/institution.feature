@@ -13,17 +13,17 @@ Feature: Mahara user permissions in institutions
 
     And the following "users" exist:
       | username | password | email | firstname | lastname | institution | authname | role |
-      | userA | Kupuhipa1 | test01@example.org | Pete | Mc | mahara | internal | member |
-      | userB | Kupuhipa2 | test02@example.org | Son | Nguyen | instone | internal | admin |
-      | userC | Kupuhipa3 | test03@example.org | New | User | mahara | internal | member |
+      | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+      | UserB | Kupuhipa1 | UserB@example.org | Bob | User | instone | internal | admin |
+      | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
 
     And the following "pages" exist:
-      | title | description| ownertype | ownername |
-      | Inst One page | This is the page | institution | instone |
+      | title | description | ownertype | ownername |
+      | Page InstOne_01 | Page | institution | instone |
 
   Scenario: Register to an institution
     # Member can register to an institution
-    Given I log in as "userA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuhipa1"
     And I choose "Institution membership" in "Groups" from main menu
     Then I should see "Request membership of an institution"
     And I log out
@@ -32,21 +32,21 @@ Feature: Mahara user permissions in institutions
     # Site admin can only share institution page with institution it belongs to
     Given I log in as "admin" with password "Kupuhipa1"
     And I choose "Pages and collections" in "Institutions" from administration menu
-    And I follow "Inst One page"
+    And I follow "Page InstOne_01"
     And I follow "Edit this page"
     And I follow "Share" in the "#toolbar-buttons" "css_element"
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should not contain "Institution Two"
     And I choose "User search" in "Users" from administration menu
-    And I follow "userB"
+    And I follow "UserB"
     And I press "Add user to institution"
     Then I should see "User added to institution \"Institution Two\"."
     And I log out
 
     # Institution admin can share institution page with any of the institutions they belong to
-    Given I log in as "userB" with password "Kupuhipa2"
+    Given I log in as "UserB" with password "Kupuhipa1"
     And I choose "Pages and collections" in "Institutions" from administration menu
-    And I follow "Inst One page"
+    And I follow "Page InstOne_01"
     And I follow "Edit this page"
     And I follow "Share" in the "#toolbar-buttons" "css_element"
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
@@ -57,7 +57,7 @@ Feature: Mahara user permissions in institutions
     Given I log in as "admin" with password "Kupuhipa1"
     And I choose "Members" in "Institutions" from administration menu
     And I select "People who have not requested institution membership yet" from "Users to display:"
-    And I select "userC" from "Non-members"
+    And I select "UserC" from "Non-members"
     And I press "Turn selected non-members into invited"
     And I press "Add members"
     And I should see "Users added"

@@ -4,40 +4,40 @@ Feature: Moderating group comments
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.org | User | Eh | mahara | internal | member |
-     | userB | Kupuhipa1 | test02@example.org | User | Bee | mahara | internal | member |
-     | userC | Kupuhipa1 | test03@example.org | User | Sea | mahara | internal | member |
+     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
 
     And the following "groups" exist:
     | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-    | GroupA | userA | This is group A | standard | ON | ON | all | ON | ON | userB |  |
+    | GroupA | UserA | GroupA owned by UserA | standard | ON | ON | all | ON | ON | UserB |  |
 
     And the following "pages" exist:
      | title | description | ownertype | ownername |
-     | Page1 | Page one | group | GroupA |
+     | Page GroupA_01 | Page 01 | group | GroupA |
 
     And the following "permissions" exist:
      | title | accesstype | accessname | allowcomments | approvecomments |
-     | Page1 | loggedin | loggedin | 1 | 1 |
+     | Page GroupA_01 | loggedin | loggedin | 1 | 1 |
 
 Scenario: Moderating a group comment when approve comments is turned on
     # Adding a comment to a group page as a non-group member
-    Given I log in as "userC" with password "Kupuhipa1"
-    And I go to portfolio page "Page1"
-    And I set the field "Comment" to "This is a comment from userC"
+    Given I log in as "UserC" with password "Kupuhipa1"
+    And I go to portfolio page "Page GroupA_01"
+    And I set the field "Comment" to "This is a comment from UserC"
     And I enable the switch "Make comment public"
     And I press "Comment"
     Then I should see "You have requested that this comment be made public." in the ".feedbacktable" "css_element"
     And I log out
 
     # Checking that normal group member is not able to moderate comment
-    Given I log in as "userB" with password "Kupuhipa1"
-    And I go to portfolio page "Page1"
-    Then I should not see "This is a comment from userC"
+    Given I log in as "UserB" with password "Kupuhipa1"
+    And I go to portfolio page "Page GroupA_01"
+    Then I should not see "This is a comment from UserC"
     And I log out
 
     # Moderating the comment as group admin
-    Given I log in as "userA" with password "Kupuhipa1"
-    And I go to portfolio page "Page1"
-    Then I should see "This is a comment from userC"
+    Given I log in as "UserA" with password "Kupuhipa1"
+    And I go to portfolio page "Page GroupA_01"
+    Then I should see "This is a comment from UserC"
     And I press "Make comment public"

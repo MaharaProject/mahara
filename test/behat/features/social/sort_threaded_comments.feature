@@ -7,54 +7,56 @@ Feature: Threaded comments
 Background:
     Given the following "institutions" exist:
      | name | displayname | commentthreaded | allowinstitutionpublicviews |
-     | instone | inst1 | 1 | 1 |
+     | instone | Institution One | 1 | 1 |
+
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | pageowner | password | test01@example.org | Paige | Owner | instone | internal | admin |
+     | AdminA | Kupuhipa1 | AdminA@example.org | Angela | Admin | instone | internal | admin |
+
     Given the following "pages" exist:
      | title | description | ownertype | ownername |
-     | page1 | page1 | user | pageowner |
+     | Page AdminA_01 | page1 | user | AdminA |
 
 Scenario: Threaded comments should be displayed in correct order
-    Given I log in as "pageowner" with password "password"
-    And I go to portfolio page "page1"
+    Given I log in as "AdminA" with password "Kupuhipa1"
+    And I go to portfolio page "Page AdminA_01"
     # Add 11 comments
     And I fill in "Comment #1" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #2" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #3" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #4" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #5" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #6" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #7" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #8" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #9" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #10" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #11" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I fill in "Comment #12" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
 
     # Go to the first page
     And I should see "Comment #1"
@@ -74,43 +76,43 @@ Scenario: Threaded comments should be displayed in correct order
     And I click on "Reply" in "Comment #1" row
     And I fill in "Comment #1/1" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And "Comment #1/1" "text" should appear before "Comment #2" "text"
     And I scroll to the id "feedbacktable"
     And I click on "Reply" in "Comment #1/1" row
     And I fill in "Comment #1/1/1" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I scroll to the id "feedbacktable"
     And I click on "Reply" in "Comment #1/1" row
     And I fill in "Comment #1/1/2" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I scroll to the id "feedbacktable"
     And I click on "Reply" in "Comment #1/1/1" row
     And I fill in "Comment #1/1/1/1" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I scroll to the id "feedbacktable"
     And I click on "Reply" in "Comment #1/1/1/1" row
     And I fill in "Comment #1/1/1/1/1" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I scroll to the id "feedbacktable"
     And I click on "Reply" in "Comment #1/1/1/1" row
     And I fill in "Comment #1/1/1/1/2" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I scroll to the id "feedbacktable"
     And I click on "Reply" in "Comment #1/1" row
     And I fill in "Comment #1/1/3" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And I scroll to the base of id "feedbacktable"
     And I click on "Reply" in "Comment #1/1/2" row
     And I fill in "Comment #1/1/2/1" in editor "Comment"
     And I press "Comment"
-    And I go to portfolio page "page1"
+    And I go to portfolio page "Page AdminA_01"
     And "Comment #1/1/1/1/1" "text" should appear before "Comment #1/1/1/1/2" "text"
     And "Comment #1/1/1/1/2" "text" should appear before "Comment #1/1/2" "text"
     And "Comment #1/1/2/1" "text" should appear before "Comment #1/1/3" "text"

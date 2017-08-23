@@ -7,8 +7,8 @@ Feature: Members of a group should be listed based on their role
 Background:
     Given the following "users" exist:
     | username  | password  | email | firstname | lastname  | institution   | authname  |role   |
-    | bob   | Kupuhipa1   | bob@example.org   | Bob   | Bobby | mahara    | internal  | member    |
-    | jen   | Kupuhipa1   | jen@example.org   | Jen   | Jenny | mahara    | internal  | member    |
+    | UserA   | Kupuhipa1   | UserA@example.org   | Angela   | User | mahara    | internal  | member    |
+    | UserB   | Kupuhipa1   | UserB@example.org   | Bob   | User | mahara    | internal  | member    |
 
 Scenario: Creating a group and adding members to it (Bug 1426983)
     # Log in as "Admin" user
@@ -24,18 +24,18 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     # Log out as "Admin user"
     And I log out
     # Log in as user 1
-    And I log in as "bob" with password "Kupuhipa1"
+    And I log in as "UserA" with password "Kupuhipa1"
     # Verifying log in was successful
-    And I should see "Bob Bobby"
+    And I should see "Angela User"
     # Joining Testing group 1
     And I choose "Find groups" in "Groups" from main menu
     And I press "Join this group"
     # Log out as user 1
     And I log out
     # Log in as user 2
-    And I log in as "jen" with password "Kupuhipa1"
+    And I log in as "UserB" with password "Kupuhipa1"
     #Verifying log in was successful
-    And I should see "Jen Jenny"
+    And I should see "Bob User"
     # Joining Testing group 1
     And I choose "Find groups" in "Groups" from main menu
     And I press "Join this group"
@@ -48,8 +48,8 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     And I follow "Testing Group 1"
     And I follow "Members" in the ".arrow-bar" "css_element"
     # Verifying they are out of order first
-    And "Bob Bobby (bob)" "link" should appear before "Jen Jenny (jen)" "link"
+    And "Angela User (UserA)" "link" should appear before "Bob User (UserB)" "link"
     And I select "Name Z to A" from "sorted by:"
     And I press the key "Enter" in the "Search:" field
     # Verifying I see them in order
-    And "Jen Jenny (jen)" "link" should appear before "Bob Bobby (bob)" "link"
+    And "Bob User (UserB)" "link" should appear before "Angela User (UserA)" "link"

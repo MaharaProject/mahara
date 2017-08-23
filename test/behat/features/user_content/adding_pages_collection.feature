@@ -6,11 +6,11 @@ Feature: Adding pages to a collection
 
 Background:
      Given the following "pages" exist:
-     | title | description| ownertype | ownername |
-     | Testing page 1 | Admin's page 01 | user | admin |
-     | Testing page 2 | Admin's page 02 | user | admin |
-     | Testing page 3 | Admin's page 03 | user | admin |
-     | A page 4 | Admin's page 04 | user | admin |
+     | title | description | ownertype | ownername |
+     | Page admin_01 | Page 01 | user | admin |
+     | Page admin_02 | Page 02 | user | admin |
+     | Page admin_03 | Page 03 | user | admin |
+     | AA Page admin_04 | Page 04 | user | admin |
 
 Scenario: Creating a collection AND adding pages
     # Log in as "Admin" user
@@ -29,20 +29,20 @@ Scenario: Creating a collection AND adding pages
     And I follow "All"
     Then I press "Add pages"
     # Verifying that the pages were added
-    And I should see "Testing page 1"
-    And I should see "Testing page 2"
-    And I should see "Testing page 3"
-    And I should see "A page 4"
+    And I should see "Page admin_01"
+    And I should see "Page admin_02"
+    And I should see "Page admin_03"
+    And I should see "AA Page admin_04"
     # Sort pages by Last modified
     Then I choose "Portfolio" from main menu
     And I select "Alphabetical" from "Sort by:"
     And I press the key "Enter" in the "Search:" field
-    And "A page 4" "link" should appear before "Testing page 1" "link"
+    And "AA Page admin_04" "link" should appear before "Page admin_01" "link"
     And I select "Last modified" from "Sort by:"
     And I press the key "Enter" in the "Search:" field
     # Checking they are in the right order
-    And "Testing page 1" "link" should appear before "Testing page 2" "link"
-    And "Testing page 2" "link" should appear before "Testing page 3" "link"
+    And "Page admin_01" "link" should appear before "Page admin_02" "link"
+    And "Page admin_02" "link" should appear before "Page admin_03" "link"
 
     # Exporting pages and collections
     And I choose "Export" in "Portfolio" from main menu

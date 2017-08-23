@@ -7,9 +7,9 @@ Feature: Select2 ajax test using sendmessage
 Background:
     Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | userA | Kupuhipa1 | test01@example.org | Andrea | Andrews | mahara | internal | member |
-    | userB | Kupuhipa1 | test02@example.org | Barry | Bishop | mahara | internal | member |
-    | userC | Kupuhipa1 | test03@example.org | Catriona | Carson | mahara | internal | member |
+    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+    | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+    | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
 
 Scenario: Selecting select2 option via ajax (Bug #1520011)
     # Log in as an Admin user
@@ -17,7 +17,7 @@ Scenario: Selecting select2 option via ajax (Bug #1520011)
     # Send a message
     And I choose "mail" from user menu by id
     And I follow "Compose"
-    And I fill in select2 input "sendmessage_recipients" with "userA" and select "Andrea Andrews (userA)"
+    And I fill in select2 input "sendmessage_recipients" with "UserA" and select "Angela User (UserA)"
     And I set the following fields to these values:
     | Subject | Test message with < & > |
     | Message | This is a test with > & < |
