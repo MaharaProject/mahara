@@ -1,8 +1,16 @@
 @javascript @core @core_view
 Feature: Allow user themes on pages
 In order to allow a user theme on a page
-As an admin
-I need to be able to activate Users can choose page themes setting
+Enable "Users can choose page themes" setting
+Log in as user and confirm it works
+
+Background:
+  Given the following "users" exist:
+    | username | password | email | firstname | lastname | institution | authname | role |
+    | userA | Kupuhipa1 | userA@example.com | Angela | User | mahara | internal | member |
+  And the following "pages" exist:
+    | title | description| ownertype | ownername |
+    | Page 1 | Page 1 | user | userA |
 
 Scenario: Activate page themes setting and edit a page (Bug 1591304)
  Given I log in as "admin" with password "Kupuhipa1"
@@ -11,11 +19,10 @@ Scenario: Activate page themes setting and edit a page (Bug 1591304)
  And I expand the section "User settings"
  And I enable the switch "Users can choose page themes"
  And I press "Update site options"
- # Now edit a page
- And I choose "Portfolio" from main menu
- And I follow "Add"
- And I click on "Page" in the dialog
- And I press "Save"
- And I follow "Text"
- And I press "Add"
- And I press "Save"
+ And I log out
+ # Now set a theme as a user and confirm logo changes
+ Given I log in as "userA" with password "Kupuhipa1"
+ And I follow "Page 1"
+ And I follow "Edit this page"
+ And I select "Modern" from "viewtheme"
+ Then the "div#logo-area" element should contain "/theme/modern/images/site-logo"
