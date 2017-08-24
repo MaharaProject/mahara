@@ -219,6 +219,8 @@ class mahara_group_external extends external_api {
 
             // create the group
             $create['retainshortname'] = true;
+            // Internal function deals with 'submittableto' not 'submitpages'
+            $create['submittableto'] = !empty($create['submitpages']) ? 1 : 0;
             $id = group_create($create);
 
             $groupids[] = array('id'=> $id, 'name'=> $group['name']);
@@ -512,6 +514,8 @@ class mahara_group_external extends external_api {
                     $newvalues->{$attr} = $group[$attr];
                 }
             }
+            // Internal function deals with 'submittableto' not 'submitpages'
+            $newvalues->submittableto = !empty($newvalues->submitpages) ? 1 : 0;
             group_update($newvalues);
 
             // now update the group membership
@@ -785,7 +789,7 @@ class mahara_group_external extends external_api {
                         'open'           => ($dbgroup->jointype == 'open' ? 1 : 0),
                         'controlled'     => ($dbgroup->jointype == 'controlled' ? 1 : 0),
                         'request'        => $dbgroup->request,
-                        'submitpages'    => (isset($dbgroup->submitpages) ? $dbgroup->submitpages : 0),
+                        'submitpages'    => (isset($dbgroup->submittableto) ? $dbgroup->submittableto : 0),
                         'public'         => $dbgroup->public,
                         'viewnotify'     => $dbgroup->viewnotify,
                         'feedbacknotify' => $dbgroup->feedbacknotify,
