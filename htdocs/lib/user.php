@@ -2508,7 +2508,8 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
 
     reset_password($user, false, $quickhash);
 
-    handle_event('createuser', $user);
+    $createuser = clone $user;
+    handle_event('createuser', $createuser);
     db_commit();
     return $user->id;
 }
