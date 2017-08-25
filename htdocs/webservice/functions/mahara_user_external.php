@@ -681,32 +681,45 @@ class mahara_user_external extends external_api {
      * @return array An array of arrays describing users
      */
     public static function get_users_by_id($users) {
-        global $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER, $USER;
 
         $params = self::validate_parameters(self::get_users_by_id_parameters(),
-                array('users'=>$users));
+            array('users' => $users));
 
-        // if this is a get all users - then lets get them all
         if (empty($params['users'])) {
-            $params['users'] = array();
-            $dbusers = get_records_sql_array('SELECT u.id AS id FROM {usr} u
-                                                INNER JOIN {auth_instance} ai ON u.authinstance = ai.id
-                                                LEFT JOIN {usr_institution} ui ON u.id = ui.usr AND ui.institution = ?
-                                                WHERE u.deleted = ? AND (ai.institution = ?
-                                                                      OR ui.institution = ?)', array($WEBSERVICE_INSTITUTION, 0, $WEBSERVICE_INSTITUTION, $WEBSERVICE_INSTITUTION));
-            if ($dbusers) {
-                foreach ($dbusers as $dbuser) {
-                    // eliminate bad uid
-                    if ($dbuser->id == 0) {
-                        continue;
-                    }
-                    $params['users'][] = array('id' => $dbuser->id);
+            list($count, $params) = self::_get_bulk_users($params);
+        }
+        $results = self::_get_users_by_id($params);
+        return $results;
+    }
+
+    private static function _get_bulk_users($params) {
+        global $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER, $USER;
+        $sortdirection = (isset($params['sortdir']) && strtolower($params['sortdir']) == 'desc') ? 'desc' : 'asc';
+        $offset = isset($params['offset']) ? $params['offset'] : null;
+        $limit = isset($params['limit']) ? $params['limit'] : null;
+        $params['users'] = array();
+        $fromsql = " FROM {usr} u
+                     INNER JOIN {auth_instance} ai ON u.authinstance = ai.id
+                     LEFT JOIN {usr_institution} ui ON u.id = ui.usr AND ui.institution = ?
+                     WHERE u.deleted = ? AND u.id != 0
+                     AND (ai.institution = ? OR ui.institution = ?)";
+        $countusers = count_records_sql("SELECT COUNT(*) " . $fromsql, array($WEBSERVICE_INSTITUTION, 0, $WEBSERVICE_INSTITUTION, $WEBSERVICE_INSTITUTION));
+        $dbusers = get_records_sql_array("SELECT u.id AS id " . $fromsql . " ORDER BY u.id " . $sortdirection, array($WEBSERVICE_INSTITUTION, 0, $WEBSERVICE_INSTITUTION, $WEBSERVICE_INSTITUTION), $offset, $limit);
+        if ($dbusers) {
+            foreach ($dbusers as $dbuser) {
+                // eliminate bad uid
+                if ($dbuser->id == 0) {
+                    continue;
                 }
+                $params['users'][] = array('id' => $dbuser->id);
             }
         }
+        return array($countusers, $params);
+    }
 
-        //TODO: check if there is any performance issue: we do one DB request to retrieve
-        //  all user, then for each user the profile_load_data does at least two DB requests
+    private static function _get_users_by_id($params) {
+        global $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER, $USER;
+
         $users = array();
         foreach ($params['users'] as $user) {
             $users[]= self::checkuser($user);
@@ -807,7 +820,13 @@ class mahara_user_external extends external_api {
      * @return external_function_parameters
      */
     public static function get_users_parameters() {
-        return new external_function_parameters(array());
+        return new external_function_parameters(
+            array(
+                'offset'       => new external_value(PARAM_INTEGER, 'Offset of the results', VALUE_DEFAULT, '0'),
+                'limit'        => new external_value(PARAM_INTEGER, 'Limit of the results', VALUE_DEFAULT, '9999999'),
+                'sortdir'      => new external_value(PARAM_TEXT, 'Order user id. Either "asc" or "desc"', VALUE_DEFAULT, 'asc'),
+            )
+        );
     }
 
     /**
@@ -815,8 +834,14 @@ class mahara_user_external extends external_api {
      *
      * @return array An array of arrays describing users
      */
-    public static function get_users() {
-        return self::get_users_by_id(array());
+    public static function get_users($offset, $limit, $sortdir) {
+        $params = array('offset' => $offset, 'limit' => $limit, 'sortdir' => $sortdir);
+        $params = self::validate_parameters(self::get_users_parameters(), $params);
+        list($countusers, $params) = self::_get_bulk_users($params);
+
+        $bulkusers = self::_get_users_by_id($params);
+
+        return array('limit' => $limit, 'offset' => $offset, 'totalcount' => $countusers, 'users' => $bulkusers);
     }
 
     /**
@@ -826,7 +851,15 @@ class mahara_user_external extends external_api {
      * @return external_description
      */
     public static function get_users_returns() {
-        return self::get_users_by_id_returns();
+        $users = self::get_users_by_id_returns();
+        return new external_single_structure(
+            array(
+                'limit' => new external_value(PARAM_INTEGER, 'Limit of the results', VALUE_DEFAULT, '10'),
+                'offset' => new external_value(PARAM_INTEGER, 'Offset of the results', VALUE_DEFAULT, '10'),
+                'totalcount' => new external_value(PARAM_INTEGER, 'Total count of the results', VALUE_OPTIONAL),
+                'users' => $users,
+            )
+        );
     }
 
     /**
