@@ -365,6 +365,21 @@ abstract class Auth {
 /******************************************************************************/
     // End of Auth base-class
 /******************************************************************************/
+/*
+* Checks all the available auth types and executes 'install_auth_default' method
+* if they have one
+*/
+function install_auth_default() {
+    $plugins = auth_get_available_auth_types();
+
+    foreach ($plugins as $key => $value) {
+        $classname = 'PluginAuth' . ucfirst(strtolower($value->name));
+        $methodname = 'install_auth_default';
+        if (method_exists($classname, $methodname)) {
+            call_static_method($classname, $methodname);
+        }
+    }
+}
 
 /**
  * Handles authentication by setting up a session for a user if they are logged
