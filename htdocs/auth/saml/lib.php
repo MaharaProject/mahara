@@ -361,6 +361,11 @@ class PluginAuthSaml extends PluginAuth {
         return true;
     }
 
+    public static function install_auth_default() {
+        // Set library version to download
+        set_config_plugin('auth', 'saml', 'version', '1.14.16');
+    }
+
     private static function create_certificates($numberofdays = 3650) {
         global $CFG;
         // Get the details of the first site admin and use it for setting up the certificate
@@ -566,6 +571,17 @@ class PluginAuthSaml extends PluginAuth {
         if (!file_exists(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php')) {
             $libchecks .= '<li>' . get_string('errorbadlib', 'auth.saml', get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php') . '</li>';
         }
+        else {
+            require(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
+            $config = SimpleSAML_Configuration::getInstance();
+
+            //simplesaml version we install with 'make ssphp'
+            $libversion = get_config_plugin('auth', 'saml', 'version');
+
+            if (!empty($libversion) && $config->getVersion() != $libversion) {
+                $libchecks .= '<li>' . get_string('errorupdatelib', 'auth.saml') . '</li>';
+            }
+        }
         // Make sure we can use 'memcache' with simplesamlphp as 'phpsession' doesn't work correctly in many situations
         $memcacheservers_config = get_config('memcacheservers');
         if (empty($memcacheservers_config) && !extension_loaded('memcache')) {
@@ -591,7 +607,7 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function save_config_options(Pieform $form, $values) {
-        delete_records('auth_config', 'plugin', 'saml');
+        delete_records_select('auth_config', 'plugin = ? AND field NOT LIKE ?', array('saml', 'version'));
         $configs = array('spentityid', 'sigalgo');
         foreach ($configs as $config) {
             set_config_plugin('auth', 'saml', $config, $values[$config]);

@@ -13,12 +13,16 @@ function xmldb_auth_saml_upgrade($oldversion=0) {
 
     $status = true;
 
-    /**
-     */
     if ($oldversion < 2017071800) {
         //For legacy installs we default to rsa-sha1 as that was the default previously, although we would
         //ideally like them to use rsa-256
         set_config_plugin('auth', 'saml', 'sigalgo', 'http://www.w3.org/2000/09/xmldsig#rsa-sha1');
     }
+
+    if ($oldversion < 2017082900) {
+        // Set library version to download
+        set_config_plugin('auth', 'saml', 'version', '1.14.16');
+    }
+
     return $status;
 }
