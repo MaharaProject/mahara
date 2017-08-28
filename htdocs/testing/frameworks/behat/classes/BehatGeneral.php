@@ -1428,4 +1428,23 @@ JS;
         fwrite(STDOUT, "\n\033[93m DEBUG: $text\033[0m\n\n");
       }
 
+      /**
+      * Takes a date in a format strtotime() can take and looks for it
+      * in the specified css element. The default format searched for is
+      * dd Month YYYY, hh:mm AM/PM. You can pass another format as a string
+      * defined in langconfig.php or directly as a php date() format.
+      *
+      * @Then I should see the date :date in the :element element
+      * @Then I should see the date :date in the :element element with the format :format
+      */
+    public function i_should_see_date($date, $element, $format = 'strftimedatetime') {
+      if (string_exists($format, 'langconfig')) {
+        $date = format_date(strtotime($date), $format);
+      }
+      else {
+        $date = date($format, strtotime($date));
+      }
+      $this->assertSession()->elementTextContains('css', $element, $date);
+    }
+
 }
