@@ -313,7 +313,7 @@ function pagination_showmore(btn) {
     var params = {};
     params.offset = parseInt(btn.data('offset'), 10);
     params.orderby = btn.data('orderby');
-    if (btn.data('group').length) {
+    if (Number.isInteger(btn.data('group'))) {
         params.group = btn.data('group');
     }
     if (btn.data('institution').length) {
