@@ -110,11 +110,12 @@ class PluginSearchElasticsearch extends PluginSearch {
 
     /**
      * This function returns elasticsearch server information at supplied host and port
-     * @param string $option An optional param to get status about a specific thing, eg cluster health
+     * @param string $option An optional param to get status about a specific status, eg cluster health
+     * @param string $index  An optional param to get status about a specific status for a particular index, eg indices status
      * @return array containing $canconnect bool    - whether we can connect to elasticsearch at host/port
      *                          $server     object  - information about the server request
      */
-    public static function elasticsearch_server($option = null) {
+    public static function elasticsearch_server($option=null, $index=null) {
         $host = get_config_plugin('search', 'elasticsearch', 'host');
         $port = get_config_plugin('search', 'elasticsearch', 'port');
         $url = $host . ':' . $port;
@@ -123,15 +124,27 @@ class PluginSearchElasticsearch extends PluginSearch {
                 case "clusterhealth":
                     $url .= '/_cluster/health';
                     break;
-                case "shardallocation":
-                    $url .= '/_cat/shards';
+                case "indexhealth":
+                    $url .= '/_cat/indices?format=json';
                     break;
             }
         }
+
         $server = mahara_http_request(array(CURLOPT_URL => $url), true);
         $canconnect = false;
         if (!empty($server->data)) {
             $server->data = json_decode($server->data);
+            if ($index && is_array($server->data)) {
+                // we need to find the data for particular index
+                $thisindex = null;
+                foreach ($server->data as $key => $data) {
+                    if (isset($data->index) && $data->index == $index) {
+                        $thisindex = $server->data[$key];
+                        break;
+                    }
+                }
+                $server->data = $thisindex;
+            }
             if (!empty($server->data->version) && !empty($server->data->version->number)) {
                 if (version_compare($server->data->version->number, self::elasticsearch_version) !== -1) {
                     $canconnect = true;
@@ -202,14 +215,10 @@ class PluginSearchElasticsearch extends PluginSearch {
 
     public static function get_config_options() {
         $enabledhtml = '';
-        if (get_config('searchplugin') == 'elasticsearch') {
-            $enabledhtml = self::get_formatted_notice(get_string('noticeenabled', 'search.elasticsearch', get_config('wwwroot') . 'admin/site/options.php?fs=searchsettings'), 'notice');
-        }
-        else {
-            $enabledhtml = self::get_formatted_notice(get_string('noticenotenabled', 'search.elasticsearch', get_config('wwwroot').'admin/site/options.php?fs=searchsettings'), 'warning');
-        }
+        $state = 'ok';
         list($status, $server) = self::elasticsearch_server();
         if (!$status) {
+            $state = 'notice';
             $notice = get_string('noticenotactive', 'search.elasticsearch', get_config_plugin('search', 'elasticsearch', 'host'), get_config_plugin('search', 'elasticsearch', 'port'));
             if (!empty($server->error)) {
                 $notice = $server->error;
@@ -219,6 +228,19 @@ class PluginSearchElasticsearch extends PluginSearch {
         list($status, $health) = self::elasticsearch_server('clusterhealth');
         if (!empty($health->data) && $health->data->status != 'green') {
             $enabledhtml .= self::get_formatted_notice(get_string('clusterstatus', 'search.elasticsearch', $health->data->status, $health->data->unassigned_shards), 'warning');
+            $state = 'notice';
+        }
+        $index = get_config_plugin('search', 'elasticsearch', 'indexname');
+        list($status, $health) = self::elasticsearch_server('indexhealth', $index);
+        if (!empty($health->data) && $health->data->health != 'green') {
+            $enabledhtml .= self::get_formatted_notice(get_string('indexstatusbad', 'search.elasticsearch', $index, $health->data->health), 'warning');
+            $state = 'notice';
+        }
+        if (get_config('searchplugin') == 'elasticsearch') {
+            $enabledhtml .= self::get_formatted_notice(get_string('noticeenabled', 'search.elasticsearch', get_config('wwwroot') . 'admin/site/options.php?fs=searchsettings'), $state);
+        }
+        else {
+            $enabledhtml .= self::get_formatted_notice(get_string('noticenotenabled', 'search.elasticsearch', get_config('wwwroot').'admin/site/options.php?fs=searchsettings'), 'warning');
         }
 
         $config = array(

@@ -49,12 +49,14 @@ $string['hostdescription'] = 'Hostname of the Elasticsearch server. Default is 1
 $string['indexingrunning'] = 'Indexing cron job is running. Please try again in a few minutes.';
 $string['indexname'] = 'Index name';
 $string['indexnamedescription'] = 'Name of the Elasticsearch index. Default is mahara.';
+$string['indexstatusok'] = 'The current index "%s" has status green.';
+$string['indexstatusbad'] = 'The current index "%s" has status "%s" and will need to be fixed up.';
 $string['license'] = 'License';
 $string['Media'] = 'Media';
 $string['newindextype'] = 'A new index type "%s" has been added to your elasticsearch settings. For this to take effect you will need to reindex your site';
 $string['newversion'] = 'A new Elasticsearch PHP version "%s" has been added to Mahara that is compatible with Elasticsearch server "%s" and above. For this to take effect you will need to reindex your site';
 $string['none'] = 'none';
-$string['noticeenabled'] = 'The Elasticsearch plugin is currently active. To deactivate it, deselect it in the <a href="%s">site options search settings</a>.';
+$string['noticeenabled'] = 'The Elasticsearch plugin is currently active. To deactivate it, deselect it in the <a href="%s" class="elasticsearch-status">site options search settings</a>.';
 $string['noticenotactive'] = 'The ElasticSearch Server is unreachable on host: %s and port %s. Please make sure it is running.';
 $string['noticenotenabled'] = 'The Elasticsearch plugin is not currently enabled. To activate it, select it in the <a href="%s">site options in the search settings</a>.';
 $string['owner'] = 'Owner';
