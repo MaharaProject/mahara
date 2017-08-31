@@ -1448,4 +1448,24 @@ JS;
       $this->assertSession()->elementTextContains('css', $element, $date);
     }
 
+    /**
+    * Takes a date in a format strtotime() can take and adds it to a field
+    * in the specified css element. You can pass a date format as a string
+    * defined in langconfig.php or directly as a php date() format.
+    *
+    * @Then I fill in :element with :date date
+    * @Then I fill in :element with :date date in the format :format
+    */
+    public function i_fill_in_date($date, $element, $format = null) {
+      if (string_exists($format, 'langconfig')) {
+        $date = format_date(strtotime($date), $format);
+      }
+      else if ($format == null) {
+      }
+      else {
+        $date = date($format, strtotime($date));
+      }
+      $this->getSession()->getPage()->fillField($element, $date);
+    }
+
 }
