@@ -11,6 +11,8 @@
 
 defined('INTERNAL') || die();
 
+$string['attributemapfilenotamap'] = 'Attribute map file "%s" didn\'t define an attribute map.';
+$string['attributemapfilenotfound'] = 'Could not find attributemap file or it is not writable: %s';
 $string['certificate1'] = 'SAML Service Provider signing and encryption certificate';
 $string['manage_certificate1'] = 'This is the certificate generated as part of the SAML Service Provider <a href="%s">Metadata</a>.';
 $string['nullprivatecert'] = "Could not generate or save the private key";

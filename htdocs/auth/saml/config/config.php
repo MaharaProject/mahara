@@ -284,6 +284,8 @@ $config = array (
      */
     'authproc.idp' => array(
         /* Enable the authproc filter below to add URN Prefixces to all attributes
+        IMPORTANT To add a custom mapping file, do not uncomment these lines.
+        Instead add the mapping file path to the saml_custommappingfile_idp in config.php
         10 => array(
             'class' => 'core:AttributeMap', 'addurnprefix'
         ), */
@@ -341,6 +343,8 @@ $config = array (
      */
     'authproc.sp' => array(
     /*
+    IMPORTANT To add a custom mapping file, do not uncomment these lines.
+    Instead add the mapping file path to the saml_custommappingfile_sp in config.php
         10 => array(
             'class' => 'core:AttributeMap', 'mappings',
         ),
@@ -517,3 +521,15 @@ $config = array (
     'metashare.publishurl' => NULL,
 
 );
+
+// if we set custom mappings files paths in config.php
+$filenames = get_config('saml_custommappingfile');
+
+if (!empty($filenames['sp']) && is_array($filenames['sp'])) {
+    $map = AuthSaml::get_attributemappings($filenames['sp']);
+    $config['authproc.sp'][] = $map;
+}
+if (!empty($filenames['idp']) && is_array($filenames['idp'])) {
+    $map = AuthSaml::get_attributemappings($filenames['idp']);
+    $config['authproc.idp'][] = $map;
+}
