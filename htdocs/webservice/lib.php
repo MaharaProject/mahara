@@ -555,6 +555,11 @@ class external_api {
      * @return mixed params with added defaults for optional items, invalid_parameters_exception thrown if any problem found
      */
     public static function validate_parameters(external_description $description, $params) {
+        // we need to turn the social profile information into a single string to pass external_value test
+        // because we can either pass in the information as a string 'profiletype|profileurl' or as an array
+        if (isset($params['socialprofile']) && is_array($params['socialprofile'])) {
+            $params['socialprofile'] = (!empty($params['socialprofile']['profiletype']) ? $params['socialprofile']['profiletype'] : '') . '|' . (!empty($params['socialprofile']['profileurl']) ? $params['socialprofile']['profileurl'] : '');
+        }
         if ($description instanceof external_value) {
             if (is_array($params) or is_object($params)) {
                 throw new WebserviceInvalidParameterException(get_string('errorscalartype', 'auth.webservice'));
