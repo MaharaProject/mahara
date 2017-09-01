@@ -1433,14 +1433,12 @@ JS;
 
       /**
       * Takes a date in a format strtotime() can take and looks for it
-      * in the specified css element. The default format searched for is
-      * dd Month YYYY, hh:mm AM/PM. You can pass another format as a string
+      * in the specified css element. You can pass a date format as a string
       * defined in langconfig.php or directly as a php date() format.
       *
-      * @Then I should see the date :date in the :element element
       * @Then I should see the date :date in the :element element with the format :format
       */
-    public function i_should_see_date($date, $element, $format = 'strftimedatetime') {
+    public function i_should_see_date($date, $element, $format = null) {
       if (string_exists($format, 'langconfig')) {
         $date = format_date(strtotime($date), $format);
       }
