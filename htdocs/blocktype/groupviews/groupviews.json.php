@@ -54,7 +54,9 @@ if (!isset($configdata['sortgroupviewsby']) || $configdata['sortgroupviewsby'] =
 else {
     $sort[] = array('column' => 'mtime', 'desc' => true);
 }
-$groupviews = (array)View::view_search(null, null, (object) array('group' => $groupid), null, $limit, $offset, true, $sort);
+$groupviews = (array)View::view_search(null, null, (object) array('group' => $groupid),
+                                      null, $limit, $offset, true, $sort, null,
+                                      false, null, null, null, null, true);
 foreach ($groupviews['data'] as &$view) {
     if (isset($view['template']) && $view['template']) {
         $view['form'] = pieform(create_view_form(null, null, $view['id']));

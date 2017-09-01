@@ -15,7 +15,7 @@ defined('INTERNAL') || die();
 $string['title'] = 'Group pages';
 $string['description'] = 'Display the pages related to the group';
 $string['displaygroupviews'] = 'Display group pages';
-$string['displaygroupviewsdesc'] = 'Group pages - pages created in the group';
+$string['displaygroupviewsdesc'] = 'Group pages - portfolios created in the group';
 $string['displaysharedviews'] = 'Display shared pages';
 $string['displaysharedviewsdesc1'] = 'Show a list of pages shared with this group (excluding pages in collections).';
 $string['displaysharedcollections'] = 'Display shared collections';
