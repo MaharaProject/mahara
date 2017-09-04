@@ -117,7 +117,7 @@ jQuery(function($) {
   function PaginatorData() {
       var self = this;
       var params = {};
-      this.pageChanged = function(data) {
+      this.pageChanged = function(ev, data) {
           self.params = {
               'offset': data.offset,
               'limit': data.limit,
