@@ -27,7 +27,7 @@ Scenario: Displaying shared pages in most recently updated order (Bug 1490569)
  And I follow "testgroup"
  And I follow "Edit this page"
  And I scroll to the id "column-container"
- And I configure the block "Group pages"
+ And I configure the block "Group portfolios"
  When I set the following fields to these values:
    | Sort shared pages and collections by | Most recently updated |
  And I click on "Save"

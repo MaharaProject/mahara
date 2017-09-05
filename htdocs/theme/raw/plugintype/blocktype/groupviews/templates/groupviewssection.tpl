@@ -6,11 +6,7 @@
         <div class="clearfix">
             <h5 class="pull-left list-group-item-heading">
                 {$view.title}
-                {if $view.collid}
-                    <strong>
-                    ({str tag=nviews section=view arg1=$view.numpages})
-                    </strong>
-                {/if}
+                <span class="text-small text-midtone">{if $view.collid}({str tag=nviews section=view arg1=$view.numpages}){/if}</span>
                 <br>
                 <span class="postedon text-small text-midtone">
                     {if $view.mtime == $view.ctime}
