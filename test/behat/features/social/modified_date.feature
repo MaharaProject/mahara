@@ -34,4 +34,4 @@ Scenario: Adding collection to group (Bug 1448807)
  And I choose "Groups" from main menu
  And I follow "group 01"
  # the formats "strftimedate" and "j F Y" both resolve to dd Month YYYY, which is wanted here.
- And I should see the date "today" in the "#sharedcollectionlist" element with the format "strftimedate"
+ And I should see the date "today" in the "#sharedcollectionlist" element with the format "d F Y"
