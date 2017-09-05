@@ -4557,6 +4557,11 @@ class View {
             ';
                     $orderby .= "COALESCE(sg.name, si.displayname, CASE WHEN su.preferredname IS NOT NULL AND su.preferredname != '' THEN su.preferredname ELSE su.firstname || ' ' || su.lastname END)";
                 }
+                // in case we are grouping by collection and there is no tablealias
+                // we should not force the alias to be 'v'
+                else if (empty($item['tablealias']) && $groupbycollection) {
+                    $orderby .= $item['column'];
+                }
                 else {
                     $orderby .= (!empty($item['tablealias']) ? $item['tablealias'] : 'v') . '.' . $item['column'];
                 }
