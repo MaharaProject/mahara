@@ -1242,7 +1242,7 @@ Shows the secret URL button.
 
 <section data-markdown data-category="icons">
 ### Group
-As used for the "Group pages" block.
+As used for the "Group portfolios" block.
 ```
 <i class="icon icon-users" role="presentation"></i>
 ```

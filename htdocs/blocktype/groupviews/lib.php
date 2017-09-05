@@ -20,11 +20,11 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
     const SORTBY_TIMESUBMITTED = 2;
 
     public static function get_title() {
-        return get_string('title', 'blocktype.groupviews');
+        return get_string('title1', 'blocktype.groupviews');
     }
 
     public static function get_description() {
-        return get_string('description', 'blocktype.groupviews');
+        return get_string('description1', 'blocktype.groupviews');
     }
 
     public static function single_only() {
@@ -197,8 +197,8 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         return array(
             'showgroupviews' => array(
                 'type' => 'select',
-                'description' => get_string('displaygroupviewsdesc', 'blocktype.groupviews'),
-                'title' => get_string('displaygroupviews', 'blocktype.groupviews'),
+                'description' => get_string('displaygroupviewsdesc1', 'blocktype.groupviews'),
+                'title' => get_string('displaygroupviews1', 'blocktype.groupviews'),
                 'options' => array(
                     1 => get_string('yes'),
                     0 => get_string('no'),
@@ -207,7 +207,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
             ),
             'sortgroupviewsby' => array(
                 'type' => 'select',
-                'title' => get_string('sortgroupviewstitle', 'blocktype.groupviews'),
+                'title' => get_string('sortgroupviewstitle1', 'blocktype.groupviews'),
                 'options' => array(
                     PluginBlocktypeGroupViews::SORTBY_TITLE => get_string('sortviewsbyalphabetical', 'blocktype.groupviews'),
                     PluginBlocktypeGroupViews::SORTBY_LASTUPDATE => get_string('sortviewsbylastupdate', 'blocktype.groupviews'),
@@ -455,7 +455,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
     }
 
     public static function get_instance_title() {
-        return get_string('title', 'blocktype.groupviews');
+        return get_string('title1', 'blocktype.groupviews');
     }
 
     /**

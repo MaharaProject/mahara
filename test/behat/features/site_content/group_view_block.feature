@@ -1,8 +1,8 @@
 @javascript @core @core_group
-Feature: Show the block "Group pages" in the group homepage
+Feature: Show the block "Group portfolios" in the group homepage
     In order to see group pages, shared and submitted pages/collections to a group
     As a group member or group admin
-    So I can see these lists on the block "Group pages" in the group homepage
+    So I can see these lists on the block "Group portfolios" in the group homepage
 
 Background:
     Given the following "institutions" exist:
@@ -129,7 +129,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Group Z"
     And I scroll to the base of id "groups"
     And I follow "Group Z" in the "div#groups" "css_element"
-    # Group pages
+    # Group portfolios
     And I should see "Page Group Z_01" in the "ul#groupviewlist" "css_element"
     And I should see "Page Group Z_05" in the "ul#groupviewlist" "css_element"
     And I should not see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
@@ -167,15 +167,18 @@ These list must take into account the sort option chosen in the block config (Bu
     Given I log in as "userB" with password "Kupuhipa1"
     And I should see "Group Z"
     And I choose "My groups" in "Groups" from main menu
+    And I scroll to the base of id "mygroups"
     And I follow "Group Z"
     And I select "Page userB_01" from "group_view_submission_form_2_options"
+    And I scroll to the id "group_view_submission_form_2_submit"
     And I press "Submit"
     And I press "Yes"
     And I select "Page userB_02" from "group_view_submission_form_2_options"
+    And I scroll to the id "group_view_submission_form_2_submit"
     And I press "Submit"
     And I press "Yes"
     And I log out
-    # Change the sort options in the "Group pages" block
+    # Change the sort options in the "Group portfolios" block
     Given I log in as "userA" with password "Kupuhipa1"
     And I should see "Group Z"
     And I follow "Group Z (Administrator)"
@@ -185,9 +188,9 @@ These list must take into account the sort option chosen in the block config (Bu
     And I click on "Edit" in "Group homepage" panel menu
 
     And I scroll to the id "column-container"
-    And I configure the block "Group pages"
+    And I configure the block "Group portfolios"
     And I set the following fields to these values:
-    | Sort group pages by | Most recently updated |
+    | Sort group pages and collections by | Most recently updated |
     | Sort shared pages and collections by | Most recently updated |
     | Sort submitted pages and collections by | Most recently submitted |
     And I press "Save"
@@ -198,10 +201,12 @@ These list must take into account the sort option chosen in the block config (Bu
     And I click on "Edit" in "Page Group Z_06" panel menu
     And I follow "Settings" in the "#toolbar-buttons" "css_element"
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
+    And I scroll to the id "settings_submit"
     And I press "Save"
     And I display the page
     # Check if it is now in the first page of the list of group pages
     And I choose "Groups" from main menu
+    And I scroll to the base of id "mygroups"
     And I follow "Group Z"
     And I should see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
     #And I follow "Next" in the "div#groupviews_pagination" "css_element"
@@ -213,10 +218,12 @@ These list must take into account the sort option chosen in the block config (Bu
     And I click on "Edit" in "Page userA_01" panel menu
     And I follow "Settings" in the "#toolbar-buttons" "css_element"
     And I set the field "Page description" to "<p>This is the page 01 (updated)</p>"
+    And I scroll to the id "settings_submit"
     And I press "Save"
     And I display the page
     # Check if it is now in the first page of the list of shared pages
     And I choose "Groups" from main menu
+    And I scroll to the base of id "mygroups"
     And I follow "Group Z"
     And I should see "Page userA_01" in the "ul#sharedviewlist" "css_element"
     #And I follow "2" in the "div#sharedviews_pagination" "css_element"
@@ -227,9 +234,11 @@ These list must take into account the sort option chosen in the block config (Bu
     And I click on "Collection userA_06" panel menu
     And I click on "Edit" in "Collection userA_06" panel menu
     And I fill in "Collection description" with "This is the collection 06 (updated)"
+    And I scroll to the id "edit_submit"
     And I press "Save"
     # Check if it is now in the first page of the list of shared collections
     And I choose "Groups" from main menu
+    And I scroll to the base of id "mygroups"
     And I follow "Group Z"
     And I should see "Collection userA_06" in the "ul#sharedcollectionlist" "css_element"
     #And I follow "2" in the "div#sharedcollections_pagination" "css_element"
@@ -246,12 +255,15 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Submit"
     And I press "Yes"
     And I select "Collection userA_01" from "group_view_submission_form_2_options"
+    And I scroll to the id "group_view_submission_form_2_submit"
     And I press "Submit"
     And I press "Yes"
     And I select "Collection userA_02" from "group_view_submission_form_2_options"
+    And I scroll to the id "group_view_submission_form_2_submit"
     And I press "Submit"
     And I press "Yes"
     And I select "Collection userA_03" from "group_view_submission_form_2_options"
+    And I scroll to the id "group_view_submission_form_2_submit"
     And I press "Submit"
     And I press "Yes"
     # Check the list of submitted pages/collections
@@ -297,17 +309,21 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Submit"
     And I press "Yes"
     And I select "Collection userC_02" from "group_view_submission_form_3_options"
+    And I scroll to the id "group_view_submission_form_3_submit"
     And I press "Submit"
     And I press "Yes"
     And I select "Collection userC_03" from "group_view_submission_form_3_options"
+    And I scroll to the id "group_view_submission_form_3_submit"
     And I press "Submit"
     And I press "Yes"
     And I choose "Groups" from main menu
+    And I scroll to the base of id "mygroups"
     And I follow "Group Z"
     And I select "Page userC_04" from "group_view_submission_form_2_options"
     And I press "Submit"
     And I press "Yes"
     And I select "Collection userC_04" from "group_view_submission_form_2_options"
+    And I scroll to the id "group_view_submission_form_2_submit"
     And I press "Submit"
     And I press "Yes"
     And I log out
@@ -379,6 +395,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Submit"
     And I press "Yes"
     And I choose "Groups" from main menu
+    And I scroll to the base of id "mygroups"
     And I follow "Group Z"
     And I select "Page userC_12" from "group_view_submission_form_2_options"
     And I press "Submit"

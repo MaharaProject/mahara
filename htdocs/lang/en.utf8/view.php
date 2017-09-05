@@ -65,7 +65,7 @@ $string['templateportfoliodescription'] = 'Set up the default layout for the pag
 
 // my views
 $string['artefacts'] = 'Artefacts';
-$string['groupviews'] = 'Group pages';
+$string['groupviews'] = 'Group pages and collections';
 $string['institutionviews'] = 'Institution pages';
 $string['institutionviewscollections'] = 'Institution pages and collections';
 $string['reallyaddaccesstoemptyview'] = 'Your page contains no blocks. Do you really want to give these users access to the page?';
