@@ -59,7 +59,7 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
 Scenario: Checking menu items are available as site staff (Bug 1467368)
  Given I log in as "UserB" with password "Kupuhipa1"
  Then I should not see "Administration" in the "Main menu" property
-# The one major difference a site staff has is site info link that leads to other links
+ # The one major difference a site staff has is site info link that leads to other links
  And I click on "Show administration menu"
  And I follow "User search"
  And I click on "Show administration menu"
@@ -68,7 +68,7 @@ Scenario: Checking menu items are available as site staff (Bug 1467368)
 
 Scenario: Checking menu items are available as Admin User (Bug 1467368)
  Given I log in as "admin" with password "Kupuhipa1"
-# checking the sub navigation in Administration
+ # Checking the sub navigation in Administration
  And I click on "Show administration menu"
  Then I should see "Admin home" in the "Administration menu" property
  And I should see "Configure site" in the "Administration menu" property
@@ -76,11 +76,12 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "Groups" in the "Administration menu" property
  And I should see "Institutions" in the "Administration menu" property
  And I should see "Extensions" in the "Administration menu" property
-# Checking the sub navigation in Admin home
+ And I should see "Web services" in the "Administration menu" property
+ # Checking the sub navigation in Admin home
  When I press "Show menu for Admin home"
  Then I should see "Overview" in the "Admin home sub-menu" property
  And I should see "Register" in the "Admin home sub-menu" property
-# Checking the sub navigation in Configure site
+ # Checking the sub navigation in Configure site
  When I press "Show menu for Configure site"
  Then I should see "Site options" in the "Configure site sub-menu" property
  And I should see "Static pages" in the "Configure site sub-menu" property
@@ -88,10 +89,11 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "Networking" in the "Configure site sub-menu" property
  And I should see "Licenses" in the "Configure site sub-menu" property
  And I should see "Pages and collections" in the "Configure site sub-menu" property
+ And I should see "Journals" in the "Configure site sub-menu" property
  And I should see "Share" in the "Configure site sub-menu" property
  And I should see "Files" in the "Configure site sub-menu" property
  And I should see "Cookie Consent" in the "Configure site sub-menu" property
-# Checking the sub navigation in Users
+ # Checking the sub navigation in Users
  When I press "Show menu for Users"
  Then I should see "User search" in the "Users sub-menu" property
  And I should see "Suspended and expired users" in the "Users sub-menu" property
@@ -100,14 +102,14 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "Export queue" in the "Users sub-menu" property
  And I should see "Add user" in the "Users sub-menu" property
  And I should see "Add users by CSV" in the "Users sub-menu" property
-# Checking the sub navigation in Groups
+ # Checking the sub navigation in Groups
  When I press "Show menu for Groups" in the "Administration menu" property
  Then I should see "Administer groups" in the "Admin Groups sub-menu" property
  And I should see "Group categories" in the "Admin Groups sub-menu" property
  And I should see "Archived submissions" in the "Admin Groups sub-menu" property
  And I should see "Add groups by CSV" in the "Admin Groups sub-menu" property
  And I should see "Update group members by CSV" in the "Admin Groups sub-menu" property
-# Checking the sub administration in Institutions
+ # Checking the sub administration in Institutions
  When I press "Show menu for Institutions"
  Then I should see "Settings" in the "Institutions sub-menu" property
  And I should see "Static pages" in the "Institutions sub-menu" property
@@ -117,26 +119,35 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "Admin notifications" in the "Institutions sub-menu" property
  And I should see "Profile completion" in the "Institutions sub-menu" property
  And I should see "Pages and collections" in the "Institutions sub-menu" property
+ And I should see "Journals" in the "Institutions sub-menu" property
  And I should see "Share" in the "Institutions sub-menu" property
  And I should see "Files" in the "Institutions sub-menu" property
  And I should see "Pending registrations" in the "Institutions sub-menu" property
-# Checking Reports menu
+ # Checking Reports menu
  And I should see "Reports"
-# Checking the sub navigation in Extensions
+ # Checking the sub navigation in Extensions
  When I press "Show menu for Extensions"
  Then I should see "Plugin administration" in the "Extensions sub-menu" property
  And I should see "HTML filters" in the "Extensions sub-menu" property
  And I should see "Allowed iframe sources" in the "Extensions sub-menu" property
  And I should see "Clean URLs" in the "Extensions sub-menu" property
-
+ And I should see "SmartEvidence" in the "Extensions sub-menu" property
+ # Checking the sub navigation in Web services
+ When I press "Web services"
+ Then I should see "Configuration" in the "Web services sub-menu" property
+ And I should see "Application connections" in the "Web services sub-menu" property
+ And I should see "Connection manager" in the "Web services sub-menu" property
+ And I should see "External apps" in the "Web services sub-menu" property
+ And I should see "Logs" in the "Web services sub-menu" property
+ And I should see "Test client" in the "Web services sub-menu" property
 
 Scenario: Checking menu items are available as Institution Administrator (Bug 1467368)
  Given I log in as "AdminA" with password "Kupuhipa1"
-# checking the sub navigation in Administration
+ # checking the sub navigation in Administration
  And I click on "Show administration menu"
  And I should not see "Configure site" in the "Administration menu" property
  And I should not see "Extensions" in the "Administration menu" property
-# Checking the sub navigation in Users
+ # Checking the sub navigation in Users
  And I press "Show menu for Users"
  Then I should not see "Site staff" in the "Users sub-menu" property
  And I should not see "Site administrators" in the "Users sub-menu" property
@@ -145,14 +156,14 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Export queue" in the "Users sub-menu" property
  And I should see "Add user" in the "Users sub-menu" property
  And I should see "Add users by CSV" in the "Users sub-menu" property
-# Checking the sub navigation in Groups
+ # Checking the sub navigation in Groups
  And I press "Show menu for Groups" in the "Administration menu" property
  Then I should not see "Administer groups" in the "Admin Groups sub-menu" property
  And I should not see "Group categories" in the "Admin Groups sub-menu" property
  And I should see "Archived submissions" in the "Admin Groups sub-menu" property
  And I should see "Add groups by CSV" in the "Admin Groups sub-menu" property
  And I should see "Update group members by CSV" in the "Admin Groups sub-menu" property
-# Checking the sub navigation in Institutions
+ # Checking the sub navigation in Institutions
  And I press "Show menu for Institutions"
  Then I should not see "Profile completion" in the "Institutions sub-menu" property
  And I should see "Settings" in the "Institutions sub-menu" property
@@ -165,5 +176,5 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Share" in the "Institutions sub-menu" property
  And I should see "Files" in the "Institutions sub-menu" property
  And I should see "Pending registrations" in the "Institutions sub-menu" property
-# Checking Reports menu
+ # Checking Reports menu
  And I should see "Reports"
