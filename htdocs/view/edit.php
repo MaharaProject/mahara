@@ -216,7 +216,8 @@ function editview_submit(Pieform $form, $values) {
         // deleting description
         $view->set('description', '');
     }
-    $view->set('tags', $values['tags']);
+    $tags = $values['tags'] ? $values['tags'] : array();
+    $view->set('tags', $tags);
     if (isset($values['locked'])) {
         $view->set('locked', (int)$values['locked']);
     }
