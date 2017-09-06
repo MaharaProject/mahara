@@ -73,7 +73,7 @@ if (!empty($groupid)) {
 else if (!empty($institution)) {
     if ($institution == 'mahara') {
         define('ADMIN', 1);
-        $templateviews = View::get_template_views();
+        $templateviews = View::get_site_template_views();
         list($searchform, $data, $pagination) = View::views_by_owner(null, 'mahara');
         if ($data->data && $offset == '0') {
             $data->data = array_merge($templateviews, $data->data);
