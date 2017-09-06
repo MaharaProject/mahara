@@ -90,3 +90,11 @@ Background:
    And I follow "orange"
    And I should see "Testing page 2"
    And I should not see "Note"
+   #Check tags can be deleted from a page - Bug 1715491
+   Given I follow "Testing page 2"
+   And I follow "Edit this page"
+   And I click on "Settings" in the "div#toolbar-buttons" "css_element"
+   And I clear value "orange (1)" from select2 field "settings_tags"
+   And I press "Save"
+   And I display the page
+   Then I should not see "orange"
