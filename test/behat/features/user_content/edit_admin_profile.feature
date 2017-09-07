@@ -9,6 +9,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     Given I log in as "admin" with password "Kupuhipa1"
     # Updating Profile
     When I choose "Profile" in "Content" from main menu
+    And I follow "About me"
     And I fill in the following:
     | First name | Test     |
     | Last name | Admin     |
