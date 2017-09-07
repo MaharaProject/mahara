@@ -523,7 +523,7 @@ function group_create($data) {
         throw new NotFoundException("group_create: group homepage is not found");
     }
 
-    // If 'Allow submissions' is true we need to update the 'Group pages' block to show
+    // If 'Allow submissions' is true we need to update the 'Group portfolios' block to show
     // the 'Submissions to this group' section by default
     if ($data['submittableto']) {
         $groupview = get_record_sql("SELECT bi.id, bi.configdata
@@ -773,7 +773,7 @@ function group_update($new, $create=false) {
         }
     }
 
-    // If 'Allow submissions' is changed we need to update the 'Group pages' block
+    // If 'Allow submissions' is changed we need to update the 'Group portfolios' block
     // to reflect the change
     $cansubmitto = 0;
     if (isset($new->submittableto) && !empty($new->submittableto)) {
