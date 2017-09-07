@@ -27,6 +27,7 @@ Scenario: Clicking ID's (Bug 1428456)
  Then I should see "Buck Mulligan"
  And I reload the page
  And I wait "1" seconds
+ And I scroll to the top
  And I follow "Text"
  And I press "Add"
  And I set the following fields to these values:

@@ -1048,6 +1048,7 @@ function core_install_firstcoredata_defaults() {
         'check_imap_for_bounces'                    => array('*', '*', '*', '*', '*'),
         'cron_event_log_expire'                     => array('7', '23', '*', '*', '*'),
         'watchlist_process_notifications'           => array('*', '*', '*', '*', '*'),
+        'cron_email_reset_rebounce'                 => array(rand(0, 59), rand(0, 23), '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new stdClass();

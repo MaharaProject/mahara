@@ -243,6 +243,12 @@ $cfg->bounceprefix    = 'AAA-';
 //$cfg->bouncedomain    = '';
 
 /**
+ * @global number $cfg->bounces_resetdays number of days before reseting the
+ * emailsent and emailbounced values for each email
+ */
+ $cfg->bounces_resetdays = 30;
+
+/**
  * @global string $cfg->imapserver The imap server to check for bounced emails
  * @global int $cfg->imapport The port for the imap server
  */
