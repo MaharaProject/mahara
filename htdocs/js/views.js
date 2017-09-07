@@ -134,6 +134,13 @@
                 onModalCancel(e, configbutton);
             });
         }
+        // Restart any TinyMCE fields if needed
+        if (typeof tinyMCE !== 'undefined') {
+            jQuery(form).find('textarea.wysiwyg').each(function() {
+                tinyMCE.execCommand('mceAddEditor', false, $(this).prop('id'));
+            });
+        }
+
     }
 
     //Private Methods

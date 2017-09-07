@@ -53,6 +53,7 @@ $string['makepublicrequestbyownermessage'] = '%s has requested that you make you
 $string['makepublicrequestsent'] = 'A message has been sent to %s to request that the feedback be made public.';
 $string['makepublicrequestbyauthormessage'] = '%s has requested that you make their feedback public.';
 
+$string['annotationempty'] = 'This field is required.';
 $string['annotationfeedbackempty'] = 'Your feedback is empty. Please enter a message.';
 
 $string['newannotationfeedbacknotificationsubject'] = 'New feedback on %s';
