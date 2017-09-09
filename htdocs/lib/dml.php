@@ -556,6 +556,20 @@ function recordset_to_array(ADORecordSet $rs) {
  * @access private
  */
 function recordset_to_assoc(ADORecordSet $rs) {
+
+    if ($rs->NumCols() < 2) {
+        $colname = $rs->FetchField(0)->name;
+        $records = $rs->GetAll();
+        if (empty($records)) {
+            return false;
+        }
+        $objects = [];
+        foreach ($records as $val) {
+            $objects[(string) $val[$colname]] = (object) $val;
+        }
+        return $objects;
+    }
+
     if ($rs && $rs->RecordCount() > 0) {
         // First of all, we are going to get the name of the first column
         // to introduce it back after transforming the recordset to assoc array
