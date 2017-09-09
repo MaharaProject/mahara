@@ -71,5 +71,26 @@ function xmldb_search_elasticsearch_upgrade($oldversion=0) {
             log_warn(get_string('newindextype', 'search.elasticsearch', 'collection'), true, false);
         }
     }
+
+    if ($oldversion < 2017080300) {
+        if ($result = get_record_sql("SELECT si.version, si.release
+                                      FROM {search_installed} si
+                                      JOIN {config} c ON c.value = si.name
+                                      WHERE si.name = 'elasticsearch'
+                                      AND c.field = 'searchplugin'", array())) {
+            log_debug('Updating elasticsearch plugin to be compatible with Elasticsearch version 5');
+            // set the shards / replicas to default elasticsearch values
+            set_config_plugin('search', 'elasticsearch', 'shards', 5);
+            set_config_plugin('search', 'elasticsearch', 'replicashards', 1);
+            list($status, $info) = call_static_method(generate_class_name('search', 'elasticsearch'), 'elasticsearch_server');
+            if (!empty($info->error)) {
+                // warn them if problems with elasticsearch server
+                log_warn($info->error);
+            }
+            // warn them they will need to reindex site
+            log_warn(get_string('newversion', 'search.elasticsearch', PluginSearchElasticsearch::elasticsearchphp_version, PluginSearchElasticsearch::elasticsearch_version), true, false);
+        }
+    }
+
     return true;
 }

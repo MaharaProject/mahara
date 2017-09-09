@@ -7,8 +7,11 @@
     - tagsonly
 *}
 <div id="totalresultsdisplay" class="totalresults view-description lead">
-    {str tag=xsearchresultsfory section=search.elasticsearch arg1=$totalresults arg2='
-    <a href="`$WWWROOT`search/elasticsearch/index.php?query=`$query`">`$query`</a>'}
+    {if $query|strlen > 0}
+        {str tag=xsearchresultsfory section=search.elasticsearch arg1=$totalresults arg2='<a href="`$WWWROOT`search/elasticsearch/index.php?query=`$query`">`$query`</a>'}
+    {else}
+        {str tag=xsearchresults section=search.elasticsearch arg1=$totalresults}
+    {/if}
 </div>
 <div class="elasticsearch-tabswrap">
     <ul class="in-page-tabs searchtab nav nav-tabs">

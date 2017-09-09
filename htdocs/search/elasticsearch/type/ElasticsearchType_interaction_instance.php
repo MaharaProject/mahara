@@ -1,103 +1,121 @@
 <?php
-
-class ElasticsearchType_interaction_instance extends ElasticsearchType
-{
-
-    public static $mappingconf =    array(
-            'mainfacetterm' =>  array(
-                    'type' => 'string',
+class ElasticsearchType_interaction_instance extends ElasticsearchType {
+    public static $mappingconf = array (
+            'mainfacetterm' => array (
+                    'type' => 'keyword',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
-            'secfacetterm' =>  array(  // set to Forum
-                    'type' => 'string',
+            'secfacetterm' => array ( // set to Forum
+                    'type' => 'keyword',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
-            'id'        =>  array(
+            'id' => array (
                     'type' => 'long',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
-            'title'     =>  array(
-                    'type' => 'string',
+            'title' => array (
+                    'type' => 'text',
                     'include_in_all' => TRUE
             ),
-            'description'     =>  array(
-                    'type' => 'string',
+            'description' => array (
+                    'type' => 'text',
                     'include_in_all' => TRUE
             ),
             // access to forum topics is granted to all members of the group
-            'access'        =>  array(
+            'access' => array (
                     'type' => 'object',
-                    'index' => 'not_analyzed',
                     'include_in_all' => FALSE,
-                    'general' =>  array(
-                            'type' => 'string',
-                            'index' => 'not_analyzed',
-                            'include_in_all' => FALSE
-                    ),
-                    'groups' =>  array(
-                            'member' =>  array(
-                                    'type' => 'int',
+                    'properties' => array (
+                            'general' => array (
+                                    'type' => 'keyword',
                                     'index' => 'not_analyzed',
                                     'include_in_all' => FALSE
                             ),
-                    ),
+                            'groups' => array (
+                                    'type' => 'object',
+                                    'include_in_all' => FALSE,
+                                    'properties' => array (
+                                         'all' => array (
+                                             'type' => 'integer',
+                                             'index' => 'not_analyzed',
+                                             'copy_to' => 'group',
+                                             'include_in_all' => false
+                                         ),
+                                         'admin' => array (
+                                             'type' => 'integer',
+                                             'index' => 'not_analyzed',
+                                             'copy_to' => 'group',
+                                             'include_in_all' => false
+                                         ),
+                                         'member' => array (
+                                             'type' => 'integer',
+                                             'index' => 'not_analyzed',
+                                             'copy_to' => 'group',
+                                             'include_in_all' => false
+                                         ),
+                                         'tutor' => array (
+                                             'type' => 'integer',
+                                             'index' => 'not_analyzed',
+                                             'copy_to' => 'group',
+                                             'include_in_all' => false
+                                         )
+                                     )
+                            ),
+                            'group' => array (
+                                    'type' => 'integer'
+                            )
+                    )
             ),
-            'ctime'  =>  array(
+            'ctime' => array (
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
                     'include_in_all' => FALSE
             ),
             // sort is the field that will be used to sort the results alphabetically
-            'sort'     =>  array(
-                    'type' => 'string',
+            'sort' => array (
+                    'type' => 'keyword',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
-            ),
+            )
     );
-
     public static $mainfacetterm = 'Text';
-
-    public function __construct($data){
-
-        $this->conditions =     array(
-                'deleted'  => 0,
+    public function __construct($data) {
+        $this->conditions = array (
+                'deleted' => 0
         );
 
-        $this->mapping = array(
+        $this->mapping = array (
                 'mainfacetterm' => NULL,
-                'secfacetterm'  => NULL,
-                'id'            => NULL,
-                'title'         => NULL,
-                'description'   => NULL,
-                'access'        => NULL,
-                'ctime'         => NULL,
-                'sort'          => NULL,
+                'secfacetterm' => NULL,
+                'id' => NULL,
+                'title' => NULL,
+                'description' => NULL,
+                'access' => NULL,
+                'ctime' => NULL,
+                'sort' => NULL
         );
 
-        parent::__construct($data);
-
+        parent::__construct ( $data );
     }
-
     public static function getRecordById($type, $id, $map = null) {
-        $record = parent::getRecordById($type, $id);
-        if (!$record || $record->deleted) {
+        $record = parent::getRecordById ( $type, $id );
+        if (! $record || $record->deleted) {
             return false;
         }
-        $public = get_field('group', 'public', 'id', $record->group);
-        $record->access['general'] = (!empty($public)) ? 'public' : 'none';
-        $record->access['groups']['member'] = $record->group;
+        $public = get_field ( 'group', 'public', 'id', $record->group );
+        $record->access ['general'] = (! empty ( $public )) ? 'public' : 'none';
+        $record->access ['groups'] ['member'] = $record->group;
         $record->mainfacetterm = self::$mainfacetterm;
         $record->secfacetterm = 'Forum';
-        $record->sort = strtolower(strip_tags($record->title));
+        $record->sort = strtolower ( strip_tags ( $record->title ) );
         return $record;
     }
-
     public static function getRecordDataById($type, $id) {
-        $record = parent::getRecordDataById($type, $id);
-        if (!$record || $record->deleted) {
+        $record = parent::getRecordDataById ( $type, $id );
+        if (! $record || $record->deleted) {
             return false;
         }
 

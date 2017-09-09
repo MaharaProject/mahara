@@ -13,5 +13,5 @@ defined('INTERNAL') || die();
 
 $config = new stdClass();
 $config->name    = 'elasticsearch';
-$config->version = 2015100800;
-$config->release = '1.0.4';
+$config->version = 2017080300;
+$config->release = '2.0.0';

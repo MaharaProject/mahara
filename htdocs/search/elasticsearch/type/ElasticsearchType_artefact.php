@@ -1,232 +1,248 @@
 <?php
-
-class ElasticsearchType_artefact extends ElasticsearchType
-{
-
-    public static $mappingconf =    array(
-            'mainfacetterm' =>  array(  // this is the 2nd level in the hierarchy artefacttype|artefactgroup|mainfacetterm
-                    'type' => 'string',
+class ElasticsearchType_artefact extends ElasticsearchType {
+    public static $mappingconf = array (
+            'mainfacetterm' => array ( // this is the 2nd level in the hierarchy artefacttype|artefactgroup|mainfacetterm
+                    'type' => 'keyword',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
-            'secfacetterm' =>  array(  // this is the 1st level in the hierarchy artefacttype|artefactgroup|mainfacetterm
-                    'type' => 'string',
+            'secfacetterm' => array ( // this is the 1st level in the hierarchy artefacttype|artefactgroup|mainfacetterm
+                    'type' => 'keyword',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
-            'id'        =>  array(
+            'id' => array (
                     'type' => 'long',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
-            'artefacttype' =>  array(
-                    'type' => 'string',
+            'artefacttype' => array (
+                    'type' => 'keyword',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
-            'title'     =>  array(
-                    'type' => 'string',
+            'title' => array (
+                    'type' => 'text',
+                    'index' => TRUE,
                     'include_in_all' => TRUE
             ),
-            'description'     =>  array(
-                    'type' => 'string',
+            'description' => array (
+                    'type' => 'text',
+                    'index' => TRUE,
                     'include_in_all' => TRUE
             ),
-            'tags'     =>  array(
-                    'type' => 'string',
-                    'index_name' => 'tag',
+            'tags' => array (
+                    'type' => 'keyword',
+                    'copy_to' => 'tag',
                     'include_in_all' => TRUE
+            ),
+            'tag' => array (
+                    'type' => 'keyword'
             ),
             // the owner can be owner (user), group, or institution
-            'owner'         =>  array(
+            'owner' => array (
                     'type' => 'long',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
-            'group'         =>  array(
+            'group' => array (
                     'type' => 'long',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
-            'institution'   =>  array(
-                    'type' => 'string',
+            'institution' => array (
+                    'type' => 'keyword',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
-            'access'        =>  array(
+            'access' => array (
                     'type' => 'object',
-                    'index' => 'not_analyzed',
                     'include_in_all' => FALSE,
                     // public - logged - friends: if artefact is visible to public or logged-in users
                     // if public or logged, the other properties are ignored
-                    'general' =>  array(
-                            'type' => 'string',
-                            'index' => 'not_analyzed',
-                            'include_in_all' => FALSE
-                    ),
-                    // array of institutions that have access to the artefact
-                    'institutions' =>  array(
-                            'type' => 'string',
-                            'index' => 'not_analyzed',
-                            'index_name' => 'institution',
-                            'include_in_all' => FALSE
-                    ),
-                    // array of groups that have access to the artefact - empty (all), member, admin
-                    'groups' =>  array(
-                            'type' => 'object',
-                            'index' => 'not_analyzed',
-                            'include_in_all' => FALSE,
-                            // list of groups for which both members and admins have access to the artefact
-                            'all' =>  array(
-                                    'type' => 'int',
+                    'properties' => array (
+                            'general' => array (
+                                    'type' => 'keyword',
                                     'index' => 'not_analyzed',
                                     'include_in_all' => FALSE
                             ),
-                            // list of groups for which only admins have access to the artefact
-                            'admin' =>  array(
-                                    'type' => 'int',
+                            // array of institutions that have access to the artefact
+                            'institutions' => array (
+                                    'type' => 'keyword',
                                     'index' => 'not_analyzed',
+                                    'copy_to' => 'institution',
                                     'include_in_all' => FALSE
                             ),
-                            // list of groups for which only members have access to the artefact
-                            'member' =>  array(
-                                    'type' => 'int',
+                            'institution' => array (
+                                    'type' => 'keyword',
                                     'index' => 'not_analyzed',
+                                    'include_in_all' => false
+                            ),
+                            // array of groups that have access to the artefact - empty (all), member, admin
+                            'groups' => array (
+                                    'type' => 'object',
+                                    'include_in_all' => FALSE,
+                                    'properties' => array (
+                                        'all' => array (
+                                            'type' => 'integer',
+                                            'index' => 'not_analyzed',
+                                            'copy_to' => 'group',
+                                            'include_in_all' => false
+                                        ),
+                                        'admin' => array (
+                                            'type' => 'integer',
+                                            'index' => 'not_analyzed',
+                                            'copy_to' => 'group',
+                                            'include_in_all' => false
+                                        ),
+                                        'member' => array (
+                                            'type' => 'integer',
+                                            'index' => 'not_analyzed',
+                                            'copy_to' => 'group',
+                                            'include_in_all' => false
+                                        ),
+                                        'tutor' => array (
+                                            'type' => 'integer',
+                                            'index' => 'not_analyzed',
+                                            'copy_to' => 'group',
+                                            'include_in_all' => false
+                                        )
+                                    )
+                            ),
+                            'group' => array (
+                                    'type' => 'integer'
+                            ),
+                            // array of user ids that have access to the artefact
+                            'usrs' => array (
+                                    'type' => 'integer',
+                                    'index' => 'not_analyzed',
+                                    'copy_to' => 'usr',
                                     'include_in_all' => FALSE
                             ),
-                            // list of groups for which only tutors have access to the artefact
-                            'tutor' =>  array(
-                                    'type' => 'int',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => FALSE
-                            ),
-                    ),
-                    // array of user ids that have access to the artefact
-                    'usrs'     =>  array(
-                            'type' => 'int',
-                            'index' => 'not_analyzed',
-                            'index_name' => 'usr',
-                            'include_in_all' => FALSE
-                    ),
-            ),
-            'ctime'  =>  array(
+                            'usr' => array (
+                                    'type' => 'integer'
+                            )
+                    )
+            )
+            ,
+            'ctime' => array (
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
                     'include_in_all' => FALSE
             ),
             // sort is the field that will be used to sort the results alphabetically
-            'sort'     =>  array(
-                    'type' => 'string',
+            'sort' => array (
+                    'type' => 'keyword',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
             // artefact_license.name is used to store the license
-            'license'     =>  array(
-                    'type' => 'string',
+            'license' => array (
+                    'type' => 'keyword',
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
-            ),
+            )
     );
-
     public static $mainfacetterm = 'Text'; // can be Text or Media depending on artefacttype
     public static $subfacetterm = 'artefacttype';
+    public function __construct($data) {
+        $this->conditions = array ();
 
-    public function __construct($data){
-
-        $this->conditions =     array();
-
-        $this->mapping =        array(
+        $this->mapping = array (
                 'mainfacetterm' => NULL,
-                'secfacetterm'  => NULL,
-                'id'            => NULL,
-                'artefacttype'  => NULL,
-                'title'         => NULL,
-                'description'   => NULL,
-                'tags'          => NULL,
-                'owner'         => NULL,
-                'group'         => NULL,
-                'institution'   => NULL,
-                'access'        => NULL,
-                'ctime'         => NULL,
-                'sort'          => NULL,
-                'license'       => NULL,
+                'secfacetterm' => NULL,
+                'id' => NULL,
+                'artefacttype' => NULL,
+                'title' => NULL,
+                'description' => NULL,
+                'tags' => NULL,
+                'owner' => NULL,
+                'group' => NULL,
+                'institution' => NULL,
+                'access' => NULL,
+                'ctime' => NULL,
+                'sort' => NULL,
+                'license' => NULL
         );
 
-        parent::__construct($data);
-
+        parent::__construct ( $data );
     }
 
     /**
-     *   set if the record has to be indexed or removed from the index
+     * set if the record has to be indexed or removed from the index
      */
-    public function setisDeleted(){
-
-        parent::setisDeleted();
+    public function setisDeleted() {
+        parent::setisDeleted ();
         // artefacts: if artefacttype is not selected, mark as deleted
-        $artefacttypes = explode(',', get_config_plugin('search', 'elasticsearch', 'artefacttypes'));
-        if (!in_array($this->mapping['artefacttype'], $artefacttypes)) {
+        $artefacttypes = explode ( ',', get_config_plugin ( 'search', 'elasticsearch', 'artefacttypes' ) );
+        if (! in_array ( $this->mapping ['artefacttype'], $artefacttypes )) {
             $this->isDeleted = true;
         }
     }
-
     public static function getRecordById($type, $id, $map = null) {
-        $record = parent::getRecordById($type, $id);
-        if (!$record) {
+        $record = parent::getRecordById ( $type, $id );
+        if (! $record) {
             return false;
         }
 
         // Tags
-        $tags = get_records_array('artefact_tag', 'artefact', $id);
-        if ($tags != false) {
-            foreach ($tags as $tag) {
-                $record->tags[] = $tag->tag;
+        $tags = get_records_array ( 'artefact_tag', 'artefact', $id );
+        if ( $tags != false ) {
+            foreach ( $tags as $tag ) {
+                $record->tags [] = $tag->tag;
             }
         }
         else {
             $record->tags = null;
         }
         // Access: get all the views where the artefact is included
-        $access = self::view_access_records($id);
-        $accessObj = self::access_process($access);
-        if (!$access) {
+        $access = self::view_access_records ( $id );
+        $accessObj = self::access_process ( $access );
+        if (! $access) {
             // File access: get viewable group media not attached to a view
-            $groupaccess = self::group_artefact_access_records($id);
+            $groupaccess = self::group_artefact_access_records ( $id );
             if ($groupaccess) {
-                foreach ($groupaccess as $access) {
-                    $accessObj['groups'][$access->role][] = $access->can_view;
+                foreach ( $groupaccess as $access ) {
+                    $accessObj ['groups'] [$access->role] [] = $access->can_view;
                 }
             }
         }
         $record->access = $accessObj;
 
         // set 'mainfacetterm' & 'artefactgroup'
-        if (!empty($map) && isset($map[$record->artefacttype])) {
-            $terms = explode("|", $map[$record->artefacttype]);
-            $record->mainfacetterm = $terms[2];
-            $record->secfacetterm = $terms[1];
+        if (! empty ( $map ) && isset ( $map [$record->artefacttype] )) {
+            $terms = explode ( "|", $map [$record->artefacttype] );
+            $record->mainfacetterm = $terms [2];
+            $record->secfacetterm = $terms [1];
 
-            require_once(get_config('docroot') . 'artefact/resume/lib.php');
-            if (PluginArtefactResume::is_active()) {
+            require_once( get_config ( 'docroot' ) . 'artefact/resume/lib.php' );
+            if (PluginArtefactResume::is_active ()) {
                 // If the artefacttype is one of the résumé ones we need to get the description
                 // from this artefact's related résumé table. There is a one -> many relationship between
                 // the artefact and the items but seen as all resume items are added
                 // to a page when choosing One résumé field, rather than selecting them individually,
                 // we can just blob together all the info for this résumé artefact into $record->description.
 
-                $resumetypes = ArtefactTypeResumeComposite::get_composite_artefact_types();
-                if (in_array($terms[0], $resumetypes)) {
+                $resumetypes = ArtefactTypeResumeComposite::get_composite_artefact_types ();
+                if (in_array ( $terms [0], $resumetypes )) {
                     try {
-                        $query = "SELECT * FROM {artefact_resume_" . $terms[0] . "} WHERE artefact = ?";
-                        $results = get_records_sql_assoc($query, array($record->id));
+                        $query = "SELECT * FROM {artefact_resume_" . $terms [0] . "} WHERE artefact = ?";
+                        $results = get_records_sql_assoc ( $query, array (
+                                $record->id
+                        ) );
                     }
-                    catch (SQLException $e) {
+                    catch ( SQLException $e ) {
                         // Table doesn't exist
-                        $results = array();
+                        $results = array ();
                     }
-                    foreach ($results as $result) {
-                        $items = get_object_vars($result);
-                        foreach ($items as $key => $item) {
-                            if (!in_array($key, array('id', 'artefact','displayorder'))) {
+                    foreach ( $results as $result ) {
+                        $items = get_object_vars ( $result );
+                        foreach ( $items as $key => $item ) {
+                            if (! in_array ( $key, array (
+                                    'id',
+                                    'artefact',
+                                    'displayorder'
+                            ) )) {
                                 $record->description .= $item . ' ';
                             }
                         }
@@ -235,13 +251,11 @@ class ElasticsearchType_artefact extends ElasticsearchType
             }
         }
         // AS the field "sort" is not analyzed, we need to clean it (remove html tags & lowercase)
-        $record->sort = strtolower(strip_tags($record->title));
+        $record->sort = strtolower ( strip_tags ( $record->title ) );
 
         return $record;
     }
-
-    public static function getRecordDataById($type, $id){
-
+    public static function getRecordDataById($type, $id) {
         global $USER;
 
         $sql = 'SELECT  a.id, a.artefacttype, a.parent, a.owner, a.title, a.description, a.institution, a.group, a.author,
@@ -252,94 +266,112 @@ class ElasticsearchType_artefact extends ElasticsearchType
         LEFT OUTER JOIN {artefact_file_image} afi ON afi.artefact = a.id
         WHERE a.id = ?';
 
-        $record = get_record_sql($sql, array($id));
-        if (!$record) {
+        $record = get_record_sql ( $sql, array (
+                $id
+        ) );
+        if (! $record) {
             return false;
         }
 
-        $record->title = str_replace(array("\r\n", "\n", "\r"), ' ', strip_tags($record->title));
-        $record->description = str_replace(array("\r\n", "\n", "\r"), ' ', strip_tags($record->description));
+        $record->title = str_replace ( array (
+                "\r\n",
+                "\n",
+                "\r"
+        ), ' ', strip_tags ( $record->title ) );
+        $record->description = str_replace ( array (
+                "\r\n",
+                "\n",
+                "\r"
+        ), ' ', strip_tags ( $record->description ) );
         // If user is owner
-        if ($USER->get('id') == $record->owner) {
+        if ($USER->get ( 'id' ) == $record->owner) {
             switch ($record->artefacttype) {
-                case 'image':
-                case 'video':
-                case 'audio':
-                case 'file':
+                case 'image' :
+                case 'video' :
+                case 'audio' :
+                case 'file' :
                     $record->link = 'artefact/file';
-                    if (isset($record->parent) && intval($record->parent) > 0) {
+                    if (isset ( $record->parent ) && intval ( $record->parent ) > 0) {
                         $record->link .= '/index.php?folder=' . $record->parent;
                     }
                     break;
-                case 'blogpost':
-                    if (isset($record->parent) && intval($record->parent) > 0) {
+                case 'blogpost' :
+                    if (isset ( $record->parent ) && intval ( $record->parent ) > 0) {
                         $record->link = 'artefact/blog/view/index.php?id=' . $record->parent;
                     }
                     break;
-                case 'blog':
+                case 'blog' :
                     $record->link = 'artefact/blog/view/index.php';
-                    if ($USER->get_account_preference('multipleblogs')) {
+                    if ($USER->get_account_preference ( 'multipleblogs' )) {
                         $record->link .= '?id=' . $record->id;
                     }
                     break;
-                case 'coverletter':
-                case 'personalinformation':
+                case 'coverletter' :
+                case 'personalinformation' :
                     $record->link = 'artefact/resume/index.php';
                     break;
-                case 'educationhistory':
-                case 'employmenthistory':
+                case 'educationhistory' :
+                case 'employmenthistory' :
                     $record->link = 'artefact/resume/employment.php';
                     break;
-                case 'book':
-                case 'certification':
-                case 'membership':
+                case 'book' :
+                case 'certification' :
+                case 'membership' :
                     $record->link = 'artefact/resume/achievements.php';
                     break;
-                case 'academicgoal':
-                case 'careergoal':
-                case 'personalgoal':
-                case 'personalinformation':
-                case 'academicskill':
-                case 'personalskill':
-                case 'workskill':
+                case 'academicgoal' :
+                case 'careergoal' :
+                case 'personalgoal' :
+                case 'personalinformation' :
+                case 'academicskill' :
+                case 'personalskill' :
+                case 'workskill' :
                     $record->link = 'artefact/resume/goalsandskills.php';
                     break;
-                case 'interest':
+                case 'interest' :
                     $record->link = 'artefact/resume/interests.php';
                     break;
-                case 'plan':
+                case 'plan' :
                     $record->link = 'artefact/plans/plan.php?id=' . $record->id;
                     break;
-                case 'task':
-                    if (isset($record->parent) && intval($record->parent) > 0) {
+                case 'task' :
+                    if (isset ( $record->parent ) && intval ( $record->parent ) > 0) {
                         $record->link = 'artefact/plans/plan.php?id=' . $record->parent;
                     }
                     break;
-                case 'socialprofile':
-                    safe_require('artefact', 'internal');
-                    $record->note = str_replace(array("\r\n", "\n", "\r"), ' ', strip_tags($record->note));
-                    $socialprofile = new ArtefactTypeSocialprofile($record->id);
-                    $icons = $socialprofile->get_profile_icons(array($record));
-                    if (!empty($icons)) {
-                        $record->link = $icons[0]->link;
-                        $record->icon = $icons[0]->icon;
+                case 'socialprofile' :
+                    safe_require ( 'artefact', 'internal' );
+                    $record->note = str_replace ( array (
+                            "\r\n",
+                            "\n",
+                            "\r"
+                    ), ' ', strip_tags ( $record->note ) );
+                    $socialprofile = new ArtefactTypeSocialprofile ( $record->id );
+                    $icons = $socialprofile->get_profile_icons ( array (
+                            $record
+                    ) );
+                    if (! empty ( $icons )) {
+                        $record->link = $icons [0]->link;
+                        $record->icon = $icons [0]->icon;
                     }
                     break;
             }
         }
 
-        require_once(get_config('docroot') . 'artefact/resume/lib.php');
-        if (PluginArtefactResume::is_active()) {
+        require_once( get_config ( 'docroot' ) . 'artefact/resume/lib.php' );
+        if (PluginArtefactResume::is_active ()) {
             // If the artefacttype is one of the résumé ones we need to fetch the related item info
-            $resumetypes = PluginArtefactResume::composite_tabs();
-            if (array_key_exists($record->artefacttype, $resumetypes)) {
+            $resumetypes = PluginArtefactResume::composite_tabs ();
+            if (array_key_exists ( $record->artefacttype, $resumetypes )) {
                 try {
                     $query = "SELECT * FROM {artefact_resume_" . $record->artefacttype . "} WHERE artefact = ?";
-                    $results = get_records_sql_assoc($query, array($record->id));
+                    $results = get_records_sql_assoc ( $query, array (
+                            $record->id
+                    ) );
                 }
-                catch (SQLException $e) {
+                catch ( SQLException $e ) {
                     // Table doesn't exist
-                    $results = array();
+                    $results = array ();
                 }
                 $record->resumeitems = $results;
             }
@@ -356,59 +388,65 @@ class ElasticsearchType_artefact extends ElasticsearchType
         LEFT OUTER JOIN {view} vp ON vp.id = vap.view
         WHERE a.id = ?';
 
-        $views = get_records_sql_array($sql, array($id));
+        $views = get_records_sql_array ( $sql, array (
+                $id
+        ) );
         if ($views) {
-            $record_views = array();
-            foreach($views AS $view){
-                if (isset($view->id)) {
+            $record_views = array ();
+            foreach ( $views as $view ) {
+                if (isset ( $view->id )) {
                     $record_views[$view->id] = $view->title;
                 }
             }
-
             $record_views = self::views_by_artefact_acl_filter($record_views);
             $record->views = $record_views;
         }
 
-        //  Tags
-        $tags = get_records_array('artefact_tag', 'artefact', $id);
+        // Tags
+        $tags = get_records_array ( 'artefact_tag', 'artefact', $id );
         if ($tags != false) {
-            foreach ($tags as $tag) {
-                $record->tags[] = $tag->tag;
+            foreach ( $tags as $tag ) {
+                $record->tags [] = $tag->tag;
             }
         }
         else {
             $record->tags = null;
         }
 
-        //  Created by
-        if (intval($record->author) > 0) {
-            $record->createdby = get_record('usr', 'id', $record->author);
-            $record->createdbyname = display_name($record->createdby);
+        // Created by
+        if (intval ( $record->author ) > 0) {
+            $record->createdby = get_record ( 'usr', 'id', $record->author );
+            $record->createdbyname = display_name ( $record->createdby );
         }
 
-        //  Thumb
+        // Thumb
         if ($record->artefacttype == 'image' || $record->artefacttype == 'profileicon') {
-            if (isset($record->width) && isset($record->height) && intval($record->width) > 0 && intval($record->height) > 0) {
+            if (isset ( $record->width ) && isset ( $record->height ) && intval ( $record->width ) > 0 && intval ( $record->height ) > 0) {
                 if ($record->width > $record->height) {
-                    $size = '80x' . intval($record->height * 80 / $record->width);
+                    $size = '80x' . intval ( $record->height * 80 / $record->width );
                 }
                 else {
-                    $size = intval($record->width * 80 / $record->height) . 'x80';
+                    $size = intval ( $record->width * 80 / $record->height ) . 'x80';
                 }
             }
-            $record->thumb = ArtefactTypeImage::get_icon(array('id' => $id, 'size' => $size));
+            $vars = array (
+                'id' => $id,
+                'size' => $size
+            );
+            if (!empty($record->views)) {
+                $vars['viewid'] = key($record->views); // use first view we are can see
+            }
+            $record->thumb = ArtefactTypeImage::get_icon ($vars);
         }
 
         return $record;
-
     }
 
     /**
      * Get all access records of the views in which the artefact is included (UNION with parent artefact -> files and blog posts)
      */
     public static function view_access_records($artefactid) {
-
-        $records = get_records_sql_array('
+        $records = get_records_sql_array ( '
                 SELECT vac.view AS view_id, vac.accesstype, vac.group, vac.role, vac.usr, vac.institution
                 FROM {view_access} vac
                 INNER JOIN {view_artefact} vart ON vac.view = vart.view
@@ -423,9 +461,10 @@ class ElasticsearchType_artefact extends ElasticsearchType
                 WHERE   art.id = ?
                 AND (vac.startdate IS NULL OR vac.startdate < current_timestamp)
                 AND (vac.stopdate IS NULL OR vac.stopdate > current_timestamp)
-                ',
-                array($artefactid, $artefactid)
-        );
+                ', array (
+                $artefactid,
+                $artefactid
+        ) );
 
         return $records;
     }
@@ -434,11 +473,11 @@ class ElasticsearchType_artefact extends ElasticsearchType
      * Get all access records of the group artefacts (called if not attached to view)
      */
     public static function group_artefact_access_records($artefactid) {
-        $records = get_records_sql_array('
+        $records = get_records_sql_array ( '
                 SELECT role, can_view FROM {artefact_access_role} WHERE artefact = ?
-               ',
-               array($artefactid)
-        );
+               ', array (
+                $artefactid
+        ) );
         return $records;
     }
 
@@ -448,38 +487,51 @@ class ElasticsearchType_artefact extends ElasticsearchType
      * from Elastic search that running the SQL query.
      */
     public static function views_by_artefact_acl_filter($views = array()) {
-
         global $USER;
-        $ret = array();
 
-        $elasticaClient = PluginSearchElasticsearch::make_client();
-        $elasticaIndex = $elasticaClient->getIndex(get_config_plugin('search', 'elasticsearch', 'indexname'));
+        $acl = new ElasticsearchFilterAcl ( $USER );
 
-        $elasticaQuery = new \Elastica\Query();
-        // check user access to the views
-        $elasticaFilterAnd  = new \Elastica\Filter\BoolAnd();
+        $filter = [
+                "bool" => [
+                        "must" => [
+                                array (
+                                        array (
+                                                'term' => [
+                                                        '_type' => 'view'
+                                                ]
+                                        ),
+                                        array (
+                                                'terms' => [
+                                                        'id' => array_keys ( $views )
+                                                ]
+                                        )
+                                )
+                        ],
+                        "should" => $acl->get_params () ['should']
+                ]
+        ]
+        ;
 
-        $elasticaFilterType = new \Elastica\Filter\Term(array('_type' => 'view'));
-        $elasticaFilterAnd->addFilter($elasticaFilterType);
-        $elasticaFilterIds = new \Elastica\Filter\Terms('id', array_keys($views));
-        $elasticaFilterAnd->addFilter($elasticaFilterIds);
+        $client = PluginSearchElasticsearch::make_client ();
+        $params = array (
+                'index' => PluginSearchElasticsearch::get_write_indexname (),
+                'body' => array (
+                        'size' => 10, //
+                        'query' => array (
+                                'bool' => array (
+                                        'filter' => $filter
+                                )
+                        )
+                )
+        );
 
-        // Apply ACL filters
-        $elasticaFilterACL   = new ElasticsearchFilterAcl($USER);
-        $elasticaFilterAnd->addFilter($elasticaFilterACL);
-
-        $elasticaFilteredQuery = new \Elastica\Query\Filtered(null, $elasticaFilterAnd);
-        $elasticaQuery->setQuery($elasticaFilteredQuery);
-
-        $elasticaResultSet  = $elasticaIndex->search($elasticaQuery);
-        $elasticaResults    = $elasticaResultSet->getResults();
-
-        foreach ($elasticaResults as $elasticaResult) {
-            $data = $elasticaResult->getData();
-            $ret[$data['id']] = $views[$data['id']];
+        $results = $client->search ( $params );
+        $valid = array();
+        if (!empty($results['hits'])) {
+            foreach($results['hits']['hits'] as $item) {
+                $valid[$item['_source']['id']] = $views[$item['_source']['id']];
+            }
         }
-
-        return $ret;
+        return $valid;
     }
-
 }
