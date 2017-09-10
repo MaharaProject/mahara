@@ -1,3 +1,16 @@
+16.04.8 (2017-09-11)
+- Bug 1697308: Potential attack vector via registration form
+- Bug 1701978: Old cookies lingering allowing one to login without giving login details
+- Bug 1701141: Shared collection doesn't show up when 1st page is deleted
+- Bug 1702434: Error in site statistics
+- Bug 1703680: "Join this group" points to wrong group
+- Bug 1703787: Site pages admin pagination ajax [Error]: Call to undefined method View::get_template_views()
+- Bug 1707076: Skin title not escaped in page settings form
+- Bug 1715491: page tags can't be removed
+- Bug 1595408: Export a page with comments raises an error
+- Bug 1710727: Elasticsearch not indexing collection tags
+- Bug 1706536: Skin title shows escaped characters for single and double quotes
+
 16.04.7 (2017-05-25)
 - Bug 1686860: Account settings sub menus not shown in mobile in 16.10
 - Bug 1688126: MathJax not working
