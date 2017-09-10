@@ -1,3 +1,43 @@
+17.04.3 (2017-09-11)
+- Bug 1697308: Potential attack vector via registration form
+- Bug 1687499: Missing simplasamlphp memcached files to all working with memcached
+- Bug 1691329: Fetching folder size value not working for Mysql
+- Bug 1694158: Incorrect logo is displayed when selecting subtheme
+- Bug 1694201: Can't select collections to export
+- Bug 1694875: Annotation field can be left empty when adding annotation
+- Bug 1694908: Archived submissions page doesn't return proper URL for results
+- Bug 1696587: Problem with Leap2A import and creating custom layout option for user
+- Bug 1696696: Group pages not shown to non-group members even when shared
+- Bug 1697909: LTI (Canvas) gives exception: WebserviceInvalidParameterException
+- Bug 1700689: "New entry" button doesn't work in "Tagged journal entries" block
+- Bug 1703676: Spelling mistake in xmlrpc config form
+- Bug 1703680: "Join this group" points to wrong group
+- Bug 1705547: Error with auth_ldap_sync_cron
+- Bug 1707076: Skin title not escaped in page settings form
+- Bug 1708567: string_exists() fuunction causes errors if string expects extra arguments
+- Bug 1710735: broken list sorting in user search screen
+- Bug 1710988: broken js when using pagination in a list of radio buttons
+- Bug 1711443: "Show more" button on "Pages and collections" doesn't work in a group
+- Bug 1712681: New topic in forum: createtopicusers error
+- Bug 1712951: password missing from user creation confirmation email
+- Bug 1715260: When adding blank annotation via page editor it removes tinymce from field
+- Bug 1715491: page tags can't be removed
+- Bug 1644386: Submitted portfolios don't appear in group pages block automatically after editing group config
+- Bug 1683582: Don't show journal entry author when viewing page anonymously
+- Bug 1686539: The pages/collections list access dropdown on last panel goes too far to the right
+- Bug 1693426: Destroy mahara session when Single Logout is initiated by IdP
+- Bug 1693652: behat test page_number_interval_sharedwithme.feature is flaky
+- Bug 1694342: Eventlog update in upgrade taking hours to process
+- Bug 1696698: Fix README for Postgres
+- Bug 1700690: Tagged journal entries block combines tags
+- Bug 1705980: Split of tagged block tags when creating new entry doesn't trim spaces
+- Bug 1708545: Webservices logs page broken due to missing institution value
+- Bug 1710727: Elasticsearch not indexing collection tags
+- Bug 1714830: Display group portfolios instead of group pages in group homepage
+- Bug 1681569: Error from rmdirr() function - PHP dir() failed to open dir
+- Bug 1700184: Stop deleting the matrices dir on plugin install
+- Bug 1706536: Skin title shows escaped characters for single and double quotesBug 
+
 17.04.2 (2017-05-25)
 - Bug 1690232: Can't click the "Comments" link in a retractable block
 - Bug 1692749: User passwords being saved in database event_log as plain text
