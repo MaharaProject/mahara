@@ -1,3 +1,21 @@
+16.10.5 (2017-09-11)
+- Bug 1697308: Potential attack vector via registration form
+- Bug 1687499: Missing simplasamlphp memcached files to all working with memcached
+- Bug 1694875: Annotation field can be left empty when adding annotation
+- Bug 1699074: Image can't be linked in TinyMCE via GUI
+- Bug 1701141: Shared collection doesn't show up when 1st page is deleted
+- Bug 1702434: Error in site statistics
+- Bug 1703680: "Join this group" points to wrong group
+- Bug 1703787: Site pages admin pagination ajax [Error]: Call to undefined method View::get_template_views()
+- Bug 1707076: Skin title not escaped in page settings form
+- Bug 1708567: string_exists() fuunction causes errors if string expects extra arguments
+- Bug 1715260: When adding blank annotation via page editor it removes tinymce from field
+- Bug 1715491: page tags can't be removed
+- Bug 1694342: Eventlog update in upgrade taking hours to process
+- Bug 1708545: Webservices logs page broken due to missing institution value
+- Bug 1710727: Elasticsearch not indexing collection tags
+- Bug 1706536: Skin title shows escaped characters for single and double quotes
+
 16.10.4 (2017-05-25)
 - Bug 1692749: User passwords being saved in database event_log as plain text
 - Bug 1677038: cant delete a user when smartevidence is not installed
