@@ -1,3 +1,6 @@
+15.04.14 (2017-09-11)
+- Bug 1697308: Potential attack vector via registration form
+
 15.04.13 (2017-05-25)
 - Bug 1686860: Account settings sub menus not shown in mobile in 16.10
 - Bug 1692749: User passwords being saved in database event_log as plain text
