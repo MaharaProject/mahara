@@ -44,11 +44,6 @@ if (!extension_loaded('mcrypt')) {
     throw new AuthInstanceException(get_string_php_version('errornomcrypt', 'auth.saml'));
 }
 
-if (!file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php')) {
-    throw new AuthInstanceException(get_string('errorbadlib', 'auth.saml', get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php'));
-}
-require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
-require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
-SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
+PluginAuthSaml::init_simplesamlphp();
 
 require('../extlib/simplesamlphp/modules/saml/www/sp/saml2-acs.php');

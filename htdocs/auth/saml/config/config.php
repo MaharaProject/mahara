@@ -31,28 +31,17 @@ foreach ($metadata_files as $file) {
 
 // Fix up session handling config - to match Mahara
 $memcache_config = array();
-if (get_config('memcacheservers') || extension_loaded('memcache')) {
-    if (empty(get_config('ssphpsessionhandler'))) {
+if (empty(get_config('ssphpsessionhandler'))) {
+    if (PluginAuthSaml::is_memcache_configured()) {
         $sessionhandler = 'memcache';
+        $memcache_config = PluginAuthSaml::get_memcache_servers();
     }
     else {
-        $sessionhandler = get_config('ssphpsessionhandler');
-    }
-    $servers = get_config('memcacheservers');
-    if (empty($servers)) {
-        $servers = 'localhost';
-    }
-    $servers = explode(',', $servers);
-
-    foreach ($servers as $server) {
-        $url = parse_url($server);
-        $host = !empty($url['host']) ? $url['host'] : $url['path'];
-        $port = !empty($url['port']) ? $url['port'] : 11211;
-        $memcache_config[] = array('hostname' => $host, 'port'=> $port);
+        throw new AuthInstanceException(get_string('errornomemcache', 'auth.saml'));
     }
 }
 else {
-    $sessionhandler = 'phpsession';
+    $sessionhandler = get_config('ssphpsessionhandler');
 }
 
 /*
@@ -222,7 +211,6 @@ $config = array (
      */
     //'session.phpsession.cookiename'  => null,
     'session.phpsession.cookiename'  => 'SSPHP_SESSION',
-    'session.phpsession.limitedpath' => false,
     'session.phpsession.savepath'    => null,
     'session.datastore.timeout' => (4*60*60), // 4 hours
     // 'session.datastore.timeout' => 60,

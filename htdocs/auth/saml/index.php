@@ -46,13 +46,7 @@ if (!extension_loaded('mcrypt')) {
 
 $sp = 'default-sp';
 
-if (!file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php')) {
-    throw new AuthInstanceException(get_string('errorbadlib', 'auth.saml', get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php'));
-}
-require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
-require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
-
-SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
+PluginAuthSaml::init_simplesamlphp();
 
 // Check the SimpleSAMLphp config is compatible
 $saml_config = SimpleSAML_Configuration::getInstance();

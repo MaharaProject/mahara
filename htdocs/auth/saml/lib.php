@@ -563,12 +563,11 @@ class PluginAuthSaml extends PluginAuth {
             $libchecks .= '<li>' . get_string_php_version('errornomcrypt', 'auth.saml') . '</li>';
         }
         // Make sure the simplesamlphp files have been installed via 'make ssphp'
-        if (!file_exists(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php')) {
+        if (!self::is_simplesamlphp_installed()) {
             $libchecks .= '<li>' . get_string('errorbadlib', 'auth.saml', get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php') . '</li>';
         }
         // Make sure we can use 'memcache' with simplesamlphp as 'phpsession' doesn't work correctly in many situations
-        $memcacheservers_config = get_config('memcacheservers');
-        if (empty($memcacheservers_config) && !extension_loaded('memcache')) {
+        if (!self::is_memcache_configured()) {
             $libchecks .= '<li>' . get_string_php_version('errornomemcache', 'auth.saml') . '</li>';
         }
         if (!empty($libchecks)) {
@@ -608,8 +607,71 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function is_usable() {
-        // would be good to be able to detect SimpleSAMLPHP libraries
+        if (!self::is_simplesamlphp_installed()) {
+            return false;
+        }
+
+        if (empty(get_config('ssphpsessionhandler'))) {
+            return self::is_memcache_configured();
+        }
+
         return true;
+    }
+
+    public static function is_simplesamlphp_installed() {
+        return file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
+    }
+
+    public static function init_simplesamlphp() {
+        if (!self::is_simplesamlphp_installed()) {
+            throw new AuthInstanceException(get_string('errorbadlib', 'auth.saml', get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php'));
+        }
+
+        require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
+        require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
+
+        SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
+    }
+
+    public static function is_memcache_configured() {
+        $is_configured = false;
+
+        if (extension_loaded('memcache')) {
+            foreach (self::get_memcache_servers() as $server) {
+                $memcache = new Memcache;
+
+                if (!empty($server['hostname']) && !empty($server['port'])) {
+                    if ($memcache->connect($server['hostname'], $server['port'])) {
+                        $is_configured = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $is_configured;
+    }
+
+    public static function get_memcache_servers() {
+        $memcache_servers = array();
+
+        $servers = get_config('memcacheservers');
+
+        if (empty($servers)) {
+            $servers = 'localhost';
+        }
+
+        $servers = explode(',', $servers);
+
+        foreach ($servers as $server) {
+            $url = parse_url($server);
+            $host = !empty($url['host']) ? $url['host'] : $url['path'];
+            $port = !empty($url['port']) ? $url['port'] : 11211;
+
+            $memcache_servers[] = array('hostname' => $host, 'port' => $port);
+        }
+
+        return $memcache_servers;
     }
 
     public static function get_idps($xml) {
@@ -629,9 +691,7 @@ class PluginAuthSaml extends PluginAuth {
         if (empty($lang)) {
             $lang = current_language();
         }
-        require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
-        require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
-        SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
+        PluginAuthSaml::init_simplesamlphp();
         $discoHandler = new PluginAuthSaml_IdPDisco(array('saml20-idp-remote', 'shib13-idp-remote'), 'saml');
         $disco = $discoHandler->getTheIdPs();
         if (count($disco['list']) > 0) {
@@ -931,6 +991,17 @@ EOF;
         if ((!$values['remoteuser']) && ($values['weautocreateusers']) && ($institutions = get_column('institution', 'name', 'registerallowed', '1'))) {
             $form->set_error('weautocreateusers', get_string('errorregistrationenabledwithautocreate1', 'auth.saml'));
         }
+
+        // If enabled "We auto-create users" check that all required fields for that are set.
+        if ($values['weautocreateusers']) {
+            $required= array('firstnamefield', 'surnamefield', 'emailfield');
+            foreach ($required as $required_field) {
+                if (empty($values[$required_field])) {
+                    $form->set_error($required_field, get_string('errorextrarequiredfield', 'auth.saml'));
+                }
+            }
+        }
+
         $dup = get_records_sql_array('SELECT COUNT(instance) AS instance FROM {auth_instance_config}
                                           WHERE ((field = \'institutionattribute\' AND value = ?) OR
                                                  (field = \'institutionvalue\' AND value = ?)) AND
@@ -1118,7 +1189,6 @@ if (file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/Simp
             // initialize standard classes
             $this->config = SimpleSAML_Configuration::getInstance();
             $this->metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
-            $this->session = SimpleSAML_Session::getSessionFromRequest();
             $this->instance = $instance;
             $this->metadataSets = $metadataSets;
             $this->isPassive = false;
