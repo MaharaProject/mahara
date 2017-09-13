@@ -5281,5 +5281,45 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records('config', 'field', 'defaultnotificationmethod');
     }
 
+    if ($oldversion < 2017092200) {
+        // This code taken directly from browserid plugin, which we've just deleted so we need
+        // to run the move users to 'internal' auth here
+        if ($instances = get_records_array('auth_instance', 'authname', 'browserid', 'id')) {
+            log_debug('Re-assigning users from "Persona" to "Internal" authentication');
+            foreach ($instances as $authinst) {
+                // Are there any users with this auth instance?
+                if (record_exists('usr', 'authinstance', $authinst->id)) {
+                    // Find the internal auth instance for this institution
+                    $internal = get_field('auth_instance', 'id', 'authname', 'internal', 'institution', $authinst->institution);
+                    if (!$internal) {
+                        // Institution has no internal auth instance. Create one.
+                        $todb = new stdClass();
+                        $todb->instancename = 'internal';
+                        $todb->authname = 'internal';
+                        $todb->active = 1;
+                        $todb->institution = $authinst->institution;
+                        $todb->priority = $authinst->priority;
+                        $internal = insert_record('auth_instance', $todb, 'id', true);
+                    }
+                    // Set the password & salt for Persona users to "*", which means "no password set"
+                    update_record('usr', (object)array('password' => '*', 'salt' => '*'), array('authinstance' => $authinst->id));
+                    set_field('usr', 'authinstance', $internal, 'authinstance', $authinst->id);
+                    set_field('usr_registration', 'authtype', 'internal', 'authtype', 'browserid');
+                }
+                // Delete the Persona auth instance
+                delete_records('auth_remote_user', 'authinstance', $authinst->id);
+                delete_records('auth_instance_config', 'instance', $authinst->id);
+                delete_records('auth_instance', 'id', $authinst->id);
+                // Make it no longer be the parent authority to any auth instances
+                delete_records('auth_instance_config', 'field', 'parent', 'value', $authinst->id);
+            }
+        }
+        log_debug('Removing "Persona" authentication plugin');
+        delete_records('auth_config', 'plugin', 'browserid');
+        delete_records('auth_cron', 'plugin', 'browserid');
+        delete_records('auth_event_subscription', 'plugin', 'browserid');
+        delete_records('auth_installed', 'name', 'browserid');
+    }
+
     return $status;
 }
