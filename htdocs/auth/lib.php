@@ -2161,7 +2161,7 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
     $registerconfirm = array();
     $reason = false;
 
-    if (count($institutions) > 0) {
+    if ($institutions && count($institutions) > 0) {
         $options = array();
         foreach ($institutions as $institution) {
             $options[$institution->name] = $institution->displayname;
