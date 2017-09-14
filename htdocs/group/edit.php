@@ -426,8 +426,8 @@ function editgroup_validate(Pieform $form, $values) {
     }
 
     if (isset($values['shortname']) && $group_data->id) {
-        if (!preg_match('/^[a-zA-Z0-9_.-]{2,255}$/', $values['shortname'])) {
-            $form->set_error('shortname', get_string('shortnameformat', 'group'));
+        if (!preg_match('/^[a-z0-9_.-]{2,255}$/', $values['shortname'])) {
+            $form->set_error('shortname', get_string('shortnameformat1', 'group'));
         }
 
         if ($group_data->shortname != $values['shortname']) {

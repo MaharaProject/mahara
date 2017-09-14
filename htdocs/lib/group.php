@@ -365,8 +365,14 @@ function group_create($data) {
         // If we want to retain the supplied shortname we need to make sure it can be done
         if (!empty($data['retainshortname'])) {
             if ($shortname != $data['shortname']) {
-                throw new UserException('group_create: The supplied shortname \'' . $data['shortname'] .
+                if ($shortname == strtolower($data['shortname'])) {
+                    throw new UserException('group_create: The supplied short name \'' . $data['shortname'] .
+                        '\' needs to be lowercase, eg \'' . $shortname . '\'.');
+                }
+                else {
+                    throw new UserException('group_create: The supplied short name \'' . $data['shortname'] .
                         '\' is already taken. This shortname \'' . $shortname . '\' is available.');
+                }
             }
         }
         $data['shortname'] = $shortname;
@@ -2749,9 +2755,8 @@ function group_get_shortname_element($group_data) {
             'maxlength' => 255
         ),
         'disabled' => $disabled,
-        'description' => get_string('shortnameformat', 'group'),
+        'description' => get_string('shortnameformat1', 'group'),
     );
-
     if (isset($group_data->id)) {
         $element['type'] = 'text';
         $element['defaultvalue'] = isset($group_data->shortname) ? $group_data->shortname : null;
