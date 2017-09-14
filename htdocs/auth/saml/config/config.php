@@ -83,24 +83,14 @@ $config = array (
      * browser, and require the user to click the submit button. If debug is set to false,
      * Browser/POST SAML messages will be automaticly submitted.
      */
-    'debug'                 => TRUE,
-    'showerrors'            => TRUE,
-    // 'errors.show_function'  => array('sspmod_avs_Error_Show', 'show'),
+    'debug'                 => !get_config('productionmode'), // TODO: should go to Mahara UI.
+    'showerrors'            => !get_config('productionmode'), // TODO: should go to Mahara UI.
 
     /**
      * This option allows you to enable validation of XML data against its
      * schemas. A warning will be written to the log if validation fails.
      */
-    'debug.validatexml' => FALSE,
-
-    /**
-     * This password must be kept secret, and modified from the default value 123.
-     * This password will give access to the installation page of simpleSAMLphp with
-     * metadata listing and diagnostics pages.
-     */
-    'auth.adminpassword'        => 'letmein',
-    'admin.protectindexpage'    => false,
-    'admin.protectmetadata'     => false,
+    'debug.validatexml' => false,
 
     /*
      * Proxy to use for retrieving URLs.
@@ -117,15 +107,15 @@ $config = array (
      * A possible way to generate a random salt is by running the following command from a unix shell:
      * tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo
      */
-    'secretsalt' => '7d77l9eb0u6vuhvz3jadpn0bhjmxo97e',
+    'secretsalt' => get_config('installation_key') . $_SERVER['HTTP_HOST'],
 
     /*
      * Some information about the technical persons running this installation.
      * The email address will be used as the recipient address for error reports, and
      * also as the technical contact in generated metadata.
      */
-    'technicalcontact_name'     => 'Administrator',
-    'technicalcontact_email'    => 'piers@toad.local.net',
+    'technicalcontact_name'     => get_config('sitename'),
+    'technicalcontact_email'    => get_config('noreplyaddress'),
 
     /*
      * The timezone of the server. This option should be set to the timezone you want
@@ -151,8 +141,8 @@ $config = array (
      * Options: [syslog,file,errorlog]
      *
      */
-    'logging.level'         => LOG_NOTICE,
-    'logging.handler'       => 'file',
+    'logging.level'         => !get_config('productionmode') ? SimpleSAML_Logger::DEBUG : SimpleSAML_Logger::ERR,
+    'logging.handler'       => 'errorlog',
 
     /*
      * Choose which facility should be used when logging with syslog.
@@ -195,9 +185,7 @@ $config = array (
      * cookies both at the SP and the IdP exceeds this duration.
      */
     'session.duration'      =>  8 * (60*60), // 8 hours.
-    // 'session.duration'      =>  60,
     'session.requestcache'  =>  4 * (60*60), // 4 hours
-    // 'session.requestcache'  =>  60,
 
     /*
      * Sets the duration, in seconds, data should be stored in the datastore. As the datastore is used for
@@ -209,21 +197,16 @@ $config = array (
     /*
      * Options to override the default settings for php sessions.
      */
-    //'session.phpsession.cookiename'  => null,
     'session.phpsession.cookiename'  => 'SSPHP_SESSION',
     'session.phpsession.savepath'    => null,
     'session.datastore.timeout' => (4*60*60), // 4 hours
-    // 'session.datastore.timeout' => 60,
     'session.cookie.name' => 'SimpleSAMLSessionID',
     'session.cookie.lifetime' => 0,
     'session.cookie.path' => '/',
-    // 'session.cookie.domain' => '.local.net',
 
     /*
      * Languages available and what language is default
      */
-    //'language.available'  => array('en', 'no', 'nn', 'se', 'fi', 'da', 'sv', 'de', 'es', 'fr', 'nl', 'lb', 'hr', 'hu', 'pl', 'sl', 'pt', 'pt-BR', 'tr'),
-    //'language.available'  => array('en', 'mi'),
     'language.available'    => array('en'),
     'language.default'      => 'en',
 
@@ -231,12 +214,6 @@ $config = array (
      * Which theme directory should be used?
      */
     'theme.use'         => 'default',
-
-    /*
-     * Default IdP for WS-Fed.
-     */
-    //'default-wsfed-idp'   => 'urn:federation:pingfederate:localhost',
-    // 'default-wsfed-idp'  => 'http://identityserver.v2.thinktecture.com/samples',
 
     /*
      * Whether the discovery service should allow the user to save his choice of IdP.
@@ -372,16 +349,6 @@ $config = array (
                         };',
         ),
 
-        // force an error
-        /*
-        99 => array(
-            'class' => 'core:PHP',
-            'code' => '
-                        throw new Exception("blah");
-                       ',
-        ),
-        */
-
         // Adopts language from attribute to use in UI
         90 => 'core:LanguageAdaptor',
 
@@ -474,7 +441,6 @@ $config = array (
      * Note: The oldest data will always be deleted if the memcache server
      * runs out of storage space.
      */
-    // 'memcache_store.expires' =>  36 * (60*60), // 36 hours.
     'memcache_store.expires' =>  60,
 
 
@@ -513,12 +479,6 @@ $config = array (
     'metadata.sign.privatekey' => NULL,
     'metadata.sign.privatekey_pass' => NULL,
     'metadata.sign.certificate' => NULL,
-
-    /*
-     * This is the default URL to a MetaShare service where a SAML 2.0 IdP can register its metadata.
-     * This is a highly experimentar feature.
-     */
-    'metashare.publishurl' => NULL,
 
 );
 
