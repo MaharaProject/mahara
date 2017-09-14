@@ -630,6 +630,36 @@ class PluginAuthSaml extends PluginAuth {
                                      )), $elements);
         }
 
+        // Show the current metadata installed on the site so we can delete them
+        // We need to handle this outside the current pieform as we don't want to submit that and re-create a new certificate
+        $disco = self::get_raw_disco_list();
+        if (count($disco['list']) > 0) {
+            $discoused = array();
+            if ($discousedtmp  = get_records_sql_array("SELECT i.name, i.displayname, aic.value,
+                                                         CASE WHEN i.name = 'mahara' THEN 1 ELSE 0 END AS site
+                                                        FROM {auth_instance} ai
+                                                        JOIN {auth_instance_config} aic ON aic.instance = ai.id
+                                                        JOIN {institution} i ON i.name = ai.institution
+                                                        WHERE ai.authname = ? and field = ?", array('saml', 'institutionidpentityid'))) {
+                // turn $discoused into useful array structure
+                foreach ($discousedtmp as $used) {
+                    $discoused[$used->value][] = $used;
+                }
+            }
+
+            list($cols, $html) = self::idptable($disco['list'], null, $discoused, true);
+            $smarty = smarty_core();
+            $smarty->assign('html', $html);
+            $smarty->assign('cols', $cols);
+            $out = $smarty->fetch('auth:saml:idptableconfig.tpl');
+            $elements = array_merge($elements , array(
+                                        'idptable' => array(
+                                            'type' => 'html',
+                                            'value' => $out,
+                                        )
+                                    ));
+        }
+
         return array(
             'elements' => $elements,
         );
@@ -652,6 +682,107 @@ class PluginAuthSaml extends PluginAuth {
         error_log("auth/saml: Creating new certificates");
         self::create_certificates();
 
+    }
+
+    public static function idptable($list, $preferred = array(), $institutions = array(), $showdelete = false) {
+        $idps = array();
+        $lang = current_language();
+        $lang = explode('.', $lang);
+        $lang = strtolower(array_shift($lang));
+        $haslogos = $hasinstitutions = $hasdelete = false;
+        foreach ($list as $entityid => $value) {
+            $candelete = false;
+            $desc = $name = $entityid;
+            if (isset($value['description'][$lang])) {
+                $desc = $value['description'][$lang];
+            }
+            if (isset($value['name'][$lang])) {
+                $name = $value['name'][$lang];
+            }
+            $idplogo = array();
+            if (isset($value['UIInfo']) && isset($value['UIInfo']['Logo'])) {
+                $haslogos = true;
+                // Fetch logo from provider if given
+                $logos = $value['UIInfo']['Logo'];
+                foreach ($logos as $logo) {
+                    if (isset($logo['lang']) && $logo['lang'] == $lang) {
+                        $idplogo = $logo;
+                        break;
+                    }
+                }
+                // None matching the lang wanted so use the first one
+                if (empty($idplogo)) {
+                    $idplogo = $logos[0];
+                }
+            }
+            $insts = array();
+            if (!empty($institutions) && !empty($institutions[$entityid])) {
+                $hasinstitutions = true;
+                $insts = $institutions[$entityid];
+            }
+            else if ($showdelete) {
+                $hasdelete = true;
+                $candelete = true;
+            }
+
+            $idps[]= array('idpentityid' => $entityid, 'name' => $name, 'description' => $desc, 'logo' => $idplogo, 'institutions' => $insts, 'delete' => $candelete);
+        }
+
+        usort($idps, function($a, $b) {
+            return $a['name'] > $b['name'];
+        });
+        $idps = array(
+                      'count'   => count($idps),
+                      'limit'   => count($idps),
+                      'offset'  => 1,
+                      'data'    => $idps,
+                      );
+
+        $cols = array(
+            'logo' => array(
+                'name' => get_string('logo', 'auth.saml'),
+                'template' => 'auth:saml:idplogo.tpl',
+                'class' => 'short',
+                'sort' => false
+            ),
+            'idpentityid' => array(
+                'name' => get_string('idpentityid', 'auth.saml'),
+                'template' => 'auth:saml:idpentityid.tpl',
+                'class' => 'col-sm-3',
+                'sort' => false
+            ),
+            'description' => array(
+                'name' => get_string('idpprovider','auth.saml'),
+                'sort' => false
+            ),
+            'institutions' => array(
+                'name' => get_string('institutions', 'auth.saml'),
+                'template' => 'auth:saml:idpinstitutions.tpl',
+                'sort' => false
+            ),
+            'delete' => array(
+                'name' => get_string('deleteidp', 'auth.saml'),
+                'template' => 'auth:saml:idpdelete.tpl',
+                'sort' => false
+            ),
+        );
+        if ($haslogos === false) {
+            unset($cols['logo']);
+        }
+        if ($hasinstitutions === false) {
+            unset($cols['institutions']);
+        }
+        if ($hasdelete === false) {
+            unset($cols['delete']);
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('results', $idps);
+        $smarty->assign('cols', $cols);
+        $smarty->assign('pagedescriptionhtml', get_string('selectidp', 'auth.saml'));
+        $html = $smarty->fetch('auth:saml:idptable.tpl');
+
+        return array($cols, $html);
     }
 
     public static function has_instance_config() {
@@ -792,13 +923,18 @@ class PluginAuthSaml extends PluginAuth {
         return array($entityid, $idps);
     }
 
+    public static function get_raw_disco_list() {
+        PluginAuthSaml::init_simplesamlphp();
+        $discoHandler = new PluginAuthSaml_IdPDisco(array('saml20-idp-remote', 'shib13-idp-remote'), 'saml');
+        return $discoHandler->getTheIdPs();
+    }
+
     public static function get_disco_list($lang = null, $entityidps = array()) {
         if (empty($lang)) {
             $lang = current_language();
         }
-        PluginAuthSaml::init_simplesamlphp();
-        $discoHandler = new PluginAuthSaml_IdPDisco(array('saml20-idp-remote', 'shib13-idp-remote'), 'saml');
-        $disco = $discoHandler->getTheIdPs();
+
+        $disco = self::get_raw_disco_list();
         if (count($disco['list']) > 0) {
             $lang = explode('.', $lang);
             $lang = strtolower(array_shift($lang));
