@@ -33,7 +33,17 @@ The following is a check list of the steps you need to take. Please refer to the
 
 # UPGRADING
 
-Mahara 17.10 supports direct upgrades from previous Mahara versions 1.9.0 and later.
+Mahara 17.10 supports direct upgrades from previous Mahara versions 15.04.0 and later.
+
+If you are upgrading from an earlier version you will need to upgrade
+in two steps:
+
+ * Upgrade version 'X' -> 15.04.X (latest 15.04 version)
+
+then
+
+ * Upgrade version 15.04.X -> 'Y'
+
 To upgrade an existing Mahara installation, follow the instructions here:
 
  * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara
