@@ -643,6 +643,11 @@ class PluginAuthSaml extends PluginAuth {
             throw new AuthInstanceException(get_string('errorbadlib', 'auth.saml', get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php'));
         }
 
+        // Tell SSP that we are on 443 if we are terminating SSL elsewhere.
+        if (get_config('sslproxy')) {
+            $_SERVER['SERVER_PORT'] = '443';
+        }
+
         require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
         require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
 
