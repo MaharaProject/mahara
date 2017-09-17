@@ -42,7 +42,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
      | addeducationhistory_qualtype | 1 |
      | addeducationhistory_qualname | something |
      | addeducationhistory_qualdescription | qually |
-    And I scroll to the base of id "addeducationhistory_attachments_list"
+    And I scroll to the base of id "educationhistoryform"
     And I attach the file "Image2.png" to "Attach file"
     # Saving the changes
     And I click on "addeducationhistory_submit"
@@ -57,7 +57,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
      | addeducationhistory_qualtype | 2 |
      | addeducationhistory_qualname | wqoiretoiqswhogh |
      | addeducationhistory_qualdescription | qually1 |
-    And I scroll to the base of id "addeducationhistory_attachments_list"
+    And I scroll to the base of id "educationhistoryform"
     And I attach the file "Image2.png" to "Attach file"
     And I click on "addeducationhistory_submit"
     And I scroll to the id "main-nav"
@@ -65,6 +65,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     And I click on "Move down" in "something" row
     And I click on "Move up" in "something" row
     # Adding an Employment history
+    And I scroll to the base of id "addemploymenthistorybutton"
     And I press "Add employment history"
     And I set the following fields to these values:
      | addemploymenthistory_startdate | 1 Jan 2009  |
@@ -73,7 +74,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
      | addemploymenthistory_employeraddress | Test |
      | addemploymenthistory_jobtitle | Test |
      | addemploymenthistory_positiondescription | Test |
-    And I scroll to the base of id "addemploymenthistory_attachments_list"
+    And I scroll to the base of id "addemploymenthistory"
     And I attach the file "Image2.png" to "addemploymenthistory_attachments_files_0"
     # Verifying it saved
     And I click on "addemploymenthistory_submit"
@@ -86,7 +87,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
      | addemploymenthistory_employeraddress | qouweyiugqs |
      | addemploymenthistory_jobtitle | aoshdguiahsg |
      | addemploymenthistory_positiondescription | aushghasdg |
-    And I scroll to the base of id "addemploymenthistory_attachments_list"
+    And I scroll to the base of id "addemploymenthistory"
     And I attach the file "Image2.png" to "addemploymenthistory_attachments_files_0"
     # Verifying it saved
     And I click on "addemploymenthistory_submit"
@@ -103,7 +104,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     | addcertification_date | 12/07/2017 |
     | addcertification_title | Cert |
     | addcertification_description | somethings |
-    And I scroll to the base of id "addcertification_attachments_list"
+    And I scroll to the base of id "addcertification"
     And I attach the file "Image2.png" to "Attach file"
     And I press "Save"
     And I scroll to the id "main-nav"
@@ -114,7 +115,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     | addcertification_date | 13/07/2017 |
     | addcertification_title | dfgfdsg |
     | addcertification_description | alfksjgaasd |
-    And I scroll to the base of id "addcertification_attachments_list"
+    And I scroll to the base of id "addcertification"
     And I attach the file "Image2.png" to "Attach file"
     And I press "Save"
     And I scroll to the id "main-nav"
@@ -129,7 +130,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     | addbook_title | Book1 |
     | addbook_contribution | alfksjgaasd |
     | addbook_description | details ashgashg |
-    And I scroll to the base of id "addbook_attachments_list"
+    And I scroll to the base of id "addbook"
     And I attach the file "Image2.png" to "addbook_attachments_files_0"
     And I click on "addbook_submit"
     And I scroll to the id "main-nav"
@@ -141,7 +142,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     | addbook_title | dfgjj |
     | addbook_contribution | asdgfasg |
     | addbook_description | details asdfsda |
-    And I scroll to the base of id "addbook_attachments_list"
+    And I scroll to the base of id "addbook"
     And I attach the file "Image2.png" to "addbook_attachments_files_0"
     And I click on "addbook_submit"
     And I scroll to the id "main-nav"
@@ -156,7 +157,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     | addmembership_enddate | 14/09/2018 |
     | addmembership_title | Mr Membership |
     | addmembership_description | asdfsetew |
-    And I scroll to the base of id "addmembership_attachments_list"
+    And I scroll to the base of id "addmembership"
     And I attach the file "Image2.png" to "addmembership_attachments_files_0"
     And I click on "addmembership_submit"
     And I scroll to the id "main-nav"
@@ -168,7 +169,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     | addmembership_enddate | 29/09/2018 |
     | addmembership_title | sdrtyh |
     | addmembership_description | sdfh |
-    And I scroll to the base of id "addmembership_attachments_list"
+    And I scroll to the base of id "addmembership"
     And I attach the file "Image2.png" to "addmembership_attachments_files_0"
     And I click on "addmembership_submit"
     And I scroll to the id "main-nav"
@@ -181,6 +182,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     And I should see "My skills"
     And I follow "Personal goals"
     And I set the field "Description" to "whateve ry askdf"
+    And I scroll to the base of id "editgoalsandskills"
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
@@ -190,6 +192,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     And I follow "Academic goals"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
+    And I scroll to the base of id "editgoalsandskills"
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
@@ -199,6 +202,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     And I follow "Career goals"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
+    And I scroll to the base of id "editgoalsandskills"
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
@@ -208,6 +212,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     And I follow "Personal skills"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
+    And I scroll to the base of id "editgoalsandskills"
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
@@ -217,6 +222,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     And I follow "Academic skills"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
+    And I scroll to the base of id "editgoalsandskills"
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
@@ -226,6 +232,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     And I follow "Work skills"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
+    And I scroll to the base of id "editgoalsandskills"
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
     And I press "Close" in the "#editgoalsandskills_filebrowser_upload_browse" "css_element"
@@ -236,6 +243,7 @@ Scenario: Editing admin resume page (Bug 1426983)q
     And I press "Edit"
     And I set the following fields to these values:
     | Interest | test |
+    And I scroll to the base of id "resumefieldform_interestfs_container"
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
