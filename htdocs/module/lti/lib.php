@@ -18,6 +18,7 @@ class PluginModuleLti extends PluginModule {
 
     private static $default_config = array(
         'autocreateusers'   => false,
+        'parentauth'        => null,
     );
 
     public static function postinst($fromversion) {
@@ -143,22 +144,58 @@ class PluginModuleLti extends PluginModule {
     }
 
     public static function get_oauth_service_config_options($serverid) {
-        $dbconfig = get_records_assoc('oauth_server_config', 'oauthserverregistryid', $serverid, '', 'field, value');
+        $rawdbconfig = get_records_sql_array('SELECT c.field, c.value, r.institution FROM {oauth_server_registry} r
+                                           LEFT JOIN {oauth_server_config} c ON c.oauthserverregistryid = r.id
+                                           WHERE r.id = ?', array($serverid));
+        $dbconfig = new stdClass();
+        foreach ($rawdbconfig as $raw) {
+            $dbconfig->institution = $raw->institution;
+            if (!empty($raw->field)) {
+                $dbconfig->{$raw->field} = $raw->value;
+            }
+        }
 
         $elements = array(
+            'institution' => array(
+                'type'  => 'html',
+                'title' => get_string('institution'),
+                'value' => institution_display_name($dbconfig->institution),
+            ),
             'autocreateusers' => array(
                 'type'  => 'switchbox',
                 'title' => get_string('autocreateusers', 'module.lti'),
-                'defaultvalue' => isset($dbconfig['autocreateusers']->value) ? $dbconfig['autocreateusers']->value : self::$default_config['autocreateusers'],
+                'defaultvalue' => isset($dbconfig->autocreateusers) ? $dbconfig->autocreateusers : self::$default_config['autocreateusers'],
             ),
         );
+
+        // Get the active auth instances for this institution that are not webservices
+        if ($instances = get_records_sql_array("SELECT ai.* FROM {oauth_server_registry} osr
+                                                JOIN {auth_instance} ai ON ai.institution = osr.institution
+                                                WHERE osr.id = ? AND ai.active = 1 AND ai.authname != 'webservice'", array($serverid))) {
+            $options = array('' => get_string('None', 'admin'));
+            foreach ($instances as $instance) {
+                $options[$instance->id] = get_string('title', 'auth.' . $instance->authname);
+            }
+            $elements['parentauth'] = array(
+                'type' => 'select',
+                'title' => get_string('parentauthforlti', 'module.lti'),
+                'defaultvalue' => isset($dbconfig->parentauth) ? $dbconfig->parentauth : self::$default_config['parentauth'],
+                'options' => $options,
+                'help' => true,
+            );
+        }
 
         return $elements;
 
     }
 
     public static function save_oauth_service_config_options($serverid, $values) {
-        return update_oauth_server_config($serverid, 'autocreateusers', (int)$values['autocreateusers']);
+        $options = array('autocreateusers', 'parentauth');
+        foreach ($options as $option) {
+            $fordb = isset($values[$option]) ? $values[$option] : null;
+            update_oauth_server_config($serverid, $option, $fordb);
+        }
+        return true;
     }
 
     // Disable form fields that are not needed by this plugin
