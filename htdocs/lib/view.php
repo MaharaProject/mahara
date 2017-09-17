@@ -2943,7 +2943,7 @@ class View {
                 SELECT * FROM {view_layout} vl
                 JOIN {usr_custom_layout} ucl
                 ON ((vl.id = ucl.layout) AND ' . $andclause . ')
-                WHERE rows = ?', $queryarray);
+                WHERE "rows" = ?', $queryarray);
 
         if ($layoutid) {
             $layout->id = $layoutid;

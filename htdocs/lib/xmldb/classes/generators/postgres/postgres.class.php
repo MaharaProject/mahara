@@ -454,23 +454,31 @@ class XMLDBpostgres extends XMLDBgenerator {
      */
     function getReservedWords() {
     /// This file contains the reserved words for PostgreSQL databases
-    /// http://www.postgresql.org/docs/8.3/static/sql-keywords-appendix.html
+    /// https://www.postgresql.org/docs/10/static/sql-keywords-appendix.html
         $reserved_words = array (
             'all', 'analyse', 'analyze', 'and', 'any', 'array', 'as', 'asc',
             'asymmetric', 'authorization', 'between', 'binary', 'both', 'case',
-            'cast', 'check', 'collate', 'column', 'constraint', 'create', 'cross',
-            'current_date', 'current_role', 'current_time', 'current_timestamp',
+            'cast', 'check', 'collate', 'collation', 'column', 'concurrently',
+            'constraint', 'create', 'cross', 'current_catalog',
+            'current_date', 'current_role', 'current_schema', 'current_time',
+            'current_timestamp',
             'current_user', 'default', 'deferrable', 'desc', 'distinct', 'do',
-            'else', 'end', 'except', 'false', 'for', 'foreign', 'freeze', 'from',
-            'full', 'grant', 'group', 'having', 'ilike', 'in', 'initially', 'inner',
-            'intersect', 'into', 'is', 'isnull', 'join', 'leading', 'left', 'like',
+            'else', 'end', 'except', 'false', 'fetch', 'for', 'foreign',
+            'freeze', 'from',
+            'full', 'grant', 'group', 'having', 'ilike', 'in', 'initially',
+            'inner',
+            'intersect', 'into', 'is', 'isnull', 'join', 'lateral', 'leading',
+            'left', 'like',
             'limit', 'localtime', 'localtimestamp', 'natural', 'new', 'not',
             'notnull', 'null', 'off', 'offset', 'old', 'on', 'only', 'or', 'order',
-            'outer', 'overlaps', 'placing', 'primary', 'references', 'returning', 'right', 'select',
-            'session_user', 'similar', 'some', 'symmetric', 'table', 'then', 'to',
+            'outer', 'overlaps', 'placing', 'primary', 'references', 'returning',
+            'right', 'select',
+            'session_user', 'similar', 'some', 'symmetric', 'table', 'tablesample',
+            'then', 'to',
             'trailing', 'true', 'union', 'unique', 'user', 'using', 'verbose',
-            'when', 'where', 'with',
-            'collation', 'concurrently', 'current_catalog', 'current_schema', 'fetch', 'lateral', 'over', 'variadic', 'window' // new reserved words in postgres 9.3
+            'variadic', 'when', 'where', 'window', 'with',
+            'collation', 'concurrently', 'current_catalog', 'current_schema',
+            'fetch', 'lateral', 'over', 'variadic', 'window'
         );
         return $reserved_words;
     }
