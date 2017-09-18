@@ -41,10 +41,11 @@ if (
 // access key for roaming teachers
 // TODO: The mt token is used by the old token-based Mahara assignment submission
 // access system, which is now deprecated. Remove eventually.
-$mnettoken = $SESSION->get('mnetuser') ? param_alphanum('mt', null) : null;
+$mnettoken = param_alphanum('mt', null);
+$mnettokenaccess = $SESSION->get('mnetuser') ? $mnettoken : null;
 
 // access key for logged out users
-$usertoken = (is_null($mnettoken) && get_config('allowpublicviews')) ? param_alphanum('t', null) : null;
+$usertoken = (is_null($mnettokenaccess) && get_config('allowpublicviews')) ? param_alphanum('t', null) : null;
 $viewtoken = null;
 if ($mnettoken) {
     $viewtoken = get_view_from_token($mnettoken, false);
