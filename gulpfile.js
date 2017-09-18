@@ -9,7 +9,6 @@ var sass = require('gulp-sass');
 var path = require('path');
 var cleanCSS = require('gulp-clean-css');
 var autoprefixer = require('gulp-autoprefixer');
-var bless = require('gulp-bless');
 var es = require('event-stream');
 var globule = require('globule');
 var argv = require('yargs').default('production', 'true').argv;
@@ -37,7 +36,6 @@ gulp.task('css', 'Compile SASS into CSS', function () {
               cascade: false
             }))
             .pipe(gulpif(argv.production !== 'false', cleanCSS()))
-            .pipe(gulpif(argv.production !== 'false', bless()))
             .pipe(gulp.dest('style/', {cwd: themepath}));
     });
 
