@@ -1713,7 +1713,7 @@ function ensure_user_account_is_active($user=null) {
     if ($authinstance->suspended || $authinstance->expired || !$authinstance->active) {
         $sitename = get_config('sitename');
         $state = ($authinstance->suspended) ? 'suspended' : 'expired';
-        $state = ($authinstane->active) ? $state : 'inactive';
+        $state = ($authinstance->active) ? $state : 'inactive';
         throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institution' . $state, 'mahara', $authinstance->displayname, $sitename));
         return false;
     }
