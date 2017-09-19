@@ -5276,5 +5276,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017092100) {
+        log_debug('Remove obsolete default notification method');
+        delete_records('config', 'field', 'defaultnotificationmethod');
+    }
+
     return $status;
 }
