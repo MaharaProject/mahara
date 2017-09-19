@@ -73,10 +73,15 @@ $form = pieform(array(
 
 
 function editsitepage_submit(Pieform $form, $values) {
+    $id = get_field('site_content', 'id', 'name', $values['pagename'], 'institution', 'mahara');
+    require_once('embeddedimage.php');
+    // Update the pagetext with any embedded image info
+    $pagetext = EmbeddedImage::prepare_embedded_images($values['pagetext'], 'staticpages', $id);
+
     global $USER;
     $data = new StdClass;
     $data->name    = $values['pagename'];
-    $data->content = $values['pagetext'];
+    $data->content = $pagetext;
     $data->mtime   = db_format_timestamp(time());
     $data->mauthor = $USER->get('id');
     $data->institution = 'mahara';

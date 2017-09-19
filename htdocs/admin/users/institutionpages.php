@@ -115,7 +115,11 @@ function editsitepage_submit(Pieform $form, $values) {
     $data = new StdClass;
     $data->name    = $values['pagename'];
     if (empty($values['pageusedefault'])) {
-        $data->content = $values['pagetext'];
+        $id = get_field('site_content', 'id', 'name', $values['pagename'], 'institution', $values['pageinstitution']);
+        require_once('embeddedimage.php');
+        // Update the pagetext with any embedded image info
+        $pagetext = EmbeddedImage::prepare_embedded_images($values['pagetext'], 'staticpages', $id);
+        $data->content = $pagetext;
     }
     $data->mtime   = db_format_timestamp(time());
     $data->mauthor = $USER->get('id');

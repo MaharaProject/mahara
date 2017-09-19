@@ -5326,5 +5326,79 @@ function xmldb_core_upgrade($oldversion=0) {
         clear_all_caches(true);
     }
 
+    if ($oldversion < 2017092600) {
+        log_debug('Add primary key to site_content table');
+
+        // See if we need to add the id column
+        $table = new XMLDBTable('site_content');
+        $field = new XMLDBField('id');
+        if (!field_exists($table, $field)) {
+            log_debug('Making a temp copy and adding id column');
+            execute_sql('CREATE TEMPORARY TABLE {temp_site_content} AS SELECT DISTINCT * FROM {site_content}', array());
+            execute_sql('TRUNCATE {site_content}', array());
+
+            // Drop the current primary key as we will move it to the id column
+            $key = new XMLDBKey('primary');
+            $key->setAttributes(XMLDB_KEY_PRIMARY, array('name', 'institution'));
+            drop_key($table, $key);
+
+            if (is_mysql()) {
+                // MySQL requires the auto-increment column to be a primary key right away.
+                execute_sql('ALTER TABLE {site_content} ADD id BIGINT(10) NOT NULL auto_increment PRIMARY KEY FIRST');
+            }
+            else {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+                add_field($table, $field);
+            }
+
+            log_debug('Adding back in the site_content information');
+            // We will do in chuncks for large sites.
+            $count = 0;
+            $x = 0;
+            $limit = 1000;
+            $total = count_records('temp_site_content');
+            for ($i = 0; $i <= $total; $i += $limit) {
+                if (is_postgres()) {
+                    $limitsql = ' OFFSET ' . $i . ' LIMIT ' . $limit;
+                }
+                else {
+                    $limitsql = ' LIMIT ' . $i . ',' . $limit;
+                }
+                execute_sql('INSERT INTO {site_content} (name, content, ctime, mtime, mauthor, institution) SELECT name, content, ctime, mtime, mauthor, institution FROM {temp_site_content}' . $limitsql, array());
+                $count += $limit;
+                if (($count % ($limit *10)) == 0 || $count >= $total) {
+                    if ($count > $total) {
+                        $count = $total;
+                    }
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+                set_time_limit(30);
+            }
+            execute_sql('DROP TABLE {temp_site_content}', array());
+
+            if (!is_mysql()) {
+                log_debug('Adding primary key index to site_content.id column');
+                $key = new XMLDBKey('primary');
+                $key->setAttributes(XMLDB_KEY_PRIMARY, array('id'));
+                add_key($table, $key);
+            }
+            // Add the old key as new unique index
+            $index = new XMLDBIndex('nameinstuk');
+            $index->setAttributes(XMLDB_INDEX_UNIQUE, array('name', 'institution'));
+            add_index($table, $index);
+        }
+
+        if ($results = get_records_sql_array("SELECT id, content FROM {site_content} WHERE content LIKE '%<img%'")) {
+            log_debug('Make sure images in static pages are embedded images');
+            require_once('embeddedimage.php');
+            foreach ($results as $result) {
+                // Update the page text with any embedded image info
+                $result->content = EmbeddedImage::prepare_embedded_images($result->content, 'staticpages', $result->id);
+                update_record('site_content', $result, array('id'));
+            }
+        }
+    }
+
     return $status;
 }
