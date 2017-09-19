@@ -20,8 +20,8 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
 | Never display usernames | 1 |
 | Show users in public search | 1 |
 | Anonymous comments | 0 |
-| Staff report access | 1 |
-| Staff statistics access | 1 |
+| Access reports for staff | 1 |
+| All reports for institution staff | 1 |
 | Users can disable device detection | 1 |
 | Require reason for masquerading | 1 |
 | Notify users of masquerading | 1 |
