@@ -12,6 +12,7 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'XML-RPC';
+$string['xmlrpcconfig'] = 'XML-RPC configuration';
 $string['description'] = 'Authenticate via SSO from an external application';
 $string['notusable'] = 'Please install the XML-RPC, Curl and OpenSSL PHP extensions.';
 $string['networkingdisabledonthissite'] = 'Networking is disabled on this site.';
