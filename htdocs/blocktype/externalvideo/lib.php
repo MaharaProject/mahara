@@ -443,6 +443,8 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         if ($prevversion == 0) {
             ensure_record_exists('iframe_source_icon', (object) array('name' => 'Prezi', 'domain' => 'prezi.com'), (object) array('name' => 'Prezi', 'domain' => 'prezi.com'));
             ensure_record_exists('iframe_source', (object) array('prefix' => 'prezi.com/embed/', 'name' => 'Prezi'), (object) array('prefix' => 'prezi.com/embed/', 'name' => 'Prezi'));
+            ensure_record_exists('iframe_source_icon', (object) array('name' => 'Youtube [privacy mode]', 'domain' => 'www.youtube.com'), (object) array('name' => 'Youtube [privacy mode]', 'domain' => 'www.youtube.com'));
+            ensure_record_exists('iframe_source', (object) array('prefix' => 'www.youtube-nocookie.com/embed/', 'name' => 'Youtube [privacy mode]'), (object) array('prefix' => 'www.youtube-nocookie.com/embed/', 'name' => 'Youtube [privacy mode]'));
             update_safe_iframe_regex();
         }
     }
