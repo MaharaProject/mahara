@@ -36,6 +36,7 @@ $string['logintolinkdesc'] = '<p><b>You are currently connected with remote user
 $string['institutionregex'] = 'Do partial string match with institution shortname';
 $string['login'] = 'SSO';
 $string['notusable'] = 'Please install the SimpleSAMLPHP SP libraries';
+$string['samlconfig'] = 'SAML configuration';
 $string['samlfieldforemail'] = 'SSO field for email';
 $string['samlfieldforfirstname'] = 'SSO field for first name';
 $string['samlfieldforsurname'] = 'SSO field for surname';

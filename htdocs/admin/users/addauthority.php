@@ -21,7 +21,7 @@ $edit        = param_boolean('edit');
 $json        = param_boolean('j');
 $instanceid  = param_variable('id', 0);
 
-define('TITLE', get_string($plugin . 'config', 'admin'));
+define('TITLE', get_string($plugin . 'config', 'auth.' . $plugin));
 
 // IF WE'RE EDITING OR CREATING AN AUTHORITY:
 if ($institution && $plugin) {
