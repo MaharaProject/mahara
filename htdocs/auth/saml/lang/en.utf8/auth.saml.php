@@ -69,6 +69,7 @@ $string['obsoletesamlinstance'] = 'The SAML authentication instance <a href="%s"
 $string['reallyreallysure1'] = "You are trying to save the Service Provider metadata for Mahara. This cannot be undone. Existing SAML logins will not work until you have reshared your new metadata with all Identity Providers.";
 $string['reset'] = 'Reset metadata';
 $string['resetmetadata'] = 'Reset the certificates for Mahara\'s metadata. This cannot be undone and you will have to reshare your metadata with the Identity Provider.';
+$string['samlconfig'] = 'SAML configuration';
 $string['samlfieldforemail'] = 'SSO field for email';
 $string['samlfieldforfirstname'] = 'SSO field for first name';
 $string['samlfieldforsurname'] = 'SSO field for surname';
