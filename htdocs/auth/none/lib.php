@@ -43,8 +43,7 @@ class AuthNone extends Auth {
      */
     public function authenticate_user_account($user, $password) {
         $this->must_be_ready();
-        return true;
-        //return $this->validate_password($password, $user->password, $user->salt);
+        return !get_config('productionmode');
     }
 
     public function can_auto_create_users() {
