@@ -1,9 +1,9 @@
 @javascript @core @core_administration
 
-Feature: Broken string in user accesslist report
-In order to make sure user can read the strings
+Feature: User reports have been moved to Reports section
+In order to make sure admin can still access reports
 As an admin
-I need to check they show no errors
+I need to check they correct report is shown
 
 Background:
  Given the following "institutions" exist:
@@ -12,11 +12,13 @@ Background:
  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | userA | Kupuhipa1 | test01@example.org | Pete | Mc | instone | internal | member |
+     | userB | Kupuhipa1 | test02@example.org | Sonny | Breezes | instone | internal | member |
 
-Scenario: Accessing language string (Bug 1449350)
+Scenario: Accessing user reports
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "User search" in "Users" from administration menu
  And I check "selectusers_2"
+ And I check "selectusers_3"
  And I press "Get reports"
- When I press "Access list"
- Then I should not see "[[loggedin/view]]"
+ Then I should see "User details"
+ And I should see "2 users selected"

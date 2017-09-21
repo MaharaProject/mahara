@@ -183,7 +183,7 @@
 {/if}
 
 {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
-<div class="navbar-form collapse navbar-collapse">
+<div class="navbar-form collapse navbar-collapse{if $languageform} with-langform{if !$LOGGEDIN && !$SHOWLOGINBLOCK && !$LOGINPAGE}-login{/if}{/if}">
     {header_search_form}
 </div>
 {/if}

@@ -514,11 +514,17 @@ class View {
             $obj->ctime = db_format_timestamp(time());
             $obj->usr   = $template->get('owner');
             $obj->group = $template->get('group');
-            insert_record('view_access', $obj);
+            $vaid = insert_record('view_access', $obj, 'id', true);
+            handle_event('updateviewaccess', array(
+                'id' => $vaid,
+                'eventfor' => (!empty($template->get('group')) ? 'group' : 'user'),
+                'parentid' => $view->get('id'),
+                'parenttype' => 'view',
+                'rules' => $obj)
+            );
         }
 
         db_commit();
-
         return array(
             $view,
             $template,
@@ -609,6 +615,7 @@ class View {
 
         $view = new View(0, $data);
         $view->commit();
+
         if (isset($viewdata['group']) &&
             (empty($viewdata['type']) || (!empty($viewdata['type']) && $viewdata['type'] != 'grouphomepage'))
            ) {
@@ -619,12 +626,19 @@ class View {
             $beforeusers[$userid] = get_record('usr', 'id', $userid);
 
             // By default, group views should be visible to the group
-            insert_record('view_access', (object) array(
+            $newaccess = (object) array(
                 'view'  => $view->get('id'),
                 'group' => $viewdata['group'],
                 'ctime' => db_format_timestamp(time()),
-            ));
-
+            );
+            $vaid = insert_record('view_access', $newaccess, 'id', true);
+            handle_event('updateviewaccess', array(
+                'id' => $vaid,
+                'eventfor' => 'group',
+                'parentid' => $view->get('id'),
+                'parenttype' => 'view',
+                'rules' => $newaccess)
+            );
             // Notify group members
             $accessdata = new StdClass;
             $accessdata->view = $view->get('id');
@@ -759,9 +773,11 @@ class View {
                 throw new SystemException(get_string('onlonlyyoneprofileviewallowed', 'error'));
             }
             $this->id = insert_record('view', $fordb, 'id', true);
+            handle_event('createview', array('id' => $this->id, 'eventfor' => 'view', 'viewtype' => $this->type));
         }
         else {
             update_record('view', $fordb, 'id');
+            handle_event('saveview', array('id' => $this->id, 'eventfor' => 'view', 'viewtype' => $this->type));
         }
 
         if (isset($this->tags)) {
@@ -867,7 +883,9 @@ class View {
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('view_visit','view',$this->id);
+        $eventdata = array('id' => $this->id, 'eventfor' => 'view');
         if ($collection = $this->get_collection()) {
+            $eventdata['collection'] = $collection->get('id');
             $collection->remove_view($this->id);
         }
         delete_records('usr_watchlist_view','view',$this->id);
@@ -878,7 +896,7 @@ class View {
                 $bi->delete();
             }
         }
-        handle_event('deleteview', $this->id);
+        handle_event('deleteview', $eventdata);
         delete_records('view_rows_columns', 'view', $this->id);
         delete_records('view','id',$this->id);
         if (!empty($this->owner) && $this->is_submitted()) {
@@ -1366,7 +1384,14 @@ class View {
 
                 if (array_search($accessrecord, $accessdata_added) === false) {
                     $accessrecord->view = $this->get('id');
-                    insert_record('view_access', $accessrecord);
+                    $vaid = insert_record('view_access', $accessrecord, 'id', true);
+                    handle_event('updateviewaccess', array(
+                        'id' => $vaid,
+                        'eventfor' => $item['type'],
+                        'parentid' => $accessrecord->view,
+                        'parenttype' => 'view',
+                        'rules' => $accessrecord)
+                    );
                     unset($accessrecord->view);
                     $accessdata_added[] = $accessrecord;
                 }
@@ -1388,7 +1413,6 @@ class View {
         }
 
         activity_occurred('viewaccess', $data);
-        handle_event('saveview', $this->get('id'));
 
         db_commit();
         return $accessdata_added;
@@ -1471,11 +1495,35 @@ class View {
                     $a->view = $id;
                     $a->ctime = db_format_timestamp(time());
                     unset($a->id);
-                    insert_record('view_access', $a);
+                    $vaid = insert_record('view_access', $a, 'id', true);
+                    handle_event('updateviewaccess', array(
+                        'id' => $vaid,
+                        'eventfor' => self::eventfor($a),
+                        'parentid' => $id,
+                        'parenttype' => 'view',
+                        'rules' => $a)
+                    );
                 }
             }
         }
         db_commit();
+    }
+
+    public static function eventfor($access) {
+        // Work out what event this access is for
+        if (!empty($access->token)) {
+            return 'token';
+        }
+        if (!empty($access->institution)) {
+            return 'institution';
+        }
+        if (!empty($access->group)) {
+            return 'group';
+        }
+        if (!empty($access->usr)) {
+            return 'user';
+        }
+        return $access->accesstype;
     }
 
     public function add_access($access) {
@@ -1491,7 +1539,14 @@ class View {
         if (!isset($access->ctime)) {
             $access->ctime = db_format_timestamp(time());
         }
-        ensure_record_exists('view_access', $whereobject, $access);
+        $vaid = ensure_record_exists('view_access', $whereobject, $access, 'id', true);
+        handle_event('updateviewaccess', array(
+            'id' => $vaid,
+            'eventfor' => self::eventfor($access),
+            'parentid' => $this->id,
+            'parenttype' => 'view',
+            'rules' => $access)
+        );
     }
 
     public function add_owner_institution_access($instnames=array()) {
@@ -1519,7 +1574,14 @@ class View {
                     $vaccess->approvecomments = 1;
                     $vaccess->ctime = db_format_timestamp(time());
 
-                    insert_record('view_access', $vaccess);
+                    $vaid = insert_record('view_access', $vaccess, 'id', true);
+                    handle_event('updateviewaccess', array(
+                        'id' => $vaid,
+                        'eventfor' => 'institution',
+                        'parentid' => $this->id,
+                        'parenttype' => 'view',
+                        'rules' => $vaccess)
+                    );
                 }
             }
             db_commit();
@@ -1572,6 +1634,12 @@ class View {
 
         $ownerlang = get_user_language($this->get('owner'));
         $url = $this->get_url(false);
+
+        handle_event('releasesubmission', array('releaseuser' => $releaseuser,
+                                                'id' => $this->get('id'),
+                                                'groupname' => $submitinfo['name'],
+                                                'eventfor' => 'view'));
+
         require_once('activity.php');
         activity_occurred('maharamessage',
             array(
@@ -2501,7 +2569,6 @@ class View {
         }
         $this->set('layout', null);
         $this->commit();
-
         $currentrowcolumns = $columnsperrow[$values['row']]->columns;
         for ($i = $values['before']; $i <= $currentrowcolumns; $i++) {
             $this->dirtycolumns[$values['row']][$i] = 1;
@@ -2797,7 +2864,6 @@ class View {
                 }
                 $this->set('theme', $theme);
                 $this->commit();
-                handle_event('saveview', $this->get('id'));
             }
         }
     }
@@ -5496,6 +5562,9 @@ class View {
                 $v['displaytitle'] = $view->display_title_editing();
                 $v['url'] = $view->get_url(false);
                 $v['fullurl'] = $needsubdomain ? $view->get_url(true) : ($wwwroot . $v['url']);
+                if ($view->id) {
+                    $v['collection'] = $view->get_collection();
+                }
             }
         }
     }
@@ -5901,7 +5970,14 @@ class View {
         while (record_exists('view_access', 'token', $data->token)) {
             $data->token = get_random_key(20);
         }
-        insert_record('view_access', $data);
+        $vaid = insert_record('view_access', $data, 'id', true);
+        handle_event('updateviewaccess', array(
+            'id' => $vaid,
+            'eventfor' => 'token',
+            'parentid' => $viewid,
+            'parenttype' => 'view',
+            'rules' => $data)
+        );
         return $data;
     }
 
@@ -6517,7 +6593,11 @@ class View {
         $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
 
         self::_db_submit(array($this->id), $group);
-
+        handle_event('addsubmission', array('id' => $this->id,
+                                            'eventfor' => 'view',
+                                            'name' => $this->title,
+                                            'group' => $group->id,
+                                            'groupname' => $group->name));
         activity_occurred(
             'groupmessage',
             array(
@@ -6597,7 +6677,14 @@ class View {
                         'approvecomments' => 0,
                         'ctime'           => db_format_timestamp(time()),
                     );
-                    ensure_record_exists('view_access', $accessrecord, $accessrecord);
+                    $vaid = ensure_record_exists('view_access', $accessrecord, $accessrecord);
+                    handle_event('updateviewaccess', array(
+                        'id' => $vaid,
+                        'eventfor' => 'group',
+                        'parentid' => $viewid,
+                        'parenttype' => 'view',
+                        'rules' => $accessrecord)
+                    );
                 }
             }
         }

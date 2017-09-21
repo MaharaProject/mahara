@@ -472,7 +472,6 @@ class Pieform {/*{{{*/
         // Check if the form was submitted, and if so, validate and process it
         $global = ($this->data['method'] == 'get') ? $_GET: $_POST;
 
-
         if ($this->data['validate'] && isset($global['pieform_' . $this->name] )) {
             if ($this->data['submit']) {
                 $this->submitted = true;

@@ -545,12 +545,19 @@ function group_create($data) {
             }
         }
     }
-
-    insert_record('view_access', (object) array(
+    $newaccess = (object) array(
         'view'       => $homepage->get('id'),
         'accesstype' => $data['public'] ? 'public' : 'loggedin',
         'ctime'      => db_format_timestamp(time()),
-    ));
+    );
+    $vaid = insert_record('view_access', $newaccess, 'id', true);
+    handle_event('updateviewaccess', array(
+        'id' => $vaid,
+        'eventfor' => $data['public'] ? 'public' : 'loggedin',
+        'parentid' => $homepage->get('id'),
+        'parenttype' => 'view',
+        'rules' => $newaccess)
+    );
     handle_event('creategroup', $data);
     db_commit();
 
@@ -734,19 +741,35 @@ function group_update($new, $create=false) {
     if ($old->public != $new->public) {
         if ($old->public && !$new->public) {
             delete_records('view_access', 'view', $homepageid, 'accesstype', 'public');
-            insert_record('view_access', (object) array(
+            $newaccess = (object) array(
                 'view'       => $homepageid,
                 'accesstype' => 'loggedin',
                 'ctime'      => db_format_timestamp(time()),
-            ));
+            );
+            $vaid = insert_record('view_access', $newaccess, 'id', true);
+            handle_event('updateviewaccess', array(
+                'id' => $vaid,
+                'eventfor' => 'loggedin',
+                'parentid' => $homepageid,
+                'parenttype' => 'view',
+                'rules' => $newaccess)
+            );
         }
         else if (!$old->public && $new->public) {
             delete_records('view_access', 'view', $homepageid, 'accesstype', 'loggedin');
-            insert_record('view_access', (object) array(
+            $newaccess = (object) array(
                 'view'       => $homepageid,
                 'accesstype' => 'public',
                 'ctime'      => db_format_timestamp(time()),
-            ));
+            );
+            $vaid = insert_record('view_access', $newaccess, 'id', true);
+            handle_event('updateviewaccess', array(
+                'id' => $vaid,
+                'eventfor' => 'public',
+                'parentid' => $homepageid,
+                'parenttype' => 'view',
+                'rules' => $newaccess)
+            );
         }
     }
 
@@ -977,6 +1000,9 @@ function group_add_user($groupid, $userid, $role=null, $method='internal') {
     insert_record('group_member', $gm);
     delete_records('group_member_request', 'group', $groupid, 'member', $userid);
     delete_records('group_member_invite', 'group', $groupid, 'member', $userid);
+
+    $gm->id = $gm->group;
+    $gm->eventfor = 'group';
     handle_event('userjoinsgroup', $gm);
     db_commit();
     global $USER;
@@ -1583,6 +1609,15 @@ function group_get_role_info($groupid) {
     return $roles;
 }
 
+function group_display_name($groupid) {
+    return hsc(get_field('group', 'name', 'id', $groupid));
+}
+
+function group_display_role($groupid, $role) {
+    $roles = group_get_role_info($groupid);
+    return $roles[$role]->display;
+}
+
 function group_get_default_artefact_permissions($groupid) {
     $permissions = array();
     $records = get_records_sql_array('
@@ -2036,23 +2071,7 @@ function group_get_menu_tabs() {
     }
 
     // Sort the menu items by weight
-    uasort($menu, function($a, $b){
-
-        // Only items with a "weight" component need to get sorted. Ones without weight can go first.
-        if (!array_key_exists('weight', $a)) {
-            return -1;
-        }
-        if (!array_key_exists('weight', $b)) {
-            return 1;
-        }
-
-        $aweight = $a['weight'];
-        $bweight = $b['weight'];
-        if ($aweight == $bweight) {
-            return 0;
-        }
-        return ($aweight < $bweight) ? -1 : 1;
-    });
+    uasort($menu, "sort_menu_by_weight");
 
     return $menu;
 }

@@ -46,14 +46,13 @@ function pieform_element_calendar(Pieform $form, $element) {
     $options['dateFormat'] = pieform_element_calendar_convert_dateformat(get_string('pieform_calendar_dateformat', 'langconfig'));
     $options['timeFormat'] = pieform_element_calendar_convert_timeformat(get_string('pieform_calendar_timeformat', 'langconfig'));
     $options = pieform_element_calendar_get_lang_strings($options, $LANGDIRECTION);
-
     $value = $form->get_value($element);
     if ($value) {
         if (!empty($options['showsTime'])) {
-                    $format = get_string('pieform_calendar_dateformat', 'langconfig');
+            $format = get_string('pieform_calendar_dateformat', 'langconfig') . ' ' . get_string('pieform_calendar_timeformat', 'langconfig');
         }
         else {
-            $format = get_string('pieform_calendar_dateformat', 'langconfig') . ' ' . get_string('pieform_calendar_timeformat', 'langconfig');
+            $format = get_string('pieform_calendar_dateformat', 'langconfig');
         }
         $value = Pieform::hsc(strftime($format, $value));
     }
@@ -104,6 +103,11 @@ function pieform_element_calendar(Pieform $form, $element) {
         setTimeout(function() {
             add_prev_next_year(inst);
         }, 1);
+        // We only need to add an in-modal class if element is within a modal
+        $(inst.dpDiv).removeClass("in-modal");
+        if ($(input).hasClass("in-modal")) {
+            $(inst.dpDiv).addClass("in-modal");
+        }
     },
     onChangeMonthYear: function(y, m, inst) {
         setTimeout(function() {
@@ -262,7 +266,9 @@ function pieform_element_calendar_set_attributes($element) {
     global $THEME;
     $element['jsroot']   = get_config('wwwroot') . 'js/jquery/jquery-ui/';
     $element['language'] = substr(current_language(), 0, 2);
-    $element['caloptions']['showsTime'] = true;
+    if (!isset($element['caloptions']['showsTime'])) {
+        $element['caloptions']['showsTime'] = true;
+    }
     return $element;
 }
 

@@ -110,11 +110,12 @@ class PluginSearchElasticsearch extends PluginSearch {
 
     /**
      * This function returns elasticsearch server information at supplied host and port
-     * @param string $option An optional param to get status about a specific thing, eg cluster health
+     * @param string $option An optional param to get status about a specific status, eg cluster health
+     * @param string $index  An optional param to get status about a specific status for a particular index, eg indices status
      * @return array containing $canconnect bool    - whether we can connect to elasticsearch at host/port
      *                          $server     object  - information about the server request
      */
-    public static function elasticsearch_server($option = null) {
+    public static function elasticsearch_server($option=null, $index=null) {
         $host = get_config_plugin('search', 'elasticsearch', 'host');
         $port = get_config_plugin('search', 'elasticsearch', 'port');
         $url = $host . ':' . $port;
@@ -123,15 +124,27 @@ class PluginSearchElasticsearch extends PluginSearch {
                 case "clusterhealth":
                     $url .= '/_cluster/health';
                     break;
-                case "shardallocation":
-                    $url .= '/_cat/shards';
+                case "indexhealth":
+                    $url .= '/_cat/indices?format=json';
                     break;
             }
         }
+
         $server = mahara_http_request(array(CURLOPT_URL => $url), true);
         $canconnect = false;
         if (!empty($server->data)) {
             $server->data = json_decode($server->data);
+            if ($index && is_array($server->data)) {
+                // we need to find the data for particular index
+                $thisindex = null;
+                foreach ($server->data as $key => $data) {
+                    if (isset($data->index) && $data->index == $index) {
+                        $thisindex = $server->data[$key];
+                        break;
+                    }
+                }
+                $server->data = $thisindex;
+            }
             if (!empty($server->data->version) && !empty($server->data->version->number)) {
                 if (version_compare($server->data->version->number, self::elasticsearch_version) !== -1) {
                     $canconnect = true;
@@ -202,14 +215,10 @@ class PluginSearchElasticsearch extends PluginSearch {
 
     public static function get_config_options() {
         $enabledhtml = '';
-        if (get_config('searchplugin') == 'elasticsearch') {
-            $enabledhtml = self::get_formatted_notice(get_string('noticeenabled', 'search.elasticsearch', get_config('wwwroot') . 'admin/site/options.php?fs=searchsettings'), 'notice');
-        }
-        else {
-            $enabledhtml = self::get_formatted_notice(get_string('noticenotenabled', 'search.elasticsearch', get_config('wwwroot').'admin/site/options.php?fs=searchsettings'), 'warning');
-        }
+        $state = 'ok';
         list($status, $server) = self::elasticsearch_server();
         if (!$status) {
+            $state = 'notice';
             $notice = get_string('noticenotactive', 'search.elasticsearch', get_config_plugin('search', 'elasticsearch', 'host'), get_config_plugin('search', 'elasticsearch', 'port'));
             if (!empty($server->error)) {
                 $notice = $server->error;
@@ -219,6 +228,19 @@ class PluginSearchElasticsearch extends PluginSearch {
         list($status, $health) = self::elasticsearch_server('clusterhealth');
         if (!empty($health->data) && $health->data->status != 'green') {
             $enabledhtml .= self::get_formatted_notice(get_string('clusterstatus', 'search.elasticsearch', $health->data->status, $health->data->unassigned_shards), 'warning');
+            $state = 'notice';
+        }
+        $index = get_config_plugin('search', 'elasticsearch', 'indexname');
+        list($status, $health) = self::elasticsearch_server('indexhealth', $index);
+        if (!empty($health->data) && $health->data->health != 'green') {
+            $enabledhtml .= self::get_formatted_notice(get_string('indexstatusbad', 'search.elasticsearch', $index, $health->data->health), 'warning');
+            $state = 'notice';
+        }
+        if (get_config('searchplugin') == 'elasticsearch') {
+            $enabledhtml .= self::get_formatted_notice(get_string('noticeenabled', 'search.elasticsearch', get_config('wwwroot') . 'admin/site/options.php?fs=searchsettings'), $state);
+        }
+        else {
+            $enabledhtml .= self::get_formatted_notice(get_string('noticenotenabled', 'search.elasticsearch', get_config('wwwroot').'admin/site/options.php?fs=searchsettings'), 'warning');
         }
 
         $config = array(
@@ -997,6 +1019,11 @@ class PluginSearchElasticsearch extends PluginSearch {
         return ElasticsearchPseudotype_all::search($query_string, $limit, $offset, $options, $mainfacetterm, $USER);
     }
 
+    public static function search_events ($options=array(), $limit = 10, $offset = 0) {
+        global $USER;
+        return ElasticsearchType_event_log::search($options, $limit, $offset, $USER);
+    }
+
     public static function search_user($query_string, $limit, $offset = 0, $data=array()) {
         return PluginSearchInternal::search_user($query_string, $limit, $offset, $data);
     }
@@ -1322,60 +1349,6 @@ class ElasticsearchFilterAcl
             $this->params['should'][] = $elasticaFilterUsr;
         }
 
-        /*
-        //    No ACL          (artefacts that don't implement ACL)
-        $elasticaFilterNoACL = new \Elastica\Filter\Missing('access.general');
-        $this->addFilter($elasticaFilterNoACL);
-
-        //    GENERAL         (public - loggedin - friends)
-        //        public
-        $elasticaFilterGeneral = new \Elastica\Filter\Term(array('access.general' => 'public'));
-        $this->addFilter($elasticaFilterGeneral);
-
-        //        loggedin
-        if ($this->user->is_logged_in()) {
-            $elasticaFilterGeneral = new \Elastica\Filter\Term(array('access.general' => 'loggedin'));
-            $this->addFilter($elasticaFilterGeneral);
-
-            //        friends: pass a list of friends => check if access.general = friends and the owner is a friend of the current user
-            if ($friends = $this->getFriendsList()) {
-                $elasticaFilterAnd  = new \Elastica\Filter\BoolAnd();
-                $elasticaFilterGeneral = new \Elastica\Filter\Term(array('access.general' => 'friends'));
-                $elasticaFilterAnd->addFilter($elasticaFilterGeneral);
-                $elasticaFilterGeneral = new \Elastica\Filter\Terms('owner', $friends);
-                $elasticaFilterAnd->addFilter($elasticaFilterGeneral);
-                $this->addFilter($elasticaFilterAnd);
-            }
-
-        }
-
-        //    INSTITUTIONS     (array of institutions that have access to the artefact)
-        $user_institutions = array_keys($this->user->get('institutions'));
-        if ($user_institutions && count($user_institutions) > 0) {
-            $elasticaFilterInstitutions = new \Elastica\Filter\Terms('access.institutions', $user_institutions);
-            $this->addFilter($elasticaFilterInstitutions);
-        }
-
-        //     GROUPS             (array of groups that have access to the artefact) groups [all/admin/member]
-        if ($groups = $this->getGroupsList()) {
-            $roles = $this->getExistingRoles();
-            foreach($roles AS $role){
-                if (isset($groups[$role]) && count($groups[$role])) {
-                    $elasticaFilterGroup[$role] = new \Elastica\Filter\Terms('access.groups.'.$role, $groups[$role]);
-                    $this->addFilter($elasticaFilterGroup[$role]);
-                }
-            }
-        }
-        //     USRS             (array of user ids that have access to the artefact)
-        if ($this->user->is_logged_in()) {
-            // if owner
-            $elasticaFilterOwner = new \Elastica\Filter\Term(array('owner' => $this->user->get('id')));
-            $this->addFilter($elasticaFilterOwner);
-            // in access.usrs list
-            $elasticaFilterUsr = new \Elastica\Filter\Term(array('access.usrs' => $this->user->get('id')));
-            $this->addFilter($elasticaFilterUsr);
-        }
-        */
     }
 
     public function get_params() {

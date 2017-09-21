@@ -711,7 +711,12 @@ abstract class ArtefactType implements IArtefactType {
             $this->log('deleted');
         }
 
-        handle_event('deleteartefact', $this);
+        $ignorefields = array(
+            'dirty', 'deleted', 'mtime', 'atime',
+            'tags', 'allowcomments', 'approvecomments', 'path'
+        );
+
+        handle_event('deleteartefact', $this, $ignorefields);
 
         // Set flags.
         $this->dirty = false;
@@ -772,8 +777,8 @@ abstract class ArtefactType implements IArtefactType {
             }
             call_static_method($classname, 'bulk_delete', $ids);
         }
-
-        handle_event('deleteartefacts', $artefactids);
+        $logdata = array_merge($containers, $leaves);
+        handle_event('deleteartefacts', $logdata);
 
         db_commit();
     }

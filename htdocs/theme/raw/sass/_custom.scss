@@ -502,15 +502,31 @@
   margin-top: -25px;
 }
 
-/*
-* NEW CSS
-* Antonella De Chiara - Eticeo Santé
-*/
-
-/***********************************
-SIDEBLOCKS
-***********************************/
-
 .accessurl-button {
     margin-bottom: 15px;
+}
+
+#reportconfigform {
+    fieldset {
+        margin-top: 10px;
+    }
+    .checkbox.form-group {
+        padding: 10px 0;
+    }
+}
+
+.reportsettings {
+    margin-top: -5px;
+}
+
+.statinfoblock {
+    width: 360px;
+
+    h3 {
+        margin-top: 0;
+    }
+
+    float: left;
+    margin-right: 15px;
+    padding: 5px;
 }

@@ -29,18 +29,39 @@ if (empty($institution)) {
         $institution = 'mahara';
     }
 }
+$start = param_variable('start', null);
+$end = param_variable('end', null);
+$start = $start ? format_date(strtotime($start), 'strftimew3cdate') : null;
+$end = $end ? format_date(strtotime($end), 'strftimew3cdate') : null;
+if (empty($extradata->start) && !empty($start)) {
+    $extradata->start = $start;
+}
+if (empty($extradata->end) && !empty($end)) {
+    $extradata->end = $end;
+}
+$activecolumns = $SESSION->get('columnsforstats');
+$activecolumns = !empty($activecolumns) ? $activecolumns : array();
+$extradata->columns = $activecolumns;
 
 $type = param_alpha('type', 'users');
+$subtype = param_alpha('subtype', $type);
 $extraparams = new stdClass();
 $extraparams->type = $type;
+$extraparams->subtype = $subtype;
 $extraparams->offset = param_integer('offset', 0);
 $extraparams->limit  = param_integer('limit', 10);
 $extraparams->sort = isset($extradata->sort) ? $extradata->sort : 'displayname';
 $extraparams->sortdesc = isset($extradata->sortdesc) ? true : false;
-$extraparams->start = param_alphanumext('start', null);
-$extraparams->end = param_alphanumext('end', null);
+$extraparams->start = $start;
+$extraparams->end = $end;
 $extraparams->field = isset($extradata->field) ? $extradata->field : (($institution == 'all') ? 'count_usr' : 'count_members');
+$extraparams->extra = (array)$extradata;
 
-list($subpages, $institutiondata, $subpagedata) = display_statistics($institution, $type, $extraparams);
+list($subpages, $subpagedata) = display_statistics($institution, $type, $extraparams);
 
-json_reply(false, (object) array('message' => false, 'data' => $subpagedata['table']));
+if (!empty($extradata) && !empty($extradata->csvdownload)) {
+    json_reply(false, (object) array('message' => false, 'data' => 'downloadready'));
+}
+else {
+    json_reply(false, (object) array('message' => false, 'data' => $subpagedata['table'], 'tableheadings' => $subpagedata['tableheadings'], 'extraparams' => $extraparams));
+}

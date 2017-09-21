@@ -678,6 +678,7 @@ EOF;
     }
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
+    $smarty->assign('loggedout', !$USER->is_logged_in());
     $publicsearchallowed = false;
     $searchplugin = get_config('searchplugin');
     if ($searchplugin) {
@@ -867,7 +868,7 @@ EOF;
             local_sideblocks_update($sideblocks);
         }
 
-        usort($sideblocks, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
+        usort($sideblocks, "sort_menu_by_weight");
 
         // Place all sideblocks on the right. If this structure is munged
         // appropriately, you can put blocks on the left. In future versions of
@@ -2561,23 +2562,23 @@ function admin_nav() {
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 90,
         ),
-        'manageinstitutions/statistics' => array(
-            'path'   => 'manageinstitutions/statistics',
-            'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('statistics', 'admin'),
-            'weight' => 100,
-        ),
         'manageinstitutions/pendingregistrations' => array(
             'path'   => 'manageinstitutions/pendingregistrations',
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
-            'weight' => 110,
+            'weight' => 100,
+        ),
+        'reports' => array(
+            'path'   => 'reports',
+            'url'    => 'admin/users/statistics.php',
+            'title'  => get_string('reports', 'statistics'),
+            'weight' => 60,
         ),
         'configextensions' => array(
             'path'   => 'configextensions',
             'url'    => 'admin/extensions/plugins.php',
             'title'  => get_string('Extensions', 'admin'),
-            'weight' => 60,
+            'weight' => 70,
             'accesskey' => 'e',
         ),
         'configextensions/pluginadmin' => array(
@@ -2773,17 +2774,17 @@ function institutional_admin_nav() {
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 90,
         ),
-        'manageinstitutions/statistics' => array(
-            'path'   => 'manageinstitutions/statistics',
-            'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('statistics', 'admin'),
-            'weight' => 100,
-        ),
         'manageinstitutions/pendingregistrations' => array(
             'path'   => 'manageinstitutions/pendingregistrations',
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
-            'weight' => 110,
+            'weight' => 100,
+        ),
+        'reports' => array(
+            'path'   => 'reports',
+            'url'    => 'admin/users/statistics.php',
+            'title'  => get_string('reports', 'statistics'),
+            'weight' => 40,
         ),
     );
 
@@ -2819,10 +2820,10 @@ function staff_nav() {
             'weight' => 10,
             'accesskey' => 'u',
         ),
-        'institutionalstatistics' => array(
-            'path'   => 'statistics',
+        'reports' => array(
+            'path'   => 'reports',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('institutionstatistics', 'admin'),
+            'title'  => get_string('reports', 'statistics'),
             'weight' => 30,
             'accesskey' => 'i',
         ),
@@ -2860,10 +2861,10 @@ function institutional_staff_nav() {
             'weight' => 10,
             'accesskey' => 'u',
         ),
-        'institutionalstatistics' => array(
-            'path'   => 'statistics',
+        'reports' => array(
+            'path'   => 'reports',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('institutionstatistics', 'admin'),
+            'title'  => get_string('reports', 'statistics'),
             'weight' => 20,
             'accesskey' => 'i',
         ),
@@ -4251,6 +4252,7 @@ function build_pagination($params) {
         $js .= "new Paginator($id, $datatable, $heading, $jsonscript, $extradata);";
     }
     else {
+        $extradata = null;
         $js .= "new Paginator($id, null, null, null, null);";
     }
 

@@ -200,3 +200,182 @@ $string['admins'] = 'Administrators';
 
 $string['activeusers'] = "Active users";
 $string['logins'] = "Logins";
+
+$string['reports'] = 'Reports';
+$string['reportsfor'] = 'Reports for %s';
+$string['reporttype'] = 'Report type';
+$string['reportconfig'] = 'Report configuration';
+$string['reportdesctitle'] = 'This report includes:';
+
+// People reports
+
+$string['reportaccesslist'] = 'Portfolio access';
+$string['reportdescaccesslist'] = '<ul>
+<li>Portfolio owner</li>
+<li>Title of the portfolio</li>
+<li>Access list, i.e. who has permission to view the portfolio</li>
+</ul>';
+
+$string['reportdescusers'] = '<ul>
+<li>Date</li>
+<li>Number of people who logged in</li>
+<li>Number of accounts created</li>
+<li>Total number of people in the selected institution</li>
+<li>Information about the average user in the selected institution</li>
+</ul>';
+
+$string['reportuserdetails'] = 'User details';
+$string['reportdescuserdetails'] = '<ul>
+<li>Username</li>
+<li>Email address</li>
+<li>First name</li>
+<li>Last name</li>
+<li>ID number</li>
+<li>Display name</li>
+<li>Remote username</li>
+<li>Last login</li>
+<li>Number of probation points</li>
+</ul>';
+
+$string['reportuseractivity'] = 'User activity';
+$string['reportdescuseractivity'] = '<ul>
+<li>User information</li>
+<li>Number of artefacts</li>
+<li>Number of pages</li>
+<li>Number of collections</li>
+<li>Number of groups</li>
+<li>Number of logins</li>
+<li>Number of actions (create and modify an artefact, forum post, personal pages and collection, group pages and collections, comments, page views)</li>
+<li>Last login</li>
+<li>Last activity</li>
+</ul>';
+
+$string['reportcollaboration'] = 'Collaboration';
+$string['reportdesccollaboration'] = '<ul>
+<li>Number of comments</li>
+<li>Number of annotation feedback</li>
+<li>Number of portfolios (pages or collections) shared with individual users</li>
+<li>Number of portfolios shared with groups</li>
+<li>Number of portfolios shared with an institution</li>
+<li>Number of portfolios shared with all registered users</li>
+<li>Number of portfolios shared publicly</li>
+<li>Number of portfolios shared via secret URLs</li>
+<li>Number of portfolios shared with friends</li>
+</ul>';
+
+$string['reportmasquerading'] = 'Masquerading sessions';
+$string['reportdescmasquerading'] = '<ul>
+<li>Name and username</li>
+<li>Reason for the masquerading session</li>
+<li>Administrator who masqueraded</li>
+<li>Start time of the masquerading session</li>
+</ul>';
+
+$string['reportpageactivity'] = 'Page activity';
+$string['reportdescpageactivity'] = '<ul>
+<li>Page title</li>
+<li>Page owner</li>
+<li>Creation date</li>
+<li>Last modification date</li>
+<li>Date, when the page was last viewed</li>
+<li>Number of blocks included in the page</li>
+<li>Title of the collection to which the page belongs (if any)</li>
+</ul>';
+$string['allothers'] = 'All others';
+
+// Group reports
+$string['reportdescgroups'] = '<ul>
+<li>ID</li>
+<li>Name</li>
+<li>Number of members</li>
+<li>Number of pages</li>
+<li>Number of comments on group pages</li>
+<li>Number of comments on pages shared with the group</li>
+<li>Number of forums</li>
+<li>Number of forum posts</li>
+</ul>';
+
+// Content reports
+$string['reportdesccontent'] = '<ul>
+<li>Title</li>
+<li>Number of modifications</li>
+<li>Total</li>
+<li>Number of unique users who made the modifications</li>
+<li>Number of unique users over the total</li>
+</ul>';
+
+// Institution reports
+$string['informationreports'] = 'Information overview';
+$string['reportdescinformation'] = '<ul>
+<li>Creation date</li>
+<li>Number of users</li>
+<li>Number of pages</li>
+<li>Disk space used</li>
+<li>For "All institutions" only:
+<ul>
+<li>Number of groups</li>
+<li>Database size</li>
+<li>Mahara version</li>
+<li>Information on the running of cron</li>
+</ul></li>
+</ul>';
+
+$string['reportinstitutioncomparison'] = 'Institution comparison';
+$string['reportdesccomparisons'] = '<ul>
+<li>Institution</li>
+<li>Number of members</li>
+<li>Number of pages</li>
+<li>Number of blocks</li>
+<li>Number of artefacts</li>
+<li>Number of forum posts by institution members</li>
+</ul>';
+
+$string['reportdesclogins'] = '<ul>
+<li>Institution</li>
+<li>Number of logins no matter the user</li>
+<li>Number of active users</li>
+</ul>';
+
+$string['userscollaborationreports'] = 'Collaboration';
+$string['userspageactivityreports'] = 'Page activity';
+$string['usersmasqueradingreports'] = 'Masquerading sessions';
+$string['usersaccesslistreports'] = 'Portfolio access';
+$string['usersuseractivityreports'] = 'User activity';
+$string['usersuserdetailsreports'] = 'User details';
+$string['groupsreports'] = 'Groups overview';
+$string['contentreports'] = 'Content overview';
+$string['peoplereports'] = 'People overview';
+$string['informationloginsreports'] = 'Logins';
+$string['informationcomparisonsreports'] = 'Institution comparison';
+
+$string['applyingfilters'] = 'Applying filters';
+$string['nogroupdataperinstitution'] = 'Group reports can only be generated for the entire site. Please select "All institutions" from the institution selector if you have permission to view sitewide reports.';
+$string['nocomparisondataperinstitution'] = 'Comparison reports can only be generated for the entire site. Please select "All institutions" from the institution selector if you have permission to view sitewide reports.';
+$string['nologinsdataperinstitution'] = 'Login reports can only be generated for the entire site. Please select "All institutions" from the institution selector if you have permission to view sitewide reports.';
+$string['timeframe'] = 'Time frame: ';
+
+$string['groupcomments'] = 'Group page comments';
+$string['sharedcomments'] = 'Shared page comments';
+$string['notdisplayed'] = 'N/A';
+$string['lastmodified'] = 'Last modified';
+$string['lastvisited'] = 'Last visited';
+$string['user'] = 'User';
+$string['usershare'] = 'Users';
+$string['groupshare'] = 'Groups';
+$string['institutionshare'] = 'Institutions';
+$string['loggedinshare'] = 'Registered';
+$string['publicshare'] = 'Public';
+$string['secretshare'] = 'Secret URLs';
+$string['friendshare'] = 'Friends';
+$string['actions'] = 'Actions';
+$string['lastactivity'] = 'Last activity';
+$string['removefilter'] = 'Remove filter';
+$string['collaborationdate'] = 'w.c. %s';
+$string['needadvancedanalytics'] = 'Advanced analytics need to be enabled for this report. Please see the "Logging settings" under "Configure site" for more information.';
+$string['Overview'] = 'Overview';
+$string['weeklytrend'] = 'Growth trend';
+$string['groupinfo'] = 'Groups overview';
+$string['usersinfo'] = 'Users overview';
+$string['viewsinfo'] = 'Pages overview';
+$string['usersbyinstitution'] = 'Users by institution';
+$string['groupsbytype'] = 'Groups by type';

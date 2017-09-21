@@ -806,7 +806,7 @@ function core_install_lastcoredata_defaults() {
     set_profile_field($user->id, 'email', $user->email);
     set_profile_field($user->id, 'firstname', $user->firstname);
     set_profile_field($user->id, 'lastname', $user->lastname);
-    handle_event('createuser', $user);
+    handle_event('createuser', $user, array('password'));
     activity_add_admin_defaults(array($user->id));
     db_commit();
 
@@ -888,6 +888,14 @@ function core_install_firstcoredata_defaults() {
         'creategroup',
         'loginas',
         'clearcaches',
+        'createview',
+        'createcollection',
+        'updatecollection',
+        'deletecollection',
+        'addsubmission',
+        'releasesubmission',
+        'updateviewaccess',
+        'sharedcommenttogroup'
     );
 
     foreach ($eventtypes as $et) {

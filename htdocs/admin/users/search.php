@@ -20,6 +20,7 @@ define('SECTION_PAGE', 'usersearch');
 define('IGNORE_FETCH_REMOTE_AVATAR', 1);
 require_once('searchlib.php');
 
+$SESSION->set('usersforstats', null);
 $search = (object) array(
     'query'          => trim(param_variable('query', '')),
     'f'              => param_alpha('f', null), // first initial

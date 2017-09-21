@@ -156,7 +156,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
  * id
  */
 function activity_set_defaults($eventdata) {
-    $user_id = $eventdata['id'];
+    $user_id = is_object($eventdata) ? $eventdata->id : $eventdata['id'];
     $activitytypes = get_records_array('activity_type', 'admin', 0);
 
     foreach ($activitytypes as $type) {

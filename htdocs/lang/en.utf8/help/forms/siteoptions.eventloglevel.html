@@ -1,7 +1,8 @@
 <!-- @license http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later -->
 <!-- @copyright For copyright information on Mahara, please see the README file distributed with this software. -->
 <h3>Log events</h3>
-<p>Events are generated every time the user does anything significant on the site, such as editing a page.</p>
-<p>Optionally, a log of these events can be kept. You can keep either all events, which could be a lot of data and database activity on a busy site, or only those events pertaining to the masquerading of an administrator as another user when using the "Log in as" functionality.
-This log is kept in the event_log table in the database. A report of masquerading sessions is available in the "User reports" section of the "User search" administration page.</p>
+<p>Events are generated every time a user does anything significant on the site, e.g. editing a page.</p>
+<p>Optionally, a log of these events can be kept in the database. You can keep either all events, which could be a lot of data and database activity on a busy site, or only those events pertaining to the masquerading of an administrator as another user when using the "Log in as" functionality.
+This log is kept in the event_log table in the database. A report of masquerading sessions is available in the "Reports" section.</p>
+<p>If you want to use the advanced analytics functionality, you need to log all events and not just the masquerading ones.</p>
 <p>No matter which setting you choose, all events are still logged in the access log.</p>

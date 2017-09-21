@@ -138,7 +138,7 @@ class PluginArtefactBlog extends PluginArtefact {
         $name = display_name($user, null, true);
         $blog = new ArtefactTypeBlog(0, (object) array(
             'title'       => get_string('defaultblogtitle', 'artefact.blog', $name),
-            'owner'       => $user['id'],
+            'owner'       => is_object($user) ? $user->id : $user['id'],
         ));
         $blog->commit();
     }

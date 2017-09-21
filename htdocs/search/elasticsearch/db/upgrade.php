@@ -92,5 +92,22 @@ function xmldb_search_elasticsearch_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017081600) {
+        log_debug('Adding ability to search by event_log in elasticsearch');
+        // Need to add the 'event_log' to the default types to index for elasticsearch
+        // Note: the $cfg->plugin_search_elasticsearch_types can be overriding this
+        // We don't want to run the re-indexing now as that will take ages for large sites
+        // It should be run from the  Extensions -> Elasticsearch -> Configuration page
+        if ($types = get_field('search_config', 'value', 'plugin', 'elasticsearch', 'field', 'types')) {
+            $types = explode(',', $types);
+            if (!in_array('event_log', $types)) {
+                $types[] = 'event_log';
+            }
+            $types = implode(',', $types);
+            update_record('search_config', array('value' => $types), array('plugin' => 'elasticsearch', 'field' => 'types'));
+            log_warn(get_string('newindextype', 'search.elasticsearch', 'event_log'), true, false);
+        }
+    }
+
     return true;
 }

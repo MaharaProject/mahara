@@ -88,8 +88,8 @@
 
         <div class="panel panel-info site-stats">
             <h3 class="panel-heading">{$sitedata.displayname}: {str tag=siteinformation section=admin} <span class="icon icon-area-chart pull-right" role="presentation" aria-hidden="true"></span></h3>
-            {include file='admin/users/stats.tpl' institutiondata=$sitedata showall='_all'}
-            <a class="panel-footer text-small" href="{$WWWROOT}admin/users/statistics.php">{str tag=viewfullsitestatistics section=admin} <span class="icon icon-arrow-circle-right pull-right" role="presentation" aria-hidden="true"></span></a>
+            {include file='admin/users/stats.tpl' institutiondata=$sitedata showall='_all' fromindex='1'}
+            <a class="panel-footer text-small" href="{$WWWROOT}admin/users/statistics.php?type=information&subtype=information">{str tag=viewfullsitestatistics section=admin} <span class="icon icon-arrow-circle-right pull-right" role="presentation" aria-hidden="true"></span></a>
         </div>
 
     {/if}

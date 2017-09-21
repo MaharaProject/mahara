@@ -63,3 +63,8 @@
         font-weight: bold;
     }
 }
+
+.elasticsearch-status {
+    color: darken($link-color, 10%);
+    font-weight: bold;
+}

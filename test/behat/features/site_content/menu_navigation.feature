@@ -66,7 +66,7 @@ Scenario: Checking menu items are available as site staff (Bug 1467368)
  And I click on "Show administration menu"
  And I follow "User search"
  And I click on "Show administration menu"
- Then I follow "Institution statistics"
+ Then I follow "Reports"
 
 
 Scenario: Checking menu items are available as Admin User (Bug 1467368)
@@ -122,8 +122,9 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "Pages and collections" in the ".manageinstitutions" "css_element"
  And I should see "Share" in the ".manageinstitutions" "css_element"
  And I should see "Files" in the ".manageinstitutions" "css_element"
- And I should see "Statistics" in the ".manageinstitutions" "css_element"
  And I should see "Pending registrations" in the ".manageinstitutions" "css_element"
+# Checking Reports menu
+ And I should see "Reports"
 # Checking the sub navigation in Extensions
  When I press "Show menu for Extensions"
  Then I should see "Plugin administration" in the ".configextensions" "css_element"
@@ -166,5 +167,6 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Pages and collections" in the ".manageinstitutions" "css_element"
  And I should see "Share" in the ".manageinstitutions" "css_element"
  And I should see "Files" in the ".manageinstitutions" "css_element"
- And I should see "Statistics" in the ".manageinstitutions" "css_element"
  And I should see "Pending registrations" in the ".manageinstitutions" "css_element"
+# Checking Reports menu
+ And I should see "Reports"

@@ -108,6 +108,7 @@ $string['nogroupviewsyet'] = 'There are no pages in this group yet';
 $string['viewssharedtogroup'] = 'Pages shared with this group';
 $string['nosharedviewsyet'] = 'There are no pages shared with this group yet';
 $string['viewssharedtogroupbyothers'] = 'Pages shared with this group by others';
+$string['sharedviews'] = 'Shared pages';
 $string['submissionstogroup'] = 'Submissions to this group';
 $string['nosubmittedviewscollectionsyet'] = 'There are no pages or collections submitted to this group yet';
 $string['nosubmissionsfrom'] = 'Members without a submission to the group';

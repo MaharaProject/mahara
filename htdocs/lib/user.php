@@ -1297,6 +1297,10 @@ function display_username($user=null) {
         $user = new StdClass;
         $user->username = $USER->get('username');
     }
+    // if cached (non $USER) $user object is missing username
+    if (empty($user->username)) {
+        $user->username = get_field('usr', 'username', 'id', $user->id);
+    }
 
     if (strlen($user->username) > MAX_USERNAME_DISPLAY) {
         return substr($user->username, 0, MAX_USERNAME_DISPLAY).'...';
@@ -2510,7 +2514,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     reset_password($user, false, $quickhash);
 
     $createuser = clone $user;
-    handle_event('createuser', $createuser);
+    handle_event('createuser', $createuser, array('password'));
     db_commit();
     return $user->id;
 }
@@ -2618,7 +2622,7 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array(), $
  */
 function add_user_to_autoadd_groups($eventdata) {
     require_once('group.php');
-    $userid = $eventdata['id'];
+    $userid = is_object($eventdata) ? $eventdata->id : $eventdata['id'];
     if ($autoaddgroups = get_column('group', 'id', 'usersautoadded', true)) {
         foreach ($autoaddgroups as $groupid) {
             if (!group_user_access($groupid, $userid)) {
