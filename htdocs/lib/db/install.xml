@@ -324,6 +324,7 @@
                 <FIELD NAME="ownerid" TYPE="int" LENGTH="10" NOTNULL="false" />
             </FIELDS>
             <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="realusrfk" TYPE="foreign" FIELDS="realusr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
