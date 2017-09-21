@@ -409,12 +409,58 @@ class PluginAuthSaml extends PluginAuth {
         }
     }
 
+    /*
+     * Return an array of signature algorithms in a form suitable for feeding into a dropdown form
+     */
+    public static function get_valid_saml_signature_algorithms() {
+        $return = array();
+        $return['http://www.w3.org/2001/04/xmldsig-more#rsa-sha256'] = get_string('sha256', 'auth.saml');
+        $return['http://www.w3.org/2001/04/xmldsig-more#rsa-sha384'] = get_string('sha384', 'auth.saml');
+        $return['http://www.w3.org/2001/04/xmldsig-more#rsa-sha512'] = get_string('sha512', 'auth.saml');
+        $return['http://www.w3.org/2000/09/xmldsig#rsa-sha1'] = get_string('sha1', 'auth.saml');
+
+        return $return;
+    }
+
+    /*
+     * Return a sensible default signature algorithm for simplesamlphp config
+     */
+    public static function get_default_saml_signature_algorithm() {
+        //Sha1 is deprecated so we default to something more sensible
+        return 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+    }
+
+    /*
+     * Check if a given value is a valid signature algorithm for configuration
+     * in simplesamlphp
+     */
+    public static function is_valid_saml_signature_algorithm($value) {
+        $valids = self::get_valid_saml_signature_algorithms();
+        return array_key_exists($value, $valids);
+    }
+
+    /*
+     * Get the configured signature algorithm, falling back to the default if
+     * no valid value can be found or no value is set
+     */
+    public static function get_config_saml_signature_algorithm() {
+        $signaturealgo = get_config_plugin('auth', 'saml', 'sigalgo');
+        if (empty($signaturealgo) || !self::is_valid_saml_signature_algorithm($signaturealgo)) {
+                $signaturealgo = self::get_default_saml_signature_algorithm();
+        }
+
+        return $signaturealgo;
+    }
+
     public static function get_config_options() {
 
         $spentityid = get_config_plugin('auth', 'saml', 'spentityid');
         if (empty($spentityid)) {
             $spentityid = $_SERVER['HTTP_HOST'] . '/mahara';
         }
+
+        $signaturealgo = self::get_config_saml_signature_algorithm();
+        $possiblealgos = self::get_valid_saml_signature_algorithms();
 
         // first time - create it
         if (!file_exists(AuthSaml::get_certificate_path() . 'server.crt')) {
@@ -462,6 +508,13 @@ class PluginAuthSaml extends PluginAuth {
                 ),
                 'defaultvalue' => $spentityid,
                 'help'  => true,
+            ),
+            'sigalgo' => array(
+                'type' => 'select',
+                'title' => get_string('sigalgo', 'auth.saml'),
+                'options' => $possiblealgos,
+                'defaultvalue' => $signaturealgo,
+                'help' => true,
             ),
             'makereallysure' => array(
                 'type'         => 'html',
@@ -539,7 +592,7 @@ class PluginAuthSaml extends PluginAuth {
 
     public static function save_config_options(Pieform $form, $values) {
         delete_records('auth_config', 'plugin', 'saml');
-        $configs = array('spentityid');
+        $configs = array('spentityid', 'sigalgo');
         foreach ($configs as $config) {
             set_config_plugin('auth', 'saml', $config, $values[$config]);
         }

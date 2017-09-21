@@ -56,6 +56,12 @@ else {
 }
 
 /*
+ * Get the configured signature algorithm, falling back to SHA256 if no valid
+ * value is found
+ */
+$signaturealgo = PluginAuthSaml::get_config_saml_signature_algorithm();
+
+/*
  * The configuration of simpleSAMLphp
  *
  * $Id: config.php 1881 2009-10-20 09:14:47Z olavmrk $
@@ -499,6 +505,12 @@ $config = array (
      * same option in the metadata for the SP or IdP.
      */
     'metadata.sign.enable' => FALSE,
+
+    /*
+     * What signature algorithm to use when signing the sp requests, configured
+     * in the plugin settings
+     */
+    'signature.algorithm' => $signaturealgo,
 
     /*
      * The default key & certificate which should be used to sign generated metadata. These

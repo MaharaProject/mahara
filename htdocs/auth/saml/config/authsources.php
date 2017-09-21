@@ -22,6 +22,12 @@ if (empty($spentityid)) {
     $spentityid = $_SERVER['HTTP_HOST'].'/mahara';
 }
 
+/*
+ * Get the configured signature algorithm, falling back to SHA256 if no valid
+ * value is found
+ */
+$signaturealgo = PluginAuthSaml::get_config_saml_signature_algorithm();
+
 $config = array(
 
     // This is a authentication source which handles admin authentication.
@@ -52,7 +58,7 @@ $config = array(
         'discoURL' => NULL,
 
         'encryption.blacklisted-algorithms' => array(),
-
+        'signature.algorithm' => $signaturealgo,
         'privatekey' => $key,
         'privatekey_pass' => get_config('sitename'),
         'certificate' => $cert,
