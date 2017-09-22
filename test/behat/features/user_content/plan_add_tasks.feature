@@ -15,76 +15,65 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
  And I press "Save plan"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Purchase Mars  |
- | Completion date  | 2015/10/30 |
+ And I fill in "Title" with "Purchase Mars"
+ And I fill in "Completion date" with "-2 months" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Set up atmosphere  |
- | Completion date  | 2016/10/30 |
+ And I fill in "Title" with "Set up atmosphere"
+ And I fill in "Completion date" with "-1 months" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Terraform  |
- | Completion date  | 2017/10/30 |
+ And I fill in "Title" with "Terraform"
+ And I fill in "Completion date" with "-2 weeks" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Exploit resources  |
- | Completion date  | 2017/11/30 |
+ And I fill in "Title" with "Exploit resources"
+ And I fill in "Completion date" with "+2 days" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Bring colonists  |
- | Completion date  | 2018/10/30 |
+ And I fill in "Title" with "Bring colonists"
+ And I fill in "Completion date" with "+2 weeks" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Build metropolis  |
- | Completion date  | 2019/10/30 |
+ And I fill in "Title" with "Build metropolis"
+ And I fill in "Completion date" with "+6 months" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Start society  |
- | Completion date  | 2020/10/30 |
+ And I fill in "Title" with "Start society"
+ And I fill in "Completion date" with "+1 year" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Build utopia  |
- | Completion date  | 2021/10/30 |
+ And I fill in "Title" with "Build utopia"
+ And I fill in "Completion date" with "+2 years" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Squabble about morals  |
- | Completion date  | 2022/10/30 |
+ And I fill in "Title" with "Squabble about morals"
+ And I fill in "Completion date" with "+3 years" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Quell rebels  |
- | Completion date  | 2023/10/30 |
+ And I fill in "Title" with "Quell rebels"
+ And I fill in "Completion date" with "+5 years" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Social collapse  |
- | Completion date  | 2024/10/30 |
+ And I fill in "Title" with "Social collapse"
+ And I fill in "Completion date" with "+6 years" date in the format "Y/m/d"
  And I press "Save task"
 
  And I follow "New task"
- And I fill in the following:
- | Title *  | Alien invasion  |
- | Completion date  | 2025/10/30 |
+ And I fill in "Title" with "Alien invasion"
+ And I fill in "Completion date" with "+10 years" date in the format "Y/m/d"
  And I press "Save task"
+
  And I follow "Next page"
  Then I should see "Alien invasion"
  # Add the plan to a page
