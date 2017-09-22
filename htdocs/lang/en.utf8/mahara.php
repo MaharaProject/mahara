@@ -1252,4 +1252,6 @@ $string['styleguide_description'] = 'This style guide describes all the differen
 // Miscellaneous (please keep these alphabetized)
 $string['cli_incorrect_value'] = 'Incorrect value, please retry.';
 $string['scroll_to_top'] = 'Back to top';
+$string['tabgroup'] = 'Group';
+$string['tabinstitution'] = 'Institution';
 $string['version.'] = 'v.'; // version shortname, used when duplicating pages and collections
