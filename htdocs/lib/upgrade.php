@@ -784,6 +784,8 @@ function core_install_lastcoredata_defaults() {
     require_once('skin.php');
     install_skins_default();
 
+    install_auth_default();
+
     // Remove admin privs from root user as it doesn't need it now
     $user->admin = 0;
     update_record('usr', $user, array('id' => 0));
@@ -1529,6 +1531,18 @@ function site_warnings() {
                 $warnings[] = get_string('obsoletesamlinstance', 'auth.saml', get_config('wwwroot') . 'admin/users/addauthority.php?id=' . $saml->id . '&edit=1&i=' . $saml->name . '&p=saml', $saml->instancename, $saml->displayname);
             }
         }
+        // Check if the library is updated to the latest version Mahara supports
+        $autoload = get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php';
+        if (file_exists($autoload)) {
+            require(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
+            $config = SimpleSAML_Configuration::getInstance();
+
+            $libversion = get_config_plugin('auth', 'saml', 'version');
+            if (!empty($libversion) && $config->getVersion() != $libversion) {
+                $warnings[] = get_string('errorupdatelib', 'auth.saml');
+            }
+        }
+
     }
 
     // Check that the GD library has support for jpg, png and gif at least

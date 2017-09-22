@@ -28,6 +28,7 @@ $string['errorretryexceeded'] = 'Maximum number of retries exceeded (%s): There 
 $string['errnosamluser'] = 'No user found';
 $string['errorssphpsetup'] = 'SAML is not set up correctly. You Need to run "make ssphp" from the commandline first.';
 $string['errorbadlib'] = 'The SimpleSAMLPHP library\'s "autoloader" file was not found at %s.<br>Make sure you install SimpleSAMLphp via "make ssphp" and the file is readable.';
+$string['errorupdatelib'] = 'Your current SimpleSAMLPHP library version is out of date. You need to run "make cleanssphp && make ssphp"';
 $string['errornomcrypt'] = 'The PHP library "mcrypt" must be installed for auth/saml. Make sure you install and activate mcrypt, e.g.:<br>sudo apt-get install php5-mcrypt<br>sudo php5enmod mcrypt<br>Then restart your web server.';
 $string['errornomcrypt7php'] = 'The PHP library "mcrypt" must be installed for auth/saml. Make sure you install and activate mcrypt, e.g.:<br>sudo apt-get install php7.0-mcrypt<br>sudo phpenmod mcrypt<br>Then restart your web server.';
 $string['errornomemcache'] = 'A memcache server is needed for auth/saml. Either list the paths to your memcache servers in the $cfg->memcacheservers config variable or install memcache locally.<br>To install the PHP library "memcache" locally:<br>sudo apt-get install php5-memcache<br>sudo php5enmod memcache<br>Then restart you web server.';
