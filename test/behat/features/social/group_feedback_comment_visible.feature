@@ -26,7 +26,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     And I set the following fields to these values:
     | Comment notifications | None |
     And I press "Save group"
-    When I click on "Pages" in the ".right-text" "css_element"
+    When I click on "Pages and collections" in the ".right-text" "css_element"
     And I follow "Add"
     And I click on "Page" in the dialog
     And I set the following fields to these values:

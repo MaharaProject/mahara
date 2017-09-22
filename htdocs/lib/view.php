@@ -1384,14 +1384,22 @@ class View {
 
                 if (array_search($accessrecord, $accessdata_added) === false) {
                     $accessrecord->view = $this->get('id');
-                    $vaid = insert_record('view_access', $accessrecord, 'id', true);
-                    handle_event('updateviewaccess', array(
-                        'id' => $vaid,
-                        'eventfor' => $item['type'],
-                        'parentid' => $accessrecord->view,
-                        'parenttype' => 'view',
-                        'rules' => $accessrecord)
-                    );
+                    require_once('ddl.php');
+                    $table = new XMLDBTable('view_access');
+                    $field = new XMLDBField('id');
+                    if (field_exists($table, $field)) {
+                        $vaid = insert_record('view_access', $accessrecord, 'id', true);
+                        handle_event('updateviewaccess', array(
+                            'id' => $vaid,
+                            'eventfor' => $item['type'],
+                            'parentid' => $accessrecord->view,
+                            'parenttype' => 'view',
+                            'rules' => $accessrecord)
+                        );
+                    }
+                    else {
+                        $vaid = insert_record('view_access', $accessrecord);
+                    }
                     unset($accessrecord->view);
                     $accessdata_added[] = $accessrecord;
                 }

@@ -1859,6 +1859,11 @@ function handle_event($event, $data, $ignorefields = array()) {
         $event_types = array_fill_keys(get_column('event_type', 'name'), true);
     }
 
+    if (defined('INSTALLER') && !isset($event_types[$event])) {
+        // Do not handle events not currently installed during upgrade
+        return;
+    }
+
     $e = $event_types[$event];
 
     if (is_null($e)) {
