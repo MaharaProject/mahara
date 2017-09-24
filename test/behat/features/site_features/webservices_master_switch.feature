@@ -1,4 +1,4 @@
-@javascript @core @core_administration
+@javascript @core @core_administration @core_webservices
 Feature: To enable webservices via the webservices configuration form
 In order to use webservices
 As an admin

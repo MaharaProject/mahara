@@ -202,6 +202,27 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Fill the wstoken text in field. This step finds the relevant token and fill in field.
+     * @When /^I fill in the wstoken for "([^"]*)" owned by "([^"]*)"$/
+     */
+    public function i_fill_in_wstoken($service, $user) {
+        $tokens = get_records_sql_array("SELECT token FROM {external_services} es
+                                         JOIN {external_tokens} et ON et.externalserviceid = es.id
+                                         JOIN {usr} u ON u.id = et.userid
+                                         WHERE es.name = ?
+                                         AND (u.username = ? OR CONCAT(u.firstname, ' ', u.lastname) = ?)", array($service, $user, $user));
+        if (!$tokens) {
+            throw new Exception(sprintf('Invalid token. No wstoken found for service "%s" owned by "%s".', $service, $user));
+        }
+        if (count($tokens) > 1) {
+            throw new Exception(sprintf('Too many tokens. More than one wstoken exists for user "%s" for service "%s".', $user, $service));
+        }
+        $token = $tokens[0]->token;
+        // success
+        $this->getSession()->getPage()->fillField("wstoken", $token);
+    }
+
+    /**
      * Assert the text in popup window. This step does not work in all the browsers, consider it experimental.
      * @Then /^I should see "(?P<text>(?:[^"]|\\")*)" in popup$/
      * @param string $text

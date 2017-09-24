@@ -453,6 +453,34 @@ class BehatForms extends BehatBase {
     }
 
     /**
+     * Enable a switch in a table row containing the specified text
+     *
+     * @When /^I enable the switch in "(?P<fieldlabel>(?:[^"]|\\")*)" row$/
+     * @param string $fieldlabel the label of the field
+     * @throws ElementNotFoundException
+     */
+    public function i_enable_switch_in_row($fieldlabel) {
+
+        // The table row container.
+        $textliteral = $this->escaper->escapeLiteral($fieldlabel);
+        $exception = new ElementNotFoundException($this->getSession(), 'field', null, 'the row containing the text "' . $fieldlabel . '"');
+        $xpath = "//tr[contains(normalize-space(.), " . $textliteral . ")]";
+
+        $rownode = $this->find('xpath', $xpath, $exception);
+        // Looking for the element DOM node inside the specified row.
+        list($selector, $locator) = $this->transform_selector('checkbox', $fieldlabel);
+        $switch_node = $this->find($selector, $locator, false, $rownode);
+        $this->ensure_node_is_visible($switch_node);
+        if (!$switch_node->isChecked()) {
+            // For some reasons, the Mink function click() and check() do not work
+            // Using jQuery as a workaround
+            $jscode = "jQuery(\"tr label:contains(" . $this->escapeDoubleQuotes($textliteral) . ")\").closest(\"tr\").find(\"input[type=checkbox]\")[0].click();";
+            $this->getSession()->executeScript($jscode);
+        }
+
+    }
+
+    /**
      * Enable a switch
      *
      * @When /^I enable the switch "(?P<fieldlabel>(?:[^"]|\\")*)"$/
