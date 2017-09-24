@@ -396,7 +396,14 @@ class ElasticsearchType_artefact extends ElasticsearchType
                     $size = intval($record->width * 80 / $record->height) . 'x80';
                 }
             }
-            $record->thumb = ArtefactTypeImage::get_icon(array('id' => $id, 'size' => $size));
+            $vars = array(
+                'id' => $id,
+                'size' => $size
+            );
+            if (!empty($record->views)) {
+                $vars['viewid'] = key($record->views); // use first view user can see
+            }
+            $record->thumb = ArtefactTypeImage::get_icon($vars);
         }
 
         return $record;
