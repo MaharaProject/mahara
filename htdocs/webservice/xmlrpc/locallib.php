@@ -462,8 +462,6 @@ class webservice_xmlrpc_server extends webservice_zend_server {
      * @return $xml
      */
     protected function modify_payload() {
-        global $HTTP_RAW_POST_DATA;
-
         $xml = null;
 
         // check for encryption and signatures
@@ -496,12 +494,12 @@ class webservice_xmlrpc_server extends webservice_zend_server {
         }
 
         // only both if we can find a public key
-        $HTTP_RAW_POST_DATA = file_get_contents('php://input');
+        $rawHTTPdata = file_get_contents('php://input');
         if (!empty($this->publickey)) {
             // A singleton provides our site's SSL info
             require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
             $openssl = OpenSslRepo::singleton();
-            $payload                 = $HTTP_RAW_POST_DATA;
+            $payload                 = $rawHTTPdata;
             $this->payload_encrypted = false;
             $this->payload_signed    = false;
 
@@ -544,7 +542,7 @@ class webservice_xmlrpc_server extends webservice_zend_server {
             }
         }
         else {
-            $payload = $HTTP_RAW_POST_DATA;
+            $payload = $rawHTTPdata;
         }
 
         // if XML has been grabbed already then it must be turned into a request object

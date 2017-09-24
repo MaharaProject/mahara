@@ -221,7 +221,7 @@ class webservice_soap_client_wsse extends Zend_Soap_Client_Common {
      * see, if you want to add more headers, the method needs to be modifyed
      */
     public function __soapCall($function_name, $arguments, $options=null,
-            $input_headers=null, $output_headers=null) {
+            $input_headers=null, &$output_headers=null) {
 
         $result = parent::__soapCall($function_name, $arguments, $options,
                 $this->wssecurity_header());
