@@ -579,6 +579,10 @@ function core_postinst() {
     if (check_dir_exists($sessionpath)) {
         // Create three levels of directories, named 0-9, a-f
         $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+        if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
+            $characters = array_merge($characters, array('g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+                                                         'o', 'p', 'q', 'r', 's', 't', 'u', 'v'));
+        }
         foreach ($characters as $c1) {
             if (check_dir_exists("$sessionpath/$c1")) {
                 foreach ($characters as $c2) {
@@ -1504,7 +1508,7 @@ function site_warnings() {
     }
 
     // Check for low security (i.e. not random enough) session IDs
-    if ((int)ini_get('session.entropy_length') < 16) {
+    if (version_compare(PHP_VERSION, '7.1.0') < 0 && (int)ini_get('session.entropy_length') < 16) {
         $warnings[] = get_string('notenoughsessionentropy', 'error');
     }
 

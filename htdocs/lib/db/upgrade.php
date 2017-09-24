@@ -5321,5 +5321,10 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records('auth_installed', 'name', 'browserid');
     }
 
+    if ($oldversion < 2017092500) {
+        log_debug('Clear all caches to allow regeneration of session directories');
+        clear_all_caches(true);
+    }
+
     return $status;
 }
