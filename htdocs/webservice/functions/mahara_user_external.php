@@ -232,7 +232,7 @@ class mahara_user_external extends external_api {
 
         // we need to turn the social profile information into a single string to pass validate_paramaters()
         foreach ($users as $key => $user) {
-            if (isset($user['socialprofile'])) {
+            if (isset($user['socialprofile']) && is_array($user['socialprofile'])) {
                 $users[$key]['socialprofile'] = (!empty($user['socialprofile']['profiletype']) ? $user['socialprofile']['profiletype'] : '') . '|' . (!empty($user['socialprofile']['profileurl']) ? $user['socialprofile']['profileurl'] : '');
             }
         }
@@ -481,7 +481,7 @@ class mahara_user_external extends external_api {
 
         // we need to turn the social profile information into a single string to pass validate_paramaters()
         foreach ($users as $key => $user) {
-            if (isset($user['socialprofile'])) {
+            if (isset($user['socialprofile']) && is_array($user['socialprofile'])) {
                 $users[$key]['socialprofile'] = (!empty($user['socialprofile']['profiletype']) ? $user['socialprofile']['profiletype'] : '') . '|' . (!empty($user['socialprofile']['profileurl']) ? $user['socialprofile']['profileurl'] : '');
             }
         }
