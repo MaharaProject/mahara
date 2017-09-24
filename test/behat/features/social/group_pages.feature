@@ -9,10 +9,11 @@ Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
      | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
 
 Given the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-     | GroupA | admin | Group A owned by admin | standard | ON | ON | all | ON | ON | UserA, UserB |  |
+     | GroupA | admin | Group A owned by admin | standard | ON | ON | all | ON | ON | UserA, UserB | UserC |
 
 Given the following "pages" exist:
      | title | description | ownertype | ownername |
@@ -37,3 +38,17 @@ Scenario: Copying a group page retains title (Bug 1519374)
  And the following fields match these values:
  | Page title | Page GroupA_01 |
  Then I press "Save"
+
+Scenario: Group homepage basic settings and skins can't be edited - Bug 1718806
+ Given I log in as "UserC" with password "Kupuhipa1"
+ When I go to group "GroupA"
+ And I should see "Edit this page"
+ And I follow "Edit this page"
+ And I should not see "Settings"
+ And I should see "Edit layout"
+ When I follow "Edit layout"
+ And I should see "Layout"
+ And I should not see "Basics"
+ And I should not see "Skin"
+ And I press "Save"
+ And I should see "Page saved successfully"

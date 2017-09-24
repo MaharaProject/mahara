@@ -1,9 +1,9 @@
 <div id="toolbar-buttons" class="btn-group btn-toolbar btn-group-top">
-        <a class="btn btn-default editviews editlayout {if $selected == 'layout'}active{/if}"
+        <a class="btn btn-default editviews editlayout {if $selected == 'layout' or $selected == 'editlayout'}active{/if}"
             href="{$WWWROOT}view/editlayout.php?id={$viewid}{if $new}&new=1{/if}"
             title="{if $edittitle}{str tag=settings section=view}{else}{str tag=editlayout section=view}{/if}">
             <span class="icon icon-lg icon-cogs"></span>
-            <span class="btn-title">{str tag=settings section=view}</span>
+            <span class="btn-title">{if $edittitle}{str tag=settings section=view}{else}{str tag=editlayout section=view}{/if}</span>
         </a>
     <a class="btn btn-default editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}view/blocks.php?id={$viewid}{if $new}&new=1{/if}" title="{str tag=editcontent1 section=view}">
         <span class="icon icon-lg icon-pencil" aria-hidden="true" role="presentation"></span>

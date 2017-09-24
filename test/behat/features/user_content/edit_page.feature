@@ -77,3 +77,34 @@ Scenario: Clicking ID's (Bug 1428456)
  Then I should see "4 rows"
  And I press "Save"
  Then I should see "Page saved successfully"
+
+Scenario: Profile and dashboard pages basic settings and skins can't be edited - Bug 1718806
+ # Check we can edit layout for dashboard and profile page views
+ # but not be able to change title or skin
+
+ Given I log in as "admin" with password "Kupuhipa1"
+
+ # Profile page
+ And I choose "Portfolio" from main menu
+ And I follow "Profile page"
+ And I follow "Edit this page"
+ And I should not see "Settings"
+ And I should see "Edit layout"
+ When I follow "Edit layout"
+ And I should see "Layout"
+ And I should not see "Basics"
+ And I should not see "Skin"
+ And I press "Save"
+ And I should see "Page saved successfully"
+
+ # Dashboard page
+ And I choose "Dashboard" from main menu
+ And I follow "Edit dashboard"
+ And I should not see "Settings"
+ And I should see "Edit layout"
+ When I follow "Edit layout"
+ And I should see "Layout"
+ And I should not see "Basics"
+ And I should not see "Skin"
+ And I press "Save"
+ And I should see "Page saved successfully"
