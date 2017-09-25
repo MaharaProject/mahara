@@ -195,7 +195,9 @@ $form = pieform(array(
             'initfunction' => 'translate_ids_to_names',
             'multiple' => true,
             'extraparams' => array(
-                    'escapeMarkup' => 'function (markup) { return markup; }',  // let our custom formatter work
+                    // Let our custom formatter work by avoiding escaping in Select2
+                    // We will instead escape the markup on the PHP side first.
+                    'escapeMarkup' => 'function (markup) { return markup; }',
                     'templateSelection' =>
 'function (data) {
     if (typeof data.name !== "undefined") {
@@ -275,7 +277,7 @@ function translate_ids_to_names(array $ids) {
     foreach ($ids as $id) {
         $deleted = get_field('usr', 'deleted', 'id', $id);
         if (($deleted === '0') && is_numeric($id) && can_send_message($USER->to_stdclass(), $id)) {
-            $results[] = (object) array('id' => $id, 'text' => display_name($id));
+            $results[] = (object) array('id' => $id, 'text' => hsc(display_name($id)));
         }
     }
     return $results;
