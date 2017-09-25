@@ -1077,12 +1077,23 @@ class PluginSearchElasticsearch extends PluginSearch {
            $credentials = "{$username}:{$password}@";
        }
 
-       // for future support of https
-       $httpstr = "http://";
-       $host = array($httpstr . $credentials . $host . ':' . $port);
+       $host = array($credentials . $host . ':' . $port);
+
+       // Build array of curlopts
+       $elasticclientcurlopts = [];
+       $elasticclientcurlopts[CURLOPT_CONNECTTIMEOUT] = 3;
+
+       if (get_config('proxyaddress')) {
+           $elasticclientcurlopts[CURLOPT_PROXY] = get_config('proxyaddress');
+           $elasticclientcurlopts[CURLOPT_HTTPHEADER] = ['Transfer-Encoding: chunked'];
+           if (get_config('proxyauthmodel') && get_config('proxyauthcredentials')) {
+               // @TODO: actually do something with $proxy_authmodel.
+               $elasticclientcurlopts[CURLOPT_PROXYUSERPWD] = get_config('proxyauthcredentials');
+           }
+       }
 
        $clientBuilder = ClientBuilder::create();
-       $clientBuilder->setHosts($host);
+       $clientBuilder->setHosts($host)->setConnectionParams(['client' => ['curl' => $elasticclientcurlopts]]);
        $client = $clientBuilder->build();
 
        return $client;
