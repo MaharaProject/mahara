@@ -3091,3 +3091,20 @@ function get_group_by_id($groupid, $includedeleted = false, $getrole = false, $c
     }
     return $group;
  }
+
+/**
+ * Sort group categories by natural sort order
+ */
+function group_sort_categories() {
+    $groupcategories = get_records_array('group_category');
+    usort($groupcategories,  function($a, $b) {
+        return strnatcasecmp($a->title, $b->title);
+    });
+
+    foreach ($groupcategories as $key => $gcategory) {
+        if ($key != $gcategory->displayorder) {
+            $gcategory->displayorder = $key;
+            update_record('group_category', $gcategory);
+        }
+    }
+}

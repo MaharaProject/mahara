@@ -62,6 +62,7 @@ class mahara_group_external extends external_api {
                                         'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
                                         'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types)),
                                         'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
+                                        'forcecategory'   => new external_value(PARAM_BOOL, 'Creates the group category if it does not already exist', VALUE_DEFAULT, '0'),
                                         'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(', ', $group_edit_roles), VALUE_OPTIONAL),
                                         'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators', VALUE_DEFAULT, '0'),
                                         'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave', VALUE_DEFAULT, '0'),
@@ -137,10 +138,20 @@ class mahara_group_external extends external_api {
             // convert the category
             if (!empty($group['category'])) {
                 $groupcategory = get_record('group_category','title', $group['category']);
-                if (empty($groupcategory)) {
+                if (!empty($groupcategory)) {
+                    $groupcategoryid = $groupcategory->id;
+                }
+                else if (!empty($group['forcecategory'])) {
+                    $categorydata = new StdClass;
+                    $categorydata->title = $group['category'];
+                    $categorydata->displayorder = 0; // Place holder is updated when we call group_sort_categories.
+                    $groupcategoryid = insert_record('group_category', $categorydata, 'id', true);
+                    group_sort_categories();
+                }
+                else {
                     throw new WebserviceInvalidParameterException('create_groups | ' . get_string('catinvalid', 'auth.webservice', $group['category']));
                 }
-                $group['category'] = $groupcategory->id;
+                $group['category'] = $groupcategoryid;
             }
 
             // validate the join type combinations
@@ -357,6 +368,7 @@ class mahara_group_external extends external_api {
                                             'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
                                             'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types), VALUE_OPTIONAL),
                                             'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
+                                            'forcecategory'   => new external_value(PARAM_BOOL, 'Creates the group category if it does not already exist', VALUE_DEFAULT, '0'),
                                             'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(', ', $group_edit_roles), VALUE_OPTIONAL),
                                             'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators', VALUE_DEFAULT),
                                             'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave', VALUE_DEFAULT),
@@ -433,10 +445,20 @@ class mahara_group_external extends external_api {
             // convert the category
             if (!empty($group['category'])) {
                 $groupcategory = get_record('group_category','title', $group['category']);
-                if (empty($groupcategory)) {
+                if (!empty($groupcategory)) {
+                    $groupcategoryid = $groupcategory->id;
+                }
+                else if (!empty($group['forcecategory'])) {
+                    $categorydata = new StdClass;
+                    $categorydata->title = $group['category'];
+                    $categorydata->displayorder = 0; // Place holder is updated when we call group_sort_categories.
+                    $groupcategoryid = insert_record('group_category', $categorydata, 'id', true);
+                    group_sort_categories();
+                }
+                else {
                     throw new WebserviceInvalidParameterException('update_groups | ' . get_string('catinvalid', 'auth.webservice', $group['category']));
                 }
-                $group['category'] = $groupcategory->id;
+                $group['category'] = $groupcategoryid;
             }
 
             // validate the join type combinations

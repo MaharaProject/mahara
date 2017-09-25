@@ -32,18 +32,8 @@ try {
         $data->id = (int)$itemid;
         update_record('group_category', $data, 'id');
     }
-
-    $groupcategories = get_records_array('group_category');
-    usort($groupcategories,  function($a, $b) {
-        return strnatcasecmp($a->title, $b->title);
-    });
-
-    foreach ($groupcategories as $key => $gcategory) {
-        if ($key != $gcategory->displayorder) {
-            $gcategory->displayorder = $key;
-            update_record('group_category', $gcategory);
-        }
-    }
+    require_once('group.php');
+    group_sort_categories();
 }
 catch (Exception $e) {
     json_reply('local',get_string('savefailed','admin'));
