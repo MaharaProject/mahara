@@ -44,12 +44,7 @@ if (!extension_loaded('mcrypt')) {
     throw new AuthInstanceException(get_string_php_version('errornomcrypt', 'auth.saml'));
 }
 
-if (!file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php')) {
-    throw new AuthInstanceException(get_string('errorbadlib', 'auth.saml', get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php'));
-}
-require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
-require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
-SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
+PluginAuthSaml::init_simplesamlphp();
 
 // Bug #1693426: destroy mahara session when Single Logout is initiated by IdP
 if ($USER->is_logged_in()) {

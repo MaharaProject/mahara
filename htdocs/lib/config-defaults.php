@@ -717,12 +717,18 @@ $cfg->passwordsaltalt1 = 'old salt value';
 $cfg->openbadgedisplayer_source = '{"backpack":"https://backpack.openbadges.org/","passport":"https://openbadgepassport.com/"}';
 
 /**
+ * @global string $cfg->memcacheservers
+ * A comma separated list of memcache servers to store user sessions for SimpleSAMLphp.
+ * localhost:11211 will be used by default.
+ */
+// $cfg->memcacheservers = 'hostname1:port1,hostname2:port2,hostname3:port3';
+
+/**
  * @global string $cfg->ssphpsessionhandler
  * An alternative session handler for SimpleSAMLphp if you do not wish to use memcache.
  * Specify the name of the session handler.
  */
 // $cfg->ssphpsessionhandler = 'memcached';
-
 
 /**
  * @global array $cfg->saml_custommappingfile
