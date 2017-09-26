@@ -1716,7 +1716,7 @@ class View {
                 unset($categories[$i]);
                 continue;
             }
-            $classes = '';
+            $classes = array();
             if (!$flag) {
                 $flag = true;
                 $classes[] = 'first';
@@ -1724,7 +1724,7 @@ class View {
             if ($category == $cat['name']) {
                 $classes[] = 'current';
             }
-            if ($classes) {
+            if (!empty($classes)) {
                 $cat['class'] = hsc(implode(' ', $classes));
             }
         }
