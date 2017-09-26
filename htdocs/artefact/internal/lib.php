@@ -506,11 +506,12 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public static function get_field_element_data() {
+        // we make sure the first/last/preferred names are safe as they get used in emails sent out
         return array(
-            'firstname'       => array('rules' => array('maxlength' => 50)),
-            'lastname'        => array('rules' => array('maxlength' => 50)),
+            'firstname'       => array('rules' => array('maxlength' => 50, 'safetext' => true)),
+            'lastname'        => array('rules' => array('maxlength' => 50, 'safetext' => true)),
             'studentid'       => array('rules' => array('maxlength' => 50)),
-            'preferredname'   => array('rules' => array('maxlength' => 50)),
+            'preferredname'   => array('rules' => array('maxlength' => 50, 'safetext' => true)),
         );
     }
 
