@@ -15,7 +15,7 @@
         {if $record->anonymise}
             {str tag=createdbyanon section=search.elasticsearch}
         {else}
-            {str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname|safe`</a>'}
+            {str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname`</a>'}
         {/if}
       </div>
     {/if}
