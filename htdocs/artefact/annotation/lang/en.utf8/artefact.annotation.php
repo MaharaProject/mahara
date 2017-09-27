@@ -50,7 +50,7 @@ $string['makepublic'] = 'Make public';
 $string['makepublicnotallowed'] = 'You are not allowed to make this feedback public.';
 $string['makepublicrequestsubject'] = 'Request to change private feedback to public.';
 $string['makepublicrequestbyownermessage'] = '%s has requested that you make your feedback public.';
-$string['groupadmins'] = 'Group Administrators';
+$string['groupadmins'] = 'Group administrators';
 $string['makepublicrequestsent'] = 'A message has been sent to %s to request that the feedback be made public.';
 $string['makepublicrequestbyauthormessage'] = '%s has requested that you make their feedback public.';
 
