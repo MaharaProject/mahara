@@ -155,6 +155,30 @@ class BehatDataGenerators extends BehatBase {
             ),
            'required' => array('emailtype', 'to', 'subject'),
         ),
+        'journals' => array(
+            'datagenerator' => 'journal',
+            'available' => array(
+                'owner'            => 'text',
+                'ownertype'        => 'text',
+                'title'            => 'text',
+                'description'      => 'text',
+                'tags'             => 'text',
+            ),
+           'required' => array('owner', 'ownertype', 'title'),
+        ),
+        'journalposts' => array(
+            'datagenerator' => 'journalpost',
+            'available' => array(
+                'owner'            => 'text',
+                'ownertype'        => 'text',
+                'title'            => 'text',
+                'entry'            => 'text',
+                'blog'             => 'text',
+                'tags'             => 'text',
+                'draft'            => 'bool',
+            ),
+           'required' => array('owner', 'ownertype', 'title', 'entry'),
+        ),
     );
 
     /**

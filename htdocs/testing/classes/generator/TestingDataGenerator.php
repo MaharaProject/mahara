@@ -839,4 +839,117 @@ EOD;
         $activity =  new ActivityTypeMaharamessage($data, false);
         $activity->notify_users();
     }
+
+    /**
+     * A fixture to set up journals in bulk.
+     * Currently it only supports adding title / description / tags for a blog
+     *
+     * Example:
+     * Given the following "journals" exist:
+     * | owner | ownertype | title | description | tags |
+     * | userA | user | Blog One | This is my new blog | cats,dogs |
+     * | Group B | group | Group Blog | This is my group blog | |
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_journal($record) {
+        $record['owner'] = trim($record['owner']);
+        $record['ownertype'] = trim($record['ownertype']);
+        $owner = null;
+        $ownertype = null;
+        if ($record['ownertype'] == 'group') {
+            $owner = get_field('group', 'id', 'name', $record['owner']);
+            $ownertype = 'group';
+        }
+        else if ($record['ownertype'] == 'institution') {
+            $owner = get_field('institution', 'name', 'displayname', $record['owner']);
+            $ownertype = 'institution';
+        }
+        else {
+            $owner = get_field('usr', 'id', 'username', $record['owner']);
+            $ownertype = 'owner';
+        }
+        if (!$owner) {
+            throw new SystemException("Invalid owner '" . $record['to'] . "'. The owner needs to be a username or group/institution display name");
+        }
+        $record['title'] = trim($record['title']);
+        if (!empty($record['title'])) {
+            // Check the blog does not already exist with that name
+            $blogid = get_field('artefact', 'id', 'artefacttype', 'blog', 'title', $record['title'], $ownertype, $owner);
+            if ($blogid) {
+                throw new SystemException("Invalid journal with '" . $record['title'] . "'. The blog already exists for this " . $record['owner'] . " " . $record['ownertype']);
+            }
+        }
+        else {
+            throw new systemException("The " . $record['title'] . " cannot be empty");
+        }
+        safe_require('artefact', 'blog');
+        $tags = array_map('trim', explode(',', $record['tags']));
+        $blogobj = new ArtefactTypeBlog(null, (object) array(
+            'title' => trim($record['title']),
+            'description' => trim($record['description']),
+            'tags' => (!empty($tags) ? $tags : null),
+            $ownertype => $owner,
+        ));
+        $blogobj->commit();
+    }
+
+    /**
+     * A fixture to set up journal entries in bulk.
+     * Currently it only supports adding title / description / tags for a blog entry
+     *
+     * Example:
+     * Given the following "journalposts" exist:
+     * | owner | ownertype | title | entry | blog | tags | draft |
+     * | userA | user | Entry One | This is my entry | Blog 1 | cats,dogs | 0 |
+     * | Group B | group | GE 1 | This is my group entry | G Blog 2 | | 0 |
+     * | userB | user | Entry One | This is my entry | | | 1 |  <-- No blog specified should default to default blog
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_journalpost($record) {
+        $record['owner'] = trim($record['owner']);
+        $record['ownertype'] = trim($record['ownertype']);
+        $owner = null;
+        $ownertype = null;
+        if ($record['ownertype'] == 'group') {
+            $owner = get_field('group', 'id', 'name', $record['owner']);
+            $ownertype = 'group';
+        }
+        else if ($record['ownertype'] == 'institution') {
+            $owner = get_field('institution', 'name', 'displayname', $record['owner']);
+            $ownertype = 'institution';
+        }
+        else {
+            $owner = get_field('usr', 'id', 'username', $record['owner']);
+            $ownertype = 'owner';
+        }
+        if (!$owner) {
+            throw new SystemException("Invalid owner '" . $record['to'] . "'. The owner needs to be a username or group/institution display name");
+        }
+        $record['blog'] = trim($record['blog']);
+        if (!empty($record['blog'])) {
+            // Check the blog exists with that name
+            $blogid = get_field('artefact', 'id', 'artefacttype', 'blog', 'title', $record['blog'], $ownertype, $owner);
+            if (!$blogid) {
+                throw new SystemException("Invalid journal '" . $record['blog'] . "'. The " . $record['ownertype'] . " " . $record['owner'] . " does not have a blog called " . $record['blog']);
+            }
+        }
+        else {
+            $blogid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('blog', $owner));
+            if (!$blogid) {
+                throw new systemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a blog to add blog entry to. Please create blog first");
+            }
+        }
+        safe_require('artefact', 'blog');
+        $postobj = new ArtefactTypeBlogPost(null, null);
+        $postobj->set('title', trim($record['title']));
+        $postobj->set('description', trim($record['entry']));
+        $tags = array_map('trim', explode(',', $record['tags']));
+        $postobj->set('tags', (!empty($tags) ? $tags : null));
+        $postobj->set('published', !$record['draft']);
+        $postobj->set($ownertype, $owner);
+        $postobj->set('parent', $blogid);
+        $postobj->commit();
+    }
 }
