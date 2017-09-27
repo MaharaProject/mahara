@@ -1989,6 +1989,10 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         $author = $comment->get('author');
         if ($author) {
             $this->fromuser = $author;
+            // We don't need to send an email to the inbox of the author of the comment as we send one to their outbox
+            if (isset($this->users[$author])) {
+                unset($this->users[$author]);
+            }
         }
         foreach ($this->users as $key => $user) {
             $authorname = empty($author) ? $comment->get('authorname') : display_name($author, $user);
