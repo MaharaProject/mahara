@@ -298,17 +298,26 @@ class Institution {
         if (is_numeric($user)) {
             $user = get_record('usr', 'id', $user);
         }
+        
+        $lang = get_account_preference($user->id, 'lang');
 
-        if ($lang = get_account_preference($user->id, 'lang')) {
-            // The user has a preset lang preference so we will use this
+        if ($lang == 'default') {
+            // The user has not a preset lang preference so we will use the institution if it has one.
+            $institution_lang = get_record_sql(
+              "SELECT value FROM {institution_config} ic where ic.institution= ? and ic.field = 'lang' ",
+              [$this->name],
+              IGNORE_MULTIPLE
+            );
+            $this->lang = $institution_lang->value? $institution_lang->value: 'default';
+            if ($this->lang != 'default') {
+                // The user hasn't been added yet, so we have to manually use this institution's lang
+                $lang = $this->lang;
+            }
+            else {
+                $lang = get_config('lang')? get_config('lang'): '';
+            }
         }
-        else if ($this->lang != 'default') {
-            // The user hasn't been added yet, so we have to manually use this institution's lang
-            $lang = $this->lang;
-        }
-        else {
-            $lang = get_user_language($user->id);
-        }
+        
         $userinst = new StdClass;
         $userinst->institution = $this->name;
         $studentid = get_field('usr_institution_request', 'studentid', 'usr', $user->id,
