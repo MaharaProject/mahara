@@ -17,7 +17,7 @@
     </h3>
     <span class="artefacttype">({str tag=collection section=search.elasticsearch})</span>
     {if $record->createdbyname}
-        <div class="createdby">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname|safe`</a>'}</div>
+        <div class="createdby">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname`</a>'}</div>
     {/if}
     <div class="detail">
         {if $record->highlight}
