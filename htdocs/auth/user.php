@@ -1218,6 +1218,11 @@ class User {
      * @return boolean
      */
     public function can_publish_artefact($a) {
+        if (defined('INSTALLER')) {
+            // we are inside an install/upgrade so should mimic admin user
+            return true;
+        }
+
         $parent = $a->get_parent_instance();
         if ($parent) {
             if (!$this->can_view_artefact($parent)) {

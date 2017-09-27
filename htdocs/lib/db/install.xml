@@ -996,6 +996,7 @@
         </TABLE>
         <TABLE NAME="site_content">
             <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
                 <FIELD NAME="content" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
@@ -1004,10 +1005,13 @@
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name,institution" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="mauthorfk" TYPE="foreign" FIELDS="mauthor" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
             </KEYS>
+            <INDEXES>
+                <INDEX NAME="nameinstuk" UNIQUE="true" FIELDS="name,institution" />
+            </INDEXES>
         </TABLE>
         <!-- watchlist stuff -->
         <TABLE NAME="usr_watchlist_view">
