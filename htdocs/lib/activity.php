@@ -1137,22 +1137,41 @@ class ActivityTypeInstitutionmessage extends ActivityType {
         }
     }
 
+    private function get_language($user) {
+        $userlang = get_account_preference($user->id, 'lang');
+        if ($userlang === 'default') {
+            if (!isset($this->institution->language) || $this->institution->language === '' || $this->institution->language === 'default') {
+                return get_config('lang');
+            }
+            else {
+                return $this->institution->language;
+            }
+        }
+        else {
+            return $userlang;
+        }
+    }
+
     public function get_subject($user) {
+        $lang = $this->get_language($user);
         if ($this->messagetype == 'request') {
             $userstring = $this->fullname . ' (' . $this->username . ')';
-            return get_string_from_language($user->lang, 'institutionrequestsubject', 'activity', $userstring,
-                                            $this->institution->displayname);
-        } else if ($this->messagetype == 'invite') {
-            return get_string_from_language($user->lang, 'institutioninvitesubject', 'activity',
-                                            $this->institution->displayname);
+            return get_string_from_language($lang, 'institutionrequestsubject', 'activity', $userstring,
+              $this->institution->displayname);
+        }
+        else if ($this->messagetype == 'invite') {
+            return get_string_from_language($lang, 'institutioninvitesubject', 'activity',
+              $this->institution->displayname);
         }
     }
 
     public function get_message($user) {
+        $lang = $this->get_language($user);
         if ($this->messagetype == 'request') {
-            return $this->get_subject($user) .' '. get_string_from_language($user->lang, 'institutionrequestmessage', 'activity', $this->url);
-        } else if ($this->messagetype == 'invite') {
-            return $this->get_subject($user) .' '. get_string_from_language($user->lang, 'institutioninvitemessage', 'activity', $this->url);
+            return $this->get_subject($user) .' '. get_string_from_language($lang, 'institutionrequestmessage', 'activity', $this->url);
+        }
+        else if ($this->messagetype == 'invite') {
+            return $this->get_subject($user) .' '. get_string_from_language($lang, 'institutioninvitemessage', 'activity', $this->url);
         }
     }
 
