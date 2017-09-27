@@ -36,7 +36,7 @@
     {/if}
 </span></h3>
 {if $record->createdbyname}
-    <div class="createdby">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname|safe`</a>'}</div>
+    <div class="createdby">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname`</a>'}</div>
 {/if}
 <div class="detail">{$record->description|str_shorten_html:100:true|safe}</div>
 <!-- RESUMEITEMS -->
