@@ -48,7 +48,7 @@ function xmldb_blocktype_externalvideo_upgrade($oldversion=0) {
         update_safe_iframe_regex();
     }
 
-    if ($oldversion < 2014030502) {
+    if ($oldversion < 2017092500) {
         ensure_record_exists('iframe_source_icon', (object) array('name' => 'Youtube [privacy mode]', 'domain' => 'www.youtube.com'), (object) array('name' => 'Youtube [privacy mode]', 'domain' => 'www.youtube.com'));
         ensure_record_exists('iframe_source', (object) array('prefix' => 'www.youtube-nocookie.com/embed/', 'name' => 'Youtube [privacy mode]'), (object) array('prefix' => 'www.youtube-nocookie.com/embed/', 'name' => 'Youtube [privacy mode]'));
         update_safe_iframe_regex();

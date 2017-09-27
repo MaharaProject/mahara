@@ -692,6 +692,8 @@ function core_postinst() {
     reload_html_filters();
 
     // Default set of sites from which iframe content can be embedded
+    // See also the postinst() function in plugins for other valid iframes
+    // by searching for 'iframe_source_icon'
     $iframesources = array(
         'www.youtube.com/embed/'                   => 'YouTube',
         'player.vimeo.com/video/'                  => 'Vimeo',
