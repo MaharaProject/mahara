@@ -10,7 +10,7 @@
          <span class="icon icon-chevron-down right collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
         </a>
     </h2>
-    <div class="panel-body collapse {if $.foreach.elements.first} in{/if}" id="{$element.name}_pseudofieldset">
+    <div class="panel-body table-responsive collapse {if $.foreach.elements.first} in{/if}" id="{$element.name}_pseudofieldset">
     {foreach from=$element.elements item=item}
         {$item.value|safe}
     {/foreach}
