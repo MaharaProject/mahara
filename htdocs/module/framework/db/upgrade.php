@@ -55,5 +55,16 @@ function xmldb_module_framework_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2017092900) {
+        log_debug('Add new matrix files to the database');
+        safe_require('module', 'framework');
+        $newmatrix = array('nz_teaching_standards_english.matrix', 'nz_teaching_standards_te_reo_maori.matrix');
+        $matricesdir = get_config('docroot') . 'module/framework/matrices/';
+        foreach ($newmatrix as $matrix) {
+            $filename = $matricesdir . $matrix;
+            PluginModuleFramework::add_matrix_to_db($filename);
+        }
+    }
+
     return true;
 }

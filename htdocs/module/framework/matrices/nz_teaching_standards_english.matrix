@@ -1,0 +1,68 @@
+{"framework":
+    {"institution":"all",
+     "name":"Standards for the teaching profession",
+     "description":"<p>The purposes of the standards for the teaching profession in Aotearoa New Zealand are to:</p> <ul><li>describe the essential professional knowledge in practice and professional relationships and values required for effective teaching</li><li>promote high-quality teaching and leadership for all learners across all education settings</li><li>set the standard expected for teachers to be issued with a practising certificate</li><li>provide a framework to guide our career-long professional learning and development as a teacher</li><li>promote the status of the teaching profession through making explicit the complex nature of teachers’ work</li><li>strengthen public confidence in the teaching profession.</li></ul><p><a href=\"https://educationcouncil.org.nz/content/our-code-our-standards\">Source</a></p>",
+     "selfassess":false,
+     "evidencestatuses":
+      [
+        {"begun":"Ready for assessment"},
+        {"incomplete":"Doesn't meet the standard"},
+        {"partialcomplete":"Partially meets the standard"},
+        {"completed":"Meets the standard"}
+      ],
+      "standards":
+      [
+        {
+         "shortname":"Standards",
+         "name":"Standards",
+         "description":"It is understood that high-quality practices will generate naturally occurring evidence that can be used for discussion and analysis. For the purposes of appraisal, it is not expected that teachers would need to identify evidence of individual elaborations; however, the evidence of the quality of their practice would need to be sufficient to reflect the standard.",
+         "standardid": 1
+        }
+      ],
+      "standardelements":
+      [
+        {
+         "shortname":"Te Tiriti o Waitangi partnership",
+         "name":"Te Tiriti o Waitangi partnership",
+         "description":"<p>Demonstrate commitment to tangata whenuatanga and Te Tiriti o Waitangi partnership in Aotearoa New Zealand.</p><ul><li>Understand and recognise the unique status of tangata whenua in Aotearoa New Zealand.</li> <li>Understand and acknowledge the histories, heritages, languages and cultures of partners to Te Tiriti o Waitangi.</li> <li>Practise and develop the use of te reo and tikanga Māori.</li></ul>",
+         "standardid": 1,
+         "elementid": "1.0"
+        },
+        {
+         "shortname":"Professional learning",
+         "name":"Professional learning",
+         "description":"<p>Use inquiry, collaborative problem-solving and professional learning to improve professional capability to impact on the learning and achievement of all learners.</p><ul><li>Inquire into and reflect on the effectiveness of practice in an ongoing way, using evidence from a range of sources.</li> <li>Critically examine how my own assumptions and beliefs, including cultural beliefs, impact on practice and the achievement of learners with different abilities and needs, backgrounds, genders, identities, languages and cultures.</li> <li>Engage in professional learning and adaptively apply this learning in practice.</li> <li>Be informed by research and innovations related to: content disciplines; pedagogy; teaching for diverse learners, including learners with disabilities and learning support needs; and wider education matters.</li> <li>Seek and respond to feedback from learners, colleagues and other education professionals, and engage in collaborative problem solving and learning-focused collegial discussions.</li></ul>",
+         "standardid": 1,
+         "elementid": "2.0"
+        },
+        {
+         "shortname":"Professional relationships",
+         "name":"Professional relationships",
+         "description":"<p>Establish and maintain professional relationships and behaviours focused on the learning and wellbeing of each learner.</p><ul><li>Engage in reciprocal, collaborative learning-focused relationships with:<ul><li>learners, families and whānau</li> <li>teaching colleagues, support staff and other professionals</li> <li>agencies, groups and individuals in the community.</li></ul></li> <li>Communicate effectively with others.</li> <li>Actively contribute, and work collegially, in the pursuit of improving my own and organisational practice, showing leadership, particularly in areas of responsibility.</li> <li>Communicate clear and accurate assessment for learning and achievement information.</li></ul>",
+         "standardid": 1,
+         "elementid": "3.0"
+        },
+        {
+         "shortname":"Learner-focused culture",
+         "name":"Learner-focused culture",
+         "description":"<p>Develop a culture that is focused on learning, and is characterised by respect, inclusion, empathy, collaboration and safety.</p><ul><li>Develop learning-focused relationships with learners, enabling them to be active participants in the process of learning, sharing ownership and responsibility for learning.</li> <li>Foster trust, respect and cooperation with and among learners so that they experience an environment in which it is safe to take risks.</li> <li>Demonstrate high expectations for the learning outcomes of all learners, including for those learners with disabilities or learning support needs.</li> <li>Manage the learning setting to ensure access to learning for all and to maximise learners’ physical, social, cultural and emotional safety.</li> <li>Create an environment where learners can be confident in their identities, languages, cultures and abilities.</li> <li>Develop an environment where the diversity and uniqueness of all learners are accepted and valued.</li> <li>Meet relevant regulatory, statutory and professional requirements.</li></ul>",
+         "standardid": 1,
+         "elementid": "4.0"
+        },
+        {
+         "shortname":"Design for learning",
+         "name":"Design for learning",
+         "description":"<p>Design learning based on curriculum and pedagogical knowledge, assessment information and an understanding of each learner’s strengths, interests, needs, identities, languages and cultures.</p> <ul><li>Select teaching approaches, resources, and learning and assessment activities based on a thorough knowledge of curriculum content, pedagogy, progressions in learning and the learners.</li> <li>Gather, analyse and use appropriate assessment information, identifying progress and needs of learners to design clear next steps in learning and to identify additional supports or adaptations that may be required.</li> <li>Design and plan culturally responsive, evidence-based approaches that reflect the local community and Te Tiriti o Waitangi partnership in New Zealand.</li> <li>Harness the rich capital that learners bring by providing culturally responsive and engaging contexts for learners.</li> <li>Design learning that is informed by national policies and priorities.</li></ul>",
+         "standardid": 1,
+         "elementid": "5.0"
+        },
+        {
+          "shortname":"Teaching",
+          "name":"Teaching",
+          "description":"<p>Teach and respond to learners in a knowledgeable and adaptive way to progress their learning at an appropriate depth and pace.</p> <ul><li>Teach in ways that ensure all learners are making sufficient progress, and monitor the extent and pace of learning, focusing on equity and excellence for all.</li> <li>Specifically support the educational aspirations for Māori learners, taking shared responsibility for these learners to achieve educational success as Māori.</li> <li>Use an increasing repertoire of teaching strategies, approaches, learning activities, technologies and assessment for learning strategies and modify these in response to the needs of individuals and groups of learners.</li> <li>Provide opportunities and support for learners to engage with, practise and apply learning to different contexts and make connections with prior learning.</li> <li>Teach in ways that enable learners to learn from one another, to collaborate, to self-regulate and to develop agency over their learning.</li> <li>Ensure learners receive ongoing feedback and assessment information and support them to use this information to guide further learning.</li></ul>",
+          "standardid": 1,
+          "elementid": "6.0"
+        }
+      ]
+    }
+}
