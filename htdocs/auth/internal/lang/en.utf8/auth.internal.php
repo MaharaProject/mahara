@@ -71,7 +71,7 @@ soon as your application has been considered.
 Regards,
 The %s Team';
 $string['approvalemailmessagehtml'] = '<p>Hi %s,</p>
-<p>Thank you for requesting an account on %s. The institution adminstrator
+<p>Thank you for requesting an account on %s. The institution administrator
 has been notified of your application. You will receive another email as
 soon as your application has been considered.</p>
 
@@ -105,7 +105,7 @@ via email.
 
 Regards
 %s';
-$string['registeredokawaitingemail2'] = 'You have successfully submitted your application for registration. The institution adminstrator has been notified, and you will receive an email as soon as your application has been processed.';
+$string['registeredokawaitingemail2'] = 'You have successfully submitted your application for registration. The institution administrator has been notified, and you will receive an email as soon as your application has been processed.';
 $string['registrationreason'] = 'Registration reason';
 $string['registrationreasondesc1'] = 'The reason for requesting registration with your chosen institution and any other details you think might be useful for the administrator in processing your application.';
 
