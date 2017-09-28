@@ -960,7 +960,9 @@ function webservice_token_submit(Pieform $form, $values) {
                 else {
                     // just pass the first one for the moment
                     $service = array_shift($services);
-                    $token = webservice_generate_token(EXTERNAL_TOKEN_PERMANENT, $service, $dbuser->id);
+                    $auth_instance = webservice_validate_user($dbuser);
+                    $institution = $auth_instance ? $auth_instance->institution : 'mahara';
+                    $token = webservice_generate_token(EXTERNAL_TOKEN_PERMANENT, $service, $dbuser->id, $institution);
                     $dbtoken = get_record('external_tokens', 'token', $token);
                     redirect('/webservice/admin/tokenconfig.php?token=' . $dbtoken->id);
                 }

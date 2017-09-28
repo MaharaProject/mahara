@@ -149,8 +149,15 @@ function mahara_external_atom_returns() {
 function webservice_validate_user($dbuser) {
     global $SESSION;
     if (!empty($dbuser)) {
-        $auth_instance = get_record('auth_instance', 'id', $dbuser->authinstance, 'active', 1);
-        if ($auth_instance->authname == 'webservice') {
+        if ($auth_instance = get_record_sql("SELECT * FROM {auth_instance}
+                                             WHERE authname = 'webservice'
+                                             AND active = 1
+                                             AND institution = (
+                                                SELECT institution FROM {auth_instance}
+                                                WHERE id = ?
+                                                AND active = 1
+                                             )", array($dbuser->authinstance))) {
+            // User belongs to an institution that contains the 'webservice' auth method
             $memberships = count_records('usr_institution', 'usr', $dbuser->id);
             if ($memberships == 0) {
                 // auth instance should be a mahara one
