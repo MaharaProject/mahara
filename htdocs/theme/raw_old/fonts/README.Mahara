@@ -2,7 +2,7 @@ FontAwesome
 ===========
 
 Website: http://fontawesome.io
-Version: 4.4.0
+Version: 4.7.0
 License: http://fontawesome.io/license Font: SIL OFL 1.1 License
 See also: theme/raw/sass/lib/font-awesome/ for CSS license information
 
@@ -53,4 +53,3 @@ License: MIT License
 Includes over 250 glyphs in font format from the Glyphicon Halflings
 set. Glyphicons Halflings are normally not available for free, but
 their creator has made them available for Bootstrap free of cost.
-
