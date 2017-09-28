@@ -396,7 +396,7 @@ function get_max_custom_rows() {
     return {$maxlayoutrows};
 }
 
-addLoadEvent(function () {
+jQuery(function () {
     formchangemanager.add("{$pieformname}");
 });
 
