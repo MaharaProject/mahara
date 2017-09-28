@@ -234,7 +234,7 @@ function changepoststatus_submit(Pieform $form, $values) {
         'message' => $strmessage,
         'goto' => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blogpost->get('parent'),
         'id' => $values['changepoststatus'],
-        'title' => $blogpost->get('title'),
+        'title' => hsc($blogpost->get('title')),
     ));
 }
 

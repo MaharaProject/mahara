@@ -557,7 +557,7 @@ class ArtefactTypeBlog extends ArtefactType {
         global $THEME;
 
         $confirm = get_string('deleteblog?', 'artefact.blog');
-
+        $title = hsc($title);
         // Check if this blog has posts.
         $postcnt = count_records_sql("
             SELECT COUNT(*)
@@ -1181,6 +1181,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $published = empty($published) ? $post->published : $published;
             $title = empty($title) ? $post->title : $title;
         }
+        $title = hsc($title);
         if ($published) {
             $strchangepoststatus = '<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('unpublishspecific', 'artefact.blog', $title) . '</span> ' . get_string('unpublish', 'artefact.blog');
         }
@@ -1212,6 +1213,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     public static function delete_form($id, $title = '') {
+        $title = hsc($title);
         global $THEME;
         return pieform(array(
             'name' => 'delete_' . $id,
