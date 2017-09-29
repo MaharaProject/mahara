@@ -293,7 +293,8 @@ $string['reportdescgroups'] = '<ul>
 <li>Number of comments on pages shared with the group</li>
 <li>Number of forums</li>
 <li>Number of forum posts</li>
-</ul>';
+</ul>
+<p><strong>Note:</strong> This report is only available when you select "All institutions" in the "Institution" drop-down menu.';
 
 // Content reports
 $string['reportdesccontent'] = '<ul>
@@ -328,13 +329,15 @@ $string['reportdesccomparisons'] = '<ul>
 <li>Number of blocks</li>
 <li>Number of artefacts</li>
 <li>Number of forum posts by institution members</li>
-</ul>';
+</ul>
+<p><strong>Note:</strong> This report is only available when you select "All institutions" in the "Institution" drop-down menu.';
 
 $string['reportdesclogins'] = '<ul>
 <li>Institution</li>
 <li>Number of logins no matter the user</li>
 <li>Number of active users</li>
-</ul>';
+</ul>
+<p><strong>Note:</strong> This report is only available when you select "All institutions" in the "Institution" drop-down menu.';
 
 $string['userscollaborationreports'] = 'Collaboration';
 $string['userspageactivityreports'] = 'Page activity';

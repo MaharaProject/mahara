@@ -23,7 +23,6 @@ $string['continue'] = 'Continue';
 $string['coredata'] = 'core data';
 $string['coredatasuccess'] = 'Successfully installed core data';
 $string['fromversion'] = 'From version';
-$string['information'] = 'Information';
 $string['Information'] = 'Information';
 $string['installingplugin'] = 'Installing %s';
 $string['installsuccess'] = 'Successfully installed version ';
