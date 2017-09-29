@@ -3483,6 +3483,11 @@ function get_full_script_path() {
     if (!empty($url['port'])) {
         $hostname .= ':'.$url['port'];
     } else if (!empty($_SERVER['SERVER_PORT'])) {
+        // SSL proxy could be on a random port and we don't want it to appear in URL.
+        if (get_config('sslproxy')) {
+            $_SERVER['SERVER_PORT'] = '443';
+        }
+
         if ($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
             $hostname .= ':'.$_SERVER['SERVER_PORT'];
         }
