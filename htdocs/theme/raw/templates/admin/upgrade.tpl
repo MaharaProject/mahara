@@ -14,7 +14,7 @@
                     <th>{str section=admin tag=component}</th>
                     <th>{str section=admin tag=fromversion}</th>
                     <th>{str section=admin tag=toversion}</th>
-                    <th id="msgscol">{str section=admin tag=information}</th>
+                    <th id="msgscol">{str section=admin tag=Information}</th>
                 </tr>
             </thead>
             <tbody>
