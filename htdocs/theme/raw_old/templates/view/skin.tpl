@@ -20,7 +20,11 @@
             </h2>
 
             <div>
-                <img class="thumbnail" src="{$WWWROOT}skin/thumb.php?id={$currentskin}" alt="{$currenttitle}">
+                {if $currentskin}
+                    <img class="thumbnail" src="{$WWWROOT}skin/thumb.php?id={$currentskin}" alt="{$currenttitle}">
+                {else}
+                    <img class="thumbnail" src="{$WWWROOT}skin/no-thumb.png" alt="{$currenttitle}">
+                {/if}
                 <ul class="metadata unstyled">
                     {if $currentskin}
                         <li class="title">
