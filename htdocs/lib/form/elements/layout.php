@@ -128,6 +128,6 @@ function pieform_element_layout(Pieform $form, $element) {
 }
 
 function pieform_element_layout_get_headdata($element) {
-    $result = '<script src="' . get_config('wwwroot') . 'js/customlayout.js?v=' . get_config('cacheversion', 0) . '" type="application/javascript">';
+    $result = '<script src="' . get_config('wwwroot') . 'js/customlayout.js?v=' . get_config('cacheversion', 0) . '" type="application/javascript"></script>';
     return array($result);
 }
