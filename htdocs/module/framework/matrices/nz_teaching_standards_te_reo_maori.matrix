@@ -1,0 +1,68 @@
+{"framework":
+    {"institution":"all",
+     "name":"Ngā paerewa mō te umanga whakaakoranga",
+     "description":"<p>Ko <a href=\"https://educationcouncil.org.nz/content/our-code-our-standards\">ngā paerewa</a> mō te umanga whakaakoranga e whakatau ana i ngā pūtake e whai ake nei:</p><ul><li>he whakaaturanga o ngā mōhiotanga ngaio matua i roto i ngā mahi, i ngā hononga ngaiotanga me ngā uara me whai wāhi ki te tōtika o te whakaakoranga</li> <li>hei whakatairanga i te kounga o te whakaakoranga me te kaihautūtanga mō te katoa o ngā ākonga puta noa i te katoa o ngā taiao mātauranga</li> <li>ko te whakatau i te taumata e tika ana mō ngā kaiako kia whakawhiwhia ki tētahi tiwhikete whakaakō</li> <li>hei anga arataki i tō tātou hi koitanga ngāio me tō tātou whakawhanaketanga hei kaiako</li> <li>hei whakatairanga i te mana o te umanga whakaakoranga mā te āta whakamārama i ngā āhuatanga matatini o ngā mahi a te kaiako</li> <li>hei whakakaha i te whakapono o te hunga tūmatanui ki te umanga whakaakoranga.</li></ul>",
+     "selfassess":false,
+     "evidencestatuses":
+      [
+        {"begun":"Ready for assessment"},
+        {"incomplete":"Doesn't meet the standard"},
+        {"partialcomplete":"Partially meets the standard"},
+        {"completed":"Meets the standard"}
+      ],
+      "standards":
+      [
+        {
+         "shortname":"Ngā paerewa",
+         "name":"Ngā paerewa",
+         "description":"E mārama ana ka riro mā ngā mahi whai kounga e tō mai ngā taunakitanga ka taea te whakamahi i roto i ngā matapaki me ngā tātaritanga. Mō te pūtake o te aromihi, ehara i te mea me tautuhi e ngā kaiako ngā taunakitanga ka taka mai i te roanga atu o ngā paerewa, heoi anō, me nui tonu ngā taunakitanga o ā rātou mahi whai kounga, e kitea atu ai te paerewa.",
+         "standardid": 1
+        }
+      ],
+      "standardelements":
+      [
+        {
+         "shortname":"Te hononga pātui i raro o Te Tiriti o Waitangi",
+         "name":"Te hononga pātui i raro o Te Tiriti o Waitangi",
+         "description":"<p>Me whakaatu i te ngākaunui ki te tikanga o te tangata whenuatanga me te hononga pātui i raro o Te Tiriti o Waitangi, i Aotearoa.</p> <ul><li>Me mārama, ā, me mōhio ki te mana ahurei o te tangata whenua i Aotearoa nei.</li> <li>Me mārama, ā, me whakaae ki ngā hītori, ki ngā tukuihotanga, ki ngā reo me ngā ahurea o ngā hoa pātui i raro o Te Tiriti o Waitangi.</li> <li>Me whakamahi, ā, me whakawhanake i te reo me ngā tikanga Māori.</li></ul>",
+         "standardid": 1,
+         "elementid": "1.0"
+        },
+        {
+         "shortname":"Akoranga ngaiotanga",
+         "name":"Akoranga ngaiotanga",
+         "description":"<p>Me whakamahi i te pakirehua, i te hīraurau hopanga ngātahi me te akoranga ngaio hei whakapakari i te āheinga ngāio e whai pānga ana ki te akoranga me te paetae o te katoa o ngā ākonga.</p> <ul><li>Me patapatai, ā, ka whakaaro i ia te wā, ki te tōtika o ngā mahi mā te whakamahi i ngā taunakitanga mai i ngā tūmomo mātāpuna.</li> <li>Me whakamātau me arohaehae i ōku ake whakapae me ōku whakapono, tae atu ki ōku whakapono ahurea, me te whai pānga o ēnei ki ngā mahi me te paetae o ngā ākonga he rerekē ō rātou pūmanawa me ō rātou matea, he rerekē ō rātou whakatipuranga me ō rātou ira tangata, ō rātou tuakiritanga, tae atu ki ō rātou reo me ō rātou ahurea.</li> <li>Me uru atu ki ngā akoranga ngaiotanga, ka āta whakahāngai i tēnei akoranga i roto i ngā mahi.</li> <li>Me mōhio ki ngā rangahau me ngā auahatanga o te wā e pā ana ki ngā kaupapa akoranga; ki ngā tikanga whakaako; ki te whakaako i ngā ākonga kanorau tae atu ki ngā ākonga hauā, ki ngā ākonga me tautoko ō rātou matea; ā, me ngā take whānui e pā ana ki te mātauranga.</li> <li>Me rapu, ā, ka whakautu i ngā whakahoki kōrero a ngā ākonga, a ngā hoa mahi me ētahi atu o ngā mātanga mātauranga, ka mutu, me uru ngātahi atu ki ngā hīraurau hopanga me ngā matapaki a ngā hoa mahi e arotahi ana ki te akoranga.</li></ul>",
+         "standardid": 1,
+         "elementid": "2.0"
+        },
+        {
+         "shortname":"Ngā hononga ngaio",
+         "name":"Ngā hononga ngaio",
+         "description":"<p>Me whakaū, ā, me whakapūmau i ngā hononga ngaio me ngā whanonga e arotahi ana ki te akoranga me te whaioranga o ia ākonga.</p> <ul><li>Me whai hononga-akoranga i runga o te mahi ngātahi: <ul><li>ki ngā ākonga me ngā whānau</li> <li>ki ngā hoa kaiako, ki ngā kaimahi tautoko me ētahi atu o ngā mātanga ngaio</li> <li>ki ngā pūtahi, ki ngā rōpū me te tangata takitahi o te hapori.</li></ul></li> <li>Me tōtika te whakawhiti kōrero ki ētahi atu.</li> <li>Me mātātoa te whai wāhi, te mahi ngātahi ki te whakapakari i āku ake whakaritenga mahi, me te whakaatu i tōku taha kaihautū, i roto tonu i ngā wāhanga haepapa e kawea ana e au.</li> <li>Me whakawhiti i ngā aromatawai mō te akoranga me ngā kōrero paetae i runga o te mārama me te tika.</li></ul>",
+         "standardid": 1,
+         "elementid": "3.0"
+        },
+        {
+         "shortname":"He ahurea akoranga",
+         "name":"He ahurea akoranga",
+         "description":"<p>Me whakawhanake i tētahi ahurea akoranga e arotahi ana ki ngā āhuatanga o te whakaaro nui, o te whai wāhi, o te aroha, o te mahi ngātahi me te noho haumaru.</p> <ul><li>Me whakawhanake i te whanaungatanga i roto i ngā mahi ako i te taha o ngā ākonga, e āhei ai rātou ki ngā mahi hihiri i roto i te tukanga akoranga, me te whai mana whai haepapa mō ā rātou mahi akoranga.</li> <li>Me whakatītina i te pono, i te whakaaro nui me te mahi tahi i te taha, i waenga o ngā ākonga kia rongo ai rātau i tētahi taiao ka taea te mahi tūpono i roto o te haumarutanga.</li> <li>Me whakaatu i ngā whāinga tiketike e pā ana ki ngā hua ako mō te katoa o ngā ākonga, tae atu ki ngā ākonga whai hauātanga, whai matea akoranga rānei me mātua tautoko.</li> <li>Me whakarite i te taiao akoranga kia āhei tonu ai te whai wāhi o te katoa ki te ako, ka mutu, ka tino tau te haumarutanga ā-tinana, ā-papori, ā-ahurea, ā-whatumanawa.</li> <li>Me waihanga i tētahi taiao e tū māia ai ngā ākonga i runga o ō rātou tuakiritanga, ō rātou reo, ō rātou ahurea me ō rātou pūmanawa.</li> <li>Me whakawhanake i tētahi taiao e whakaaetia ai, e kaingākautia ai te rerekētanga me te ahureitanga o ngā ākonga katoa.</li> <li>Me whakatutuki i ngā whakaritenga ā-ture, ā-ngāiotanga.</li></ul>",
+         "standardid": 1,
+         "elementid": "4.0"
+        },
+        {
+         "shortname":"Te hoahoa akoranga",
+         "name":"Te hoahoa akoranga",
+         "description":"<p>Me hoahoa ngā mahi akoranga e ai ki te marautanga me te whai mōhiotanga ki ngā tikanga whakaako, ki ngā kōrero aromatawai, ā, me te mārama ki ngā pūmanawa, ki ngā hiahia, ki ngā matea, ki te tuakiri, ki te reo me te ahurea o ia ākonga.</p> <ul><li>Me whiriwhiri i ngā huarahi whakaako, i ngā rauemi, ā, me ngā mahi akoranga, aromatawai, i runga o te matatau ki ngā kaupapa marautanga, ki ngā tikanga whakaako, ki ngā taumata akoranga, ā, ki ngā ākonga hoki.</li> <li>Me kohi, me tātari, ā, ka whakamahi i ngā kōrero aromatawai tōtika, hei tautuhi i te haere whakamua me ngā matea ako o ngā ākonga, kia mārama ai te whakahoahoa i ngā huarahi akoranga o muri iho, ā, hei tautuhi i ngā tūmomo tautoko me ngā whakarerekētanga rānei ka hiahiatia.</li> <li>Me hoahoa, ā, me whakamahere i ngā huarahi whai taunakitanga, ka mutu kei te hāngai tonu ki te ahurea, e kitea atu ai te hapori ā-rohe me te hononga pātui i raro o Te Tiriti o Waitangi, i Aotearoa.</li> <li>Me whītiki i ngā taonga whai painga ka mauria mai e ngā ākonga mā te whakarato taiao ahurea e rata ai, e whai wāhi atu ai ngā ākonga ki ēnei.</li> <li>Me mōhio ki ngā kaupapa here me ngā kaupapa matua ā-motu.</li></ul>",
+         "standardid": 1,
+         "elementid": "5.0"
+        },
+        {
+          "shortname":"Te whakaakoranga",
+          "name":"Te whakaakoranga",
+          "description":"<p>Me whakaako me urupare ki ngā ākonga i runga o te matatau me te urutau kia neke whakamua ai te ako i te taumata me te kaha e tika ana mō ia ākonga.</p> <ul><li>Me whakaako kia āhei ai te katoa o ngā ākonga ki te neke whakamua; ka mutu, me aroturuki te whānui me te rere o tā rātou ako, me te arotahi ki te whakaōritenga me te panekiretanga mō te katoa.</li> <li>Me mātua tautoko i ngā wawata mātauranga mō ngā ākonga Māori, me te kawe i te haepapatanga mō ēnei ākonga kia ekea te paetae angitu mātauranga e ngā ākonga Māori.</li> <li>Me whakamahi i te whānuitanga o ngā tūmomo rautaki, huarahi whakaako, wheako akoranga, ngā rautaki hangarau me ngā rautaki aromatawai mō te akoranga, ā, ka whakarerekē i ēnei i runga o te urupare ki ngā matea o te hunga takitahi me ngā rōpū ākonga.</li> <li>Me whakarato i te whai wāhi me te tautoko kia taea ai e ngā ākonga te whai, te whakamahi me te whakahāngai i ngā akoranga hou ki ngā horopaki rerekē, ā, me te kite i te whai pānga o ēnei ki ngā akoranga o mua.</li> <li>Me whakaako kia āhei ai ngā ākonga ki te ako mai i a rātou anō, kia taea ai e rātou te mahi ngātahi, te whakarite i a rātou anō, ā, me te whakawhanake i te haepapatanga mō ā rātou mahi akoranga.</li> <li>Me mōhio ka whakawhiwhia ngā ākonga, i ia te wā, ki ngā whakahoki kōrero me ngā pārongo aromatawai me te tautoko i a rātou ki te whakamahi i ēnei mōhiotanga hei ārahi i ngā akoranga o muri iho.</li></ul>",
+          "standardid": 1,
+          "elementid": "6.0"
+        }
+      ]
+    }
+}
