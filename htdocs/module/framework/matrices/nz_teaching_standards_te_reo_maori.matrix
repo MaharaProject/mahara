@@ -5,10 +5,10 @@
      "selfassess":false,
      "evidencestatuses":
       [
-        {"begun":"Ready for assessment"},
-        {"incomplete":"Doesn't meet the standard"},
-        {"partialcomplete":"Partially meets the standard"},
-        {"completed":"Meets the standard"}
+        {"begun":"Kua rite mō te aromatawai"},
+        {"incomplete":"Kāore te paerewa i tutuki"},
+        {"partialcomplete":"Kua tutuki wāhi noa te paerewa"},
+        {"completed":"Kua tutuki te paerewa"}
       ],
       "standards":
       [
