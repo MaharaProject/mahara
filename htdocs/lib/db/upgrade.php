@@ -4944,13 +4944,15 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2017030200) {
-        log_debug('Clean institution theme in view table');
         if (!get_config('userscanchooseviewthemes')) {
+            drop_elasticsearch_triggers();
+            log_debug('Clean institution theme in view table');
             execute_sql("
                 UPDATE {view}
                 SET theme = NULL
                 WHERE theme IS NOT NULL
             ");
+            create_elasticsearch_triggers();
         }
     }
 
@@ -5036,6 +5038,7 @@ function xmldb_core_upgrade($oldversion=0) {
                                               WHERE g.submittableto = 1
                                               AND bi.configdata NOT LIKE '%showsubmitted%'", array())) {
             safe_require('blocktype', 'groupviews');
+            drop_elasticsearch_triggers();
             log_debug('Update submittable groups to display submissions in block by default');
             // We can only update those blocks where a decision hasn't yet been made rather than include blocks
             // that have showsubmitted set to false as that may be a valid choice by the group administrator.
@@ -5054,6 +5057,7 @@ function xmldb_core_upgrade($oldversion=0) {
                     set_time_limit(30);
                 }
             }
+            create_elasticsearch_triggers();
         }
     }
 
