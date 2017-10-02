@@ -87,6 +87,8 @@ $string['views'] = 'pages';
 $string['viewsandcollections'] = 'pages and collections';
 $string['View'] = 'Page';
 $string['Views'] = 'Pages';
+$string['portfolio'] = 'portfolio';
+$string['portfolios'] = 'portfolios';
 $string['Viewscollections'] = 'Pages and collections';
 $string['viewsubmittedtogroup'] = 'This page has been submitted to <a href="%s">%s</a>.';
 $string['viewsubmittedtogroupon'] = 'This page was submitted to <a href="%s">%s</a> on %s.';
@@ -106,8 +108,11 @@ $string['youhavenviews'] = array(
     'You have %d pages.',
 );
 $string['viewsownedbygroup'] = 'Pages owned by this group';
+$string['ownedbygroup'] = 'Owned by this group';
 $string['nogroupviewsyet'] = 'There are no pages in this group yet';
+$string['viewscollectionssharedtogroup'] = 'Pages and collections shared with this group';
 $string['viewssharedtogroup'] = 'Pages shared with this group';
+$string['sharedtogroup'] = 'Shared with this group';
 $string['nosharedviewsyet'] = 'There are no pages shared with this group yet';
 $string['viewssharedtogroupbyothers'] = 'Pages shared with this group by others';
 $string['sharedviews'] = 'Shared pages';

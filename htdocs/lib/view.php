@@ -5000,6 +5000,61 @@ class View {
         );
     }
 
+    private static function _get_participation_sql($type) {
+        $sql = "
+            SELECT CASE WHEN coll IS NOT NULL THEN c.name ELSE v.title END AS title,
+            CASE WHEN coll IS NOT NULL THEN (SELECT view FROM {collection_view} WHERE collection = coll ORDER BY displayorder ASC LIMIT 1) ELSE vc END AS vid,
+            coll AS collid,
+            SUM(mc) AS membercommentcount,
+            SUM(nmc) AS nonmembercommentcount
+            FROM (
+                SELECT c.id AS coll,                                                     -- count comments and group by collection or view id
+                CASE WHEN c.id IS NULL THEN v.id ELSE c.id END AS vc,
+                COUNT(artefact) AS mc, 0 as nmc
+                FROM {view} v
+                LEFT JOIN (                                                                   -- Get all comment artefacts
+                    SELECT acc.artefact, acc.onview FROM {artefact_comment_comment} acc
+                    JOIN {artefact} a ON a.id = acc.artefact
+                    WHERE EXISTS (                                                       -- Where author is a group member
+                        SELECT 1 FROM {group_member} m2
+                         WHERE m2.group = ? AND m2.member = a.author
+                    )
+                ) AS sub ON v.id = sub.onview
+                LEFT JOIN {collection_view} cv ON cv.view = v.id
+                LEFT JOIN {collection} c ON c.id = cv.collection
+                GROUP BY CASE WHEN c.id IS NULL THEN v.id ELSE c.id END, coll
+                UNION
+                SELECT c.id AS coll,                                                     -- count comments and group by collection or view id
+                CASE WHEN c.id IS NULL THEN v.id ELSE c.id END AS vc,
+                0 as mc, COUNT(artefact) AS nmc
+                FROM {view} v
+                LEFT JOIN (                                                                   -- Get all comment artefacts
+                    SELECT acc.artefact, acc.onview FROM {artefact_comment_comment} acc
+                    JOIN {artefact} a ON a.id = acc.artefact
+                    WHERE NOT EXISTS (                                                   -- Where author is not a group member
+                        SELECT 1 FROM {group_member} m2
+                        WHERE m2.group = ? AND m2.member = a.author
+                    )
+                ) AS sub ON v.id = sub.onview
+                LEFT JOIN {collection_view} cv ON cv.view = v.id
+                LEFT JOIN {collection} c ON c.id = cv.collection
+                GROUP BY CASE WHEN c.id IS NULL THEN v.id ELSE c.id END, coll
+            ) AS foo
+            LEFT JOIN {collection} c ON c.id = coll                                      -- group together member and non member results as one row per collection / view
+            LEFT JOIN {view} v ON v.id = vc";
+        if ($type == 'groupview') {
+            $sql .= " WHERE (v.group = ? OR c.group = ?) ";
+        }
+        else if ($type == 'sharedview') {
+            $sql .= " JOIN {view_access} va ON (va.view = CASE WHEN coll IS NOT NULL THEN (
+                          SELECT view FROM {collection_view} WHERE collection = coll ORDER BY displayorder ASC LIMIT 1
+                      ) ELSE vc END AND va.group = ?)";
+            $sql .= " WHERE ((v.group IS NULL OR v.group != ?) AND (c.group IS NULL OR c.group != ?))";
+        }
+        $sql .= " GROUP BY coll, vc, c.name, v.title";
+        return $sql;
+    }
+
     /**
      * Get all group views and its participation info excluding the view in collections
      *
@@ -5023,64 +5078,28 @@ class View {
         if (!group_user_access($groupid)) {
             throw new AccessDeniedException(get_string('accessdenied', 'error'));
         }
-        // Query group views with number of member comments
-        $sql1 = "
-        SELECT DISTINCT v.id, count(DISTINCT ac.artefact) AS membercommentcount
-        FROM {view} v
-            LEFT JOIN (
-                SELECT c.*
-                FROM {artefact_comment_comment} c
-                INNER JOIN {artefact} a ON (a.id = c.artefact)
-                WHERE EXISTS (SELECT 1 FROM {group_member} m2 WHERE m2.group = ? AND m2.member = a.author)
-            ) ac ON (ac.onview = v.id)
-        WHERE v.group = ?
-            AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)
-        GROUP BY v.id ";
-        $ph = array($groupid, $groupid);
-        // Query shared views with number of non-member comments
-        $sql2 = "
-        SELECT DISTINCT v.id, count(DISTINCT ac.artefact) AS nonmembercommentcount
-        FROM {view} v
-            LEFT JOIN (
-                SELECT c.*
-                FROM {artefact_comment_comment} c
-                INNER JOIN {artefact} a ON (a.id = c.artefact)
-                WHERE NOT EXISTS (SELECT 1 FROM {group_member} m2 WHERE m2.group = ? AND m2.member = a.author)
-            ) ac ON (ac.onview = v.id)
-        WHERE v.group = ?
-            AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)
-        GROUP BY v.id ";
-        $ph = array_merge($ph, array($groupid, $groupid));
-        $from = '
-            FROM {view} v
-            INNER JOIN (' . $sql1 . ') pv1 ON (pv1.id = v.id)
-            INNER JOIN (' . $sql2 . ') pv2 ON (pv2.id = v.id) ';
 
-        $count = count_records_sql('SELECT COUNT(DISTINCT(v.id)) ' . $from, $ph);
-        if (in_array($sort, array('title', 'owner', 'membercommentcount', 'nonmembercommentcount'))
+        // Get the count of member and non-member comments for both collections and stand alone pages
+        $selectsql = self::_get_participation_sql('groupview');
+
+        $where = array($groupid, $groupid, $groupid, $groupid);
+        $count = count_records_sql("SELECT COUNT(*) FROM (" . $selectsql . ") as ct", $where);
+        if (in_array($sort, array('title', 'membercommentcount', 'nonmembercommentcount'))
              && in_array($direction, array('asc', 'desc'))) {
-            $ordersql = "$sort $direction";
+            $ordersql = " ORDER BY $sort $direction";
         }
         else {
-            $ordersql = "v.title, v.id";
+            $ordersql = " ORDER BY title DESC";
         }
-        $viewdata = get_records_sql_assoc('
-            SELECT DISTINCT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat,v.institution,v.urlid, membercommentcount, nonmembercommentcount'
-            . $from . '
-            ORDER BY '. $ordersql,
-            $ph, $offset, $limit
-        );
 
-        if ($viewdata) {
-            // Get more info about view comments
+        $viewdata = get_records_sql_assoc($selectsql . $ordersql, $where, $offset, $limit);
+
+        if (!empty($viewdata)) {
             foreach ($viewdata as &$view) {
-                if (isset($view->group)) {
-                    $view->groupname = get_field('group', 'name', 'id', $view->group);
-                }
-
+                $view->id = $view->vid;
+                $view->collection = $view->collid;
                 $viewobj = new View($view->id);
                 $view->url = $viewobj->get_url();
-
                 self::get_view_comment_info($view, $groupid);
             }
         }
@@ -5120,65 +5139,34 @@ class View {
         if (!group_user_access($groupid)) {
             throw new AccessDeniedException(get_string('accessdenied', 'error'));
         }
-        // Query shared views with number of member comments
-        $sql1 = "
-        SELECT DISTINCT v.id, count(DISTINCT ac.artefact) AS membercommentcount
-        FROM {view} v
-            INNER JOIN {view_access} va ON (va.view = v.id)
-            LEFT JOIN (
-                SELECT c.*
-                FROM {artefact_comment_comment} c
-                INNER JOIN {artefact} a ON (a.id = c.artefact)
-                WHERE EXISTS (SELECT 1 FROM {group_member} m2 WHERE m2.group = ? AND m2.member = a.author)
-            ) ac ON (ac.onview = v.id)
-        WHERE va.group = ? AND (v.group IS NULL OR v.group != ?)
-            AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)
-        GROUP BY v.id ";
-        $ph = array($groupid, $groupid, $groupid);
-        // Query shared views with number of non-member comments
-        $sql2 = "
-        SELECT DISTINCT v.id, count(DISTINCT ac.artefact) AS nonmembercommentcount
-        FROM {view} v
-            INNER JOIN {view_access} va ON (va.view = v.id)
-            LEFT JOIN (
-                SELECT c.*
-                FROM {artefact_comment_comment} c
-                INNER JOIN {artefact} a ON (a.id = c.artefact)
-                WHERE NOT EXISTS (SELECT 1 FROM {group_member} m2 WHERE m2.group = ? AND m2.member = a.author)
-            ) ac ON (ac.onview = v.id)
-        WHERE va.group = ? AND (v.group IS NULL OR v.group != ?)
-            AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)
-        GROUP BY v.id ";
-        $ph = array_merge($ph, array($groupid, $groupid, $groupid));
-        $from = '
-            FROM {view} v
-            INNER JOIN (' . $sql1 . ') pv1 ON (pv1.id = v.id)
-            INNER JOIN (' . $sql2 . ') pv2 ON (pv2.id = v.id) ';
 
-        $count = count_records_sql('SELECT COUNT(DISTINCT(v.id)) ' . $from, $ph);
-        if (in_array($sort, array('title', 'owner', 'membercommentcount', 'nonmembercommentcount'))
+        // Get the count of member and non-member comments for both collections and stand alone pages
+        $selectsql = self::_get_participation_sql('sharedview');
+        $where = array($groupid, $groupid, $groupid, $groupid, $groupid);
+        $count = count_records_sql("SELECT COUNT(*) FROM (" . $selectsql . ") as ct", $where);
+        if (in_array($sort, array('title', 'membercommentcount', 'nonmembercommentcount'))
              && in_array($direction, array('asc', 'desc'))) {
-            $ordersql = "$sort $direction";
+            $ordersql = " ORDER BY $sort $direction";
         }
         else {
-            $ordersql = "v.title, v.id";
+            $ordersql = " ORDER BY title DESC";
         }
-        $viewdata = get_records_sql_assoc('
-            SELECT DISTINCT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat,v.institution,v.urlid, membercommentcount, nonmembercommentcount'
-            . $from . '
-            ORDER BY '. $ordersql,
-            $ph, $offset, $limit
-        );
+
+        $viewdata = get_records_sql_assoc($selectsql . $ordersql, $where, $offset, $limit);
 
         if ($viewdata) {
             // Get more info about view comments
             foreach ($viewdata as &$view) {
-                if (isset($view->group)) {
-                    $view->groupname = get_field('group', 'name', 'id', $view->group);
-                }
-
+                $view->id = $view->vid;
+                $view->collection = $view->collid;
                 $viewobj = new View($view->id);
                 $view->url = $viewobj->get_url();
+                $view->owner = $viewobj->owner;
+                $view->group = $viewobj->group;
+                $view->institution = $viewobj->institution;
+                if (!empty($view->group)) {
+                    $view->groupname = get_field('group', 'name', 'id', $view->group);
+                }
 
                 self::get_view_comment_info($view, $groupid);
             }
@@ -5207,54 +5195,64 @@ class View {
      * @param $groupid a ID of the group that the view is shared with
      */
     public static function get_view_comment_info(&$view, $groupid) {
-        $viewcomments = get_records_sql_array('
-            SELECT
-                a.id, a.author, a.authorname, a.ctime, a.mtime, a.description, a.group,
-                c.private, c.deletedby, c.requestpublic, c.rating, c.lastcontentupdate,
-                u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
-                u.deleted, u.profileicon, u.urlid
-            FROM {artefact} a
-            INNER JOIN {artefact_comment_comment} c ON a.id = c.artefact
-                LEFT JOIN {usr} u ON a.author = u.id
-            WHERE c.onview = ?'
-            , array($view->id));
+        if (isset($view->collection)) {
+            $views = get_column('collection_view', 'view', 'collection', $view->collid);
+        }
+        else {
+            $views = array($view->id);
+        }
 
         $extcommenters = 0;
         $membercommenters = 0;
         $extcomments = 0;
         $membercomments = 0;
         $commenters = array();
-        if ($viewcomments && is_array($viewcomments)) {
-            foreach ($viewcomments as $c) {
-                if (empty($c->author)) {
-                    if (!isset($commenters[$c->authorname])) {
-                        $commenters[$c->authorname] = array();
-                    }
-                    $commenters[$c->authorname]['commenter'] = $c->authorname;
-                    $commenters[$c->authorname]['count'] = (isset($commenters[$c->authorname]['count']) ? $commenters[$c->authorname]['count'] + 1 : 1);
-                    if ($commenters[$c->authorname]['count'] == 1) {
-                        $extcommenters++;
-                    }
-                    $extcomments++;
-                }
-                else {
-                    if (!isset($commenters[$c->author])) {
-                        $commenters[$c->author] = array();
-                    }
-                    $commenters[$c->author]['commenter'] = (int) $c->author;
-                    $commenters[$c->author]['member'] = group_user_access($groupid, $c->author);
-                    $commenters[$c->author]['count'] = (isset($commenters[$c->author]['count']) ? $commenters[$c->author]['count'] + 1 : 1);
-                    if (empty($commenters[$c->author]['member'])) {
-                        if ($commenters[$c->author]['count'] == 1) {
+
+        foreach ($views as $v) {
+            $viewcomments = get_records_sql_array('
+                SELECT
+                    a.id, a.author, a.authorname, a.ctime, a.mtime, a.description, a.group,
+                    c.private, c.deletedby, c.requestpublic, c.rating, c.lastcontentupdate,
+                    u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
+                    u.deleted, u.profileicon, u.urlid
+                FROM {artefact} a
+                INNER JOIN {artefact_comment_comment} c ON a.id = c.artefact
+                    LEFT JOIN {usr} u ON a.author = u.id
+                WHERE c.onview = ?'
+                , array($v));
+
+            if ($viewcomments && is_array($viewcomments)) {
+                foreach ($viewcomments as $c) {
+                    if (empty($c->author)) {
+                        if (!isset($commenters[$c->authorname])) {
+                            $commenters[$c->authorname] = array();
+                        }
+                        $commenters[$c->authorname]['commenter'] = $c->authorname;
+                        $commenters[$c->authorname]['count'] = (isset($commenters[$c->authorname]['count']) ? $commenters[$c->authorname]['count'] + 1 : 1);
+                        if ($commenters[$c->authorname]['count'] == 1) {
                             $extcommenters++;
                         }
                         $extcomments++;
                     }
                     else {
-                        if ($commenters[$c->author]['count'] == 1) {
-                            $membercommenters++;
+                        if (!isset($commenters[$c->author])) {
+                            $commenters[$c->author] = array();
                         }
-                        $membercomments++;
+                        $commenters[$c->author]['commenter'] = (int) $c->author;
+                        $commenters[$c->author]['member'] = group_user_access($groupid, $c->author);
+                        $commenters[$c->author]['count'] = (isset($commenters[$c->author]['count']) ? $commenters[$c->author]['count'] + 1 : 1);
+                        if (empty($commenters[$c->author]['member'])) {
+                            if ($commenters[$c->author]['count'] == 1) {
+                                $extcommenters++;
+                            }
+                            $extcomments++;
+                        }
+                        else {
+                            if ($commenters[$c->author]['count'] == 1) {
+                                $membercommenters++;
+                            }
+                            $membercomments++;
+                        }
                     }
                 }
             }
@@ -5265,6 +5263,7 @@ class View {
         $view->mcomments = $membercomments;
         $view->ecomments = $extcomments;
         $view->comments = $commenters;
+        $view->viewcount = count($views);
     }
 
     /**
