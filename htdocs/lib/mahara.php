@@ -4970,3 +4970,33 @@ function no_accents($str) {
     );
     return strtr($str, $accents);
 }
+
+/**
+ * Disable elasticsearch triggers for site - useful for upgrades if we don't need to reindex the changes
+ * This should be paired with create_elasticsearch_triggers(); - an example:
+ *  drop_elasticsearch_triggers();
+ *  execute_sql("UPDATE {view} ... ");
+ *  create_elasticsearch_triggers();
+ */
+function drop_elasticsearch_triggers() {
+    if (get_config('searchplugin') == 'elasticsearch') {
+        log_debug('Dropping elasticsearch triggers');
+        require_once(get_config('docroot') . 'search/elasticsearch/lib.php');
+        ElasticsearchIndexing::drop_trigger_functions();
+    }
+}
+
+/**
+ * Paired with  drop_elasticsearch_triggers(); - see it's info for useage
+ */
+function create_elasticsearch_triggers() {
+    if (get_config('searchplugin') == 'elasticsearch') {
+        log_debug('Adding elasticsearch triggers back in');
+        require_once(get_config('docroot') . 'search/elasticsearch/lib.php');
+        ElasticsearchIndexing::create_trigger_functions();
+        $enabledtypes = explode(',', get_config_plugin('search', 'elasticsearch', 'types'));
+        foreach ($enabledtypes as $type) {
+            ElasticsearchIndexing::create_triggers($type);
+        }
+    }
+}
