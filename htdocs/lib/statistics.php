@@ -4038,3 +4038,86 @@ function userhasaccess($institution, $report) {
     $smarty->display('admin/users/noinstitutionsstats.tpl');
     exit;
 }
+
+function report_earliest_date($subtype, $institution = 'mahara') {
+    // A quick way to find possible earliest dates for things
+
+    // This check accepts the fact that 'mahara' institution must exist first
+    // therefore the earliest for 'mahara' must be the earliest for 'all'
+    $institution = ($institution == 'all') ? 'mahara' : $institution;
+    switch ($subtype) {
+        case "content":
+            $date = get_field_sql("SELECT MIN(i.time) FROM {institution_registration} i WHERE i.institution = ?", array($institution));
+            break;
+        case "groups":
+            $date = get_field_sql("SELECT MIN(ctime) FROM {group}");
+            break;
+        case "logins":
+            $date = get_field_sql("SELECT MIN(ctime) FROM {usr_login_data}");
+            break;
+        case "collaboration":
+            if ($institution != 'mahara') {
+                // base it on when first member joined institution
+                $date = get_field_sql("SELECT MIN(ctime) FROM {usr_institution} WHERE institution = ?", array($institution));
+            }
+            else {
+                $date = get_field_sql("SELECT MIN(ctime) FROM {view_access}");
+            }
+            break;
+        case "masquerading":
+            if ($institution != 'mahara') {
+                $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                       JOIN {usr_institution} ui ON ui.usr = el.realusr
+                                       WHERE el.event = 'loginas' AND ui.institution = ?", array($institution));
+            }
+            else {
+                $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                       WHERE el.event = 'loginas' AND el.realusr NOT IN (
+                                           SELECT usr FROM {usr_institution}
+                                       )");
+            }
+            break;
+        case "useractivity":
+            if ($institution != 'mahara') {
+                $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                       JOIN {usr_institution} ui ON ui.usr = el.usr
+                                       WHERE el.event != 'loginas' AND ui.institution = ?", array($institution));
+            }
+            else {
+                $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                       WHERE el.event != 'loginas' AND el.usr NOT IN (
+                                           SELECT usr FROM {usr_institution}
+                                       )");
+            }
+            break;
+        case "pageactivity":
+        case "accesslist":
+            if ($institution != 'mahara') {
+                $date = get_field_sql("SELECT MIN(v.ctime) FROM {view} v
+                                       JOIN {usr_institution} ui ON ui.usr = v.owner
+                                       WHERE ui.institution = ?", array($institution));
+            }
+            else {
+                $date = get_field_sql("SELECT MIN(v.ctime) FROM {view} v");
+            }
+            break;
+        case "users":
+            $date = get_field_sql("SELECT MIN(ctime) FROM {institution_data}
+                                   WHERE institution = ?", array($institution));
+            break;
+        case "userdetails":
+        case "comparisons":
+        default:
+            if ($institution != 'mahara') {
+                $date = get_field_sql("SELECT MIN(ctime) FROM {usr_institution} WHERE institution = ?", array($institution));
+            }
+            else {
+                $date = get_field_sql("SELECT MIN(ctime) FROM {usr}");
+            }
+            break;
+    }
+    if (!$date) {
+        return false;
+    }
+    return format_date(strtotime($date), 'strftimedate');
+}

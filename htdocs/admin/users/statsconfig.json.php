@@ -68,6 +68,16 @@ $formarray = report_config_form($extraparams, $institutionelement);
 $form = $formarray ? pieform($formarray) : '';
 
 $reportinfo = get_string('reportdesc' . $subtype, 'statistics');
+$reportdatestr = '<div class="alert alert-warning">';
+if ($date = report_earliest_date($subtype, $institution)) {
+    $reportdatestr .= get_string('earliestdate', 'statistics', $date);
+}
+else {
+    $reportdatestr .= get_string('noearliestdate', 'statistics');
+}
+$reportdatestr .= '</div>';
+$reportinfo .= $reportdatestr;
+
 $tableheaders = '';
 $function = $subtype . '_statistics_headers';
 if (function_exists($function)) {
