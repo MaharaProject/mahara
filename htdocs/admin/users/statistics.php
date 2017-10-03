@@ -256,7 +256,7 @@ if ($type == 'information' && (empty($subtype) || $subtype == 'information')) {
 }
 else {
     list($subpages, $subpagedata) = display_statistics($institution, $type, $extraparams);
-    $subpagination = !empty($subpagedata['table']) ? $subpagedata['table']['pagination_js'] : false;
+    $subpagination = (!empty($subpagedata['table']) && !empty($subpagedata['table']['pagination_js'])) ? $subpagedata['table']['pagination_js'] : false;
     $institutiondata = false;
     if ($subpagination) {
         $js .= <<<JS
