@@ -71,11 +71,6 @@ function load_account_preferences($userid) {
  * @param string $value preference value to set.
  */
 function set_account_preference($userid, $field, $value) {
-    if ($field == 'mobileuploadtoken'
-        && ((!isset($value) || empty($value))
-            || (is_array($value) && count($value) == 1 && (!isset($value[0]) || empty($value[0]))))) {
-        $value = '';
-    }
     if ($field == 'lang') {
         $oldlang = get_field('usr_account_preference', 'value', 'usr', $userid, 'field', 'lang');
         if (empty($oldlang) || $oldlang == 'default') {
@@ -236,7 +231,6 @@ function expected_account_preferences() {
                  'multipleblogs' => get_config('defaultmultipleblogs'),
                  'showhomeinfo' => 1,
                  'showprogressbar' => 1,
-                 'mobileuploadtoken' => '',
                  'theme' => '',
                  'resizeonuploaduserdefault' => 1,
                  'devicedetection' => 1,
@@ -432,18 +426,6 @@ function general_account_prefs_form_elements($prefs) {
             'defaultvalue' => $prefs->showprogressbar,
             'title' => get_string('showprogressbar', 'account'),
             'description' => get_string('showprogressbardescription', 'account', hsc(get_config('sitename'))),
-        );
-    }
-    if (get_config('allowmobileuploads')) {
-        $defaultvalue = array();
-        $mobileuploadtoken = isset($prefs->mobileuploadtoken) ? $prefs->mobileuploadtoken : get_config('mobileuploadtoken');
-        $defaultvalue = explode('|', trim($mobileuploadtoken, '|'));
-
-        $elements['mobileuploadtoken'] = array(
-            'type'         => 'multitext',
-            'title'        => get_string('mobileuploadtoken', 'account'),
-            'defaultvalue' => $defaultvalue,
-            'help'         => 'true'
         );
     }
     if (get_config_plugin('artefact', 'file', 'resizeonuploadenable')) {

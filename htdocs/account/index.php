@@ -178,14 +178,6 @@ function accountprefs_validate(Pieform $form, $values) {
         }
     }
 
-    if (get_config('allowmobileuploads')) {
-        foreach ($values['mobileuploadtoken'] as $k => $text) {
-            if (strlen($text) > 0 && !preg_match('/^[a-zA-Z0-9 !@#$%^&*()\-_=+\[{\]};:\'",<\.>\/?]{6,}$/', $text)) {
-                $form->set_error('mobileuploadtoken', get_string('badmobileuploadtoken', 'account'));
-            }
-        }
-    }
-
     plugin_account_prefs_validate($form, $values);
 }
 
@@ -222,14 +214,6 @@ function accountprefs_submit(Pieform $form, $values) {
     $oldtheme = $USER->get_account_preference('theme');
     $oldgroupsideblockmaxgroups = $USER->get_account_preference('groupsideblockmaxgroups');
     $oldgroupsideblocksortby = $USER->get_account_preference('groupsideblocksortby');
-
-    if (get_config('allowmobileuploads')) {
-        // Make sure the mobile token is formatted / saved correctly
-        $values['mobileuploadtoken'] = array_filter($values['mobileuploadtoken']);
-        $new_token_pref = empty($values['mobileuploadtoken']) ? null : ('|' . join('|', $values['mobileuploadtoken']) . '|');
-        $USER->set_account_preference('mobileuploadtoken', $new_token_pref);
-        unset($values['mobileuploadtoken']);
-    }
 
     // Set user account preferences
     foreach ($expectedprefs as $eprefkey => $epref) {

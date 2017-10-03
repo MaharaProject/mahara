@@ -48,7 +48,6 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
 | Registration agreement | 1 |
 | License metadata | 1 |
 | Custom licenses | 1 |
-| Mobile uploads | 1 |
 And I press "Update site options"
 
 Scenario: Setting default account lifetime

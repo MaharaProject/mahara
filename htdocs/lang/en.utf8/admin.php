@@ -367,6 +367,7 @@ $string['defaultaccountlifetimeupdatedescription'] = 'If default account lifetim
 $string['defaultaccountlifetimeupdatenone'] = 'Only for newly created users';
 $string['defaultaccountlifetimeupdatesome'] = 'For new users and users without an account lifetime already set (excluding site administrators)';
 $string['defaultaccountlifetimeupdateall'] = 'For all user accounts (excluding site administrators)';
+$string['deprecatedmobileapp'] = "Sorry, this mobile application has been superseded. You need to use Mahara mobile application instead. Download for android devices https://play.google.com/store/apps/details?id=org.mahara.mobile or for apple devices https://itunes.apple.com/us/app/mahara-mobile/id1172638950";
 $string['embeddedcontent'] = 'Embedded content';
 $string['embeddedcontentdescription'] = 'If you would like users to be able to embed videos or other outside content into their portfolios, you can choose which sites to trust below.';
 $string['Everyone'] = 'Everyone';
@@ -394,8 +395,6 @@ $string['licensemetadata'] = 'License metadata';
 $string['licensemetadatadescription'] = "Request and store license metadata for user-generated content.";
 $string['licenseallowcustom1'] = 'Custom licenses';
 $string['licenseallowcustomdescription'] = "For license metadata, allow users to enter any URL as the license. If not checked, users will be limited to the licenses configured by the site administrator.";
-$string['allowmobileuploads1'] = 'Mobile uploads';
-$string['allowmobileuploadsdescription1'] = 'Users can set an authentication token for use with a mobile app for Mahara. Content uploaded with this token will be saved as artefacts.';
 $string['recaptchakeysmissing1'] = 'reCAPTCHA is turned on, but it will not function until you also provide a site key and secret key.';
 $string['recaptchanotpassed'] = 'The reCAPTCHA wasn\'t entered correctly. Please try it again.';
 $string['recaptchaonregisterform'] = 'reCAPTCHA on user registration form';

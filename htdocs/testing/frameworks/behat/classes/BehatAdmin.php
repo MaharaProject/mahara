@@ -87,7 +87,6 @@ class BehatAdmin extends BehatBase {
                 'onlineuserssideblockmaxusers',
                 'licensemetadata',
                 'licenseallowcustom',
-                'allowmobileuploads',
                 'wysiwyg',
                 'sitefilesaccess',
                 'watchlistnotification_delay',
