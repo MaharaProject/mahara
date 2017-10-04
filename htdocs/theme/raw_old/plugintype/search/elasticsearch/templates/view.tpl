@@ -19,7 +19,13 @@
         {/if}
       </div>
     {/if}
-      <div class="detail">{$record->description|str_shorten_html:140:true|safe}</div>
+      <div class="detail">
+          {if $record->highlight}
+              {$record->highlight|safe}
+          {else}
+              {$record->description|str_shorten_html:140:true|safe}
+          {/if}
+      </div>
     <!-- TAGS -->
     {if $record->tags|count gt 0}
     <div class="tags"><strong>{str tag=tags section=search.elasticsearch}:</strong>
