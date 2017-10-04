@@ -3,7 +3,16 @@
                     <div class="panel panel-default {if $view.submittedto} panel-warning {/if}
                     {if $view.template == $sitetemplate} site-template{/if}">
                         <h3 class="panel-heading has-link">
-                            <a class="title-link title" href="{if $view.numviews > 0}{$view.fullurl}{else}{$WWWROOT}collection/views.php?id={$view.collid}{/if}" title="{$view.displaytitle}">
+                          <a class="title-link title"
+                          href="
+                              {if $view.template == $sitetemplate}
+                                  {$WWWROOT}view/blocks.php?id={$view.id}
+                              {elseif isset($view.numviews) && $view.numviews == 0}
+                                  {$WWWROOT}collection/views.php?id={$view.collid}
+                              {else}
+                                  {$view.fullurl}
+                              {/if}"
+                          title="{$view.displaytitle}">
                                 {$view.displaytitle}
                             </a>
                         </h3>
