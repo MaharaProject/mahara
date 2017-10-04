@@ -1,4 +1,4 @@
-<h3>{str tag=youraverageuser section=admin}</h3>
+<h4>{str tag=youraverageuser section=admin}</h4>
 <ul class="list-group list-group-lite unstyled">
     <li class="list-group-item">{$data.strmaxfriends|safe}</li>
     <li class="list-group-item">{$data.strmaxviews|safe}</li>
@@ -6,8 +6,9 @@
     <li class="list-group-item">{$data.strmaxquotaused|safe}</li>
 </ul>
 {if $data}
-    <div id="site-stats-graph">
-        <canvas class="graphcanvas" id="sitestatsusersgraph" width="300" height="300"></canvas>
+    <h4>{str tag=usersbytype section=statistics}</h4>
+    <div class="panel-body">
+        <canvas class="graphcanvas" id="sitestatsusersgraph" width="300" height="200"></canvas>
         <script type="application/javascript">
         {literal}
         jQuery(function() {

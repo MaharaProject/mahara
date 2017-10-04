@@ -58,6 +58,9 @@
     font-weight: 700;
   }
 }
+.ui-datepicker.in-modal {
+  z-index: 1041 !important;
+}
 
 /* Styles for the new year prev/next css */
 

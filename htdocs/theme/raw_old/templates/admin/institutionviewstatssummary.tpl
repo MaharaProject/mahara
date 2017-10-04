@@ -2,16 +2,17 @@
 <p>{str tag=noviews1 section=view}</p>
 {/if}
 {if $blocktypecounts}
-<p>{str tag=blockcountsbytype section=admin}:
-<ul>
-{foreach from=$blocktypecounts item=item}
-  <li>{str tag=title section=blocktype.$item->langsection}: {$item->blocks}</li>
-{/foreach}
-</ul>
-</p>
+    <h4>{str tag=blockcountsbytype section=admin}</h4>
+    <ul class="list-group list-group-lite unstyled">
+    {foreach from=$blocktypecounts item=item}
+        <li class="list-group-item">{str tag=title section=blocktype.$item->langsection}: {$item->blocks}</li>
+    {/foreach}
+    </ul>
+    </p>
 {/if}
 {if $viewtypes}
-    <div id="site-stats-graph" class="site-stats-graph">
+    <h4>{str tag=viewsbytype section=admin}</h4>
+    <div class="panel-body">
         <canvas class="graphcanvas" id="sitestatsviewtypesgraph" width="300" height="200"></canvas>
         <script type="application/javascript">
         {literal}
