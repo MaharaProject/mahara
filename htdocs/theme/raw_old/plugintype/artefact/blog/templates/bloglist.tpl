@@ -22,6 +22,7 @@
         </a>
     </div>
 
+    {if $blog->canedit}
     <div class="panel-footer has-form">
         <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-default btn-sm">
             <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
@@ -40,5 +41,6 @@
             {/if}
         </div>
     </div>
+    {/if}
 </div>
 {/foreach}
