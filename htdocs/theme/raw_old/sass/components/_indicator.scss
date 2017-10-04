@@ -43,6 +43,7 @@
     }
 }
 
+tr[data-toggle="collapse"],
 a[data-toggle="collapse"] {
     &:hover .collapse-indicator,
     &:focus .collapse-indicator{

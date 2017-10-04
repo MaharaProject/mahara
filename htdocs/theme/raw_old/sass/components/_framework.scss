@@ -5,6 +5,7 @@
     tr {
         &.standard {
             background: darken($table-bg-accent, 2%) !important;
+            cursor: pointer;
         }
     }
 
@@ -142,4 +143,8 @@
             color: $assessment-completed-color;
         }
     }
+}
+
+.shortname-container {
+    cursor: pointer;
 }
