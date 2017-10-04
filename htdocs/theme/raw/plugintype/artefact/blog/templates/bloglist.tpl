@@ -39,8 +39,8 @@
                 <span class="sr-only">{str tag=editspecific arg1=$blog->title}</span>
             </a>
             {$blog->deleteform|safe}
+            {/if}
         </div>
-        {/if}
     </div>
     {/if}
 </div>
