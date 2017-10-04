@@ -10,5 +10,11 @@
         </a>
     </h3>
     <span class="artefacttype text-midtone">({str tag=forum section=search.elasticsearch})</span>
-    <div class="detail">{$record->description|str_shorten_html:140:true|safe}</div>
+    <div class="detail">
+        {if $record->highlight}
+            {$record->highlight|safe}
+        {else}
+            {$record->description|str_shorten_html:140:true|safe}
+        {/if}
+    </div>
 {/if}

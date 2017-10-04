@@ -59,4 +59,12 @@
     .list-group-item ul:not(.list-group) {
         padding-left: 25px;
     }
+    .search-highlight {
+        font-weight: bold;
+    }
+}
+
+.elasticsearch-status {
+    color: darken($link-color, 10%);
+    font-weight: bold;
 }
