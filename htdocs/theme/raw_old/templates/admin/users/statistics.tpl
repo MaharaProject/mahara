@@ -1,41 +1,48 @@
 {include file='header.tpl'}
-
-{if $institutiondata}
-    <div id="panel panel-info" class="panel-items js-masonry">
-        <div class="panel panel-info">
-            <h3 class="panel-heading">{str tag=information section=admin}<span class="icon icon-info pull-right" role="presentation" aria-hidden="true"></span></h3>
-          {include file='admin/users/stats.tpl' cron=1}
+<div class="btn-group btn-group-top">
+    <button id="configbtn" type="button" class="btn btn-default" data-toggle="modal-docked" data-target="#modal-configs">
+        <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
+        {str tag="configurereport" section="admin"}
+    </button>
+</div>
+<div class="reportsettings">{$reportsettings|safe}</div>
+<div class="clearfix"></div>
+{if $institutiondata || $subpagedata}
+    <div>
+    {if $institutiondata}
+        <div class="subpage panel-body row">
+        {include file='admin/users/stats.tpl' cron=1}
         </div>
-
-        <div class="panel panel-default double">
-            <div class="panel-heading">
-                <ul class="nav nav-pills">
-                    {foreach from=$subpages item=subpage}
-                        <li{if $subpage == $type} class="active"{/if}>
-                            <a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/users/statistics.php?institution={$institutiondata.name}&type={$subpage}">{str tag=$subpage}
-                            <span class="accessible-hidden sr-only">({str tag=tab}{if $subpage == $type} {str tag=selected}{/if})</span></a>
-                        </li>
-                    {/foreach}
-                </ul>
-            </div>
-
-            <div class="subpage panel-body row">
-                {if $subpagedata.table.count == 0}{else}
+    {/if}
+    {if $subpagedata && $subpagedata.notvalid_errorstring}
+        <div class="alert alert-info postlist">{$subpagedata.notvalid_errorstring}</div>
+    {elseif $subpagedata}
+            <div class="subpage panel-body row statistics">
+                {if $subpagedata.table.count == 0}
+                {else}
                     <div id="statistics_table_container" class="col-md-12">
-                        <h3>{$subpagedata.tabletitle}</h3>
-                        <table id="statistics_table" class="table table-striped fullwidth">
-                            <thead>
-                                <tr>
-                                    {foreach from=$subpagedata.tableheadings item=heading}
-                                        <th{if $heading.class} class="{$heading.class}"{/if}>{$heading.name}</th>
-                                    {/foreach}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {$subpagedata.table.tablerows|safe}
-                            </tbody>
-                        </table>
-                        {$subpagedata.table.pagination|safe}
+                        <div class="table-responsive">
+                            <table id="statistics_table" class="table table-striped fullwidth">
+                                <thead>
+                                    <tr>
+                                        {foreach from=$subpagedata.tableheadings item=heading}
+                                            {if $heading.selected}
+                                                {$heading.html|safe}
+                                            {/if}
+                                        {/foreach}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {$subpagedata.table.tablerows|safe}
+                                </tbody>
+                            </table>
+                            {$subpagedata.table.pagination|safe}
+                        </div>
+                        {if $subpagedata.table.csv}
+                            <a href="{$WWWROOT}download.php" id="csvdownload" class="csv-button pull-right" title="{str tag="exportstatsascsv" section="admin"}">
+                            <span class="icon icon-download" role="presentation" aria-hidden="true"></span>
+                            <span>{str tag="Download" section="admin"}</span></a>
+                        {/if}
                     </div>
                 {/if}
                 {if $subpagedata.summary}
@@ -44,14 +51,29 @@
                     </div>
                 {/if}
             </div>
-
-            {if $subpagedata.table.csv}
-                <a href="{$WWWROOT}download.php" class="panel-footer">
-                <span class="icon icon-table" role="presentation" aria-hidden="true"></span> {str tag=exportstatsascsv section=admin}</span></a>
-            {/if}
         </div>
-
+    {/if}
     </div>
+{else}
+    <div>{str tag="nostatistics" section="admin"}</div>
 {/if}
+{* The configuration modal form *}
+<div class="modal modal-docked modal-docked-right modal-shown closed" id="modal-configs" tabindex="-1" role="dialog" aria-labelledby="#modal-configs-title">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="deletebutton close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
+                    <span class="times">×</span>
+                    <span class="sr-only">{str tag=Close}</span>
+                </button>
+                <h4 class="modal-title blockinstance-header text-inline modal-configs-title">{str tag="reportconfig" section="statistics"}</h4>
+            </div>
+            <div class="modal-body">
+                <span class="icon icon-spinner icon-pulse" role="presentation" aria-hidden="true"></span>
+                <span>{str tag="loading" section="mahara"}</span>
+            </div>
+        </div>
+    </div>
+</div>
 
 {include file='footer.tpl'}
