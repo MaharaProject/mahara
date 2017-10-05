@@ -4,10 +4,10 @@
     {str section='module.multirecipientnotification' tag='composemessage'}
 </a>
 <div id="notifications-page-header"/></div>
-
+{include file="module:multirecipientnotification:indexsearch.tpl" searchdata=$searchdata boxtype=inbox}
 {if $activitylist.count > 0}
 
-    <div id="notifications" class="notification-parent" data-requesturl="indexin.json.php">
+    <div id="notifications" class="notification-parent view-container" data-requesturl="indexin.json.php">
 
         <div class="btn-group bulk-actions" role="group">
             <label class="btn btn-default" for="selectall">
@@ -70,7 +70,11 @@
 {else}
 <div class="notifications-empty" id="notifications">
     <p class="no-results">
-        {str section='activity' tag='yourinboxisempty'}
+        {if $searchdata->searchtext}
+            {str section='activity' tag='noresultsfound'}
+        {else}
+            {str section='activity' tag='yourinboxisempty'}
+        {/if}
     </p>
 </div>
 {/if}

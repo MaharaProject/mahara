@@ -47,7 +47,8 @@
     {/foreach}
   </tr>
   {foreach from=$standards key=sk item=standard}
-    <tr class="standard" data-standard="{$sk}" data-toggle="collapse" aria-expanded="true">
+    <tr class="standard{if $standard->settingstate == 'closed'} collapsed{/if}" data-standard="{$standard->id}" data-collection="{$collectionid}"
+        data-toggle="collapse" aria-expanded="{if $standard->settingstate == 'closed'}false{else}true{/if}">
         <td colspan="{$viewcount + 2}">
             <div class="shortname-container">
                 <span class="sr-only">{str tag="standardbegin" section="module.framework"}</span>
@@ -75,7 +76,7 @@
     {if $standard->options}
         {foreach from=$standard->options key=ok item=option}
         {if $option->children}
-        <tr class="matrixlevel{$option->level} examplefor{$sk}">
+        <tr class="matrixlevel{$option->level} examplefor{$standard->id}{if $standard->settingstate == 'closed'} hidden{/if}">
             <td colspan="{$viewcount + 2}" class="code">
                 <div class="shortname-container">
                     <span class="sr-only">{str tag="headerrow" section="module.framework"}</span>
@@ -96,7 +97,7 @@
             </td>
         </tr>
         {else}
-        <tr class="matrixlevel{$option->level} examplefor{$sk}">
+        <tr class="matrixlevel{$option->level} examplefor{$standard->id}{if $standard->settingstate == 'closed'} hidden{/if}">
             <td class="code">
                 <div class="shortname-container" tabindex="0">
                     <span class="sr-only">{str tag="headerrow" section="module.framework"}</span>

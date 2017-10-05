@@ -144,11 +144,15 @@
                             </div>
 
                             {if $view.collid}
-                                <div class="collection-list" title="{str tag='numviewsincollection' section='collection' arg1='$view.numviews'}" title="{str tag='numviewsincollection' section='collection' arg1='$view.numviews'}">
+                                {assign var=fullnumviews value=$view.numviews}
+                                {if $view.framework}
+                                    {assign var=fullnumviews value=$view.numviews + 1}
+                                {/if}
+                                <div class="collection-list" title="{str tag='numviewsincollection' section='collection' arg1='$fullnumviews'}">
                                     {if $view.numviews > 0}
                                     <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false">
                                         <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
-                                        <span class="page-count">{$view.numviews}</span>
+                                        <span class="page-count">{$fullnumviews}</span>
                                         <span class="icon icon-file close-indicator" role="presentation" aria-hidden="true">
                                             {if $view.numviews > 1}
                                             <span class="collection-indicator few"></span>
