@@ -209,6 +209,9 @@ table.table tr {
             float:left;
         }
     }
+    .with-selectall {
+        min-width: 110px;
+    }
 }
 
 .table > thead > tr.th-has-shared > th {
@@ -262,4 +265,15 @@ table.table tr {
 .table>thead>tr>th.groupname,
 .table>thead>tr>th.groupshortname {
     width: 20%;
+}
+
+.table.profile-info {
+    table-layout: fixed;
+    td,
+    th {
+        word-break: break-all;
+    }
+    >tbody>tr:first-child>td {
+        border-top-width: 1px;
+    }
 }

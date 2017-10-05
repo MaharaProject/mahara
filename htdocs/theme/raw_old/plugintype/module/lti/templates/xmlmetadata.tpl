@@ -6,11 +6,9 @@
     <blti:launch_url>{$launchurl}</blti:launch_url>
     <blti:extensions platform="canvas.instructure.com">
         <lticm:property name="icon_url">{$sitelogo}</lticm:property>
-        <lticm:property name="link_text">{$sitename}</lticm:property>
         <lticm:property name="privacy_level">public</lticm:property>
         <lticm:property name="tool_id">mahara</lticm:property>
         <lticm:options name="course_navigation">
-            <lticm:property name="text">{$sitename}</lticm:property>
             <lticm:property name="default">enabled</lticm:property>
             <lticm:property name="visibility">members</lticm:property>
             <lticm:property name="enabled">true</lticm:property>

@@ -24,7 +24,7 @@
                 <span class="subsection-heading">{$artefacttitle}</span>
             {/if}
             <span class="metadata">
-                | {$view->display_title()|safe}
+                | {$viewdisplaytitle|safe}
                 {if $hasfeed}
                 <a href="{$feedlink}">
                     <span class="icon-rss icon pull-right" role="presentation" aria-hidden="true"></span>
@@ -51,9 +51,9 @@
 
                         {if $artefact}
                             {if $viewbeingwatched}
-                                {str tag=removefromwatchlistartefact section=view arg1=$view->get('title')}
+                                {str tag=removefromwatchlistartefact section=view arg1=$viewtitle}
                             {else}
-                                {str tag=addtowatchlistartefact section=view arg1=$view->get('title')}
+                                {str tag=addtowatchlistartefact section=view arg1=$viewtitle}
                             {/if}
                         {else}
                             {if $viewbeingwatched}

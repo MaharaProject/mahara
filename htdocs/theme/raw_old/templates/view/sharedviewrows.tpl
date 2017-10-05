@@ -3,7 +3,7 @@
       <td class="sharedpages">
         <h3 class="title"><a href="{$view.fullurl}">{$view.title|str_shorten_text:65:true}</a>{if $view.collid} ({str tag=nviews section=view arg1=$view.numpages}){/if}</h3>
         {if $view.sharedby}
-        <div class="groupdate">
+          <div class="groupdate">
           {if $view.group}
             <a href="{$view.groupdata->homeurl}">{$view.sharedby}</a>
           {elseif $view.owner}
@@ -15,13 +15,13 @@
           {else}
             {$view.sharedby}
           {/if}
-        <span class="postedon text-midtone"> - {if $view.mtime == $view.ctime}
+            <span class="postedon text-midtone"> - {if $view.mtime == $view.ctime}
                     {str tag=Created}
                 {else}
                     {str tag=Updated}
                 {/if}
-                {$view.mtime|strtotime|format_date:'strftimedate'}
-        <div
+                {$view.mtime|strtotime|format_date:'strftimedate'}</span>
+          </div>
         {/if}
         <div class="detail">{$view.description|str_shorten_html:70:true|strip_tags|safe}</div>
         {if $view.tags}<div class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
