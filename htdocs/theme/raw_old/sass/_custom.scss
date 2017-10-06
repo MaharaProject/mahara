@@ -512,6 +512,13 @@
     }
     .checkbox.form-group {
         padding: 10px 0;
+        label {
+            padding-left: 20px;
+            display: inline;
+        }
+        input[type=checkbox] {
+            float: left;
+        }
     }
 }
 
