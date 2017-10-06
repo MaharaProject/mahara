@@ -1,9 +1,25 @@
 {if !$grouptypecounts}
 <p class="lead text-small">{str tag=nogroups section=group}</p>
 {else}
-
-{if $groupgraph}
-    <div id="site-stats-graph" class="site-stats-graph panel-body pull-right">
+<div>
+<h4>{str tag=groupcountsbytype section=admin}</h4>
+    <ul class="list-group list-group-lite unstyled">
+    {foreach from=$grouptypecounts item=item}
+      <li class="list-group-item">{str tag=name section=grouptype.$item->grouptype}: {$item->groups}</li>
+    {/foreach}
+    </ul>
+</div>
+<div>
+<h4>{str tag=groupcountsbyjointype section=admin}</h4>
+    <ul class="list-group list-group-lite unstyled">
+    {foreach from=$jointypecounts item=item}
+      <li class="list-group-item">{str tag=membershiptype.$item->jointype section=group}: {$item->groups}</li>
+    {/foreach}
+    </ul>
+</div>
+    {if $groupgraph}
+    <h4>{str tag=groupsbytype section=statistics}</h4>
+    <div class="panel-body">
         <canvas class="graphcanvas" id="sitestatsgroupgraph"></canvas>
         <script type="application/javascript">
         {literal}
@@ -13,23 +29,5 @@
         {/literal}
         </script>
     </div>
-{/if}
-<div>
-<h4>{str tag=groupcountsbytype section=admin}:</h4>
-
-    <ul>
-    {foreach from=$grouptypecounts item=item}
-      <li class="">{str tag=name section=grouptype.$item->grouptype}: {$item->groups}</li>
-    {/foreach}
-    </ul>
-</div>
-<div>
-<h4>{str tag=groupcountsbyjointype section=admin}:</h4>
-    <ul>
-    {foreach from=$jointypecounts item=item}
-      <li>{str tag=membershiptype.$item->jointype section=group}: {$item->groups}</li>
-    {/foreach}
-    </ul>
-</div>
-
+    {/if}
 {/if}

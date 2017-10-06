@@ -3,7 +3,16 @@
                     <div class="panel panel-default {if $view.submittedto} panel-warning {/if}
                     {if $view.template == $sitetemplate} site-template{/if}">
                         <h3 class="panel-heading has-link">
-                            <a class="title-link title" href="{if $view.numviews > 0}{$view.fullurl}{else}{$WWWROOT}collection/views.php?id={$view.collid}{/if}" title="{$view.displaytitle}">
+                          <a class="title-link title"
+                          href="
+                              {if $view.template == $sitetemplate}
+                                  {$WWWROOT}view/blocks.php?id={$view.id}
+                              {elseif isset($view.numviews) && $view.numviews == 0}
+                                  {$WWWROOT}collection/views.php?id={$view.collid}
+                              {else}
+                                  {$view.fullurl}
+                              {/if}"
+                          title="{$view.displaytitle}">
                                 {$view.displaytitle}
                             </a>
                         </h3>
@@ -30,8 +39,58 @@
                         </div>
                         <div class="panel-footer">
                             {* Note: This is positioned relative to base of panel-quarter *}
+                            <div class="page-access">
+                                {if $view.accesslist || $view.manageaccess}
+                                    <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='manageaccess' section='view'}">
+                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                                        <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock-alt{/if} close-indicator" role="presentation" aria-hidden="true"></span>
+                                        <span class="sr-only">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        {foreach from=$view.manageaccess item=manageitem}
+                                        <li>
+                                            {if $manageitem->accesstype == 'managesharing'}
+                                            <a class="seperator" href="{$WWWROOT}view/accessurl.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
+                                                <span class="icon {if $view.locked}icon-lock{else}icon-unlock-alt{/if} left" role="presentation" aria-hidden="true"></span>
+                                                <span class="link-text">{$manageitem->displayname}</span>
+                                                <span class="sr-only">{$manageitem->accessibilityname}</span>
+                                            </a>
+                                            {/if}
+                                        </li>
+                                        {/foreach}
+                                        {foreach from=$view.accesslist item=accessitem}
+                                        <li>
+                                            <a href="{$WWWROOT}view/accessurl.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
+                                            {if $accessitem->accesstype == 'loggedin'}
+                                                <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
+                                                <span class="link-text">{str tag="registeredusers" section="view"}</span>
+                                            {elseif $accessitem->accesstype == 'public'}
+                                                <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span>
+                                                <span class="link-text">{str tag="public" section="view"}</span>
+                                            {elseif $accessitem->accesstype == 'friends'}
+                                                <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
+                                                <span class="link-text">{str tag="friends" section="view"}</span>
+                                            {elseif $accessitem->group}
+                                                <span class="icon icon-users left" role="presentation" aria-hidden="true"></span>
+                                                <span class="link-text">{$accessitem->displayname}</span>
+                                            {elseif $accessitem->institution}
+                                                <span class="icon icon-university left" role="presentation" aria-hidden="true"></span>
+                                                <span class="link-text">{$accessitem->displayname}</span>
+                                            {elseif $accessitem->usr}
+                                                <span class="icon icon-user left" role="presentation" aria-hidden="true"></span>
+                                                <span class="link-text">{$accessitem->displayname}</span>
+                                            {elseif $accessitem->token}
+                                                <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span>
+                                                <span class="link-text">{str tag="token" section="view"}</span>
+                                            {/if}
+                                            </a>
+                                        </li>
+                                        {/foreach}
+                                    </ul>
+                                {/if}
+                            </div>
                             <div class="page-controls">
-                                <a class="dropdown-toggle moremenu btn btn-link" type="button" data-toggle="dropdown" aria-expanded="false" title="{str tag='more...' section='mahara'}">
+                                <a href="#" class="dropdown-toggle moremenu btn btn-link" type="button" data-toggle="dropdown" aria-expanded="false" title="{str tag='more...' section='mahara'}">
                                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="sr-only">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
@@ -82,63 +141,6 @@
                                     {/if}
                                 </li>
                                 </ul>{* hamburger buttons *}
-                            </div>
-
-                            <div class="page-access">
-                                {if $view.accesslist || $view.manageaccess}
-                                    <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='manageaccess' section='view'}">
-                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
-                                        <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock-alt{/if} close-indicator" role="presentation" aria-hidden="true"></span>
-                                        <span class="sr-only">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
-                                    </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        {foreach from=$view.manageaccess item=manageitem}
-                                        <li>
-                                            {if $manageitem->accesstype == 'managesharing'}
-                                            <a href="{$WWWROOT}view/access.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
-                                                <span class="icon {if $view.locked}icon-lock{else}icon-unlock-alt{/if} left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$manageitem->displayname}</span>
-                                                <span class="sr-only">{$manageitem->accessibilityname}</span>
-                                            </a>
-                                            {elseif $manageitem->accesstype == 'managekeys'}
-                                            <a class="seperator" href="{$WWWROOT}view/urls.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
-                                                <span class="icon icon-key left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$manageitem->displayname}</span>
-                                                <span class="sr-only">{$manageitem->accessibilityname}</span>
-                                            </a>
-                                            {/if}
-                                        </li>
-                                        {/foreach}
-                                        {foreach from=$view.accesslist item=accessitem}
-                                        <li>
-                                            <a href="{$WWWROOT}view/{if $accessitem->token}urls.php{else}access.php{/if}?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
-                                            {if $accessitem->accesstype == 'loggedin'}
-                                                <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{str tag="registeredusers" section="view"}</span>
-                                            {elseif $accessitem->accesstype == 'public'}
-                                                <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{str tag="public" section="view"}</span>
-                                            {elseif $accessitem->accesstype == 'friends'}
-                                                <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{str tag="friends" section="view"}</span>
-                                            {elseif $accessitem->group}
-                                                <span class="icon icon-users left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$accessitem->displayname}</span>
-                                            {elseif $accessitem->institution}
-                                                <span class="icon icon-university left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$accessitem->displayname}</span>
-                                            {elseif $accessitem->usr}
-                                                <span class="icon icon-user left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$accessitem->displayname}</span>
-                                            {elseif $accessitem->token}
-                                                <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{str tag="token" section="view"}</span>
-                                            {/if}
-                                            </a>
-                                        </li>
-                                        {/foreach}
-                                    </ul>
-                                {/if}
                             </div>
 
                             {if $view.collid}

@@ -39,6 +39,7 @@
 
 .customrow + .btn {
     margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 // Used on pending friends page
@@ -374,4 +375,9 @@ td.action-list-copy {
 // Group categories.php: 138
 .btn-add-group {
     margin-top: 20px;
+}
+
+.reportsettings .btn.filter {
+    line-height: 1;
+    padding: 1px 4px;
 }

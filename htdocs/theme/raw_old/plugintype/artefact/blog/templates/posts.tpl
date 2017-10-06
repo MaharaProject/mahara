@@ -14,7 +14,7 @@
                     {/if}
                 </span>
 
-                {if !$post->locked}
+                {if !$post->locked && $post->canedit}
                 <span id="changepoststatus{$post->id}" class="changepoststatus text-inline">
                     {$post->changepoststatus|safe}
                 </span>
@@ -25,7 +25,7 @@
                     <span class="icon icon-lock left" role="presentation" aria-hidden="true"></span>
                     {str tag=submittedforassessment section=view}
                 </span>
-                {else}
+                {elseif $post->canedit}
                 <div class="btn-group postcontrols">
                     <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button pull-left">
                         <input type="hidden" name="id" value="{$post->id}">

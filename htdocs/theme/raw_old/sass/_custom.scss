@@ -38,6 +38,10 @@
     }
 }
 
+.wysiwyg.view-description {
+    width: 70%;
+}
+
 .toolbar-affix.affix {
     position: fixed;
     top: 70px;
@@ -437,13 +441,18 @@
         }
     }
 }
-#manage-skins-btn {
+.manage-skins-btn {
   margin-top: 10px;
   margin-bottom: 20px;
 }
 
 #auth_config_institutionidp {
     width: 90%;
+}
+
+.defaultskin {
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 .authInstance .authitem {
@@ -486,4 +495,38 @@
 
 .notification-parent .bulk-actions label.btn-default {
   padding-bottom: 3px;
+}
+
+.forassessment label {
+  display: inline-block !important;
+  margin-top: -25px;
+}
+
+.accessurl-button {
+    margin-bottom: 15px;
+}
+
+#reportconfigform {
+    fieldset {
+        margin-top: 10px;
+    }
+    .checkbox.form-group {
+        padding: 10px 0;
+    }
+}
+
+.reportsettings {
+    margin-top: -5px;
+}
+
+.statinfoblock {
+    width: 360px;
+
+    h3 {
+        margin-top: 0;
+    }
+
+    float: left;
+    margin-right: 15px;
+    padding: 5px;
 }

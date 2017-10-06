@@ -72,6 +72,10 @@
             }
         }
 
+        .dropdown-toggle:focus {
+            outline: 1px dotted $theme-text-lighttone-color;
+        }
+
         .dropdown-menu {
             top: 100%;
             width: 200%; // to allow it to expand to almost 2 panel blocks wide
