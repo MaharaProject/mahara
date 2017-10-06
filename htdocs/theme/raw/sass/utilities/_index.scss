@@ -90,6 +90,11 @@
 @import "../features/user-pages";
 @import "../features/plan-task";
 
+// Plugin sass
+@import "../plugin/artefact/resume";
+@import "../plugin/blocktype/externalfeed";
+@import "../plugin/blocktype/externalvideo";
+@import "../plugin/blocktype/openbadgedisplayer";
 
 // Supporting sass for library code
 @import "../lib/meter.scss"; // progress bar (old/ported)
