@@ -8,7 +8,17 @@
 </div>
 {/if}
 {if !$blogs->data}
-<p class="no-results">{str tag=youhavenoblogs section=artefact.blog}</p>
+  <p class="no-results">
+  {if $group}
+    {str tag=youhavenogroupblogs section=artefact.blog}
+  {elseif $institutionname == 'mahara'}
+    {str tag=youhavenositeblogs section=artefact.blog}
+  {elseif $institutionname}
+    {str tag=youhavenoinstitutionblogs section=artefact.blog}
+  {else}
+    {str tag=youhavenoblogs section=artefact.blog}
+  {/if}
+  </p>
 {else}
 <div class="rel view-container">
     <div class="panel-items">
