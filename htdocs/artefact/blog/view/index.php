@@ -202,7 +202,7 @@ if ($institutionname) {
     $institution = new Institution($institutionname);
     $smarty->assign('institutiondisplayname', $institution->displayname);
 }
-else if (!$USER->get_account_preference('multipleblogs')) {
+else if (!$groupid && !$USER->get_account_preference('multipleblogs')) {
     $blogcount = count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id'));
     if ($blogcount == 1) {
         $smarty->assign('enablemultipleblogstext', 1);
