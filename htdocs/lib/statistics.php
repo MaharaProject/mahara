@@ -1518,7 +1518,6 @@ function institution_user_stats_table($limit, $offset, &$institutiondata, $extra
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
-        'extradata' => array('institution' => $institutiondata['name']),
         'setlimit' => true,
         'extradata' => $extra,
     ));
@@ -2732,6 +2731,7 @@ function institution_content_stats_table($limit, $offset, &$institutiondata, $ex
         'limit' => $limit,
         'offset' => $offset,
         'extradata' => $extra,
+        'setlimit' => true,
     ));
 
     $result = array(
