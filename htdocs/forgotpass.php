@@ -111,7 +111,7 @@ function forgotpass_validate(Pieform $form, $values) {
             FROM {usr} u INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id AND ai.active = 1)
             WHERE (LOWER(u.email) = ? OR LOWER(u.username) = ?)
             AND ((ai.authname != \'internal\') AND (ai.authname != \'none\'))', array_fill(0, 2, strtolower($values['emailusername'])))) {
-                $form->set_error('emailusername', get_string('forgotpassuserusingexternalauthentication', 'mahara', get_config('wwwroot') . 'contact.php'));
+                $form->set_error('emailusername', get_string('forgotpassuserusingexternalauthentication', 'mahara', get_config('wwwroot') . 'contact.php'), false);
         }
         else {
             if (!($authinstance = get_field_sql('SELECT u.authinstance
