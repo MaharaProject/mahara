@@ -50,7 +50,7 @@
                 </div>
             {/foreach}
             </div>
-        {elseif $query}
+        {else}
             <p class="no-results">{str tag=nosearchresultsfound section=group}</p>
         {/if}
     </div>
