@@ -247,7 +247,7 @@ class PluginArtefactFile extends PluginArtefact {
         static $allmimetypes = null;
 
         if (is_null($allmimetypes)) {
-            $allmimetypes = get_records_assoc('artefact_file_mime_types');
+            $allmimetypes = get_records_array('artefact_file_mime_types');
         }
 
         if (is_string($description)) {
