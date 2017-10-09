@@ -164,10 +164,10 @@
                                         </span>
                                     </a>
                                     {else}
-                                    <button class="btn btn-link">
+                                    <a href="#" class="dropdown-toggle btn btn-link">
                                         <span class="page-count">{$view.numviews}</span>
                                         <span class="icon icon-file" role="presentation" aria-hidden="true">
-                                    </button>
+                                    </a>
                                     {/if}
                                     {if $view.collid && $view.collviews > 0}
                                     <ul class="dropdown-menu" role="menu">
