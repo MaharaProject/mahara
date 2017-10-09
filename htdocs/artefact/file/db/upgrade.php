@@ -467,5 +467,21 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017100900) {
+        log_debug('Update video files that may have wrong artefacttype');
+        // For video/mp4 files added after commit a5cf7d59ebbd17193efaa38661eafe7b370095ee
+        // They can get wrong artefact filetype if last selected was not the one with 'mp4' description
+        $fromsql = " FROM (SELECT a.id FROM {artefact} a
+                     JOIN {artefact_file_files} aff ON aff.artefact = a.id
+                     WHERE aff.filetype = ?
+                     AND a.artefacttype != ?) AS foo";
+        if (count_records_sql("SELECT COUNT(*) " . $fromsql, array('video/mp4', 'video'))) {
+            execute_sql("UPDATE {artefact} SET artefacttype = ?
+                         WHERE id IN (
+                             SELECT id " . $fromsql . "
+                         )", array('video', 'video/mp4', 'video'));
+        }
+    }
+
     return $status;
 }
