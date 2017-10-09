@@ -49,7 +49,7 @@ $js .= '});';
 $groupid = param_integer('group', 0);
 $institutionname = param_alphanum('institution', false);
 
-$smarty = smarty(array('paginator'));
+$smarty = smarty(array('paginator', 'js/jquery/jquery-ui/js/jquery-ui.min.js'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('sitetemplate', View::SITE_TEMPLATE);
