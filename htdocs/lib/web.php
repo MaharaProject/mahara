@@ -4306,12 +4306,19 @@ function build_showmore_pagination($params) {
         $output .= ' data-offset="' . ((int) $params['offset'] + (int) $params['limit']) . '"';
         $output .= ' data-group="' . (isset($params['group']) ? $params['group'] : '') . '"';
         $output .= ' data-jsonscript="' . $params['jsonscript'] . '"';
-        $output .= ' data-institution="' . (isset($params['institution']) ? $params['institution'] : '') . '">';
+        $output .= ' data-institution="' . (isset($params['institution']) ? $params['institution'] : '') . '"';
+        $output .= ' tabindex="0">';
         $output .= get_string('showmore', 'mahara') . '</div>' . "\n";
         $output .= '</div>';
 
         $js  = 'jQuery("#' . $params['databutton'] . '").on("click", function() {';
         $js .= '    pagination_showmore(jQuery(this));';
+        $js .= '});' . "\n";
+
+        $js .= 'jQuery("#' . $params['databutton'] . '").on("keydown", function(e) {';
+        $js .= '    if (e.keyCode == $j.ui.keyCode.SPACE || e.keyCode == $j.ui.keyCode.ENTER) {';
+        $js .= '        pagination_showmore(jQuery(this));';
+        $js .= '    }';
         $js .= '});' . "\n";
     }
 

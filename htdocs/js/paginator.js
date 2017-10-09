@@ -326,5 +326,10 @@ function pagination_showmore(btn) {
         jQuery('#' + btnid).on('click', function() {
             pagination_showmore(jQuery(this));
         });
+        jQuery('#' + btnid).on('keydown', function(e) {
+            if (e.keyCode == $j.ui.keyCode.SPACE || e.keyCode == $j.ui.keyCode.ENTER) {
+                pagination_showmore(jQuery(this));
+            }
+        });
     });
 }
