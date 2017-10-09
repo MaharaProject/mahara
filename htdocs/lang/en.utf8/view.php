@@ -454,6 +454,7 @@ $string['portfolio'] = 'Portfolio';
 $string['grouphomepage'] = 'Group homepage';
 
 $string['grouphomepagedescription'] = 'The group homepage contains the content that appears on the "About" tab for this group';
+$string['pageaccessrules'] = 'Page access rules';
 
 // Shared views
 $string['sharedwithme'] = 'Shared with me';

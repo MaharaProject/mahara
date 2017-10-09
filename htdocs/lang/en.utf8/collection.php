@@ -41,6 +41,7 @@ $string['groupcollections'] = 'Group collections';
 $string['institutioncollections'] = 'Institution collections';
 $string['sitecollections'] = 'Site collections';
 $string['collectionaccess'] = 'Collection access';
+$string['collectionaccessrules'] = 'Collection access rules';
 $string['collectionaccesseditedsuccessfully'] = 'Collection access saved successfully';
 $string['collectioneditaccess'] = 'You are editing access for %d pages in this collection.';
 $string['collectionconfirmdelete'] = 'Pages in this collection will not be deleted. Are you sure you wish to delete this collection?';
