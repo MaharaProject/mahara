@@ -583,7 +583,14 @@ function contextualHelpPosition(container) {
     else {
         position.left -= containerwidth;
     }
-    position.top -= 10;
+
+
+    if (container.closest('table').parent().hasClass('table-responsive')) {
+        position.top -= 3;
+    }
+    else {
+        position.top -= 10;
+    }
 
     contextualHelpContainer.css('visibility', 'visible');
 
