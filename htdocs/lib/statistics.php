@@ -982,7 +982,8 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
             $obj->collections = !empty($aggmap[$item['key'] . '|createcollection']) ? $aggmap[$item['key'] . '|createcollection'] : 0;
             $obj->groups = !empty($aggmap[$item['key'] . '|creategroup']) ? $aggmap[$item['key'] . '|creategroup'] : 0;
             $obj->logins = !empty($aggmap[$item['key'] . '|login']) ? $aggmap[$item['key'] . '|login'] : 0;
-            $obj->lastactivity = get_field('event_log', 'event', 'id', $item['LastActivity']['value']);
+            $lastactivity = get_field('event_log', 'event', 'id', $item['LastActivity']['value']);
+            $obj->lastactivity = ($lastactivity) ? get_string($lastactivity, 'statistics') : '';
             $obj->profileurl = profile_url($item['key']);
             $date = $item['LastLogin']['value'] / 1000; // convert from UTC milliseconds
             $timezone = new DateTimeZone(date_default_timezone_get()); // get timezone we are in
