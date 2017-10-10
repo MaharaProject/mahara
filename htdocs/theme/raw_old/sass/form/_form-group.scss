@@ -117,7 +117,6 @@
     // this is a weird and somewhat broken case where form renderers are being use to render regular html
     &.html form {
         display: block;
-        .form-group,
         .collapsible-group .panel.collapsible & .form-group {
             border: 0;
             padding: 0;
@@ -203,6 +202,7 @@
             display: block;
         }
          input[type=checkbox] {
+            top: 3px;
             margin-left: 0;
         }
         &.stacked {

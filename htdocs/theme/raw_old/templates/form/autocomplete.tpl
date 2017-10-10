@@ -27,6 +27,7 @@
             },
             processResults: function(data, page) {
                 return {
+                    {{if $renderresult}}
                     results: jQuery.map(data.results, function(item) {
                         // sometimes text contains html that has to be renderered in the result list (e.g. user profile)
                         // we're assigning text to resultsText variable that get rendered in results, and
@@ -36,6 +37,9 @@
                           text: jQuery('<div>').html(item.text).text()
                         })
                     }),
+                    {{else}}
+                    results: data.results,
+                    {{/if}}
                     pagination: {
                         more: data.more
                     }
@@ -52,6 +56,12 @@
             return item.resultsText || item.text;
         },
         {{$extraparams|safe}}
+    });
+    jQuery("#{{$id}}").on('select2:select', function(e) {
+        window.pageIsRendering = false;
+    });
+    jQuery("#{{$id}}").on('select2:unselect', function(e) {
+        window.pageIsRendering = false;
     });
 {{if !$inblockconfig}}
     });

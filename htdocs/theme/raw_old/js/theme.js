@@ -219,8 +219,12 @@ jQuery(function($) {
     $('.block.collapse').on('click',function(e) {
         var dialog = $('.modal-dialog'),
             dialogParent = $(e.target).closest('.modal-dialog').length;
-
-        if(e.target !== dialog && !dialogParent){
+        // If we have a link to a comments dialog within a collapsible block
+        // We need to close all of them except for the one we just
+        // clicked for
+        var collapseModalTarget = $(e.target).data('target');
+        var wantedDialog = $(collapseModalTarget);
+        if (e.target !== dialog && !wantedDialog.length && !dialogParent) {
             $(this).find('button.close').trigger('click');
         }
     });

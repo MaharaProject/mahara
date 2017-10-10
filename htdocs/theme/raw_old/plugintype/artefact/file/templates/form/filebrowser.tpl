@@ -100,7 +100,7 @@
                         </label>
 
                         <span id="{$prefix}_userfile_container">
-                            <input type="file" class="file"  {$accepts|safe} {if $capturedevice} capture="{$capturedevice}"{/if} id="{$prefix}_userfile" name="userfile[]" multiple size="20" />
+                            <input type="file" class="file" {$accepts|safe} {if $capturedevice} capture="{$capturedevice}"{/if} id="{$prefix}_userfile" name="userfile[]" multiple size="20" />
                         </span>
 
                         <span id="{$prefix}_userfile_maxuploadsize" class="file-description">

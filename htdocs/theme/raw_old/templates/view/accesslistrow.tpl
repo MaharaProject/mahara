@@ -20,12 +20,12 @@
           {/if}
           {if $accessgroup.startdate}
             {if $accessgroup.stopdate}
-              <span class="date"> {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}&rarr;{$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
+              <span class="date"> {$accessgroup.startdate|strtotime|format_date:'strftimedatetime'}&rarr;{$accessgroup.stopdate|strtotime|format_date:'strftimedatetime'}</span>
             {else}
-              <span class="date"> {str tag=after} {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
+              <span class="date"> {str tag=after} {$accessgroup.startdate|strtotime|format_date:'strftimedatetime'}</span>
             {/if}
           {elseif $accessgroup.stopdate}
-            <span class="date"> {str tag=before} {$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
+            <span class="date"> {str tag=before} {$accessgroup.stopdate|strtotime|format_date:'strftimedatetime'}</span>
           {/if}{if !$dwoo.foreach.ags.last}, {/if}
     {/strip}{/foreach}
 {/if}

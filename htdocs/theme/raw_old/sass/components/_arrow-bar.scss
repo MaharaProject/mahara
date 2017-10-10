@@ -74,6 +74,7 @@
             padding: 0 8px;
             line-height: 2em;
             margin-top: 9px;
+            margin-bottom: 9px;
             &:hover,
             &:focus {
                 @include transition-duration(0.3s);
@@ -81,7 +82,7 @@
                 color: $link-color;
             }
         }
-        &.active > a, 
+        &.active > a,
         &.active > button,  {
             color: $text-color;
             background: #fff;
