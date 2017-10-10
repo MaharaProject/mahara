@@ -185,13 +185,31 @@
 }( window.CustomLayoutManager = window.CustomLayoutManager || {}, jQuery ));
 
 function init(pieformname) {
-    $('#' + pieformname + '_basic_container legend a, ' +
-      '#' + pieformname + '_layout_container legend a, ' +
-      '#' + pieformname + '_skin_container legend a'
-    ).click(function(event) {
+    $('#' + pieformname + '_basic_container legend a, #' + pieformname + '_adv_container legend a').click(function(event) {
+        var containerclicked = $( $(this).context ).attr('aria-controls');
+        var basiccollapse = advancedcollapse = customcollapse = 'hide';
+        if (containerclicked == '#' + pieformname + '_layoutselect_container') {
+            basiccollapse = 'toggle';
+        }
+        else if (containerclicked == '#' + pieformname + '_advancedlayoutselect_container') {
+            advancedcollapse = 'toggle';
+        }
+        else if (containerclicked == '#' + pieformname + '_createcustomlayout_container') {
+            customcollapse = 'toggle';
+        }
+        $('#' + pieformname + '_layoutselect_container').collapse(basiccollapse);
+        $('#' + pieformname + '_advancedlayoutselect_container').collapse(advancedcollapse);
+        $('#' + pieformname + '_createcustomlayout_container').collapse(customcollapse);
 
         var layoutselected = $('#' + pieformname + '_currentlayoutselect').val();
         var layoutfallback = $('#' + pieformname + '_layoutfallback').val();
+        if ($('.layoutselect :radio[value=' + layoutselected +']').length ) {
+            $('.layoutselect :radio[value=' + layoutselected +']').attr("checked","checked");
+        }
+        else {
+            $('.layoutselect :radio[value=' + layoutfallback + ']').attr("checked","checked");
+            $('#' + pieformname + '_currentlayoutselect').val(layoutfallback);
+        }
         if ($('.advancedlayoutselect :radio[value=' + layoutselected +']').length ) {
             $('.advancedlayoutselect :radio[value=' + layoutselected +']').attr("checked","checked");
         }
