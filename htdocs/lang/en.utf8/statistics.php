@@ -283,6 +283,42 @@ $string['reportdescpageactivity'] = '<ul>
 </ul>';
 $string['allothers'] = 'All others';
 
+// Last activities reported on in the "User activity" report
+$string['blockinstancecommit'] = 'Add a block to a page';
+$string['addfriend'] = 'Add a friend';
+$string['activateuser'] = 'Activate a user';
+$string['clearcaches'] = 'Clear the cache';
+$string['sharedcommenttogroup'] = 'Comment on a page shared with a group';
+$string['createcollection'] = 'Create a collection';
+$string['creategroup'] = 'Create a group';
+$string['createview'] = 'Create a page';
+$string['createuser'] = 'Create a user';
+$string['deactivateuser'] = 'Deactivate a user';
+$string['deleteartefact'] = 'Delete an artefact';
+$string['deleteartefacts'] = 'Delete artefacts';
+$string['deleteblockinstance'] = 'Delete a block from a page';
+$string['deletecollection'] = 'Delete a collection';
+$string['removefriendrequest'] = 'Delete a friend request';
+$string['deleteview'] = 'Delete a page';
+$string['deleteuser'] = 'Delete a user';
+$string['expireuser'] = 'Expire a user';
+$string['userjoinsgroup'] = 'Join a group';
+$string['login'] = 'Logged in';
+$string['loginas'] = 'Masquerade as a user';
+$string['releasesubmission'] = 'Release a submission';
+$string['removefriend'] = 'Remove a friend';
+$string['saveartefact'] = 'Save an artefact';
+$string['saveview'] = 'Save a page';
+$string['addfriendrequest'] = 'Send a friend request';
+$string['addsubmission'] = 'Submit a portfolio';
+$string['suspenduser'] = 'Suspend a user';
+$string['undeleteuser'] = 'Undelete a user';
+$string['unexpireuser'] = 'Unexpire a user';
+$string['unsuspenduser'] = 'Unsuspend a user';
+$string['updatecollection'] = 'Update a collection';
+$string['updateuser'] = 'Update a user';
+$string['updateviewaccess'] = 'Update the portfolio access';
+
 // Group reports
 $string['reportdescgroups'] = '<ul>
 <li>ID</li>
