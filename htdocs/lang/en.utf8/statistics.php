@@ -213,6 +213,7 @@ $string['reportaccesslist'] = 'Portfolio access';
 $string['reportdescaccesslist'] = '<ul>
 <li>Portfolio owner</li>
 <li>Title of the portfolio</li>
+<li>Number of pages in the portfolio</li>
 <li>Access list, i.e. who has permission to view the portfolio</li>
 </ul>';
 
@@ -221,7 +222,6 @@ $string['reportdescusers'] = '<ul>
 <li>Number of people who logged in</li>
 <li>Number of accounts created</li>
 <li>Total number of people in the selected institution</li>
-<li>Information about the average user in the selected institution</li>
 </ul>';
 
 $string['reportuserdetails'] = 'User details';
@@ -240,10 +240,10 @@ $string['reportdescuserdetails'] = '<ul>
 $string['reportuseractivity'] = 'User activity';
 $string['reportdescuseractivity'] = '<ul>
 <li>User information</li>
-<li>Number of artefacts</li>
-<li>Number of pages</li>
-<li>Number of collections</li>
-<li>Number of groups</li>
+<li>Number of artefacts created or updated</li>
+<li>Number of pages created</li>
+<li>Number of collections created</li>
+<li>Number of groups created</li>
 <li>Number of logins</li>
 <li>Number of actions (create and modify an artefact, forum post, personal pages and collection, group pages and collections, comments, page views)</li>
 <li>Last login</li>
@@ -274,12 +274,14 @@ $string['reportdescmasquerading'] = '<ul>
 $string['reportpageactivity'] = 'Page activity';
 $string['reportdescpageactivity'] = '<ul>
 <li>Page title</li>
+<li>Title of the collection to which the page belongs (if any)</li>
 <li>Page owner</li>
 <li>Creation date</li>
 <li>Last modification date</li>
 <li>Date, when the page was last viewed</li>
 <li>Number of blocks included in the page</li>
-<li>Title of the collection to which the page belongs (if any)</li>
+<li>Number of visits to the page</li>
+<li>Number of comments on the page</li>
 </ul>';
 $string['allothers'] = 'All others';
 
@@ -325,8 +327,9 @@ $string['reportdescgroups'] = '<ul>
 <li>Name</li>
 <li>Number of members</li>
 <li>Number of pages</li>
-<li>Number of comments on group pages</li>
-<li>Number of comments on pages shared with the group</li>
+<li>Number of shared pages</li>
+<li>Number of comments on group pages and artefacts</li>
+<li>Number of comments on pages and artefacts shared with the group</li>
 <li>Number of forums</li>
 <li>Number of forum posts</li>
 </ul>
@@ -348,12 +351,16 @@ $string['reportdescinformation'] = '<ul>
 <li>Number of users</li>
 <li>Number of pages</li>
 <li>Disk space used</li>
+<li>Users overview</li>
+<li>Pages overview</li>
+<li>Growth trend</li>
 <li>For "All institutions" only:
 <ul>
 <li>Number of groups</li>
 <li>Database size</li>
 <li>Mahara version</li>
 <li>Information on the running of cron</li>
+<li>Groups overview</li>
 </ul></li>
 </ul>';
 
@@ -366,7 +373,7 @@ $string['reportdesccomparisons'] = '<ul>
 <li>Number of artefacts</li>
 <li>Number of forum posts by institution members</li>
 </ul>
-<p><strong>Note:</strong> This report is only available when you select "All institutions" in the "Institution" drop-down menu.';
+<p><strong>Note:</strong> This report is only available when you select "All institutions" in the "Institution" drop-down menu. It is only updated at the end of a week.';
 
 $string['reportdesclogins'] = '<ul>
 <li>Institution</li>
