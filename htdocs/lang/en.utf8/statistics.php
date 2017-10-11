@@ -418,3 +418,5 @@ $string['usersinfo'] = 'Users overview';
 $string['viewsinfo'] = 'Pages overview';
 $string['usersbyinstitution'] = 'Users by institution';
 $string['groupsbytype'] = 'Groups by type';
+$string['earliestdate'] = 'Data for this report is only available from %s onwards.';
+$string['noearliestdate'] = 'There is no data recorded for this report.';

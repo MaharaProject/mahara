@@ -47,6 +47,9 @@
             update_report_config();
         }
     });
+    $('#reportconfigform_institution').on('change', function() {
+        update_report_config();
+    });
     $('#reportconfigform_typesubtype').on('change', function() {
         update_report_config();
     });
