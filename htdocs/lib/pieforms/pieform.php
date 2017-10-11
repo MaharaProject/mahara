@@ -266,7 +266,7 @@ class Pieform {/*{{{*/
                 // @todo don't rely on submit element
                 throw new PieformException('Forms with spam config must have a secret and submit element');
             }
-            $this->time = isset($_POST['__timestamp']) ? $_POST['__timestamp'] : time();
+            $this->time = param_exists('__timestamp') ? param_integer('__timestamp') : time();
             $spamelements1 = array(
                 '__invisiblefield' => array(
                     'type'         => 'text',

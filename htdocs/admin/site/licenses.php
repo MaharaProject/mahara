@@ -21,14 +21,11 @@ require_once('license.php');
 define('TITLE', get_string('sitelicenses', 'admin'));
 define('DEFAULTPAGE', 'home');
 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['license_delete'])) {
-        $license_delete_array_keys = array_keys($_POST['license_delete']);
-        $del = array_shift($license_delete_array_keys);
-        delete_records('artefact_license', 'name', $del);
-        $SESSION->add_ok_msg(get_string('licensedeleted', 'admin'));
-    }
+if (param_exists('license_delete')) {
+    $license_delete_array_keys = array_keys(param_variable('license_delete'));
+    $del = array_shift($license_delete_array_keys);
+    delete_records('artefact_license', 'name', $del);
+    $SESSION->add_ok_msg(get_string('licensedeleted', 'admin'));
 }
 
 if (!isset($licenses)) {
