@@ -419,7 +419,7 @@ function auth_setup () {
     // reset the password clearing the session from usr_session.
     $sessionexists = ($USER->id > 0) ? get_record('usr_session', 'usr', $USER->id, 'session', $USER->get('sessionid')) : false;
     $parentuser = $USER->get('parentuser');
-    if (($sessionlogouttime && isset($_GET['logout']))
+    if (($sessionlogouttime && param_exists('logout'))
        || ($sessionexists === false && $USER->get('sessionid') != '' && empty($parentuser))
        || ($sessionexists && isset($sessionexists->useragent) && $sessionexists->useragent != $_SERVER['HTTP_USER_AGENT'])) {
         // Call the authinstance' logout hook
@@ -524,7 +524,7 @@ function auth_setup () {
         }
 
         // Check if the page is public or the site is configured to be public.
-        if (defined('PUBLIC') && !isset($_GET['login'])) {
+        if (defined('PUBLIC') && !param_exists('login')) {
             return;
         }
 
@@ -766,7 +766,7 @@ function auth_check_required_fields() {
     }
 
     // Check if the user wants to log in anyway
-    if ($USER->get('passwordchange') && $USER->get('parentuser') && isset($_GET['loginanyway'])) {
+    if ($USER->get('passwordchange') && $USER->get('parentuser') && param_exists('loginanyway')) {
         $USER->loginanyway = true;
         $changepassword = false;
     }
@@ -1249,7 +1249,7 @@ function auth_get_login_form() {
             if (!isset($elements[$key]) && !isset($elements['login']['elements'][$key])) {
                 $elements[$key] = array(
                     'type'  => 'hidden',
-                    'value' => $value
+                    'value' => param_variable($key)
                 );
             }
         }
@@ -1290,7 +1290,7 @@ function auth_get_login_form_elements() {
             'type'        => 'text',
             'class'       => 'fullwidth',
             'title'       => get_string('username') . ':',
-            'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
+            'defaultvalue' => param_exists('login_username') ? param_variable('login_username') : '',
             'rules' => array(
                 'required'    => true
             )

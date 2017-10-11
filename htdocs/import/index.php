@@ -65,12 +65,12 @@ switch ($action) {
         break;
     case DOIMPORT_ACT:
         db_begin();
-        if (isset($_POST['import_submit'])) {
+        if (param_exists('import_submit')) {
             save_decisions();
             // Do import and print the results
             do_import();
         }
-        else if (isset($_POST['cancel_import_submit'])) {
+        else if (param_exists('cancel_import_submit')) {
             cancel_import();
         }
         db_commit();
