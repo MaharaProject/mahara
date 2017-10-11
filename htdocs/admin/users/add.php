@@ -209,7 +209,7 @@ function adduser_validate(Pieform $form, $values) {
         $form->set_error('password', get_string('passwordinvalidform', 'auth.' . $authobj->type));
     }
 
-    if (isset($_POST['createmethod']) && $_POST['createmethod'] == 'leap2a') {
+    if (param_exists('createmethod') && param_variable('createmethod') == 'leap2a') {
         $form->set_error('firstname', null);
         $form->set_error('lastname', null);
         $form->set_error('email', null);

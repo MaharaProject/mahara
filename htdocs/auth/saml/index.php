@@ -466,7 +466,7 @@ function saml_auth_generate_login_form() {
                 'type'        => 'text',
                 'title'       => get_string('username') . ':',
                 'description' => get_string('usernamedescription'),
-                'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
+                'defaultvalue' => param_exists('login_username') ? param_variable('login_username') : '',
                 'rules' => array(
                     'required'    => true
                 )
