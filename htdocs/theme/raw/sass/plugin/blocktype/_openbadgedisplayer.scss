@@ -1,3 +1,13 @@
+/**
+ * CSS rules for the openbadgedisplayer blocktype plugin
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+
+ * This file is distributed under the same terms as Mahara itself
+ */
+
 .openbadgedisplayer {
     padding: 10px;
 }
@@ -46,4 +56,8 @@
 
 .openbadge-details tr td:first-child {
     min-width: 80px;
+}
+
+.openbadge-details table td {
+    padding: 0 9px;
 }

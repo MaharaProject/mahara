@@ -1,5 +1,5 @@
 /**
- * CSS rules for the forum interaction plugin
+ * CSS rules for the externalfeed blocktype plugin
  *
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
@@ -7,3 +7,10 @@
 
  * This file is distributed under the same terms as Mahara itself
  */
+#blocktype_externalfeed_feed .feedlogoimage {
+    margin: 10px 0;
+}
+#blocktype_externalfeed_feed .feedlogoimage img {
+    max-width: 144px;
+    max-height: 400px;
+}

@@ -1,0 +1,209 @@
+/**
+ * Stylesheet for static HTML export
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ */
+html {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5em;
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Generic styles */
+a img {
+    border: none;
+}
+.center {
+    text-align: center;
+}
+.right {
+    text-align: right;
+}
+.fullwidth {
+    width: 100%;
+}
+.fl {
+    float: left;
+    padding-right: 10px;
+}
+.fr {
+    float: right;
+    padding-left: 10px;
+}
+.cl {
+    clear: left;
+}
+.cr {
+    clear: right;
+}
+.cb {
+    clear: both;
+}
+.r0 {
+    background-color: #f0f0f0;
+}
+.r1 {
+    background-color: #f8f8f8;
+}
+div.pagination span.selected,
+span.pagination {
+    padding: 5px;
+}
+.date {
+    color: #888;
+    font-style: italic;
+}
+
+/* Headings */
+h1 {
+    border-bottom: 1px solid #bbb;
+    font-family: Arial, sans-serif;
+    margin: 1em 0 0;
+}
+h1 a {
+    text-decoration: none;
+}
+#mahara-logo {
+    float: right;
+}
+h2, h3, h4, h5, h6 {
+    font-family: Arial, sans-serif;
+    margin: .5em 0 .25em;
+}
+
+/* Tables */
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+th {
+    padding: 3px 0;
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.8em;
+}
+
+/* Main content */
+#content {
+    margin: 0 1em;
+    font-family: "Times New Roman", serif;
+}
+
+/* Breadcrumbs */
+.breadcrumbs ul {
+    margin: .5em 0 .1em;
+    padding: 0;
+}
+.breadcrumbs li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+    color: #808080;
+    font-size: smaller;
+    font-family: Arial, sans-serif;
+}
+.breadcrumbs a {
+    color: #808080;
+}
+.breadcrumbs li.selected a {
+    color: #303030;
+}
+.breadcrumbs.collection {
+    margin-top: .5em;
+}
+.breadcrumbs li.collectionname {
+    color: #303030;
+    font-weight: bold;
+}
+#breadcrumbs-footer {
+    clear: both;
+}
+
+/* Homepage summary */
+.summary {
+    float: left;
+    width: 48%;
+}
+.summary.even {
+    clear: left;
+}
+#summary-internal {
+    border: none;
+    float: none;
+    clear: both;
+    width: auto;
+    border-bottom: 1px dotted #ccc;
+}
+#summary-internal ul {
+    list-style-position: inside;
+}
+#summary-internal #profile-introduction {
+    font-size: larger;
+}
+#summary-internal #profile-icon {
+    float: left;
+    padding: 0 1em 1em 0;
+}
+
+/* Views */
+#view-title {
+    color: #3986c3;
+}
+#view-description {
+    font-family: Arial, sans-serif;
+    font-size: smaller;
+}
+.column {
+    font-family: Arial, sans-serif;
+}
+.blockinstance-header {
+    color: #3986c3;
+    border-bottom: 1px solid #d2d2d2;
+}
+.blockinstance-header a  {
+    color: #3986c3;
+    text-decoration: none;
+}
+.blockinstance-content {
+    padding: .5em .25em;
+    font-size: smaller;
+}
+
+/* views footer */
+.viewfooter {
+    border: 1px solid #eee;
+}
+.feedbacktable .fr {
+    margin-top: 3px;
+}
+.feedbacktable th {
+    color: #303030;
+}
+.feedbacktable .details {
+    color: #d1d1d1;
+}
+.feedbacktable .details span {
+    color: #9e9e9e;
+}
+
+/* Footer */
+#footer {
+    border-top: 1px solid #bbb;
+    text-align: center;
+    font-size: smaller;
+    clear: both;
+    color: #606060;
+}
+#footer p {
+    margin-top: .5em;
+}
+#footer a {
+    color: #606060;
+}
