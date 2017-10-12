@@ -5184,6 +5184,10 @@ function drop_elasticsearch_triggers() {
     if (get_config('searchplugin') == 'elasticsearch') {
         log_debug('Dropping elasticsearch triggers');
         require_once(get_config('docroot') . 'search/elasticsearch/lib.php');
+        $enabledtypes = explode(',', get_config_plugin('search', 'elasticsearch', 'types'));
+        foreach ($enabledtypes as $type) {
+            ElasticsearchIndexing::drop_triggers($type);
+        }
         ElasticsearchIndexing::drop_trigger_functions();
     }
 }
