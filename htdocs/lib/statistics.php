@@ -517,7 +517,7 @@ function userdetails_statistics_headers($extra, $urllink) {
               'link' => format_goto($urllink . '&sort=email', $extra, array('sort'), 'email')
         ),
         array(
-              'id' => 'studentid', 'required' => true,
+              'id' => 'studentid',
               'name' => get_string('studentid'),
               'class' => format_class($extra, 'studentid'),
               'link' => format_goto($urllink . '&sort=studentid', $extra, array('sort'), 'studentid')
@@ -535,13 +535,13 @@ function userdetails_statistics_headers($extra, $urllink) {
               'link' => format_goto($urllink . '&sort=username', $extra, array('sort'), 'username')
         ),
         array(
-              'id' => 'remotename', 'required' => true,
+              'id' => 'remotename',
               'name' => get_string('remoteuser', 'admin'),
               'class' => format_class($extra, 'remotename'),
               'link' => format_goto($urllink . '&sort=remotename', $extra, array('sort'), 'remotename')
         ),
         array(
-              'id' => 'lastlogin', 'required' => true,
+              'id' => 'lastlogin',
               'name' => get_string('lastlogin', 'admin'),
               'class' => format_class($extra, 'lastlogin'),
               'link' => format_goto($urllink . '&sort=lastlogin', $extra, array('sort'), 'lastlogin')
@@ -706,48 +706,56 @@ function useractivity_statistics_headers($extra, $urllink) {
               'id' => 'artefacts', 'required' => true,
               'name' => get_string('artefacts'),
               'class' => format_class($extra, 'artefacts'),
-              'link' => format_goto($urllink . '&sort=artefacts', $extra, array('sort'), 'artefacts')
+              'link' => format_goto($urllink . '&sort=artefacts', $extra, array('sort'), 'artefacts'),
+              'helplink' => get_help_icon('core', 'reports', 'useractivity', 'artefacts')
         ),
         array(
               'id' => 'pages', 'required' => true,
               'name' => get_string('Views', 'view'),
               'class' => format_class($extra, 'pages'),
-              'link' => format_goto($urllink . '&sort=pages', $extra, array('sort'), 'pages')
+              'link' => format_goto($urllink . '&sort=pages', $extra, array('sort'), 'pages'),
+              'helplink' => get_help_icon('core', 'reports', 'useractivity', 'pages')
         ),
         array(
               'id' => 'collections', 'required' => true,
               'name' => get_string('Collections', 'collection'),
               'class' => format_class($extra, 'collections'),
-              'link' => format_goto($urllink . '&sort=collections', $extra, array('sort'), 'collections')
+              'link' => format_goto($urllink . '&sort=collections', $extra, array('sort'), 'collections'),
+              'helplink' => get_help_icon('core', 'reports', 'useractivity', 'collections')
         ),
         array(
               'id' => 'groups', 'required' => true,
               'name' => get_string('groups'),
               'class' => format_class($extra, 'groups'),
-              'link' => format_goto($urllink . '&sort=groups', $extra, array('sort'), 'groups')
+              'link' => format_goto($urllink . '&sort=groups', $extra, array('sort'), 'groups'),
+              'helplink' => get_help_icon('core', 'reports', 'useractivity', 'groups')
         ),
         array(
               'id' => 'logins', 'required' => true,
               'name' => get_string('logins'),
               'class' => format_class($extra, 'logins'),
-              'link' => format_goto($urllink . '&sort=logins', $extra, array('sort'), 'logins')
+              'link' => format_goto($urllink . '&sort=logins', $extra, array('sort'), 'logins'),
+              'helplink' => get_help_icon('core', 'reports', 'useractivity', 'logins')
         ),
         array(
               'id' => 'actions',
               'name' => get_string('actions', 'statistics'),
               'class' => format_class($extra, 'actions'),
-              'link' => format_goto($urllink . '&sort=actions', $extra, array('sort'), 'actions')
+              'link' => format_goto($urllink . '&sort=actions', $extra, array('sort'), 'actions'),
+              'helplink' => get_help_icon('core', 'reports', 'useractivity', 'actions')
         ),
         array(
               'id' => 'lastlogin', 'required' => true,
               'name' => get_string('lastlogin', 'admin'),
               'class' => format_class($extra, 'lastlogin'),
-              'link' => format_goto($urllink . '&sort=lastlogin', $extra, array('sort'), 'lastlogin')
+              'link' => format_goto($urllink . '&sort=lastlogin', $extra, array('sort'), 'lastlogin'),
+              'helplink' => get_help_icon('core', 'reports', 'useractivity', 'lastlogin')
         ),
         array(
               'id' => 'lastactivity',
               'name' => get_string('lastactivity', 'statistics'),
               'class' => format_class($extra, 'lastactivity'),
+              'helplink' => get_help_icon('core', 'reports', 'useractivity', 'lastactivity'),
 //              'link' => format_goto($urllink . '&sort=lastactivity', $extra, array('sort'), 'lastactivity')
         ),
     );
