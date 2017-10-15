@@ -569,6 +569,14 @@ $siteoptionform = array(
             'legend'       => get_string('notificationsettings', 'admin'),
             'elements'     => array_merge(
                 array(
+                    'internalnotificationexpire' => array(
+                        'type' => 'text',
+                        'size'         => 4,
+                        'title'         => get_string('internalnotificationexpire', 'admin'),
+                        'description'   => get_string('internalnotificationexpiredescription', 'admin'),
+                        'defaultvalue'  => get_config('internalnotificationexpire') ? get_config('internalnotificationexpire') : 182,
+                        'help'          => true,
+                    ),
                     'activitydescription' => array(
                         'type' => 'html',
                         'class' => 'description',
@@ -790,7 +798,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'allowanonymouspages', 'generatesitemap',
         'registration_sendweeklyupdates', 'mathjax', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
         'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
-        'tagssideblockmaxtags', 'country', 'userscanchooseviewthemes',
+        'tagssideblockmaxtags', 'country', 'userscanchooseviewthemes', 'internalnotificationexpire',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
         'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
