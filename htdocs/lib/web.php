@@ -694,6 +694,9 @@ EOF;
     }
 
     $smarty->assign('PRODUCTIONMODE', get_config('productionmode'));
+    if (defined('SITEOUTOFSYNC')) {
+        $smarty->assign('SITEOUTOFSYNC', SITEOUTOFSYNC);
+    }
     if (function_exists('local_header_top_content')) {
         $sitetop = (isset($sitetop) ? $sitetop : '') . local_header_top_content();
     }

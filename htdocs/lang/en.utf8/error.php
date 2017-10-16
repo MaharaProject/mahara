@@ -149,3 +149,4 @@ $string['nomemcachedserver'] = 'The memcache server "%s" is not reachable. Pleas
 $string['nophpextension'] = 'The PHP extension "%s" is not enabled. Please enable the extension and restart your webserver or choose a different session option.';
 $string['nomemcacheserversdefined'] = 'The session save handler "%s" has no related servers defined. Please set the $cfg->memcacheservers value, eg "localhost:11211"';
 $string['memcacheusememcached'] = 'The "memcache" session storage is obsolete. Please use "memcached"';
+$string['siteoutofsyncfor'] = 'This site has database information newer than %s files indicate it should be.';

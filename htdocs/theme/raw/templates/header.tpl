@@ -25,6 +25,12 @@
                 {str tag=notproductionsite section=error}
             </div>
         {/if}
+        {if $SITEOUTOFSYNC}
+            <div class="site-message alert alert-warning" role="alert">
+                <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span>
+                {str tag=siteoutofsyncfor section=error arg1=$SITEOUTOFSYNC}
+            </div>
+        {/if}
         {if $SITECLOSED}
             <div class="site-message alert alert-danger" role="alert">
                 <span class="icon icon-lg icon-lock left" role="presentation" aria-hidden="true"></span>

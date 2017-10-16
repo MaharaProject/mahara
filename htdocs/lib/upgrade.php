@@ -54,6 +54,7 @@ function check_upgrades($name=null) {
         catch (Exception $e) {
             $coreversion = 0;
         }
+        $corerelease = get_config('release');
         $core = new stdClass();
         $core->to = $config->version;
         $core->torelease = $config->release;
@@ -81,7 +82,6 @@ function check_upgrades($name=null) {
             $installing = true;
         }
         else if ($config->version > $coreversion) {
-            $corerelease = get_config('release');
             if (isset($config->minupgradefrom) && isset($config->minupgraderelease)
                 && $coreversion < $config->minupgradefrom) {
                 throw new ConfigSanityException("Must upgrade to $config->minupgradefrom "
@@ -92,6 +92,16 @@ function check_upgrades($name=null) {
             $core->upgrade = true;
             $core->from = $coreversion;
             $core->fromrelease = $corerelease;
+        }
+        else if ($config->version < $coreversion) {
+            if (get_config('productionmode')) {
+                throw new ConfigSanityException("Database version of Mahara $corerelease ($coreversion) is newer "
+                                            . "than files version $config->release ($config->version). "
+                                            . "Please make sure you have the correct Mahara files in place.");
+            }
+            else {
+                define('SITEOUTOFSYNC', 'core');
+            }
         }
         else {
             // Core doesn't need to be upgraded. Remove it from the list!
@@ -220,6 +230,11 @@ function check_upgrades($name=null) {
         $config = new StdClass;
         require(get_config('docroot') . $pluginpath . '/version.php');
 
+        $classname = generate_class_name($plugintype, $pluginname);
+        safe_require($plugintype, $pluginname);
+        // Check if there is a displayname
+        $plugindisplayname = call_static_method($classname, 'get_plugin_display_name');
+
         if (empty($pluginversion)) {
             $newinstall = false;
             if (empty($installing) && $pluginkey != $name) {
@@ -235,11 +250,7 @@ function check_upgrades($name=null) {
             if (property_exists($config, 'requires_parent')) {
                 $plugininfo->requires_parent = $config->requires_parent;
             }
-
-            $classname = generate_class_name($plugintype, $pluginname);
-            safe_require($plugintype, $pluginname);
-            // Check if there is a displayname
-            $plugininfo->displayname = call_static_method($classname, 'get_plugin_display_name');
+            $plugininfo->displayname = $plugindisplayname;
 
             try {
                 $classname::sanity_check();
@@ -281,11 +292,8 @@ function check_upgrades($name=null) {
             if (property_exists($config, 'requires_parent')) {
                 $plugininfo->requires_parent = $config->requires_parent;
             }
+            $plugininfo->displayname = $plugindisplayname;
 
-            $classname = generate_class_name($plugintype, $pluginname);
-            safe_require($plugintype, $pluginname);
-            // Check if there is a displayname
-            $plugininfo->displayname = call_static_method($classname, 'get_plugin_display_name');
             try {
                 $classname::sanity_check();
             }
@@ -299,6 +307,18 @@ function check_upgrades($name=null) {
             }
 
             $toupgrade[$pluginkey] = $plugininfo;
+        }
+        else if ($config->version < $pluginversion) {
+            $plugindisplayname = !empty($plugindisplayname) ? $plugindisplayname : $config->name;
+            if (get_config('productionmode')) {
+                throw new ConfigSanityException("Database version of Mahara plugin " . $plugindisplayname . " "
+                                            . $pluginrelease . " (" . $pluginversion . ") is newer "
+                                            . "than files version " . $config->release . " (" . $config->version . "). "
+                                            . "Please make sure you have the correct Mahara plugin files in place.");
+            }
+            else {
+                define('SITEOUTOFSYNC', $plugindisplayname);
+            }
         }
     }
 
