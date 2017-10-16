@@ -58,14 +58,14 @@ if ($usersparam = param_variable('users', null)) {
 }
 
 define('PAGEHEADINGARROW', get_string('reports', 'statistics'));
-$type = param_alpha('type', 'users');
+$type = param_alpha('type', 'information');
 $subtype = param_alpha('subtype', '');
 
 if (isset($institution)) {
     if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
         $USER->is_institutional_staff($institution) && empty(get_config('staffstats')) && !empty(get_config('staffreports'))) {
         // we need to give them the correct default report
-        $subtype = !empty($subtype) ? $subtype : 'userdetails';
+        $subtype = !empty($subtype) ? $subtype : 'information';
     }
 }
 
