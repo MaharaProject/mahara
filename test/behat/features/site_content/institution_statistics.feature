@@ -21,5 +21,6 @@ Scenario: Viewing user statistics
  When I choose "Reports" from administration menu
  And I press "Configure report"
  And I set the select2 value "Institution One" for "reportconfigform_institution"
+ And I set the select2 value "People overview" for "reportconfigform_typesubtype"
  And I press "Submit"
  Then I should see "People overview | Institution One"

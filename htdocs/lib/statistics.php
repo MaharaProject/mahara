@@ -746,14 +746,14 @@ function useractivity_statistics_headers($extra, $urllink) {
         ),
         array(
               'id' => 'lastlogin', 'required' => true,
-              'name' => get_string('lastlogin', 'admin'),
+              'name' => get_string('lastactiontime', 'statistics'),
               'class' => format_class($extra, 'lastlogin'),
               'link' => format_goto($urllink . '&sort=lastlogin', $extra, array('sort'), 'lastlogin'),
               'helplink' => get_help_icon('core', 'reports', 'useractivity', 'lastlogin')
         ),
         array(
               'id' => 'lastactivity',
-              'name' => get_string('lastactivity', 'statistics'),
+              'name' => get_string('lastaction', 'statistics'),
               'class' => format_class($extra, 'lastactivity'),
               'helplink' => get_help_icon('core', 'reports', 'useractivity', 'lastactivity'),
 //              'link' => format_goto($urllink . '&sort=lastactivity', $extra, array('sort'), 'lastactivity')
@@ -795,16 +795,22 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
     $wheresql = " WHERE id != 0 AND u.lastlogin IS NOT NULL";
     $where = array();
     if ($institution) {
-        $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
-        $where = array($institution);
+        if ($institution == 'mahara') {
+            $fromsql .= " LEFT JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution IS NULL)";
+        }
+        else {
+            $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
+            $where = array($institution);
+        }
     }
     if ($users) {
         $wheresql .= " AND u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
     }
     if ($start) {
-        $wheresql .= " AND EXISTS(SELECT usr FROM {usr_login_data} uld
-                                  WHERE uld.usr = u.id
-                                  AND uld.ctime >= DATE(?) AND uld.ctime <= DATE(?)
+        $wheresql .= " AND EXISTS(SELECT usr FROM {event_log} el
+                                  WHERE el.usr = u.id
+                                  AND el.event = 'login'
+                                  AND el.ctime >= DATE(?) AND el.ctime <= DATE(?)
                                   LIMIT 1)";
         $where[] = $start;
         $where[] = $end;
@@ -937,7 +943,7 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
                         'LastLogin' => array(
                             'max' => array(
                                 'script' => array(
-                                    'inline' => "doc.event.value == 'login' ? doc.ctime.value : 0",
+                                    'inline' => "doc.ctime.value",
                                 ),
                             ),
                         ),
@@ -965,7 +971,7 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
             }
             if (!empty($sortname)) {
                 usort($aggregates['aggregations']['UsrId']['buckets'], function ($a, $b) use ($sortname) {
-                    return strnatcmp($a[$sortname], $b[$sortname]);
+                    return strnatcasecmp($a[$sortname], $b[$sortname]);
                 });
                 if ($sortdesc == 'desc') {
                     $aggregates['aggregations']['UsrId']['buckets'] = array_reverse($aggregates['aggregations']['UsrId']['buckets']);
@@ -1173,7 +1179,6 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
     }
 
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
-
     $aggmap = array();
     if (get_config('searchplugin') == 'elasticsearch') {
         safe_require('search', 'elasticsearch');
@@ -1218,6 +1223,38 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
                 ),
             ),
         );
+        if ($institution) {
+            // restrict results to users from the institution
+            if ($institution == 'mahara') {
+                $usrids = get_records_sql_assoc("SELECT u.id, u.username FROM {usr} u
+                                                 LEFT JOIN {usr_institution} ui ON ui.usr = u.id
+                                                 JOIN {event_log} el ON el.usr = u.id
+                                                 WHERE ui.institution IS NULL
+                                                 AND el.event = 'login'
+                                                 AND el.ctime >= DATE(?) AND el.ctime <= DATE(?)
+                                                 GROUP BY u.id", array($start, $end));
+            }
+            else {
+                $usrids = get_records_sql_assoc("SELECT u.id, u.username FROM {usr} u
+                                                 JOIN {usr_institution} ui ON ui.usr = u.id
+                                                 JOIN {event_log} el ON el.usr = u.id
+                                                 WHERE ui.institution = ?
+                                                 AND el.event = 'login'
+                                                 AND el.ctime >= DATE(?) AND el.ctime <= DATE(?)
+                                                 GROUP BY u.id", array($institution, $start, $end));
+            }
+            if (!empty($usrids)) {
+                $usrids = array_keys($usrids);
+                $options['query'] = array(
+                    'terms' => array(
+                        'usr' => $usrids
+                    ),
+                );
+            }
+            else {
+                return $result;
+            }
+        }
         $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
         if ($aggregates['totalresults'] > 0) {
             ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('YearWeek', 'EventType', 'ResourceType', 'ParentResourceType'));
@@ -1709,17 +1746,20 @@ function groups_statistics_headers($extra, $urllink) {
         array('id' => 'groupcomments',
               'name' => get_string('groupcomments', 'statistics'),
               'class' => format_class($extra, 'groupcomments'),
-              'link' => format_goto($urllink . '&sort=groupcomments', $extra, array('sort'), 'groupcomments')
+              'link' => format_goto($urllink . '&sort=groupcomments', $extra, array('sort'), 'groupcomments'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'groupcomments')
         ),
         array('id' => 'sharedviews',
               'name' => get_string('sharedviews', 'view'),
               'class' => format_class($extra, 'sharedviews'),
-              'link' => format_goto($urllink . '&sort=sharedviews', $extra, array('sort'), 'sharedviews')
+              'link' => format_goto($urllink . '&sort=sharedviews', $extra, array('sort'), 'sharedviews'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'sharedviews')
         ),
         array('id' => 'sharedcomments',
               'name' => get_string('sharedcomments', 'statistics'),
               'class' => format_class($extra, 'sharedcomments'),
-              'link' => format_goto($urllink . '&sort=sharedcomments', $extra, array('sort'), 'sharedcomments')
+              'link' => format_goto($urllink . '&sort=sharedcomments', $extra, array('sort'), 'sharedcomments'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'sharedcomments')
         ),
         array('id' => 'forums', 'required' => true,
               'name' => get_string('nameplural', 'interaction.forum'),
@@ -1810,7 +1850,7 @@ function group_stats_table($limit, $offset, $extra) {
 
     $aggmap = array();
     // Add in the elasticsearch data if needed
-    if (get_config('searchplugin') == 'elasticsearch') {
+    if (get_config('searchplugin') == 'elasticsearch' && get_config('eventlogenhancedsearch')) {
         safe_require('search', 'elasticsearch');
         $options = array(
             'query' => array(
@@ -1893,8 +1933,10 @@ function group_stats_table($limit, $offset, $extra) {
             $ordersql = " fc.forums " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
         case "posts":
-            $ordersql = " pc.posts IS NULL " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ",
-                          pc.posts " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $ordersql = " posts " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "id":
+            $ordersql = " g.id " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
         case "group":
         default:
@@ -1909,12 +1951,10 @@ function group_stats_table($limit, $offset, $extra) {
         $rangewhere[] = $start;
         $rangewhere[] = $end;
     }
-    if (!empty($sortdirection) && empty($extra['csvdownload']) && !empty($groupids)) {
-        $rangesql .= " AND g.id IN(" . join(',', array_map('db_quote', array_values($groupids))) . ")";
-    }
 
     $sql = "SELECT
-            g.id, g.name, g.urlid, g.ctime, mc.members, vc.views, fc.forums, pc.posts
+            g.id, g.name, g.urlid, g.ctime, mc.members, vc.views, fc.forums,
+            CASE WHEN pc.posts IS NULL THEN 0 ELSE pc.posts END AS posts
         FROM {group} g
             LEFT JOIN (
                 SELECT gm.group, COUNT(gm.member) AS members
@@ -1951,9 +1991,16 @@ function group_stats_table($limit, $offset, $extra) {
     else {
         $groupdata = get_records_sql_array($sql, $rangewhere, $offset, $limit);
     }
+
     if (!empty($sortdirection) && !empty($groupids)) {
         $groupidkeys = array_flip($groupids);
         usort($groupdata, function ($a, $b) use ($groupidkeys) {
+            if (!isset($groupidkeys[$a->id]) && !isset($groupidkeys[$b->id])) {
+                return 0;
+            }
+            else if (!isset($groupidkeys[$a->id]) || !isset($groupidkeys[$b->id])) {
+                return 1;
+            }
             $posA = $groupidkeys[$a->id];
             $posB = $groupidkeys[$b->id];
             if ($posA == $posB) {
@@ -1980,7 +2027,11 @@ function group_stats_table($limit, $offset, $extra) {
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('id', 'name', 'members', 'views', 'groupcomments', 'sharedviews',
                            'sharedcomments', 'forums', 'posts');
-        $USER->set_download_file(generate_csv($groupdata, $csvfields), 'groupstatistics.csv', 'text/csv');
+        $csvheaders = array('sharedviews' => 'shared_pages',
+                            'views' => 'pages',
+                            'groupcomments' => 'group_comments',
+                            'sharedcomments' => 'shared_page_comments');
+        $USER->set_download_file(generate_csv($groupdata, $csvfields, $csvheaders), 'groupstatistics.csv', 'text/csv');
     }
     $result['csv'] = true;
 
@@ -2167,10 +2218,10 @@ function view_stats_table($limit, $offset, $extra) {
             $orderby = " v.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
         case "modified":
-            $orderby = " m.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            $orderby = " v.mtime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
         case "visited":
-            $orderby = " a.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            $orderby = " v.atime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
         case "visits":
         default:
