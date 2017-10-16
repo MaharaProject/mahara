@@ -104,6 +104,11 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
                 'legend'       => get_string('file', 'artefact.file'),
                 'class'        => 'last select-file with-formgroup',
                 'elements'     => array(
+                    'pdfwarning' => array(
+                        'type' => 'html',
+                        'value' => get_string('pdfwarning', 'blocktype.file/pdf'),
+                        'class' => 'alert alert-info',
+                    ),
                     'artefactid' => $filebrowser
                 )
             ),
