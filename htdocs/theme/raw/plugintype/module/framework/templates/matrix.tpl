@@ -16,7 +16,7 @@
 <table class="fullwidth table tablematrix" id="tablematrix">
   <caption class="sr-only">{str tag="tabledesc" section="module.framework"}</caption>
   <tr class="table-pager">
-    <td colspan="2">&nbsp;</td>
+    <td colspan="{$colspan}">&nbsp;</td>
     <td colspan="{$viewcount}" class="special">
         <button class="btn btn-default" id="prev">
             <span class="icon left icon-chevron-left" aria-hidden="true" role="presentation"></span>
@@ -35,10 +35,38 @@
         <span class="sr-only">{str tag="headerelements" section="module.framework"}</span>
         &nbsp;
     </th>
-    <th>
-        <span class="sr-only">{str tag="headercompletedcount" section="module.framework"}</span>
-        &nbsp;
-    </th>
+    {if $enabled->readyforassessment}
+        <th class="statusheader text-center">
+            <span class="{$statusestodisplay->readyforassessment.classes}" title="{$statusestodisplay->readyforassessment.title}"></span>
+            <span class="sr-only">{str tag="headerreadyforassessmentcount" section="module.framework"}</span>
+            &nbsp;
+        </th>
+        <th class="smartevidencedash text-center">&nbsp;</th>
+    {/if}
+    {if $enabled->dontmatch}
+        <th class="statusheader text-center">
+            <span class="{$statusestodisplay->dontmatch.classes}" title="{$statusestodisplay->dontmatch.title}"></span>
+            <span class="sr-only">{str tag="headernotmatchcount" section="module.framework"}</span>
+            &nbsp;
+        </th>
+        <th class="smartevidencedash text-center">&nbsp;</th>
+    {/if}
+    {if $enabled->partiallycomplete}
+        <th class="statusheader text-center">
+            <span class="{$statusestodisplay->partiallycomplete.classes}" title="{$statusestodisplay->partiallycomplete.title}"></span>
+            <span class="sr-only">{str tag="headerpartiallycompletecount" section="module.framework"}</span>
+            &nbsp;
+        </th>
+        <th class="smartevidencedash text-center">&nbsp;</th>
+    {/if}
+    {if $enabled->completed}
+        <th class="statusheader text-center">
+            <span class="{$statusestodisplay->completed.classes}" title="{$statusestodisplay->completed.title}"></span>
+            <span class="sr-only">{str tag="headercompletedcount" section="module.framework"}</span>
+            &nbsp;
+        </th>
+    {/if}
+
     {foreach from=$views key=vk item=view}
     <th class="viewtab" scope="col">
         <span class="sr-only">{str tag="headerpage" section="module.framework"}</span>
@@ -49,7 +77,7 @@
   {foreach from=$standards key=sk item=standard}
     <tr class="standard{if $standard->settingstate == 'closed'} collapsed{/if}" data-standard="{$standard->id}" data-collection="{$collectionid}"
         data-toggle="collapse" aria-expanded="{if $standard->settingstate == 'closed'}false{else}true{/if}">
-        <td colspan="{$viewcount + 2}">
+        <td colspan="{$viewcount + $colspan}">
             <div class="shortname-container">
                 <span class="sr-only">{str tag="standardbegin" section="module.framework"}</span>
                 <span class="icon icon-chevron-down collapse-indicator right pull-right"></span>
@@ -116,13 +144,47 @@
                     </div>
                 </div>
             </td>
-            <td class="completedcount">
-                <span class="sr-only">{str tag="completedcount" section="module.framework"}</span>
-                <span>
-                    {if $completed[$option->id]}{$count = $completed[$option->id]}{else}{$count = 0}{/if}
-                    {$count}
-                </span>
-            </td>
+            {if $enabled->readyforassessment}
+                <td class="completedcount readyforassessment text-center">
+                    <span class="sr-only">{str tag="readyforassessmentcount" section="module.framework"}</span>
+                    <span>
+                        {if $statuscounts->readyforassessment[$option->id]}{$count = $statuscounts->readyforassessment[$option->id]}{else}{$count = 0}{/if}
+                        {$count}
+                    </span>
+                </td>
+                <td class="smartevidencedash text-center">-</td>
+            {/if}
+            {if $enabled->dontmatch}
+                <td class="completedcount dontmatch text-center">
+                    <span class="sr-only">{str tag="dontmatchcount" section="module.framework"}</span>
+                    <span>
+                        {if $statuscounts->dontmatch[$option->id]}{$count = $statuscounts->dontmatch[$option->id]}{else}{$count = 0}{/if}
+                        {$count}
+                    </span>
+                </td>
+                <td class="smartevidencedash text-center">-</td>
+            {/if}
+            {if $enabled->partiallycomplete}
+                <td class="completedcount partiallycomplete text-center">
+                    <span class="sr-only">{str tag="partiallycompletecount" section="module.framework"}</span>
+                    <span>
+                        {if $statuscounts->partiallycomplete[$option->id]}{$count = $statuscounts->partiallycomplete[$option->id]}{else}{$count = 0}{/if}
+                        {$count}
+                    </span>
+                </td>
+                <td class="smartevidencedash text-center">-</td>
+            {/if}
+            {if $enabled->completed}
+                <td class="completedcount completed text-center">
+                    <span class="sr-only">{str tag="completedcount" section="module.framework"}</span>
+                    <span>
+                        {if $statuscounts->completed[$option->id]}{$count = $statuscounts->completed[$option->id]}{else}{$count = 0}{/if}
+                        {$count}
+                    </span>
+                </td>
+            {/if}
+
+
             {foreach from=$views key=vk item=view}
             <td class="mid">
               <span data-view="{$view->id}" data-option="{$option->id}"

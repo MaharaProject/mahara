@@ -125,17 +125,69 @@ $evidence = $framework->get_evidence($collection->get('id'));
 if (!$evidence) {
     $evidence = array();
 }
-$evidencematrix = $completed = array();
+
+$evidencematrix = array();
+$statuscounts = new StdClass();
+$enabled = new StdClass();
+
+//completed should be always enabled
+$statuscounts->completed = array();
+$enabled->completed = true;
+
+if ($framework->get_config('readyforassesment_field_enabled')) {
+    $statuscounts->readyforassessment = array();
+    $enabled->readyforassessment = true;
+}
+if ($framework->get_config('partiallycomplete_field_enabled')) {
+    $statuscounts->partiallycomplete = array();
+    $enabled->partiallycomplete = true;
+}
+if ($framework->get_config('dontmatch_field_enabled')) {
+    $statuscounts->dontmatch = array();
+    $enabled->dontmatch = true;
+}
+
+$statusestodisplay = get_statuses_to_display($frameworkid);
+
 foreach ($evidence as $e) {
     $state = Framework::get_state_array($e->state, true);
     $choices = Framework::get_evidence_statuses($e->framework);
     $state['title'] = $choices[$e->state];
     $evidencematrix[$e->framework][$e->element][$e->view] = $state;
-    if (!isset($completed[$e->element])) {
-        $completed[$e->element] = 0;
-    }
-    if ((int) $e->state === Framework::EVIDENCE_COMPLETED) {
-        $completed[$e->element] ++;
+
+    switch ($e->state) {
+        case Framework::EVIDENCE_COMPLETED:
+            if (isset($statuscounts->completed)) {
+                if (!isset($statuscounts->completed[$e->element])) {
+                    $statuscounts->completed[$e->element] = 0;
+                }
+                $statuscounts->completed[$e->element] ++;
+            }
+        break;
+        case Framework::EVIDENCE_BEGUN:
+            if (isset($statuscounts->readyforassessment)) {
+                if (!isset($statuscounts->readyforassessment[$e->element])) {
+                    $statuscounts->readyforassessment[$e->element] = 0;
+                }
+                $statuscounts->readyforassessment[$e->element] ++;
+            }
+        break;
+        case Framework::EVIDENCE_PARTIALCOMPLETE:
+            if (isset($statuscounts->partiallycomplete)) {
+                if (!isset($statuscounts->partiallycomplete[$e->element])) {
+                    $statuscounts->partiallycomplete[$e->element] = 0;
+                }
+                $statuscounts->partiallycomplete[$e->element] ++;
+            }
+        break;
+        case Framework::EVIDENCE_INCOMPLETE:
+            if (isset($statuscounts->dontmatch)) {
+                if (!isset($statuscounts->dontmatch[$e->element])) {
+                    $statuscounts->dontmatch[$e->element] = 0;
+                }
+                $statuscounts->dontmatch[$e->element] ++;
+            }
+        break;
     }
 }
 
@@ -154,7 +206,10 @@ $smarty->assign('name', $framework->get('name'));
 $smarty->assign('description', $framework->get('description'));
 $smarty->assign('standards', $standards['standards']);
 $smarty->assign('evidence', $evidencematrix);
-$smarty->assign('completed', $completed);
+$smarty->assign('statuscounts', $statuscounts);
+$smarty->assign('statusestodisplay', $statusestodisplay);
+$smarty->assign('enabled', $enabled);
+$smarty->assign('colspan', count((array)$enabled) * 2);
 $smarty->assign('canaddannotation', Framework::can_annotate_view($view->get('id')));
 $smarty->assign('standardscount', $standards['count']);
 $smarty->assign('framework', $collection->get('framework'));
@@ -175,3 +230,44 @@ else {
 }
 
 $smarty->display('module:framework:matrix.tpl');
+
+function get_statuses_to_display($frameworkid) {
+    $statusestodisplay = new StdClass();
+    $allstatuses = array(
+        Framework::EVIDENCE_COMPLETED,
+        Framework::EVIDENCE_BEGUN,
+        Framework::EVIDENCE_PARTIALCOMPLETE,
+        Framework::EVIDENCE_INCOMPLETE
+    );
+    $choices = Framework::get_evidence_statuses($frameworkid);
+    foreach ($allstatuses as $item) {
+        $state = Framework::get_state_array($item, true);
+        switch ($item) {
+            case Framework::EVIDENCE_COMPLETED:
+            $statusestodisplay->completed = array(
+                'classes' => $state['classes'],
+                'title' => $choices[$item],
+            );
+            break;
+            case Framework::EVIDENCE_BEGUN:
+            $statusestodisplay->readyforassessment = array(
+                'classes' => $state['classes'],
+                'title' => $choices[$item],
+            );
+            break;
+            case Framework::EVIDENCE_PARTIALCOMPLETE:
+            $statusestodisplay->partiallycomplete = array(
+                'classes' => $state['classes'],
+                'title' => $choices[$item],
+            );
+            break;
+            case Framework::EVIDENCE_INCOMPLETE:
+            $statusestodisplay->dontmatch = array (
+                'classes' => $state['classes'],
+                'title' => $choices[$item],
+            );
+            break;
+        }
+    }
+    return $statusestodisplay;
+}

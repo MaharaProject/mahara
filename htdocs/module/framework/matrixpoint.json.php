@@ -81,7 +81,7 @@ if ($action == 'update') {
     $data = (object) array('id' => $id,
                            'class' => $class,
                            'view' => $view->get('id'),
-                           'completed' => 0,
+                           'readyforassessment' => 1,
                            'option' => $option,
                            'title' => $choices[0]
                            );
@@ -113,20 +113,45 @@ else if ($action == 'evidence') {
     $id = Framework::save_evidence($evidence->id, null, null, null, $evidence->annotation, $assessment, $USER->get('id'));
     $message = get_string('matrixpointupdated', 'module.framework');
 
-    $completed = 0;
     // If we are changing to/from completed we need to change $completed to adjust the count on screen
+    $readyforassessment = 0;
+    if ((Framework::EVIDENCE_BEGUN === (int) $oldstate) && (Framework::EVIDENCE_BEGUN !== $assessment)) {
+        $readyforassessment = -1;
+    }
+    else if (Framework::EVIDENCE_BEGUN === $assessment) {
+        $readyforassessment = 1;
+    }
+    $dontmatch = 0;
+    if ((Framework::EVIDENCE_INCOMPLETE === (int) $oldstate) && (Framework::EVIDENCE_INCOMPLETE !== $assessment)) {
+        $dontmatch = -1;
+    }
+    else if (Framework::EVIDENCE_INCOMPLETE === $assessment) {
+        $dontmatch = 1;
+    }
+    $partiallycomplete = 0;
+    if ((Framework::EVIDENCE_PARTIALCOMPLETE === (int) $oldstate) && (Framework::EVIDENCE_PARTIALCOMPLETE !== $assessment)) {
+        $partiallycomplete = -1;
+    }
+    else if (Framework::EVIDENCE_PARTIALCOMPLETE === $assessment) {
+        $partiallycomplete = 1;
+    }
+    $completed = 0;
     if ((Framework::EVIDENCE_COMPLETED === (int) $oldstate) && (Framework::EVIDENCE_COMPLETED !== $assessment)) {
         $completed = -1;
     }
     else if (Framework::EVIDENCE_COMPLETED === $assessment) {
         $completed = 1;
     }
+
     $currentstate = Framework::get_state_array($assessment, true);
     $class = $currentstate['classes'];
     $choices = Framework::get_evidence_statuses($framework);
     $data = (object) array('id' => $id,
                            'class' => $class,
                            'view' => $view->get('id'),
+                           'readyforassessment' => $readyforassessment,
+                           'dontmatch' => $dontmatch,
+                           'partiallycomplete' => $partiallycomplete,
                            'completed' => $completed,
                            'option' => $option,
                            'title' => $choices[$assessment]

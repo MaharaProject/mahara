@@ -17,6 +17,7 @@
         <th>{str tag="usedincollections" section="module.framework"}</th>
         <th>{str tag="selfassess" section="module.framework"}</th>
         <th>{str tag="active"}</th>
+        <th></th>
     </tr>
 </thead>
 <tbody>
@@ -25,7 +26,10 @@
         <td>{$item->name}</td>
         <td>{$item->collections}</td>
         <td>{$item->selfassess}</td>
-        <td class="buttonscell framework">{$item->activationswitch|safe}
+        <td>
+            <span title="{$item->active.title}" class="{$item->active.classes}"></span>
+        </td>
+        <td class="buttonscell framework">
         <script type="application/javascript">
             jQuery('#framework{$item->id}_enabled').on('change', function() {
                 // save switch
@@ -35,7 +39,9 @@
                 });
             });
         </script>
-        {$item->delete|safe}</td>
+        {$item->config|safe}
+        {$item->delete|safe}
+        </td>
     </tr>
 {/foreach}
 </tbody>

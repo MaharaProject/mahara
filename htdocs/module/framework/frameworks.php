@@ -36,35 +36,19 @@ if ($upload) {
 $frameworks = Framework::get_frameworks('any');
 if ($frameworks) {
     foreach ($frameworks as $framework) {
-        $framework->activationswitch = pieform(
-            array(
-                'name' => 'framework' . $framework->id,
-                'successcallback' => 'framework_update_submit',
-                'renderer' => 'div',
-                'class' => 'form-inline pull-left framework',
-                'jsform' => false,
-                'checkdirtychange' => false,
-                'elements' => array(
-                    'plugintype' => array(
-                        'type' => 'hidden',
-                        'value' => 'module'
-                    ),
-                    'pluginname' => array(
-                        'type' => 'hidden',
-                        'value' => 'framework'
-                    ),
-                    'id' => array(
-                        'type' => 'hidden',
-                        'value' => $framework->id
-                    ),
-                    'enabled' => array(
-                        'type' => 'switchbox',
-                        'value' => $framework->active,
-                    ),
-                ),
-            )
-        );
         $fk = new Framework($framework->id);
+        if ($fk->get('active')) {
+            $framework->active = array(
+                'title' => 'Enabled',
+                'classes' => 'icon icon-lg icon-check text-success displayicon'
+            );
+        }
+        else {
+            $framework->active = array(
+                'title' => 'Disabled',
+                'classes' => 'icon icon-lg icon-times text-danger displayicon'
+            );
+        }
         $framework->collections = count($fk->get_collectionids());
         $framework->delete = false;
         if (empty($framework->collections)) {
@@ -73,7 +57,7 @@ if ($frameworks) {
                     'name' => 'framework_delete_' . $framework->id,
                     'successcallback' => 'framework_delete_submit',
                     'renderer' => 'div',
-                    'class' => 'form-inline form-as-button pull-right framework',
+                    'class' => 'form-inline pull-right framework',
                     'elements' => array(
                         'submit' => array(
                             'type'         => 'button',
@@ -90,30 +74,28 @@ if ($frameworks) {
                 )
             );
         }
-    }
-}
+        $framework->config = pieform(
+            array(
+                'name' => 'framework_config_' . $framework->id,
+                'successcallback' => 'framework_config_submit',
+                'renderer' => 'div',
+                'class' => 'form-inline pull-right framework',
+                'elements' => array(
+                    'submit' => array(
+                        'type'         => 'button',
+                        'class'        => 'btn-default btn-sm',
+                        'usebuttontag' => true,
+                        'value'        => '<span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
 
-function framework_update_submit(Pieform $form, $values) {
-    global $SESSION;
-    // Should not normally get here as the form has no submit button and is updated via ajax/frameworks.json.php
-    // but in case one does
-    if (!is_plugin_active('framework', 'module')) {
-        $SESSION->add_error_msg(get_string('needtoactivate', 'module.framework'));
+                    ),
+                    'framework'  => array(
+                        'type'         => 'hidden',
+                        'value'        => $framework->id,
+                    )
+                ),
+            )
+        );
     }
-    if (!$USER->get('admin')) {
-        $SESSION->add_error_msg(get_string('accessdenied'));
-    }
-    else {
-        $id = $values['id'];
-        $enabledval = param_alphanum('enabled', false);
-        $enabled = ($enabledval == 'on' || $enabledval == 1) ? 1 : 0;
-        // need to update the active status
-        if (set_field('framework', 'active', $enabled, 'id', $id)) {
-            $SESSION->add_ok_msg(get_string('frameworkupdated', 'module.framework'));
-        }
-    }
-
-    redirect('/module/framework/frameworks.php');
 }
 
 function framework_delete_submit(Pieform $form, $values) {
@@ -129,6 +111,10 @@ function framework_delete_submit(Pieform $form, $values) {
     }
 
     redirect('/module/framework/frameworks.php');
+}
+
+function framework_config_submit(Pieform $form, $values) {
+    redirect(get_config('wwwroot') . 'module/framework/frameworkmanager.php?id=' . $values['framework']);
 }
 
 $smarty = smarty();
