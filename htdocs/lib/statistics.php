@@ -3111,25 +3111,25 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
     $users = $SESSION->get('usersforstats');
 
     $fromsql = " FROM (
-        SELECT u.id AS userid, CONCAT(u.firstname, ' ', u.lastname) AS displayname, cv.view AS viewid, c.id AS collectionid,
+        SELECT u.id AS userid, u.deleted AS udeleted, CONCAT(u.firstname, ' ', u.lastname) AS displayname, cv.view AS viewid, c.id AS collectionid,
             (SELECT COUNT(*) FROM {collection_view} WHERE collection = c.id) AS views,
             c.name AS title, c.ctime AS vctime
         FROM {usr} u JOIN {collection} c ON c.owner = u.id
         JOIN {collection_view} cv ON cv.collection = c.id
         WHERE cv.displayorder = 0
         UNION
-        SELECT u.id AS userid, CONCAT(u.firstname, ' ', u.lastname) AS displayname, v.id AS viewid, NULL AS collectionid,
+        SELECT u.id AS userid, u.deleted AS udeleted, CONCAT(u.firstname, ' ', u.lastname) AS displayname, v.id AS viewid, NULL AS collectionid,
             1 AS views, v.title, v.ctime AS vctime
         FROM {usr} u JOIN {view} v ON v.owner = u.id
         LEFT JOIN {collection_view} cv ON cv.view = v.id
         WHERE cv.collection IS NULL AND v.type !='dashboard'
         UNION
-        SELECT u.id AS userid, CONCAT(u.firstname, ' ', u.lastname) AS displayname, NULL AS viewid, NULL AS collectionid,
+        SELECT u.id AS userid, u.deleted AS udeleted, CONCAT(u.firstname, ' ', u.lastname) AS displayname, NULL AS viewid, NULL AS collectionid,
             0 AS views, NULL as title, u.ctime AS vctime
         FROM {usr} u LEFT JOIN {view} v ON v.owner = u.id
         WHERE v.id IS NULL
     ) AS t";
-    $wheresql = " WHERE userid != 0";
+    $wheresql = " WHERE userid != 0 AND udeleted = 0";
     $where = array();
     if ($institution) {
         $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = userid AND ui.institution = ?)";
@@ -3835,6 +3835,12 @@ function report_config_form($extra, $institutionelement) {
     }
 
     $typesubtypes = get_report_types($institution);
+    if (!isset($typesubtypes[$type]['options'][$type . '_' . $subtype])) {
+        // This can happen when switching from 'all institutions' to a particular institution
+        // where the allowed report options are different. So default back to overview page.
+        $type = 'information';
+        $subtype = 'information';
+    }
     $form['elements']['typesubtype'] = array(
         'type' => 'select',
         'title' => get_string('reporttype', 'statistics'),
@@ -4046,10 +4052,6 @@ function get_report_types($institution = null) {
     asort($usersoptions);
 
     $optgroups = array(
-        'groups' => array(
-            'label' => get_string('Groups', 'admin'),
-            'options' => array('groups_groups' => get_string('Groups', 'admin')),
-        ),
         'content' => array(
             'label' => get_string('Content', 'admin'),
             'options' => array('content_content' => get_string('Content', 'admin')),
@@ -4063,6 +4065,13 @@ function get_report_types($institution = null) {
             'options' => $usersoptions,
         ),
     );
+
+    if (empty($institution) || $institution == 'all') {
+        $optgroups['groups'] = array(
+            'label' => get_string('Groups', 'admin'),
+            'options' => array('groups_groups' => get_string('Groups', 'admin')),
+        );
+    }
 
     // But ignore $optgroups above if $USER is only institution staff and only allowed to see old user related reports
     if (!empty($institution)) {
@@ -4162,12 +4171,12 @@ function report_earliest_date($subtype, $institution = 'mahara') {
         case "masquerading":
             if ($institution != 'mahara') {
                 $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
-                                       JOIN {usr_institution} ui ON ui.usr = el.realusr
+                                       JOIN {usr_institution} ui ON ui.usr = el.usr
                                        WHERE el.event = 'loginas' AND ui.institution = ?", array($institution));
             }
             else {
                 $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
-                                       WHERE el.event = 'loginas' AND el.realusr NOT IN (
+                                       WHERE el.event = 'loginas' AND el.usr NOT IN (
                                            SELECT usr FROM {usr_institution}
                                        )");
             }
