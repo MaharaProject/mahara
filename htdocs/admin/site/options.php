@@ -754,7 +754,7 @@ $siteoptionform = array(
                 'eventlogenhancedsearch' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('eventlogenhancedsearch', 'admin'),
-                    'description'  => get_string('eventlogenhancedsearchdescription', 'admin'),
+                    'description'  => get_string('eventlogenhancedsearchdescription1', 'admin'),
                     'defaultvalue' => get_config('eventlogenhancedsearch'),
                     'help'         => true,
                     'disabled'     => (get_config('searchplugin') != 'elasticsearch' || in_array('eventlogenhancedsearch', $OVERRIDDEN)),
