@@ -215,7 +215,7 @@ $string['reportdescaccesslist'] = '<ul>
 <li>Title of the portfolio</li>
 <li>Number of pages in the portfolio</li>
 <li>Access list, i.e. who has permission to view the portfolio</li>
-</ul>';
+</ul><p>Listed are portfolios that were created during the selected time frame. Their current access permissions are shown.</p>';
 
 $string['reportdescusers'] = '<ul>
 <li>Date</li>
@@ -235,7 +235,7 @@ $string['reportdescuserdetails'] = '<ul>
 <li>Remote username</li>
 <li>Last login</li>
 <li>Number of probation points</li>
-</ul>';
+</ul><p>People whose user accounts were created during the selected time frame are displayed.</p>';
 
 $string['reportuseractivity'] = 'User activity';
 $string['reportdescuseractivity'] = '<ul>
@@ -245,9 +245,9 @@ $string['reportdescuseractivity'] = '<ul>
 <li>Number of collections created</li>
 <li>Number of groups created</li>
 <li>Number of logins</li>
-<li>Number of actions (create and modify an artefact, forum post, personal pages and collection, group pages and collections, comments, page views)</li>
-<li>Last login</li>
-<li>Last activity</li>
+<li>Number of actions</li>
+<li>Last action time</li>
+<li>Last action</li>
 </ul>';
 
 $string['reportcollaboration'] = 'Collaboration';
@@ -282,7 +282,7 @@ $string['reportdescpageactivity'] = '<ul>
 <li>Number of blocks included in the page</li>
 <li>Number of visits to the page</li>
 <li>Number of comments on the page</li>
-</ul>';
+</ul><p>Displayed are pages that were created during the reporting time frame.</p>';
 $string['allothers'] = 'All others';
 
 // Last activities reported on in the "User activity" report
