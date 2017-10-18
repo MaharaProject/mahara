@@ -77,7 +77,7 @@ function db_is_utf8() {
     }
     if (is_mysql()) {
         $result = $db->_Execute("SHOW VARIABLES LIKE 'character_set_database'");
-        return $result->fields['Value'] == 'utf8';
+        return preg_match('/^utf8/', $result->fields['Value']);
     }
     if (is_postgres()) {
         $result = $db->_Execute("SHOW SERVER_ENCODING");
@@ -1538,7 +1538,7 @@ function configure_dbconnection() {
 
     if (is_mysql()) {
         $db->_Execute("SET SQL_MODE='POSTGRESQL'");
-        $db->_Execute("SET CHARACTER SET utf8");
+        $db->_Execute("SET CHARACTER SET utf8mb4");
         $db->_Execute("SET SQL_BIG_SELECTS=1");
     }
 

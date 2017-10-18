@@ -1375,7 +1375,7 @@
             <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
             </KEYS>
           <INDEXES>
-            <INDEX NAME="connectionk" UNIQUE="true" FIELDS="name,class,connection,institution" COMMENT="the connections can be repeated but the name must be unique for a given type and institution"/>
+            <INDEX NAME="connectionk" UNIQUE="true" FIELDS="name" COMMENT="the connections can be repeated but the name must be unique for a given type and institution"/>
           </INDEXES>
         </TABLE>
     </TABLES>

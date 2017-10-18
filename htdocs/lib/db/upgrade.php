@@ -4574,7 +4574,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addFieldInfo('isfatal', XMLDB_TYPE_INTEGER, 1, false, XMLDB_NOTNULL, null, null, null, 1);
         $table->addFieldInfo('version', XMLDB_TYPE_CHAR, 255, false);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->addIndexInfo('connectionk', XMLDB_INDEX_UNIQUE, array('name', 'class', 'connection', 'institution'));
+        $table->addIndexInfo('connectionk', XMLDB_INDEX_UNIQUE, array('name'));
         $table->addKeyInfo('institution', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
         create_table($table);
         clear_menu_cache();
