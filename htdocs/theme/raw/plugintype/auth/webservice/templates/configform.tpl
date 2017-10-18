@@ -3,19 +3,23 @@
 
 <div class="collapsible-group" id="accordion" aria-multiselectable="true" role="tablist" >
 {foreach from=$form.elements item=element name=elements}
+    {if $element.type == 'fieldset'}
     <div class="pseudofieldset panel panel-default collapsible collapsible-group{if $.foreach.elements.last} last{/if}">
-    <h2 class="pseudolegend panel-heading has-link">
+        <h2 class="pseudolegend panel-heading has-link">
         <a class="{if !$.foreach.elements.first}collapsed{/if}" href="#{$element.name}_pseudofieldset" data-toggle="collapse" aria-expanded="{if $.foreach.elements.first}true{else}false{/if}" aria-controls="{$element.name}_pseudofieldset" data-parent="#accordion">
         {$element.legend}
          <span class="icon icon-chevron-down right collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
         </a>
-    </h2>
-    <div class="panel-body table-responsive collapse {if $.foreach.elements.first} in{/if}" id="{$element.name}_pseudofieldset">
-    {foreach from=$element.elements item=item}
-        {$item.value|safe}
-    {/foreach}
+        </h2>
+        <div class="panel-body table-responsive collapse {if $.foreach.elements.first} in{/if}{if $.foreach.elements.last} no-footer{/if}" id="{$element.name}_pseudofieldset">
+        {foreach from=$element.elements item=item}
+            {$item.value|safe}
+        {/foreach}
+        </div>
     </div>
-    </div>
+    {else}
+        {$element.value|safe}
+    {/if}
 {/foreach}
 </div>
 <script type="application/javascript">

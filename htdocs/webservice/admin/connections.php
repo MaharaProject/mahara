@@ -103,8 +103,12 @@ if ($reorder && $json) {
  *  @return pieforms $element array
  */
 function webservice_client_connections($institution) {
-
+    $wcc = webservice_connection_classes($institution);
     $elements = array(
+        'addconnection' => array(
+            'type' => 'html',
+            'value' => $wcc['addconnection'],
+        ),
         // fieldset for managing service function groups
         'pluginconnections' => array(
             'type' => 'fieldset',
@@ -112,7 +116,7 @@ function webservice_client_connections($institution) {
             'elements' => array(
                 'webservicesservicecontainer' => array(
                     'type' => 'html',
-                    'value' => webservice_connection_classes($institution),
+                    'value' => $wcc['instances'],
                 )
             ),
             'collapsible' => true,
@@ -174,9 +178,11 @@ function webservice_connection_classes($institution) {
     $smarty->assign('instancelist', $connection_instances);
     $smarty->assign('connections', $connections);
     $smarty->assign('institution', $institution);
+    $addhtml = $smarty->fetch('auth:webservice:addconnectionform.tpl');
     $smarty->assign('instancestring', $instancestring);
     $smarty->assign('sesskey', $USER->get('sesskey'));
-    return $smarty->fetch('auth:webservice:connections.tpl');
+    $html = $smarty->fetch('auth:webservice:connections.tpl');
+    return array('instances' => $html, 'addconnection' => $addhtml);
 }
 
 
