@@ -633,7 +633,7 @@ abstract class TestingUtil {
      * @static
      * @param bool $displayprogress
      */
-    protected static function drop_database($displayprogress = false) {
+    public static function drop_database($displayprogress = false) {
         global $CFG;
         // Drop triggers
         try {

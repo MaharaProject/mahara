@@ -13,6 +13,8 @@ if (!defined('TESTSRUNNING')) {
     define('TESTSRUNNING', 1);
 }
 
+require_once(dirname(__DIR__) . '/testing/classes/util.php');
+
 /**
  * Small class to handle all things necessary to bootstrap Mahara
  * to create an environment to run tests in.
@@ -79,60 +81,9 @@ class UnitTestBootstrap {
                 throw new UnitTestBootstrapException('Stale test tables found, and drop option not set.  Refusing to run tests');
             }
             log_info('Stale test tables found, and drop option is set.  Dropping them before running tests');
-            $this->uninstall_mahara();
+            TestingUtil::drop_database(true);
             log_info('Done');
         }
-    }
-
-    /**
-     * completely uninstall mahara, drop all tables.
-     * this just does what install does, but in reverse order
-     * reversing the order of tables, and indexes
-     * to respect referential integrity
-     */
-    public function uninstall_mahara() {
-        // this can't be done in a transaction because sometimes
-        // things exist in the database that aren't in the file or the other way around
-        // in the case where there are stale tables and then the code is upgraded
-        foreach (get_installed_plugins_paths() as $pluginpath) {
-            $location = $pluginpath . '/db/';
-            log_info('Uninstalling ' . $location);
-            $xmldbfile = $location . 'install.xml';
-            if (is_readable($xmldbfile)) {
-                uninstall_from_xmldb_file($xmldbfile);
-            }
-        }
-        // now uninstall core
-        log_info('Uninstalling core');
-
-        // These constraints must be dropped manually as they cannot be
-        // created with xmldb due to ordering issues
-        if (is_postgres()) {
-            try {
-                execute_sql('ALTER TABLE {usr} DROP CONSTRAINT {usr_pro_fk}');
-            }
-            catch (Exception $e) {
-            }
-            try {
-                execute_sql('ALTER TABLE {institution} DROP CONSTRAINT {inst_log_fk}');
-            }
-            catch (Exception $e) {
-            }
-        }
-        else {
-            try {
-                execute_sql('ALTER TABLE {usr} DROP FOREIGN KEY {usr_pro_fk}');
-            }
-            catch (Exception $e) {
-            }
-            try {
-                execute_sql('ALTER TABLE {institution} DROP FOREIGN KEY {inst_log_fk}');
-            }
-            catch (Exception $e) {
-            }
-        }
-
-        uninstall_from_xmldb_file(get_config('docroot') . 'lib/db/install.xml');
     }
 
     /**
