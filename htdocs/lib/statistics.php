@@ -3176,11 +3176,11 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
             $orderby = " views " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
         case "views":
-            $orderby = " title " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $orderby = " title " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", displayname";
             break;
         case "owner":
         default:
-            $orderby = " displayname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $orderby = " displayname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", title, viewid";
     }
     $sql = "SELECT userid, displayname, viewid, collectionid, views, title, vctime
             " . $fromsql . $wheresql . "
@@ -3201,11 +3201,12 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
             SELECT *, 0 AS secreturls
             FROM {view_access} WHERE view = ? AND token IS NULL
             UNION
-            SELECT *, (SELECT COUNT(*) FROM {view_access} va2 WHERE token IS NOT NULL AND va2.view = va.view) AS secreturls
-            FROM {view_access} va WHERE va.view = ? AND va.token IS NOT NULL",
+            (SELECT *, (SELECT COUNT(*) FROM {view_access} va2 WHERE token IS NOT NULL AND va2.view = va.view) AS secreturls
+            FROM {view_access} va WHERE va.view = ? AND va.token IS NOT NULL LIMIT 1)",
             array($item->viewid, $item->viewid));
         $item->hasaccessrules = !empty($item->access);
     }
+
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('displayname', 'userurl', 'title', 'views', 'hasaccessrules');
         $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'accessstatistics.csv', 'text/csv');
