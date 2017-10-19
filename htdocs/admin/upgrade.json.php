@@ -63,9 +63,6 @@ if ($install) {
 }
 
 if (!empty($upgrade)) {
-    // clear out menu cache to allow upgraded site to remake cached menus
-    clear_menu_cache();
-
     if (!empty($upgrade->errormsg)) {
         $data['newversion'] = $upgrade->torelease . ' (' . $upgrade->to . ')' ;
         $data['install'] = false;
