@@ -408,7 +408,7 @@ $string['remoteavatars'] = 'Display remote avatars';
 $string['remoteavatarsdescription1'] = 'Use the <a href="http://www.gravatar.com">Gravatar</a> service for users\' default profile pictures.';
 $string['searchplugin'] = 'Search plugin';
 $string['searchplugindescription'] = 'Search plugin to use';
-$string['searchconfigerror1'] = 'The configuration settings for the search plugin "%s" are incorrect. Please check the configuration settings under "Extensions" → "Plugin type: search". You may need to hit the search\'s \'reset\' button when done.';
+$string['searchconfigerror1'] = 'The configuration settings for the search plugin "%s" are incorrect. Please check the configuration settings under "Extensions" → "Plugin type: search". You may need to hit the search\'s \'Reset\' button when done.';
 $string['searchuserspublic'] = 'Show users in public search';
 $string['searchuserspublicdescription'] = 'Allow users\' names to appear in public search results. This needs to have \'publicsearchallowed\' set to true and be using a search plugin that allows public search, e.g. Elasticsearch. Changing this setting will require search re-indexing.';
 $string['sessionlifetime'] = 'Session lifetime';
@@ -436,7 +436,7 @@ $string['smallviewheadersdescription1'] = 'Display a small header and site navig
 $string['spamhaus1'] = 'Spamhaus URL blacklist';
 $string['spamhausdescription1'] = 'Check URLs against the Spamhaus DNSBL.';
 $string['staffaccessreports'] = 'Access reports for staff';
-$string['staffaccessreportsdescription'] = 'Allow site and institution staff to access the "User details", "Access list", and "Masquerading sessions" reports in their institution(s). These reports are normally restricted to administrators.';
+$string['staffaccessreportsdescription1'] = 'Allow site and institution staff to access the "User details", "Portfolio access", and "Masquerading sessions" reports in their institution(s). These reports are normally restricted to administrators.';
 $string['institutionstaffallreports'] = 'All reports for institution staff';
 $string['institutionstaffallreportsdescription'] = 'Allow institution staff to access all reports for their institution(s). The reports are normally restricted to administrators and site staff.';
 $string['surbl1'] = 'SURBL URL blacklist';
@@ -1044,8 +1044,8 @@ $string['Admins'] = 'Administrators';
 
 $string['noinstitutions'] = 'No institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate users with an institution, you should create the institution first.';
-$string['noinstitutionsstats'] = 'Unable to view institution statistics';
-$string['noinstitutionsstatsdescription1'] = 'Staff statistics access needs to be turned on for the site to allow staff to view their institution statistics. A site administrator can turn this setting on in "User settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
+$string['noinstitutionreports'] = 'Unable to view institution reports';
+$string['noinstitutionreportsdescription'] = 'Staff report access needs to be turned on for the site to allow staff to view their institution reports. A site administrator can turn this setting on in "User settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
 $string['noinstitutionstaticpages'] = 'You do not have permission to edit any institution static pages or no institutions have been created yet.';
 $string['noinstitutionstaticpagesadmin'] = 'If you are a site administrator, please edit the default static pages in <a href="%s">Configure site</a>.';
 

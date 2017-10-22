@@ -165,7 +165,7 @@ $siteoptionform = array(
                 'staffreports' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('staffaccessreports', 'admin'),
-                    'description'  => get_string('staffaccessreportsdescription', 'admin'),
+                    'description'  => get_string('staffaccessreportsdescription1', 'admin'),
                     'defaultvalue' => get_config('staffreports'),
                     'disabled'     => in_array('staffreports', $OVERRIDDEN),
                 ),
