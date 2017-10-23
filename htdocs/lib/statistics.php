@@ -4148,8 +4148,12 @@ function report_earliest_date($subtype, $institution = 'mahara') {
     // A quick way to find possible earliest dates for things
 
     // This check accepts the fact that 'mahara' institution must exist first
-    // therefore the earliest for 'mahara' must be the earliest for 'all'
-    $institution = ($institution == 'all') ? 'mahara' : $institution;
+    // therefore the earliest for 'mahara' must be the earliest for 'all' for many of the reports
+    $all = false;
+    if ($institution == 'all') {
+        $institution = 'mahara';
+        $all = true;
+    }
     switch ($subtype) {
         case "content":
             $date = get_field_sql("SELECT MIN(i.time) FROM {institution_registration} i WHERE i.institution = ?", array($institution));
@@ -4176,10 +4180,16 @@ function report_earliest_date($subtype, $institution = 'mahara') {
                                        WHERE el.event = 'loginas' AND ui.institution = ?", array($institution));
             }
             else {
-                $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
-                                       WHERE el.event = 'loginas' AND el.usr NOT IN (
-                                           SELECT usr FROM {usr_institution}
-                                       )");
+                if ($all) {
+                    $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                           WHERE el.event = 'loginas'");
+                }
+                else {
+                    $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                           WHERE el.event = 'loginas' AND el.usr NOT IN (
+                                               SELECT usr FROM {usr_institution}
+                                           )");
+                }
             }
             break;
         case "useractivity":
@@ -4189,10 +4199,16 @@ function report_earliest_date($subtype, $institution = 'mahara') {
                                        WHERE el.event != 'loginas' AND ui.institution = ?", array($institution));
             }
             else {
-                $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
-                                       WHERE el.event != 'loginas' AND el.usr NOT IN (
-                                           SELECT usr FROM {usr_institution}
-                                       )");
+                if ($all) {
+                    $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                           WHERE el.event != 'loginas'");
+                }
+                else {
+                    $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                           WHERE el.event != 'loginas' AND el.usr NOT IN (
+                                               SELECT usr FROM {usr_institution}
+                                           )");
+                }
             }
             break;
         case "pageactivity":
