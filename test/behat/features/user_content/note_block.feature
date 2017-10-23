@@ -13,6 +13,7 @@ Given the following "users" exist:
     | title | description | ownertype | ownername |
     | Page UserA_01 | Page 01| user | UserA |
 
+Scenario: Adding and deleting a Note block (Bug 1424512)
     # Logging in as a user
     Given I log in as "UserA" with password "Kupuhipa1"
     And I choose "Pages and collections" in "Portfolio" from main menu
@@ -22,27 +23,31 @@ Given the following "users" exist:
     And I expand "General" node
     And I follow "Note" in the "div#general" "css_element"
     And I press "Add"
-    And I fill in the following:
+    And I set the following fields to these values:
     | Block title | Note block 1 |
-
-Scenario: Adding and deleting a Note block (Bug 1424512)
+    | Block content | This is a test |
+    #Adding an attachment to a note and attaching a file to it.
+    And I follow "Attachments" in the "div#instconf_artefactfieldset_container" "css_element"
+    And I attach the file "Image2.png" to "userfile[]"
     And I press "Save"
-    And I should see "Note block 1"
+    #Add a second note to the page
+    And I follow "Note" in the "div#general" "css_element"
+    And I press "Add"
+    And I follow "Use content from another note"
+    And I select the radio "Note block 1"
+    # Set title after selection as selection updates the title with original one
+    And I set the following fields to these values:
+    | Block title | Note block 2 |
+    And I press "Save"
+    And I should see "This is a test" in the block "Note block 2"
+    # Verifying the attachment saved
+    And I choose "Notes" in "Content" from main menu
+    And I follow "Note block 1"
+    And I should see "Image2.png"
     # Verifying the Note block saved
-    And I display the page
+    And I follow "Page UserA_01"
     And I choose "Notes" in "Content" from main menu
     And I should see "Note block 1"
     # Verifying the Note block can be deleted
     And I delete the "Note block 1" row
     Then I should see "Note deleted"
-
-Scenario: Adding an attachment to a note
-    # Attaching a file to the note
-    And I follow "Attachments" in the "div#instconf_artefactfieldset_container" "css_element"
-    And I attach the file "Image2.png" to "userfile[]"
-    And I should see "Upload of Image2.png complete"
-    And I press "Save"
-    # Verifying the attachment saved
-    And I choose "Notes" in "Content" from main menu
-    And I follow "Note block 1"
-    And I should see "Image2.png"
