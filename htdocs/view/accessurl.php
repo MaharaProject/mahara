@@ -378,11 +378,11 @@ if (!empty($institution)) {
         $shareurl = 'admin/site/shareviews.php';
     }
     else {
-        $shareurl = 'view/institutionshare.php';
+        $shareurl = 'view/institutionviews.php';
     }
 }
 else if (!empty($group)) {
-    $shareurl = 'group/shareviews.php?group=' . $group;
+    $shareurl = 'view/groupviews.php?group=' . $group;
 }
 else {
     $shareurl = 'view/index.php';
