@@ -753,13 +753,13 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         $mail->IsSMTP();
         // use SMTP directly
         $mail->Host = get_config('smtphosts');
+        $mail->Port = is_numeric(get_config('smtpport')) ? get_config('smtpport') : 25;
         if (get_config('smtpuser')) {
             // Use SMTP authentication
             $mail->SMTPAuth   = true;
             $mail->Username   = get_config('smtpuser');
             $mail->Password   = get_config('smtppass');
             $mail->SMTPSecure = get_config('smtpsecure');
-            $mail->Port       = get_config('smtpport');
             if (get_config('smtpsecure') && !get_config('smtpport')) {
                 // Encrypted connection with no port. Use default one.
                 if (get_config('smtpsecure') == 'ssl') {
