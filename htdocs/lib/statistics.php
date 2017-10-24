@@ -976,6 +976,8 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
     }
 
     $data = array();
+    $timezone = new DateTimeZone(date_default_timezone_get()); // get timezone we are in
+    $offsettime = $timezone->getOffset(new DateTime("now")); // work out offset in seconds
     if ($aggregates['totalresults'] > 0) {
         foreach ($aggregates['aggregations']['UsrId']['buckets'] as $item) {
             $obj = new stdClass();
@@ -994,13 +996,11 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
             $obj->lastactivity = ($lastactivity) ? get_string($lastactivity, 'statistics') : '';
             $obj->profileurl = profile_url($item['key']);
             $date = $item['LastLogin']['value'] / 1000; // convert from UTC milliseconds
-            $timezone = new DateTimeZone(date_default_timezone_get()); // get timezone we are in
-            $offsettime = $timezone->getOffset(new DateTime("now")); // work out offset in seconds
-            if ($offset < 0) {
-                $date -= $offsettime;
-            }
-            if ($offset > 0) {
+            if ($offsettime < 0) {
                 $date += $offsettime;
+            }
+            if ($offsettime > 0) {
+                $date -= $offsettime;
             }
             $obj->lastlogin = $item['LastLogin']['value'] ? date('d F Y, H:i a', $date) : '';
             $obj->actions = $item['doc_count'];
