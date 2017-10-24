@@ -11,31 +11,37 @@
     .loading-box {
         float: left;
     }
-    .logo {
-        margin-right: 15px;
-        // logo restricted to 45px - custom work required for a larger version
-        img {
-            height: 45px;
-        }
-    }
 
-    .logo.change-to-small {
-        img {
-            @media (max-width: 415px) {
-              display: none;
-            }
+    $screen-width-small-logo: 415px;
+
+    .logo {
+        margin: 6px 15px 6px 0;
+        display: inline-block;
+        // logo restricted to 45px - custom work required for a larger version
+        height: 45px;
+
+        // When small logo is uploaded 'change-to-small' class is added.
+        &.change-to-small {
+          display: none;
+          @media (min-width: $screen-width-small-logo) {
+              display: inline-block;
+          }
         }
     }
 
     .logoxs {
-        padding: 6px 0;
-        margin-right: 15px;
+        margin: 6px 15px 6px 0;
+        height: 48px;
+        @media (min-width: $screen-width-small-logo) {
+          display: none;
+        }
+    }
+
+    .logo,
+    .logoxs {
         img {
-            display: none;
-            @media (max-width: 415px) {
-              display: inherit;
-              height: 48px;
-            }
+            height: 100%;
+            max-width: none;
         }
     }
 
