@@ -34,7 +34,7 @@ Scenario:
     And I should see "There is a cat in a table"
     And I should not see "</h2></strong>"
     And I should not see "<title>Sample HTML file</title>"
-    And I should see images in the block "Some HTML"
+    And I should see images within the block "Some HTML"
     And I follow "mahara manual"
     And I wait "2" seconds
     Then I should see "This is the user manual for Mahara"

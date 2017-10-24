@@ -43,8 +43,8 @@ Scenario: Enable/disable external resources in mahara pages
  And I press "Save"
  And I scroll to the top
  And I follow "Display page"
- Then I should see images in the block "Text block with an internal image"
- And I should see images in the block "Text block with an external image"
+ Then I should see images within the block "Text block with an internal image"
+ And I should see images within the block "Text block with an external image"
  And I log out
 
 # Disable external resources and check if external images are displayed in pages
@@ -57,5 +57,5 @@ Scenario: Enable/disable external resources in mahara pages
  And I log in as "UserA" with password "Kupuhipa1"
  And I choose "Pages and collections" in "Portfolio" from main menu
  And I follow "Page UserA_01"
- Then I should see images in the block "Text block with an internal image"
- And I should not see images in the block "Text block with an external image"
+ Then I should see images within the block "Text block with an internal image"
+ And I should not see images within the block "Text block with an external image"
