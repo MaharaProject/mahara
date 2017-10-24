@@ -514,6 +514,12 @@ class PluginAuthSaml extends PluginAuth {
                 'defaultvalue' => $spentityid,
                 'help'  => true,
             ),
+            'metadata' => array(
+                'type'  => 'html',
+                'class' => 'htmldescription',
+                'title' => get_string('spmetadata', 'auth.saml'),
+                'value' => self::is_usable() ? get_string('metadatavewlink', 'auth.saml', get_config('wwwroot') . 'auth/saml/sp/metadata.php?output=xhtml') : get_string('ssphpnotconfigured', 'auth.saml'),
+            ),
             'sigalgo' => array(
                 'type' => 'select',
                 'title' => get_string('sigalgo', 'auth.saml'),
@@ -533,7 +539,7 @@ class PluginAuthSaml extends PluginAuth {
                                 'elements' =>  array(
                                                 'protos_help' =>  array(
                                                 'type' => 'html',
-                                                'value' => '<div><p>' . get_string('manage_certificate1', 'auth.saml', get_config('wwwroot') . 'auth/saml/sp/metadata.php?output=xhtml') . '</p></div>',
+                                                'value' => '<div><p>' . get_string('manage_certificate2', 'auth.saml') . '</p></div>',
                                                 ),
 
                                                 'pubkey' => array(
