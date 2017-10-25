@@ -363,7 +363,7 @@ class PluginAuthSaml extends PluginAuth {
 
     public static function install_auth_default() {
         // Set library version to download
-        set_config_plugin('auth', 'saml', 'version', '1.14.16');
+        set_config_plugin('auth', 'saml', 'version', '1.14.17');
     }
 
     private static function create_certificates($numberofdays = 3650) {
