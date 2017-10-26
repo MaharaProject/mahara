@@ -1838,18 +1838,22 @@ function group_stats_table($limit, $offset, $extra) {
 
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
     $sortdesc = !empty($extra['sortdesc']) ? 'desc' : 'asc';
+    $sorttypeaggmap = '';
     switch ($sorttype) {
         case "groupcomments":
             $sortdirection = array('EventTypeCount' => $sortdesc);
             $sortorder = "(doc.event.value == 'saveartefact' && doc.resourcetype.value == 'comment' && doc.ownertype.value == 'group') ? 1 : 0";
+            $sorttypeaggmap = '|saveartefact|comment|group';
             break;
         case "sharedviews":
             $sortdirection = array('EventTypeCount' => $sortdesc);
             $sortorder = "(doc.event.value == 'updateviewaccess' && doc.resourcetype.value == 'group' && doc.ownertype.value == 'user') ? 1 : 0";
+            $sorttypeaggmap = '|updateviewaccess|group|user';
             break;
         case "sharedcomments":
             $sortdirection = array('EventTypeCount' => $sortdesc);
             $sortorder = "(doc.event.value == 'sharedcommenttogroup' && doc.resourcetype.value == 'comment' && doc.ownertype.value == 'group') ? 1 : 0";
+            $sorttypeaggmap = '|sharedcommenttogroup|comment|group';
             break;
         default:
             $sortdirection = '';
@@ -1922,11 +1926,13 @@ function group_stats_table($limit, $offset, $extra) {
         $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
         $groupids = array();
         if ($aggregates['totalresults'] > 0) {
+            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('GroupId', 'EventType', 'ResourceType', 'OwnerType'));
             $groups = array_slice($aggregates['aggregations']['GroupId']['buckets'], $offset, $limit, true);
             foreach($groups as $k => $g) {
-                $groupids[$k] = $g['key'];
+                if (isset($aggmap[$g['key'] . $sorttypeaggmap]) && $aggmap[$g['key'] . $sorttypeaggmap] > 0) {
+                    $groupids[$k] = $g['key'];
+                }
             }
-            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('GroupId', 'EventType', 'ResourceType', 'OwnerType'));
         }
     }
 
@@ -1960,9 +1966,21 @@ function group_stats_table($limit, $offset, $extra) {
         $rangewhere[] = $end;
     }
 
+    $elasticselect = $elasticfrom = '';
+    if (!empty($sortdirection) && !empty($groupids)) {
+        $elasticselect = ", CASE WHEN ggc.elastic IS NULL THEN 0 ELSE ggc.elastic END AS elastic";
+        $elasticfrom = " LEFT JOIN (
+                            SELECT g.id, 1 AS elastic
+                            FROM {group} g
+                            WHERE g.id IN (" . implode(',', $groupids) . ")
+                        ) ggc on g.id = ggc.id";
+        $ordersql = " elastic  " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", " . $ordersql;
+    }
+
     $sql = "SELECT
             g.id, g.name, g.urlid, g.ctime, mc.members, vc.views, fc.forums,
             CASE WHEN pc.posts IS NULL THEN 0 ELSE pc.posts END AS posts
+            " . $elasticselect . "
         FROM {group} g
             LEFT JOIN (
                 SELECT gm.group, COUNT(gm.member) AS members
@@ -1989,10 +2007,12 @@ function group_stats_table($limit, $offset, $extra) {
                 WHERE ii.deleted = 0 AND ift.deleted = 0 AND ifp.deleted = 0
                 GROUP BY ii.group
             ) pc ON g.id = pc.group
+            " . $elasticfrom . "
         WHERE
             g.deleted = 0 " . $rangesql . "
         ORDER BY
             " . $ordersql . ", g.name, g.id";
+
     if (!empty($extra['csvdownload'])) {
         $groupdata = get_records_sql_array($sql, $rangewhere);
     }
@@ -2007,7 +2027,7 @@ function group_stats_table($limit, $offset, $extra) {
                 return 0;
             }
             else if (!isset($groupidkeys[$a->id]) || !isset($groupidkeys[$b->id])) {
-                return 1;
+                return empty($extra['sortdesc']) ? -1 : 1;
             }
             $posA = $groupidkeys[$a->id];
             $posB = $groupidkeys[$b->id];

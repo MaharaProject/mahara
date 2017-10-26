@@ -2008,7 +2008,7 @@ function handle_event($event, $data, $ignorefields = array()) {
         insert_record('event_log', $logentry);
         // If we are adding a comment to a page that is shared to a group
         // we need to add a 'sharedcommenttogroup' event
-        if ($reftype == 'comment') {
+        if ($reftype == 'comment' && empty($logdata['group'])) {
             if (!empty($logdata['onartefact'])) {
                 $commenttype = 'artefact';
                 $commenttypeid = $logdata['onartefact'];
