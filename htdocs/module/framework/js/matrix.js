@@ -319,28 +319,30 @@ jQuery(function($) {
     // clicking the name or pressing enter key
     // Hide it when leaving
 
-    $('td.code div').click(
-        function () {
+    $('td.code div').on({
+        click: function () {
             if ($(this).find('.popover').hasClass('hidden')) {
                 $(this).find('.popover').removeClass('hidden');
             }
             else {
                 $(this).find('.popover').addClass('hidden');
             }
-        }
-    );
-
-    $('td.code div').keyup(function(event) {
-        if (event.keyCode == 13) {
-          $(this).click();
-        }
-    });
-
-    $('td.code div').focusout(
-        function() {
+        },
+        mouseenter: function() {
+            $(this).find('.popover').removeClass('hidden');
+        },
+        mouseleave: function() {
+            $(this).find('.popover').addClass('hidden');
+        },
+        keyup: function(event) {
+            if (event.keyCode == 13) {
+                $(this).click();
+            }
+        },
+        focusout: function() {
             $(this).closest('div').find('.popover').addClass('hidden');
         }
-    );
+    });
 
     // Allow for the expand/collapse of the standards
     $('tr.standard').off(); // clear any existing click state
