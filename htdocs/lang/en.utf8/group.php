@@ -303,6 +303,7 @@ $string['approverequest'] = 'Approve request';
 $string['denyrequest']    = 'Deny request';
 $string['pending']        = 'pending';
 $string['pendingsince']   = 'pending since %s';
+$string['requestedsince']   = 'requested since %s';
 $string['trysearchingforfriends'] = 'Try %ssearching for new friends%s to grow your network.';
 $string['nobodyawaitsfriendapproval'] = 'Nobody is awaiting your approval to become your friend.';
 $string['sendfriendrequest'] = 'Send friend request';

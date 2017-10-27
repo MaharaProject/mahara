@@ -1,10 +1,14 @@
-<div class="{if $user->pending}pending panel-warning{else}panel-default{/if} panel panel-half myfriend">
+<div class="{if $user->pending || $user->requestedfriendship}pending panel-warning{else}panel-default{/if} panel panel-half myfriend">
     <h3 class="panel-heading profile-block">
         <a href="{profile_url($user)}" class="username">
             {$user->display_name}
             {if $user->pending}
             <em class="text-small pendingfriend">
             - {str tag='pendingsince' section='group' arg1=$user->pending_time}
+            </em>
+            {elseif $user->requestedfriendship}
+            <em class="text-small requestedfriend">
+            - {str tag='requestedsince' section='group' arg1=$user->requested_time}
             </em>
             {elseif $user->friend && $page == 'find'}
             <em class="text-small existingfriend">
@@ -52,6 +56,14 @@
             </div>
             {/if}
         </div>
+        {if $user->requestedfriendship}
+        <div class="requested text-small">
+            <span class="icon icon-lg text-success icon-check left" role="presentation" aria-hidden="true"></span>
+            <span>
+                {str tag='friendshiprequested' section='group'}
+            </span>
+        </div>
+        {/if}
         {if $user->messages}
         <div class="sendmessage text-small">
             <span class="icon icon-envelope left" role="presentation" aria-hidden="true"></span>

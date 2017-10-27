@@ -1952,9 +1952,12 @@ function get_users_data($userids, $getviews=true) {
                 u.profileicon, u.email, u.urlid,
                 fp.requester AS pending,
                 fp.ctime AS pending_time,
+                fp2.ctime AS requested_time,
                 ap.value AS hidenamepref,
-                COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
-                COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'friendscontrol\'), \'auth\') AS friendscontrol,
+                COALESCE((SELECT ap.value FROM {usr_account_preference} ap
+                          WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
+                COALESCE((SELECT ap.value FROM {usr_account_preference} ap
+                          WHERE ap.usr = u.id AND ap.field = \'friendscontrol\'), \'auth\') AS friendscontrol,
                 (SELECT 1 FROM {usr_friend} WHERE ((usr1 = ? AND usr2 = u.id) OR (usr2 = ? AND usr1 = u.id))) AS friend,
                 (SELECT 1 FROM {usr_friend_request} fr WHERE fr.requester = ? AND fr.owner = u.id) AS requestedfriendship,
                 (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
@@ -1962,15 +1965,17 @@ function get_users_data($userids, $getviews=true) {
                 FROM {usr} u
                 LEFT JOIN {usr_account_preference} ap ON (u.id = ap.usr AND ap.field = \'hiderealname\')
                 LEFT JOIN {usr_friend_request} fp ON fp.owner = ? AND fp.requester = u.id
+                LEFT JOIN {usr_friend_request} fp2 ON fp2.requester = ? AND fp2.owner = u.id
                 WHERE u.id IN (' . join(',', array_fill(0, count($userids), '?')) . ')';
     $userid = $USER->get('id');
-    $data = get_records_sql_assoc($sql, array_merge(array($userid, $userid, $userid, $userid), $userids));
+    $data = get_records_sql_assoc($sql, array_merge(array($userid, $userid, $userid, $userid, $userid), $userids));
     $allowhidename = get_config('userscanhiderealnames');
     $showusername = !get_config('nousernames');
 
     $institutionstrings = get_institution_strings_for_users($userids);
     foreach ($data as &$record) {
         $record->pending_time = format_date(strtotime($record->pending_time), 'strftimedaydate');
+        $record->requested_time = format_date(strtotime($record->requested_time), 'strftimedaydate');
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
         if (isset($institutionstrings[$record->id])) {
             $record->institutions = $institutionstrings[$record->id];

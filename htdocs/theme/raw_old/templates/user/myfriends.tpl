@@ -6,7 +6,7 @@
 </p>
 {/if}
 {if $results}
-<div id="friendslist" class="panel-items">
+<div id="friendslist" class="panel-items js-masonry" data-masonry-options='{literal}{ "itemSelector": ".panel" }{/literal}'>
     {$results.tablerows|safe}
 </div>
 <div class="panel-pagination">
