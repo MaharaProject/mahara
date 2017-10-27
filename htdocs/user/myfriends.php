@@ -72,7 +72,7 @@ jQuery(function ($) {
     p = {$data['pagination_js']}
     $('#filter_submit').on('click', function (event) {
         $('#messages').empty();
-        var params = {'filter': $('filter_filter').value};
+        var params = {'filter': $('#filter_filter').val()};
         p.sendQuery(params);
         event.preventDefault();
     });
