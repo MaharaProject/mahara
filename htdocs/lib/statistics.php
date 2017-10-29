@@ -746,14 +746,14 @@ function useractivity_statistics_headers($extra, $urllink) {
         ),
         array(
               'id' => 'lastlogin', 'required' => true,
-              'name' => get_string('lastlogin', 'admin'),
+              'name' => get_string('lastactiontime', 'statistics'),
               'class' => format_class($extra, 'lastlogin'),
               'link' => format_goto($urllink . '&sort=lastlogin', $extra, array('sort'), 'lastlogin'),
               'helplink' => get_help_icon('core', 'reports', 'useractivity', 'lastlogin')
         ),
         array(
               'id' => 'lastactivity',
-              'name' => get_string('lastactivity', 'statistics'),
+              'name' => get_string('lastaction', 'statistics'),
               'class' => format_class($extra, 'lastactivity'),
               'helplink' => get_help_icon('core', 'reports', 'useractivity', 'lastactivity'),
 //              'link' => format_goto($urllink . '&sort=lastactivity', $extra, array('sort'), 'lastactivity')
@@ -795,16 +795,22 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
     $wheresql = " WHERE id != 0 AND u.lastlogin IS NOT NULL";
     $where = array();
     if ($institution) {
-        $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
-        $where = array($institution);
+        if ($institution == 'mahara') {
+            $fromsql .= " LEFT JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution IS NULL)";
+        }
+        else {
+            $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
+            $where = array($institution);
+        }
     }
     if ($users) {
         $wheresql .= " AND u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
     }
     if ($start) {
-        $wheresql .= " AND EXISTS(SELECT usr FROM {usr_login_data} uld
-                                  WHERE uld.usr = u.id
-                                  AND uld.ctime >= DATE(?) AND uld.ctime <= DATE(?)
+        $wheresql .= " AND EXISTS(SELECT usr FROM {event_log} el
+                                  WHERE el.usr = u.id
+                                  AND el.event = 'login'
+                                  AND el.ctime >= DATE(?) AND el.ctime <= DATE(?)
                                   LIMIT 1)";
         $where[] = $start;
         $where[] = $end;
@@ -937,7 +943,7 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
                         'LastLogin' => array(
                             'max' => array(
                                 'script' => array(
-                                    'inline' => "doc.event.value == 'login' ? doc.ctime.value : 0",
+                                    'inline' => "doc.ctime.value",
                                 ),
                             ),
                         ),
@@ -965,7 +971,7 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
             }
             if (!empty($sortname)) {
                 usort($aggregates['aggregations']['UsrId']['buckets'], function ($a, $b) use ($sortname) {
-                    return strnatcmp($a[$sortname], $b[$sortname]);
+                    return strnatcasecmp($a[$sortname], $b[$sortname]);
                 });
                 if ($sortdesc == 'desc') {
                     $aggregates['aggregations']['UsrId']['buckets'] = array_reverse($aggregates['aggregations']['UsrId']['buckets']);
@@ -1173,7 +1179,6 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
     }
 
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
-
     $aggmap = array();
     if (get_config('searchplugin') == 'elasticsearch') {
         safe_require('search', 'elasticsearch');
@@ -1218,6 +1223,38 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
                 ),
             ),
         );
+        if ($institution) {
+            // restrict results to users from the institution
+            if ($institution == 'mahara') {
+                $usrids = get_records_sql_assoc("SELECT u.id, u.username FROM {usr} u
+                                                 LEFT JOIN {usr_institution} ui ON ui.usr = u.id
+                                                 JOIN {event_log} el ON el.usr = u.id
+                                                 WHERE ui.institution IS NULL
+                                                 AND el.event = 'login'
+                                                 AND el.ctime >= DATE(?) AND el.ctime <= DATE(?)
+                                                 GROUP BY u.id", array($start, $end));
+            }
+            else {
+                $usrids = get_records_sql_assoc("SELECT u.id, u.username FROM {usr} u
+                                                 JOIN {usr_institution} ui ON ui.usr = u.id
+                                                 JOIN {event_log} el ON el.usr = u.id
+                                                 WHERE ui.institution = ?
+                                                 AND el.event = 'login'
+                                                 AND el.ctime >= DATE(?) AND el.ctime <= DATE(?)
+                                                 GROUP BY u.id", array($institution, $start, $end));
+            }
+            if (!empty($usrids)) {
+                $usrids = array_keys($usrids);
+                $options['query'] = array(
+                    'terms' => array(
+                        'usr' => $usrids
+                    ),
+                );
+            }
+            else {
+                return $result;
+            }
+        }
         $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
         if ($aggregates['totalresults'] > 0) {
             ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('YearWeek', 'EventType', 'ResourceType', 'ParentResourceType'));
@@ -1309,19 +1346,22 @@ function users_statistics_headers($extra, $urllink) {
               'id' => 'loggedin', 'required' => true,
               'name' => get_string('Loggedin', 'admin'),
               'class' => format_class($extra, 'loggedin'),
-              'link' => format_goto($urllink . '&sort=loggedin', $extra, array('sort'), 'loggedin')
+              'link' => format_goto($urllink . '&sort=loggedin', $extra, array('sort'), 'loggedin'),
+              'helplink' => get_help_icon('core', 'reports', 'users', 'loggedin')
         ),
         array(
               'id' => 'created', 'required' => true,
               'name' => get_string('Created'),
               'class' => format_class($extra, 'created'),
+              'helplink' => get_help_icon('core', 'reports', 'users', 'created'),
 //              'link' => format_goto($urllink . '&sort=created', $extra, array('sort'), 'created')
         ),
         array(
               'id' => 'total', 'required' => true,
               'name' => get_string('Total'),
               'class' => format_class($extra, 'total'),
-              'link' => format_goto($urllink . '&sort=total', $extra, array('sort'), 'total')
+              'link' => format_goto($urllink . '&sort=total', $extra, array('sort'), 'total'),
+              'helplink' => get_help_icon('core', 'reports', 'users', 'total')
         ),
     );
 }
@@ -1694,42 +1734,50 @@ function groups_statistics_headers($extra, $urllink) {
         array('id' => 'group', 'required' => true,
               'name' => get_string('Group', 'group'),
               'class' => format_class($extra, 'group'),
-              'link' => format_goto($urllink . '&sort=group', $extra, array('sort'), 'group')
+              'link' => format_goto($urllink . '&sort=group', $extra, array('sort'), 'group'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'group')
         ),
         array('id' => 'members', 'required' => true,
               'name' => get_string('Members', 'group'),
               'class' => format_class($extra, 'members'),
-              'link' => format_goto($urllink . '&sort=members', $extra, array('sort'), 'members')
+              'link' => format_goto($urllink . '&sort=members', $extra, array('sort'), 'members'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'members')
         ),
         array('id' => 'views', 'required' => true,
               'name' => get_string('Views', 'view'),
               'class' => format_class($extra, 'views'),
-              'link' => format_goto($urllink . '&sort=views', $extra, array('sort'), 'views')
+              'link' => format_goto($urllink . '&sort=views', $extra, array('sort'), 'views'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'views')
         ),
         array('id' => 'groupcomments',
               'name' => get_string('groupcomments', 'statistics'),
               'class' => format_class($extra, 'groupcomments'),
-              'link' => format_goto($urllink . '&sort=groupcomments', $extra, array('sort'), 'groupcomments')
+              'link' => format_goto($urllink . '&sort=groupcomments', $extra, array('sort'), 'groupcomments'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'groupcomments')
         ),
         array('id' => 'sharedviews',
               'name' => get_string('sharedviews', 'view'),
               'class' => format_class($extra, 'sharedviews'),
-              'link' => format_goto($urllink . '&sort=sharedviews', $extra, array('sort'), 'sharedviews')
+              'link' => format_goto($urllink . '&sort=sharedviews', $extra, array('sort'), 'sharedviews'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'sharedviews')
         ),
         array('id' => 'sharedcomments',
               'name' => get_string('sharedcomments', 'statistics'),
               'class' => format_class($extra, 'sharedcomments'),
-              'link' => format_goto($urllink . '&sort=sharedcomments', $extra, array('sort'), 'sharedcomments')
+              'link' => format_goto($urllink . '&sort=sharedcomments', $extra, array('sort'), 'sharedcomments'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'sharedcomments')
         ),
         array('id' => 'forums', 'required' => true,
               'name' => get_string('nameplural', 'interaction.forum'),
               'class' => format_class($extra, 'forums'),
-              'link' => format_goto($urllink . '&sort=forums', $extra, array('sort'), 'forums')
+              'link' => format_goto($urllink . '&sort=forums', $extra, array('sort'), 'forums'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'forums')
         ),
         array('id' => 'posts', 'required' => true,
               'name' => get_string('Posts', 'interaction.forum'),
               'class' => format_class($extra, 'posts'),
-              'link' => format_goto($urllink . '&sort=posts', $extra, array('sort'), 'posts')
+              'link' => format_goto($urllink . '&sort=posts', $extra, array('sort'), 'posts'),
+              'helplink' => get_help_icon('core', 'reports', 'groups', 'posts')
         ),
     );
 }
@@ -1790,18 +1838,22 @@ function group_stats_table($limit, $offset, $extra) {
 
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
     $sortdesc = !empty($extra['sortdesc']) ? 'desc' : 'asc';
+    $sorttypeaggmap = '';
     switch ($sorttype) {
         case "groupcomments":
             $sortdirection = array('EventTypeCount' => $sortdesc);
             $sortorder = "(doc.event.value == 'saveartefact' && doc.resourcetype.value == 'comment' && doc.ownertype.value == 'group') ? 1 : 0";
+            $sorttypeaggmap = '|saveartefact|comment|group';
             break;
         case "sharedviews":
             $sortdirection = array('EventTypeCount' => $sortdesc);
             $sortorder = "(doc.event.value == 'updateviewaccess' && doc.resourcetype.value == 'group' && doc.ownertype.value == 'user') ? 1 : 0";
+            $sorttypeaggmap = '|updateviewaccess|group|user';
             break;
         case "sharedcomments":
             $sortdirection = array('EventTypeCount' => $sortdesc);
             $sortorder = "(doc.event.value == 'sharedcommenttogroup' && doc.resourcetype.value == 'comment' && doc.ownertype.value == 'group') ? 1 : 0";
+            $sorttypeaggmap = '|sharedcommenttogroup|comment|group';
             break;
         default:
             $sortdirection = '';
@@ -1810,7 +1862,7 @@ function group_stats_table($limit, $offset, $extra) {
 
     $aggmap = array();
     // Add in the elasticsearch data if needed
-    if (get_config('searchplugin') == 'elasticsearch') {
+    if (get_config('searchplugin') == 'elasticsearch' && get_config('eventlogenhancedsearch')) {
         safe_require('search', 'elasticsearch');
         $options = array(
             'query' => array(
@@ -1874,11 +1926,13 @@ function group_stats_table($limit, $offset, $extra) {
         $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
         $groupids = array();
         if ($aggregates['totalresults'] > 0) {
+            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('GroupId', 'EventType', 'ResourceType', 'OwnerType'));
             $groups = array_slice($aggregates['aggregations']['GroupId']['buckets'], $offset, $limit, true);
             foreach($groups as $k => $g) {
-                $groupids[$k] = $g['key'];
+                if (isset($aggmap[$g['key'] . $sorttypeaggmap]) && $aggmap[$g['key'] . $sorttypeaggmap] > 0) {
+                    $groupids[$k] = $g['key'];
+                }
             }
-            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('GroupId', 'EventType', 'ResourceType', 'OwnerType'));
         }
     }
 
@@ -1893,8 +1947,10 @@ function group_stats_table($limit, $offset, $extra) {
             $ordersql = " fc.forums " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
         case "posts":
-            $ordersql = " pc.posts IS NULL " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ",
-                          pc.posts " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $ordersql = " posts " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "id":
+            $ordersql = " g.id " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
         case "group":
         default:
@@ -1909,12 +1965,22 @@ function group_stats_table($limit, $offset, $extra) {
         $rangewhere[] = $start;
         $rangewhere[] = $end;
     }
-    if (!empty($sortdirection) && empty($extra['csvdownload']) && !empty($groupids)) {
-        $rangesql .= " AND g.id IN(" . join(',', array_map('db_quote', array_values($groupids))) . ")";
+
+    $elasticselect = $elasticfrom = '';
+    if (!empty($sortdirection) && !empty($groupids)) {
+        $elasticselect = ", CASE WHEN ggc.elastic IS NULL THEN 0 ELSE ggc.elastic END AS elastic";
+        $elasticfrom = " LEFT JOIN (
+                            SELECT g.id, 1 AS elastic
+                            FROM {group} g
+                            WHERE g.id IN (" . implode(',', $groupids) . ")
+                        ) ggc on g.id = ggc.id";
+        $ordersql = " elastic  " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", " . $ordersql;
     }
 
     $sql = "SELECT
-            g.id, g.name, g.urlid, g.ctime, mc.members, vc.views, fc.forums, pc.posts
+            g.id, g.name, g.urlid, g.ctime, mc.members, vc.views, fc.forums,
+            CASE WHEN pc.posts IS NULL THEN 0 ELSE pc.posts END AS posts
+            " . $elasticselect . "
         FROM {group} g
             LEFT JOIN (
                 SELECT gm.group, COUNT(gm.member) AS members
@@ -1941,19 +2007,28 @@ function group_stats_table($limit, $offset, $extra) {
                 WHERE ii.deleted = 0 AND ift.deleted = 0 AND ifp.deleted = 0
                 GROUP BY ii.group
             ) pc ON g.id = pc.group
+            " . $elasticfrom . "
         WHERE
             g.deleted = 0 " . $rangesql . "
         ORDER BY
             " . $ordersql . ", g.name, g.id";
+
     if (!empty($extra['csvdownload'])) {
         $groupdata = get_records_sql_array($sql, $rangewhere);
     }
     else {
         $groupdata = get_records_sql_array($sql, $rangewhere, $offset, $limit);
     }
+
     if (!empty($sortdirection) && !empty($groupids)) {
         $groupidkeys = array_flip($groupids);
         usort($groupdata, function ($a, $b) use ($groupidkeys) {
+            if (!isset($groupidkeys[$a->id]) && !isset($groupidkeys[$b->id])) {
+                return 0;
+            }
+            else if (!isset($groupidkeys[$a->id]) || !isset($groupidkeys[$b->id])) {
+                return empty($extra['sortdesc']) ? -1 : 1;
+            }
             $posA = $groupidkeys[$a->id];
             $posB = $groupidkeys[$b->id];
             if ($posA == $posB) {
@@ -1980,7 +2055,11 @@ function group_stats_table($limit, $offset, $extra) {
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('id', 'name', 'members', 'views', 'groupcomments', 'sharedviews',
                            'sharedcomments', 'forums', 'posts');
-        $USER->set_download_file(generate_csv($groupdata, $csvfields), 'groupstatistics.csv', 'text/csv');
+        $csvheaders = array('sharedviews' => 'shared_pages',
+                            'views' => 'pages',
+                            'groupcomments' => 'group_comments',
+                            'sharedcomments' => 'shared_page_comments');
+        $USER->set_download_file(generate_csv($groupdata, $csvfields, $csvheaders), 'groupstatistics.csv', 'text/csv');
     }
     $result['csv'] = true;
 
@@ -2050,47 +2129,56 @@ function pageactivity_statistics_headers($extra, $urllink) {
         array('id' => 'view', 'required' => true,
               'name' => get_string('view'),
               'class' => format_class($extra, 'view'),
-              'link' => format_goto($urllink . '&sort=view', $extra, array('sort'), 'view')
+              'link' => format_goto($urllink . '&sort=view', $extra, array('sort'), 'view'),
+              'helplink' => get_help_icon('core', 'reports', 'pageactivity', 'view')
         ),
         array('id' => 'collection', 'required' => true,
               'name' => get_string('Collection', 'collection'),
               'class' => format_class($extra, 'collection'),
-              'link' => format_goto($urllink . '&sort=collection', $extra, array('sort'), 'collection')
+              'link' => format_goto($urllink . '&sort=collection', $extra, array('sort'), 'collection'),
+              'helplink' => get_help_icon('core', 'reports', 'pageactivity', 'collection')
         ),
         array('id' => 'owner', 'required' => true,
               'name' => get_string('Owner', 'view'),
               'class' => format_class($extra, 'owner'),
-              'link' => format_goto($urllink . '&sort=owner', $extra, array('sort'), 'owner')
+              'link' => format_goto($urllink . '&sort=owner', $extra, array('sort'), 'owner'),
+              'helplink' => get_help_icon('core', 'reports', 'pageactivity', 'owner')
         ),
         array('id' => 'created',
               'name' => get_string('Created'),
               'class' => format_class($extra, 'created'),
-              'link' => format_goto($urllink . '&sort=created', $extra, array('sort'), 'created')
+              'link' => format_goto($urllink . '&sort=created', $extra, array('sort'), 'created'),
+              'helplink' => get_help_icon('core', 'reports', 'pageactivity', 'created')
         ),
         array('id' => 'modified',
               'name' => get_string('lastmodified', 'statistics'),
               'class' => format_class($extra, 'modified'),
-              'link' => format_goto($urllink . '&sort=modified', $extra, array('sort'), 'modified')
+              'link' => format_goto($urllink . '&sort=modified', $extra, array('sort'), 'modified'),
+              'helplink' => get_help_icon('core', 'reports', 'pageactivity', 'modified')
         ),
         array('id' => 'visited',
               'name' => get_string('lastvisited', 'statistics'),
               'class' => format_class($extra, 'visited'),
-              'link' => format_goto($urllink . '&sort=visited', $extra, array('sort'), 'visited')
+              'link' => format_goto($urllink . '&sort=visited', $extra, array('sort'), 'visited'),
+              'helplink' => get_help_icon('core', 'reports', 'pageactivity', 'visited')
         ),
         array('id' => 'blocks',
               'name' => get_string('blocks'),
               'class' => format_class($extra, 'blocks'),
-              'link' => format_goto($urllink . '&sort=blocks', $extra, array('sort'), 'blocks')
+              'link' => format_goto($urllink . '&sort=blocks', $extra, array('sort'), 'blocks'),
+              'helplink' => get_help_icon('core', 'reports', 'pageactivity', 'blocks')
         ),
         array('id' => 'visits', 'required' => true,
               'name' => get_string('Visits'),
               'class' => format_class($extra, 'visits'),
-              'link' => format_goto($urllink . '&sort=visits', $extra, array('sort'), 'visits')
+              'link' => format_goto($urllink . '&sort=visits', $extra, array('sort'), 'visits'),
+              'helplink' => get_help_icon('core', 'reports', 'pageactivity', 'visits')
         ),
         array('id' => 'comments', 'required' => true,
               'name' => get_string('Comments', 'artefact.comment'),
               'class' => format_class($extra, 'comments'),
-              'link' => format_goto($urllink . '&sort=comments', $extra, array('sort'), 'comments')
+              'link' => format_goto($urllink . '&sort=comments', $extra, array('sort'), 'comments'),
+              'helplink' => get_help_icon('core', 'reports', 'pageactivity', 'comments')
         ),
     );
 }
@@ -2167,10 +2255,10 @@ function view_stats_table($limit, $offset, $extra) {
             $orderby = " v.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
         case "modified":
-            $orderby = " m.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            $orderby = " v.mtime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
         case "visited":
-            $orderby = " a.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            $orderby = " v.atime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
         case "visits":
         default:
@@ -2546,17 +2634,20 @@ function content_statistics_headers($extra, $urllink) {
         array('id' => 'name', 'required' => true,
               'name' => get_string('name'),
               'class' => format_class($extra, 'name'),
-              'link' => format_goto($urllink . '&sort=name', $extra, array('sort'), 'name')
+              'link' => format_goto($urllink . '&sort=name', $extra, array('sort'), 'name'),
+              'helplink' => get_help_icon('core', 'reports', 'content', 'name')
         ),
         array('id' => 'modified', 'required' => true,
               'name' => get_string('modified'),
               'class' => format_class($extra, 'modified'),
+              'helplink' => get_help_icon('core', 'reports', 'content', 'modified'),
 //              'link' => format_goto($urllink . '&sort=modified', $extra, array('sort'), 'modified')
         ),
         array('id' => 'total', 'required' => true,
               'name' => get_string('Total'),
               'class' => format_class($extra, 'total'),
-              'link' => format_goto($urllink . '&sort=total', $extra, array('sort'), 'total')
+              'link' => format_goto($urllink . '&sort=total', $extra, array('sort'), 'total'),
+              'helplink' => get_help_icon('core', 'reports', 'content', 'total')
         ),
     );
 }
@@ -2833,24 +2924,28 @@ function masquerading_statistics_headers($extra, $urllink) {
               'id' => 'user', 'required' => true,
               'name' => get_string('user', 'statistics'),
               'class' => format_class($extra, 'user'),
-              'link' => format_goto($urllink . '&sort=user', $extra, array('sort'), 'user')
+              'link' => format_goto($urllink . '&sort=user', $extra, array('sort'), 'user'),
+              'helplink' => get_help_icon('core', 'reports', 'masquerading', 'user')
         ),
         array(
               'id' => 'reason',
               'name' => get_string('masqueradereason', 'admin'),
               'class' => format_class($extra, 'reason'),
+              'helplink' => get_help_icon('core', 'reports', 'masquerading', 'reason')
         ),
         array(
               'id' => 'masquerader',
               'name' => get_string('masquerader', 'admin'),
               'class' => format_class($extra, 'masquerader'),
-              'link' => format_goto($urllink . '&sort=masquerader', $extra, array('sort'), 'masquerader')
+              'link' => format_goto($urllink . '&sort=masquerader', $extra, array('sort'), 'masquerader'),
+              'helplink' => get_help_icon('core', 'reports', 'masquerading', 'masquerader')
         ),
         array(
               'id' => 'date', 'required' => true,
               'name' => get_string('masqueradetime', 'admin'),
               'class' => format_class($extra, 'date'),
-              'link' => format_goto($urllink . '&sort=date', $extra, array('sort'), 'date')
+              'link' => format_goto($urllink . '&sort=date', $extra, array('sort'), 'date'),
+              'helplink' => get_help_icon('core', 'reports', 'masquerading', 'date')
         ),
     );
 }
@@ -2982,24 +3077,28 @@ function accesslist_statistics_headers($extra, $urllink) {
               'id' => 'owner', 'required' => true,
               'name' => get_string('owner', 'view'),
               'class' => format_class($extra, 'owner'),
-              'link' => format_goto($urllink . '&sort=owner', $extra, array('sort'), 'owner')
+              'link' => format_goto($urllink . '&sort=owner', $extra, array('sort'), 'owner'),
+              'helplink' => get_help_icon('core', 'reports', 'accesslist', 'owner')
         ),
         array(
               'id' => 'views', 'required' => true,
               'name' => get_string('View', 'view') . '/' . get_string('Collection', 'collection'),
               'class' => format_class($extra, 'views'),
-              'link' => format_goto($urllink . '&sort=views', $extra, array('sort'), 'views')
+              'link' => format_goto($urllink . '&sort=views', $extra, array('sort'), 'views'),
+              'helplink' => get_help_icon('core', 'reports', 'accesslist', 'views')
         ),
         array(
               'id' => 'numviews', 'required' => true,
               'name' => get_string('Views', 'view'),
               'class' => format_class($extra, 'numviews'),
-              'link' => format_goto($urllink . '&sort=numviews', $extra, array('sort'), 'numviews')
+              'link' => format_goto($urllink . '&sort=numviews', $extra, array('sort'), 'numviews'),
+              'helplink' => get_help_icon('core', 'reports', 'accesslist', 'numviews')
         ),
         array(
               'id' => 'accessrules', 'required' => true,
               'name' => get_string('accesslist', 'view'),
               'class' => format_class($extra, 'accessrules'),
+              'helplink' => get_help_icon('core', 'reports', 'accesslist', 'accessrules')
         ),
     );
 }
@@ -3032,25 +3131,25 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
     $users = $SESSION->get('usersforstats');
 
     $fromsql = " FROM (
-        SELECT u.id AS userid, CONCAT(u.firstname, ' ', u.lastname) AS displayname, cv.view AS viewid, c.id AS collectionid,
+        SELECT u.id AS userid, u.deleted AS udeleted, CONCAT(u.firstname, ' ', u.lastname) AS displayname, cv.view AS viewid, c.id AS collectionid,
             (SELECT COUNT(*) FROM {collection_view} WHERE collection = c.id) AS views,
             c.name AS title, c.ctime AS vctime
         FROM {usr} u JOIN {collection} c ON c.owner = u.id
         JOIN {collection_view} cv ON cv.collection = c.id
         WHERE cv.displayorder = 0
         UNION
-        SELECT u.id AS userid, CONCAT(u.firstname, ' ', u.lastname) AS displayname, v.id AS viewid, NULL AS collectionid,
+        SELECT u.id AS userid, u.deleted AS udeleted, CONCAT(u.firstname, ' ', u.lastname) AS displayname, v.id AS viewid, NULL AS collectionid,
             1 AS views, v.title, v.ctime AS vctime
         FROM {usr} u JOIN {view} v ON v.owner = u.id
         LEFT JOIN {collection_view} cv ON cv.view = v.id
         WHERE cv.collection IS NULL AND v.type !='dashboard'
         UNION
-        SELECT u.id AS userid, CONCAT(u.firstname, ' ', u.lastname) AS displayname, NULL AS viewid, NULL AS collectionid,
+        SELECT u.id AS userid, u.deleted AS udeleted, CONCAT(u.firstname, ' ', u.lastname) AS displayname, NULL AS viewid, NULL AS collectionid,
             0 AS views, NULL as title, u.ctime AS vctime
         FROM {usr} u LEFT JOIN {view} v ON v.owner = u.id
         WHERE v.id IS NULL
     ) AS t";
-    $wheresql = " WHERE userid != 0";
+    $wheresql = " WHERE userid != 0 AND udeleted = 0";
     $where = array();
     if ($institution) {
         $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = userid AND ui.institution = ?)";
@@ -3097,11 +3196,11 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
             $orderby = " views " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
         case "views":
-            $orderby = " title " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $orderby = " title " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", displayname";
             break;
         case "owner":
         default:
-            $orderby = " displayname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $orderby = " displayname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", title, viewid";
     }
     $sql = "SELECT userid, displayname, viewid, collectionid, views, title, vctime
             " . $fromsql . $wheresql . "
@@ -3122,11 +3221,12 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
             SELECT *, 0 AS secreturls
             FROM {view_access} WHERE view = ? AND token IS NULL
             UNION
-            SELECT *, (SELECT COUNT(*) FROM {view_access} va2 WHERE token IS NOT NULL AND va2.view = va.view) AS secreturls
-            FROM {view_access} va WHERE va.view = ? AND va.token IS NOT NULL",
+            (SELECT *, (SELECT COUNT(*) FROM {view_access} va2 WHERE token IS NOT NULL AND va2.view = va.view) AS secreturls
+            FROM {view_access} va WHERE va.view = ? AND va.token IS NOT NULL LIMIT 1)",
             array($item->viewid, $item->viewid));
         $item->hasaccessrules = !empty($item->access);
     }
+
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('displayname', 'userurl', 'title', 'views', 'hasaccessrules');
         $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'accessstatistics.csv', 'text/csv');
@@ -3159,31 +3259,36 @@ function comparisons_statistics_headers($extra, $urllink) {
             'id' => 'members', 'required' => true,
             'name' => get_string('members'),
             'class' => format_class($extra, 'members'),
-            'link' => format_goto($urllink . '&sort=members', $extra, array('sort'), 'members')
+            'link' => format_goto($urllink . '&sort=members', $extra, array('sort'), 'members'),
+            'helplink' => get_help_icon('core', 'reports', 'comparisons', 'members')
         ),
         array(
             'id' => 'views', 'required' => true,
             'name' => get_string('views'),
             'class' => format_class($extra, 'views'),
-            'link' => format_goto($urllink . '&sort=views', $extra, array('sort'), 'views')
+            'link' => format_goto($urllink . '&sort=views', $extra, array('sort'), 'views'),
+            'helplink' => get_help_icon('core', 'reports', 'comparisons', 'views')
         ),
         array(
             'id' => 'blocks', 'required' => true,
             'name' => get_string('blocks'),
             'class' => format_class($extra, 'blocks'),
-            'link' => format_goto($urllink . '&sort=blocks', $extra, array('sort'), 'blocks')
+            'link' => format_goto($urllink . '&sort=blocks', $extra, array('sort'), 'blocks'),
+            'helplink' => get_help_icon('core', 'reports', 'comparisons', 'blocks')
         ),
         array(
             'id' => 'artefacts', 'required' => true,
             'name' => get_string('artefacts'),
             'class' => format_class($extra, 'artefacts'),
-            'link' => format_goto($urllink . '&sort=artefacts', $extra, array('sort'), 'artefacts')
+            'link' => format_goto($urllink . '&sort=artefacts', $extra, array('sort'), 'artefacts'),
+            'helplink' => get_help_icon('core', 'reports', 'comparisons', 'artefacts')
         ),
         array(
             'id' => 'posts', 'required' => true,
             'name' => get_string('posts'),
             'class' => format_class($extra, 'posts'),
-            'link' => format_goto($urllink . '&sort=posts', $extra, array('sort'), 'posts')
+            'link' => format_goto($urllink . '&sort=posts', $extra, array('sort'), 'posts'),
+            'helplink' => get_help_icon('core', 'reports', 'comparisons', 'posts')
         ),
     );
 }
@@ -3416,13 +3521,15 @@ function logins_statistics_headers($extra, $urllink) {
             'id' => 'logins', 'required' => true,
             'name' => get_string('logins', 'statistics'),
             'class' => format_class($extra, 'count_logins'),
-            'link' => format_goto($urllink . '&sort=count_logins', $extra, array('sort'), 'count_logins')
+            'link' => format_goto($urllink . '&sort=count_logins', $extra, array('sort'), 'count_logins'),
+            'helplink' => get_help_icon('core', 'reports', 'logins', 'count_logins')
         ),
         array(
             'id' => 'activeusers', 'required' => true,
             'name' => get_string('activeusers', 'statistics'),
             'class' => format_class($extra, 'count_active'),
-            'link' => format_goto($urllink . '&sort=count_active', $extra, array('sort'), 'count_active')
+            'link' => format_goto($urllink . '&sort=count_active', $extra, array('sort'), 'count_active'),
+            'helplink' => get_help_icon('core', 'reports', 'logins', 'count_active')
         ),
     );
 }
@@ -3749,6 +3856,12 @@ function report_config_form($extra, $institutionelement) {
     }
 
     $typesubtypes = get_report_types($institution);
+    if (!isset($typesubtypes[$type]['options'][$type . '_' . $subtype])) {
+        // This can happen when switching from 'all institutions' to a particular institution
+        // where the allowed report options are different. So default back to overview page.
+        $type = 'information';
+        $subtype = 'information';
+    }
     $form['elements']['typesubtype'] = array(
         'type' => 'select',
         'title' => get_string('reporttype', 'statistics'),
@@ -3960,10 +4073,6 @@ function get_report_types($institution = null) {
     asort($usersoptions);
 
     $optgroups = array(
-        'groups' => array(
-            'label' => get_string('Groups', 'admin'),
-            'options' => array('groups_groups' => get_string('Groups', 'admin')),
-        ),
         'content' => array(
             'label' => get_string('Content', 'admin'),
             'options' => array('content_content' => get_string('Content', 'admin')),
@@ -3977,6 +4086,13 @@ function get_report_types($institution = null) {
             'options' => $usersoptions,
         ),
     );
+
+    if (empty($institution) || $institution == 'all') {
+        $optgroups['groups'] = array(
+            'label' => get_string('Groups', 'admin'),
+            'options' => array('groups_groups' => get_string('Groups', 'admin')),
+        );
+    }
 
     // But ignore $optgroups above if $USER is only institution staff and only allowed to see old user related reports
     if (!empty($institution)) {
@@ -4052,8 +4168,12 @@ function report_earliest_date($subtype, $institution = 'mahara') {
     // A quick way to find possible earliest dates for things
 
     // This check accepts the fact that 'mahara' institution must exist first
-    // therefore the earliest for 'mahara' must be the earliest for 'all'
-    $institution = ($institution == 'all') ? 'mahara' : $institution;
+    // therefore the earliest for 'mahara' must be the earliest for 'all' for many of the reports
+    $all = false;
+    if ($institution == 'all') {
+        $institution = 'mahara';
+        $all = true;
+    }
     switch ($subtype) {
         case "content":
             $date = get_field_sql("SELECT MIN(i.time) FROM {institution_registration} i WHERE i.institution = ?", array($institution));
@@ -4076,14 +4196,20 @@ function report_earliest_date($subtype, $institution = 'mahara') {
         case "masquerading":
             if ($institution != 'mahara') {
                 $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
-                                       JOIN {usr_institution} ui ON ui.usr = el.realusr
+                                       JOIN {usr_institution} ui ON ui.usr = el.usr
                                        WHERE el.event = 'loginas' AND ui.institution = ?", array($institution));
             }
             else {
-                $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
-                                       WHERE el.event = 'loginas' AND el.realusr NOT IN (
-                                           SELECT usr FROM {usr_institution}
-                                       )");
+                if ($all) {
+                    $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                           WHERE el.event = 'loginas'");
+                }
+                else {
+                    $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                           WHERE el.event = 'loginas' AND el.usr NOT IN (
+                                               SELECT usr FROM {usr_institution}
+                                           )");
+                }
             }
             break;
         case "useractivity":
@@ -4093,10 +4219,16 @@ function report_earliest_date($subtype, $institution = 'mahara') {
                                        WHERE el.event != 'loginas' AND ui.institution = ?", array($institution));
             }
             else {
-                $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
-                                       WHERE el.event != 'loginas' AND el.usr NOT IN (
-                                           SELECT usr FROM {usr_institution}
-                                       )");
+                if ($all) {
+                    $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                           WHERE el.event != 'loginas'");
+                }
+                else {
+                    $date = get_field_sql("SELECT MIN(el.ctime) FROM {event_log} el
+                                           WHERE el.event != 'loginas' AND el.usr NOT IN (
+                                               SELECT usr FROM {usr_institution}
+                                           )");
+                }
             }
             break;
         case "pageactivity":

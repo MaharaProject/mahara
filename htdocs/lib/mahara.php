@@ -2008,7 +2008,7 @@ function handle_event($event, $data, $ignorefields = array()) {
         insert_record('event_log', $logentry);
         // If we are adding a comment to a page that is shared to a group
         // we need to add a 'sharedcommenttogroup' event
-        if ($reftype == 'comment') {
+        if ($reftype == 'comment' && empty($logdata['group'])) {
             if (!empty($logdata['onartefact'])) {
                 $commenttype = 'artefact';
                 $commenttypeid = $logdata['onartefact'];
@@ -4596,8 +4596,20 @@ function sanitize_preferredname($value) {
     return $value;
 }
 
-function generate_csv($data, $csvfields) {
-    $csv = join(',', $csvfields) . "\n";
+function generate_csv($data, $csvfields, $csvheaders = array()) {
+    $csvfieldsheaders = $csvfields;
+    if (!empty($csvheaders)) {
+        // Allow for more human readable headers for csv columns
+        // You can define this for any number of columns.
+        // @TODO: allow lang string translations
+        foreach ($csvfieldsheaders as $k => $v) {
+            if (array_key_exists($v, $csvheaders)) {
+                $csvfieldsheaders[$k] = $csvheaders[$v];
+            }
+        }
+    }
+    $csv = join(',', $csvfieldsheaders) . "\n";
+
     foreach ($data as $row) {
         if (is_object($row)) {
             $row = (array) $row;

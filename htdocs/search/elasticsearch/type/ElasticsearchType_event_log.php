@@ -139,6 +139,14 @@ class ElasticsearchType_event_log extends ElasticsearchType {
         $record->firstname = $user->firstname;
         $record->lastname = $user->lastname;
         $record->displayname = $user->preferredname;
+        // Need to adjust the view shared to group so ownerid is the group id being shared to
+        // rather than user id being shared from as the resourceid is the view_access row id not the group id.
+        if ($record->event == 'updateviewaccess' && $record->resourcetype == 'group' && $record->ownertype == 'user') {
+            $data = json_decode($record->data);
+            if (isset($data->rules) && isset($data->rules->group)) {
+                $record->ownerid = $data->rules->group;
+            }
+        }
         $record->createdbyuser = FALSE;
         if ($record->usr === $record->realusr) {
             // A non-masquerading event
