@@ -78,7 +78,7 @@ modification to support other databases.
 
 ### PHP
 
-Mahara requires PHP version 5.4 or later. The "magic_quotes" and "register_globals"
+Mahara requires PHP version 5.5.9 or later. The "magic_quotes" and "register_globals"
 settings should be turned *off* (which is the default on modern PHP installations).
 
 The following PHP extensions are also required:
@@ -114,10 +114,10 @@ available.
 
 For Mahara 18.04, the supported browser versions are:
 // TODO: Review list of browsers closer to the release date.
- * Firefox - 48.0
- * Chrome - 51.0
- * Safari - 9.1
- * Opera - 39.0
+ * Firefox - 56.0
+ * Chrome - 61.0
+ * Safari - 11
+ * Opera - 47.0
  * IE - 11 and Edge
  * Safari for iOS
  * Chrome for Android
