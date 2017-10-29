@@ -832,6 +832,7 @@ function auth_check_required_fields() {
     safe_require('artefact', 'internal');
 
     $alwaysmandatoryfields = array_keys(ArtefactTypeProfile::get_always_mandatory_fields());
+    $element_data = ArtefactTypeProfile::get_field_element_data();
     foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
         // Always mandatory fields are stored in the usr table, so are part of
         // the user session object. We can save a query by grabbing them from
@@ -866,6 +867,11 @@ function auth_check_required_fields() {
             'title' => get_string($field, 'artefact.internal'),
             'rules' => array('required' => true)
         );
+        // We need to merge the rules for the element if they have special rules defined
+        // in get_field_element_data() so that we save correct data.
+        if (isset($element_data[$field])) {
+            $elements[$field] = array_merge_recursive($elements[$field], $element_data[$field]);
+        }
 
         if ($field == 'socialprofile') {
             $elements[$field] = ArtefactTypeSocialprofile::get_new_profile_elements();
@@ -998,9 +1004,10 @@ function requiredfields_validate(Pieform $form, $values) {
             }
         }
     }
+
     // Check if email has been taken
     if (isset($values['email']) && record_exists('artefact_internal_profile_email', 'email', $values['email'])) {
-            $form->set_error('email', get_string('unvalidatedemailalreadytaken', 'artefact.internal'));
+        $form->set_error('email', get_string('unvalidatedemailalreadytaken', 'artefact.internal'));
     }
     // Check if the socialprofile url is valid.
     if (isset($values['socialprofile_hidden']) && $values['socialprofile_hidden'] && $values['socialprofile_profiletype'] == 'webpage' && !filter_var($values['socialprofile_profileurl'], FILTER_VALIDATE_URL)) {
