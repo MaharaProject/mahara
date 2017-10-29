@@ -131,6 +131,11 @@ class module_lti_launch extends external_api {
             if (!$is_site_admin) {
                 // check user is member of configured OAuth institution
                 $institutions = array_keys(load_user_institutions($userid));
+                if (empty($institutions)) {
+                    // we check if they are in the 'mahara' institution
+                    $institutions = array('mahara');
+                }
+
                 if (!in_array($WEBSERVICE_INSTITUTION, $institutions)) {
                     $USER->logout();
                     die_info(get_string('institutiondenied', 'module.lti', institution_display_name($WEBSERVICE_INSTITUTION)));
@@ -171,13 +176,21 @@ class module_lti_launch extends external_api {
         }
 
         $user = get_record('usr', 'id', $userid, 'deleted', 0);
-
         if ($updateuser) {
             $user->email = $params['lis_person_contact_email_primary'];
             $user->firstname = $params['lis_person_name_given'];
             $user->lastname = $params['lis_person_name_family'];
             unset($user->password);
-            update_user($user);
+
+            $profilefields = new StdClass;
+            $remoteuser = null;
+            // We need to update the following fields for both the usr and artefact tables
+            foreach (array('firstname', 'lastname', 'email') as $field) {
+                if (isset($user->{$field})) {
+                    $profilefields->{$field} = $user->{$field};
+                }
+            }
+            update_user($user, $profilefields, $remoteuser);
         }
 
         log_debug('found userid: '.$user->id);
