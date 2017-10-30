@@ -4236,5 +4236,16 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2015030450) {
+        log_debug('Add an "useragent" field to usr_session table');
+        $table = new XMLDBTable('usr_session');
+        $field = new XMLDBField('useragent');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('small');
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+    }
+
     return $status;
 }
