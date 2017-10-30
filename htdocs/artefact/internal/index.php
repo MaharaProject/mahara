@@ -366,7 +366,8 @@ function profileform_submit(Pieform $form, $values) {
                         ),
                         null,
                         get_string('newemailalert_subject', 'artefact.internal', $sitename),
-                        get_string('newemailalert_body', 'artefact.internal', $USER->get('firstname'), $sitename, $emails, $sitename, get_config('wwwroot'))
+                        get_string('newemailalert_body_text', 'artefact.internal', $USER->get('firstname'), $sitename, $emails, $sitename, get_config('wwwroot')),
+                        get_string('newemailalert_body_html', 'artefact.internal', hsc($USER->get('firstname')), hsc($sitename), hsc($emails), hsc($sitename), get_config('wwwroot'))
                     );
                 }
                 catch (EmailException $e) {
