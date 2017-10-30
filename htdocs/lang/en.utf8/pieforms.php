@@ -66,7 +66,7 @@ $string['rule.minvalue.minvalue'] = 'This value cannot be smaller than %d.';
 $string['rule.regex.regex'] = 'This field is not in valid form.';
 
 $string['rule.required.required'] = 'This field is required.';
-
+$string['rule.safetext.invalidchars'] = 'This field has invalid characters.';
 $string['rule.validateoptions.validateoptions'] = 'The option "%s" is invalid.';
 
 $string['rule.maxvalue.maxvalue'] = 'This value cannot be larger than %d.';
