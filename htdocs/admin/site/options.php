@@ -677,13 +677,6 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('licenseallowcustom'),
                     'disabled'     => in_array('licenseallowcustom', $OVERRIDDEN),
                 ),
-                'allowmobileuploads' => array(
-                    'type'         => 'switchbox',
-                    'title'        => get_string('allowmobileuploads1', 'admin'),
-                    'description'  => get_string('allowmobileuploadsdescription1', 'admin'),
-                    'defaultvalue' => get_config('allowmobileuploads'),
-                    'disabled'     => in_array('allowmobileuploads', $OVERRIDDEN),
-                ),
                 'wysiwyg' => array(
                     'type'         => 'select',
                     'title'        => get_string('wysiwyg', 'admin'),
@@ -802,7 +795,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'homepageinfo', 'showprogressbar', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
-        'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
+        'registerterms', 'licensemetadata', 'licenseallowcustom', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
         'eventloglevel', 'eventlogexpiry', 'eventlogenhancedsearch', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',

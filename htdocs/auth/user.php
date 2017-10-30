@@ -295,63 +295,6 @@ class User {
     }
 
     /**
-     * Populates this object with the user record identified by a mobile 'token'
-     *
-     * @throws AuthUnknownUserException If the user cannot be found.
-     */
-    public function find_by_mobileuploadtoken($token, $username) {
-
-        if (!is_string($token)) {
-            throw new InvalidArgumentException('Input parameters must be strings to create a User object from token');
-        }
-
-        $sql = 'SELECT
-                        u.*,
-                        ' . db_format_tsfield('u.expiry', 'expiry') . ',
-                        ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ',
-                        ' . db_format_tsfield('u.lastlastlogin', 'lastlastlogin') . ',
-                        ' . db_format_tsfield('u.lastaccess', 'lastaccess') . ',
-                        ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . ',
-                        ' . db_format_tsfield('u.ctime', 'ctime') . '
-                FROM
-                    {usr} u
-                    LEFT JOIN {usr_account_preference} p ON u.id = p.usr
-                            WHERE p.field=\'mobileuploadtoken\'
-                              AND p.value ' . db_ilike() . ' \'%|\' || ? || \'|%\' AND u.username = ?
-		';
-
-        $user = get_record_sql($sql, array($token, $username));
-
-        if (false == $user) {
-            throw new AuthUnknownUserException("User with mobile upload token \"$token\" is not known");
-        }
-
-        $this->populate($user);
-        $this->accountprefs = load_account_preferences($user->id);
-        return $this;
-    }
-
-    /**
-     * Refreshes a users mobile 'token' and returns it
-     *
-     */
-    public function refresh_mobileuploadtoken($old_token) {
-        $new_token = md5(openssl_random_pseudo_bytes(8));
-        $old_tokenstring = $this->get_account_preference('mobileuploadtoken');
-        $tokenarray = explode('|', trim($old_tokenstring, '|'));
-        foreach ($tokenarray as $k => $v) {
-            if ( $v == $old_token ) {
-                $tokenarray[$k] = $new_token;
-            }
-        }
-        $new_tokenstring = empty($tokenarray) ? null : ('|' . join('|', $tokenarray) . '|');
-        $this->set_account_preference('mobileuploadtoken', $new_tokenstring);
-        $this->set('lastaccess', time());
-        $this->commit();
-        return $new_token;
-    }
-
-    /**
      * Set stuff that needs to be initialised once before a user record is created.
      */
     public function create() {

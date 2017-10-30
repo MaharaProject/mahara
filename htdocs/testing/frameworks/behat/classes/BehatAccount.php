@@ -45,14 +45,6 @@ class BehatAccount extends BehatBase {
             }
         }
 
-        if (get_config('allowmobileuploads')) {
-            foreach ($prefs['mobileuploadtoken'] as $k => $text) {
-                if (strlen($text) > 0 && !preg_match('/^[a-zA-Z0-9 !@#$%^&*()\-_=+\[{\]};:\'",<\.>\/?]{6,}$/', $text)) {
-                    throw new Exception("Invalid mobileuploadtoken: " . get_string('badmobileuploadtoken', 'account'));
-                }
-            }
-        }
-
         // Update user's account settings
         db_begin();
         // use this as looping through values is not safe.
@@ -72,14 +64,6 @@ class BehatAccount extends BehatBase {
         $oldtheme = $USER->get_account_preference('theme');
         $oldgroupsideblockmaxgroups = $USER->get_account_preference('groupsideblockmaxgroups');
         $oldgroupsideblocksortby = $USER->get_account_preference('groupsideblocksortby');
-
-        if (get_config('allowmobileuploads') && isset($prefs['mobileuploadtoken'])) {
-            // Make sure the mobile token is formatted / saved correctly
-            $prefs['mobileuploadtoken'] = array_filter($prefs['mobileuploadtoken']);
-            $new_token_pref = '|' . join('|', $prefs['mobileuploadtoken']) . '|';
-            $USER->set_account_preference('mobileuploadtoken', $new_token_pref);
-            unset($prefs['mobileuploadtoken']);
-        }
 
         // Set user account preferences
         foreach ($expectedprefs as $eprefkey => $epref) {

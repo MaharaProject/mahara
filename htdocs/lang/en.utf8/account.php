@@ -64,9 +64,6 @@ $string['showhomeinfodescription1'] = 'Display information about how to use %s o
 $string['showprogressbar'] = 'Profile completion progress bar';
 $string['showprogressbardescription'] = 'Display progress bar and tips on how to complete your %s profile.';
 
-$string['mobileuploadtoken'] = 'Mobile upload token';
-$string['badmobileuploadtoken'] = 'Sorry that mobile upload token is invalid. Tokens must be at least 6 characters long.';
-
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your preferences.';
 

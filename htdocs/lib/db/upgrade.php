@@ -5414,5 +5414,14 @@ function xmldb_core_upgrade($oldversion=0) {
             add_field($table, $field);
         }
     }
+
+    if ($oldversion < 2017103100) {
+        // remove allowmobileuploads from config, used only by old mobile api
+        delete_records('config','field','allowmobileuploads');
+        // remove mobileuploadtoken from account settings, used only by old mobile api
+        // for new mobile api, we save tokens in table external_tokens
+        delete_records('usr_account_preference','field','mobileuploadtoken');
+    }
+
     return $status;
 }
