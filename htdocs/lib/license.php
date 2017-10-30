@@ -270,7 +270,7 @@ function render_license($artefact) {
         return get_string('licensenonedetailedowner');
     }
     else {
-        return get_string('licensenonedetailed', 'mahara', $artefact->display_owner());
+        return get_string('licensenonedetailed', 'mahara', hsc($artefact->display_owner()));
     }
 
     if (strpos($license, '://') === FALSE) {
