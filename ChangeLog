@@ -1,3 +1,9 @@
+15.04.15 (2017-10-30)
+- Bug 1701978: Old cookies lingering allowing one to login without giving login details
+- Bug 1719480: Webservice test client / elasticsearch not escaping returned dumped values to screen
+- Bug 1719491: Avoid saving firstname / lastname / preferredname that contains html tags
+- Bug 1720034: journal titles not being escaped
+
 15.04.14 (2017-09-11)
 - Bug 1697308: Potential attack vector via registration form
 
