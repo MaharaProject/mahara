@@ -1,3 +1,254 @@
+17.10.0 (2017-10-30)
+- Security bugs:
+- Bug 1692749: User passwords being saved in database event_log as plain text
+- Bug 1697308: Potential attack vector via registration form
+- Bug 1701978: Old cookies lingering allowing one to login without giving login details
+- Bug 1719472: User autocomplete selector in Mail composer not escaping the name
+- Bug 1719480: Webservice test client / elasticsearch not escaping returned dumped values to screen
+- Bug 1719491: Avoid saving firstname / lastname / preferredname that contains html tags
+- Bug 1720034: journal titles not being escaped
+- Bug 1394082: Can create a URL that takes you to a different page depending on whether you're logged in to MNet or not.
+- General bugs:
+- Bug 1356638: Can not see the image in the static page "Home" for logged-in users
+- Bug 1546769: The 'None' auth needs to be locked down or removed to avoid troubles with multi institutions
+- Bug 1575512: Behat tests are failing due to not waiting for Javascript to finish
+- Bug 1664582: Journal comments can't be viewed on a page
+- Bug 1670637: Sessions directories missing after upgrade to 16.10 and php 7.1 on Ubuntu 16.04 LTS
+- Bug 1672737: Entries missing from view_rows_columns
+- Bug 1679864: Pages and collections search form 'searchtype' not being sticky
+- Bug 1681169: The cli sync_langpacks.php returns an error
+- Bug 1681283: Link for empty collection doesn't go anywhere for 17.04 pages and collections
+- Bug 1681289: Copying a collection displays a warning message
+- Bug 1681293: Allow Blackboard specific LTI parameters
+- Bug 1681588: Unable to add Email address on contact information
+- Bug 1681604: Header messages don't push content down sufficiently
+- Bug 1681629: Search on "Pages and collections" doesn't work for collections
+- Bug 1681974: Image block showing 'http://' as part of description
+- Bug 1683224: If you aren't allowed to create / edit a page in a group, don't show the "Add" and "Copy" buttons
+- Bug 1684267: Old raw theme missing some templates
+- Bug 1685041: Page templates are in the wrong layout
+- Bug 1686336: SmartEvidence matrix page not accessible via secret URL
+- Bug 1686501: Submitted collection causes unknown $url error on pages/collections list
+- Bug 1686833: Gender lang string is misssing
+- Bug 1686885: Site options - Event log expiry field not enabled
+- Bug 1687499: Missing simplasamlphp memcached files to all working with memcached
+- Bug 1688126: MathJax not working
+- Bug 1688693: All portfolios of others are shown in the "Default" theme rather than the site or institution theme
+- Bug 1689923: Problems adding annotation comments to SmartEvidence in 17.04 via matrix page
+- Bug 1689931: Problem with leaving feedback on copied SE collection annotation
+- Bug 1690232: Can't click the "Comments" link in a retractable block
+- Bug 1690267: Bring back "Display this page" button
+- Bug 1691329: Fetching folder size value not working for Mysql
+- Bug 1693061: Edit access screen needs to check if data is saved before leaving
+- Bug 1694158: Incorrect logo is displayed when selecting subtheme
+- Bug 1694171: Upgrade Elasticsearch to Elasticsearch 5
+- Bug 1694201: Can't select collections to export
+- Bug 1694875: Annotation field can be left empty when adding annotation
+- Bug 1694908: Archived submissions page doesn't return proper URL for results
+- Bug 1696587: Problem with Leap2A import and creating custom layout option for user
+- Bug 1696601: Behat uninstall process issue
+- Bug 1696696: Group pages not shown to non-group members even when shared
+- Bug 1697909: LTI (Canvas) gives exception: WebserviceInvalidParameterException
+- Bug 1698978: get_records_*_assoc giving incorrect false when records exists
+- Bug 1700689: "New entry" button doesn't work in "Tagged journal entries" block
+- Bug 1701083: Make SmartEvidence keyboard accessible
+- Bug 1703676: Spelling mistake in xmlrpc config form
+- Bug 1703680: "Join this group" points to wrong group
+- Bug 1705126: Tags with special characters aren't found
+- Bug 1705547: Error with auth_ldap_sync_cron
+- Bug 1706263: Mahara17.04.2 fails to install when deployed against MariaDB v10.2.4 or higher
+- Bug 1707076: Skin title not escaped in page settings form
+- Bug 1707535: SAML problem with ACS endpoints
+- Bug 1708567: string_exists() fuunction causes errors if string expects extra arguments
+- Bug 1710005: SAML attribute mapping needed
+- Bug 1710735: broken list sorting in user search screen
+- Bug 1710988: broken js when using pagination in a list of radio buttons
+- Bug 1711443: "Show more" button on "Pages and collections" doesn't work in a group
+- Bug 1712454: Create group via webservices also creates group category if not existing
+- Bug 1712681: New topic in forum: createtopicusers error
+- Bug 1712711: Upgrade simplesamlphp to version 1.14.15
+- Bug 1712951: password missing from user creation confirmation email
+- Bug 1714408: behat date step causes whitespace error in single digit dates
+- Bug 1715260: When adding blank annotation via page editor it removes tinymce from field
+- Bug 1715491: page tags can't be removed
+- Bug 1716279: Pagination on "My portfolios" doesn't work when profile page is shared publicly
+- Bug 1716474: Web service group functions don't respect submitpages
+- Bug 1716541: LTI Integration - non-admin user in 'No institution' unable to login
+- Bug 1716811: Remove Persona plugin from Mahara completely for 17.10
+- Bug 1717133: Incorrect port in SimpleSAML when sslproxy is enabled
+- Bug 1717371: Upgrade from 15.04 -> 17.10 fails on logoxs not found
+- Bug 1717819: Alter the minimum version to upgrade from
+- Bug 1717822: Spelling mistake in code for denying user login to expired institution
+- Bug 1718289: A string for the auth plugins is stored in core admin.php lang file rather than in the plugins
+- Bug 1718562: New 'handle event' events break upgrade
+- Bug 1718806: Edit layout button not working for some pages
+- Bug 1718821: When selecting an institution file to add via tinymce it lists institutions as a selectbox called 'groups'
+- Bug 1719224: Get Elasticsearch to respect the site 'Proxy settings'
+- Bug 1719824: Minor lang string fixes for Mahara 17.10
+- Bug 1720236: Spelling mistake in auth/internal administrator is spelled adminstrator
+- Bug 1720260: default skin error: 403 Forbidden
+- Bug 1720269: Make sure raw_old is up to date in 17.10
+- Bug 1720912: Better way to disable elasticsearch triggers during upgrade
+- Bug 1721392: missplaced endif {/if} in bloglist.tpl
+- Bug 1721623: Some core plugins have their own style/style.css files not controlled via sass
+- Bug 1722120: broken style in choose layout screen
+- Bug 1722132: When artefact type is set to 'video' in the database, Undefined index: video/mp4 error is shown
+- Bug 1723784: Incorrect time for 'Last login' in User activity report
+- Bug 1724113: General bug to deal with problems in Reports
+- Bug 1724704: Webservice connection manager not showing 'add connection' form if no connection instances exist but a plugin has 'define_webservice_connections' function set
+- Bug 1727524: Update simplesamlphp to 1.14.17 for security fix Bug 604839  Deprecate swf embedded objects
+- Bug 1197197: No comment modification notification for group view
+- Bug 1444182: Leaving feedback on own page generates notification to self
+- Bug 1513276: Consolidate the iframe sources code
+- Bug 1541183: MNet does not support peers with URL longer than 64 characters
+- Bug 1566122: Select institution with web service auth immediately for token
+- Bug 1625389: Error message when sharing profile page with public
+- Bug 1644386: Submitted portfolios don't appear in group pages block automatically after editing group config
+- Bug 1658393: Can't copy group created by CSV when not an admin
+- Bug 1668118: behat test for retractable blocks
+- Bug 1673295: behat test for html block
+- Bug 1674850: behat test for journal blocktypes
+- Bug 1676596: leap 2a import fails on 'nbsp;' entity
+- Bug 1677949: expand behat test for social media buttons
+- Bug 1678668: Adding Web service external app ensures 'webservice' auth method set for institution
+- Bug 1679904: no test for comments block 
+- Bug 1680640: The alignmnet of buttons are improper when a member is invited to join Institution
+- Bug 1681291: Unable to import leap2a file
+- Bug 1681579: Put the Mahara logo into the themes as SVG file
+- Bug 1681633: Lang strings in LTI plugin missing
+- Bug 1681934: Count SmartEvidence overview page on "Pages and collections"
+- Bug 1681961: Bad link on can't show matrix page
+- Bug 1681987: Artefact display page showing owner's name to anonymous viewer
+- Bug 1683098: Introduction not displayed in owner preview
+- Bug 1683202: Custom profile field for country doesn't display real name in "User search"
+- Bug 1683219: Modern theme is missing the line above buttons in admin area
+- Bug 1683551: Footer headings are showing up twice
+- Bug 1683561: Update style guide for Mahara 17.04
+- Bug 1683582: Don't show journal entry author when viewing page anonymously
+- Bug 1684079: Achievements in Résumé result in an error in a portfolio page
+- Bug 1684333: Change the "Gender" question to a more inclusive one
+- Bug 1686259: Refactor pages and collection template and styles
+- Bug 1686539: The pages/collections list access dropdown on last panel goes too far to the right
+- Bug 1686843: Table styles on Resume block
+- Bug 1687356: Social media: Extra field shouldn't be shown unless for "Other"
+- Bug 1689975: Help icon on "Settings" not aligned correctly
+- Bug 1690221: Profile fields are displayed too randomly
+- Bug 1690687: Excluded tagged entries are not styled differently now
+- Bug 1690709: Look at consolidating tests related to group membership and settings
+- Bug 1691640: Behat tests to edit create and delete menu item
+- Bug 1692758: Be able to tab to "More options" icon on "Pages and collections"
+- Bug 1692759: Move focus to "Create a page or collection" dialogue when navigating via keyboard
+- Bug 1692760: Mention application on "External apps" for "Enabled"
+- Bug 1693062: Placement of message when secret URLs are turned off needs correcting
+- Bug 1693426: Destroy mahara session when Single Logout is initiated by IdP
+- Bug 1693559: Fix remaining PHP7 compatibility problems
+- Bug 1693652: behat test page_number_interval_sharedwithme.feature is flaky
+- Bug 1694342: Eventlog update in upgrade taking hours to process
+- Bug 1696698: Fix README for Postgres
+- Bug 1696704: Problem with a test containing "Apply changes" failing
+- Bug 1696705: Correct Behat test for "Social profile"
+- Bug 1696706: Correct Behat test for "Social profile"
+- Bug 1698043: Update keyboard accessibility shortcuts
+- Bug 1698255: Update fontawesome
+- Bug 1699656: Adjusting the social media behat test to check the box
+- Bug 1699657: Behat: Trying to scroll third level nav into view in another way
+- Bug 1700690: Tagged journal entries block combines tags
+- Bug 1701437: Confusing date of shared pages/collections
+- Bug 1701927: Help file missing when creating a new user (General account options - Licence)
+- Bug 1702374: Incorrect event triggered when share a collection with a group
+- Bug 1702608: Correct spelling mistake in collection
+- Bug 1702609: Add proper content to resume page Behat test
+- Bug 1702611: Remove reference to IE9 in the site registration help file
+- Bug 1702612: Fix Behat spelling errors
+- Bug 1702614: Remove the special admin background for improved readability
+- Bug 1702615: Improve color contrast for link color in the Modern theme
+- Bug 1703261: Help for tags does not display on Page->Edit->Settings form
+- Bug 1703608: Institution addUserAsMember lang logic is flawed
+- Bug 1703721: consolidate and improve behat tests for adding users
+- Bug 1703736: order behat tests to reflect functionality
+- Bug 1705980: Split of tagged block tags when creating new entry doesn't trim spaces
+- Bug 1708335: false fails in behat tests occuring after "I scroll to" steps?
+- Bug 1708545: Webservices logs page broken due to missing institution value
+- Bug 1708959: Webservice create group missing some settings
+- Bug 1709731: Note block in view - 'Use content from another note' Search button not working
+- Bug 1710710: The public search box overlaps the language selector box
+- Bug 1710727: Elasticsearch not indexing collection tags
+- Bug 1711277: behat modified_date.feature doesn't check date is displayed
+- Bug 1711485: Group group_create() wrong error if shortname is not lowercase
+- Bug 1711958: Allow the lib/dml update_record() function to return the id of the record updated
+- Bug 1711998: make behat test data uniform so we know what to expect
+- Bug 1713382: Behat add_tags.feature: Include confirmation steps
+- Bug 1713441: SMTP port isn't set when no SMTP user is specified
+- Bug 1713598: [] operator not supported for strings
+- Bug 1714100: When checking elasticsearch status we need to check on a specified index
+- Bug 1714143: create behat step to use relative dates in forms
+- Bug 1714830: Display group portfolios instead of group pages in group homepage
+- Bug 1715198: PHP ini variable session.entropy_length removed in php7.1
+- Bug 1715802: Errors trying to add SAML Auth to an institution
+- Bug 1716083: elasticsearch image thumbnail missing when viewing media shared by another
+- Bug 1717136: Hardcoded items for SAML config
+- Bug 1717861: Redirect to incorrect port when sslproxy is on and wwwroot is set
+- Bug 1718538: Page edit screen 'settings' button has wrong title
+- Bug 1718602: Fix for the institution collaboration help file
+- Bug 1719736: Webservices - manage access tokens - broken style
+- Bug 1720069: Replace the NZ PTC framework with new version
+- Bug 1720235: SmartEvidence matrix section mouse pointer
+- Bug 1721645: Pages and collections 'Show more' button not reachable with tabs
+- Bug 1721862: Pages and collections index - the collection with 0 pages icon wrong colour
+- Bug 1721866: Don't display 'enable the multiple journals option' in group journals
+- Bug 1721868: The Reports -> Configure report -> Columns checkboxes are not aligned correctly with labels
+- Bug 1722116: Reports for an institution not showing the 'Results per page' selector
+- Bug 1722124: Forgot password message not display correctly for user with external auth
+- Bug 1724116: Behat tests for big homepage buttons
+- Bug 1724769: Cancel button on "Edit access" doesn't do anything
+- Bug 1727169: SmartEvidence matrix section show details when hover
+- Bug 1727857: need to update Default theme mahara logo
+- Bug 1727991: The filter on 'My friends' page is broken
+- Bug 1381184: need to drop old default email option
+- Bug 1451263: Minor design fixes to mahara 17.04
+- Bug 1517729: Better documentation of the compatible Elasticsearch version
+- Bug 1651592: Navigating to fonts in admin throws an error
+- Bug 1681569: Error from rmdirr() function - PHP dir() failed to open dir
+- Bug 1681587: A hardcoded lang string in collection views and a not used lang variable
+- Bug 1686226: License block - Only variables should be passed by reference
+- Bug 1687346: Behat: Merge notifications and group comment feature files
+- Bug 1687494: Allow the pressing of 'enter' button to do search in Admin -> User search form
+- Bug 1687820: Behat remove row not dealing with manage collection pages
+- Bug 1688165: Image not shown in group description if not a member of a group
+- Bug 1688452: Need to change 'Make public' for comment section to say 'Make comment public'
+- Bug 1692360: Add installation instructions for UTF-8 database requirement to README
+- Bug 1694155: Allow addblocktype to return id of new block instance
+- Bug 1700184: Stop deleting the matrices dir on plugin install
+- Bug 1702198: When creating a site the 'admin' and 'root' users do not have ctime set
+- Bug 1702613: improve behat test for help text
+- Bug 1705162: Send institution messages for new users in the correct language
+- Bug 1706536: Skin title shows escaped characters for single and double quotes
+- Bug 1708054: small change to networking behat test
+- Bug 1710997: behat theme test doesn't test themes work
+- Bug 1713806: webservices need to check if error message needs extra args
+- Bug 1715546: behat edit_admin_profile.feature fails when running whole test suite
+- Bug 1717035: The register.php is always accessible even if not institutions allow it
+- Bug 1721865: Share page has title for 'pages' tab but not 'collections' tab
+- New features:
+- Bug 1369569: Search/Filter for the inbox/outbox
+- Bug 1668888: Keep page editing buttons on all editing screens of a page
+- Bug 1676214: Allow to upload 2nd logo for small devices
+- Bug 1681284: SmartEvidence matrix page - need the ability to expand / collapse the sections of the matrix
+- Bug 1681952: Group homepage to list all members that have not submitted anything to the group
+- Bug 1688416: Return to pages & collection button
+- Bug 1691317: Allow LTI to be a child auth
+- Bug 1691910: Consolidate site and institution statistics into one place
+- Bug 1692385: Adjust the event_log table to facilitate logging of more chronological information
+- Bug 1694172: Allow fulltext search field to be empty to initiate a search
+- Bug 1694563: create behat step to insert breakpoint
+- Bug 1695118: Displaying image via data base64
+- Bug 1697248: Change navigation through reports / statistics
+- Bug 1698242: Find current institution based on current theme for a user
+- Bug 1704887: Add signature.algorithm as config field in the SAML configuration
+- Bug 1713366: Allow swipe left/right to navigate in page collection
+- Bug 1715544: SAML Service Provider Metadata link should be hidden if SSPHP is not installed
+- Bug 1720883: Add disclaimer to reports regarding earliest recorded data
+
 17.10rc2 (2017-10-13)
 
 17.10rc1 (2017-09-29)
