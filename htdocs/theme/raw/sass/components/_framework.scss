@@ -148,3 +148,73 @@
 .shortname-container {
     cursor: pointer;
 }
+
+td.completedcount {
+    vertical-align: middle !important;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+}
+
+th.statusheader {
+    vertical-align: middle !important;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+}
+
+div.statusheader{
+    .icon {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+
+div.statusheader,
+th.statusheader {
+    .icon {
+        font-size: 1.2em;
+        &.begun {
+            color: $assessment-begun-color;
+        }
+        &.incomplete {
+            color: $assessment-incomplete-color;
+        }
+        &.partial {
+            color: $assessment-partial-color;
+        }
+        &.completed {
+            color: $assessment-completed-color;
+        }
+        &.dot {
+            font-size: 0.8em;
+            color: lighten($gray-light, 15%);
+        }
+    }
+}
+
+th.smartevidencedash, td.smartevidencedash {
+    padding: 0px !important;
+    vertical-align: middle !important;
+}
+
+.statusheader,
+.completedcount {
+  // Pick the screen size you want it might be $screen-md-min.
+  @media (min-width: $screen-sm-min) {
+    // addjust pixel value
+    max-width: 14px;
+  }
+}
+.smartevidencedash {
+  // Pick the screen size you want it might be $screen-md-min.
+  // might not need media query because you might want to force the dash cell to be all the same.
+  @media (min-width: $screen-sm-min) {
+    // addjust pixel value
+    max-width: 3px;
+  }
+}
+
+div.pseudolabel {
+    @media (min-width: $screen-sm-min) {
+        min-width: 265px !important;
+    }
+}

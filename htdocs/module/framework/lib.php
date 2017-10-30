@@ -111,6 +111,7 @@ class PluginModuleFramework extends PluginModule {
         else {
             $framework = new Framework(null, $ok['content']->framework);
             $framework->commit();
+            $framework->set_config_fields();
         }
     }
 
@@ -239,6 +240,7 @@ class Framework {
         delete_records('framework_assessment_feedback', 'framework', $this->id);
         delete_records_sql('DELETE FROM {framework_standard_element} WHERE standard IN (' . join(',', array_map('intval', $standards)) . ')');
         delete_records('framework_standard', 'framework', $this->id);
+        delete_records('framework_config', 'framework', $this->id);
         delete_records('framework', 'id', $this->id);
 
         db_commit();
@@ -369,6 +371,32 @@ class Framework {
         }
 
         db_commit();
+    }
+
+    function set_config_fields() {
+        if (table_exists(new XMLDBTable('framework_config'))) {
+            $status = new StdClass;
+
+            $status->framework = $this->get('id');
+            $status->field     = 'completed_field_enabled';
+            $status->value     = 1;
+            insert_record('framework_config', $status);
+
+            $status->framework = $this->get('id');
+            $status->field     = 'readyforassesment_field_enabled';
+            $status->value     = 0;
+            insert_record('framework_config', $status);
+
+            $status->framework = $this->get('id');
+            $status->field     = 'dontmatch_field_enabled';
+            $status->value     = 0;
+            insert_record('framework_config', $status);
+
+            $status->framework = $this->get('id');
+            $status->field     = 'partiallycomplete_field_enabled';
+            $status->value     = 0;
+            insert_record('framework_config', $status);
+        }
     }
 
     /**
@@ -1003,6 +1031,162 @@ class Framework {
         }
         return $statuses;
     }
+
+    function get_config($value) {
+        $record = false;
+        if (table_exists(new XMLDBTable('framework_config')) &&
+            $record = get_record('framework_config', 'framework', $this->id, 'field', $value)) {
+            return $record->value;
+        }
+        return $record;
+    }
+
+    function set_config($field, $value) {
+        set_field('framework_config', 'value', $value, 'field', $field, 'framework', $this->id);
+    }
+
+    public function config_option_enabled($configoption) {
+        $enabled = false;
+        if ($configoption == 'active_framework') {
+            $enabled = $this->get('active');
+        }
+        else {
+            $enabled = $this->get_config($configoption);
+        }
+        return $enabled;
+    }
+
+    public function get_config_option_fields() {
+        $options = array(
+                    'active_framework',
+                    'readyforassesment_field_enabled',
+                    'dontmatch_field_enabled',
+                    'partiallycomplete_field_enabled',
+                    'completed_field_enabled',
+                );
+        return $options;
+    }
+
+    public function get_framework_config_options() {
+        // check if the plugin has been upgraded
+        // if not, all status settings should be greyed out
+        $disabled = !table_exists(new XMLDBTable('framework_config'));
+        $warning = array();
+        if ($disabled) {
+            $warning['plugin_warning'] = array(
+                    'type' => 'markup',
+                    'value' =>  '<div class="admin-warning alert alert-warning">' .
+                              '<p>' .  get_string('upgradeplugin', 'module.framework') . '</p></div>',
+            );
+        }
+
+        $choices = Framework::get_evidence_statuses($this->get('id'));
+
+        $options = array(
+            'active_framework' => array(
+                'type'  => 'switchbox',
+                'title' => get_string('activeframework','module.framework'),
+                'defaultvalue' => $this->config_option_enabled('active_framework'),
+            ),
+            'statusestitle' => array(
+                'type' => 'html',
+                'value' => "<h4>" . get_string('displaystatusestitle','module.framework') . "</h4>" .
+                          "<p>" . get_string('displaystatusestitledetail','module.framework') . "</p>",
+            ),
+            'readyforassesment_container' => array(
+              'type' => 'fieldset',
+              'class' => 'form-inline',
+              'elements' => array(
+                  'label' => array(
+                      'type'=> 'html',
+                      'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_BEGUN] . '</span>' .
+                                '<span class="' . $this->get_state_array(Framework::EVIDENCE_BEGUN)['begun']['classes'] . '"></span></div>',
+                  ),
+                  'readyforassesment_field_enabled' => array(
+                      'type'  => 'switchbox',
+                      'title' => '',
+                      'defaultvalue' => $this->config_option_enabled('readyforassesment_field_enabled'),
+                      'disabled' => $disabled,
+                  ),
+              ),
+            ),
+            'dontmatch_container' => array(
+              'type' => 'fieldset',
+              'class' => 'form-inline',
+              'elements' => array(
+                  'label' => array(
+                      'type'=> 'html',
+                      'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_INCOMPLETE] . '</span>' .
+                                '<span class="' . $this->get_state_array(Framework::EVIDENCE_INCOMPLETE)['incomplete']['classes'] . '"></span></div>',
+                  ),
+                  'dontmatch_field_enabled' => array(
+                      'type'  => 'switchbox',
+                      'title' => '',
+                      'defaultvalue' => $this->config_option_enabled('dontmatch_field_enabled'),
+                      'disabled' => $disabled,
+                  ),
+              ),
+            ),
+            'partiallycomplete_container' => array(
+              'type' => 'fieldset',
+              'class' => 'form-inline',
+              'elements' => array(
+                  'label' => array(
+                      'type'=> 'html',
+                      'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_PARTIALCOMPLETE] . '</span>' .
+                                '<span class="' . $this->get_state_array(Framework::EVIDENCE_PARTIALCOMPLETE)['partialcomplete']['classes'] . '"></span></div>',
+                  ),
+                  'partiallycomplete_field_enabled' => array(
+                      'type'  => 'switchbox',
+                      'title' => '',
+                      'defaultvalue' => $this->config_option_enabled('partiallycomplete_field_enabled'),
+                      'disabled' => $disabled,
+                  ),
+              ),
+            ),
+            'completed_container' => array(
+              'type' => 'fieldset',
+              'class' => 'form-inline',
+              'elements' => array(
+                  'label' => array(
+                      'type'=> 'html',
+                      'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_COMPLETED] . '</span>' .
+                                '<span class="' . $this->get_state_array(Framework::EVIDENCE_COMPLETED)['completed']['classes'] . '"></span></div>',
+                  ),
+                  'completed_field_enabled' => array(
+                      'type'  => 'switchbox',
+                      'title' => '',
+                      'value' => $disabled || $this->config_option_enabled('completed_field_enabled'),
+                      'disabled' => true,
+                  ),
+              ),
+            ),
+        );
+
+        return array(
+            'elements' => array_merge($warning, $options),
+        );
+    }
+
+    public function save_config_options(Pieform $form, $values) {
+
+        $configoptions = $this->get_config_option_fields();
+
+        foreach ($configoptions as $option) {
+            if (isset($values[$option])) {
+                $enabled = ($values[$option] == true || $values[$option] == 1) ? 1 : 0;
+                if ($option === 'active_framework') {
+                    $this->set('active', $enabled);
+                    $this->commit();
+                }
+                else {
+                    if ($option != 'completed_field_enabled')
+                    $this->set_config($option, $enabled);
+                }
+            }
+        }
+    }
+
 }
 
 class FrameworkNotFoundException extends NotFoundException {}

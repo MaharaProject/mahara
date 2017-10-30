@@ -1,7 +1,9 @@
 jQuery(function($) {
     // Variable to adjust for the hiding/showing of columns
-    var minstart = 1; // The index of the last column before first page column, indexes start at zero so 1 = two columns
-    var curstart = 2; // The index of first page currently being displayed
+    var statusheaders = $('.statusheader').length;
+    var dashes = $('th.smartevidencedash').length;
+    var minstart = statusheaders + dashes; // The index of the last column before first page column, indexes start at zero so 1 = two columns
+    var curstart = 1 + statusheaders + dashes; // The index of first page currently being displayed
     var range = 4; // The number of pages to display
     var curend = curstart + range; // The index of last page currently being displayed
     var maxend = $( "#tablematrix tr th" ).length; // The number of columns in the table
@@ -287,8 +289,23 @@ jQuery(function($) {
                   .attr('title', results.data.title)
                   .data('option', results.data.option)
                   .data('view', results.data.view).empty();
-                var completed = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount span:nth-child(2)').text(), 10);
-                $('#tablematrix tr:eq(' + celly + ') td.completedcount span:nth-child(2)').text(completed + results.data.completed);
+                if (results.data.readyforassessment) {
+                    var readyforassessment = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount.readyforassessment span:nth-child(2)').text(), 10);
+                    $('#tablematrix tr:eq(' + celly + ') td.completedcount.readyforassessment span:nth-child(2)').text(readyforassessment + results.data.readyforassessment);
+                }
+                if (results.data.dontmatch) {
+                    var dontmatch = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount.dontmatch span:nth-child(2)').text(), 10);
+                    $('#tablematrix tr:eq(' + celly + ') td.completedcount.dontmatch span:nth-child(2)').text(dontmatch + results.data.dontmatch);
+                }
+                if (results.data.partiallycomplete) {
+                    var partiallycomplete = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount.partiallycomplete span:nth-child(2)').text(), 10);
+                    $('#tablematrix tr:eq(' + celly + ') td.completedcount.partiallycomplete span:nth-child(2)').text(partiallycomplete + results.data.partiallycomplete);
+                }
+                if (results.data.completed) {
+                    var completed = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount.completed span:nth-child(2)').text(), 10);
+                    $('#tablematrix tr:eq(' + celly + ') td.completedcount.completed span:nth-child(2)').text(completed + results.data.completed);
+                }
+
             }
             if (results.data.tablerows) {
                 if ($("#matrixfeedbacklist").has(".annotationfeedbacktable").length == 0) {
