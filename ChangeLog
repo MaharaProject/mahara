@@ -1,3 +1,24 @@
+17.04.4 (2017-10-30)
+- Bug 1546769: The 'None' auth needs to be locked down or removed to avoid troubles with multi institutions
+- Bug 1701978: Old cookies lingering allowing one to login without giving login details
+- Bug 1706263: Mahara17.04.2 fails to install when deployed against MariaDB v10.2.4 or higher
+- Bug 1712711: Upgrade simplesamlphp to version 1.14.15
+- Bug 1716279: Pagination on "My portfolios" doesn't work when profile page is shared publicly
+- Bug 1716474: Web service group functions don't respect submitpages
+- Bug 1716541: LTI Integration - non-admin user in 'No institution' unable to login
+- Bug 1717822: Spelling mistake in code for denying user login to expired institution
+- Bug 1718289: A string for the auth plugins is stored in core admin.php lang file rather than in the plugins
+- Bug 1719472: User autocomplete selector in Mail composer not escaping the name
+- Bug 1719480: Webservice test client / elasticsearch not escaping returned dumped values to screen
+- Bug 1719491: Avoid saving firstname / lastname / preferredname that contains html tags
+- Bug 1720034: journal titles not being escaped
+- Bug 1720236: Spelling mistake in auth/internal administrator is spelled adminstrator
+- Bug 1720912: Better way to disable elasticsearch triggers during upgrade
+- Bug 1722132: When artefact type is set to 'video' in the database, Undefined index: video/mp4 error is shown
+- Bug 1722154: Language string tagsonly not in view.php
+- Bug 1724704: Webservice connection manager not showing 'add connection' form if no connection instances exist but a plugin has 'define_webservice_connections' function set
+- Bug 1716083: elasticsearch image thumbnail missing when viewing media shared by another
+
 17.04.3 (2017-09-11)
 - Bug 1697308: Potential attack vector via registration form
 - Bug 1687499: Missing simplasamlphp memcached files to all working with memcached
