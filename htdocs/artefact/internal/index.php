@@ -288,7 +288,7 @@ function profileform_submit(Pieform $form, $values) {
     $email_errors = array();
 
     $lockedfields = locked_profile_fields();
-    $alertofnewemail = array();
+    $alertuserofnewemail = array();
 
     foreach ($element_list as $element => $type) {
 
