@@ -1,0 +1,9 @@
+language: c
+dist:
+- trusty
+script:
+- sudo apt-get update
+- sudo apt-get install --yes npm
+- sudo npm install -g gulp
+    # there's no `gulp` package in trusty
+- make -j
