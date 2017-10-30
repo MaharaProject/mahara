@@ -42,7 +42,7 @@ global $SESSION;
 if ($result = $SESSION->get('ws_call_results')) {
     $SESSION->set('ws_call_results', false);
     $result = unserialize($result);
-    $elements['wsresults'] = array('type' => 'html', 'value' => '<h3>Results:</h3><pre>' . var_export($result, true) . '</pre><br/>');
+    $elements['wsresults'] = array('type' => 'html', 'value' => '<h3>Results:</h3><pre>' . hsc(var_export($result, true)) . '</pre><br/>');
 }
 
 // add protocol choice
