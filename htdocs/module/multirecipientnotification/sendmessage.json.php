@@ -46,10 +46,11 @@ while ($more && count($tmpuser) < $usersperpage) {
                 ($USER->id == $user['id'])) {
             continue;
         }
-        $tmpuser[] = (object) array('id' => $user['id'],
+        $tmpuser[] = (object) array(
+            'id' => $user['id'],
             'text' => '<img class="select2-user-icon" src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' . $user['id'] . '" />' .
-                      '<span>' . display_name($user['id']) . '</span>',
-            'name' => display_name($user['id'])
+                      '<span>' . hsc(display_name($user['id'])) . '</span>',
+            'name' => hsc(display_name($user['id']))
         );
     }
     $page++;
