@@ -281,7 +281,7 @@ function render_license($artefact) {
             $copyrightholder = $licensor;
         }
         else {
-            $copyrightholder = $artefact->display_owner();
+            $copyrightholder = hsc($artefact->display_owner());
         }
 
         if ($licensorurl) {
