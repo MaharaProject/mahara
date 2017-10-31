@@ -318,6 +318,7 @@ tinyMCE.init({
         + ",ul[id|type|compact]"
         + ",iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type]"
         + ",a[id|class|title|href|name]"
+        + ",button[id|class|title]"
     ,urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
     directionality: "{$tinymce_langdir}",
@@ -3751,6 +3752,8 @@ function clean_html($text, $xhtml=false) {
             )
         );
         $area->excludes = array('area' => true);
+        // Allow button tags
+        $def->addElement('button', 'Inline', 'Inline', 'Common');
     }
 
     $purifier = new HTMLPurifier($config);
