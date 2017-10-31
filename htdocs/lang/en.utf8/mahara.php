@@ -494,7 +494,7 @@ $string['forgotusernamepasswordtextprimaryemail'] = '<p>If you have forgotten yo
 <p>If you know your username and have forgotten your password, you can also enter your username instead.</p>';
 $string['lostusernamepassword'] = 'Lost username / password';
 $string['emailaddressorusername'] = 'Email address or username';
-$string['pwchangerequestsent'] = 'You should receive an email shortly with a link you can use to change the password for your account.';
+$string['pwchangerequestsentfullinfo'] = 'You should receive an email shortly with a link you can use to change the password for your account.<br>If you do not receive an email either the details you entered are incorrect or you normally use external authentication to access the site.';
 $string['forgotusernamepasswordemailsubject'] = 'Username / password details for %s';
 $string['forgotusernamepasswordemailmessagetext'] = 'Dear %s,
 
@@ -530,8 +530,6 @@ $string['forgotusernamepasswordemailmessagehtml'] = '<p>Dear %s,</p>
 <p>Regards, %s site administrator</p>';
 $string['forgotpassemailsendunsuccessful'] = 'Sorry, it appears that the email could not be sent successfully. This is our fault. Please try again shortly.';
 $string['forgotpassemailsentanyway1'] = 'An email was sent to the address stored for this user, but the address may not be correct or the recipient server is returning messages. Please contact the %s administrator to reset your password if you do not receive the email.';
-$string['forgotpassnosuchemailaddressorusername'] = 'The email address or username you entered does not match any users for this site';
-$string['forgotpassuserusingexternalauthentication'] = 'The user you requested uses an external authentication method. <a href="%s">Ask your administrator</a> for help with changing your password. Or provide another username or email address.';
 $string['forgotpasswordenternew'] = 'Please enter your new password to continue.';
 $string['nosuchpasswordrequest'] = 'No such password request';
 $string['passwordresetexpired'] = 'The password reset key has expired';
