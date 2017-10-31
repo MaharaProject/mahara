@@ -49,7 +49,7 @@ Scenario: Asking for a password reset (Bug 1460911)
 Scenario: Trying a username or password that doesn't exist (Bug 1460911)
   When I fill in "Email address or username" with "nosuchuser"
   And I press "Send request"
-  Then I should see "The email address or username you entered does not match any users for this site"
+  Then I should see "If you do not receive an email either the details you entered are incorrect or you normally use external authentication to access the site"
 
 Scenario: Student can't change password to anything on suckypasswords list (Bug #844457)
   Given I log in as "UserA" with password "Kupuhipa1"
