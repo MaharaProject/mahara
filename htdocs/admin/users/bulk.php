@@ -11,7 +11,8 @@
 
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
-define('MENUITEM', 'configusers');
+define('MENUITEM', 'configusers/usersearch');
+define('SECTION_PAGE', 'bulkedit');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('docroot') . 'lib/antispam.php');
 

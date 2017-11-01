@@ -108,6 +108,7 @@ foreach ($CFG as $key => $option) {
 require('dml.php');
 require('web.php');
 require('user.php');
+require('manualhelp.php');
 // Optional local/lib.php file
 $locallib = get_config('docroot') . 'local/lib.php';
 if (file_exists($locallib)) {

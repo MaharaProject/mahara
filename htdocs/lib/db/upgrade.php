@@ -5759,5 +5759,16 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {block_instance} SET title = '' WHERE blocktype IN ('myviews', 'mygroups', 'myfriends', 'wall')");
     }
 
+    if ($oldversion < 2018022300) {
+        log_debug('Add "manualhelp" as a default footer link');
+        $footerlinkstr = get_config('footerlinks');
+        $footerlinks = unserialize($footerlinkstr);
+        if (!in_array('manualhelp', $footerlinks)) {
+            $footerlinks[] = 'manualhelp';
+        }
+        $footerlinkstr = serialize($footerlinks);
+        set_config('footerlinks', $footerlinkstr);
+    }
+
     return $status;
 }

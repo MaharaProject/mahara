@@ -14,7 +14,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'configextensions/frameworks');
 define('SECTION_PLUGINTYPE', 'module');
 define('SECTION_PLUGINNAME', 'framework');
-define('SECTION_PAGE', 'frameworks');
+define('SECTION_PAGE', 'frameworkmanager');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('Framework', 'module.framework'));
 

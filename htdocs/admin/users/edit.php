@@ -16,6 +16,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('accountsettings', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'edit');
 require_once('activity.php');
 require_once(get_config('docroot') . 'lib/antispam.php');
 

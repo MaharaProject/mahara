@@ -38,7 +38,11 @@
         <ul class="nav nav-pills footer-nav pull-left">
         {foreach from=$FOOTERMENU item=item name=footermenu}
             <li>
+                {if $item.fullurl}
+                {$item.fullurl|safe}
+                {else}
                 <a href="{$item.url}">{$item.title}</a>
+                {/if}
             </li>
         {/foreach}
         </ul>

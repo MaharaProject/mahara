@@ -161,12 +161,28 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
-     * Switches to the main Moodle window. Useful when you finish interacting with popup windows.
+     * Switches to the newly opened tab/window. Useful when you do not know name of window/tab.
+     *
+     * @Given /^I switch to the new window$/
+     */
+    public function switch_to_the_new_window() {
+        $windowNames = $this->getSession()->getWindowNames();
+        if (count($windowNames) > 1) {
+            $this->getSession()->switchToWindow(end($windowNames));
+        }
+        else {
+            throw new Exception('Only one tab/window available.');
+        }
+    }
+
+    /**
+     * Switches to the main window. Useful when you finish interacting with other windows/tabs.
      *
      * @Given /^I switch to the main window$/
      */
     public function switch_to_the_main_window() {
-        $this->getSession()->switchToWindow();
+        $windowNames = $this->getSession()->getWindowNames();
+        $this->getSession()->switchToWindow($windowNames[0]);
     }
 
     /**

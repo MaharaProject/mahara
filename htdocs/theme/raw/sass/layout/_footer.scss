@@ -2,6 +2,9 @@
     background-color: rgba(255, 255, 255, 0.7);
     .footer-nav {
         font-size: $font-size-small;
+        .icon-stack {
+            font-size: 0.75em;
+        }
     }
 
     .footer-performance-info {

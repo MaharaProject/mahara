@@ -22,6 +22,7 @@ if (!PluginArtefactPlans::is_active()) {
 
 $id = param_integer('id',0);
 if ($id) {
+    define('SECTION_PAGE', 'newtask');
     $plan = new ArtefactTypePlan($id);
     if (!$USER->can_edit_artefact($plan)) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
@@ -30,6 +31,7 @@ if ($id) {
     $form = ArtefactTypeTask::get_form($id);
 }
 else {
+    define('SECTION_PAGE', 'newplan');
     define('TITLE', get_string('newplan','artefact.plans'));
     $form = ArtefactTypePlan::get_form();
 }
