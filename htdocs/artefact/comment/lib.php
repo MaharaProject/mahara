@@ -1790,7 +1790,8 @@ function add_feedback_form_submit(Pieform $form, $values) {
     if (!$anonymous && !get_field('usr_watchlist_view', 'ctime', 'usr', $author, 'view', $view->get('id')) && ($author != $owner)) {
         insert_record('usr_watchlist_view', (object) array('usr' => $author,
                                                            'view' => $view->get('id'),
-                                                           'ctime' => db_format_timestamp(time())));
+                                                           'ctime' => db_format_timestamp(time()),
+                                                           'unsubscribetoken' => get_random_key(24)));
         $updatelink = ($artefact) ? get_string('removefromwatchlistartefact', 'view', $view->get('title')) : get_string('removefromwatchlist', 'view');
     }
 

@@ -54,10 +54,10 @@ class PluginNotificationEmaildigest extends PluginNotification {
         }
 
         $sql = 'SELECT q.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
-                    p.value AS lang, q.*,' . db_format_tsfield('q.ctime', 'qctime').'
+                    p.value AS lang, q.*,' . db_format_tsfield('q.ctime', 'qctime').', a.name AS activitytype
                 FROM {usr} u
-                    JOIN {notification_emaildigest_queue} q
-                        ON q.usr = u.id
+                    JOIN {notification_emaildigest_queue} q ON q.usr = u.id
+                    JOIN {activity_type} a ON a.id = q.type
                     LEFT OUTER JOIN {usr_account_preference} p ON (p.usr = u.id AND p.field = \'lang\')
                 ORDER BY usr,type,q.ctime';
 
@@ -81,6 +81,11 @@ class PluginNotificationEmaildigest extends PluginNotification {
                 }
                 $queue->nicetype = get_string_from_language($users[$queue->usr]->user->lang,
                                                             'type' . $types[$queue->type]->name, $types[$queue->type]->section);
+                if ($queue->activitytype == 'watchlist' && !empty($queue->url)) {
+                    if (preg_match('/[\?\&]id=(\d+)/', $queue->url, $matches)) {
+                        $queue->unsubscribetoken = get_field('usr_watchlist_view', 'unsubscribetoken', 'usr', $queue->usr, 'view', $matches[1]);
+                    }
+                }
                 $users[$queue->usr]->entries[$queue->id] = $queue;
             }
         }
@@ -102,6 +107,9 @@ class PluginNotificationEmaildigest extends PluginNotification {
                         $entry->url = get_config('wwwroot') . $entry->url;
                     }
                     $body .= "\n" . $entry->url;
+                }
+                if (!empty($entry->unsubscribetoken)) {
+                    $body .= "\n" . get_string_from_language($lang, 'unsubscribe', 'notification.email', get_config('wwwroot') . 'view/unsubscribe.php?a=watchlist&t=' . $entry->unsubscribetoken);
                 }
                 $body .= "\n\n";
             }

@@ -1706,4 +1706,28 @@ JS;
       $this->getSession()->getPage()->fillField($element, $date);
     }
 
+    /**
+     * Mimic the clicking of the unsubscribe link in the email
+     * by supplying what user and page it was for
+     *
+     * @Then I unsubscribe from :page owned by :user
+     *
+     */
+    public function i_unsubscribe_via_link($page, $user) {
+        $tokens = get_records_sql_array("SELECT unsubscribetoken FROM {usr_watchlist_view} wv
+                                         JOIN {usr} u ON u.id = wv.usr
+                                         JOIN {view} v ON v.id = wv.view
+                                         WHERE (u.username = ? OR CONCAT(u.firstname, ' ', u.lastname) = ?)
+                                         AND v.title = ?", array($user, $user, $page));
+        if (!$tokens) {
+            throw new Exception(sprintf('Invalid token. No unsubscribetoken found for page "%s" owned by "%s".', $page, $user));
+        }
+        if (count($tokens) > 1) {
+            throw new Exception(sprintf('Too many tokens. More than one unsubscribetoken exists for user "%s" for page "%s".', $user, $page));
+        }
+        $token = $tokens[0]->unsubscribetoken;
+        // Go to the unsubscribe page
+        $this->visitPath("/view/unsubscribe.php?a=watchlist&t={$token}");
+    }
+
 }

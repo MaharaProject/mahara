@@ -1255,7 +1255,7 @@ class ActivityTypeWatchlist extends ActivityType {
         if (is_mysql()) {
             $casturl = '?';
         }
-        $sql = 'SELECT u.*, p.method, ap.value AS lang, ' . $casturl . ' AS url
+        $sql = 'SELECT u.*, wv.unsubscribetoken, p.method, ap.value AS lang, ' . $casturl . ' AS url
                     FROM {usr_watchlist_view} wv
                     JOIN {usr} u
                         ON wv.usr = u.id
@@ -1326,8 +1326,8 @@ class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist{
 
         $this->blocktitles = $data->blocktitles;
         $this->usr = $data->usr;
-
-
+        $this->unsubscribelink = get_config('wwwroot') . 'view/unsubscribe.php?a=watchlist&t=';
+        $this->unsubscribetype = 'watchlist';
         $this->viewinfo = new View($this->view);
     }
 

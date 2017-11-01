@@ -1020,12 +1020,16 @@
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="unsubscribetoken" TYPE="char" LENGTH="24" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="usr,view" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
             </KEYS>
+            <INDEXES>
+                <INDEX NAME="unsubscribetokenix" UNIQUE="true" FIELDS="unsubscribetoken"/>
+            </INDEXES>
         </TABLE>
         <TABLE NAME="import_queue">
             <FIELDS>

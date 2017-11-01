@@ -71,7 +71,14 @@ class PluginNotificationEmail extends PluginNotification {
             }
 
             $messagebody .= "\n\n$separator";
-
+            // Add unsubscribe link
+            if (isset($user->unsubscribetoken) && !empty($user->unsubscribetoken)) {
+                $unsubscribemessage = 'unsubscribe';
+                if (isset($data->unsubscribetype) && !empty($data->unsubscribetype)) {
+                    $unsubscribemessage .= '_' . $data->unsubscribetype;
+                }
+                $messagebody .= "\n\n" . get_string_from_language($lang, $unsubscribemessage, 'notification.email', $data->unsubscribelink . $user->unsubscribetoken);
+            }
             $prefurl = get_config('wwwroot') . 'account/activity/preferences/index.php';
             $messagebody .=  "\n\n" . get_string_from_language($lang, 'emailfooter', 'notification.email', $sitename, $prefurl);
         }

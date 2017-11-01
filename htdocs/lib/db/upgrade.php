@@ -5778,5 +5778,17 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('footerlinks', $footerlinkstr);
     }
 
+    if ($oldversion < 2018022400) {
+        log_debug('Create a new "unsubscribetoken" field in "usr_watchlist_view" table');
+        $table = new XMLDBTable('usr_watchlist_view');
+        $field = new XMLDBField('unsubscribetoken');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 24);
+        add_field($table, $field);
+
+        $index = new XMLDBIndex('unsubscribetokenix');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('unsubscribetoken'));
+        add_index($table, $index);
+    }
+
     return $status;
 }

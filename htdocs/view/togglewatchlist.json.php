@@ -21,6 +21,7 @@ $data = new StdClass;
 $data->view = $viewid;
 $data->usr = $USER->get('id');
 $data->ctime = db_format_timestamp(time());
+$data->unsubscribetoken = get_random_key(24);
 
 $result = new StdClass;
 require_once(get_config('libroot') . 'view.php');
