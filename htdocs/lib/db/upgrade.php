@@ -5416,6 +5416,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2017103100) {
+        log_debug('Remove MaharaDroid configurations');
         // remove allowmobileuploads from config, used only by old mobile api
         delete_records('config','field','allowmobileuploads');
         // remove mobileuploadtoken from account settings, used only by old mobile api
