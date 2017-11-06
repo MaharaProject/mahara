@@ -53,7 +53,7 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
         $offset      = param_integer('offset', 0);
         $showcomment = param_integer('showcomment', null);
         // Create the "make comment private form" now if it's been submitted
-        if (param_variable('make_public_submit', null)) {
+        if (param_exists('make_public_submit')) {
             pieform(ArtefactTypeComment::make_public_form(param_integer('comment')));
         }
         else if (param_exists('delete_comment_submit')) {
