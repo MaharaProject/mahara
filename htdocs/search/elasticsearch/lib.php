@@ -110,47 +110,67 @@ class PluginSearchElasticsearch extends PluginSearch {
 
     /**
      * This function returns elasticsearch server information at supplied host and port
+     * We can't use the $ESClient as we need to check if we are trying to connect to either an older or current server so will run curl commands directly
      * @param string $option An optional param to get status about a specific status, eg cluster health
      * @param string $index  An optional param to get status about a specific status for a particular index, eg indices status
      * @return array containing $canconnect bool    - whether we can connect to elasticsearch at host/port
      *                          $server     object  - information about the server request
      */
     public static function elasticsearch_server($option=null, $index=null) {
-        $host = get_config_plugin('search', 'elasticsearch', 'host');
-        $port = get_config_plugin('search', 'elasticsearch', 'port');
-        $url = $host . ':' . $port;
-        if ($option) {
-            switch ($option) {
-                case "clusterhealth":
-                    $url .= '/_cluster/health';
-                    break;
-                case "indexhealth":
-                    $url .= '/_cat/indices?format=json';
-                    break;
-            }
+        $clientops = self::get_client_config('write');
+        $host = $clientops['hosts'][0];
+        $url = $host['host'] . ':' . $host['port'];
+        if (!empty($host['username'])) {
+            $url = $host['username'] . ':' . $host['password'] . '@' . $url;
+        }
+        if (!empty($host['scheme'])) {
+            $url = $host['scheme'] . '://' . $url;
         }
 
-        $server = mahara_http_request(array(CURLOPT_URL => $url), true);
+        switch ($option) {
+            case "clusterhealth":
+                $url .= '/_cluster/health';
+                break;
+            case "indexhealth":
+                $url .= '/_cat/indices?format=json';
+                break;
+            default:
+                $clientopts['curlopts'][CURLOPT_NOBODY] = true;
+        }
+
+        $url .= '/' . get_config_plugin('search', 'elasticsearch', 'indexname') . '?format=json';
+        $curlopts = array(CURLOPT_URL => $url) + $clientops['curlopts'];
+        $server = mahara_http_request($curlopts, true);
         $canconnect = false;
+        if (!empty($server->info) && !empty($server->info['http_code'])) {
+            if ($server->info['http_code'] != '200') {
+                $server->error = get_string('servererror', 'search.elasticsearch', $server->info['http_code']);
+            }
+            else {
+                $canconnect = true;
+            }
+        }
         if (!empty($server->data)) {
             $server->data = json_decode($server->data);
-            if ($index && is_array($server->data)) {
-                // we need to find the data for particular index
-                $thisindex = null;
-                foreach ($server->data as $key => $data) {
-                    if (isset($data->index) && $data->index == $index) {
-                        $thisindex = $server->data[$key];
-                        break;
-                    }
-                }
-                $server->data = $thisindex;
+            if (!empty($server->data->error)) {
+                $server->error = $server->data->status . ': ' . $server->data->error->reason;
             }
-            if (!empty($server->data->version) && !empty($server->data->version->number)) {
-                if (version_compare($server->data->version->number, self::elasticsearch_version) !== -1) {
-                    $canconnect = true;
+            else {
+                if ($index && is_array($server->data)) {
+                    // we need to find the data for particular index
+                    $thisindex = null;
+                    foreach ($server->data as $key => $data) {
+                        if (isset($data->index) && $data->index == $index) {
+                            $thisindex = $server->data[$key];
+                            break;
+                        }
+                    }
+                    $server->data = $thisindex;
                 }
-                else {
-                    $server->error = get_string('elasticsearchtooold', 'search.elasticsearch', $server->data->version->number, self::elasticsearch_version);
+                if (!empty($server->data->version) && !empty($server->data->version->number)) {
+                    if (version_compare($server->data->version->number, self::elasticsearch_version) === -1) {
+                        $server->error = get_string('elasticsearchtooold', 'search.elasticsearch', $server->data->version->number, self::elasticsearch_version);
+                    }
                 }
             }
         }
@@ -225,16 +245,23 @@ class PluginSearchElasticsearch extends PluginSearch {
             }
             $enabledhtml .= self::get_formatted_notice($notice, 'warning');
         }
-        list($status, $health) = self::elasticsearch_server('clusterhealth');
-        if (!empty($health->data) && $health->data->status != 'green') {
-            $enabledhtml .= self::get_formatted_notice(get_string('clusterstatus', 'search.elasticsearch', $health->data->status, $health->data->unassigned_shards), 'warning');
-            $state = 'notice';
-        }
-        $index = get_config_plugin('search', 'elasticsearch', 'indexname');
-        list($status, $health) = self::elasticsearch_server('indexhealth', $index);
-        if (!empty($health->data) && $health->data->health != 'green') {
-            $enabledhtml .= self::get_formatted_notice(get_string('indexstatusbad', 'search.elasticsearch', $index, $health->data->health), 'warning');
-            $state = 'notice';
+        else {
+            list($status, $health) = self::elasticsearch_server('clusterhealth');
+            if (!empty($health->data) && $health->data->status != 'green') {
+                $enabledhtml .= self::get_formatted_notice(get_string('clusterstatus', 'search.elasticsearch', $health->data->status, $health->data->unassigned_shards), 'warning');
+                $state = 'notice';
+            }
+            $index = get_config_plugin('search', 'elasticsearch', 'indexname');
+            list($status, $health) = self::elasticsearch_server('indexhealth', $index);
+            if (!empty($health->data)) {
+                if (isset($health->data->status) && $health->data->status == '403') {
+                    $enabledhtml .= self::get_formatted_notice(get_string('indexstatusunknown', 'search.elasticsearch', $index, $health->data->status), 'warning');
+                }
+                else if (isset($health->data->health) && $health->data->health != 'green') {
+                    $enabledhtml .= self::get_formatted_notice(get_string('indexstatusbad', 'search.elasticsearch', $index, $health->data->health), 'warning');
+                }
+                $state = 'notice';
+            }
         }
         if (get_config('searchplugin') == 'elasticsearch') {
             $enabledhtml .= self::get_formatted_notice(get_string('noticeenabled', 'search.elasticsearch', get_config('wwwroot') . 'admin/site/options.php?fs=searchsettings'), $state);
@@ -263,6 +290,17 @@ class PluginSearchElasticsearch extends PluginSearch {
                     'value'        => get_config_plugin('search', 'elasticsearch', 'port'),
                     'help'         => true,
                 ),
+                'scheme' => array(
+                    'title'        => get_string('scheme', 'search.elasticsearch'),
+                    'description'  => get_string('schemedescription', 'search.elasticsearch'),
+                    'type'         => 'html',
+                    'value'        => (
+                            get_config_plugin('search', 'elasticsearch', 'scheme')
+                            ? get_config_plugin('search', 'elasticsearch', 'scheme')
+                            : get_string('confignotset', 'search.elasticsearch')
+                    ),
+                    'help'         => true,
+                ),
                 'username' => array(
                     'title'        => get_string('username', 'search.elasticsearch'),
                     'description'  => get_string('usernamedescription', 'search.elasticsearch'),
@@ -281,6 +319,28 @@ class PluginSearchElasticsearch extends PluginSearch {
                     'value'        => (
                             get_config_plugin('search', 'elasticsearch', 'password')
                             ? get_string('passwordlength', 'search.elasticsearch', strlen(get_config_plugin('search', 'elasticsearch', 'password')))
+                            : get_string('confignotset', 'search.elasticsearch')
+                    ),
+                    'help'         => true,
+                ),
+                'indexingusername' => array(
+                    'title'        => get_string('indexingusername', 'search.elasticsearch'),
+                    'description'  => get_string('indexingusernamedescription', 'search.elasticsearch'),
+                    'type'         => 'html',
+                    'value'        => (
+                            get_config_plugin('search', 'elasticsearch', 'indexingusername')
+                            ? get_config_plugin('search', 'elasticsearch', 'indexingusername')
+                            : get_string('confignotset', 'search.elasticsearch')
+                    ),
+                    'help'         => true,
+                ),
+                'indexingpassword' => array(
+                    'title'        => get_string('indexingpassword', 'search.elasticsearch'),
+                    'description'  => get_string('indexingpassworddescription', 'search.elasticsearch'),
+                    'type'         => 'html',
+                    'value'        => (
+                            get_config_plugin('search', 'elasticsearch', 'indexingpassword')
+                            ? get_string('passwordlength', 'search.elasticsearch', strlen(get_config_plugin('search', 'elasticsearch', 'indexingpassword')))
                             : get_string('confignotset', 'search.elasticsearch')
                     ),
                     'help'         => true,
@@ -652,7 +712,7 @@ class PluginSearchElasticsearch extends PluginSearch {
             return false;
         }
 
-        $ESClient = self::make_client();
+        $ESClient = self::make_client('write');
         $ESAnalyzer = get_config_plugin('search', 'elasticsearch', 'analyzer');
 
         $mappingparams = array(
@@ -723,7 +783,7 @@ class PluginSearchElasticsearch extends PluginSearch {
             return;
         }
 
-        $ESClient = self::make_client();
+        $ESClient = self::make_client('write');
         /*
         $indexname = self::get_write_indexname();
         $elasticaIndex = $elasticaClient->getIndex($indexname);
@@ -1056,32 +1116,40 @@ class PluginSearchElasticsearch extends PluginSearch {
 
    }
 
-   /**
-    * Creates an \Elastica\Client object, filling in the host and
-    * port with the values from the elasticsearch plugin's admin screen.
-    * If you wanted to make other changes to how we connect to elasticsearch,
-    * this would be a good place to do it.
-    *
-    * @return \Elastica\Client
-    */
-   public static function make_client() {
+   public static function get_client_config($type='read') {
        $host = get_config_plugin('search', 'elasticsearch', 'host');
        $port = get_config_plugin('search', 'elasticsearch', 'port');
 
-       $credentials="";
-       if ($username = get_config_plugin('search', 'elasticsearch', 'username')) {
-           $password = get_config_plugin('search', 'elasticsearch', 'password');
-           // Thank you Wikipedia: http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
-           $authheader = 'Basic ' . base64_encode("{$username}:{$password}");
-           $config['headers'] = array('Authorization'=>$authheader);
-           $credentials = "{$username}:{$password}@";
-       }
-
-       $host = array($credentials . $host . ':' . $port);
+       $hosts = array(
+                    array(
+                        'host' => $host,
+                        'port' => $port
+                    )
+       );
 
        // Build array of curlopts
        $elasticclientcurlopts = [];
        $elasticclientcurlopts[CURLOPT_CONNECTTIMEOUT] = 3;
+
+       if ($username = get_config_plugin('search', 'elasticsearch', 'username')) {
+           $password = get_config_plugin('search', 'elasticsearch', 'password');
+           if ($type == 'write' && $indexingusername = get_config_plugin('search', 'elasticsearch', 'indexingusername')) {
+               $username = $indexingusername;
+               $password = get_config_plugin('search', 'elasticsearch', 'indexingpassword');
+           }
+           $hosts[0]['username'] = $username;
+           $hosts[0]['password'] = $password;
+           $elasticclientcurlopts[CURLOPT_USERPWD] = $username . ':' . $password;
+       }
+
+       if (get_config_plugin('search', 'elasticsearch', 'scheme')) {
+           $hosts[0]['scheme'] = get_config_plugin('search', 'elasticsearch', 'scheme');
+           if (!get_config('productionmode') && get_config_plugin('search', 'elasticsearch', 'ignoressl')) {
+               // Ignore verifying the SSL certificate
+               $elasticclientcurlopts[CURLOPT_SSL_VERIFYHOST] = false;
+               $elasticclientcurlopts[CURLOPT_SSL_VERIFYPEER] = false;
+           }
+       }
 
        if (get_config('proxyaddress')) {
            $elasticclientcurlopts[CURLOPT_PROXY] = get_config('proxyaddress');
@@ -1091,9 +1159,22 @@ class PluginSearchElasticsearch extends PluginSearch {
                $elasticclientcurlopts[CURLOPT_PROXYUSERPWD] = get_config('proxyauthcredentials');
            }
        }
+       return array('hosts' => $hosts, 'curlopts' => $elasticclientcurlopts);
+   }
+
+   /**
+    * Creates an \Elastica\Client object, filling in the host and
+    * port with the values from the elasticsearch plugin's admin screen.
+    * If you wanted to make other changes to how we connect to elasticsearch,
+    * this would be a good place to do it.
+    *
+    * @return \Elastica\Client
+    */
+   public static function make_client($type='read') {
+       $clientopts = self::get_client_config($type);
 
        $clientBuilder = ClientBuilder::create();
-       $clientBuilder->setHosts($host)->setConnectionParams(['client' => ['curl' => $elasticclientcurlopts]]);
+       $clientBuilder->setHosts($clientopts['hosts'])->setConnectionParams(['client' => ['curl' => $clientopts['curlopts']]]);
        $client = $clientBuilder->build();
 
        return $client;
@@ -1995,7 +2076,7 @@ class ElasticsearchIndexing {
     public static function create_index() {
         // Drop the index if it already exists.
         $params = array('index' => PluginSearchElasticsearch::get_write_indexname());
-        $ESClient = PluginSearchElasticsearch::make_client();
+        $ESClient = PluginSearchElasticsearch::make_client('write');
 
         if ($ESClient->indices()->exists($params)) {
             $ESClient->indices()->delete($params);
