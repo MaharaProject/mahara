@@ -494,21 +494,31 @@ $cfg->cleanurlusereditable = true;
  * See the helpfiles on the plugin's configuration page for details.
  * @global string $cfg->plugin_search_elasticsearch_host
  * @global int $cfg->plugin_search_elasticsearch_port
+ * @global int $cfg->plugin_search_elasticsearch_scheme
  * @global string $cfg->plugin_search_elasticsearch_username
  * @global string $cfg->plugin_search_elasticsearch_password
+ * @global string $cfg->plugin_search_elasticsearch_indexingusername
+ * @global string $cfg->plugin_search_elasticsearch_indexingpassword
  * @global string $cfg->plugin_search_elasticsearch_indexname
  * @global string $cfg->plugin_search_elasticsearch_bypassindexname
  * @global string $cfg->plugin_search_elasticsearch_analyzer
  * @global string $cfg->plugin_search_elasticsearch_types
+ * @global string $cfg->plugin_search_elasticsearch_ignoressl
  */
 // $cfg->plugin_search_elasticsearch_host = '127.0.0.1';
 // $cfg->plugin_search_elasticsearch_port = 9200;
+// $cfg->plugin_search_elasticsearch_scheme = 'https';
 // $cfg->plugin_search_elasticsearch_username = '';
 // $cfg->plugin_search_elasticsearch_password = '';
+// $cfg->plugin_search_elasticsearch_indexingusername = '';
+// $cfg->plugin_search_elasticsearch_indexingpassword = '';
 // $cfg->plugin_search_elasticsearch_indexname = 'mahara';
 // $cfg->plugin_search_elasticsearch_bypassindexname = null;
 // $cfg->plugin_search_elasticsearch_analyzer = 'mahara_analyzer';
 // $cfg->plugin_search_elasticsearch_types = 'usr,interaction_instance,interaction_forum_post,group,view,artefact,block_instance,collection';
+// When scheme is set to https but the mahara site is not in production mode this flag will
+// allow system to ignore checking SSL certificate. Useful if testing with a site using a self-signed certificate
+// $cfg->plugin_search_elasticsearch_ignoressl = false;
 /**
  * @global int $cfg->plugin_search_elasticsearch_requestlimit How many items to send per elasticsearch bulk request
  * The main side effect of raising this, is that it increases the size of the POST request you send to your
