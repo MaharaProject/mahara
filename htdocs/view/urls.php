@@ -156,7 +156,7 @@ jQuery(function($) {
             for (i = 0; i < {$count}; i++) {
                 var element = document.getElementById("copytoclipboard-" + i);
                 try {
-                    var client = new ZeroClipboard(element);
+                    var client = new Clipboard(element);
                     client.on("error", function(e) {
                         var element = document.getElementById("copytoclipboard-" + e.client.id);
                         $(element).hide();
@@ -290,7 +290,7 @@ jQuery(function($) {
 EOF;
 
 $smarty = smarty(
-    array('js/zeroclipboard/ZeroClipboard.min.js'),
+    array('js/clipboard/clipboard.min.js'),
     array(),
     array(),
     array('sidebars' => true)
