@@ -1804,6 +1804,9 @@ function load_user_institutions($userid) {
  * @param string $maxlen    Maximum length of desired username
  */
 function get_new_username($desired, $maxlen=30) {
+    if (empty($desired)) {
+        $desired = 'user';
+    }
     if (function_exists('mb_strtolower')) {
         $desired = mb_strtolower(mb_substr($desired, 0, $maxlen, 'UTF-8'), 'UTF-8');
     }
