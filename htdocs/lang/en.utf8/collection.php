@@ -116,8 +116,10 @@ $string['copiedpagesblocksandartefactsfromtemplate'] = 'Copied %d pages, %d bloc
 $string['copiedblogpoststonewjournal'] = 'Copied journal posts have been put into a new separate journal.';
 $string['by'] = 'by';
 $string['copycollection'] = 'Copy collection';
-$string['youhaveonecollection'] = 'You have 1 collection.';
-$string['youhavecollections']   = 'You have %s collections.';
+$string['youhavencollections'] = array(
+    'You have 1 collection.',
+    'You have %d collections.',
+);
 $string['youhavenocollections'] = 'You have no collections.';
 $string['collectionssharedtogroup'] = 'Collections shared with this group';
 $string['nosharedcollectionsyet'] = 'There are no collections shared with this group yet';

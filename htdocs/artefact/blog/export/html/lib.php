@@ -47,10 +47,7 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
         }
         if ($blogs) {
             $smarty->assign('blogs', $blogs);
-
-            $stryouhaveblogs = (count($blogs) == 1)
-                ? get_string('youhaveoneblog', 'artefact.blog')
-                : get_string('youhaveblogs', 'artefact.blog', count($blogs));
+            $stryouhaveblogs = get_string('youhavenblog', 'artefact.blog', count($blogs), count($blogs));
         }
         else {
             $stryouhaveblogs = get_string('youhavenoblogs', 'artefact.blog');

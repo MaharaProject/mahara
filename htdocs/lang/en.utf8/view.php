@@ -101,8 +101,10 @@ $string['nviews'] = array(
 );
 $string['youhavenoviews1'] = 'You don\'t have any pages or collections.';
 $string['youhaventcreatedanyviewsyet'] = "You have not created any pages yet.";
-$string['youhaveoneview'] = 'You have 1 page.';
-$string['youhaveviews']   = 'You have %s pages.';
+$string['youhavenviews'] = array(
+    'You have 1 page.',
+    'You have %d pages.',
+);
 $string['viewsownedbygroup'] = 'Pages owned by this group';
 $string['nogroupviewsyet'] = 'There are no pages in this group yet';
 $string['viewssharedtogroup'] = 'Pages shared with this group';
