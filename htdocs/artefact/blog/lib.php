@@ -1133,7 +1133,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $post = new ArtefactTypeBlogPost($id);
             $published = $post->published;
         }
-        $title = hsc($title);
+
         if ($published) {
             $strchangepoststatus = '<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span> ' .get_string('unpublish', 'artefact.blog');
         }
