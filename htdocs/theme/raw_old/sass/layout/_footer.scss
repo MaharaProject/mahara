@@ -27,6 +27,11 @@
     }
 }
 
-.mahara-footer-logo {
+.mahara-logo a {
     height: 37px;
+    display: inline-block;
+    .mahara-footer-logo {
+        height: 100%;
+        max-width: none;
+    }
 }
