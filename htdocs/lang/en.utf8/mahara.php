@@ -996,6 +996,7 @@ $string['country.ke'] = 'Kenya';
 $string['country.ki'] = 'Kiribati';
 $string['country.kp'] = 'Korea, Democratic People\'s Republic of';
 $string['country.kr'] = 'Korea, Republic of';
+$string['country.xk'] = 'Kosovo';
 $string['country.kw'] = 'Kuwait';
 $string['country.kg'] = 'Kyrgyzstan';
 $string['country.la'] = 'Lao People\'s Democratic Republic';
