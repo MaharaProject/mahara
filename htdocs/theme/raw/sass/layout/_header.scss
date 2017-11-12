@@ -10,14 +10,19 @@
     .loading-box {
         float: left;
     }
+
     .logo {
-        padding: 6px 0;
-        margin-right: 15px;
+        margin: 6px 15px 6px 0;
+        display: inline-block;
         // logo restricted to 45px - custom work required for a larger version
+        height: 45px;
+
         img {
-            height: 45px;
+            height: 100%;
+            max-width: none;
         }
     }
+
     .admin-title {
         @extend .sr-only;
         @media (min-width: $screen-sm-min) {
