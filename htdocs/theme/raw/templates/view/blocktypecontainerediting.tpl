@@ -35,7 +35,6 @@
 					<button class="deletebutton btn btn-inverse btn-xs" name="action_removeblockinstance_id_{$id}" alt="{str tag=Close}" data-id="{$id}">
 						<span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
 					</button>
-				</button>
 				{else}
 					<button class="deletebutton btn btn-inverse btn-xs" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
 						<span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>

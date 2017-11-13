@@ -293,6 +293,11 @@ td.action-list-copy {
     }
 }
 //page builder collapsible
+.btn-accordion.ui-accordion {
+    &.btn-help {
+        padding-left: 27px;
+    }
+}
 .btn-accordion.ui-accordion .ui-accordion-content {
     @include box-sizing(border-box);
     border-radius: 0;
