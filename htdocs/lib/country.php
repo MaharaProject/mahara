@@ -55,11 +55,6 @@ class Country {
             'match' => "^Armenia\$",
         ),
         array(
-            '2' => 'an',
-            '3' => 'ant',
-            'match' => "^Netherlands Antilles\$",
-        ),
-        array(
             '2' => 'ao',
             '3' => 'ago',
             'match' => "^Angola\$",
@@ -150,6 +145,11 @@ class Country {
             'match' => "^Benin\$",
         ),
         array(
+            '2' => 'bl',
+            '3' => 'blm',
+            'match' => "^Saint Barthelemy\$",
+        ),
+        array(
             '2' => 'bm',
             '3' => 'bmu',
             'match' => "^Bermuda\$",
@@ -163,6 +163,11 @@ class Country {
             '2' => 'bo',
             '3' => 'bol',
             'match' => "^Bolivia\$",
+        ),
+        array(
+            '2' => 'bq',
+            '3' => 'bes',
+            'match' => "^Bonaire, Sint Eustatius and Saba\$",
         ),
         array(
             '2' => 'br',
@@ -265,11 +270,6 @@ class Country {
             'match' => "^Costa Rica\$",
         ),
         array(
-            '2' => 'cs',
-            '3' => 'scg',
-            'match' => "^Serbia and Montenegro\$",
-        ),
-        array(
             '2' => 'cu',
             '3' => 'cub',
             'match' => "^Cuba\$",
@@ -278,6 +278,11 @@ class Country {
             '2' => 'cv',
             '3' => 'cpv',
             'match' => "^Cape Verde\$",
+        ),
+        array(
+            '2' => 'cw',
+            '3' => 'cuw',
+            'match' => "^Curacao\$",
         ),
         array(
             '2' => 'cx',
@@ -390,11 +395,6 @@ class Country {
             'match' => "^France\$",
         ),
         array(
-            '2' => 'fx',
-            '3' => 'fxx',
-            'match' => "^France, Metropolitan\$",
-        ),
-        array(
             '2' => 'ga',
             '3' => 'gab',
             'match' => "^Gabon\$",
@@ -418,6 +418,11 @@ class Country {
             '2' => 'gf',
             '3' => 'guf',
             'match' => "^French Guiana\$",
+        ),
+        array(
+            '2' => 'gg',
+            '3' => 'ggy',
+            'match' => "^Guernsey\$",
         ),
         array(
             '2' => 'gh',
@@ -530,6 +535,11 @@ class Country {
             'match' => "^Israel\$",
         ),
         array(
+            '2' => 'im',
+            '3' => 'imn',
+            'match' => "^Isle of Man\$",
+        ),
+        array(
             '2' => 'in',
             '3' => 'ind',
             'match' => "^India\$",
@@ -558,6 +568,11 @@ class Country {
             '2' => 'it',
             '3' => 'ita',
             'match' => "^Italy\$",
+        ),
+        array(
+            '2' => 'je',
+            '3' => 'jey',
+            'match' => "^Jersey\$",
         ),
         array(
             '2' => 'jm',
@@ -682,7 +697,7 @@ class Country {
         array(
             '2' => 'ly',
             '3' => 'lby',
-            'match' => "^Libyan Arab Jamahiriya\$",
+            'match' => "^Libya\$",
         ),
         array(
             '2' => 'ma',
@@ -698,6 +713,16 @@ class Country {
             '2' => 'md',
             '3' => 'mda',
             'match' => "^Moldova, Republic of\$",
+        ),
+        array(
+            '2' => 'me',
+            '3' => 'mne',
+            'match' => "^Montenegro\$",
+        ),
+        array(
+            '2' => 'mf',
+            '3' => 'maf',
+            'match' => "^Saint Martin (French part)\$",
         ),
         array(
             '2' => 'mg',
@@ -907,7 +932,7 @@ class Country {
         array(
             '2' => 'ps',
             '3' => 'pse',
-            'match' => "^Palestinian Territory, Occupied\$",
+            'match' => "^Palestine, State of\$",
         ),
         array(
             '2' => 'pt',
@@ -938,6 +963,11 @@ class Country {
             '2' => 'ro',
             '3' => 'rou',
             'match' => "^Romania\$",
+        ),
+        array(
+            '2' => 'rs',
+            '3' => 'srb',
+            'match' => "^Serbia\$",
         ),
         array(
             '2' => 'ru',
@@ -1025,6 +1055,11 @@ class Country {
             'match' => "^Suriname\$",
         ),
         array(
+            '2' => 'ss',
+            '3' => 'ssd',
+            'match' => "^South Sudan\$",
+        ),
+        array(
             '2' => 'st',
             '3' => 'stp',
             'match' => "^Sao Tome and Principe\$",
@@ -1033,6 +1068,11 @@ class Country {
             '2' => 'sv',
             '3' => 'slv',
             'match' => "^El Salvador\$",
+        ),
+        array(
+            '2' => 'sx',
+            '3' => 'sxm',
+            'match' => "^Sint Maarten (Dutch part)\$",
         ),
         array(
             '2' => 'sy',
@@ -1200,6 +1240,11 @@ class Country {
             'match' => "^Samoa\$",
         ),
         array(
+            '2' => 'xk',
+            '3' => 'xk',
+            'match' => "^Kosovo\$",
+        ),
+        array(
             '2' => 'ye',
             '3' => 'yem',
             'match' => "^Yemen\$",
@@ -1208,11 +1253,6 @@ class Country {
             '2' => 'yt',
             '3' => 'myt',
             'match' => "^Mayotte\$",
-        ),
-        array(
-            '2' => 'xk',
-            '3' => 'xk',
-            'match' => "^Kosovo\$",
         ),
         array(
             '2' => 'za',
@@ -1263,4 +1303,11 @@ class Country {
         return null;
     }
 
+    public static function iso3166_alpha2() {
+        $alpha2 = array();
+        foreach (self::$mapping as $countrydata) {
+            $alpha2[] = $countrydata['2'];
+        }
+        return $alpha2;
+    }
 }
