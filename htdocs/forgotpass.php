@@ -66,6 +66,7 @@ if ($SESSION->get('forgotpasskey')) {
             ),
             'submit' => array(
                 'type' => 'submit',
+                'class' => 'btn-primary',
                 'value' => get_string('change')
             )
         )
