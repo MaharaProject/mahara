@@ -127,7 +127,7 @@ jQuery(function ($) {
             'offset': 0,
             'sesskey': config['sesskey'],
             'setlimit': true,
-            'type': $('usertype_type').value,
+            'type': $('#usertype_type option:selected').val(),
         };
         p.sendQuery(params);
         event.preventDefault();
