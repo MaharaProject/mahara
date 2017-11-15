@@ -1305,6 +1305,12 @@ $string['cli_restore_warning'] = '*** WARNING *** Unable to restore backup of "%
 $string['cli_tmpdir_notwritable'] = 'The temporary upload directory "%s" is not writable.';
 $string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for series "%s"';
 
+// Fast index for elasticsearch
+$string['cli_fast_index'] = 'Elasticsearch fast indexer allows quicker indexing of sites by avoiding waiting for the next cron run. Instead it begins next run immediately after first finishes.';
+$string['cli_unabletoupdatecron'] = 'Unable to update the search cron database record';
+$string['cli_problemindexing'] = 'A problem occurred while indexing';
+$string['cli_done'] = 'Indexing finished';
+
 $string['withselectedcontentexport'] = 'Re-queue items into the export queue';
 $string['withselectedcontentdelete'] = 'Delete selected items from the export queue';
 $string['allothers'] = 'All others';
