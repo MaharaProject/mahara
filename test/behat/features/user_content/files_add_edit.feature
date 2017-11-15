@@ -8,8 +8,6 @@ Feature: Creating folders
 Scenario: Creating sub folder and attaching files (Bug 1426983)
     # Log in as "Admin user"
     Given I log in as "admin" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Admin User"
     # Creating folder 1
     When I choose "Files" in "Content" from main menu
     And I fill in "Folder1" for "files_filebrowser_createfolder_name"

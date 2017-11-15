@@ -24,8 +24,6 @@ Background:
 Scenario: Create groups and limit display on profile page (Bug 1426983)
     # Log in as a normal user
     Given I log in as "UserA" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Angela"
     # Creating several groups to test
     And I choose "Groups" from main menu
     And I follow "Create group"

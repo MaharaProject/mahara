@@ -13,8 +13,6 @@ Background:
 Scenario: Creating a group and adding members to it (Bug 1426983)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Admin User"
     # Creating Testing group 1
     And I choose "Groups" from main menu
     And I follow "Create group"
@@ -25,8 +23,6 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     And I log out
     # Log in as user 1
     And I log in as "UserA" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Angela User"
     # Joining Testing group 1
     And I choose "Find groups" in "Groups" from main menu
     And I press "Join this group"
@@ -34,8 +30,6 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     And I log out
     # Log in as user 2
     And I log in as "UserB" with password "Kupuhipa1"
-    #Verifying log in was successful
-    And I should see "Bob User"
     # Joining Testing group 1
     And I choose "Find groups" in "Groups" from main menu
     And I press "Join this group"

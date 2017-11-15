@@ -49,7 +49,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Matrix table'                => array("#tablematrix", "css_element"),
     'Toolbar buttons'             => array("#toolbar-buttons", "css_element"),
     #xpath_elements
-    'Secret urls - table row 2'   => array("//table/tbody/tr[2]/td[4]/a", "xpath_element"),
+    'Secret urls - table row 1'   => array("//table/tbody/tr[1]/td[4]/a", "xpath_element"),
     'Multirecipientnotification'  => array("//li[@id='module.multirecipientnotification']", "xpath_element"),
     )));
 

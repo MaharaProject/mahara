@@ -12,8 +12,6 @@ Background:
 Scenario Outline: When quota notification threshold is changed, send notifications to users who are now over threshold (Bug 1367539)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Admin User"
     # Modifying user quota quota to 2MB
     And I choose "Extensions" from administration menu
     And I go to "admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=file&type=file"
@@ -32,8 +30,6 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     And I log out
     # Log in as user 1
     When I log in as "UserA" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Angela User"
     # Upload files to reach quota threshold of 50%
     And I choose "Files" in "Content" from main menu
     And I attach the file "Image1.jpg" to "File"

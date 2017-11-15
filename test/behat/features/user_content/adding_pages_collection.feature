@@ -15,8 +15,6 @@ Background:
 Scenario: Creating a collection AND adding pages
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Admin User"
     # Create Test collection
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I follow "Add"
@@ -30,19 +28,7 @@ Scenario: Creating a collection AND adding pages
     Then I press "Add pages"
     # Verifying that the pages were added
     And I should see "Page admin_01"
-    And I should see "Page admin_02"
-    And I should see "Page admin_03"
     And I should see "AA Page admin_04"
-    # Sort pages by Last modified
-    Then I choose "Portfolio" from main menu
-    And I select "Alphabetical" from "Sort by:"
-    And I press the key "Enter" in the "Search:" field
-    And "AA Page admin_04" "link" should appear before "Page admin_01" "link"
-    And I select "Last modified" from "Sort by:"
-    And I press the key "Enter" in the "Search:" field
-    # Checking they are in the right order
-    And "Page admin_01" "link" should appear before "Page admin_02" "link"
-    And "Page admin_02" "link" should appear before "Page admin_03" "link"
 
     # Exporting pages and collections
     And I choose "Export" in "Portfolio" from main menu
@@ -73,4 +59,3 @@ Scenario: Creating a collection AND adding pages
     And I follow "All"
     And I press "Add pages"
     And I should see "1 page added to collection"
-    And I follow "Done"

@@ -4,15 +4,16 @@ Feature: Annotation block is off by default
  As an admin
  So I can annotate people's work
 
+Background:
+ Given the following "pages" exist:
+  | title | description | ownertype | ownername |
+  | Page admin_01 | Page 01 | admin | admin |
+
 Scenario: Accessing annotation block (Bug 1443730)
  Given I log in as "admin" with password "Kupuhipa1"
- # Creating a page
- And I choose "Pages and collections" in "Portfolio" from main menu
- And I follow "Add"
- And I click on "Page" in the dialog
- And I fill in "My page is amazing" for "Page title *"
- And I press "Save"
-# Checking if annotation block is there
+# Checking if annotation block is available by default
+ And I follow "Page admin_01"
+ And I follow "Edit this page"
  And I expand "General" node
  And I should not see "Annotation"
  And I display the page
@@ -21,7 +22,7 @@ Scenario: Accessing annotation block (Bug 1443730)
  And I press "activate_blocktype_annotation_submit"
  And I am on homepage
 # Editing page to add annotation block
- And follow "My page is amazing"
+ And follow "Page admin_01"
  And I follow "Edit"
  And I expand "General" node
  And I follow "Annotation"
@@ -33,6 +34,6 @@ Scenario: Accessing annotation block (Bug 1443730)
  And I press "Save"
 # Checking that the block saved by using the one thing on the page that changed.
  And I am on homepage
- And follow "My page is amazing"
+ And follow "Page admin_01"
  And I should see "Annotation"
  And I should see "Please grade me"

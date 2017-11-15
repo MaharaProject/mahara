@@ -59,8 +59,6 @@ Background:
 
 Scenario: Create users by csv (Bug 1426983)
   Given I log in as "admin" with password "Kupuhipa1"
- #Verifying log in was successful
-  And I should see "Admin User"
  #Adding 50 Users by csv
   And I choose "Add users by CSV" in "Users" from administration menu
   And I attach the file "50users_new.csv" to "CSV file"

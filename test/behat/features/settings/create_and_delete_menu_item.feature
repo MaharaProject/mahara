@@ -7,8 +7,6 @@ Feature: Creating/Deleting external links from the Links and Resources sideblock
 Scenario: Creating and deleting external links (Selenium 1426983)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuhipa1"
-    # Verifying log in as successful
-    And I should see "Admin User"
     # Entering an external link
     And I choose "Menus" in "Configure site" from administration menu
     And I select "Logged-in links and resources" from "Edit:"
@@ -30,17 +28,14 @@ Scenario: Creating and deleting external links (Selenium 1426983)
 Scenario: Make sure blogs do not show in site file link options (Bug #1537426)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuhipa1"
-
     # I create a site journal
     And I choose "Journals" in "Configure site" from administration menu
     And I follow "Create journal"
     And I fill in "Title" with "Site blog"
     And I press "Create journal"
-
     # I upload some site files
     And I choose "Files" in "Configure site" from administration menu
     And I attach the file "Image1.jpg" to "File"
-
     # Entering an external link
     And I choose "Menus" in "Configure site" from administration menu
     And I select "Logged-in links and resources" from "Edit:"

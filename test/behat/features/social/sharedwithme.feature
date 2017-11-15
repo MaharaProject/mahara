@@ -56,7 +56,6 @@ Scenario: Testing that views & collections are collated properly
     When I log out
     And I log in as "UserB" with password "Kupuhipa1"
     And I choose "Shared with me" in "Portfolio" from main menu
-
     Then I should see "Page UserA_03"
     # I should see collections & individual pages
     And I should see "Collection UserA_01 (2 pages)"

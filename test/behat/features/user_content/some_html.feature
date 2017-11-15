@@ -29,11 +29,8 @@ Scenario:
     And I press "Save"
     And I display the page
     #check content of HTML block shows content, but not html tags
-    Then I should see "mahara manual"
-    And I should not see "<a href=\"http://manual.mahara.org\">"
-    And I should see "There is a cat in a table"
-    And I should not see "</h2></strong>"
-    And I should not see "<title>Sample HTML file</title>"
+    And I should see "Mahara does HTML"
+    And I should not see "<h1>Mahara does HTML</h1>"
     And I should see images within the block "Some HTML"
     And I follow "mahara manual"
     And I wait "2" seconds

@@ -26,6 +26,5 @@ Scenario: Make Text Block Retractable
     And I scroll to the id "main-nav"
     Then I click on "Display page"
     Then I should see "Here is a new block"
-    Then I should see "Text Block 1"
     And I collapse "Text Block 1" node
     And I should not see "Here is a new block"

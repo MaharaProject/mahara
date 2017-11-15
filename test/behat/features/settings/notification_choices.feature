@@ -12,8 +12,6 @@ Background:
 Scenario: Confirm that multiple notification choices are available (Bug #1299993)
     # Log in as admin
     Given I log in as "admin" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Admin User"
     # Navigating to notification settings
     And I choose "Site options" in "Configure site" from administration menu
     And I follow "Notification settings"
@@ -46,8 +44,6 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     And I log out
     # Logging in as user1
     Then I log in as "UserA" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Angela User"
     # Navigating to notification settings
     And I choose "Notifications" in "Settings" from user menu
     # Verifying the "None" option is not available for the following notifications

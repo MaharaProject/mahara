@@ -14,7 +14,6 @@ Scenario: Creating a journal and editing it (Bug 1513716)
 Given I log in as "UserA" with password "Kupuhipa1"
 # Creating a journal
 And I choose "Journals" in "Content" from main menu
-And I should see "Journals"
 When I click on "New entry"
 And I set the following fields to these values:
  | Title | My new journal |
@@ -27,6 +26,5 @@ And I set the following fields to these values:
  | Title | My new journal |
  | Entry | Jinelle was here Nov 2015 |
  And I press "Save entry"
-
  And I should see "Jinelle was here Nov 2015"
  And I should see "Last updated:"

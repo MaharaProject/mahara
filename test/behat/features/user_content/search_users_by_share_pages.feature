@@ -10,33 +10,20 @@ Background:
     | UserA | Kupuhipa1 | UserA@example.org  | Angela | User | mahara | internal | member |
     | UserB | Kupuhipa1 | UserB@example.org  | Bob | User | mahara | internal | member |
 
+    And the following "pages" exist:
+     | title | description | ownertype | ownername |
+     | Page UserA_01 | Page 01 | user | UserA |
+     | Page UserA_02 | Page 02 | user | UserA |
+     | Page UserB_01 | Page 03 | user | UserB |
+     | Page UserB_02 | Page 04 | user | UserB |
+
 Scenario: Create users and search for them (Bug 897586)
     # Log in as the student user
     Given I log in as "UserA" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Angela User"
-    # Creating page one
-    And I choose "Portfolio" from main menu
-    And I follow "Add"
-    And I click on "Page" in the dialog
-    And I fill in the following:
-    | Page title | Testing page 1 |
-    And I press "Save"
-    # Verifying the page has been created
-    And I should see "Page saved successfully"
-    # Creating page two
-    And I choose "Portfolio" from main menu
-    And I follow "Add"
-    And I click on "Page" in the dialog
-    And I fill in the following:
-    | Page title | Testing page 2 |
-    And I press "Save"
-    # Verifying the page has been created
-    And I should see "Page saved successfully"
     # Sharing both of the pages that have been created
     And I choose "Shared by me" in "Portfolio" from main menu
-    And I click on "Edit access" in "Testing page 1" row
-    And I set the select2 value "Testing page 1, Testing page 2" for "editaccess_views"
+    And I click on "Edit access" in "Page UserA_01" row
+    And I set the select2 value "Page UserA_01, Page UserA_02" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
     # Verifying that both of the pages have been shared
@@ -46,28 +33,10 @@ Scenario: Create users and search for them (Bug 897586)
     And I log in as "UserB" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Bob User"
-    # Creating page three
-    And I choose "Portfolio" from main menu
-    And I follow "Add"
-    And I click on "Page" in the dialog
-    And I fill in the following:
-    | Page title | Testing page 3 |
-    And I press "Save"
-    # Verifying the page has been created
-    And I should see "Page saved successfully"
-    # Creating page 4
-    And I choose "Portfolio" from main menu
-    And I follow "Add"
-    And I click on "Page" in the dialog
-    And I fill in the following:
-    | Page title | Testing page 4 |
-    And I press "Save"
-    # Verifying the page has been created
-    And I should see "Page saved successfully"
     # Sharing both of the pages Bob created
     And I choose "Shared by me" in "Portfolio" from main menu
-    And I click on "Edit access" in "Testing page 3" row
-    And I set the select2 value "Testing page 3, Testing page 4" for "editaccess_views"
+    And I click on "Edit access" in "Page UserB_01" row
+    And I set the select2 value "Page UserB_01, Page UserB_02" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
     # Verifying that both of the pages have been shared
@@ -81,9 +50,9 @@ Scenario: Create users and search for them (Bug 897586)
     | Search: | Angela |
     And I check "Public"
     And I press "search_submit"
-    # Veryfing I have seen Angela's pages
-    Then I should see "page 1"
-    And I should see "page 2"
-    # Veryfing I have not seen Bob's pages
-    And I should not see "page 3"
-    And I should not see "page 4"
+    # Verifying I can see Angela's pages
+    Then I should see "Page UserA_01"
+    And I should see "Page UserA_02"
+    # Verifying I cannot see Bob's pages
+    And I should not see "Page UserB_03"
+    And I should not see "Page UserB_04"

@@ -20,10 +20,8 @@ The wall post must generate a notification (Bug 547333)
     And I log out
     And I log in as "UserA" with password "Kupuhipa1"
     And I choose "mail" from user menu by id
-    Then I should see "New post on your wall"
     When I click on "New post on your wall"
     Then I should see "Hello"
-    And I should see "View whole wall"
     When I follow "View whole wall"
     Then I should see "Angela User: Wall"
     And I should see "Bob User"

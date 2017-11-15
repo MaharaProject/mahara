@@ -3,6 +3,11 @@ Feature: Creating a plan and adding a number of tasks to the plan
 As a user
 In order to test the pagination of the plan
 
+Background:
+     Given the following "pages" exist:
+     | title | description | ownertype | ownername |
+     | Page admin_01 | Page 01 | user | admin |
+
 Scenario: Creating a plan with 11 tasks (Bug #1503036)
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Plans" in "Content" from main menu
@@ -78,9 +83,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
  Then I should see "Alien invasion"
  # Add the plan to a page
  And I choose "Pages and collections" in "Portfolio" from main menu
- And I follow "Add"
- And I click on "Page" in the dialog
- And I press "Save"
+ And I click on "Edit" in "Page admin_01" panel menu
  And I expand "General" node
  And I follow "Plans" in the "blocktype sidebar" property
  And I press "Add"

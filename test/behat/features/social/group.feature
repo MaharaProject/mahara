@@ -17,7 +17,6 @@ Feature: Mahara users can participate in groups
   Scenario: Join a group
     Given I log in as "UserE" with password "Kupuhipa1"
     And I choose "Find groups" in "Groups" from main menu
-    Then I should see "GroupA"
     When I click on "GroupA"
     Then I should see "About"
     When I press "Join this group"

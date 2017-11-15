@@ -10,6 +10,11 @@ Given the following "institutions" exist:
      | instone | Institution One | ON | OFF |
      | insttwo | Institution Two | ON | OFF |
 
+And the following "pages" exist:
+     | title | description | ownertype | ownername |
+     | Page mahara_01 | Page 01 | institution | mahara |
+
+
 Scenario: Clicking on the journal sub menu headings and adding first journal (Bug 1472467)
   # log in as admin
   Given I log in as "admin" with password "Kupuhipa1"
@@ -95,14 +100,8 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I press "Save entry"
   And I should see "Journal entry saved"
   And I should see "Spongebob"
-  # Creating a site page
   And I choose "Pages and collections" in "Configure site" from administration menu
-  And I follow "Add"
-  And I click on "Page" in the dialog
-  And I set the following fields to these values:
-  | Page title | Square pants |
-  | Page description | hsdfhjkl78695t 8677y8 |
-  And I press "Save"
+  And I click on "Edit" in "Page mahara_01" panel menu
   # Adding journal block to the page
   # Need to access the adding "Journal" block more directly than normal now that "Journals" is a menu item also
   And I expand "Journals" node in the "blocktype sidebar" property
@@ -133,7 +132,7 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I follow "log in anyway"
   # Checking I can see the page ...
   And I choose "Portfolio" from main menu
-  Then I should see "Square pants"
+  Then I should see "Page mahara_01"
   # ... and the journal
   And I choose "Journals" in "Content" from main menu
   And I follow "Copy of Site journal 1"

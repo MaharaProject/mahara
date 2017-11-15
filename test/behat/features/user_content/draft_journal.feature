@@ -46,13 +46,11 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "george" and select "george"
  And I press "Save entry"
- Then I should see "Journal entry saved"
 
  # Remove tag from first journal and save
  Given I click on "Edit" in "My diary entry one" row
  And I clear value "mildred (1)" from select2 field "editpost_tags"
  And I press "Save entry"
- Then I should see "Journal entry saved"
  And I should not see "mildred"
 
  # Display tagged journals in block

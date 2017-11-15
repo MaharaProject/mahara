@@ -4,6 +4,11 @@ In order to view mathslate plugin
 As an admin
 I need to be able to access mathslate in Tinymce
 
+Background:
+ Given the following "pages" exist:
+  | title | description | ownertype | ownername |
+  | Page mahara_01 | Page 01 | institution | mahara |
+
 Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Site options" in "Configure site" from administration menu
@@ -11,18 +16,11 @@ Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
  And I enable the switch "Enable MathJax"
  And I press "Update site options"
  And I choose "Pages and collections" in "Configure site" from administration menu
- And I follow "Add"
- And I click on "Page" in the dialog
- And I set the following fields to these values:
-   | Page title | test |
-   | Page description | testing |
- And I press "Save"
- And I choose "Pages and collections" in "Configure site" from administration menu
- And I follow "test"
+ And I follow "Page mahara_01"
  # Tinymce field adding a math equation
  And I scroll to the id "feedbacktable"
  And I fill in "\\[\\alpha A\\beta B\\]" in editor "Comment"
  And I press "Comment"
  And I choose "Pages and collections" in "Configure site" from administration menu
- And I follow "test"
+ And I follow "Page mahara_01"
  And I should see "αAβB"

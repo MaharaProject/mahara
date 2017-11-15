@@ -20,13 +20,10 @@ Scenario: Create Text block
     And I click on "Edit" in "Page UserA_01" panel menu
     And I follow "Text"
     And I press "Add"
-    Then I should see "Text: Configure"
     And I set the field "Block title" to "Text Block 1"
     And I set the field "Block content" to "Here is a new block."
     And I press "Save"
-    Then I should see "Here is a new block" in the "div#column-container" element
     And I should see "Text block 1" in the "div#column-container" element
     And I scroll to the top
     And I follow "Display page"
     Then I should see "Here is a new block"
-    And I should see "Text block 1"

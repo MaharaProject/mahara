@@ -7,8 +7,7 @@ Feature: Create an Institution
 Scenario: Creating an institution (selenium test)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuhipa1"
-    # Verifying log in successful
-    And I should see "Admin User"
+
     # Creating an Institution
     And I choose "Settings" in "Institutions" from administration menu
     And I press "Add institution"

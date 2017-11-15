@@ -30,7 +30,6 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I click on "Edit" in "Page admin_02" panel menu
   And I follow "Text"
   And I press "Add"
-  Then I should see "Text: Configure"
   And I set the field "Block title" to "Text Block 1"
   And I set the field "Block content" to "Here is a new block."
   And I press "Save"
@@ -40,7 +39,6 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I follow "Copy"
   And I click on "Copy page" in "Page admin_02" row
   And I press "Save"
-  Then I should see "Text Block 1"
   And I should see "Here is a new block."
 
   # Add the page to the collection which has block
@@ -64,4 +62,3 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I press "Next page"
   And I press "Next page"
   Then I should see "Text Block 1"
-  And I should see "Here is a new block."

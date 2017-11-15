@@ -26,9 +26,8 @@ I can create a new page from the site default portfolio page
      | Block content | <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p> |
     And I press "Save"
     And I should see "Sample text block"
-    And I should see "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
     And I log out
-    And I should see "Login"
+
     # Create a new portfolio page
     And I log in as "UserA" with password "Kupuhipa1"
     And I choose "Portfolio" from main menu

@@ -130,12 +130,10 @@ These list must take into account the sort option chosen in the block config (Bu
     And I scroll to the base of id "groups"
     And I follow "GroupA" in the "My groups box" property
     # Group portfolios
-    And I should see "Page GroupA_01" in the "Group portfolios" property
     And I should see "Page GroupA_05" in the "Group portfolios" property
     And I should not see "Page GroupA_06" in the "Group portfolios" property
     #And I follow "Next page" in the "div#groupviews_pagination" "css_element"
     And I jump to next page of the list "groupviews_pagination"
-    And I should see "Page GroupA_06" in the "Group portfolios" property
     And I should see "Page GroupA_08" in the "Group portfolios" property
     And I should not see "Page GroupA_05" in the "Group portfolios" property
     # Shared pages
@@ -144,18 +142,13 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should not see "Page UserB_01" in the "Pages shared with this group" property
     #And I follow "2" in the "div#sharedviews_pagination" "css_element"
     And I jump to page "2" of the list "sharedviews_pagination"
-    And I should see "Page UserB_01" in the "Pages shared with this group" property
     And I should see "Page UserB_05" in the "Pages shared with this group" property
     And I should not see "Page UserA_05" in the "Pages shared with this group" property
-    And I should not see "Page UserB_06" in the "Pages shared with this group" property
     #And I follow "3" in the "div#sharedviews_pagination" "css_element"
     And I jump to page "3" of the list "sharedviews_pagination"
     And I should see "Page UserB_06" in the "Pages shared with this group" property
-    And I should see "Page UserB_07" in the "Pages shared with this group" property
-    And I should not see "Page UserA_01" in the "Pages shared with this group" property
     And I should not see "Page UserB_01" in the "Pages shared with this group" property
     # Shared collections
-    And I should see "Collection UserA_01" in the "Collections shared with this group" property
     And I should see "Collection UserA_05" in the "Collections shared with this group" property
     And I should not see "Collection UserA_06" in the "Collections shared with this group" property
     #And I follow "2" in the "div#sharedcollections_pagination" "css_element"
@@ -178,7 +171,6 @@ These list must take into account the sort option chosen in the block config (Bu
     And I log out
     # Change the sort options in the "Group pages" block
     Given I log in as "UserA" with password "Kupuhipa1"
-    And I should see "GroupA"
     And I follow "GroupA (Administrator)"
     And I should see "Page UserB_01"
     And I follow "Pages and collections (tab)"
@@ -263,13 +255,11 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Yes"
     # Check the list of submitted pages/collections
     And I should see "Page UserA_03" in the "Submissions to this group" property
-    And I should see "Page UserA_02" in the "Submissions to this group" property
     And I should see "Collection UserA_03" in the "Submissions to this group" property
     And I should not see "Page UserB_01" in the "Submissions to this group" property
     #And I follow "2" in the "div#allsubmitted_pagination" "css_element"
     And I jump to page "2" of the list "allsubmitted_pagination"
     And I should see "Page UserA_01" in the "Submissions to this group" property
-    And I should see "Page UserB_01" in the "Submissions to this group" property
     And I should not see "Page UserA_02" in the "Submissions to this group" property
     And I log out
     # Check pages and collections are shown in correct section
@@ -297,13 +287,7 @@ These list must take into account the sort option chosen in the block config (Bu
     # Submit pages and collections to the "GroupD" and "GroupA"
     And I choose "Groups" from main menu
     And I follow "GroupD"
-    And I select "Page UserC_02" from "group_view_submission_form_4_options"
-    And I press "Submit"
-    And I press "Yes"
     And I select "Page UserC_03" from "group_view_submission_form_4_options"
-    And I press "Submit"
-    And I press "Yes"
-    And I select "Collection UserC_02" from "group_view_submission_form_4_options"
     And I press "Submit"
     And I press "Yes"
     And I select "Collection UserC_03" from "group_view_submission_form_4_options"
@@ -323,17 +307,12 @@ These list must take into account the sort option chosen in the block config (Bu
     Given I log in as "UserA" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Angela"
-    And I should see "GroupD"
     And I follow "GroupD"
-    And I should see "Page UserC_01" in the "Pages shared with this group" property
     And I should not see "Page UserC_03" in the "Pages shared with this group" property
-    And I should see "Page UserC_04" in the "Pages shared with this group" property
-    And I should see "Page UserC_02" in the "Submissions to this group" property
     And I should see "Page UserC_03" in the "Submissions to this group" property
     And I should see "Collection UserC_01" in the "Collections shared with this group" property
     And I should not see "Collection UserC_03" in the "Collections shared with this group" property
     And I should see "Collection UserC_04" in the "Collections shared with this group" property
-    And I should see "Collection UserC_02" in the "Submissions to this group" property
     And I should see "Collection UserC_03" in the "Submissions to this group" property
     And I log out
     Given I log in as "UserB" with password "Kupuhipa1"

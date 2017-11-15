@@ -9,11 +9,14 @@ Background:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuhipa1 | test01@example.com | Angela | User | mahara | internal | member |
 
+  And the following "pages" exist:
+     | title | description | ownertype | ownername |
+     | Page UserA_01 | Page 01 | user | UserA |
+     | Page UserA_02 | Page 02 | user | UserA |
+
   Scenario: Adding tags to files (Bug 1426983)
    # Log in as the UserA
    Given I log in as "UserA" with password "Kupuhipa1"
-   # Verifying log in was successful
-   Then I should see "Angela User"
    # Creating a folder with a  tag
    When I choose "Files" in "Content" from main menu
    And I set the following fields to these values:
@@ -52,20 +55,16 @@ Background:
    And I scroll to the base of id "addtasks_tags_container"
    And I fill in select2 input "addtasks_tags" with "blue" and select "blue"
    And I press "Save task"
-   # Creating page 1 with a tag
-   And I choose "Portfolio" from main menu
-   And I follow "Add"
-   And I click on "Page" in the dialog
-   And I set the following fields to these values:
-   | Page title * | Test page 1   |
+   # Adding a tag to page 1
+   And I choose "Pages and collections" in "Portfolio" from main menu
+   And I click on "Edit" in "Page UserA_01" panel menu
+   And I follow "Settings" in the "#toolbar-buttons" "css_element"
    And I fill in select2 input "settings_tags" with "blue" and select "blue"
    And I press "Save"
-   And I choose "Portfolio" from main menu
-   # Creating page 2 with a tag
-   And I follow "Add"
-   And I click on "Page" in the dialog
-   And I set the following fields to these values:
-   | Page title *    | Testing page 2    |
+   # Adding a tag to page 2
+   And I choose "Pages and collections" in "Portfolio" from main menu
+   And I click on "Edit" in "Page UserA_02" panel menu
+   And I follow "Settings" in the "#toolbar-buttons" "css_element"
    And I fill in select2 input "settings_tags" with "orange" and select "orange"
    And I press "Save"
    # Creating a Note with a tag
@@ -88,10 +87,10 @@ Background:
    And I should see "task one"
    #Check single tag
    And I follow "orange"
-   And I should see "Testing page 2"
+   And I should see "Page UserA_02"
    And I should not see "Note"
    #Check tags can be deleted from a page - Bug 1715491
-   Given I follow "Testing page 2"
+   Given I follow "Page UserA_02"
    And I follow "Edit this page"
    And I click on "Settings" in the "Toolbar buttons" property
    And I clear value "orange (1)" from select2 field "settings_tags"
