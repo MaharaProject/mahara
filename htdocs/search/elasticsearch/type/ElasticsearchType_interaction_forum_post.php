@@ -21,7 +21,8 @@ class ElasticsearchType_interaction_forum_post extends ElasticsearchType {
                     'include_in_all' => TRUE
             ),
             'body' => array (
-                    'type' => 'keyword',
+                    'type' => 'text',
+                    'index' => TRUE,
                     'include_in_all' => TRUE
             ),
             // access to forum posts is granted to all members of the group
