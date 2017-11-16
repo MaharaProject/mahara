@@ -44,8 +44,12 @@ class HtmlExportPlans extends HtmlExportArtefactPlugin {
         }
         $smarty->assign('plans', $plans);
 
+        if (count($plans)) {
+            $smarty->assign('stryouhaveplans', get_string('youhavenplan', 'artefact.plans', count($plans), count($plans)));
+        }
+
         return array(
-            'title' => get_string('plans', 'artefact.plans'),
+            'title' => get_string('Plans', 'artefact.plans'),
             'description' => $smarty->fetch('export:html/plans:summary.tpl'),
         );
     }

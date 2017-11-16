@@ -161,8 +161,10 @@ $string['youhavenoblogs'] = 'You have no journals.';
 $string['youhavenogroupblogs'] = 'There are no journals in this group.';
 $string['youhavenoinstitutionblogs'] = 'There are no journals in this institution.';
 $string['youhavenositeblogs'] = 'There are no site journals.';
-$string['youhaveoneblog'] = 'You have 1 journal.';
-$string['youhaveblogs'] = 'You have %s journals.';
+$string['youhavenblog'] = array(
+    'You have 1 journal.',
+    'You have %d journals.'
+);
 
 $string['feedsnotavailable'] = 'Feeds are not available for this artefact type.';
 $string['feedrights'] = 'Copyright %s.';

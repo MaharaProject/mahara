@@ -39,6 +39,10 @@ $string['planstasksdescription'] = 'Add tasks below or use the "%s" button to be
 $string['saveplan'] = 'Save plan';
 $string['title'] = 'Title';
 $string['titledesc'] = 'The title will be used to display each task in the plans blocktype.';
+$string['youhavenplan'] = array(
+    'You have 1 plan.',
+    'You have %d plans.'
+);
 
 /* Tasks */
 $string['alltasks'] = 'All tasks';

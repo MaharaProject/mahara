@@ -476,10 +476,7 @@ class PluginExportHtml extends PluginExport {
         if (!empty($list['views'])
             && ($this->viewexportmode == self::EXPORT_ALL_VIEWS_COLLECTIONS
                 || $this->viewexportmode == self::EXPORT_LIST_OF_VIEWS)) {
-            $stryouhaveviews = ($nviews == 1)
-                ? get_string('youhaveoneview', 'view')
-                : get_string('youhaveviews', 'view', $nviews);
-            $smarty->assign('stryouhaveviews', $stryouhaveviews);
+            $smarty->assign('stryouhaveviews', get_string('youhavenviews', 'view', $nviews, $nviews));
             $smarty->assign('list', $list['views']);
             $summary['view'] = array(
                 'title' => get_string('Views', 'view'),
@@ -493,10 +490,7 @@ class PluginExportHtml extends PluginExport {
         if (!empty($list['collections'])
             && ($this->viewexportmode == self::EXPORT_ALL_VIEWS_COLLECTIONS
                 || $this->viewexportmode == self::EXPORT_LIST_OF_COLLECTIONS)) {
-            $stryouhavecollections = ($ncollections == 1)
-                ? get_string('youhaveonecollection', 'collection')
-                : get_string('youhavecollections', 'collection', $ncollections);
-            $smarty->assign('stryouhavecollections', $stryouhavecollections);
+            $smarty->assign('stryouhavecollections', get_string('youhavencollections', 'collection', $ncollections, $ncollections));
             $smarty->assign('list', $list['collections']);
             $summary['collection'] = array(
                 'title' => get_string('Collections', 'collection'),
