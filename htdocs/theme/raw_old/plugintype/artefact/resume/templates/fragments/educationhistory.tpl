@@ -84,6 +84,12 @@
             </p>
             {/if}
 
+            {if $row->institutionaddress}
+                <span class="text-small text-muted">
+                    {str tag=addresstag section='blocktype.resume/entireresume' arg1=$row->institutionaddress}
+                </span>
+            {/if}
+
             {if $row->attachments}
             <div class="list-group-item-heading">
                 <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>

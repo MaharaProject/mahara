@@ -1036,10 +1036,10 @@ EOF;
         return $js;
     }
 
-    static function get_tablerenderer_title_js($titlestring, $extrastring, $bodystring, $attachstring) {
+    static function get_tablerenderer_title_js($titlestring, $extrastring, $bodystring, $attachstring, $addressstring='false') {
         return <<<EOF
                 function (row, data) {
-                    if (!{$bodystring} && !{$attachstring}) {
+                    if (!{$bodystring} && !{$attachstring} && !{$addressstring}) {
                       return jQuery('<td>').append(
                         jQuery('<span>').append({$titlestring}),
                         jQuery('<div>', {'class': 'detail text-midtone'}).append({$extrastring})
@@ -1048,7 +1048,7 @@ EOF;
                     var link = jQuery('<a>', {'class': 'toggle textonly', 'href': ''}).append({$titlestring})[0];
                     jQuery(link).on('click', function (e) {
                         e.preventDefault();
-                        return showhideComposite(row, {$bodystring}, {$attachstring});
+                        return showhideComposite(row, {$bodystring}, {$attachstring}, {$addressstring});
                     });
                     var extra = jQuery('<div>', {'class': 'detail text-midtone'}).append({$extrastring});
                     return jQuery('<td>', {'id': 'composite-' + row.artefact + '-' + row.id}).append(
@@ -1060,7 +1060,7 @@ EOF;
 
     static function get_showhide_composite_js() {
         return <<<EOF
-            function showhideComposite(row, content, attachments) {
+            function showhideComposite(row, content, attachments, address) {
                 // get the reference for the title we just clicked on
                 var titleTD = jQuery('#composite-' + row.artefact + '-' + row.id);
                 var bodyNode = jQuery('#composite-body-' + row.artefact +  '-' + row.id);
@@ -1070,6 +1070,7 @@ EOF;
                 }
                     var newNode = jQuery('<div>', {'id': 'composite-body-' + row.artefact + '-' + row.id}).append(
                       jQuery('<div>', {'class':'content-text'}).append(content),
+                      address,
                       attachments
                       );
                 newNode.insertAfter(titleTD.find('.expandable-head').first());
@@ -1261,7 +1262,8 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_title_js_string(),
                     self::get_tablerenderer_date_js_string(),
                     self::get_tablerenderer_body_js_string(),
-                    self::get_tablerenderer_attachments_js_string()
+                    self::get_tablerenderer_attachments_js_string(),
+                    self::get_tablerenderer_address_js_string()
                 ) . ",
                 function (row, data) {
                     return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
@@ -1287,6 +1289,13 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_attachments_js_string() {
         return " listAttachments(row.attachments)";
+    }
+
+    public static function get_tablerenderer_address_js_string() {
+      $address = get_string('address', 'blocktype.resume/entireresume');
+      return <<<EOF
+          (row.employeraddress) ? jQuery('<p>', {'text' : "{$address}: " + row.employeraddress}) : ""
+EOF;
     }
 
     public static function get_addform_elements() {
@@ -1403,7 +1412,8 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_title_js_string(),
                     self::get_tablerenderer_date_js_string(),
                     self::get_tablerenderer_body_js_string(),
-                    self::get_tablerenderer_attachments_js_string()
+                    self::get_tablerenderer_attachments_js_string(),
+                    self::get_tablerenderer_address_js_string()
                 ) . ",
                 function (row, data) {
                     return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
@@ -1447,6 +1457,13 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_attachments_js_string() {
         return " listAttachments(row.attachments)";
+    }
+
+    public static function get_tablerenderer_address_js_string() {
+      $address = get_string('address', 'blocktype.resume/entireresume');
+      return <<<EOF
+          (row.institutionaddress) ? jQuery('<p>', {'text' : "{$address}: " + row.institutionaddress}) : ""
+EOF;
     }
 
     public static function get_addform_elements() {
@@ -1706,7 +1723,8 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_title_js_string(),
                     self::get_tablerenderer_date_js_string(),
                     self::get_tablerenderer_body_js_string(),
-                    self::get_tablerenderer_attachments_js_string()
+                    self::get_tablerenderer_attachments_js_string(),
+                    self::get_tablerenderer_urladdress_js_string()
                 ) . ",
                 function (row, data) {
                     return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
@@ -1727,18 +1745,19 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
     }
 
     public static function get_tablerenderer_body_js_string() {
-      return <<<EOF
-          jQuery('<div>').append(
-              row.description,
-              jQuery('<div>', {'id':'composite-book-url'}).append(
-                  jQuery('<a>', {'href':row.url, 'text' : row.url})
-              )
-          )[0]
-EOF;
-  }
+      return " row.description";
+    }
 
     public static function get_tablerenderer_attachments_js_string() {
         return " listAttachments(row.attachments)";
+    }
+
+    public static function get_tablerenderer_urladdress_js_string() {
+      return <<<EOF
+              jQuery('<div>', {'id':'composite-book-url'}).append(
+                  jQuery('<a>', {'href':row.url, 'text' : row.url})
+              )
+EOF;
     }
 
     public static function get_addform_elements() {
