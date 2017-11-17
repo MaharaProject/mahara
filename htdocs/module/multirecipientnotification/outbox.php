@@ -193,13 +193,7 @@ function delete_all_notifications_submit() {
     redirect(get_config('wwwroot') . 'module/multirecipientnotification/outbox.php?type=' . $type);
 }
 
-
-$extrastylesheets = $THEME->get_url('style.css', false, 'module/multirecipientnotification');
-$smarty = smarty(array(
-    'paginator'
-    ),
-    array('<link rel="stylesheet" type="text/css" href="'.$extrastylesheets.'">')
-);
+$smarty = smarty(array('paginator'));
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
 
