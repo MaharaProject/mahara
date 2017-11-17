@@ -48,6 +48,6 @@ if (get_config('cleanurls') && get_config('cleanurlusersubdomains') && !$editing
 }
 
 $smarty = smarty();
-$smarty->assign('url', $urlbase . 'artefact/file/download.php?file='.$fileid.'&view='.$viewid);
+$smarty->assign('url', $urlbase . 'artefact/file/download.php?file='.$fileid.'&view='.$viewid.'&title='.urlencode($file->get('title')));
 $smarty->assign('title', $file->get('title'));
 $smarty->display('blocktype:pdf:pdf.tpl');
