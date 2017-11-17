@@ -2978,7 +2978,7 @@ function masquerading_stats_table($limit, $offset, $extra, $institution, $urllin
     $users = $SESSION->get('usersforstats');
 
     $fromsql = " FROM {usr} u JOIN {event_log} e ON e.usr = u.id ";
-    $wheresql = " WHERE u.id != 0 AND e.event = 'loginas'";
+    $wheresql = " WHERE u.id != 0 AND u.deleted = 0 AND e.event = 'loginas'";
     $where = array();
     if ($institution) {
         $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
