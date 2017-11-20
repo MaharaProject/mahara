@@ -244,6 +244,15 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
                     if (!empty($rendered['javascript'])) {
                         $result->html .= '<script type="application/javascript">' . $rendered['javascript'] . '</script>';
                     }
+                    $attachments = $rendered['attachments'];
+                    if (!empty($attachments)) {
+                        $smarty->assign('attachments', $attachments);
+                        $smarty->assign('postid', $result->id);
+                        $result->attachments = $smarty->fetch('artefact:blog:render/blogpost_renderattachments.tpl');
+                    }
+
+                    safe_require('artefact', 'file');
+                    $result->description = ArtefactTypeFolder::append_view_url($result->description, $view);
                 }
             }
 
