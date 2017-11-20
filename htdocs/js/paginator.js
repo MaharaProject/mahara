@@ -220,7 +220,7 @@ return function(id, list, heading, script, extradata) {
             if (firstLink.length) {
                 firstLink.focus();
             }
-            else if (results.length) {
+            else if (results && results.length > 0) {
                 results.prop('tabindex', -1)
                     .addClass('hidefocus')
                     .focus();
