@@ -1121,6 +1121,7 @@ function search_friend($filter, $limit = null, $offset = 0) {
     }
 
     if (in_array($filter, array('all', 'pending'))) {
+        // For the friends being requested
         $count += count_records_sql('SELECT COUNT("owner") FROM {usr_friend_request}
             JOIN {usr} u ON (u.id = requester AND u.deleted = 0)
             WHERE "owner" = ?',
@@ -1128,6 +1129,15 @@ function search_friend($filter, $limit = null, $offset = 0) {
         );
 
         array_push($sql, 'SELECT requester AS id, 1 AS status FROM {usr_friend_request} WHERE "owner" = ?
+        ');
+        // For the one doing the request
+        $count += count_records_sql('SELECT COUNT("requester") FROM {usr_friend_request}
+            JOIN {usr} u ON (u.id = "owner" AND u.deleted = 0)
+            WHERE requester = ?',
+            array($userid)
+        );
+
+        array_push($sql, 'SELECT "owner" AS id, 1 AS status FROM {usr_friend_request} WHERE requester = ?
         ');
     }
     $sqlstr = 'SELECT f.id FROM (' . join('UNION ', $sql) . ') f
