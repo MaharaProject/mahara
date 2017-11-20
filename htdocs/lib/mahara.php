@@ -5130,6 +5130,8 @@ function clear_all_caches($clearsessiondirs = false) {
             }
         }
 
+        clearstatcache();
+
         handle_event('clearcaches', array());
 
         $result = true;

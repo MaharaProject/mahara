@@ -98,19 +98,8 @@ $successicon = 'icon icon-check text-success left';
 $failureicon = 'icon icon-exclamation-triangle left';
 $warningicon = 'icon icon-exclamation-triangle left';
 
-
-// Remove all files in the dwoo cache
-require_once('file.php');
-$basedir = get_config('dataroot') . 'dwoo/compile/';
-$dh = new DirectoryIterator($basedir);
-foreach ($dh as $themedir) {
-    if ($themedir->isDot()) continue;
-    $themedirname = $basedir . $themedir->getFilename();
-    rmdirr($themedirname);
-    clearstatcache();
-    check_dir_exists($themedirname);
-}
-
+// Clear all caches.
+clear_all_caches();
 
 $loadingstring = json_encode(get_string('upgradeloading', 'admin'));
 $installsuccessstring = json_encode(get_string('installsuccess', 'admin'));

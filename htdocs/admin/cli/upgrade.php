@@ -45,6 +45,9 @@ if (empty($upgrades['settings']['toupgradecount'])) {
 // Check for issues which would pose problems during upgrade
 ensure_upgrade_sanity();
 
+// Clear all caches
+clear_all_caches();
+
 // Actually perform the upgrade
 log_info(get_string('cliupgradingmahara', 'admin'));
 foreach ($upgrades as $name => $data) {
