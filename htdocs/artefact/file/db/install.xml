@@ -11,11 +11,15 @@
             <FIELD NAME="oldextension" TYPE="text" NOTNULL="false" />
             <FIELD NAME="fileid" TYPE="int" LENGTH="10" NOTNULL="false" />
             <FIELD NAME="filetype" TYPE="text" NOTNULL="false" />
+            <FIELD NAME="contenthash" TYPE="char" LENGTH="64" NOTNULL="false" />
         </FIELDS>
         <KEYS>
             <KEY NAME="artefactpk" TYPE="primary" FIELDS="artefact" />
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="contenthashix" UNIQUE="false" FIELDS="contenthash"/>
+        </INDEXES>
     </TABLE>
     <TABLE NAME="artefact_file_image">
         <FIELDS>

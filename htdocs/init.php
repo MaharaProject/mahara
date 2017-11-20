@@ -465,6 +465,28 @@ if (!defined('INSTALLER')) {
 if (get_config('disableexternalresources')) {
     $CFG->wwwhost = parse_url($CFG->wwwroot, PHP_URL_HOST);
 }
+
+// Ensure that externalfilesystem is configured correctly.
+if (get_config('externalfilesystem')) {
+    if (empty($CFG->externalfilesystem['includefilepath']) || empty($CFG->externalfilesystem['class'])) {
+        throw new ConfigSanityException('externalfilesystem configuration detected but the settings are invalid');
+    }
+
+    if (!file_exists($CFG->docroot . '/' . $CFG->externalfilesystem['includefilepath'])) {
+        throw new ConfigSanityException('externalfilesystem is configured, but file ' . $CFG->externalfilesystem['includefilepath'] . ' does not exist');
+    }
+
+    require_once($CFG->docroot . '/' . $CFG->externalfilesystem['includefilepath']);
+
+    if (!class_exists($CFG->externalfilesystem['class'])) {
+        throw new ConfigSanityException('externalfilesystem is configured, but class ' . $CFG->externalfilesystem['class'] . ' does not exist');
+    }
+
+    if (!is_subclass_of($CFG->externalfilesystem['class'], 'external_file_system')) {
+        throw new ConfigSanityException('externalfilesystem is configured, but ' . $CFG->externalfilesystem['class'] . ' class does not implement external_file_system interface');
+    }
+}
+
 /*
  * Initializes our performance info early.
  *

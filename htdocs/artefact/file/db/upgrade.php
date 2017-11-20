@@ -483,5 +483,20 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2017100901) {
+        require_once(get_config('docroot') . '/lib/file.php');
+
+        log_debug('Create a new "contenthash" field in "artefact_file_files" table');
+
+        $table = new XMLDBTable('artefact_file_files');
+        $field = new XMLDBField('contenthash');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 64);
+        add_field($table, $field);
+
+        $index = new XMLDBIndex('contenthashix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('contenthash'));
+        add_index($table, $index);
+    }
+
     return $status;
 }

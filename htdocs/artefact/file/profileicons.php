@@ -240,46 +240,29 @@ function upload_validate(Pieform $form, $values) {
 }
 
 function upload_submit(Pieform $form, $values) {
-    global $USER, $filesize;
     safe_require('artefact', 'file');
 
+    $data = new stdClass;
+    $data->title = $values['title'] ? $values['title'] : $values['file']['name'];
+
     try {
-        $USER->quota_add($filesize);
+        ArtefactTypeProfileIcon::save_uploaded_file($values['file']['tmp_name'], $data);
     }
-    catch (QuotaException $qe) {
+    catch (QuotaExceededException $e) {
         $form->json_reply(PIEFORM_ERR, array(
             'message' => get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'))
         ));
     }
-
-    // Entry in artefact table
-    $data = new stdClass;
-    $data->owner = $USER->id;
-    $data->parent = ArtefactTypeFolder::get_folder_id(get_string('imagesdir', 'artefact.file'), get_string('imagesdirdesc', 'artefact.file'), null, true, $USER->id);
-    $data->title = $values['title'] ? $values['title'] : $values['file']['name'];
-    $data->title = ArtefactTypeFileBase::get_new_file_title($data->title, (int)$data->parent, $USER->id);  // unique title
-    $data->note = $values['file']['name'];
-    $data->size = $filesize;
-    $imageinfo = getimagesize($values['file']['tmp_name']);
-    $data->width    = $imageinfo[0];
-    $data->height   = $imageinfo[1];
-    $data->filetype = $imageinfo['mime'];
-    $data->description = get_string('uploadedprofileicon', 'artefact.file');
-
-    $artefact = new ArtefactTypeProfileIcon(0, $data);
-    if (preg_match("/\.([^\.]+)$/", $values['file']['name'], $saved)) {
-        $artefact->set('oldextension', $saved[1]);
+    catch (UploadException $e) {
+        $form->json_reply(PIEFORM_ERR, array(
+            'message' => get_string('uploadoffilefailed', 'artefact.file',  $data->title) . ': ' . $e->getMessage()
+        ));
     }
-    $artefact->commit();
-
-    $id = $artefact->get('id');
-
-    // Move the file into the correct place.
-    $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($id % 256) . '/';
-    check_dir_exists($directory);
-    move_uploaded_file($values['file']['tmp_name'], $directory . $id);
-
-    $USER->commit();
+    catch (Exception $e) {
+        $form->json_reply(PIEFORM_ERR, array(
+            'message' => get_string('uploadoffilefailed', 'artefact.file',  $data->title) . ': ' . $e->getMessage()
+        ));
+    }
 
     $form->json_reply(PIEFORM_OK, get_string('profileiconaddedtoimagesfolder', 'artefact.file', get_string('imagesdir', 'artefact.file')));
 }

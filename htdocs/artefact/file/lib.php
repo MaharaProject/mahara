@@ -11,6 +11,8 @@
 
 defined('INTERNAL') || die();
 
+require_once('file.php');
+
 class PluginArtefactFile extends PluginArtefact {
 
     public static function get_artefact_types() {
@@ -448,7 +450,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         parent::__construct($id, $data);
 
         if (empty($this->id)) {
-            $this->allowcomments = get_config_plugin('artefact', 'file', 'commentsallowed' . $this->artefacttype);
+            $allowcomments = get_config_plugin('artefact', 'file', 'commentsallowed' . $this->artefacttype);
+            $this->allowcomments = !is_null($allowcomments) ? $allowcomments : $this->allowcomments;
         }
     }
 
@@ -477,7 +480,21 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return true;
     }
 
+    /**
+     * Return an instance of external filesystem class or False if not configured.
+     *
+     * @return external_file_system
+     */
+    final public static function get_external_filesystem_instance() {
+        global $CFG;
 
+        if (is_using_external_filesystem()) {
+            $classname = $CFG->externalfilesystem['class'];
+            return new $classname();
+        }
+
+        return false;
+    }
 
     // Check if something exists in the db with a given title and parent,
     // either in adminfiles or with a specific owner.
@@ -1004,7 +1021,18 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     // file is a copy of another file artefact.
     protected $fileid;
 
-    protected $filetype; // Mime type
+    // Mime type
+    protected $filetype;
+
+    // File content hash. It could be used by external file systems.
+    protected $contenthash;
+
+    /**
+     * Array with remote file system settings like 'includefilepath' and 'class'
+     *
+     * @var external_file_system
+     */
+    protected $externalfilesystem;
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -1015,7 +1043,14 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     $this->{$name} = $value;
                 }
             }
+
+            // If contenthash is not set for some reason, set it now.
+            if (empty($this->contenthash)) {
+                $this->save_content_hash();
+            }
         }
+
+        $this->externalfilesystem = ArtefactTypeFileBase::get_external_filesystem_instance();
     }
 
     /**
@@ -1051,11 +1086,16 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'oldextension'  => $this->get('oldextension'),
             'fileid'        => $this->get('fileid'),
             'filetype'      => $this->get('filetype'),
+            'contenthash'   => $this->get('contenthash'),
         );
 
         if ($new) {
             if (empty($data->fileid)) {
                 $data->fileid = $data->artefact;
+            }
+
+            if (empty($this->fileid)) {
+                $this->fileid = $data->fileid;
             }
             insert_record('artefact_file_files', $data);
         }
@@ -1066,20 +1106,54 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $this->dirty = false;
     }
 
+    protected function save_content_hash() {
+        $this->contenthash = self::generate_content_hash($this->get_local_path());
+
+        if (!empty($this->contenthash)) {
+            $this->dirty = true;
+            $this->commit();
+        }
+    }
+
+    public static function generate_content_hash($path) {
+        if (!file_exists($path)) {
+            // We don't want to throw any exception here, because mahara doesn't catch them properly.
+            // Let's just return empty hash.
+            return '';
+        }
+
+        return hash_file('sha256', $path);
+    }
+
     public static function get_file_directory($id) {
         return "artefact/file/originals/" . ($id % 256);
     }
 
-    public function get_path() {
+    public function get_path($data=array()) {
+        if (!empty($this->externalfilesystem)) {
+            return $this->externalfilesystem->get_path($this);
+        }
+        else {
+            return $this->get_local_path($data);
+        }
+    }
+
+    public function get_local_path($data = array()) {
         return get_config('dataroot') . self::get_file_directory($this->fileid) . '/' .  $this->fileid;
     }
 
+    public function ensure_local() {
+        if (!empty($this->externalfilesystem)) {
+            $this->externalfilesystem->ensure_local($this);
+        }
+    }
 
     /**
      * Test file type and return a new Image or File.
      */
     public static function new_file($path, $data) {
-        require_once('file.php');
+        $data->contenthash = self::generate_content_hash($path);
+
         if (is_image_file($path)) {
             // If it's detected as an image, overwrite the browser mime type
             $imageinfo      = getimagesize($path);
@@ -1338,12 +1412,17 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         $file = $this->get_path();
 
-
         if (is_file($file)) {
             $size = filesize($file);
             // Only delete the file on disk if no other artefacts point to it
             if (count_records('artefact_file_files', 'fileid', $this->get('id')) == 1) {
-                unlink($file);
+                if (!empty($this->externalfilesystem)) {
+                    // We trust an external filesystem to do it.
+                    $this->externalfilesystem->delete_file($this);
+                }
+                else {
+                    unlink($file);
+                }
             }
             global $USER;
             // Deleting other users' files won't lower their quotas yet...
@@ -1393,17 +1472,17 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             );
         }
 
-        // Get all fileids so that we can delete the files on disk
-        $filetodeleteids = get_column_sql('
-            SELECT fileid
+        // Get all files so that we can delete the files on filesystem
+        $filerecords = get_records_sql_assoc('
+            SELECT aff1.*, a.artefacttype
             FROM {artefact_file_files} aff1
+            JOIN {artefact} a ON aff1.artefact = a.id
             WHERE artefact IN (' . $idstr . ')
             GROUP BY fileid
             HAVING COUNT(aff1.artefact) IN
                (SELECT COUNT(aff2.artefact)
                 FROM {artefact_file_files} aff2
-                WHERE aff1.fileid = aff2.fileid)',
-            null
+                WHERE aff1.fileid = aff2.fileid)'
         );
 
         // The current rule is that file deletion should be logged in the artefact_log table
@@ -1415,10 +1494,22 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         delete_records_select('artefact_file_files', 'artefact IN (' . $idstr . ')');
         parent::bulk_delete($artefactids, $log);
 
-        foreach ($filetodeleteids as $filetodeleteid) {
-            $file = get_config('dataroot') . self::get_file_directory($filetodeleteid) . '/' . $filetodeleteid;
-            if (is_file($file)) {
-                unlink($file);
+        $externalfilesystem = ArtefactTypeFileBase::get_external_filesystem_instance();
+
+        if (!empty($filerecords)) {
+            foreach ($filerecords as $filerecord) {
+                if (!empty($externalfilesystem)) {
+                    // We can't use artefact_instance_from_id() as we've removed all artefacts already
+                    $classname = generate_artefact_class_name($filerecord->artefacttype);
+                    $fileartefact = new $classname(0, $filerecord);
+                    $externalfilesystem->delete_file($fileartefact);
+                }
+                else {
+                    $file = get_config('dataroot') . self::get_file_directory($filerecord->fileid) . '/' . $filerecord->fileid;
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
+                }
             }
         }
 
@@ -2288,10 +2379,8 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return $url;
     }
 
-    public function get_path($data=array()) {
-        require_once('file.php');
-        $result = get_dataroot_image_path('artefact/file/', $this->fileid, $data);
-        return $result;
+    public function get_local_path($data=array()) {
+        return get_dataroot_image_path('artefact/file/', $this->fileid, $data);
     }
 
     public function delete() {
@@ -2390,10 +2479,8 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         return $url;
     }
 
-    public function get_path($data=array()) {
-        require_once('file.php');
-        $result = get_dataroot_image_path('artefact/file/profileicons/', $this->fileid, $data);
-        return $result;
+    public function get_local_path($data=array()) {
+        return get_dataroot_image_path('artefact/file/profileicons/', $this->fileid, $data);
     }
 
     public function in_view_list() {
@@ -2549,6 +2636,46 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
                 self::download_thumbnail_for_user(-1);
             }
         }
+    }
+
+    public static function save_uploaded_file($inputname, $data, $inputindex=null, $resized=false) {
+        global $USER;
+
+        require_once('uploadmanager.php');
+
+        $um = new upload_manager('file');
+
+        if ($error = $um->preprocess_file()) {
+            throw new UploadException($error);
+        }
+
+        $USER->quota_add($um->file['size']);
+
+        $imageinfo = getimagesize($inputname);
+        $data->parent = ArtefactTypeFolder::get_folder_id(get_string('imagesdir', 'artefact.file'), get_string('imagesdirdesc', 'artefact.file'), null, true, $USER->id);
+        $data->title = $data->title ? $data->title : $um->file['name'];
+        $data->title = ArtefactTypeFileBase::get_new_file_title($data->title, (int)$data->parent, $USER->id);  // unique title
+        $data->owner = $USER->id;
+        $data->width = $imageinfo[0];
+        $data->height = $imageinfo[1];
+        $data->filetype = $imageinfo['mime'];
+        $data->description = get_string('uploadedprofileicon', 'artefact.file');
+        $data->contenthash = parent::generate_content_hash($inputname);
+        $data->size = $um->file['size'];
+        $data->note = $um->file['name'];
+        $data->oldextension = $um->original_filename_extension();
+
+        $artefact = new ArtefactTypeProfileIcon(0, $data);
+        $artefact->commit();
+
+        $id = $artefact->get('id');
+
+        // Move the file into the correct place.
+        $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($id % 256) . '/';
+        check_dir_exists($directory);
+        move_uploaded_file($inputname, $directory . $id);
+
+        $USER->commit();
     }
 }
 
