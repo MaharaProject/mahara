@@ -2248,6 +2248,7 @@ function getoptions_country() {
         'wf',
         'eh',
         'ye',
+        'xk',
         'zm',
         'zw',
     );

@@ -1210,6 +1210,11 @@ class Country {
             'match' => "^Mayotte\$",
         ),
         array(
+            '2' => 'xk',
+            '3' => 'xk',
+            'match' => "^Kosovo\$",
+        ),
+        array(
             '2' => 'za',
             '3' => 'zaf',
             'match' => "^South Africa\$",
