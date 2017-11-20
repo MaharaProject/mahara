@@ -55,7 +55,7 @@
     {foreach from=$rows item=row}
     <div class="list-group-item">
         <h4 class="list-group-item-heading">
-            {if $row->qualdescription || $row->attachments}
+            {if $row->qualdescription || $row->attachments || $row->institutionaddress}
             <a href="#education-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
                 {$row->qualification}
                 <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
@@ -82,6 +82,12 @@
             <p class="content-text">
                 {$row->qualdescription|safe}
             </p>
+            {/if}
+
+            {if $row->institutionaddress}
+                <span class="text-small text-muted">
+                    {str tag=addresstag section='blocktype.resume/entireresume' arg1=$row->institutionaddress}
+                </span>
             {/if}
 
             {if $row->attachments}

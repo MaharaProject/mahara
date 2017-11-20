@@ -56,7 +56,7 @@
     {foreach from=$rows item=row}
     <div class="list-group-item">
         <h5 class="list-group-item-heading">
-        {if $row->positiondescription || $row->attachments}
+        {if $row->positiondescription || $row->attachments || $row->employeraddress}
             <a href="#employment-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
                 {$row->jobtitle} {str tag="at"} {$row->employer}
                 <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
@@ -81,6 +81,12 @@
             <p class="content-text">
                 {$row->positiondescription|safe}
             </p>
+            {/if}
+
+            {if $row->employeraddress}
+                <span class="text-small text-muted">
+                    {str tag=addresstag section='blocktype.resume/entireresume' arg1=$row->employeraddress}
+                </span>
             {/if}
 
             {if $row->attachments}
