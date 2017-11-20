@@ -64,6 +64,10 @@
                 {$post->description|clean_html|safe}
             </div>
 
+            {if $post->attachments}
+                {$post->attachments|safe}
+            {/if}
+
             {if !$editing}
                 {if $post->commentcount != null}
                 <div class="comments clearfix">
