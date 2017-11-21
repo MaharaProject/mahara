@@ -10,5 +10,5 @@ Scenario: Checking that the Multirecipient notifications plugin is active (Bug 1
  # Currently only tests for multirecipientnotifications plugin which
  # should be active and not be able to be hidden
  And I scroll to the base of id "module.multirecipientnotification"
- Then I should not see "Hide" in the "//li[@id='module.multirecipientnotification']" "xpath_element"
- And I should not see "Show" in the "//li[@id='module.multirecipientnotification']" "xpath_element"
+ Then I should not see "Hide" in the "multirecipientnotification" property
+ And I should not see "Show" in the "multirecipientnotification" property

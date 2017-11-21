@@ -25,11 +25,11 @@ Background:
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Celeste's Page" panel menu
     And I click on "Edit" in "Celeste's Page" panel menu
-    And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
+    And I expand "Journals" node in the "blocktype sidebar" property
 
 Scenario: Add Journal block to the page
 
-    Given I follow "Journal" in the "div#blog" "css_element"
+    Given I follow "Journal" in the "blocktype sidebar" property
     And I press "Add"
     And I set the field "Mars journal" to "1"
     And I press "Save"
@@ -37,7 +37,7 @@ Scenario: Add Journal block to the page
     Then I should see "Spacefood is kind of gross"
 
 Scenario: Add specific Journal entry to the page
-    Given I follow "Journal entry" in the "div#blog" "css_element"
+    Given I follow "Journal entry" in the "blocktype sidebar" property
     And I press "Add"
     And I wait "1" seconds
     And I set the field "I'm going to Mars!" to "1"
@@ -47,7 +47,7 @@ Scenario: Add specific Journal entry to the page
     And I should not see "Spacefood is kind of gross"
 
 Scenario: Add a recent journal entries block to the page
-    Given I follow "Recent journal entries" in the "div#blog" "css_element"
+    Given I follow "Recent journal entries" in the "blocktype sidebar" property
     And I press "Add"
     And I set the field "Mars journal" to "1"
     And I press "Save"
@@ -55,7 +55,7 @@ Scenario: Add a recent journal entries block to the page
     Then I should see "Spacefood"
 
 Scenario: Add a tagged journal entry block to the page
-    Given I follow "Tagged journal entries" in the "div#blog" "css_element"
+    Given I follow "Tagged journal entries" in the "blocktype sidebar" property
     And I press "Add"
     #And I set the field "Display entries tagged with" to "Mars"
     And I fill in select2 input "instconf_tagselect" with "food" and select "food"

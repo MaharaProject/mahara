@@ -32,7 +32,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I click on "Help"
   Then I should see "Designing your page layout enables you to personalise the way in which your resources and information can be displayed."
   And I follow "Close help"
-  Given I click on "Settings" in the "div#main-column-container" "css_element"
+  Given I click on "Settings" in the "Toolbar buttons" property
   And I click on "Help"
   # Tags
   Then I should see "You can add tags to artefacts, pages and collections you create."
@@ -41,9 +41,9 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I click on "Add"
   And I click on "Collection"
   # Edit collection settings
-  And I click on "Help" in the "h1.page-header" "css_element"
+  And I click on "Help" in the "h1 heading" property
   Then I should see "Here you may give your collection a title and description to give people an idea of what your collection is about."
-  And I follow "Help" in the "div#edit_tags_container" "css_element"
+  And I follow "Help" in the "Tags section" property
   Then I should see "You can add tags to artefacts, pages and collections you create. Tags are descriptive labels that allow you to find your content later on more easily."
   And I set the field "Collection name" to "Collection 01"
   And I press "Next: Edit collection pages"

@@ -25,7 +25,7 @@ Scenario: Creating an institution (selenium test)
     And I press "Submit"
 
     # Moving authentication option
-    And I press "Edit" in the "table#adminstitutionslist" "css_element"
+    And I click on "Edit" in "Institution One" row
     And I scroll to the base of id "dummySelect"
     And I follow "Move up"
 
@@ -37,6 +37,6 @@ Scenario: Creating an institution (selenium test)
     And I press "Submit"
 
     # Delete the institution
-    And I press "Delete" in the "table#adminstitutionslist" "css_element"
+    And I click on "Delete" in "Institution One" row
     And I press "Yes"
     Then I should see "Institution deleted successfully"

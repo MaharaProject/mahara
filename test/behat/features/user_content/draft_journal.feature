@@ -59,15 +59,15 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I choose "Portfolio" from main menu
  And I click on "Page UserA_01" panel menu
  And I click on "Edit" in "Page UserA_01" panel menu
- And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
- And I follow "Tagged journal entries" in the "div#blog" "css_element"
+ And I expand "Journals" node in the "blocktype sidebar" property
+ And I follow "Tagged journal entries" in the "blocktype sidebar" property
  And I press "Add"
  And I fill in select2 input "instconf_tagselect" with "george" and select "george"
  And I press "Save"
  Then I should see "My diary entry two"
  And I go to portfolio page "Page UserA_01"
  And I follow "Edit this page"
- And I follow "Share" in the "#toolbar-buttons" "css_element"
+ And I follow "Share" in the "Toolbar buttons" property
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  And I log out

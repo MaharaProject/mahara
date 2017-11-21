@@ -21,7 +21,7 @@ Scenario: Accessing annotation block
  # Navigating to admin block to turn it on
  And I choose "Plugin administration" in "Extensions" from administration menu
  And I press "activate_blocktype_annotation_submit"
- And I should see "Hide" in the "form#activate_module_framework" "css_element"
+ And I should see "Hide" in the "smartevidence" property
  And I choose "Settings" in "Institutions" from administration menu
  And I press "Edit"
  And I enable the switch "Allow SmartEvidence"

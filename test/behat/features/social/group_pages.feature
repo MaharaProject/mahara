@@ -23,7 +23,7 @@ Scenario: Copying a group page retains title (Bug 1519374)
  # Make the group page copyable
  Given I log in as "UserA" with password "Kupuhipa1"
  When I go to group "GroupA"
- And I follow "Share" in the "ul.nav-inpage" "css_element"
+ And I follow "Share" in the "Arrow-bar nav" property
  And I click on "Edit access" in "Page GroupA_01" row
  And I follow "Advanced options"
  And I set the following fields to these values:

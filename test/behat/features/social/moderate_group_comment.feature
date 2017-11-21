@@ -27,7 +27,7 @@ Scenario: Moderating a group comment when approve comments is turned on
     And I set the field "Comment" to "This is a comment from UserC"
     And I enable the switch "Make comment public"
     And I press "Comment"
-    Then I should see "You have requested that this comment be made public." in the ".feedbacktable" "css_element"
+    Then I should see "You have requested that this comment be made public." in the "Comment feedbacktable" property
     And I log out
 
     # Checking that normal group member is not able to moderate comment

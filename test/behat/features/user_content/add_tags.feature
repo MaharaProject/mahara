@@ -70,7 +70,7 @@ Background:
    And I press "Save"
    # Creating a Note with a tag
    And I expand "General" node
-   And I follow "Note" in the "div#general" "css_element"
+   And I follow "Note" in the "blocktype sidebar" property
    And I press "Add"
    And I fill in select2 input "instconf_tags" with "black" and select "black"
    And I press "Save"
@@ -93,7 +93,7 @@ Background:
    #Check tags can be deleted from a page - Bug 1715491
    Given I follow "Testing page 2"
    And I follow "Edit this page"
-   And I click on "Settings" in the "div#toolbar-buttons" "css_element"
+   And I click on "Settings" in the "Toolbar buttons" property
    And I clear value "orange (1)" from select2 field "settings_tags"
    And I press "Save"
    And I display the page

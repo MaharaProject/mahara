@@ -105,14 +105,14 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I press "Save"
   # Adding journal block to the page
   # Need to access the adding "Journal" block more directly than normal now that "Journals" is a menu item also
-  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
-  And I follow "Journal" in the "div#blog" "css_element"
+  And I expand "Journals" node in the "blocktype sidebar" property
+  And I follow "Journal" in the "blocktype sidebar" property
   And I press "Add"
   And I select the radio "Site journal 1"
   And I select "Others will get their own copy of your journal" from "Block copy permission"
   And I press "Save"
   And I scroll to the id "main-nav"
-  And I follow "Share" in the "#toolbar-buttons" "css_element"
+  And I follow "Share" in the "Toolbar buttons" property
   And I select "Registered users" from "accesslist[0][searchtype]"
   And I follow "Advanced options"
   And I set the following fields to these values:

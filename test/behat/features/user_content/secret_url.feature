@@ -13,15 +13,15 @@ Scenario: Create a page and secret URLs to copy (Bug 1426983)
     And I follow "Add"
     And I click on "Page" in the dialog
     And I fill in the following:
-    | Page title    | Testing page 1 |
+    | Page title    | Testing page |
     And I press "Save"
     # Verifying page was created
     And I should see "Page saved successfully"
     And I display the page
     # Navigating to shared by be to click button
     And I choose "Shared by me" in "Portfolio" from main menu
-    And I click on "Edit secret URL access"
+    And I click on "Edit secret URL access" in "Testing page" row
     And I press "New secret URL"
     # Verifying Secret URLs was created
     And I choose "Shared by me" in "Portfolio" from main menu
-    Then I should see "1" in the "td.secreturls" "css_element"
+    Then I should see "1" in the "Secret urls - table row 2" property

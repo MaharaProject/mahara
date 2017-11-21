@@ -21,7 +21,7 @@ Scenario:
     And I click on "Edit" in "Page UserA_01" panel menu
     # Configuring the block
     And I expand "Media" node
-    And I follow "PDF" in the "div#fileimagevideo" "css_element"
+    And I follow "PDF" in the "blocktype sidebar" property
     And I press "Add"
     And I fill in the following:
     | Block title | Mahara about PDF |

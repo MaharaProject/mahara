@@ -82,7 +82,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
  And I click on "Page" in the dialog
  And I press "Save"
  And I expand "General" node
- And I follow "Plans" in the "div#general" "css_element"
+ And I follow "Plans" in the "blocktype sidebar" property
  And I press "Add"
  And I set the following fields to these values:
  | Plan 9 from outer space | 1 |

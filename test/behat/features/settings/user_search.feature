@@ -13,7 +13,7 @@ Scenario: Testing functions for user search page (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "User search" in "Users" from administration menu
  And I follow "Advanced options"
- And I follow "A" in the "div#firstnamelist" "css_element"
+ And I follow "A" in the "Filter by first name" property
  And I follow "UserA"
  And I should see "Account settings | Angela User (UserA)"
  # Flicking the switches to new settings

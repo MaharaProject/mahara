@@ -70,7 +70,7 @@ Scenario: Add comments block to page
     # Add a comments block so that comments will now be at the top of the page
     And I expand "General" node
     And I wait "1" seconds
-    And I follow "Comments" in the "div#general" "css_element"
+    And I follow "Comments" in the "blocktype sidebar" property
     And I press "Add"
     Then I should see "Comments for this page will be displayed here rather than at the bottom of the page."
     And I display the page
