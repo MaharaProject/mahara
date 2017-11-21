@@ -74,7 +74,7 @@
                         <span class="switch-inner" role="presentation" aria-hidden="true"></span>
                         <span class="switch-indicator" role="presentation" aria-hidden="true"></span>
                         <span class="state-label on" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.on section=pieforms}</span>
-                        <span class="state-label off" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.off section=pieforms}<span>
+                        <span class="state-label off" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.off section=pieforms}</span>
                     </label>
                 </div>
             </div>
