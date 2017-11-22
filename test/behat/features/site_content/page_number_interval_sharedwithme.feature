@@ -35,7 +35,7 @@
      | Page UserA_21 | Page 21 | user | UserA |
      | Page UserA_22 | Page 22 | user | UserA |
 
- Scenario: Checking the jump list of the paginagtor (Bug 1409370)
+ Scenario: Checking the jump list of the paginator (Bug 1409370)
   Given I log in as "UserA" with password "Kupuhipa1"
   And I choose "Shared by me" in "Portfolio" from main menu
   And I click on "Edit access" in "Page UserA_01" row
@@ -51,9 +51,6 @@
   And I press "search_submit"
   And I should see "Results per page:"
   And I select "1" from "limit"
-  And I should see "1"
-  And I should see "2"
-  And I should see "3"
-  And I follow "3"
-  And I should see "4"
-  And I should see "5"
+  Then I follow "...21"
+  And I follow "...8"
+  And I should see "Page UserA_08"
