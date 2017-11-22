@@ -2621,7 +2621,7 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array(), $
 function add_user_to_autoadd_groups($eventdata) {
     require_once('group.php');
     $userid = is_object($eventdata) ? $eventdata->id : $eventdata['id'];
-    if ($autoaddgroups = get_column('group', 'id', 'usersautoadded', true)) {
+    if ($autoaddgroups = get_column('group', 'id', 'usersautoadded', true, 'deleted', 0)) {
         foreach ($autoaddgroups as $groupid) {
             if (!group_user_access($groupid, $userid)) {
                 group_add_user($groupid, $userid);
