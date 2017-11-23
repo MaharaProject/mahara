@@ -1857,13 +1857,19 @@ class LiveUser extends User {
         if (isset($_SERVER['HTTP_USER_AGENT'])) {
             $useragent = $_SERVER['HTTP_USER_AGENT'];
         }
-        insert_record('usr_session', (object) array(
-            'usr' => $this->get('id'),
-            'session' => $sessionid,
-            'ctime' => db_format_timestamp(time()),
-            'mtime' => db_format_timestamp(time()),
-            'useragent' => $useragent,
-        ));
+
+        if ($this->get('id') == 0) {
+            throw new UserException("Logged out user can not be stored in usr_session");
+        }
+        else {
+            insert_record('usr_session', (object) array(
+                'usr' => $this->get('id'),
+                'session' => $sessionid,
+                'ctime' => db_format_timestamp(time()),
+                'mtime' => db_format_timestamp(time()),
+                'useragent' => $useragent,
+            ));
+        }
     }
 
    /**
