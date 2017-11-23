@@ -6347,7 +6347,8 @@ class View {
                 db_format_tsfield('v.submittedtime', 'submittedtime') . ", v.submittedstatus,
                 c.id AS cid, c.name AS cname, c.framework,
                 c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost, " .
-                db_format_tsfield('c.submittedtime', 'csubmittime') . ", c.submittedstatus AS csubmitstatus
+                db_format_tsfield('c.submittedtime', 'csubmittime') . ", c.submittedstatus AS csubmitstatus,
+                cv.displayorder
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
@@ -6403,6 +6404,7 @@ class View {
                 'submittedhost'  => $r['submittedhost'],
                 'submittedtime'  => $r['submittedtime'],
                 'submittedstatus' => $r['submittedstatus'],
+                'displayorder' => $r['displayorder'],
             );
             if (isset($r['user'])) {
                 $v['ownername'] = display_name($r['user']);

@@ -39,6 +39,7 @@ if ($id = param_integer('id', null)) {
 }
 else {
     define('TITLE', get_string('creategroup', 'group'));
+    define('CREATEGROUP', true);
 
     if (!group_can_create_groups()) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
