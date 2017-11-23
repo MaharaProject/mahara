@@ -32,6 +32,10 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "personalinformation_save"
     And I should see "Résumé saved"
 
+Scenario: Editing Education and Employment info
+    Given I log in as "UserA" with password "Kupuhipa1"
+    # Editing resume
+    When I choose "Résumé" in "Content" from main menu
     And I follow "Education and employment"
     # Adding Education history
     And I press "Add education history"
@@ -96,10 +100,11 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "Move down" in "Test Analyst" row
     And I click on "Move up" in "Test Analyst" row
 
-    # Adding Achievements
-    And I scroll to the base of id "messages"
+Scenario: Adding Achievements
+    Given I log in as "UserA" with password "Kupuhipa1"
+    # Editing resume
+    When I choose "Résumé" in "Content" from main menu
     And I follow "Achievements"
-    And I scroll to the base of id "addcertificationbutton"
     And I click on "Add certifications, accreditations and awards"
     # Adding Certifications, accreditations and awards
     And I set the following fields to these values:
@@ -125,7 +130,6 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "Move down" in "Scrum Master Certification" row
     And I click on "Move up" in "Scrum Master Certification" row
 
-    # Adding Books and publications
     And I scroll to the base of id "addbookbutton"
     And I click on "Add books and publications"
     And I set the following fields to these values:
@@ -181,7 +185,10 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I click on "Move down" in "Accredited Technologist" row
     And I click on "Move up" in "Accredited Technologist" row
 
-    And I scroll to the top
+Scenario: Adding Goals and Skills
+    Given I log in as "UserA" with password "Kupuhipa1"
+    # Editing resume
+    When I choose "Résumé" in "Content" from main menu
     And I follow "Goals and skills"
     And I should see "My goals"
     And I should see "My skills"
@@ -237,7 +244,11 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "Close" in the "Upload dialog" property
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the top
+
+Scenario: Adding interests
+    Given I log in as "UserA" with password "Kupuhipa1"
+    # Editing resume
+    When I choose "Résumé" in "Content" from main menu
     And I follow "Interests"
     And I press "Edit"
     And I set the following fields to these values:
@@ -245,6 +256,11 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
+
+Scenario: Adding license info
+    Given I log in as "UserA" with password "Kupuhipa1"
+    # Editing resume
+    When I choose "Résumé" in "Content" from main menu
     And I follow "License"
     And I fill in the following:
     | License | http://creativecommons.org/licenses/by/4.0/ |
@@ -254,5 +270,3 @@ Scenario: Editing admin resume page (Bug 1426983)
     | Original URL | something here |
     And I press "Save"
     And I should see "Résumé saved"
-    # Logging out and loggin in as as student user/ then ending
-    And I log out
