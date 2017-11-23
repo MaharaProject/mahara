@@ -5717,5 +5717,18 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("DELETE FROM {config} WHERE field = ?", array('alwaysallowselfdelete'));
     }
 
+    if ($oldversion < 2018021601) {
+        log_debug('Remove auto-added users from deleted groups if added post deletion');
+        if ($records = get_records_sql_array("SELECT id, SUBSTR(name, POSITION('.deleted.' IN name) + LENGTH('.deleted.')) AS deltime
+                                              FROM {group} WHERE deleted = 1")) {
+            foreach ($records as $key => $record) {
+                if (is_numeric($record->deltime)) {
+                    $timestamp = date('Y-m-d H:i:s', $record->deltime);
+                    delete_records_sql('DELETE FROM {group_member} WHERE "group" = ? AND ctime >= ?', array($record->id, $timestamp));
+                }
+            }
+        }
+    }
+
     return $status;
 }
