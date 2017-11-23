@@ -417,7 +417,7 @@ function auth_setup () {
     // Need to doublecheck that the User's sessionid still has a match the usr_session table
     // It can disappear if the current user has hacked the real user's account and the real user has
     // reset the password clearing the session from usr_session.
-    $sessionexists = get_record('usr_session', 'usr', $USER->id, 'session', $USER->get('sessionid'));
+    $sessionexists = ($USER->id > 0) ? get_record('usr_session', 'usr', $USER->id, 'session', $USER->get('sessionid')) : false;
     $parentuser = $USER->get('parentuser');
     if (($sessionlogouttime && isset($_GET['logout']))
        || ($sessionexists === false && $USER->get('sessionid') != '' && empty($parentuser))
