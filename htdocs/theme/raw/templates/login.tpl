@@ -9,7 +9,7 @@
 	    </h3>
 	    <div class="panel-body">
 	        <noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
-	        {dynamic}{insert_messages placement='loginbox'}{/dynamic}
+	        {dynamic}{$messages.loginbox|safe}{/dynamic}
 	        <div id="loginform_container">
 	            {$login_form|safe}
 	        </div>

@@ -494,7 +494,8 @@ class Session {
  */
 function insert_messages($placement='messages') {
     global $SESSION;
-    return $SESSION->render_messages($placement);
+    $messages = $SESSION->render_messages($placement);
+    return (array($placement => $messages));
 }
 
 
