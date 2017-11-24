@@ -915,6 +915,8 @@ EOF;
         require_once('cookieconsent.php');
         $smarty->assign('COOKIECONSENTCODE', get_cookieconsent_code());
     }
+    // Render the session messages
+    $smarty->assign('messages', insert_messages('messages'));
     return $smarty;
 }
 
