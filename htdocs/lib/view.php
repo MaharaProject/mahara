@@ -2366,7 +2366,7 @@ class View {
         // is lost on block move so we need to referesh the block with its original content
         $configdata = $bi->get('configdata');
         $html = null;
-        if ($bi->get('blocktype') == 'externalvideo' && $configdata['embed']['service'] == 'embedly') {
+        if ($bi->get('blocktype') == 'externalvideo' && isset($configdata['embed']) && $configdata['embed']['service'] == 'embedly') {
             $html = PluginBlocktypeExternalvideo::render_instance($bi, true);
         }
         return array('html' => $html);

@@ -77,7 +77,36 @@
             });
 
             swapNodes(oldblock.get()[0], newblock.get()[0]); // using DOM objects, not jQuery objects so we needn't worry about IDs
-            eval(data.data.javascript);
+
+            var embedjs = data.data.javascript;
+            if (embedjs.includes("AC_Voki_Embed")) {
+                var paramsstr = embedjs.substring(embedjs.lastIndexOf("(")+1,embedjs.lastIndexOf(")"));
+                var params = paramsstr.split(',');
+                if (params.length == 7 ) { // old voki embed code has only 7 parameters
+                    // change the last parameter to 1 so it returns the embed code instead of showing it
+                    var newScript = 'AC_Voki_Embed(';
+                    for (var i = 0; i<params.length-1; i++) {
+                        newScript += params[i] + ', ';
+                    }
+                    newScript += "1)";
+                    var embedCode = get_string_ajax('reloadtoview', 'mahara');
+                    if (window['AC_Voki_Embed']) {
+                        embedCode = eval(newScript);
+                    }
+                    // add embed code to already loaded page
+                    var newChild = document.createElement('div');
+                    newChild.innerHTML = embedCode;
+                    newblock.get()[0].getElementsByClassName('mediaplayer')[0].appendChild(newChild);
+                }
+                else {
+                  // patch for new voki code, need to reload page so it shows the embed code
+                  $(window).trigger('embednewvoki');
+                }
+            }
+            else {
+              eval(data.data.javascript);
+            }
+
             rewriteConfigureButton(newblock.find('.configurebutton'));
             rewriteDeleteButton(newblock.find('.deletebutton'));
         }
@@ -189,6 +218,10 @@
 
         $(window).on('resize colresize', function(){
             equalHeights();
+        });
+
+        $(window).on('embednewvoki', function() {
+            location.reload();
         });
 
     // images need time to load before height can be properly calculated
