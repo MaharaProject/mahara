@@ -1,33 +1,30 @@
 <?php
 class ElasticsearchType_collection extends ElasticsearchType {
-    public static $mappingconf = array (
+    // New style v6 mapping
+    public static $mappingconfv6 = array (
+            'type' => array(
+                'type' => 'keyword',
+            ),
             'mainfacetterm' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'secfacetterm' => array ( // set to Page - used in 2nd facet
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'id' => array (
                     'type' => 'long',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'name' => array (
                     'type' => 'text',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'description' => array (
                     'type' => 'text',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'tags' => array (
                     'type' => 'keyword',
-                    'copy_to' => 'tag',
-                    'include_in_all' => TRUE
+                    'copy_to' => ['tag','catch_all']
             ),
             'tag' => array (
                     'type' => 'keyword'
@@ -35,69 +32,47 @@ class ElasticsearchType_collection extends ElasticsearchType {
             // the owner can be owner (user), group, or institution
             'owner' => array (
                     'type' => 'long',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'group' => array (
                     'type' => 'long',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'institution' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'access' => array (
                     'type' => 'object',
-                    'include_in_all' => FALSE,
                     // public - loggedin - friends: if artefact is visible to public or logged-in users
                     // if public or logged, the other properties are ignored
                     'properties' => array (
                             'general' => array (
                                     'type' => 'keyword',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => FALSE
                             ), // array of institutions that have access to the artefact
                             'institutions' => array (
                                     'type' => 'keyword',
-                                    'index' => 'not_analyzed',
                                     'copy_to' => 'institution',
-                                    'include_in_all' => false
                             ),
                             'institution' => array (
                                     'type' => 'keyword',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => false
                             ),
                             // array of groups that have access to the artefact
                             'groups' => array (
                                     'type' => 'object',
-                                    'include_in_all' => FALSE,
                                     'properties' => array (
                                         'all' => array (
                                             'type' => 'integer',
-                                            'index' => 'not_analyzed',
                                             'copy_to' => 'group',
-                                            'include_in_all' => false
                                         ),
                                         'admin' => array (
                                             'type' => 'integer',
-                                            'index' => 'not_analyzed',
                                             'copy_to' => 'group',
-                                            'include_in_all' => false
                                         ),
                                         'member' => array (
                                             'type' => 'integer',
-                                            'index' => 'not_analyzed',
                                             'copy_to' => 'group',
-                                            'include_in_all' => false
                                         ),
                                         'tutor' => array (
                                             'type' => 'integer',
-                                            'index' => 'not_analyzed',
                                             'copy_to' => 'group',
-                                            'include_in_all' => false
                                         )
                                     )
                             ),
@@ -107,9 +82,7 @@ class ElasticsearchType_collection extends ElasticsearchType {
                             // array of user ids that have access to the artefact
                             'usrs' => array (
                                     'type' => 'integer',
-                                    'index' => 'not_analyzed',
                                     'copy_to' => 'usr',
-                                    'include_in_all' => false
                             ),
                             'usr' => array (
                                     'type' => 'integer'
@@ -119,15 +92,13 @@ class ElasticsearchType_collection extends ElasticsearchType {
             'ctime' => array (
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
-                    'include_in_all' => FALSE
             ),
             // sort is the field that will be used to sort the results alphabetically
             'sort' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             )
     );
+
     public static $mainfacetterm = 'Portfolio';
     public static $secfacetterm = 'Collection';
     public function __construct($data) {

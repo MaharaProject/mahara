@@ -1,101 +1,78 @@
 <?php
 class ElasticsearchType_event_log extends ElasticsearchType {
-    public static $mappingconf = array (
+    // New style v6 mapping
+    public static $mappingconfv6 = array (
+            'type' => array(
+                'type' => 'keyword',
+            ),
             'mainfacetterm' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'secfacetterm' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'id' => array (
                     'type' => 'long',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'usr' => array (
                     'type' => 'integer',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'realusr' => array (
                     'type' => 'integer',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'event' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'data' => array (
                     'type' => 'text',
-                    'include_in_all' => FALSE
             ),
             'resourceid' => array (
                     'type' => 'integer',
-                    'include_in_all' => FALSE
             ),
             'resourcetype' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'parentresourceid' => array (
                     'type' => 'integer',
-                    'include_in_all' => FALSE
             ),
             'parentresourcetype' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'ownerid' => array (
                     'type' => 'integer',
-                    'include_in_all' => FALSE
             ),
             'ownertype' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'ctime' => array (
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
-                    'include_in_all' => FALSE
             ),
             'yearweek' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'createdbyuser' => array (
                     'type' => 'boolean',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'firstname' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'lastname' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'username' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'displayname' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
     );
+
     public static $mainfacetterm = 'Event';
     public static $secfacetterm = 'Log';
     public function __construct($data) {
@@ -200,8 +177,6 @@ class ElasticsearchType_event_log extends ElasticsearchType {
         //      1 - Get the aggregate list of events
         // ------------------------------------------------------------------------------------------
         $records = array();
-        $searchfield = '_all';
-
         $matching = array(
             'match_all' => new \stdClass()
         );

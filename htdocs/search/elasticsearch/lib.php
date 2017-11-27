@@ -32,7 +32,7 @@ spl_autoload_register('__autoload_elasticsearchtypes', true);
 class PluginSearchElasticsearch extends PluginSearch {
 
     /**
-     * The version of elasticsearch this plugin is compatible with.
+     * The minimum version of elasticsearch this plugin is compatible with.
      */
     const elasticsearch_version = '5.0';
 
@@ -469,9 +469,6 @@ class PluginSearchElasticsearch extends PluginSearch {
                     'title' => $type,
                     'type' => 'html',
                     'value' => $count_in_queue,
-//                    'title'        =>   $type . $count_in_queue,
-//                    'type'         => 'submit',
-//                    'defaultvalue' => get_string('reset', 'search.elasticsearch'),
                 );
             }
             // And on the end, a special one to reset all the indexes.
@@ -558,26 +555,6 @@ class PluginSearchElasticsearch extends PluginSearch {
             // free the cron lock
             delete_records('config', 'field', '_cron_lock_search_elasticsearch_cron', 'value', $start);
         }
-        // TODO: Make single-searchtype reset work properly. For now we'll just comment this out in hopes
-        // it will aid a future developer.
-//         else {
-//             // If they clicked any "reset index" button, then reset only that index.
-//             // We'll  loop through the index types, in order to check for the form detail for each one
-//             $types = explode(',', $values['types']);
-//             foreach ($types as $type) {
-//                 // Check whether they chose to reset the index on this type
-//                 $type = trim($type);
-//                 $keyreset = $type . 'reset';
-//                 if (isset($values[$keyreset]) AND $values[$keyreset] == 'reset') {
-//                     // Queues every matching record for this index type
-//                     ElasticsearchIndexing::requeue_searchtype_contents($type);
-//                 }
-//                 // Reset the mappings for (only) this type
-//                 self::set_mapping($type);
-//                 ElasticsearchIndexing::create_triggers($type);
-//             }
-//         }
-
         return true;
     }
 
@@ -628,13 +605,20 @@ class PluginSearchElasticsearch extends PluginSearch {
         ElasticSearchIndexing::create_index();
         ElasticsearchIndexing::create_trigger_functions();
         $enabledtypes = explode(',', get_config_plugin('search', 'elasticsearch', 'types'));
+        $mappings = array();
         // (re)create the mappings and the overall site index
         foreach ($enabledtypes as $type) {
             ElasticsearchIndexing::create_triggers($type);
             ElasticsearchIndexing::requeue_searchtype_contents($type);
-            error_log("setting mapping for $type");
-            self::set_mapping($type);
+            error_log("fetching mapping for $type");
+            $ES_class = 'ElasticsearchType_' . $type;
+            if ($ES_class::$mappingconfv6 === false) {
+                error_log("mapping $type missing - will ignore");
+                continue;
+            }
+            $mappings[]= $ES_class::$mappingconfv6;
         }
+        self::set_mapping($mappings);
     }
 
     public static function postinst($prevversion) {
@@ -697,47 +681,54 @@ class PluginSearchElasticsearch extends PluginSearch {
     }
 
     /**
-     * Creates the "mapping" for this searchtype, on the elasticsearch server
+     * Creates the "mapping" for the 'doc' mappingtype on the elasticsearch server
      *
-     * TODO: it would be good to be able to make elasticsearch just delete the contents of one
-     * searchtype, perhaps identified by its mapping? But I haven't been able to figure out how
-     * to do that, so instead you can only delete the whole index at once.
-     * @param string $type
+     * @param array $mappings Array of old style mapping types that we want to merge to make one type
      */
-    private static function set_mapping($type) {
-        // usr,interaction_instance,interaction_forum_post,view,group,artefact
-        $ES_class = 'ElasticsearchType_' . $type;
-        if ($ES_class::$mappingconf === false) {
-            error_log("mapping $type: returning false");
+    private static function set_mapping($mappings) {
+
+        if (!is_array($mappings) || empty($mappings)) {
+            error_log('wrong mapping info');
             return false;
         }
-
-        $ESClient = self::make_client('write');
+        $docmapping = array();
+        foreach ($mappings as $maptype) {
+            foreach ($maptype as $k => $v) {
+                if (!isset($docmapping[$k])) {
+                    $docmapping[$k] = $v;
+                }
+                else {
+                    $docmapping[$k] = array_replace_recursive($docmapping[$k], $v);
+                }
+            }
+        }
         $ESAnalyzer = get_config_plugin('search', 'elasticsearch', 'analyzer');
+        // In version 6.x there is no catchall '_all' field so we now map '$type_all' for the different types
+        // and instead of doing full search on '_all' we do multi_match on 'catch_all' to achieve same functionality.
+        $docmapping['catch_all'] = array(
+            'type' => 'text',
+            'analyzer'  => $ESAnalyzer,
+            'search_analyzer' => $ESAnalyzer,
+            'store' => true
+        );
 
         $mappingparams = array(
             'index' => PluginSearchElasticsearch::get_write_indexname(),
-            'type' => $type,
+            'type' => 'doc', // Only allowed one type mapping in version 6.x
             'body' => array(
-                $type => array(
+                'doc' => array(
                     '_source' => array(
                         'enabled' => true
                     ),
-                    '_all' => array(
-                        'analyzer'  => $ESAnalyzer,
-                        'search_analyzer' => $ESAnalyzer,
-                        'store' => 'yes',
-                        'enabled' => true
-                    ),
-                    'properties' => $ES_class::$mappingconf
+                    'properties' => $docmapping
                 )
             )
         );
-
+        error_log("setting merged mappings");
+        $ESClient = self::make_client('write');
         // Set mapping on index type.
         $ESClient->indices()->putMapping($mappingparams);
     }
-
 
     /**
      * Sends records from the queue table into the elasticsearch server
@@ -809,8 +800,8 @@ class PluginSearchElasticsearch extends PluginSearch {
                             $params['body'][] = [
                                     'delete' => [
                                             '_index' => PluginSearchElasticsearch::get_write_indexname(),
-                                            '_type'  => $type,
-                                            '_id'    => $record,
+                                            '_type'  => 'doc',
+                                            '_id'    => $type.$record,
                                     ],
                             ];
                         }
@@ -836,10 +827,11 @@ class PluginSearchElasticsearch extends PluginSearch {
                             $params['body'][] = [
                                 'index' => [
                                     '_index' => PluginSearchElasticsearch::get_write_indexname(),
-                                    '_type'  => $type,
-                                    '_id'    => $record['id'],
+                                    '_type'  => 'doc',
+                                    '_id'    => $type.$record['id'],
                                 ],
                             ];
+                            $record['body']['type'] = $record['type'];
                             $params['body'][] = (array)$record['body'];
                         }
 
@@ -867,8 +859,8 @@ class PluginSearchElasticsearch extends PluginSearch {
                     function($record, $type) use ($ESClient) {
                         $params = array(
                                 'index' => PluginSearchElasticsearch::get_write_indexname(),
-                                'type'  => $type,
-                                'id'    => $record,
+                                'type'  => 'doc',
+                                'id'    => $type.$record,
                         );
 
                         return $ESClient->delete($params);
@@ -886,10 +878,11 @@ class PluginSearchElasticsearch extends PluginSearch {
                 self::send_queued_items_individually(
                     $documents,
                     function($record, $type) use ($ESClient) {
+                        $record['body']['type'] = $record['type'];
                         $params = array(
                             'index' => PluginSearchElasticsearch::get_write_indexname(),
-                            'type'  => $type,
-                            'id'    => $record['id'],
+                            'type'  => 'doc',
+                            'id'    => $type.$record['id'],
                             'body'  => (array)$record['body'],
                         );
 
@@ -1754,7 +1747,7 @@ class ElasticsearchPseudotype_all
         //      1 - Get the aggregate lists of content / filter / owner types
         // ------------------------------------------------------------------------------------------
         $records = array();
-        $searchfield = '_all';
+        $searchfield = 'catch_all';
         if ($result['tagsonly'] === true) {
             $searchfield = 'tags';
         }
@@ -1923,7 +1916,7 @@ class ElasticsearchPseudotype_all
 
         foreach ($results['hits']['hits'] as $hit) {
             $tmp = array();
-            $tmp['type'] = $hit['_type'];
+            $tmp['type'] = $hit['_source']['type'];
             $ES_class = 'ElasticsearchType_' . $tmp['type'];
 
             // Store highlighted fields if there is any
@@ -2093,8 +2086,8 @@ class ElasticsearchIndexing {
                     'analyzer' => array(
                         'mahara_analyzer' => array(
                             'type' => 'custom',
-                            'tokenizer' => 'pattern', // define token separators as any non-alphanumeric character
-                            'filter' => array('standard', 'lowercase', 'stop', 'maharaSnowball'),
+                            'tokenizer' => 'lowercase', // define token separators as any non-alphanumeric character
+                            'filter' => array('standard', 'stop', 'maharaSnowball'),
                             'char_filter' => array('maharaHtml'),
                         ),
                         'whitespace_analyzer' => array(

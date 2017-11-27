@@ -1,53 +1,44 @@
 <?php
 class ElasticsearchType_group extends ElasticsearchType {
-    public static $mappingconf = array (
+    // New style v6 mapping
+    public static $mappingconfv6 = array (
+            'type' => array(
+                'type' => 'keyword',
+            ),
             'mainfacetterm' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'id' => array (
                     'type' => 'long',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'name' => array (
                     'type' => 'text',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'description' => array (
                     'type' => 'text',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'grouptype' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'jointype' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             // access to group
             'access' => array (
                     'type' => 'object',
-                    'include_in_all' => FALSE,
                     'properties' => array (
                             'general' => array (
                                     'type' => 'keyword',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => FALSE
                             ),
                             'groups' => array (
                                     'type' => 'object',
-                                    'include_in_all' => FALSE,
                                     'properties' => array (
                                           'member' => array (
                                              'type' => 'integer',
-                                             'index' => 'not_analyzed',
                                              'copy_to' => 'group',
-                                             'include_in_all' => false
                                           )
                                      )
                             ),
@@ -59,15 +50,13 @@ class ElasticsearchType_group extends ElasticsearchType {
             'ctime' => array (
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
-                    'include_in_all' => FALSE
             ),
             // sort is the field that will be used to sort the results alphabetically
             'sort' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             )
     );
+
     public static $mainfacetterm = 'Group';
     public function __construct($data) {
         $this->conditions = array (
