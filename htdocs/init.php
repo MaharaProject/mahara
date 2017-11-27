@@ -359,7 +359,9 @@ if (!defined('CLI')) {
     header('X-XSS-Protection: 1; mode=block');
     header('X-Content-Type-Options: nosniff');
     header('X-Permitted-Cross-Domain-Policies: master-only');
-
+    if (is_https()) {
+        header('Strict-Transport-Security: max-age=63072000');
+    }
     // Don't print precise PHP version as an HTTP header
     header_remove('x-powered-by');
 }
