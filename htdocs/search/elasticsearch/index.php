@@ -149,7 +149,8 @@ jQuery(function ($) {
             var tagsonly = false;
         }
 
-        var params = {'query': $('#search_query').val(), 'tagsonly': tagsonly, 'mainfacetterm': null,'limit': $('#setlimitselect').val(), 'extradata':JSON.stringify({'page':'index'})};
+        var params = {'query': $('#search_query').val(), 'tagsonly': tagsonly, 'mainfacetterm': null,
+                      'offset': 0, 'limit': $('#setlimitselect').val(), 'extradata':JSON.stringify({'page':'index'})};
         p.sendQuery(params);
         event.preventDefault();
     });
