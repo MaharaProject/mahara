@@ -1013,3 +1013,12 @@ function keytabbinginadialog(dialog, firstelement, lastelement) {
         }
     });
 }
+
+/*
+* fix for Internet Explorer where Number.isInteger is not defined
+*/
+Number.isInteger = Number.isInteger || function(value) {
+    return typeof value === "number" &&
+           isFinite(value) &&
+           Math.floor(value) === value;
+};
