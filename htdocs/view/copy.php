@@ -24,7 +24,9 @@ $collection = param_integer('collection', null);
 $groupid = param_integer('group', null);
 
 $view = new View($viewid);
-
+if (!can_view_view($view)) {
+    throw new AccessDeniedException(get_string('thisviewmaynotbecopied', 'view'));
+}
 if (!$view->is_copyable()) {
     throw new AccessDeniedException(get_string('thisviewmaynotbecopied', 'view'));
 }

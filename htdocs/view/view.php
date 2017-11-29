@@ -273,7 +273,7 @@ if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
 }
 
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
-$can_copy = $view->is_copyable($view);
+$can_copy = $view->is_copyable();
 
 $viewgroupform = false;
 if ($owner && $owner == $USER->get('id')) {
@@ -386,6 +386,10 @@ if ($can_edit) {
 }
 if ($can_copy) {
     $smarty->assign('copyurl', get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''));
+    if (!$USER->is_logged_in() && $view->get('owner')) {
+        // if no user is loggedin and the personal profile is public, the Copy button should download the portfolio
+        $smarty->assign('downloadurl', get_config('wwwroot') . 'view/download.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''));
+    }
 }
 
 $title = hsc(TITLE);

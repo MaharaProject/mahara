@@ -4261,6 +4261,14 @@ class View {
         if (!empty($results->count)) {
             return true;
         }
+        // Check if view has a secret url and is also a template
+        if (count_records_sql("SELECT COUNT(*) FROM {view} v
+                               JOIN {view_access} va ON va.view = v.id
+                               WHERE (va.token IS NOT null AND va.token !='')
+                               AND v.template = ?
+                               AND v.id = ?", array(self::USER_TEMPLATE, $this->id))) {
+            return true;
+        }
         return false;
     }
 

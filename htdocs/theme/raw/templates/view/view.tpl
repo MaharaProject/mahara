@@ -35,7 +35,11 @@
     {/strip}{/if}
 
     {if $copyurl}{strip}
-    <a id="copyview-button" title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn btn-default">
+        {if $downloadurl}
+            <a id="downloadview-button" title="{str tag=copythisview section=view}" href="{$downloadurl}" class="btn btn-default">
+        {else}
+            <a id="copyview-button" title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn btn-default">
+        {/if}
         <span class="icon icon-files-o icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag=copy section=mahara}
     </a>
