@@ -214,6 +214,10 @@ class ElasticsearchType_artefact extends ElasticsearchType {
             $terms = explode ( "|", $map [$record->artefacttype] );
             $record->mainfacetterm = $terms [2];
             $record->secfacetterm = $terms [1];
+            if ($record->artefacttype == 'country') {
+                // We need to index the actual name and not the iso code
+                $record->title = get_string("country.{$record->title}");
+            }
 
             require_once( get_config ( 'docroot' ) . 'artefact/resume/lib.php' );
             if (PluginArtefactResume::is_active ()) {
@@ -278,6 +282,10 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                 "\n",
                 "\r"
         ), ' ', strip_tags ( $record->title ) );
+        if ($record->artefacttype == 'country') {
+            // We need to display the actual name and not the iso code
+            $record->title = get_string("country.{$record->title}");
+        }
         $record->description = str_replace ( array (
                 "\r\n",
                 "\n",
