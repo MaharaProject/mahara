@@ -366,6 +366,7 @@ $smarty->assign('mrmoduleactive', PluginModuleMultirecipientnotification::is_act
 
 $smarty->display('user/view.tpl');
 
+mahara_touch_record('view', $viewid); // Update record 'atime'
 mahara_log('views', "$viewid"); // Log view visits
 
 // Send an invitation to the user to join a group

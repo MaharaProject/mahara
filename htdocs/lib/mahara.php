@@ -4541,6 +4541,10 @@ function build_portfolio_search_html(&$data) {
     $data->pagination_js = $pagination['javascript'];
 }
 
+function mahara_touch_record($table, $id) {
+    execute_sql("UPDATE " . db_table_name($table) . " SET atime = ? WHERE id = ?", array(db_format_timestamp(time()), $id));
+}
+
 function mahara_log($logname, $string) {
     error_log('[' . date("Y-m-d h:i:s") . "] $string\n", 3, get_config('dataroot') . 'log/' . $logname . '.log');
 }
