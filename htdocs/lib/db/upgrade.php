@@ -5111,154 +5111,278 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('event_log');
         $field = new XMLDBField('id');
         if (!field_exists($table, $field)) {
-            log_debug('Making a temp copy and adding id column');
-            execute_sql('CREATE TEMPORARY TABLE {temp_event_log} AS SELECT DISTINCT * FROM {event_log}', array());
-            if (is_mysql()) {
-                // We've disabled the db_start() method for our MySQL driver, but since we're truncating event_log,
-                // we really should start a transaction manually at least.
-                execute_sql('START TRANSACTION');
-            }
-            execute_sql('TRUNCATE {event_log}', array());
-
+            log_debug('Adding id column');
             if (is_mysql()) {
                 // MySQL requires the auto-increment column to be a primary key right away.
                 execute_sql('ALTER TABLE {event_log} ADD id BIGINT(10) NOT NULL auto_increment PRIMARY KEY FIRST');
             }
             else {
-                $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-                add_field($table, $field);
+                // This will auto-populate the id column without having to create a temp table.
+                execute_sql('ALTER TABLE {event_log} ADD COLUMN id BIGSERIAL PRIMARY KEY');
             }
+
             // Add 'ctime' field and drop 'time' field
+            log_debug('Adding ctime column');
+            $field = new XMLDBField('ctime');
+            $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+            add_field($table, $field);
+
+            $sql = "update event_log set ctime = time";
+            execute_sql($sql);
+
+            // now set ctime attribute to NOT NULL.
             $field = new XMLDBField('ctime');
             $field->setAttributes(XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
-            add_field($table, $field);
+            change_field_notnull($table, $field);
+
             $field = new XMLDBField('time');
             drop_field($table, $field);
 
-            log_debug('Adding back in the event_log information');
-            // We will do in chuncks for large sites.
-            $count = 0;
-            $x = 0;
-            $limit = 1000;
-            $total = count_records('temp_event_log');
-            for ($i = 0; $i <= $total; $i += $limit) {
-                if (is_postgres()) {
-                    $limitsql = ' OFFSET ' . $i . ' LIMIT ' . $limit;
-                }
-                else {
-                    $limitsql = ' LIMIT ' . $i . ',' . $limit;
-                }
-                execute_sql('INSERT INTO {event_log} (usr, realusr, ctime, event, data) SELECT usr, realusr, time, event, data FROM {temp_event_log}' . $limitsql, array());
-                $count += $limit;
-                if (($count % ($limit *10)) == 0 || $count >= $total) {
-                    if ($count > $total) {
-                        $count = $total;
-                    }
-                    log_debug("$count/$total");
-                    set_time_limit(30);
-                }
-                set_time_limit(30);
-            }
-            if (is_mysql()) {
-                execute_sql('COMMIT');
-            }
-            execute_sql('DROP TABLE {temp_event_log}', array());
+            log_debug('Adding resourceid column');
+            $field = new XMLDBField('resourceid');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+            add_field($table, $field);
 
-            if (!is_mysql()) {
-                log_debug('Adding primary key index to event_log.id column');
-                $key = new XMLDBKey('primary');
-                $key->setAttributes(XMLDB_KEY_PRIMARY, array('id'));
-                add_key($table, $key);
-            }
+            log_debug('Adding resourcetype column');
+            $field = new XMLDBField('resourcetype');
+            $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+            add_field($table, $field);
+
+            log_debug('Adding parentresourceid column');
+            $field = new XMLDBField('parentresourceid');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+            add_field($table, $field);
+
+            log_debug('Adding parentresourcetype column');
+            $field = new XMLDBField('parentresourcetype');
+            $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+            add_field($table, $field);
+
+            log_debug('Adding ownerid column');
+            $field = new XMLDBField('ownerid');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+            add_field($table, $field);
+
+            log_debug('Adding ownertype column');
+            $field = new XMLDBField('ownertype');
+            $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+            add_field($table, $field);
         }
 
-        $field = new XMLDBField('resourceid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
-        add_field($table, $field);
-
-        $field = new XMLDBField('resourcetype');
-        $field->setAttributes(XMLDB_TYPE_CHAR, 255);
-        add_field($table, $field);
-
-        $field = new XMLDBField('parentresourceid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
-        add_field($table, $field);
-
-        $field = new XMLDBField('parentresourcetype');
-        $field->setAttributes(XMLDB_TYPE_CHAR, 255);
-        add_field($table, $field);
-
-        $field = new XMLDBField('ownerid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
-        add_field($table, $field);
-
-        $field = new XMLDBField('ownertype');
-        $field->setAttributes(XMLDB_TYPE_CHAR, 255);
-        add_field($table, $field);
-
         log_debug('Adjust existing "event_log" data to fit new table structure');
-        // As there can be very many rows we need to do the adjusting in chuncks
-        $count = 0;
-        $limit = 10000;
-        $chunk = 5000;
-        $total = count_records_select('event_log', 'data != ?', array('{}'));
-        if ($total > 0) {
-            for ($i = 0; $i <= $total; $i += $chunk) {
-                $results = get_records_sql_array("SELECT event, data FROM {event_log}", array(), $count, $chunk);
-                foreach ($results as $result) {
-                    $data = json_decode($result->data);
-                    $where = clone $result;
-                    switch ($result->event) {
-                        case 'saveview':
-                        case 'deleteview':
-                            $result->resourceid = $data->id;
-                            $result->resourcetype = 'view';
-                            break;
-                        case 'userjoinsgroup':
-                            $result->resourceid = $data->group;
-                            $result->resourcetype = 'group';
-                            break;
-                        case 'creategroup':
-                            $result->resourceid = $data->id;
-                            $result->resourcetype = 'group';
-                            break;
-                        case 'saveartefact':
-                        case 'deleteartefact':
-                        case 'deleteartefacts':
-                            $result->resourceid = $data->id;
-                            $result->resourcetype = $data->artefacttype;
-                            break;
-                        case 'blockinstancecommit':
-                        case 'deleteblockinstance':
-                            $result->resourceid = $data->id;
-                            $result->resourcetype = $data->blocktype;
-                            break;
-                        case 'addfriend':
-                        case 'removefriend':
-                            $result->resourceid = $data->friend;
-                            $result->resourcetype = 'friend';
-                            break;
-                        case 'addfriendrequest':
-                            $result->resourceid = $data->owner;
-                            $result->resourcetype = 'friend';
-                            break;
-                        case 'removefriendrequest':
-                            $result->resourceid = $data->requester;
-                            $result->resourcetype = 'friend';
-                            break;
+        $db_version = get_db_version();
+        if (is_mysql() && version_compare($db_version, '5.7.8', '>=')) {
+            // Update the event_log table using the json datatype
+            // by converting the data field to json.
+            // This datatype was introduced in Mysql 5.7.8.
+            log_debug('Adjust existing "event_log" data for "saveview" and "deleteview" events');
+            $sql = "UPDATE {event_log} e
+                    LEFT JOIN {view} v on v.id = JSON_EXTRACT( CAST( e.data AS JSON ), '$.id')
+                    SET e.resourceid   = JSON_EXTRACT( CAST( e.data AS JSON ), '$.id'),
+                        e.resourcetype = 'view',
+                        e.ownerid      = v.owner,
+                        e.ownertype    = CASE WHEN v.owner IS NULL THEN NULL ELSE 'view' END
+                    WHERE e.event IN ('saveview', 'deleteview')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "userjoinsgroup" event');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = JSON_EXTRACT( CAST( data AS JSON ), '$.group' ),
+                        resourcetype = 'group',
+                        ownerid      = JSON_EXTRACT( CAST( data AS JSON ), '$.group' ),
+                        ownertype    = 'group'
+                    WHERE event IN ('userjoinsgroup')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "creategroup" event');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = JSON_EXTRACT( CAST( data AS JSON ), '$.id' ),
+                        resourcetype = 'group',
+                        ownerid      = JSON_EXTRACT( CAST( data AS JSON ), '$.id' ),
+                        ownertype    = 'group'
+                    WHERE event IN ('creategroup')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "saveartefact" and "deleteartefact" events');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = JSON_EXTRACT( CAST( data AS JSON ), '$.id' ),
+                        resourcetype = JSON_EXTRACT( CAST( data AS JSON), '$.artefacttype' )
+                    WHERE event IN ('saveartefact', 'deleteartefact')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "blockinstancecommit" and "deleteblockinstance" events');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = JSON_EXTRACT( CAST( data AS JSON ), '$.id' ),
+                        resourcetype = JSON_EXTRACT( CAST( data AS JSON), '$.blocktype' )
+                    WHERE event IN ('blockinstancecommit', 'deleteblockinstance')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "addfriend" and "removefriend" events');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = JSON_EXTRACT( CAST( data AS JSON ), '$.friend' ),
+                        resourcetype = 'friend'
+                    WHERE event IN ('addfriend', 'removefriend')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "addfriendrequest" event');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = JSON_EXTRACT( CAST( data AS JSON ), '$.owner' ),
+                        resourcetype = 'friend'
+                    WHERE event IN ('addfriendrequest')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "removefriendrequest" event');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = JSON_EXTRACT( CAST( data AS JSON ), '$.requester' ),
+                        resourcetype = 'friend'
+                    WHERE event IN ('removefriendrequest')";
+            execute_sql($sql);
+        }
+        else if (is_postgres() && version_compare($db_version, '9.2.0', '>=')) {
+            // Update the event_log table using the json datatype
+            // by converting the data field to json.
+            // This datatype was introduced in Postgres 9.2.
+            log_debug('Adjust existing "event_log" data for "saveview" and "deleteview" events');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = CAST( CAST( e.data AS JSON )->>'id' AS INTEGER ),
+                        resourcetype = 'view',
+                        ownerid      = view.owner,
+                        ownertype    = CASE WHEN view.owner IS NULL THEN NULL ELSE 'view' END
+                    FROM {event_log} AS e
+                    LEFT JOIN {view} on view.id = CAST( CAST( e.data AS JSON )->>'id' AS BIGINT)
+                    WHERE e.event IN ('saveview', 'deleteview')
+                    AND   event_log.id = e.id";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "userjoinsgroup" event');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = CAST( CAST( data AS JSON )->>'group' AS INTEGER ),
+                        resourcetype = 'group',
+                        ownerid      = CAST( CAST( data AS JSON )->>'group' AS BIGINT ),
+                        ownertype    = 'group'
+                    WHERE event IN ('userjoinsgroup')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "creategroup" event');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = CAST( CAST( data AS JSON )->>'id' AS INTEGER ),
+                        resourcetype = 'group',
+                        ownerid      = CAST( CAST( data AS JSON )->>'id' AS BIGINT ),
+                        ownertype    = 'group'
+                    WHERE event IN ('creategroup')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "saveartefact" and "deleteartefact" events');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = CAST( CAST( data AS JSON )->>'id' AS INTEGER ),
+                        resourcetype = CAST( data AS JSON)->>'artefacttype'
+                    WHERE event IN ('saveartefact', 'deleteartefact')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "blockinstancecommit" and "deleteblockinstance" events');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = CAST( CAST( data AS JSON )->>'id' AS INTEGER ),
+                        resourcetype = CAST( data AS JSON)->>'blocktype'
+                    WHERE event IN ('blockinstancecommit', 'deleteblockinstance')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "addfriend" and "removefriend" events');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = CAST( CAST( data AS JSON )->>'friend' AS INTEGER ),
+                        resourcetype = 'friend'
+                    WHERE event IN ('addfriend', 'removefriend')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "addfriendrequest" event');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = CAST( CAST( data AS JSON )->>'owner' AS INTEGER ),
+                        resourcetype = 'friend'
+                    WHERE event IN ('addfriendrequest')";
+            execute_sql($sql);
+
+            log_debug('Adjust existing "event_log" data for "removefriendrequest" event');
+            $sql = "UPDATE {event_log}
+                    SET resourceid   = CAST( CAST( data AS JSON )->>'requester' AS INTEGER ),
+                        resourcetype = 'friend'
+                    WHERE event IN ('removefriendrequest')";
+            execute_sql($sql);
+        }
+        else {
+            // This is an older database. Can't use json datatype.
+            // Will need to loop through all the records and adjust.
+            // As there can be very many rows we need to do the adjusting in chuncks.
+            log_debug('Loop through all records and adjust');
+            $count = 0;
+            $limit = 10000;
+            $chunk = 5000;
+            $total = count_records_select('event_log', 'data != ?', array('{}'));
+            if ($total > 0) {
+                for ($i = 0; $i <= $total; $i += $chunk) {
+                    $results = get_records_sql_array("SELECT id, event, data FROM {event_log}", array(), $count, $chunk);
+                    foreach ($results as $result) {
+                        $data = json_decode($result->data);
+                        $where = clone $result;
+                        switch ($result->event) {
+                            case 'saveview':
+                            case 'deleteview':
+                                $result->resourceid = $data->id;
+                                $result->resourcetype = 'view';
+                                break;
+                            case 'userjoinsgroup':
+                                $result->resourceid = $data->group;
+                                $result->resourcetype = 'group';
+                                break;
+                            case 'creategroup':
+                                $result->resourceid = $data->id;
+                                $result->resourcetype = 'group';
+                                break;
+                            case 'saveartefact':
+                            case 'deleteartefact':
+                                // Make sure there is actually an id and artefacttype.
+                                if (isset($data->id)) {
+                                    $result->resourceid = $data->id;
+                                }
+                                if (isset($data->artefacttype)) {
+                                    $result->resourcetype = $data->artefacttype;
+                                }
+                                break;
+                            case 'deleteartefacts':
+                                // These hold multiple ids. Can't do much with them.
+                                // Will leave them as is.
+                                break;
+                            case 'blockinstancecommit':
+                            case 'deleteblockinstance':
+                                $result->resourceid = $data->id;
+                                $result->resourcetype = $data->blocktype;
+                                break;
+                            case 'addfriend':
+                            case 'removefriend':
+                                $result->resourceid = $data->friend;
+                                $result->resourcetype = 'friend';
+                                break;
+                            case 'addfriendrequest':
+                                $result->resourceid = $data->owner;
+                                $result->resourcetype = 'friend';
+                                break;
+                            case 'removefriendrequest':
+                                $result->resourceid = $data->requester;
+                                $result->resourcetype = 'friend';
+                                break;
+                        }
+                        list ($ownerid, $ownertype) = event_find_owner_type($result);
+                        $result->ownerid = $ownerid;
+                        $result->ownertype = $ownertype;
+                        unset($result->id); // No reason to update the ID.
+                        update_record('event_log', $result, array('id'=>$where->id));
                     }
-                    list ($ownerid, $ownertype) = event_find_owner_type($result);
-                    $result->ownerid = $ownerid;
-                    $result->ownertype = $ownertype;
-                    update_record('event_log', $result, $where);
-                }
-                $count += $chunk;
-                if (($count % $limit) == 0 || $count >= $total) {
-                    if ($count > $total) {
-                        $count = $total;
+                    $count += $chunk;
+                    if (($count % $limit) == 0 || $count >= $total) {
+                        if ($count > $total) {
+                            $count = $total;
+                        }
+                        log_debug("$count/$total");
+                        set_time_limit(30);
                     }
-                    log_debug("$count/$total");
-                    set_time_limit(30);
                 }
             }
         }

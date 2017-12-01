@@ -1907,3 +1907,17 @@ function mysql_get_variable($name) {
     $result = $db->Execute("SHOW VARIABLES LIKE ?", array($name));
     return $result->fields['Value'];
 }
+
+function get_db_version() {
+    global $db;
+    $version = '0';
+    if (is_postgres()) {
+        $sql = "SHOW server_version";
+        $result =  $db->Execute($sql);
+        $version = $result->fields['server_version'];
+    }
+    else {
+        $version = mysql_get_variable('innodb_version');
+    }
+    return $version;
+}

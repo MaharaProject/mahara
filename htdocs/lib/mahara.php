@@ -2001,6 +2001,14 @@ function handle_event($event, $data, $ignorefields = array()) {
             'parentresourceid' => $parentrefid,
             'parentresourcetype' => $parentreftype,
         );
+        // Include the old time column as well to cater for
+        // older versions of Mahara getting upgraded.
+        // Their event_log table will have not gone
+        // through the table alters during this
+        // part of the upgrade.
+        // The date it changed was 2017090800.
+        $logentry->time = $logentry->ctime;
+
         // find out who 'owns' the event
         list ($ownerid, $ownertype) = event_find_owner_type($logentry);
         $logentry->ownerid = $ownerid;
