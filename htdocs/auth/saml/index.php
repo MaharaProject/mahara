@@ -325,7 +325,7 @@ function auth_saml_disco_screen($list, $preferred) {
             // Fetch logo from provider if given
             $logos = $value['UIInfo']['Logo'];
             foreach ($logos as $logo) {
-                if ($logo['lang'] == $lang) {
+                if (isset($logo['lang']) && $logo['lang'] == $lang) {
                     $idplogo = $logo;
                     break;
                 }
