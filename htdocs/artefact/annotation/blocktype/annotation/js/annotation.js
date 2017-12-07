@@ -27,18 +27,12 @@ function modifyAnnotationFeedbackSuccess(form, data) {
     var limit    = getUrlParameter('limit');
     var offset   = getUrlParameter('offset');
 
-    if (limit === false && offset === false) {
-        // Pagination is not used.
-        limit = null;
-        offset = null;
-    }
-
     // Reload the annotation feedback table with the new feedback that's just been made public.
 
     // Calls the save method on all editor instances before
     // annotation being submitted.
     tinyMCE.triggerSave();
-    sendjsonrequest('../artefact/annotation/annotations.json.php',
+    sendjsonrequest(config.wwwroot + 'artefact/annotation/annotations.json.php',
         {
             'annotationid' : jQuery('#' + formname + '_annotationid').val(),
             'viewid'       : jQuery('#' + formname + '_viewid').val(),
@@ -71,12 +65,6 @@ function addAnnotationFeedbackSuccess(form, data) {
     var offset   = getUrlParameter('offset');
     var tinymce = jQuery('#' + form.id + '_message');
 
-    if (limit === false && offset === false) {
-        // Pagination is not used.
-        limit = null;
-        offset = null;
-    }
-
     if (typeof(paginator) != 'undefined' && paginator.id == 'annotationfeedback_pagination_' + blockid) {
         // Make sure its using the annotation paginator for its block not the feedback paginator.
         paginator.updateResults(data);
@@ -88,7 +76,7 @@ function addAnnotationFeedbackSuccess(form, data) {
         // Calls the save method on all editor instances before
         // annotation being submitted.
         tinyMCE.triggerSave();
-        sendjsonrequest('../artefact/annotation/annotations.json.php',
+        sendjsonrequest(config.wwwroot + 'artefact/annotation/annotations.json.php',
             {
                 'annotationid' : jQuery('#' + formname + '_annotationid').val(),
                 'viewid'       : jQuery('#' + formname + '_viewid').val(),
