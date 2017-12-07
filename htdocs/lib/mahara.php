@@ -5125,9 +5125,8 @@ function clear_all_caches($clearsessiondirs = false) {
 
         if ($clearsessiondirs) {
             $session_dir = get_config('dataroot') . 'sessions';
-            if (check_dir_exists($session_dir) && !rmdirr($session_dir)) {
-                throw new SystemException('Can not remove session directory ' . $session_dir);
-            }
+            rmdirr($session_dir);
+            Session::create_directory_levels($session_dir);
         }
 
         clearstatcache();
