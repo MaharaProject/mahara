@@ -995,7 +995,7 @@
     function setupPositionBlockDialog() {
 
         $('#addblock .cancel, #addblock .deletebutton').on('mousedown keydown', function(e) {
-            if (isHit(e)) {
+            if (isHit(e) || e.keyCode === $j.ui.keyCode.ESCAPE) {
                 closePositionBlockDialog(e, {'saved': false});
             }
         });
