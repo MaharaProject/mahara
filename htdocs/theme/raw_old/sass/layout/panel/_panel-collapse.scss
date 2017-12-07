@@ -89,6 +89,9 @@
                 position: relative;
                 padding: 20px 0;
                 border-bottom: 1px solid $list-group-border;
+                &.alert {
+                    padding: 5px 10px;
+                }
                 &:last-child,
                 &.last {
                     border-bottom: 0;

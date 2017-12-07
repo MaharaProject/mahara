@@ -13,3 +13,4 @@ defined('INTERNAL') || die();
 
 $string['title'] = 'PDF';
 $string['description'] = 'A single PDF file from your files area';
+$string['pdfwarning'] = 'Note: Displaying large PDF files can be browser resource intensive.';
