@@ -5127,7 +5127,7 @@ function xmldb_core_upgrade($oldversion=0) {
             $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
             add_field($table, $field);
 
-            $sql = "update event_log set ctime = time";
+            $sql = "UPDATE {event_log} SET ctime = time";
             execute_sql($sql);
 
             // now set ctime attribute to NOT NULL.
