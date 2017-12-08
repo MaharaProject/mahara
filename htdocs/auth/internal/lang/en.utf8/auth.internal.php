@@ -140,3 +140,44 @@ $string['pendingregistrationadminemailhtml'] = "<p>Hi %s,</p>
 <pre>--
 Regards,
 The %s Team</pre>";
+
+
+// pending user account deletion
+$string['userdeletionnosuchid'] = 'Sorry, this deletion request does not exist. Perhaps it has already been evaluated?';
+$string['userdeletiondeniedmessage'] = 'Hello %s,
+
+We have received your request to delete your user account on %s and
+decided not to delete your data.
+
+If you think that this decision was incorrect, please get in touch with me
+via email.
+
+Regards
+%s';
+$string['userdeletiondeniedmessagereason'] = 'Hello %s,
+
+We have received your request to delete your user account on %s and decided
+not to delete your data for the following reason:
+
+%s
+
+If you think that this decision was incorrect, please get in touch with me
+via email.
+
+Regards
+%s';
+$string['userdeletiondeniedemailsubject'] = 'User account deletion attempt at %s denied.';
+$string['userdeletionemailsubject'] = 'Your user account was deleted from %s';
+$string['userdeletionemailmessagetext'] = 'Hello %s,
+
+Your user account was deleted successfully from %s.
+
+--
+Regards,
+The %s Team';
+$string['userdeletionemailmessagehtml'] = '<p>Hello %s,</p>
+<p>Your user account was deleted successfully from %s.</p>
+
+<pre>--
+Regards,
+The %s Team</pre>';

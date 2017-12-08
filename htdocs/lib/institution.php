@@ -886,6 +886,19 @@ class Institution {
         }
         return $institutions;
     }
+
+    /*
+    * returns: true if the institution requires admin approval before deleting a user account
+    * or it doesn't have the value set for it in the configuration, but the site requires approval by default
+    */
+    public function requires_user_deletion_approval() {
+        /* If site default is set to 'yes', it will be the value for the institutions
+         * if it's set to 'no', then we take the value from the institution settings
+         */
+        return (get_config('defaultreviewselfdeletion') ||
+               (isset($this->configs['reviewselfdeletion']) && $this->configs['reviewselfdeletion'])
+            );
+    }
 }
 
 /**

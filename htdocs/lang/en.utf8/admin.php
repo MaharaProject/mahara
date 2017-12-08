@@ -485,6 +485,10 @@ $string['watchlistdelaydescription'] = 'The delay in minutes between sending ema
 $string['watchlistdelaytitle'] = 'Watchlist notification delay';
 $string['defaultmultipleblogs'] = 'Multiple journals';
 $string['defaultmultipleblogsdescription1'] = 'Allow users to have multiple journals by default. Users can override this in their account settings page.';
+$string['defaultreviewselfdeletion'] = 'Review account before self-deletion';
+$string['defaultreviewselfdeletiondescription'] = 'Force all institutions to review account deletion requests.';
+$string['reviewselfdeletion'] = 'Review account before self-deletion';
+$string['reviewselfdeletiondescription'] = 'An institution administrator must approve the request from users to delete their account.';
 $string['mathjax'] = 'Enable MathJax';
 $string['mathjaxdescription'] = 'MathJax renders LaTeX markup into properly formatted math and science equations on portfolio pages.';
 $string['mathjaxconfig'] = 'MathJax configuration';
@@ -1373,3 +1377,21 @@ $string['termsandconditionslowcase'] = 'terms and conditions';
 $string['hasrefused'] = 'has refused the %s';
 $string['privacyandtotheterms'] = 'privacy statement and to the terms and conditions';
 $string['privacyandtheterms'] = 'privacy statement and the terms and conditions';
+
+// pending user account deletions
+$string['approveuserdeletionfor'] = 'Approve user account deletion for %s %s <%s>';
+$string['approveuserdeletionmessage'] = 'If you continue, you will delete the user account "%s". All personal content will be deleted permanently. Are you sure you want to approve this request?';
+$string['deletionapprovedsuccessfully'] = 'User account deletion approved successfully.';
+$string['deletionapprovedfailed'] = 'User account deletion failed.';
+$string['deletiondeniedreason'] = 'Denial reason';
+$string['deletiondeniedreasondesc'] = 'Information as to why the deletion request was denied that might help the user.';
+$string['deletionreason'] = 'Deletion reason';
+$string['denyuserdeletionfor'] = 'Deny user account deletion request for \'%s %s\'';
+$string['denyuserdeletionmessage'] = 'If you continue, you will not approve the deletion of the account. Please provide a reason for the user.';
+$string['nopendingdeletions'] = 'No pending account deletion requests were found for this institution.';
+$string['pendingdeletion'] = 'Pending deletion';
+$string['pendingdeletions'] = 'Pending deletions';
+$string['pendingdeletionspagedescription'] = '<p>On this page you can see users who requested their accounts to be deleted from the site and approve their deletion.<p>
+<p>On approving the deletion of an account, all personal content from that account will be deleted permanently. The person who made the request will be notified via email once their account has been deleted.</p>';
+$string['userdeletiondeniedsuccessful'] = 'Request denied successfully.';
+$string['userdeletiondeniedunsuccessful'] = 'The attempted user account deletion denial failed.';
