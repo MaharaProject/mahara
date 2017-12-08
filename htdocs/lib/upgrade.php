@@ -595,43 +595,9 @@ function upgrade_plugin($upgrade) {
 }
 
 function core_postinst() {
-    $status = true;
-
     // Attempt to create session directories
     $sessionpath = get_config('sessionpath');
-    if (check_dir_exists($sessionpath)) {
-        // Create three levels of directories, named 0-9, a-f
-        $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
-        if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
-            $characters = array_merge($characters, array('g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-                                                         'o', 'p', 'q', 'r', 's', 't', 'u', 'v'));
-        }
-        foreach ($characters as $c1) {
-            if (check_dir_exists("$sessionpath/$c1")) {
-                foreach ($characters as $c2) {
-                    if (check_dir_exists("$sessionpath/$c1/$c2")) {
-                        foreach ($characters as $c3) {
-                            if (!check_dir_exists("$sessionpath/$c1/$c2/$c3")) {
-                                $status = false;
-                                break(3);
-                            }
-                        }
-                    }
-                    else {
-                        $status = false;
-                        break(2);
-                    }
-                }
-            }
-            else {
-                $status = false;
-                break;
-            }
-        }
-    }
-    else {
-        $status = false;
-    }
+    $status = Session::create_directory_levels($sessionpath);
 
     $now = db_format_timestamp(time());
     // Set default search plugin
