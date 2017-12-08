@@ -8,21 +8,7 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 
-/**
- * Return the specified request variable from the URL.
- * This should be moved to mahara.js to everyone can use it.
- */
-function getURLParameter(variable) {
-    var query = window.location.search.substring(1);
-    var vars = query.split("&");
-    for (var i = 0; i < vars.length; i++) {
-        var pair = vars[i].split("=");
-        if (pair[0] == variable) {
-            return pair[1];
-        }
-    }
-   return false;
-}
+
 
 function isTinyMceUsed(elementname) {
     return (tinyMCE !== undefined && tinyMCE.get(elementname) !== undefined);
@@ -38,8 +24,8 @@ function initTinyMCE(formname){
 
 function modifyAnnotationFeedbackSuccess(form, data) {
     var formname = form.name;
-    var limit    = getURLParameter('limit');
-    var offset   = getURLParameter('offset');
+    var limit    = getUrlParameter('limit');
+    var offset   = getUrlParameter('offset');
 
     if (limit === false && offset === false) {
         // Pagination is not used.
@@ -81,8 +67,8 @@ function modifyAnnotationFeedbackSuccess(form, data) {
 function addAnnotationFeedbackSuccess(form, data) {
     var formname = form.name;
     var blockid  = jQuery('#' + formname + '_blockid').val();
-    var limit    = getURLParameter('limit');
-    var offset   = getURLParameter('offset');
+    var limit    = getUrlParameter('limit');
+    var offset   = getUrlParameter('offset');
     var tinymce = jQuery('#' + form.id + '_message');
 
     if (limit === false && offset === false) {

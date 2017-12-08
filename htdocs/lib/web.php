@@ -112,6 +112,15 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
     return $stylesheets;
 }
 
+/**
+* True if we are not in admin, institution or admin section
+*/
+function user_personal_section() {
+    $usersection = !defined('ADMIN') && !defined('STAFF') && !defined('INSTITUTIONALADMIN') &&
+        !defined('INSTITUTIONALSTAFF') && !defined('GROUP') && !defined('CREATEGROUP');
+
+    return $usersection ? 1 : 0;
+}
 
 /**
  * This function creates a Smarty object and sets it up for use within our
@@ -141,7 +150,7 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
 
 
 function smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
-    global $USER, $SESSION, $THEME, $HEADDATA, $langselectform, $CFG;
+    global $USER, $SESSION, $THEME, $HEADDATA, $langselectform, $CFG, $viewid;
 
     if (!is_array($headers)) {
         $headers = array();
@@ -217,6 +226,15 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     if (is_html_editor_enabled()) {
         $checkarray = array(&$javascript, &$headers);
         $found_tinymce = false;
+        $tinymceviewid = 'null';
+        if ($inpersonalarea = user_personal_section()) {
+            if (defined('SECTION_PAGE') && (SECTION_PAGE == 'view' || SECTION_PAGE == 'blocks' || SECTION_PAGE == 'editlayout')) {
+                if (isset($viewid) && $viewid > 0) {
+                    $tinymceviewid = $viewid;
+                }
+            }
+        }
+
         foreach ($checkarray as &$check) {
             if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check)) !== false) {
                 if (!$found_tinymce) {
@@ -327,6 +345,26 @@ tinyMCE.init({
     remove_script_host: false,
     relative_urls: false,
     target_list: false,
+    link_list: function(success) {
+        // Only show the list of links in the normal user section
+        if ({$inpersonalarea}) {
+            var params = {
+                'viewid': {$tinymceviewid}
+            }
+            sendjsonrequest(config['wwwroot'] + 'json/tinymceviewlist.json.php',  params, 'POST', function(data) {
+                if (data.count > 0) {
+                    success(JSON.parse(data.data));
+                }
+                else {
+                    success(''); // stop showing list with only option being 'none'
+                }
+            });
+        }
+        else {
+            success(''); // stop showing list with only option being 'none'
+        }
+    },
+
     cache_suffix: '?v={$CFG->cacheversion}',
     {$extramceconfig}
     setup: function(ed) {

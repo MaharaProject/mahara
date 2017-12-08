@@ -9,6 +9,8 @@
  *
  */
 
+
+
 // Expects strings array
 function get_string(name) {
     // Flatten the arguments in case string parameters were passed as an array
