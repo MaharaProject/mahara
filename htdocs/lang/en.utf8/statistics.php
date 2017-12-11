@@ -282,7 +282,7 @@ $string['reportdescpageactivity'] = '<ul>
 <li>Number of blocks included in the page</li>
 <li>Number of visits to the page</li>
 <li>Number of comments on the page</li>
-</ul><p>Displayed are pages that were created during the reporting time frame.</p>';
+</ul><p>Displayed are pages that were modified during the reporting time frame.</p>';
 $string['allothers'] = 'All others';
 
 // Last activities reported on in the "User activity" report
@@ -327,8 +327,8 @@ $string['reportdescgroups'] = '<ul>
 <li>Name</li>
 <li>Number of members</li>
 <li>Number of pages</li>
-<li>Number of shared pages</li>
 <li>Number of comments on group pages and artefacts</li>
+<li>Number of shared pages</li>
 <li>Number of comments on pages and artefacts shared with the group</li>
 <li>Number of forums</li>
 <li>Number of forum posts</li>
