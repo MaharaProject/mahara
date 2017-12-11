@@ -5177,7 +5177,7 @@ function xmldb_core_upgrade($oldversion=0) {
             // This datatype was introduced in Mysql 5.7.8.
             log_debug('Adjust existing "event_log" data for "saveview" and "deleteview" events');
             $sql = "UPDATE {event_log} e
-                    LEFT JOIN {view} v on v.id = JSON_EXTRACT( CAST( e.data AS JSON ), '$.id')
+                    LEFT JOIN {view} v ON v.id = JSON_EXTRACT( CAST( e.data AS JSON ), '$.id')
                     SET e.resourceid   = JSON_EXTRACT( CAST( e.data AS JSON ), '$.id'),
                         e.resourcetype = 'view',
                         e.ownerid      = v.owner,
@@ -5243,15 +5243,15 @@ function xmldb_core_upgrade($oldversion=0) {
             // by converting the data field to json.
             // This datatype was introduced in Postgres 9.2.
             log_debug('Adjust existing "event_log" data for "saveview" and "deleteview" events');
-            $sql = "UPDATE {event_log}
+            $sql = "UPDATE {event_log} e2
                     SET resourceid   = CAST( CAST( e.data AS JSON )->>'id' AS INTEGER ),
                         resourcetype = 'view',
-                        ownerid      = view.owner,
-                        ownertype    = CASE WHEN view.owner IS NULL THEN NULL ELSE 'view' END
-                    FROM {event_log} AS e
-                    LEFT JOIN {view} on view.id = CAST( CAST( e.data AS JSON )->>'id' AS BIGINT)
+                        ownerid      = v.owner,
+                        ownertype    = CASE WHEN v.owner IS NULL THEN NULL ELSE 'view' END
+                    FROM {event_log} e
+                    LEFT JOIN {view} v ON v.id = CAST( CAST( e.data AS JSON )->>'id' AS BIGINT)
                     WHERE e.event IN ('saveview', 'deleteview')
-                    AND   event_log.id = e.id";
+                    AND e2.id = e.id";
             execute_sql($sql);
 
             log_debug('Adjust existing "event_log" data for "userjoinsgroup" event');
