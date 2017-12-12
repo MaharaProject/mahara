@@ -169,7 +169,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
             $dwoo->assign('group_view_submission_form', $data['group_view_submission_form']);
         }
         // Get members who have no submitted work - only show to those allowed to see submitted work
-        if (!empty($configdata['showsubmitted']) && group_user_can_assess_submitted_views($groupid, $USER->get('id')) && isset($data['nosubmissions'])) {
+        if ($USER->is_logged_in() && !empty($configdata['showsubmitted']) && group_user_can_assess_submitted_views($groupid, $USER->get('id')) && isset($data['nosubmissions'])) {
             $nosubmissions = $data['nosubmissions'];
             $pagination = array(
                 'baseurl'    => $baseurl,
