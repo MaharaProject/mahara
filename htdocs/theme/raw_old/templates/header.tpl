@@ -59,7 +59,7 @@
                 <a href="{$WWWROOT}" class="logo">
                     <img src="{$sitelogo}" alt="{$sitename}">
                 </a>
-                <div id="loading-box" class="loading-box" style='display:none'></div>
+                <div id="loading-box" class="loading-box hidden"></div>
             </div>
             {include file="header/topright.tpl"}
 
