@@ -110,9 +110,13 @@ jQuery(function($j) {
     $j("#copy-view-button").on('click', function() {
         // drop the collection bit from the url
         var url = copyurl.replace(/collection=(.*)/, '');
+        $j(this).text(get_string('processing') + ' ...').prop('disabled', true).blur();
+        processingStart();
         window.location = url;
     });
     $j("#copy-collection-button").on('click', function() {
+        $j(this).text(get_string('processing') + ' ...').prop('disabled', true).blur();
+        processingStart();
         window.location = copyurl;
     });
 
