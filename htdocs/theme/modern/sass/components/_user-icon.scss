@@ -2,13 +2,21 @@ a.user-icon {
   border: none;
   padding: 0;
   background: none;
-  border-radius: 50%;
-  
+
   img {
       border-radius: 50%;
       border: 0px solid #FFF;
   }
   &:hover {
     background-color: transparent;
+  }
+  &.user-icon-larger img {
+    border-radius: 3px;
+    background-color: #fff;
+    padding: 5px;
+    display: table;
+    border: 1px solid #ddd;
+    overflow: hidden;
+    position: relative;
   }
 }
