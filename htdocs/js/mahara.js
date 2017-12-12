@@ -139,7 +139,7 @@ function formStartProcessing(form, btn) {
     processingStart();
     var button = jQuery(btn);
     if (button.length) {
-        button.val(get_string('processing') + ' ...');
+        button.text(get_string('processing') + ' ...');
 
         // we add a hidden input field so the "disabled" button still gets to
         // pass its value through
@@ -149,7 +149,7 @@ function formStartProcessing(form, btn) {
         });
         button.after(node);
 
-        button.attr('disabled', true);
+        button.prop('disabled', true);
         button.blur();
 
         // Start the progress meter if it is enabled.

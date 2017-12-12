@@ -49,7 +49,7 @@
                         <img src="{$sitelogosmall}" alt="{$sitename}">
                     </a>
                 {/if}
-                <div id="loading-box" class="loading-box" style='display:none'></div>
+                <div id="loading-box" class="loading-box hidden"></div>
             </div>
             {if $MAINNAV}
              <!-- Brand and toggle get grouped for better mobile display -->
