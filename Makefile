@@ -86,9 +86,16 @@ endif
 
 revision := $(shell git rev-parse --verify HEAD 2>/dev/null)
 whitelist := $(shell grep / test/WHITELIST | xargs -I entry find entry -type f | xargs -I file echo '! -path ' file 2>/dev/null)
+breakpoints := $(shell git diff-tree --diff-filter=ACM --name-only --no-commit-id -r -z $(revision) |  grep -rn --include=*.feature "I insert breakpoint"  test/behat/features)
 
 minaccept:
 	@echo "Running minimum acceptance test..."
+ifdef breakpoints
+	@echo "Oops, you left breakpoints in your tests :/"
+	@git diff-tree --diff-filter=ACM --name-only --no-commit-id -r -z $(revision) |  grep -rn --include=*.feature "I insert breakpoint"  test/behat/features
+	@echo "Please remove breakpoints, commit and push again"
+	exit 1
+endif
 ifdef revision
 	@git diff-tree --diff-filter=ACM --no-commit-id --name-only -z -r $(revision) htdocs | grep -z "^htdocs/.*\.php$$" | xargs -0 -n 1 -P 2 --no-run-if-empty php -l
 	@php test/versioncheck.php
