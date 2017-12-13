@@ -65,11 +65,16 @@ Scenario: Editing Education and Employment info
     And I scroll to the base of id "educationhistoryform"
     And I attach the file "Image2.png" to "Attach file"
     And I click on "addeducationhistory_submit"
-    And I scroll to the id "main-nav"
-    And I should see "Saved successfully"
     And I click on "Move down" in "North American Cultural Studies" row
     And I click on "Move up" in "North American Cultural Studies" row
-
+    And I scroll to the id "main-nav"
+    And I should see "Saved successfully"
+    And I press "Add education history"
+    And I set the following fields to these values:
+    | addeducationhistory_startdate | 1 Jan 2017 |
+    | addeducationhistory_institution | Mail-order PhD |
+    | addeducationhistory_institutionaddress | 45 Empty St |
+    And I click on "addeducationhistory_submit"
     # Adding an Employment history
     And I press "Add employment history"
     And I set the following fields to these values:
@@ -99,6 +104,26 @@ Scenario: Editing Education and Employment info
     Then I should see "Saved successfully"
     And I click on "Move down" in "Test Analyst" row
     And I click on "Move up" in "Test Analyst" row
+
+    # When entire resume is displayed on Profile page, it should include employment address (Bug 1529750)
+    Given I choose "Pages and collections" in "Portfolio" from main menu
+    And I click on "Edit" in "Profile page" panel menu
+    And I expand "Personal info" node
+    And I follow "My entire résumé" in the "blocktype sidebar" property
+    And I press "Add"
+    And I select "Automatically retract" from "Retractable"
+    And I press "Save"
+    And I display the page
+    And I expand "My entire résumé" node
+    # Test whether Employment history shows address
+    When I follow "Test Analyst at Catalyst IT"
+    Then I should see "Address: 150 Willis St"
+    # Test whether Education history shows address
+    When I follow "Machine Learning - Creation 2.1 (Masters of Philosophy) at University College"
+    Then I should see "Address: 23a O'Dell Boulevard"
+    # Test whether a qualification with just start date and title also shows address
+    When I follow "Mail-order PhD"
+    Then I should see "45 Empty St"
 
 Scenario: Adding Achievements
     Given I log in as "UserA" with password "Kupuhipa1"
