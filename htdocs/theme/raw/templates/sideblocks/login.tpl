@@ -5,7 +5,7 @@
     </h3>
     <div class="panel-body">
         <noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
-        {dynamic}{$messages.loginbox}{/dynamic}
+        {dynamic}{$messages.loginbox|safe}{/dynamic}
         <div id="loginform_container">{$sbdata.loginform|safe}</div>
     </div>
 </div>

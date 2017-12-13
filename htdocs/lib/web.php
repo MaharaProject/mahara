@@ -954,7 +954,10 @@ EOF;
         $smarty->assign('COOKIECONSENTCODE', get_cookieconsent_code());
     }
     // Render the session messages
-    $smarty->assign('messages', insert_messages('messages'));
+    $messages = array();
+    $messages = array_merge($messages, insert_messages('loginbox'));
+    $messages = array_merge($messages, insert_messages('messages'));
+    $smarty->assign('messages', $messages);
     return $smarty;
 }
 
