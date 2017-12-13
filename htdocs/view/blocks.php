@@ -187,14 +187,8 @@ $addform = pieform(array(
     ),
 ));
 
-$blockid = $view->get_blockinstance_currently_being_configured();
-if (!$blockid) {
-    $blockid = param_integer('block', 0);
-    if (!$blockid) {
-        // Build content before initialising smarty in case pieform elements define headers.
-        $viewcontent = $view->build_rows(true);
-    }
-}
+// Build content before initialising smarty in case pieform elements define headers.
+$viewcontent = $view->build_rows(true);
 
 $smarty = smarty($javascript, $stylesheets, array(
     'view' => array(
