@@ -221,7 +221,7 @@ a:focus, a:hover {
 a.btn-primary {
     background-color: {$data.background};
     color: {$data.backgroundfg};
-    border-color: transparent;
+    border-color: {$data.backgroundfg};
 }
 .btn-primary.active,
 .btn-primary.focus,
