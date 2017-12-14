@@ -92,3 +92,13 @@
         color: #fff;
     }   
 }
+
+.panel-secondary .blockinstance-controls .btn-group-top .btn {
+    color: #333;
+    .text-danger {
+        color: $state-danger-text;
+    }
+    &:hover {
+        background-color: #ccc;
+    }
+}
