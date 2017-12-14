@@ -1,3 +1,5 @@
+17.10.1 (2017-12-14)
+
 17.10.0 (2017-10-30)
 - Security bugs:
 - Bug 1692749: User passwords being saved in database event_log as plain text
