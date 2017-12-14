@@ -1,7 +1,7 @@
 {if count($items) > 0}
   {foreach from=$items item=view}
     <tr class="{cycle values='r0,r1'}">
-      <td class="sv"><a href="{$view->url}">{$view->title}</a></td>
+      <td class="sv"><a href="{$view->url}">{$view->title}</a>{if $view->collection} <span class="text-small text-midtone">({str tag='nviews' section='view' arg1=$view->viewcount})</span>{/if}</td>
       <td class="mc"><label class="hidden">{str tag=membercommenters section=group}: </label>
         <ul class="list-nested list-unstyled">
     {foreach from=$view->comments key=commenter item=info}
