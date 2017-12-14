@@ -917,7 +917,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $smarty->assign('updatedon', get_string('updatedon', 'artefact.blog') . ' ' . format_date($this->mtime));
         }
         return array('html' => $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl'),
-                     'javascript' => '');
+                     'javascript' => '',
+                     'attachments' => $attachments);
     }
 
 
