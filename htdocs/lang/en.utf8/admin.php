@@ -592,6 +592,8 @@ $string['emailsmtpsecuressl'] = 'SSL';
 $string['emailsmtpsecuretls'] = 'TLS';
 $string['emailnoreplyaddress'] = 'System mail address';
 $string['emailnoreplyaddressdescription'] = 'Emails come out as from this address';
+$string['internalnotificationexpire'] = 'Internal notification expiry';
+$string['internalnotificationexpiredescription'] = 'The number of days to keep internal notifications';
 $string['notificationsettings'] = 'Notification settings';
 $string['notificationsettingsdescription'] = 'Here you can set the default options for new users to get notifications. Users can override these settings on their own "Settings → Notifications" page.<br>
          If you select either of the email options, notifications will still arrive in the user\'s inbox, but they will be marked as read automatically.';

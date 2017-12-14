@@ -118,6 +118,7 @@ class PluginNotificationInternal extends PluginNotification {
      * @param $olderthandays integer the age an entry should at least be, before cleaning
      */
     public static function clean_notifications($types, $olderthandays=182) {
+        $olderthandays = get_config('internalnotificationexpire') ? get_config('internalnotificationexpire') : $olderthandays;
         $staletime = db_format_timestamp(time() - ($olderthandays * 24 * 60 * 60));
 
         if (!is_array($types)) {
