@@ -56,12 +56,7 @@ if ($new && $id === false) {
 
 $view = new View($id);
 
-if ($new) {
-    define('TITLE', get_string('notitle', 'view'));
-}
-else {
-    define('TITLE', $view->get('title'));
-}
+define('TITLE', $view->get('title'));
 define('SUBSECTIONHEADING', TITLE);
 
 if (!$USER->can_edit_view($view)) {
@@ -119,14 +114,13 @@ $smarty->assign('viewtype', $view->get('type'));
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $view->get_url());
-$smarty->assign('new', $new);
 $smarty->assign('issiteview', $view->get('institution') == 'mahara');
 $smarty->assign('issitetemplate', ($view->get('template') == View::SITE_TEMPLATE ? true : false));
 $smarty->assign('PAGEHEADING', $state);
 $smarty->display('view/editlayout.tpl');
 
 function create_settings_pieform(){
-    global $view, $new, $pieformname, $caneditonlylayout;
+    global $view, $pieformname, $caneditonlylayout;
     $inlinejavascript = '';
     $issiteview = $view->get('institution') == 'mahara';
     $issitetemplate = ($view->get('template') == View::SITE_TEMPLATE ? true : false);
@@ -197,10 +191,6 @@ function create_settings_pieform(){
             'type'  => 'hidden',
             'value' => $view->get('id'),
         ),
-        'new' => array(
-            'type' => 'hidden',
-            'value' => $new,
-        ),
     );
 
     $hiddenelements = array_merge($hiddenelements, $hiddenlayoutelements);
@@ -224,7 +214,7 @@ function create_settings_pieform(){
 }
 
 function get_basic_elements() {
-    global $view, $new, $urlallowed, $group, $institution, $USER;
+    global $view, $urlallowed, $group, $institution, $USER;
 
     $formatstring = '%s (%s)';
     $ownerformatoptions = array(
@@ -254,9 +244,9 @@ function get_basic_elements() {
             'title'        => get_string('viewurl', 'view'),
             'prehtml'      => '<span class="description">' . (isset($cleanurlbase) ? $cleanurlbase : '') . '</span> ',
             'description'  => get_string('viewurldescription', 'view') . ' ' . get_string('cleanurlallowedcharacters'),
-            'defaultvalue' => $new ? null : $view->get('urlid'),
+            'defaultvalue' => $view->get('urlid'),
             'rules'        => array('maxlength' => 100, 'regex' => get_config('cleanurlvalidate')),
-            'ignore'       => !$urlallowed || $new,
+            'ignore'       => !$urlallowed,
         ),
         'description' => array(
             'type'         => 'wysiwyg',
@@ -437,7 +427,7 @@ JAVASCRIPT;
 }
 
 function get_skin_elements() {
-    global $view, $USER, $new, $pieformname;
+    global $view, $USER, $pieformname;
     $issiteview = $view->get('institution') == 'mahara';
 
     if (!can_use_skins(null, false, $issiteview)) {
@@ -482,9 +472,6 @@ function get_skin_elements() {
         throw new AccessDeniedException();
     }
     $displaylink = $view->get_url();
-    if ($new) {
-        $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
-    }
 
     $snippet = smarty_core();
     $snippet->assign('saved', $saved);
@@ -499,7 +486,6 @@ function get_skin_elements() {
     $snippet->assign('viewid', $view->get('id'));
     $snippet->assign('viewtype', $view->get('type'));
     $snippet->assign('edittitle', $view->can_edit_title());
-    $snippet->assign('new', $new);
     $snippet->assign('issiteview', $issiteview);
     $skinform = array(
         'skins_html' => array(
@@ -568,7 +554,7 @@ function settings_validate(Pieform $form, $values) {
 }
 
 function settings_submit(Pieform $form, $values) {
-    global $view, $SESSION, $new, $caneditonlylayout;
+    global $view, $SESSION, $caneditonlylayout;
     $issiteview = $view->get('institution') == 'mahara';
     $issitetemplate = ($view->get('template') == View::SITE_TEMPLATE ? true : false);
     $canedittitle = !$caneditonlylayout;
@@ -586,11 +572,11 @@ function settings_submit(Pieform $form, $values) {
 
     $view->commit();
     $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
-    redirect('/view/blocks.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));
+    redirect('/view/blocks.php?id=' . $view->get('id'));
   }
 
 function set_view_layout(Pieform $form, $values){
-    global $view, $SESSION, $new;
+    global $view, $SESSION;
 
     $oldrows = $view->get('numrows');
     $oldlayout = $view->get_layout();
@@ -630,7 +616,7 @@ function set_view_layout(Pieform $form, $values){
         if ($dbcolumns != $newcolumns) {
             db_rollback();
             $SESSION->add_error_msg(get_string('changecolumnlayoutfailed', 'view'));
-            redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));
+            redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id'));
         }
     }
     // add or remove rows and move content accordingly if required
@@ -648,7 +634,7 @@ function set_view_layout(Pieform $form, $values){
     if ($view->get('numrows') != $newrows) {
         db_rollback();
         $SESSION->add_error_msg(get_string('changerowlayoutfailed', 'view'));
-        redirect(get_config('wwwroot') . 'view/editlayout.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));
+        redirect(get_config('wwwroot') . 'view/editlayout.php?id=' . $view->get('id'));
     }
 
     db_commit();
@@ -657,7 +643,7 @@ function set_view_layout(Pieform $form, $values){
 }
 
 function set_view_title_and_description(Pieform $form, $values){
-    global $view, $new, $urlallowed;
+    global $view, $urlallowed, $new;
 
     $view->set('title', $values['title']);
     if (trim($values['description']) !== '') {
@@ -680,13 +666,14 @@ function set_view_title_and_description(Pieform $form, $values){
     if (isset($values['anonymise'])) {
         $view->set('anonymise', (int)$values['anonymise']);
     }
-    if (isset($values['urlid'])) {
-        $view->set('urlid', strlen($values['urlid']) == 0 ? null : $values['urlid']);
-    }
-    else if ($new && $urlallowed) {
+    // Change the 'untitled' urlid on first save
+    if ($new && $urlallowed) {
         // Generate one automatically based on the title
         $desired = generate_urlid($values['title'], get_config('cleanurlviewdefault'), 3, 100);
         $ownerinfo = (object) array('owner' => $view->get('owner'), 'group' => $view->get('group'));
         $view->set('urlid', View::new_urlid($desired, $ownerinfo));
+    }
+    else if (isset($values['urlid'])) {
+        $view->set('urlid', strlen($values['urlid']) == 0 ? null : $values['urlid']);
     }
 }

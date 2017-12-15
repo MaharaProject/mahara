@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-{include file="view/editviewtabs.tpl" selected='title' new=$new issiteview=$issiteview}
+{include file="view/editviewtabs.tpl" selected='title' issiteview=$issiteview}
 
 {if $ADMIN || $INSTITUTIONALADMIN}
 <div class="row">

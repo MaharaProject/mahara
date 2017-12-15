@@ -22,16 +22,10 @@
 
 <div class="btn-group btn-group-top">
     {if $editurl}{strip}
-        {if $new}
-        <a class="btn btn-default" href="{$editurl}">
-            {str tag=back}
-        </a>
-        {else}
         <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-default">
             <span class="icon icon-pencil icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=editthisview section=view}
         </a>
-        {/if}
     {/strip}{/if}
 
     {if $copyurl}{strip}

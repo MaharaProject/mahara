@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-{include file="view/editviewtabs.tpl" selected='content' new=$new issiteview=$issiteview}
+{include file="view/editviewtabs.tpl" selected='content' issiteview=$issiteview}
 <div id="blocksinstruction" class="lead view-description">
         {str tag='blocksintructionnoajax' section='view'}
 </div>
@@ -14,11 +14,10 @@
             <input type="hidden" name="change" value="1">
             <input type="hidden" id="category" name="c" value="{$category}">
             <input type="hidden" name="sesskey" value="{$SESSKEY}">
-            {if $new}<input type="hidden" name="new" value="1">{/if}
 
             <div id="editcontent-sidebar-wrapper" class="col-collapse">
                 <div id="editcontent-sidebar" data-spy="affix" data-offset-top="420" data-offset-top="100" class="toolbar-affix">
-                {include file="view/contenteditor.tpl" selected='content' new=$new}
+                {include file="view/contenteditor.tpl" selected='content'}
                 {if $viewthemes}
                     <div id="select-theme" class="select dropdown theme-dropdown">
                         <label id="select-theme-header">{str tag=theme section=view}</label>
@@ -81,11 +80,10 @@
             <input type="hidden" name="change" value="1">
             <input type="hidden" id="category" name="c" value="{$category}">
             <input type="hidden" name="sesskey" value="{$SESSKEY}">
-            {if $new}<input type="hidden" name="new" value="1">{/if}
 
             <div id="editcontent-sidebar-wrapper" class="col-collapse">
                 <div id="editcontent-sidebar">
-                    {include file="view/contenteditor.tpl" selected='content' new=$new}
+                    {include file="view/contenteditor.tpl" selected='content'}
                     {if $viewthemes}
                     <div id="select-theme" class="select dropdown theme-dropdown">
                         <label id="select-theme-header">{str tag=theme section=view}</label>

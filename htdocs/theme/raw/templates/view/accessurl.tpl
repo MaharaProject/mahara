@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-{include file="view/editviewtabs.tpl" selected='share' new=$new issiteview=$issiteview}
+{include file="view/editviewtabs.tpl" selected='share' issiteview=$issiteview}
 
 <div id="accessurl-container">
 
