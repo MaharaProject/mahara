@@ -2157,32 +2157,52 @@ class ElasticsearchIndexing {
 
     /**
      *   Check if access changed between the last time the function was called (view_access table) and
-     *   add items to the queue
+     *   add items to the queue. Or pass in an array of views to work wih (useful when all view_access rules
+     *   deleted for view)
      */
-    public static function add_to_queue_access($last_run, $timestamp) {
+    public static function add_to_queue_access($last_run, $timestamp, $views = array()) {
 
         $artefacttypes_str = self::artefacttypes_filter_string();
+        if (!empty($views)) {
+            $joinstr = '';
+            $wherestr = " v.id IN (" . implode(',', array_values($views)) . ")";
+        }
+        else {
+            $joinstr = " INNER JOIN {view_access} vac ON vac.view = v.id ";
+            $wherestr = " vac.startdate BETWEEN '{$last_run}' AND '{$timestamp}'
+                          OR vac.stopdate BETWEEN '{$last_run}' AND '{$timestamp}'
+                          OR vac.ctime BETWEEN '{$last_run}' AND '{$timestamp}'";
+        }
 
         execute_sql("
             INSERT INTO {search_elasticsearch_queue} (itemid, type)
-            SELECT view, 'view'
-            FROM {view_access} WHERE startdate BETWEEN '{$last_run}' AND '{$timestamp}'
-            OR stopdate BETWEEN  '{$last_run}' AND '{$timestamp}'
-            ;"
+            SELECT v.id, 'view'
+            FROM {view} v
+            " . $joinstr . "
+            WHERE " . $wherestr . ";"
         );
 
         execute_sql("
             INSERT INTO {search_elasticsearch_queue} (itemid, type, artefacttype)
             SELECT var.artefact, 'artefact', a.artefacttype
-            FROM {view_access} vac
-            INNER JOIN {view_artefact} var ON var.view = vac.view
+            FROM {view} v
+            " . $joinstr . "
+            INNER JOIN {view_artefact} var ON var.view = v.id
             INNER JOIN {artefact} a ON var.artefact = a.id
-            WHERE
-                (
-                    vac.startdate BETWEEN '{$last_run}' AND '{$timestamp}'
-                    OR vac.stopdate BETWEEN  '{$last_run}' AND '{$timestamp}'
-                )
-                AND a.artefacttype IN {$artefacttypes_str}
+            WHERE (" . $wherestr . ")
+            AND a.artefacttype IN {$artefacttypes_str}
+            ;"
+        );
+
+        // Deal with text blocks
+        execute_sql("
+            INSERT INTO {search_elasticsearch_queue} (itemid, type)
+            SELECT b.id, 'block_instance'
+            FROM {view} v
+            " . $joinstr . "
+            INNER JOIN {block_instance} b ON v.id = b.view
+            WHERE (" . $wherestr . ")
+            AND b.blocktype IN ('text')
             ;"
         );
     }
