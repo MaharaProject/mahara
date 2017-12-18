@@ -28,6 +28,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Institutions sub-menu'       => array(".manageinstitutions ul", "css_element"),
     'Options dialog'              => array(".modal-header", "css_element"),
     'Portfolio sub-menu'          => array(".myportfolio", "css_element"),
+    'Web services sub-menu'       => array(".webservices", "css_element"),
     'H1 heading'                  => array("h1", "css_element"),
     'Collections text-box'        => array(".select2-selection__rendered", "css_element"),
     'Annotation'                  => array("#activate_blocktype_annotation", "css_element"),
