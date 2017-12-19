@@ -1514,7 +1514,8 @@ function delete_user($userid) {
     $deleterec->deleted = 1;
     foreach ($fieldstomunge as $field) {
         if (!preg_match('/\.deleted\.\d+$/', $user->$field)) {
-            $deleterec->$field = $user->$field . $datasuffix;
+            $hash = md5($user->$field . $datasuffix) . (1000000 + $userid);
+            $deleterec->$field = $hash;
         }
     }
 
@@ -1622,7 +1623,7 @@ function delete_user($userid) {
 /**
  * Undeletes a user
  *
- * NOTE: changing their email addresses to remove the .deleted.timestamp part
+ * NOTE: changing their email addresses to replace the field.deleted.timestamp part
  * has not been implemented yet! This function is not actually used anywhere in
  * Mahara, so hasn't really been tested because of this. It's a simple enough
  * job for the first person who gets there - see how delete_user works to see
