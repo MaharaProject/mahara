@@ -62,8 +62,7 @@ ifdef simplesamlphp
 	@echo "SimpleSAMLphp already exists - doing nothing"
 else
 	@echo "Pulling SimpleSAMLphp from download ..."
-	@curl -sSL https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.14.17/simplesamlphp-1.14.17.tar.gz | tar  --transform 's/simplesamlphp-[0-9]+\.[0-9]+\.[0-9]+/simplesamlphp/x1' -C htdocs/auth/saml/extlib -xzf -
-# SimpleSAMLPHP release tarball already has all composer dependencies.
+	@curl -sSL https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.15.0/simplesamlphp-1.15.0.tar.gz | tar  --transform 's/simplesamlphp-[0-9]+\.[0-9]+\.[0-9]+/simplesamlphp/x1' -C htdocs/auth/saml/extlib -xzf - # SimpleSAMLPHP release tarball already has all composer dependencies.
 #	@php external/composer.phar --working-dir=htdocs/auth/saml/extlib/simplesamlphp update --no-dev
 	@echo "Deleting unneeded files ..."
 #	Delete composer.json and .lock files to avoid leaking minor version info
