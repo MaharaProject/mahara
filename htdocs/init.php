@@ -343,7 +343,7 @@ if (get_config('installed')) {
 
 // If we're in the middle of an upgrade, quit the cron now.
 $siteclosedforupgrade = get_config('siteclosedforupgrade');
-if ($siteclosedforupgrade && defined('CRON')) {
+if ($siteclosedforupgrade && (defined('CRON') || (defined('CLI') && !defined('INSTALLER')))) {
     exit("Site closed for upgrade.\n");
 }
 
@@ -395,6 +395,9 @@ if (!defined('INSTALLER') && !defined('CLI') && !defined('CRON')) {
 if ($siteclosedforupgrade || (get_config('siteclosedbyadmin') && !$USER->admin)) {
     if ($USER->is_logged_in()) {
         $USER->logout();
+    }
+    if (defined('CLI') && !defined('INSTALLER')) {
+        exit("Site closed.\n");
     }
     if (!defined('HOME') && !defined('INSTALLER')) {
         redirect();
