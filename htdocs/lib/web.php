@@ -2265,6 +2265,12 @@ function admin_nav() {
             'title'  => get_string('staticpages', 'admin'),
             'weight' => 20
         ),
+        'configsite/privacy' => array(
+            'path'   => 'configsite/privacy',
+            'url'    => 'admin/site/privacy.php',
+            'title'  => get_string('privacy', 'admin'),
+            'weight' => 25,
+        ),
         'configsite/sitemenu' => array(
             'path'   => 'configsite/sitemenu',
             'url'    => 'admin/site/menu.php',
@@ -2412,6 +2418,12 @@ function admin_nav() {
             'url'    => 'admin/users/institutionpages.php',
             'title'  => get_string('staticpages', 'admin'),
             'weight' => 15
+        ),
+        'manageinstitutions/privacy' => array(
+            'path'   => 'manageinstitutions/privacy',
+            'url'    => 'admin/users/institutionprivacy.php',
+            'title'  => get_string('privacy', 'admin'),
+            'weight' => 17
         ),
         'manageinstitutions/institutionusers' => array(
             'path'   => 'manageinstitutions/institutionusers',
@@ -2630,6 +2642,12 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/institutionpages.php',
             'title'  => get_string('staticpages', 'admin'),
             'weight' => 15
+        ),
+        'manageinstitutions/privacy' => array(
+            'path'   => 'manageinstitutions/privacy',
+            'url'    => 'admin/users/institutionprivacy.php',
+            'title'  => get_string('privacy', 'admin'),
+            'weight' => 17
         ),
         'manageinstitutions/institutionusers' => array(
             'path'   => 'manageinstitutions/institutionusers',
