@@ -1002,7 +1002,7 @@
                 <FIELD NAME="content" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="mauthor" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="mauthor" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
             </FIELDS>
             <KEYS>

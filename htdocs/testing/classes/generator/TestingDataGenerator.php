@@ -527,6 +527,7 @@ EOD;
             $page->name = $name;
             $page->ctime = $now;
             $page->mtime = $now;
+            $page->mauthor = 0;
             $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('staticpageconfiginstitution', 'install'));
             $page->institution = $newinstitution->name;
             insert_record('site_content', $page);

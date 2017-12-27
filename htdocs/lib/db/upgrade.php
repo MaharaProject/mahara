@@ -5570,5 +5570,23 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('event_type', $event, $event);
     }
 
+    if ($oldversion < 2018010500) {
+        log_debug('Make site_content mauthor field have a user id by defaut');
+        // Defaults to usr = 0 on install
+        execute_sql("UPDATE {site_content} SET mauthor = 0 WHERE mauthor IS NULL");
+        $table = new XMLDBTable('site_content');
+        $key = new XMLDBKEY('mauthorfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('mauthor'), 'usr', array('id'));
+        drop_key($table, $key);
+
+        $field = new XMLDBField('mauthor');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        change_field_notnull($table, $field);
+
+        $key = new XMLDBKEY('mauthorfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('mauthor'), 'usr', array('id'));
+        add_key($table, $key);
+    }
+
     return $status;
 }

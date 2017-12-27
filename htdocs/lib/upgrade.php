@@ -721,18 +721,6 @@ function core_install_lastcoredata_defaults() {
     $institution->priority = 0;
     insert_record('institution', $institution);
 
-    $pages = site_content_pages();
-    $now = db_format_timestamp(time());
-    foreach ($pages as $name) {
-        $page = new stdClass();
-        $page->name = $name;
-        $page->ctime = $now;
-        $page->mtime = $now;
-        $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('staticpageconfigdefault', 'install'));
-        $page->institution = 'mahara';
-        insert_record('site_content', $page);
-    }
-
     $auth_instance = new StdClass;
     $auth_instance->instancename  = 'Internal';
     $auth_instance->priority='1';
@@ -742,8 +730,9 @@ function core_install_lastcoredata_defaults() {
     $auth_instance->id = insert_record('auth_instance', $auth_instance, 'id', true);
 
     // Insert the root user
+    $userid = 0;
     $user = new StdClass;
-    $user->id = 0;
+    $user->id = $userid;
     $user->username = 'root';
     $user->password = '*';
     $user->salt = '*';
@@ -761,6 +750,19 @@ function core_install_lastcoredata_defaults() {
     }
     else {
         insert_record('usr', $user);
+    }
+
+    $pages = site_content_pages();
+    $now = db_format_timestamp(time());
+    foreach ($pages as $name) {
+        $page = new stdClass();
+        $page->name = $name;
+        $page->ctime = $now;
+        $page->mtime = $now;
+        $page->mauthor = $userid;
+        $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('staticpageconfigdefault', 'install'));
+        $page->institution = 'mahara';
+        insert_record('site_content', $page);
     }
 
     // install the default layout options
