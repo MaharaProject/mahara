@@ -364,6 +364,7 @@ class ElasticsearchType_artefact extends ElasticsearchType {
         $views = get_records_sql_array ( $sql, array (
                 $id
         ) );
+
         if ($views) {
             $record_views = array ();
             foreach ( $views as $view ) {
@@ -462,43 +463,45 @@ class ElasticsearchType_artefact extends ElasticsearchType {
     public static function views_by_artefact_acl_filter($views = array()) {
         global $USER;
 
-        $acl = new ElasticsearchFilterAcl ( $USER );
+        $acl = new ElasticsearchFilterAcl($USER);
+        $viewmap = function($value) {
+            return 'view' . $value;
+        };
 
-        $filter = [
-                "bool" => [
-                        "must" => [
-                                array (
-                                        array (
-                                                'term' => [
-                                                        '_type' => 'view'
-                                                ]
-                                        ),
-                                        array (
-                                                'terms' => [
-                                                        'id' => array_keys ( $views )
-                                                ]
-                                        )
-                                )
-                        ],
-                        "should" => $acl->get_params () ['should']
-                ]
-        ]
-        ;
-
-        $client = PluginSearchElasticsearch::make_client ();
-        $params = array (
-                'index' => PluginSearchElasticsearch::get_write_indexname (),
-                'body' => array (
-                        'size' => 10, //
-                        'query' => array (
-                                'bool' => array (
-                                        'filter' => $filter
-                                )
+        $filter = array(
+            "bool" => array(
+                "must" => array(
+                    array (
+                        array (
+                            'term' => array(
+                                '_type' => 'doc'
+                            )
+                        ),
+                        array (
+                            'terms' => array(
+                                '_id' => array_map($viewmap, array_keys($views))
+                            )
                         )
-                )
+                    )
+                ),
+                "should" => $acl->get_params() ['should']
+            )
         );
 
-        $results = $client->search ( $params );
+        $client = PluginSearchElasticsearch::make_client();
+        $params = array (
+            'index' => PluginSearchElasticsearch::get_write_indexname(),
+            'body' => array (
+                'size' => 10,
+                'query' => array (
+                    'bool' => array (
+                        'filter' => $filter
+                    )
+                )
+            )
+        );
+
+        $results = $client->search ($params);
         $valid = array();
         if (!empty($results['hits'])) {
             foreach($results['hits']['hits'] as $item) {

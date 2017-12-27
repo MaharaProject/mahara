@@ -1914,6 +1914,15 @@ class ElasticsearchPseudotype_all
             return mb_strtolower($chr, "UTF-8") != $chr;
         }
 
+        $cleanuphighlight = function($str) {
+            $str = strip_tags($str, '<span>');
+            if (strpos($str, '<') > strpos($str, '>')) {
+                // we probably have a broken close tag so will strip it out
+                $str = substr($str, strpos($str, '>') + 1);
+            }
+            return $str;
+        };
+
         foreach ($results['hits']['hits'] as $hit) {
             $tmp = array();
             $tmp['type'] = $hit['_source']['type'];
@@ -1933,7 +1942,8 @@ class ElasticsearchPseudotype_all
                 $tmp['db']->deleted = false;
                 $highlight = false;
                 if (!empty($tmp['highlight'])) {
-                    $highlight = implode(' ... ', $tmp['highlight']);
+                    $highlights = array_map($cleanuphighlight, $tmp['highlight']);
+                    $highlight = implode(' ... ', $highlights);
                     if (substr($highlight, 0, 1) !== '<' && !starts_with_upper(strip_tags($highlight))) {
                         $highlight = '... ' . $highlight;
                     }
