@@ -1896,6 +1896,7 @@ function auth_handle_account_expiries() {
 
     $daystoexpire = ceil($warn / 86400) . ' ';
     $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
+    $expiredate = format_date(strtotime('+' . $daystoexpire), 'strftimedate');
 
     // Expiry warning messages
     if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
@@ -1905,8 +1906,8 @@ function auth_handle_account_expiries() {
         foreach ($users as $user) {
             $displayname  = display_name($user);
             _email_or_notify($user, get_string('accountexpirywarning'),
-                get_string('accountexpirywarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
-                get_string('accountexpirywarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+                get_string('accountexpirywarningtext1', 'mahara', $displayname, $sitename, $expiredate, $wwwroot . 'export/index.php', $wwwroot . 'contact.php', $sitename),
+                get_string('accountexpirywarninghtml1', 'mahara', $displayname, $sitename, $expiredate, $wwwroot . 'export/index.php', $wwwroot . 'contact.php', $sitename)
             );
             set_field('usr', 'expirymailsent', 1, 'id', $user->id);
         }
@@ -1956,8 +1957,8 @@ function auth_handle_account_expiries() {
             foreach ($users as $user) {
                 $displayname = display_name($user);
                 _email_or_notify($user, get_string('accountinactivewarning'),
-                    get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $sitename),
-                    get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename)
+                    get_string('accountinactivewarningtext1', 'mahara', $displayname, $sitename, $expiredate, $sitename),
+                    get_string('accountinactivewarninghtml1', 'mahara', $displayname, $sitename, $expiredate, $sitename)
                 );
                 set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
             }
@@ -1981,10 +1982,10 @@ function auth_handle_account_expiries() {
         foreach ($users as $user) {
             $displayname  = display_name($user);
             _email_or_notify($user, get_string('institutionmembershipexpirywarning'),
-                get_string('institutionmembershipexpirywarningtext', 'mahara', $displayname, $user->institutionname,
-                    $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
-                get_string('institutionmembershipexpirywarninghtml', 'mahara', $displayname, $user->institutionname,
-                    $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+                get_string('institutionmembershipexpirywarningtext1', 'mahara', $displayname, $user->institutionname,
+                    $sitename, $expiredate, $wwwroot . 'contact.php', $sitename),
+                get_string('institutionmembershipexpirywarninghtml1', 'mahara', $displayname, $user->institutionname,
+                    $sitename, $expiredate, $wwwroot . 'contact.php', $sitename)
             );
             set_field('usr_institution', 'expirymailsent', 1, 'usr', $user->id,
                       'institution', $user->institution);
@@ -2012,6 +2013,7 @@ function auth_handle_institution_expiries() {
 
     $daystoexpire = ceil($warn / 86400) . ' ';
     $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
+    $expiredate = format_date(strtotime('+' . $daystoexpire), 'strftimedate');
 
     // Get site administrators
     $siteadmins = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff FROM {usr} u WHERE u.admin = 1', array());
@@ -2027,8 +2029,8 @@ function auth_handle_institution_expiries() {
             foreach ($siteadmins as $user) {
                 $user_displayname  = display_name($user);
                 _email_or_notify($user, get_string('institutionexpirywarning'),
-                    get_string('institutionexpirywarningtext_site', 'mahara', $user_displayname, $institution_displayname, $daystoexpire, $sitename, $sitename),
-                    get_string('institutionexpirywarninghtml_site', 'mahara', $user_displayname, $institution_displayname, $daystoexpire, $sitename, $sitename)
+                    get_string('institutionexpirywarningtext_site1', 'mahara', $user_displayname, $institution_displayname, $expiredate, $sitename, $sitename),
+                    get_string('institutionexpirywarninghtml_site1', 'mahara', $user_displayname, $institution_displayname, $expiredate, $sitename, $sitename)
                 );
             }
 
@@ -2040,8 +2042,8 @@ function auth_handle_institution_expiries() {
             foreach ($institutionaladmins as $user) {
                 $user_displayname  = display_name($user);
                 _email_or_notify($user, get_string('institutionexpirywarning'),
-                    get_string('institutionexpirywarningtext_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
-                    get_string('institutionexpirywarninghtml_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+                    get_string('institutionexpirywarningtext_institution1', 'mahara', $user_displayname, $institution_displayname, $sitename, $expiredate, $wwwroot . 'contact.php', $sitename),
+                    get_string('institutionexpirywarninghtml_institution1', 'mahara', $user_displayname, $institution_displayname, $sitename, $expiredate, $wwwroot . 'contact.php', $sitename)
                 );
             }
             set_field('institution', 'expirymailsent', 1, 'name', $institution->name);
