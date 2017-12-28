@@ -5609,5 +5609,24 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2018010700) {
+        log_debug('Move the site Privacy statement from the site_content table to the site_content_version table');
+
+        if ($records = get_records_array('site_content', 'name', 'privacy')) {
+            foreach ($records as $data) {
+                $record = new stdClass;
+                $record->type = 'privacy';
+                $record->content = $data->content;
+                $record->author = $data->mauthor;
+                $record->institution = $data->institution;
+                $record->version = '1.0';
+                $record->ctime = db_format_timestamp(time());
+
+                insert_record('site_content_version', $record);
+                delete_records('site_content', 'id', $data->id);
+            }
+        }
+    }
+
     return $status;
 }
