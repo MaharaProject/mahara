@@ -3188,7 +3188,15 @@ function site_menu() {
  * @return array of names
  */
 function site_content_pages() {
-    return array('about', 'home', 'loggedouthome', 'privacy', 'termsandconditions');
+    return array('about', 'home', 'loggedouthome', 'termsandconditions');
+}
+
+/**
+ * Returns the list of site versioned content pages
+ * @return array of names
+ */
+function site_content_version_pages() {
+    return array('privacy');
 }
 
 function get_site_page_content($pagename) {

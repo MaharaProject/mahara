@@ -26,7 +26,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Add"
     And I press "Save"
     # Adding profile info block
-    And I expand "Personal info" node
+    And I expand "Personal info" node in the "blocktype sidebar" property
     And I follow "Profile information"
     And I press "Add"
     And I press "Save"

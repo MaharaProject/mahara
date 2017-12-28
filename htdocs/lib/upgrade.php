@@ -756,13 +756,25 @@ function core_install_lastcoredata_defaults() {
     $now = db_format_timestamp(time());
     foreach ($pages as $name) {
         $page = new stdClass();
-        $page->name = $name;
         $page->ctime = $now;
+        $page->institution = 'mahara';
+        $page->content = get_string($name . 'defaultcontent', 'install', get_string('staticpageconfigdefault', 'install'));
+        $page->name = $name;
         $page->mtime = $now;
         $page->mauthor = $userid;
-        $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('staticpageconfigdefault', 'install'));
-        $page->institution = 'mahara';
         insert_record('site_content', $page);
+    }
+
+    $versionedpages = site_content_version_pages();
+    foreach ($versionedpages as $name) {
+        $page = new stdClass();
+        $page->ctime = $now;
+        $page->institution = 'mahara';
+        $page->content = get_string($name . 'defaultcontent', 'install', get_string('staticpageconfigdefault', 'install'));
+        $page->type = $name;
+        $page->author = $userid;
+        $page->version = '1.0';
+        insert_record('site_content_version', $page);
     }
 
     // install the default layout options
