@@ -157,6 +157,22 @@ jQuery(function ($) {
     });
 
     show_buttons('$type');
+
+    var wireselectall = function() {
+        $("#selectall").click(function(e) {
+            e.preventDefault();
+            $("#suspendedlist :checkbox").prop("checked", true);
+        });
+    };
+
+    var wireselectnone = function() {
+        $("#selectnone").click(function(e) {
+            e.preventDefault();
+            $("#suspendedlist :checkbox").prop("checked", false);
+        });
+    };
+    wireselectall();
+    wireselectnone();
 });
 EOF
 );
