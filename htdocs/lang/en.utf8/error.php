@@ -94,7 +94,7 @@ $string['accessdeniedobjection'] = 'Access denied. The objection has already bee
 $string['accessdeniedexception'] =  'You do not have access to view this page.';
 $string['accessdeniednourlsecret'] =  'You do not have access to this functionality. Please provide the value for "urlsecret" from your config.php file as part of the URL.';
 $string['accessdeniedbadge'] =  'You do not have access to view this badge.';
-
+$string['siteprivacystatementnotfound'] = 'Site privacy statement with id %s not found.';
 $string['viewnotfoundexceptiontitle'] = 'Page not found';
 $string['viewnotfoundexceptionmessage'] = 'You tried to access a page that does not exist.';
 $string['viewnotfound'] = 'Page with id %s not found.';

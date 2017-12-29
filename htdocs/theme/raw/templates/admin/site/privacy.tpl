@@ -1,5 +1,22 @@
 {include file="header.tpl"}
-<div class="lead">{str tag="privacypagedescription" section="admin"}</div>
+    {if $versionid}
+        {if $version == $latestversion}
+            <div class="lead">{str tag="privacypagedescription" section="admin"}</div>
+            {if $pageeditform}
+            <div class="col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {$pageeditform|safe}
+                    </div>
+                </div>
+            </div>
+            {/if}
+            </div>
+        {else}
+            {$content|clean_html|safe}
+        {/if}
+    {else}
+    <div class="lead">{str tag="privacypagedescription" section="admin"}</div>
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default view-container">
@@ -27,8 +44,22 @@
                                         {/if}
                                     </td>
                                     <td>{$result->content|truncate:100:"..."|htmlspecialchars_decode|strip_tags}</td>
-                                    <td>{$result->ctime|date_format:'%d %b %Y %H:%I'}</td>
-                                    <td class="control-buttons"></td>
+                                    <td>{$result->ctime|date_format:'%d %b %Y %H:%M'}</td>
+                                    <td class="control-buttons">
+                                        {if $key === $latestprivacyid}
+                                            <div class="btn-group">
+                                                <a href="{$WWWROOT}admin/site/privacy.php?id={$result->id}" title="{str tag=editversion section='admin' arg1='$result->version'}" class="btn btn-default btn-xs">
+                                                    <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                                                </a>
+                                            </div>
+                                        {else}
+                                            <div class="btn-group">
+                                                <a href="{$WWWROOT}admin/site/privacy.php?id={$result->id}" title="{str tag=viewversion section='admin' arg1='$result->version'}" class="btn btn-default btn-xs">
+                                                    <span class="icon icon-eye icon-lg" role="presentation" aria-hidden="true"></span>
+                                                </a>
+                                            </div>
+                                        {/if}
+                                    </td>
                                 </tr>
                             {/foreach}
                         </tbody>
@@ -38,4 +69,5 @@
         </div>
     </div>
 </div>
+{/if}
 {include file="footer.tpl"}
