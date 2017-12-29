@@ -22,10 +22,15 @@ if (!is_logged_in()) {
     throw new AccessDeniedException();
 }
 
-$data = '<div class="no-results"> Site settings here </div>';
+$data = get_records_sql_assoc("
+    SELECT  s.id, s.version, u.firstname, u.lastname, u.id AS userid, s.content, s.ctime
+      FROM {site_content_version} s
+ LEFT JOIN {usr} u ON s.author = u.id");
+
+krsort($data);
 
 $smarty = smarty();
 setpageicon($smarty, 'icon-umbrella');
 
-$smarty->assign('data', $data);
+$smarty->assign('results', $data);
 $smarty->display('admin/site/privacy.tpl');

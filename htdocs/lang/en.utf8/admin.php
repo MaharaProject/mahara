@@ -1321,3 +1321,9 @@ $string['nobehatfeaturefiles'] = 'No behat feature files found';
 $string['behatmatchingrows'] = '%s in ';
 $string['behatnocore'] = 'Unable to read core behat steps from behat.yml file';
 $string['behatstepnotused'] = 'This behat step is not currently used';
+
+// Privacy Statement section
+$string['author'] = 'Author';
+$string['content'] = 'Content';
+$string['creationdate'] = 'Creation date';
+$string['version'] = 'Version';
