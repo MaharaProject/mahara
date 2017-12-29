@@ -14,6 +14,13 @@ define('PUBLIC', 1);
 require('init.php');
 define('TITLE', get_string('privacystatement'));
 
+$privacycontent = get_field_sql("
+    SELECT s.content
+    FROM {site_content_version} s
+    WHERE s.institution = ?
+    ORDER BY s.version DESC
+    LIMIT 1", array('mahara'));
+
 $smarty = smarty();
-$smarty->assign('page_content', get_site_page_content('privacy'));
+$smarty->assign('page_content', $privacycontent);
 $smarty->display('sitepage.tpl');
