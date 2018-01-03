@@ -5866,5 +5866,13 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2018061600) {
+        log_debug('Adding new event type "userchangegrouprole"');
+        $event = (object)array(
+            'name'  => 'userchangegrouprole'
+        );
+        ensure_record_exists('event_type', $event, $event);
+    }
+
     return $status;
 }

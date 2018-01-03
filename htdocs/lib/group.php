@@ -120,6 +120,18 @@ function group_change_role($groupid, $userid, $role) {
     }
 
     set_field('group_member', 'role', $role, 'group', $groupid, 'member', $userid);
+
+    $data = new StdClass;
+    $data->user = $userid;
+    $data->group = $groupid;
+    $data->role = $role;
+    handle_event('userchangegrouprole', array(
+        'id' => $groupid,
+        'eventfor' => 'group',
+        'parentid' => $userid,
+        'parenttype' => 'user',
+        'rules' => $data)
+    );
 }
 
 /**
