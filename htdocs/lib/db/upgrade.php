@@ -5554,11 +5554,20 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2018010300) {
+        log_debug('Anonymising remaining deleted user data');
         $sql = "UPDATE {usr}
             SET username = CONCAT(MD5(username), 1000000 + id),
             email = CONCAT(MD5(email), 1000000 + id)
             WHERE deleted = 1 ";
         execute_sql($sql);
+    }
+
+    if ($oldversion < 2018010400) {
+        log_debug('Adding new event type "userleavesgroup"');
+        $event = (object)array(
+            'name'  => 'userleavesgroup'
+        );
+        ensure_record_exists('event_type', $event, $event);
     }
 
     return $status;

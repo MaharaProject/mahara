@@ -871,6 +871,7 @@ function core_install_firstcoredata_defaults() {
         'deactivateuser',
         'activateuser',
         'userjoinsgroup',
+        'userleavesgroup',
         'saveartefact',
         'deleteartefact',
         'deleteartefacts',

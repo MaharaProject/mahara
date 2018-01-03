@@ -1074,6 +1074,11 @@ function group_remove_user($groupid, $userid=null, $force=false) {
     if (!$force && !group_user_can_leave($groupid, $userid)) {
         throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
     }
+    $data = new StdClass;
+    $data->user = $userid;
+    $data->group = $groupid;
+    $data->role = get_field('group_member', 'role', 'group', $groupid, 'member', $userid);
+    handle_event('userleavesgroup', $data);
     delete_records('group_member', 'group', $groupid, 'member', $userid);
 
     global $USER;
