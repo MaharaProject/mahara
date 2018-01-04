@@ -13,7 +13,7 @@ Scenario: Accessing annotation block (Bug 1443730)
  Given I log in as "admin" with password "Kupuhipa1"
 # Checking if annotation block is available by default
  And I follow "Page admin_01"
- And I follow "Edit this page"
+ And I follow "Edit"
  And I expand "General" node
  And I should not see "Annotation"
  And I display the page

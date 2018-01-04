@@ -23,6 +23,6 @@ Scenario: Activate page themes setting and edit a page (Bug 1591304)
  # Now set a theme as a user and confirm logo changes
  Given I log in as "UserA" with password "Kupuhipa1"
  And I follow "Page UserA_01"
- And I follow "Edit this page"
+ And I follow "Edit"
  And I select "Modern" from "viewtheme"
  Then the "div#logo-area" element should contain "/theme/modern/images/site-logo"

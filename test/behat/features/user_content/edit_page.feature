@@ -8,7 +8,7 @@ Scenario: Clicking ID's (Bug 1428456)
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Portfolio" from main menu
  And I follow "Profile page"
- And I follow "Edit this page"
+ And I follow "Edit"
 
  # Checking if we can add a block
  And I follow "Text"
@@ -46,7 +46,7 @@ Scenario: Clicking ID's (Bug 1428456)
  # Checking that we can delete more than one block (Bug #1511536)
  # We need to leave and return to the page for this
  And I display the page
- And I follow "Edit this page"
+ And I follow "Edit"
  When I delete the block "The Sun Also Rises"
  Then I should not see "Robert Cohn"
  When I delete the block "1984"
@@ -87,7 +87,7 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  # Profile page
  And I choose "Portfolio" from main menu
  And I follow "Profile page"
- And I follow "Edit this page"
+ And I follow "Edit"
  And I should not see "Settings"
  And I should see "Edit layout"
  When I follow "Edit layout"

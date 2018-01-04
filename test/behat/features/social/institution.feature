@@ -33,7 +33,7 @@ Feature: Mahara user permissions in institutions
     Given I log in as "admin" with password "Kupuhipa1"
     And I choose "Pages and collections" in "Institutions" from administration menu
     And I follow "Page InstOne_01"
-    And I follow "Edit this page"
+    And I follow "Edit"
     And I follow "Share" in the "Toolbar buttons" property
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should not contain "Institution Two"
@@ -47,7 +47,7 @@ Feature: Mahara user permissions in institutions
     Given I log in as "UserB" with password "Kupuhipa1"
     And I choose "Pages and collections" in "Institutions" from administration menu
     And I follow "Page InstOne_01"
-    And I follow "Edit this page"
+    And I follow "Edit"
     And I follow "Share" in the "Toolbar buttons" property
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should contain "Institution Two"

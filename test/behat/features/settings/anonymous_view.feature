@@ -26,7 +26,7 @@ Scenario: Testing that views & collections are collated properly
     Given I log in as "UserA" with password "Kupuhipa1"
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I follow "Page UserA_01"
-    And I follow "Edit this page"
+    And I follow "Edit"
     And I follow "Settings" in the "Toolbar buttons" property
     And I set the following fields to these values:
     | Anonymise | 1 |

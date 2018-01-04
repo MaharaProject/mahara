@@ -91,7 +91,7 @@ Background:
    And I should not see "Note"
    #Check tags can be deleted from a page - Bug 1715491
    Given I follow "Page UserA_02"
-   And I follow "Edit this page"
+   And I follow "Edit"
    And I click on "Settings" in the "Toolbar buttons" property
    And I clear value "orange (1)" from select2 field "settings_tags"
    And I press "Save"

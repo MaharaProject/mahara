@@ -76,7 +76,7 @@ Scenario: Creating a Journal entry
  # Adding journal blocks to a page
  And I choose "Pages and collections" in "Portfolio" from main menu
  And I follow "Page admin_01"
- And I follow "Edit this page"
+ And I follow "Edit"
  And I expand "Journals" node in the "blocktype sidebar" property
  And I follow "Tagged journal entries" in the "blocktype sidebar" property
  And I press "Add"

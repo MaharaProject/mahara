@@ -14,7 +14,7 @@ And the following "pages" exist:
 Scenario: Use content from another note (Bug 1710988)
   Given I log in as "UserA" with password "Kupuhipa1"
   And I follow "Page UserA_01"
-  And I follow "Edit this page"
+  And I follow "Edit"
   And I expand "General" node
   And I follow "Note" in the "blocktype sidebar" property
   And I press "Add"

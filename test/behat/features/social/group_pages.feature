@@ -42,7 +42,7 @@ Scenario: Copying a group page retains title (Bug 1519374)
 Scenario: Group homepage basic settings and skins can't be edited - Bug 1718806
  Given I log in as "UserC" with password "Kupuhipa1"
  When I go to group "GroupA"
- And I follow "Edit this page"
+ And I follow "Edit"
  And I should not see "Settings"
  When I follow "Edit layout"
  And I should see "Layout"

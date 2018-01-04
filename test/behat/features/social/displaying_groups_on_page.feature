@@ -34,7 +34,7 @@ Scenario: Create groups and limit display on profile page (Bug 1426983)
     # Changing the amount of groups seen in My groups block
     And I choose "Portfolio" from main menu
     And I follow "Profile page"
-    And I follow "Edit this page"
+    And I follow "Edit"
     And I configure the block "My groups"
     And I set the following fields to these values:
     | Maximum number of groups to display | 3 |

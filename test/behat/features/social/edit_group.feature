@@ -58,4 +58,4 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I choose "Groups" from main menu
  And I follow "Group awesome sauce"
  # Making sure I can't edit a group I am not owner of
- And I should not see "Edit this page"
+ And I should not see "Edit"
