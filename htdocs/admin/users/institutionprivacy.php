@@ -60,41 +60,54 @@ $privacies = get_records_sql_assoc("
 
 $form = false;
 if ($versionid !== null) {
-    $form = pieform(array(
-        'name'              => 'editsitepage',
-        'jsform'            => false,
-        'jssuccesscallback' => 'contentSaved',
-        'elements'          => array(
-            'version' => array(
-                'type'         => 'text',
-                'title'        => get_string('version', 'admin'),
-                'description'  => '',
-                'defaultvalue' => '',
-                'rules' => array(
-                    'required'    => true,
-                    'maxlength' => 15
-                )
-            ),
-            'pageinstitution' => array('type' => 'hidden', 'value' => $institution),
-            'pagetext' => array(
-                'name'        => 'pagetext',
-                'type'        => 'wysiwyg',
-                'rows'        => 25,
-                'cols'        => 100,
-                'title'       => get_string('pagetext', 'admin'),
-                'defaultvalue' => '',
-                'rules'       => array(
-                    'maxlength' => 65536,
-                    'required' => true
-                )
-            ),
-            'submit' => array(
-                'class' => 'btn-primary',
-                'type'  => 'submit',
-                'value' => get_string('savechanges', 'admin')
-            ),
-        )
-    ));
+    $pageoptions = get_record('site_content_version', 'id', $versionid, 'institution', $institution);
+    if ($versionid === 0 || $pageoptions) {
+        $form = pieform(array(
+            'name'              => 'editsitepage',
+            'jsform'            => false,
+            'jssuccesscallback' => 'contentSaved',
+            'elements'          => array(
+                'version' => array(
+                    'type'         => 'text',
+                    'title'        => get_string('version', 'admin'),
+                    'description'  => $pageoptions ? get_string('lastversion', 'admin', $pageoptions->version) : '',
+                    'defaultvalue' => '',
+                    'rules' => array(
+                        'required'    => true,
+                        'maxlength' => 15
+                    )
+                ),
+                'pageinstitution' => array('type' => 'hidden', 'value' => $institution),
+                'pagetext' => array(
+                    'name'        => 'pagetext',
+                    'type'        => 'wysiwyg',
+                    'rows'        => 25,
+                    'cols'        => 100,
+                    'title'       => get_string('pagetext', 'admin'),
+                    'defaultvalue' => $pageoptions ? $pageoptions->content : '',
+                    'rules'       => array(
+                        'maxlength' => 65536,
+                        'required' => true
+                    )
+                ),
+                'submit' => array(
+                    'class' => 'btn-primary',
+                    'type'  => 'submit',
+                    'value' => get_string('savechanges', 'admin')
+                ),
+            )
+        ));
+    }
+    else {
+        throw new ViewNotFoundException(get_string('institutionprivacystatementnotfound', 'error', $institutionelement['options'][$institution], $versionid));
+    }
+}
+
+function editsitepage_validate(Pieform $form, $values) {
+    // Check if the version entered by the user already exists
+    if (record_exists('site_content_version', 'institution', $values['pageinstitution'], 'version', $values['version'])) {
+        $form->set_error('version', get_string('versionalreadyexist', 'admin', $values['version']));
+    }
 }
 
 function editsitepage_submit(Pieform $form, $values) {
@@ -151,5 +164,9 @@ $smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfe
 $smarty->assign('versionid', $versionid);
 $smarty->assign('privacies', $privacies);
 $smarty->assign('pageeditform', $form);
+$smarty->assign('institution', $institution);
+$smarty->assign('latestversion', $privacies ? reset($privacies)->version : 0);
+$smarty->assign('latestprivacyid', $privacies ? reset($privacies)->id : 0);
+$smarty->assign('version', $versionid && $pageoptions ? $pageoptions->version : '');
 $smarty->assign('institutionselector', $institutionselector);
 $smarty->display('admin/users/institutionprivacy.tpl');

@@ -1,5 +1,4 @@
 {include file="header.tpl"}
-<div class="lead">{str tag="institutionprivacypagedescription" section="admin"}</div>
 <div class="panel panel-default">
     <div class="last form-group collapsible-group">
         <fieldset class="pieform-fieldset last collapsible">
@@ -20,13 +19,23 @@
     </div>
 </div>
 {if $versionid !== null}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            {$pageeditform|safe}
+    {if $version == $latestversion}
+        <div class="lead">{str tag="institutionprivacypagedescription" section="admin"}</div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {$pageeditform|safe}
+            </div>
         </div>
-    </div>
+    {else}
+        {foreach from=$privacies item=result key=key}
+            {if $result->version == $version}
+                {$result->content|clean_html|safe}
+            {/if}
+        {/foreach}
+    {/if}
 {else}
     {if $privacies}
+        <div class="lead">{str tag="institutionprivacypagedescription" section="admin"}</div>
         <div class="panel panel-default">
             <div class="table-responsive">
                 <table id="adminstitutionslist" class="fullwidth table table-striped">
@@ -53,7 +62,21 @@
                                 </td>
                                 <td>{$result->content|truncate:100:"..."|htmlspecialchars_decode|strip_tags}</td>
                                 <td>{$result->ctime|date_format:'%d %b %Y %H:%M'}</td>
-                                <td class="control-buttons"></td>
+                                <td class="control-buttons">
+                                    {if $key == $latestprivacyid}
+                                        <div class="btn-group">
+                                            <a href="{$WWWROOT}admin/users/institutionprivacy.php?institution={$institution}&id={$result->id}" title="{str tag=editversion section='admin' arg1='$result->version'}" class="btn btn-default btn-xs">
+                                                <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                                            </a>
+                                        </div>
+                                    {else}
+                                        <div class="btn-group">
+                                            <a href="{$WWWROOT}admin/users/institutionprivacy.php?institution={$institution}&id={$result->id}" title="{str tag=viewversion section='admin' arg1='$result->version'}" class="btn btn-default btn-xs">
+                                                <span class="icon icon-eye icon-lg" role="presentation" aria-hidden="true"></span>
+                                            </a>
+                                        </div>
+                                    {/if}
+                                </td>
                             </tr>
                         {/foreach}
                     </tbody>
