@@ -18,6 +18,7 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutionprivacy');
 define('MENUITEM', 'manageinstitutions/privacy');
 require_once('institution.php');
+$versionid = param_integer('id', null);
 
 if (!is_logged_in()) {
     throw new AccessDeniedException();
@@ -45,10 +46,82 @@ $institutionselector = pieform(array(
         'institution' => $institutionelement,
     )
 ));
-
-$data = '<div class="no-results">' . get_string('noinstitutionprivacy', 'admin') . '</div>'; //privacy data to show
-
 $wwwroot = get_config('wwwroot');
+
+// The "Add one" link displayed when an institution has no privay statement of its own.
+$href = $wwwroot . 'admin/users/institutionprivacy.php?institution=' . $institution . '&id=0';
+
+$privacies = get_records_sql_assoc("
+    SELECT  s.id, s.version, u.firstname, u.lastname, u.id AS userid, s.content, s.ctime
+    FROM {site_content_version} s
+    LEFT JOIN {usr} u ON s.author = u.id
+    WHERE s.institution = ?
+    ORDER BY s.id DESC", array($institution));
+
+$form = false;
+if ($versionid !== null) {
+    $form = pieform(array(
+        'name'              => 'editsitepage',
+        'jsform'            => false,
+        'jssuccesscallback' => 'contentSaved',
+        'elements'          => array(
+            'version' => array(
+                'type'         => 'text',
+                'title'        => get_string('version', 'admin'),
+                'description'  => '',
+                'defaultvalue' => '',
+                'rules' => array(
+                    'required'    => true,
+                    'maxlength' => 15
+                )
+            ),
+            'pageinstitution' => array('type' => 'hidden', 'value' => $institution),
+            'pagetext' => array(
+                'name'        => 'pagetext',
+                'type'        => 'wysiwyg',
+                'rows'        => 25,
+                'cols'        => 100,
+                'title'       => get_string('pagetext', 'admin'),
+                'defaultvalue' => '',
+                'rules'       => array(
+                    'maxlength' => 65536,
+                    'required' => true
+                )
+            ),
+            'submit' => array(
+                'class' => 'btn-primary',
+                'type'  => 'submit',
+                'value' => get_string('savechanges', 'admin')
+            ),
+        )
+    ));
+}
+
+function editsitepage_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+
+    $id = get_field('site_content_version', 'id', 'version', $values['version']);
+    require_once('embeddedimage.php');
+    // Update the pagetext with any embedded image info
+    $pagetext = EmbeddedImage::prepare_embedded_images($values['pagetext'], 'staticpages', $id);
+
+    $data = new StdClass;
+    $data->content = $pagetext;
+    $data->author = $USER->get('id');
+    $data->institution = $values['pageinstitution'];
+    $data->ctime = db_format_timestamp(time());
+    $data->version = $values['version'];
+    $data->type = 'privacy';
+
+    try {
+        insert_record('site_content_version', $data);
+        $SESSION->add_ok_msg(get_string('pagesaved', 'admin'));
+    }
+    catch (SQLException $e) {
+        $SESSION->add_ok_msg(get_string('savefailed', 'admin'));
+    }
+    redirect(get_config('wwwroot').'admin/users/institutionprivacy.php?institution=' . $values['pageinstitution']);
+}
 
 // Site privacy to display in an expandable panel
 $siteprivacycontent = get_record_sql("
@@ -72,8 +145,11 @@ $smarty = smarty();
 setpageicon($smarty, 'icon-umbrella');
 
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('data', $data);
+$smarty->assign('href', $href);
 $smarty->assign('siteprivacycontent', $siteprivacycontent);
 $smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfeed', format_date(strtotime($siteprivacycontent->ctime))));
+$smarty->assign('versionid', $versionid);
+$smarty->assign('privacies', $privacies);
+$smarty->assign('pageeditform', $form);
 $smarty->assign('institutionselector', $institutionselector);
 $smarty->display('admin/users/institutionprivacy.tpl');

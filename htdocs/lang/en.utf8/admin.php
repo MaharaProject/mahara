@@ -1332,3 +1332,4 @@ $string['editversion'] = 'Edit version %s';
 $string['lastversion'] = 'Privacy statements must have unique version names of up to 15 characters. The latest version for this privacy statement is "%s".';
 $string['versionalreadyexist'] = 'A privacy statement with the version name "%s" already exists.';
 $string['siteprivacystatement'] = 'Site privacy statement';
+$string['addoneversionlink']   = '<a href="%s">Add one</a> if you need it.';
