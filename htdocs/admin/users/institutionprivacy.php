@@ -49,10 +49,19 @@ $institutionselector = pieform(array(
 $data = '<div class="no-results">' . get_string('noinstitutionprivacy', 'admin') . '</div>'; //privacy data to show
 
 $wwwroot = get_config('wwwroot');
+
+// Site privacy to display in an expandable panel
+$siteprivacycontent = get_record_sql("
+    SELECT s.content, s.ctime
+    FROM {site_content_version} s
+    WHERE s.institution = ?
+    ORDER BY s.id DESC
+    LIMIT 1", array('mahara'));
+
 $js = <<< EOF
 jQuery(function($) {
   function reloadUsers() {
-      window.location.href = '{$wwwroot}admin/users/institutionprivacy.php?institution='+$('#usertypeselect_institution').val();
+      window.location.href = '{$wwwroot}admin/users/institutionprivacy.php?institution=' + $('#usertypeselect_institution').val();
   }
 
   $('#usertypeselect_institution').on('change', reloadUsers);
@@ -64,5 +73,7 @@ setpageicon($smarty, 'icon-umbrella');
 
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('data', $data);
+$smarty->assign('siteprivacycontent', $siteprivacycontent);
+$smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfeed', format_date(strtotime($siteprivacycontent->ctime))));
 $smarty->assign('institutionselector', $institutionselector);
 $smarty->display('admin/users/institutionprivacy.tpl');
