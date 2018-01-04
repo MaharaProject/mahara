@@ -450,6 +450,8 @@ $string['trustedsites'] = 'Trusted sites';
 $string['updatesiteoptions'] = 'Update site options';
 $string['usersallowedmultipleinstitutions'] = 'Users allowed multiple institutions';
 $string['usersallowedmultipleinstitutionsdescription1'] = 'Allow users to be members of several institutions at the same time.';
+$string['institutionstrictprivacy'] = 'Strict privacy';
+$string['institutionstrictprivacydescription'] = 'Turn on this option when your site needs to adhere to the <a href="https://www.eugdpr.org/">GDPR</a> ';
 $string['requireregistrationconfirm'] = 'Confirm registration';
 $string['requireregistrationconfirmdescription1'] = 'Force all institutions to approve new self-registered accounts.';
 $string['userscanchooseviewthemes'] = 'Users can choose page themes';

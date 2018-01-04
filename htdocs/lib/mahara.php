@@ -4816,6 +4816,19 @@ function get_user_institution_comment_threads($userid = null) {
 }
 
 /**
+ * Returns the user id of users in multiple institutions
+ *
+ * @return array user ids (or false)
+ */
+function users_in_multiple_institutions() {
+    $sql = "SELECT usr
+            FROM {usr_institution}
+            GROUP BY usr
+            HAVING COUNT(usr) > 1";
+    return get_records_sql_array($sql);
+}
+
+/**
  * Returns all directories of installed plugins except for local
  * from the current codebase.
  *

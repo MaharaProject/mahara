@@ -286,12 +286,13 @@ $siteoptionform = array(
             'collapsed'    => true,
             'legend'       => get_string('institutionsettingslegend', 'admin'),
             'elements'     => array(
-                'requireregistrationconfirm' => array(
+                'institutionstrictprivacy' => array(
                     'type'         => 'switchbox',
-                    'title'        => get_string('requireregistrationconfirm', 'admin'),
-                    'description'  => get_string('requireregistrationconfirmdescription1', 'admin'),
-                    'defaultvalue' => get_config('requireregistrationconfirm'),
+                    'title'        => get_string('institutionstrictprivacy', 'admin'),
+                    'description'  => get_string('institutionstrictprivacydescription', 'admin'),
+                    'defaultvalue' => get_config('institutionstrictprivacy'),
                     'help'         => true,
+                    'disabled'     => users_in_multiple_institutions() || get_config('usersallowedmultipleinstitutions'),
                 ),
                 'usersallowedmultipleinstitutions' => array(
                     'type'         => 'switchbox',
@@ -300,6 +301,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('usersallowedmultipleinstitutions'),
                     'help'         => true,
                     'disabled'     => in_array('usersallowedmultipleinstitutions', $OVERRIDDEN),
+                ),
+                'requireregistrationconfirm' => array(
+                  'type'         => 'switchbox',
+                  'title'        => get_string('requireregistrationconfirm', 'admin'),
+                  'description'  => get_string('requireregistrationconfirmdescription1', 'admin'),
+                  'defaultvalue' => get_config('requireregistrationconfirm'),
+                  'help'         => true,
                 ),
                 'institutionexpirynotification' => array(
                     'type'         => 'expiry',
@@ -797,6 +805,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'allowanonymouspages', 'generatesitemap',
         'registration_sendweeklyupdates', 'mathjax', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
+        'institutionstrictprivacy',
         'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'userscanchooseviewthemes', 'internalnotificationexpire',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
@@ -845,6 +854,15 @@ function siteoptions_submit(Pieform $form, $values) {
             $count = count_records_sql("SELECT COUNT(*) FROM {usr} $where_sql");
             execute_sql("UPDATE {usr} SET expiry = ? $where_sql", array(format_date($user_expiry)));
             db_commit();
+        }
+    }
+    // Make sure we have valid strict privacy and multi institutions settings
+    if (users_in_multiple_institutions()) {
+        $values['institutionstrictprivacy'] = false;
+    }
+    else {
+        if (!empty($values['institutionstrictprivacy'])) {
+            $values['usersallowedmultipleinstitutions'] = false;
         }
     }
     // if public views are disabled, sitemap generation must also be disabled.
@@ -954,7 +972,10 @@ function siteoptions_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, array('message' => $message, 'goto' => '/admin/site/options.php'));
 }
 
+$usermultipleinstitutions = (!empty(users_in_multiple_institutions()) ? "true" : "false");
+
 $js = <<<EOF
+var usersinmultipleinstitutions = {$usermultipleinstitutions};
 jQuery(document).ready(function() {
     var j = jQuery.noConflict();
     var overrideuseraccountlifetime = j('#siteoptions input[name=defaultaccountlifetimeupdate]');
@@ -990,7 +1011,18 @@ jQuery(document).ready(function() {
     });
     // initial setup
     overrideuseraccountlife(defaultaccountlifetime.val());
+
+    jQuery('#siteoptions_institutionstrictprivacy').click(function() {
+        multipleinstitutionscheckallowed();
+    });
+    jQuery('#siteoptions_usersallowedmultipleinstitutions').click(function() {
+        strictprivacycheckallowed();
+    });
+    multipleinstitutionscheckallowed();
+    strictprivacycheckallowed();
 });
+
+
 EOF;
 
 $thispage = json_encode(get_config('wwwroot') . 'admin/site/options.php');
