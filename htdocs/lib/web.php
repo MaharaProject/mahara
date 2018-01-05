@@ -3041,11 +3041,17 @@ function right_nav() {
             'weight' => 10,
             'iconclass' => 'user'
         ),
+        'settings/privacy' => array(
+            'path' => 'settings/privacy',
+            'url' => 'account/userprivacy.php',
+            'title' => get_string('privacy', 'admin'),
+            'weight' => 30
+        ),
         'settings/notifications' => array(
             'path' => 'settings/notifications',
             'url' => 'account/activity/preferences/index.php',
             'title' => get_string('notifications'),
-            'weight' => 30,
+            'weight' => 40,
             'iconclass' => 'flag'
         ),
     );

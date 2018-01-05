@@ -3218,3 +3218,25 @@ function get_site_admins() {
     // just in case there is something horribly wrong.
     return false;
 }
+
+/**
+ * Returns a list of the latest privacy statements of each institution the current user belongs to.
+ *
+ * @param $institutions an array of the institutions to which the current user belongs to.
+ * @returns array of stdclass objects containing the latest privacy statements the user has agreed to.
+ */
+function get_latest_privacy_versions($institutions = array()) {
+    global $USER;
+
+    // Get the latest Privacy Statements the user has agreed to.
+    $latestversions = get_records_sql_assoc("
+        SELECT s.id, s.version, s.content, s.ctime, s.institution
+        FROM {site_content_version} s
+        INNER JOIN (SELECT MAX(id) as current, institution
+            FROM {site_content_version}
+            GROUP BY institution) s2 ON s.institution = s2.institution AND s.id = s2.current
+        JOIN {usr_agreement} u ON s2.current = u.sitecontentid AND u.usr = ?
+        WHERE s.institution IN (" . join(',',array_map('db_quote',$institutions)) . ")", array($USER->get('id')));
+
+    return $latestversions;
+}

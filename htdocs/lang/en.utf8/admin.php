@@ -1335,3 +1335,6 @@ $string['versionalreadyexist'] = 'A privacy statement with the version name "%s"
 $string['siteprivacystatement'] = 'Site privacy statement';
 $string['addoneversionlink']   = '<a href="%s">Add one</a> if you need it.';
 $string['versionfor'] = 'Privacy statement for version "%s" is as follows:';
+$string['institutionprivacystatement'] = 'Institution privacy statement';
+$string['userprivacypagedescription'] = 'Displayed are the current privacy statements to which you consented.';
+$string['lastupdated'] = 'Last updated on';
