@@ -1172,6 +1172,7 @@ $string['lastupdate'] = 'Last update';
 $string['lastupdateorcomment'] = 'Last update or comment';
 $string['Title'] = 'Title';
 $string['anonymoususer'] = '(Author\'s name hidden)';
+$string['removefooterlinksupgradewarning'] = 'Your site uses custom links for terms and conditions or privacy statement. The following links "%s" have now been removed. You will need to add their content directly to the site\'s "Administration → Configure site → Legal" section.';
 
 // import related strings (maybe separated later)
 $string['importedfrom'] = 'Imported from %s';

@@ -8,6 +8,7 @@ Scenario: Clicking ID's (Bug 1428456)
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Portfolio" from main menu
  And I follow "Profile page"
+ And I scroll to the base of id "viewh1"
  And I follow "Edit"
 
  # Checking if we can add a block
@@ -88,6 +89,7 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  # Profile page
  And I choose "Portfolio" from main menu
  And I follow "Profile page"
+ And I scroll to the base of id "viewh1"
  And I follow "Edit"
  And I should not see "Settings"
  And I should see "Edit layout"

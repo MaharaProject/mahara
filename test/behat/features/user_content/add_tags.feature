@@ -22,6 +22,7 @@ Background:
    And I set the following fields to these values:
    | Create folder | folder1 |
    # Pressing create folder button
+   And I scroll to the base of id "files_filebrowser_createfolder"
    And I press "Create folder"
    # Editing the folder
    And I press "Edit folder \"folder1\""

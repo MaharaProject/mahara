@@ -296,20 +296,30 @@ $activeurls = get_config('footercustomlinks');
 $activeurls = $activeurls ? unserialize($activeurls) : null;
 $footerelements = array();
 foreach ($all as $k => $v) {
-    $footerelements[$k] = array(
-        'type' => 'switchbox',
-        'class' => 'last with-text-input',
-        'title' => $v['title'],
-        'defaultvalue' => in_array($k, $active),
-        'onclick' => "jQuery('#footerlinks_{$k}_link')[0].disabled = !this.checked;",
-    );
-    $footerelements[$k . '_link'] = array(
-        'type' => 'text',
-        'size' => 60,
-        'description' => get_string('footercustomlink', 'admin', $v['url']),
-        'defaultvalue' => isset($activeurls[$k]) ? $activeurls[$k] : '',
-        'disabled' => !in_array($k, $active),
-    );
+    if ($k == 'termsandconditions' || $k == 'privacystatement') {
+        $footerelements[$k] = array(
+            'type' => 'switchbox',
+            'class' => 'last with-text-input',
+            'title' => $v['title'],
+            'defaultvalue' => in_array($k, $active),
+        );
+    }
+    else {
+        $footerelements[$k] = array(
+            'type' => 'switchbox',
+            'class' => 'last with-text-input',
+            'title' => $v['title'],
+            'defaultvalue' => in_array($k, $active),
+            'onclick' => "jQuery('#footerlinks_{$k}_link')[0].disabled = !this.checked;",
+        );
+        $footerelements[$k . '_link'] = array(
+            'type' => 'text',
+            'size' => 60,
+            'description' => get_string('footercustomlink', 'admin', $v['url']),
+            'defaultvalue' => isset($activeurls[$k]) ? $activeurls[$k] : '',
+            'disabled' => !in_array($k, $active),
+        );
+    }
 }
 $footerelements['submit'] = array(
     'class' => 'btn-primary',

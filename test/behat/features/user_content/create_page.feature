@@ -10,6 +10,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # Navigating to Portfolio to create a page
     # This is the test for manually creating a page
     And I choose "Portfolio" from main menu
+    And I scroll to the base of id "addview-button"
     And I follow "Add"
     And I click on "Page" in the dialog
     And I fill in the following:

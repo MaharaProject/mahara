@@ -5653,7 +5653,6 @@ function xmldb_core_upgrade($oldversion=0) {
         foreach ($admins as $admin) {
             save_user_reply_to_agreement($admin->id, $sitecontentid, 1);
         }
-
     }
 
     if ($oldversion < 2018013001) {
@@ -5678,6 +5677,25 @@ function xmldb_core_upgrade($oldversion=0) {
         $admins = get_site_admins();
         foreach ($admins as $admin) {
             save_user_reply_to_agreement($admin->id, $sitecontentid, 1);
+        }
+    }
+
+    if ($oldversion < 2018021500) {
+        log_debug('Remove privacy statement and T&C conditions custom links from footer');
+        // remove custom links
+        if ($footercustomlinks = get_config('footercustomlinks')) {
+            $footercustomlinks = unserialize($footercustomlinks);
+            $removedlinks = array();
+            foreach ($footercustomlinks as $key => $customlink) {
+                if ($key == 'termsandconditions' || $key == 'privacystatement') {
+                    $removedlinks[] = $customlink;
+                    unset($footercustomlinks[$key]);
+                }
+            }
+            if ($removedlinks) {
+                $SESSION->add_error_msg(get_string('removefooterlinksupgradewarning', 'mahara', implode(', ', $removedlinks)));
+            }
+            set_config('footercustomlinks', serialize($footercustomlinks));
         }
     }
 
