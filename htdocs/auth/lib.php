@@ -2226,6 +2226,10 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
             'class' => 'js-hidden',
             'rows' => 4,
             'cols' => 60,
+            'rules' => array(
+                'requiredby' => array('reference' => 'institution',
+                                      'required' => $registerconfirm),
+            )
         );
     }
 
