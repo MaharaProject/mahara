@@ -101,6 +101,8 @@ else {
 $success = reset_password($user);
 
 if ($success) {
+    // Delete the existing usr_session rows to force usr to log back in
+    execute_sql("DELETE FROM {usr_session} WHERE usr = ?", array($user->id));
     $exitstring = get_string('cli_pwreset_success', 'admin', $username);
     if ($forcepasswordchange) {
         set_field('usr', 'passwordchange', 1, 'username', $username);
