@@ -1047,12 +1047,12 @@ class BehatGeneral extends BehatBase {
      *
      * This step is for advanced users, use it if you don't find anything else suitable for what you need.
      *
-     * @Then /^"(?P<element_string>(?:[^"]|\\")*)" "(?P<selector_string>[^"]*)" should exists$/
+     * @Then /^"(?P<element_string>(?:[^"]|\\")*)" "(?P<selector_string>[^"]*)" should exist$/
      * @throws ElementNotFoundException Thrown by BehatBase::find
      * @param string $element The locator of the specified selector
      * @param string $selectortype The selector type
      */
-    public function should_exists($element, $selectortype) {
+    public function should_exist($element, $selectortype) {
 
         // Getting Mink selector and locator.
         list($selector, $locator) = $this->transform_selector($selectortype, $element);
@@ -1066,12 +1066,12 @@ class BehatGeneral extends BehatBase {
      *
      * This step is for advanced users, use it if you don't find anything else suitable for what you need.
      *
-     * @Then /^"(?P<element_string>(?:[^"]|\\")*)" "(?P<selector_string>[^"]*)" should not exists$/
+     * @Then /^"(?P<element_string>(?:[^"]|\\")*)" "(?P<selector_string>[^"]*)" should not exist$/
      * @throws ExpectationException
      * @param string $element The locator of the specified selector
      * @param string $selectortype The selector type
      */
-    public function should_not_exists($element, $selectortype) {
+    public function should_not_exist($element, $selectortype) {
 
         try {
             $this->should_exists($element, $selectortype);
