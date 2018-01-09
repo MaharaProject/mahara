@@ -5588,5 +5588,26 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2018010600) {
+        log_debug('Create "site_content_version" table');
+
+        $table = new XMLDBTable('site_content_version');
+        create_table($table);
+
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('content', XMLDB_TYPE_TEXT, 'big', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('author', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('version', XMLDB_TYPE_CHAR, 15, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        $table->addKeyInfo('authorfk', XMLDB_KEY_FOREIGN, array('author'), 'usr', array('id'));
+
+        create_table($table);
+    }
+
     return $status;
 }
