@@ -5553,5 +5553,13 @@ function xmldb_core_upgrade($oldversion=0) {
         reload_html_filters();
     }
 
+    if ($oldversion < 2018010300) {
+        $sql = "UPDATE {usr}
+            SET username = CONCAT(MD5(username), 1000000 + id),
+            email = CONCAT(MD5(email), 1000000 + id)
+            WHERE deleted = 1 ";
+        execute_sql($sql);
+    }
+
     return $status;
 }
