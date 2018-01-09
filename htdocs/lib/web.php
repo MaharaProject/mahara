@@ -931,7 +931,7 @@ EOF;
         $smarty->assign('USERMASQUERADING', true);
         $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', display_name($USER)));
         $smarty->assign('becomeyoulink', hsc($wwwroot) . 'admin/users/changeuser.php?restore=1');
-        $smarty->assign('becomeyouagain', get_string('becomeadminagain', 'admin', hsc($USER->get('parentuser')->name)));
+        $smarty->assign('becomeyouagain', get_string('becomeadminagain', 'admin', $USER->get('parentuser')->name));
     }
 
     // Define additional html content
