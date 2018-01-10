@@ -710,6 +710,7 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+
     if ($oldversion < 2018013000) {
         log_debug('Auto accept the privacy agreement for all site admins');
         $sitecontentid = get_field('site_content_version', 'id', 'type', 'privacy', 'institution', 'mahara');
@@ -1085,6 +1086,22 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('instructionscollapsed');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
+    }
+
+    if ($oldversion < 2018091200) {
+        log_debug('Adding view_versioning table');
+        $table = new XMLDBTable('view_versioning');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED,
+            XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('blockdata', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('artefactids', XMLDB_TYPE_TEXT);
+        $table->addFieldInfo('commentdata', XMLDB_TYPE_TEXT);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+
+        create_table($table);
     }
 
     return $status;

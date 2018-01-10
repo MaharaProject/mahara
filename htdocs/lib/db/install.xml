@@ -1409,6 +1409,20 @@
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
+        <TABLE NAME="view_versioning">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="blockdata" TYPE="text" LENGTH="big" NOTNULL="false" />
+                <FIELD NAME="artefactids" TYPE="text" LENGTH="big" NOTNULL="false" />
+                <FIELD NAME="commentdata" TYPE="text" LENGTH="big" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
         <TABLE NAME="tag">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
