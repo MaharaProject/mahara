@@ -7064,6 +7064,76 @@ class View {
     public function has_peer_assessement_block() {
         return get_records_select_assoc('block_instance', 'blocktype = ? AND view = ?', array('peerassessment', $this->get('id')));
     }
+
+    /**
+     * Fetch a list of versions for the particular view
+     *
+     * @param string $view the ID of the view we wish to retrieve versioning information from
+     * @return object $views an object containing the count and data of the versions
+     */
+    public function get_versions($view, $fromdate=NULL, $todate = NULL) {
+        if (!is_numeric($view)) {
+            throw new InvalidArgumentException(get_string('noaccesstoview', 'view'));
+        }
+        $versions = new stdClass();
+        $versions->count = 0;
+        $versions->data = array();
+        if ($fromdate && $todate) {
+            if ($records = get_records_sql_array("SELECT vv.*, v.title AS viewname, v.owner, v.institution
+                                                  FROM {view_versioning} vv
+                                                  JOIN {view} v ON v.id = vv.view
+                                                  WHERE vv.ctime < ? AND vv.ctime > ? AND vv.view = ?", array($todate, $fromdate, $view))) {
+                $versions->count = count($records);
+                $versions->data = $records;
+            }
+        }
+        else {
+            if ($records = get_records_sql_array("SELECT vv.*,v.title AS viewname, v.owner, v.institution
+                                                  FROM {view_versioning} vv
+                                                  JOIN {view} v ON v.id = vv.view
+                                                  WHERE vv.view = ?", array($view))) {
+                $versions->count = count($records);
+                $versions->data = $records;
+            }
+        }
+
+        return $versions;
+    }
+
+    public function get_timeline_form($view, $from = '-3 months', $to = 'now') {
+        require_once('pieforms/pieform/elements/calendar.php');
+        $elements = array(
+            'from' => array(
+                'title' => get_string('from'),
+                'type' => 'calendar',
+                'defaultvalue' => strtotime($from),
+            ),
+            'to' => array(
+                'title' => get_string('to'),
+                'type' => 'calendar',
+                'defaultvalue' => strtotime($to),
+            ),
+            'viewid' => array(
+                'type' => 'hidden',
+                'value' => $view,
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'class' => 'btn-primary',
+                'value' => get_string('go'),
+            )
+        );
+
+        $form = array(
+            'name' => 'timeline',
+            'elements' => $elements,
+        );
+        return pieform($form);
+    }
+
+    public function build_timeline_results($search, $offset, $limit) {
+        return false;
+    }
 }
 
 class ViewSubmissionException extends UserException {

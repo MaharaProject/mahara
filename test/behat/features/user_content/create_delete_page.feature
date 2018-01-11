@@ -114,8 +114,13 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # Check that the image is displayed on copied page and ensure the link is correct
     Then I should see image "Image2.png" on the page
     And I log out
+
     # check page can be deleted (Bug 1755682)
     Given I log in as "admin" with password "Kupuh1pa!"
+    # Go to version page
+    And I choose "Pages and collections" in "Create" from main menu
+    And I follow "This is the edited page title"
+    And I follow "Timeline"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Delete" in "This is the edited page" panel menu
     And I should see "Do you really want to delete this page?"

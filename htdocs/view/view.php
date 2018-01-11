@@ -437,7 +437,7 @@ if ($can_copy) {
         $smarty->assign('downloadurl', get_config('wwwroot') . 'view/download.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''));
     }
 }
-
+$smarty->assign('versionurl', get_config('wwwroot') . 'view/versioning.php?view=' . $viewid);
 $title = hsc(TITLE);
 
 $smarty->assign('maintitle', $titletext);

@@ -40,6 +40,11 @@
 {/if}
 
 <div class="btn-group btn-group-top">
+
+  <a class="btn btn-default" href="{$versionurl}">
+    <span class="icon icon-code-fork icon-lg left" role="presentation" aria-hidden="true"></span>
+      {str tag=timeline section=view}
+  </a>
     {if $editurl}{strip}
         <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-default">
             <span class="icon icon-pencil icon-lg left" role="presentation" aria-hidden="true"></span>
