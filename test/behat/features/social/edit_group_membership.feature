@@ -30,7 +30,7 @@ Scenario: Check modal is working for the "Edit group memebership" on find people
    Given I log in as "admin" with password "Kupuhipa1"
    And I choose "Find people" in "Groups" from main menu
    And I follow "2" in the "Find people results" property
-   And I follow "Edit group membership"
+   And I click on "Edit group membership" in "Liam User" row
    # allow the modal to open
    And I wait "1" seconds
    And I check "GroupA"

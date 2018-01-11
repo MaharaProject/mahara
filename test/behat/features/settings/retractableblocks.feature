@@ -23,7 +23,7 @@ Scenario: Make Text Block Retractable
     And I set the field "Block content" to "Here is a new block."
     Given I select "Yes" from "Retractable"
     And I press "Save"
-    And I scroll to the id "main-nav"
+    And I scroll to the top
     Then I click on "Display page"
     Then I should see "Here is a new block"
     And I collapse "Text Block 1" node

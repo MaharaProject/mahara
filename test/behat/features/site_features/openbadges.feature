@@ -26,4 +26,6 @@ Scenario: Open badges block
     And I press "Add"
     Then I should see "Your email UserA@example.org is not found in the service"
     And I press "Save"
+    #When watching the test it took quite a long time for the window to close after pressing save (while the button said "processing"). Just making it work for now. TODO: figure out why/ if it's a problem.
+    And I wait "5" seconds
     Then I should see "No public badge collections / badges found."

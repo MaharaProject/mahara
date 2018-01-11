@@ -25,6 +25,7 @@ Background:
   | password | Kupuhipa1 |
   | Institution administrator | 1 |
   And I select "Institution One" from "adduser_authinstance"
+  And I scroll to the top
   And I press "General account options"
   And I set the following fields to these values:
   | Multiple journals | 1 |
