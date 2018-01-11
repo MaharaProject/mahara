@@ -35,6 +35,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     # Verifying the settings saved
     And I should see "Profile saved successfully"
     # Updating Social media tab
+    And I scroll to the top
     And I follow "Social media"
     And I follow "New social media account"
     And I fill in the following:
@@ -42,6 +43,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Your URL or username | https://twitter.com/MaharaProject |
     And I press "Save"
     # Verifying the settings held, navitgating to dashboard page to check
+    And I scroll to the top
     Then I follow "Dashboard"
     And I should see "Test Admin"
     # Resetting/Editing details
@@ -56,6 +58,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     # Verifing settings saved
     And I should see "Profile saved successfully"
     # Editing contact information
+    And I scroll to the top
     And I follow "Contact information"
     And I press "Add email address"
     And I fill in the following:
@@ -72,6 +75,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     And I press "Save profile"
     And I should see "Profile saved successfully"
     # Verifying changes has been made navigating to dashboard page to checked
+    And I scroll to the top
     Then I follow "Dashboard"
     And I should see "Admin User"
 

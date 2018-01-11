@@ -22,6 +22,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  | Social network * | Facebook URL |
  | Your URL or username * | https://www.facebook.com/wellingtonphoenixfc |
  And I press "Save"
+ And I scroll to the top
  And I follow "Portfolio"
  And I press "Create page"
  And I set the following fields to these values:

@@ -20,6 +20,7 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     And I should see "Item saved"
     And I press "Save changes"
     # Verifying the link as been added successfully
+    And I scroll to the top
     And I follow "Return to site"
     Then I should see "Test Menu Link"
     And I follow "Administration"

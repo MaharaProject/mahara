@@ -23,8 +23,8 @@ Scenario: Open badges block
     And I wait "1" seconds
     And I follow "Open Badges"
     And I press "Add"
-    And I wait "5" seconds
+    And I wait "7" seconds
     Then I should see "Your email test01@example.com is not found in the service"
     And I press "Save"
-    And I wait "1" seconds
+    And I wait "7" seconds
     Then I should see "No public badge collections / badges found."
