@@ -3078,6 +3078,7 @@ function right_nav() {
 
 
 function footer_menu($all=false) {
+    global $USER;
     $wwwroot = get_config('wwwroot');
 
     $menu = array(
@@ -3086,7 +3087,7 @@ function footer_menu($all=false) {
             'title' => get_string('termsandconditions'),
         ),
         'privacystatement' => array(
-            'url'   => $wwwroot . 'privacy.php',
+            'url'   => ($USER->is_logged_in() ? $wwwroot . 'account/userprivacy.php' : $wwwroot . 'privacy.php'),
             'title' => get_string('privacystatement'),
         ),
         'about' => array(
