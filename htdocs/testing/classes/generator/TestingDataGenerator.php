@@ -283,6 +283,14 @@ EOD;
             require_once('activity.php');
             activity_add_admin_defaults(array($user->id));
         }
+        // Use the institution's privacy option if exists
+        $instprivacy = get_field('site_content_version', 'id', 'type', 'privacy', 'institution', $record['institution']);
+        $siteprivacy = get_field('site_content_version', 'id', 'type', 'privacy', 'institution', 'mahara');
+
+        // Accept the user privacy agreement
+        $sitecontentid = $instprivacy ? $instprivacy : $siteprivacy;
+        $agreed = !empty($record['agreement']) ? (bool)$record['agreement'] : 1; // accept by default
+        save_user_reply_to_agreement($user->id, $sitecontentid, $agreed);
 
         if ($record['institution'] != 'mahara') {
             if ($record['role'] == 'admin') {

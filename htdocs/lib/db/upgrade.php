@@ -5646,5 +5646,15 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2018013000) {
+        log_debug('Auto accept the privacy agreement for all site admins');
+        $sitecontentid = get_field('site_content_version', 'id', 'type', 'privacy', 'institution', 'mahara');
+        $admins = get_site_admins();
+        foreach ($admins as $admin) {
+            save_user_reply_to_agreement($admin->id, $sitecontentid, 1);
+        }
+
+    }
+
     return $status;
 }

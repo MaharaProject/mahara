@@ -11,6 +11,7 @@
 
 defined('INTERNAL') || die();
 define('MAXLOGINTRIES', 5);
+require_once(get_config('docroot') . 'lib/user.php');
 $put = array();
 
 
@@ -605,6 +606,38 @@ class User {
      */
     public function is_logged_in() {
         return ($this->get('logout_time') > 0 ? true : false);
+    }
+
+    /**
+     * Determines if the user has accepted the latest Privacy statement
+     *
+     * @return boolean
+     */
+    public function has_latest_agreement() {
+        global $USER;
+        // If users are logged in they cannot be logged out for site upgrade.
+        // We need to check if table exists otherwise we get error message about usr_agreement table
+        // not existing.
+        require_once('ddl.php');
+        if (!table_exists(new XMLDBTable("usr_agreement"))) {
+            return true;
+        }
+
+        $userinstitutions = array_keys($USER->get('institutions'));
+        // Include the 'mahara' institution so that we may show the site privacy statement as well.
+        array_push($userinstitutions, 'mahara');
+
+        // Check if there are new privacies that need to be accepted.
+        $latestversions = get_latest_privacy_versions($userinstitutions, true);
+
+        $hasagreement = true;
+        foreach ($latestversions as $key => $version) {
+            // Check if there are privacy statements the user needs to agree
+            if (!$version->agreed) {
+                $hasagreement = false;
+            }
+        }
+        return $hasagreement;
     }
 
     public function to_stdclass() {

@@ -3220,23 +3220,48 @@ function get_site_admins() {
 }
 
 /**
- * Returns a list of the latest privacy statements of each institution the current user belongs to.
+ * Returns a list of the latest privacy statements of each institution the current user belongs to (including mahara).
  *
  * @param $institutions an array of the institutions to which the current user belongs to.
- * @returns array of stdclass objects containing the latest privacy statements the user has agreed to.
+ * @param $ignoreagreevalue a boolean if true, get all the latest Privacy Statements of the institutions the user belongs to (including mahara)
+ *  if false, get just the latest privacy statements the user has agreed to.
+ *
+ * @returns array of stdclass objects containing the latest privacy statements.
  */
-function get_latest_privacy_versions($institutions = array()) {
+function get_latest_privacy_versions($institutions = array(), $ignoreagreevalue = false) {
     global $USER;
 
-    // Get the latest Privacy Statements the user has agreed to.
+    $joinsql = $ignoreagreevalue ? 'LEFT JOIN' : 'JOIN';
+
     $latestversions = get_records_sql_assoc("
-        SELECT s.id, s.version, s.content, s.ctime, s.institution
+        SELECT s.id, s.version, s.content, s.ctime, s.institution, u.agreed, u.ctime AS agreedtime,
+            CASE s.institution WHEN 'mahara' THEN 1 ELSE 2 END as type
         FROM {site_content_version} s
         INNER JOIN (SELECT MAX(id) as current, institution
             FROM {site_content_version}
             GROUP BY institution) s2 ON s.institution = s2.institution AND s.id = s2.current
-        JOIN {usr_agreement} u ON s2.current = u.sitecontentid AND u.usr = ?
-        WHERE s.institution IN (" . join(',',array_map('db_quote',$institutions)) . ")", array($USER->get('id')));
+        {$joinsql} {usr_agreement} u ON s2.current = u.sitecontentid AND u.usr = ? AND u.agreed = 1
+        WHERE s.institution IN (" . join(',',array_map('db_quote',$institutions)) . ")
+        ORDER BY type", array($USER->get('id')));
 
     return $latestversions;
+}
+
+/**
+ *  Saves a user's reply to privacy agreement
+ *
+ */
+function save_user_reply_to_agreement($userid, $sitecontentid, $agreed) {
+    $usragreement = new StdClass;
+    $usragreement->usr = $userid;
+    $usragreement->sitecontentid = $sitecontentid;
+    $usragreement->ctime = db_format_timestamp(time());
+    $usragreement->agreed = $agreed;
+    if ($oldrecord = get_field('usr_agreement', 'id', 'sitecontentid', $sitecontentid, 'usr', $userid)) {
+        update_record('usr_agreement', $usragreement, array('id' => $oldrecord));
+    }
+    else {
+        insert_record('usr_agreement', $usragreement);
+    }
+    return true;
 }

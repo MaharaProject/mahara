@@ -57,39 +57,39 @@
                     {/if}
                     <div id="loading-box" class="loading-box hidden"></div>
                 </div>
-                <div class="nav-toggle-area">
-                    {if $MAINNAV}
-                        <button class="main-nav-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main" aria-expanded="false" aria-controls="nav-main" title='{str tag="mainmenu"}'>
-                            <span class="sr-only">{str tag="showmainmenu"}</span>
-                            <span class="icon icon-bars icon-lg" role="presentation" aria-hidden="true"></span>
+                    <div class="nav-toggle-area">
+                        {if $MAINNAV}
+                            <button class="main-nav-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main" aria-expanded="false" aria-controls="nav-main" title='{str tag="mainmenu"}'>
+                                <span class="sr-only">{str tag="showmainmenu"}</span>
+                                <span class="icon icon-bars icon-lg" role="presentation" aria-hidden="true"></span>
+                            </button>
+                        {/if}
+                        {if $MAINNAVADMIN}
+                            <button class="admin-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main-admin" aria-expanded="false" aria-controls="nav-main-admin" title='{str tag="adminmenu"}'>
+                                <span class="sr-only">{str tag="showadminmenu"}</span>
+                                <span class="icon icon-wrench icon-large" role="presentation" aria-hidden="true"></span>
+                            </button>
+                        {/if}
+                        {if $LOGGEDIN}
+                            <a href="{profile_url($USER)}" class="user-icon" title='{str tag="profilepage"}'>
+                                <img src="{profile_icon_url user=$USER maxheight=25 maxwidth=25}">
+                            </a>
+                            <button class="user-toggle navbar-toggle" role="button" data-toggle="collapse" data-target=".nav-main-user" aria-expanded="false" aria-controls="nav-main-user" title='{str tag="usermenu"}'>
+                                <span class="sr-only">{str tag="showusermenu"}</span>
+                                <span class="icon icon-chevron-down collapsed"></span>
+                            </button>
+                        {/if}
+                        <!-- HIDE WHEN ON DESKTOP -->
+                        {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
+                        <button class="search-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
+                            <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="nav-title sr-only">{str tag="showsearch"}</span>
                         </button>
-                    {/if}
-                    {if $MAINNAVADMIN}
-                        <button class="admin-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-main-admin" aria-expanded="false" aria-controls="nav-main-admin" title='{str tag="adminmenu"}'>
-                            <span class="sr-only">{str tag="showadminmenu"}</span>
-                            <span class="icon icon-wrench icon-large" role="presentation" aria-hidden="true"></span>
-                        </button>
-                    {/if}
-                    {if $LOGGEDIN}
-                        <a href="{profile_url($USER)}" class="user-icon" title='{str tag="profilepage"}'>
-                            <img src="{profile_icon_url user=$USER maxheight=25 maxwidth=25}">
-                        </a>
-                        <button class="user-toggle navbar-toggle" role="button" data-toggle="collapse" data-target=".nav-main-user" aria-expanded="false" aria-controls="nav-main-user" title='{str tag="usermenu"}'>
-                            <span class="sr-only">{str tag="showusermenu"}</span>
-                            <span class="icon icon-chevron-down collapsed"></span>
-                        </button>
-                    {/if}
-                    <!-- HIDE WHEN ON DESKTOP -->
-                    {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
-                    <button class="search-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
-                        <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
-                        <span class="nav-title sr-only">{str tag="showsearch"}</span>
-                    </button>
-                    {/if}
-                </div>
+                        {/if}
+                    </div>
 
-                {include file="header/topright.tpl"}
-                {include file="header/navigation.tpl"}
+                    {include file="header/topright.tpl"}
+                    {include file="header/navigation.tpl"}
             </div>
         </div>
     </header>
