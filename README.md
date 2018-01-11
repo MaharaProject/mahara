@@ -64,6 +64,8 @@ Mahara is only officially supported on Debian (5.0/"Lenny" or later) and
 Ubuntu (10.04/"Lucid Lynx" or later), however it will probably run in any
 OS with a suitable web server.
 
+Note: This version of Mahara has NOT been tested on Debian 9+ / Ubuntu 17.10+
+
 ### Web Server
 
 Mahara is only officially supported on Apache 2 or later, although it will
@@ -75,6 +77,9 @@ Mahara requires either Postgres or MySQL. It would require extensive
 modification to support other databases.
  * Postgres 9.1 or later
  * MySQL 5.1 or later (or MariaDB equivalent)
+
+Note: This version of Mahara has NOT been tested on Postgres 10+, MySQL 8.0+,
+MariaDB 10.3+ versions.
 
 ### PHP
 
@@ -100,6 +105,8 @@ The following PHP extensions are also required:
  * zlib (optional)
  * adodb (optional; improves performance)
  * enchant or pspell (optional; for TinyMCE spellcheck button)
+
+Note: This version of Mahara has not been tested on php versions 7.2+.
 
 ### Web Browser
 
