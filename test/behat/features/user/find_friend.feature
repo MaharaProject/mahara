@@ -22,7 +22,7 @@ Scenario: Find users in your institution and outside your institution
 
     # Searching within my own institution, I should only find users in my institution
     And I select "My institutions" from "Filter"
-    And I set the field "Search" to "smith"
+    And I fill in "Search" with "smith"
     And I scroll to the id "main-nav"
     And I press "Search"
     Then I should see "Jen Smith"
@@ -30,7 +30,7 @@ Scenario: Find users in your institution and outside your institution
 
     # Searching outside my own institution, I should find all users
     When I select "Everyone" from "Filter"
-    And I set the field "Search" to "smith"
+    And I fill in "Search" with "smith"
     And I scroll to the id "main-nav"
     And I press "search_submit"
     # I should find everyone

@@ -126,7 +126,7 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I press "Save"
   # Needs to add new user now to see if they get copy of page
   And I choose "Add user" in "Users" from administration menu
-  And I set the following fields to these values:
+  And I fill in the following:
   | First name * | Pete |
   | Last name * | Mc |
   | Email * | test01@example.com |
