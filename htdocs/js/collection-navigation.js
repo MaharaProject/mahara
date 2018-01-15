@@ -31,7 +31,7 @@ jQuery(function($) {
 
         // setup prev
         if (currentIndex !== 0) {
-            $('.prevpage').removeClass('invisible');
+            $('.prevpage').removeClass('disabled');
 
             $('.prevpage').click(function() {
                 var target = currentIndex - 1;
@@ -46,7 +46,7 @@ jQuery(function($) {
 
         // setup next
         if (currentIndex !== (indexLength - 1)) {
-            $('.nextpage').removeClass('invisible');
+            $('.nextpage').removeClass('disabled');
 
             $('.nextpage').click(function() {
                 var target = currentIndex + 1;
