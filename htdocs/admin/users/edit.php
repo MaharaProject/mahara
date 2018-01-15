@@ -104,6 +104,12 @@ $elements['maildisabled'] = array(
     'title' => get_string('disableemail', 'admin'),
     'help' => true,
 );
+$elements['lastlogin'] = array(
+    'type'          => 'html',
+    'class'         => 'htmldescription',
+    'title'         => get_string('lastlogin', 'admin'),
+    'value'         => format_date($user->lastlogin),
+);
 $elements['expiry'] = array(
     'type'         => 'date',
     'class'        => 'form-condensed',
