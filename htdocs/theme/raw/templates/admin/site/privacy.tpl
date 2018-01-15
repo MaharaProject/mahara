@@ -1,7 +1,6 @@
 {include file="header.tpl"}
-    {if $versionid}
-        {if $version == $latestversion}
-            <div class="lead">{str tag="privacypagedescription" section="admin"}</div>
+    {if $versionid && $version == $latestversion}
+        <div class="lead">{str tag="privacypagedescription" section="admin"}</div>
             {if $pageeditform}
             <div class="col-md-9">
                 <div class="panel panel-default">
@@ -11,10 +10,7 @@
                 </div>
             </div>
             {/if}
-            </div>
-        {else}
-            {$content|clean_html|safe}
-        {/if}
+        </div>
     {else}
     <div class="lead">{str tag="privacypagedescription" section="admin"}</div>
     <div class="row">
@@ -61,6 +57,14 @@
                                         {/if}
                                     </td>
                                 </tr>
+                                {if $result->version === $version}
+                                <tr>
+                                    <td colspan="5">
+                                        <div>{str tag=versionfor section=admin arg1="$result->version"}</div>
+                                        {$result->content|clean_html|safe}
+                                    </td>
+                                </tr>
+                                {/if}
                             {/foreach}
                         </tbody>
                     </table>

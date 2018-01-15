@@ -18,21 +18,13 @@
         </fieldset>
     </div>
 </div>
-{if $versionid !== null}
-    {if $version == $latestversion}
-        <div class="lead">{str tag="institutionprivacypagedescription" section="admin"}</div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                {$pageeditform|safe}
-            </div>
+{if $versionid !== null && $version == $latestversion}
+    <div class="lead">{str tag="institutionprivacypagedescription" section="admin"}</div>
+    <div class="panel panel-default">
+         <div class="panel-body">
+            {$pageeditform|safe}
         </div>
-    {else}
-        {foreach from=$privacies item=result key=key}
-            {if $result->version == $version}
-                {$result->content|clean_html|safe}
-            {/if}
-        {/foreach}
-    {/if}
+    </div>
 {else}
     {if $privacies}
         <div class="lead">{str tag="institutionprivacypagedescription" section="admin"}</div>
@@ -78,6 +70,14 @@
                                     {/if}
                                 </td>
                             </tr>
+                            {if $result->version === $version}
+                            <tr>
+                                <td colspan="5">
+                                    <div>{str tag=versionfor section=admin arg1="$result->version"}</div>
+                                    {$result->content|clean_html|safe}
+                                </td>
+                            </tr>
+                            {/if}
                         {/foreach}
                     </tbody>
                 </table>

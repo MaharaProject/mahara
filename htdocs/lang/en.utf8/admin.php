@@ -1333,3 +1333,4 @@ $string['lastversion'] = 'Privacy statements must have unique version names of u
 $string['versionalreadyexist'] = 'A privacy statement with the version name "%s" already exists.';
 $string['siteprivacystatement'] = 'Site privacy statement';
 $string['addoneversionlink']   = '<a href="%s">Add one</a> if you need it.';
+$string['versionfor'] = 'Privacy statement for version "%s" is as follows:';

@@ -62,8 +62,9 @@ if ($versionid) {
                 ),
                 'submit' => array(
                     'class' => 'btn-primary',
-                    'type'  => 'submit',
-                    'value' => get_string('savechanges', 'admin')
+                    'type'  => 'submitcancel',
+                    'value' => array(get_string('savechanges', 'admin'), get_string('cancel')),
+                    'goto'  => get_config('wwwroot') . 'admin/site/privacy.php',
                 ),
             )
         ));
