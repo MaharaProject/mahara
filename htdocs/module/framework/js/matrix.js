@@ -368,6 +368,9 @@ jQuery(function($) {
         var id = section.data('standard');
         var state = null;
         if (section.attr('aria-expanded') === 'true') {
+            // Set the width of the first <th> so that the pages line doesn't jump about
+            var standardnameswidth = $(this).next().find('td:nth-child(1)').outerWidth();
+            $('tr:nth-child(2) th:nth-child(1)').css('width', standardnameswidth + 'px');
             section.attr('aria-expanded', 'false');
             section.addClass('collapsed');
             state = 'closed';
