@@ -496,6 +496,7 @@ $string['pagename']            = 'Page name';
 $string['pagesaved']           = 'Page saved';
 $string['pagetext']            = 'Page text';
 $string['privacy']             = 'Privacy statement';
+$string['legal']               = 'Legal';
 $string['savechanges']         = 'Save changes';
 $string['savefailed']          = 'Save failed';
 $string['sitepageloaded']      = 'Site page loaded';

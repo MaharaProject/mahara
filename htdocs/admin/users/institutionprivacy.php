@@ -12,12 +12,14 @@
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('privacy', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutionprivacy');
 define('MENUITEM', 'manageinstitutions/privacy');
 require_once('institution.php');
+
+define('TITLE', get_string('legal', 'admin'));
+define('SUBSECTIONHEADING', get_string('privacy', 'admin'));
 $versionid = param_integer('id', null);
 
 if (!is_logged_in()) {

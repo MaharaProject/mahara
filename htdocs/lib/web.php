@@ -2268,7 +2268,7 @@ function admin_nav() {
         'configsite/privacy' => array(
             'path'   => 'configsite/privacy',
             'url'    => 'admin/site/privacy.php',
-            'title'  => get_string('privacy', 'admin'),
+            'title'  => get_string('legal', 'admin'),
             'weight' => 25,
         ),
         'configsite/sitemenu' => array(
@@ -2422,7 +2422,7 @@ function admin_nav() {
         'manageinstitutions/privacy' => array(
             'path'   => 'manageinstitutions/privacy',
             'url'    => 'admin/users/institutionprivacy.php',
-            'title'  => get_string('privacy', 'admin'),
+            'title'  => get_string('legal', 'admin'),
             'weight' => 17
         ),
         'manageinstitutions/institutionusers' => array(
@@ -2646,7 +2646,7 @@ function institutional_admin_nav() {
         'manageinstitutions/privacy' => array(
             'path'   => 'manageinstitutions/privacy',
             'url'    => 'admin/users/institutionprivacy.php',
-            'title'  => get_string('privacy', 'admin'),
+            'title'  => get_string('legal', 'admin'),
             'weight' => 17
         ),
         'manageinstitutions/institutionusers' => array(
