@@ -22,8 +22,8 @@ if ($SESSION->get('pwchangerequested')) {
     die_info(get_string('pwchangerequestsent'));
 }
 
-if (isset($_GET['key'])) {
-    $SESSION->set('forgotpasskey', $_GET['key']);
+if (param_exists('key')) {
+    $SESSION->set('forgotpasskey', param_alphanum('key'));
     redirect('/forgotpass.php');
 }
 if ($SESSION->get('forgotpasskey')) {

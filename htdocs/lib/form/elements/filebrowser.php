@@ -88,8 +88,8 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     if ($config['select']) {
         if (function_exists($element['selectlistcallback'])) {
-            if ($form->is_submitted() && $form->has_errors() && isset($_POST[$prefix . '_selected']) && is_array($_POST[$prefix . '_selected'])) {
-                $value = array_keys($_POST[$prefix . '_selected']);
+            if ($form->is_submitted() && $form->has_errors() && param_exists($prefix . '_selected') && is_array(param_array($prefix . '_selected'))) {
+                $value = array_keys(param_array($prefix . '_selected'));
             }
             else if (isset($element['defaultvalue'])) {
                 $value = $element['defaultvalue'];
@@ -679,10 +679,11 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
 
     if (!empty($_FILES['userfile']['name'])) {
         if (!is_array($_FILES['userfile']['name'])) {
-            if (!empty($_POST['_userfile']) && is_array($_POST['_userfile'])) {
+            if (param_exists('_userfile') && is_array(param_array('_userfile'))) {
+                $userfile = param_array('_userfile');
                 // renaming file for drag and drop
-                $_FILES['userfile']['name'] = $_POST['_userfile']['name'];
-                $_FILES['userfile']['type'] = $_POST['_userfile']['type'];
+                $_FILES['userfile']['name'] = $userfile['name'];
+                $_FILES['userfile']['type'] = $userfile['type'];
             }
             if (strlen($_FILES['userfile']['name']) > 1024) {
                 http_response_code(403);
