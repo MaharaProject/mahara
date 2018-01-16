@@ -1168,7 +1168,7 @@ EOF;
      */
     public static function login_form_elements() {
         $url = get_config('wwwroot') . 'auth/saml/index.php';
-        if (isset($_GET['login'])) {
+        if (param_exists('login')) {
             // We're on the transient login page. Redirect back to original page once we're done.
             $url .= '?wantsurl=' . urlencode(get_full_script_path());
         }

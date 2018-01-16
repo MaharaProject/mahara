@@ -7,7 +7,7 @@ echo $form_tag;
             <h3 class="panel-heading"><?php echo get_string('usercreationmethod', 'admin'); ?></h3>
             <div class="panel-body">
                 <div class="choice">
-                    <input type="radio" name="createmethod" class="ic"<?php if (!isset($_POST['createmethod']) || $_POST['createmethod'] == 'scratch') { ?> checked="checked"<?php } ?> id="createfromscratch" value="scratch">
+                    <input type="radio" name="createmethod" class="ic"<?php if (!param_exists('createmethod') || param_alphanum('createmethod') == 'scratch') { ?> checked="checked"<?php } ?> id="createfromscratch" value="scratch">
                     <label for="createfromscratch"><?php echo get_string('createnewuserfromscratch', 'admin'); ?></label>
                 </div>
 
@@ -27,7 +27,7 @@ echo $form_tag;
                 </span>
 
                 <div class="choice">
-                    <input type="radio" name="createmethod" class="ic"<?php if (isset($_POST['createmethod']) && $_POST['createmethod'] == 'leap2a') { ?> checked="checked"<?php } ?> id="uploadleap" value="leap2a"> <label for="uploadleap"><?php echo get_string('uploadleap2afile', 'admin'); ?></label> <?php echo get_help_icon('core', 'admin', 'adduser', 'leap2afile'); ?>
+                    <input type="radio" name="createmethod" class="ic"<?php if (param_exists('createmethod') && param_alphanum('createmethod') == 'leap2a') { ?> checked="checked"<?php } ?> id="uploadleap" value="leap2a"> <label for="uploadleap"><?php echo get_string('uploadleap2afile', 'admin'); ?></label> <?php echo get_help_icon('core', 'admin', 'adduser', 'leap2afile'); ?>
                 </div>
                 <?php echo $elements['leap2afile']['html']; ?>
                 <?php if (isset($elements['leap2afile']['error'])) { ?>
