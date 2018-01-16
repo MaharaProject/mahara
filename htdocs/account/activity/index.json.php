@@ -58,7 +58,7 @@ else if ($delete) {
     foreach ($_GET as $k => $v) {
         if (preg_match('/^delete\-(\d+)$/',$k,$m)) {
             $ids[] = $m[1];
-            if (isset($_GET['unread-' . $m[1]])) {
+            if (param_exists('unread-' . $m[1])) {
                 $deleteunread++;
             }
         }

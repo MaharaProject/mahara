@@ -104,11 +104,11 @@ $moderators = get_column_sql(
 );
 
 // updates the selected topics as subscribed/closed/sticky
-if ($membership && isset($_POST['checked'])) {
-    $checked = array_map('intval', array_keys($_POST['checked']));
+if ($membership && param_exists('checked')) {
+    $checked = array_map('intval', array_keys(param_variable('checked')));
     // get type based on which button was pressed
-    if (isset($_POST['updatetopics'])) {
-        $type = $_POST['type'];
+    if (param_exists('updatetopics')) {
+        $type = param_variable('type');
     }
     // check that user is only messing with topics from this forum
     $alltopics = get_column('interaction_forum_topic', 'id', 'forum', $forumid, 'deleted', 0);

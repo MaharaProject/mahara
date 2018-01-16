@@ -82,7 +82,7 @@ else if ($delete) {
         if (preg_match('/^select\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
             $list = $m[1];
             $ids[$list][] = $m[2];
-            if (isset($_GET['unread-' . $list . '-' . $m[2]])) {
+            if (param_exists('unread-' . $list . '-' . $m[2])) {
                 $deleteunread++;
             }
         }

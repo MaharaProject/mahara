@@ -528,8 +528,8 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
                 $values['badgegroup'] = array_merge($values['badgegroup'], $values[$source]);
                 unset($values[$source]);
             }
-            else if (isset($_POST[$source])) {
-                $values['badgegroup'] = array_merge($values['badgegroup'], $_POST[$source]);
+            else if (param_exists($source)) {
+                $values['badgegroup'] = array_merge($values['badgegroup'], param_variable($source));
             }
         }
         // check that what has been entered is allowed
