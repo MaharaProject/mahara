@@ -98,8 +98,10 @@ $successicon = 'icon icon-check text-success left';
 $failureicon = 'icon icon-exclamation-triangle left';
 $warningicon = 'icon icon-exclamation-triangle left';
 
-// Clear all caches.
-clear_all_caches();
+if (empty($upgrades['core']->install)) {
+    // Clear all caches on upgrade
+    clear_all_caches();
+}
 
 $loadingstring = json_encode(get_string('upgradeloading', 'admin'));
 $installsuccessstring = json_encode(get_string('installsuccess', 'admin'));
