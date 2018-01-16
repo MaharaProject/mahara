@@ -32,6 +32,22 @@ function get_composerroot_dir() {
 }
 
 /**
+ * Return html report directory
+ * @return string Full path
+ */
+function get_html_report_dir() {
+    return get_composerroot_dir() . '/vendor/emuse/behat-html-formatter';
+}
+
+/**
+ * Return mahara report styling directory
+ * @return string Full path
+ */
+function get_html_styling_dir() {
+    return get_mahararoot_dir() . '/htdocs/testing/frameworks/behat/html-formatter';
+}
+
+/**
  * Returns relative path against current working directory,
  * to be used for shell execution hints.
  * @param string $maharapath starting with "/", ex: "/testing/frameworks/cli/init.php"
@@ -184,5 +200,40 @@ function testing_update_dependencies() {
                 exit($errorcode);
             }
         }
+    }
+}
+
+/**
+* Copies mahara styling to external html folder
+*/
+function set_report_styling() {
+    $report_root = get_html_report_dir();
+    $report_styling = get_html_styling_dir();
+    $report_css = $report_root . "/assets/Twig/css";
+    $report_js = $report_root . "/assets/Twig/js";
+    $font_awesome_dir = get_mahararoot_dir() . "/htdocs/theme/raw/fonts/font-awesome";
+    $font_files = array_values(array_diff(scandir($font_awesome_dir), array('.', '..')));
+    $font_awesome_css = get_mahararoot_dir() . "/htdocs/theme/raw/style/lib/font-awesome/font-awesome.css";
+    $jquery_js = get_mahararoot_dir() . "/htdocs/js/jquery/jquery.js";
+    $bootstrap_js = get_mahararoot_dir() . "/htdocs/lib/bootstrap/assets/javascripts/bootstrap.js";
+
+    if (file_exists($report_root . '/composer.json')) {
+        echo "Adding styling for html report...\n";
+        copy($report_styling . "/bootstrap.min.css" , $report_css . "/bootstrap.min.css");
+        copy($report_styling . "/catalyst.css" , $report_css . "/catalyst.css");
+        copy($report_styling . "/style.css" , $report_css . "/style.css");
+        copy($report_styling . "/index.html.twig" , $report_root . "/templates/index.html.twig");
+        copy($report_styling . "/Behat2Renderer.php" , $report_root . "/src/Renderer/Behat2Renderer.php");
+        if (!file_exists($report_css . "/font-awesome")) {
+          mkdir($report_css . "/font-awesome");
+        }
+        foreach ($font_files as $file) {
+          copy($font_awesome_dir . "/$file" , $report_css . "/font-awesome/$file");
+        }
+        copy($font_awesome_css , $report_css . "/font-awesome/font-awesome.css");
+
+        // JavaScript
+        copy($jquery_js, $report_js . "/jquery.js");
+        copy($bootstrap_js, $report_js . "/bootstrap.js");
     }
 }
