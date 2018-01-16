@@ -1,3 +1,14 @@
+17.10.2 (2018-01-17)
+- Bug 1732987 	Fix user input from direct get post usage
+- Bug 1733722 	Mahara not clearing messages for PHP session correctly for PHP7.1 using files store
+- Bug 1734767 	Mahara needing the HTTP Strict Transport Security (HSTS) header when site is https
+- Bug 1736843 	Missing directories in <sitedata>/sessions makes login fail
+- Bug 1739331 	Upgrade simplesamlphp to version 1.15.0
+- Bug 1742600 	chromedriver version needs updating for running test
+- Bug 1471103 	Make the password reset CLI script log out the user 
+- Bug 1737038 	Error about table missing on install 
+- Bug 1738055 	Avoid committing behat tests with 'And I insert breakpoint' in them 
+
 17.10.1 (2017-12-14)
 
 17.10.0 (2017-10-30)
