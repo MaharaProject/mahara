@@ -1,3 +1,20 @@
+17.04.5 (2018-01-17)
+- 1734194 	Infinite redirect loop caused by logged out user in usr_session table
+- 1711200 	search in journal entry block not working
+- 1726655 	Mahara logo is cut off at the bottom in IE 11
+- 1727524 	Update simplesamlphp to 1.14.17 for security fix
+- 1729423 	Can't choose which comment to make public
+- 1731082 	internal media style.css missing from old_raw
+- 1732987 	Fix user input from direct get post usage
+- 1733722 	Mahara not clearing messages for PHP session correctly for PHP7.1 using files store
+- 1734767 	Mahara needing the HTTP Strict Transport Security (HSTS) header when site is https
+- 1735442 	Buttons w/ white background are invisible in the configurable theme
+- 1735585 	Problem with watchlist for a page
+- 1737581 	Add a spinner icon when copying collections
+- 1739331 	Upgrade simplesamlphp to version 1.15.0
+- 1742600 	chromedriver version needs updating for running tests
+- 1471103 	Make the password reset CLI script log out the user
+
 17.04.4 (2017-10-30)
 - Bug 1546769: The 'None' auth needs to be locked down or removed to avoid troubles with multi institutions
 - Bug 1701978: Old cookies lingering allowing one to login without giving login details
