@@ -19,7 +19,7 @@ require('init.php');
 
 if ($SESSION->get('pwchangerequested')) {
     $SESSION->set('pwchangerequested', false);
-    die_info(get_string('pwchangerequestsent'));
+    die_info(get_string('pwchangerequestsentfullinfo'));
 }
 
 if (param_exists('key')) {
@@ -96,6 +96,9 @@ $form = array(
                 'required' => true,
             )
         ),
+        'captcha' => array(
+            'type' => 'captcha',
+        ),
         'submit' => array(
             'type' => 'submit',
             'class' => 'btn-primary',
@@ -104,92 +107,64 @@ $form = array(
     )
 );
 
-function forgotpass_validate(Pieform $form, $values) {
-    // See if the user input an email address or a username. We favour email addresses
-    if (!$form->get_error('emailusername')) {
-        // Check if the user who associates to username or email address is using the external authentication
-        if (record_exists_sql('SELECT u.authinstance
-            FROM {usr} u INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id AND ai.active = 1)
-            WHERE (LOWER(u.email) = ? OR LOWER(u.username) = ?)
-            AND ((ai.authname != \'internal\') AND (ai.authname != \'none\'))', array_fill(0, 2, strtolower($values['emailusername'])))) {
-                $form->set_error('emailusername', get_string('forgotpassuserusingexternalauthentication', 'mahara', get_config('wwwroot') . 'contact.php'), false);
-        }
-        else {
-            if (!($authinstance = get_field_sql('SELECT u.authinstance
-                FROM {usr} u INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id AND ai.active = 1)
-                WHERE (LOWER(u.email) = ? OR LOWER(u.username) = ?)
-                AND ai.authname = \'internal\'', array_fill(0, 2, strtolower($values['emailusername']))))) {
-                    $form->set_error('emailusername', get_string('forgotpassnosuchemailaddressorusername'));
-            }
-        }
-    }
-
-    if ($form->get_error('emailusername')) {
-        return;
-    }
-
-    $authobj = AuthFactory::create($authinstance);
-    if (!method_exists($authobj, 'change_password')) {
-        die_info(get_string('cantchangepassword'));
-    }
-}
-
 function forgotpass_submit(Pieform $form, $values) {
     global $SESSION;
 
-    try {
-        if (!($user = get_record_sql('SELECT u.* FROM {usr} u
-            INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id AND ai.active = 1)
-            WHERE (LOWER(u.email) = ? OR LOWER(u.username) = ?)
-            AND ai.authname = \'internal\'', array_fill(0, 2, strtolower($values['emailusername']))))) {
-                die_info(get_string('forgotpassnosuchemailaddressorusername'));
+    $sendemail = true;
+    if (!($user = get_record_sql("SELECT u.*
+        FROM {usr} u INNER JOIN {auth_instance} ai ON (u.authinstance = ai.id AND ai.active = 1)
+        WHERE (LOWER(u.email) = ? OR LOWER(u.username) = ?)
+        AND ai.authname = 'internal'", array_fill(0, 2, strtolower($values['emailusername']))))) {
+            $sendemail = false;
+    }
+
+    if ($sendemail) {
+        try {
+            $pwrequest = new StdClass;
+            $pwrequest->usr = $user->id;
+            $pwrequest->expiry = db_format_timestamp(time() + 86400);
+            $pwrequest->key = get_random_key();
+            $sitename = get_config('sitename');
+            $fullname = display_name($user);
+            // Override the disabled status of this e-mail address
+            $user->ignoredisabled = true;
+            email_user($user, null,
+                get_string('forgotusernamepasswordemailsubject', 'mahara', $sitename),
+                get_string('forgotusernamepasswordemailmessagetext', 'mahara',
+                    $fullname,
+                    $sitename,
+                    $user->username,
+                    get_config('wwwroot') . 'forgotpass.php?key=' . $pwrequest->key,
+                    get_config('wwwroot') . 'contact.php',
+                    $sitename),
+                get_string('forgotusernamepasswordemailmessagehtml', 'mahara',
+                    $fullname,
+                    $sitename,
+                    $user->username,
+                    get_config('wwwroot') . 'forgotpass.php?key=' . $pwrequest->key,
+                    get_config('wwwroot') . 'forgotpass.php?key=' . $pwrequest->key,
+                    get_config('wwwroot') . 'contact.php',
+                    $sitename));
+            insert_record('usr_password_request', $pwrequest);
+        }
+        catch (SQLException $e) {
+            die_info(get_string('forgotpassemailsendunsuccessful'));
+        }
+        catch (EmailException $e) {
+            die_info(get_string('forgotpassemailsendunsuccessful'));
         }
 
-        $pwrequest = new StdClass;
-        $pwrequest->usr = $user->id;
-        $pwrequest->expiry = db_format_timestamp(time() + 86400);
-        $pwrequest->key = get_random_key();
-        $sitename = get_config('sitename');
-        $fullname = display_name($user);
-        // Override the disabled status of this e-mail address
-        $user->ignoredisabled = true;
-        email_user($user, null,
-            get_string('forgotusernamepasswordemailsubject', 'mahara', $sitename),
-            get_string('forgotusernamepasswordemailmessagetext', 'mahara',
-                $fullname,
-                $sitename,
-                $user->username,
-                get_config('wwwroot') . 'forgotpass.php?key=' . $pwrequest->key,
-                get_config('wwwroot') . 'contact.php',
-                $sitename),
-            get_string('forgotusernamepasswordemailmessagehtml', 'mahara',
-                $fullname,
-                $sitename,
-                $user->username,
-                get_config('wwwroot') . 'forgotpass.php?key=' . $pwrequest->key,
-                get_config('wwwroot') . 'forgotpass.php?key=' . $pwrequest->key,
-                get_config('wwwroot') . 'contact.php',
-                $sitename));
-        insert_record('usr_password_request', $pwrequest);
-    }
-    catch (SQLException $e) {
-        die_info(get_string('forgotpassemailsendunsuccessful'));
-    }
-    catch (EmailException $e) {
-        die_info(get_string('forgotpassemailsendunsuccessful'));
-    }
-
-    // Add a note if this e-mail address is over the bounce threshold to
-    // warn users that they may not receive the e-mail
-    if ($mailinfo = get_record_select('artefact_internal_profile_email', '"owner" = ? AND principal = 1', array($user->id))) {
-        if (check_overcount($mailinfo)) {
-            $SESSION->add_info_msg(get_string('forgotpassemailsentanyway1', 'mahara', get_config('sitename')));
+        // Add a note if this e-mail address is over the bounce threshold to
+        // warn users that they may not receive the e-mail
+        if ($mailinfo = get_record_select('artefact_internal_profile_email', '"owner" = ? AND principal = 1', array($user->id))) {
+            if (check_overcount($mailinfo)) {
+                $SESSION->add_info_msg(get_string('forgotpassemailsentanyway1', 'mahara', get_config('sitename')));
+            }
         }
+
+        // Unsetting disabled status overriding
+        unset($user->ignoredisabled);
     }
-
-    // Unsetting disabled status overriding
-    unset($user->ignoredisabled);
-
     // Add a marker in the session to say that the user has registered
     $SESSION->set('pwchangerequested', true);
 
