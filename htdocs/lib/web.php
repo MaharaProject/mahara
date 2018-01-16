@@ -1619,7 +1619,7 @@ function param_exists($name) {
 function param_variable($name) {
     $args = func_get_args();
     list ($value) = call_user_func_array('_param_retrieve', $args);
-    return $value;
+    return fix_utf8($value);
 }
 
 /**
@@ -1872,6 +1872,109 @@ function param_imagesize($name) {
     }
 
     return $value;
+}
+
+/**
+ * This function returns a GET or POST array parameter as array with optional
+ * default.  If the default isn't specified and the array parameter hasn't been sent,
+ * a ParameterException exception is thrown. Likewise, if the array parameter does not
+ * contain valid alphanumext strings, a ParameterException exception is thrown
+ *
+ * Valid characters for array values are a-z and A-Z and 0-9 and _ and - and . and / and space char
+ *
+ * @param string The GET or POST array parameter you want returned
+ * @param mixed [optional] the default array for this parameter
+ *
+ * @return string The value of the parameter
+ *
+ */
+function param_array($name) {
+    if (!empty($_POST[$name])) {
+        return fix_utf8($_POST[$name]);
+    }
+    else {
+        if (func_num_args() >= 2) {
+            $value = func_get_arg(1);
+            if ($value === null) {
+                return array();
+            }
+            else if (is_array($value)) {
+                return $value;
+            }
+            else {
+                throw new ParameterException("The '$name' default parameter is not an array");
+            }
+        }
+        else {
+            throw new ParameterException("Missing parameter '$name' and no default supplied");
+        }
+    }
+}
+
+/**
+ * Makes sure the data is using valid utf8, invalid characters are discarded.
+ *
+ * Note: this function is not intended for full objects with methods and private properties.
+ *
+ * @param mixed $value
+ * @return mixed with proper utf-8 encoding
+ */
+function fix_utf8($value) {
+    if (is_null($value) or $value === '') {
+        return $value;
+    }
+    else if (is_string($value)) {
+        if ((string)(int)$value === $value) {
+            // Shortcut.
+            return $value;
+        }
+        // No null bytes expected in our data, so let's remove it.
+        $value = str_replace("\0", '', $value);
+
+        static $buggyiconv = null;
+        if ($buggyiconv === null) {
+            $buggyiconv = (!function_exists('iconv') or @iconv('UTF-8', 'UTF-8//IGNORE', '100' . chr(130) . '€') !== '100€');
+        }
+
+        if ($buggyiconv) {
+            if (function_exists('mb_convert_encoding')) {
+                $subst = mb_substitute_character();
+                mb_substitute_character('');
+                $result = mb_convert_encoding($value, 'utf-8', 'utf-8');
+                mb_substitute_character($subst);
+            }
+            else {
+                // Warn admins on admin/index.php page.
+                $result = $value;
+            }
+        }
+        else {
+            $result = @iconv('UTF-8', 'UTF-8//IGNORE', $value);
+        }
+
+        return $result;
+    }
+    else if (is_array($value)) {
+        $newvalue = array();
+        foreach ($value as $k => $v) {
+            $newvalue[fix_utf8($k)] = fix_utf8($v);
+        }
+
+        return $newvalue;
+    }
+    else if (is_object($value)) {
+        // Use clean object to ensure no funny keys are kept.
+        $newvalue = array();
+        foreach ($value as $k => $v) {
+            $newvalue[fix_utf8($k)] = fix_utf8($v);
+        }
+
+        return (object)$newvalue;
+    }
+    else {
+        // This is some other type, no utf-8 here.
+        return $value;
+    }
 }
 
 /**

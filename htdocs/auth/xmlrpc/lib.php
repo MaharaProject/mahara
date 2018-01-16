@@ -540,7 +540,7 @@ class AuthXmlrpc extends Auth {
         // Unset locked fields
         $SESSION->clear('lockedfields');
 
-        if (isset($_GET['logout'])) {
+        if (param_exists('logout')) {
             // Explicit logout request
             $this->kill_parent($remoteusername);
             redirect($this->wwwroot);
