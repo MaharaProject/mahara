@@ -281,7 +281,7 @@ function uploadcsv_validate(Pieform $form, $values) {
             // like whether the password is too easy. The user is going to have to
             // change their password on first login anyway.
             if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
-                $csverrors->add($i, get_string('uploadcsverrorinvalidpassword', 'admin', $i));
+                $csverrors->add($i, get_string('uploadcsverrorinvalidpassword1', 'admin', $i, get_password_policy_description()));
             }
         }
 
@@ -391,7 +391,7 @@ function uploadcsv_validate(Pieform $form, $values) {
             else {
                 // New user, check the password
                 if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
-                    $csverrors->add($line, get_string('uploadcsverrorinvalidpassword', 'admin', $line));
+                    $csverrors->add($line, get_string('uploadcsverrorinvalidpassword1', 'admin', $line, get_password_policy_description()));
                 }
             }
 

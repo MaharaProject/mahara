@@ -7,13 +7,13 @@ Feature: Clicking on Inbox
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
-     | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
-     | UserD | Kupuhipa1 | UserD@example.org | Dmitri | User | mahara | internal | member |
-     | UserE | Kupuhipa1 | UserE@example.org | Evonne | User | mahara | internal | member |
-     | UserF | Kupuhipa1 | UserF@example.org | Fergus | User | mahara | internal | member |
-     | UserG | Kupuhipa1 | UserG@example.org | Gabi | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | mahara | internal | member |
+     | UserD | Kupuh1pa! | UserD@example.org | Dmitri | User | mahara | internal | member |
+     | UserE | Kupuh1pa! | UserE@example.org | Evonne | User | mahara | internal | member |
+     | UserF | Kupuh1pa! | UserF@example.org | Fergus | User | mahara | internal | member |
+     | UserG | Kupuh1pa! | UserG@example.org | Gabi | User | mahara | internal | member |
 
 And the following "messages" exist:
      | emailtype | to | from | subject | messagebody | read | url | urltext |
@@ -27,7 +27,7 @@ And the following "messages" exist:
 
 Scenario: Clicking on the Inbox link on the right menu (Bug 1427019)
    # Log in as users
-   Given I log in as "UserA" with password "Kupuhipa1"
+   Given I log in as "UserA" with password "Kupuh1pa!"
    # Navigating to the Inbox via the 'more' link in the Inbox block
    And I follow "More"
    # Verifying that you do not see a page full of error messages

@@ -7,7 +7,7 @@ Feature: Displaying multiple groups on a page
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
     And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
      | GroupA | UserA | GroupA owned by UserA | standard | ON | OFF | all | ON | ON | admin |  |
@@ -23,7 +23,7 @@ Background:
 
 Scenario: Create groups and limit display on profile page (Bug 1426983)
     # Log in as a normal user
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Creating several groups to test
     And I choose "Groups" from main menu
     And I follow "Create group"

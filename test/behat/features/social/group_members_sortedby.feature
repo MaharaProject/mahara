@@ -7,12 +7,12 @@ Feature: Members of a group should be listed based on their role
 Background:
     Given the following "users" exist:
     | username  | password  | email | firstname | lastname  | institution   | authname  |role   |
-    | UserA   | Kupuhipa1   | UserA@example.org   | Angela   | User | mahara    | internal  | member    |
-    | UserB   | Kupuhipa1   | UserB@example.org   | Bob   | User | mahara    | internal  | member    |
+    | UserA   | Kupuh1pa!   | UserA@example.org   | Angela   | User | mahara    | internal  | member    |
+    | UserB   | Kupuh1pa!   | UserB@example.org   | Bob   | User | mahara    | internal  | member    |
 
 Scenario: Creating a group and adding members to it (Bug 1426983)
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     # Creating Testing group 1
     And I choose "Groups" from main menu
     And I follow "Create group"
@@ -22,21 +22,21 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     # Log out as "Admin user"
     And I log out
     # Log in as user 1
-    And I log in as "UserA" with password "Kupuhipa1"
+    And I log in as "UserA" with password "Kupuh1pa!"
     # Joining Testing group 1
     And I choose "Find groups" in "Groups" from main menu
     And I press "Join this group"
     # Log out as user 1
     And I log out
     # Log in as user 2
-    And I log in as "UserB" with password "Kupuhipa1"
+    And I log in as "UserB" with password "Kupuh1pa!"
     # Joining Testing group 1
     And I choose "Find groups" in "Groups" from main menu
     And I press "Join this group"
     # Log out as user 2
     And I log out
     # Log in as "Admin" user
-    And I log in as "admin" with password "Kupuhipa1"
+    And I log in as "admin" with password "Kupuh1pa!"
     # Going to Groups and setting it to sort by
     And I choose "Groups" from main menu
     And I follow "Testing Group 1"

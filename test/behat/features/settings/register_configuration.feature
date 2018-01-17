@@ -23,7 +23,7 @@ Scenario: Registering as a new student and checking switch can flick back and fo
  And I wait "4" seconds
  And I press "Register"
  And I follow "Login"
- And I log in as "admin" with password "Kupuhipa1"
+ And I log in as "admin" with password "Kupuh1pa!"
  And I choose "Pending registrations" in "Institutions" from administration menu
  And I follow "Approve"
  And I press "Approve"

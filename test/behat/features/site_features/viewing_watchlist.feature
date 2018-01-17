@@ -7,7 +7,7 @@ So I can access them from my dashboard
 Background:
 Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
 And the following "pages" exist:
     | title | description | ownertype | ownername |
@@ -19,7 +19,7 @@ And the following "permissions" exist:
     | Page UserA_01 | public |
 
 Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  When I am on homepage
  Then I should see "Watched pages"
  And I should see "There are no pages on your watchlist."

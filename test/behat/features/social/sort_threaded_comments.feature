@@ -11,14 +11,14 @@ Background:
 
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | AdminA | Kupuhipa1 | AdminA@example.org | Angela | Admin | instone | internal | admin |
+     | AdminA | Kupuh1pa! | AdminA@example.org | Angela | Admin | instone | internal | admin |
 
     Given the following "pages" exist:
      | title | description | ownertype | ownername |
      | Page AdminA_01 | page1 | user | AdminA |
 
 Scenario: Threaded comments should be displayed in correct order
-    Given I log in as "AdminA" with password "Kupuhipa1"
+    Given I log in as "AdminA" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
     # Add 11 comments
     And I fill in "Comment #1" in editor "Comment"

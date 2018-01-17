@@ -11,13 +11,13 @@ Background:
     
     Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname |role |
-    | UserA | Kupuhipa1 | UserA@example.org  | Angela | User | instone | internal | member |
-    | UserB | Kupuhipa1 | UserB@example.org  | Bob | User | instone | internal | member |
-    | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | insttwo | internal | member |
+    | UserA | Kupuh1pa! | UserA@example.org  | Angela | User | instone | internal | member |
+    | UserB | Kupuh1pa! | UserB@example.org  | Bob | User | instone | internal | member |
+    | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | insttwo | internal | member |
 
 Scenario: Find users in your institution and outside your institution
     # Log in as a user
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Find people" in "Groups" from main menu
 
     # Searching within my own institution, I should only find users in my institution

@@ -12,14 +12,14 @@ Background:
 
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
      And the following "pages" exist:
      | title | description | ownertype | ownername |
      | Page UserA_01 | Page 01| user | UserA |
 
 Scenario: Editing admin resume page (Bug 1426983)
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Content" from main menu
     And I follow "Introduction"
@@ -37,7 +37,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I should see "Résumé saved"
 
 Scenario: Editing Education and Employment info
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Content" from main menu
     And I follow "Education and employment"
@@ -130,7 +130,7 @@ Scenario: Editing Education and Employment info
     Then I should see "45 Empty St"
 
 Scenario: Adding Achievements
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Content" from main menu
     And I follow "Achievements"
@@ -215,7 +215,7 @@ Scenario: Adding Achievements
     And I click on "Move up" in "Accredited Technologist" row
 
 Scenario: Adding Goals and Skills
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Content" from main menu
     And I follow "Goals and skills"
@@ -275,7 +275,7 @@ Scenario: Adding Goals and Skills
     And I should see "Saved successfully"
 
 Scenario: Adding interests
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Content" from main menu
     And I follow "Interests"
@@ -295,7 +295,7 @@ Scenario: Adding interests
     And I should see "clarinet" in the "Resume field block" property
 
 Scenario: Adding license info
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Content" from main menu
     And I follow "License"

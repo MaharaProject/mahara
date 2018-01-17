@@ -6,7 +6,7 @@ Feature: Add journal blocktypes to a page
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | celeste | Kupuhipa1 | celeste@example.com | Celeste | Phobos | mahara | internal | member |
+     | celeste | Kupuh1pa! | celeste@example.com | Celeste | Phobos | mahara | internal | member |
 
     And the following "pages" exist:
      | title | description| ownertype | ownername |
@@ -21,7 +21,7 @@ Background:
      | celeste | user | I'm going to Mars! | I just passed my exam and am approved for a Mars Mission | Mars journal | Mars | 0 |
      | celeste | user | Spacefood | Spacefood is kind of gross if you don't cook it right | Mars journal | Mars,food | 0 |
 
-    Given I log in as "celeste" with password "Kupuhipa1"
+    Given I log in as "celeste" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Celeste's Page" panel menu
     And I click on "Edit" in "Celeste's Page" panel menu

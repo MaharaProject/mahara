@@ -72,17 +72,34 @@ class AuthInternal extends Auth {
 
     /**
      * For internal authentication, passwords can contain a range of letters,
-     * numbers and symbols. There is a minimum limit of six characters allowed
+     * numbers and symbols. There is a minimum limit of eight characters allowed
      * for the password, and no upper limit
      *
      * @param string $password The password to check
      * @return bool            Whether the password is valid
      */
     public function is_password_valid($password) {
-        if (!preg_match('/^[a-zA-Z0-9 ~!@#\$%\^&\*\(\)_\-=\+\,\.<>\/\?;:"\[\]\{\}\\\|`\']{6,}$/', $password)) {
+        list($minlength, $format) = get_password_policy(true);
+
+        if (!preg_match('/^[a-zA-Z0-9 ~!@#\$%\^&\*\(\)_\-=\+\,\.<>\/\?;:"\[\]\{\}\\\|`\']{' . $minlength . ',}$/', $password)) {
             return false;
         }
-        return true;
+
+        $containsLetter = preg_match('/\pL/',       $password); // '/[a-zA-Z]/'
+        $containsNumber = preg_match('/\pN/',       $password); // '/\d/'
+        $containsSymbol = preg_match('/[^\pL\pN]/', $password); // '/[^a-zA-Z\d]/'
+
+        if ($format == 'ul') {
+            return $containsLetter;
+        }
+        if ($format == 'uln') {
+            return ($containsLetter && $containsNumber);
+        }
+        if ($format == 'ulns') {
+            return ($containsLetter && $containsNumber && $containsSymbol);
+        }
+
+        return false;
     }
 
     /**

@@ -7,7 +7,7 @@ So I can prevent dictionary attacks on my passwords
 Background:
   Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
   And I am on homepage
   And I follow "Lost username / password"
 
@@ -22,13 +22,13 @@ Scenario: Too many bad password attempts
   And I should see "Login"
 
   # I've failed 5 times. Now even if I log in with the correct password I'm locked out.
-  When I log in as "UserA" with password "Kupuhipa1"
+  When I log in as "UserA" with password "Kupuh1pa!"
   Then I should see "You have exceeded the maximum login attempts."
   And I should see "Login"
 
   # The cron should reset the limit, allowing me to log in again
   When I trigger the cron
-  And I log in as "UserA" with password "Kupuhipa1"
+  And I log in as "UserA" with password "Kupuh1pa!"
   # I'm logged in!
   Then I should see "Dashboard"
   And I log out
@@ -52,16 +52,16 @@ Scenario: Trying a username or password that doesn't exist (Bug 1460911)
   Then I should see "If you do not receive an email either the details you entered are incorrect or you normally use external authentication to access the site"
 
 Scenario: Student can't change password to anything on suckypasswords list (Bug #844457)
-  Given I log in as "UserA" with password "Kupuhipa1"
+  Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Settings" from user menu
-  And I fill in "Current password" with "Kupuhipa1"
+  And I fill in "Current password" with "Kupuh1pa!"
   And I fill in "New password" with "abc123"
   And I fill in "Confirm password" with "abc123"
   And I press "Save"
-  And I should see "Your password is too easy"
-  And I fill in "Current password" with "Kupuhipa1"
-  And I fill in "New password" with "dragon"
-  And I fill in "Confirm password" with "dragon"
+  And I should see "Password must be at least 8 characters long"
+  And I fill in "Current password" with "Kupuh1pa!"
+  And I fill in "New password" with "p@ssw0rd"
+  And I fill in "Confirm password" with "p@ssw0rd"
   And I press "Save"
   Then I should see "Your password is too easy"
   And I log out

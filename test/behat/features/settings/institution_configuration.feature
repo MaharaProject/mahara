@@ -5,7 +5,7 @@ As an admin
 So I can have different settings for each institution
 
 Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Settings" in "Institutions" from administration menu
  And I press "Add institution"
  And I set the following fields to these values:

@@ -20,8 +20,7 @@ $string['webserviceconnectionsconfigdesc'] = 'Set up the connection objects that
 $string['completeregistration'] = 'Complete registration';
 $string['emailalreadytaken'] = 'This email address has already registered here';
 $string['iagreetothetermsandconditions'] = 'I agree to the Terms and Conditions.';
-$string['passwordformdescription'] = 'Your password must be at least six characters long and contain at least one digit and two letters.';
-$string['passwordinvalidform'] = 'Your password must be at least six characters long and contain at least one digit and two letters.';
+$string['passwordinvalidform1'] = 'Your password must be at least %s characters long. Passwords are case sensitive and must be different from your username. Your password must contain %s.';
 $string['registeredemailsubject'] = 'You have registered at %s';
 $string['registeredemailmessagetext'] = 'Hello %s,
 

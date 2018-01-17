@@ -11,13 +11,13 @@ Given the following "institutions" exist:
 
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org  | Bob | Staff | mahara | internal |  staff  |
-     | UserC | Kupuhipa1 | UserC@example.org | Cecilia | Staff | instone | internal | staff  |
-     | AdminA | Kupuhipa1 | AdminA@example.org  | Angela | Admin | instone | internal | admin  |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org  | Bob | Staff | mahara | internal |  staff  |
+     | UserC | Kupuh1pa! | UserC@example.org | Cecilia | Staff | instone | internal | staff  |
+     | AdminA | Kupuh1pa! | AdminA@example.org  | Angela | Admin | instone | internal | admin  |
 
 Scenario: Checking menu items are available as a student (Bug 1467368)
- Given I log in as "UserA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuh1pa!"
  # Checking the main menu navigation headings
  When I click on "Show main menu"
  And I follow "Dashboard"
@@ -57,7 +57,7 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
 
 
 Scenario: Checking menu items are available as site staff (Bug 1467368)
- Given I log in as "UserB" with password "Kupuhipa1"
+ Given I log in as "UserB" with password "Kupuh1pa!"
  Then I should not see "Administration" in the "Main menu" property
  # The one major difference a site staff has is site info link that leads to other links
  And I click on "Show administration menu"
@@ -67,7 +67,7 @@ Scenario: Checking menu items are available as site staff (Bug 1467368)
 
 
 Scenario: Checking menu items are available as Admin User (Bug 1467368)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  # Checking the sub navigation in Administration
  And I click on "Show administration menu"
  Then I should see "Admin home" in the "Administration menu" property
@@ -144,7 +144,7 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "Test client" in the "Web services sub-menu" property
 
 Scenario: Checking menu items are available as Institution Administrator (Bug 1467368)
- Given I log in as "AdminA" with password "Kupuhipa1"
+ Given I log in as "AdminA" with password "Kupuh1pa!"
  # checking the sub navigation in Administration
  And I click on "Show administration menu"
  And I should not see "Configure site" in the "Administration menu" property

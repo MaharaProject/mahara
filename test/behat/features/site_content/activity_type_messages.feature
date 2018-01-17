@@ -7,12 +7,12 @@ So I can filter messages
 Background:
  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
 
 Scenario: Selection options to filter messages (Bug 1433342)
  # Log in as "Admin" user
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Users" from administration menu
  And I follow "Angela"
  And I follow "Send message"
@@ -21,7 +21,7 @@ Scenario: Selection options to filter messages (Bug 1433342)
  | Message   | This is a test message |
  And I press "Send message"
  And I log out
- Given I log in as "UserA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuh1pa!"
  And I choose "mail" from user menu by id
  And I follow "Hi there"
  And I follow "Reply"
@@ -31,13 +31,13 @@ Scenario: Selection options to filter messages (Bug 1433342)
  And I log out
 
  # First check what options an admin has
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "mail" from user menu by id
  And the "Activity type:" select box should contain all "Administration messages | Comment | Contact us | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content | Objectionable content in forum | Repeat virus upload | System message | Virus flag release | Watchlist"
  And I log out
 
  # Then check what options a normal user has
- Given I log in as "UserA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuh1pa!"
  And I choose "Groups" from main menu
  And I follow "Create group"
  And I fill in "Group name" with "Jurassic Park"

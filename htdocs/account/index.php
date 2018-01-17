@@ -25,6 +25,7 @@ $authobj = AuthFactory::create($USER->authinstance);
 
 // @todo auth preference for a password change screen for all auth methods other than internal
 if (method_exists($authobj, 'change_password')) {
+
     $elements = array(
         'changepassworddesc' => array(
             'value' => '<tr><td colspan="2"><h3>' . get_string('changepassworddesc', 'account') . '</h3></td></tr>'
@@ -38,7 +39,8 @@ if (method_exists($authobj, 'change_password')) {
             'class' => 'hidden',
             'value' => 'decoypassword',
         ),
-        'oldpassword' => array( 'type' => 'password',
+        'oldpassword' => array(
+            'type' => 'password',
             'title' => get_string('oldpassword'),
             'help'  => true,
             'autocomplete' => 'off',
@@ -46,6 +48,8 @@ if (method_exists($authobj, 'change_password')) {
         'password1' => array(
             'type' => 'password',
             'title' => get_string('newpassword'),
+            'description' => get_password_policy_description(),
+            'showstrength' => true
         ),
         'password2' => array(
             'type' => 'password',

@@ -6,19 +6,19 @@ Feature: The wall block should send out notifications
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
 
 Scenario: Wall post notifications
 The wall post must generate a notification (Bug 547333)
-    Given I log in as "UserB" with password "Kupuhipa1"
+    Given I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Find people" in "Groups" from main menu
     And I follow "Angela User"
     And I scroll to the base of id "wall-wrap"
     And I set the field "Post" to "Hello"
     And I press "Post"
     And I log out
-    And I log in as "UserA" with password "Kupuhipa1"
+    And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "mail" from user menu by id
     When I click on "New post on your wall"
     Then I should see "Hello"

@@ -46,8 +46,13 @@ echo $form_tag;
                             <?php echo $elements[$field]['labelhtml']; ?>
 
                             <?php echo $elements[$field]['html']; ?>
+                            <?php if (isset($elements[$field]['description'])) { ?>
+                                <div class="metadata form-group html">
+                                    <?php echo $elements[$field]['description']; ?>
+                                </div>
+                            <?php } ?>
                             <?php if (isset($elements[$field]['error'])) { ?>
-                                 <p class="text-danger"><?php echo $elements[$field]['error']; ?></p>
+                                <p class="text-danger"><?php echo $elements[$field]['error']; ?></p>
                             <?php } ?>
                         </div>
                     <?php } ?>

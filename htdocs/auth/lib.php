@@ -912,7 +912,8 @@ function auth_check_required_fields() {
             $elements['password1'] = array(
                 'type'        => 'password',
                 'title'       => get_string('newpassword') . ':',
-                'description' => get_string('yournewpassword'),
+                'description' => get_password_policy_description('user'),
+                'showstrength' => true,
                 'rules'       => array(
                     'required' => true
                 )
@@ -2227,7 +2228,7 @@ function password_validate(Pieform $form, $values, $user) {
     $authobj = AuthFactory::create($user->authinstance);
 
     if (!$form->get_error('password1') && !$authobj->is_password_valid($values['password1'])) {
-        $form->set_error('password1', get_string('passwordinvalidform', "auth.$authobj->type"), false);
+        $form->set_error('password1', get_password_policy_description('error'));
     }
 
     $suckypasswords = array(

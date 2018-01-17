@@ -6,8 +6,8 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
  Background:
   Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-    | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+    | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
 
   And the following "pages" exist:
     | title | description | ownertype | ownername |
@@ -20,7 +20,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
     | UserB | user | UserB entry | This is a journal entry for UserB | | blog,one | 0 |
 
  Scenario: Create blogs
-  Given I log in as "UserA" with password "Kupuhipa1"
+  Given I log in as "UserA" with password "Kupuh1pa!"
   # Add a taggedblogs block to a page
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I click on "Page UserA_01" panel menu
@@ -50,7 +50,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
 
   # Copy the page as another user
   And I log out
-  Given I log in as "UserB" with password "Kupuhipa1"
+  Given I log in as "UserB" with password "Kupuh1pa!"
   And I scroll to the id "view"
   And I follow "Page UserA_01"
   And I scroll to the base of id "copyview-button"

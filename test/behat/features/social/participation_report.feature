@@ -7,9 +7,9 @@ Feature: Participation report to show pages in a collection
 Background:
 Given the following "users" exist:
  | username | password | email | firstname | lastname | institution | authname | role |
- | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
- | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
- | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
+ | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+ | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
+ | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | mahara | internal | member |
 
  And the following "groups" exist:
  | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
@@ -33,7 +33,7 @@ Given the following "users" exist:
 
 Scenario: In the participation report pages should be seen in a collection
  # Log in as a normal userA
- Given I log in as "UserA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
  And I choose "Shared by me" in "Portfolio" from main menu
  And I follow "Pages"
@@ -99,7 +99,7 @@ Scenario: In the participation report pages should be seen in a collection
  # Log out as UserA
  And I log out
  # Log in as UserB
- Given I log in as "UserB" with password "Kupuhipa1"
+ Given I log in as "UserB" with password "Kupuh1pa!"
  # UserB comments on the group page 01
  And I choose "Groups" from main menu
  And I follow "Group one"
@@ -132,7 +132,7 @@ Scenario: In the participation report pages should be seen in a collection
  # Log out as USer B
  And I log out
  # UserC comments on group page 01
- Given I log in as "UserC" with password "Kupuhipa1"
+ Given I log in as "UserC" with password "Kupuh1pa!"
  And I choose "Groups" from main menu
  And I follow "searching for groups"
  And I follow "Group one"
@@ -167,7 +167,7 @@ Scenario: In the participation report pages should be seen in a collection
  # Log out as User C
  And I log out
  # Log in as UserA
- Given I log in as "UserA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuh1pa!"
  And I choose "Groups" from main menu
  And I follow "Group one"
  And I click on "Report" in the "Arrow-bar nav" property

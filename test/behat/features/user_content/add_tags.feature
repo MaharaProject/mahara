@@ -7,7 +7,7 @@ So I can create a file and tag
 Background:
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | test01@example.com | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | test01@example.com | Angela | User | mahara | internal | member |
 
   And the following "pages" exist:
      | title | description | ownertype | ownername |
@@ -16,7 +16,7 @@ Background:
 
   Scenario: Adding tags to files (Bug 1426983)
    # Log in as the UserA
-   Given I log in as "UserA" with password "Kupuhipa1"
+   Given I log in as "UserA" with password "Kupuh1pa!"
    # Creating a folder with a  tag
    When I choose "Files" in "Content" from main menu
    And I set the following fields to these values:

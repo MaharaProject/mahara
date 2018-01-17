@@ -7,7 +7,7 @@ Feature: Contextual helps for Mahara pages
 Background:
   Given the following "users" exist:
   | username | password | email | firstname | lastname | institution | authname | role |
-  | UserA | Kupuhipa1 | test01@example.com | Angela | User | mahara | internal | member |
+  | UserA | Kupuh1pa! | test01@example.com | Angela | User | mahara | internal | member |
 
   # Skins need to be enabled
   And the following site settings are set:
@@ -23,7 +23,7 @@ Background:
   | GroupA | admin | GroupA owned by admin | standard | ON | ON | all | ON | ON | UserA |  |
 
 Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
-  When I log in as "UserA" with password "Kupuhipa1"
+  When I log in as "UserA" with password "Kupuh1pa!"
   # Test pages and collections help
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I click on "Help"
@@ -88,7 +88,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
 
 Scenario: Showing correct external manual help file for mahara page
   # Test by going to pages and collections help for user / institution / site / group
-  When I log in as "admin" with password "Kupuhipa1"
+  When I log in as "admin" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I follow "Help" in the ".footer-nav" "css_element"
   And I switch to the new window

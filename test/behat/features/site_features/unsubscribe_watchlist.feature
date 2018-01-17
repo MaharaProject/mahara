@@ -7,8 +7,8 @@ I follow unsubscription link in email
 Background:
 Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-    | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+    | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
 
 And the following "pages" exist:
     | title | description | ownertype | ownername |
@@ -20,7 +20,7 @@ And the following "permissions" exist:
     | Page UserA_01 | loggedin |
 
 Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
- Given I log in as "UserB" with password "Kupuhipa1"
+ Given I log in as "UserB" with password "Kupuh1pa!"
  And I choose "Notifications" in "Settings" from user menu
  And I select "Email" from "Watchlist"
  And I press "Save"

@@ -9,7 +9,7 @@ Background:
      | Page admin_01 | Page 01 | user | admin |
 
 Scenario: Creating a plan with 11 tasks (Bug #1503036)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Plans" in "Content" from main menu
  And I follow "New plan"
  And I fill in the following:

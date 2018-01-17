@@ -7,8 +7,8 @@ I need to have a journal
 Background:
  Given the following "users" exist:
  | username | password | email | firstname | lastname | institution | authname | role |
- | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
- | UserB | Kupuhipa1 | UserB@example.org | Britta | Briggs | mahara | internal | member |
+ | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+ | UserB | Kupuh1pa! | UserB@example.org | Britta | Briggs | mahara | internal | member |
 
  And the following "pages" exist:
  | title | description | ownertype | ownername |
@@ -16,7 +16,7 @@ Background:
 
 Scenario: Creating a Journal, publishing a draft, using tagged entry block
  # Create draft entry
- Given I log in as "UserA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuh1pa!"
  When I choose "Journals" in "Content" from main menu
  And I follow "New entry"
  And I fill in the following:
@@ -69,7 +69,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  And I log out
- And I log in as "UserB" with password "Kupuhipa1"
+ And I log in as "UserB" with password "Kupuh1pa!"
  And I go to portfolio page "Page UserA_01"
  Then I should see "My diary entry two"
  And I should not see "My diary entry one"

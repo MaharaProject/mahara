@@ -9,7 +9,7 @@ Mahara institution
 Background:
   Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | admin |
+    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | admin |
 
   And the following "pages" exist:
     | title | description | ownertype | ownername |
@@ -31,7 +31,7 @@ Background:
     | Collection admin_01 | public |
 
 Scenario: Installing framework module and activating for an institution
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Plugin administration" in "Extensions" from administration menu
  Then I should see "smartevidence"
  And I should see "Hide" in the "smartevidence" property
@@ -100,7 +100,7 @@ Scenario: Installing framework module and activating for an institution
  And I log out
 
  # Try as another admin
- Given  I log in as "UserA" with password "Kupuhipa1"
+ Given  I log in as "UserA" with password "Kupuh1pa!"
  And I follow "Collection admin_01"
  And I click on the matrix point "3,4"
  And I wait "1" seconds

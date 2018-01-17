@@ -5,7 +5,7 @@ As an admin
 I need to be able to turn the switches on and off and save the page
 
 Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Groups" from main menu
  And I follow "Create group"
  And I set the following fields to these values:

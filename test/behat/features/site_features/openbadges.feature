@@ -6,7 +6,7 @@ Feature: The openbadges block should be present
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
     And the following "pages" exist:
      | title | description | ownertype | ownername |
@@ -16,7 +16,7 @@ Scenario: Open badges block
     # As the open badges block normally fetches user data from third
     # party site we can't currently test that part and ship the details in this test
     # So all we can do is check that the block exists and saves to a page
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Page UserA_01" panel menu
     And I click on "Edit" in "Page UserA_01" panel menu

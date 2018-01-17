@@ -5,7 +5,7 @@ As an admin
 So I can configure the site to the way the client wants
 
 Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Site options" in "Configure site" from administration menu
  # Verifying I'm on the right page
  And I should see "Here you can set some global options that will apply by default throughout the entire site."
@@ -51,7 +51,7 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
 And I press "Update site options"
 
 Scenario: Setting default account lifetime
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Site options" in "Configure site" from administration menu
  And I expand all fieldsets
  And I select "Weeks" from "siteoptions_defaultaccountlifetime_units"

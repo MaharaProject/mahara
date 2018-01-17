@@ -7,15 +7,15 @@ So I can view others social media pages
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
 
 And the following "pages" exist:
      | title | description | ownertype | ownername |
      | Page UserA_01 | Page 01 | user | UserA |
 
 Scenario: Creating and accessing social media buttons (Bug 1448948)
- Given I log in as "UserA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuh1pa!"
  And I choose "Content" from main menu
  And I follow "Social media"
  And I follow "New social media account"
@@ -58,7 +58,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I should see "Access rules were updated for 1 page"
  And I log out
  # Logging in as UserB to try see the buttons
- Given I log in as "UserB" with password "Kupuhipa1"
+ Given I log in as "UserB" with password "Kupuh1pa!"
  And I follow "Page UserA_01"
  And I should see "Social Media"
  And I should see "Facebook"

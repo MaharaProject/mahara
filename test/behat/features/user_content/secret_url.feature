@@ -11,7 +11,7 @@ Background:
 
 Scenario: Create a page and secret URLs to copy (Bug 1426983)
     # Log in as an Admin user
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     # Navigating to shared by be to click button
     And I choose "Shared by me" in "Portfolio" from main menu
     And I click on "Edit secret URL access" in "Page admin_01" row

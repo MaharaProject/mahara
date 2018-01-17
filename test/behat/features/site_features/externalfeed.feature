@@ -6,7 +6,7 @@ Feature: The external block should be added and configured in a page
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
     And the following "pages" exist:
      | title | description | ownertype | ownername |
@@ -15,7 +15,7 @@ Background:
 Scenario: Add some externalfeed blocks
     # Externalfeed block should be added in a page from several feed sources in
     # RSS or Atom format
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Page UserA_01" panel menu
     And I click on "Edit" in "Page UserA_01" panel menu

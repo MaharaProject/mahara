@@ -6,9 +6,9 @@ In order to be able to see the Pages & Collections that have been shared with me
 Background:
     Given the following "users" exist:
       | username | password | email | firstname | lastname | institution | authname | role |
-      | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-      | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
-      | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
+      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+      | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
+      | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | mahara | internal | member |
 
     And the following "groups" exist:
       | name | owner | description | grouptype | open | invitefriends | editroles |
@@ -35,7 +35,7 @@ Background:
 
 Scenario: Testing that views & collections are collated properly
     # Putting some comments on the pages
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Collection UserA_01" panel collection
     And I click on "Page UserA_01" in "Collection UserA_01" panel collection
@@ -54,7 +54,7 @@ Scenario: Testing that views & collections are collated properly
     And I press "Comment"
 
     When I log out
-    And I log in as "UserB" with password "Kupuhipa1"
+    And I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Shared with me" in "Portfolio" from main menu
     Then I should see "Page UserA_03"
     # I should see collections & individual pages

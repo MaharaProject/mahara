@@ -6,7 +6,7 @@ Feature: Move posts between forums within groups
 
 Scenario: Moving pages within a group (Bug 1426983)
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     # Creating a group
     And I choose "Groups" from main menu
     And I follow "Create group"

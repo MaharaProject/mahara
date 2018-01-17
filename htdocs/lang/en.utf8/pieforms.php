@@ -46,6 +46,10 @@ $string['element.expiry.noenddate'] = 'No end date';
 
 $string['element.files.addattachment'] = 'Add attachment';
 
+$string['element.passwordpolicy.ul'] = 'Upper and lowercase letters';
+$string['element.passwordpolicy.uln'] = 'Upper and lowercase letters, numbers';
+$string['element.passwordpolicy.ulns'] = 'Upper and lowercase letters, numbers, symbols';
+
 $string['element.select.other'] = 'Other';
 $string['element.select.remove'] = 'Remove "%s"';
 

@@ -8,14 +8,14 @@ Background:
 
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
 And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
      | GroupA | UserB | GroupA owned by UserB | course | ON | ON | all | ON | ON | admin, UserA | admin |
 
 Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Add groups by CSV" in "Groups" from administration menu
  # Attaching the groups via CSV
  And I attach the file "groups.csv" to "CSV file"
@@ -29,7 +29,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I press "Update group members by CSV"
  And I log out
  # Logging back in as a user
- And I log in as "UserA" with password "Kupuhipa1"
+ And I log in as "UserA" with password "Kupuh1pa!"
  And I choose "Groups" from main menu
  And I follow "Group Two"
  # Editing the group
@@ -41,7 +41,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I should see "Group saved successfully"
 
  Scenario: Editing groups as a user not via CSV
- Given I log in as "UserB" with password "Kupuhipa1"
+ Given I log in as "UserB" with password "Kupuh1pa!"
  And I choose "Groups" from main menu
  And I follow "GroupA"
  # Editing the group
@@ -54,7 +54,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I should see "Group saved successfully"
  And I log out
  # Logging in as Admin
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Groups" from main menu
  And I follow "Group awesome sauce"
  # Making sure I can't edit a group I am not owner of

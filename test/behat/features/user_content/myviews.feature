@@ -7,7 +7,7 @@ So I have fast access to them
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
     And the following "pages" exist:
       | title | description | ownertype | ownername |
       | Page UserA_01 | page P1A | user | UserA |
@@ -18,7 +18,7 @@ Background:
       | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_01, Page UserA_02 |
 
 Scenario: Testing that views & collections are collated properly in the "My portfolios" block
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # I should see collections & individual pages
     And I scroll to the id "column-container"
     And I should see "Collection UserA_01" in the "My portfolios" property

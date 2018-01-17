@@ -6,7 +6,7 @@ Feature: Editing a profile page
 
 Scenario: Editing admin profile page (Bug: 1426983)
     # Log in
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     # Updating Profile
     When I choose "Profile" in "Content" from main menu
     And I follow "About me"
@@ -78,7 +78,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
 
 Scenario: Editing admin profile picture (Bug: 1578000)
     # Log in
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     # Add new profile picture
     When I choose "Profile pictures" in "Content" from main menu
     And I attach the file "Image2.png" to "Profile picture"

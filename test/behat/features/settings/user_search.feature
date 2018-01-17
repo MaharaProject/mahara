@@ -7,10 +7,10 @@ So I can benefit from the use of different configurations
 Background:
  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | admin |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | admin |
 
 Scenario: Testing functions for user search page (Bug 1431569)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "User search" in "Users" from administration menu
  And I follow "Advanced options"
  And I follow "A" in the "Filter by first name" property

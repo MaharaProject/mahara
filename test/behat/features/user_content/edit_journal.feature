@@ -7,11 +7,11 @@ I need to create a journal
 Background:
 Given the following "users" exist:
  | username | password | email | firstname | lastname | institution | authname | role |
- | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+ | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
 
 Scenario: Creating a journal and editing it (Bug 1513716)
-Given I log in as "UserA" with password "Kupuhipa1"
+Given I log in as "UserA" with password "Kupuh1pa!"
 # Creating a journal
 And I choose "Journals" in "Content" from main menu
 When I click on "New entry"

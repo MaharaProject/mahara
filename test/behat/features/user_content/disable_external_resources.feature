@@ -8,14 +8,14 @@ For security reason, I can enable/disable the setting "Disable external resource
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
     And the following "pages" exist:
       | title | description | ownertype | ownername |
       | Page UserA_01 | Page 01| user | UserA |
 
 Scenario: Enable/disable external resources in mahara pages
 # By default external resources are allowed in a page
- When I log in as "UserA" with password "Kupuhipa1"
+ When I log in as "UserA" with password "Kupuh1pa!"
  # Upload an image
  And I choose "Files" in "Content" from main menu
  And I attach the file "Image2.png" to "files_filebrowser_userfile"
@@ -50,13 +50,13 @@ Scenario: Enable/disable external resources in mahara pages
  And I log out
 
 # Disable external resources and check if external images are displayed in pages
- When I log in as "admin" with password "Kupuhipa1"
+ When I log in as "admin" with password "Kupuh1pa!"
  And I choose "Site options" in "Configure site" from administration menu
  And I expand the section "Security settings"
  And I enable the switch "Disable external resources in user HTML"
  And I press "Update site options"
  And I log out
- And I log in as "UserA" with password "Kupuhipa1"
+ And I log in as "UserA" with password "Kupuh1pa!"
  And I choose "Pages and collections" in "Portfolio" from main menu
  And I follow "Page UserA_01"
  Then I should see images within the block "Text block with an internal image"

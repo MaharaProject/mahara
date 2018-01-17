@@ -13,9 +13,9 @@ Feature: Mahara user permissions in institutions
 
     And the following "users" exist:
       | username | password | email | firstname | lastname | institution | authname | role |
-      | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-      | UserB | Kupuhipa1 | UserB@example.org | Bob | User | instone | internal | admin |
-      | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
+      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+      | UserB | Kupuh1pa! | UserB@example.org | Bob | User | instone | internal | admin |
+      | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | mahara | internal | member |
 
     And the following "pages" exist:
       | title | description | ownertype | ownername |
@@ -23,14 +23,14 @@ Feature: Mahara user permissions in institutions
 
   Scenario: Register to an institution
     # Member can register to an institution
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Institution membership" in "Groups" from main menu
     Then I should see "Request membership of an institution"
     And I log out
 
   Scenario: Site admin vs institution admin when sharing institution page
     # Site admin can only share institution page with institution it belongs to
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Institutions" from administration menu
     And I follow "Page InstOne_01"
     And I follow "Edit"
@@ -44,7 +44,7 @@ Feature: Mahara user permissions in institutions
     And I log out
 
     # Institution admin can share institution page with any of the institutions they belong to
-    Given I log in as "UserB" with password "Kupuhipa1"
+    Given I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Institutions" from administration menu
     And I follow "Page InstOne_01"
     And I follow "Edit"
@@ -54,7 +54,7 @@ Feature: Mahara user permissions in institutions
     And I log out
 
     # Add new member to institution via Institution -> Member's page
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Members" in "Institutions" from administration menu
     And I select "People who have not requested institution membership yet" from "Users to display:"
     And I select "UserC" from "Non-members"

@@ -48,7 +48,8 @@ if ($SESSION->get('forgotpasskey')) {
             'password1' => array(
                 'type' => 'password',
                 'title' => get_string('password'),
-                'description' => get_string('yournewpassword'),
+                'description' => get_password_policy_description('user'),
+                'showstrength' => true,
                 'rules' => array(
                     'required' => true
                 )
