@@ -185,7 +185,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
                     $textreadonly = $totalannotationfeedback[$view->get('id')]->total > 0;
                 }
 
-                $text = $artefact->get('description');
+                $text = clean_html($artefact->get('description'));
                 $tags = $artefact->get('tags');
             }
             catch (ArtefactNotFoundException $e) {
