@@ -849,7 +849,7 @@ class Framework {
             'elements'   => array(
                 'annotation' => array(
                     'type' => 'html',
-                    'value' => $text,
+                    'value' => clean_html($text),
                 ),
             ),
         );

@@ -231,7 +231,7 @@ EOF;
             'replyto'  => ($values['replyto']) ? $values['replyto'] : null,
             'private'  => (int)(bool)$values['private'],
             'postdate' => db_format_timestamp(time()),
-            'text'     => $values['text'],
+            'text'     => clean_html($values['text']),
         );
 
         $newid = insert_record('blocktype_wall_post', $record, 'id', true);
@@ -288,15 +288,13 @@ EOF;
         $params = array($instance->get('id'));
 
         if ($records = get_records_sql_array($sql, $params, $nolimit ? '' : 0, $nolimit ? '' : 10)) {
-            return array_map(
-                create_function(
-                    '$item',
-                    '$item->displayname = display_name($item);
-                    $item->profileurl = profile_url($item);
-                    $item->deletable = PluginBlocktypeWall::can_delete_wallpost($item->from, ' . intval($owner) .');
-                    return $item;'),
-                $records
-            );
+            return array_map(function($item) {
+                $item->displayname = display_name($item);
+                $item->text = clean_html($item->text);
+                $item->profileurl = profile_url($item);
+                $item->deletable = PluginBlocktypeWall::can_delete_wallpost($item->from, ' . intval($owner) .');
+                return $item;
+            }, $records);
         }
         return false;
     }
