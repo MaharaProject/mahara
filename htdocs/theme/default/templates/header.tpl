@@ -91,7 +91,7 @@
                                 </div>
                             {/if}
 
-                            {dynamic}{insert_messages}{/dynamic}
+                            {dynamic}{$messages.messages|safe}{/dynamic}
                             {if $institutionselector}
                                 <div class="institutionselector">
                                 {$institutionselector|safe}
