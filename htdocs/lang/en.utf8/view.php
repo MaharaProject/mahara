@@ -82,6 +82,7 @@ $string['accessuntildate3'] = 'Nobody can see this page after %s.';
 $string['accessbetweendates3'] = 'Nobody can see this page before %s or after %s.';
 $string['artefactsinthisview'] = 'Artefacts in this page';
 $string['whocanseethisview'] = 'Who can see this page';
+$string['pending'] = 'Portfolio under review';
 $string['view'] = 'page';
 $string['panelmenu'] = 'Menu';
 $string['vieworcollection'] = 'page or collection';

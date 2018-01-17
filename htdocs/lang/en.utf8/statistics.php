@@ -362,6 +362,25 @@ $string['reportdesccontent'] = '<ul>
 <li>Number of unique users who made the modifications</li>
 <li>Number of unique users over the total</li>
 </ul>';
+$string['reportdescobjectionable'] = "<ul>
+<li>Page title</li>
+<li>Artefact title</li>
+<li>Objectionable content reporter</li>
+<li>Reporter's name</li>
+<li>Report description</li>
+<li>Report date</li>
+<li>Reviewer's name</li>
+<li>Review description</li>
+<li>Review date</li>
+<li>Report status</li>
+</ul>";
+$string['reporter'] = 'Reporter';
+$string['review'] = 'Review';
+$string['reviewer'] = 'Reviewer';
+$string['contentobjectionablereports'] = 'Objectionable content';
+$string['status.0'] = '';
+$string['status.1'] = 'Administrator needs to review';
+$string['status.2'] = 'User needs to make changes';
 
 // Institution reports
 $string['informationreports'] = 'Information overview';

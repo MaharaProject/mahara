@@ -34,7 +34,7 @@ if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
 }
 
 if (!$notallowed) {
-    // Get the institution selector to worl out what institutions they are allowed to see
+    // Get the institution selector to work out what institutions they are allowed to see
     $institutionelement = get_institution_selector(true, false, true, ($allstaffstats || $userstaffstats), ($USER->get('admin') || $USER->get('staff')));
 }
 

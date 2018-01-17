@@ -106,6 +106,12 @@
                                     {str tag="duplicateemailfilter1" section="admin"}
                                 </label>
                             </div>
+                            <div class="objectionable-filter checkbox">
+                                <label class="input-inline" for="objectionable">
+                                    <input class="checkbox" type="checkbox" name="objectionable" id="objectionable" value="1"{if $search->objectionable} checked{/if}>
+                                    {str tag="objectionablefilter" section="admin"}
+                                </label>
+                            </div>
                         </form>
                     </div>
                 </div>

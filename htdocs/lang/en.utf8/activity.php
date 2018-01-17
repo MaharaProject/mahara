@@ -137,6 +137,53 @@ To see the page, follow this link:
 To see the reporter\'s profile, follow this link:
 %s';
 
+$string['objectionablereviewview'] = 'Review of objectionable content on page "%s" requested by %s';
+$string['objectionablereviewviewartefact'] = 'Review of objectionable content on page "%s" in "%s" requested by %s';
+
+$string['objectionablereviewviewhtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Review of objectionable content on "%s" requested by %s<br>%s</div>
+
+<div style="margin: 1em 0;">%s</div>
+
+<div style="font-size: smaller; border-top: 1px solid #999;">
+<p>Request relates to: <a href="%s">%s</a></p>
+<p>Requested by: <a href="%s">%s</a></p>
+</div>';
+$string['objectionablereviewviewtext'] = 'Review of objectionable content on "%s" requested by %s
+%s
+------------------------------------------------------------------------
+
+%s
+
+------------------------------------------------------------------------
+To see the page, follow this link:
+%s
+To see the owner\'s profile, follow this link:
+%s';
+
+$string['objectionablereviewviewartefacthtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Review of objectionable content on "%s" in "%s" requested by %s<br>%s</div>
+
+<div style="margin: 1em 0;">%s</div>
+
+<div style="font-size: smaller; border-top: 1px solid #999;">
+<p>Request relates to: <a href="%s">%s</a></p>
+<p>Requested by: <a href="%s">%s</a></p>
+</div>';
+$string['objectionablereviewviewartefacttext'] = 'Review of objectionable content on %s in "%s" requested by %s
+%s
+------------------------------------------------------------------------
+
+%s
+
+------------------------------------------------------------------------
+To see the page, follow this link:
+%s
+To see the owner\'s profile, follow this link:
+%s';
+
+$string['stillobjectionablecontent'] = 'The content contains objectionable material.
+
+%s';
+$string['stillobjectionablecontentsuspended'] = 'The access to the page has been temporarily revoked until the objectionable content is cleared up.';
 $string['newgroupmembersubj'] = '%s is now a group member.';
 $string['removedgroupmembersubj'] = '%s is no longer a group member.';
 

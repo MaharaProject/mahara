@@ -1241,6 +1241,10 @@ $string['usershavenotloggedinsince'] = 'Users have not logged in since';
 // Admin user search duplicate email filter
 $string['duplicateemailfilter1'] = 'Duplicate email addresses';
 
+// Admin user search objectionable content filter
+$string['objectionable'] = 'Objectionable content';
+$string['objectionablefilter'] = 'People with objectionable content';
+
 $string['noemailfound'] = 'No email address found';
 
 $string['lastlogin'] = 'Last login';

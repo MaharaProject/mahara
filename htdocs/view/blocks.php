@@ -256,7 +256,7 @@ $owner = $view->get('owner');
 if ($owner &&  $viewtype == 'profile') {
     $viewtitle = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
 }
-
+$smarty->assign('accesssuspended', View::access_override_pending(array('id' => $viewid)));
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);

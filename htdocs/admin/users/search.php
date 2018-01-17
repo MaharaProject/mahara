@@ -30,6 +30,7 @@ $search = (object) array(
     'loggedin'       => param_alpha('loggedin', 'any'),
     'loggedindate'   => param_variable('loggedindate', strftime(get_string('strftimedatetimeshort'))),
     'duplicateemail' => param_boolean('duplicateemail', false),
+    'objectionable'  => param_boolean('objectionable', false),
     'authname'       => param_alpha('authname', null),
 );
 

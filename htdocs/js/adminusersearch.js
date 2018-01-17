@@ -24,6 +24,7 @@ var UserSearch = (function($) {
           self.rewriteCheckboxes();
           self.rewriteLoggedInFilter();
           self.rewriteDuplicateEmailFilter();
+          self.rewriteObjectionableContentFilter();
 
           paginatorProxy.addObserver(self);
           var oldparams = $.extend({}, pager.params);
@@ -210,6 +211,14 @@ var UserSearch = (function($) {
           $('#duplicateemail').on("click", function() {
               pager.params.offset = 0;
               pager.params.duplicateemail = $(this).prop('checked');
+              pager.sendQuery();
+          });
+      };
+
+      this.rewriteObjectionableContentFilter = function() {
+          $('#objectionable').on("click", function() {
+              pager.params.offset = 0;
+              pager.params.objectionable = $(this).prop('checked');
               pager.sendQuery();
           });
       };

@@ -1,13 +1,27 @@
 {include file="header.tpl"}
 
+{if $notrudeform}
+    <div class="message deletemessage alert alert-danger">
+        {$notrudeform|safe}
+    </div>
+{elseif $objector}
+    <div class="alert alert-danger">{str tag=objectionablematerialreported}</div>
+{/if}
+{if $userisowner && $objectedpage}
+    <div class="alert alert-danger">
+        <p>
+        {if $objectionreplied}
+            {str tag=objectionablematerialreportreplied}
+        {else}
+            {str tag=objectionablematerialreportedowner}
+        {/if}
+        </p>
+        <p>{str tag=objectionreviewonview}</p>
+    </div>
+{/if}
+
 <div class="row">
     <div class="col-md-9">
-
-        {if $notrudeform}
-        <div class="message deletemessage alert alert-danger">
-            {$notrudeform|safe}
-        </div>
-        {/if}
 
         <h1 class="page-header">
             {if count($artefactpath) == 0}
@@ -34,12 +48,13 @@
         </h1>
 
         <div class="btn-top-right btn-group btn-group-top pull-right">
-            {if $LOGGEDIN}
+            {if $LOGGEDIN && (!$userisowner || ($userisowner && $objectedpage))}
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag="more..."}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                {if !$userisowner}
                 <li>
                     <a id="toggle_watchlist_link" class="watchlist" href="">
 
@@ -65,11 +80,28 @@
                     </a>
                 </li>
                 <li>
+                    {if $objector}
+                    <span class="nolink">
+                        <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                        {str tag=objectionablematerialreported}
+                    </span>
+                    {else}
                     <a id="objection_link" class="objection" href="#" data-toggle="modal" data-target="#report-form">
                         <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                         {str tag=reportobjectionablematerial}
                     </a>
+                    {/if}
                 </li>
+                {/if}
+                {if $userisowner && $objectedpage}
+                    <li>
+                    <span class="nolink">
+                        <span class="icon icon-lg icon-flag text-success left" role="presentation" aria-hidden="true"></span>
+                        {str tag=objectionreviewonview}
+                    </span>
+                    </li>
+                {/if}
+            </ul>
             {/if}
         </div>
 
@@ -117,5 +149,9 @@
         </div>
     </div>
 </div>
+
+{if $stillrudeform}
+    {include file=objectionreview.tpl}
+{/if}
 
 {include file="footer.tpl"}

@@ -160,6 +160,11 @@ $objectionform = pieform(objection_form());
 if ($notrudeform = notrude_form()) {
     $notrudeform = pieform($notrudeform);
 }
+// For for admin to review objection claim, add comment
+// about objectionable content and possibly remove access
+if ($stillrudeform = stillrude_form()) {
+    $stillrudeform = pieform($stillrudeform);
+}
 
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
@@ -212,13 +217,19 @@ $smarty->assign('feedback', $feedback);
 
 $smarty->assign('hasfeed', $hasfeed);
 $smarty->assign('feedlink', $feedlink);
-
+$smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
 if (isset($addfeedbackform)) {
     $smarty->assign('enablecomments', 1);
     $smarty->assign('addfeedbackform', $addfeedbackform);
 }
-$smarty->assign('objectionform', $objectionform);
-$smarty->assign('notrudeform', $notrudeform);
+if ($objectionform) {
+    $smarty->assign('objectionform', $objectionform);
+    $smarty->assign('notrudeform', $notrudeform);
+    $smarty->assign('stillrudeform', $stillrudeform);
+    $smarty->assign('objectedpage', $view->is_objectionable());
+    $smarty->assign('objector', $view->is_objectionable($USER->get('id')));
+    $smarty->assign('objectionreplied', $view->is_objectionable(null, true));
+}
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('viewdisplaytitle', $view->display_title(true, true, $view->display_author()));

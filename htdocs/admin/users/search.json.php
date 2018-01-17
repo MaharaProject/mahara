@@ -27,6 +27,7 @@ $params->sortdir        = param_alpha('sortdir', 'asc');
 $params->loggedin       = param_alpha('loggedin', 'any');
 $params->loggedindate   = param_variable('loggedindate', null);
 $params->duplicateemail = param_boolean('duplicateemail', false);
+$params->objectionable  = param_boolean('objectionable', false);
 
 $offset  = param_integer('offset', 0);
 $limit   = param_integer('limit', 10);

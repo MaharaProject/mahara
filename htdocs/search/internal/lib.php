@@ -505,6 +505,16 @@ class PluginSearchInternal extends PluginSearch {
                             $where .= ' AND FALSE';
                         }
                         break;
+                    case 'objectionable':
+                        if (!empty($f['string'])) {
+                            $where .= '
+                                AND u.id IN (' . join(',', array_map('db_quote', $f['string'])) . ')';
+                        }
+                        else {
+                            // No users with objectionable content found, return empty list
+                            $where .= ' AND FALSE';
+                        }
+                        break;
                     case 'exportqueue':
                         $firstcols = 'e.id AS eid,
                           (SELECT case WHEN e.starttime IS NOT NULL THEN ' . db_format_tsfield('e.starttime', false) . ' ELSE ' . db_format_tsfield('e.ctime', false) . ' END) AS status,

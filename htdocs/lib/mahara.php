@@ -2988,6 +2988,12 @@ function can_view_view($view, $user_id=null) {
         else if ($view->get('group') && $user->get('admin')) {
             return true;
         }
+
+        $params = array('view', $view->get('id'));
+        $suspended = record_exists_select('objectionable', 'objecttype = ? AND objectid = ? AND suspended = 1', $params);
+        if ($suspended) {
+            return false;
+        }
     }
 
 
@@ -3321,6 +3327,46 @@ function _get_views_trim_list(&$list, &$users, $limit, &$results) {
         return true;
     }
     return false;
+}
+
+/**
+ * Given a view id will return wether this view is suspended or not.
+ *
+ * @param mixed $view           viewid or View to check
+ * @param bool  $artefacts      Whether to check if there are suspended artefacts on the view.
+ *                              If there are any then the view is treated as suspended.
+ *
+ * @returns boolean Wether the specified view is suspended or not.
+ */
+function is_view_suspended($view, $artefacts=true) {
+    require_once(get_config('libroot') . 'view.php');
+    if ($view instanceof View) {
+        $viewid = $view->get('id');
+    }
+    else {
+        $viewid = $view;
+    }
+
+    if ($artefacts) {
+        return get_field_sql("
+            SELECT SUM(suspended) FROM (
+                SELECT id, suspended FROM {objectionable}
+                WHERE objecttype = 'view' AND objectid = ?
+                AND resolvedtime IS NULL
+                UNION
+                SELECT o.id, suspended FROM {objectionable} o
+                JOIN {view_artefact} va ON va.artefact = o.objectid
+                WHERE objecttype = 'artefact' AND va.view = ?
+                AND resolvedtime IS NULL
+            ) AS foo
+        ", array($viewid, $viewid));
+    }
+    else {
+        return get_field_sql("
+            SELECT suspended FROM {objectionable}
+            WHERE objecttype = 'view' AND objectid = ? AND resolvedtime IS NULL
+        ", array($viewid));
+    }
 }
 
 /**

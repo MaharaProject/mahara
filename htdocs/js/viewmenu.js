@@ -70,6 +70,20 @@ function objectionSuccess(form, data) {
     if (jQuery('#report-form').length) {
         jQuery('#report-form').modal('hide');
     }
+    // Update the objection menu link to be message sent one
+    if (jQuery('#objection_link').length) {
+        jQuery('#objection_link').parent().html('<span class="nolink"><span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>' + get_string_ajax('objectionablematerialreported', 'mahara') + '</span>');
+    }
+}
+
+function reviewSuccess(form, data) {
+    jQuery('#review_form_message').val('');
+    formSuccess(form, data);
+    // close the form when the form is submited
+    // Using bootstrap modal
+    if (jQuery('#review-form').length) {
+        jQuery('#review-form').modal('hide');
+    }
 }
 
 function resetFeedbackReplyto() {

@@ -8,6 +8,25 @@
     <div class="alert alert-danger">
     {$notrudeform|safe}
     </div>
+{elseif $objector}
+    <div class="alert alert-danger">{str tag=objectionablematerialreported}</div>
+{/if}
+{if $userisowner && $objectedpage}
+    <div class="alert alert-danger">
+        {if $objectionreplied}
+            {str tag=objectionablematerialreportreplied}
+        {else}
+            {str tag=objectionablematerialreportedowner}
+            <br><br>
+            {str tag=objectionablematerialreportedreply}
+        {/if}
+        <div class="form-group">
+        <a id="review_link" class="btn btn-default" href="#" data-toggle="modal" data-target="#review-form">
+            <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+            {str tag=objectionreview}
+        </a>
+        </div>
+    </div>
 {/if}
 
 {if $maintitle}
@@ -71,20 +90,35 @@
                 </a>
             </li>
             <li>
-                <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
-                    <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
-                    {str tag=reportobjectionablematerial}
+                {if $objector}
+                    <span class="nolink">
+                        <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                        {str tag=objectionablematerialreported}
+                    </span>
+                {else}
+                    <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
+                        <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                        {str tag=reportobjectionablematerial}
+                    </a>
+                {/if}
+            </li>
+            {/if}
+            {if $userisowner && $objectedpage}
+            <li>
+                <a id="review_link" href="#" data-toggle="modal" data-target="#review-form">
+                    <span class="icon icon-lg icon-flag text-success left" role="presentation" aria-hidden="true"></span>
+                    {str tag=objectionreview}
                 </a>
             </li>
             {/if}
             {if $userisowner || $canremove}
-                <li>
-                  <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
-                      <span class="icon icon-lg icon-trash text-danger" role="presentation" aria-hidden="true"></span>
-                      <span class="sr-only">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
-                      {str tag=deletethisview section=view}
-                  </a>
-                </li>
+            <li>
+                <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
+                    <span class="icon icon-lg icon-trash text-danger" role="presentation" aria-hidden="true"></span>
+                    <span class="sr-only">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
+                    {str tag=deletethisview section=view}
+                </a>
+            </li>
             {/if}
         {/if}
     </ul>
@@ -192,6 +226,24 @@
             </div>
         </div>
         {/if}
+        {if $userisowner}
+        <div class="modal fade" id="review-form">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            <span class="icon icon-lg icon-flag text-success left" role="presentation" aria-hidden="true"></span>
+                            {str tag=objectionreview}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        {$reviewform|safe}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
         <div class="modal fade" id="copyview-form">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -218,4 +270,9 @@
 <div class="metadata text-right">
     {$lastupdatedstr}{if $visitstring}; {$visitstring}{/if}
 </div>
+
+{if $stillrudeform}
+    {include file=objectionreview.tpl}
+{/if}
+
 {include file="footer.tpl"}

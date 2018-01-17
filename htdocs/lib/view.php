@@ -1358,11 +1358,39 @@ class View {
     /**
      * Returns true if the view is currently marked as objectionable
      *
+     * @param integer $reporter User id of the person who made the report
+     * @param bool    $replied  Has an admin replied to the report
+     *
      * @return boolean True if view is objectionable
      */
-    public function is_objectionable() {
-        $params = array('view', $this->id);
-        return record_exists_select('objectionable', 'objecttype = ? AND objectid = ? AND resolvedby IS NULL', $params);
+    public function is_objectionable($reporter=null, $replied=false) {
+        $wheresql = "";
+        if ($reporter) {
+            $wheresql = " AND reportedby = ?";
+        }
+        else if ($replied) {
+            require_once('objectionable.php');
+            $wheresql = " AND status = ?";
+        }
+
+        $sql = "SELECT id FROM {objectionable}
+                WHERE objecttype = ? AND objectid = ?
+                AND (resolvedby IS NULL OR resolvedby <= 0)" . $wheresql . "
+                UNION
+                SELECT o.id FROM {objectionable} o
+                JOIN {view_artefact} va ON va.artefact = o.objectid
+                WHERE o.objecttype = ? AND va.view = ?
+                AND (resolvedby IS NULL OR resolvedby <= 0)" . $wheresql;
+        if ($reporter) {
+            $params = array('view', $this->id, $reporter, 'artefact', $this->id, $reporter);
+        }
+        else if ($replied) {
+            $params = array('view', $this->id, OBJECTIONABLE_CHANGE, 'artefact', $this->id, OBJECTIONABLE_CHANGE);
+        }
+        else {
+            $params = array('view', $this->id, 'artefact', $this->id);
+        }
+        return record_exists_sql($sql, $params);
     }
 
     public function is_public() {
@@ -4081,6 +4109,7 @@ class View {
                     $ua->accesstype = 'managesharing';
 
                     $data['manageaccess'] = array($ua);
+                    $data['manageaccesssuspended'] = self::access_override_pending(array('id' => $data['vid'])) ? true : false;
 
                     if ($accesslist = get_records_sql_array('
                         SELECT va.*, g.name AS groupname, g.grouptype, i.displayname AS institutionname
@@ -6624,6 +6653,12 @@ class View {
     }
 
 
+    // Returns a boolean if access is pending/suspended or not
+    public static function access_override_pending($v) {
+        return is_view_suspended($v['id']);
+    }
+
+
     /**
      * Get all views & collections for a (user,group), grouped
      * by their accesslists
@@ -6649,6 +6684,7 @@ class View {
                 unset($data['views'][$k]);
             }
         }
+
         // Remember one representative viewid in each collection
         $viewindex = array();
 
@@ -6656,13 +6692,15 @@ class View {
         foreach ($data['collections'] as &$c) {
             $view = current($c['views']);
             $viewindex[$view['id']] = array('type' => 'collections', 'id' => $c['id']);
-            $c['access'] = self::access_override_description($view);
-            $c['viewid'] = $view['id'];
+            $c['access']  = self::access_override_description($view);
+            $c['pending'] = self::access_override_pending($view);
+            $c['viewid']  = $view['id'];
         }
         foreach ($data['views'] as &$v) {
             $viewindex[$v['id']] = array('type' => 'views', 'id' => $v['id']);
-            $v['access'] = self::access_override_description($v);
-            $v['viewid'] = $v['id'];
+            $v['access']  = self::access_override_description($v);
+            $v['pending'] = self::access_override_pending($v);
+            $v['viewid']  = $v['id'];
         }
 
         if (empty($viewindex)) {

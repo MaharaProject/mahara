@@ -963,6 +963,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     protected $artefact;
     protected $reporter;
     protected $ctime;
+    protected $review;
 
     /**
      * @param array $data Parameters:
@@ -971,6 +972,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
      *                    - artefact (int) (optional)
      *                    - reporter (int)
      *                    - ctime (int) (optional)
+     *                    - review (int) (optional)
      */
     function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
@@ -982,11 +984,21 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             require_once(get_config('docroot') . 'artefact/lib.php');
             $this->artefact = artefact_instance_from_id($this->artefact);
         }
-
+        // Notify institutional admins of the view owner
+        $adminusers = array();
         if ($owner = $this->view->get('owner')) {
-            // Notify institutional admins of the view owner
             if ($institutions = get_column('usr_institution', 'institution', 'usr', $owner)) {
-                $this->users = activity_get_users($this->get_id(), null, null, null, $institutions);
+                $adminusers = activity_get_users($this->get_id(), null, null, null, $institutions);
+            }
+        }
+        if (isset($data->touser) && !empty($data->touser)) {
+            // Notify user when admin updates objection
+            $owneruser = activity_get_users($this->get_id(), array($data->touser));
+            $this->users = array_merge($owneruser, $adminusers);
+        }
+        else if ($owner = $this->view->get('owner')) {
+            if (!empty($adminusers)) {
+                $this->users = $adminusers;
             }
         }
 
@@ -1003,7 +1015,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             $this->strings = new stdClass();
             if (empty($this->artefact)) {
                 $this->strings->subject = (object) array(
-                    'key'     => 'objectionablecontentview',
+                    'key'     => ($this->review ? 'objectionablereviewview' : 'objectionablecontentview'),
                     'section' => 'activity',
                     'args'    => array($viewtitle, display_default_name($this->reporter)),
                 );
@@ -1011,7 +1023,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             else {
                 $title = $this->artefact->get('title');
                 $this->strings->subject = (object) array(
-                    'key'     => 'objectionablecontentviewartefact',
+                    'key'     => ($this->review ? 'objectionablereviewviewartefact' : 'objectionablecontentviewartefact'),
                     'section' => 'activity',
                     'args'    => array($viewtitle, $title, display_default_name($this->reporter)),
                 );
@@ -1023,15 +1035,17 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         $reporterurl = profile_url($this->reporter);
         $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
         if (empty($this->artefact)) {
+            $key = ($this->review ? 'objectionablereviewviewtext' : 'objectionablecontentviewtext');
             return get_string_from_language(
-                $user->lang, 'objectionablecontentviewtext', 'activity',
+                $user->lang, $key, 'activity',
                 $this->view->get('title'), display_default_name($this->reporter), $ctime,
                 $this->message, $this->view->get_url(true, true) . "&objection=1", $reporterurl
             );
         }
         else {
+            $key = ($this->review ? 'objectionablereviewviewartefacttext' : 'objectionablecontentviewartefacttext');
             return get_string_from_language(
-                $user->lang, 'objectionablecontentviewartefacttext', 'activity',
+                $user->lang, $key, 'activity',
                 $this->view->get('title'), $this->artefact->get('title'), display_default_name($this->reporter), $ctime,
                 $this->message, get_config('wwwroot') . "artefact/artefact.php?artefact=" . $this->artefact->get('id') . "&view=" . $this->view->get('id') . "&objection=1", $reporterurl
             );
@@ -1043,18 +1057,20 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         $reportername = hsc(display_default_name($this->reporter));
         $reporterurl = profile_url($this->reporter);
         $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
-        $message = hsc($this->message);
+        $message = format_whitespace($this->message);
         if (empty($this->artefact)) {
+            $key = ($this->review ? 'objectionablereviewviewhtml' : 'objectionablecontentviewhtml');
             return get_string_from_language(
-                $user->lang, 'objectionablecontentviewhtml', 'activity',
+                $user->lang, $key, 'activity',
                 $viewtitle, $reportername, $ctime,
                 $message, $this->view->get_url(true, true) . "&objection=1", $viewtitle,
                 $reporterurl, $reportername
             );
         }
         else {
+            $key = ($this->review ? 'objectionablereviewviewartefacthtml' : 'objectionablecontentviewartefacthtml');
             return get_string_from_language(
-                $user->lang, 'objectionablecontentviewartefacthtml', 'activity',
+                $user->lang, $key, 'activity',
                 $viewtitle, hsc($this->artefact->get('title')), $reportername, $ctime,
                 $message, get_config('wwwroot') . "artefact/artefact.php?artefact=" . $this->artefact->get('id') . "&view=" . $this->view->get('id') . "&objection=1", hsc($this->artefact->get('title')),
                 $reporterurl, $reportername

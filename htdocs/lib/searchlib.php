@@ -300,6 +300,33 @@ function get_admin_user_search_results($search, $offset, $limit) {
             'string' => $duplicateemailartefacts
         );
     }
+    // Filter by users with objectionable content
+    if (!empty($search->objectionable)) {
+        $objectionableartefacts = get_column_sql('
+            SELECT u.id
+            FROM {usr} u
+            JOIN {artefact} a ON a.owner = u.id
+            JOIN {objectionable} o ON o.objectid = a.id
+            WHERE o.objecttype = \'artefact\' AND resolvedtime IS NULL
+        ');
+        $objectionableviews = get_column_sql('
+            SELECT u.id
+            FROM {usr} u
+            JOIN {view} v ON v.owner = u.id
+            JOIN {objectionable} o ON o.objectid = v.id
+            WHERE o.objecttype = \'view\' AND resolvedtime IS NULL
+        ');
+        $objectionable = array_unique(array_merge($objectionableartefacts, $objectionableviews));
+        if ($objectionable === false || !is_array($objectionable)) {
+            $objectionable = array();
+        }
+
+        $constraints[] = array(
+            'field'  => 'objectionable',
+            'type'   => 'in',
+            'string' => $objectionable
+        );
+    }
 
     // Filter by viewable institutions:
     global $USER;
@@ -397,7 +424,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
 function build_admin_user_search_results($search, $offset, $limit) {
     global $USER, $THEME;
 
-    $wantedparams = array('query', 'f', 'l', 'loggedin', 'loggedindate', 'duplicateemail', 'institution', 'authname');
+    $wantedparams = array('query', 'f', 'l', 'loggedin', 'loggedindate', 'duplicateemail', 'objection', 'institution', 'authname');
     $params = array();
     foreach ($search as $k => $v) {
         if (!in_array($k, $wantedparams)) {

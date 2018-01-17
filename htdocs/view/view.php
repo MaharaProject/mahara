@@ -86,6 +86,13 @@ if (!isset($view)) {
     $view = new View($viewid);
 }
 
+$is_admin = $USER->get('admin') || $USER->is_institutional_admin();
+$is_owner = $view->get('owner') == $USER->get('id');
+if (is_view_suspended($view) && !$is_admin && !$is_owner) {
+    $errorstr = get_string('accessdeniedsuspension', 'error');
+    throw new AccessDeniedException($errorstr);
+}
+
 if (!can_view_view($view)) {
     $errorstr = (param_integer('objection', null)) ? get_string('accessdeniedobjection', 'error') : get_string('accessdenied', 'error');
     throw new AccessDeniedException($errorstr);
@@ -219,10 +226,17 @@ if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))
     $moderate = !$USER->is_logged_in() || (isset($commenttype) && $commenttype === 'private');
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate, $moderate));
 }
+$objectionform = false;
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
+    $reviewform = pieform(review_form($view->get('id')));
     if ($notrudeform = notrude_form()) {
         $notrudeform = pieform($notrudeform);
+    }
+    // For for admin to review objection claim, add comment
+    // about objectionable content and possibly remove access
+    if ($stillrudeform = stillrude_form()) {
+        $stillrudeform = pieform($stillrudeform);
     }
 }
 
@@ -448,6 +462,13 @@ if (isset($addfeedbackform)) {
 if (isset($objectionform)) {
     $smarty->assign('objectionform', $objectionform);
     $smarty->assign('notrudeform', $notrudeform);
+    $smarty->assign('stillrudeform', $stillrudeform);
+    $smarty->assign('objectedpage', $view->is_objectionable());
+    $smarty->assign('objector', $view->is_objectionable($USER->get('id')));
+    $smarty->assign('objectionreplied', $view->is_objectionable(null, true));
+}
+if (isset($reviewform)) {
+    $smarty->assign('reviewform', $reviewform);
 }
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 

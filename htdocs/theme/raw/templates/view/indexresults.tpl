@@ -1,6 +1,6 @@
                 {foreach from=$views item=view name=loopidx}
                 <div class="panel-quarter {if $view.collid}panel-collection{else}panel-view{/if}">
-                    <div class="panel panel-default {if $view.submittedto} panel-warning {/if}
+                    <div class="panel panel-default {if $view.submittedto} panel-warning {/if}{if $view.manageaccesssuspended} panel-danger {/if}
                     {if $view.template == $sitetemplate} site-template{/if}">
                         <h3 class="panel-heading has-link">
                             <a class="title-link title"
@@ -47,6 +47,9 @@
                                         <span class="sr-only">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
+                                      {if $view.manageaccesssuspended}
+                                        <li class="view-details">{str tag="pending" section="view"}</li>
+                                      {else}
                                         {foreach from=$view.manageaccess item=manageitem}
                                         <li>
                                             {if $manageitem->accesstype == 'managesharing'}
@@ -86,6 +89,7 @@
                                             </a>
                                         </li>
                                         {/foreach}
+                                      {/if}
                                     </ul>
                                 {/if}
                             </div>
@@ -139,6 +143,9 @@
                                     <br>
                                     {if $view.submittedto}
                                         {$view.submittedto|clean_html|safe}
+                                    {/if}
+                                    {if $view.manageaccesssuspended}
+                                        {str tag=pending section=view}
                                     {/if}
                                 </li>
                                 </ul>{* hamburger buttons *}

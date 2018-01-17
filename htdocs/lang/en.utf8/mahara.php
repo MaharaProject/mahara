@@ -78,9 +78,35 @@ $string['disabled'] = 'Disabled';
 $string['complaint'] = 'Complaint';
 $string['notifyadministrator'] = 'Notify administrator';
 $string['notifyadministratorconfirm'] = 'Are you sure you wish to report this page as containing objectionable material?';
+$string['notifyadministratorreview'] = 'Are you sure you are ready for the administrator to review this page again?';
 $string['notobjectionable'] = 'Not objectionable';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
+$string['objectionablematerialreported'] = 'Objectionable material reported';
+$string['objectionablematerialreportedowner'] = 'Someone reported your page to contain objectionable content. Please review your page and make adjustments where needed.';
+$string['objectionablematerialreportedreply'] = 'Click the "Review objectionable content" button to let your administrator know that you\'ve made changes or to ask for clarification.';
+$string['objectionablematerialreportreplied'] = 'An administrator reviewed the page again and still finds it to contain objectionable content. Please check your notification for more information. You can then make changes and send a message to the administrator by clicking the "Review objectionable content" button or ask for clarification.';
+$string['objectionreviewsent'] = 'Objection review has been sent to page owner. Click on "Still objectionable" if you want to adjust and send another review.';
+$string['lastobjection'] = 'Last objection';
+$string['objectionnotreviewed'] = 'Objection not yet reviewed';
+$string['objectionnotreviewedreply'] = 'Reply to un-reviewed objection:
+
+%s';
+$string['lastobjectionartefact'] = 'Last objection for "%s"';
+$string['replyingtoobjection'] = 'Replying to objection:
+"%s"
+
+%s';
 $string['reportsent'] = 'Your report has been sent.';
+$string['reviewrequestsent'] = 'Your review request has been sent.';
+$string['stillobjectionable'] = 'Still objectionable';
+$string['objectionreview'] = 'Review objectionable material';
+$string['objectionreviewonview'] = 'Replying to objectionable material can only be done via the page';
+$string['reviewcomplaint'] = 'Review of complaint';
+$string['reviewcomplaintdesc'] = 'Enter a message that you would like to send along to give more details to the author on what they should change. If you leave the field empty, the original complaint will be sent instead.';
+$string['reviewnotification'] = 'The administrator was notified to review the portfolio and check if objectionable material still exists.';
+$string['reviewnotificationdesc'] = 'Please review if objectionable material still exists.';
+$string['removeaccess'] = 'Remove access';
+$string['removeaccessdesc'] = 'Revoke access to this page (and collection if the page is in one) immediately until the objectionable material has been removed.';
 // responsive design strings
 $string['tabs'] = 'Tabs';
 $string['tab'] = 'tab';

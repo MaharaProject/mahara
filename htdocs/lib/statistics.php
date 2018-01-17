@@ -3034,7 +3034,7 @@ function content_stats_table($limit, $offset, $extra) {
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
-        'url' => get_config('wwwroot') . 'admin/users/statistics.php?type=content',
+        'url' => get_config('wwwroot') . 'admin/users/statistics.php?type=content&subtype=content',
         'jsonscript' => 'admin/users/statistics.json.php',
         'datatable' => 'statistics_table',
         'count' => $count,
@@ -3119,6 +3119,168 @@ function content_stats_table($limit, $offset, $extra) {
     return $result;
 }
 
+function objectionable_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array('id' => 'viewname', 'required' => true,
+              'name' => get_string('view'),
+              'class' => format_class($extra, 'viewname'),
+        ),
+        array('id' => 'artefactname', 'required' => true,
+              'name' => get_string('Artefact'),
+              'class' => format_class($extra, 'artefactname'),
+        ),
+        array('id' => 'reporter', 'required' => true,
+              'name' => get_string('reporter', 'statistics'),
+              'class' => format_class($extra, 'reporter'),
+        ),
+        array('id' => 'report', 'required' => true,
+              'name' => get_string('report', 'group'),
+              'class' => format_class($extra, 'report'),
+        ),
+        array('id' => 'date', 'required' => true,
+              'name' => get_string('date'),
+              'class' => format_class($extra, 'date'),
+        ),
+        array('id' => 'reviewer', 'required' => false,
+              'name' => get_string('reviewer', 'statistics'),
+              'class' => format_class($extra, 'reviewer'),
+        ),
+        array('id' => 'review', 'required' => false,
+              'name' => get_string('review', 'statistics'),
+              'class' => format_class($extra, 'review'),
+        ),
+        array('id' => 'reviewdate', 'required' => false,
+              'name' => get_string('date'),
+              'class' => format_class($extra, 'reviewdate'),
+        ),
+        array('id' => 'status', 'required' => true,
+              'name' => get_string('status'),
+              'class' => format_class($extra, 'status'),
+        ),
+    );
+}
+
+function objectionable_statistics($limit, $offset, $extra, $institution = null) {
+    userhasaccess($institution, 'objectionable');
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=content&subtype=objectionable';
+    if ($institution) {
+        $urllink .= '&institution=' . $institution;
+    }
+    $data['tableheadings'] = objectionable_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = objectionable_stats_table($limit, $offset, $extra, $institution, $urllink);
+    $data['table']['activeheadings'] = $activeheadings;
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+function objectionable_stats_table($limit, $offset, $extra, $institution, $urllink) {
+    global $USER, $SESSION;
+
+    $start = !empty($extra['start']) ? $extra['start'] : date('Y-m-d', strtotime("-1 months"));
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    $users = $SESSION->get('usersforstats');
+
+    $fromsql = " FROM (SELECT objectid AS viewid, report, NULL AS artefactid, reportedby, reportedtime, reviewedby, review, reviewedtime, resolvedtime, status
+                       FROM {objectionable}
+                       WHERE objecttype = 'view'
+                       UNION
+                       SELECT va.view AS viewid, o.report, o.objectid AS artefactid, reportedby, reportedtime, reviewedby, review, reviewedtime, resolvedtime, status
+                       FROM {objectionable} o
+                       JOIN {view_artefact} va ON va.artefact = o.objectid
+                       WHERE o.objecttype = 'artefact'
+                      ) AS obj
+                 JOIN {view} v ON v.id = obj.viewid
+                 JOIN {usr} u ON u.id = v.owner";
+    $wheresql = " WHERE obj.resolvedtime IS NULL";
+    $where = array();
+    if ($institution) {
+        if ($institution == 'mahara') {
+            $wheresql .= " AND u.id NOT IN (SELECT usr FROM {usr_institution})";
+        }
+        else {
+            $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?)";
+            $where = array($institution);
+        }
+    }
+    if ($users) {
+        $wheresql .= " AND (u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+    }
+    if ($start) {
+        $wheresql .= " AND obj.reportedtime >= DATE(?) AND obj.reportedtime <= DATE(?)";
+        $where[] = $start;
+        $where[] = $end;
+    }
+
+    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . $wheresql, $where);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => $urllink,
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'extradata' => $extra,
+        'setlimit' => true,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
+    if ($count < 1) {
+        return $result;
+    }
+
+    $sql = "SELECT viewid, report, artefactid, reportedby, reportedtime, reviewedby, review, reviewedtime, resolvedtime, status,
+                v.title, u.id AS ownerid " . $fromsql . $wheresql . " ORDER BY v.title, reportedtime";
+    if (empty($extra['csvdownload'])) {
+        $sql .= " LIMIT $limit OFFSET $offset";
+    }
+
+    $data = get_records_sql_array($sql, $where);
+
+    if ($data) {
+        foreach ($data as &$item) {
+            $item->artefactname = ($item->artefactid) ? get_field('artefact', 'title', 'id', $item->artefactid) : null;
+            $item->viewname = $item->title;
+            $item->reporter = display_name($item->reportedby);
+            $item->reviewer = display_name($item->reviewedby);
+        }
+    }
+
+    if (!empty($extra['csvdownload'])) {
+        $csvfields = array('objectname', 'reporter', 'reportedtime', 'report', 'status');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'objectionablestatistics.csv', 'text/csv');
+    }
+    $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
+    $result['tablerows'] = $smarty->fetch('admin/objectionablestats.tpl');
+
+    return $result;
+}
+
 function institution_content_statistics($limit, $offset, &$institutiondata, $extra) {
     userhasaccess($institutiondata['name'], 'pageactivity');
     $data = array();
@@ -3166,7 +3328,7 @@ function institution_content_stats_table($limit, $offset, &$institutiondata, $ex
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
-        'url' => get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['name'] . '&type=content',
+        'url' => get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['name'] . '&type=content&subtype=content',
         'jsonscript' => 'admin/users/statistics.json.php',
         'datatable' => 'statistics_table',
         'count' => $count,
@@ -4059,7 +4221,12 @@ function display_statistics($institution, $type, $extra = null) {
             }
             break;
          case 'content':
-            $data = content_statistics($extra->limit, $extra->offset, $extra->extra);
+            if ($subtype == 'content') {
+                $data = content_statistics($extra->limit, $extra->offset, $extra->extra);
+            }
+            else if ($subtype == 'objectionable') {
+                $data = objectionable_statistics($extra->limit, $extra->offset, $extra->extra);
+            }
             break;
          case 'groups':
             $data = group_statistics($extra->limit, $extra->offset, $extra->extra);
@@ -4109,7 +4276,12 @@ function display_statistics($institution, $type, $extra = null) {
             }
             break;
          case 'content':
-            $data = institution_content_statistics($extra->limit, $extra->offset, $institutiondata, $extra->extra);
+            if ($subtype == 'content') {
+                $data = institution_content_statistics($extra->limit, $extra->offset, $institutiondata, $extra->extra);
+            }
+            else if ($subtype == 'objectionable') {
+                $data = objectionable_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+            }
             break;
          case 'groups':
                 $data = array('notvalid_errorstring' => get_string('nogroupdataperinstitution', 'statistics'));
@@ -4424,7 +4596,10 @@ function get_report_types($institution = null) {
     $optgroups = array(
         'content' => array(
             'label' => get_string('Content', 'admin'),
-            'options' => array('content_content' => get_string('Content', 'admin')),
+            'options' => array(
+                'content_content' => get_string('Content', 'admin'),
+                'content_objectionable' => get_string('objectionable', 'admin')
+            ),
         ),
         'information' => array(
             'label' => get_string('Institution', 'admin'),
@@ -4527,6 +4702,9 @@ function report_earliest_date($subtype, $institution = 'mahara') {
     switch ($subtype) {
         case "content":
             $date = get_field_sql("SELECT MIN(i.time) FROM {institution_registration} i WHERE i.institution = ?", array($institution));
+            break;
+        case "objectionable":
+            $date = get_field_sql("SELECT MIN(o.reportedtime) FROM {objectionable} o WHERE o.resolvedtime IS NULL");
             break;
         case "groups":
             $date = get_field_sql("SELECT MIN(ctime) FROM {group}");

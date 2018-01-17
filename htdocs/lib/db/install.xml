@@ -1252,12 +1252,18 @@
                 <FIELD NAME="reportedby" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="report" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="reportedtime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="reviewedby" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="review" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="reviewedtime" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="resolvedby" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="resolvedtime" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="suspended" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="status" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="reporterfk" TYPE="foreign" FIELDS="reportedby" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="reviewerfk" TYPE="foreign" FIELDS="reviewedby" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="resolverfk" TYPE="foreign" FIELDS="resolvedby" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
             <INDEXES>

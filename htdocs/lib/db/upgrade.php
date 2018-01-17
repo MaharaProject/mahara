@@ -5967,5 +5967,38 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2018080901) {
+        log_debug('Add "suspended" and "status" to "objectionable" table');
+        $table = new XMLDBTable('objectionable');
+        $field = new XMLDBField('suspended');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        if (!field_exists($table, $field)) {
+           add_field($table, $field);
+        }
+        $field = new XMLDBField('status');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+        $field = new XMLDBField('reviewedby');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+            $key = new XMLDBKEY('reviewerfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('reviewedby'), 'usr', array('id'));
+            add_key($table, $key);
+        }
+        $field = new XMLDBField('review');
+        $field->setAttributes(XMLDB_TYPE_TEXT, 'small', null, null);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+        $field = new XMLDBField('reviewedtime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+    }
+
     return $status;
 }
