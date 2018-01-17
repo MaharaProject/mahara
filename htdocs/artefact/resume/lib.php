@@ -931,6 +931,17 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
             else {
                 $record->clipcount = count($attachments);
             }
+            // Clean up description before displaying it
+            if (isset($record->qualdescription)) {
+                $record->qualdescription = clean_html($record->qualdescription);
+            }
+            else if (isset($record->positiondescription)) {
+                $record->positiondescription = clean_html($record->positiondescription);
+            }
+            else {
+                $record->description = clean_html($record->description);
+            }
+
             $datawithattachments[] = $record;
         }
 
