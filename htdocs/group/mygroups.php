@@ -18,7 +18,7 @@ define('SECTION_PLUGINNAME', 'group');
 define('SECTION_PAGE', 'mygroups');
 require_once('group.php');
 $filter = param_alpha('filter', 'all');
-$offset = param_integer('offset', 'all');
+$offset = param_integer('offset', 0);
 $groupcategory = param_signed_integer('groupcategory', 0);
 
 $groupsperpage = 10;
