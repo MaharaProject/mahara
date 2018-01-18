@@ -14,6 +14,15 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title | Test view |
+    And I fill in "First description" in first editor
+    And I press "Save"
+    # Editing the pages
+    And I follow "Settings" in the "Toolbar buttons" property
+    #Change the Page title
+    And I fill in the following:
+    | Page title | This is the edited page title |
+    # Change the page description
+    And I fill in "This is the edited description" in first editor
     And I press "Save"
     # Adding media block
     And I expand "Media" node
@@ -36,5 +45,6 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Add"
     And I press "Remove"
     And I display the page
-    # Verifying the page saved and is clickable
-    Then I should see "Test view"
+    # Verifying the page title and description changed
+    Then I should see "This is the edited page title"
+    Then I should see "This is the edited description"
