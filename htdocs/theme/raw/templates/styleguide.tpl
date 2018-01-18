@@ -199,12 +199,184 @@ This button is used to show there are more options available. An example can be 
 
 <section data-markdown data-category="navigation">
 ### Main navigation
-The Mahara navigation is displayed in collapsible format with drop-down menus. The navigation is 
-split up into main navigation, administration navigation and user navigation each having their own 
+The Mahara navigation is displayed in collapsible format with drop-down menus. The navigation is
+split up into main navigation, administration navigation and user navigation each having their own
 icons and drop-down menus.
 
 Please see <a class="follow" href="https://wiki.mahara.org/wiki/Customising/Themes/17.04">Mahara Wiki</a> for more
 details on navigation styles.
+
+<!-- Styles to fix searchbar positioning - used in this styleguide only -->
+<style>
+.navbar-main .navbar-collapse.nav-one,
+.navbar-main .navbar-collapse.nav-two,
+.navbar-main .navbar-collapse.nav-three {
+    position: relative;
+    top: 0;
+    right: 0;
+}
+.navbar-form.navbar-collapse.search-form {
+    position: static;
+    top: auto;
+    right: auto;
+}
+@media only screen and (max-width: 768px) {
+    .navbar-form.navbar-collapse.search-form {
+        position: initial;
+    }
+}
+</style>
+```
+<div class="row">
+    <div class="navbar-default navbar-main pull-right">
+        <div class="nav-toggle-area">
+            <!-- Nav One Button -->
+            <button class="nav-one-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-one" aria-expanded="false" aria-controls="nav-one" title="Nav one">
+                <span class="sr-only">Show nav one</span>
+                <span class="icon icon-bars icon-lg" role="presentation" aria-hidden="true"></span>
+            </button>
+            <!-- Nav Two Button -->
+            <button class="nav-two-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-two" aria-expanded="false" aria-controls="nav-two" title="Nav two">
+                <span class="sr-only">Show nav two</span>
+                <span class="icon icon-wrench icon-large" role="presentation" aria-hidden="true"></span>
+            </button>
+            <!-- Nav Three Button and icon -->
+            <a href="" class="user-icon" title="Profile page">
+                <img src="{$WWWROOT}theme/raw/images/no_userphoto25.png">
+            </a>
+            <button class="user-toggle nav-three-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
+                <span class="sr-only">Show nav three</span>
+                <span class="icon icon-chevron-down collapsed"></span>
+            </button>
+            <!-- Hide Search When on Desktop -->
+            <button class="search-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
+                <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
+                <span class="nav-title sr-only">{str tag=showsearch}</span>
+            </button>
+        </div>
+
+        <!-- Nav One -->
+        <nav id="nav-one" class="nav collapse navbar-collapse nav-one" role="tabpanel">
+           <ul id="navone" class="nav navbar-nav">
+              <li>
+                  <a href="">Link 1</a>
+              </li>
+              <li>
+                 <a href="">Link 2</a>
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navone" data-target="#subnavone">
+                     <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
+                     <span class="nav-title sr-only">Link 2</span>
+                 </button>
+                 <ul id="subnavone" class=" collapse child-nav" role="menu">
+                    <li><a href="">Sublink 2</a></li>
+                    <li><a href="">Sublink 2</a></li>
+                 </ul>
+              </li>
+              <li>
+                 <a href="">Link 2</a>
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navone" data-target="#subnavtwo">
+                     <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
+                     <span class="nav-title sr-only">Link 2</span>
+                 </button>
+                 <ul id="subnavtwo" class=" collapse child-nav" role="menu">
+                    <li><a href="">Sublink 1</a></li>
+                    <li><a href="">Sublink 2</a></li>
+                 </ul>
+              </li>
+              <li>
+                 <a href="">Link 4</a>
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navone" data-target="#subnavthree">
+                     <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
+                     <span class="nav-title sr-only">Link 4</span>
+                 </button>
+                 <ul id="subnavthree" class=" collapse child-nav" role="menu">
+                    <li><a href="">Sublink 1</a></li>
+                    <li><a href="">Sublink 2</a></li>
+                 </ul>
+              </li>
+           </ul>
+        </nav>
+
+        <!-- Nav Two -->
+        <nav id="nav-two" class="nav navbar-collapse nav-two collapse" role="tabpanel" aria-expanded="false">
+            <ul id="navtwo" class="nav navbar-nav">
+                <li>
+                    <a href="">Link 1</a>
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navtwo" data-target="#subnavfour">
+                        <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
+                        <span class="nav-title sr-only">Link 1</span>
+                    </button>
+                    <ul id="subnavfour" class=" collapse child-nav" role="menu">
+                        <li><a href="">Sublink 1</a></li>
+                        <li><a href="">Sublink 2</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="">Link 2</a>
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navtwo" data-target="#subnavfive">
+                        <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
+                        <span class="nav-title sr-only">Link 2</span>
+                    </button>
+                    <ul id="subnavfive" class=" collapse child-nav" role="menu">
+                        <li><a href="">Sublink 1</a></li>
+                        <li><a href="">Sublink 2</a></li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="">Link 3</a>
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navtwo" data-target="#subnavsix">
+                        <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
+                        <span class="nav-title sr-only">Link 3</span>
+                    </button>
+                    <ul id="subnavsix" class=" collapse child-nav" role="menu">
+                        <li><a href="">Sublink 1</a></li>
+                        <li><a href="">Sublink 2</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Nav Three -->
+        <nav id="nav-three" class=" nav collapse navbar-collapse nav-three" role="tabpanel">
+            <ul id="navthree" class="nav navbar-nav">
+                <li class="has-icon">
+                    <a href="">
+                        <span class="icon icon-user" role="presentation" aria-hidden="true"></span>
+                        <span class="nav-title">Link 1</span>
+                    </a>
+                </li>
+                <li class="has-icon dropdown-item">
+                    <a href="">
+                        <span class="icon icon-cogs" role="presentation" aria-hidden="true"></span>
+                        <span class="nav-title">Link 2</span>
+                    </a>
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navuser" data-target="#subnavseven">
+                        <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
+                        <span class="nav-title sr-only">Link 2</span>
+                    </button>
+                    <ul id="subnavseven" class=" collapse child-nav" role="menu">
+                        <li><a href="">Sublink 1</a></li>
+                        <li><a href="">Sublink 2</a></li>
+                    </ul>
+                </li>
+                <li class="has-icon dropdown-item">
+                    <a href="">
+                        <span class="icon icon-envelope" role="presentation" aria-hidden="true"></span>
+                        <span class="navcount unreadmessagecount">Link 3</span>
+                    </a>
+                </li>
+                <li class="has-icon">
+                    <a href="">
+                        <span class="icon icon-sign-out" role="presentation" aria-hidden="true"></span>
+                        <span class="nav-title">Link 4</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+```
 </section>
 
 <section data-markdown data-category="navigation">
@@ -561,6 +733,225 @@ This is the general layout of blocks. An example of this being used is the 'Late
 ```
 </section>
 
+<section data-markdown data-category="panels">
+## Page Panel
+This panel is used to show a page.
+```
+<div class="panel-quarter panel-view">
+    <div class="panel panel-default">
+        <h3 class="panel-heading has-link">
+            <a class="title-link title" href="" title="Dashboard page">Dashboard page</a>
+        </h3>
+        <div class="panel-body">
+            <div class="detail">
+                <div class="detail">Your dashboard page is what you see on the homepage when you first log in. Only you have access to it.</div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="page-access"></div>
+            <div class="page-controls">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" type="button" data-toggle="dropdown" aria-expanded="false" title="More...">
+                    <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
+                    <span class="sr-only">More options for "Dashboard page"</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li>
+                        <a href="" title="Edit content and layout">
+                        <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">Edit</span>
+                        <span class="sr-only">Edit "Dashboard page"</span>
+                        </a>
+                    </li>
+                    <li class="view-details">
+                        Created 18 Jan 2017,  9:02
+                        <br>
+                        Modified 15 Jan 2018, 11:29
+                        <br>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+```
+</section>
+
+<section data-markdown data-category="panels">
+## Submitted Page Panel
+This panel is used to show a submitted page.
+<style>
+/* Styles for submitted and collection panels */
+.panel-quarter:nth-child(4n) .page-access .dropdown-menu {
+    left: 0;
+}
+</style>
+```
+<div class="panel-quarter panel-view">
+    <div class="panel panel-default panel-warning">
+        <h3 class="panel-heading has-link">
+            <a class="title-link title" href="" title="Dashboard page">Unnamed page</a>
+        </h3>
+        <div class="panel-body">
+            <div class="detail">
+                <div class="detail">Lorem ipsum</div>
+            </div>
+        </div>
+        <div class="panel-footer">
+
+            <div class="page-access">
+                <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
+                    <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-unlock-alt close-indicator" role="presentation" aria-hidden="true"></span>
+                    <span class="sr-only">Access rules for "Unnamed page"</span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a class="seperator" href="">
+                            <span class="icon icon-unlock-alt left" role="presentation" aria-hidden="true"></span>
+                            <span class="link-text">Manage access</span>
+                            <span class="sr-only">Manage access for "Unnamed page"</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <span class="icon icon-users left" role="presentation" aria-hidden="true"></span>
+                            <span class="link-text">group (Submitted)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="page-controls">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" type="button" data-toggle="dropdown" aria-expanded="false" title="More...">
+                    <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
+                    <span class="sr-only">More options for "Dashboard page"</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li>
+                        <a href="" title="Edit content and layout">
+                        <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">Edit</span>
+                        <span class="sr-only">Edit "Unnamed page"</span>
+                        </a>
+                    </li>
+                    <li class="view-details">
+                        Created 18 Jan 2017,  9:02
+                        <br>
+                        Modified 15 Jan 2018, 11:29
+                        <br>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+```
+</section>
+
+
+<section data-markdown data-category="panels">
+## Collections Panel
+This panel is used to show a collection.
+<style>
+/* Styles for submitted and collection panels */
+.panel-quarter:nth-child(4n) .page-access .dropdown-menu {
+    left: 0;
+}
+</style>
+```
+<div class="panel-quarter panel-collection">
+    <div class="panel panel-default
+        ">
+        <h3 class="panel-heading has-link">
+            <a class="title-link title" href="" title="collection uno">
+            collection
+            </a>
+        </h3>
+        <div class="panel-body">
+            <div class="detail"></div>
+        </div>
+        <div class="panel-footer">
+            <div class="page-access">
+                <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
+                <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-unlock-alt close-indicator" role="presentation" aria-hidden="true"></span>
+                <span class="sr-only">Access rules for "collection"</span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a class="seperator" href="">
+                        <span class="icon icon-unlock-alt left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">Manage access</span>
+                        <span class="sr-only">Manage access for "collection"</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                        <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">Public</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="page-controls">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" type="button" data-toggle="dropdown" aria-expanded="false" title="More...">
+                <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
+                <span class="sr-only">More options for "collection"</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li>
+                        <a href="" title="Manage pages">
+                        <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">Manage</span>
+                        <span class="sr-only">Manage pages in "collection"</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" title="Edit title and description">
+                        <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">Edit</span>
+                        <span class="sr-only">Edit "collection"</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" title="Delete collection">
+                        <span class="icon icon-trash text-danger left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">Delete</span>
+                        <span class="sr-only">Delete "collection"</span>
+                        </a>
+                    </li>
+                    <li class="view-details">
+                        Created 30 Jan 2017,  8:09
+                        <br>
+                        Modified 17 Jan 2018, 15:26
+                        <br>
+                    </li>
+                </ul>
+            </div>
+            <div class="collection-list" title="1 page in collection">
+                <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false">
+                <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                <span class="page-count">1</span>
+                <span class="icon icon-file close-indicator" role="presentation" aria-hidden="true">
+                </span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a href="">
+                        <span class="icon icon-file-o left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">Untitled page</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="collection-stack "></div>
+</div>
+```
+</section>
 
 <section data-markdown data-category="alerts">
 ### Warning alert
@@ -628,6 +1019,51 @@ A slide-out modal. This is used to show a block's configuration for example.
             </div>
             <div class="modal-body">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pretium, magna in tempor accumsan, augue lacus pretium urna, fringilla malesuada orci eros iaculis dui. Donec blandit urna sed condimentum ullamcorper. Vestibulum commodo hendrerit suscipit. Etiam eget fermentum risus. Etiam faucibus elit at tortor molestie rutrum at nec ex. Mauris id elit sed neque rhoncus iaculis. Maecenas id dui turpis.
+            </div>
+        </div>
+    </div>
+</div>
+```
+</section>
+
+<section data-markdown data-category="modals">
+### Modal
+A fold down modal. This is typially used to report objectionable content.
+```
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#report-form">
+    Launch demo modal
+</button>
+<div class="modal fade" id="report-form" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">
+                    <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                    Report objectionable material
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="pieform" name="objection_form" method="post" id="objection_form">
+                    <div class="form-group requiredmarkerdesc">
+                        Fields marked by '*' are required.
+                    </div>
+                    <div id="objection_form_message_container" class="under-label required textarea form-group">
+                        <label for="objection_form_message">
+                            Complaint
+                            <span class="requiredmarker">*</span>
+                        </label>
+                        <textarea rows="5" cols="80" class="form-control under-label required textarea resizable" id="objection_form_message" name="message" tabindex="0" aria-required="true"></textarea>
+                    </div>
+                    <div id="objection_form_submit_container" class=" default submitcancel form-group">
+                        <button type="submit" class="btn-default submitcancel submit btn" data-confirm="Are you sure you wish to report this page as containing objectionable material?" id="objection_form_submit" name="submit" tabindex="0">
+                            Notify administrator
+                        </button>
+                        <input type="submit" class="btn-default submitcancel cancel" id="cancel_objection_form_submit" name="cancel_submit" tabindex="0" value="Cancel">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -1635,7 +2071,7 @@ Used on the "Administer institutions" page in the administration area.
 ### Unlock
 
 ```
-<i class="icon icon-unlock" role="presentation"></i>
+<i class="icon icon-unlock-alt" role="presentation"></i>
 ```
 </section>
 
