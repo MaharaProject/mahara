@@ -1351,3 +1351,7 @@ $string['privacyagreement'] = 'I consent to this privacy statement';
 $string['privacyagreementdescription'] = 'By choosing "Yes", you give your consent to the clauses of the privacy statement above.';
 $string['privacyagreedto'] = 'You agreed to this privacy statement in %s.';
 $string['agreementsaved'] = 'Agreement saved';
+$string['refuseprivacy'] = 'Refuse privacy statement';
+$string['confirmprivacyrefusal'] = 'Are you really sure you wish to continue?';
+$string['privacyrefusaldetails'] = 'If you do not consent to the privacy statement, your account will be suspended.';
+$string['privacyrefusal'] = 'Refused to consent to the privacy statement.';

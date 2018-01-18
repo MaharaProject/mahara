@@ -1426,7 +1426,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
     $suspendrec = new StdClass;
     $suspendrec->id              = $suspendeduserid;
     $suspendrec->suspendedcusr   = $suspendinguserid;
-    $suspendrec->suspendedreason = $reason;
+    $suspendrec->suspendedreason = $reason == 'privacyrefusal' ? get_string($reason, 'admin') : $reason;
     $suspendrec->suspendedctime  = db_format_timestamp(time());
     update_record('usr', $suspendrec, 'id');
 
@@ -1448,6 +1448,10 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
             $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtext2', 'mahara',
                 get_config('sitename'), display_name($suspendinguserid, $suspendeduserid));
         }
+    }
+    else if ($reason == 'privacyrefusal') {
+            $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtext3', 'mahara',
+                get_config('sitename'));
     }
     else {
         if ($iscron) {
