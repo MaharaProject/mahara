@@ -894,6 +894,7 @@ $string['loginasdenied'] = 'Attempt to log in as another user without permission
 $string['loginastwice'] = 'Attempt to log in as another user when already logged in as another user';
 $string['loginasrestorenodata'] = 'No user data to restore';
 $string['loginasoverridepasswordchange'] = 'As you are masquerading as another user, you may choose to %slog in anyway%s ignoring the password change screen.';
+$string['loginasoverrideprivacyaccept'] = 'As you are masquerading as another user, you may choose to %slog in anyway%s ignoring the accept privacy statement screen.';
 
 // Institutions
 $string['Add'] = 'Add';

@@ -139,8 +139,6 @@ function formStartProcessing(form, btn) {
     processingStart();
     var button = jQuery(btn);
     if (button.length) {
-        button.text(get_string('processing') + ' ...');
-
         // we add a hidden input field so the "disabled" button still gets to
         // pass its value through
         var node = jQuery('<input type="hidden" />').attr({
@@ -148,6 +146,12 @@ function formStartProcessing(form, btn) {
             'name': button.attr('name')
         });
         button.after(node);
+        if (button.prop("tagName").toLowerCase() == 'input') {
+            button.prop('value', get_string('processing') + ' ...');
+        }
+        else {
+            button.text(get_string('processing') + ' ...');
+        }
 
         button.prop('disabled', true);
         button.blur();
@@ -172,6 +176,22 @@ function meter_update_timer(instance) {
 
 function formStopProcessing(form, btn) {
     processingStop();
+}
+
+// This is to style the in processing button back to it's original state
+// Takes a jQuery object
+function formAbortProcessing(jbtn) {
+    processingStop();
+    var button = jbtn;
+    var buttonnext = button.next('input');
+    if (button.length) {
+       // reset the form button back to it's pre-submitted state
+       button.prop('disabled', false);
+       if (buttonnext.attr('name') == button.attr('name')) {
+           button.prop('value', buttonnext.prop('value'));
+           buttonnext.remove();
+       }
+    }
 }
 
 function formError(form, data) {

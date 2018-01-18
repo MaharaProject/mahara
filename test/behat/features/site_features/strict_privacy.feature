@@ -1,0 +1,48 @@
+@javascript @core @gdpr
+
+Feature: Strict privacy switch
+        As a new user logging in for the first time
+        When strict privacy is enabled
+        I should be required to accept the privacy statement
+
+Background:
+
+    # And the following site settings are set:
+     #| 'usersallowedmultipleinstitutions' | 0 |
+    # | 'institutionstrictprivacy' | 1 |
+
+Scenario: Create user who logs in with strict privacy enabled
+    Given I log in as "admin" with password "Kupuhipa1"
+    And I choose "Site options" in "Configure site" from administration menu
+    And I expand "Institution settings" node
+    # Need to disable multiple inst first, or set strict privacy doesn't work.
+    And I disable the switch "Users allowed multiple institutions"
+    And I enable the switch "Strict privacy"
+    # Check this worked as otherwise there is no point in continuing
+    And the field "Strict privacy" matches value "1"
+    And I press "Update site options"
+    # Background adding of user doesn't work for this test
+    And I choose "Add user" in "Users" from administration menu
+    And I set the following fields to these values:
+    | First name | Bob |
+    | Last name | One |
+    | Email | UserB@example.com |
+    | Username | bob |
+    | password | Kupuhipa1 |
+    And I press "Create user"
+    And I disable the switch "Force password change on next login"
+    And I enable the switch "Disable email"
+    And I press "Save changes"
+    And I log out
+    Given I log in as "bob" with password "Kupuhipa1"
+    Then I should see "Before entering your account, please read the privacy statement displayed below."
+    # Try to ignore privacy statement
+    And I choose "Pages and collections" in "Portfolio" from main menu
+    Then I should see "Before entering your account, please read the privacy statement displayed below."
+    And I press "Save changes"
+    Then I should see "If you do not consent to the privacy statement, your account will be suspended."
+    Then I press "No"
+    # consent to privacy statement
+    And I enable the switch "I consent to this privacy statement"
+    And I press "Save changes"
+    Then I should see "Welcome"

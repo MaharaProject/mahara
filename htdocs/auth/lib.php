@@ -750,72 +750,66 @@ function auth_get_available_auth_types($institution=null) {
  */
 function auth_check_required_fields() {
     global $USER, $SESSION;
-    $refused = param_boolean('refuseprivacy', false);
+
+    // for the case we are mascarading as the user and we want to return to be admin user
+    $restoreadmin = param_integer('restore', 0);
+    $loginanyway = false;
+    if ($USER->get('parentuser') && param_exists('loginanyway')) {
+        $USER->loginanyway = true;
+    }
+    if ($USER->get('loginanyway')) {
+        $loginanyway = true;
+    }
     // Privacy statement.
-    if (get_config('institutionstrictprivacy') && !$USER->has_latest_agreement()) {
+    if (get_config('institutionstrictprivacy') && !$USER->has_latest_agreement() && !$restoreadmin && !$loginanyway) {
+        // Get all institutions of a user.
+        $userinstitutions = array_keys($USER->get('institutions'));
+        // Include the 'mahara' institution so that we may show the site privacy statement as well.
+        array_push($userinstitutions, 'mahara');
 
-        if ($refused) {
-            $elements['refused'] = array(
+        // Check if there are new privacies that need to be accepted.
+        $latestversions = get_latest_privacy_versions($userinstitutions, true);
+
+        foreach ($latestversions as $privacy) {
+            $elements[$privacy->institution . 'text'] = array(
+                'type' => 'markup',
+                'value' => '<h2>' . ($privacy->institution == 'mahara' ? get_string('siteprivacystatement', 'admin') : get_string('institutionprivacystatement', 'admin')) . '</h2>' . $privacy->content,
+            );
+            $elements[$privacy->institution . 'id'] = array(
                 'type' => 'hidden',
-                'value' => 1
+                'value' => $privacy->id,
             );
-            $elements['submit'] = array(
-                'type' => 'submitcancel',
-                'class' => 'btn-default',
-                'value' => array(get_string('yes'), get_string('no')),
-                'goto' => get_config('wwwroot'),
+            $elements[$privacy->institution] = array(
+                'type'         => 'switchbox',
+                'title'        => get_string('privacyagreement', 'admin'),
+                'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin', format_date(strtotime($privacy->agreedtime))) : '',
+                'defaultvalue' => $privacy->agreed ? true : false,
+                'disabled'     => $privacy->agreed ? true : false,
+                'required' => true,
             );
-            $form = pieform(array(
-                'name'       => 'refuseprivacy',
-                'elements' => $elements,
-            ));
+            $elements[$privacy->institution . 'switch'] = array(
+                'type' => 'hidden',
+                'value' => $privacy->agreed ? 'disabled' : 'enabled',
+            );
         }
-        else {
-            // Get all institutions of a user.
-            $userinstitutions = array_keys($USER->get('institutions'));
-            // Include the 'mahara' institution so that we may show the site privacy statement as well.
-            array_push($userinstitutions, 'mahara');
-
-            // Check if there are new privacies that need to be accepted.
-            $latestversions = get_latest_privacy_versions($userinstitutions, true);
-
-            foreach ($latestversions as $privacy) {
-                $elements[$privacy->institution . 'text'] = array(
-                    'type' => 'markup',
-                    'value' => '<h2>' . ($privacy->institution == 'mahara' ? get_string('siteprivacystatement', 'admin') : get_string('institutionprivacystatement', 'admin')) . '</h2>' . $privacy->content,
-                );
-                $elements[$privacy->institution . 'id'] = array(
-                    'type' => 'hidden',
-                    'value' => $privacy->id,
-                );
-                $elements[$privacy->institution] = array(
-                    'type'         => 'switchbox',
-                    'title'        => get_string('privacyagreement', 'admin'),
-                    'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin', format_date(strtotime($privacy->agreedtime))) : '',
-                    'defaultvalue' => $privacy->agreed ? true : false,
-                    'disabled'     => $privacy->agreed ? true : false,
-                    'required' => true,
-                );
-                $elements[$privacy->institution . 'switch'] = array(
-                    'type' => 'hidden',
-                    'value' => $privacy->agreed ? 'disabled' : 'enabled',
-                );
-            }
-            $elements['submit'] = array(
-                'class' => 'btn-primary',
-                'type'  => 'submit',
-                'value' => get_string('savechanges', 'admin')
-            );
-            $form = pieform(array(
-                'name'       => 'agreetoprivacy',
-                'elements' => $elements,
-            ));
-        }
+        $elements['submit'] = array(
+            'class' => 'btn-primary',
+            'type'  => 'submit',
+            'value' => get_string('savechanges', 'admin')
+        );
+        $form = pieform(array(
+            'name'       => 'agreetoprivacy',
+            'elements' => $elements,
+        ));
         define('TITLE', get_string('privacy', 'admin'));
         $smarty = smarty();
         setpageicon($smarty, 'icon-umbrella');
+        if ($USER->get('parentuser')) {
+            $smarty->assign('loginanyway',
+            get_string('loginasoverrideprivacyaccept', 'admin',
+                       '<strong><a class="" href="' . get_config('wwwroot') . '?loginanyway">', '</a></strong>'));
+        }
         $smarty->assign('form', $form);
-        $smarty->assign('refused', $refused);
         $smarty->display('account/useracceptprivacy.tpl');
         exit;
     }
@@ -835,8 +829,7 @@ function auth_check_required_fields() {
     }
 
     // Check if the user wants to log in anyway
-    if ($USER->get('passwordchange') && $USER->get('parentuser') && param_exists('loginanyway')) {
-        $USER->loginanyway = true;
+    if ($USER->get('passwordchange') && $loginanyway) {
         $changepassword = false;
     }
 
@@ -1212,7 +1205,8 @@ function agreetoprivacy_submit(Pieform $form, $values) {
     $userinstitutions = array_keys($USER->get('institutions'));
     array_push($userinstitutions, 'mahara');
 
-    $hasrefused = false;
+    $hasrefused = param_integer('hasrefused', 0);
+
     foreach ($userinstitutions as $institution) {
         // check if the institution has a privacy statement
         // if not, it depends on the site one and we can skip it
@@ -1223,32 +1217,20 @@ function agreetoprivacy_submit(Pieform $form, $values) {
         try {
             $agreed = (empty($values[$institution]) ? 0 : $values[$institution]);
             save_user_reply_to_agreement($USER->get('id'), $values[$institution . 'id'], $agreed);
-            if ($values[$institution]) {
-                $SESSION->add_ok_msg(get_string('agreementsaved', 'admin'));
-            }
-            else {
-                $hasrefused = true;
+            $SESSION->add_ok_msg(get_string('agreementsaved', 'admin'));
+            if ($hasrefused) {
+                suspend_user($USER->get('id'), 'privacyrefusal');
+                $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
+                $USER->logout();
+                redirect();
             }
         }
         catch (SQLException $e) {
             $SESSION->add_ok_msg(get_string('savefailed', 'admin'));
         }
     }
-    if ($hasrefused) {
-        redirect(get_config('wwwroot') . '?refuseprivacy=true');
-    }
-    $SESSION->set('nocheckrequiredfields', true);
-    redirect();
-}
 
-function refuseprivacy_submit(Pieform $form, $values) {
-    global $USER, $SESSION;
-
-    suspend_user($USER->get('id'), 'privacyrefusal');
-    $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
-    $SESSION->set('nocheckrequiredfields', true);
-
-    $USER->logout();
+    $USER->renew();
     redirect();
 }
 /**
