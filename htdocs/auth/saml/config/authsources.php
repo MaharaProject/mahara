@@ -57,8 +57,6 @@ $config = array(
         'privatekey_pass' => get_config('sitename'),
         'certificate' => $cert,
 
-        'NameIDPolicy' => NULL,
-
         'redirect.sign' => TRUE,
         'redirect.validate' => TRUE,
     ),
