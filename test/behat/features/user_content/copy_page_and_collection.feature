@@ -34,6 +34,13 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I set the field "Block content" to "Here is a new block."
   And I press "Save"
 
+  # Copy a page directly from its location
+  And I display the page
+  And I follow "Copy"
+  And I press "Save"
+  And I display the page
+  And I should see "Page admin_02 v.2"
+
   # Copy a page
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I follow "Copy"
@@ -50,6 +57,14 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I should see "1 page added to collection"
   And I follow "Done"
 
+  # Copy a collection directly from its location
+  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I click on "Collection admin_01"
+  And I follow "Copy"
+  And I press "Collection"
+  And I press "Next: Edit collection pages"
+  And I follow "Done"
+
   # Copy a collection
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I follow "Copy"
@@ -57,8 +72,15 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I press "Next: Edit collection pages"
   And I follow "Done"
 
-  #Veryfying if the page that has block been copied to collection
+  #veryfying if the collection is copied directly from its location
   And I click on "Collection admin_01 v.2"
+  And I press "Next page"
+  And I press "Next page"
+  Then I should see "Text Block 1"
+
+  #Veryfying if the page that has block been copied to collection
+  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I click on "Collection admin_01 v.3"
   And I press "Next page"
   And I press "Next page"
   Then I should see "Text Block 1"
