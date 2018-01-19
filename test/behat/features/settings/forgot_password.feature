@@ -24,4 +24,4 @@ Then I should see "You should receive an email shortly with a link you can use t
 Scenario: Trying a username or password that doesn't exist (Bug 1460911)
 When I fill in "Email address or username" with "nosuchuser"
 And I press "Send request"
-Then I should see "The email address or username you entered does not match any users for this site"
+Then I should see "If you do not receive an email either the details you entered are incorrect or you normally use external authentication to access the site"
