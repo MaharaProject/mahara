@@ -473,7 +473,7 @@ $string['displayname'] = 'Display name';
 $string['fullname'] = 'Full name';
 $string['registerwelcome'] = 'Welcome! To use this site you must register first.';
 $string['registeragreeterms'] = 'You must also agree to the <a href="terms.php">terms and conditions</a>.';
-$string['registerprivacy'] = 'The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
+$string['registerprivacy1'] = 'The data we collect here will be stored according to our privacy statement.';
 $string['registerstep3fieldsoptional'] = '<h3>Choose an optional profile picture</h3><p>You have now successfully registered with %s. You may now choose an optional profile picture to be displayed as your avatar.</p>';
 $string['registerstep3fieldsmandatory'] = '<h3>Fill out mandatory profile fields</h3><p>The following fields are required. You must fill them out before your registration is complete.</p>';
 $string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time.';
