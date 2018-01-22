@@ -187,8 +187,28 @@ $form = array(
 $pieform = pieform_instance($form);
 $form = $pieform->build(false);
 
+$inlinejs = <<<EOF
+  function toggle_xmlrpc_part() {
+      if ($('#allocate_webservice_users_wssigenc').is(':checked')) {
+          $('#allocate_webservice_users_publickey_container').show();
+          $('#allocate_webservice_users_publickeyexpires_container').show();
+      }
+      else {
+          $('#allocate_webservice_users_publickey_container').hide();
+          $('#allocate_webservice_users_publickeyexpires_container').hide();
+      }
+  }
+  jQuery(function($) {
+      $('#allocate_webservice_users_wssigenc_container').on('click', function() {
+          toggle_xmlrpc_part();
+      });
+      toggle_xmlrpc_part();
+  });
+EOF;
+
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('suid', $dbserviceuser->id);
 $smarty->assign('form', $form);
 $heading = get_string('users', 'auth.webservice');
