@@ -312,22 +312,28 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                         $record->link = 'artefact/plans/plan.php?id=' . $record->parent;
                     }
                     break;
-                case 'socialprofile' :
-                    safe_require ( 'artefact', 'internal' );
-                    $record->note = str_replace ( array (
+            }
+        }
+
+        // The socialprofile link is for external sites so we can display it for all users.
+        if ($record->artefacttype == 'socialprofile') {
+            safe_require ( 'artefact', 'internal' );
+            $record->note = str_replace ( array (
                             "\r\n",
                             "\n",
                             "\r"
-                    ), ' ', strip_tags ( $record->note ) );
-                    $socialprofile = new ArtefactTypeSocialprofile ( $record->id );
-                    $icons = $socialprofile->get_profile_icons ( array (
+            ), ' ', strip_tags ( $record->note ) );
+            $socialprofile = new ArtefactTypeSocialprofile ( $record->id );
+            $icons = $socialprofile->get_profile_icons ( array (
                             $record
-                    ) );
-                    if (! empty ( $icons )) {
-                        $record->link = $icons [0]->link;
-                        $record->icon = $icons [0]->icon;
-                    }
-                    break;
+            ) );
+            if (! empty ( $icons )) {
+                $record->link = $icons [0]->link;
+                $record->icon = $icons [0]->icon;
+            }
+            else {
+                // Instantiate the attribute used by the template.
+                $record->icon = '';
             }
         }
 

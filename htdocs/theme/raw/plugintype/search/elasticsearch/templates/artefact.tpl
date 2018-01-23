@@ -15,7 +15,7 @@
             <img src="{$record->icon}" alt="{$record->note}">
             <h3 class="title list-group-item-heading text-inline">
                 {if $record->link}
-                    <a href="{$WWWROOT}{$record->link}">
+                    <a href="{$record->link}">
                         {$record->title|str_shorten_html:50:true|safe}
                     </a>
                 {else}
