@@ -180,7 +180,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $options = array('stepHour' => 1,
                      'stepMinute' => 5,
                      );
-    $options = pieform_element_calendar_get_lang_strings($options, $LANGDIRECTION);
+    $tooltips = pieform_element_calendar_tooltip_lang_strings();
     $datepickeroptionstr = '';
     foreach ($options as $key => $option) {
         if (is_numeric($option)) {
@@ -204,6 +204,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     }
 
     $smarty->assign('datepickeroptions', $datepickeroptionstr);
+    $smarty->assign('datepickertooltips', json_encode($tooltips));
     $smarty->assign('viewtype', $element['viewtype']);
     $smarty->assign('potentialpresets', json_encode($allowedpresets));
     $smarty->assign('loggedinindex', $loggedinindex);

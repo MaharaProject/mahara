@@ -45,7 +45,6 @@ function pieform_element_calendar(Pieform $form, $element) {
     $options = array_merge($element['caloptions'], array('inputField' => $id));
     $options['dateFormat'] = pieform_element_calendar_convert_dateformat(get_string('pieform_calendar_dateformat', 'langconfig'));
     $options['timeFormat'] = pieform_element_calendar_convert_timeformat(get_string('pieform_calendar_timeformat', 'langconfig'));
-    $options = pieform_element_calendar_get_lang_strings($options, $LANGDIRECTION);
     $value = $form->get_value($element);
     if ($value) {
         if (!empty($options['showsTime'])) {
@@ -66,58 +65,30 @@ function pieform_element_calendar(Pieform $form, $element) {
         var input_' . $id . ' = jQuery("input#' . $id . '");
         ';
     if (!empty($options['showsTime'])) {
-        $result .= 'input_' . $id . '.datetimepicker({';
+        $result .= 'input_' . $id . '.datetimepicker({
+            format: "' . $options['dateFormat'] . ' ' . $options['timeFormat'] . '",';
     }
     else {
-        $result .= 'input_' . $id . '.datepicker({';
+        $result .= 'input_' . $id . '.datetimepicker({
+            format: "' . $options['dateFormat'] . '",';
     }
-    $result .= ' onSelect: function(date) {
-                     if (typeof formchangemanager !== \'undefined\') {
-                         var form = input_' . $id . '.closest(\'form\')[0];
-                         formchangemanager.setFormState(form, FORM_CHANGED);
-                     }
-                 },';
-    foreach ($options as $key => $option) {
-        if (is_numeric($option)) {
-            $result .= $key . ': ' . $option . ',';
-        }
-        else if (is_array($option)) {
-            foreach ($option as $k => $v) {
-                if (!is_numeric($v)) {
-                    if (preg_match('/^\'(.*)\'$/', $v, $match)) {
-                        $v = $match[1];
-                    }
-                    $option[$k] = json_encode($v);
-                }
-            }
-            $option = '[' . implode(',', $option) . ']';
-            $result .= $key . ': ' . $option . ',';
-        }
-        else {
-            $result .= $key . ': ' . json_encode($option) . ',';
-        }
-    }
-    // Adding prev / next year buttons
+    $tooltips = json_encode(pieform_element_calendar_tooltip_lang_strings());
     $result .= '
-    beforeShow: function(input, inst) {
-        setTimeout(function() {
-            add_prev_next_year(inst);
-        }, 1);
-        // We only need to add an in-modal class if element is within a modal
-        $(inst.dpDiv).removeClass("in-modal");
-        if ($(input).hasClass("in-modal")) {
-            $(inst.dpDiv).addClass("in-modal");
+        locale: "' . strstr(current_language(), '.', true) . '",
+        useCurrent: false,
+        showClear: true,
+        showTodayButton: true,
+        tooltips: ' . $tooltips . ',
+        icons: {
+            clear: "icon icon-trash",
+            today: "icon icon-crosshairs",
+        },
+    }).on("dp.hide", function(selectedDate) {
+        if (typeof formchangemanager !== \'undefined\') {
+            var form = input_' . $id . '.closest(\'form\')[0];
+            formchangemanager.setFormState(form, FORM_CHANGED);
         }
-    },
-    onChangeMonthYear: function(y, m, inst) {
-        setTimeout(function() {
-            add_prev_next_year(inst);
-        }, 1);
-
-    },
-';
-    $result .= '
-        });
+    });
     </script>';
 
     return $result;
@@ -206,15 +177,10 @@ function pieform_element_calendar_convert_dateformat($format) {
 
     $replacements = array(
             '%e' => 'd',  // day of month (no leading zero)
-            '%d' => 'dd', // day of month (two digit)
-            '%m' => 'mm', // month of year (two digit)
+            '%d' => 'DD', // day of month (two digit)
+            '%m' => 'MM', // month of year (two digit)
             '%y' => 'y',  // year (two digit)
-            '%Y' => 'yy', // year (four digit)
-            // strtotime only works in English. So no non-digit formats
-//             '%a' => 'D',  // day name short (Mon - Sun)
-//             '%A' => 'DD', // day name long (Monday - Sunday)
-//             '%b' => 'M',  // month name short (Jan - Dec)
-//             '%B' => 'MM', // month name long (January - December)
+            '%Y' => 'YYYY', // year (four digit)
     );
     return str_replace(
             array_keys($replacements),
@@ -241,13 +207,13 @@ function pieform_element_calendar_convert_timeformat($format) {
 
     $replacements = array(
             '%k' => "H", // Hour (24-hour, no leading 0)
-            '%H' => 'HH', // Hour (24-hour, 2 digits)
+            '%H' => 'hh', // Hour (24-hour, 2 digits)
             '%l' => "h", // Hour (12-hour, no leading 0)
             '%I' => 'hh', // Hour (12-hour, 2 digits)
             '%M' => 'mm', // Minute (2 digits)
-            '%S' => 'ss', // Second (2 digits)
-            '%P' => 'tt', // am or pm for AM/PM
-            '%p' => 'TT', // AM or PM for AM/PM
+            '%S' => 'a', // Second (2 digits)
+            '%P' => 't', // am or pm for AM/PM
+            '%p' => 'T', // AM or PM for AM/PM
     );
     return str_replace(
             array_keys($replacements),
@@ -281,38 +247,19 @@ function pieform_element_calendar_set_attributes($element) {
 function pieform_element_calendar_get_headdata($element) {
     global $THEME;
 
-    $themefile = $THEME->get_url('style/datepicker.css');
     $libjs = $element['jsroot'] . 'js/jquery-ui.min.js';
     $libcss = $element['jsroot'] . 'css/smoothness/jquery-ui.min.css';
     $timeaddonjs  = $element['jsroot'] . 'js/jquery-ui-timepicker-addon.js';
+    $bootstrapdatetimejs = '/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js';
+    $momentjs = '/js/momentjs/moment-with-locales.min.js';
     $prev = get_string('datepicker_prevText');
     $next = get_string('datepicker_nextText');
-    $extrajs = <<<EOF
-/**
- * Add the prev and next year button to a datepicker
- */
-function add_prev_next_year(inst) {
-    var widgetHeader = jQuery("#ui-datepicker-div").find(".ui-datepicker-header");
-    var prevYrBtn = jQuery('<a class="ui-datepicker-prev-year ui-corner-all" title="$prev"><span class="ui-icon ui-icon-circle-triangle-wy" role="presentation" aria-hidden="true">$prev</span></a>');
-    prevYrBtn.off("click").on("click", function() {
-                jQuery.datepicker._adjustDate(inst.input, -1, "Y");
-    }).hover(function() { \$j(this).addClass('ui-datepicker-prev-year-hover ui-state-hover')},
-             function() { \$j(this).removeClass('ui-datepicker-prev-year-hover ui-state-hover')});
-    var nextYrBtn = jQuery('<a class="ui-datepicker-next-year ui-corner-all" title="$next"><span class="ui-icon ui-icon-circle-triangle-ey" role="presentation" aria-hidden="true">$next</span></a>');
-    nextYrBtn.off("click").on("click", function() {
-                jQuery.datepicker._adjustDate(inst.input, +1, "Y");
-    }).hover(function() { \$j(this).addClass('ui-datepicker-next-year-hover ui-state-hover')},
-             function() { \$j(this).removeClass('ui-datepicker-next-year-hover ui-state-hover')});
-    nextYrBtn.prependTo(widgetHeader);
-    prevYrBtn.prependTo(widgetHeader);
-}
-EOF;
     $result = array(
         '<link rel="stylesheet" type="text/css" media="all" href="' . append_version_number($libcss) . '">',
-        '<link rel="stylesheet" type="text/css" media="all" href="' . append_version_number($themefile) . '">',
         '<script type="application/javascript" src="' . append_version_number($libjs) . '"></script>',
         '<script type="application/javascript" src="' . append_version_number($timeaddonjs) . '"></script>',
-        '<script type="application/javascript">' . $extrajs . '</script>',
+        '<script type="application/javascript" src="' . append_version_number($momentjs) . '"></script>',
+        '<script type="application/javascript" src="' . append_version_number($bootstrapdatetimejs) . '"></script>'
     );
     return $result;
 }
@@ -366,7 +313,7 @@ function pieform_element_calendar_convert_to_epoch($date) {
     // (See http://php.net/manual/en/function.strtotime.php#refsect1-function.strtotime-notes)
     $dateformat = get_string('pieform_calendar_dateformat', 'langconfig');
     if (preg_match('/%[ed].*%[m].*%[yY]/', $dateformat)) {
-        $value = strtotime(preg_replace('/[^0-9]/', '.', $date));
+         $value = strtotime(preg_replace('/[^0-9]/', '.', $date));
     }
 
     // If that didn't work, then just try doing strtotime on the plain value
@@ -384,30 +331,23 @@ function pieform_element_calendar_convert_to_epoch($date) {
 }
 
 /**
- * Retrieves the values of the internationalised strings for a calendar
+ * Retrieves the values of the internationalised tooltip strings for a calendar
  * The $form is not passed in so that we can fetch this array from outside a pieform
  * on the viewacl.tpl
  *
- * @param array   $options The datepicker options array
- * @return array  $options The datepicker options array with the new lang strings added
+ * @return array  $tooltips The datepicker tooltip options array with the new lang strings added
  */
-function pieform_element_calendar_get_lang_strings($options, $langdirection = 'ltr') {
-    // Set up internationalisation
-    $lang_options = array('clearText','closeText','closeStatus','prevText','prevStatus',
-                          'nextText','nextStatus','currentText','currentStatus',
-                          'monthNames','monthNamesShort','monthStatus',
-                          'yearStatus','weekHeader','weekStatus',
-                          'dayNames','dayNamesShort','dayNamesMin','dayStatus',
-                          'dateStatus','initStatus',
-                          'timeOnlyTitle', 'timeText', 'hourText', 'minuteText', 'secondText',
-                          'millisecText', 'timezoneText', 'amNames', 'pmNames');
-    foreach ($lang_options as $lang_option) {
-        $langopt = get_string('datepicker_' . $lang_option);
-        if (preg_match('/^\[(.*)\]$/', $langopt, $match)) {
-            $langopt = explode(',', $match[1]);
+function pieform_element_calendar_tooltip_lang_strings() {
+    $tooltips = array();
+    $tooltip_options = array(
+        'today', 'clear', 'close', 'selectMonth', 'prevMonth', 'nextMonth', 'selectYear', 'prevYear', 'nextYear',
+        'selectDecade', 'prevDecade', 'nextDecade', 'prevCentury', 'nextCentury',
+        'pickHour', 'incrementHour', 'decrementHour', 'pickMinute', 'incrementMinute', 'decrementMinute',
+        'pickSecond', 'incrementSecond', 'decrementSecond', 'togglePeriod', 'selectTime');
+    foreach ($tooltip_options as $tooltip) {
+        if (string_exists('datepicker_' . $tooltip)) {
+            $tooltips[$tooltip] = get_string('datepicker_' . $tooltip);
         }
-        $options[$lang_option] = $langopt;
     }
-    $options['isRTL'] = ($langdirection == 'rtl') ? true : false;
-    return $options;
+    return $tooltips;
 }
