@@ -27,6 +27,18 @@ list($searchform, $data, $pagination) = View::views_by_owner();
 $js = <<< EOF
 jQuery(function ($) {
     {$pagination['javascript']}
+    function showmatchall() {
+        if ($('#searchviews_type').val() == 'tagsonly') {
+            $('#searchviews_matchalltags_container').show();
+        }
+        else {
+            $('#searchviews_matchalltags_container').hide();
+        }
+    }
+    $('#searchviews_type').on('change', function() {
+        showmatchall();
+    });
+    showmatchall();
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF
