@@ -88,6 +88,8 @@ $string['staticpageinstitutionbad'] = "You can't access and/or edit static pages
 $string['usedefault'] = 'Use site default';
 $string['usedefaultdescription3'] = 'Use the site\'s default text for the selected page type.';
 $string['staticpagesdescription'] = 'Edit the content of static pages in Mahara (Home, Terms and Conditions, etc.)';
+$string['institutionprivacypagedescription'] = 'Edit the privacy statement for your institution, which is displayed in addition to the site privacy statement. The version you edited last becomes the current privacy statement automatically. You see the current site privacy statement as reference.';
+$string['noinstitutionprivacy'] = 'There is no privacy statement for this institution yet.';
 $string['menus'] = 'Menus';
 $string['menusdescription'] = 'Manage the links and files within the "Links and resources" and footer menus';
 $string['sitefiles']          = 'Site files';
@@ -494,11 +496,13 @@ $string['pagename']            = 'Page name';
 $string['pagesaved']           = 'Page saved';
 $string['pagetext']            = 'Page text';
 $string['privacy']             = 'Privacy statement';
+$string['legal']               = 'Legal';
 $string['savechanges']         = 'Save changes';
 $string['savefailed']          = 'Save failed';
 $string['sitepageloaded']      = 'Site page loaded';
 $string['termsandconditions']  = 'Terms and conditions';
 $string['uploadcopyright']     = 'Upload copyright statement';
+$string['privacypagedescription'] = 'Edit the privacy statement for the entire site. The version you edited last becomes the current privacy statement automatically.';
 
 // Links and resources menu editor
 $string['sitefile']            = 'Site file';
@@ -1318,3 +1322,19 @@ $string['nobehatfeaturefiles'] = 'No behat feature files found';
 $string['behatmatchingrows'] = '%s in ';
 $string['behatnocore'] = 'Unable to read core behat steps from behat.yml file';
 $string['behatstepnotused'] = 'This behat step is not currently used';
+
+// Privacy Statement section
+$string['author'] = 'Author';
+$string['content'] = 'Content';
+$string['creationdate'] = 'Creation date';
+$string['version'] = 'Version';
+$string['viewversion'] = 'View version %s';
+$string['editversion'] = 'Edit version %s';
+$string['lastversion'] = 'Privacy statements must have unique version names of up to 15 characters. The latest version for this privacy statement is "%s".';
+$string['versionalreadyexist'] = 'A privacy statement with the version name "%s" already exists.';
+$string['siteprivacystatement'] = 'Site privacy statement';
+$string['addoneversionlink']   = '<a href="%s">Add one</a> if you need it.';
+$string['versionfor'] = 'Privacy statement for version "%s" is as follows:';
+$string['institutionprivacystatement'] = 'Institution privacy statement';
+$string['userprivacypagedescription'] = 'Displayed are the current privacy statements to which you consented.';
+$string['lastupdated'] = 'Last updated on';

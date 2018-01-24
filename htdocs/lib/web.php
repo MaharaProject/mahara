@@ -2265,6 +2265,12 @@ function admin_nav() {
             'title'  => get_string('staticpages', 'admin'),
             'weight' => 20
         ),
+        'configsite/privacy' => array(
+            'path'   => 'configsite/privacy',
+            'url'    => 'admin/site/privacy.php',
+            'title'  => get_string('legal', 'admin'),
+            'weight' => 25,
+        ),
         'configsite/sitemenu' => array(
             'path'   => 'configsite/sitemenu',
             'url'    => 'admin/site/menu.php',
@@ -2412,6 +2418,12 @@ function admin_nav() {
             'url'    => 'admin/users/institutionpages.php',
             'title'  => get_string('staticpages', 'admin'),
             'weight' => 15
+        ),
+        'manageinstitutions/privacy' => array(
+            'path'   => 'manageinstitutions/privacy',
+            'url'    => 'admin/users/institutionprivacy.php',
+            'title'  => get_string('legal', 'admin'),
+            'weight' => 17
         ),
         'manageinstitutions/institutionusers' => array(
             'path'   => 'manageinstitutions/institutionusers',
@@ -2630,6 +2642,12 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/institutionpages.php',
             'title'  => get_string('staticpages', 'admin'),
             'weight' => 15
+        ),
+        'manageinstitutions/privacy' => array(
+            'path'   => 'manageinstitutions/privacy',
+            'url'    => 'admin/users/institutionprivacy.php',
+            'title'  => get_string('legal', 'admin'),
+            'weight' => 17
         ),
         'manageinstitutions/institutionusers' => array(
             'path'   => 'manageinstitutions/institutionusers',
@@ -3023,11 +3041,17 @@ function right_nav() {
             'weight' => 10,
             'iconclass' => 'user'
         ),
+        'settings/privacy' => array(
+            'path' => 'settings/privacy',
+            'url' => 'account/userprivacy.php',
+            'title' => get_string('privacy', 'admin'),
+            'weight' => 30
+        ),
         'settings/notifications' => array(
             'path' => 'settings/notifications',
             'url' => 'account/activity/preferences/index.php',
             'title' => get_string('notifications'),
-            'weight' => 30,
+            'weight' => 40,
             'iconclass' => 'flag'
         ),
     );
@@ -3188,7 +3212,15 @@ function site_menu() {
  * @return array of names
  */
 function site_content_pages() {
-    return array('about', 'home', 'loggedouthome', 'privacy', 'termsandconditions');
+    return array('about', 'home', 'loggedouthome', 'termsandconditions');
+}
+
+/**
+ * Returns the list of site versioned content pages
+ * @return array of names
+ */
+function site_content_version_pages() {
+    return array('privacy');
 }
 
 function get_site_page_content($pagename) {

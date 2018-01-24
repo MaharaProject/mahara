@@ -5609,5 +5609,42 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2018010700) {
+        log_debug('Move the site Privacy statement from the site_content table to the site_content_version table');
+
+        if ($records = get_records_array('site_content', 'name', 'privacy')) {
+            foreach ($records as $data) {
+                $record = new stdClass;
+                $record->type = 'privacy';
+                $record->content = $data->content;
+                $record->author = $data->mauthor;
+                $record->institution = $data->institution;
+                $record->version = '1.0';
+                $record->ctime = db_format_timestamp(time());
+
+                insert_record('site_content_version', $record);
+                delete_records('site_content', 'id', $data->id);
+            }
+        }
+    }
+
+    if ($oldversion < 2018011000) {
+        log_debug('Create "usr_agreement" table');
+
+        $table = new XMLDBTable('usr_agreement');
+
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, true);
+        $table->addFieldInfo('sitecontentid', XMLDB_TYPE_INTEGER, 10, null, true);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('agreed', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        $table->addKeyInfo('sitecontentfk', XMLDB_KEY_FOREIGN, array('sitecontentid'), 'site_content_version', array('id'));
+
+        create_table($table);
+    }
+
     return $status;
 }

@@ -1394,5 +1394,19 @@
                 <KEY NAME="authorfk" TYPE="foreign" FIELDS="author" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="usr_agreement">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="sitecontentid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="agreed" TYPE="int" LENGTH="1" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
+                <KEY NAME="sitecontentfk" TYPE="foreign" FIELDS="sitecontentid" REFTABLE="site_content_version" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>

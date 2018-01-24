@@ -86,6 +86,7 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  Then I should see "Site options" in the "Configure site sub-menu" property
  And I should see "Static pages" in the "Configure site sub-menu" property
  And I should see "Menus" in the "Configure site sub-menu" property
+ And I should see "Legal" in the "Configure site sub-menu" property
  And I should see "Networking" in the "Configure site sub-menu" property
  And I should see "Licenses" in the "Configure site sub-menu" property
  And I should see "Pages and collections" in the "Configure site sub-menu" property
@@ -113,6 +114,7 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  When I press "Show menu for Institutions"
  Then I should see "Settings" in the "Institutions sub-menu" property
  And I should see "Static pages" in the "Institutions sub-menu" property
+ And I should see "Legal" in the "Institutions sub-menu" property
  And I should see "Members" in the "Institutions sub-menu" property
  And I should see "Staff" in the "Institutions sub-menu" property
  And I should see "Administrators" in the "Institutions sub-menu" property
@@ -168,6 +170,7 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  Then I should not see "Profile completion" in the "Institutions sub-menu" property
  And I should see "Settings" in the "Institutions sub-menu" property
  And I should see "Static pages" in the "Institutions sub-menu" property
+ And I should see "Legal" in the "Institutions sub-menu" property
  And I should see "Members" in the "Institutions sub-menu" property
  And I should see "Staff" in the "Institutions sub-menu" property
  And I should see "Administrators" in the "Institutions sub-menu" property
