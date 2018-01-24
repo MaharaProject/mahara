@@ -84,3 +84,4 @@ $string['resizeonuploaduserdefaultdescription2'] = '"Automatic resizing of image
 
 $string['devicedetection'] = 'Device detection';
 $string['devicedetectiondescription'] = 'Enable mobile device detection when browsing this site.';
+$string['noprivacystatementsaccepted'] = 'This account has not accepted any current privacy statements.';

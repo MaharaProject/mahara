@@ -22,26 +22,33 @@ if (!is_logged_in()) {
     throw new AccessDeniedException();
 }
 
-// Get all institutions of a user.
-$userinstitutions = array_keys($USER->get('institutions'));
-// Include the 'mahara' institution so that we may show the site privacy statement as well.
-array_push($userinstitutions, 'mahara');
-
-// Get all the latest privacy statement (institution and site) the user has agreed to.
-$data = get_latest_privacy_versions($userinstitutions);
+$form = privacy_form();
 
 // JQuery logic for panel hide/show.
 // Needed here because there are multiple dropdown panels on this page.
 $js = <<< EOF
-    function showPanel(el) {
-        elementid = $(el).attr('id');
-        $("#dropdown" + elementid).toggleClass("collapse");
+    $( document ).ready(function() {
+        $(".state-label").click(function() {
+            $(this).siblings( ".switch-inner" ).toggleClass("redraw-consent");
+            showSubmitButton();
+        });
+    });
+    function showSubmitButton() {
+        if ($('body').find(".redraw-consent").length == 0) {
+            $('#agreetoprivacy_submit_container').addClass('js-hidden');
+            $('#agreetoprivacy_submit').addClass('js-hidden');
+        }
+        else {
+            $('#agreetoprivacy_submit_container').removeClass('js-hidden');
+            $('#agreetoprivacy_submit').removeClass('js-hidden');
+        }
     }
 EOF;
 
 $smarty = smarty();
 setpageicon($smarty, 'icon-umbrella');
 
-$smarty->assign('results', $data);
+$smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('description', get_string('userprivacypagedescription', 'admin'));
 $smarty->display('account/userprivacy.tpl');

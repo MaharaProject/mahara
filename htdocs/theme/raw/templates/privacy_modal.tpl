@@ -1,13 +1,3 @@
-{include file="header.tpl"}
-
-{if $loginanyway}
-    <p class="lead">
-    {$loginanyway|safe}
-    </p>
-{/if}
-<div class="lead">{str tag="newprivacy" section="admin"}</div>
-<div>{$form|safe}</div>
-
 {* Modal form *}
     <div tabindex="0" class="modal fade" id="privacy-confirm-form">
         <div class="modal-dialog">
@@ -71,5 +61,3 @@
         }
     });
     </script>
-
-{include file="footer.tpl"}

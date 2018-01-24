@@ -743,6 +743,79 @@ function auth_get_available_auth_types($institution=null) {
     return $result;
 }
 /**
+ * Build the agree with or withdraw consent to privacy statement
+ *
+ * @param ignoreagreevalue true when a new privacy statement needs to be accepted,
+ * false when the form will be displayed to allow the consent withdraw.
+ * @return form
+ */
+function privacy_form($ignoreagreevalue = false) {
+    global $USER;
+
+    // Get all institutions of a user.
+    $userinstitutions = array_keys($USER->get('institutions'));
+    // Include the 'mahara' institution so that we may show the site privacy statement as well.
+    array_push($userinstitutions, 'mahara');
+
+    // Check if there are new privacies that need to be accepted.
+    $latestversions = get_latest_privacy_versions($userinstitutions, $ignoreagreevalue);
+    if (empty($latestversions)) {
+        // We may be masquerading as user
+        return '<div>' . get_string('noprivacystatementsaccepted', 'account') . '</div>';
+    }
+
+    foreach ($latestversions as $privacy) {
+        $privacytitle = $privacy->institution == 'mahara' ? get_string('siteprivacystatement', 'admin') : get_string('institutionprivacystatement', 'admin');
+        $smarty = smarty_core();
+        $smarty->assign('privacy', $privacy);
+        $smarty->assign('privacytitle', $privacytitle);
+        $smarty->assign('privacytime', format_date(strtotime($privacy->ctime)));
+        $smarty->assign('ignoreagreevalue', $ignoreagreevalue);
+        $htmlbegin = $smarty->fetch('privacy_panel_begin.tpl');
+
+        //Build form elements.
+        $elements[$privacy->institution . 'text'] = array(
+            'type' => 'markup',
+            'value' => $htmlbegin,
+        );
+        $elements[$privacy->institution . 'id'] = array(
+            'type' => 'hidden',
+            'value' => $privacy->id,
+        );
+        $elements[$privacy->institution] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('privacyagreement', 'admin'),
+            'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin', format_date(strtotime($privacy->agreedtime))) : '',
+            'defaultvalue' => $privacy->agreed ? true : false,
+            'disabled'     => ($privacy->agreed && $ignoreagreevalue) ? true : false,
+            'required' => true,
+        );
+        $elements[$privacy->institution . 'switch'] = array(
+            'type' => 'hidden',
+            'value' => ($privacy->agreed && $ignoreagreevalue) ? 'disabled' : 'enabled',
+        );
+        $smarty = smarty_core();
+        $smarty->assign('ignoreagreevalue', $ignoreagreevalue);
+        $htmlend = $smarty->fetch('privacy_panel_end.tpl');
+        $elements[$privacy->institution . 'text2'] = array(
+            'type' => 'markup',
+            'value' => $htmlend,
+        );
+
+    }
+    $classhidden = $ignoreagreevalue ? '' : 'js-hidden';
+    $elements['submit'] = array(
+        'class' => 'btn-primary ' . $classhidden,
+        'type'  => 'submit',
+        'value' => get_string('savechanges', 'admin')
+    );
+    $form = pieform(array(
+        'name'       => 'agreetoprivacy',
+        'elements' => $elements,
+    ));
+    return $form;
+}
+/**
  * Checks that all the required fields are set, and handles setting them if required.
  *
  * Checks whether the current user needs to change their password, and handles
@@ -762,45 +835,9 @@ function auth_check_required_fields() {
     }
     // Privacy statement.
     if (get_config('institutionstrictprivacy') && !$USER->has_latest_agreement() && !$restoreadmin && !$loginanyway) {
-        // Get all institutions of a user.
-        $userinstitutions = array_keys($USER->get('institutions'));
-        // Include the 'mahara' institution so that we may show the site privacy statement as well.
-        array_push($userinstitutions, 'mahara');
+        // Build the agree with privacy statement form.
+        $form = privacy_form(true);
 
-        // Check if there are new privacies that need to be accepted.
-        $latestversions = get_latest_privacy_versions($userinstitutions, true);
-
-        foreach ($latestversions as $privacy) {
-            $elements[$privacy->institution . 'text'] = array(
-                'type' => 'markup',
-                'value' => '<h2>' . ($privacy->institution == 'mahara' ? get_string('siteprivacystatement', 'admin') : get_string('institutionprivacystatement', 'admin')) . '</h2>' . $privacy->content,
-            );
-            $elements[$privacy->institution . 'id'] = array(
-                'type' => 'hidden',
-                'value' => $privacy->id,
-            );
-            $elements[$privacy->institution] = array(
-                'type'         => 'switchbox',
-                'title'        => get_string('privacyagreement', 'admin'),
-                'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin', format_date(strtotime($privacy->agreedtime))) : '',
-                'defaultvalue' => $privacy->agreed ? true : false,
-                'disabled'     => $privacy->agreed ? true : false,
-                'required' => true,
-            );
-            $elements[$privacy->institution . 'switch'] = array(
-                'type' => 'hidden',
-                'value' => $privacy->agreed ? 'disabled' : 'enabled',
-            );
-        }
-        $elements['submit'] = array(
-            'class' => 'btn-primary',
-            'type'  => 'submit',
-            'value' => get_string('savechanges', 'admin')
-        );
-        $form = pieform(array(
-            'name'       => 'agreetoprivacy',
-            'elements' => $elements,
-        ));
         define('TITLE', get_string('privacy', 'admin'));
         $smarty = smarty();
         setpageicon($smarty, 'icon-umbrella');
@@ -810,7 +847,8 @@ function auth_check_required_fields() {
                        '<strong><a class="" href="' . get_config('wwwroot') . '?loginanyway">', '</a></strong>'));
         }
         $smarty->assign('form', $form);
-        $smarty->display('account/useracceptprivacy.tpl');
+        $smarty->assign('description', get_string('newprivacy', 'admin'));
+        $smarty->display('account/userprivacy.tpl');
         exit;
     }
 
