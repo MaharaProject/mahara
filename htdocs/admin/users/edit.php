@@ -113,13 +113,16 @@ $elements['lastlogin'] = array(
     'value'         => format_date($user->lastlogin),
 );
 $elements['expiry'] = array(
-    'type'         => 'date',
-    'class'        => 'form-condensed',
+    'type'         => 'calendar',
+    'class'        => '',
     'title'        => get_string('accountexpiry', 'admin'),
     'description'  => get_string('accountexpirydescription', 'admin'),
     'minyear'      => $currentdate['year'] - 2,
     'maxyear'      => $currentdate['year'] + 20,
-    'defaultvalue' => $user->expiry
+    'defaultvalue' => $user->expiry,
+    'caloptions'   => array(
+        'showsTime' => false
+    )
 );
 $quotaused = get_string('quotaused', 'admin') . ': ' . display_size($user->quotaused);
 if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
@@ -755,13 +758,16 @@ foreach ($institutions as $i) {
         'collapsed'    => true,
         'elements' => array(
             $i->institution.'_expiry' => array(
-                'type'         => 'date',
+                'type'         => 'calendar',
                 'title'        => get_string('membershipexpiry', 'admin'),
                 'description'  => get_string('membershipexpirydescription', 'admin'),
-                'class'        => 'form-condensed',
+                'class'        => '',
                 'minyear'      => $currentdate['year'],
                 'maxyear'      => $currentdate['year'] + 20,
-                'defaultvalue' => $i->membership_expiry
+                'defaultvalue' => $i->membership_expiry,
+                'caloptions'   => array(
+                    'showsTime' => false
+                )
             ),
             $i->institution.'_studentid' => array(
                 'type'         => 'text',

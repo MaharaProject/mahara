@@ -339,19 +339,19 @@ $elements['editability'] = array(
 $currentdate = getdate();
 
 $elements['editwindowstart'] = array (
-    'type'         => 'date',
-    'class'        => 'five-across hide-label',
+    'type'         => 'calendar',
+    'class'        => '',
     'title'        => get_string('windowstart', 'group'),
     'defaultvalue' => $group_data->editwindowstart,
     'description'  => get_string('windowstartdesc', 'group'),
     'minyear'      => $currentdate['year'],
     'maxyear'      => $currentdate['year'] + 20,
-    'time'         => true
+    'time'         => true,
 );
 
 $elements['editwindowend'] = array (
-    'type'         => 'date',
-    'class'        => 'five-across hide-label',
+    'type'         => 'calendar',
+    'class'        => '',
     'title'        => get_string('windowend', 'group'),
     'defaultvalue' => $group_data->editwindowend,
     'description'  => get_string('windowenddesc', 'group'),
