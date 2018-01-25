@@ -1,0 +1,12 @@
+jTLine
+==================
+
+Website: https://naadydev.github.io/jTLine/
+Version: 1.0
+
+jQuery plugin, that create Horizontal Timeline,
+Build upon the fantastic "codyhouse" article.
+
+Changes:
+
+* Removed demo examples
