@@ -757,6 +757,15 @@ Please clean up existing user accounts or ask to have the maximum number of allo
 Regards,
 The %s Team';
 
+$string['institutionmemberrefusedprivacy'] = 'Hello %s,
+
+The user %s, with the username %s, has refused the privacy statement. Their user account was suspended.
+
+Please contact the user via email at %s if you wish to discuss the refusal.
+
+Regards,
+The %s Team';
+
 $string['config'] = 'Configuration';
 
 $string['sendmessage'] = 'Send message';

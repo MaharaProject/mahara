@@ -1257,6 +1257,10 @@ function agreetoprivacy_submit(Pieform $form, $values) {
             save_user_reply_to_agreement($USER->get('id'), $values[$institution . 'id'], $agreed);
             $SESSION->add_ok_msg(get_string('agreementsaved', 'admin'));
             if ($hasrefused) {
+                // Send a message to the institution/site admin informing that the user has refused the privacy statement.
+                $institution = new Institution($institution);
+                $institution->send_admin_institution_refused_privacy_message($USER->get('id'));
+
                 suspend_user($USER->get('id'), 'privacyrefusal');
                 $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
                 $USER->logout();
