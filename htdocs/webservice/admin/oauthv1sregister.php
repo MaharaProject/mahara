@@ -534,11 +534,14 @@ function webservice_server_list_form($sopts, $iopts) {
                 ),
                 'institution' => array(
                     'type' => 'select',
-                    'class' => 'institution input-small',
+                    'title' => get_string('institution'),
+                    'class' => 'institution input-small hide-label',
                     'options' => $iopts,
                 ),
                 'service' => array(
                     'type' => 'select',
+                    'title' => get_string('service', 'auth.webservice'),
+                    'class' => 'hide-label',
                     'options' => $sopts,
                 ),
                 'action' => array('type' => 'hidden', 'value' => 'add'),
