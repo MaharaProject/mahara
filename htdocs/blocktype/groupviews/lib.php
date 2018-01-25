@@ -409,7 +409,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
 
         }
 
-        if ($group->submittableto) {
+        if ($group->submittableto && $USER->is_logged_in()) {
             // A user can submit more than one view to the same group, but no view can be
             // submitted to more than one group.
 
