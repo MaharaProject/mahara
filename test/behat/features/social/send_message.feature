@@ -8,8 +8,6 @@ Background:
     Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-    | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
-    | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
 
 Scenario: Selecting select2 option via ajax (Bug #1520011)
     # Log in as an Admin user
@@ -17,6 +15,9 @@ Scenario: Selecting select2 option via ajax (Bug #1520011)
     # Send a message
     And I choose "mail" from user menu by id
     And I follow "Compose"
+    Then I should see "Recipients *"
+    And I should see "Subject *"
+    And I should see "Message *"
     And I fill in select2 input "sendmessage_recipients" with "UserA" and select "Angela User (UserA)"
     And I set the following fields to these values:
     | Subject | Test message with < & > |

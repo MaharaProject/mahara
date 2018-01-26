@@ -8,6 +8,10 @@ Background:
  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+
+
+Scenario: Selection options to filter messages (Bug 1433342)
+ # Log in as "Admin" user
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Users" from administration menu
  And I follow "Angela"
@@ -26,7 +30,6 @@ Background:
  And I press "Reply"
  And I log out
 
-Scenario: Selection options to filter messages (Bug 1433342)
  # First check what options an admin has
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "mail" from user menu by id
