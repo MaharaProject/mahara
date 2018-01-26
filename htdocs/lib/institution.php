@@ -471,8 +471,9 @@ class Institution {
      * Else send the messege to the site admin(s).
      *
      * @param integer $studentid The id of the user who has refused the privacy statement.
+     * @param string $reason The reson why the user refused the privacy statement.
      */
-    public function send_admin_institution_refused_privacy_message($studentid) {
+    public function send_admin_institution_refused_privacy_message($studentid, $reason) {
         $student = new User();
         $student->find_by_id($studentid);
         $studentname = display_name($student, null, true);
@@ -482,6 +483,11 @@ class Institution {
         // If the user is not part of an institution OR his institution has no admin, send the message to the site admin.
         if (empty($admins)) {
             $admins = $this->institution_and_site_admins();
+        }
+        $thereasonis = '';
+        if ($reason != '') {
+            $thereasonis = get_string('thereasonis', 'mahara');
+            $reason = '"' . urldecode($reason) . '"';
         }
         // check if there are admins - otherwise there are no site admins?!?!?
         if (count($admins) > 0) {
@@ -493,9 +499,10 @@ class Institution {
                 $user->find_by_id($id);
                 $message = (object) array(
                     'users'   => array($id),
-                    'subject' => $studentname . ' has refused the privacy statement',
+                    'subject' => $studentname . ' ' . get_string('hasrefused', 'admin'),
                     'message' => get_string_from_language($lang, 'institutionmemberrefusedprivacy', 'mahara',
-                            $user->firstname, $studentname, $student->username, $student->email,  get_config('sitename')),
+                        $user->firstname, $studentname, $student->username,
+                        $thereasonis, $reason, $student->email, get_config('sitename')),
                 );
                 activity_occurred('maharamessage', $message);
             }

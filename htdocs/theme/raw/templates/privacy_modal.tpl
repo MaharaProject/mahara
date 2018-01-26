@@ -10,6 +10,9 @@
                 </div>
                 <div class="modal-body">
                     <p><strong>{str tag=privacyrefusaldetails section=admin}</strong></p>
+                    <p class="reason">
+                        <textarea id="reason" rows="4" cols="65" placeholder="{str tag=enterreason section=admin}"></textarea>
+                    </p>
                     <p>{str tag=confirmprivacyrefusal section=admin}</p>
                     <div class="btn-group">
                         <button id="confirm-no-button" type="button" class="btn btn-default">{str tag="yes"}</button>
@@ -39,7 +42,8 @@
         $j("#privacy-confirm-form").modal('hide');
         formAbortProcessing($j("#agreetoprivacy_submit"));
         $j('<input />').attr('type', 'hidden').attr('name', "hasrefused").attr('value', "1").appendTo('#agreetoprivacy');
-
+        var reason = encodeURIComponent($j('#reason').val());
+        $j('<input />').attr('class', 'js-hidden').attr('name', "reason").attr('value', reason).appendTo('#agreetoprivacy');
         // settimeout to 0 so it waits for everything else to finish before trigger the submit button
         setTimeout(function() {
             $j('#agreetoprivacy_submit').trigger( "click" );

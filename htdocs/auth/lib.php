@@ -1244,6 +1244,7 @@ function agreetoprivacy_submit(Pieform $form, $values) {
     array_push($userinstitutions, 'mahara');
 
     $hasrefused = param_integer('hasrefused', 0);
+    $reason = param_variable('reason', '');
 
     foreach ($userinstitutions as $institution) {
         // check if the institution has a privacy statement
@@ -1259,7 +1260,7 @@ function agreetoprivacy_submit(Pieform $form, $values) {
             if ($hasrefused) {
                 // Send a message to the institution/site admin informing that the user has refused the privacy statement.
                 $institution = new Institution($institution);
-                $institution->send_admin_institution_refused_privacy_message($USER->get('id'));
+                $institution->send_admin_institution_refused_privacy_message($USER->get('id'), $reason);
 
                 suspend_user($USER->get('id'), 'privacyrefusal');
                 $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
