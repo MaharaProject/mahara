@@ -1,21 +1,27 @@
 @javascript @core @core_artefact @core_portfolio @core_collection
 Feature: Adding pages to a collection
    In order to add pages to a collection
-   As an admin I need pages
+   As an normal user I need pages
    So I can add them to the collection
 
 Background:
+
+     Given the following "users" exist:
+     | username | password | email | firstname | lastname | institution | authname |role |
+     | UserA | Kupuhipa1 | UserA@example.org  | Angela | User | mahara | internal | member |
+
      Given the following "pages" exist:
      | title | description | ownertype | ownername |
-     | Page admin_01 | Page 01 | user | admin |
-     | Page admin_02 | Page 02 | user | admin |
-     | Page admin_03 | Page 03 | user | admin |
-     | AA Page admin_04 | Page 04 | user | admin |
+     | Page UserA_01 | Page 01 | user | UserA |
+     | Page UserA_02 | Page 02 | user | UserA |
+     | Page UserA_03 | Page 03 | user | UserA |
+     | Page UserA_04 | Page 04 | user | UserA |
 
 Scenario: Creating a collection AND adding pages
-    # Log in as "Admin" user
-    Given I log in as "admin" with password "Kupuhipa1"
+    # Log in as "Normal" user
+    Given I log in as "UserA" with password "Kupuhipa1"
     # Create Test collection
+    # This is the test for manually creating a collection
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I follow "Add"
     And I click on "Collection" in the dialog
@@ -27,8 +33,8 @@ Scenario: Creating a collection AND adding pages
     And I follow "All"
     Then I press "Add pages"
     # Verifying that the pages were added
-    And I should see "Page admin_01"
-    And I should see "AA Page admin_04"
+    And I should see "Page UserA_01"
+    And I should see "Page UserA_04"
 
     # Exporting pages and collections
     And I choose "Export" in "Portfolio" from main menu

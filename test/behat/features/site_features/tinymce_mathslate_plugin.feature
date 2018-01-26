@@ -23,4 +23,5 @@ Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
  And I press "Comment"
  And I choose "Pages and collections" in "Configure site" from administration menu
  And I follow "Page mahara_01"
+ And I wait "1" seconds
  And I should see "αAβB"
