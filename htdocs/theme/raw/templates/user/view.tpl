@@ -137,4 +137,7 @@
     </div>
 </div>
 
+<div class="metadata text-right">
+    {$lastupdatedstr}{if $visitstring}; {$visitstring}{/if}
+</div>
 {include file="footer.tpl"}
