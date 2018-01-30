@@ -24,8 +24,9 @@ Scenario: Open badges block
     And I scroll to the base of id "content-editor-foldable"
     And I follow "Open Badges"
     And I press "Add"
+    # Need to add delays as Mahara needs to talk to external site.
+    And I wait "2" seconds
     Then I should see "Your email UserA@example.org is not found in the service"
     And I press "Save"
-    #When watching the test it took quite a long time for the window to close after pressing save (while the button said "processing"). Just making it work for now. TODO: figure out why/ if it's a problem.
     And I wait "5" seconds
     Then I should see "No public badge collections / badges found."
