@@ -5656,5 +5656,30 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2018013001) {
+        log_debug('Move the site terms and conditions  from the site_content table to the site_content_version table');
+        if ($records = get_records_array('site_content', 'name', 'termsandconditions')) {
+            foreach ($records as $data) {
+                $record = new stdClass;
+                $record->type = 'termsandconditions';
+                $record->content = $data->content;
+                $record->author = $data->mauthor;
+                $record->institution = $data->institution;
+                $record->version = '1.0';
+                $record->ctime = db_format_timestamp(time());
+
+                insert_record('site_content_version', $record);
+                delete_records('site_content', 'id', $data->id);
+            }
+        }
+
+        log_debug('Auto accept the terms and conditions for all site admins');
+        $sitecontentid = get_field('site_content_version', 'id', 'type', 'termsandconditions', 'institution', 'mahara');
+        $admins = get_site_admins();
+        foreach ($admins as $admin) {
+            save_user_reply_to_agreement($admin->id, $sitecontentid, 1);
+        }
+    }
+
     return $status;
 }
