@@ -276,7 +276,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                         null,
                         '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | imagebrowser | undo redo"',
                         '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl | fullscreen"',
-                        '"fontselect | fontsizeselect | emoticons nonbreaking charmap ' . $mathslate . ' ' . $spellchecker_toolbar . ' | table | removeformat pastetext | code"',
+                        '"fontselect | fontsizeselect | emoticons nonbreaking charmap ' . $mathslate . ' ' . $spellchecker_toolbar . ' | table | removeformat pastetext | anchor | code"',
                     );
 
                     // For right-to-left langs, reverse button order & align controls right.
@@ -301,7 +301,7 @@ EOF;
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
     theme: "modern",
-    plugins: "tooltoggle,textcolor,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin}",
+    plugins: "tooltoggle,textcolor,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin},anchor",
     skin: 'light',
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
