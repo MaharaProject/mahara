@@ -3251,9 +3251,10 @@ function get_latest_privacy_versions($institutions = array(), $ignoreagreevalue 
         FROM {site_content_version} s
         INNER JOIN (SELECT MAX(id) as current, institution
             FROM {site_content_version}
+            WHERE type = 'privacy'
             GROUP BY institution) s2 ON s.institution = s2.institution AND s.id = s2.current
-        " . $useragreementsql . "
-        WHERE s.institution IN (" . join(',',array_map('db_quote', $institutions)) . ")
+            " . $useragreementsql . "
+        WHERE s.type = 'privacy' AND s.institution IN (" . join(',',array_map('db_quote',$institutions)) . ")
         ORDER BY type", $params);
 
     return $latestversions;

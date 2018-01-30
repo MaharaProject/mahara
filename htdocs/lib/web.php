@@ -3213,7 +3213,7 @@ function site_menu() {
  * @return array of names
  */
 function site_content_pages() {
-    return array('about', 'home', 'loggedouthome', 'termsandconditions');
+    return array('about', 'home', 'loggedouthome');
 }
 
 /**
@@ -3221,7 +3221,7 @@ function site_content_pages() {
  * @return array of names
  */
 function site_content_version_pages() {
-    return array('privacy');
+    return array('privacy', 'termsandconditions');
 }
 
 function get_site_page_content($pagename) {
