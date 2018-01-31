@@ -7082,7 +7082,8 @@ class View {
             if ($records = get_records_sql_array("SELECT vv.*, v.title AS viewname, v.owner, v.institution
                                                   FROM {view_versioning} vv
                                                   JOIN {view} v ON v.id = vv.view
-                                                  WHERE vv.ctime < ? AND vv.ctime > ? AND vv.view = ?", array($todate, $fromdate, $view))) {
+                                                  WHERE vv.ctime < ? AND vv.ctime > ? AND vv.view = ?
+                                                  ORDER BY vv.ctime ASC", array($todate, $fromdate, $view))) {
                 $versions->count = count($records);
                 $versions->data = $records;
             }
@@ -7091,7 +7092,8 @@ class View {
             if ($records = get_records_sql_array("SELECT vv.*,v.title AS viewname, v.owner, v.institution
                                                   FROM {view_versioning} vv
                                                   JOIN {view} v ON v.id = vv.view
-                                                  WHERE vv.view = ?", array($view))) {
+                                                  WHERE vv.view = ?
+                                                  ORDER BY vv.ctime ASC", array($view))) {
                 $versions->count = count($records);
                 $versions->data = $records;
             }
@@ -7104,12 +7106,12 @@ class View {
         require_once('pieforms/pieform/elements/calendar.php');
         $elements = array(
             'from' => array(
-                'title' => get_string('from'),
+                'title' => get_string('From'),
                 'type' => 'calendar',
                 'defaultvalue' => strtotime($from),
             ),
             'to' => array(
-                'title' => get_string('to'),
+                'title' => get_string('To'),
                 'type' => 'calendar',
                 'defaultvalue' => strtotime($to),
             ),
@@ -7134,7 +7136,59 @@ class View {
     public function build_timeline_results($search, $offset, $limit) {
         return false;
     }
+    public function format_versioning_data($data) {
+   if (empty($data)) {
+     return $data;
+   }
+   $data=json_decode($data);
+   $this->numrows = isset($data->numrows) ? $data->numrows : $this->numrows;
+   $this->layout = isset($data->layout) ? $data->layout : $this->layout;
+   $this->description = isset($data->description) ? $data->description : '';
+   $this->tags = isset($data->tags) && is_array($data->tags) ? $data->tags : array();
+   $colsperrow = array();
+   if (isset($data->columnsperrow)) {
+     foreach ($data->columnsperrow as $k=>$v){
+       $colsperrow[$k] = $v;
+     }
+   }
+   $this->columnsperrow = $colsperrow;
+   $this->columns = array();
+   for ($i = 1; $i <= $this->numrows; $i++) {
+       for ($j = 1; $j <= $data->columnsperrow->{$i}->columns; $j++) {
+         $this->columns[$i][$j] = array('blockinstances' => array());
+       }
+   }
+
+   $html = '';
+   if (!empty($data->blocks)) {
+     require_once(get_config('docroot') . 'blocktype/lib.php');
+     foreach ($data->blocks as $k => $v) {
+       // log_debug($k . ': ' . $v->blocktype);
+       safe_require('blocktype', $v->blocktype);
+       $bi = new BlockInstance(0,
+           array(
+               'blocktype'  => $v->blocktype,
+               'title'      => $v->title,
+               'view'       => $this->get('id'),
+               'view_obj'   => $this,
+               'row'        => $v->row,
+               'column'     => $v->column,
+               'order'      => $v->order,
+               'configdata' => serialize((array)$v->configdata),
+           )
+       );
+       // $html .= call_static_method(generate_class_name("blocktype", $v->blocktype), "render_instance", $bi);
+          $this->columns[$v->row][$v->column]['blockinstances'][] = $bi;
+      }
+   }
+   $html = $this->build_rows(true);
+   // log_debug($html);
+   $data->html = $html;
+   return $data;
+ }
 }
+
+
 
 class ViewSubmissionException extends UserException {
     public function strings() {

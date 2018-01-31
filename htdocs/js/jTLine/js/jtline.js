@@ -46,6 +46,7 @@
                 timelineComponents['timelineDates'] = parseDate(timelineComponents['timelineEvents']);
                 timelineComponents['eventsMinLapse'] = minLapse(timelineComponents['timelineDates']);
                 timelineComponents['timelineNavigation'] = timeline.find('.cd-timeline-navigation');
+                timelineComponents['timelineNavigationViewport'] = timeline.find('.cd-timeline-navigation-second');
                 timelineComponents['eventsContent'] = timeline.children('.events-content');
                 //assign a left postion to the single events along the timeline
                 setDatePosition(timelineComponents, options.eventsMinDistance);
@@ -73,6 +74,41 @@
                     updateFilling($(this), timelineComponents['fillingLine'], timelineTotWidth);
                     updateVisibleContent($(this), timelineComponents['eventsContent']);
                 });
+                //detect click on the next viewport arrow
+                             timelineComponents['timelineNavigationViewport'].on('click', '.next', function (event) {
+                               event.preventDefault();
+                               // $().addClass('selected');
+                               var currentSelected = $('#jtlinesection .events a.selected');
+                               currentSelected.removeClass('selected');
+                               console.log(currentSelected);
+                               var nextSelected = currentSelected.closest('li').next().find('a');
+                               nextSelected.addClass('selected');
+                               console.log(nextSelected);
+                                 updateOlderEvents(nextSelected);
+                                 updateFilling(nextSelected, timelineComponents['fillingLine'], timelineTotWidth);
+                                 updateVisibleContent(nextSelected, timelineComponents['eventsContent']);
+                                 updateSlide(timelineComponents, timelineTotWidth, 'next');
+                               });
+
+                               //detect click on the prev viewport arrow
+
+                               timelineComponents['timelineNavigationViewport'].on('click', '.prev', function (event) {
+                                 event.preventDefault();
+                                 var currentSelected = $('#jtlinesection .events ol li a.selected');
+                                 currentSelected.removeClass('selected');
+                                 console.log(currentSelected);
+                                 var nextSelected = currentSelected.closest('li').next().find('a');
+                                 nextSelected.removeClass('selected');
+                                 var prevSelected = currentSelected.closest('li').prev().find('a');
+                                 prevSelected.addClass('selected');
+                                   updateOlderEvents(prevSelected);
+                                   updateFilling(prevSelected, timelineComponents['fillingLine'], timelineTotWidth);
+                                   updateVisibleContent(prevSelected, timelineComponents['eventsContent']);
+                                   updateSlide(timelineComponents, timelineTotWidth, 'prev');
+                                   // prevSelected.removeClass('older-event');
+
+                                   console.log(prevSelected);
+                                 });
 
                 //on swipe, show next/prev event content
                 timelineComponents['eventsContent'].on('swipeleft', function () {
@@ -110,6 +146,10 @@
                 var visibleContent = timelineComponents['eventsContent'].find('.selected'),
                     newContent = (string == 'next') ? visibleContent.next() : visibleContent.prev();
 
+                var showOldContent = function (timelineComponents, timelineTotWidth, string) {
+                  var visibleContent = timelineComponents['eventsContent'].find('.selected'),
+                  oldContent = (string == 'prev') ? visibleContent.prev() : visibleContent.next();
+
                 if (newContent.length > 0) { //if there's a next/prev event - show it
                     var selectedDate = timelineComponents['eventsWrapper'].find('.selected'),
                         newEvent = (string == 'next') ? selectedDate.parent('li').next('li').children('a') : selectedDate.parent('li').prev('li').children('a');
@@ -122,6 +162,7 @@
                     updateTimelinePosition(string, newEvent, timelineComponents);
                 }
             }
+          }
 
             var updateTimelinePosition = function (string, event, timelineComponents) {
                 //translate timeline to the left/right according to the position of the selected event
@@ -144,6 +185,8 @@
                 //update navigation arrows visibility
                 (value == 0) ? timelineComponents['timelineNavigation'].find('.prev').addClass('inactive') : timelineComponents['timelineNavigation'].find('.prev').removeClass('inactive');
                 (value == totWidth) ? timelineComponents['timelineNavigation'].find('.next').addClass('inactive') : timelineComponents['timelineNavigation'].find('.next').removeClass('inactive');
+                (value == 0) ? timelineComponents['timelineNavigationViewport'].find('.prev').addClass('inactive') : timelineComponents['timelineNavigationViewport'].find('.prev').removeClass('inactive');
+                (value == totWidth) ? timelineComponents['timelineNavigationViewport'].find('.next').addClass('inactive') : timelineComponents['timelineNavigationViewport'].find('.next').removeClass('inactive');
             }
 
             var updateFilling = function (selectedEvent, filling, totWidth) {
@@ -237,10 +280,11 @@
                         classLeaving = 'leave-right';
                 }
 
-                selectedContent.attr('class', classEnetering);
-                visibleContent.attr('class', classLeaving).one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function () {
-                    visibleContent.removeClass('leave-right leave-left');
+                selectedContent.addClass(classEnetering);
+                visibleContent.addClass(classLeaving).one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function () {
+                    visibleContent.removeClass('leave-right leave-left selected');
                     selectedContent.removeClass('enter-left enter-right');
+                    selectedContent.addClass('selected');
                 });
                 eventsContent.css('height', selectedContentHeight + 'px');
             }
@@ -431,8 +475,12 @@
                     $liTimeLineCollection += point.pointCnt + '</a></li>';
                     // -----------------
                     $liEventContentCollection += '<li ';
-                    if (isSelectedPoint)
-                        $liEventContentCollection += 'class="selected"';
+                    if (isSelectedPoint) {
+                        $liEventContentCollection += 'class="lineli selected"';
+                      }
+                      else {
+                        $liEventContentCollection += 'class="lineli"';
+                      }
                     $liEventContentCollection += ' data-date="' + point.dateValue + '">' + formatTitle(point.title, dataCollection[i]) + formatSubTitle(point.subTitle, dataCollection[i]) + formatBodyContent(point.bodyCnt, dataCollection[i]) + '</li>';
 
                 }
@@ -442,8 +490,8 @@
                 var $container = $(mainObject);
 
                 var $sectionStart = '<section id="jtlinesection" class="jtline">';
-                var $timeline = '<div class="timeline"><div class="events-wrapper"><div class="events"><ol>' + $liTimeLineCollection + '</ol><span class="filling-line" aria-hidden="true"></span></div></div><ul class="cd-timeline-navigation"><li><a href="#0" class="prev inactive">Prev</a></li><li><a href="#0" class="next">Next</a></li></ul></div>';
-                var $eventsContent = '<div class="events-content"><ol>' + $liEventContentCollection + '</ol></div>';
+                var $timeline = '<div class="timeline"><div class="events-wrapper"><div class="events"><ol>' + $liTimeLineCollection + '</ol><span class="filling-line" aria-hidden="true"></span></div></div><ul class="cd-timeline-navigation"><li class="lineli"><a href="#0" class="prev inactive">Prev</a></li><li lineli><a href="#0" class="next">Next</a></li></ul></div>';
+                var $eventsContent = '<div class="events-content"><ol>' + $liEventContentCollection + '</ol><ul class="cd-timeline-navigation-second"><li><a href="#0" class="prev inactive">Prev</a></li><li><a href="#0" class="next">Next</a></li></ul></div>';
                 var $sectionEnd = '</section>';
 
                 var allHtml = $sectionStart + $timeline + $eventsContent + $sectionEnd;
@@ -477,7 +525,7 @@
                 if (formatBodyCnt)
                     return options.formatBodyContent(bodyCnt, obj);
                 else
-                    return '<p>' + bodyCnt + '</p>';
+                    return '<p class="linep">' + bodyCnt + '</p>';
             }
             var _attacheEvents = function () {
 

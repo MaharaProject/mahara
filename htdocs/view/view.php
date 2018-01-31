@@ -438,6 +438,8 @@ if ($can_copy) {
     }
 }
 $smarty->assign('versionurl', get_config('wwwroot') . 'view/versioning.php?view=' . $viewid);
+$smarty->assign('createversionurl', get_config('wwwroot') . 'view/createversion.php?view=' . $viewid);
+
 $title = hsc(TITLE);
 
 $smarty->assign('maintitle', $titletext);

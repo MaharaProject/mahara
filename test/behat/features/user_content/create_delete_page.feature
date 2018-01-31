@@ -120,7 +120,11 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # Go to version page
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "This is the edited page title"
+    And I press "More..."
     And I follow "Timeline"
+
+    Then I should see "Timeline"
+    # check page can be deleted (Bug 1755682)
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Delete" in "This is the edited page" panel menu
     And I should see "Do you really want to delete this page?"

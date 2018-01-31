@@ -41,10 +41,7 @@
 
 <div class="btn-group btn-group-top">
 
-  <a class="btn btn-default" href="{$versionurl}">
-    <span class="icon icon-code-fork icon-lg left" role="presentation" aria-hidden="true"></span>
-      {str tag=timeline section=view}
-  </a>
+
     {if $editurl}{strip}
         <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-default">
             <span class="icon icon-pencil icon-lg left" role="presentation" aria-hidden="true"></span>
@@ -125,6 +122,22 @@
                 </a>
             </li>
             {/if}
+        {/if}
+        <li>
+            <a href="{$versionurl}">
+            <span class="icon icon-code-fork icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="sr-only">{str(tag=timelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
+                {str tag=timeline section=view}
+            </a>
+        </li>
+            {if $userisowner}
+        <li>
+            <a href="{$createversionurl}">
+            <span class="icon icon-save icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="sr-only">{str(tag=savetimelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
+                {str tag=savetimeline section=view}
+            </a>
+        </li>
         {/if}
     </ul>
 </div>

@@ -254,6 +254,7 @@ $string['blocknotinview'] = 'The block with ID "%d" is not in the page.';
 $string['viewcreatedsuccessfully'] = 'Page created successfully';
 $string['viewaccesseditedsuccessfully'] = 'Page access saved successfully';
 $string['viewsavedsuccessfully'] = 'Page saved successfully';
+$string['savedtotimeline'] = 'Saved to timeline';
 $string['updatedaccessfornumviews1'] = array(
     'Access rules were updated for 1 page.',
     'Access rules were updated for %d pages.',
@@ -520,3 +521,6 @@ $string['advanced']     = 'Advanced';
 
 // Versioning strings
 $string['timeline'] = 'Timeline';
+$string['timelinespecific'] = 'Timeline for %s';
+$string['savetimeline'] = 'Save to timeline';
+$string['savetimelinespecific'] = 'Save timeline for %s';
