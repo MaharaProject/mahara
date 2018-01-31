@@ -1,8 +1,7 @@
 @javascript @core @core_administration
-Feature: Improvements to Notification Systems
-In order to select multiple types of notifications
-As an admin
-I need to go to Notifications settings and see multiple options available
+Feature: Validating multiple notification settings
+Log in as admin and as a user to confirm default notification options are available in the select box
+Secondly, check that the notification types are listed alphabetically
 
 Background:
     Given the following "users" exist:
@@ -82,3 +81,24 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     And I select "Inbox" from "New forum post"
     And I select "None" from "New forum post"
     And I press "Save"
+    And I should see "Preferences saved"
+
+Scenario: Admin logs in and checks notification settings (Bug 1388682)
+    Given I log in as "admin" with password "Kupuhipa1"
+    And I choose "Site options" in "Configure site" from administration menu
+    And I click on "Notification settings"
+    #see the notification settings in alphabetical order.
+    And "Comment" "text" should appear before "Contact us" "text"
+    And "Contact us" "text" should appear before "Feedback on annotations" "text"
+    And "Feedback on annotations" "text" should appear before "Group message" "text"
+    And "Group message" "text" should appear before "Institution message" "text"
+    And "Institution message" "text" should appear before "Message from other users" "text"
+    And "Message from other users" "text" should appear before "New forum post" "text"
+    And "New forum post" "text" should appear before "New page access" "text"
+    And "New page access" "text" should appear before "Objectionable content" "text"
+    And "Objectionable content" "text" should appear before "Objectionable content in forum" "text"
+    And "Objectionable content in forum" "text" should appear before "Repeat virus upload" "text"
+    And "Repeat virus upload" "text" should appear before "System message" "text"
+    And "System message" "text" should appear before "Virus flag release" "text"
+    And "Virus flag release" "text" should appear before "Wall post" "text"
+    And "Wall post" "text" should appear before "Watchlist" "text"
