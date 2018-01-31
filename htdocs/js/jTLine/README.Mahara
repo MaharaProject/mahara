@@ -10,3 +10,4 @@ Build upon the fantastic "codyhouse" article.
 Changes:
 
 * Removed demo examples
+* Adjusted ajax setting to accept parameters from Mahara

@@ -6,6 +6,7 @@
                 eventsMinDistance: 60,
                 callType: 'ajax',
                 url: '',
+                params: {},
                 structureObj: [{}],
                 distanceMode: 'auto', // predefinedDistance , fixDistance
                 fixDistanceValue: 2,
@@ -353,13 +354,13 @@
             var _fetchData = function (obj) {
                 // var dataResult;
                 if (options.callType == callTypes.ajax) {
-                    $.getJSON(options.url, function (data) {
-                        // console.log(data);
-                    }).done(function (data) {
+                    $.getJSON(options.url, options.params)
+                    .done(function (data) {
                         //----------------------
 
-                        if (data)
-                            _constructDom(data, obj);
+                        if (data.error==false) {
+                            _constructDom(data.message.data, obj);
+                        }
                         else {
                             $(obj).html("Error fetching data");
                         }
