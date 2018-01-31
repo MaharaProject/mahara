@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-    {if $versionid && $version == $latestversion}
+    {if $versionid && in_array($versionid, $latestVersions)}
         <div class="lead">{str tag="privacypagedescription" section="admin"}</div>
             {if $pageeditform}
             <div class="col-md-9">
@@ -42,14 +42,14 @@
                             </tr>
                             </thead>
                             <tbody id="privacy" class="tab">
-                                {foreach from=$results item=result key=key}
+                                {foreach from=$results item=result}
                                     {if $result->type == 'privacy'}
                                         {include file="admin/site/privacytable.tpl"}
                                     {/if}
                                 {/foreach}
                             </tbody>
                             <tbody id="termsandconditions" class="tab js-hidden">
-                                {foreach from=$results item=result key=key}
+                                {foreach from=$results item=result}
                                     {if $result->type == 'termsandconditions'}
                                         {include file="admin/site/privacytable.tpl"}
                                     {/if}

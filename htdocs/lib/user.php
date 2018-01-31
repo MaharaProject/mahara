@@ -3278,3 +3278,25 @@ function save_user_reply_to_agreement($userid, $sitecontentid, $agreed) {
     }
     return true;
 }
+
+/**
+ *  Get the privacy statement and T&C of an institution
+ *
+ *  @param $institution string, the name of an institution
+ *  @return array, all the privacy statements and T&Cs of an institution
+ */
+function get_institution_versioned_content($institution = 'mahara') {
+    $content = get_records_sql_assoc("
+        SELECT  s.id, s.version, u.firstname, u.lastname, u.id AS userid, s.content, s.ctime, s.type, s2.current
+        FROM {site_content_version} s
+        LEFT JOIN (
+            SELECT MAX(id) AS current, type
+            FROM {site_content_version}
+            WHERE institution = ?
+            GROUP BY type) s2 ON s.type = s2.type AND s.id = s2.current
+        LEFT JOIN {usr} u ON s.author = u.id
+        WHERE s.institution = ?
+        ORDER BY s.id DESC", array($institution, $institution));
+
+    return $content;
+}

@@ -1340,8 +1340,9 @@ $string['creationdate'] = 'Creation date';
 $string['version'] = 'Version';
 $string['viewversion'] = 'View version %s';
 $string['editversion'] = 'Edit version %s';
-$string['lastversion'] = 'Privacy statements must have unique version names of up to 15 characters. The latest version for this privacy statement is "%s".';
-$string['versionalreadyexist'] = 'A privacy statement with the version name "%s" already exists.';
+$string['privacylastversion'] = 'Privacy statements must have unique version names of up to 15 characters. The latest version for this privacy statement is "%s".';
+$string['termsandconditionslastversion'] = 'Terms and conditions must have unique version names of up to 15 characters. The latest version for this privacy statement is "%s".';
+$string['versionalreadyexist'] = 'A %s version with the name "%s" already exists.';
 $string['siteprivacystatement'] = 'Site privacy statement';
 $string['addoneversionlink']   = '<a href="%s">Add one</a> if you need it.';
 $string['privacyversionfor'] = 'Privacy statement for version "%s" is as follows:';
@@ -1362,3 +1363,5 @@ $string['registerprivacyrefusal'] = 'Your account will not be created when you d
 $string['registerprivacydetails'] = 'Please read the privacy statement. If you do not consent to it, you cannot create an account on the site.';
 $string['enterreason'] = 'Please enter the reason of refusal here...';
 $string['hasrefused'] = 'has refused the privacy statement';
+$string['privacylowcase'] = 'privacy statement';
+$string['termsandconditionslowcase'] = 'terms and conditions';

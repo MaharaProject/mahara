@@ -11,7 +11,7 @@
             <td>{$result->content|htmlspecialchars_decode|strip_tags|truncate:100:"..."}</td>
             <td>{$result->ctime|date_format:'%d %b %Y %H:%M'}</td>
             <td class="control-buttons">
-                {if $key === $latestprivacyid}
+                {if $result->id == $result->current}
                     <div class="btn-group">
                         <a href="{$WWWROOT}{$link}{$result->id}" title="{str tag=editversion section='admin' arg1='$result->version'}" class="btn btn-default btn-xs">
                             <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
@@ -27,7 +27,7 @@
             </td>
         </tr>
         <!-- Because T&C and PS can have the same version, we must check the id as well -->
-        {if $result->version === $version && $result->id == $versionid}
+        {if $result->id == $versionid}
         <tr>
             <td colspan="5">
                 <div>
