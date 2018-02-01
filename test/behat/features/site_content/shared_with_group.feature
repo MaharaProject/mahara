@@ -68,7 +68,20 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I click on "Edit access" in "Page UserA_05" row
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"
+
+    #Checking the last modified date on a collection shared to a group.
+    And I choose "Shared by me" in "Portfolio" from main menu
+    And I follow "Edit access"
+    And I select "GroupA" from "accesslist[0][searchtype]"
+    And I press "Save"
+    Then I should see "Access rules were updated for 2 pages"
+    And I choose "Groups" from main menu
+    And I follow "GroupA"
+    # the formats "strftimedate" and "j F Y" both resolve to dd Month YYYY, which is wanted here.
+    And I should see the date "today" in the "#sharedcollectionlist" element with the format "d F Y"
+
     # Edit access for Collection 01
+    And I choose "Shared by me" in "Portfolio" from main menu
     And I click on "Edit access" in "Collection UserA_01" row
     And I set the select2 value "Collection UserA_01" for "editaccess_collections"
     And I select "GroupA" from "accesslist[0][searchtype]"
