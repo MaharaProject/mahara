@@ -2208,7 +2208,7 @@ function view_stats_table($limit, $offset, $extra) {
     $where = "(v.owner != 0 OR v.owner IS NULL) AND v.type != ? AND v.template != ?";
     $values = array('dashboard', View::SITE_TEMPLATE);
     if ($start) {
-        $where .= " AND v.ctime >= DATE(?) AND v.ctime <= DATE(?)";
+        $where .= " AND v.mtime >= DATE(?) AND v.mtime <= DATE(?)";
         $values[] = $start;
         $values[] = $end;
     }
@@ -2246,8 +2246,16 @@ function view_stats_table($limit, $offset, $extra) {
         case "collection":
             $orderby = " c.name " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.id";
             break;
-        case "comments":
         case "owner":
+            $orderby = " CASE
+                  WHEN v.owner IS NOT NULL
+                  THEN (SELECT CONCAT(firstname, ' ', lastname) FROM {usr} WHERE id = v.owner)
+                  WHEN v.group IS NOT NULL
+                  THEN (SELECT name FROM {group} WHERE id = v.group)
+                  ELSE (SELECT displayname FROM {institution} WHERE name = v.institution)
+                  END " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.id";
+            break;
+        case "comments":
         case "blocks":
             $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
@@ -2398,14 +2406,14 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
         $start = !empty($extra['start']) ? $extra['start'] : null;
         $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
 
-        $where = 'id IN (' . $institutiondata['viewssql'] . ') AND type != ?';
+        $where = 'v.id IN (' . $institutiondata['viewssql'] . ') AND v.type != ?';
         $values = array_merge($institutiondata['viewssqlparam'], array('dashboard'));
         if ($start) {
-            $where .= " AND ctime >= DATE(?) AND ctime <= DATE(?)";
+            $where .= " AND v.mtime >= DATE(?) AND v.mtime <= DATE(?)";
             $values[] = $start;
             $values[] = $end;
         }
-        $count = count_records_select('view', $where, $values);
+        $count = count_records_sql('SELECT COUNT(*) FROM {view} v WHERE ' . $where, $values);
     }
     else {
         $count = 0;
@@ -2440,8 +2448,19 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
         case "view":
             $orderby = " v.title " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.id";
             break;
-        case "comments":
+        case "collection":
+            $orderby = " c.name " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.id";
+            break;
         case "owner":
+            $orderby = " CASE
+                  WHEN v.owner IS NOT NULL
+                  THEN (SELECT CONCAT(firstname, ' ', lastname) FROM {usr} WHERE id = v.owner)
+                  WHEN v.group IS NOT NULL
+                  THEN (SELECT name FROM {group} WHERE id = v.group)
+                  ELSE (SELECT displayname FROM {institution} WHERE name = v.institution)
+                  END " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.id";
+            break;
+        case "comments":
         case "blocks":
             $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
@@ -2449,10 +2468,10 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
             $orderby = " v.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
         case "modified":
-            $orderby = " m.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            $orderby = " v.mtime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
         case "visited":
-            $orderby = " a.ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
+            $orderby = " v.atime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
             break;
         case "visits":
             default:
@@ -2471,7 +2490,10 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
             v.ctime, v.mtime, v.atime,
             (SELECT COUNT(*) FROM {block_instance} WHERE view = v.id) AS blocks,
             (SELECT COUNT(*) FROM {artefact_comment_comment} WHERE onview = v.id) AS comments
-        FROM {view} v WHERE " . $where . "
+        FROM {view} v
+        LEFT JOIN {collection_view} cv ON cv.view = v.id
+        LEFT JOIN {collection} c ON c.id = cv.collection
+        WHERE " . $where . "
         ORDER BY " . $orderby;
     if (!empty($extra['csvdownload'])) {
         $viewdata = get_records_sql_assoc($sql, $values);
