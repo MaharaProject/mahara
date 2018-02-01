@@ -1425,8 +1425,20 @@ abstract class ArtefactType implements IArtefactType {
         // - Do this for all items that start with the item's path.
         // The WHERE clause must be like this to avoid /1% matching /10.
         $length = strlen($oldparent->path) + 1;
-        $params = array($newparent->path, $length, $this->path, db_like_escape("{$this->path}/") . '%');
-        $sql = "UPDATE {artefact} SET path = ? || SUBSTR(path, ?) WHERE (path = ? OR path LIKE ? )";
+        if (!empty($this->institution)) {
+            $ownertype = 'institution';
+            $ownerid = $this->institution;
+        }
+        else if (!empty($this->group)) {
+            $ownertype = '"group"';
+            $ownerid = $this->group;
+        }
+        else {
+            $ownertype = 'owner';
+            $ownerid = $this->owner;
+        }
+        $params = array($newparent->path, $length, $ownerid, $this->path, db_like_escape("{$this->path}/") . '%');
+        $sql = "UPDATE {artefact} SET path = ? || SUBSTR(path, ?) WHERE " . $ownertype . " = ? AND (path = ? OR path LIKE ? )";
 
         execute_sql($sql, $params);
 
