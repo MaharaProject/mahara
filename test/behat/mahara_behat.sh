@@ -5,7 +5,7 @@ ACTION=$1
 SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
 MAHARAROOT=`dirname $( dirname $( dirname "$SCRIPTPATH" ))`
 SERVER=0
-test -z $SELENIUM_PORT && export SELENIUM_PORT=4400
+test -z $SELENIUM_PORT && export SELENIUM_PORT=4444
 test -z $PHP_PORT && export PHP_PORT=8000
 test -z $XVFB_PORT && export XVFB_PORT=10
 
@@ -103,6 +103,8 @@ then
 
         SELENIUM_FILENAME=selenium-server-standalone-$SELENIUM_VERSION_MAJOR.$SELENIUM_VERSION_MINOR.jar
         SELENIUM_PATH=./test/behat/$SELENIUM_FILENAME
+        # @todo make this more flexible, cross-platform?
+        CHROMEDRIVER_PATH=./test/behat/chromedriver-2.26-linux64
 
         # If no Selenium installed, download it
         if [ ! -f $SELENIUM_PATH ]; then
@@ -115,11 +117,10 @@ then
         then
             # we want to run selenium headless on a different display - this allows for that ;)
             echo "Starting Xvfb ..."
-            Xvfb :${XVFB_PORT} -ac > /tmp/xvfb.log 2>&1 & echo "PID [$!]"
-
-            DISPLAY=:${XVFB_PORT} nohup java -jar $SELENIUM_PATH -port ${SELENIUM_PORT} > /tmp/selenium.log 2>&1 & echo $!
+            Xvfb :${XVFB_PORT} -ac > /tmp/xvfb-${XVFB_PORT}.log 2>&1 & echo "PID [$!]"
+            DISPLAY=:${XVFB_PORT} nohup java -Dwebdriver.chrome.driver=$CHROMEDRIVER_PATH -jar $SELENIUM_PATH -port ${SELENIUM_PORT} -log /tmp/selenium-${SELENIUM_PORT}.log > /tmp/selenium-${SELENIUM_PORT}.log 2>&1 & echo $!
         else
-            java -jar $SELENIUM_PATH -port ${SELENIUM_PORT} &> /tmp/selenium.log &
+            java -Dwebdriver.chrome.driver=$CHROMEDRIVER_PATH -jar $SELENIUM_PATH -port ${SELENIUM_PORT} -log /tmp/selenium-${SELENIUM_PORT}.log > /tmp/selenium-${SELENIUM_PORT}.log 2>&1 &
         fi
 
         if is_selenium_running; then
@@ -131,7 +132,7 @@ then
     fi
 
     echo "Start PHP server"
-    php --server localhost:${PHP_PORT} --docroot $MAHARAROOT/htdocs &> /tmp/php.log &
+    php --server localhost:${PHP_PORT} --docroot $MAHARAROOT/htdocs > /tmp/php-${PHP_PORT}.log 2>&1 &
     SERVER=$!
 
     BEHATCONFIGFILE=`php htdocs/testing/frameworks/behat/cli/util.php --config`

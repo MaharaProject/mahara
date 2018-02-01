@@ -156,16 +156,12 @@ class BehatConfigManager {
                     'Behat\MinkExtension' => array(
                         'base_url' => $CFG->behat_wwwroot,
                         'files_path' => get_mahararoot_dir() . '/test/behat/upload_files',
-                        'sessions' => array(
-                            'default' => array(
-                                'selenium2' => array (
-                                    'wd_host' => $CFG->behat_selenium2
-                                ),
-                            ),
-                            'headless' => array(
-                                'goutte' => null
-                            ),
+                        'javascript_session' => 'selenium2',
+                        'selenium2' => array(
+                            'browser' => 'chrome',
+                            'wd_host' => $CFG->behat_selenium2
                         ),
+                        'goutte' => null,
                      ),
                 ),
                 'suites' => $suites
