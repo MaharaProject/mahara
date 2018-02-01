@@ -32,7 +32,7 @@ spl_autoload_register('__autoload_elasticsearchtypes', true);
 class PluginSearchElasticsearch extends PluginSearch {
 
     /**
-     * The version of elasticsearch this plugin is compatible with.
+     * The minimum version of elasticsearch this plugin is compatible with.
      */
     const elasticsearch_version = '5.0';
 
@@ -110,47 +110,67 @@ class PluginSearchElasticsearch extends PluginSearch {
 
     /**
      * This function returns elasticsearch server information at supplied host and port
+     * We can't use the $ESClient as we need to check if we are trying to connect to either an older or current server so will run curl commands directly
      * @param string $option An optional param to get status about a specific status, eg cluster health
      * @param string $index  An optional param to get status about a specific status for a particular index, eg indices status
      * @return array containing $canconnect bool    - whether we can connect to elasticsearch at host/port
      *                          $server     object  - information about the server request
      */
     public static function elasticsearch_server($option=null, $index=null) {
-        $host = get_config_plugin('search', 'elasticsearch', 'host');
-        $port = get_config_plugin('search', 'elasticsearch', 'port');
-        $url = $host . ':' . $port;
-        if ($option) {
-            switch ($option) {
-                case "clusterhealth":
-                    $url .= '/_cluster/health';
-                    break;
-                case "indexhealth":
-                    $url .= '/_cat/indices?format=json';
-                    break;
-            }
+        $clientops = self::get_client_config('write');
+        $host = $clientops['hosts'][0];
+        $url = $host['host'] . ':' . $host['port'];
+        if (!empty($host['username'])) {
+            $url = $host['username'] . ':' . $host['password'] . '@' . $url;
+        }
+        if (!empty($host['scheme'])) {
+            $url = $host['scheme'] . '://' . $url;
         }
 
-        $server = mahara_http_request(array(CURLOPT_URL => $url), true);
+        switch ($option) {
+            case "clusterhealth":
+                $url .= '/_cluster/health';
+                break;
+            case "indexhealth":
+                $url .= '/_cat/indices?format=json';
+                break;
+            default:
+                $clientopts['curlopts'][CURLOPT_NOBODY] = true;
+        }
+
+        $url .= '/' . get_config_plugin('search', 'elasticsearch', 'indexname') . '?format=json';
+        $curlopts = array(CURLOPT_URL => $url) + $clientops['curlopts'];
+        $server = mahara_http_request($curlopts, true);
         $canconnect = false;
+        if (!empty($server->info) && !empty($server->info['http_code'])) {
+            if ($server->info['http_code'] != '200') {
+                $server->error = get_string('servererror', 'search.elasticsearch', $server->info['http_code']);
+            }
+            else {
+                $canconnect = true;
+            }
+        }
         if (!empty($server->data)) {
             $server->data = json_decode($server->data);
-            if ($index && is_array($server->data)) {
-                // we need to find the data for particular index
-                $thisindex = null;
-                foreach ($server->data as $key => $data) {
-                    if (isset($data->index) && $data->index == $index) {
-                        $thisindex = $server->data[$key];
-                        break;
-                    }
-                }
-                $server->data = $thisindex;
+            if (!empty($server->data->error)) {
+                $server->error = $server->data->status . ': ' . $server->data->error->reason;
             }
-            if (!empty($server->data->version) && !empty($server->data->version->number)) {
-                if (version_compare($server->data->version->number, self::elasticsearch_version) !== -1) {
-                    $canconnect = true;
+            else {
+                if ($index && is_array($server->data)) {
+                    // we need to find the data for particular index
+                    $thisindex = null;
+                    foreach ($server->data as $key => $data) {
+                        if (isset($data->index) && $data->index == $index) {
+                            $thisindex = $server->data[$key];
+                            break;
+                        }
+                    }
+                    $server->data = $thisindex;
                 }
-                else {
-                    $server->error = get_string('elasticsearchtooold', 'search.elasticsearch', $server->data->version->number, self::elasticsearch_version);
+                if (!empty($server->data->version) && !empty($server->data->version->number)) {
+                    if (version_compare($server->data->version->number, self::elasticsearch_version) === -1) {
+                        $server->error = get_string('elasticsearchtooold', 'search.elasticsearch', $server->data->version->number, self::elasticsearch_version);
+                    }
                 }
             }
         }
@@ -225,16 +245,23 @@ class PluginSearchElasticsearch extends PluginSearch {
             }
             $enabledhtml .= self::get_formatted_notice($notice, 'warning');
         }
-        list($status, $health) = self::elasticsearch_server('clusterhealth');
-        if (!empty($health->data) && $health->data->status != 'green') {
-            $enabledhtml .= self::get_formatted_notice(get_string('clusterstatus', 'search.elasticsearch', $health->data->status, $health->data->unassigned_shards), 'warning');
-            $state = 'notice';
-        }
-        $index = get_config_plugin('search', 'elasticsearch', 'indexname');
-        list($status, $health) = self::elasticsearch_server('indexhealth', $index);
-        if (!empty($health->data) && $health->data->health != 'green') {
-            $enabledhtml .= self::get_formatted_notice(get_string('indexstatusbad', 'search.elasticsearch', $index, $health->data->health), 'warning');
-            $state = 'notice';
+        else {
+            list($status, $health) = self::elasticsearch_server('clusterhealth');
+            if (!empty($health->data) && $health->data->status != 'green') {
+                $enabledhtml .= self::get_formatted_notice(get_string('clusterstatus', 'search.elasticsearch', $health->data->status, $health->data->unassigned_shards), 'warning');
+                $state = 'notice';
+            }
+            $index = get_config_plugin('search', 'elasticsearch', 'indexname');
+            list($status, $health) = self::elasticsearch_server('indexhealth', $index);
+            if (!empty($health->data)) {
+                if (isset($health->data->status) && $health->data->status == '403') {
+                    $enabledhtml .= self::get_formatted_notice(get_string('indexstatusunknown', 'search.elasticsearch', $index, $health->data->status), 'warning');
+                }
+                else if (isset($health->data->health) && $health->data->health != 'green') {
+                    $enabledhtml .= self::get_formatted_notice(get_string('indexstatusbad', 'search.elasticsearch', $index, $health->data->health), 'warning');
+                }
+                $state = 'notice';
+            }
         }
         if (get_config('searchplugin') == 'elasticsearch') {
             $enabledhtml .= self::get_formatted_notice(get_string('noticeenabled', 'search.elasticsearch', get_config('wwwroot') . 'admin/site/options.php?fs=searchsettings'), $state);
@@ -263,6 +290,17 @@ class PluginSearchElasticsearch extends PluginSearch {
                     'value'        => get_config_plugin('search', 'elasticsearch', 'port'),
                     'help'         => true,
                 ),
+                'scheme' => array(
+                    'title'        => get_string('scheme', 'search.elasticsearch'),
+                    'description'  => get_string('schemedescription', 'search.elasticsearch'),
+                    'type'         => 'html',
+                    'value'        => (
+                            get_config_plugin('search', 'elasticsearch', 'scheme')
+                            ? get_config_plugin('search', 'elasticsearch', 'scheme')
+                            : get_string('confignotset', 'search.elasticsearch')
+                    ),
+                    'help'         => true,
+                ),
                 'username' => array(
                     'title'        => get_string('username', 'search.elasticsearch'),
                     'description'  => get_string('usernamedescription', 'search.elasticsearch'),
@@ -281,6 +319,28 @@ class PluginSearchElasticsearch extends PluginSearch {
                     'value'        => (
                             get_config_plugin('search', 'elasticsearch', 'password')
                             ? get_string('passwordlength', 'search.elasticsearch', strlen(get_config_plugin('search', 'elasticsearch', 'password')))
+                            : get_string('confignotset', 'search.elasticsearch')
+                    ),
+                    'help'         => true,
+                ),
+                'indexingusername' => array(
+                    'title'        => get_string('indexingusername', 'search.elasticsearch'),
+                    'description'  => get_string('indexingusernamedescription', 'search.elasticsearch'),
+                    'type'         => 'html',
+                    'value'        => (
+                            get_config_plugin('search', 'elasticsearch', 'indexingusername')
+                            ? get_config_plugin('search', 'elasticsearch', 'indexingusername')
+                            : get_string('confignotset', 'search.elasticsearch')
+                    ),
+                    'help'         => true,
+                ),
+                'indexingpassword' => array(
+                    'title'        => get_string('indexingpassword', 'search.elasticsearch'),
+                    'description'  => get_string('indexingpassworddescription', 'search.elasticsearch'),
+                    'type'         => 'html',
+                    'value'        => (
+                            get_config_plugin('search', 'elasticsearch', 'indexingpassword')
+                            ? get_string('passwordlength', 'search.elasticsearch', strlen(get_config_plugin('search', 'elasticsearch', 'indexingpassword')))
                             : get_string('confignotset', 'search.elasticsearch')
                     ),
                     'help'         => true,
@@ -409,9 +469,6 @@ class PluginSearchElasticsearch extends PluginSearch {
                     'title' => $type,
                     'type' => 'html',
                     'value' => $count_in_queue,
-//                    'title'        =>   $type . $count_in_queue,
-//                    'type'         => 'submit',
-//                    'defaultvalue' => get_string('reset', 'search.elasticsearch'),
                 );
             }
             // And on the end, a special one to reset all the indexes.
@@ -498,26 +555,6 @@ class PluginSearchElasticsearch extends PluginSearch {
             // free the cron lock
             delete_records('config', 'field', '_cron_lock_search_elasticsearch_cron', 'value', $start);
         }
-        // TODO: Make single-searchtype reset work properly. For now we'll just comment this out in hopes
-        // it will aid a future developer.
-//         else {
-//             // If they clicked any "reset index" button, then reset only that index.
-//             // We'll  loop through the index types, in order to check for the form detail for each one
-//             $types = explode(',', $values['types']);
-//             foreach ($types as $type) {
-//                 // Check whether they chose to reset the index on this type
-//                 $type = trim($type);
-//                 $keyreset = $type . 'reset';
-//                 if (isset($values[$keyreset]) AND $values[$keyreset] == 'reset') {
-//                     // Queues every matching record for this index type
-//                     ElasticsearchIndexing::requeue_searchtype_contents($type);
-//                 }
-//                 // Reset the mappings for (only) this type
-//                 self::set_mapping($type);
-//                 ElasticsearchIndexing::create_triggers($type);
-//             }
-//         }
-
         return true;
     }
 
@@ -568,13 +605,20 @@ class PluginSearchElasticsearch extends PluginSearch {
         ElasticSearchIndexing::create_index();
         ElasticsearchIndexing::create_trigger_functions();
         $enabledtypes = explode(',', get_config_plugin('search', 'elasticsearch', 'types'));
+        $mappings = array();
         // (re)create the mappings and the overall site index
         foreach ($enabledtypes as $type) {
             ElasticsearchIndexing::create_triggers($type);
             ElasticsearchIndexing::requeue_searchtype_contents($type);
-            error_log("setting mapping for $type");
-            self::set_mapping($type);
+            error_log("fetching mapping for $type");
+            $ES_class = 'ElasticsearchType_' . $type;
+            if ($ES_class::$mappingconfv6 === false) {
+                error_log("mapping $type missing - will ignore");
+                continue;
+            }
+            $mappings[]= $ES_class::$mappingconfv6;
         }
+        self::set_mapping($mappings);
     }
 
     public static function postinst($prevversion) {
@@ -637,47 +681,54 @@ class PluginSearchElasticsearch extends PluginSearch {
     }
 
     /**
-     * Creates the "mapping" for this searchtype, on the elasticsearch server
+     * Creates the "mapping" for the 'doc' mappingtype on the elasticsearch server
      *
-     * TODO: it would be good to be able to make elasticsearch just delete the contents of one
-     * searchtype, perhaps identified by its mapping? But I haven't been able to figure out how
-     * to do that, so instead you can only delete the whole index at once.
-     * @param string $type
+     * @param array $mappings Array of old style mapping types that we want to merge to make one type
      */
-    private static function set_mapping($type) {
-        // usr,interaction_instance,interaction_forum_post,view,group,artefact
-        $ES_class = 'ElasticsearchType_' . $type;
-        if ($ES_class::$mappingconf === false) {
-            error_log("mapping $type: returning false");
+    private static function set_mapping($mappings) {
+
+        if (!is_array($mappings) || empty($mappings)) {
+            error_log('wrong mapping info');
             return false;
         }
-
-        $ESClient = self::make_client();
+        $docmapping = array();
+        foreach ($mappings as $maptype) {
+            foreach ($maptype as $k => $v) {
+                if (!isset($docmapping[$k])) {
+                    $docmapping[$k] = $v;
+                }
+                else {
+                    $docmapping[$k] = array_replace_recursive($docmapping[$k], $v);
+                }
+            }
+        }
         $ESAnalyzer = get_config_plugin('search', 'elasticsearch', 'analyzer');
+        // In version 6.x there is no catchall '_all' field so we now map '$type_all' for the different types
+        // and instead of doing full search on '_all' we do multi_match on 'catch_all' to achieve same functionality.
+        $docmapping['catch_all'] = array(
+            'type' => 'text',
+            'analyzer'  => $ESAnalyzer,
+            'search_analyzer' => $ESAnalyzer,
+            'store' => true
+        );
 
         $mappingparams = array(
             'index' => PluginSearchElasticsearch::get_write_indexname(),
-            'type' => $type,
+            'type' => 'doc', // Only allowed one type mapping in version 6.x
             'body' => array(
-                $type => array(
+                'doc' => array(
                     '_source' => array(
                         'enabled' => true
                     ),
-                    '_all' => array(
-                        'analyzer'  => $ESAnalyzer,
-                        'search_analyzer' => $ESAnalyzer,
-                        'store' => 'yes',
-                        'enabled' => true
-                    ),
-                    'properties' => $ES_class::$mappingconf
+                    'properties' => $docmapping
                 )
             )
         );
-
+        error_log("setting merged mappings");
+        $ESClient = self::make_client('write');
         // Set mapping on index type.
         $ESClient->indices()->putMapping($mappingparams);
     }
-
 
     /**
      * Sends records from the queue table into the elasticsearch server
@@ -723,7 +774,7 @@ class PluginSearchElasticsearch extends PluginSearch {
             return;
         }
 
-        $ESClient = self::make_client();
+        $ESClient = self::make_client('write');
         /*
         $indexname = self::get_write_indexname();
         $elasticaIndex = $elasticaClient->getIndex($indexname);
@@ -749,8 +800,8 @@ class PluginSearchElasticsearch extends PluginSearch {
                             $params['body'][] = [
                                     'delete' => [
                                             '_index' => PluginSearchElasticsearch::get_write_indexname(),
-                                            '_type'  => $type,
-                                            '_id'    => $record,
+                                            '_type'  => 'doc',
+                                            '_id'    => $type.$record,
                                     ],
                             ];
                         }
@@ -776,10 +827,11 @@ class PluginSearchElasticsearch extends PluginSearch {
                             $params['body'][] = [
                                 'index' => [
                                     '_index' => PluginSearchElasticsearch::get_write_indexname(),
-                                    '_type'  => $type,
-                                    '_id'    => $record['id'],
+                                    '_type'  => 'doc',
+                                    '_id'    => $type.$record['id'],
                                 ],
                             ];
+                            $record['body']['type'] = $record['type'];
                             $params['body'][] = (array)$record['body'];
                         }
 
@@ -807,8 +859,8 @@ class PluginSearchElasticsearch extends PluginSearch {
                     function($record, $type) use ($ESClient) {
                         $params = array(
                                 'index' => PluginSearchElasticsearch::get_write_indexname(),
-                                'type'  => $type,
-                                'id'    => $record,
+                                'type'  => 'doc',
+                                'id'    => $type.$record,
                         );
 
                         return $ESClient->delete($params);
@@ -826,10 +878,11 @@ class PluginSearchElasticsearch extends PluginSearch {
                 self::send_queued_items_individually(
                     $documents,
                     function($record, $type) use ($ESClient) {
+                        $record['body']['type'] = $record['type'];
                         $params = array(
                             'index' => PluginSearchElasticsearch::get_write_indexname(),
-                            'type'  => $type,
-                            'id'    => $record['id'],
+                            'type'  => 'doc',
+                            'id'    => $type.$record['id'],
                             'body'  => (array)$record['body'],
                         );
 
@@ -1056,32 +1109,40 @@ class PluginSearchElasticsearch extends PluginSearch {
 
    }
 
-   /**
-    * Creates an \Elastica\Client object, filling in the host and
-    * port with the values from the elasticsearch plugin's admin screen.
-    * If you wanted to make other changes to how we connect to elasticsearch,
-    * this would be a good place to do it.
-    *
-    * @return \Elastica\Client
-    */
-   public static function make_client() {
+   public static function get_client_config($type='read') {
        $host = get_config_plugin('search', 'elasticsearch', 'host');
        $port = get_config_plugin('search', 'elasticsearch', 'port');
 
-       $credentials="";
-       if ($username = get_config_plugin('search', 'elasticsearch', 'username')) {
-           $password = get_config_plugin('search', 'elasticsearch', 'password');
-           // Thank you Wikipedia: http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
-           $authheader = 'Basic ' . base64_encode("{$username}:{$password}");
-           $config['headers'] = array('Authorization'=>$authheader);
-           $credentials = "{$username}:{$password}@";
-       }
-
-       $host = array($credentials . $host . ':' . $port);
+       $hosts = array(
+                    array(
+                        'host' => $host,
+                        'port' => $port
+                    )
+       );
 
        // Build array of curlopts
        $elasticclientcurlopts = [];
        $elasticclientcurlopts[CURLOPT_CONNECTTIMEOUT] = 3;
+
+       if ($username = get_config_plugin('search', 'elasticsearch', 'username')) {
+           $password = get_config_plugin('search', 'elasticsearch', 'password');
+           if ($type == 'write' && $indexingusername = get_config_plugin('search', 'elasticsearch', 'indexingusername')) {
+               $username = $indexingusername;
+               $password = get_config_plugin('search', 'elasticsearch', 'indexingpassword');
+           }
+           $hosts[0]['username'] = $username;
+           $hosts[0]['password'] = $password;
+           $elasticclientcurlopts[CURLOPT_USERPWD] = $username . ':' . $password;
+       }
+
+       if (get_config_plugin('search', 'elasticsearch', 'scheme')) {
+           $hosts[0]['scheme'] = get_config_plugin('search', 'elasticsearch', 'scheme');
+           if (!get_config('productionmode') && get_config_plugin('search', 'elasticsearch', 'ignoressl')) {
+               // Ignore verifying the SSL certificate
+               $elasticclientcurlopts[CURLOPT_SSL_VERIFYHOST] = false;
+               $elasticclientcurlopts[CURLOPT_SSL_VERIFYPEER] = false;
+           }
+       }
 
        if (get_config('proxyaddress')) {
            $elasticclientcurlopts[CURLOPT_PROXY] = get_config('proxyaddress');
@@ -1091,9 +1152,22 @@ class PluginSearchElasticsearch extends PluginSearch {
                $elasticclientcurlopts[CURLOPT_PROXYUSERPWD] = get_config('proxyauthcredentials');
            }
        }
+       return array('hosts' => $hosts, 'curlopts' => $elasticclientcurlopts);
+   }
+
+   /**
+    * Creates an \Elastica\Client object, filling in the host and
+    * port with the values from the elasticsearch plugin's admin screen.
+    * If you wanted to make other changes to how we connect to elasticsearch,
+    * this would be a good place to do it.
+    *
+    * @return \Elastica\Client
+    */
+   public static function make_client($type='read') {
+       $clientopts = self::get_client_config($type);
 
        $clientBuilder = ClientBuilder::create();
-       $clientBuilder->setHosts($host)->setConnectionParams(['client' => ['curl' => $elasticclientcurlopts]]);
+       $clientBuilder->setHosts($clientopts['hosts'])->setConnectionParams(['client' => ['curl' => $clientopts['curlopts']]]);
        $client = $clientBuilder->build();
 
        return $client;
@@ -1673,7 +1747,7 @@ class ElasticsearchPseudotype_all
         //      1 - Get the aggregate lists of content / filter / owner types
         // ------------------------------------------------------------------------------------------
         $records = array();
-        $searchfield = '_all';
+        $searchfield = 'catch_all';
         if ($result['tagsonly'] === true) {
             $searchfield = 'tags';
         }
@@ -1840,9 +1914,18 @@ class ElasticsearchPseudotype_all
             return mb_strtolower($chr, "UTF-8") != $chr;
         }
 
+        $cleanuphighlight = function($str) {
+            $str = strip_tags($str, '<span>');
+            if (strpos($str, '<') > strpos($str, '>')) {
+                // we probably have a broken close tag so will strip it out
+                $str = substr($str, strpos($str, '>') + 1);
+            }
+            return $str;
+        };
+
         foreach ($results['hits']['hits'] as $hit) {
             $tmp = array();
-            $tmp['type'] = $hit['_type'];
+            $tmp['type'] = $hit['_source']['type'];
             $ES_class = 'ElasticsearchType_' . $tmp['type'];
 
             // Store highlighted fields if there is any
@@ -1859,7 +1942,8 @@ class ElasticsearchPseudotype_all
                 $tmp['db']->deleted = false;
                 $highlight = false;
                 if (!empty($tmp['highlight'])) {
-                    $highlight = implode(' ... ', $tmp['highlight']);
+                    $highlights = array_map($cleanuphighlight, $tmp['highlight']);
+                    $highlight = implode(' ... ', $highlights);
                     if (substr($highlight, 0, 1) !== '<' && !starts_with_upper(strip_tags($highlight))) {
                         $highlight = '... ' . $highlight;
                     }
@@ -1995,7 +2079,7 @@ class ElasticsearchIndexing {
     public static function create_index() {
         // Drop the index if it already exists.
         $params = array('index' => PluginSearchElasticsearch::get_write_indexname());
-        $ESClient = PluginSearchElasticsearch::make_client();
+        $ESClient = PluginSearchElasticsearch::make_client('write');
 
         if ($ESClient->indices()->exists($params)) {
             $ESClient->indices()->delete($params);
@@ -2012,8 +2096,8 @@ class ElasticsearchIndexing {
                     'analyzer' => array(
                         'mahara_analyzer' => array(
                             'type' => 'custom',
-                            'tokenizer' => 'pattern', // define token separators as any non-alphanumeric character
-                            'filter' => array('standard', 'lowercase', 'stop', 'maharaSnowball'),
+                            'tokenizer' => 'lowercase', // define token separators as any non-alphanumeric character
+                            'filter' => array('standard', 'stop', 'maharaSnowball'),
                             'char_filter' => array('maharaHtml'),
                         ),
                         'whitespace_analyzer' => array(
@@ -2083,32 +2167,52 @@ class ElasticsearchIndexing {
 
     /**
      *   Check if access changed between the last time the function was called (view_access table) and
-     *   add items to the queue
+     *   add items to the queue. Or pass in an array of views to work wih (useful when all view_access rules
+     *   deleted for view)
      */
-    public static function add_to_queue_access($last_run, $timestamp) {
+    public static function add_to_queue_access($last_run, $timestamp, $views = array()) {
 
         $artefacttypes_str = self::artefacttypes_filter_string();
+        if (!empty($views)) {
+            $joinstr = '';
+            $wherestr = " v.id IN (" . implode(',', array_values($views)) . ")";
+        }
+        else {
+            $joinstr = " INNER JOIN {view_access} vac ON vac.view = v.id ";
+            $wherestr = " vac.startdate BETWEEN '{$last_run}' AND '{$timestamp}'
+                          OR vac.stopdate BETWEEN '{$last_run}' AND '{$timestamp}'
+                          OR vac.ctime BETWEEN '{$last_run}' AND '{$timestamp}'";
+        }
 
         execute_sql("
             INSERT INTO {search_elasticsearch_queue} (itemid, type)
-            SELECT view, 'view'
-            FROM {view_access} WHERE startdate BETWEEN '{$last_run}' AND '{$timestamp}'
-            OR stopdate BETWEEN  '{$last_run}' AND '{$timestamp}'
-            ;"
+            SELECT v.id, 'view'
+            FROM {view} v
+            " . $joinstr . "
+            WHERE " . $wherestr . ";"
         );
 
         execute_sql("
             INSERT INTO {search_elasticsearch_queue} (itemid, type, artefacttype)
             SELECT var.artefact, 'artefact', a.artefacttype
-            FROM {view_access} vac
-            INNER JOIN {view_artefact} var ON var.view = vac.view
+            FROM {view} v
+            " . $joinstr . "
+            INNER JOIN {view_artefact} var ON var.view = v.id
             INNER JOIN {artefact} a ON var.artefact = a.id
-            WHERE
-                (
-                    vac.startdate BETWEEN '{$last_run}' AND '{$timestamp}'
-                    OR vac.stopdate BETWEEN  '{$last_run}' AND '{$timestamp}'
-                )
-                AND a.artefacttype IN {$artefacttypes_str}
+            WHERE (" . $wherestr . ")
+            AND a.artefacttype IN {$artefacttypes_str}
+            ;"
+        );
+
+        // Deal with text blocks
+        execute_sql("
+            INSERT INTO {search_elasticsearch_queue} (itemid, type)
+            SELECT b.id, 'block_instance'
+            FROM {view} v
+            " . $joinstr . "
+            INNER JOIN {block_instance} b ON v.id = b.view
+            WHERE (" . $wherestr . ")
+            AND b.blocktype IN ('text')
             ;"
         );
     }

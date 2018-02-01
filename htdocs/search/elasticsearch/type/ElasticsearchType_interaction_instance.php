@@ -1,66 +1,52 @@
 <?php
 class ElasticsearchType_interaction_instance extends ElasticsearchType {
-    public static $mappingconf = array (
+    // New style v6 mapping
+    public static $mappingconfv6 = array (
+            'type' => array(
+                'type' => 'keyword',
+            ),
             'mainfacetterm' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'secfacetterm' => array ( // set to Forum
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'id' => array (
                     'type' => 'long',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'title' => array (
                     'type' => 'text',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'description' => array (
                     'type' => 'text',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             // access to forum topics is granted to all members of the group
             'access' => array (
                     'type' => 'object',
-                    'include_in_all' => FALSE,
                     'properties' => array (
                             'general' => array (
                                     'type' => 'keyword',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => FALSE
                             ),
                             'groups' => array (
                                     'type' => 'object',
-                                    'include_in_all' => FALSE,
                                     'properties' => array (
                                          'all' => array (
                                              'type' => 'integer',
-                                             'index' => 'not_analyzed',
                                              'copy_to' => 'group',
-                                             'include_in_all' => false
                                          ),
                                          'admin' => array (
                                              'type' => 'integer',
-                                             'index' => 'not_analyzed',
                                              'copy_to' => 'group',
-                                             'include_in_all' => false
                                          ),
                                          'member' => array (
                                              'type' => 'integer',
-                                             'index' => 'not_analyzed',
                                              'copy_to' => 'group',
-                                             'include_in_all' => false
                                          ),
                                          'tutor' => array (
                                              'type' => 'integer',
-                                             'index' => 'not_analyzed',
                                              'copy_to' => 'group',
-                                             'include_in_all' => false
                                          )
                                      )
                             ),
@@ -72,15 +58,13 @@ class ElasticsearchType_interaction_instance extends ElasticsearchType {
             'ctime' => array (
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
-                    'include_in_all' => FALSE
             ),
             // sort is the field that will be used to sort the results alphabetically
             'sort' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             )
     );
+
     public static $mainfacetterm = 'Text';
     public function __construct($data) {
         $this->conditions = array (

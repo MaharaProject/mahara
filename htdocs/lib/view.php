@@ -1295,7 +1295,13 @@ class View {
         $beforeusers = activity_get_viewaccess_users($this->get('id'));
 
         $select = 'view = ? AND visible = 1 AND token IS NULL';
-
+        $beforerules = get_records_select_array('view_access', $select, array($this->id));
+        if (get_config('searchplugin') == 'elasticsearch' && !empty($beforerules) && empty($accessdata) && $viewids != null) {
+            // We are removing access rules and none are left so we need to let elasticsearch know
+            // as it won't be picked up by the add_to_queue_access() function
+            safe_require('search', 'elasticsearch');
+            ElasticsearchIndexing::add_to_queue_access(null, null, $viewids);
+        }
         db_begin();
         delete_records_select('view_access', $select, array($this->id));
 

@@ -1,4 +1,5 @@
 {include file="header.tpl"}
+<a name="onsearch"></a>
 {$form|safe}
 <script language="javascript" type="application/javascript" src="{$WWWROOT}search/elasticsearch/filter.js"></script>
 <div id="universalsearchresult">

@@ -1,66 +1,59 @@
 <?php
 class ElasticsearchType_usr extends ElasticsearchType {
-    public static $mappingconf = array (
+    // New style v6 mapping
+    public static $mappingconfv6 = array (
+            'type' => array(
+                    'type' => 'keyword',
+            ),
             'mainfacetterm' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'id' => array (
                     'type' => 'long',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'email' => array (
                     'type' => 'keyword',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'username' => array (
                     'type' => 'keyword',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'firstname' => array (
                     'type' => 'keyword',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'lastname' => array (
                     'type' => 'keyword',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'preferredname' => array (
                     'type' => 'keyword',
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'institutions' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
                     'copy_to' => 'institution',
-                    'include_in_all' => FALSE
             ),
             // access to user - to be able to hide user from public search
             'access' => array (
                     'type' => 'object',
-                    'include_in_all' => FALSE,
                     'properties' => array (
                             'general' => array (
                                     'type' => 'keyword',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => FALSE
                             )
                     )
             ),
             'ctime' => array (
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
-                    'include_in_all' => FALSE
             ),
             // sort is the field that will be used to sort the results alphabetically
             'sort' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             )
     );
+
     public static $mainfacetterm = 'User';
     public function __construct($data) {
         $this->conditions = array (

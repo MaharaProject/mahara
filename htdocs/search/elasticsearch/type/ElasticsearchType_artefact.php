@@ -1,40 +1,33 @@
 <?php
 class ElasticsearchType_artefact extends ElasticsearchType {
-    public static $mappingconf = array (
+    // New style v6 mapping
+    public static $mappingconfv6 = array (
+            'type' => array(
+                'type' => 'keyword',
+            ),
             'mainfacetterm' => array ( // this is the 2nd level in the hierarchy artefacttype|artefactgroup|mainfacetterm
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'secfacetterm' => array ( // this is the 1st level in the hierarchy artefacttype|artefactgroup|mainfacetterm
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'id' => array (
                     'type' => 'long',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'artefacttype' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'title' => array (
                     'type' => 'text',
-                    'index' => TRUE,
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'description' => array (
                     'type' => 'text',
-                    'index' => TRUE,
-                    'include_in_all' => TRUE
+                    'copy_to' => 'catch_all'
             ),
             'tags' => array (
                     'type' => 'keyword',
-                    'copy_to' => 'tag',
-                    'include_in_all' => TRUE
+                    'copy_to' => ['tag', 'catch_all']
             ),
             'tag' => array (
                     'type' => 'keyword'
@@ -42,70 +35,48 @@ class ElasticsearchType_artefact extends ElasticsearchType {
             // the owner can be owner (user), group, or institution
             'owner' => array (
                     'type' => 'long',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'group' => array (
                     'type' => 'long',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'institution' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             'access' => array (
                     'type' => 'object',
-                    'include_in_all' => FALSE,
                     // public - logged - friends: if artefact is visible to public or logged-in users
                     // if public or logged, the other properties are ignored
                     'properties' => array (
                             'general' => array (
                                     'type' => 'keyword',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => FALSE
                             ),
                             // array of institutions that have access to the artefact
                             'institutions' => array (
                                     'type' => 'keyword',
-                                    'index' => 'not_analyzed',
                                     'copy_to' => 'institution',
-                                    'include_in_all' => FALSE
                             ),
                             'institution' => array (
                                     'type' => 'keyword',
-                                    'index' => 'not_analyzed',
-                                    'include_in_all' => false
                             ),
                             // array of groups that have access to the artefact - empty (all), member, admin
                             'groups' => array (
                                     'type' => 'object',
-                                    'include_in_all' => FALSE,
                                     'properties' => array (
                                         'all' => array (
                                             'type' => 'integer',
-                                            'index' => 'not_analyzed',
                                             'copy_to' => 'group',
-                                            'include_in_all' => false
                                         ),
                                         'admin' => array (
                                             'type' => 'integer',
-                                            'index' => 'not_analyzed',
                                             'copy_to' => 'group',
-                                            'include_in_all' => false
                                         ),
                                         'member' => array (
                                             'type' => 'integer',
-                                            'index' => 'not_analyzed',
                                             'copy_to' => 'group',
-                                            'include_in_all' => false
                                         ),
                                         'tutor' => array (
                                             'type' => 'integer',
-                                            'index' => 'not_analyzed',
                                             'copy_to' => 'group',
-                                            'include_in_all' => false
                                         )
                                     )
                             ),
@@ -115,9 +86,7 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                             // array of user ids that have access to the artefact
                             'usrs' => array (
                                     'type' => 'integer',
-                                    'index' => 'not_analyzed',
                                     'copy_to' => 'usr',
-                                    'include_in_all' => FALSE
                             ),
                             'usr' => array (
                                     'type' => 'integer'
@@ -128,21 +97,17 @@ class ElasticsearchType_artefact extends ElasticsearchType {
             'ctime' => array (
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
-                    'include_in_all' => FALSE
             ),
             // sort is the field that will be used to sort the results alphabetically
             'sort' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             ),
             // artefact_license.name is used to store the license
             'license' => array (
                     'type' => 'keyword',
-                    'index' => 'not_analyzed',
-                    'include_in_all' => FALSE
             )
     );
+
     public static $mainfacetterm = 'Text'; // can be Text or Media depending on artefacttype
     public static $subfacetterm = 'artefacttype';
     public function __construct($data) {
@@ -399,6 +364,7 @@ class ElasticsearchType_artefact extends ElasticsearchType {
         $views = get_records_sql_array ( $sql, array (
                 $id
         ) );
+
         if ($views) {
             $record_views = array ();
             foreach ( $views as $view ) {
@@ -497,43 +463,45 @@ class ElasticsearchType_artefact extends ElasticsearchType {
     public static function views_by_artefact_acl_filter($views = array()) {
         global $USER;
 
-        $acl = new ElasticsearchFilterAcl ( $USER );
+        $acl = new ElasticsearchFilterAcl($USER);
+        $viewmap = function($value) {
+            return 'view' . $value;
+        };
 
-        $filter = [
-                "bool" => [
-                        "must" => [
-                                array (
-                                        array (
-                                                'term' => [
-                                                        '_type' => 'view'
-                                                ]
-                                        ),
-                                        array (
-                                                'terms' => [
-                                                        'id' => array_keys ( $views )
-                                                ]
-                                        )
-                                )
-                        ],
-                        "should" => $acl->get_params () ['should']
-                ]
-        ]
-        ;
-
-        $client = PluginSearchElasticsearch::make_client ();
-        $params = array (
-                'index' => PluginSearchElasticsearch::get_write_indexname (),
-                'body' => array (
-                        'size' => 10, //
-                        'query' => array (
-                                'bool' => array (
-                                        'filter' => $filter
-                                )
+        $filter = array(
+            "bool" => array(
+                "must" => array(
+                    array (
+                        array (
+                            'term' => array(
+                                '_type' => 'doc'
+                            )
+                        ),
+                        array (
+                            'terms' => array(
+                                '_id' => array_map($viewmap, array_keys($views))
+                            )
                         )
-                )
+                    )
+                ),
+                "should" => $acl->get_params() ['should']
+            )
         );
 
-        $results = $client->search ( $params );
+        $client = PluginSearchElasticsearch::make_client();
+        $params = array (
+            'index' => PluginSearchElasticsearch::get_write_indexname(),
+            'body' => array (
+                'size' => 10,
+                'query' => array (
+                    'bool' => array (
+                        'filter' => $filter
+                    )
+                )
+            )
+        );
+
+        $results = $client->search ($params);
         $valid = array();
         if (!empty($results['hits'])) {
             foreach($results['hits']['hits'] as $item) {
