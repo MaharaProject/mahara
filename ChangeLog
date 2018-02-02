@@ -1,3 +1,7 @@
+17.04.6 (2018-02-02)
+- Bug 1744797: SAML plugin not working correctly with SimpleSamlPhp 1.15
+- Bug 1738898: Elasticsearch not updating indexed items when access rules change
+
 17.04.5 (2018-01-17)
 - 1734194 	Infinite redirect loop caused by logged out user in usr_session table
 - 1711200 	search in journal entry block not working
