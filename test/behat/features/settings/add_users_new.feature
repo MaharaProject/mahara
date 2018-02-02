@@ -51,6 +51,8 @@ Background:
   And I choose "Journals" in "Content" from main menu
   And I should see "Create journal"
   And I log out
+  # Test for logout confirmation
+  And I should see "You have been logged out successfully"
  #login as staff user
   Given I log in as "StaffA" with password "Kupuhipa1"
   And I click on "Show administration menu"
