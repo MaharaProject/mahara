@@ -931,20 +931,25 @@ function fetch_graph_data(opts) {
 function updateUrlParameter(url, param, value) {
     var found = false;
     var vars = url.split("?");
-    varparams = vars[1].split("&");
+    if (typeof(vars[1]) !== 'undefined') {
+        varparams = vars[1].split("&");
 
-    for (var i = 0; i < varparams.length; i++) {
-        var pair = varparams[i].split("=");
-        if (pair[0] == param) {
-            pair[1] = value;
-            found = true;
+        for (var i = 0; i < varparams.length; i++) {
+            var pair = varparams[i].split("=");
+            if (pair[0] == param) {
+                pair[1] = value;
+                found = true;
+            }
+            varparams[i] = pair.join("=");
         }
-        varparams[i] = pair.join("=");
+        vars[1] = varparams.join("&");
+        url = vars.join("?");
+        if (!found) {
+            url = url + '&' + param + '=' + value;
+        }
     }
-    vars[1] = varparams.join("&");
-    url = vars.join("?");
-    if (!found) {
-        url = url + '&' + param + '=' + value;
+    else {
+        url = url + '?' + param + '=' + value;
     }
     return url;
 }

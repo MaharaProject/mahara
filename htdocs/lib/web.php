@@ -3083,7 +3083,7 @@ function footer_menu($all=false) {
 
     $menu = array(
         'termsandconditions' => array(
-            'url'   => $wwwroot . 'terms.php',
+            'url'   => ($USER->is_logged_in() ? $wwwroot . 'account/userprivacy.php' : $wwwroot . 'terms.php'),
             'title' => get_string('termsandconditions'),
         ),
         'privacystatement' => array(

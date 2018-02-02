@@ -89,7 +89,9 @@ $string['usedefault'] = 'Use site default';
 $string['usedefaultdescription3'] = 'Use the site\'s default text for the selected page type.';
 $string['staticpagesdescription'] = 'Edit the content of static pages in Mahara (Home, Terms and Conditions, etc.)';
 $string['institutionprivacypagedescription'] = 'Edit the privacy statement for your institution, which is displayed in addition to the site privacy statement. The version you edited last becomes the current privacy statement automatically. You see the current site privacy statement as reference.';
+$string['institutiontermspagedescription'] = 'Edit the terms and conditions for your institution, which is displayed in addition to the site terms and conditions. The version you edited last becomes the current terms and conditions automatically. You see the current site terms and conditions as reference.';
 $string['noinstitutionprivacy'] = 'There is no privacy statement for this institution yet.';
+$string['noinstitutionterms'] = 'There are no terms and conditions for this institution yet.';
 $string['menus'] = 'Menus';
 $string['menusdescription'] = 'Manage the links and files within the "Links and resources" and footer menus';
 $string['sitefiles']          = 'Site files';
@@ -1344,6 +1346,7 @@ $string['privacylastversion'] = 'Privacy statements must have unique version nam
 $string['termsandconditionslastversion'] = 'Terms and conditions must have unique version names of up to 15 characters. The latest version for this privacy statement is "%s".';
 $string['versionalreadyexist'] = 'A %s version with the name "%s" already exists.';
 $string['siteprivacystatement'] = 'Site privacy statement';
+$string['sitetermsstatement'] = 'Site terms and conditions';
 $string['addoneversionlink']   = '<a href="%s">Add one</a> if you need it.';
 $string['privacyversionfor'] = 'Privacy statement for version "%s" is as follows:';
 $string['termsversionfor'] = 'Terms and conditions for version "%s" is as follows:';

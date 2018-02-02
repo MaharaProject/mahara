@@ -3244,18 +3244,17 @@ function get_latest_privacy_versions($institutions = array(), $ignoreagreevalue 
         $useragreementsql = $joinsql . " {usr_agreement} u ON s2.current = u.sitecontentid AND u.usr = ? AND u.agreed = 1";
         $params = array($USER->get('id'));
     }
-
-    $latestversions = get_records_sql_array("
-        SELECT s.id, s.version, s.content, s.ctime, s.institution, " . $userdetails . "
-            CASE s.institution WHEN 'mahara' THEN 1 ELSE 2 END as type
+    $select = count($institutions) == 1 ? 's.type, s.id' : 's.id, s.type';
+    $latestversions = get_records_sql_assoc("
+        SELECT " . $select . ", s.id, s.version, s.content, s.ctime, s.institution, " . $userdetails . "
+            CASE s.institution WHEN 'mahara' THEN 1 ELSE 2 END AS site
         FROM {site_content_version} s
-        INNER JOIN (SELECT MAX(id) as current, institution
+        INNER JOIN (SELECT MAX(id) AS current, institution, type
             FROM {site_content_version}
-            WHERE type = 'privacy'
-            GROUP BY institution) s2 ON s.institution = s2.institution AND s.id = s2.current
+            GROUP BY institution, type) s2 ON s.institution = s2.institution AND s.id = s2.current
             " . $useragreementsql . "
-        WHERE s.type = 'privacy' AND s.institution IN (" . join(',',array_map('db_quote',$institutions)) . ")
-        ORDER BY type", $params);
+        WHERE s.institution IN (" . join(',',array_map('db_quote',$institutions)) . ")
+        ORDER BY site", $params);
 
     return $latestversions;
 }

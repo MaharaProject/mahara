@@ -19,8 +19,8 @@ define('MENUITEM', 'manageinstitutions/privacy');
 require_once('institution.php');
 
 define('TITLE', get_string('legal', 'admin'));
-define('SUBSECTIONHEADING', get_string('privacy', 'admin'));
 $versionid = param_integer('id', null);
+$fs = param_alpha('fs', 'privacy');
 
 if (!is_logged_in()) {
     throw new AccessDeniedException();
@@ -51,19 +51,38 @@ $institutionselector = pieform(array(
 $wwwroot = get_config('wwwroot');
 
 // The "Add one" link displayed when an institution has no privay statement of its own.
-$href = $wwwroot . 'admin/users/institutionprivacy.php?institution=' . $institution . '&id=0';
+$href = $wwwroot . 'admin/users/institutionprivacy.php?institution=' . $institution . '&id=0&fs=' . $fs;
 
-$privacies = get_records_sql_assoc("
-    SELECT  s.id, s.version, u.firstname, u.lastname, u.id AS userid, s.content, s.ctime
-    FROM {site_content_version} s
-    LEFT JOIN {usr} u ON s.author = u.id
-    WHERE s.type = 'privacy' AND s.institution = ?
-    ORDER BY s.id DESC", array($institution));
+// Get the institution's privacy statements and T&Cs.
+$privacies = get_institution_versioned_content($institution);
 
+// Add to an array the latest versions of both T&C and privacy statement.
+$latestVersions = array(); $types = array();
+if ($privacies) {
+    foreach ($privacies as $key => $content) {
+        if ($content->current != null) {
+            array_push($latestVersions, $key);
+        }
+        if (!in_array($content->type, $types)) {
+            // Useful in case an institution has just one type of content.
+            // Will use the $types to know on which tab to display the versions table.
+            array_push($types, $content->type);
+        }
+        $content->displayname = display_name($content->userid, null, true);
+    }
+}
+// Add 0 to $latestVersions, to allow the creation of a first privacy/T&C
+if (count($types) <= 1) {
+    array_push($latestVersions, 0);
+}
+// Site privacy and T&C to display in an expandable panel.
+$sitecontent = get_latest_privacy_versions(array('mahara'));
+$selectedtab = $fs;
 $form = false;
 if ($versionid !== null) {
     $pageoptions = get_record('site_content_version', 'id', $versionid, 'institution', $institution);
     if ($versionid === 0 || $pageoptions) {
+        $selectedtab = ($versionid === 0) ? $selectedtab : $pageoptions->type;
         $form = pieform(array(
             'name'              => 'editsitepage',
             'jsform'            => false,
@@ -72,7 +91,7 @@ if ($versionid !== null) {
                 'version' => array(
                     'type'         => 'text',
                     'title'        => get_string('version', 'admin'),
-                    'description'  => $pageoptions ? get_string('lastversion', 'admin', $pageoptions->version) : '',
+                    'description'  => $pageoptions ? get_string($privacies[$versionid]->type . 'lastversion', 'admin', $pageoptions->version) : '',
                     'defaultvalue' => '',
                     'rules' => array(
                         'required'    => true,
@@ -80,6 +99,7 @@ if ($versionid !== null) {
                     )
                 ),
                 'pageinstitution' => array('type' => 'hidden', 'value' => $institution),
+                'activetab' => array('type' => 'hidden', 'value' => $selectedtab),
                 'pagetext' => array(
                     'name'        => 'pagetext',
                     'type'        => 'wysiwyg',
@@ -96,7 +116,7 @@ if ($versionid !== null) {
                     'class' => 'btn-primary',
                     'type'  => 'submitcancel',
                     'value' => array(get_string('savechanges', 'admin'), get_string('cancel')),
-                    'goto'  => get_config('wwwroot') . 'admin/users/institutionprivacy.php?institution=' . $institution,
+                    'goto'  => get_config('wwwroot') . 'admin/users/institutionprivacy.php?institution=' . $institution . '&fs=' . $selectedtab,
                 ),
             )
         ));
@@ -107,69 +127,67 @@ if ($versionid !== null) {
 }
 
 function editsitepage_validate(Pieform $form, $values) {
-    // Check if the version entered by the user already exists
-    if (record_exists('site_content_version', 'institution', $values['pageinstitution'], 'version', $values['version'])) {
-        $form->set_error('version', get_string('versionalreadyexist', 'admin', $values['version']));
+    // Check if the version entered by the user already exists for a specific content type.
+    if (record_exists('site_content_version', 'institution', $values['pageinstitution'], 'version', $values['version'], 'type', $values['activetab'])) {
+        $form->set_error('version', get_string('versionalreadyexist', 'admin', get_string($values['activetab'] . 'lowcase', 'admin'), $values['version']));
     }
 }
 
 function editsitepage_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
-    $id = get_field('site_content_version', 'id', 'version', $values['version']);
-    require_once('embeddedimage.php');
-    // Update the pagetext with any embedded image info
-    $pagetext = EmbeddedImage::prepare_embedded_images($values['pagetext'], 'staticpages', $id);
-
     $data = new StdClass;
-    $data->content = $pagetext;
+    $data->content = $values['pagetext'];
     $data->author = $USER->get('id');
     $data->institution = $values['pageinstitution'];
     $data->ctime = db_format_timestamp(time());
     $data->version = $values['version'];
-    $data->type = 'privacy';
+    $data->type = $values['activetab'];
 
     try {
-        insert_record('site_content_version', $data);
+        $id = insert_record('site_content_version', $data, 'id', true);
+        if ($id) {
+            require_once('embeddedimage.php');
+            $pagetext = EmbeddedImage::prepare_embedded_images($values['pagetext'], 'staticpages', $id);
+            // If there is an embedded image, update the src so users can have visibility
+            if ($values['pagetext'] != $pagetext) {
+                // Update the pagetext with any embedded image info
+                $updated = new stdClass();
+                $updated->id = $id;
+                $updated->content = $pagetext;
+                update_record('site_content_version', $updated, 'id');
+            }
+            // Auto accept the PS/T&C to avoid situation in which
+            // the admin is asked to agree to the PS/T&C he has just created.
+            save_user_reply_to_agreement($USER->get('id'), $id, 1);
+        }
         $SESSION->add_ok_msg(get_string('pagesaved', 'admin'));
     }
     catch (SQLException $e) {
         $SESSION->add_ok_msg(get_string('savefailed', 'admin'));
     }
-    redirect(get_config('wwwroot').'admin/users/institutionprivacy.php?institution=' . $values['pageinstitution']);
+    redirect(get_config('wwwroot').'admin/users/institutionprivacy.php?institution=' . $values['pageinstitution'] . '&fs=' . $values['activetab']);
 }
 
-// Site privacy to display in an expandable panel
-$siteprivacycontent = get_record_sql("
-    SELECT s.content, s.ctime
-    FROM {site_content_version} s
-    WHERE s.type = 'privacy' AND s.institution = ?
-    ORDER BY s.id DESC
-    LIMIT 1", array('mahara'));
-
 $js = <<< EOF
-jQuery(function($) {
-  function reloadUsers() {
-      window.location.href = '{$wwwroot}admin/users/institutionprivacy.php?institution=' + $('#usertypeselect_institution').val();
-  }
-
+$(document).ready(function() {
+  checkActiveTab('$selectedtab');
   $('#usertypeselect_institution').on('change', reloadUsers);
 });
 EOF;
 
-$smarty = smarty();
+$smarty = smarty(array('privacy'));
 setpageicon($smarty, 'icon-umbrella');
 
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('href', $href);
-$smarty->assign('siteprivacycontent', $siteprivacycontent);
-$smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfeed', format_date(strtotime($siteprivacycontent->ctime))));
+$smarty->assign('sitecontent', $sitecontent);
 $smarty->assign('versionid', $versionid);
-$smarty->assign('privacies', $privacies);
+$smarty->assign('results', $privacies);
 $smarty->assign('pageeditform', $form);
 $smarty->assign('institution', $institution);
-$smarty->assign('latestversion', $privacies ? reset($privacies)->version : 0);
-$smarty->assign('latestprivacyid', $privacies ? reset($privacies)->id : 0);
-$smarty->assign('version', $versionid && $pageoptions ? $pageoptions->version : '');
+$smarty->assign('latestVersions', $latestVersions);
 $smarty->assign('institutionselector', $institutionselector);
+$smarty->assign('types', implode(' ', $types));
+$smarty->assign('link', "admin/users/institutionprivacy.php?institution={$institution}&id=");
 $smarty->display('admin/users/institutionprivacy.tpl');

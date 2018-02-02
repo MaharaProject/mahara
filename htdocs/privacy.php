@@ -18,9 +18,9 @@ $privacycontent = get_field_sql("
     SELECT s.content
     FROM {site_content_version} s
     WHERE s.institution = ?
+    AND s.type = 'privacy'
     ORDER BY s.version DESC
     LIMIT 1", array('mahara'));
-
 $smarty = smarty();
 $smarty->assign('page_content', $privacycontent);
 $smarty->display('sitepage.tpl');
