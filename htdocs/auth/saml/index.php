@@ -40,10 +40,6 @@ if (get_field('auth_installed', 'active', 'name', 'saml') != 1) {
     redirect();
 }
 
-if (!extension_loaded('mcrypt')) {
-    throw new AuthInstanceException(get_string_php_version('errornomcrypt','auth.saml'));
-}
-
 $sp = 'default-sp';
 
 PluginAuthSaml::init_simplesamlphp();
@@ -51,6 +47,9 @@ PluginAuthSaml::init_simplesamlphp();
 // Check the SimpleSAMLphp config is compatible
 $saml_config = SimpleSAML_Configuration::getInstance();
 $session_handler = $saml_config->getString('session.handler', false);
+if ($session_handler == 'memcache' && !extension_loaded('mcrypt')) {
+    throw new AuthInstanceException(get_string_php_version('errornomcrypt','auth.saml'));
+}
 $store_type = $saml_config->getString('store.type', false);
 if ($store_type == 'phpsession' || $session_handler == 'phpsession' || (empty($store_type) && empty($session_handler))) {
     throw new AuthInstanceException(get_string('errorbadssphp', 'auth.saml'));

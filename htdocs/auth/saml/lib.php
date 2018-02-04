@@ -367,7 +367,7 @@ class PluginAuthSaml extends PluginAuth {
 
     public static function install_auth_default() {
         // Set library version to download
-        set_config_plugin('auth', 'saml', 'version', '1.15.0');
+        set_config_plugin('auth', 'saml', 'version', '1.15.1');
     }
 
     private static function create_certificates($numberofdays = 3650) {
@@ -574,7 +574,7 @@ class PluginAuthSaml extends PluginAuth {
         // check extensions are loaded
         $libchecks = '';
         // Make sure mcrypt exists
-        if (!extension_loaded('mcrypt')) {
+        if (get_config('memcacheservers') && !extension_loaded('mcrypt')) {
             $libchecks .= '<li>' . get_string_php_version('errornomcrypt', 'auth.saml') . '</li>';
         }
         // Make sure the simplesamlphp files have been installed via 'make ssphp'
@@ -592,9 +592,9 @@ class PluginAuthSaml extends PluginAuth {
                 $libchecks .= '<li>' . get_string('errorupdatelib', 'auth.saml') . '</li>';
             }
         }
-        // Make sure we can use 'memcache' with simplesamlphp as 'phpsession' doesn't work correctly in many situations
-        if (!self::is_memcache_configured()) {
-            $libchecks .= '<li>' . get_string_php_version('errornomemcache', 'auth.saml') . '</li>';
+        // Make sure we can use a valid session handler with simplesamlphp as 'phpsession' doesn't work correctly in many situations
+        if (!self::is_usable()) {
+            $libchecks .= '<li>' . get_string_php_version('errornovalidsessionhandler', 'auth.saml') . '</li>';
         }
         if (!empty($libchecks)) {
             $libcheckstr = '<div class="alert alert-danger"><ul class="unstyled">' . $libchecks . '</ul></div>';
@@ -637,11 +637,23 @@ class PluginAuthSaml extends PluginAuth {
             return false;
         }
 
-        if (empty(get_config('ssphpsessionhandler'))) {
-            return self::is_memcache_configured();
+        if (get_config('ssphpsessionhandler') == 'memcached' && self::is_memcache_configured()) {
+            return true;
         }
 
-        return true;
+        if (get_config('ssphpsessionhandler') == 'redis' && self::is_redis_configured()) {
+            return true;
+        }
+
+        if (empty(get_config('ssphpsessionhandler'))) {
+            // Check Redis
+            $ishandler = self::is_redis_configured();
+            // And check Memcache if no Redis
+            $ishandler = $ishandler ? $ishandler : self::is_memcache_configured();
+            return $ishandler;
+        }
+
+        return false;
     }
 
     public static function is_simplesamlphp_installed() {
@@ -679,7 +691,6 @@ class PluginAuthSaml extends PluginAuth {
                 }
             }
         }
-
         return $is_configured;
     }
 
@@ -703,6 +714,43 @@ class PluginAuthSaml extends PluginAuth {
         }
 
         return $memcache_servers;
+    }
+
+    public static function is_redis_configured() {
+        return (bool) PluginAuthSaml::get_redis_master();
+    }
+
+    public static function get_redis_master() {
+        $master = null;
+        if (extension_loaded('redis')) {
+            foreach (self::get_redis_servers() as $server) {
+                if (!empty($server['server']) && !empty($server['mastergroup']) && !empty($server['prefix'])) {
+                    require_once(get_config('libroot') . 'redis/sentinel.php');
+                    $sentinel = new sentinel($server['server']);
+                    $master = $sentinel->get_master_addr($server['mastergroup']);
+                }
+            }
+        }
+        return $master;
+    }
+
+    public static function get_redis_config() {
+        $servers = PluginAuthSaml::get_redis_servers();
+        $master = PluginAuthSaml::get_redis_master();
+        return array('host' => $master->ip,
+                     'port' => (int)$master->port,
+                     'prefix' => $servers[0]['prefix']
+                    );
+    }
+
+    public static function get_redis_servers() {
+        $redissentinelservers = get_config('redissentinelservers');
+        $redismastergroup = get_config('redismastergroup');
+        $redisprefix = get_config('redisprefix');
+        $redis_servers[] = array('server' => $redissentinelservers,
+                                 'mastergroup' => $redismastergroup,
+                                 'prefix' => $redisprefix);
+        return $redis_servers;
     }
 
     public static function get_idps($xml) {

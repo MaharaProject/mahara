@@ -31,13 +31,18 @@ foreach ($metadata_files as $file) {
 
 // Fix up session handling config - to match Mahara
 $memcache_config = array();
+$redis_config = array('host' => '', 'port' => 6379, 'prefix' => '');
 if (empty(get_config('ssphpsessionhandler'))) {
     if (PluginAuthSaml::is_memcache_configured()) {
         $sessionhandler = 'memcache';
         $memcache_config = PluginAuthSaml::get_memcache_servers();
     }
+    else if (PluginAuthSaml::is_redis_configured()) {
+        $sessionhandler = 'redis';
+        $redis_config = PluginAuthSaml::get_redis_config();
+    }
     else {
-        throw new AuthInstanceException(get_string('errornomemcache', 'auth.saml'));
+        throw new AuthInstanceException(get_string('errornovalidsessionhandler', 'auth.saml'));
     }
 }
 else {
@@ -356,20 +361,6 @@ $config = array (
 
     'metadata.sources' => $metadata_sources,
 
-
-    /*
-     * This configuration option allows you to select which session handler
-     * SimpleSAMLPHP should use to store the session information. Currently
-     * we have two session handlers:
-     * - 'phpsession': The default PHP session handler.
-     * - 'memcache': Stores the session information in one or more
-     *   memcache servers by using the MemcacheStore class.
-     *
-     * The default session handler is 'phpsession'.
-     */
-    'session.handler'       => $sessionhandler,
-
-
     /*
      * Configuration for the MemcacheStore class. This allows you to store
      * multiple redudant copies of sessions on different memcache servers.
@@ -443,14 +434,16 @@ $config = array (
      */
     'memcache_store.expires' =>  60,
 
+    /*
+     * The hostname and port of the Redis datastore instance.
+     */
+    'store.redis.host' => $redis_config['host'],
+    'store.redis.port' => $redis_config['port'],
 
-    'redis_store.servers' => array(
-        array(
-            array('hostname' => 'localhost'),
-        ),
-    ),
-    'redis_store.expires' =>  36 * (60*60), // 36 hours.
-
+    /*
+     * The prefix we should use on our Redis datastore.
+     */
+    'store.redis.prefix' => $redis_config['prefix'],
 
     /*
      * Should signing of generated metadata be enabled by default.
@@ -480,6 +473,53 @@ $config = array (
     'metadata.sign.privatekey_pass' => NULL,
     'metadata.sign.certificate' => NULL,
 
+     /****************************
+     | DATA STORE CONFIGURATION |
+     ****************************/
+
+    /*
+     * Configure the data store for SimpleSAMLphp.
+     *
+     * - 'phpsession': Limited datastore, which uses the PHP session.
+     * - 'memcache': Key-value datastore, based on memcache.
+     * - 'sql': SQL datastore, using PDO.
+     * - 'redis': Key-value datastore, based on redis.
+     *
+     * The default datastore is 'phpsession'.
+     *
+     * (This option replaces the old 'session.handler'-option.)
+     */
+    'store.type'=> $sessionhandler,
+
+    /*
+     * The DSN the sql datastore should connect to.
+     *
+     * See http://www.php.net/manual/en/pdo.drivers.php for the various
+     * syntaxes.
+     */
+    'store.sql.dsn'       => 'sqlite:/path/to/sqlitedatabase.sq3',
+
+    /*
+     * The username and password to use when connecting to the database.
+     */
+    'store.sql.username' => null,
+    'store.sql.password' => null,
+
+    /*
+     * The prefix we should use on our tables.
+     */
+    'store.sql.prefix' => 'SimpleSAMLphp',
+
+    /*
+     * The hostname and port of the Redis datastore instance.
+     */
+    'store.redis.host' => $redis_config['host'],
+    'store.redis.port' => $redis_config['port'],
+
+    /*
+     * The prefix we should use on our Redis datastore.
+     */
+    'store.redis.prefix' => $redis_config['prefix'],
 );
 
 // if we set custom mappings files paths in config.php

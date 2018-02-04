@@ -11,8 +11,8 @@
 defined('INTERNAL') || die();
 
 $config = new StdClass;
-$config->version = 2017122000;
-$config->release = '1.2.3';
+$config->version = 2018021600;
+$config->release = '1.2.4';
 $config->name = 'saml';
 $config->requires_config = 1;
 $config->requires_parent = 0;

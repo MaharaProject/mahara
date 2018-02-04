@@ -739,8 +739,8 @@ $cfg->openbadgedisplayer_source = '{"backpack":"https://backpack.openbadges.org/
  * Specify the name of the session handler.
  */
 $cfg->sessionhandler = 'file';
-//$cfg->sessionhandler = 'memcached';
-//$cfg->memcacheservers = 'localhost:11211';
+//$cfg->sessionhandler = 'memcached'; // also set the $cfg->memcacheservers setting if using this one
+//$cfg->sessionhandler = 'redis'; // also set the $cfg->redis* ssettings if using this one
 
 /**
  * @global string $cfg->ssphpsessionhandler
@@ -748,6 +748,14 @@ $cfg->sessionhandler = 'file';
  * Specify the name of the session handler.
  */
 // $cfg->ssphpsessionhandler = 'memcached';
+
+
+/**
+ * Redis session handling
+ */
+//$cfg->redissentinelservers = "localhost:26379";  // A comma seperated string of hosts:ports
+//$cfg->redismastergroup = 'mymaster';
+//$cfg->redisprefix = 'mahara';
 
 /**
  * @global array $cfg->saml_custommappingfile

@@ -144,6 +144,7 @@ $string['nopasswordsaltset'] = 'No sitewide password salt has been set. Edit you
 $string['passwordsaltweak'] = 'Your sitewide password salt is not strong enough. Edit your config.php and set the "passwordsaltmain" parameter to a longer secret phrase.';
 $string['urlsecretweak'] = 'The $cfg->urlsecret set for this site has not been changed from the default value. Edit your config.php and set the $cgf->urlsecret parameter to a different string (or null if you do not wish to use a urlsecret).';
 $string['notproductionsite'] = 'This site is not in production mode. Some data may not be available and/or may be out of date.';
+$string['badsessionhandle'] = 'The session save handler "%s" is not configured correctly. Please check the settings in your "config.php" file.';
 $string['wrongsessionhandle'] = 'The session save handler "%s" is not supported in Mahara.';
 $string['nomemcachedserver'] = 'The memcache server "%s" is not reachable. Please check the $cfg->memcacheservers value to make sure it is correct';
 $string['nophpextension'] = 'The PHP extension "%s" is not enabled. Please enable the extension and restart your webserver or choose a different session option.';
