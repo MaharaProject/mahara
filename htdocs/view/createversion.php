@@ -28,6 +28,7 @@ $version = new stdClass();
 $version->numrows = $view->get('numrows');
 $version->layout = $view->get('layout');
 $version->description = $view->get('description');
+$version->title = $view->get('title');
 $version->tags = $view->get('tags');
 $version->columnsperrow = $view->get('columnsperrow');
 $version->blocks = array();

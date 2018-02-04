@@ -10,7 +10,7 @@
                 structureObj: [{}],
                 distanceMode: 'auto', // predefinedDistance , fixDistance
                 fixDistanceValue: 2,
-                firstPointMargin: 2,
+                firstPointMargin: 1,
                 map: {
                     "dataRoot": "dataArray",
                     "isSelected": "isSelected",
@@ -18,7 +18,8 @@
                     "subTitle": "subTitle",
                     "dateValue": "dateValue",
                     "pointCnt": "pointCnt",
-                    "bodyCnt": 'bodyCnt'
+                    "bodyCnt": 'bodyCnt',
+                    "idValue": "idValue"
                 },
                 isSelectedAttrProvided: false,
                 formatTitle: function (title, obj) { },
@@ -34,6 +35,8 @@
                 "ajax": "ajax",
                 "mappedJsonObject": "mappedJsonObject"
             }
+
+            var timelineCurrentIndex;
 
             var _initTimeLine = function (timeline) {
 
@@ -52,8 +55,15 @@
                 setDatePosition(timelineComponents, options.eventsMinDistance);
                 //assign a width to the timeline
                 var timelineTotWidth = setTimelineWidth(timelineComponents, options.eventsMinDistance);
+                // We don't need the timeline prev/next buttons to be active if our timeline is shorter than viewport
+                if (timelineTotWidth < timelineComponents['timelineWrapper'].width()) {
+                    timelineComponents['timelineNavigation'].find('.next').addClass('inactive');
+                }
                 //the timeline has been initialize - show it
                 timeline.addClass('loaded');
+                //the currently selected item
+                var timelineCurrentItem = timelineComponents['eventsContent'].find('.selected');
+                timelineCurrentIndex = timelineComponents['eventsContent'].find('li').index(timelineCurrentItem);
 
                 //detect click on the next arrow
                 timelineComponents['timelineNavigation'].on('click', '.next', function (event) {
@@ -70,46 +80,22 @@
                     event.preventDefault();
                     timelineComponents['timelineEvents'].removeClass('selected');
                     $(this).addClass('selected');
+                    timelineCurrentIndex = $(this).closest('li').index();
+                    updateViewportButtons(timelineComponents);
                     updateOlderEvents($(this));
                     updateFilling($(this), timelineComponents['fillingLine'], timelineTotWidth);
                     updateVisibleContent($(this), timelineComponents['eventsContent']);
                 });
+                //detect click on the prev viewport arrow
+                timelineComponents['timelineNavigationViewport'].on('click', '.prev', function (event) {
+                    event.preventDefault();
+                    showNewContent(timelineComponents, timelineTotWidth, 'prev');
+                });
                 //detect click on the next viewport arrow
-                             timelineComponents['timelineNavigationViewport'].on('click', '.next', function (event) {
-                               event.preventDefault();
-                               // $().addClass('selected');
-                               var currentSelected = $('#jtlinesection .events a.selected');
-                               currentSelected.removeClass('selected');
-                               console.log(currentSelected);
-                               var nextSelected = currentSelected.closest('li').next().find('a');
-                               nextSelected.addClass('selected');
-                               console.log(nextSelected);
-                                 updateOlderEvents(nextSelected);
-                                 updateFilling(nextSelected, timelineComponents['fillingLine'], timelineTotWidth);
-                                 updateVisibleContent(nextSelected, timelineComponents['eventsContent']);
-                                 updateSlide(timelineComponents, timelineTotWidth, 'next');
-                               });
-
-                               //detect click on the prev viewport arrow
-
-                               timelineComponents['timelineNavigationViewport'].on('click', '.prev', function (event) {
-                                 event.preventDefault();
-                                 var currentSelected = $('#jtlinesection .events ol li a.selected');
-                                 currentSelected.removeClass('selected');
-                                 console.log(currentSelected);
-                                 var nextSelected = currentSelected.closest('li').next().find('a');
-                                 nextSelected.removeClass('selected');
-                                 var prevSelected = currentSelected.closest('li').prev().find('a');
-                                 prevSelected.addClass('selected');
-                                   updateOlderEvents(prevSelected);
-                                   updateFilling(prevSelected, timelineComponents['fillingLine'], timelineTotWidth);
-                                   updateVisibleContent(prevSelected, timelineComponents['eventsContent']);
-                                   updateSlide(timelineComponents, timelineTotWidth, 'prev');
-                                   // prevSelected.removeClass('older-event');
-
-                                   console.log(prevSelected);
-                                 });
-
+                timelineComponents['timelineNavigationViewport'].on('click', '.next', function (event) {
+                    event.preventDefault();
+                    showNewContent(timelineComponents, timelineTotWidth, 'next');
+                });
                 //on swipe, show next/prev event content
                 timelineComponents['eventsContent'].on('swipeleft', function () {
                     var mq = checkMQ();
@@ -121,14 +107,13 @@
                 });
 
                 //keyboard navigation
-                $(document).keyup(function (event) {
+                $(document).on('keyup', function (event) {
                     if (event.which == '37' && elementInViewport(timeline.get(0))) {
                         showNewContent(timelineComponents, timelineTotWidth, 'prev');
                     } else if (event.which == '39' && elementInViewport(timeline.get(0))) {
                         showNewContent(timelineComponents, timelineTotWidth, 'next');
                     }
                 });
-                //});
             }
 
             var updateSlide = function (timelineComponents, timelineTotWidth, string) {
@@ -146,11 +131,8 @@
                 var visibleContent = timelineComponents['eventsContent'].find('.selected'),
                     newContent = (string == 'next') ? visibleContent.next() : visibleContent.prev();
 
-                var showOldContent = function (timelineComponents, timelineTotWidth, string) {
-                  var visibleContent = timelineComponents['eventsContent'].find('.selected'),
-                  oldContent = (string == 'prev') ? visibleContent.prev() : visibleContent.next();
-
                 if (newContent.length > 0) { //if there's a next/prev event - show it
+                    timelineCurrentIndex = (string == 'next') ? timelineCurrentIndex + 1 : timelineCurrentIndex - 1;
                     var selectedDate = timelineComponents['eventsWrapper'].find('.selected'),
                         newEvent = (string == 'next') ? selectedDate.parent('li').next('li').children('a') : selectedDate.parent('li').prev('li').children('a');
 
@@ -161,8 +143,19 @@
                     updateOlderEvents(newEvent);
                     updateTimelinePosition(string, newEvent, timelineComponents);
                 }
+                updateViewportButtons(timelineComponents);
             }
-          }
+
+            var updateViewportButtons = function (timelineComponents) {
+                timelineComponents['timelineNavigationViewport'].find('.next').removeClass('inactive');
+                timelineComponents['timelineNavigationViewport'].find('.prev').removeClass('inactive');
+                if (timelineCurrentIndex == 0) {
+                    timelineComponents['timelineNavigationViewport'].find('.prev').addClass('inactive');
+                }
+                if (timelineCurrentIndex == (fetchedData.length - 1)) {
+                    timelineComponents['timelineNavigationViewport'].find('.next').addClass('inactive');
+                }
+            }
 
             var updateTimelinePosition = function (string, event, timelineComponents) {
                 //translate timeline to the left/right according to the position of the selected event
@@ -171,8 +164,16 @@
                     timelineWidth = Number(timelineComponents['timelineWrapper'].css('width').replace('px', '')),
                     timelineTotWidth = Number(timelineComponents['eventsWrapper'].css('width').replace('px', ''));
                 var timelineTranslate = getTranslateValue(timelineComponents['eventsWrapper']);
-
-                if ((string == 'next' && eventLeft > timelineWidth - timelineTranslate) || (string == 'prev' && eventLeft < -timelineTranslate)) {
+                if (
+                     (string == 'next' && (
+                         (eventLeft > timelineWidth - timelineTranslate) ||
+                         ((timelineWidth - timelineTranslate) - timelineWidth > eventLeft)
+                     )) ||
+                     (string == 'prev' && (
+                         (eventLeft < -timelineTranslate) ||
+                         ((timelineWidth - timelineTranslate) < eventLeft)
+                     ))
+                   ) {
                     translateTimeline(timelineComponents, -eventLeft + timelineWidth / 2, timelineWidth - timelineTotWidth);
                 }
             }
@@ -185,8 +186,6 @@
                 //update navigation arrows visibility
                 (value == 0) ? timelineComponents['timelineNavigation'].find('.prev').addClass('inactive') : timelineComponents['timelineNavigation'].find('.prev').removeClass('inactive');
                 (value == totWidth) ? timelineComponents['timelineNavigation'].find('.next').addClass('inactive') : timelineComponents['timelineNavigation'].find('.next').removeClass('inactive');
-                (value == 0) ? timelineComponents['timelineNavigationViewport'].find('.prev').addClass('inactive') : timelineComponents['timelineNavigationViewport'].find('.prev').removeClass('inactive');
-                (value == totWidth) ? timelineComponents['timelineNavigationViewport'].find('.next').addClass('inactive') : timelineComponents['timelineNavigationViewport'].find('.next').removeClass('inactive');
             }
 
             var updateFilling = function (selectedEvent, filling, totWidth) {
@@ -232,7 +231,6 @@
 
                         totalItemsWidth += objPredefinedDistance;
                     }
-
                     timelineComponents['timelineEvents'].eq(i).css('left', distanceNorm * min + 'px');
                 }
             }
@@ -242,6 +240,7 @@
                 var timeSpanNorm;
                 var totalWidth;
                 var objPredefinedDistance;
+
                 var nextfixDistanceValue = options.firstPointMargin;// For First Point Margin
                 if (options.distanceMode == 'auto') {
                     timeSpan = daydiff(timelineComponents['timelineDates'][0], timelineComponents['timelineDates'][timelineComponents['timelineDates'].length - 1]);
@@ -251,7 +250,7 @@
                 }
                 else if (options.distanceMode == 'fixDistance') { // Define Fixed Distance
                     var fixedDistByPixl = (options.eventsMinDistance * options.fixDistanceValue);
-                    var allPointsWidth = (fixedDistByPixl * fetchedData.length); //- 60; //+ (options.firstPointMargin * options.eventsMinDistance);
+                    var allPointsWidth = (fixedDistByPixl * fetchedData.length); // - 30;
                     totalWidth = allPointsWidth;
                 }
                 else if (options.distanceMode == 'predefinedDistance') { //  predefined Distance inside Json Object for each object
@@ -268,29 +267,40 @@
             // -----------------------------------------------------------
             var updateVisibleContent = function (event, eventsContent) {
                 var eventDate = event.data('date'),
+                    eventID = event.data('id'),
                     visibleContent = eventsContent.find('.selected'),
-                    selectedContent = eventsContent.find('[data-date="' + eventDate + '"]'),
+                    selectedContent = eventsContent.find('[data-id="' + eventID + '"]'),
                     selectedContentHeight = selectedContent.height();
 
+                var classEntering = 'selected enter-left',
+                    classLeaving = 'leave-right';
                 if (selectedContent.index() > visibleContent.index()) {
-                    var classEnetering = 'selected enter-right',
-                        classLeaving = 'leave-left';
-                } else {
-                    var classEnetering = 'selected enter-left',
-                        classLeaving = 'leave-right';
+                    classEntering = 'selected enter-right',
+                    classLeaving = 'leave-left';
                 }
 
-                selectedContent.addClass(classEnetering);
-                visibleContent.addClass(classLeaving).one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function () {
-                    visibleContent.removeClass('leave-right leave-left selected');
-                    selectedContent.removeClass('enter-left enter-right');
-                    selectedContent.addClass('selected');
+                selectedContent.addClass(classEntering);
+                var evdone = false;
+
+                visibleContent.addClass(classLeaving).animate({
+                    opacity: 1,
+                    },
+                    200,
+                    function () {
+                    if (!evdone) {
+                        // we only want to attach this once
+                        visibleContent.removeClass('leave-right leave-left selected');
+                        selectedContent.removeClass('enter-left enter-right');
+                        selectedContent.addClass('selected');
+                        evdone = true;
+                    }
                 });
                 eventsContent.css('height', selectedContentHeight + 'px');
             }
 
             var updateOlderEvents = function (event) {
                 event.parent('li').prevAll('li').children('a').addClass('older-event').end().end().nextAll('li').children('a').removeClass('older-event');
+                event.removeClass('older-event');
             }
 
             var getTranslateValue = function (timeline) {
@@ -401,7 +411,6 @@
                     $.getJSON(options.url, options.params)
                     .done(function (data) {
                         //----------------------
-
                         if (data.error==false) {
                             _constructDom(data.message.data, obj);
                         }
@@ -415,8 +424,6 @@
                         var statusText = err.statusText;
                         var errd = statusText + status;
                         $(obj).html(errd);
-                        // alert('error');
-                        //console.log(err);
                     });
                 }
                 if (options.callType == callTypes.jsonObject) {
@@ -463,25 +470,24 @@
                         "title": dataCollection[i][options.map.title],
                         "subTitle": dataCollection[i][options.map.subTitle],
                         "dateValue": dataCollection[i][options.map.dateValue],
+                        "idValue": dataCollection[i][options.map.idValue],
                         "pointCnt": dataCollection[i][options.map.pointCnt],
                         "bodyCnt": dataCollection[i][options.map.bodyCnt]
                     }
 
-                    $liTimeLineCollection += '<li><a href="#0" data-date="' + point.dateValue + '" ';
-                    // if (point.isSelected) $liTimeLineCollection += 'class="selected"';
+                    $liTimeLineCollection += '<li><a href="#0" data-id="' + point.idValue + '" data-date="' + point.dateValue + '" ';
                     $liTimeLineCollection += 'class="tlnode ' + (isSelectedPoint ? 'selected' : '') + '"';
-
                     $liTimeLineCollection += '>';
                     $liTimeLineCollection += point.pointCnt + '</a></li>';
                     // -----------------
                     $liEventContentCollection += '<li ';
                     if (isSelectedPoint) {
                         $liEventContentCollection += 'class="lineli selected"';
-                      }
-                      else {
+                    }
+                    else {
                         $liEventContentCollection += 'class="lineli"';
-                      }
-                    $liEventContentCollection += ' data-date="' + point.dateValue + '">' + formatTitle(point.title, dataCollection[i]) + formatSubTitle(point.subTitle, dataCollection[i]) + formatBodyContent(point.bodyCnt, dataCollection[i]) + '</li>';
+                    }
+                    $liEventContentCollection += ' data-id="' + point.idValue + '" data-date="' + point.dateValue + '">' + formatTitle(point.title, dataCollection[i]) + formatSubTitle(point.subTitle, dataCollection[i]) + formatBodyContent(point.bodyCnt, dataCollection[i]) + '</li>';
 
                 }
                 //-----------------------------------------
@@ -490,8 +496,8 @@
                 var $container = $(mainObject);
 
                 var $sectionStart = '<section id="jtlinesection" class="jtline">';
-                var $timeline = '<div class="timeline"><div class="events-wrapper"><div class="events"><ol>' + $liTimeLineCollection + '</ol><span class="filling-line" aria-hidden="true"></span></div></div><ul class="cd-timeline-navigation"><li class="lineli"><a href="#0" class="prev inactive">Prev</a></li><li lineli><a href="#0" class="next">Next</a></li></ul></div>';
-                var $eventsContent = '<div class="events-content"><ol>' + $liEventContentCollection + '</ol><ul class="cd-timeline-navigation-second"><li><a href="#0" class="prev inactive">Prev</a></li><li><a href="#0" class="next">Next</a></li></ul></div>';
+                var $timeline = '<div class="timeline"><div class="events-wrapper"><div class="events"><ol>' + $liTimeLineCollection + '</ol><span class="filling-line" aria-hidden="true"></span></div></div><ul class="cd-timeline-navigation"><li class="lineli"><a href="#0" class="prev inactive">' + get_string_ajax('previous', 'mahara') + '</a></li><li class="lineli"><a href="#0" class="next">' + get_string_ajax('next', 'mahara') + '</a></li></ul></div>';
+                var $eventsContent = '<div class="events-content"><ol>' + $liEventContentCollection + '</ol><ul class="cd-timeline-navigation-second"><li><a href="#0" class="prev inactive">' + get_string_ajax('previousversion', 'view') + '</a></li><li><a href="#0" class="next">' + get_string_ajax('nextversion', 'view') + '</a></li></ul></div>';
                 var $sectionEnd = '</section>';
 
                 var allHtml = $sectionStart + $timeline + $eventsContent + $sectionEnd;

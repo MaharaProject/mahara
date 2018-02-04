@@ -123,21 +123,23 @@
             </li>
             {/if}
         {/if}
-        <li>
-            <a href="{$versionurl}">
-            <span class="icon icon-code-fork icon-lg left" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str(tag=timelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
-                {str tag=timeline section=view}
-            </a>
-        </li>
-            {if $userisowner}
-        <li>
-            <a href="{$createversionurl}">
-            <span class="icon icon-save icon-lg left" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str(tag=savetimelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
-                {str tag=savetimeline section=view}
-            </a>
-        </li>
+        {if $versionurl}
+            <li>
+              <a href="{$versionurl}">
+                  <span class="icon icon-code-fork icon-lg left" role="presentation" aria-hidden="true"></span>
+                  <span class="sr-only">{str(tag=timelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
+                  {str tag=timeline section=view}
+              </a>
+            </li>
+        {/if}
+        {if $userisowner}
+            <li>
+              <a href="{$createversionurl}">
+                  <span class="icon icon-save icon-lg left" role="presentation" aria-hidden="true"></span>
+                  <span class="sr-only">{str(tag=savetimelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
+                  {str tag=savetimeline section=view}
+              </a>
+            </li>
         {/if}
     </ul>
 </div>

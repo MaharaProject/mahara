@@ -3355,6 +3355,64 @@ function is_view_suspended($view, $artefacts=true) {
         ", array($viewid));
     }
 }
+/**
+ * Checks if artefact was in a previous version of the view
+ *
+ * @param int|object $artefact ID of an artefact or object itself.
+ *                   Will load object if ID is supplied.
+ * @param int $view ID of a page that contains artefact.
+ *
+ * @return boolean True if artefact is in previous version of view, False otherwise.
+ */
+function artefact_in_view_version($artefact, $view) {
+    if (!is_object($artefact)) {
+        require_once(get_config('docroot') . 'artefact/lib.php');
+        $artefact = artefact_instance_from_id($artefact);
+    }
+    // First check if in current view
+    if (artefact_in_view($artefact, $view)) {
+        return true;
+    }
+    // If not in current view then lets check the older versions
+    $db_version = get_db_version();
+    if (is_postgres() && version_compare($db_version, '9.2.0', '>=')) {
+        // We can check direct on the json data
+        return get_records_sql_array("SELECT id FROM {view_versioning} v, JSON_ARRAY_ELEMENTS(CAST(v.blockdata AS JSON)->'blocks') obj
+                                   WHERE (? = ANY(TRANSLATE(obj->'configdata'->>'artefactids','[]','{}')::int[]) OR
+                                          obj->'configdata'->>'artefactid' = ?)
+                                   AND view = ?", array($artefact->get('id'), $artefact->get('id'), $view));
+    }
+    else if (is_mysql() && mysql_get_type() == 'mysql' && version_compare($db_version, '8.0.0', '>=')) {
+        // Note: we can't translate the array string to an array yet so we need to do a regexp match instead
+        $mysqlregex = '\\\[' . $artefact->get('id') . ',|\\\s' . $artefact->get('id') . ',|\\\s' . $artefact->get('id') . '\\\]';
+        return get_records_Sql_array("SELECT id FROM {view_versioning} v WHERE view = ?
+                                      AND (REGEXP_LIKE(JSON_EXTRACT( CAST(v.blockdata AS JSON), '$.blocks[*].configdata.artefactid'), '" . $mysqlregex . "')
+                                        OR REGEXP_LIKE(JSON_EXTRACT( CAST(v.blockdata AS JSON), '$.blocks[*].configdata.artefactids'), '" . $mysqlregex . "')
+                                      )", array($view));
+    }
+
+    // If we can't check direct on the json data We'll need to limit the results to those that possibly
+    // contain the blockid and work back from most recent to make things faster
+    if ($versions = get_records_sql_array("SELECT id, view, blockdata
+                                       FROM {view_versioning}
+                                       WHERE view = ? AND blockdata LIKE '%' || ? || '%'
+                                       ORDER BY ctime DESC", array($view, $artefact->get('id')))) {
+        foreach ($versions as $version) {
+            $blockdata = json_decode($version->blockdata);
+            if (isset($blockdata->blocks) && is_array($blockdata->blocks)) {
+                foreach ($blockdata->blocks as $block) {
+                    if (isset($block->configdata) && isset($block->configdata->artefactid) && $block->configdata->artefactid == $artefact->get('id')) {
+                        return true;
+                    }
+                    if (isset($block->configdata) && isset($block->configdata->artefactids) && in_array($artefact->get('id'), $block->configdata->artefactids)) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
 
 /**
  * Checks if artefact or at least one of its ancestors is in view

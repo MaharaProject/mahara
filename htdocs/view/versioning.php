@@ -27,8 +27,8 @@ if (!can_view_view($view)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 
-$fromdate = param_variable('fromdate', NULL);
-$todate = param_variable('todate', NULL);
+$fromdate = param_variable('fromdate', '-3 months');
+$todate = param_variable('todate', 'now');
 
 $viewobject = new View($view);
 define('SUBSECTIONHEADING', $viewobject->display_title(true, false, false));
@@ -37,24 +37,26 @@ function timeline_submit(Pieform $form, $values) {
     redirect('/view/versioning.php?view='.$values['viewid'].'&fromdate='.$values['from'].'&todate='.$values['to']);
 }
 
-if ($fromdate && $todate ) {
-    $versions = View::get_versions($view, db_format_timestamp($fromdate), db_format_timestamp($todate));
+if ($fromdate || $todate ) {
+    $versions = View::get_versions($view, $fromdate, $todate);
 }
 else {
     $versions = View::get_versions($view);
 }
-$form = View::get_timeline_form($view);
+
+if ($versions->total == 0) {
+    throw new AccessDeniedException(get_string('noversionsexist', 'view', $viewobject->get('title')));
+}
+
+$form = View::get_timeline_form($view, $fromdate, $todate);
 
 $smarty = smarty(array('paginator', 'js/jquery/jquery-ui/js/jquery-ui.min.js', 'js/jTLine/js/jtline.js'), array(), array(), array('sidebars' => false));
-// $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('versions', $versions->data);
-// $smarty->assign('pagination', $pagination['html']);
-$html = $smarty->fetch('view/versionresults.tpl');
 $smarty->assign('timelineform', $form);
-$smarty->assign('viewresults', $html);
 $smarty->assign('views', $versions->count);
-$smarty->assign('fromdate', $fromdate);
-$smarty->assign('todate', $todate);
+$smarty->assign('fromdate', urlencode($fromdate));
+$smarty->assign('todate', urlencode($todate));
+$smarty->assign('viewurl', $viewobject->get_url());
 $smarty->assign('view', $view);
 $smarty->assign('headingclass', 'page-header');
 $smarty->display('view/versioning.tpl');

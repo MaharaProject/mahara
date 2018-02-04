@@ -69,6 +69,11 @@ if ($viewid && $fileid) {
         }
     }
 
+    // If the artefact exists in a previous version of the view we can display it
+    if (!$artefactok && artefact_in_view_version($file, $viewid)) {
+        $artefactok = true;
+    }
+
     // The user may be trying to download a file that's not in the page, but which has
     // been attached to a public comment on the page
     if ($commentid = param_integer('comment', null)) {

@@ -1,39 +1,45 @@
 {include file="header.tpl"}
 
-    <div class="grouppageswrap view-container">
-        {$timelineform|safe}
-        <div class="jtline"></div>
-    </div>
+<div id="view-wizard-controls" class="with-heading">
+    <a href="{$viewurl}" id="display_page">
+        {str tag=displayview section=view}
+        <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
+    </a>
+</div>
 
-    <script>
-$(document).ready(function () {
-  var jtLine = $('.jtline').jTLine({
-              callType: 'ajax',
-              url:'versioning.json.php',
-              eventsMinDistance: 200,
-              distanceMode: 'fixDistance',
-              params: {literal}{{/literal}
-                'sesskey': config.sesskey,
-                {if $fromdate} 'fromdate' : '{$fromdate}', {/if}
-                {if $todate}'todate' : '{$todate}', {/if}
-                'view' : '{$view}',
-                {literal}}{/literal},
-              map: {
-                  "dataRoot": "/",
-                  "title": "taskTitle",
-                  "subTitle": "taskSubTitle",
-                  "dateValue": "assignDate",
-                  "pointCnt": "taskShortDate",
-                  "bodyCnt": "taskDetails"
-              },
-              formatTitle: function (title, obj) { return '<h3>' + title + '</h3>';},
-              formatSubTitle: function (subTitle, obj)  { return '<div class="metadata">' + subTitle + '</div>';},
-              formatBodyContent: function (bodyCnt, obj) { return bodyCnt;},
-              onPointClick: function (e) {
-                  console.log(e);
-              }
-          });
-});
-</script>
+<div class="grouppageswrap view-container">
+    {$timelineform|safe}
+{if $views}
+    <div class="jtline"></div>
+    <script type="application/javascript">
+    $(function () {
+        var jtLine = $('.jtline').jTLine({
+            callType: 'ajax',
+            url:'versioning.json.php',
+            eventsMinDistance: 100,
+            distanceMode: 'fixDistance',
+            params: {literal}{{/literal}
+              'sesskey': config.sesskey,
+              {if $fromdate} 'fromdate' : '{$fromdate}', {/if}
+              {if $todate}'todate' : '{$todate}', {/if}
+              'view' : '{$view}',
+              {literal}}{/literal},
+            map: {
+                "dataRoot": "/",
+                "title": "taskTitle",
+                "subTitle": "taskSubTitle",
+                "dateValue": "assignDate",
+                "idValue": "assignID",
+                "pointCnt": "taskShortDate",
+                "bodyCnt": "taskDetails"
+            },
+            formatTitle: function (title, obj) { return '<h3>' + title + '</h3>'; },
+            formatSubTitle: function (subTitle, obj) { return '<div class="metadata">' + subTitle + '</div>'; },
+            formatBodyContent: function (bodyCnt, obj) { return bodyCnt;}
+        });
+    });
+    </script>
+{/if}
+</div>
 
 {include file="footer.tpl"}

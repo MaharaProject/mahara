@@ -524,3 +524,6 @@ $string['timeline'] = 'Timeline';
 $string['timelinespecific'] = 'Timeline for %s';
 $string['savetimeline'] = 'Save to timeline';
 $string['savetimelinespecific'] = 'Save timeline for %s';
+$string['noversionsexist'] = 'There are no saved versions to display for the page "%s"';
+$string['previousversion'] = 'Previous version';
+$string['nextversion'] = 'Next version';

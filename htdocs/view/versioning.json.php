@@ -15,19 +15,18 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 
-$fromdate  = param_alphanumext('fromdate', null);
-$todate   = param_alphanumext('todate', null);
+$fromdate  = param_variable('fromdate', null);
+$todate   = param_variable('todate', null);
 $viewid = param_integer('view', 0);
 
-if ($fromdate && $todate ) {
-    $versions = View::get_versions($viewid, db_format_timestamp($fromdate), db_format_timestamp($todate));
+if ($fromdate || $todate ) {
+    $versions = View::get_versions($viewid, $fromdate, $todate);
 }
 else {
     $versions = View::get_versions($viewid);
 }
 
 $data = array();
-
 if ($versions->count > 0) {
     end($versions->data);
     $lastkey = key($versions->data);
@@ -36,12 +35,13 @@ if ($versions->count > 0) {
         $view = new View($viewid);
         $value->blockdata_formatted = $view->format_versioning_data($value->blockdata);
         $data[$key] = array(
-            "isSelected"=> ($key == $lastkey ? true : false),
-            "taskTitle"=> $value->viewname,
-            "taskSubTitle"=> $view->display_author() . ',' . format_date(strtotime($value->ctime)),
-            "assignDate"=> date('d/m/Y\TH:i', strtotime($value->ctime)),
-            "taskShortDate"=> date('j M', strtotime($value->ctime)),
-            "taskDetails"=> $value->blockdata_formatted->html,
+            "isSelected" => ($key == $lastkey ? true : false),
+            "taskTitle" => (isset($value->blockdata_formatted->title) ? $value->blockdata_formatted->title : $value->viewname),
+            "taskSubTitle" => $view->display_author() . ', ' . format_date(strtotime($value->ctime)),
+            "assignDate" => date('d/m/Y\TH:i', strtotime($value->ctime)),
+            "assignID" => $value->id,
+            "taskShortDate" => date('j M', strtotime($value->ctime)),
+            "taskDetails" => $value->blockdata_formatted->html,
         );
     }
 }

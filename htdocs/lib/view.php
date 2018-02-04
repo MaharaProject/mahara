@@ -986,6 +986,7 @@ class View {
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('tag', 'resourcetype', 'view', 'resourceid', $this->id);
         delete_records('view_visit','view',$this->id);
+        delete_records('view_versioning', 'view', $this->id);
         delete_records('existingcopy', 'view', $this->id);
         $eventdata = array('id' => $this->id, 'eventfor' => 'view');
         if ($collection = $this->get_collection()) {
@@ -7069,51 +7070,78 @@ class View {
      * Fetch a list of versions for the particular view
      *
      * @param string $view the ID of the view we wish to retrieve versioning information from
+     * @param $fromdate date of the oldest version we want to retrieve
+     * @param $todate date of the newest version we want to retrieve
      * @return object $views an object containing the count and data of the versions
      */
-    public function get_versions($view, $fromdate=NULL, $todate = NULL) {
+    public function get_versions($view, $fromdate = null, $todate = null) {
         if (!is_numeric($view)) {
             throw new InvalidArgumentException(get_string('noaccesstoview', 'view'));
         }
-        $versions = new stdClass();
-        $versions->count = 0;
-        $versions->data = array();
-        if ($fromdate && $todate) {
-            if ($records = get_records_sql_array("SELECT vv.*, v.title AS viewname, v.owner, v.institution
-                                                  FROM {view_versioning} vv
-                                                  JOIN {view} v ON v.id = vv.view
-                                                  WHERE vv.ctime < ? AND vv.ctime > ? AND vv.view = ?
-                                                  ORDER BY vv.ctime ASC", array($todate, $fromdate, $view))) {
-                $versions->count = count($records);
-                $versions->data = $records;
-            }
+        if (is_numeric($fromdate)) {
+            $fromdate = db_format_timestamp($fromdate);
         }
         else {
-            if ($records = get_records_sql_array("SELECT vv.*,v.title AS viewname, v.owner, v.institution
-                                                  FROM {view_versioning} vv
-                                                  JOIN {view} v ON v.id = vv.view
-                                                  WHERE vv.view = ?
-                                                  ORDER BY vv.ctime ASC", array($view))) {
-                $versions->count = count($records);
-                $versions->data = $records;
-            }
+            $fromdate = db_format_timestamp(strtotime($fromdate));
         }
+        if (is_numeric($todate)) {
+            $todate = db_format_timestamp($todate);
+        }
+        else {
+            $todate = db_format_timestamp(strtotime($todate));
+        }
+        $versions = new stdClass();
+        $versions->count = 0;
+        $versions->total = 0;
+        $versions->data = array();
+        $sql = "SELECT vv.*, v.title AS viewname, v.owner, v.institution
+                FROM {view_versioning} vv
+                JOIN {view} v ON v.id = vv.view
+                WHERE vv.view = ?";
+        $values = array($view);
+        if ($fromdate) {
+            $sql .= " AND vv.ctime >= ?";
+            $values[] = $fromdate;
+        }
+        if ($todate) {
+            $sql .= " AND vv.ctime <= ?";
+            $values[] = $todate;
+        }
+        $sql .= " ORDER BY vv.ctime ASC";
 
+        if ($records = get_records_sql_array($sql, $values)) {
+            $versions->count = count($records);
+            $versions->data = $records;
+        }
+        $versions->total = count_records('view_versioning', 'view', $view);
         return $versions;
     }
 
-    public function get_timeline_form($view, $from = '-3 months', $to = 'now') {
+    public function get_timeline_form($view, $from = null, $to = null) {
+        if (is_numeric($from)) {
+            $from = db_format_timestamp($from);
+        }
+        if (is_numeric($to)) {
+            $to = db_format_timestamp($to);
+        }
+
         require_once('pieforms/pieform/elements/calendar.php');
         $elements = array(
             'from' => array(
                 'title' => get_string('From'),
                 'type' => 'calendar',
                 'defaultvalue' => strtotime($from),
+                'caloptions' => array(
+                    'showsTime' => false,
+                ),
             ),
             'to' => array(
                 'title' => get_string('To'),
                 'type' => 'calendar',
                 'defaultvalue' => strtotime($to),
+                'caloptions' => array(
+                    'showsTime' => false,
+                ),
             ),
             'viewid' => array(
                 'type' => 'hidden',
@@ -7129,6 +7157,7 @@ class View {
         $form = array(
             'name' => 'timeline',
             'elements' => $elements,
+            'autofocus' => false,
         );
         return pieform($form);
     }
@@ -7136,59 +7165,56 @@ class View {
     public function build_timeline_results($search, $offset, $limit) {
         return false;
     }
+
     public function format_versioning_data($data) {
-   if (empty($data)) {
-     return $data;
-   }
-   $data=json_decode($data);
-   $this->numrows = isset($data->numrows) ? $data->numrows : $this->numrows;
-   $this->layout = isset($data->layout) ? $data->layout : $this->layout;
-   $this->description = isset($data->description) ? $data->description : '';
-   $this->tags = isset($data->tags) && is_array($data->tags) ? $data->tags : array();
-   $colsperrow = array();
-   if (isset($data->columnsperrow)) {
-     foreach ($data->columnsperrow as $k=>$v){
-       $colsperrow[$k] = $v;
-     }
-   }
-   $this->columnsperrow = $colsperrow;
-   $this->columns = array();
-   for ($i = 1; $i <= $this->numrows; $i++) {
-       for ($j = 1; $j <= $data->columnsperrow->{$i}->columns; $j++) {
-         $this->columns[$i][$j] = array('blockinstances' => array());
-       }
-   }
+        if (empty($data)) {
+            return $data;
+        }
 
-   $html = '';
-   if (!empty($data->blocks)) {
-     require_once(get_config('docroot') . 'blocktype/lib.php');
-     foreach ($data->blocks as $k => $v) {
-       // log_debug($k . ': ' . $v->blocktype);
-       safe_require('blocktype', $v->blocktype);
-       $bi = new BlockInstance(0,
-           array(
-               'blocktype'  => $v->blocktype,
-               'title'      => $v->title,
-               'view'       => $this->get('id'),
-               'view_obj'   => $this,
-               'row'        => $v->row,
-               'column'     => $v->column,
-               'order'      => $v->order,
-               'configdata' => serialize((array)$v->configdata),
-           )
-       );
-       // $html .= call_static_method(generate_class_name("blocktype", $v->blocktype), "render_instance", $bi);
-          $this->columns[$v->row][$v->column]['blockinstances'][] = $bi;
-      }
-   }
-   $html = $this->build_rows(true);
-   // log_debug($html);
-   $data->html = $html;
-   return $data;
- }
+        $data = json_decode($data);
+        $this->numrows = isset($data->numrows) ? $data->numrows : $this->numrows;
+        $this->layout = isset($data->layout) ? $data->layout : $this->layout;
+        $this->description = isset($data->description) ? $data->description : '';
+        $this->tags = isset($data->tags) && is_array($data->tags) ? $data->tags : array();
+        $colsperrow = array();
+        if (isset($data->columnsperrow)) {
+            foreach ($data->columnsperrow as $k => $v) {
+                $colsperrow[$k] = $v;
+            }
+        }
+        $this->columnsperrow = $colsperrow;
+        $this->columns = array();
+        for ($i = 1; $i <= $this->numrows; $i++) {
+            for ($j = 1; $j <= $data->columnsperrow->{$i}->columns; $j++) {
+                $this->columns[$i][$j] = array('blockinstances' => array());
+            }
+        }
+
+        $html = '';
+        if (!empty($data->blocks)) {
+            require_once(get_config('docroot') . 'blocktype/lib.php');
+            foreach ($data->blocks as $k => $v) {
+                safe_require('blocktype', $v->blocktype);
+                $bi = new BlockInstance(0,
+                    array(
+                        'blocktype'  => $v->blocktype,
+                        'title'      => $v->title,
+                        'view'       => $this->get('id'),
+                        'view_obj'   => $this,
+                        'row'        => $v->row,
+                        'column'     => $v->column,
+                        'order'      => $v->order,
+                        'configdata' => serialize((array)$v->configdata),
+                    )
+                );
+                $this->columns[$v->row][$v->column]['blockinstances'][] = $bi;
+            }
+        }
+        $html = $this->build_rows();
+        $data->html = $html;
+        return $data;
+    }
 }
-
-
 
 class ViewSubmissionException extends UserException {
     public function strings() {

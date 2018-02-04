@@ -22,10 +22,11 @@ Main Components
 }
 .jtline .timeline {
   position: relative;
-  height: 100px;
+  height: 80px;
   width: 100%;
   max-width: 1150px;
   margin: 0 auto;
+  border-bottom: 1px solid #eeeeee;
 }
 .jtline .events-wrapper {
   position: relative;
@@ -47,8 +48,6 @@ Main Components
 }
 .jtline .events-wrapper::after {
   right: 0;
-  // background-image: -webkit-linear-gradient( right , #f8f8f8, rgba(248, 248, 248, 0));
-  // background-image: linear-gradient(to left, #f8f8f8, rgba(248, 248, 248, 0));
 }
 .jtline .events {
   /* this is the grey line/timeline */
@@ -138,7 +137,7 @@ Main Components
 }
 @media only screen and (min-width: 1100px) {
   .jtline {
-    margin: 6em auto;
+    margin: 3em auto;
   }
   .jtline::before {
     /* never visible - this is used in jQuery to check the current MQ */
@@ -146,7 +145,7 @@ Main Components
   }
 }
 
-ul.cd-timeline-navigation-second{
+ul.cd-timeline-navigation-second {
   list-style-type: none !important;
   padding: 0;
   margin:0;
@@ -180,7 +179,7 @@ ul.cd-timeline-navigation-second{
 }
 
 .cd-timeline-navigation-second a {
-
+  top: 80px;
 }
 .cd-timeline-navigation a::after,
 .cd-timeline-navigation-second a::after {
@@ -220,6 +219,7 @@ ul.cd-timeline-navigation-second{
 .cd-timeline-navigation a.inactive,
 .cd-timeline-navigation-second a.inactive {
   cursor: not-allowed;
+  pointer-events: none;
 }
 .cd-timeline-navigation a.inactive::after,
 .cd-timeline-navigation-second a.inactive::after {
@@ -231,8 +231,7 @@ ul.cd-timeline-navigation-second{
 }
 
 .jtline .events-content {
-    // width:900px;
-    margin:0 auto;
+  margin:0 auto;
   position: relative;
 
   overflow: hidden;
@@ -308,13 +307,13 @@ outline-color: #000;
 
 
 .jtline .timeline ol, .ListeOL {
-// list-style: none !important;
-margin: 0 0 0 0;
-padding: 50px;
+  margin: 0 0 0 0;
+  padding: 50px;
 }
 
 .jtline .events-content ol {
-  // margin: 2px;
+  margin: 5px;
+  padding: 0 30px;
 }
 .jtline .events-content h2 {
   font-weight: bold;
@@ -429,24 +428,14 @@ padding: 50px;
 }
 
 
-#timeline_from_container {
-  width: 200px;
-  display: inline-block;
-  margin-left: 5px;
+#timeline {
+  div {
+    display: inline-block;
+    border-bottom: 0;
+    label {
+        min-width: 0;
+    }
+  }
 }
 
-#timeline_to_container {
-  width: 200px;
-  display: inline-block;
-  margin-left: 3%;
-}
 
-#timeline_submit_container {
-  display: inline-block;
-  margin: 0 auto;
-
-}
-
-#timeline_submit {
-  margin-bottom: 30px;
-}

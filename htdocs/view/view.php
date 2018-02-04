@@ -437,7 +437,10 @@ if ($can_copy) {
         $smarty->assign('downloadurl', get_config('wwwroot') . 'view/download.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''));
     }
 }
-$smarty->assign('versionurl', get_config('wwwroot') . 'view/versioning.php?view=' . $viewid);
+$versions = View::get_versions($view->get('id'));
+if ($versions->count > 0) {
+    $smarty->assign('versionurl', get_config('wwwroot') . 'view/versioning.php?view=' . $viewid);
+}
 $smarty->assign('createversionurl', get_config('wwwroot') . 'view/createversion.php?view=' . $viewid);
 
 $title = hsc(TITLE);
