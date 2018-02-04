@@ -72,7 +72,7 @@ function pieform_element_layout(Pieform $form, $element) {
               . '<div id="customrow_1" class="customrow form-group five-across multi-label clearfix" style="border-bottom: 0px !important;">'
               . '<div class="customrowtitle pull-left field"><strong>' . get_string('Row', 'view') . ' 1</strong></div>'
               . '<div class="pull-left field field-selectnumcols">'
-                  . '<label for="selectnumcolsrow_1">' . get_string('numberofcolumns', 'view') . '</label>'
+                  . '<label for="selectnumcolsrow_1"><span class="sr-only">' . get_string('Row', 'view') . ' 1: </span>' . get_string('numberofcolumns', 'view') . '</label>'
                   . '<select name="selectnumcols" id="selectnumcolsrow_1" class="selectnumcols input-sm" onchange="CustomLayoutManager.customlayout_change_numcolumns(\'' . $form->get_property('name') . '\', this)">';
                       foreach ($element['clnumcolumnsoptions'] as $value => $data) {
                           $output .= '<option value="' . $value . '" ' . (($element['clnumcolumnsdefault'] == $value)? 'selected="selected"' : '') . '>' . $data . '</option>';
@@ -80,7 +80,7 @@ function pieform_element_layout(Pieform $form, $element) {
       $output .= '</select></div>'
 
               . '<div class="pull-left field">'
-                  . '<label for="selectcollayoutrow_1">' . get_string('columnlayout', 'view') . '</label>'
+                  . '<label for="selectcollayoutrow_1"><span class="sr-only">' . get_string('Row', 'view') . ' 1: </span>' . get_string('columnlayout', 'view') . '</label>'
                   . '<select name="selectcollayout" id="selectcollayoutrow_1" class="selectcollayout input-sm" onchange="CustomLayoutManager.customlayout_change_column_layout(\'' . $form->get_property('name') . '\')">';
                       foreach ($element['columnlayoutoptions'] as $value => $data) {
                           $numcols = count(explode('-', $data));
