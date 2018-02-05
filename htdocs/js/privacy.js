@@ -25,7 +25,8 @@ function showTab(el) {
     }
     $(el).removeClass("js-hidden");
     $(el + '-text').removeClass("js-hidden");
-    // Useful in case an institution has just one type of content
+
+    // Institution Legal: Useful in case an institution has just one type of content (privacy/T&C).
     if (typeof types != 'undefined') {
         showNoContentAddOne(el);
     }

@@ -769,7 +769,7 @@ The %s Team';
 
 $string['institutionmemberrefusedprivacy'] = 'Hello %s,
 
-The user %s, with the username %s, has refused the privacy statement. Their user account was suspended.
+The user %s, with the username %s, has refused the %s. Their user account was suspended.
 %s %s
 
 Please contact the user via email at %s if you wish to discuss the refusal.
@@ -886,7 +886,7 @@ $string['youraccounthasbeensuspendedtextcron'] = 'Your account at %s has been su
 $string['youraccounthasbeensuspendedreasontext'] = "Your account at %s has been suspended by %s. Reason:\n\n%s";
 $string['youraccounthasbeensuspendedreasontextcron'] = "Your account at %s has been suspended. Reason:\n\n%s";
 $string['youraccounthasbeenunsuspendedtext2'] = 'Your account at %s has been unsuspended. You may once again log in and use the site.'; // can't provide a login link because we don't know how they log in - it might be by xmlrpc
-$string['youraccounthasbeensuspendedtext3'] = 'Your account on %s has been suspended because you refused to consent to the privacy statement';
+$string['youraccounthasbeensuspendedtext3'] = 'Your account on %s has been suspended because you refused to consent to the %s.';
 
 // size of stuff
 $string['sizemb'] = 'MB';

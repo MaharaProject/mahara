@@ -765,39 +765,53 @@ function privacy_form($ignoreagreevalue = false) {
     }
 
     foreach ($latestversions as $privacy) {
-        $privacytitle = $privacy->institution == 'mahara' ? get_string('siteprivacystatement', 'admin') : get_string('institutionprivacystatement', 'admin');
+        if ($privacy->type == 'privacy') {
+            $title = get_string('institutionprivacystatement', 'admin');
+            if ($privacy->institution == 'mahara') {
+                $title = get_string('siteprivacystatement', 'admin');
+            }
+        }
+        else {
+            $title = get_string('institutiontermsstatement', 'admin');
+            if ($privacy->institution == 'mahara') {
+                $title = get_string('sitetermsstatement', 'admin');
+            }
+        }
         $smarty = smarty_core();
         $smarty->assign('privacy', $privacy);
-        $smarty->assign('privacytitle', $privacytitle);
+        $smarty->assign('privacytitle', $title);
         $smarty->assign('privacytime', format_date(strtotime($privacy->ctime)));
         $smarty->assign('ignoreagreevalue', $ignoreagreevalue);
         $htmlbegin = $smarty->fetch('privacy_panel_begin.tpl');
 
         //Build form elements.
-        $elements[$privacy->institution . 'text'] = array(
+        $elements[$privacy->institution . $privacy->type . 'text'] = array(
             'type' => 'markup',
             'value' => $htmlbegin,
         );
-        $elements[$privacy->institution . 'id'] = array(
+        $elements[$privacy->institution . $privacy->type . 'id'] = array(
             'type' => 'hidden',
             'value' => $privacy->id,
         );
-        $elements[$privacy->institution] = array(
+
+        $elements[$privacy->institution . $privacy->type] = array(
             'type'         => 'switchbox',
-            'title'        => get_string('privacyagreement', 'admin'),
-            'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin', format_date(strtotime($privacy->agreedtime))) : '',
+            'title'        => get_string('privacyagreement', 'admin', get_string($privacy->type . 'lowcase', 'admin')),
+            'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin',
+                get_string($privacy->type . 'lowcase', 'admin'), format_date(strtotime($privacy->agreedtime))) : '',
             'defaultvalue' => $privacy->agreed ? true : false,
             'disabled'     => ($privacy->agreed && $ignoreagreevalue) ? true : false,
             'required' => true,
         );
-        $elements[$privacy->institution . 'switch'] = array(
+        $elements[$privacy->institution . $privacy->type . 'switch'] = array(
             'type' => 'hidden',
             'value' => ($privacy->agreed && $ignoreagreevalue) ? 'disabled' : 'enabled',
         );
+
         $smarty = smarty_core();
         $smarty->assign('ignoreagreevalue', $ignoreagreevalue);
         $htmlend = $smarty->fetch('privacy_panel_end.tpl');
-        $elements[$privacy->institution . 'text2'] = array(
+        $elements[$privacy->institution . $privacy->type . 'text2'] = array(
             'type' => 'markup',
             'value' => $htmlend,
         );
@@ -838,7 +852,7 @@ function auth_check_required_fields() {
         // Build the agree with privacy statement form.
         $form = privacy_form(true);
 
-        define('TITLE', get_string('privacy', 'admin'));
+        define('TITLE', get_string('legal', 'admin'));
         $smarty = smarty();
         setpageicon($smarty, 'icon-umbrella');
         if ($USER->get('parentuser')) {
@@ -1240,13 +1254,20 @@ function requiredfields_submit(Pieform $form, $values) {
 function agreetoprivacy_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
-    $userinstitutions = array_keys($USER->get('institutions'));
-    array_push($userinstitutions, 'mahara');
+    $institutions = array('maharaprivacy', 'maharatermsandconditions');
+    $userinstitution = array_keys($USER->get('institutions'));
+
+    if (!empty($userinstitution)) {
+        array_push($userinstitution, $userinstitution[0] . 'termsandconditions', $userinstitution[0] . 'privacy');
+        array_shift($userinstitution);
+        $institutions = array_merge($institutions, $userinstitution);
+    }
 
     $hasrefused = param_integer('hasrefused', 0);
     $reason = param_variable('reason', '');
+    $whathasbeenrefused = array();
 
-    foreach ($userinstitutions as $institution) {
+    foreach ($institutions as $institution) {
         // check if the institution has a privacy statement
         // if not, it depends on the site one and we can skip it
         // if yes, check if the user has already accepted it (switch is disabled)
@@ -1256,23 +1277,26 @@ function agreetoprivacy_submit(Pieform $form, $values) {
         try {
             $agreed = (empty($values[$institution]) ? 0 : $values[$institution]);
             save_user_reply_to_agreement($USER->get('id'), $values[$institution . 'id'], $agreed);
-            $SESSION->add_ok_msg(get_string('agreementsaved', 'admin'));
-            if ($hasrefused) {
-                // Send a message to the institution/site admin informing that the user has refused the privacy statement.
-                $institution = new Institution($institution);
-                $institution->send_admin_institution_refused_privacy_message($USER->get('id'), $reason);
-
-                suspend_user($USER->get('id'), 'privacyrefusal');
-                $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
-                $USER->logout();
-                redirect();
+            if (!$agreed) {
+                array_push($whathasbeenrefused, strpos($institution , 'privacy') ? 'privacylowcase' : 'termsandconditionslowcase');
             }
+            $SESSION->add_ok_msg(get_string('agreementsaved', 'admin'));
         }
         catch (SQLException $e) {
             $SESSION->add_ok_msg(get_string('savefailed', 'admin'));
         }
     }
+    // Moved this here to allow all refused items to be saved in the DB.
+    if ($hasrefused) {
+        // Send a message to the institution/site admin informing that the user has refused the privacy statement.
+        $institution = new Institution(str_replace(array('privacy', 'termsandconditions'), array('', ''), $institution));
+        $institution->send_admin_institution_refused_privacy_message($USER->get('id'), $reason, $whathasbeenrefused);
 
+        suspend_user($USER->get('id'), $whathasbeenrefused);
+        $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
+        $USER->logout();
+        redirect();
+    }
     $USER->renew();
     redirect();
 }
