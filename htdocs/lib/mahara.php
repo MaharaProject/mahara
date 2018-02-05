@@ -5244,3 +5244,41 @@ function create_elasticsearch_triggers() {
         }
     }
 }
+
+
+/**
+ * Return a list of available institution(s) to associate to a group.
+ *
+ * This list is based on user's institution memberships.
+ * If the user is admin then all institutions are returned.
+ *
+ */
+function get_institutions_to_associate() {
+    global $USER;
+
+    $institutions = array();
+    if (is_array($USER->institutions) && count($USER->institutions) > 0) {
+        // Get all institutions where user is member
+        foreach ($USER->institutions as $inst) {
+            if (empty($inst->suspended)) {
+                $institutions = array_merge($institutions, array($inst->institution => $inst->displayname));
+            }
+        }
+    }
+    else if ($USER->get('admin')) {
+        // Get all institutions since user is admin
+        $records = get_records_array('institution');
+        foreach ($records as $inst) {
+            if (empty($inst->suspended)) {
+                $institutions = array_merge($institutions, array($inst->name => $inst->displayname));
+            }
+        }
+    }
+    else {
+        $institutions = array(
+            'mahara' => get_field('institution', 'displayname', 'name', 'mahara')
+        );
+    }
+
+    return $institutions;
+}

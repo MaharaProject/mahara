@@ -599,9 +599,6 @@ function group_update($new, $create=false) {
         $new->allowarchives = 0;
     }
 
-    // Institution cannot be updated (yet)
-    unset($new->institution);
-
     $update_blog_access = ($new->editroles != $old->editroles);
 
     foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'allowarchives', 'editroles',
@@ -1780,7 +1777,7 @@ function build_grouplist_html($query, $limit, $offset, &$count=null, $institutio
         $group->displayname = $group->name;
         $group->submitpages = $group->submittableto;
         $group->roles = $group->grouptype;
-
+        $group->institutionname = get_field('institution', 'displayname', 'name', $group->institution);
         switch ($group->jointype) {
             case 'open':
                 $group->open = 1;

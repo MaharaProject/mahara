@@ -49,6 +49,7 @@ else {
         'id'             => null,
         'name'           => null,
         'description'    => null,
+        'institution'    => 'mahara',
         'grouptype'      => 'standard',
         'open'           => 1,
         'controlled'     => 0,
@@ -85,6 +86,13 @@ $form = array(
             'defaultvalue' => $group_data->name,
         ),
         'shortname' => group_get_shortname_element($group_data),
+        'institution' => array(
+            'type'         => 'select',
+            'title'        => get_string('assigntoinstitution', 'group'),
+            'defaultvalue' => $group_data->institution,
+            'collapseifoneoption' => true,
+            'options'      => get_institutions_to_associate(),
+        ),
         'description' => array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription', 'group'),
@@ -487,9 +495,12 @@ function editgroup_submit(Pieform $form, $values) {
 
     $values['public'] = (isset($values['public'])) ? $values['public'] : 0;
     $values['usersautoadded'] = (isset($values['usersautoadded'])) ? $values['usersautoadded'] : 0;
+    $allowedinstitutions = get_institutions_to_associate();
+    $institution = isset($allowedinstitutions[$values['institution']]) ? $values['institution'] : 'mahara';
 
     $newvalues = array(
         'name'           => $group_data->name == $values['name'] ? $values['name'] : trim($values['name']),
+        'institution'    => $institution,
         'description'    => $values['description'],
         'grouptype'      => $values['grouptype'],
         'category'       => empty($values['category']) ? null : intval($values['category']),

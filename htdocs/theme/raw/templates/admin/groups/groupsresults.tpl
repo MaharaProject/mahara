@@ -13,6 +13,7 @@
         <td>{$group->categorytitle}</td>
     {/if}
     <td>{$group->visibility}</td>
+    <td>{$group->institutionname}</td>
     <td class="right">
         <div class="btn-group">
             <a class="btn btn-default btn-sm" title="{str tag="groupmanage" section="admin"}" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}">

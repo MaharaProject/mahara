@@ -69,6 +69,39 @@ function groupquotasform_submit(Pieform $form, $values) {
 }
 
 
+$institutionform = pieform(array(
+    'name'       => 'institutionform',
+    'renderer'   => 'div',
+    'elements'   => array(
+        'groupid' => array(
+            'type' => 'hidden',
+            'value' => $group->id,
+        ),
+        'institution' => array(
+            'type' => 'select',
+            'title' => get_string('institution'),
+            'defaultvalue' => $group->institution,
+            'collapseifoneoption' => true,
+            'options' => get_institutions_to_associate(),
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'class' => 'btn-primary',
+            'value' => get_string('save'),
+        )
+    ),
+));
+
+function institutionform_submit(Pieform $form, $values) {
+    global $SESSION;
+
+    update_record('group', array('institution' => $values['institution']), array('id' => $values['groupid']));
+
+    $SESSION->add_ok_msg(get_string('groupassigned', 'group'));
+    redirect(get_config('wwwroot').'admin/groups/groups.php');
+}
+
+
 $admins = get_column_sql(
     "SELECT gm.member FROM {group_member} gm WHERE gm.role = 'admin' AND gm.group = ?", array($group->id)
 );
@@ -131,6 +164,7 @@ $smarty = smarty();
 setpageicon($smarty, 'icon-users');
 
 $smarty->assign('quotasform', $quotasform);
+$smarty->assign('institutionform', $institutionform);
 $smarty->assign('groupname', $group->name);
 $smarty->assign('managegroupform', $groupadminsform);
 $smarty->display('admin/groups/manage.tpl');

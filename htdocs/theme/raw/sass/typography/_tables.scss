@@ -263,8 +263,9 @@ table.table tr {
 
 // Specific width for group table.
 .table>thead>tr>th.groupname,
-.table>thead>tr>th.groupshortname {
-    width: 20%;
+.table>thead>tr>th.groupshortname,
+.table>thead>tr>th.groupmanagebuttons {
+    width: 15%;
 }
 
 .table.profile-info {

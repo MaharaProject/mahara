@@ -14,7 +14,8 @@
                                     <th>{str tag="groupcategory" section="group"}</th>
                                 {/if}
             <th>{str tag="groupvisible" section="admin"}</th>
-            <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
+            <th>{str tag="institution"}</th>
+            <th class="groupmanagebuttons"><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
         </tr>
         </thead>
         <tbody>

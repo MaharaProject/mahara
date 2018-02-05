@@ -14,6 +14,9 @@ defined('INTERNAL') || die();
 // my groups
 $string['groupname'] = 'Group name';
 $string['groupshortname'] = 'Short name';
+$string['assigntoinstitution'] = 'Assign to institution';
+$string['assigntoaninstitution'] = 'Assign group \'%s\' to an institution';
+$string['groupassigned'] = 'Group assigned to institution successfully';
 $string['creategroup'] = 'Create group';
 $string['copygroup'] = 'Copy group "%s"';
 $string['groupmemberrequests'] = 'Pending membership requests';

@@ -1,5 +1,11 @@
 {include file="header.tpl"}
 <div class="panel panel-default">
+    <h2 class="panel-heading">{str tag=assigntoaninstitution section=group args=$groupname}</h2>
+    <div class="panel-body">
+        {$institutionform|safe}
+    </div>
+</div>
+<div class="panel panel-default">
     <h2 class="panel-heading">{str tag=groupquotas section=admin args=$groupname}</h2>
     <div class="panel-body">
         <p>
