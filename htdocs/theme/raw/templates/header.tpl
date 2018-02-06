@@ -44,6 +44,7 @@
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
         </div>
     {/if}
+
     <header class="header navbar-fixed-top no-site-messages">
         <div class="navbar navbar-default navbar-main">
             <div class="container">
