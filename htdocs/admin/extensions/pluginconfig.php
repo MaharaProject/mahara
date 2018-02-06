@@ -50,6 +50,13 @@ if (!call_static_method($classname, 'has_config')) {
 }
 
 $form = call_static_method($classname, 'get_config_options');
+if (method_exists($classname, 'get_config_options_css')) {
+    $formcss = call_static_method($classname, 'get_config_options_css');
+}
+else {
+    $formcss = array();
+}
+
 if (!array_key_exists('class', $form)) {
     $form['class'] = 'panel panel-body';
 }
@@ -80,7 +87,7 @@ $form['elements']['save'] = array(
 
 $form = pieform($form);
 
-$smarty = smarty();
+$smarty = smarty(array(), $formcss);
 $smarty->assign('form', $form);
 $smarty->assign('plugintype', $plugintype);
 $smarty->assign('pluginname', $pluginname);
