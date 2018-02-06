@@ -49,11 +49,8 @@
 
 .toolbar-affix.affix {
     position: fixed;
-    top: 70px;
+    top: 30px;
     z-index: 1;
-    @media (max-width: $screen-sm-min) {
-        top: 0;
-    }
 }
 
 .layoutthumb {

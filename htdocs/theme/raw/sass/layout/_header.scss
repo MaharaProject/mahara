@@ -12,13 +12,13 @@
         float: left;
     }
 
+    // CHANGE this value to switch between large and small logo
     $screen-width-small-logo: 415px;
 
     .logo {
-        margin: 6px 15px 6px 0;
+        padding: 6px 15px 6px 0;
         display: inline-block;
-        // logo restricted to 45px - custom work required for a larger version
-        height: 45px;
+        height: $navbar-height; // CHANGE this value
 
         // When small logo is uploaded 'change-to-small' class is added.
         &.change-to-small {
@@ -57,10 +57,11 @@
             margin: 18px 10px 5px 0;
         }
     }
-    // if container is directly after header, then it will need a margin
-    + .container {
+
+    .navbar-main.navbar {
+        min-height: auto;
         @media (min-width: $screen-sm-min) {
-            margin-top: 30px;
+            height: $navbar-height; // CHANGE this value
         }
     }
 }
