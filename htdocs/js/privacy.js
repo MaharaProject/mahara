@@ -61,3 +61,16 @@ function reloadUsers() {
     }
     window.location.href = config.wwwroot + 'admin/users/institutionprivacy.php?institution=' + $('#usertypeselect_institution').val() + appendfs;
 }
+
+// User's Legal page: show the submit button if the user changes
+// the value of one or more switches from YES to NO.
+function showSubmitButton() {
+    if ($('body').find(".redraw-consent").length == 0) {
+        $('#agreetoprivacy_submit_container').addClass('js-hidden');
+        $('#agreetoprivacy_submit').addClass('js-hidden');
+    }
+    else {
+        $('#agreetoprivacy_submit_container').removeClass('js-hidden');
+        $('#agreetoprivacy_submit').removeClass('js-hidden');
+    }
+}

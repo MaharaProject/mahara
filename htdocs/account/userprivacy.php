@@ -16,7 +16,7 @@ define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'userprivacy');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'lib/user.php');
-define('TITLE', get_string('privacy', 'admin'));
+define('TITLE', get_string('legal', 'admin'));
 
 if (!is_logged_in()) {
     throw new AccessDeniedException();
@@ -24,8 +24,7 @@ if (!is_logged_in()) {
 
 $form = privacy_form();
 
-// JQuery logic for panel hide/show.
-// Needed here because there are multiple dropdown panels on this page.
+// JQuery logic for panel hide/show submit button.
 $js = <<< EOF
     $( document ).ready(function() {
         $(".state-label").click(function() {
@@ -33,19 +32,9 @@ $js = <<< EOF
             showSubmitButton();
         });
     });
-    function showSubmitButton() {
-        if ($('body').find(".redraw-consent").length == 0) {
-            $('#agreetoprivacy_submit_container').addClass('js-hidden');
-            $('#agreetoprivacy_submit').addClass('js-hidden');
-        }
-        else {
-            $('#agreetoprivacy_submit_container').removeClass('js-hidden');
-            $('#agreetoprivacy_submit').removeClass('js-hidden');
-        }
-    }
 EOF;
 
-$smarty = smarty();
+$smarty = smarty(array('privacy'));
 setpageicon($smarty, 'icon-umbrella');
 
 $smarty->assign('form', $form);

@@ -3254,7 +3254,7 @@ function get_latest_privacy_versions($institutions = array(), $ignoreagreevalue 
             GROUP BY institution, type) s2 ON s.institution = s2.institution AND s.id = s2.current
             " . $useragreementsql . "
         WHERE s.institution IN (" . join(',',array_map('db_quote',$institutions)) . ")
-        ORDER BY site", $params);
+        ORDER BY site, type", $params);
 
     return $latestversions;
 }

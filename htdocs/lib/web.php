@@ -3044,7 +3044,7 @@ function right_nav() {
         'settings/privacy' => array(
             'path' => 'settings/privacy',
             'url' => 'account/userprivacy.php',
-            'title' => get_string('privacy', 'admin'),
+            'title' => get_string('legal', 'admin'),
             'weight' => 30
         ),
         'settings/notifications' => array(
