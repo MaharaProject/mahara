@@ -18,6 +18,7 @@ Scenario: Registering as a new student and checking switch can flick back and fo
  | Email address | fakeymcfakey@example.org |
  | Registration reason | I will absolutely make this institution more amazing!! |
  And I enable the switch "I consent to this privacy statement"
+ And I enable the switch "I consent to this terms and conditions"
  # we wait a human amount of time so the spam trap is avoided
  And I wait "4" seconds
  And I press "Register"

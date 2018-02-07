@@ -24,7 +24,7 @@
                 <legend>
                     <h4>
                         <a href="#dropdown-privacyst-{$sitecontent['privacy']->id}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
-                            {str tag="siteprivacystatement" section="admin"}
+                            {str tag="siteprivacy" section="admin"}
                             <span class="icon icon-chevron-down collapse-indicator right pull-right"> </span>
                         </a>
                     </h4>
@@ -48,7 +48,7 @@
                 <legend>
                     <h4>
                         <a href="#dropdown-terms-{$sitecontent['termsandconditions']->id}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
-                            {str tag="sitetermsstatement" section="admin"}
+                            {str tag="sitetermsandconditions" section="admin"}
                             <span class="icon icon-chevron-down collapse-indicator right pull-right"> </span>
                         </a>
                     </h4>
