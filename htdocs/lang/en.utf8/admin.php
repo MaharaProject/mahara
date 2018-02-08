@@ -894,6 +894,7 @@ $string['loginasdenied'] = 'Attempt to log in as another user without permission
 $string['loginastwice'] = 'Attempt to log in as another user when already logged in as another user';
 $string['loginasrestorenodata'] = 'No user data to restore';
 $string['loginasoverridepasswordchange'] = 'As you are masquerading as another user, you may choose to %slog in anyway%s ignoring the password change screen.';
+$string['loginasoverrideprivacyaccept'] = 'As you are masquerading as another user, you may choose to %slog in anyway%s ignoring the accept privacy statement screen.';
 
 // Institutions
 $string['Add'] = 'Add';
@@ -1346,3 +1347,12 @@ $string['versionfor'] = 'Privacy statement for version "%s" is as follows:';
 $string['institutionprivacystatement'] = 'Institution privacy statement';
 $string['userprivacypagedescription'] = 'Displayed are the current privacy statements to which you consented.';
 $string['lastupdated'] = 'Last updated on';
+$string['newprivacy'] = 'Before entering your account, please read the privacy statement displayed below.';
+$string['privacyagreement'] = 'I consent to this privacy statement';
+$string['privacyagreementdescription'] = 'By choosing "Yes", you give your consent to the clauses of the privacy statement above.';
+$string['privacyagreedto'] = 'You agreed to this privacy statement in %s.';
+$string['agreementsaved'] = 'Agreement saved';
+$string['refuseprivacy'] = 'Refuse privacy statement';
+$string['confirmprivacyrefusal'] = 'Are you really sure you wish to continue?';
+$string['privacyrefusaldetails'] = 'If you do not consent to the privacy statement, your account will be suspended.';
+$string['privacyrefusal'] = 'Refused to consent to the privacy statement.';

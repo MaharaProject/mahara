@@ -866,6 +866,7 @@ $string['youraccounthasbeensuspendedtextcron'] = 'Your account at %s has been su
 $string['youraccounthasbeensuspendedreasontext'] = "Your account at %s has been suspended by %s. Reason:\n\n%s";
 $string['youraccounthasbeensuspendedreasontextcron'] = "Your account at %s has been suspended. Reason:\n\n%s";
 $string['youraccounthasbeenunsuspendedtext2'] = 'Your account at %s has been unsuspended. You may once again log in and use the site.'; // can't provide a login link because we don't know how they log in - it might be by xmlrpc
+$string['youraccounthasbeensuspendedtext3'] = 'Your account on %s has been suspended because you refused to consent to the privacy statement';
 
 // size of stuff
 $string['sizemb'] = 'MB';
