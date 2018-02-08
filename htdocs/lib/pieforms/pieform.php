@@ -1512,7 +1512,8 @@ EOF;
         if (isset($element['title']) && $element['title'] !== '') {
             $title = self::hsc($element['title']);
 
-            if ($this->get_property('requiredmarker') && !empty($element['rules']['required'])) {
+            if ($this->get_property('requiredmarker') &&
+                (!empty($element['rules']['required']) || !empty($element['rules']['requiredby']))) {
                 $requiredmarker = ' <span class="requiredmarker">' . $this->get_property('requiredmarker') . '</span>';
                 $this->has_required_fields = true;
                 if (!empty($element['hiddenlabel'])) {
