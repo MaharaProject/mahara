@@ -1,0 +1,11 @@
+Bootstrap for Sass
+==================
+
+Website: https://github.com/twbs/bootstrap
+Version: 3.3.1
+
+The most popular HTML, CSS, and JavaScript framework for developing responsive, mobile first projects on the web.
+
+Changes:
+- Only kept the 'assets/' directory
+- used the information from 'scss/' directory in the 'theme/raw/sass/' directory but highly customised
