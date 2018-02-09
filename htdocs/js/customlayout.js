@@ -9,6 +9,8 @@
             var newrow = $('#customrow_' + numrows).clone();
             var currentncols = $('#customrow_' + numrows).find('#selectnumcolsrow_' + numrows).val();
             var currentcollayout = $('#customrow_' + numrows).find('#selectcollayoutrow_' + numrows).val();
+            var labelValue = "<span class='sr-only'>" + get_string("Row", "view") + " " + (numrows + 1) + ": </span>" + get_string_ajax("numberofcolumns", "view");
+            var labelValue2 = "<span class='sr-only'>" + get_string("Row", "view") + " " + (numrows + 1) + ": </span>" + get_string_ajax('columnlayout', 'view');
 
             newrow.find('.customrowtitle').html('<strong>' + get_string('rownr', 'view', numrows + 1) + '</strong>');
             newrow.attr('id', 'customrow_' + (numrows + 1));
@@ -16,18 +18,18 @@
             newid = 'selectnumcolsrow_' + (numrows + 1);
             newrow.find('#selectnumcolsrow_' + numrows).val(currentncols);
             newrow.find('#selectnumcolsrow_' + numrows).attr('id', newid);
-            newrow.find('label[for="selectnumcolsrow_' + numrows + '"]').attr('for', newid);
+            newrow.find('label[for="selectnumcolsrow_' + numrows + '"]').attr('for', newid).html(labelValue);
 
             newid = 'selectcollayoutrow_' + (numrows + 1);
             newrow.find('#selectcollayoutrow_' + numrows).val(currentcollayout);
             newrow.find('#selectcollayoutrow_' + numrows).attr('id', 'selectcollayoutrow_' + (numrows + 1));
-            newrow.find('label[for="selectcollayoutrow_' + numrows + '"]').attr('for', newid);
+            newrow.find('label[for="selectcollayoutrow_' + numrows + '"]').attr('for', newid).html(labelValue2);
 
             if ((oldremovebutton = $(newrow).find('button')).length != 0) {
                 oldremovebutton.attr('class', 'pull-left btn btn-sm btn-default removecustomrow_' + (numrows + 1));
             }
             else {
-                // wanring: classes are modified above for any subsequent button instances
+                // warning: classes are modified above for any subsequent button instances
                 newrow.append('<button name="removerow" class="pull-left btn btn-sm btn-default removecustomrow_' + (numrows + 1) + '" onclick="CustomLayoutManager.customlayout_remove_row(\'' + pieformname + '\', this)"><span class="icon icon-lg icon-trash text-danger"></span><span class="hidden-xs pls"> ' + get_string('removethisrow', 'view') + '</span></button>');
             }
             $('#customrow_' + numrows).after(newrow);
