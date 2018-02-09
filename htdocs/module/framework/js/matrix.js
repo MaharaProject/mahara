@@ -283,6 +283,10 @@ jQuery(function($) {
     function editmatrix_update(data) {
         params = data;
         sendjsonrequest('matrixpoint.json.php', params, 'POST', function(results) {
+            var hastinymce = false;
+            if (typeof tinyMCE !== 'undefined') {
+                hastinymce = true;
+            }
             if (results.data.class) {
                 $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon')
                   .attr('class', results.data.class)
