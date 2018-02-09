@@ -90,6 +90,8 @@ class AuthSaml extends Auth {
         $this->config['loginlink'] = false;
         $this->config['institutionidp'] = '';
         $this->config['institutionidpentityid'] = '';
+        $this->config['parent'] = null;
+        $this->config['authloginmsg'] = '';
         $this->instanceid = $id;
 
         if (!empty($id)) {
@@ -346,7 +348,9 @@ class PluginAuthSaml extends PluginAuth {
         'remoteuser'             => 1,
         'loginlink'              => 0,
         'institutionidpentityid' => '',
-        'active'                 => 1
+        'active'                 => 1,
+        'parent'                 => null,
+        'authloginmsg'           => ''
     );
 
     public static function can_be_disabled() {
@@ -852,6 +856,17 @@ jQuery('document').ready(function($) {
 </script>
 EOF;
 
+        $instances = auth_get_auth_instances_for_institution($institution);
+        $options = array('None');
+        if (is_array($instances)) {
+            foreach($instances as $someinstance) {
+                if ($someinstance->requires_parent == 1 || $someinstance->authname == 'none' || $someinstance->authname == 'saml') {
+                    continue;
+                }
+                $options[$someinstance->id] = $someinstance->instancename;
+            }
+        }
+
         $elements = array(
             'instance' => array(
                 'type'  => 'hidden',
@@ -975,6 +990,23 @@ EOF;
                 'title' => get_string('samlfieldforstudentid', 'auth.saml'),
                 'defaultvalue' => self::$default_config['studentidfield'],
                 'help' => true,
+            ),
+            'parent' => array(
+                'type'                => 'select',
+                'title'               => get_string('parent','auth'),
+                'collapseifoneoption' => false,
+                'options'             => $options,
+                'defaultvalue'        => self::$default_config['parent'],
+                'help'   => true
+            ),
+            'authloginmsg' => array(
+                'type'         => 'wysiwyg',
+                'rows'         => 10,
+                'cols'         => 70,
+                'title'        => '',
+                'description'  => get_string('authloginmsgnoparent', 'auth'),
+                'defaultvalue' => self::$default_config['authloginmsg'],
+                'help'         => true,
             ),
         );
 
@@ -1138,6 +1170,8 @@ EOF;
             'institutionvalue' => $values['institutionvalue'],
             'institutionregex' => $values['institutionregex'],
             'institutionidpentityid' => $entityid,
+            'parent' => $values['parent'],
+            'authloginmsg' => $values['authloginmsg'],
         );
 
         foreach(self::$default_config as $field => $value) {
