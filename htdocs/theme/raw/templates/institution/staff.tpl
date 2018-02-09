@@ -6,7 +6,7 @@
         <h4 class="list-group-item-heading">
             <a href="{profile_url($user)}">{$user->display_name}</a>
         </h4>
-        {if $USER->get('id') != $user->id && $user->messages && $listtype == 'admin'}
+        {if $USER->get('id') != $user->id && $user->messages && ($listtype == 'admin' || $listtype == 'staff')}
             <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&returnto={$page}&inst={$inst}" id="btn-sendmessage" class="btn btn-default btn-xs">
                 <span class="icon icon-envelope left" aria-hidden="true" role="presentation"></span>
                 {str tag='sendmessage' section='group'}
@@ -14,4 +14,3 @@
         {/if}
     </div>
 </div>
-
