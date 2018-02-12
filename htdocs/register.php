@@ -172,7 +172,12 @@ if (isset($key)) {
                 set_field('usr_institution', 'staff', 1, 'usr', $user->id, 'institution', $registration->institution);
             }
         }
-
+        // Save in DB the privacy statement(s) the user has accepted while registering.
+        if (!empty($extrafields->privacy)) {
+            foreach ($extrafields->privacy as $privacyid) {
+                save_user_reply_to_agreement($user->id, $privacyid, 1);
+            }
+        }
 
         if (!empty($registration->lang) && $registration->lang != 'default') {
             set_account_preference($user->id, 'lang', $registration->lang);
@@ -207,16 +212,9 @@ if (!$form) {
 list($formhtml, $js) = auth_generate_registration_form_js($form, $registerconfirm);
 
 $registerdescription = get_string('registerwelcome');
-if ($registerterms = get_config('registerterms')) {
-    $registerdescription .= ' ' . get_string('registeragreeterms');
-}
-$registerdescription .= ' ' . get_string('registerprivacy');
 
 $smarty = smarty();
 $smarty->assign('register_form', $formhtml);
 $smarty->assign('registerdescription', $registerdescription);
-if ($registerterms) {
-    $smarty->assign('termsandconditions', '<a name="user_acceptterms"></a>' . get_site_page_content('termsandconditions'));
-}
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('register.tpl');

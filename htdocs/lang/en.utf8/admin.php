@@ -1356,3 +1356,7 @@ $string['refuseprivacy'] = 'Refuse privacy statement';
 $string['confirmprivacyrefusal'] = 'Are you really sure you wish to continue?';
 $string['privacyrefusaldetails'] = 'If you do not consent to the privacy statement, your account will be suspended.';
 $string['privacyrefusal'] = 'Refused to consent to the privacy statement.';
+$string['registerprivacyrefusal'] = 'Your account will not be created when you do not consent to the privacy statement.';
+$string['registerprivacydetails'] = 'Please read the privacy statement. If you do not consent to it, you cannot create an account on the site.';
+$string['enterreason'] = 'Please enter the reason of refusal here...';
+$string['hasrefused'] = 'has refused the privacy statement';

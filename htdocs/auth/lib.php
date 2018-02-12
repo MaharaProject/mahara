@@ -743,6 +743,79 @@ function auth_get_available_auth_types($institution=null) {
     return $result;
 }
 /**
+ * Build the agree with or withdraw consent to privacy statement
+ *
+ * @param ignoreagreevalue true when a new privacy statement needs to be accepted,
+ * false when the form will be displayed to allow the consent withdraw.
+ * @return form
+ */
+function privacy_form($ignoreagreevalue = false) {
+    global $USER;
+
+    // Get all institutions of a user.
+    $userinstitutions = array_keys($USER->get('institutions'));
+    // Include the 'mahara' institution so that we may show the site privacy statement as well.
+    array_push($userinstitutions, 'mahara');
+
+    // Check if there are new privacies that need to be accepted.
+    $latestversions = get_latest_privacy_versions($userinstitutions, $ignoreagreevalue);
+    if (empty($latestversions)) {
+        // We may be masquerading as user
+        return '<div>' . get_string('noprivacystatementsaccepted', 'account') . '</div>';
+    }
+
+    foreach ($latestversions as $privacy) {
+        $privacytitle = $privacy->institution == 'mahara' ? get_string('siteprivacystatement', 'admin') : get_string('institutionprivacystatement', 'admin');
+        $smarty = smarty_core();
+        $smarty->assign('privacy', $privacy);
+        $smarty->assign('privacytitle', $privacytitle);
+        $smarty->assign('privacytime', format_date(strtotime($privacy->ctime)));
+        $smarty->assign('ignoreagreevalue', $ignoreagreevalue);
+        $htmlbegin = $smarty->fetch('privacy_panel_begin.tpl');
+
+        //Build form elements.
+        $elements[$privacy->institution . 'text'] = array(
+            'type' => 'markup',
+            'value' => $htmlbegin,
+        );
+        $elements[$privacy->institution . 'id'] = array(
+            'type' => 'hidden',
+            'value' => $privacy->id,
+        );
+        $elements[$privacy->institution] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('privacyagreement', 'admin'),
+            'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin', format_date(strtotime($privacy->agreedtime))) : '',
+            'defaultvalue' => $privacy->agreed ? true : false,
+            'disabled'     => ($privacy->agreed && $ignoreagreevalue) ? true : false,
+            'required' => true,
+        );
+        $elements[$privacy->institution . 'switch'] = array(
+            'type' => 'hidden',
+            'value' => ($privacy->agreed && $ignoreagreevalue) ? 'disabled' : 'enabled',
+        );
+        $smarty = smarty_core();
+        $smarty->assign('ignoreagreevalue', $ignoreagreevalue);
+        $htmlend = $smarty->fetch('privacy_panel_end.tpl');
+        $elements[$privacy->institution . 'text2'] = array(
+            'type' => 'markup',
+            'value' => $htmlend,
+        );
+
+    }
+    $classhidden = $ignoreagreevalue ? '' : 'js-hidden';
+    $elements['submit'] = array(
+        'class' => 'btn-primary ' . $classhidden,
+        'type'  => 'submit',
+        'value' => get_string('savechanges', 'admin')
+    );
+    $form = pieform(array(
+        'name'       => 'agreetoprivacy',
+        'elements' => $elements,
+    ));
+    return $form;
+}
+/**
  * Checks that all the required fields are set, and handles setting them if required.
  *
  * Checks whether the current user needs to change their password, and handles
@@ -762,45 +835,9 @@ function auth_check_required_fields() {
     }
     // Privacy statement.
     if (get_config('institutionstrictprivacy') && !$USER->has_latest_agreement() && !$restoreadmin && !$loginanyway) {
-        // Get all institutions of a user.
-        $userinstitutions = array_keys($USER->get('institutions'));
-        // Include the 'mahara' institution so that we may show the site privacy statement as well.
-        array_push($userinstitutions, 'mahara');
+        // Build the agree with privacy statement form.
+        $form = privacy_form(true);
 
-        // Check if there are new privacies that need to be accepted.
-        $latestversions = get_latest_privacy_versions($userinstitutions, true);
-
-        foreach ($latestversions as $privacy) {
-            $elements[$privacy->institution . 'text'] = array(
-                'type' => 'markup',
-                'value' => '<h2>' . ($privacy->institution == 'mahara' ? get_string('siteprivacystatement', 'admin') : get_string('institutionprivacystatement', 'admin')) . '</h2>' . $privacy->content,
-            );
-            $elements[$privacy->institution . 'id'] = array(
-                'type' => 'hidden',
-                'value' => $privacy->id,
-            );
-            $elements[$privacy->institution] = array(
-                'type'         => 'switchbox',
-                'title'        => get_string('privacyagreement', 'admin'),
-                'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin', format_date(strtotime($privacy->agreedtime))) : '',
-                'defaultvalue' => $privacy->agreed ? true : false,
-                'disabled'     => $privacy->agreed ? true : false,
-                'required' => true,
-            );
-            $elements[$privacy->institution . 'switch'] = array(
-                'type' => 'hidden',
-                'value' => $privacy->agreed ? 'disabled' : 'enabled',
-            );
-        }
-        $elements['submit'] = array(
-            'class' => 'btn-primary',
-            'type'  => 'submit',
-            'value' => get_string('savechanges', 'admin')
-        );
-        $form = pieform(array(
-            'name'       => 'agreetoprivacy',
-            'elements' => $elements,
-        ));
         define('TITLE', get_string('privacy', 'admin'));
         $smarty = smarty();
         setpageicon($smarty, 'icon-umbrella');
@@ -810,7 +847,8 @@ function auth_check_required_fields() {
                        '<strong><a class="" href="' . get_config('wwwroot') . '?loginanyway">', '</a></strong>'));
         }
         $smarty->assign('form', $form);
-        $smarty->display('account/useracceptprivacy.tpl');
+        $smarty->assign('description', get_string('newprivacy', 'admin'));
+        $smarty->display('account/userprivacy.tpl');
         exit;
     }
 
@@ -1206,6 +1244,7 @@ function agreetoprivacy_submit(Pieform $form, $values) {
     array_push($userinstitutions, 'mahara');
 
     $hasrefused = param_integer('hasrefused', 0);
+    $reason = param_variable('reason', '');
 
     foreach ($userinstitutions as $institution) {
         // check if the institution has a privacy statement
@@ -1219,6 +1258,10 @@ function agreetoprivacy_submit(Pieform $form, $values) {
             save_user_reply_to_agreement($USER->get('id'), $values[$institution . 'id'], $agreed);
             $SESSION->add_ok_msg(get_string('agreementsaved', 'admin'));
             if ($hasrefused) {
+                // Send a message to the institution/site admin informing that the user has refused the privacy statement.
+                $institution = new Institution($institution);
+                $institution->send_admin_institution_refused_privacy_message($USER->get('id'), $reason);
+
                 suspend_user($USER->get('id'), 'privacyrefusal');
                 $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
                 $USER->logout();
@@ -2330,6 +2373,50 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
             )
         );
     }
+    // Add site privacy statement and T&C to the register form.
+    $siteprivacy = get_latest_privacy_versions(array('mahara'));
+    $elements['privacy'] = array(
+        'type' => 'markup',
+        'value' => '<div id ="siteprivacy">' .
+                        '<h2>' . get_string('siteprivacystatement', 'admin') . '</h2>' .
+                        '<p class="text-midtone">' . get_string('registerprivacy1') . '</p>' .
+                        '<div id ="siteprivacytext">' . $siteprivacy[0]->content . '</div>' .
+                    '</div>',
+    );
+    $elements['privacyswitch'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('privacyagreement', 'admin'),
+        'description'  => get_string('registerprivacydetails', 'admin'),
+        'required' => true,
+    );
+    $elements['privacyid'] = array(
+        'type'         => 'hidden',
+        'value'        => $siteprivacy[0]->id,
+    );
+    // Add institution privacy if an institution has been selected.
+    $elements['instprivacy'] = array(
+        'type' => 'markup',
+        'value' => '<div id ="instprivacy" class ="js-hidden">' .
+                        '<h2>' . get_string('institutionprivacystatement', 'admin') . '</h2>' .
+                        '<p class="text-midtone">' . get_string('registerprivacy1') . '</p>' .
+                        '<div id ="instprivacytext"></div>' .
+                    '</div>',
+    );
+    $elements['instprivacyswitch'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('privacyagreement', 'admin'),
+        'description'  => get_string('registerprivacydetails', 'admin'),
+        'class' => 'instprivacyswitch js-hidden',
+    );
+    $elements['instprivacyid'] = array(
+        'type' => 'text',
+        'class' => 'js-hidden',
+    );
+    // Add the terms and conditions.
+    $elements['terms'] = array(
+        'type' => 'markup',
+        'value' => "<h2>Terms and condititions</h2>" . get_site_page_content('termsandconditions'),
+    );
 
     $registerterms = get_config('registerterms');
     if ($registerterms) {
@@ -2413,17 +2500,19 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
         });
        ';
     }
-    else {
-        $url = get_config('wwwroot') . 'json/termsandconditions.php';
-        $js = '
+    // Display the institution privacy statement, if it exist.
+    $url = get_config('wwwroot') . 'json/privacystatement.php';
+    $js = '
         var registerconfirm = ' . json_encode($registerconfirm) . ';
         jQuery(function($) {
-            function show_reason(reasonid, value) {
-                if (value) {
-                    $("#" + reasonid + "_container").removeClass("js-hidden");
-                    $("#" + reasonid + "_container textarea").removeClass("js-hidden");
-                    $("#" + reasonid + "_container").next("tr.textarea").removeClass("js-hidden");
-                    // need to fetch the correct terms and conditions for the institution
+            function show_privacy(institutionid, value) {
+                $("#register_instprivacyid").attr("value", "");
+                $("#instprivacy").addClass("js-hidden");
+                $("#instprivacytext").html("");
+                $(".instprivacyswitch").addClass("js-hidden");
+
+                if (value !== "0" && value !== "mahara") {
+                    // Fetch the institution privacy statement.
                     $.ajax({
                         type: "POST",
                         dataType: "json",
@@ -2432,10 +2521,20 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
                             "institution": value,
                         }
                     }).done(function (data) {
-                        if (data.content) {
-                            $("#termscontainer").html(data.content);
+                        if (data && data.content) {
+                            $("#instprivacy").removeClass("js-hidden");
+                            $("#instprivacytext").html(data.content);
+                            $(".instprivacyswitch").removeClass("js-hidden");
+                            $("#register_instprivacyid").attr("value", data.id);
                         }
                     });
+                }
+            }
+            function show_reason(reasonid, value) {
+                if (value) {
+                    $("#" + reasonid + "_container").removeClass("js-hidden");
+                    $("#" + reasonid + "_container textarea").removeClass("js-hidden");
+                    $("#" + reasonid + "_container").next("tr.textarea").removeClass("js-hidden");
                 }
                 else {
                     $("#" + reasonid + "_container").addClass("js-hidden");
@@ -2446,22 +2545,28 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
             // For when page loads after error found on form completion
             var defaultselect = $j("#' . $institutionid . '").val();
             var reasonid = "' . $reasonid . '";
-            if (defaultselect != 0 && registerconfirm[defaultselect] == 1) {
-                show_reason(reasonid, defaultselect);
+            if (defaultselect != 0) {
+                if (registerconfirm[defaultselect] == 1) {
+                    show_reason(reasonid, defaultselect);
+                }
+                show_privacy("' . $institutionid . '", defaultselect);
             }
 
             // For when select changes
             $("#' . $institutionid . '").change(function() {
-                if (this.value && registerconfirm[this.value] == 1) {
-                    show_reason(reasonid, this.value);
-                }
-                else {
-                    show_reason(reasonid, null);
+                if (this.value) {
+                    if (registerconfirm[this.value] == 1) {
+                        show_reason(reasonid, this.value);
+                    }
+                    else {
+                        show_reason(reasonid, null);
+                    }
+                    show_privacy("' . $institutionid . '", this.value);
                 }
             });
         });
-        ';
-    }
+    ';
+
 
     return array($formhtml, $js);
 }
@@ -2504,6 +2609,16 @@ function auth_register_validate(Pieform $form, $values) {
 
     $institution = $values['institution'];
     safe_require('auth', 'internal');
+
+    // Privacy statements must have been accepted by the user.
+    if (!$values['instprivacyswitch'] && $values['instprivacyid'] != '') {
+        $SESSION->add_error_msg(get_string('registerprivacyrefusal', 'admin'));
+        $form->set_error('instprivacyswitch', get_string('registerprivacyrefusal', 'admin'));
+    }
+    if (!$values['privacyswitch']) {
+        $SESSION->add_error_msg(get_string('registerprivacyrefusal', 'admin'));
+        $form->set_error('privacyswitch', get_string('registerprivacyrefusal', 'admin'));
+    }
 
     // First name and last name must contain at least one non whitespace
     // character, so that there's something to read
@@ -2590,7 +2705,9 @@ function auth_register_submit(Pieform $form, $values) {
     if (function_exists('local_register_submit')) {
         local_register_submit($values);
     }
-
+    $extra = new StdClass;
+    $extra->privacy = array($values['privacyid'], $values['instprivacyid']);
+    $values['extra'] = serialize($extra);
     try {
         if (!record_exists('usr_registration', 'email', $values['email'])) {
             insert_record('usr_registration', $values);

@@ -464,6 +464,50 @@ class Institution {
             }
         }
     }
+    /**
+     * Send a message to the site admin or to the institution admin when a user refuses the privacy statement.
+     *
+     * If the user is part of an institution and the institution has admin(s), send the message just to the inst. admin(s).
+     * Else send the messege to the site admin(s).
+     *
+     * @param integer $studentid The id of the user who has refused the privacy statement.
+     * @param string $reason The reson why the user refused the privacy statement.
+     */
+    public function send_admin_institution_refused_privacy_message($studentid, $reason) {
+        $student = new User();
+        $student->find_by_id($studentid);
+        $studentname = display_name($student, null, true);
+
+        // Get the institution admin user records.
+        $admins = $this->admins();
+        // If the user is not part of an institution OR his institution has no admin, send the message to the site admin.
+        if (empty($admins)) {
+            $admins = $this->institution_and_site_admins();
+        }
+        $thereasonis = '';
+        if ($reason != '') {
+            $thereasonis = get_string('thereasonis', 'mahara');
+            $reason = '"' . urldecode($reason) . '"';
+        }
+        // check if there are admins - otherwise there are no site admins?!?!?
+        if (count($admins) > 0) {
+            require_once('activity.php');
+            // send an email/message to each amdininistrator based on their specific language.
+            foreach ($admins as $index => $id) {
+                $lang = get_user_language($id);
+                $user = new User();
+                $user->find_by_id($id);
+                $message = (object) array(
+                    'users'   => array($id),
+                    'subject' => $studentname . ' ' . get_string('hasrefused', 'admin'),
+                    'message' => get_string_from_language($lang, 'institutionmemberrefusedprivacy', 'mahara',
+                        $user->firstname, $studentname, $student->username,
+                        $thereasonis, $reason, $student->email, get_config('sitename')),
+                );
+                activity_occurred('maharamessage', $message);
+            }
+        }
+    }
 
     public function declineRequestFromUser($userid) {
         $lang = get_user_language($userid);
