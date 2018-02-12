@@ -146,7 +146,7 @@ function check_upgrades($name=null) {
             $plugins[] = explode('.', $name);
         }
         catch (InstallationException $_e) {
-            log_warn("Plugin $pt $pn is not installable: " . $_e->GetMessage());
+            log_warn(get_string('pluginnotinstallable', 'mahara', $pt, $pn) . $_e->GetMessage());
         }
     }
     else {
@@ -156,7 +156,8 @@ function check_upgrades($name=null) {
                 if (strpos($dir, '.') === 0 or 'CVS' == $dir) {
                     continue;
                 }
-                if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
+                $plugin_dir = get_config('docroot') . $plugin . '/' . $dir;
+                if (!is_dir($plugin_dir)) {
                     continue;
                 }
                 try {
@@ -164,11 +165,11 @@ function check_upgrades($name=null) {
                     $plugins[] = array($plugin, $dir);
                 }
                 catch (InstallationException $_e) {
-                    log_warn("Plugin $plugin $dir is not installable: " . $_e->GetMessage());
+                    log_warn(get_string('pluginnotinstallable', 'mahara', $plugin, $dir) . $_e->GetMessage(), true , false);
                 }
 
                 if ($plugin == 'artefact') { // go check it for blocks as well
-                    $btlocation = get_config('docroot') . $plugin . '/' . $dir . '/blocktype';
+                    $btlocation = $plugin_dir . '/blocktype';
                     if (!is_dir($btlocation)) {
                         continue;
                     }
@@ -1083,7 +1084,7 @@ function validate_plugin($plugintype, $pluginname, $pluginpath='') {
         $pluginpath = get_config('docroot') . $plugintype . '/' . $pluginname;
     }
     if (!file_exists($pluginpath . '/version.php')) {
-        throw new InstallationException(get_string('versionphpmissing', 'error', $plugintype, $pluginname));
+        throw new InstallationException(get_string('versionphpmissing1', 'error', $plugintype, $pluginname, $pluginname, $pluginpath));
     }
     safe_require($plugintype, $pluginname);
     $classname = generate_class_name($plugintype, $pluginname);

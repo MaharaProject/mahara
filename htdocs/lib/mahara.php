@@ -4859,7 +4859,7 @@ function get_installed_plugins_paths() {
                 $plugins[] = array($plugin, $dir);
             }
             catch (InstallationException $_e) {
-                log_warn("Plugin $plugin $dir is not installable: " . $_e->GetMessage());
+                log_warn(get_string('pluginnotinstallable', 'mahara', $plugin, $dir) . $_e->GetMessage());
             }
 
             if ($plugin === 'artefact') { // go check it for blocks as well

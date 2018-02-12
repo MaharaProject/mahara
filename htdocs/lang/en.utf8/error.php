@@ -73,7 +73,7 @@ $string['blocktypelibmissing'] = 'Missing lib.php for block %s in artefact plugi
 $string['unabletosetmultipleblogs'] = 'Enabling multiple journals for the user %s when copying page %s has failed. This can be set manually on the <a href="%s">account</a> page.';
 $string['pleaseloginforjournals'] = 'You need to log out and log back in before you will see all your journals and posts.';
 $string['blocktypemissingconfigform'] = 'Block type %s must implement instance_config_form.';
-$string['versionphpmissing'] = 'Plugin %s %s is missing version.php.';
+$string['versionphpmissing1'] = 'Plugin %s %s is missing version.php. If you are not expecting to have a plugin %s, please delete the folder at %s';
 $string['blocktypeprovidedbyartefactnotinstallable'] = 'This will be installed as part of the installation of artefact plugin %s.';
 $string['blockconfigdatacalledfromset'] = 'Configdata should not be set directly. Use PluginBlocktype::instance_config_save instead.';
 $string['invaliddirection'] = 'Invalid direction %s.';
