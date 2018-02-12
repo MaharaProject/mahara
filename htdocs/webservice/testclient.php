@@ -161,7 +161,7 @@ if (!empty($authtype)) {
                     $authinstances = auth_get_auth_instances();
                     $options = array();
                     foreach ($authinstances as $authinstance) {
-                        $options[$authinstance->instancename] = $authinstance->displayname . ': ' . $authinstance->instancename;
+                        $options[$authinstance->authname] = $authinstance->instancename;
                     }
                     $elements[$name] = array(
                                              'type'         => 'select',
