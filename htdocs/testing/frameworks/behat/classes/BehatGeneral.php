@@ -410,6 +410,34 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Checks the list/table row containing the specified text.
+     *
+     * @Then I should see :text in the :rowtext row
+     * @param string $text we look for
+     * @param string $rowtext The list/table row text
+     * @throws ElementNotFoundException
+     */
+    public function i_find_in_row($text, $rowtext) {
+
+        // The table row container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the row containing the text "' . $rowtext . '"');
+        $xpath = "//div[(contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'listrow', ' '))" .
+            " or contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'list-group-item', ' ')))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]" .
+            "|" .
+            "//tr[contains(normalize-space(.), " . $rowtextliteral . ")]" .
+            "|" .
+            "//li[(contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'list-group-item', ' ')))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]";
+
+        $rownode = $this->find('xpath', $xpath, $exception);
+        // Looking for the element DOM node inside the specified row.
+        $elementnode = $this->find('named', array('content', $text));
+        $this->ensure_node_is_visible($elementnode);
+    }
+
+    /**
      * Click on the link or button inside a list/table row containing the specified text.
      *
      * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" row$/
@@ -520,6 +548,28 @@ class BehatGeneral extends BehatBase {
 
         // Click on the elipsis button for the panel
         $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.page-controls a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
+        $this->getSession()->executeScript($jscode);
+    }
+
+    /**
+     * Click on the link or button inside a panel access menu containing the specified text.
+     *
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" panel access menu$/
+     * @param string $link_or_button we look for
+     * @param string $rowtext The panel menu text
+     * @throws ElementNotFoundException
+     */
+    public function i_click_on_in_panel_access_menu($link_or_button, $rowtext) {
+
+        // The panel container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel access containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]";
+        $rownode = $this->find('xpath', $xpath, $exception);
+
+        // Click on the elipsis button for the panel
+        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.page-access a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
