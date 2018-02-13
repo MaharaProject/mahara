@@ -57,7 +57,7 @@ $privacies = get_records_sql_assoc("
     SELECT  s.id, s.version, u.firstname, u.lastname, u.id AS userid, s.content, s.ctime
     FROM {site_content_version} s
     LEFT JOIN {usr} u ON s.author = u.id
-    WHERE s.institution = ?
+    WHERE s.type = 'privacy' AND s.institution = ?
     ORDER BY s.id DESC", array($institution));
 
 $form = false;
@@ -143,7 +143,7 @@ function editsitepage_submit(Pieform $form, $values) {
 $siteprivacycontent = get_record_sql("
     SELECT s.content, s.ctime
     FROM {site_content_version} s
-    WHERE s.institution = ?
+    WHERE s.type = 'privacy' AND s.institution = ?
     ORDER BY s.id DESC
     LIMIT 1", array('mahara'));
 

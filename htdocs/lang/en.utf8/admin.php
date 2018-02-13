@@ -505,6 +505,7 @@ $string['sitepageloaded']      = 'Site page loaded';
 $string['termsandconditions']  = 'Terms and conditions';
 $string['uploadcopyright']     = 'Upload copyright statement';
 $string['privacypagedescription'] = 'Edit the privacy statement for the entire site. The version you edited last becomes the current privacy statement automatically.';
+$string['termspagedescription'] = 'Edit the terms and conditions for the entire site. The version you edited last becomes the current terms and conditions automatically.';
 
 // Links and resources menu editor
 $string['sitefile']            = 'Site file';
@@ -1343,7 +1344,8 @@ $string['lastversion'] = 'Privacy statements must have unique version names of u
 $string['versionalreadyexist'] = 'A privacy statement with the version name "%s" already exists.';
 $string['siteprivacystatement'] = 'Site privacy statement';
 $string['addoneversionlink']   = '<a href="%s">Add one</a> if you need it.';
-$string['versionfor'] = 'Privacy statement for version "%s" is as follows:';
+$string['privacyversionfor'] = 'Privacy statement for version "%s" is as follows:';
+$string['termsversionfor'] = 'Terms and conditions for version "%s" is as follows:';
 $string['institutionprivacystatement'] = 'Institution privacy statement';
 $string['userprivacypagedescription'] = 'Displayed are the current privacy statements to which you consented.';
 $string['lastupdated'] = 'Last updated on';

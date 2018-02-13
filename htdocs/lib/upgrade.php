@@ -820,6 +820,9 @@ function core_install_lastcoredata_defaults() {
     // Accept the user privacy agreement on install
     $sitecontentid = get_field('site_content_version', 'id', 'type', 'privacy', 'institution', 'mahara');
     save_user_reply_to_agreement($user->id, $sitecontentid, 1);
+    // Accept the user T&C on install
+    $sitecontentid = get_field('site_content_version', 'id', 'type', 'termsandconditions', 'institution', 'mahara');
+    save_user_reply_to_agreement($user->id, $sitecontentid, 1);
     handle_event('createuser', $user, array('password'));
     activity_add_admin_defaults(array($user->id));
     db_commit();
