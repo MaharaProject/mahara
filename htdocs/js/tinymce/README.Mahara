@@ -16,6 +16,7 @@ Changes:
  * Adding the 'aria-hidden="true"' to presentation icons (original commit: 4ac89c31a719a9f63be6555c4d1a094fd2b09d0e)
  * Bug 1605110: Modified the "table" plugin to style the table through CSS instead of HTML attributes (original commit: 63f91a7ea8bd60c102e257c05678cc6d55e21683)
  * Add TinyMCE imagebrowser plugin: plugins/imagebrowser/plugin.js
+ * Modified plugins/link/plugin.js to add 'user_' to the anchorlist value and selected to account for htmlpurification prefixing all user id's with 'user_'
  * Removed
    plugins/layer removed in v4.5.0
    plugins/media/moxieplayer.swf	removed in v4.5.0

@@ -199,8 +199,8 @@ tinymce.PluginManager.add('link', function(editor) {
 				if (id) {
 					anchorList.push({
 						text: id,
-						value: '#' + id,
-						selected: url.indexOf('#' + id) != -1
+						value: '#user_' + id,
+						selected: url.indexOf('#user_' + id) != -1
 					});
 				}
 			});
