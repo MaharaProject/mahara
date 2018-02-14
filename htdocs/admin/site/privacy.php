@@ -19,26 +19,24 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('legal', 'admin'));
 
 $versionid = param_integer('id', null);
+$fs = param_alpha('fs', 'privacy');
 
 if (!is_logged_in()) {
     throw new AccessDeniedException();
 }
+// Get the site privacy statement and T&C.
+$data = get_institution_versioned_content('mahara');
 
-$data = get_records_sql_assoc("
-    SELECT  s.id, s.version, u.firstname, u.lastname, u.id AS userid, s.content, s.ctime, s.type
-    FROM {site_content_version} s
-    LEFT JOIN {usr} u ON s.author = u.id
-    WHERE s.institution = ?
-    ORDER BY s.id DESC", array('mahara'));
-
-if ($data) {
-    // Add the displayname of user
-    foreach ($data as $k => $v) {
-        $v->displayname = display_name($v->userid, null, true);
+// Add to an array the latest versions of both T&C and privacy statement.
+$latestVersions = array();
+foreach ($data as $key => $content) {
+    if ($content->current != null) {
+        array_push($latestVersions, $key);
     }
+    $content->displayname = display_name($content->userid, null, true);
 }
 
-$selectedtab = 'privacy';
+$selectedtab = $fs;
 if ($versionid) {
     if ($pageoptions = get_record('site_content_version', 'id', $versionid, 'institution', 'mahara')) {
         $selectedtab = $pageoptions->type;
@@ -50,7 +48,7 @@ if ($versionid) {
                 'version' => array(
                     'type'         => 'text',
                     'title'        => get_string('version', 'admin'),
-                    'description'  => get_string('lastversion', 'admin', $pageoptions->version),
+                    'description'  => get_string($data[$versionid]->type . 'lastversion', 'admin', $pageoptions->version),
                     'defaultvalue' => '',
                     'rules' => array(
                         'required'    => true,
@@ -58,6 +56,7 @@ if ($versionid) {
                     )
                 ),
                 'pageinstitution' => array('type' => 'hidden', 'value' => 'mahara'),
+                'activetab' => array('type' => 'hidden', 'value' => $selectedtab),
                 'pagetext' => array(
                     'name'        => 'pagetext',
                     'type'        => 'wysiwyg',
@@ -74,7 +73,7 @@ if ($versionid) {
                     'class' => 'btn-primary',
                     'type'  => 'submitcancel',
                     'value' => array(get_string('savechanges', 'admin'), get_string('cancel')),
-                    'goto'  => get_config('wwwroot') . 'admin/site/privacy.php',
+                    'goto'  => get_config('wwwroot') . 'admin/site/privacy.php?fs=' . $selectedtab,
                 ),
             )
         ));
@@ -85,36 +84,46 @@ if ($versionid) {
 }
 
 function editsitepage_validate(Pieform $form, $values) {
-    // Check if the version entered by the user already exists.
-    if (record_exists('site_content_version', 'institution', $values['pageinstitution'], 'version', $values['version'])) {
-        $form->set_error('version', get_string('versionalreadyexist', 'admin', $values['version']));
+    // Check if the version entered by the user already exists for a specific content type.
+    if (record_exists('site_content_version', 'institution', $values['pageinstitution'], 'version', $values['version'], 'type', $values['activetab'])) {
+        $form->set_error('version', get_string('versionalreadyexist', 'admin', get_string($values['activetab'] . 'lowcase', 'admin'), $values['version']));
     }
 }
 
 function editsitepage_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
-    $id = get_field('site_content_version', 'id', 'version', $values['version']);
-    require_once('embeddedimage.php');
-    // Update the pagetext with any embedded image info
-    $pagetext = EmbeddedImage::prepare_embedded_images($values['pagetext'], 'staticpages', $id);
-
     $data = new StdClass;
-    $data->content = $pagetext;
+    $data->content = $values['pagetext'];
     $data->author = $USER->get('id');
     $data->institution = $values['pageinstitution'];
     $data->ctime = db_format_timestamp(time());
     $data->version = $values['version'];
-    $data->type = 'privacy';
+    $data->type = $values['activetab'];
 
     try {
-        insert_record('site_content_version', $data);
+        $id = insert_record('site_content_version', $data, 'id', true);
+        if ($id) {
+            require_once('embeddedimage.php');
+            $pagetext = EmbeddedImage::prepare_embedded_images($values['pagetext'], 'staticpages', $id);
+            // If there is an embedded image, update the src so users can have visibility
+            if ($values['pagetext'] != $pagetext) {
+                // Update the pagetext with any embedded image info
+                $updated = new stdClass();
+                $updated->id = $id;
+                $updated->content = $pagetext;
+                update_record('site_content_version', $updated, 'id');
+            }
+            // Auto accept the PS/T&C to avoid situation in which
+            // the admin is asked to agree to the PS/T&C he has just created.
+            save_user_reply_to_agreement($USER->get('id'), $id, 1);
+        }
         $SESSION->add_ok_msg(get_string('pagesaved', 'admin'));
     }
     catch (SQLException $e) {
         $SESSION->add_ok_msg(get_string('savefailed', 'admin'));
     }
-    redirect(get_config('wwwroot').'admin/site/privacy.php');
+    redirect(get_config('wwwroot').'admin/site/privacy.php?fs=' . $values['activetab']);
 }
 
 // JQuery logic for tab hide/show and to keep the same tab active on page refresh.
@@ -136,8 +145,7 @@ else {
 setpageicon($smarty, 'icon-umbrella');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('results', $data);
-$smarty->assign('latestversion', null);
+$smarty->assign('latestVersions', $latestVersions);
 $smarty->assign('versionid', $versionid);
-$smarty->assign('latestprivacyid', null);
 $smarty->assign('link', "admin/site/privacy.php?id=");
 $smarty->display('admin/site/privacy.tpl');

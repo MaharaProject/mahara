@@ -14,6 +14,13 @@ define('PUBLIC', 1);
 require('init.php');
 define('TITLE', get_string('termsandconditions'));
 
+$termscontent = get_field_sql("
+    SELECT s.content
+    FROM {site_content_version} s
+    WHERE s.institution = ?
+    AND s.type = 'termsandconditions'
+    ORDER BY s.version DESC
+    LIMIT 1", array('mahara'));
 $smarty = smarty();
-$smarty->assign('page_content', get_site_page_content('termsandconditions'));
+$smarty->assign('page_content', $termscontent);
 $smarty->display('sitepage.tpl');

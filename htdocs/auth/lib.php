@@ -765,39 +765,53 @@ function privacy_form($ignoreagreevalue = false) {
     }
 
     foreach ($latestversions as $privacy) {
-        $privacytitle = $privacy->institution == 'mahara' ? get_string('siteprivacystatement', 'admin') : get_string('institutionprivacystatement', 'admin');
+        if ($privacy->type == 'privacy') {
+            $title = get_string('institutionprivacystatement', 'admin');
+            if ($privacy->institution == 'mahara') {
+                $title = get_string('siteprivacy', 'admin');
+            }
+        }
+        else {
+            $title = get_string('institutiontermsandconditions', 'admin');
+            if ($privacy->institution == 'mahara') {
+                $title = get_string('sitetermsandconditions', 'admin');
+            }
+        }
         $smarty = smarty_core();
         $smarty->assign('privacy', $privacy);
-        $smarty->assign('privacytitle', $privacytitle);
+        $smarty->assign('privacytitle', $title);
         $smarty->assign('privacytime', format_date(strtotime($privacy->ctime)));
         $smarty->assign('ignoreagreevalue', $ignoreagreevalue);
         $htmlbegin = $smarty->fetch('privacy_panel_begin.tpl');
 
         //Build form elements.
-        $elements[$privacy->institution . 'text'] = array(
+        $elements[$privacy->institution . $privacy->type . 'text'] = array(
             'type' => 'markup',
             'value' => $htmlbegin,
         );
-        $elements[$privacy->institution . 'id'] = array(
+        $elements[$privacy->institution . $privacy->type . 'id'] = array(
             'type' => 'hidden',
             'value' => $privacy->id,
         );
-        $elements[$privacy->institution] = array(
+
+        $elements[$privacy->institution . $privacy->type] = array(
             'type'         => 'switchbox',
-            'title'        => get_string('privacyagreement', 'admin'),
-            'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin', format_date(strtotime($privacy->agreedtime))) : '',
+            'title'        => get_string('privacyagreement', 'admin', get_string($privacy->type . 'lowcase', 'admin')),
+            'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin',
+                get_string($privacy->type . 'lowcase', 'admin'), format_date(strtotime($privacy->agreedtime))) : '',
             'defaultvalue' => $privacy->agreed ? true : false,
             'disabled'     => ($privacy->agreed && $ignoreagreevalue) ? true : false,
             'required' => true,
         );
-        $elements[$privacy->institution . 'switch'] = array(
+        $elements[$privacy->institution . $privacy->type . 'switch'] = array(
             'type' => 'hidden',
             'value' => ($privacy->agreed && $ignoreagreevalue) ? 'disabled' : 'enabled',
         );
+
         $smarty = smarty_core();
         $smarty->assign('ignoreagreevalue', $ignoreagreevalue);
         $htmlend = $smarty->fetch('privacy_panel_end.tpl');
-        $elements[$privacy->institution . 'text2'] = array(
+        $elements[$privacy->institution . $privacy->type . 'text2'] = array(
             'type' => 'markup',
             'value' => $htmlend,
         );
@@ -838,7 +852,7 @@ function auth_check_required_fields() {
         // Build the agree with privacy statement form.
         $form = privacy_form(true);
 
-        define('TITLE', get_string('privacy', 'admin'));
+        define('TITLE', get_string('legal', 'admin'));
         $smarty = smarty();
         setpageicon($smarty, 'icon-umbrella');
         if ($USER->get('parentuser')) {
@@ -1240,13 +1254,20 @@ function requiredfields_submit(Pieform $form, $values) {
 function agreetoprivacy_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
-    $userinstitutions = array_keys($USER->get('institutions'));
-    array_push($userinstitutions, 'mahara');
+    $institutions = array('maharaprivacy', 'maharatermsandconditions');
+    $userinstitution = array_keys($USER->get('institutions'));
+
+    if (!empty($userinstitution)) {
+        array_push($userinstitution, $userinstitution[0] . 'termsandconditions', $userinstitution[0] . 'privacy');
+        array_shift($userinstitution);
+        $institutions = array_merge($institutions, $userinstitution);
+    }
 
     $hasrefused = param_integer('hasrefused', 0);
     $reason = param_variable('reason', '');
+    $whathasbeenrefused = array();
 
-    foreach ($userinstitutions as $institution) {
+    foreach ($institutions as $institution) {
         // check if the institution has a privacy statement
         // if not, it depends on the site one and we can skip it
         // if yes, check if the user has already accepted it (switch is disabled)
@@ -1256,23 +1277,26 @@ function agreetoprivacy_submit(Pieform $form, $values) {
         try {
             $agreed = (empty($values[$institution]) ? 0 : $values[$institution]);
             save_user_reply_to_agreement($USER->get('id'), $values[$institution . 'id'], $agreed);
-            $SESSION->add_ok_msg(get_string('agreementsaved', 'admin'));
-            if ($hasrefused) {
-                // Send a message to the institution/site admin informing that the user has refused the privacy statement.
-                $institution = new Institution($institution);
-                $institution->send_admin_institution_refused_privacy_message($USER->get('id'), $reason);
-
-                suspend_user($USER->get('id'), 'privacyrefusal');
-                $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
-                $USER->logout();
-                redirect();
+            if (!$agreed) {
+                array_push($whathasbeenrefused, strpos($institution , 'privacy') ? 'privacylowcase' : 'termsandconditionslowcase');
             }
+            $SESSION->add_ok_msg(get_string('agreementsaved', 'admin'));
         }
         catch (SQLException $e) {
             $SESSION->add_ok_msg(get_string('savefailed', 'admin'));
         }
     }
+    // Moved this here to allow all refused items to be saved in the DB.
+    if ($hasrefused) {
+        // Send a message to the institution/site admin informing that the user has refused the privacy statement.
+        $institution = new Institution(str_replace(array('privacy', 'termsandconditions'), array('', ''), $institution));
+        $institution->send_admin_institution_refused_privacy_message($USER->get('id'), $reason, $whathasbeenrefused);
 
+        suspend_user($USER->get('id'), $whathasbeenrefused);
+        $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
+        $USER->logout();
+        redirect();
+    }
     $USER->renew();
     redirect();
 }
@@ -2374,48 +2398,67 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
         );
     }
     // Add site privacy statement and T&C to the register form.
-    $siteprivacy = get_latest_privacy_versions(array('mahara'));
-    $elements['privacy'] = array(
-        'type' => 'markup',
-        'value' => '<div id ="siteprivacy">' .
-                        '<h2>' . get_string('siteprivacystatement', 'admin') . '</h2>' .
-                        '<p class="text-midtone">' . get_string('registerprivacy1') . '</p>' .
-                        '<div id ="siteprivacytext">' . $siteprivacy[0]->content . '</div>' .
-                    '</div>',
-    );
-    $elements['privacyswitch'] = array(
-        'type'         => 'switchbox',
-        'title'        => get_string('privacyagreement', 'admin'),
-        'description'  => get_string('registerprivacydetails', 'admin'),
-        'required' => true,
-    );
-    $elements['privacyid'] = array(
-        'type'         => 'hidden',
-        'value'        => $siteprivacy[0]->id,
-    );
+    $sitecontent = get_latest_privacy_versions(array('mahara'));
+    if ($sitecontent) {
+        $elements['privacytext'] = array(
+            'type' => 'markup',
+            'value' => '<p class="text-midtone">' . get_string('registerprivacy1') . '</p>',
+        );
+        foreach ($sitecontent as $content) {
+            $elements[$content->type] = array(
+                'type' => 'markup',
+                'value' => '<div id ="siteprivacy">' .
+                                '<h2>' . get_string('site' . $content->type, 'admin') . '</h2>' .
+                                '<div id ="siteprivacytext">' . $content->content . '</div>' .
+                            '</div>',
+            );
+            $elements[$content->type . 'switch'] = array(
+                'type'         => 'switchbox',
+                'title'        => get_string('privacyagreement', 'admin', get_string($content->type . 'lowcase', 'admin')),
+                'description'  => get_string('register' . $content->type, 'admin'),
+                'required' => true,
+            );
+            $elements[$content->type . 'id'] = array(
+                'type'         => 'hidden',
+                'value'        => $content->id,
+            );
+        }
+    }
     // Add institution privacy if an institution has been selected.
     $elements['instprivacy'] = array(
         'type' => 'markup',
-        'value' => '<div id ="instprivacy" class ="js-hidden">' .
+        'value' => '<div id ="instprivacy" class ="inst js-hidden">' .
                         '<h2>' . get_string('institutionprivacystatement', 'admin') . '</h2>' .
-                        '<p class="text-midtone">' . get_string('registerprivacy1') . '</p>' .
-                        '<div id ="instprivacytext"></div>' .
+                        '<div id ="instprivacytext" class="insttext"></div>' .
                     '</div>',
     );
     $elements['instprivacyswitch'] = array(
         'type'         => 'switchbox',
-        'title'        => get_string('privacyagreement', 'admin'),
-        'description'  => get_string('registerprivacydetails', 'admin'),
-        'class' => 'instprivacyswitch js-hidden',
+        'title'        => get_string('privacyagreement', 'admin', get_string('privacylowcase', 'admin')),
+        'description'  => get_string('registerprivacy1'),
+        'class'         => 'instprivacyswitch js-hidden',
     );
     $elements['instprivacyid'] = array(
         'type' => 'text',
         'class' => 'js-hidden',
     );
-    // Add the terms and conditions.
-    $elements['terms'] = array(
+    // Add institution terms if an institution has been selected.
+    $elements['insttermsandconditions'] = array(
         'type' => 'markup',
-        'value' => "<h2>Terms and condititions</h2>" . get_site_page_content('termsandconditions'),
+        'value' => '<div id ="insttermsandconditions" class ="inst js-hidden">' .
+                        '<h2>' . get_string('institutiontermsandconditions', 'admin') . '</h2>' .
+                        '<div id ="insttermsandconditionstext" class="insttext"></div>' .
+                    '</div>',
+    );
+    $elements['insttermsandconditionsswitch'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('privacyagreement', 'admin', get_string('termsandconditionslowcase', 'admin')),
+        'description'  => get_string('registertermsandconditions', 'admin'),
+        'class'         => 'insttermsandconditionsswitch js-hidden',
+    );
+    $elements['insttermsandconditionsid'] = array(
+        'type' => 'text',
+        'class' => 'js-hidden',
     );
 
     $registerterms = get_config('registerterms');
@@ -2507,8 +2550,10 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
         jQuery(function($) {
             function show_privacy(institutionid, value) {
                 $("#register_instprivacyid").attr("value", "");
-                $("#instprivacy").addClass("js-hidden");
-                $("#instprivacytext").html("");
+                $("#register_insttermsandconditionsid").attr("value", "");
+                $(".inst").addClass("js-hidden");
+                $(".insttext").html("");
+                $(".insttermsandconditionsswitch").addClass("js-hidden");
                 $(".instprivacyswitch").addClass("js-hidden");
 
                 if (value !== "0" && value !== "mahara") {
@@ -2521,11 +2566,13 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
                             "institution": value,
                         }
                     }).done(function (data) {
-                        if (data && data.content) {
-                            $("#instprivacy").removeClass("js-hidden");
-                            $("#instprivacytext").html(data.content);
-                            $(".instprivacyswitch").removeClass("js-hidden");
-                            $("#register_instprivacyid").attr("value", data.id);
+                        if (data) {
+                            $.each(data, function(index, value) {
+                                $("#inst" + index).removeClass("js-hidden");
+                                $("#inst" + index + "text").html(value.content);
+                                $(".inst" + index + "switch").removeClass("js-hidden");
+                                $("#register_inst" + index + "id").attr("value", value.id);
+                            });
                         }
                     });
                 }
@@ -2611,13 +2658,22 @@ function auth_register_validate(Pieform $form, $values) {
     safe_require('auth', 'internal');
 
     // Privacy statements must have been accepted by the user.
-    if (!$values['instprivacyswitch'] && $values['instprivacyid'] != '') {
-        $SESSION->add_error_msg(get_string('registerprivacyrefusal', 'admin'));
-        $form->set_error('instprivacyswitch', get_string('registerprivacyrefusal', 'admin'));
-    }
     if (!$values['privacyswitch']) {
-        $SESSION->add_error_msg(get_string('registerprivacyrefusal', 'admin'));
-        $form->set_error('privacyswitch', get_string('registerprivacyrefusal', 'admin'));
+        $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
+        $form->set_error('privacyswitch', get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
+    }
+    if (!$values['instprivacyswitch'] && $values['instprivacyid'] != '') {
+        $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
+        $form->set_error('instprivacyswitch', get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
+    }
+    // Terms and conditions must have been accepted by the user.
+    if (!$values['termsandconditionsswitch']) {
+        $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
+        $form->set_error('termsandconditionsswitch', get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
+    }
+    if (!$values['insttermsandconditionsswitch'] && $values['insttermsandconditionsid'] != '') {
+        $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
+        $form->set_error('insttermsandconditionsswitch', get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
     }
 
     // First name and last name must contain at least one non whitespace
@@ -2706,7 +2762,13 @@ function auth_register_submit(Pieform $form, $values) {
         local_register_submit($values);
     }
     $extra = new StdClass;
-    $extra->privacy = array($values['privacyid'], $values['instprivacyid']);
+    $extra->privacy = array($values['privacyid'], $values['termsandconditionsid']);
+    if (isset($values['instprivacyid']) && !empty($values['instprivacyid'])) {
+        array_push($extra->privacy, $values['instprivacyid']);
+    }
+    if (isset($values['insttermsandconditionsid']) && !empty($values['insttermsandconditionsid'])) {
+        array_push($extra->privacy, $values['insttermsandconditionsid']);
+    }
     $values['extra'] = serialize($extra);
     try {
         if (!record_exists('usr_registration', 'email', $values['email'])) {

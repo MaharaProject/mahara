@@ -3044,7 +3044,7 @@ function right_nav() {
         'settings/privacy' => array(
             'path' => 'settings/privacy',
             'url' => 'account/userprivacy.php',
-            'title' => get_string('privacy', 'admin'),
+            'title' => get_string('legal', 'admin'),
             'weight' => 30
         ),
         'settings/notifications' => array(
@@ -3083,7 +3083,7 @@ function footer_menu($all=false) {
 
     $menu = array(
         'termsandconditions' => array(
-            'url'   => $wwwroot . 'terms.php',
+            'url'   => ($USER->is_logged_in() ? $wwwroot . 'account/userprivacy.php' : $wwwroot . 'terms.php'),
             'title' => get_string('termsandconditions'),
         ),
         'privacystatement' => array(

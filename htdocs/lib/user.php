@@ -1426,7 +1426,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
     $suspendrec = new StdClass;
     $suspendrec->id              = $suspendeduserid;
     $suspendrec->suspendedcusr   = $suspendinguserid;
-    $suspendrec->suspendedreason = $reason == 'privacyrefusal' ? get_string($reason, 'admin') : $reason;
+    $suspendrec->suspendedreason = is_array($reason) ? get_string('privacyrefusal', 'admin') : $reason;
     $suspendrec->suspendedctime  = db_format_timestamp(time());
     update_record('usr', $suspendrec, 'id');
 
@@ -1449,9 +1449,9 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
                 get_config('sitename'), display_name($suspendinguserid, $suspendeduserid));
         }
     }
-    else if ($reason == 'privacyrefusal') {
-            $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtext3', 'mahara',
-                get_config('sitename'));
+    else if (is_array($reason)) {
+        $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtext3', 'mahara',
+            get_config('sitename'), get_string(count($reason) == 1 ? $reason[0] : 'privacyandtotheterms', 'admin'));
     }
     else {
         if ($iscron) {
@@ -3244,18 +3244,17 @@ function get_latest_privacy_versions($institutions = array(), $ignoreagreevalue 
         $useragreementsql = $joinsql . " {usr_agreement} u ON s2.current = u.sitecontentid AND u.usr = ? AND u.agreed = 1";
         $params = array($USER->get('id'));
     }
-
-    $latestversions = get_records_sql_array("
-        SELECT s.id, s.version, s.content, s.ctime, s.institution, " . $userdetails . "
-            CASE s.institution WHEN 'mahara' THEN 1 ELSE 2 END as type
+    $select = count($institutions) == 1 ? 's.type, s.id' : 's.id, s.type';
+    $latestversions = get_records_sql_assoc("
+        SELECT " . $select . ", s.id, s.version, s.content, s.ctime, s.institution, " . $userdetails . "
+            CASE s.institution WHEN 'mahara' THEN 1 ELSE 2 END AS site
         FROM {site_content_version} s
-        INNER JOIN (SELECT MAX(id) as current, institution
+        INNER JOIN (SELECT MAX(id) AS current, institution, type
             FROM {site_content_version}
-            WHERE type = 'privacy'
-            GROUP BY institution) s2 ON s.institution = s2.institution AND s.id = s2.current
+            GROUP BY institution, type) s2 ON s.institution = s2.institution AND s.id = s2.current
             " . $useragreementsql . "
-        WHERE s.type = 'privacy' AND s.institution IN (" . join(',',array_map('db_quote',$institutions)) . ")
-        ORDER BY type", $params);
+        WHERE s.institution IN (" . join(',',array_map('db_quote',$institutions)) . ")
+        ORDER BY site, type", $params);
 
     return $latestversions;
 }
@@ -3277,4 +3276,26 @@ function save_user_reply_to_agreement($userid, $sitecontentid, $agreed) {
         insert_record('usr_agreement', $usragreement);
     }
     return true;
+}
+
+/**
+ *  Get the privacy statement and T&C of an institution
+ *
+ *  @param $institution string, the name of an institution
+ *  @return array, all the privacy statements and T&Cs of an institution
+ */
+function get_institution_versioned_content($institution = 'mahara') {
+    $content = get_records_sql_assoc("
+        SELECT  s.id, s.version, u.firstname, u.lastname, u.id AS userid, s.content, s.ctime, s.type, s2.current
+        FROM {site_content_version} s
+        LEFT JOIN (
+            SELECT MAX(id) AS current, type
+            FROM {site_content_version}
+            WHERE institution = ?
+            GROUP BY type) s2 ON s.type = s2.type AND s.id = s2.current
+        LEFT JOIN {usr} u ON s.author = u.id
+        WHERE s.institution = ?
+        ORDER BY s.id DESC", array($institution, $institution));
+
+    return $content;
 }

@@ -1,15 +1,9 @@
 @javascript @core @gdpr
 
 Feature: Strict privacy switch
-        As a new user logging in for the first time
-        When strict privacy is enabled
-        I should be required to accept the privacy statement
-
-Background:
-
-    # And the following site settings are set:
-     #| 'usersallowedmultipleinstitutions' | 0 |
-    # | 'institutionstrictprivacy' | 1 |
+    As a new user logging in for the first time
+    When strict privacy is enabled
+    I should be required to accept the privacy statement
 
 Scenario: Create user who logs in with strict privacy enabled
     Given I log in as "admin" with password "Kupuhipa1"
@@ -35,14 +29,15 @@ Scenario: Create user who logs in with strict privacy enabled
     And I press "Save changes"
     And I log out
     Given I log in as "bob" with password "Kupuhipa1"
-    Then I should see "Before entering your account, please read the privacy statement displayed below."
+    Then I should see "Before entering your account, please read the information displayed below."
     # Try to ignore privacy statement
     And I choose "Pages and collections" in "Portfolio" from main menu
-    Then I should see "Before entering your account, please read the privacy statement displayed below."
+    Then I should see "Before entering your account, please read the information displayed below."
     And I press "Save changes"
-    Then I should see "If you do not consent to the privacy statement, your account will be suspended."
+    Then I should see "If you do not consent to the privacy statements or terms and conditions, your account will be suspended."
     Then I press "No"
     # consent to privacy statement
     And I enable the switch "I consent to this privacy statement"
+    And I enable the switch "I consent to this terms and conditions"
     And I press "Save changes"
     Then I should see "Welcome"

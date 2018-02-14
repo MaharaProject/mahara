@@ -21,4 +21,4 @@ $institution = param_alphanum('institution', null);
 $privacy = get_latest_privacy_versions(array($institution));
 
 json_headers();
-print json_encode($privacy[0]);
+print json_encode($privacy);
