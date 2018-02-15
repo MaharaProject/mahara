@@ -10,13 +10,13 @@
 {if !$blogs->data}
   <p class="no-results">
   {if $group}
-    {str tag=youhavenogroupblogs section=artefact.blog}
+    {str tag=youhavenogroupblogs1 section=artefact.blog arg1=$grouphref}
   {elseif $institutionname == 'mahara'}
-    {str tag=youhavenositeblogs section=artefact.blog}
+    {str tag=youhavenositeblogs1 section=artefact.blog arg1=$sitehref}
   {elseif $institutionname}
-    {str tag=youhavenoinstitutionblogs section=artefact.blog}
+    {str tag=youhavenoinstitutionblogs1 section=artefact.blog arg1=$institutionhref}
   {else}
-    {str tag=youhavenoblogs section=artefact.blog}
+    {str tag=youhavenoblogsaddone section=artefact.blog arg1=$userhref}
   {/if}
   </p>
 {else}
