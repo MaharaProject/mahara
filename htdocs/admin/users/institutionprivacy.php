@@ -69,6 +69,7 @@ if ($privacies) {
             array_push($types, $content->type);
         }
         $content->displayname = display_name($content->userid, null, true);
+        $content->userdeleted = get_field('usr', 'deleted', 'id', $content->userid);
     }
 }
 // Add 0 to $latestVersions, to allow the creation of a first privacy/T&C
