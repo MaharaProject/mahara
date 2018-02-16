@@ -675,6 +675,287 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
     return $result;
 }
 
+function useragreement_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array(
+              'id' => 'firstname', 'required' => true,
+              'name' => get_string('firstname'),
+              'class' => format_class($extra, 'firstname'),
+              'link' => format_goto($urllink . '&sort=firstname', $extra, array('sort'), 'firstname')
+        ),
+        array(
+              'id' => 'lastname', 'required' => true,
+              'name' => get_string('lastname'),
+              'class' => format_class($extra, 'lastname'),
+              'link' => format_goto($urllink . '&sort=lastname', $extra, array('sort'), 'lastname')
+        ),
+        array(
+              'id' => 'displayname',
+              'name' => get_string('displayname'),
+              'class' => format_class($extra, 'displayname'),
+              'link' => format_goto($urllink . '&sort=displayname', $extra, array('sort'), 'displayname')
+        ),
+        array(
+              'id' => 'email',
+              'name' => get_string('email'),
+              'class' => format_class($extra, 'email'),
+              'link' => format_goto($urllink . '&sort=email', $extra, array('sort'), 'email')
+        ),
+        array(
+              'id' => 'username',
+              'name' => get_string('username'),
+              'class' => format_class($extra, 'username'),
+              'link' => format_goto($urllink . '&sort=username', $extra, array('sort'), 'username')
+        ),
+        array(
+              'id' => 'siteprivacy', 'required' => true,
+              'name' => get_string('siteprivacy', 'admin'),
+              'class' => format_class($extra, 'siteprivacy'),
+              'link' => format_goto($urllink . '&sort=siteprivacy', $extra, array('sort'), 'siteprivacy')
+        ),
+        array(
+              'id' => 'siteprivacyconsentdate',
+              'name' => get_string('siteprivacyconsentdate', 'admin'),
+              'class' => format_class($extra, 'siteprivacyconsentdate'),
+              'link' => format_goto($urllink . '&sort=siteprivacyconsentdate', $extra, array('sort'), 'siteprivacyconsentdate')
+        ),
+        array(
+              'id' => 'siteterms', 'required' => true,
+              'name' => get_string('sitetermsandconditions', 'admin'),
+              'class' => format_class($extra, 'siteterms'),
+              'link' => format_goto($urllink . '&sort=siteterms', $extra, array('sort'), 'siteterms')
+        ),
+        array(
+              'id' => 'sitetermsconsentdate',
+              'name' => get_string('sitetermsconsentdate', 'admin'),
+              'class' => format_class($extra, 'sitetermsconsentdate'),
+              'link' => format_goto($urllink . '&sort=sitetermsconsentdate', $extra, array('sort'), 'sitetermsconsentdate')
+        ),
+        array(
+              'id' => 'institutionprivacy', 'required' => true,
+              'name' => get_string('institutionprivacystatement', 'admin'),
+              'class' => format_class($extra, 'institutionprivacy'),
+              'link' => format_goto($urllink . '&sort=institutionprivacy', $extra, array('sort'), 'institutionprivacy')
+        ),
+        array(
+              'id' => 'institutionprivacyconsentdate',
+              'name' => get_string('institutionprivacyconsentdate', 'admin'),
+              'class' => format_class($extra, 'institutionprivacyconsentdate'),
+              'link' => format_goto($urllink . '&sort=institutionprivacyconsentdate', $extra, array('sort'), 'institutionprivacyconsentdate')
+        ),
+        array(
+              'id' => 'institutionterms', 'required' => true,
+              'name' => get_string('institutiontermsandconditions', 'admin'),
+              'class' => format_class($extra, 'institutionterms'),
+              'link' => format_goto($urllink . '&sort=institutionterms', $extra, array('sort'), 'institutionterms')
+        ),
+        array(
+              'id' => 'institutiontermsconsentdate',
+              'name' => get_string('institutiontermsconsentdate', 'admin'),
+              'class' => format_class($extra, 'institutiontermsconsentdate'),
+              'link' => format_goto($urllink . '&sort=institutiontermsconsentdate', $extra, array('sort'), 'institutiontermsconsentdate')
+        ),
+        array(
+              'id' => 'institution',
+              'name' => get_string('institution', 'admin'),
+              'class' => format_class($extra, 'institution'),
+              'link' => format_goto($urllink . '&sort=institution', $extra, array('sort'), 'institution')
+        ),
+    );
+}
+
+function useragreement_statistics($limit, $offset, $extra, $institution = null) {
+    userhasaccess($institution, 'useragreement');
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=useragreement';
+    if ($institution) {
+        $urllink .= '&institution=' . $institution;
+    }
+    $data['tableheadings'] = useragreement_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = useragreement_stats_table($limit, $offset, $extra, $institution, $urllink);
+    $data['table']['activeheadings'] = $activeheadings;
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+function useragreement_stats_table($limit, $offset, $extra, $institution, $urllink) {
+    global $USER, $SESSION;
+
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    $users = $SESSION->get('usersforstats');
+
+    $fromsql = "
+        FROM {usr_agreement} ua
+        JOIN {usr} u ON u.id = ua.usr
+        LEFT JOIN {usr_institution} ui ON ui.usr = ua.usr
+        LEFT JOIN {institution} i ON i.name = ui.institution
+        LEFT JOIN (
+            SELECT MAX(ua.sitecontentid) AS siteprivacyid, MAX(ua.ctime) AS ctime, ua.usr
+            FROM {usr_agreement} ua
+            JOIN {site_content_version} s ON (s.id = ua.sitecontentid AND s.type = 'privacy' AND s.institution = 'mahara')
+            GROUP BY ua.usr
+        ) sp ON ua.usr = sp.usr
+        LEFT JOIN (
+            SELECT MAX(ua.sitecontentid) AS sitetermsid, MAX(ua.ctime) AS ctime, ua.usr
+            FROM {usr_agreement} ua
+            JOIN {site_content_version} s ON (s.id = ua.sitecontentid AND s.type = 'termsandconditions' AND s.institution = 'mahara')
+            GROUP BY ua.usr
+        ) st ON ua.usr = st.usr
+        LEFT JOIN (
+            SELECT MAX(ua.sitecontentid) AS institutionprivacyid, MAX(ua.ctime) AS ctime, ua.usr
+            FROM {usr_agreement} ua
+            JOIN {site_content_version} s ON (s.id = ua.sitecontentid AND s.type = 'privacy' AND s.institution != 'mahara')
+            JOIN {usr_institution} ui ON (ui.institution = s.institution AND ui.usr = ua.usr)
+            GROUP BY ua.usr
+        ) ip ON ua.usr = ip.usr
+        LEFT JOIN (
+            SELECT MAX(ua.sitecontentid) AS institutiontermsid, MAX(ua.ctime) AS ctime, ua.usr
+            FROM {usr_agreement} ua
+            JOIN {site_content_version} s ON (s.id = ua.sitecontentid AND s.type = 'termsandconditions' AND s.institution != 'mahara')
+            JOIN {usr_institution} ui ON (ui.institution = s.institution AND ui.usr = ua.usr)
+            GROUP BY ua.usr
+        ) it ON ua.usr = it.usr";
+    $wheresql = " WHERE u.deleted = 0 AND u.id != 0";
+    $where = array();
+    if ($institution) {
+        if ($institution == 'mahara') {
+            $wheresql .= " AND ui.institution IS NULL";
+        }
+        else {
+            $wheresql .= " AND ui.institution = ?";
+            $where = array($institution);
+        }
+    }
+    if ($users) {
+        $wheresql .= " AND u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+    }
+    if ($start) {
+        $wheresql .= " AND COALESCE(it.ctime, ip.ctime, st.ctime, sp.ctime) >= DATE(?) AND COALESCE(it.ctime, ip.ctime, st.ctime, sp.ctime) <= DATE(?)";
+        $where[] = $start;
+        $where[] = $end;
+    }
+
+    $count = count_records_sql("SELECT COUNT(DISTINCT(ua.usr)) " . $fromsql . $wheresql, $where);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => $urllink,
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+        'extradata' => $extra,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
+    $result['settings']['users'] = count($users);
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "siteprivacy":
+            $orderby = " (SELECT version FROM {site_content_version} WHERE id = sp.siteprivacyid) " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "siteterms":
+            $orderby = " (SELECT version FROM {site_content_version} WHERE id = st.sitetermsid) " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "institutionprivacy":
+            $orderby = " (SELECT version FROM {site_content_version} WHERE id = ip.institutionprivacyid) " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "institutionterms":
+            $orderby = " (SELECT version FROM {site_content_version} WHERE id = it.institutiontermsid) " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "siteprivacyconsentdate":
+            $orderby = " sp.ctime " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "sitetermsconsentdate":
+            $orderby = " st.ctime " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "institutionprivacyconsentdate":
+            $orderby = " ip.ctime " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "institutiontermsconsentdate":
+            $orderby = " it.ctime " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "username":
+        case "displayname":
+        case "email":
+            $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT (u.firstname, ' ', u.lastname)";
+            break;
+        case "lastname":
+            $orderby = " u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "firstname":
+        default:
+            $orderby = " u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+    }
+
+    $sql = "SELECT DISTINCT ua.usr, sp.siteprivacyid, sp.ctime AS siteprivacyconsentdate, (SELECT version FROM {site_content_version} WHERE id = sp.siteprivacyid) AS siteprivacy,
+            st.sitetermsid, st.ctime AS sitetermsconsentdate, (SELECT version FROM {site_content_version} WHERE id = st.sitetermsid) AS siteterms,
+            ip.institutionprivacyid, ip.ctime AS institutionprivacyconsentdate, (SELECT version FROM {site_content_version} WHERE id = ip.institutionprivacyid) AS institutionprivacy,
+            it.institutiontermsid, it.ctime AS institutiontermsconsentdate, (SELECT version FROM {site_content_version} WHERE id = it.institutiontermsid) AS institutionterms,
+            u.id, u.username, u.firstname, u.lastname, u.preferredname AS displayname, u.email,
+            i.name, i.displayname AS instname, COALESCE(it.ctime, ip.ctime, st.ctime, sp.ctime) AS defaulttime
+            " . $fromsql . $wheresql . "
+            ORDER BY " . $orderby;
+
+    if (empty($extra['csvdownload'])) {
+        $sql .= " LIMIT $limit OFFSET $offset";
+    }
+    $data = get_records_sql_array($sql, $where);
+
+    foreach ($data as $item) {
+        $item->profileurl = profile_url($item->id);
+        $item->siteprivacyconsentdate = $item->siteprivacyconsentdate ? format_date(strtotime($item->siteprivacyconsentdate)) : ' ';
+        $item->sitetermsconsentdate = $item->sitetermsconsentdate ? format_date(strtotime($item->sitetermsconsentdate)) : ' ';
+        $item->institutionprivacyconsentdate = $item->institutionprivacyconsentdate ? format_date(strtotime($item->institutionprivacyconsentdate)) : ' ';
+        $item->institutiontermsconsentdate = $item->institutiontermsconsentdate ? format_date(strtotime($item->institutiontermsconsentdate)) : ' ';
+    }
+
+    if (!empty($extra['csvdownload'])) {
+        $csvfields = array('username', 'firstname', 'lastname', 'displayname', 'email',
+                           'siteprivacy', 'siteprivacyconsentdate', 'siteterms', 'sitetermsconsentdate',
+                           'institutionprivacy', 'institutionprivacyconsentdate', 'institutionterms', 'institutiontermsconsentdate',
+                           'instname');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'useragreementsstatistics.csv', 'text/csv');
+    }
+    $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
+
+    $result['tablerows'] = $smarty->fetch('admin/users/useragreementstats.tpl');
+
+    return $result;
+}
+
 function useractivity_statistics_headers($extra, $urllink) {
     return array(
         array('id' => 'rownum', 'name' => '#'),
@@ -3795,6 +4076,9 @@ function display_statistics($institution, $type, $extra = null) {
             else if ($subtype == 'userdetails') {
                 $data = userdetails_statistics($extra->limit, $extra->offset, $extra->extra, null);
             }
+            else if ($subtype == 'useragreement') {
+                $data = useragreement_statistics($extra->limit, $extra->offset, $extra->extra, null);
+            }
             else if ($subtype == 'collaboration') {
                 $data = collaboration_statistics($extra->limit, $extra->offset, $extra->extra, null);
             }
@@ -3841,6 +4125,9 @@ function display_statistics($institution, $type, $extra = null) {
             }
             else if ($subtype == 'userdetails') {
                 $data = userdetails_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+            }
+            else if ($subtype == 'useragreement') {
+                $data = useragreement_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
             }
             else if ($subtype == 'collaboration') {
                 $data = collaboration_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
@@ -4113,6 +4400,7 @@ function get_report_types($institution = null) {
         'users_accesslist' => get_string('reportaccesslist', 'statistics'),
         'users_masquerading' => get_string('reportmasquerading', 'statistics'),
         'users_userdetails' => get_string('reportuserdetails', 'statistics'),
+        'users_useragreement' => get_string('reportuseragreement', 'statistics'),
     );
     if (get_config('eventlogenhancedsearch')) {
         $advancedoptions = array(
@@ -4152,7 +4440,8 @@ function get_report_types($institution = null) {
             $usersoptions = array(
                 'users_accesslist' => get_string('reportaccesslist', 'statistics'),
                 'users_masquerading' => get_string('reportmasquerading', 'statistics'),
-                'users_userdetails' => get_string('reportuserdetails', 'statistics')
+                'users_userdetails' => get_string('reportuserdetails', 'statistics'),
+                'users_useragreement' => get_string('reportuseragreement', 'statistics'),
             );
             asort($usersoptions);
             $optgroups = array(
@@ -4298,6 +4587,7 @@ function report_earliest_date($subtype, $institution = 'mahara') {
                                    WHERE institution = ?", array($institution));
             break;
         case "userdetails":
+        case "useragreement":
         case "comparisons":
         default:
             if ($institution != 'mahara') {

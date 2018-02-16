@@ -1350,12 +1350,16 @@ $string['privacylastversion'] = 'Privacy statements must have unique version nam
 $string['termsandconditionslastversion'] = 'Terms and conditions must have unique version names of up to 15 characters. The latest version for this privacy statement is "%s".';
 $string['versionalreadyexist'] = 'A %s version with the name "%s" already exists.';
 $string['siteprivacy'] = 'Site privacy statement';
+$string['siteprivacyconsentdate'] = 'Site privacy consent reviewed';
 $string['sitetermsandconditions'] = 'Site terms and conditions';
+$string['sitetermsconsentdate'] = 'Site terms and conditions consent reviewed';
 $string['addoneversionlink']   = '<a href="%s">Add one</a> if you need it.';
 $string['privacyversionfor'] = 'Privacy statement for version "%s" is as follows:';
 $string['termsversionfor'] = 'Terms and conditions for version "%s" is as follows:';
 $string['institutionprivacystatement'] = 'Institution privacy statement';
 $string['institutiontermsandconditions'] = 'Institution terms and conditions';
+$string['institutionprivacyconsentdate'] = 'Institution privacy consent reviewed';
+$string['institutiontermsconsentdate'] = 'Institution terms and conditions consent reviewed';
 $string['userprivacypagedescription'] = 'Displayed are the current privacy statements and terms and conditions to which you consented.';
 $string['lastupdated'] = 'Last updated on';
 $string['newprivacy'] = 'Before entering your account, please read the information displayed below.';
@@ -1377,6 +1381,10 @@ $string['termsandconditionslowcase'] = 'terms and conditions';
 $string['hasrefused'] = 'has refused the %s';
 $string['privacyandtotheterms'] = 'privacy statement and to the terms and conditions';
 $string['privacyandtheterms'] = 'privacy statement and the terms and conditions';
+$string['consentdate'] = 'Date of consent / rejection';
+$string['useragreements'] = 'User agreements';
+$string['userprivacyagreements'] = 'Displayed below are all the privacy statements the user has agreed to.';
+$string['usertermsagreements'] = 'Displayed below are all the terms and conditions the user has agreed to.';
 
 // pending user account deletions
 $string['approveuserdeletionfor'] = 'Approve user account deletion for %s %s <%s>';
@@ -1395,3 +1403,4 @@ $string['pendingdeletionspagedescription'] = '<p>On this page you can see users 
 <p>On approving the deletion of an account, all personal content from that account will be deleted permanently. The person who made the request will be notified via email once their account has been deleted.</p>';
 $string['userdeletiondeniedsuccessful'] = 'Request denied successfully.';
 $string['userdeletiondeniedunsuccessful'] = 'The attempted user account deletion denial failed.';
+$string['consented'] = 'Consented';

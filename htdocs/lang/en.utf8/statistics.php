@@ -285,6 +285,24 @@ $string['reportdescpageactivity'] = '<ul>
 </ul><p>Displayed are pages that were modified during the reporting time frame.</p>';
 $string['allothers'] = 'All others';
 
+$string['reportuseragreement'] = 'User agreements';
+$string['reportdescuseragreement'] = '<ul>
+<li>First name</li>
+<li>Last name</li>
+<li>Display name</li>
+<li>Email address</li>
+<li>Username</li>
+<li>Site privacy statement</li>
+<li>Site privacy consent reviewed</li>
+<li>Site terms and conditions</li>
+<li>Site terms and conditions consent reviewed</li>
+<li>Institution privacy statement</li>
+<li>Institution privacy consent reviewed</li>
+<li>Institution terms and conditions</li>
+<li>Institution terms and conditions consent reviewed</li>
+<li>Institution</li>
+</ul><p>Displayed are the people who accepted or rejected privacy statements or terms and conditions during the selected time frame.</p>';
+
 // Last activities reported on in the "User activity" report
 $string['blockinstancecommit'] = 'Add a block to a page';
 $string['addfriend'] = 'Add a friend';
@@ -388,6 +406,7 @@ $string['usersmasqueradingreports'] = 'Masquerading sessions';
 $string['usersaccesslistreports'] = 'Portfolio access';
 $string['usersuseractivityreports'] = 'User activity';
 $string['usersuserdetailsreports'] = 'User details';
+$string['usersuseragreementreports'] = 'User agreements';
 $string['groupsreports'] = 'Groups overview';
 $string['contentreports'] = 'Content overview';
 $string['peoplereports'] = 'People overview';

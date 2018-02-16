@@ -15,9 +15,6 @@ function checkActiveTab(activeTab) {
 }
 
 function showTab(el) {
-    var newurl = updateUrlParameter(location.href, 'fs', el.replace("#", ""));
-    history.pushState(null, null, newurl);
-
     var i;
     var x = $(".tab");
     for (i = 0; i < x.length; i++) {
@@ -26,9 +23,13 @@ function showTab(el) {
     $(el).removeClass("js-hidden");
     $(el + '-text').removeClass("js-hidden");
 
-    // Institution Legal: Useful in case an institution has just one type of content (privacy/T&C).
+    // Institution legal page specific.
     if (typeof types != 'undefined') {
+        // Needed in case an institution has just one type of content (privacy/T&C).
         showNoContentAddOne(el);
+        // Needed to keep the same tab active when user is changing the institutions from the institution selector.
+        var newurl = updateUrlParameter(location.href, 'fs', el.replace("#", ""));
+        history.pushState(null, null, newurl);
     }
 }
 
