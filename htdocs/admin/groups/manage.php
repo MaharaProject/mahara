@@ -18,6 +18,7 @@ $group = get_record_select('group', 'id = ? AND deleted = 0', array(param_intege
 
 define('TITLE', get_string('administergroups', 'admin'));
 
+$quotaused = get_string('quotaused', 'admin') . ': ' . display_size($group->quotaused);
 $quotasform = pieform(array(
     'name'       => 'groupquotasform',
     'renderer'   => 'div',
@@ -31,7 +32,7 @@ $quotasform = pieform(array(
             'hiddenlabel' => true,
             'title' => get_string('filequota1', 'admin'),
             'defaultvalue' => $group->quota,
-            'description'  => '<p class="text-small text-midtone">' .get_string('groupfilequotadescription', 'admin') . '</p>',
+            'description'  => '<p class="text-small text-midtone">' .get_string('groupfilequotadescription', 'admin') . '<br>' . $quotaused . '</p>',
         ),
         'submit' => array(
             'type' => 'submit',
