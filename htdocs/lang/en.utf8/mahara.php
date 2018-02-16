@@ -787,6 +787,7 @@ $string['blacklisteddomaininurl'] = 'A URL in this field contains the blackliste
 $string['newuserscantpostlinksorimages1'] = 'Sorry, anonymous or newly registered users aren\'t allowed to post links. Please reword your post to remove any links or URLs and try again.';
 
 $string['notinstallable'] = 'Not installable';
+$string['pluginnotinstallable'] = "Plugin %s %s is not installable: ";
 $string['installedplugins'] = 'Installed plugins';
 $string['notinstalledplugins'] = '<span class="error">Not installed plugins</span>';
 $string['plugintype'] = 'Plugin type';
