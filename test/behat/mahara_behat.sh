@@ -30,7 +30,7 @@ function cleanup {
     echo "Shutdown Selenium"
     curl -o /dev/null --silent http://localhost:${SELENIUM_PORT}/selenium-server/driver/?cmd=shutDownSeleniumServer
 
-    if [[ $REPORT ]]
+    if [[ $REPORT == 'html' ]]
     then
         xdg-open file://${BEHATROOT}/behat/html_results/index.html
     fi
