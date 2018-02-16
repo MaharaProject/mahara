@@ -353,6 +353,8 @@ $smarty->assign('viewtitle', get_string('usersprofile', 'mahara', display_name($
 $smarty->assign('viewtype', 'profile');
 $smarty->assign('PAGEHEADING', null);
 $smarty->assign('user', $user);
+$smarty->assign('lastupdatedstr', $view->lastchanged_message());
+$smarty->assign('visitstring', $view->visit_message());
 if ($loggedinid && $loggedinid == $userid) {
     $smarty->assign('ownprofile', true);
 }

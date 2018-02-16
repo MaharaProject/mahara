@@ -110,4 +110,6 @@ $smarty->assign('cancopy', group_can_create_groups());
 $smarty->assign('returnto', 'view');
 $smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
 $smarty->assign('headingclass', 'page-header');
+$smarty->assign('lastupdatedstr', $view->lastchanged_message());
+$smarty->assign('visitstring', $view->visit_message());
 $smarty->display('group/view.tpl');
