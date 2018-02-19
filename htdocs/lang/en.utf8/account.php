@@ -75,9 +75,95 @@ Please check that your email account is working as expected before you re-enable
 EOF;
 $string['maildisableddescription'] = 'Sending of email to your account has been disabled. You may <a href="%s">re-enable your email</a> from the account preferences page.';
 
-$string['deleteaccount']  = 'Delete account';
+$string['deleteaccount']  = 'Delete account of user %s';
 $string['deleteaccountdescription']  = 'If you delete your account, all your content will be deleted permanently. You cannot get it back. Your profile information and your pages will no longer be visible to other users. The content of any forum posts you have written will still be visible, but your name will no longer be displayed.';
+$string['sendnotificationdescription']  = 'A notification will be sent to an administrator, who needs to approve the deletion of your account. If you request to delete your account, all your personal content will be deleted permanently. That means any files you uploaded, journal entries you wrote, and pages and collections you created will be deleted. You cannot get any of that back. If you uploaded files to groups, created journal entries and portfolios, and contributed to forums there, they will stay on the site, but your name will no longer be displayed.';
+$string['pendingdeletionsince'] = 'Account pending deletion since %s';
+$string['pendingdeletionadminemailsubject'] = "Account deletion request on %s";
+$string['resenddeletionadminemailsubject'] = "Reminder of account deletion request on %s";
+$string['canceldeletionadminemailsubject'] = "Cancellation of account deletion request on %s";
+$string['pendingdeletionadminemailtext'] = "Hello Administrator,
+
+User %s has requested the deletion of their account from the site.
+
+You are listed as an administrator in an institution to which the user belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: %s
+
+Details of the account deletion request follow:
+
+Name: %s
+Email: %s
+Reason: %s
+
+--
+Regards,
+The %s Team";
+$string['pendingdeletionadminemailhtml'] = "<p>Hello Administrator,</p>
+<p>User %s has requested the deletion of their account from the site.</p>
+<p>You are listed as an administrator in an institution to which the user belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: <a href='%s'>%s</a></p>
+<p>Details of the account deletion request follow:</p>
+<p>Name: %s</p>
+<p>Email: %s</p>
+<p>Reason: %s</p>
+<pre>--
+Regards,
+The %s Team</pre>";
+
 $string['accountdeleted']  = 'Your account has been deleted.';
+$string['resenddeletionnotification'] = 'Resend deletion notification';
+$string['resenddeletionadminemailtext'] = "Hello Administrator,
+
+This is a reminder that user %s has requested the deletion of their account from the site.
+
+You are listed as an administrator in an institution to which the user belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: %s
+
+Details of the account deletion request follow:
+
+Name: %s
+Email: %s
+Message: %s
+
+--
+Regards,
+The %s Team";
+$string['resenddeletionadminemailhtml'] = "<p>Hello Administrator,</p>
+<p>This is a reminder that user % has requested the deletion of their account from the site.</p>
+<p>You are listed as an administrator in an institution to which the user belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: <a href='%s'>%s</a></p>
+<p>Details of the account deletion request follow:</p>
+<p>Name: %s</p>
+<p>Email: %s</p>
+<p>Message: %s</p>
+<pre>--
+Regards,
+The %s Team</pre>";
+
+$string['pendingdeletionemailsent'] = 'Sent notification to institution administrators';
+$string['cancelrequest'] = 'Cancel request';
+$string['deleterequestcanceled'] = 'The request to delete your user account has been cancelled.';
+$string['canceldeletionrequest'] = 'Cancel deletion request';
+$string['canceldeletionrequestconfirmation'] = 'This will cancel the request to the institution administrators for deleting the account of %s. Are you sure you want to continue?';
+$string['canceldeletionadminemailtext'] = "Hello Administrator,
+
+User %s has cancelled the request to delete their account from the site.
+
+You are listed as an administrator in an institution to which the user belongs.
+
+Details of the cancelled request follow:
+
+Name: %s
+Email: %s
+
+--
+Regards,
+The %s Team";
+$string['canceldeletionadminemailhtml'] = "<p>Hello Administrator,</p>
+<p>User %s has cancelled the request to delete their account from the site.</p>
+<p>You are listed as an administrator in an institution to which the user belongs.</p>
+<p>Details of the cancelled request follow:</p>
+<p>Name: %s</p>
+<p>Email: %s</p>
+<pre>--
+Regards,
+The %s Team</pre>";
 
 $string['resizeonuploaduserdefault1'] = 'Resize large images on upload';
 $string['resizeonuploaduserdefaultdescription2'] = '"Automatic resizing of images" is enabled by default. Images larger than the maximum dimensions will be resized when they are uploaded. You can disable this default setting for each image upload individually.';

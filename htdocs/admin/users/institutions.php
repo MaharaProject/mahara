@@ -228,6 +228,7 @@ if ($institution || $add) {
         $data->commentsortorder = get_config_institution($institution, 'commentsortorder');
         $data->commentthreaded = get_config_institution($institution, 'commentthreaded');
         $data->allowinstitutionsmartevidence = get_config_institution($institution, 'allowinstitutionsmartevidence');
+        $data->reviewselfdeletion = get_config_institution($institution, 'reviewselfdeletion');
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
 
         // TODO: Find a better way to work around Smarty's minimal looping logic
@@ -584,6 +585,13 @@ if ($institution || $add) {
         'disabled'     => is_plugin_active('framework', 'module') == false,
         'help'         => true,
     );
+    $elements['reviewselfdeletion'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('reviewselfdeletion', 'admin'),
+        'description'  => get_string('reviewselfdeletiondescription','admin'),
+        'disabled'     => get_config('defaultreviewselfdeletion') == true,
+        'defaultvalue' => get_config('defaultreviewselfdeletion') ? get_config('defaultreviewselfdeletion') : (isset($data->reviewselfdeletion) && $data->reviewselfdeletion),
+    );
     $elements['lockedfields'] = array(
         'type' => 'fieldset',
         'class' => 'last with-formgroup',
@@ -929,6 +937,12 @@ function institution_submit(Pieform $form, $values) {
 
     $newinstitution->allowinstitutionpublicviews  = (isset($values['allowinstitutionpublicviews']) && $values['allowinstitutionpublicviews']) ? 1 : 0;
     $newinstitution->allowinstitutionsmartevidence  = (isset($values['allowinstitutionsmartevidence']) && $values['allowinstitutionsmartevidence']) ? 1 : 0;
+
+    // do not set 'reviewselfdeletion' if it has never been changed at institution level
+    // and the value is the same as site setting 'defaultreviewselfdeletion'
+    if (get_config_institution($institution, 'reviewselfdeletion') != null || get_config('defaultreviewselfdeletion') != $values['reviewselfdeletion']) {
+        $newinstitution->reviewselfdeletion  = $values['reviewselfdeletion'] ? 1 : 0;
+    }
 
     // TODO: Move handling of authentication instances within the Institution class as well?
     if (!empty($values['authplugin'])) {

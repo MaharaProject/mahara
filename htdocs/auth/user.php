@@ -1314,29 +1314,93 @@ class User {
 
     public function can_delete_self() {
         if (!$this->get('admin')) {
-
-            if (get_config('alwaysallowselfdelete')) {
-                return true;
-            }
-
-            // Users who belong to an institution that doesn't allow
-            // registration cannot delete themselves.
-            $institutions = $this->get('institutions');
-            if (empty($institutions)) {
-                // only in the no institution
-                return get_field('institution', 'registerallowed', 'name', 'mahara');
-            }
-            else {
-                foreach ($institutions as $i) {
-                    if (!$i->registerallowed) {
-                        return false;
-                    }
-                }
-            }
             return true;
         }
         // The last admin user should not be deleted.
         return count_records('usr', 'admin', 1, 'deleted', 0) > 1;
+    }
+
+    /*
+    * returns true if the user requires an approval from an institution
+    * admin to delete its account
+    */
+    public function requires_delete_approval() {
+        $institutions = !empty($this->get('institutions')) ? array_keys($this->get('institutions')) : array('mahara');
+        foreach ($institutions as $institution) {
+            $instobj = new Institution($institution);
+            if ($instobj->requires_user_deletion_approval()) {
+                return true;
+            }
+        }
+        // none of the institutions requires approval
+        return false;
+    }
+
+    /*
+    * Returns all admins from institutions that the user belongs to
+    * which require approval to delete the user
+    */
+    public function get_approval_admins() {
+        // get all institutions the user belogs to
+        $institutions = $this->get('institutions');
+        $admins = array();
+        foreach ($institutions as $institution) {
+            $instobj = new Institution($institution->institution);
+            // get all admins from institutions that requires approval to delete the users
+            if ($instobj->requires_user_deletion_approval()) {
+                $admins = array_merge($admins, $instobj->admins());
+            }
+        }
+        // if there are no institution admins, or the user does not belong to any
+        if (empty($admins)) {
+            $admins = get_column('usr', 'id', 'admin', 1, 'deleted', 0);
+        }
+        return $admins;
+    }
+
+    /*
+    * Sends a notification email to the $admins
+    * of a new account deletion request from this user
+    * @param $type Indicates the action performed by the user
+    *              0: requested deletion
+    *              1: resend the request
+    *              2: canceled the request
+    */
+    public function notify_admins_pending_deletion($admins, $message='', $type=0) {
+        $pendingdeletionslink = sprintf("%sadmin/users/pendingdeletions.php",
+                                    get_config('wwwroot'));
+
+        $fullname = display_name($this, null, true);
+
+        switch ($type) {
+            case 0:
+                $emailsubject = get_string('pendingdeletionadminemailsubject', 'account', get_config('sitename'));
+                $emailmessage = get_string('pendingdeletionadminemailtext', 'account',
+                            $fullname, $pendingdeletionslink, $fullname, $this->email,
+                            $message, get_config('sitename'));
+                break;
+            case 1:
+                $emailsubject = get_string('resenddeletionadminemailsubject', 'account', get_config('sitename'));
+                $emailmessage = get_string('resenddeletionadminemailtext', 'account',
+                            $fullname, $pendingdeletionslink, $fullname, $this->email,
+                            $message, get_config('sitename'));
+                break;
+            case 2:
+                $emailsubject = get_string('canceldeletionadminemailsubject', 'account', get_config('sitename'));
+                $emailmessage = get_string('canceldeletionadminemailtext', 'account',
+                            $fullname, $fullname, $this->email,
+                            get_config('sitename'));
+                break;
+        }
+
+        $data = array(
+            'subject' => $emailsubject,
+            'message' => $emailmessage,
+            'users' => $admins,
+            'type' => 1,
+        );
+        $activity = new ActivityTypeMaharamessage($data);
+        $activity->notify_users();
     }
 
     /**

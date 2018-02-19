@@ -631,13 +631,6 @@ $cfg->dbprefix = '';
 $cfg->publicsearchallowed = false;
 
 /**
- * @global bool $cfg->alwaysallowselfdelete Set this to "true" to allow all users on the site to delete
- * their accounts. Leave on the default "false" to only allow users to delete their accounts if they
- * belong to an institution that allows self-registration.
- */
-//$cfg->alwaysallowselfdelete = true;
-
-/**
  * @global boolean $cfg->probationenabled Determines whether or not to use the new-user probation system.
  * If enabled, this will prevent newly self-registered users from taking certain actions that would be
  * useful for creating spam content. Users will leave probation once non-probationary users take actions

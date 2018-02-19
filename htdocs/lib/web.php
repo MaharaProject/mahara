@@ -2479,6 +2479,12 @@ function admin_nav() {
             'title'  => get_string('pendingregistrations', 'admin'),
             'weight' => 100,
         ),
+        'manageinstitutions/pendingdeletions' => array(
+            'path'   => 'manageinstitutions/pendingdeletions`',
+            'url'    => 'admin/users/pendingdeletions.php',
+            'title'  => get_string('pendingdeletions', 'admin'),
+            'weight' => 110,
+        ),
         'reports' => array(
             'path'   => 'reports',
             'url'    => 'admin/users/statistics.php',
@@ -2696,6 +2702,12 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
             'weight' => 100,
+        ),
+        'manageinstitutions/pendingdeletions' => array(
+            'path'   => 'manageinstitutions/pendingdeletions`',
+            'url'    => 'admin/users/pendingdeletions.php',
+            'title'  => get_string('pendingdeletions', 'admin'),
+            'weight' => 110,
         ),
         'reports' => array(
             'path'   => 'reports',

@@ -5699,5 +5699,23 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018021600) {
+        log_debug('Add an "usr_pendingdeletion" table');
+        $table = new XMLDBTable('usr_pendingdeletion');
+
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('reason', XMLDB_TYPE_TEXT);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+
+        create_table($table);
+
+        log_debug('Clean old alwaysallowselfdelete configuration setting');
+        execute_sql("DELETE FROM {config} WHERE field = ?", array('alwaysallowselfdelete'));
+    }
+
     return $status;
 }

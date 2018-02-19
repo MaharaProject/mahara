@@ -1572,6 +1572,8 @@ function delete_user($userid) {
     delete_records('usr_watchlist_view', 'usr', $userid);
     delete_records('view_access', 'usr', $userid);
     delete_records('usr_login_data', 'usr', $userid);
+    delete_records('usr_pendingdeletion', 'usr', $userid); // just in case
+    delete_records('usr_agreement', 'usr', $userid);
 
     if (is_plugin_active('framework', 'module')) {
         delete_records('framework_assessment_feedback', 'usr', $userid);
@@ -1719,6 +1721,17 @@ function deactivate_user($userid) {
  */
 function activate_user($userid) {
     handle_event('activateuser', $userid);
+}
+
+/*
+* Marks the user account to be deleted
+*/
+function set_account_pending_deletion($userid, $reason='') {
+    $deletion = new stdClass();
+    $deletion->usr = $userid;
+    $deletion->ctime = db_format_timestamp(time());
+    $deletion->reason = $reason;
+    insert_record('usr_pendingdeletion', $deletion);
 }
 
 /**

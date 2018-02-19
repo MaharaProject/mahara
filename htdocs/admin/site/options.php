@@ -326,6 +326,13 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('institutionautosuspend', $OVERRIDDEN),
                 ),
+                'defaultreviewselfdeletion' => array(
+                    'type'         => 'switchbox',
+                    'title'        => get_string('defaultreviewselfdeletion', 'admin'),
+                    'description'  => get_string('defaultreviewselfdeletiondescription', 'admin'),
+                    'defaultvalue' => get_config('defaultreviewselfdeletion'),
+                    'disabled'     => in_array('defaultreviewselfdeletion', $OVERRIDDEN),
+                ),
             ),
         ),
         'accountsettings' => array(
@@ -816,6 +823,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
         'eventloglevel', 'eventlogexpiry', 'eventlogenhancedsearch', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',
+        'defaultreviewselfdeletion'
     );
     if (get_config('dropdownmenuenabled')) {
       $fields = array_merge($fields, array('dropdownmenu'));

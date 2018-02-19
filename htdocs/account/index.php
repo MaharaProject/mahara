@@ -116,6 +116,7 @@ if ($blogcount != 1 && $prefs->multipleblogs == 1) {
     $elements['multipleblogs']['readonly'] = true;
 }
 
+
 $elements['submit'] = array(
     'type' => 'submit',
     'class' => 'btn-primary',
@@ -281,8 +282,6 @@ function accountprefs_submit(Pieform $form, $values) {
     $form->json_reply(PIEFORM_OK, $returndata);
 }
 
-
-
 $prefsform = pieform($prefsform);
 
 $ijs = <<< EOF
@@ -303,8 +302,13 @@ var clearPasswords = (function($) {
   }
 }(jQuery))
 EOF;
+
+$request = get_record('usr_pendingdeletion', 'usr', $USER->id);
+
 $smarty = smarty();
 $smarty->assign('form', $prefsform);
 $smarty->assign('candeleteself', $USER->can_delete_self());
+$smarty->assign('deletionsent', !empty($request));
+$smarty->assign('requestdate', !empty($request) ? format_date(strtotime($request->ctime)) : '');
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->display('account/index.tpl');
