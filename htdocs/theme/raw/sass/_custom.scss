@@ -548,3 +548,8 @@
     padding: 5px;
     clear: right;
 }
+
+// Used to remove the second border around the legal information
+#agreetoprivacy .panel {
+    border: 0;
+}
