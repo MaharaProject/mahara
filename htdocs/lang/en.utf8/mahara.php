@@ -1207,6 +1207,7 @@ $string['deleteduser'] = 'Deleted user';
 
 $string['theme'] = 'Theme';
 $string['choosetheme'] = 'Choose theme...';
+$string['missingparent'] = 'Theme "%s" has missing parent theme "%s".';
 
 // Homepage info block
 $string['Hide2'] = 'Hide information box';

@@ -876,6 +876,26 @@ function validate_theme($theme, $institution = null, $new = false) {
             return false;
         }
     }
+
+    // validate parent theme
+    if (($themeconfig = Theme::get_theme_config($theme)) && $themeconfig->parent !== false) {
+
+          $parentthemename = $themeconfig->parent;
+          $parentthemeconfig = Theme::get_theme_config($parentthemename);
+
+          if (!$parentthemeconfig) {
+            if ($institution) {
+                set_config_institution($institution, 'theme', null);
+            }
+            else {
+                set_config('theme', 'default');
+            }
+            $SESSION->add_info_msg(get_string('parentthememissing', 'admin', $themeconfig->displayname, $parentthemename));
+            return false;
+
+          }
+      }
+
     return true;
 }
 

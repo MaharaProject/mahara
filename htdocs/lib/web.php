@@ -730,16 +730,10 @@ EOF;
     $smarty->assign('publicsearchallowed', $publicsearchallowed);
     if ($USER->is_logged_in()) {
         global $SELECTEDSUBNAV; // It's evil, but rightnav & mainnav stuff are now in different templates.
-        if (in_array('raw_old', $THEME->inheritance)) {
-            $menutype = (in_admin_section() ? 'adminnav' : null);
-            $smarty->assign('MAINNAV', main_nav($menutype));
-        }
-        else {
-            $smarty->assign('MAINNAV', main_nav());
-            $is_admin = $USER->get('admin') || $USER->is_institutional_admin() || $USER->get('staff') || $USER->is_institutional_staff();
-            if ($is_admin) {
-                $smarty->assign('MAINNAVADMIN', main_nav('adminnav'));
-            }
+        $smarty->assign('MAINNAV', main_nav());
+        $is_admin = $USER->get('admin') || $USER->is_institutional_admin() || $USER->get('staff') || $USER->is_institutional_staff();
+        if ($is_admin) {
+            $smarty->assign('MAINNAVADMIN', main_nav('adminnav'));
         }
         $mainnavsubnav = $SELECTEDSUBNAV;
         $smarty->assign('RIGHTNAV', right_nav());
@@ -1113,36 +1107,37 @@ class Theme {
     }
 
     /**
+     * Given a theme name, retrieves the $theme variable in the themeconfig.php file
+     */
+    public static function get_theme_config($themename) {
+        $themeconfigfile = get_config('docroot') . 'theme/' . $themename . '/themeconfig.php';
+        if (is_readable($themeconfigfile)) {
+            require( get_config('docroot') . 'theme/' . $themename . '/themeconfig.php' );
+            return $theme;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
      * Given a theme name, reads in all config and sets fields on this object
      */
     private function init_theme($themename, $themedata) {
 
-        // A little anonymous function to retrieve *only* the $theme variable from
-        // the themeconfig.php file
-        $getthemeconfig = function($themename) {
-            $themeconfigfile = get_config('docroot') . 'theme/' . $themename . '/themeconfig.php';
-            if (is_readable($themeconfigfile)) {
-                require( get_config('docroot') . 'theme/' . $themename . '/themeconfig.php' );
-                return $theme;
-            }
-            else {
-                return false;
-            }
-        };
-
-        $themeconfig = $getthemeconfig($themename);
+        $themeconfig = self::get_theme_config($themename);
 
         if (!$themeconfig) {
             // We can check if we have been given a viewbasename
             if (!empty($themedata->viewbasename)) {
                 $themename = $themedata->viewbasename;
-                $themeconfig = $getthemeconfig($themename);
+                $themeconfig = self::get_theme_config($themename);
             }
             if (!$themeconfig) {
                 // We can safely assume that the default theme is installed, users
                 // should never be able to remove it
                 $themename = 'default';
-                $themeconfig = $getthemeconfig($themename);
+                $themeconfig = self::get_theme_config($themename);
             }
         }
 
@@ -1173,13 +1168,13 @@ class Theme {
             // Now go through the theme hierarchy assigning variables from the
             // parent themes
             $parentthemename = $themeconfig->parent;
-            $parentthemeconfig = $getthemeconfig($parentthemename);
+            $parentthemeconfig = self::get_theme_config($parentthemename);
 
             // If the parent theme is missing, short-circuit to the "raw" theme
             if (!$parentthemeconfig) {
-                log_warn("Theme \"{$currentthemename}\" has missing parent theme \"{$parentthemename}\".");
+                log_info(get_string('missingparent', 'mahara', $currentthemename, $parentthemename));
                 $parentthemename = 'raw';
-                $parentthemeconfig = $getthemeconfig($parentthemename);
+                $parentthemeconfig = self::get_theme_config($parentthemename);
             }
             $currentthemename = $parentthemename;
             $themeconfig = $parentthemeconfig;
