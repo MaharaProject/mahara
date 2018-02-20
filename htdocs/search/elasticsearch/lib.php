@@ -1167,7 +1167,14 @@ class PluginSearchElasticsearch extends PluginSearch {
        $clientopts = self::get_client_config($type);
 
        $clientBuilder = ClientBuilder::create();
-       $clientBuilder->setHosts($clientopts['hosts'])->setConnectionParams(['client' => ['curl' => $clientopts['curlopts']]]);
+
+       // php versions < 5.6.6 dont have JSON_PRESERVE_ZERO_FRACTION defined
+       if (version_compare(phpversion(), '5.6.6', '<') || !defined('JSON_PRESERVE_ZERO_FRACTION')) {
+           $clientBuilder->setHosts($clientopts['hosts'])->setConnectionParams(['client' => ['curl' => $clientopts['curlopts']]])->allowBadJSONSerialization();
+       }
+       else {
+           $clientBuilder->setHosts($clientopts['hosts'])->setConnectionParams(['client' => ['curl' => $clientopts['curlopts']]]);
+       }
        $client = $clientBuilder->build();
 
        return $client;
