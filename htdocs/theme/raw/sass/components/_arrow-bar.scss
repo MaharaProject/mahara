@@ -4,7 +4,7 @@
     margin-top: 10px;
     margin-bottom: $grid-gutter-width;
     line-height: 46px;
-    color: #fff;
+    color: $popover-arrow-color;
     display: block;
     width: 100%;
     background-color: lighten($arrow-color, 5%);
@@ -78,14 +78,14 @@
             &:hover,
             &:focus {
                 @include transition-duration(0.3s);
-                background: #fff;
+                background: $navbar-default-bg;
                 color: $link-color;
             }
         }
         &.active > a,
-        &.active > button,  {
+        &.active > button  {
             color: $text-color;
-            background: #fff;
+            background: $navbar-default-bg;
             &:hover,
             &:focus {
                 color: $link-color;

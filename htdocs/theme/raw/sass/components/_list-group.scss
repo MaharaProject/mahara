@@ -53,7 +53,7 @@
     }
 
     &.attachment-incontent {
-        border-left: 1px solid #ddd; // Full Journal attachment list block
+        border-left: 1px solid $list-group-border; // Full Journal attachment list block
     }
 }
 

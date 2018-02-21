@@ -113,8 +113,8 @@
     .select2-choices {
         @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075) inset);
         border-radius: 4px;
-        background-color: #fff;
-        border: 1px solid #ccc;
+        background-color: $body-bg;
+        border: 1px solid $input-border;
         background-image: none;
         width: 100%;
         .select2-search-choice {

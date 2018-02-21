@@ -14,7 +14,7 @@
     .table {
         margin-top:10px;
         color: inherit;
-        background-color: rgba(#fff, 0.75);
+        background-color: rgba($body-bg, 0.75);
         >thead{
             color: inherit;
         }
@@ -38,7 +38,7 @@
 }
 
 .alert-default {
-    background-color: rgba(#fff, 0.4);
+    background-color: rgba($body-bg, 0.4);
     border: 1px solid darken($brand-default, 5%);
     color: $gray;
 }

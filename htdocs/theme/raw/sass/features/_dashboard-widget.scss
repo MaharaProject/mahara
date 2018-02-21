@@ -51,7 +51,7 @@ $logged-in-height-mobile: 100px;
         text-align:center;
 
         .icon {
-            color: #fff;
+            color: $body-bg;
             padding-top:16px;
             font-size: 30px;
             &.icon-user {
@@ -136,7 +136,7 @@ $logged-in-height-mobile: 100px;
                 border-radius: 0 0 $border-radius-base $border-radius-base;
                 margin-top: 0;
                 border: 1px solid $gray-lighter;
-                background-color: #fff;
+                background-color: $body-bg;
                 font-weight: normal;
                 opacity: 1;
             }
@@ -144,7 +144,7 @@ $logged-in-height-mobile: 100px;
                 color: #fff;
 
                 @media (max-width: $screen-sm-min) {
-                    color:#333;
+                    color:$theme-text-color;
                 }
             }
         }

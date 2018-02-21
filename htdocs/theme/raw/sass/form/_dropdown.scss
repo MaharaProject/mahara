@@ -2,7 +2,7 @@
 .dropdown {
     .picker {
         position: relative;
-        background: #fff;
+        background: $body-bg;
         display: inline-block;
         min-width: 20px;
         max-width: 100%;
@@ -119,7 +119,7 @@
     .picker {
         select.form-control:disabled {
             cursor: default;
-            background: #fff;
+            background: $body-bg;
             border: 0;
             box-shadow: none;
             color: $theme-text-midtone-color;

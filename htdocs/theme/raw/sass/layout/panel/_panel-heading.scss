@@ -33,7 +33,7 @@
 
         &.collapsed {
             background-color: $panel-default-heading-bg;
-            color: #333;
+            color: $theme-text-color;
             padding: 10px 15px;
             &.outer-link {
                 background: none;
@@ -43,7 +43,7 @@
             }
         }
         &:hover, &:focus {
-            background: rgba(#333, 0.03);
+            background: rgba($theme-text-color, 0.03);
             text-decoration: none;
         }
         .pieform > .collapsible-group:first-child &,
