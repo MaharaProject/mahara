@@ -163,12 +163,20 @@ $addform = pieform(array(
     'autofocus' => false,
     'class' => 'cell-radios',
     'elements' => array(
-        'cellchooser' => array(
-            'type' => 'radio',
-            'class' => 'fullwidth',
-            'title' => get_string('blockcell', 'view'),
-            'rowsize' => 2,
-            'options' => array('R1C1', 'R1C2', 'R2C1'),
+        'blocklegend' => array(
+            'type' => 'fieldset',
+            'elements' => array(
+                'celltitle' => array(
+                    'type' => 'markup',
+                    'value'=> '<legend>' . get_string('celltitle', 'view') . '</legend>',
+                ),
+                'cellchooser' => array(
+                    'type' => 'radio',
+                    'class' => 'fullwidth',
+                    'rowsize' => 2,
+                    'options' => array('R1C1', 'R1C2', 'R2C1'),
+                ),
+            ),
         ),
         'position' => array(
             'type' => 'select',
