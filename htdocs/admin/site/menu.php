@@ -296,7 +296,7 @@ $activeurls = get_config('footercustomlinks');
 $activeurls = $activeurls ? unserialize($activeurls) : null;
 $footerelements = array();
 foreach ($all as $k => $v) {
-    if ($k == 'termsandconditions' || $k == 'privacystatement') {
+    if ($k == 'legal') {
         $footerelements[$k] = array(
             'type' => 'switchbox',
             'class' => 'last with-text-input',

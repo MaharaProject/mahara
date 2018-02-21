@@ -3094,13 +3094,9 @@ function footer_menu($all=false) {
     $wwwroot = get_config('wwwroot');
 
     $menu = array(
-        'termsandconditions' => array(
-            'url'   => ($USER->is_logged_in() ? $wwwroot . 'account/userprivacy.php' : $wwwroot . 'terms.php'),
-            'title' => get_string('termsandconditions'),
-        ),
-        'privacystatement' => array(
-            'url'   => ($USER->is_logged_in() ? $wwwroot . 'account/userprivacy.php' : $wwwroot . 'privacy.php'),
-            'title' => get_string('privacystatement'),
+        'legal' => array(
+            'url'   => ($USER->is_logged_in() ? $wwwroot . 'account/userprivacy.php' : $wwwroot . 'legal.php'),
+            'title' => get_string('legal'),
         ),
         'about' => array(
             'url'   => $wwwroot . 'about.php',

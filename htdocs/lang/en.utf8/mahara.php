@@ -725,6 +725,7 @@ $string['termsandconditions'] = 'Terms and conditions';
 $string['privacystatement']   = 'Privacy statement';
 $string['about']              = 'About';
 $string['contactus']          = 'Contact us';
+$string['legal']              = 'Legal';
 
 // my account
 $string['account'] =  'Settings';

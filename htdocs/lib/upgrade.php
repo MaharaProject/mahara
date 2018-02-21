@@ -856,7 +856,7 @@ function core_install_firstcoredata_defaults() {
     set_config('anonymouscomments', 1);
     set_config('homepageinfo', 1);
     set_config('showonlineuserssideblock', 1);
-    set_config('footerlinks', serialize(array('privacystatement', 'about', 'contactus')));
+    set_config('footerlinks', serialize(array('legal', 'about', 'contactus')));
     set_config('nousernames', 0);
     set_config('onlineuserssideblockmaxusers', 10);
     set_config('loggedinprofileviewaccess', 1);

@@ -5730,5 +5730,29 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018022100) {
+        log_debug('Combine footer links T&C and Privacy into Legal link');
+
+        if ($enabledfooterlinks = get_config('footerlinks')) {
+            $enabledfooterlinks = unserialize($enabledfooterlinks);
+            $enablelegal = false;
+            if (in_array('termsandconditions', $enabledfooterlinks)) {
+                $key = array_search('termsandconditions', $enabledfooterlinks);
+                unset($enabledfooterlinks[$key]);
+                $enablelegal = true;
+            }
+            if (in_array('privacystatement', $enabledfooterlinks)) {
+                $key = array_search('privacystatement', $enabledfooterlinks);
+                unset($enabledfooterlinks[$key]);
+                $enablelegal = true;
+            }
+            // if T&C or privacy links were shown on the footer, then show legal link
+            if ($enablelegal) {
+                $enabledfooterlinks[] = 'legal';
+                set_config('footerlinks', serialize($enabledfooterlinks));
+            }
+        }
+    }
+
     return $status;
 }
