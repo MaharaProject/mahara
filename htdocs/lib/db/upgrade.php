@@ -5754,5 +5754,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018022200) {
+        log_debug('Removing confusing blockinstance title information');
+        execute_sql("UPDATE {block_instance} SET title = '' WHERE blocktype IN ('myviews', 'mygroups', 'myfriends', 'wall')");
+    }
+
     return $status;
 }

@@ -2680,7 +2680,7 @@ function install_system_profile_view() {
     foreach (array_keys($blocktypes) as $blocktype) {
         if (in_array($blocktype, $installed)) {
             $weights[$blocktypes[$blocktype]]++;
-            $title = ($blocktype == 'profileinfo') ? get_string('aboutme', 'blocktype.internal/profileinfo') : get_string('title', 'blocktype.' . $blocktype);
+            $title = ($blocktype == 'profileinfo') ? get_string('aboutme', 'blocktype.internal/profileinfo') : '';
             $newblock = new BlockInstance(0, array(
                 'blocktype'  => $blocktype,
                 'title'      => $title,
