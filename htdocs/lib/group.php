@@ -664,6 +664,8 @@ function group_update($new, $create=false) {
         unset($new->members);
     }
 
+    $new->mtime = db_format_timestamp(time());
+
     update_record('group', $new, 'id');
 
     // Add users who have requested membership of a group that's becoming
@@ -960,6 +962,7 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
             'institution' => null,
             'category' => null,
             'urlid' => null,
+            'mtime' => db_format_timestamp(time()),
         ),
         array(
             'id' => $group->id,
