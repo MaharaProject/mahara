@@ -11,4 +11,6 @@
             </legend>
             <div class="fieldset-body collapse {if !($privacy->agreed && $ignoreagreevalue)}in{/if}" id="dropdown{$privacy->id}">
                 <span class="text-midtone pull-right">{str tag='lastupdated' section='admin'} {$privacytime} </span>
-                {$privacy->content|safe}
+                <div class="last-updated-offset">
+                    {$privacy->content|safe}
+                </div>
