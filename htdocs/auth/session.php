@@ -126,6 +126,32 @@ class Session {
                     Session::create_directory_levels($sessionpath);
                 }
                 break;
+            case 'redis':
+                if (!extension_loaded(get_config('sessionhandler'))) {
+                    throw new ConfigSanityException(get_string('nophpextension', 'error', get_config('sessionhandler')));
+                }
+                else if (
+                         ($redissentinelservers = get_config('redissentinelservers')) &&
+                         ($redismastergroup = get_config('redismastergroup')) &&
+                         ($redisprefix = get_config('redisprefix'))
+                        ) {
+                    require_once(get_config('libroot') . 'redis/sentinel.php');
+
+                    $sentinel = new sentinel($redissentinelservers);
+                    $master = $sentinel->get_master_addr($redismastergroup);
+
+                    if (!empty($master)) {
+                        ini_set('session.save_handler', 'redis');
+                        ini_set('session.save_path', 'tcp://' . $master->ip . ':' . $master->port . '?prefix=' . $redisprefix);
+                    }
+                    else {
+                        throw new ConfigSanityException(get_string('badsessionhandle', 'error', get_config('sessionhandler')));
+                    }
+                }
+                else {
+                    throw new ConfigSanityException(get_string('badsessionhandle', 'error', get_config('sessionhandler')));
+                }
+                break;
             default:
                 throw new ConfigSanityException(get_string('wrongsessionhandle', 'error', get_config('sessionhandler')));
         }

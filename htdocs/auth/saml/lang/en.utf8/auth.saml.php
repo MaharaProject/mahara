@@ -35,6 +35,7 @@ $string['errorbadlib'] = 'The SimpleSAMLPHP library\'s "autoloader" file was not
 $string['errorupdatelib'] = 'Your current SimpleSAMLPHP library version is out of date. You need to run "make cleanssphp && make ssphp".';
 $string['errornomcrypt'] = 'The PHP library "mcrypt" must be installed for auth/saml. Make sure you install and activate mcrypt, e.g.:<br>sudo apt-get install php5-mcrypt<br>sudo php5enmod mcrypt<br>Then restart your web server.';
 $string['errornomcrypt7php'] = 'The PHP library "mcrypt" must be installed for auth/saml. Make sure you install and activate mcrypt, e.g.:<br>sudo apt-get install php7.0-mcrypt<br>sudo phpenmod mcrypt<br>Then restart your web server.';
+$string['errornovalidsessionhandler'] = 'The SimpleSAMLphp session handler is misconfigured or the server is currently unavailable.';
 $string['errornomemcache'] = 'Memcache is misconfigured for auth/saml or a Memcache server is currently unavailable.';
 $string['errornomemcache7php'] = 'Memcache is misconfigured for auth/saml or a Memcache server is currently unavailable.';
 $string['errorbadconfig'] = 'The SimpleSAMLPHP config directory %s is incorrect.';

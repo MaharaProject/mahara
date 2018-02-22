@@ -40,7 +40,7 @@ if (get_field('auth_installed', 'active', 'name', 'saml') != 1) {
     redirect();
 }
 
-if (!extension_loaded('mcrypt')) {
+if (get_config('memcacheservers') && !extension_loaded('mcrypt')) {
     throw new AuthInstanceException(get_string_php_version('errornomcrypt', 'auth.saml'));
 }
 
