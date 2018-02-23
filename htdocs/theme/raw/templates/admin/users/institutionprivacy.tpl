@@ -33,8 +33,9 @@
                     <span class="text-midtone pull-right">
                         {str tag="lastupdated" section="admin"} {$sitecontent['privacy']->ctime|date_format:'%d %B %Y %H:%M %p'}
                     </span>
-                    <br>
-                    {$sitecontent['privacy']->content|safe}
+                    <div class="last-updated-offset">
+                        {$sitecontent['privacy']->content|safe}
+                    </div>
                 </div>
             </fieldset>
         </div>
@@ -57,8 +58,9 @@
                     <span class="text-midtone pull-right">
                         {str tag="lastupdated" section="admin"} {$sitecontent['termsandconditions']->ctime|date_format:'%d %B %Y %H:%M %p'}
                     </span>
-                    <br>
-                    {$sitecontent['termsandconditions']->content|safe}
+                    <div class="last-updated-offset">
+                        {$sitecontent['termsandconditions']->content|safe}
+                    </div>
                 </div>
             </fieldset>
         </div>
