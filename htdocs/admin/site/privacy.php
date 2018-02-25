@@ -34,6 +34,7 @@ foreach ($data as $key => $content) {
         array_push($latestVersions, $key);
     }
     $content->displayname = display_name($content->userid, null, true);
+    $content->userdeleted = get_field('usr', 'deleted', 'id', $content->userid);
 }
 
 $selectedtab = $fs;

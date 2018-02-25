@@ -1,6 +1,6 @@
         <tr>
             <td>{$result->version}</td>
-            <td>{if $result->userid == '0'}
+            <td>{if $result->userid == '0' || $result->userdeleted == '1'}
                     {$result->displayname}
                 {else}
                     <a href="{$WWWROOT}user/view.php?id={$result->userid}">
