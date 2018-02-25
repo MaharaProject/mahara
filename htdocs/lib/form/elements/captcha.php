@@ -64,7 +64,7 @@ function pieform_element_captcha_set_attributes($element) {
         }
         $element['rules']['validate'] = array();
         if (empty($element['description'])) {
-            $element['description'] = get_string('recaptcharegisterdesc', 'auth.internal');
+            $element['description'] = get_string('recaptcharegisterdesc1', 'auth.internal');
         }
         if (empty($element['title'])) {
             $element['title'] = get_string('recaptcharegistertitle', 'auth.internal');

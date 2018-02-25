@@ -63,7 +63,11 @@ $elements = array(
         ),
     )
 );
-
+if (!$USER->is_logged_in()) {
+    $elements['captcha'] = array(
+        'type' => 'captcha',
+    );
+}
 $elements['userid'] = array(
     'type'  => 'hidden',
     'value' => $userid,
