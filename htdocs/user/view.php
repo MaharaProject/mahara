@@ -15,6 +15,7 @@ define('PUBLIC', 1);
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'internal');
 define('SECTION_PAGE', 'view');
+define('VIEW_TYPE', 'profile');
 
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once('group.php');

@@ -55,6 +55,7 @@ else if ($groupid = param_alphanum('group', null)) {
 }
 else {
     define('TITLE', get_string('newblog', 'artefact.blog') . ': ' . get_string('blogsettings','artefact.blog'));
+    PluginArtefactBlog::set_blog_nav();
 }
 
 $form = array(

@@ -10,13 +10,17 @@ Background:
   | UserA | Kupuhipa1 | test01@example.com | Angela | User | mahara | internal | member |
 
   # Skins need to be enabled
-  Given the following site settings are set:
+  And the following site settings are set:
   | field | value |
   | skins | 1 |
 
-  Given the following "pages" exist:
+  And the following "pages" exist:
   | title | description| ownertype | ownername |
   | Page 01 | UserA's page 01 | user | UserA |
+
+  And the following "groups" exist:
+  | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
+  | GroupA | admin | GroupA owned by admin | standard | ON | ON | all | ON | ON | UserA |  |
 
 Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   When I log in as "UserA" with password "Kupuhipa1"
@@ -81,3 +85,31 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I choose "Import" in "Portfolio" from main menu
   And I click on "Help"
   Then I should see "You can import your (or any valid Leap2a) portfolio from another Mahara site yourself."
+
+Scenario: Showing correct external manual help file for mahara page
+  # Test by going to pages and collections help for user / institution / site / group
+  When I log in as "admin" with password "Kupuhipa1"
+  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I follow "Help" in the ".footer-nav" "css_element"
+  And I switch to the new window
+  And I should see "5.1.1. Overview page"
+  And I switch to the main window
+  When I am on homepage
+  And I choose "Pages and collections" in "Institutions" from administration menu
+  And I follow "Help" in the ".footer-nav" "css_element"
+  And I switch to the new window
+  And I should see "10.6.11. Institution pages and collections"
+  And I switch to the main window
+  When I am on homepage
+  And I choose "Pages and collections" in "Configure site" from administration menu
+  And I follow "Help" in the ".footer-nav" "css_element"
+  And I switch to the new window
+  And I should see "10.3.6. Site pages and collections"
+  And I switch to the main window
+  When I am on homepage
+  And I follow "GroupA"
+  And I follow "Pages and collections (tab)"
+  And I follow "Help" in the ".footer-nav" "css_element"
+  And I switch to the new window
+  And I should see "6.4.4. Pages and collections"
+  And I switch to the main window

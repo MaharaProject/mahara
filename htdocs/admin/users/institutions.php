@@ -14,7 +14,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('Institutions', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
-define('SECTION_PAGE', 'institutions');
+
 require_once('license.php');
 define('MENUITEM', 'manageinstitutions/institutions');
 
@@ -54,7 +54,7 @@ if (!$USER->get('admin')) {
 }
 
 if ($institution || $add) {
-
+    define('SECTION_PAGE', 'institutionedit');
     $authinstances = auth_get_auth_instances_for_institution($institution);
     if (false == $authinstances) {
         $authinstances = array();
@@ -655,6 +655,7 @@ if ($institution || $add) {
 }
 else {
     // Get a list of institutions
+    define('SECTION_PAGE', 'institutions');
     require_once(get_config('libroot') . 'institution.php');
     if (!$USER->get('admin')) { // Filter the list for institutional admins
         $filter      = $USER->get('admininstitutions');

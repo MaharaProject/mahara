@@ -11,6 +11,7 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/findfriends');
+define('SECTION_PAGE', 'removefriend');
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $id = param_integer('id');

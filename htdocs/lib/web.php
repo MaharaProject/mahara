@@ -3107,6 +3107,58 @@ function footer_menu($all=false) {
             'title' => get_string('contactus'),
         ),
     );
+    $helpkeys = null;
+    if (defined('MENUITEM')) {
+        $helpkey = ($USER->is_logged_in() ? '' : 'loggedout') . MENUITEM;
+        $helpkeys = explode('/', $helpkey);
+    }
+    if (defined('SECTION_PAGE')) {
+        $helpkeys[] = SECTION_PAGE;
+    }
+    if (defined('VIEW_TYPE')) {
+        $helpkeys[] = VIEW_TYPE;
+    }
+    // To handle the 'Report' pages where type/subtype are passed in as params
+    if (defined('MENUITEM') && MENUITEM == 'reports') {
+        if (param_exists('type')) {
+            $helpkeys[] = param_alpha('type');
+        }
+        if (param_exists('subtype')) {
+            $helpkeys[] = param_variable('subtype');
+        }
+    }
+    // To handle the configmanager page where plugintye/pluginname are
+    // passed in as params (not when defined as part of php file)
+    if (param_exists('plugintype')) {
+        $helpkeys[] = param_alpha('plugintype');
+    }
+    if (param_exists('pluginname')) {
+        $helpkeys[] = param_variable('pluginname');
+    }
+    // If we are in resume section
+    if (defined('RESUME_SUBPAGE')) {
+        $helpkeys[] = RESUME_SUBPAGE;
+    }
+    // If group is set
+    if (param_exists('group')) {
+        $helpkeys[] = 'group';
+    }
+    // If institution is set
+    if (param_exists('institution') || param_exists('i')) {
+        $helpkeys[] = 'institution';
+    }
+    // To handle when things have a 'new' state vs edit state
+    if (param_exists('id')) {
+        if (param_exists('new')) {
+            $helpkeys[] = 'new';
+        }
+    }
+
+    $menu['manualhelp'] = array('fullurl' => get_manual_help_link($helpkeys),
+                                'title' => get_string('externalmanual'),
+                                'url' => _get_manual_link_prefix(),
+                               );
+
     if ($all) {
         return $menu;
     }
@@ -3126,6 +3178,7 @@ function footer_menu($all=false) {
             }
         }
     }
+
     return $menu;
 }
 

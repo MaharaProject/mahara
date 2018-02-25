@@ -12,6 +12,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'managegroups/groups');
+define('SECTION_PAGE', 'manage');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $group = get_record_select('group', 'id = ? AND deleted = 0', array(param_integer('id')));

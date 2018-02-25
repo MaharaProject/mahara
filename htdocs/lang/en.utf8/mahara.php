@@ -726,6 +726,7 @@ $string['privacystatement']   = 'Privacy statement';
 $string['about']              = 'About';
 $string['contactus']          = 'Contact us';
 $string['legal']              = 'Legal';
+$string['externalmanual']     = 'External manual';
 
 // my account
 $string['account'] =  'Settings';
