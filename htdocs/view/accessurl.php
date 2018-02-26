@@ -38,13 +38,7 @@ else {
 
 $view = new View($viewid);
 
-$new = param_boolean('new', 0);
-if ($new) {
-    define('VIEWTITLE', get_string('notitle', 'view'));
-}
-else {
-    define('VIEWTITLE', $view->get('title'));
-}
+define('VIEWTITLE', $view->get('title'));
 define('SUBSECTIONHEADING', VIEWTITLE);
 
 if (empty($collection)) {

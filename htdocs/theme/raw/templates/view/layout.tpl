@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-{include file="view/editviewtabs.tpl" selected='layout' new=$new issiteview=$issiteview}
+{include file="view/editviewtabs.tpl" selected='layout' issiteview=$issiteview}
 
 {$form|safe}
 

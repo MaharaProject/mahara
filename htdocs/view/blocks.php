@@ -19,7 +19,6 @@ require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 
 $id = param_integer('id', 0); // if 0, we're editing our profile.
-$new = param_boolean('new', false);
 $profile = param_boolean('profile');
 $dashboard = param_boolean('dashboard');
 
@@ -69,7 +68,7 @@ if ($blockid = param_integer('blockconfig', 0)) {
         if ($bi->get('view') != $view->get('id')) {
             throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
         }
-        $bi->build_configure_form($new);
+        $bi->build_configure_form();
     }
 }
 
@@ -93,9 +92,6 @@ else if ($view->get('type') == 'grouphomepage') {
     }
     define('TITLE', $title);
 }
-else if ($new) {
-    define('TITLE', get_string('notitle', 'view'));
-}
 else {
     define('TITLE', $view->get('title'));
     $editabletitle = true;
@@ -110,7 +106,7 @@ if (empty($category)) {
     $category = $view->get_default_category();
 }
 
-$view->process_changes($category, $new);
+$view->process_changes($category, false);
 
 $extraconfig = array(
     'sidebars'    => false,
@@ -213,7 +209,7 @@ $smarty = smarty($javascript, $stylesheets, array(
 $smarty->assign('addform', $addform);
 
 // The list of categories for the tabbed interface
-$smarty->assign('category_list', $view->build_category_list($category, $new));
+$smarty->assign('category_list', $view->build_category_list($category, false));
 
 // The list of shortcut blocks
 $smarty->assign('shortcut_list', $view->build_blocktype_list('shortcut'));
@@ -244,14 +240,10 @@ foreach (array_keys($_POST + $_GET) as $key) {
 
 $viewid = $view->get('id');
 $displaylink = $view->get_url();
-if ($new) {
-    $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
-}
 $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $displaylink);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
-$smarty->assign('new', $new);
 $smarty->assign('profile', $profile);
 $smarty->assign('dashboard', $dashboard);
 if (get_config('blockeditormaxwidth')) {

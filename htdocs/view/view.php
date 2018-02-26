@@ -77,7 +77,6 @@ else {
     $viewid = param_integer('id');
 }
 
-$new = param_boolean('new');
 $showmore = param_boolean('showmore');
 if (!$showmore) {
     $showmore = 0;
@@ -357,7 +356,6 @@ if ($collection) {
 
 $smarty->assign('canremove', $can_edit);
 $smarty->assign('INLINEJAVASCRIPT', $javascript . $inlinejs);
-$smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
@@ -382,7 +380,7 @@ $titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->
 $smarty->assign('lastupdatedstr', $view->lastchanged_message());
 $smarty->assign('visitstring', $view->visit_message());
 if ($can_edit) {
-    $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
+    $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid);
 }
 if ($can_copy) {
     $smarty->assign('copyurl', get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''));
