@@ -721,19 +721,20 @@ $cfg->openbadgedisplayer_source = '{"backpack":"https://backpack.openbadges.org/
 /**
  * @global string $cfg->sessionhandler
  * An alternative session handler for Mahara if you do not wish to use files.
- * Specify the name of the session handler.
+ * Specify the name of the session handler. Will be used for SAML session handling unless $cfg->ssphpsessionhandler set
  */
 $cfg->sessionhandler = 'file';
 //$cfg->sessionhandler = 'memcached'; // also set the $cfg->memcacheservers setting if using this one
-//$cfg->sessionhandler = 'redis'; // also set the $cfg->redis* ssettings if using this one
+//$cfg->sessionhandler = 'redis'; // also set the $cfg->redis* settings if using this one
 
 /**
  * @global string $cfg->ssphpsessionhandler
  * An alternative session handler for SimpleSAMLphp if you do not wish to use memcache.
  * Specify the name of the session handler.
  */
-// $cfg->ssphpsessionhandler = 'memcached';
-
+// $cfg->ssphpsessionhandler = 'memcached'; // also set the $cfg->memcacheservers setting if using this one
+// $cfg->ssphpsessionhandler = 'redis'; // also set the $cfg->redis* setting if using this one
+// $cfg->ssphpsessionhandler = 'sql'; // also set the $cfg->ssphpsql* settings if using this one
 
 /**
  * Redis session handling
@@ -741,6 +742,17 @@ $cfg->sessionhandler = 'file';
 //$cfg->redissentinelservers = "localhost:26379";  // A comma seperated string of hosts:ports
 //$cfg->redismastergroup = 'mymaster';
 //$cfg->redisprefix = 'mahara';
+
+/**
+ * SQL session store configs for SimpleSAMLphp
+ * Specify the SQL database connection string, credentials and table prefix
+ */
+/*
+ $cfg->ssphpsqldsn = "mysql:host=localhost;dbname=simplesamlphp";
+ $cfg->ssphpsqlusername = null;
+ $cfg->ssphpsqlpassword = null;
+ $cfg->ssphpsqlprefix = 'ssphp';
+*/
 
 /**
  * @global array $cfg->saml_custommappingfile

@@ -802,11 +802,17 @@ class PluginAuthSaml extends PluginAuth {
             return true;
         }
 
+        if (get_config('ssphpsessionhandler') == 'sql' && self::is_sql_configured()) {
+            return true;
+        }
+
         if (empty(get_config('ssphpsessionhandler'))) {
             // Check Redis
             $ishandler = self::is_redis_configured();
             // And check Memcache if no Redis
             $ishandler = $ishandler ? $ishandler : self::is_memcache_configured();
+            // And check Sql if no Memcache
+            $ishandler = $ishandler ? $ishandler : self::is_sql_configured();
             return $ishandler;
         }
 
@@ -908,6 +914,25 @@ class PluginAuthSaml extends PluginAuth {
                                  'mastergroup' => $redismastergroup,
                                  'prefix' => $redisprefix);
         return $redis_servers;
+    }
+
+    public static function is_sql_configured() {
+        $config = PluginAuthSaml::get_sql_config();
+        try {
+            $connection = new PDO($config['dsn'], $config['username'], $config['password']);
+            return true;
+        }
+        catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public static function get_sql_config() {
+        return array('dsn' => get_config('ssphpsqldsn'),
+                     'username' => get_config('ssphpsqlusername'),
+                     'password' => get_config('ssphpsqlpassword'),
+                     'prefix' => get_config('ssphpsqlprefix'),
+                    );
     }
 
     public static function get_idps($xml) {
