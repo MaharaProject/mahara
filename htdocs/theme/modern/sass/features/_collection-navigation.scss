@@ -1,0 +1,10 @@
+.collection-nav {
+    h2 {
+        font-size: 32px;
+    }
+    .collection-nav-btns {
+      @media (min-width: $screen-md-min) {
+        bottom: 14px;
+      }
+    }
+}

@@ -2,42 +2,38 @@
     background-color: $panel-default-heading-bg;
     padding: 10px;
     margin-bottom: 20px;
-    border-top: 1px solid $btn-default-border;
-    @include border-bottom-radius(3px);
-    text-align: center;
+    margin-left: -10px;
+    margin-right: -10px;
+    border-radius: 3px;
+    position: relative;
 
     h2 {
-        clear: both;
+        font-weight: bold;
+        font-size: 30px;
 
         @media (min-width: $screen-md-min) {
-            clear: none;
+          margin-right: 300px;
+          margin-bottom: 0;
         }
     }
+    .collection-nav-btns {
+      display: inline-block;
+
+      @media (min-width: $screen-md-min) {
+        position: absolute;
+        right: 10px;
+        bottom: 12px;
+      }
+    }
     .prevpage {
-        float: left;
         background-color: $body-bg;
-        margin-right: 10px;
-        margin-bottom: 10px;
     }
     .nextpage {
-        float: right;
         background-color: $body-bg;
-        margin-left: 10px;
-        margin-bottom: 10px;
-    }
-    p.navlabel {
-        display: inline-block;
-        margin-right: 10px;
     }
     nav.custom-dropdown {
         margin: 0 auto;
         display: inline-block;
         min-width: 200px;
-    }
-
-    @media (min-width: $screen-md-min) {
-        h2 {
-            clear: none;
-        }
     }
 }
