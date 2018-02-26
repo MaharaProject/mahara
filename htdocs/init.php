@@ -337,6 +337,16 @@ if (get_config('installed')) {
     if ($upgradeavailable) {
         ensure_upgrade_sanity();
     }
+    else if ($config->version < get_config('version')) {
+        if (get_config('productionmode')) {
+            throw new ConfigSanityException("Database version of Mahara $corerelease ($coreversion) is newer "
+                                            . "than files version $config->release ($config->version). "
+                                            . "Please make sure you have the correct Mahara files in place.");
+        }
+        else {
+            define('SITEOUTOFSYNC', 'core');
+        }
+    }
     if ($upgradeavailable != get_config('siteclosedforupgrade')) {
         set_config('siteclosedforupgrade', $upgradeavailable);
     }
