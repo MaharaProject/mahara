@@ -322,6 +322,7 @@ $string['closeconfiguration'] = 'Close configuration';
 $string['removeblock1'] = 'Remove %s block (ID %s)';
 $string['removethisblock1'] = 'Remove this block (ID %s)';
 $string['blocktitle'] = 'Block title';
+$string['celltitle'] = 'Cell';
 
 $string['changemyviewlayout'] = 'Change my page layout';
 $string['createcustomlayout'] = 'Create custom layout';
