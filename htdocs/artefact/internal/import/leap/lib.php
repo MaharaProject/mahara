@@ -1096,6 +1096,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * @return HTML code for displaying user's profile fields and choosing how to import them
      */
     public static function render_import_entry_requests(PluginImportLeap $importer) {
+        global $USER;
+
         $importid = $importer->get('importertransport')->get('importid');
         $profilefields = array(
             'profile' => array(
@@ -1115,6 +1117,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 'fields' => array('occupation', 'industry'),
             ),
         );
+        // Get current user's institutions
+        $institutions = empty($USER->get('institutions')) ? array('mahara') : array_keys($USER->get('institutions'));
         // Get import entry requests for Mahara profile fields
         $profilegroups = array();
         foreach ($profilefields as $gr_key => $group) {
@@ -1137,7 +1141,15 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                             $ier->existingitemids = unserialize($ier->existingitemids);
                         }
                         $profilefieldvalue['disabled'][PluginImport::DECISION_IGNORE] = false;
-                        if (!empty($ier->duplicateditemids)) {
+                        if (get_field_sql('SELECT profilefield FROM {institution_locked_profile_field}
+                                          WHERE name IN (' . join(',', array_map('db_quote', $institutions)) . ')
+                                          AND profilefield = ?', array($f))) {
+                            $profilefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = true;
+                            $profilefieldvalue['disabled'][PluginImport::DECISION_APPEND] = true;
+                            $profilefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = true;
+                            $profilefieldvalue['decision'] = PluginImport::DECISION_IGNORE;
+                        }
+                        else if (!empty($ier->duplicateditemids)) {
                             $duplicated_pfield = artefact_instance_from_id($ier->duplicateditemids[0]);
                             $profilefieldvalue['duplicateditem']['id'] = $duplicated_pfield->get('id');
                             $res = $duplicated_pfield->render_self(array());
