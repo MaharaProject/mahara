@@ -47,11 +47,17 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Members without a submission to the group' => array("#nosubmissionslist", "css_element"),
     'Collections shared with this group' => array("#sharedcollectionlist", "css_element"),
     'Pages shared with this group'=> array("#sharedviewlist", "css_element"),
+    'Shared with this group report'=> array("#sharedviewsreport", "css_element"),
     'Matrix table'                => array("#tablematrix", "css_element"),
     'Toolbar buttons'             => array("#toolbar-buttons", "css_element"),
     #xpath_elements
     'Secret urls - table row 1'   => array("//table/tbody/tr[1]/td[4]/a", "xpath_element"),
     'Multirecipientnotification'  => array("//li[@id='module.multirecipientnotification']", "xpath_element"),
+    // xpath related to participation report
+    'Group views report tr1 tc1'  => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[1]", "xpath_element"),
+    'Group views report tr1 tc2'  => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[2]", "xpath_element"),
+    'Group views report tr1 tc3'  => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[3]", "xpath_element"),
+    'Group views report tr3 tc1'  => array("//*[@id='groupviewsreport']/tbody/tr[3]/td[1]", "xpath_element"),
     )));
 
 /**
