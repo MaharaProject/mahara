@@ -5171,7 +5171,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
         log_debug('Adjust existing "event_log" data to fit new table structure');
         $db_version = get_db_version();
-        if (is_mysql() && version_compare($db_version, '5.7.8', '>=')) {
+        if (is_mysql() && mysql_get_type() == 'mysql' && version_compare($db_version, '5.7.8', '>=')) {
             // Update the event_log table using the json datatype
             // by converting the data field to json.
             // This datatype was introduced in Mysql 5.7.8.

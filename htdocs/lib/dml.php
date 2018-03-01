@@ -1562,6 +1562,22 @@ function is_mysql() {
     return (strpos(get_config('dbtype'), 'mysql') === 0);
 }
 
+function mysql_get_type() {
+    if (!is_mysql()) {
+        throw new SQLException('mysql_get_type() expects a mysql database');
+    }
+    $mysqltype = mysql_get_variable('version_comment');
+    if (stripos($mysqltype, 'MariaDB') !== false) {
+        return 'mariadb';
+    }
+    else if (stripos($mysqltype, 'Percona') !== false) {
+        return 'percona';
+    }
+    else {
+        return 'mysql';
+    }
+}
+
 /**
  * function to convert an array to
  * an array of placeholders (?)
