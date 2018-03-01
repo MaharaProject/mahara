@@ -1,19 +1,27 @@
 .arrow-bar {
     // to theme the Résumé nav red
     &.resume {
-        background-color: lighten(#ca0238, 5%);
+        background-color: lighten($arrow-link-color, 5%);
 
         .arrow {
-            background-color: #ca0238;
+            background-color: $arrow-link-color;
             &:after {
-                border-left-color: #ca0238;
+                border-left-color: $arrow-link-color;
             }
         }
         .nav-inpage {
             &.nav > li {
+                & > a {
+                    color: $arrow-text-color;
+                }
                 &.active > a,
-                &.active > button,  {
-                    color: #ca0238;
+                &.active > button  {
+                    color: $arrow-link-color;
+                    background-color: $arrow-link-background-color;
+                }
+                & > a:hover {
+                    color: $arrow-link-hover-color;
+                    background-color: $arrow-link-background-color;
                 }
             }
         }
@@ -21,19 +29,27 @@
 
     // to theme the Groups nav green
     &.group {
-        background-color: lighten(#799323, 5%);
+        background-color: lighten($arrow-link-group-color, 5%);
 
         .arrow {
-            background-color: #799323;
+            background-color: $arrow-link-group-color;
             &:after {
-                border-left-color: #799323;
+                border-left-color: $arrow-link-group-color;
             }
         }
         .nav-inpage {
             &.nav > li {
+                & > a {
+                    color: $arrow-text-color;
+                }
                 &.active > a,
-                &.active > button,  {
-                    color: #799323;
+                &.active > button  {
+                    color: $arrow-link-group-color;
+                    background-color: $arrow-link-background-color;
+                }
+                & > a:hover {
+                    color: $arrow-link-hover-color;
+                    background-color:$arrow-link-background-color;
                 }
             }
         }
