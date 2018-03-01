@@ -197,7 +197,7 @@ function check_upgrades($name=null) {
             }
         }
     }
-
+    $outofsyncplugins = array();
     foreach ($plugins as $plugin) {
         $plugintype = $plugin[0];
         $pluginname = $plugin[1];
@@ -309,7 +309,7 @@ function check_upgrades($name=null) {
             $toupgrade[$pluginkey] = $plugininfo;
         }
         else if ($config->version < $pluginversion) {
-            $plugindisplayname = !empty($plugindisplayname) ? $plugindisplayname : $config->name;
+            $plugindisplayname = !empty($plugindisplayname) ? $plugindisplayname : (!empty($config->name) ? $config->name : $pluginpath);
             if (get_config('productionmode')) {
                 throw new ConfigSanityException("Database version of Mahara plugin " . $plugindisplayname . " "
                                             . $pluginrelease . " (" . $pluginversion . ") is newer "
@@ -317,13 +317,15 @@ function check_upgrades($name=null) {
                                             . "Please make sure you have the correct Mahara plugin files in place.");
             }
             else {
-                define('SITEOUTOFSYNC', $plugindisplayname);
+                $outofsyncplugins[] = $plugindisplayname;
             }
         }
     }
-
+    if (!empty($outofsyncplugins)) {
+        define('SITEOUTOFSYNC', implode(', ', $outofsyncplugins));
+    }
     // if we've just asked for one, don't return an array...
-    if (!empty($name)){
+    if (!empty($name)) {
         if (count($toupgrade) == 1) {
             $upgrade = new StdClass;
             $upgrade->name = $name;
