@@ -5610,19 +5610,22 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2018010700) {
-        log_debug('Move the site Privacy statement from the site_content table to the site_content_version table');
-
+        log_debug('Move the site and institution Privacy statement from the site_content table to the site_content_version table');
+        //For all istitutions, get the values of the "Use site default" option regarding the privacy page
+        $instconfigs = get_records_sql_assoc("SELECT institution, value FROM {institution_config}
+                                                WHERE field = 'sitepages_privacy'");
         if ($records = get_records_array('site_content', 'name', 'privacy')) {
             foreach ($records as $data) {
-                $record = new stdClass;
-                $record->type = 'privacy';
-                $record->content = $data->content;
-                $record->author = $data->mauthor;
-                $record->institution = $data->institution;
-                $record->version = '1.0';
-                $record->ctime = db_format_timestamp(time());
-
-                insert_record('site_content_version', $record);
+                if ($data->institution == 'mahara' || $instconfigs[$data->institution]->value == $data->institution) {
+                    $record = new stdClass;
+                    $record->type = 'privacy';
+                    $record->content = $data->content;
+                    $record->author = $data->mauthor;
+                    $record->institution = $data->institution;
+                    $record->version = '1.0';
+                    $record->ctime = db_format_timestamp(time());
+                    insert_record('site_content_version', $record);
+                }
                 delete_records('site_content', 'id', $data->id);
             }
         }
@@ -5656,18 +5659,23 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2018013001) {
-        log_debug('Move the site terms and conditions  from the site_content table to the site_content_version table');
+        log_debug('Move the site and institution terms and conditions  from the site_content table to the site_content_version table');
+        //For all istitutions, get the values of the "Use site default" option regarding the termsandconditions page
+        $instconfigs = get_records_sql_assoc("SELECT institution, value FROM {institution_config}
+                                        WHERE field = 'sitepages_termsandconditions'");
         if ($records = get_records_array('site_content', 'name', 'termsandconditions')) {
             foreach ($records as $data) {
-                $record = new stdClass;
-                $record->type = 'termsandconditions';
-                $record->content = $data->content;
-                $record->author = $data->mauthor;
-                $record->institution = $data->institution;
-                $record->version = '1.0';
-                $record->ctime = db_format_timestamp(time());
+                if ($data->institution == 'mahara' || $instconfigs[$data->institution]->value == $data->institution) {
+                    $record = new stdClass;
+                    $record->type = 'termsandconditions';
+                    $record->content = $data->content;
+                    $record->author = $data->mauthor;
+                    $record->institution = $data->institution;
+                    $record->version = '1.0';
+                    $record->ctime = db_format_timestamp(time());
 
-                insert_record('site_content_version', $record);
+                    insert_record('site_content_version', $record);
+                }
                 delete_records('site_content', 'id', $data->id);
             }
         }
