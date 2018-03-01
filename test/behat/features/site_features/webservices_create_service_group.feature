@@ -27,6 +27,7 @@ Scenario: Turning master switch on
  And I set the field "service" to "Test service"
  And I press "Add"
  And I scroll to the top
+ And I wait "1" seconds
  And I click on "Edit" in "Test service" row
  And I set the field "Short name" to "testservice"
  And I enable the switch "Service"
