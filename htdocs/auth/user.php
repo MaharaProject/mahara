@@ -1949,7 +1949,13 @@ class LiveUser extends User {
 
     private function store_sessionid() {
         $sessionid = $this->get('sessionid');
-        delete_records('usr_session', 'usr', $this->get('id'));
+        if (get_config('productionmode') == false) {
+            // Allow webservice test client work without needing to login to get results
+            delete_records('usr_session', 'session', $sessionid);
+        }
+        else {
+            delete_records('usr_session', 'usr', $this->get('id'));
+        }
         $useragent = 'unknown';
         if (isset($_SERVER['HTTP_USER_AGENT'])) {
             $useragent = $_SERVER['HTTP_USER_AGENT'];
