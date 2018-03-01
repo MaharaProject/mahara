@@ -39,8 +39,8 @@ class BehatView extends BehatBase {
                 'The block "' . $blocktitle . '"');
         $xpath = "//div[@id='column-container']"
                     . "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'blockinstance', ' '))]"
-                        . "//span[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'blockinstance-header', ' '))]"
-                            . "[normalize-space(.)=" . $nodetextliteral . "]";
+                        . "//span[(contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'blockinstance-header', ' ')))"
+                            . "and contains(normalize-space(.), " . $nodetextliteral . ")]";
         $titlenode = $this->find('xpath', $xpath, $exception);
         $blocknode = $titlenode->getParent()->getParent();
 
