@@ -365,6 +365,21 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+    * @Given I click on the :selector element
+    * @param string $selector - css selector
+    */
+    public function i_click_on_the($selector) {
+        $page = $this->getSession()->getPage();
+        $element = $page->find('css', $selector);
+
+        if (empty($element)) {
+            throw new Exception("No html element found for the selector ('$selector')");
+        }
+
+        $element->click();
+    }
+
+    /**
      * Click on the link or button which is located inside the second element.
      *
      * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
@@ -831,37 +846,46 @@ class BehatGeneral extends BehatBase {
     * @param string $property
     * @param string $location
     */
-   public function get_property_call_funct($step_funct, $text, $property, $location = null) {
-     $css_locator = get_property($property, $location);
-     // get_property returns null if locator not found
-     if (!$css_locator) {
+    public function get_property_call_funct($step_funct, $text, $property, $location = null) {
+        $css_locator = get_property($property, $location);
+        // get_property returns null if locator not found
+        if (!$css_locator) {
             throw new ExpectationException('"A property called "' . $property . '" was not found in the properties.php file. Check that file or try passing a css locator directly"',
             $this->getSession());
-     }
-     else {
-       // switch covers steps in BehatGeneral that pass a css_locator
-       switch ($step_funct) {
-         case "click on":
-             $funct = "i_click_on_in_the";
-             break;
-         case "follow":
-             $funct = "i_follow_in_the";
-             break;
-         case "press":
-             $funct = "i_press_in_the";
-             break;
-         case "should see":
-             $funct = "assert_element_contains_text";
-             break;
-         case "should not see":
-             $funct = "assert_element_not_contains_text";
-             break;
-         }
-      $this->$funct($text, $css_locator[0], $css_locator[1]);
-     }
-   }
+        }
+        else {
+            // switch covers steps in BehatGeneral that pass a css_locator
+            switch ($step_funct) {
+                case "click on":
+                    $funct = "i_click_on_in_the";
+                    break;
+                case "follow":
+                    $funct = "i_follow_in_the";
+                    break;
+                case "press":
+                    $funct = "i_press_in_the";
+                    break;
+                case "should see":
+                    $funct = "assert_element_contains_text";
+                    break;
+                case "should not see":
+                    $funct = "assert_element_not_contains_text";
+                    break;
+            }
+            $this->$funct($text, $css_locator[0], $css_locator[1]);
+        }
+    }
 
-     /**
+    /**
+    * @Given I click on the :property property
+    * @param string $property
+    */
+    public function click_on_property($property) {
+        $property = get_property($property);
+        $this->i_click_on_the($property[0]);
+    }
+
+    /**
      * @Then /^I should see "(?P<text_string>(?:[^"]|\\")*)" in the
      * "(?P<property_string>(?:[^"]|\\")*)" property in "(?P<location_string>(?:[^"]|\\")*)"$/
      * @param string $text
@@ -870,14 +894,14 @@ class BehatGeneral extends BehatBase {
      */
     public function should_see_property_in_location($text, $property, $location) {
 
-      $css_locator = get_property_in_location($property, $location);
-      if (!$css_locator) {
-             throw new ExpectationException('"A property called $property was not found in the properties.php file. Check that file or try passing a css locator directly"',
-                      $this->getSession());
-      }
-      else {
-        $this->assert_element_contains_text($text, $css_locator[0], $css_locator[1]);
-      }
+        $css_locator = get_property_in_location($property, $location);
+        if (!$css_locator) {
+            throw new ExpectationException('"A property called $property was not found in the properties.php file. Check that file or try passing a css locator directly"',
+            $this->getSession());
+        }
+        else {
+            $this->assert_element_contains_text($text, $css_locator[0], $css_locator[1]);
+        }
     }
 
     /**

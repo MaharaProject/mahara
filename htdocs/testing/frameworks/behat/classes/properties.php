@@ -15,6 +15,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Latest changes I can view'   => array(".bt-newviews", "css_element"),
     'Resume field block'          => array(".bt-resumefield", "css_element"),
     'Watched pages'               => array(".bt-watchlist", "css_element"),
+    'Select'                      => array(".btn[title='Select']", "css_element"),
     'Comment preview'             => array(".commentreplyview", "css_element"),
     'Comment text'                => array(".comment-text", "css_element"),
     'Extensions sub-menu'         => array(".configextensions ul", "css_element"),
