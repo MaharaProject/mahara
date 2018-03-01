@@ -1,13 +1,20 @@
 @javascript @core @core_artefact @core_content
-Feature: Creating folders
-   In order to fill in a folder with content
-   As an admin I need to create a folder with other folders inside
-   So I can add files to it
+Feature: Creating folders and subfolders with images inside
+   In order to organise my files
+   As an user I need to create folders with other folders inside
+   So I can add files to them
 
+Background:
+    Given the following "users" exist:
+    | username | password | email | firstname | lastname | institution | authname | role |
+    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+
+    And the following "pages" exist:
+    | title | description | ownertype | ownername |
+    | Page UserA_01 | Page 01 | user | UserA |
 
 Scenario: Creating sub folder and attaching files (Bug 1426983)
-    # Log in as "Admin user"
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Creating folder 1
     When I choose "Files" in "Content" from main menu
     And I fill in "Folder1" for "files_filebrowser_createfolder_name"
@@ -44,3 +51,16 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     # Verifying all 2 folders are still there
     Then I should see "Folder1"
     And I should see "Folder2"
+
+    # Check folder can be inserted into block and image displayed on a page(Bug 1679886)
+    # this could be expanded to check the other folder block options
+    Given I choose "Pages and collections" in "Portfolio" from main menu
+    And I click on "Edit" in "Page UserA_01" panel menu
+    And I expand "Media" node
+    And I follow "Folder"
+    And I press "Add"
+    And I expand "Folders" node
+    And I click on "Select" in "Folder1" row
+    And I press "Save"
+    And I display the page
+    Then I should see images within the block "Folder1"
