@@ -35,6 +35,8 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I follow "Recent journal entries"
     And I press "Add"
     And I press "Save"
+    And I scroll to the base of id "block-category-blog"
+    And I collapse "Journals" node in the "blocktype sidebar" property
     # Adding profile info block
     And I expand "Personal info" node in the "blocktype sidebar" property
     And I follow "Profile information"

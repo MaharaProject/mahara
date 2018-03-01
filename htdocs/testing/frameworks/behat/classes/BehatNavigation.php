@@ -188,6 +188,16 @@ class BehatNavigation extends BehatBase {
     }
 
     /**
+     * Collapse the selected node that matches the text which is located inside the second element.
+     *
+     * @Given /^I collapse "(?P<element_string>(?:[^"]|\\")*)" node in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
+     * @Given I collapse :element node in the :property property
+     */
+    public function i_collapse_node_in_the($element = null, $nodeelement = null, $nodeselectortype = null, $property = null) {
+        $this->i_expand_node_in_the($element, $nodeelement, $nodeselectortype, $property);
+    }
+
+    /**
      * Expands the selected node that matches the text which is located inside the second element.
      *
      * @Given /^I expand "(?P<element_string>(?:[^"]|\\")*)" node in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
