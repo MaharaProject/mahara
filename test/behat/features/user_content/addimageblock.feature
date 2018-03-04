@@ -25,7 +25,7 @@ Scenario: Create Image block
     And I follow "Image"
     And I attach the file "Image1.jpg" to "File"
     Then I should see "Image - Image1.jpg"
-    And I set the field "Show description" to "1"
+    And I enable the switch "Show description"
     And I press "Save"
     And I scroll to the top
     And I follow "Display page"
