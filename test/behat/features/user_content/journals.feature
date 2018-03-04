@@ -31,7 +31,7 @@ Scenario: Add Journal block to the page
 
     Given I follow "Journal" in the "blocktype sidebar" property
     And I press "Add"
-    And I set the field "Mars journal" to "1"
+    And I select the radio "Mars journal"
     And I press "Save"
     And I display the page
     Then I should see "Spacefood is kind of gross"
@@ -40,7 +40,7 @@ Scenario: Add specific Journal entry to the page
     Given I follow "Journal entry" in the "blocktype sidebar" property
     And I press "Add"
     And I wait "1" seconds
-    And I set the field "I'm going to Mars!" to "1"
+    And I select the radio "I'm going to Mars! (Mars journal)"
     And I press "Save"
     And I display the page
     Then I should see "I just passed my exam"
@@ -49,7 +49,7 @@ Scenario: Add specific Journal entry to the page
 Scenario: Add a recent journal entries block to the page
     Given I follow "Recent journal entries" in the "blocktype sidebar" property
     And I press "Add"
-    And I set the field "Mars journal" to "1"
+    And I select the radio "Mars journal"
     And I press "Save"
     And I display the page
     Then I should see "Spacefood"

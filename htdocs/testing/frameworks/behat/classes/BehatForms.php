@@ -653,6 +653,7 @@ class BehatForms extends BehatBase {
         $page = $this->getSession()->getPage();
         foreach ($page->findAll('css', 'label') as $label) {
             if ($textliteral === "'" . $label->getText() . "'" ||
+                $textliteral === '"' . $label->getText() . '"' ||
                 $textliteral === $this->escaper->escapeLiteral(preg_replace('/"/', '\"', $label->getHtml()))) {
                 $radioButton = $page->find('css', '#' . $label->getAttribute('for'));
                 $radioButton->click();
