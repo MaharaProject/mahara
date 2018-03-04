@@ -13,6 +13,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Arrow-bar nav'               => array(".arrow-bar", "css_element"),
     'My portfolios'               => array(".bt-myviews", "css_element"),
     'Latest changes I can view'   => array(".bt-newviews", "css_element"),
+    'Resume field block'          => array(".bt-resumefield", "css_element"),
     'Watched pages'               => array(".bt-watchlist", "css_element"),
     'Comment preview'             => array(".commentreplyview", "css_element"),
     'Comment text'                => array(".comment-text", "css_element"),

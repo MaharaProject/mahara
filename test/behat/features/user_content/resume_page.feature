@@ -14,6 +14,10 @@ Background:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
 
+     And the following "pages" exist:
+     | title | description | ownertype | ownername |
+     | Page UserA_01 | Page 01| user | UserA |
+
 Scenario: Editing admin resume page (Bug 1426983)
     Given I log in as "UserA" with password "Kupuhipa1"
     # Editing resume
@@ -277,10 +281,18 @@ Scenario: Adding interests
     And I follow "Interests"
     And I press "Edit"
     And I set the following fields to these values:
-    | Interest | test |
+    | Interest | running, swimming, skydiving, clarinet |
     And I press "Save"
     And I should see "Saved successfully"
-    And I scroll to the top
+    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I click on "Edit" in "Page UserA_01" panel menu
+    And I expand "Personal info" node
+    And I follow "One résumé field"
+    And I press "Add"
+    And I select the radio "Interests"
+    And I press "Save"
+    And I display the page
+    And I should see "clarinet" in the "Resume field block" property
 
 Scenario: Adding license info
     Given I log in as "UserA" with password "Kupuhipa1"
