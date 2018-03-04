@@ -1,0 +1,42 @@
+.arrow-bar {
+    // to theme the Résumé nav blue
+    &.resume {
+        .nav-inpage {
+            &.nav > li {
+                & > a {
+                    color: $arrow-text-color;
+                }
+                &.active > a,
+                &.active > button  {
+                    color: $arrow-link-active-color;
+                    background-color: $arrow-link-background-color;
+                }
+                & > a:hover {
+                    color: $arrow-link-hover-color;
+                    background-color: $arrow-link-background-color;
+                }
+            }
+        }
+    }
+
+
+    // to theme the Groups nav blue
+    &.group {
+        .nav-inpage {
+            &.nav > li {
+                & > a {
+                    color: $arrow-text-color;
+                }
+                &.active > a,
+                &.active > button  {
+                    color: $arrow-link-active-color;
+                    background-color: $arrow-link-background-color;
+                }
+                & > a:hover {
+                    color: $arrow-link-hover-color;
+                    background-color:$arrow-link-background-color;
+                }
+            }
+        }
+    }
+}
