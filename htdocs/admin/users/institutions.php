@@ -1020,7 +1020,7 @@ function institution_submit(Pieform $form, $values) {
             $page->ctime = $now;
             $page->mtime = $now;
             $page->mauthor = $USER->get('id');
-            $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('staticpageconfiginstitution', 'install'));
+            $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('staticpageconfiginstitutions', 'install', get_config('wwwroot') . 'admin/users/institutionpages.php'));
             $page->institution = $newinstitution->name;
             insert_record('site_content', $page);
 

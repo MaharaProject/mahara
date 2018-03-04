@@ -781,7 +781,7 @@ function core_install_lastcoredata_defaults() {
         $page = new stdClass();
         $page->ctime = $now;
         $page->institution = 'mahara';
-        $page->content = get_string($name . 'defaultcontent', 'install', get_string('staticpageconfigdefault', 'install'));
+        $page->content = get_string($name . 'defaultcontent', 'install', get_string('staticpageconfigdefaults', 'install',  get_config('wwwroot') . 'admin/site/pages.php'));
         $page->name = $name;
         $page->mtime = $now;
         $page->mauthor = $userid;
@@ -793,7 +793,7 @@ function core_install_lastcoredata_defaults() {
         $page = new stdClass();
         $page->ctime = $now;
         $page->institution = 'mahara';
-        $page->content = get_string($name . 'defaultcontent', 'install', get_string('staticpageconfigdefault', 'install'));
+        $page->content = get_string($name . 'defaultcontent', 'install', get_string('versionedpageconfigdefault', 'install', get_config('wwwroot') . 'admin/site/privacy.php?fs=' . $name));
         $page->type = $name;
         $page->author = $userid;
         $page->version = '1.0';
