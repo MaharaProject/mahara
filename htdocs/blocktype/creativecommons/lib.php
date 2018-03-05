@@ -81,9 +81,11 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
     public static function get_instance_config_javascript(BlockInstance $instance) {
         return array('js/creativecommons.js');
     }
-
+    //sets wording for block
     public static function instance_config_save($values) {
         $license = 'by';
+        $values['noncommercial'] = (isset($values['noncommercial']) && !empty($values['noncommercial'])) ? '0' : '1';
+
         if (1 == $values['noncommercial']) {
             $license .= '-' . self::noncommercial;
         }
@@ -101,9 +103,8 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
     public static function instance_config_form(BlockInstance $instance) {
         global $THEME;
         $configdata = $instance->get('configdata');
-
-        $noncommercial = 0;
         $noderivatives = 1;
+        $noncommercial = 0;
 
         if (isset($configdata['license'])) {
             $noncommercial = !(strpos($configdata['license'], self::noncommercial) === false);
@@ -139,42 +140,37 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
             ),
 
             'noncommercial' => array(
-                'type' => 'radio',
+                'type'  => 'switchbox',
                 'title' => get_string('config:noncommercial', 'blocktype.creativecommons'),
-                'options' => array(
-                                   0 => get_string('yes'),
-                                   1 => get_string('no'),
-                                   ),
                 'onclick' => 'toggle_seal();',
-                'defaultvalue' => $noncommercial,
+                'defaultvalue' => !$noncommercial,
                 'help' => true,
-                'rules' => array('required'    => true),
-            ),
+              ),
 
             'noderivatives' => array(
-                'type' => 'radio',
+                'type' => 'select',
                 'title' => get_string('config:noderivatives', 'blocktype.creativecommons'),
+                'defaultvalue' => $noderivatives,
+                'collapseifoneoption' => true,
                 'options' => array(
                                    0 => get_string('yes'),
                                    1 => get_string('config:sharealike', 'blocktype.creativecommons'),
                                    2 => get_string('no'),
                                    ),
                 'onclick' => 'toggle_seal();',
-                'defaultvalue' => $noderivatives,
                 'help' => true,
-                'rules' => array('required'    => true),
             ),
 
             'version' => array(
-                'type' => 'radio',
+                'type' => 'select',
                 'title' => get_string('config:version', 'blocktype.creativecommons'),
+                'defaultvalue' => $version,
+                'collapseifoneoption' => true,
                 'options' => array(
                     30 => get_string('version30', 'blocktype.creativecommons'),
                     40 => get_string('version40', 'blocktype.creativecommons'),
                     ),
-                'defaultvalue' => $version,
                 'help' => true,
-                'rules' => array('required' => true),
             ),
         );
     }
