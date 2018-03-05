@@ -30,17 +30,23 @@
             <span title="{$item->active.title}" class="{$item->active.classes}"></span>
         </td>
         <td class="buttonscell framework">
-        <script type="application/javascript">
-            jQuery('#framework{$item->id}_enabled').on('change', function() {
-                // save switch
-                jQuery.post(config.wwwroot + 'module/framework/frameworks.json.php', jQuery('#framework{$item->id}').serialize())
-                .done(function(data) {
-                    console.log(data);
+            <script type="application/javascript">
+                jQuery('#framework{$item->id}_enabled').on('change', function() {
+                    // save switch
+                    jQuery.post(config.wwwroot + 'module/framework/frameworks.json.php', jQuery('#framework{$item->id}').serialize())
+                    .done(function(data) {
+                        console.log(data);
+                    });
                 });
-            });
-        </script>
-        {$item->config|safe}
-        {$item->delete|safe}
+            </script>
+            <div class="pull-right btn-group form-as-button">
+            {$item->config|safe}
+            {if $item->delete}
+                {$item->delete|safe}
+            {else}
+                <span class="no-delete-btn"></span>
+            {/if}
+            </div>
         </td>
     </tr>
 {/foreach}
