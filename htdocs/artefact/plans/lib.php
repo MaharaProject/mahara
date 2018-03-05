@@ -159,7 +159,7 @@ class ArtefactTypePlan extends ArtefactType {
     }
 
     public static function submit(Pieform $form, $values) {
-        global $USER, $SESSION;
+        global $USER, $SESSION, $view;
 
         $new = false;
 
@@ -185,12 +185,17 @@ class ArtefactTypePlan extends ArtefactType {
 
         $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));
 
-        if ($new) {
-            redirect('/artefact/plans/plan.php?id='.$artefact->get('id'));
+        if ($view && $USER->can_edit_view($view)) {
+            $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+        }
+        else if ($new) {
+            $returnurl = get_config('wwwroot') . 'artefact/plans/plan.php?id=' . $artefact->get('id');
         }
         else {
-            redirect('/artefact/plans/index.php');
+            $returnurl = get_config('wwwroot') . 'artefact/plans/index.php';
         }
+
+        redirect($returnurl);
     }
 
     /**
@@ -198,13 +203,22 @@ class ArtefactTypePlan extends ArtefactType {
     *
     */
     public static function get_form($plan=null) {
+        global $USER, $view;
+
+        if ($view && $USER->can_edit_view($view)) {
+            $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+        }
+        else {
+            $returnurl = get_config('wwwroot') . 'artefact/plans/index.php';
+        }
+
         require_once('license.php');
         $elements = call_static_method(generate_artefact_class_name('plan'), 'get_planform_elements', $plan);
         $elements['submit'] = array(
             'type' => 'submitcancel',
             'class' => 'btn-primary',
             'value' => array(get_string('saveplan','artefact.plans'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'artefact/plans/index.php',
+            'goto' => $returnurl,
         );
         $planform = array(
             'name' => empty($plan) ? 'addplan' : 'editplan',
@@ -440,13 +454,22 @@ class ArtefactTypeTask extends ArtefactType {
     *
     */
     public static function get_form($parent, $task=null) {
+        global $USER, $view;
+
+        if ($view && $USER->can_edit_view($view)) {
+            $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+        }
+        else {
+            $returnurl = get_config('wwwroot') . 'artefact/plans/plan.php?id=' . $parent;
+        }
+
         require_once('license.php');
         $elements = call_static_method(generate_artefact_class_name('task'), 'get_taskform_elements', $parent, $task);
         $elements['submit'] = array(
             'type' => 'submitcancel',
             'class' => 'btn-primary',
             'value' => array(get_string('savetask','artefact.plans'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'artefact/plans/plan.php?id=' . $parent,
+            'goto' => $returnurl,
         );
         $taskform = array(
             'name' => empty($task) ? 'addtasks' : 'edittask',
@@ -545,7 +568,7 @@ class ArtefactTypeTask extends ArtefactType {
     }
 
     public static function submit(Pieform $form, $values) {
-        global $USER, $SESSION;
+        global $USER, $SESSION, $view;
 
         if (!empty($values['task'])) {
             $id = (int) $values['task'];
@@ -571,7 +594,14 @@ class ArtefactTypeTask extends ArtefactType {
 
         $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));
 
-        redirect('/artefact/plans/plan.php?id='.$values['parent']);
+        if ($view && $USER->can_edit_view($view)) {
+            $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+        }
+        else {
+            $returnurl = get_config('wwwroot') . 'artefact/plans/plan.php?id=' . $values['parent'];
+        }
+
+       redirect($returnurl);
     }
 
     /**

@@ -20,7 +20,15 @@ if (!PluginArtefactPlans::is_active()) {
     throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('plans','artefact.plans')));
 }
 
-$id = param_integer('id',0);
+$id = param_integer('id', 0);
+$viewid = param_integer('view', 0);
+if ($viewid) {
+    require_once('view.php');
+    $view = new View($viewid);
+}
+else {
+    $view = null;
+}
 if ($id) {
     define('SECTION_PAGE', 'newtask');
     $plan = new ArtefactTypePlan($id);

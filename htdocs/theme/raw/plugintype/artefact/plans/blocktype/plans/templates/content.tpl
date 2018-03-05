@@ -1,5 +1,21 @@
 {foreach from=$plans item=plan}
 <div class="panel-body flush">
+    {if $editing}
+        <div class="pull-right btn-group">
+            <a class="btn btn-default btn-sm" href="{$WWWROOT}artefact/plans/edit/index.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=editspecific arg1=$plan.title)|escape:html|safe}">
+                <span class="icon icon-pencil"></span>
+                <span class="sr-only">{str tag='edit'}</span>
+            </a>
+            <a class="btn btn-default btn-sm" href="{$WWWROOT}artefact/plans/new.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=addtaskspecific section='artefact.plans' arg1=$plan.title)|escape:html|safe}">
+                <span class="icon icon-plus"></span>
+                <span class="sr-only">{str tag='addtask' section='artefact.plans'}</span>
+            </a>
+            <a class="btn btn-default btn-sm" href="{$WWWROOT}artefact/plans/delete/index.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=deletespecific arg1=$plan.title)|escape:html|safe}">
+                <span class="icon icon-trash text-danger"></span>
+                <span class="sr-only">{str tag='Delete'}</span>
+            </a>
+        </div>
+    {/if}
     <strong>{$plan.title}</strong>
     <p>{$plan.description}</p>
 

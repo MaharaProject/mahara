@@ -76,7 +76,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                 }
                 else {
                     $baseurl = $instance->get_view()->get_url();
-                    $baseurl .= ((false === strpos($baseurl, '?')) ? '?' : '&') . 'block=' . $blockid . '&planid=' . $planid;
+                    $baseurl .= ((false === strpos($baseurl, '?')) ? '?' : '&') . 'block=' . $blockid . '&planid=' . $planid . '&editing=' . $editing;
                     $pagination = array(
                         'baseurl'   => $baseurl,
                         'id'        => 'block' . $blockid . '_plan' . $planid . '_pagination',
@@ -86,7 +86,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                 }
                 $configdata['view'] = $instance->get('view');
                 $configdata['block'] = $blockid;
-                ArtefactTypeTask::render_tasks($tasks, $template, $configdata, $pagination);
+                ArtefactTypeTask::render_tasks($tasks, $template, $configdata, $pagination, $editing);
 
                 if ($exporter && $tasks['count'] > $tasks['limit']) {
                     $artefacturl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $planid
@@ -107,6 +107,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                 $tasks['planid'] = $planid;
                 array_push($alltasks, $tasks);
             }
+            $smarty->assign('editing', $editing);
             $smarty->assign('plans', $plans);
             $smarty->assign('alltasks', $alltasks);
         }
