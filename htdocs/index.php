@@ -38,6 +38,15 @@ if ($USER->is_logged_in()) {
     $stylesheets = array();
     $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 
+    // Set up skin, if the page has one
+    $viewskin = $view->get('skin');
+    if ($viewskin && get_config('skins') && can_use_skins($view->get('owner'), false, false) && (!isset($THEME->skins) || $THEME->skins !== false)) {
+        $skin = array('skinid' => $viewskin, 'viewid' => $view->get('id'));
+    }
+    else {
+        $skin = false;
+    }
+
     // include slimbox2 js and css files, if it is enabled...
     if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
         $langdir = (get_string('thisdirection', 'langconfig') == 'rtl' ? '-rtl' : '');
@@ -53,6 +62,7 @@ if ($USER->is_logged_in()) {
         array(),
         array(
             'stylesheets' => array('style/views.css'),
+            'skin' => $skin,
         )
     );
 
