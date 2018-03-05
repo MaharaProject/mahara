@@ -127,6 +127,11 @@ foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($sheet) . '">';
 }
 
+$issiteview = $view->get('institution') == 'mahara';
+$issitetemplate = ($view->get('template') == View::SITE_TEMPLATE ? true : false);
+$canedittitle = $view->can_edit_title();
+$canuseskins = !$issitetemplate && can_use_skins(null, false, $issiteview);
+
 $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 // Tell the user to change the view theme if the current one is no
 // longer available to them.
@@ -239,7 +244,8 @@ $displaylink = $view->get_url();
 if ($new) {
     $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
 }
-$smarty->assign('edittitle', $view->can_edit_title());
+$smarty->assign('edittitle', $canedittitle);
+$smarty->assign('canuseskins', $canuseskins);
 $smarty->assign('displaylink', $displaylink);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
