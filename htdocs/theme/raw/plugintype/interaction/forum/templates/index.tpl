@@ -81,7 +81,7 @@
                     {$forum->subscribe|safe}
                     {/if}
                 </td>
-
+                {if $admin}
                 <td class="right control-buttons">
                     <div class="btn-group">
                         <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index" class="btn btn-default btn-sm" title="{str tag=edit}">
@@ -95,6 +95,7 @@
                         </a>
                     </div>
                 </td>
+                {/if}
             </tr>
         {/foreach}
         <tbody>

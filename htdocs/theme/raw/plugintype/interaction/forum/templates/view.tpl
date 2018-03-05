@@ -132,14 +132,14 @@
                     {str tag="updateselectedtopics" section="interaction.forum"}
                 </button>
             </span>
+            {if $moderator}
+                {contextualhelp plugintype='interaction' pluginname='forum' section='updatemod'}
+            {else}
+                {contextualhelp plugintype='interaction' pluginname='forum' section='update'}
+            {/if}
         </div>
         {/if}
         <input type="hidden" name="sesskey" value="{$SESSKEY}">
-        {if $moderator}
-        {contextualhelp plugintype='interaction' pluginname='forum' section='updatemod'}
-        {else}
-        {contextualhelp plugintype='interaction' pluginname='forum' section='update'}
-        {/if}
     </form>
 </div>
 
