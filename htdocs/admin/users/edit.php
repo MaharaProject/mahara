@@ -593,9 +593,9 @@ function edituser_site_submit(Pieform $form, $values) {
     redirect('/admin/users/edit.php?id='.$user->id);
 }
 
-
 // Suspension/deletion controls
 $suspended = $user->get('suspendedcusr');
+$expired = ($user->get('active') == 0 && $user->get('expirymailsent') && !$suspended);
 if (empty($suspended)) {
     $suspendform = pieform(array(
         'name'       => 'edituser_suspend',
@@ -919,6 +919,10 @@ function edituser_institution_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('user', $user);
+$smarty->assign('expired', $expired);
+if ($expired) {
+    $smarty->assign('expiredon', get_string('expiredinfo', 'admin', format_date($user->get('expiry'), 'strftimedate')));
+}
 $smarty->assign('suspended', $suspended);
 if ($suspended) {
     $smarty->assign('suspendedby', get_string('suspendedinfo', 'admin', $suspender, $suspendedtime));
