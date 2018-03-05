@@ -664,6 +664,7 @@ class ArtefactTypeTask extends ArtefactType {
         $smarty->assign('tasks', $tasks);
         $smarty->assign('options', $options);
         $smarty->assign('view', (!empty($options['view']) ? $options['view'] : null));
+        $smarty->assign('block', (!empty($options['block']) ? $options['block'] : null));
         $tasks['tablerows'] = $smarty->fetch($template);
 
         if ($tasks['limit'] && $pagination) {

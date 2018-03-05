@@ -12,7 +12,8 @@
     margin: 20px 0;
 }
 
-.task-item .complete-task .icon {
+.task-item .complete-task .icon,
+.task-item .overdue-task .icon {
     margin-left: -8px; //correct alignment
 }
 
