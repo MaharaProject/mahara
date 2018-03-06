@@ -1813,7 +1813,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
     // If you're anonymous and your message is moderated or private, then you won't
     // be able to tell what happened to it. So we'll provide some more explanation in
     // the comment message.
-    if ($anonymous && $moderated) {
+    if ($moderated) {
         $message = get_string('commentsubmittedmoderatedanon', 'artefact.comment');
     }
     else if ($anonymous && $private) {

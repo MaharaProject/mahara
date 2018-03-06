@@ -58,7 +58,7 @@ $string['groupadmins'] = 'Group administrators';
 $string['messageempty'] = 'Your message is empty. Please enter a message or attach a file.';
 $string['Moderate'] = 'Moderate';
 $string['moderatecomments'] = 'Moderate comments';
-$string['moderatecommentsdescription1'] = 'Comments on pages will remain private until they are approved by you. Comments on individual content, e.g. files and journal entries, are excluded from the moderation.';
+$string['moderatecommentsdescription2'] = 'Comments on pages and artefacts remain private until you approve them. Comments by people not logged into their accounts always go into a moderation queue and need to be approved.';
 $string['newcommentnotificationsubject'] = 'New comment on %s';
 $string['progress_feedback'] = array(
     'Comment on another user\'s page',

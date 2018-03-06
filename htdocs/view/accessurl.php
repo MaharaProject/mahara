@@ -112,7 +112,7 @@ $form['elements']['more'] = array(
         'approvecomments' => array(
             'type'         => 'switchbox',
             'title'        => get_string('moderatecomments', 'artefact.comment'),
-            'description'  => get_string('moderatecommentsdescription1', 'artefact.comment'),
+            'description'  => get_string('moderatecommentsdescription2', 'artefact.comment'),
             'defaultvalue' => $view->get('approvecomments'),
         ),
         'template' => array(

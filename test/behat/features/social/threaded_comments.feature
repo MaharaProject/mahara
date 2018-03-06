@@ -105,6 +105,11 @@ Scenario: No private replies to anonymous comments
     And I fill in "Comment" with "Public comment by anonymous user"
     And I enable the switch "Make comment public"
     And I press "Comment"
+    # Public comments are now always moderated
+    When I log in as "AdminA" with password "Kupuh1pa!"
+    And I go to portfolio page "Page AdminA_01"
+    And I click on "Make comment public"
+    And I log out
     When I log in as "AdminB" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
     And I click on "Reply" in "Public comment by anonymous user" row
