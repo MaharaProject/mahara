@@ -77,7 +77,7 @@
         .fieldset-body {
             border: 1px solid $panel-default-border;
             padding: 10px 15px;
-            background: #fff;
+            background: $panel-bg;
             margin-bottom: -1px; //remove double border
             .jstabs & {
                 border: 0;
@@ -148,7 +148,7 @@
     .panel-heading {
         border: 0;
         a {
-            text-shadow: 1px 0 0 #fff;
+            text-shadow: 1px 0 0 $text-shadow;
         }
     }
 
@@ -219,7 +219,7 @@
     legend h4,
     legend h3 {
         a {
-            text-shadow: 1px 0 0 #fff;
+            text-shadow: 1px 0 0 $text-shadow;
             background-color: darken($panel-default-heading-bg, 1%);
             border: 1px solid $panel-default-border;
             border-bottom: 0;

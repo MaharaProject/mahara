@@ -1,14 +1,6 @@
 .arrow-bar {
-    // to theme the Résumé nav red
+    // to theme the Résumé nav blue
     &.resume {
-        background-color: lighten($arrow-link-color, 5%);
-
-        .arrow {
-            background-color: $arrow-link-color;
-            &:after {
-                border-left-color: $arrow-link-color;
-            }
-        }
         .nav-inpage {
             &.nav > li {
                 & > a {
@@ -16,7 +8,7 @@
                 }
                 &.active > a,
                 &.active > button  {
-                    color: $arrow-link-color;
+                    color: $arrow-link-active-color;
                     background-color: $arrow-link-background-color;
                 }
                 & > a:hover {
@@ -27,16 +19,9 @@
         }
     }
 
-    // to theme the Groups nav green
-    &.group {
-        background-color: lighten($arrow-link-group-color, 5%);
 
-        .arrow {
-            background-color: $arrow-link-group-color;
-            &:after {
-                border-left-color: $arrow-link-group-color;
-            }
-        }
+    // to theme the Groups nav blue
+    &.group {
         .nav-inpage {
             &.nav > li {
                 & > a {
@@ -44,7 +29,7 @@
                 }
                 &.active > a,
                 &.active > button  {
-                    color: $arrow-link-group-color;
+                    color: $arrow-link-active-color;
                     background-color: $arrow-link-background-color;
                 }
                 & > a:hover {

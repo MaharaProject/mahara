@@ -65,6 +65,8 @@ $link-hover-color:      darken($theme-primary-color, 5%) !default;
 //** Link hover decoration.
 $link-hover-decoration: underline !default;
 
+$text-shadow:           #fff;
+
 
 //== Typography
 //
@@ -610,6 +612,8 @@ $modal-backdrop-bg:           #000 !default;
 $modal-backdrop-opacity:      .5 !default;
 //** Modal header border color
 $modal-header-border-color:   #e5e5e5 !default;
+
+$modal-docked-header:         #fff;
 //** Modal footer border color
 $modal-footer-border-color:   $modal-header-border-color !default;
 

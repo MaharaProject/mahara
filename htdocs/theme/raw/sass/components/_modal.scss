@@ -162,9 +162,9 @@ $width-sm: 90%;
     .modal-header {
         background:  $brand-primary;
         padding: 10px 15px;
-        color: #fff;
+        color: $modal-docked-header;
          h4, a {
-            color: #fff;
+            color: $modal-docked-header;
         }
         &.modal-section {
             margin: 0 0 10px 0;
@@ -177,7 +177,7 @@ $width-sm: 90%;
             top: 1px;
             left: -29px;
             padding: 10px 7px 9px;
-            background: #fff;
+            background: $modal-docked-header;
             border: 1px solid $modal-header-border-color;
             border-right:0;
 

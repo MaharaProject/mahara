@@ -8,7 +8,7 @@ body, p {
 h1 {
     @extend .page-header;
     .admin & {
-        text-shadow: 1px 1px 0 rgba(#fff, 0.5);
+        text-shadow: 1px 1px 0 rgba($text-shadow, 0.5);
         color: $gray;
         border-bottom-color: $list-group-border;
     }
