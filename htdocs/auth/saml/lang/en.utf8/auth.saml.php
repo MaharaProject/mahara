@@ -80,6 +80,7 @@ $string['samlfieldforemail'] = 'SSO field for email';
 $string['samlfieldforfirstname'] = 'SSO field for first name';
 $string['samlfieldforsurname'] = 'SSO field for surname';
 $string['samlfieldforstudentid'] = 'SSO field for student ID';
+$string['samlfieldauthloginmsg'] = 'Wrong login message';
 $string['spentityid'] = "Service Provider entityId";
 $string['title'] = 'SAML';
 $string['updateuserinfoonlogin'] = 'Update user details on login';

@@ -18,3 +18,4 @@ $string['notusable'] = 'Please install the XML-RPC, Curl and OpenSSL PHP extensi
 $string['networkingdisabledonthissite'] = 'Networking is disabled on this site.';
 $string['networkservers'] = 'Network servers';
 $string['youhaveloggedinfrom1'] = 'Return to <a href="%s">%s</a>';
+$string['authloginmsgtitle'] = 'Wrong login message';

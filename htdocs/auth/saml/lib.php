@@ -90,7 +90,6 @@ class AuthSaml extends Auth {
         $this->config['loginlink'] = false;
         $this->config['institutionidp'] = '';
         $this->config['institutionidpentityid'] = '';
-        $this->config['parent'] = null;
         $this->config['authloginmsg'] = '';
         $this->instanceid = $id;
 
@@ -349,7 +348,6 @@ class PluginAuthSaml extends PluginAuth {
         'loginlink'              => 0,
         'institutionidpentityid' => '',
         'active'                 => 1,
-        'parent'                 => null,
         'authloginmsg'           => ''
     );
 
@@ -904,17 +902,6 @@ jQuery('document').ready(function($) {
 </script>
 EOF;
 
-        $instances = auth_get_auth_instances_for_institution($institution);
-        $options = array('None');
-        if (is_array($instances)) {
-            foreach($instances as $someinstance) {
-                if ($someinstance->requires_parent == 1 || $someinstance->authname == 'none' || $someinstance->authname == 'saml') {
-                    continue;
-                }
-                $options[$someinstance->id] = $someinstance->instancename;
-            }
-        }
-
         $elements = array(
             'instance' => array(
                 'type'  => 'hidden',
@@ -1039,22 +1026,15 @@ EOF;
                 'defaultvalue' => self::$default_config['studentidfield'],
                 'help' => true,
             ),
-            'parent' => array(
-                'type'                => 'select',
-                'title'               => get_string('parent','auth'),
-                'collapseifoneoption' => false,
-                'options'             => $options,
-                'defaultvalue'        => self::$default_config['parent'],
-                'help'   => true
-            ),
             'authloginmsg' => array(
                 'type'         => 'wysiwyg',
                 'rows'         => 10,
-                'cols'         => 70,
-                'title'        => '',
+                'cols'         => 50,
+                'title'        => get_string('samlfieldauthloginmsg', 'auth.saml'),
                 'description'  => get_string('authloginmsgnoparent', 'auth'),
                 'defaultvalue' => self::$default_config['authloginmsg'],
                 'help'         => true,
+                'class'        => 'under-label-help',
             ),
         );
 
@@ -1218,7 +1198,6 @@ EOF;
             'institutionvalue' => $values['institutionvalue'],
             'institutionregex' => $values['institutionregex'],
             'institutionidpentityid' => $entityid,
-            'parent' => $values['parent'],
             'authloginmsg' => $values['authloginmsg'],
         );
 
