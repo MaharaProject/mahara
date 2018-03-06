@@ -342,6 +342,7 @@ $string['columnlayout'] = 'Column layout';
 $string['layoutpreview'] = 'Layout preview';
 $string['layoutpreviewimage'] = 'Layout preview image';
 $string['Help'] = 'Help';
+$string['blockhelp'] = 'Block help';
 
 $string['by'] = 'by';
 $string['viewtitleby'] = '%s by <a href="%s">%s</a>';

@@ -1737,12 +1737,14 @@ class View {
 
         // Because of the reference in the above loop, $cat refers to the last item
         $cat['class'] = (isset($cat['class'])) ? $cat['class'] . ' last' : 'last';
-
+        $helplink = get_manual_help_link_array(array('blocktype', 'blocks'));
+        $manualhelplink = $helplink['prefix'] . '/' . $helplink['language'] . '/' . $helplink['version'] . '/' .  $helplink['suffix'];
         $blocktypelist = $this->build_blocktype_list($category);
         $smarty = smarty_core();
         $smarty->assign('categories', $categories);
         $smarty->assign('selectedcategory', $category);
         $smarty->assign('blocktypelist', $blocktypelist);
+        $smarty->assign('manualhelpblock', $manualhelplink);
         $smarty->assign('viewid', $this->get('id'));
         $smarty->assign('new', $new);
         return $smarty->fetch('view/blocktypecategorylist.tpl');

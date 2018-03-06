@@ -20,6 +20,26 @@ defined('INTERNAL') || die();
  */
 
 function get_manual_help_link($keys) {
+    $data = get_manual_help_link_array($keys);
+
+    $manuallink = sprintf('<a id="footerhelp" href="%s/%s/%s/%s">' . get_string('Help') . '</a>',
+        $data['prefix'],
+        $data['language'],
+        $data['version'],
+        $data['suffix']
+    );
+    return $manuallink;
+}
+
+/**
+ * Get link information in array format.
+ * Useful for json data return
+ *
+ * @param  array $keys An array of keys that indicate what help file we want
+ *
+ * @return array
+ */
+function get_manual_help_link_array($keys) {
     if (!is_array($keys)) {
         $keys = (array)$keys;
     }
@@ -31,13 +51,12 @@ function get_manual_help_link($keys) {
     else {
         $prefix = _get_manual_link_prefix();
     }
-    $manuallink = sprintf('<a rel="noopener" target="_blank" href="%s/%s/%s/%s">' . get_string('Help') . '</a>',
-        $prefix,
-        _get_manual_language(),
-        _get_mahara_version(),
-        _get_manual_help_link_suffix($keys)
+    $data = array('prefix' => $prefix,
+                  'language' => _get_manual_language(),
+                  'version' => _get_mahara_version(),
+                  'suffix' => _get_manual_help_link_suffix($keys)
     );
-    return $manuallink;
+    return $data;
 }
 
 /**
@@ -122,6 +141,7 @@ $manual_link_map = array(
     "" => "", // default - means go to manual homepage
     "adminhome|home" => "administration/overview.html#admin-home",
     "adminhome|registersite" => "administration/overview.html#register-your-mahara-site",
+    "blocktype|blocks" => "blocks/blocks.html",
     "configextensions|cleanurls" => "administration/extensions.html#clean-urls",
     "configextensions|filters" => "administration/extensions.html#html-filters",
     "configextensions|frameworks" => "administration/smartevidence.html#smartevidence-admin",

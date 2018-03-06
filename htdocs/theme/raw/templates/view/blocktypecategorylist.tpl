@@ -18,6 +18,10 @@
         </div>
     {/if}
 {/foreach}
+<a id="blockshelp" class="text-left blocktypelink btn btn-help hide-title-collapsed btn-default btn-accordion" href="{$manualhelpblock}">
+    <span class="icon icon-question-circle-o block-icon" role="presentation" aria-hidden="true"></span>
+    <span class="title">{str tag=blockhelp section=view}</span>
+</a>
 
 <div class="btn btn-primary text-right last collapse-expand" aria-hidden="true" data-trigger="col-collapse">
     <span class="icon icon-angle-double-left" role="presentation" aria-hidden="true"></span>

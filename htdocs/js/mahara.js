@@ -1049,3 +1049,37 @@ Number.isInteger = Number.isInteger || function(value) {
            isFinite(value) &&
            Math.floor(value) === value;
 };
+
+/**
+ * Wire up the 'help' footer link so it opens help in a new window/tab
+ */
+jQuery(document).ready(function($) {
+    if ($('#footerhelp').length > 0) {
+        var link = $('#footerhelp');
+        link.off('click');
+        link.on('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var newWnd = window;
+            newWnd.opener = null;
+            newWnd.open(link.prop('href'), '_blank');
+        });
+    }
+});
+
+/**
+ * Wire up the 'help' in blocks edit page so it opens help in a new window/tab
+ */
+jQuery(document).ready(function($) {
+    if ($('#blockshelp').length > 0) {
+        var link = $('#blockshelp');
+        link.off('click');
+        link.on('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var newWnd = window;
+            newWnd.opener = null;
+            newWnd.open(link.prop('href'), '_blank');
+        });
+    }
+});
