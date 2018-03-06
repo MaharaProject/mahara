@@ -23,7 +23,7 @@
     </div>
     {/if}
 
-    {if $posts}
+    {if $posts.count > 0}
     <div id="postlist" class="postlist list-group list-group-lite">
         {$posts.tablerows|safe}
     </div>
@@ -35,9 +35,9 @@
         {literal}}{/literal});
     </script>
     {else}
-    <div class="metadata">
+    <p class="no-results">
         {str tag=nopostsyet section=artefact.blog} {if !$blog->get('locked')}<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str tag=addone section=mahara}</a>{/if}
-    </div>
+    </p>
     {/if}
 
     {if $enablemultipleblogstext}

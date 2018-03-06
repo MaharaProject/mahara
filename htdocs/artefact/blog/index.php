@@ -102,6 +102,11 @@ $smarty->assign('blogs', $blogs);
 $smarty->assign('institutionname', $institutionname);
 $smarty->assign('group', $groupid);
 $smarty->assign('canedit', (!empty($group) ? $group->canedit : true));
+
+$smarty->assign('grouphref', get_config('wwwroot') . "artefact/blog/new/index.php?group=" . $groupid);
+$smarty->assign('sitehref', get_config('wwwroot') . "artefact/blog/new/index.php?institution=mahara");
+$smarty->assign('institutionhref', get_config('wwwroot') . "artefact/blog/new/index.php?institution=" . $institutionname);
+$smarty->assign('userhref', get_config('wwwroot') . "artefact/blog/new/index.php");
 $js = '';
 if ($blogs->pagination_js) {
     $js .= 'jQuery(function() {' . $blogs->pagination_js . '});';
