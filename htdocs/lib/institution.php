@@ -58,7 +58,8 @@ class Institution {
         'licensedefault' => null,
         'licensemandatory' => 0,
         'dropdownmenu' => 0,
-        'skins' => true
+        'skins' => true,
+        'tags' => false
     );
 
     // This institution's config settings
@@ -124,6 +125,7 @@ class Institution {
             // int 1 (i.e. true/false)
             case 'registerallowed':
             case 'skins':
+            case 'tags':
             case 'suspended':
             case 'licensemandatory':
             case 'expirymailsent':

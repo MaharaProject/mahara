@@ -5874,5 +5874,15 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('event_type', $event, $event);
     }
 
+    if ($oldversion < 2018061800) {
+        log_debug('Add a "tags" field to the institution table');
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('tags');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+    }
+
     return $status;
 }

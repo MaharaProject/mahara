@@ -13,6 +13,7 @@ Scenario: Creating an institution (selenium test)
     And I press "Add institution"
     And I fill in the following:
     | Institution name | Institution One |
+    And I enable the switch "Allow institution tags"
     And I press "Submit"
     # Verifying the institution has been created
     Then I should see "Institution added successfully"

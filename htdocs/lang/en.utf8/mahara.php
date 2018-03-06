@@ -214,6 +214,10 @@ $string['norelatedtaggeditemstoviewfiltered'] = 'There is no %s you can view wit
 $string['selfsearch'] = 'Search my portfolio';
 $string['resultsperpage'] = 'Results per page';
 
+// Institution tags
+$string['allowinstitutiontags'] = 'Allow institution tags';
+$string['allowinstitutiontagsdescription'] = 'Administrators can define a set of tags that institution members can use.';
+
 // License metadata
 $string['license'] = 'License';
 $string['licenseother'] = 'Other license (enter URL)';
