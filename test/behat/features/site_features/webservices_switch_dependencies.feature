@@ -5,7 +5,7 @@ As an admin
 So I can benefit from the mahara/moodle cross over.
 
 Scenario: Testing web service admin page on/off switches, and checking test client page is accessible (Bug 1431540)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Configuration" in "Web services" from administration menu
  # Toggle Web service requester master switch
  And I disable the switch "Allow outgoing web service requests:"

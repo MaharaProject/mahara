@@ -84,6 +84,8 @@ $elements = array(
         'type' => 'password',
         'title' => get_string('password'),
         'rules' => array('required' => true),
+        'description' => get_password_policy_description(),
+        'showstrength' => true,
     ),
     'staff' => array(
         'type' => 'switchbox',
@@ -144,7 +146,7 @@ unset($prefs);
 
 $form = pieform(array(
     'name'       => 'adduser',
-    'class' => 'panel panel-default panel-body',
+    'class'      => 'panel panel-default panel-body',
     'autofocus'  => false,
     'template'   => 'adduser.php',
     'templatedir' => pieform_template_dir('adduser.php'),
@@ -206,7 +208,13 @@ function adduser_validate(Pieform $form, $values) {
     }
 
     if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
-        $form->set_error('password', get_string('passwordinvalidform', 'auth.' . $authobj->type));
+        if ($authobj->type == 'internal') {
+            $form->set_error('password', get_password_policy_description('error'));
+        }
+        else {
+            // Allow auth type to return their own error message - Currently not used
+            $form->set_error('password', get_string('passwordinvalidform' . $authobj->type, 'auth.' . $authobj->type));
+        }
     }
 
     if (param_exists('createmethod') && param_variable('createmethod') == 'leap2a') {

@@ -6,14 +6,14 @@ Feature: Mahara users can create their blogs
  Background:
   Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
   And the following "pages" exist:
   | title | description| ownertype | ownername |
   | Page UserA_01 | Page 01 | user | UserA |
 
  Scenario: Create blogs
-  Given I log in as "UserA" with password "Kupuhipa1"
+  Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Settings" in "Setting" from user menu
   And I fill in the following:
     | tagssideblockmaxtags | 10 |

@@ -17,6 +17,16 @@ select {
     }
 }
 
+.password-progress {
+    margin-top: 8px;
+    margin-bottom: 0;
+    padding: 0 !important;
+
+    .step2 & {
+        width: 100% !important;
+    }
+}
+
 label,
 .pseudolabel {
     @extend .control-label;

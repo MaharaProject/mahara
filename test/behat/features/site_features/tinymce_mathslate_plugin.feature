@@ -10,7 +10,7 @@ Background:
   | Page mahara_01 | Page 01 | institution | mahara |
 
 Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Site options" in "Configure site" from administration menu
  And I follow "General settings"
  And I enable the switch "Enable MathJax"

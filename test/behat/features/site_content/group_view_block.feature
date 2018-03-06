@@ -11,9 +11,9 @@ Background:
      | insttwo | Institution Two | ON | OFF |
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | instone | internal | staff |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | instone | internal | member |
-     | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | instone | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | instone | internal | staff |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | instone | internal | member |
+     | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | instone | internal | member |
     And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
      | GroupA | UserA | GroupA owned by UserA | standard | ON | OFF | all | ON | OFF | UserB, UserC |  |
@@ -88,7 +88,7 @@ Scenario: The list of group pages, shared/submitted pages and collections should
 be displayed page by page and sorted by "page title (A-Z)" or "most recently updated".
 These list must take into account the sort option chosen in the block config (Bug 1457246)
     # Log in as a normal user
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Angela"
     And I should see "GroupA"
@@ -110,7 +110,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Save"
     And I log out
     # Log in as a normal user
-    Given I log in as "UserB" with password "Kupuhipa1"
+    Given I log in as "UserB" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Bob"
     And I should see "GroupA"
@@ -123,7 +123,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Save"
     And I log out
     # Check the list of shared pages to group "GroupA"
-    Given I log in as "UserC" with password "Kupuhipa1"
+    Given I log in as "UserC" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Cecilia"
     And I should see "GroupA"
@@ -157,7 +157,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should not see "Collection UserA_05" in the "Collections shared with this group" property
     And I log out
     # Check that we can see submitted pages before editing/saving the configuration for group pages block
-    Given I log in as "UserB" with password "Kupuhipa1"
+    Given I log in as "UserB" with password "Kupuh1pa!"
     And I should see "GroupA"
     And I choose "My groups" in "Groups" from main menu
     And I scroll to the base of id "mygroups"
@@ -170,7 +170,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Yes"
     And I log out
     # Change the sort options in the "Group pages" block
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I follow "GroupA (Administrator)"
     And I should see "Page UserB_01"
     And I follow "Pages and collections (tab)"
@@ -265,7 +265,7 @@ These list must take into account the sort option chosen in the block config (Bu
     # Check pages and collections are shown in correct section
     # Share and submit pages and collections
     # Log in as a normal user
-    Given I log in as "UserC" with password "Kupuhipa1"
+    Given I log in as "UserC" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Cecilia"
     And I should see "GroupD"
@@ -304,7 +304,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Yes"
     And I log out
     #Check cases
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Angela"
     And I follow "GroupD"
@@ -315,7 +315,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Collection UserC_04" in the "Collections shared with this group" property
     And I should see "Collection UserC_03" in the "Submissions to this group" property
     And I log out
-    Given I log in as "UserB" with password "Kupuhipa1"
+    Given I log in as "UserB" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Bob"
     And I should see "GroupD"
@@ -331,7 +331,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I log out
     # Share and submit pages and collections - for course group "GroupC"
     # Log in as a normal user
-    Given I log in as "UserC" with password "Kupuhipa1"
+    Given I log in as "UserC" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Cecilia"
     And I should see "GroupC"
@@ -376,7 +376,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Yes"
     And I log out
     #Check cases
-    Given I log in as "UserB" with password "Kupuhipa1"
+    Given I log in as "UserB" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Bob"
     And I should see "GroupC"

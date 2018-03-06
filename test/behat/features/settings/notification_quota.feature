@@ -7,11 +7,11 @@ Feature: Notification when a user is about to reach his quota
 Background:
     Given the following "users" exist:
     | username  | password  | email | firstname | lastname  | institution   | authname  |role   |
-    | UserA   | Kupuhipa1   | UserA@example.org   | Angela   | User | mahara    | internal  | member    |
+    | UserA   | Kupuh1pa!   | UserA@example.org   | Angela   | User | mahara    | internal  | member    |
 
 Scenario Outline: When quota notification threshold is changed, send notifications to users who are now over threshold (Bug 1367539)
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     # Modifying user quota quota to 2MB
     And I choose "Extensions" from administration menu
     And I go to "admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=file&type=file"
@@ -29,7 +29,7 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     # Log out as "Admin user"
     And I log out
     # Log in as user 1
-    When I log in as "UserA" with password "Kupuhipa1"
+    When I log in as "UserA" with password "Kupuh1pa!"
     # Upload files to reach quota threshold of 50%
     And I choose "Files" in "Content" from main menu
     And I attach the file "Image1.jpg" to "File"

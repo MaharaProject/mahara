@@ -14,7 +14,7 @@ Background:
   | GroupA | admin | GroupA owned by admin | standard | ON | OFF | all |
 
 Scenario: Turning on and of switches in Journal configuration block (Bug 1431569)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  # Navigating to switchbox in Journal block
  And I choose "Journals" in "Content" from main menu
  And I follow "New entry"
@@ -23,7 +23,7 @@ Scenario: Turning on and of switches in Journal configuration block (Bug 1431569
 
 
 Scenario: Creating a Journal entry
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  # Navigating to switchbox in Journal block
  And I choose "Journals" in "Content" from main menu
  And I follow "New entry"

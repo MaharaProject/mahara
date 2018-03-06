@@ -17,7 +17,7 @@ Background:
     | Collection admin_01 | Collection 01 | user | admin | Page admin_01, Page admin_02, Page admin_03, Page admin_04 |
 
 Scenario: Accessing annotation block
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  # Navigating to admin block to turn it on
  And I choose "Plugin administration" in "Extensions" from administration menu
  And I press "activate_blocktype_annotation_submit"

@@ -6,8 +6,8 @@ Feature: Looking at the "Latest Pages" (newviews) block on my dashboard
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
     And the following "pages" exist:
       | title | description | ownertype | ownername |
       | Page UserA_01 | Page 01 | user | UserA |
@@ -27,7 +27,7 @@ Background:
 
 Scenario: Share pages and collections to a group.
 The list of shared pages must take into account of access date (Bug 1374163)
-    And I log in as "UserB" with password "Kupuhipa1"
+    And I log in as "UserB" with password "Kupuh1pa!"
     Then I should see "Page UserA_01" in the "Latest changes I can view" property
     And I should see "Collection UserA_01" in the "Latest changes I can view" property
     # I shouldn't see the pages I didn't share

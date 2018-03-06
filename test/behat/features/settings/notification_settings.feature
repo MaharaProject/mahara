@@ -6,11 +6,11 @@ Secondly, check that the notification types are listed alphabetically
 Background:
     Given the following "users" exist:
     | username  | password  | email | firstname | lastname  | institution   | authname  | role  |
-    | UserA   | Kupuhipa1   | UserA@example.org   | Angela   | User | mahara    | internal  | member    |
+    | UserA   | Kupuh1pa!   | UserA@example.org   | Angela   | User | mahara    | internal  | member    |
 
 Scenario: Confirm that multiple notification choices are available (Bug #1299993)
     # Log in as admin
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     # Navigating to notification settings
     And I choose "Site options" in "Configure site" from administration menu
     And I follow "Notification settings"
@@ -42,7 +42,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     # Log out as "Admin User"
     And I log out
     # Logging in as user1
-    Then I log in as "UserA" with password "Kupuhipa1"
+    Then I log in as "UserA" with password "Kupuh1pa!"
     # Navigating to notification settings
     And I choose "Notifications" in "Settings" from user menu
     # Verifying the "None" option is not available for the following notifications
@@ -84,7 +84,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     And I should see "Preferences saved"
 
 Scenario: Admin logs in and checks notification settings (Bug 1388682)
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Site options" in "Configure site" from administration menu
     And I click on "Notification settings"
     #see the notification settings in alphabetical order.

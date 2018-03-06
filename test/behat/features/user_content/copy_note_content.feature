@@ -6,13 +6,13 @@ Background:
 
 Given the following "users" exist:
   | username | password | email | firstname | lastname | institution | authname | role |
-  | UserA | Kupuhipa1 | UserA@example.com | Angela | User | mahara | internal | member |
+  | UserA | Kupuh1pa! | UserA@example.com | Angela | User | mahara | internal | member |
 And the following "pages" exist:
   | title | description| ownertype | ownername |
   | Page UserA_01 | Page 01| user | UserA |
 
 Scenario: Use content from another note (Bug 1710988)
-  Given I log in as "UserA" with password "Kupuhipa1"
+  Given I log in as "UserA" with password "Kupuh1pa!"
   And I follow "Page UserA_01"
   And I follow "Edit"
   And I expand "General" node

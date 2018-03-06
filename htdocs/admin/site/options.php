@@ -410,6 +410,16 @@ $siteoptionform = array(
             'collapsed'    => true,
             'legend'       => get_string('securitysettingslegend', 'admin'),
             'elements'     => array(
+                'passwordpolicy' => array(
+                    'type' => 'passwordpolicy',
+                    'minlength' => 8,
+                    'maxlength' => 20,
+                    'title' => get_string('passwordpolicy', 'admin'),
+                    'description' => get_string('passwordpolicydesc', 'admin'),
+                    'defaultvalue' => get_config('passwordpolicy'),
+                    'disabled' => in_array('passwordpolicy', $OVERRIDDEN),
+                    'class' => 'double'
+                ),
                 'viruschecking' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('viruschecking', 'admin'),
@@ -807,6 +817,7 @@ function siteoptions_fail(Pieform $form, $field) {
 }
 
 function siteoptions_submit(Pieform $form, $values) {
+    global $USER;
     $fields = array(
         'sitename','lang','theme',
         'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
@@ -815,7 +826,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'institutionstrictprivacy',
         'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'userscanchooseviewthemes', 'internalnotificationexpire',
-        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
+        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'passwordpolicy',
         'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'homepageinfo', 'showprogressbar', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
@@ -885,6 +896,21 @@ function siteoptions_submit(Pieform $form, $values) {
     if (!empty($values['eventlogenhancedsearch']) && $values['searchplugin'] != 'elasticsearch') {
         $values['eventlogenhancedsearch'] = false;
     }
+    // If password policy is changed, force reset password for all users with internal authentication.
+    if ($values['passwordpolicy'] != get_password_policy()) {
+        db_begin();
+        execute_sql("
+            UPDATE {usr} SET passwordchange = 1
+            WHERE authinstance IN (
+                SELECT ai.id
+                FROM {auth_instance} ai
+                WHERE ai.authname = 'internal'
+            )
+            AND id NOT IN (0, ?)
+        ", array($USER->get('id'))); // Ignore the root and current admin user
+        db_commit();
+    }
+
     $oldsearchplugin = get_config('searchplugin');
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

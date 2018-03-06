@@ -5265,7 +5265,6 @@ function create_elasticsearch_triggers() {
     }
 }
 
-
 /**
  * Return a list of available institution(s) to associate to a group.
  *
@@ -5301,4 +5300,38 @@ function get_institutions_to_associate() {
     }
 
     return $institutions;
+}
+
+/**
+ * Get the password policy for this site
+ *
+ * @param  bool $parts  When true we return an array of the policy parts and when false return the policy string
+ */
+function get_password_policy($parts = false) {
+    $policy = !empty(get_config('passwordpolicy')) ? get_config('passwordpolicy') : '8_ulns';
+    if ($parts) {
+        return explode('_', $policy);
+    }
+    return $policy;
+}
+
+/**
+ * Get the password policy description based on password policy values
+ *
+ * @param  bool $type  When 'error' we return an error description rather than form field description
+ *                     When 'user' we use message to user rather than generic message
+ */
+function get_password_policy_description($type = 'generic') {
+    list($numbervalue, $formatvalue) = get_password_policy(true);
+    if ($type == 'error') {
+        $formatdesc = strtolower(get_string('element.passwordpolicy.' . $formatvalue, 'pieforms'));
+        $description = get_string('passwordinvalidform1', 'auth.internal', $numbervalue, $formatdesc);
+    }
+    else if ($type == 'user') {
+        $description = get_string('yournewpassword1', 'mahara', $numbervalue, get_string('passworddescription.' . $formatvalue, 'mahara'));
+    }
+    else {
+        $description = get_string('passworddescriptionbase', 'mahara', $numbervalue) . ' ' . get_string('passworddescription.' . $formatvalue, 'mahara');
+    }
+    return $description;
 }

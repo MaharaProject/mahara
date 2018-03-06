@@ -9,12 +9,12 @@ Background:
 
 Given the following "users" exist:
  | username | password | email | firstname | lastname | institution | authname | role |
- | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
- | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+ | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+ | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
 
  Scenario: Verifying the "User search" box functionality
  # Log in as a normal user
- Given I log in as "UserA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuh1pa!"
  And I fill in "Bob" for "usf_query"
  #click on the search icon
  And I press "usf_submit"
@@ -29,14 +29,14 @@ Given the following "users" exist:
  #Log out as UserA
  And I log out
  #Log in as UserB and verify the display names
- Given I log in as "UserB" with password "Kupuhipa1"
+ Given I log in as "UserB" with password "Kupuh1pa!"
  And I fill in "Alpha" for "usf_query"
  And I press "usf_submit"
  And I should see "Angela"
  #Log out as UserB
  And I log out
  #Log in as admin and change the display name settings
- Then I log in as "admin" with password "Kupuhipa1"
+ Then I log in as "admin" with password "Kupuh1pa!"
  And I choose "Site options" in "Configure site" from administration menu
  And I expand all fieldsets
  And I set the following fields to these values:
@@ -45,7 +45,7 @@ Given the following "users" exist:
  #Log out as admin user
  And I log out
  #Verify if the never display username functionality works
- Given I log in as "UserA" with password "Kupuhipa1"
+ Given I log in as "UserA" with password "Kupuh1pa!"
  And I fill in "UserB" for "usf_query"
  And I press "usf_submit"
  And I should see "No search results found"

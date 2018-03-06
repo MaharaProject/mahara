@@ -7,8 +7,8 @@ Feature: Commenting on a group page
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
 
 Given the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
@@ -19,7 +19,7 @@ Given the following "pages" exist:
       | Page GroupA_01 | Page 01 | group | GroupA |
 
 Scenario: As a user leaving a public comment on a group page (Bug 1509129)
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" from main menu
     # Changing the settings of the block to change comment notification
     And I click on "Settings" in "Group A" row
@@ -35,7 +35,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     # Verifying that it saves
     Then I should see "Comment submitted"
     And I log out
-    And I log in as "UserB" with password "Kupuhipa1"
+    And I log in as "UserB" with password "Kupuh1pa!"
     # Needs to navigate to see the comment and check it can be seen publicly
     When I follow "GroupA"
     When I follow "Pages and collections (tab)"
@@ -45,7 +45,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
 # As part of consolidating behat tests, this scenario has been added.
 # Original feature title: Sending notification message when someone leaves a comment in a group page
 Scenario: Adding a comment on a group page (Bug 1426983) and verifying the notification message.
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" from main menu
     And I follow "GroupA"
     And I follow "Pages and collections (tab)"
@@ -56,7 +56,7 @@ Scenario: Adding a comment on a group page (Bug 1426983) and verifying the notif
     # Log out as user 1
     And I log out
     # Log in as  admin
-    When I log in as "UserB" with password "Kupuhipa1"
+    When I log in as "UserB" with password "Kupuh1pa!"
     # Checking notification display on the dashboard
     And I wait "1" seconds
     Then I should see "New comment on Page GroupA_01"

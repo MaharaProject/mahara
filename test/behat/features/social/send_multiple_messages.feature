@@ -7,12 +7,12 @@ Feature: Send messages to other users
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
 
 Scenario: Sending messages between user and admin (Bug 1426983)
    # Log in as "Admin" user
-   Given I log in as "admin" with password "Kupuhipa1"
+   Given I log in as "admin" with password "Kupuh1pa!"
    # Sending message 1
    And I choose "Find people" in "Groups" from main menu
    And I follow "Angela"
@@ -34,7 +34,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    # Log out as "Admin" user
    And I log out
    # Log in as user 1
-   Then I log in as "UserA" with password "Kupuhipa1"
+   Then I log in as "UserA" with password "Kupuh1pa!"
    # Confirming all messages has been received
    And I am on homepage
    And I should see "Hi there"
@@ -44,7 +44,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    # Log out as Angela
    And I log out
    #Sending friend requests from student to admin (Bug 1440908)
-   Then I log in as "admin" with password "Kupuhipa1"
+   Then I log in as "admin" with password "Kupuh1pa!"
    And I choose "User search" in "Users" from administration menu
    And I follow "Bob"
    And I follow "Log in as UserB"

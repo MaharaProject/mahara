@@ -4,7 +4,7 @@ Feature: Writing and deleting comments
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | admin |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | admin |
     Given the following "pages" exist:
      | title | description | ownertype | ownername |
      | Page UserA_01 | Page 01 | user | UserA |
@@ -23,7 +23,7 @@ Scenario: Adding and deleting public comments
     And I fill in "Comment" with "Public comment by anonymous user"
     And I enable the switch "Make comment public"
     And I press "Comment"
-    And I log in as "UserA" with password "Kupuhipa1"
+    And I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_01"
     # The label for message text area - logged in users
     And I fill in "Comment by page owner" in editor "Comment"
@@ -59,7 +59,7 @@ Scenario: Add comments block to page
     And I fill in "Comment" with "Public comment by anonymous user"
     And I enable the switch "Make comment public"
     And I press "Comment"
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Page UserA_01" panel menu
     And I click on "Edit" in "Page UserA_01" panel menu
@@ -75,7 +75,7 @@ Scenario: Add comments block to page
     And I should see "Public comment by anonymous user"
 
 Scenario: Comments update the page's mtime
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
 
     # Set New Views to only show me the most recently updated page
     And I follow "Edit dashboard"

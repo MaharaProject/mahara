@@ -6,7 +6,7 @@ Feature: Creating a page with stuff in it
 
 Scenario: Creating a page with content in it (Bug 1426983)
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     # Navigating to Portfolio to create a page
     # This is the test for manually creating a page
     And I choose "Portfolio" from main menu

@@ -8,7 +8,7 @@ Background:
 
      Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname |role |
-     | UserA | Kupuhipa1 | UserA@example.org  | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org  | Angela | User | mahara | internal | member |
 
      Given the following "pages" exist:
      | title | description | ownertype | ownername |
@@ -19,7 +19,7 @@ Background:
 
 Scenario: Creating a collection AND adding pages
     # Log in as "Normal" user
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Create Test collection
     # This is the test for manually creating a collection
     And I choose "Pages and collections" in "Portfolio" from main menu

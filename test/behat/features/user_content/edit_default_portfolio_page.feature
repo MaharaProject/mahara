@@ -9,10 +9,10 @@ I can create a new page from the site default portfolio page
   Background:
     Given the following "users" exist:
       | username | password | email | firstname | lastname | institution | authname | role |
-      | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
   Scenario: Add a text block into the site default portfolio page and create a new portfolio page (Bug 1488255)
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Configure site" from administration menu
     And I should see "Page template"
     And I click on "Page template" panel menu
@@ -29,7 +29,7 @@ I can create a new page from the site default portfolio page
     And I log out
 
     # Create a new portfolio page
-    And I log in as "UserA" with password "Kupuhipa1"
+    And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Portfolio" from main menu
     And I should see "Pages and collections"
     And I follow "Add"

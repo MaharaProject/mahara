@@ -8,10 +8,10 @@ Feature: Mahara users submit pages / colelctions to a group
   Background:
     Given the following "users" exist:
       | username | password | email | firstname | lastname | institution | authname | role |
-      | groupAdmin | Kupuhipa1 | groupAdmin@example.org | Group | Admin | mahara | internal | admin |
-      | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-      | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
-      | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
+      | groupAdmin | Kupuh1pa! | groupAdmin@example.org | Group | Admin | mahara | internal | admin |
+      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+      | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
+      | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | mahara | internal | member |
 
     And the following "groups" exist:
       | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
@@ -36,7 +36,7 @@ Feature: Mahara users submit pages / colelctions to a group
 
   Scenario: Group users submit content to the group and group admin checks who is still to submit content
     # UserA submits a collection to the group
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Find groups" in "Groups" from main menu
     When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
@@ -47,7 +47,7 @@ Feature: Mahara users submit pages / colelctions to a group
     And I log out
 
     # UserB submits a page to the group
-    Given I log in as "UserB" with password "Kupuhipa1"
+    Given I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Find groups" in "Groups" from main menu
     When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
@@ -58,7 +58,7 @@ Feature: Mahara users submit pages / colelctions to a group
     And I log out
 
     # UserC didn't submit anything so should appear on the need to do submissions list
-    Given I log in as "groupAdmin" with password "Kupuhipa1"
+    Given I log in as "groupAdmin" with password "Kupuh1pa!"
     And I choose "Find groups" in "Groups" from main menu
     When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"

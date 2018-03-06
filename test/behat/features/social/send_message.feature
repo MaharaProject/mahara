@@ -7,11 +7,11 @@ Feature: Select2 ajax test using sendmessage
 Background:
     Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
 Scenario: Selecting select2 option via ajax (Bug #1520011)
     # Log in as an Admin user
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     # Send a message
     And I choose "mail" from user menu by id
     And I follow "Compose"

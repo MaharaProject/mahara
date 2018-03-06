@@ -372,6 +372,10 @@ $string['defaultaccountlifetimeupdatedescription'] = 'If default account lifetim
 $string['defaultaccountlifetimeupdatenone'] = 'Only for newly created users';
 $string['defaultaccountlifetimeupdatesome'] = 'For new users and users without an account lifetime already set (excluding site administrators)';
 $string['defaultaccountlifetimeupdateall'] = 'For all user accounts (excluding site administrators)';
+$string['passwordpolicy'] = 'Password policy';
+$string['passwordpolicydesc'] = 'Password policy for people whose account is set to use the built-in internal authentication method. Select the number of minimum characters and the complexity of the password.';
+$string['passwordpolicylength'] = 'Minimum password length';
+$string['passwordpolicytype'] = 'Password complexity';
 $string['deprecatedmobileapp'] = "Sorry, this mobile application has been superseded. You need to use Mahara mobile application instead. Download for android devices https://play.google.com/store/apps/details?id=org.mahara.mobile or for apple devices https://itunes.apple.com/us/app/mahara-mobile/id1172638950";
 $string['embeddedcontent'] = 'Embedded content';
 $string['embeddedcontentdescription'] = 'If you would like users to be able to embed videos or other outside content into their portfolios, you can choose which sites to trust below.';
@@ -633,8 +637,7 @@ $string['uploadcsverrorunspecifiedproblem1'] = 'The records in your CSV file cou
 $string['uploadcsverrorwrongnumberoffields'] = 'Error on line %s of your file: Incorrect number of fields.';
 $string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The email address for this user is not in the correct format.';
 $string['uploadcsverrorincorrectnumberoffields'] = 'Error on line %s of your file: This line does not have the correct number of fields.';
-$string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: Passwords must be at least six characters long. Passwords are case-sensitive and must be different from your username.<br/>
-For good security, consider using a passphrase. A passphrase is a sentence rather than a single word. Consider using a favourite quote or listing two (or more!) of your favourite things separated by spaces.';
+$string['uploadcsverrorinvalidpassword1'] = 'Error on line %s of your file: %s';
 $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The username for this user is not in the correct format.';
 $string['uploadcsverrormandatoryfieldnotspecified'] = 'Line %s of the file does not have the required "%s" field.';
 $string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the username "%s" that already exists.';

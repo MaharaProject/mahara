@@ -168,6 +168,12 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     if (!isset($langselectform)) {
         $langselectform = language_select_form();
     }
+    // Now that password element can set headdata we need to call the login form before smarty_core()
+    $isloginblockvisible = !$USER->is_logged_in() && !get_config('siteclosedforupgrade')
+        && get_config('showloginsideblock');
+    if ($isloginblockvisible) {
+        $authgenerateloginform = auth_generate_login_form();
+    }
     $smarty = smarty_core();
 
     $wwwroot = get_config('wwwroot');
@@ -868,15 +874,13 @@ EOF;
             );
         }
 
-        $isloginblockvisible = !$USER->is_logged_in() && !get_config('siteclosedforupgrade')
-                && get_config('showloginsideblock');
         if ($isloginblockvisible) {
             $sideblocks[] = array(
                 'name'   => 'login',
                 'weight' => -10,
                 'id'     => 'sb-loginbox',
                 'data'   => array(
-                    'loginform' => auth_generate_login_form(),
+                    'loginform' => $authgenerateloginform,
                 ),
             );
         }

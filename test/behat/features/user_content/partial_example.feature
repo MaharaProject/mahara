@@ -5,7 +5,7 @@ Feature: Testing Behat's functionality
     And test every link/file/button/checkbox etc. possible
 
 Scenario: Meta test testing Behat's functionality (Bug #1387836)
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     And I am on homepage
     And I choose "Profile" in "Content" from main menu
     And I follow "About me"

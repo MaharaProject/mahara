@@ -11,13 +11,13 @@ Background:
      | one | Institution 1 | webservice |
   And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | serviceadmin | Kupuhipa1 | svad@example.com | Service | Admin | one | webservice | admin |
+     | serviceadmin | Kupuh1pa! | svad@example.com | Service | Admin | one | webservice | admin |
   And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff | institution |
      | Group A | admin | This is my group A | standard | ON | OFF | all | OFF | OFF | admin |  | one |
 
 Scenario: Turning master switch on
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Configuration" in "Web services" from administration menu
  # Turning the master switch on
  And I enable the switch "Accept incoming web service requests:"

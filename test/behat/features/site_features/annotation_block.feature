@@ -10,7 +10,7 @@ Background:
   | Page admin_01 | Page 01 | admin | admin |
 
 Scenario: Accessing annotation block (Bug 1443730)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
 # Checking if annotation block is available by default
  And I follow "Page admin_01"
  And I follow "Edit"

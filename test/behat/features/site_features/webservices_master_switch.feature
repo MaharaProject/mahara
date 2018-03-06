@@ -8,10 +8,10 @@ So I can benefit from the cross over of Moodle/Mahara
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
 Scenario: Turning master switch on
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Configuration" in "Web services" from administration menu
  # Turning the master switch on
  And I enable the switch "Accept incoming web service requests:"
@@ -19,7 +19,7 @@ Scenario: Turning master switch on
  And I should not see "The web service authentication plugin is disabled"
  And I log out
  # Logging in as student to try turn switch on
- When I log in as "UserA" with password "Kupuhipa1"
+ When I log in as "UserA" with password "Kupuh1pa!"
  Then I should see "Angela User"
  # Checking the student can't access the link
  And "Administration" "link" should not be visible

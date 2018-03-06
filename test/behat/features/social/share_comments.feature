@@ -16,7 +16,7 @@ And the following "pages" exist:
 
 Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
 
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Pages and collections" in "Portfolio" from main menu
  And I click on "Edit" in "Page admin_01" panel menu
  # Sharing Page

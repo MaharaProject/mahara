@@ -11,8 +11,8 @@ Background:
 
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
 
   And the following "pages" exist:
      | title | description | ownertype | ownername |
@@ -69,7 +69,7 @@ Background:
      | Page UserA_51 | Page 51 | user | UserA |
 
 Scenario: Making sure that the max items per page drop down limits to correct amount of pages (Bug 1409369)
-  Given I log in as "UserA" with password "Kupuhipa1"
+  Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I select "atoz" from "orderby"
   And I scroll to the base of id "searchviews_submit"
@@ -80,7 +80,7 @@ Scenario: Making sure that the max items per page drop down limits to correct am
   And I select "Public" from "accesslist[0][searchtype]"
   And I press "Save"
   And I log out
-  And I log in as "UserB" with password "Kupuhipa1"
+  And I log in as "UserB" with password "Kupuh1pa!"
   And I choose "Shared with me" in "Portfolio" from main menu
   And I check "Registered users"
   And I check "Public"

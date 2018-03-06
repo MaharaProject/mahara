@@ -5,7 +5,7 @@ As a user
 The big homepage buttons should navigate to their correct places
 
 Scenario: Checking navigation of the big homepage buttons
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I click on "Develop your portfolio"
  Then I should see "Pages and collections" in the "h1 heading" property
  And I am on homepage

@@ -6,7 +6,7 @@ Feature: Strict privacy switch
     I should be required to accept the privacy statement
 
 Scenario: Create user who logs in with strict privacy enabled
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Site options" in "Configure site" from administration menu
     And I expand "Institution settings" node
     # Need to disable multiple inst first, or set strict privacy doesn't work.
@@ -22,13 +22,14 @@ Scenario: Create user who logs in with strict privacy enabled
     | Last name | One |
     | Email | UserB@example.com |
     | Username | bob |
-    | password | Kupuhipa1 |
+    | password | Kupuh1pa! |
+    And I scroll to the top
     And I press "Create user"
     And I disable the switch "Force password change on next login"
     And I enable the switch "Disable email"
     And I press "Save changes"
     And I log out
-    Given I log in as "bob" with password "Kupuhipa1"
+    Given I log in as "bob" with password "Kupuh1pa!"
     Then I should see "Before entering your account, please read the information displayed below."
     # Try to ignore privacy statement
     And I choose "Pages and collections" in "Portfolio" from main menu

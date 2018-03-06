@@ -16,7 +16,7 @@ Background:
      | Collection admin_01 | Collection 01 | user | admin | Page admin_01, Page admin_03 |
 
 Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361450)
-  Given I log in as "admin" with password "Kupuhipa1"
+  Given I log in as "admin" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Portfolio" from main menu
   And I follow "Copy"
   And I follow "Collection admin_01"

@@ -11,11 +11,11 @@ Background:
      | instone | Institution One | ON | OFF |
  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | instone | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | instone | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | instone | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | instone | internal | member |
 
 Scenario: Accessing user reports
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "User search" in "Users" from administration menu
  And I check "selectusers_2"
  And I check "selectusers_3"

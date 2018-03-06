@@ -60,12 +60,13 @@ if (method_exists($authobj, 'change_username')) {
     );
 }
 
+// Only show the password options if the plugin allows for the functionality
 if (method_exists($authobj, 'change_password')) {
-    // Only show the password options if the plugin allows for the functionality
     $elements['password'] = array(
         'type'         => 'password',
         'title'        => get_string('resetpassword','admin'),
-        'description'  => get_string('resetpassworddescription','admin'),
+        'description'  => get_string('resetpassworddescription', 'admin') . ' ' . get_password_policy_description(),
+        'showstrength' => true
     );
 
     $elements['passwordchange'] = array(
@@ -288,17 +289,15 @@ function edituser_site_validate(Pieform $form, $values) {
     $userobj = new User();
     $userobj = $userobj->find_by_id($user->id);
 
+    if (!isset($values['authinstance'])) {
+        $authobj = AuthFactory::create($userobj->authinstance);
+    }
+    else {
+        $authobj = AuthFactory::create($values['authinstance']);
+    }
+
     if (isset($values['username']) && !empty($values['username']) && $values['username'] != $userobj->username) {
-
-        if (!isset($values['authinstance'])) {
-            $authobj = AuthFactory::create($userobj->authinstance);
-        }
-        else {
-            $authobj = AuthFactory::create($values['authinstance']);
-        }
-
         if (method_exists($authobj, 'change_username')) {
-
             if (method_exists($authobj, 'is_username_valid_admin')) {
                 if (!$authobj->is_username_valid_admin($values['username'])) {
                     $form->set_error('username', get_string('usernameinvalidadminform', 'auth.internal'));
@@ -318,7 +317,17 @@ function edituser_site_validate(Pieform $form, $values) {
             $form->set_error('username', get_string('usernamechangenotallowed', 'admin'));
         }
     }
-
+    if (isset($values['password']) && !empty($values['password'])) {
+        if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($values['password'])) {
+            if ($authobj->type == 'internal') {
+                $form->set_error('password', get_password_policy_description('error'));
+            }
+            else {
+                // Allow auth type to return their own error message - Currently not used
+                $form->set_error('password', get_string('passwordinvalidform' . $authobj->type, 'auth.' . $authobj->type));
+            }
+        }
+    }
     // Check that the external username isn't already in use by someone else
     if (isset($values['authinstance']) && isset($values['remoteusername'])) {
         // there are 4 cases for changes on the page

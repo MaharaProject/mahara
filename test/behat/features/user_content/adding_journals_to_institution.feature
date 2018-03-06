@@ -17,7 +17,7 @@ And the following "pages" exist:
 
 Scenario: Clicking on the journal sub menu headings and adding first journal (Bug 1472467)
   # log in as admin
-  Given I log in as "admin" with password "Kupuhipa1"
+  Given I log in as "admin" with password "Kupuh1pa!"
   # Make sure more than one site journal can be created
   When I choose "Journals" in "Configure site" from administration menu
   And I follow "Create journal"
@@ -84,7 +84,7 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   Then I should not see "Journal entry 1"
 
 Scenario: Newly created user can get a copy of the journal (Bug 1472467)
-  Given I log in as "admin" with password "Kupuhipa1"
+  Given I log in as "admin" with password "Kupuh1pa!"
   # Creating a site wide journal
   And I choose "Journals" in "Configure site" from administration menu
   And I follow "Create journal"

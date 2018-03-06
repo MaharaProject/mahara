@@ -7,9 +7,9 @@ Feature: List of shared pages to a group
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
-     | UserB | Kupuhipa1 | UserB@example.org | Bob | User | mahara | internal | member |
-     | UserC | Kupuhipa1 | UserC@example.org | Cecilia | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
+     | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | mahara | internal | member |
     And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
      | GroupA | UserB | GroupA owned by UserB | standard | ON | OFF | all | OFF | OFF | UserA |  |
@@ -37,7 +37,7 @@ Background:
 Scenario: Share pages and collections to a group.
 The list of shared pages must take into account of access date (Bug 1374163)
     # Log in as a normal user
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Edit access for Page 01
     And I choose "Shared by me" in "Portfolio" from main menu
     And I follow "Pages"
@@ -120,7 +120,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I should not see "Collection UserA_01"
     And I log out
     #Displaying shared pages in most recently updated order (Bug 1490569)
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Groups" from main menu
     And I follow "GroupB"
     And I follow "Edit"

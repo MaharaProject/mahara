@@ -11,10 +11,10 @@ Background:
 
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuhipa1 | UserA@example.org | Angela | User | mahara | internal | member |
+     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
 Scenario: Social media credentials upon logging in as student (Bug 1432988)
- When I log in as "UserA" with password "Kupuhipa1"
+ When I log in as "UserA" with password "Kupuh1pa!"
  And I set the following fields to these values:
  | Social network | Facebook URL |
  | Your URL or username | https://www.facebook.com |

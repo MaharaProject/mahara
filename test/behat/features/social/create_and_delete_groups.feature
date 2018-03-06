@@ -6,7 +6,7 @@ Feature: Delete groups
 
 Scenario: Creating groups and deleting them (Selenium)
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Kupuhipa1"
+    Given I log in as "admin" with password "Kupuh1pa!"
     # Create a Friend invitation only group
     And I choose "Groups" from main menu
     And I follow "Create group"

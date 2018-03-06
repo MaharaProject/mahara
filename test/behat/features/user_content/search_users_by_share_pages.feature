@@ -7,8 +7,8 @@ Feature: Searching by user in Shared Pages
 Background:
     Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname |role |
-    | UserA | Kupuhipa1 | UserA@example.org  | Angela | User | mahara | internal | member |
-    | UserB | Kupuhipa1 | UserB@example.org  | Bob | User | mahara | internal | member |
+    | UserA | Kupuh1pa! | UserA@example.org  | Angela | User | mahara | internal | member |
+    | UserB | Kupuh1pa! | UserB@example.org  | Bob | User | mahara | internal | member |
 
     And the following "pages" exist:
      | title | description | ownertype | ownername |
@@ -19,7 +19,7 @@ Background:
 
 Scenario: Create users and search for them (Bug 897586)
     # Log in as the student user
-    Given I log in as "UserA" with password "Kupuhipa1"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     # Sharing both of the pages that have been created
     And I choose "Shared by me" in "Portfolio" from main menu
     And I click on "Edit access" in "Page UserA_01" row
@@ -30,7 +30,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Access rules were updated for 2 pages."
     And I log out
     # Log in as the second student user
-    And I log in as "UserB" with password "Kupuhipa1"
+    And I log in as "UserB" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Bob User"
     # Sharing both of the pages Bob created
@@ -43,7 +43,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Access rules were updated for 2 pages."
     And I log out
     # Logging back in as admin to search for users on the shared with me page
-    And I log in as "admin" with password "Kupuhipa1"
+    And I log in as "admin" with password "Kupuh1pa!"
     And I choose "Shared with me" in "Portfolio" from main menu
     # Entering Angela name in the search box
     And I fill in the following:
