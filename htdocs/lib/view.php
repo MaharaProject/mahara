@@ -1852,21 +1852,6 @@ class View {
                 $action = substr($key, 7);
                 break;
             }
-            else if (substr($key, 0, 37) == 'cancel_action_configureblockinstance_'
-                     && param_integer('removeoncancel', 0)) {
-                $action = 'removeblockinstance_' . substr($key, 37);
-                break;
-            }
-        }
-        // TODO Scan GET for an action. The only action that is GETted is
-        // confirming deletion of a blockinstance. It _should_ be a POST, but
-        // that can be fixed later.
-        if (!$action) {
-            foreach ($_GET as $key => $value) {
-                if (substr($key, 0, 7) == 'action_') {
-                    $action = substr($key, 7);
-                }
-            }
         }
 
         $viewtheme = param_variable('viewtheme', '');
@@ -1903,31 +1888,9 @@ class View {
                 $values['blocktype'] = param_alpha('blocktype', null);
             break;
             case 'removeblockinstance': // requires action_removeblockinstance_id_\d
-                if (!defined('JSON')) {
-                    if (!$sure = param_boolean('sure')) {
-                        $yesform = '<form action="' . get_config('wwwroot') . '/view/blocks.php" class="text-inline">'
-                            . '<input type="hidden" name="id" value="' . $this->get('id') . '">'
-                            . '<input type="hidden" name="c" value="file">'
-                            . '<input type="hidden" name="action_' . $action . '_' .  $actionstring . '" value="1">'
-                            . '<input type="hidden" name="sure" value="1">'
-                            . '<input type="hidden" name="sesskey" value="' . $USER->get('sesskey') . '">'
-                            . '<input class="submit btn btn-primary" type="submit" name="removeblock_submit" value="' . get_string('yes') . '">'
-                            . '</form>';
-                        $baselink = get_config('wwwroot') . 'view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
-                        $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view')
-                            . '&nbsp;' . $yesform . ' <a href="' . $baselink . '">' . get_string('no') . '</a>', false);
-                        redirect($baselink);
-                        exit;
-                    }
-                }
             break;
             case 'configureblockinstance': // requires action_configureblockinstance_id_\d_column_\d_order_\d
             case 'acsearch': // requires action_acsearch_id_\d
-                if (!defined('JSON')) {
-                    $this->blockinstance_currently_being_configured = $values['id'];
-                    // And we're done here for now
-                    return;
-                }
             case 'moveblockinstance': // requires action_moveblockinstance_id_\d_row_\d_column_\d_order_\d
             case 'addcolumn': // requires action_addcolumn_\d_row_\d_before_\d
             case 'removecolumn': // requires action_removecolumn_\d_row_\d_column_\d
@@ -1950,8 +1913,10 @@ class View {
                 'view' => $this->get('id'),
             );
 
+            //is json ever not defined? When would this be?
             if (!defined('JSON')) {
                 $message = get_string('success.' . $action, 'view');
+                log_debug("message: " . $message);
             }
             $success = true;
         }
@@ -1963,6 +1928,7 @@ class View {
             }
             $message = get_string('err.' . $action, 'view');
         }
+        //and what about here?
         if (!defined('JSON')) {
             // set stuff in the session and redirect
             $fun = 'add_ok_msg';
@@ -2516,20 +2482,6 @@ class View {
             } // cols
         } // rows
         return array_unique($javascript);
-    }
-
-    private $blockinstance_currently_being_configured = 0;
-
-    /**
-     * Sets what blockinstance is currently being edited
-     * TODO: use get()
-     */
-    public function set_blockinstance_currently_being_configured($id) {
-        $this->blockinstance_currently_being_configured = $id;
-    }
-
-    public function get_blockinstance_currently_being_configured() {
-        return $this->blockinstance_currently_being_configured;
     }
 
     /**
