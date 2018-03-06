@@ -12,6 +12,13 @@
         {/if}
         {$suspendform2|safe}
    </div>
+{elseif $expired}
+    <div class="suspendederror admin-warning alert alert-warning">
+        <h3 class="title">{$expiredon}</h3>
+        <div class="detail">
+            {str tag=unexpiredesc section=admin}
+        </div>
+   </div>
 {/if}
     <div class="row">
         <div class="col-md-9 main">
