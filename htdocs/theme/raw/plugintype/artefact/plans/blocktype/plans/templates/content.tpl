@@ -16,7 +16,9 @@
             </a>
         </div>
     {/if}
-    <strong>{$plan.title}</strong>
+    {if count($plans) > 1}
+    <h4>{$plan.title}</h4>
+    {/if}
     <p>{$plan.description}</p>
 
     {if $plan.tags}
@@ -35,7 +37,7 @@
                     <div id="plans_page_container_{$blockid}_plan{$tasks.planid}" class="hidden">
                         {$tasks.pagination|safe}
                     </div>
-                    <script>
+                    <script type="application/javascript">
                     jQuery(function($) {literal}{{/literal}
                         {$tasks.pagination_js|safe}
                         $('#plans_page_container_{$blockid}_plan{$tasks.planid}').removeClass('hidden');

@@ -1,11 +1,15 @@
 {foreach from=$tasks.data item=task}
     {if $task->completed == -1}
         <div class="task-item plan_incomplete list-group-item {if $task->description || $task->tags}list-group-item-default{/if}">
-
+            {if $editing}
+            <div class="pull-right btn-group">
+                <a class="btn btn-default btn-sm" href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil text-default"></span></a>
+                <a class="btn btn-default btn-sm" href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash text-danger"></span></a>
+            </div>
+            {/if}
             {if $task->description || $task->tags}<a class="link-block collapsed" href="#expand-task-{$task->id}{if $block}-{$block}{/if}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}{if $block}-{$block}{/if}">{/if}
-
                 <span class="overdue-task">
-                    <span class="icon icon-times text-danger icon-lg left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-times text-danger icon-lg left task{$task->id}" role="presentation" aria-hidden="true" {if $editing}onclick="saveCheckBoxChange(this, '{$task->id}')"{/if}></span>
                     <span class="text-danger">{$task->title}</span> -
                     <span class="text-small text-midtone">
                         {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
@@ -33,15 +37,19 @@
         </div>
     {else}
         <div class="task-item list-group-item {if $task->description || $task->tags}list-group-item-default{/if}">
-
+            {if $editing}
+            <div class="pull-right btn-group">
+                <a class="btn btn-default btn-sm" href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil text-default"></span></a>
+                <a class="btn btn-default btn-sm" href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash text-danger"></span></a>
+            </div>
+            {/if}
             {if $task->description || $task->tags}<a class="link-block collapsed" href="#expand-task-{$task->id}{if $block}-{$block}{/if}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}{if $block}-{$block}{/if}">{/if}
-
                 <span class="complete-task">
                     {if $task->completed == 1}
-                        <span class="icon icon-check-square-o icon-lg text-success left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-check-square-o icon-lg text-success left task{$task->id}" role="presentation" aria-hidden="true" {if $editing}onclick="saveCheckBoxChange(this, '{$task->id}')"{/if}></span>
                         <span class="sr-only">{str tag=completed section=artefact.plans}</span>
                     {else}
-                        <span class="icon-square-o icon icon-lg text-midtone left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon-square-o icon icon-lg text-midtone left task{$task->id}" role="presentation" aria-hidden="true" {if $editing}onclick="saveCheckBoxChange(this, '{$task->id}')"{/if}></span>
                         <span class="sr-only">{str tag=incomplete section=artefact.plans}</span>
                     {/if}
 

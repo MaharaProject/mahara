@@ -48,7 +48,6 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
         return array(
             array(
                 'file'   => 'js/plansblock.js',
-                'initjs' => "initNewPlansBlock($blockid);",
             )
         );
     }

@@ -293,11 +293,12 @@ class ArtefactTypePlan extends ArtefactType {
         if (!empty($options['viewid'])) {
             $baseurl .= '&view=' . $options['viewid'];
         }
+        $baseurl .= '&planid=' . $this->id;
 
         $pagination = array(
             'baseurl' => $baseurl,
             'id' => 'task_pagination',
-            'datatable' => 'tasktable',
+            'datatable' => 'tasklist',
             'jsonscript' => 'artefact/plans/viewtasks.json.php',
         );
 
@@ -322,7 +323,6 @@ class ArtefactTypePlan extends ArtefactType {
         $smarty->assign('view', (!empty($options['viewid']) ? $options['viewid'] : null));
         $smarty->assign('owner', $this->get('owner'));
         $smarty->assign('tags', $this->get('tags'));
-
         return array('html' => $smarty->fetch('artefact:plans:viewplan.tpl'), 'javascript' => '');
     }
 
@@ -620,7 +620,7 @@ class ArtefactTypeTask extends ArtefactType {
                 FROM {artefact} a
             JOIN {artefact_plans_task} at ON at.artefact = a.id
             WHERE a.artefacttype = 'task' AND a.parent = ?
-            ORDER BY at.completiondate ASC, a.id", array($plan), $offset, $limit))
+            ORDER BY at.completed, at.completiondate ASC, a.id", array($plan), $offset, $limit))
             || ($results = array());
 
         // format the date and setup completed for display if task is incomplete
@@ -685,16 +685,18 @@ class ArtefactTypeTask extends ArtefactType {
      * @param   string  $template   The name of the template to use for rendering
      * @param   array   $options    The block instance options
      * @param   array   $pagination The pagination data
+     * @param   boolean $editing    True if page is being edited
      *
      * @return  array   $tasks      The tasks array updated with rendered table html
      */
-    public function render_tasks(&$tasks, $template, $options, $pagination) {
+    public function render_tasks(&$tasks, $template, $options, $pagination, $editing=false) {
 
         $smarty = smarty_core();
         $smarty->assign('tasks', $tasks);
         $smarty->assign('options', $options);
         $smarty->assign('view', (!empty($options['view']) ? $options['view'] : null));
         $smarty->assign('block', (!empty($options['block']) ? $options['block'] : null));
+        $smarty->assign('editing', $editing);
         $tasks['tablerows'] = $smarty->fetch($template);
 
         if ($tasks['limit'] && $pagination) {

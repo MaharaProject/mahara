@@ -59,6 +59,7 @@ $string['deletetask'] = 'Delete task';
 $string['deletethistask'] = 'Delete task: \'%s\'';
 $string['edittask'] = 'Edit task';
 $string['editingtask'] = 'Editing task';
+$string['editthistask'] = 'Edit task: \'%s\'';
 $string['mytasks'] = 'My tasks';
 $string['newtask'] = 'New task';
 $string['notasks'] = 'No tasks to display.';

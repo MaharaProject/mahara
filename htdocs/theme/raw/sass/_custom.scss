@@ -14,7 +14,11 @@
 
 .task-item .complete-task .icon,
 .task-item .overdue-task .icon {
-    margin-left: -8px; //correct alignment
+    margin-left: -8px; // correct alignment
+}
+
+.task-item .btn-group {
+    margin-right: -8px; // correct alignment
 }
 
 .no-results {
