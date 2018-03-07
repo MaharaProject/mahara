@@ -41,6 +41,11 @@
 .wysiwyg.view-description {
     width: 70%;
 }
+.wysiwyg.under-label-help {
+    label  + .mce-tinymce {
+        width:70%;
+    }
+}
 
 .toolbar-affix.affix {
     position: fixed;

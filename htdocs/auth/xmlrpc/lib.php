@@ -802,11 +802,12 @@ class PluginAuthXmlrpc extends PluginAuth {
         $elements['authloginmsg'] = array(
             'type'         => 'wysiwyg',
             'rows'         => 10,
-            'cols'         => 70,
-            'title'        => '',
+            'cols'         => 50,
+            'title'        => get_string('authloginmsgtitle', 'auth.xmlrpc'),
             'description'  => get_string('authloginmsg2', 'auth'),
             'defaultvalue' => self::$default_config['authloginmsg'],
             'help'         => true,
+            'class'        => 'under-label-help',
         );
 
         $elements['ssodirection'] = array(
