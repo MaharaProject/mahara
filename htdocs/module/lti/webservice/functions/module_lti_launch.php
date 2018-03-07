@@ -45,7 +45,7 @@ class module_lti_launch extends external_api {
                 'launch_presentation_locale' => new external_value(PARAM_TEXT, 'LTI launch_presentation_locale', VALUE_OPTIONAL),
                 'launch_presentation_width' => new external_value(PARAM_NUMBER, 'LTI launch_presentation_width', VALUE_OPTIONAL),
                 'lis_course_section_sourcedid' => new external_value(PARAM_TEXT, 'LTI lis_course_section_sourcedid', VALUE_OPTIONAL),
-                'lis_outcome_service_url' => new external_value(PARAM_TEXT, 'LTI lis_outcome_service_url', VALUE_OPTIONAL),
+                'lis_outcome_service_url' => new external_value(PARAM_URL, 'LTI lis_outcome_service_url', VALUE_OPTIONAL),
                 'lis_person_name_full' => new external_value(PARAM_TEXT, 'LTI lis_person_name_full', VALUE_OPTIONAL),
                 'lis_person_sourcedid' => new external_value(PARAM_TEXT, 'LTI lis_person_sourcedid', VALUE_OPTIONAL),
                 'lis_result_sourcedid' => new external_value(PARAM_TEXT, 'LTI lis_result_sourcedid', VALUE_OPTIONAL),
@@ -226,6 +226,24 @@ class module_lti_launch extends external_api {
 
         if (isset($params['launch_presentation_return_url'])) {
             $SESSION->set('logouturl', $params['launch_presentation_return_url']);
+        }
+
+        // If the consumer supports grading send the user to select a portfolio
+        if (!empty($params['lis_outcome_service_url'])) {
+
+            $SESSION->set('lti.lis_outcome_service_url', $params['lis_outcome_service_url']);
+            $SESSION->set('lti.lis_result_sourcedid', $params['lis_result_sourcedid']);
+            $SESSION->set('lti.roles', $params['roles']);
+            $SESSION->set('lti.serverid', $WEBSERVICE_OAUTH_SERVERID);
+            $SESSION->set('lti.presentation_target', $params['launch_presentation_document_target']);
+
+            $parts = parse_url($params['lis_outcome_service_url']);
+            $cspurl = $parts['scheme'] . '://' . $parts['host'];
+
+            $SESSION->set('csp-ancestor-exemption', $cspurl);
+
+            redirect(get_config('wwwroot').'module/lti/submission.php');
+            exit;
         }
 
         redirect(get_config('wwwroot'));
