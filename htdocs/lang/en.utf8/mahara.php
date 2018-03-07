@@ -217,8 +217,17 @@ $string['resultsperpage'] = 'Results per page';
 // Institution tags
 $string['allowinstitutiontags'] = 'Allow institution tags';
 $string['allowinstitutiontagsdescription'] = 'Administrators can define a set of tags that institution members can use.';
+$string['cantlistinstitutiontags'] = 'You are not allowed to list institution tags.';
+$string['createtag'] = 'Create tag';
+$string['error:duplicatetag'] = 'Institutional tag already exists.';
+$string['error:emptytag'] = 'Institutional tag cannot be empty.';
+$string['institutiontagcantbesaved'] = 'Institution tag can\'t be saved.';
+$string['institutiontag'] = 'Institution tag';
+$string['institutiontagdesc'] = 'You can add one tag at a time';
 $string['institutiontags'] = 'Institution tags';
 $string['institutiontagsdescription'] = 'The institution tags are predefined by the institution and available for use by all institution members. You can create as many tags as you like.';
+$string['institutiontagsaved'] = 'Institution tag saved.';
+$string['notags'] = 'No tags for this institution.';
 
 // License metadata
 $string['license'] = 'License';
