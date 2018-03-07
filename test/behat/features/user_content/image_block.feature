@@ -1,7 +1,8 @@
 @javascript @core @blocktype @blocktype_addimageblock
-Feature: Creating a new image block on a page
-    in order to check that the image is visible
-    after it is created
+Feature: Creating/deleting an image block
+    As a user
+    I want to add and remove image blocks from my page
+    So I can control the content
 
 Background:
     Given the following "users" exist:
@@ -12,8 +13,7 @@ Background:
      | title | description | ownertype | ownername |
      | Page UserA_01 | Page 01| user | UserA |
 
-
-Scenario: Create Image block
+Scenario: Create and delete image block
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Page UserA_01" panel menu
@@ -30,3 +30,8 @@ Scenario: Create Image block
     And I scroll to the top
     And I follow "Display page"
     And I should see "Image1.jpg"
+    # delete image block
+    And I follow "Edit"
+    And I delete the block "Image Block 1"
+    And I display the page
+    Then I should not see "Image Block 1"
