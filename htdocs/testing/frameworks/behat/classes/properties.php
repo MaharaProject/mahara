@@ -23,6 +23,8 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Users sub-menu'              => array(".configusers", "css_element"),
     'Content sub-menu'            => array(".content", "css_element"),
     'Comment feedbacktable'       => array(".feedbacktable", "css_element"),
+    'File download heading 1'     => array(".filedownload-item:nth-of-type(1)>h4", "css_element"),
+    'File download heading 2'     => array(".filedownload-item:nth-of-type(2)>h4", "css_element"),
     'Filelist table'              => array(".filelist", "css_element"),
     'Pages and Collections boxes' => array(".grouppageswrap", "css_element"),
     'Groups sub-menu'             => array(".groups", "css_element"),
