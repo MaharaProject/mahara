@@ -55,6 +55,15 @@ if (!is_writable(get_config('dataroot'))) {
     log_warn("Unable to write to dataroot directory.");
 }
 
+// cron jobs (callfunction as in 'cron' table)
+// that need to drop the elasticsearch triggers
+$jobsneeddroptriggers = array(
+    'recalculate_quota',
+    'cron_site_data_daily',
+    'user_login_tries_to_zero',
+    'interaction_forum_new_post',
+);
+
 // for each plugin type
 foreach (plugin_types() as $plugintype) {
 
@@ -97,6 +106,11 @@ foreach (plugin_types() as $plugintype) {
 
             safe_require($plugintype, $job->plugin, 'lib.php', 'require_once');
 
+            $droptriggers = in_array($job->callfunction, $jobsneeddroptriggers);
+            if ($droptriggers) {
+                drop_elasticsearch_triggers();
+            }
+
             try {
                 call_static_method($classname, $job->callfunction);
             }
@@ -105,6 +119,10 @@ foreach (plugin_types() as $plugintype) {
                 $output = $e instanceof MaharaException ? $e->render_exception() : $e->getMessage();
                 echo "$output\n";
                 // Don't call handle_exception; try to update next run time and free the lock
+            }
+
+            if ($droptriggers) {
+                create_elasticsearch_triggers();
             }
 
             $nextrun = cron_next_run_time($start, (array)$job);
@@ -159,6 +177,11 @@ if ($jobs) {
 
         $function = $job->callfunction;
 
+        $droptriggers = in_array($job->callfunction, $jobsneeddroptriggers);
+        if ($droptriggers) {
+            drop_elasticsearch_triggers();
+        }
+
         try {
             $function();
         }
@@ -167,6 +190,10 @@ if ($jobs) {
             $output = $e instanceof MaharaException ? $e->render_exception() : $e->getMessage();
             echo "$output\n";
             // Don't call handle_exception; try to update next run time and free the lock
+        }
+
+        if ($droptriggers) {
+            create_elasticsearch_triggers();
         }
 
         $nextrun = cron_next_run_time($start, (array)$job);
