@@ -63,7 +63,10 @@ if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
-$caneditonlylayout = !$view->can_edit_title();
+$issiteview = $view->get('institution') == 'mahara';
+$issitetemplate = ($view->get('template') == View::SITE_TEMPLATE ? true : false);
+$canedittitle = $view->can_edit_title();
+$canuseskins = !$issitetemplate && can_use_skins(null, false, $issiteview);
 
 // If the view has been submitted, disallow editing
 if ($view->is_submitted()) {
@@ -112,20 +115,18 @@ $smarty->assign('form', $form);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtype', $view->get('type'));
 $smarty->assign('viewtitle', $view->get('title'));
-$smarty->assign('edittitle', $view->can_edit_title());
+$smarty->assign('edittitle', $canedittitle);
+$smarty->assign('canuseskins', $canuseskins);
 $smarty->assign('displaylink', $view->get_url());
-$smarty->assign('issiteview', $view->get('institution') == 'mahara');
-$smarty->assign('issitetemplate', ($view->get('template') == View::SITE_TEMPLATE ? true : false));
+$smarty->assign('issiteview', $issiteview);
+$smarty->assign('issitetemplate', $issitetemplate);
 $smarty->assign('PAGEHEADING', $state);
 $smarty->display('view/editlayout.tpl');
 
 function create_settings_pieform(){
-    global $view, $pieformname, $caneditonlylayout;
+    global $view, $pieformname, $issiteview, $issitetemplate,
+    $canedittitle, $canuseskins;
     $inlinejavascript = '';
-    $issiteview = $view->get('institution') == 'mahara';
-    $issitetemplate = ($view->get('template') == View::SITE_TEMPLATE ? true : false);
-    $canedittitle = !$caneditonlylayout;
-    $canuseskins = !$issitetemplate && can_use_skins(null, false, $issiteview) && !$caneditonlylayout;
 
     //get elements for each section of the form
     if ($canedittitle) {
@@ -523,10 +524,7 @@ JAVASCRIPT;
 }
 
 function settings_validate(Pieform $form, $values) {
-    global $view, $caneditonlylayout;
-    $issiteview = $view->get('institution') == 'mahara';
-    $issitetemplate = ($view->get('template') == View::SITE_TEMPLATE ? true : false);
-    $canuseskins = !$issitetemplate && can_use_skins(null, false, $issiteview) && !$caneditonlylayout;
+    global $view, $issiteview, $issitetemplate, $canuseskins;
 
     $layoutrows = $view->get_layoutrows();
     if (!isset($layoutrows[$values['currentlayoutselect']]) ) {
@@ -554,11 +552,7 @@ function settings_validate(Pieform $form, $values) {
 }
 
 function settings_submit(Pieform $form, $values) {
-    global $view, $SESSION, $caneditonlylayout;
-    $issiteview = $view->get('institution') == 'mahara';
-    $issitetemplate = ($view->get('template') == View::SITE_TEMPLATE ? true : false);
-    $canedittitle = !$caneditonlylayout;
-    $canuseskins = !$issitetemplate && can_use_skins(null, false, $issiteview) && !$caneditonlylayout;
+    global $view, $SESSION, $issiteview, $issitetemplate, $canedittitle, $canuseskins;
 
     if ($canedittitle) {
         set_view_title_and_description($form, $values);

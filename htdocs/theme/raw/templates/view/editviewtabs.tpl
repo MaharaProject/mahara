@@ -3,7 +3,7 @@
             href="{$WWWROOT}view/editlayout.php?id={$viewid}"
             title="{if $edittitle}{str tag=settings section=view}{else}{str tag=editlayout section=view}{/if}">
             <span class="icon icon-lg icon-cogs"></span>
-            <span class="btn-title">{if $edittitle}{str tag=settings section=view}{else}{str tag=editlayout section=view}{/if}</span>
+            <span class="btn-title">{if ($edittitle || $canuseskins) }{str tag=settings section=view}{else}{str tag=editlayout section=view}{/if}</span>
         </a>
     <a class="btn btn-default editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}view/blocks.php?id={$viewid}" title="{str tag=editcontent1 section=view}">
         <span class="icon icon-lg icon-pencil" aria-hidden="true" role="presentation"></span>
