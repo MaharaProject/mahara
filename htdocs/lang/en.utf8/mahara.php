@@ -217,6 +217,8 @@ $string['resultsperpage'] = 'Results per page';
 // Institution tags
 $string['allowinstitutiontags'] = 'Allow institution tags';
 $string['allowinstitutiontagsdescription'] = 'Administrators can define a set of tags that institution members can use.';
+$string['institutiontags'] = 'Institution tags';
+$string['institutiontagsdescription'] = 'The institution tags are predefined by the institution and available for use by all institution members. You can create as many tags as you like.';
 
 // License metadata
 $string['license'] = 'License';

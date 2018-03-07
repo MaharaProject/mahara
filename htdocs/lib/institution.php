@@ -911,10 +911,12 @@ class Institution {
  * @param bool $includesitestaff         To allow site staff to see dropdown like the site admin would
  * @param bool $includeinstitutionstaff  To allow institution staff to see dropdown like institution admin would
  * @param bool $allselector              To add an 'all' option to the dropdown where it makes sense, eg in institution statistics page
+ * @param bool $withactiveinstitutiontags To only fetch institutions which are configured to define their own tags
  *
  * @return null or array suitable for pieform element
  */
-function get_institution_selector($includedefault = true, $assumesiteadmin=false, $includesitestaff=false, $includeinstitutionstaff=false, $allselector=false) {
+function get_institution_selector($includedefault = true, $assumesiteadmin=false, $includesitestaff=false, $includeinstitutionstaff=false,
+    $allselector=false, $withactiveinstitutiontags=false) {
     global $USER;
 
     if (($assumesiteadmin || $USER->get('admin')) || ($includesitestaff && $USER->get('staff'))) {
@@ -960,8 +962,17 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
     if ($allselector) {
         $options['all'] = get_string('Allinstitutions', 'mahara');
     }
-    foreach ($institutions as $i) {
-        $options[$i->name] = $i->displayname;
+    if ($withactiveinstitutiontags) {
+        foreach ($institutions as $i) {
+            if ($i->tags) {
+                $options[$i->name] = $i->displayname;
+            }
+        }
+    }
+    else {
+        foreach ($institutions as $i) {
+            $options[$i->name] = $i->displayname;
+        }
     }
     $institution = key($options);
     $institutionelement = array(

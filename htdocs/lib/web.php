@@ -2564,6 +2564,16 @@ function admin_nav() {
         );
     }
 
+    // Add the menu items for tags, if that feature is enabled in a visible institution.
+    if (($selector = get_institution_selector(false, false, false, false, false, true)) && !empty($selector['options'])) {
+        $menu['manageinstitutions/institutiontags'] = array(
+            'path'   => 'manageinstitutions/tags',
+            'url'    => 'admin/users/institutiontags.php',
+            'title'  => get_string('tags'),
+            'weight' => 95
+        );
+    }
+
     // enable plugins to augment the admin menu structure
     foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {
         if ($plugins = plugins_installed($plugintype)) {
@@ -2740,6 +2750,16 @@ function institutional_admin_nav() {
             'weight' => 40,
         ),
     );
+
+    // Add the menu items for tags, if that feature is enabled in a visible institution.
+    if (($selector = get_institution_selector(false, false, false, false, false, true)) && !empty($selector['options'])) {
+        $ret['manageinstitutions/institutiontags'] = array(
+            'path'   => 'manageinstitutions/tags',
+            'url'    => 'admin/users/institutiontags.php',
+            'title'  => get_string('tags'),
+            'weight' => 95
+        );
+    }
 
     // enable plugins to augment the institution admin menu structure
     foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {

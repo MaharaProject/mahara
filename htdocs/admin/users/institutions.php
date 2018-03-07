@@ -836,8 +836,6 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution = new Institution($institution);
         $newinstitution->displayname = $values['displayname'];
         $oldinstitution = get_record('institution', 'name', $institution);
-        // Clear out any cached menus for this institution
-        clear_menu_cache($institution);
     }
 
     $newinstitution->showonlineusers              = !isset($values['showonlineusers']) ? 2 : $values['showonlineusers'];
@@ -1173,7 +1171,8 @@ function institution_submit(Pieform $form, $values) {
         $SESSION->add_ok_msg($message);
         $nexturl = '/admin/users/institutions.php';
     }
-
+    // Clear out any cached menus for this institution
+    clear_menu_cache();
     redirect($nexturl);
 }
 
