@@ -363,7 +363,7 @@ if (!defined('CLI')) {
     header('Pragma: no-cache');
 
     // Security headers. See https://www.owasp.org/index.php/List_of_useful_HTTP_headers
-    header('X-Frame-Options: SAMEORIGIN');
+
     header('X-XSS-Protection: 1; mode=block');
     header('X-Content-Type-Options: nosniff');
     header('X-Permitted-Cross-Domain-Policies: master-only');
@@ -372,6 +372,16 @@ if (!defined('CLI')) {
     }
     // Don't print precise PHP version as an HTTP header
     header_remove('x-powered-by');
+
+    // Allow LTI to load in an iframe
+    if ($csp_ancestor_exemption = $SESSION->get('csp-ancestor-exemption')) {
+        header("Content-Security-Policy: frame-ancestors 'self' $csp_ancestor_exemption");
+        header('X-Frame-Options: ALLOW-FROM '. $csp_ancestor_exemption);
+    }
+    else {
+        header("Content-Security-Policy: frame-ancestors 'self'");
+        header('X-Frame-Options: SAMEORIGIN');
+    }
 }
 
 // Only do authentication once we know the page theme, so that the login form
