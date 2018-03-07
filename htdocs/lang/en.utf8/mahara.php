@@ -474,6 +474,7 @@ $string['cannotremovedefaultemail'] = 'You cannot remove your primary email addr
 $string['emailtoolong'] = 'Email addresses cannot be longer than 255 characters.';
 $string['emailinvalid'] = 'Email address invalid.';
 $string['mustspecifyoldpassword'] = 'You must specify your current password.';
+$string['mustspecifycurrentpassword'] = 'You must specify your current password to change your username.';
 $string['Site'] = 'Site';
 $string['maildisabled'] = 'Email disabled';
 
