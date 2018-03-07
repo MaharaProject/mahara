@@ -412,7 +412,7 @@ if ($siteclosedforupgrade || (get_config('siteclosedbyadmin') && !$USER->admin))
     if (defined('CLI') && !defined('INSTALLER')) {
         exit("Site closed.\n");
     }
-    if (!defined('HOME') && !defined('INSTALLER')) {
+    if (!defined('HOME') && !defined('INSTALLER') && !defined('IGNOREMAINTENANCE')) {
         redirect();
     }
 }
