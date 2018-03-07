@@ -477,6 +477,9 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         }
         else {
             // Work around that save_file doesn't let us set the mtime
+            if (strtotime($data->mtime) === false) {
+                $data->mtime = "now";
+            }
             $artefact->set('mtime', strtotime($data->mtime));
         }
 
