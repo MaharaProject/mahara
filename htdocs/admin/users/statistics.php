@@ -207,7 +207,7 @@ $(document).on('pageupdated', function(e, data) {
 
 jQuery(function ($) {
     // JS Code to deal with the report configuration modal
-    // This fetches the form for choosing the results with filters, eg time frame
+    // This fetches the form for choosing the results with filters, eg time period
 
     // We need to show/hide modal explicitly so the on 'show.bs.modal' fires allowing
     // us to do ajax call for form as modal opens

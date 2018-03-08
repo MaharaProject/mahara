@@ -449,13 +449,13 @@ $string['passwordstrength4'] = 'Very strong';
 $string['passworddescription'] = '';
 $string['passworddescriptionbase'] = 'The mininum length of the password is %s characters.';
 $string['passworddescription.ul'] = 'It must contain upper and lowercase letters.';
-$string['passworddescription.uln'] = 'It must contain upper and lowercase letters and numbers.';
-$string['passworddescription.ulns'] = 'It must contain upper and lowercase letters, numbers and symbols.';
+$string['passworddescription.uln'] = 'It must contain upper and lowercase letters, and numbers.';
+$string['passworddescription.ulns'] = 'It must contain upper and lowercase letters, numbers, and symbols.';
 $string['passwordhelp'] = 'The password you use to access the system';
 $string['passwordnotchanged'] = 'You did not change your password. Please choose a new password.';
 $string['passwordsaved'] = 'Your new password has been saved';
 $string['passwordsdonotmatch'] = 'The passwords do not match.';
-$string['passwordtooeasy'] = 'Your password is too easy. Please choose a harder password.';
+$string['passwordtooeasy'] = 'Your password is too easy. Please choose a stronger password.';
 $string['register'] = 'Register';
 $string['reloadtoview'] = 'Reload the page to view';
 $string['sessiontimedout'] = 'Your session has timed out. Please enter your login details to continue.';
@@ -466,8 +466,8 @@ $string['preferredname'] = 'Display name';
 $string['usernamedescription'] = ' ';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['youaremasqueradingas'] = 'You are masquerading as %s.';
-$string['yournewpassword1'] = 'Your new password. Password must be at least %s characters long. Passwords are case sensitive and must be different from your username. %s<br/>
-For good security, consider using a passphrase. A passphrase is a sentence rather than a single word. Consider using a favourite quote or listing two (or more!) of your favourite things separated by spaces.';
+$string['yournewpassword1'] = 'Your new password. The password must be at least %s characters long. Passwords are case sensitive and must be different from your username. %s<br/>
+For good security, consider using a passphrase. A passphrase is a sentence rather than a single word. Consider using a favourite quote or listing two (or more) of your favourite things separated by spaces.';
 $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
 $string['cannotremovedefaultemail'] = 'You cannot remove your primary email address.';
@@ -514,7 +514,7 @@ $string['forgotusernamepasswordtextprimaryemail'] = '<p>If you have forgotten yo
 <p>If you know your username and have forgotten your password, you can also enter your username instead.</p>';
 $string['lostusernamepassword'] = 'Lost username / password';
 $string['emailaddressorusername'] = 'Email address or username';
-$string['pwchangerequestsentfullinfo'] = 'You should receive an email shortly with a link you can use to change the password for your account.<br>If you do not receive an email either the details you entered are incorrect or you normally use external authentication to access the site.';
+$string['pwchangerequestsentfullinfo'] = 'You should receive an email shortly with a link that you can use to change the password for your account.<br>If you do not receive an email, either the details you entered are incorrect or you normally use external authentication to access the site.';
 $string['forgotusernamepasswordemailsubject'] = 'Username / password details for %s';
 $string['forgotusernamepasswordemailmessagetext'] = 'Dear %s,
 
@@ -1179,7 +1179,7 @@ $string['lastupdate'] = 'Last update';
 $string['lastupdateorcomment'] = 'Last update or comment';
 $string['Title'] = 'Title';
 $string['anonymoususer'] = '(Author\'s name hidden)';
-$string['removefooterlinksupgradewarning'] = 'Your site uses custom links for terms and conditions or privacy statement. The following links "%s" have now been removed. You will need to add their content directly to the site\'s "Administration → Configure site → Legal" section.';
+$string['removefooterlinksupgradewarning'] = 'Your site uses custom links for the terms and conditions or the privacy statement. The following links "%s" have now been removed. You will need to add their content directly to the site\'s "Administration menu" → "Configure site" → "Legal" section.';
 
 // import related strings (maybe separated later)
 $string['importedfrom'] = 'Imported from %s';

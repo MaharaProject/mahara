@@ -98,7 +98,7 @@ function institutionform_submit(Pieform $form, $values) {
 
     update_record('group', array('institution' => $values['institution']), array('id' => $values['groupid']));
 
-    $SESSION->add_ok_msg(get_string('groupassigned', 'group'));
+    $SESSION->add_ok_msg(get_string('groupassociated', 'group'));
     redirect(get_config('wwwroot').'admin/groups/groups.php');
 }
 

@@ -68,7 +68,8 @@ Scenario: Clicking ID's (Bug 1428456)
 
  # Checking if we can change page layout
  When I follow "Edit layout"
- And I scroll to the id "createcustomlayoutpane"
+ And I expand all fieldsets
+ And I scroll to the base of id "addrow"
  And I press "Add a row"
  And I select "25 - 50 - 25" from "selectcollayoutrow_2"
  And I press "Add a row"
@@ -91,23 +92,18 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  And I follow "Profile page"
  And I scroll to the base of id "viewh1"
  And I follow "Edit"
- And I should not see "Settings"
- And I should see "Edit layout"
  When I follow "Edit layout"
  And I should see "Layout"
  And I should not see "Basics"
- And I should not see "Skin"
  And I press "Save"
  And I should see "Page saved successfully"
 
  # Dashboard page
  And I choose "Dashboard" from main menu
  And I follow "Edit dashboard"
- And I should not see "Settings"
- And I should see "Edit layout"
  When I follow "Edit layout"
  And I should see "Layout"
  And I should not see "Basics"
- And I should not see "Skin"
+ And I should see "Skin"
  And I press "Save"
  And I should see "Page saved successfully"

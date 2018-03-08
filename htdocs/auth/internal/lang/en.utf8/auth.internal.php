@@ -21,7 +21,7 @@ $string['emailalreadytakenbyothers'] = 'This email address has been taken by ano
 $string['iagreetothetermsandconditions'] = 'I agree to the Terms and Conditions.';
 $string['passwordinvalidform1'] = 'Your password must be at least %s characters long. Passwords are case sensitive and must be different from your username. Your password must contain %s.';
 $string['recaptcharegistertitle'] = 'reCAPTCHA challenge';
-$string['recaptcharegisterdesc1'] = 'Please tick the "I\'m not a robot" box. Doing so helps prevent automated programs from abusing this service.';
+$string['recaptcharegisterdesc2'] = 'Please tick the "I\'m not a robot" box if you want to continue.';
 $string['registeredemailsubject'] = 'You have registered at %s';
 $string['registeredemailmessagetext'] = 'Hi %s,
 

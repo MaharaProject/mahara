@@ -32,7 +32,7 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  And I trigger cron
  # Testing the unsubscribe link in the email sent
  And I unsubscribe from "Page UserA_01" owned by "UserB"
- And I should see "You have successfully unsubscribed"
+ And I should see "You have unsubscribed successfully"
  And I am on homepage
  And I follow "Page UserA_01"
  And I press "More..."

@@ -158,10 +158,10 @@ $string['viewposts'] = 'Copied entries (%s)';
 $string['postscopiedfromview'] = 'Entries copied from %s';
 
 $string['youhavenoblogs'] = 'You have no journals.';
-$string['youhavenoblogsaddone'] = 'You have no journals. <a href="%s">Add one</a>';
-$string['youhavenogroupblogs1'] = 'There are no journals in this group. <a href="%s">Add one</a>';
-$string['youhavenoinstitutionblogs1'] = 'There are no journals in this institution. <a href="%s">Add one</a>';
-$string['youhavenositeblogs1'] = 'There are no site journals. <a href="%s">Add one</a>';
+$string['youhavenoblogsaddone'] = 'You have no journals. <a href="%s">Add one</a>.';
+$string['youhavenogroupblogs1'] = 'There are no journals in this group. <a href="%s">Add one</a>.';
+$string['youhavenoinstitutionblogs1'] = 'There are no journals in this institution. <a href="%s">Add one</a>.';
+$string['youhavenositeblogs1'] = 'There are no site journals. <a href="%s">Add one</a>.';
 $string['youhavenblog'] = array(
     'You have 1 journal.',
     'You have %d journals.'

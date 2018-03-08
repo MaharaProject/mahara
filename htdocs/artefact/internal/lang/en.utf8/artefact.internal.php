@@ -100,26 +100,26 @@ If this email belongs to you, but you have not requested adding it to your %s ac
 %s
 EOF;
 $string['newemailalert_subject'] = 'New email address added to your %s account';
-$string['newemailalert_body_text'] = <<<EOF
+$string['newemailalert_body_text1'] = <<<EOF
 Hello %s,
 
-You have added the email addresses to your user account in %s:
+You have added the following email address(es) to your account in %s:
 
 %s
 
-If you have not requested this change in your %s account, please contact the site administrator
+If you have not requested this change in your %s account, please contact the site administrator.
 
 %scontact.php
 
 EOF;
-$string['newemailalert_body_html'] = <<<EOF
+$string['newemailalert_body_html1'] = <<<EOF
 <p>Hello %s,</p>
 
-<p>You have added the email addresses to your user account in %s:</p>
+<p>You have added the following email address(es) to your account in %s:</p>
 
 <p>%s</p>
 
-<p>If you have not requested this change in your %s account, please <a href="%scontact.php">contact the site administrator</a></p>
+<p>If you have not requested this change in your %s account, please <a href="%scontact.php">contact the site administrator</a>.</p>
 
 EOF;
 

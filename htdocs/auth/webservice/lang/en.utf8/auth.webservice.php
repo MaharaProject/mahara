@@ -53,7 +53,7 @@ $string['youmaynotregisterwithouttandc'] = 'You may not register unless you agre
 
 
 $string['pluginconnections'] = 'Connection objects';
-$string['nodefinedconnections'] = 'No webservice connections defined in any plugins. Please define a connection first.';
+$string['nodefinedconnections'] = 'There are no webservice connections defined in any plugin. Please define a connection first.';
 $string['instancelistempty'] = 'No connection objects for this institution.';
 
 $string['addconnection'] = 'Add client connection';
