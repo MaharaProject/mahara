@@ -12,6 +12,7 @@
 
 jQuery(function($) {
     $('#whatviewsselection').removeClass('hidden');
+    $('#whatcollectionsselection').removeClass('hidden');
 
     var containers = {
         'views': {'container': $('#whatviews'), 'visible': false},
@@ -84,6 +85,19 @@ jQuery(function($) {
             sendjsonrequest(config['wwwroot'] + 'view/viewcontent.json.php', params, 'POST', showPreview.bind(null, 'big'));
         });
     });
+    $(containers.collections.container).find('a.viewlink').each(function() {
+       $(this).off();
+       $(this).prop('title', 'Click to preview');
+       $(this).on('click', function (event) {
+           event.preventDefault();
+           var href = $(this).prop('href');
+           var params = {
+               'id': getUrlParameter('id', href) || '',
+               'export': 1
+           };
+           sendjsonrequest(config['wwwroot'] + 'collection/viewcontent.json.php', params, 'POST', showPreview.bind(null, 'big'));
+       });
+   });
 
     // Checkbox helpers
     var checkboxes = $('#whatviews input.checkbox');
@@ -101,6 +115,25 @@ jQuery(function($) {
     checkboxReverseSelection.on('click', function(e) {
         e.preventDefault();
           checkboxes.each(function() {
+            $(this).prop('checked', !$(this).prop('checked'));
+          });
+    });
+
+    var checkboxesCollection = $('#whatcollections input.checkbox');
+    var checkboxHelperDivCollection = $('<div>');
+
+    var checkboxSelectAllCollection = $('#selection_all_collections');
+    $(checkboxSelectAllCollection).on('click', function(e) {
+        e.preventDefault();
+        checkboxesCollection.each(function() {
+          $(this).prop('checked', true);
+        });
+    });
+
+    var checkboxReverseSelectionCollection = $('#selection_reverse_collections');
+    checkboxReverseSelectionCollection.on('click', function(e) {
+        e.preventDefault();
+          checkboxesCollection.each(function() {
             $(this).prop('checked', !$(this).prop('checked'));
           });
     });
