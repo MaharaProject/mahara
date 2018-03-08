@@ -4464,7 +4464,7 @@ function get_report_settings($settings) {
     $str = '';
     if (!empty($settings['start'])) {
         $str .= "<div>";
-        $str .= get_string('timeframe', 'statistics') . format_date(strtotime($settings['start']), 'strftimedate');
+        $str .= get_string('timeperiod', 'statistics') . format_date(strtotime($settings['start']), 'strftimedate');
         if (!empty($settings['end'])) {
             $str .= ' - ';
             $str .= format_date(strtotime($settings['end']), 'strftimedate');

@@ -36,7 +36,7 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
 | Spamhaus URL blacklist | 1 |
 | SURBL URL blacklist | 1 |
 | Disable external resources in user HTML | 1 |
-| reCAPTCHA on user registration/contact us forms | 1 |
+| reCAPTCHA on user registration / contact us forms | 1 |
 | Allow public pages | 0 |
 | Allow public profiles | 0 |
 | Allow anonymous pages | 1 |

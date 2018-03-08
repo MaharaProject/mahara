@@ -857,7 +857,7 @@ function auth_check_required_fields() {
         setpageicon($smarty, 'icon-umbrella');
         if ($USER->get('parentuser')) {
             $smarty->assign('loginanyway',
-            get_string('loginasoverrideprivacyaccept', 'admin',
+            get_string('loginasoverridelegalaccept', 'admin',
                        '<strong><a class="" href="' . get_config('wwwroot') . '?loginanyway">', '</a></strong>'));
         }
         $smarty->assign('form', $form);

@@ -12,4 +12,4 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'None';
-$string['description'] = 'Anyone can log in. Does not work when in production mode!';
+$string['description'] = 'Anyone can log in. This does not work when in production mode!';

@@ -35,7 +35,7 @@ Scenario: Create user who logs in with strict privacy enabled
     And I choose "Pages and collections" in "Portfolio" from main menu
     Then I should see "Before entering your account, please read the information displayed below."
     And I press "Save changes"
-    Then I should see "If you do not consent to the privacy statements or terms and conditions, your account will be suspended."
+    Then I should see "If you do not consent to the privacy statement(s) or terms and conditions, your account will be suspended."
     Then I press "No"
     # consent to privacy statement
     And I enable the switch "I consent to this privacy statement"

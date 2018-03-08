@@ -89,7 +89,7 @@ $string['usedefault'] = 'Use site default';
 $string['usedefaultdescription3'] = 'Use the site\'s default text for the selected page type.';
 $string['staticpagesdescription'] = 'Edit the content of static pages in Mahara (Home, Terms and Conditions, etc.)';
 $string['institutionprivacypagedescription'] = 'Edit the privacy statement for your institution, which is displayed in addition to the site privacy statement. The version you edited last becomes the current privacy statement automatically. You see the current site privacy statement as reference.';
-$string['institutiontermspagedescription'] = 'Edit the terms and conditions for your institution, which is displayed in addition to the site terms and conditions. The version you edited last becomes the current terms and conditions automatically. You see the current site terms and conditions as reference.';
+$string['institutiontermspagedescription'] = 'Edit the terms and conditions for your institution, which are displayed in addition to the site terms and conditions. The version you edited last becomes the current terms and conditions automatically. You see the current site terms and conditions as reference.';
 $string['noinstitutionprivacy'] = 'There is no privacy statement for this institution yet.';
 $string['noinstitutionterms'] = 'There are no terms and conditions for this institution yet.';
 $string['menus'] = 'Menus';
@@ -376,7 +376,7 @@ $string['passwordpolicy'] = 'Password policy';
 $string['passwordpolicydesc'] = 'Password policy for people whose account is set to use the built-in internal authentication method. Select the number of minimum characters and the complexity of the password.';
 $string['passwordpolicylength'] = 'Minimum password length';
 $string['passwordpolicytype'] = 'Password complexity';
-$string['deprecatedmobileapp'] = "Sorry, this mobile application has been superseded. You need to use Mahara mobile application instead. Download for android devices https://play.google.com/store/apps/details?id=org.mahara.mobile or for apple devices https://itunes.apple.com/us/app/mahara-mobile/id1172638950";
+$string['deprecatedmobileapp'] = "Sorry, this mobile application has been superseded. You need to use Mahara Mobile instead. Download for Android devices https://play.google.com/store/apps/details?id=org.mahara.mobile or for Apple devices https://itunes.apple.com/us/app/mahara-mobile/id1172638950";
 $string['embeddedcontent'] = 'Embedded content';
 $string['embeddedcontentdescription'] = 'If you would like users to be able to embed videos or other outside content into their portfolios, you can choose which sites to trust below.';
 $string['Everyone'] = 'Everyone';
@@ -406,7 +406,7 @@ $string['licenseallowcustom1'] = 'Custom licenses';
 $string['licenseallowcustomdescription'] = "For license metadata, allow users to enter any URL as the license. If not checked, users will be limited to the licenses configured by the site administrator.";
 $string['recaptchakeysmissing1'] = 'reCAPTCHA is turned on, but it will not function until you also provide a site key and secret key.';
 $string['recaptchanotpassed'] = 'The reCAPTCHA wasn\'t entered correctly. Please try it again.';
-$string['recaptchaonregisterform1'] = 'reCAPTCHA on user registration/contact us forms';
+$string['recaptchaonregisterform1'] = 'reCAPTCHA on user registration / contact us forms';
 $string['recaptchaonregisterformdesc2'] = 'Users self-registering a new account or using the contact us form will have to prove themselves human by passing a <a href="http://recaptcha.org/">reCAPTCHA</a> test.';
 $string['recaptchaprivatekey1'] = 'reCAPTCHA secret key';
 $string['recaptchaprivatekeydesc1'] = 'The secret key for your site\'s reCAPTCHA account.';
@@ -458,7 +458,7 @@ $string['updatesiteoptions'] = 'Update site options';
 $string['usersallowedmultipleinstitutions'] = 'Users allowed multiple institutions';
 $string['usersallowedmultipleinstitutionsdescription1'] = 'Allow users to be members of several institutions at the same time.';
 $string['institutionstrictprivacy'] = 'Strict privacy';
-$string['institutionstrictprivacydescription'] = 'Turn on this option when your site needs to adhere to the <a href="https://www.eugdpr.org/">GDPR</a> ';
+$string['institutionstrictprivacydescription'] = 'Turn on this option when your site needs to adhere to the <a href="https://www.eugdpr.org/">GDPR</a>.';
 $string['requireregistrationconfirm'] = 'Confirm registration';
 $string['requireregistrationconfirmdescription1'] = 'Force all institutions to approve new self-registered accounts.';
 $string['userscanchooseviewthemes'] = 'Users can choose page themes';
@@ -907,7 +907,7 @@ $string['loginasdenied'] = 'Attempt to log in as another user without permission
 $string['loginastwice'] = 'Attempt to log in as another user when already logged in as another user';
 $string['loginasrestorenodata'] = 'No user data to restore';
 $string['loginasoverridepasswordchange'] = 'As you are masquerading as another user, you may choose to %slog in anyway%s ignoring the password change screen.';
-$string['loginasoverrideprivacyaccept'] = 'As you are masquerading as another user, you may choose to %slog in anyway%s ignoring the accept privacy statement screen.';
+$string['loginasoverridelegalaccept'] = 'As you are masquerading as another user, you may choose to %slog in anyway%s without needing to accept the legal statements.';
 
 // Institutions
 $string['Add'] = 'Add';
@@ -1328,7 +1328,7 @@ $string['cli_tmpdir_notwritable'] = 'The temporary upload directory "%s" is not 
 $string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for series "%s"';
 
 // Fast index for elasticsearch
-$string['cli_fast_index'] = 'Elasticsearch fast indexer allows quicker indexing of sites by avoiding waiting for the next cron run. Instead it begins next run immediately after first finishes.';
+$string['cli_fast_index'] = 'Elasticsearch fast indexer allows quicker indexing of sites by avoiding waiting for the next cron run. Instead, it begins the next run immediately after first finishes.';
 $string['cli_unabletoupdatecron'] = 'Unable to update the search cron database record';
 $string['cli_problemindexing'] = 'A problem occurred while indexing';
 $string['cli_done'] = 'Indexing finished';
@@ -1339,11 +1339,11 @@ $string['allothers'] = 'All others';
 
 // Behat variables script
 $string['behatvariables'] = 'Behat steps';
-$string['behatvariablesdesc'] = 'Quick tool to help find the available Behat steps.';
-$string['nobehatfeaturefiles'] = 'No behat feature files found';
+$string['behatvariablesdesc'] = 'Tool to find available Behat steps quickly';
+$string['nobehatfeaturefiles'] = 'No Behat feature files found';
 $string['behatmatchingrows'] = '%s in ';
-$string['behatnocore'] = 'Unable to read core behat steps from behat.yml file';
-$string['behatstepnotused'] = 'This behat step is not currently used';
+$string['behatnocore'] = 'Unable to read core Behat steps from behat.yml file';
+$string['behatstepnotused'] = 'Currently, this Behat step is not used.';
 
 // Privacy Statement section
 $string['author'] = 'Author';
@@ -1353,7 +1353,7 @@ $string['version'] = 'Version';
 $string['viewversion'] = 'View version %s';
 $string['editversion'] = 'Edit version %s';
 $string['privacylastversion'] = 'Privacy statements must have unique version names of up to 15 characters. The latest version for this privacy statement is "%s".';
-$string['termsandconditionslastversion'] = 'Terms and conditions must have unique version names of up to 15 characters. The latest version for this privacy statement is "%s".';
+$string['termsandconditionslastversion'] = 'Terms and conditions must have unique version names of up to 15 characters. The latest version for these terms and conditions is "%s".';
 $string['versionalreadyexist'] = 'A %s version with the name "%s" already exists.';
 $string['siteprivacy'] = 'Site privacy statement';
 $string['siteprivacyconsentdate'] = 'Site privacy consent reviewed';
@@ -1361,7 +1361,7 @@ $string['sitetermsandconditions'] = 'Site terms and conditions';
 $string['sitetermsconsentdate'] = 'Site terms and conditions consent reviewed';
 $string['addoneversionlink']   = '<a href="%s">Add one</a> if you need it.';
 $string['privacyversionfor'] = 'Privacy statement for version "%s" is as follows:';
-$string['termsversionfor'] = 'Terms and conditions for version "%s" is as follows:';
+$string['termsversionfor'] = 'Terms and conditions for version "%s" are as follows:';
 $string['institutionprivacystatement'] = 'Institution privacy statement';
 $string['institutiontermsandconditions'] = 'Institution terms and conditions';
 $string['institutionprivacyconsentdate'] = 'Institution privacy consent reviewed';
@@ -1373,13 +1373,13 @@ $string['privacyagreement'] = 'I consent to this %s';
 $string['privacyagreementdescription'] = 'By choosing "Yes", you give your consent to the clauses of the privacy statement above.';
 $string['privacyagreedto'] = 'You agreed to this %s in %s.';
 $string['agreementsaved'] = 'Agreement saved';
-$string['refuseprivacy'] = 'Refuse privacy statement or terms and condititons';
+$string['refuseprivacy'] = 'Refuse privacy statement or terms and conditions';
 $string['confirmprivacyrefusal'] = 'Are you really sure you wish to continue?';
-$string['privacyrefusaldetails'] = 'If you do not consent to the privacy statements or terms and conditions, your account will be suspended.';
+$string['privacyrefusaldetails'] = 'If you do not consent to the privacy statement(s) or terms and conditions, your account will be suspended.';
 $string['privacyrefusal'] = 'Refused to consent to the privacy statement.';
 $string['registerrefusal'] = 'Your account will not be created when you do not consent to the %s.';
-$string['registerprivacy'] = 'Please read the privacy statement. If you don not consent to it, you cannot create an account on the site.';
-$string['registertermsandconditions'] = 'Please read the terms and conditions. If you don not consent to them, you cannot create an account on the site.';
+$string['registerprivacy'] = 'Please read the privacy statement. If you do not consent to it, you cannot create an account on the site.';
+$string['registertermsandconditions'] = 'Please read the terms and conditions. If you do not consent to them, you cannot create an account on the site.';
 $string['enterreason'] = 'Please enter the reason of refusal here...';
 $string['hasrefused'] = 'has refused the privacy statement';
 $string['privacylowcase'] = 'privacy statement';

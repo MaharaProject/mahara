@@ -106,7 +106,7 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
                 $options->period = $period;
                 $options->orderby = $orderby;
                 if ($results->count > 0) {
-                    // Pages shared to user filtered according to date/time frame and filter
+                    // Pages shared to user filtered according to date/time period and filter
                     list($results, $count) = self::filter_views_shared_to_user($results->data, $options);
                 }
                 break;

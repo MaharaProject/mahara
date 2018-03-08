@@ -215,7 +215,7 @@ $string['reportdescaccesslist'] = '<ul>
 <li>Title of the portfolio</li>
 <li>Number of pages in the portfolio</li>
 <li>Access list, i.e. who has permission to view the portfolio</li>
-</ul><p>Listed are portfolios that were created during the selected time frame. Their current access permissions are shown.</p>';
+</ul><p>Listed are portfolios that were created during the selected time period. Their current access permissions are shown.</p>';
 
 $string['reportdescusers'] = '<ul>
 <li>Date</li>
@@ -235,7 +235,7 @@ $string['reportdescuserdetails'] = '<ul>
 <li>Remote username</li>
 <li>Last login</li>
 <li>Number of probation points</li>
-</ul><p>People whose user accounts were created during the selected time frame are displayed.</p>';
+</ul><p>People whose user accounts were created during the selected time period are displayed.</p>';
 
 $string['reportuseractivity'] = 'User activity';
 $string['reportdescuseractivity'] = '<ul>
@@ -282,7 +282,7 @@ $string['reportdescpageactivity'] = '<ul>
 <li>Number of blocks included in the page</li>
 <li>Number of visits to the page</li>
 <li>Number of comments on the page</li>
-</ul><p>Displayed are pages that were modified during the reporting time frame.</p>';
+</ul><p>Displayed are pages that were modified during the reporting time period.</p>';
 $string['allothers'] = 'All others';
 
 $string['reportuseragreement'] = 'User agreements';
@@ -301,7 +301,7 @@ $string['reportdescuseragreement'] = '<ul>
 <li>Institution terms and conditions</li>
 <li>Institution terms and conditions consent reviewed</li>
 <li>Institution</li>
-</ul><p>Displayed are the people who accepted or rejected privacy statements or terms and conditions during the selected time frame.</p>';
+</ul><p>Displayed are the people who accepted or rejected privacy statements or terms and conditions during the selected time period.</p>';
 
 // Last activities reported on in the "User activity" report
 $string['blockinstancecommit'] = 'Add a block to a page';
@@ -406,7 +406,7 @@ $string['usersmasqueradingreports'] = 'Masquerading sessions';
 $string['usersaccesslistreports'] = 'Portfolio access';
 $string['usersuseractivityreports'] = 'User activity';
 $string['usersuserdetailsreports'] = 'User details';
-$string['usersuseragreementreports'] = 'User agreements';
+$string['usersuseragreementreports'] = 'Legal consent';
 $string['groupsreports'] = 'Groups overview';
 $string['contentreports'] = 'Content overview';
 $string['peoplereports'] = 'People overview';
@@ -417,7 +417,7 @@ $string['applyingfilters'] = 'Applying filters';
 $string['nogroupdataperinstitution'] = 'Group reports can only be generated for the entire site. Please select "All institutions" from the institution selector if you have permission to view sitewide reports.';
 $string['nocomparisondataperinstitution'] = 'Comparison reports can only be generated for the entire site. Please select "All institutions" from the institution selector if you have permission to view sitewide reports.';
 $string['nologinsdataperinstitution'] = 'Login reports can only be generated for the entire site. Please select "All institutions" from the institution selector if you have permission to view sitewide reports.';
-$string['timeframe'] = 'Time frame: ';
+$string['timeperiod'] = 'Time period: ';
 
 $string['groupcomments'] = 'Group page comments';
 $string['sharedcomments'] = 'Shared page comments';

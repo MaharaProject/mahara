@@ -60,10 +60,10 @@ $string['upgradeplugin'] = 'The SmartEvidence plugin needs to be upgraded to ena
 
 $string['noannotation'] = 'There are no annotations on page "%s" for standard element "%s".';
 $string['addannotation'] = 'Add an annotation for standard "%s" to page "%s".';
-$string['readyforassessmentcount'] = 'Number of pages that contain the standard element ready for assessment:';
-$string['dontmatchcount'] = 'Number of pages that contain the incompleted standard element:';
-$string['partiallycompletecount'] = 'Number of pages that contain the partially completed standard element:';
-$string['completedcount'] = 'Number of pages that contain the complete standard element:';
+$string['readyforassessmentcount'] = 'Number of pages that contain the standard element "Ready for assessment":';
+$string['dontmatchcount'] = 'Number of pages that contain the standard element "Does not meet the standard":';
+$string['partiallycompletecount'] = 'Number of pages that contain the standard element "Partially meets the standard":';
+$string['completedcount'] = 'Number of pages that contain the standard element "Meets the standard":';
 $string['tabledesc'] = 'Below is the structure for the collection\'s SmartEvidence matrix.';
 $string['standardbegin'] = 'Beginning of a standard section';
 $string['uncollapsesection'] = 'Click to show the table section for standard "%s".';

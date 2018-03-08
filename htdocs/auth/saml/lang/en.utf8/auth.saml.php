@@ -16,8 +16,8 @@ $string['attributemapfilenotfound'] = 'Could not find attribute map file or it i
 $string['certificate1'] = 'SAML Service Provider signing and encryption certificate';
 $string['spmetadata'] = 'Service Provider metadata';
 $string['metadatavewlink'] = '<a href="%s">View metadata</a>';
-$string['ssphpnotconfigured'] = 'SimpleSAMLPHP is not configured';
-$string['manage_certificate2'] = 'This is the certificate generated as part of the SAML Service Provider';
+$string['ssphpnotconfigured'] = 'SimpleSAMLPHP is not configured.';
+$string['manage_certificate2'] = 'This is the certificate generated as part of the SAML Service Provider.';
 $string['nullprivatecert'] = "Could not generate or save the private key";
 $string['nullpubliccert'] = "Could not generate or save the public certificate";
 $string['defaultinstitution'] = 'Default institution';
