@@ -381,7 +381,6 @@ $siteoptionform = array(
                         'some'     => get_string('defaultaccountlifetimeupdatesome', 'admin'),
                         'all'      => get_string('defaultaccountlifetimeupdateall', 'admin')
                     ),
-                    'help'         => true,
                 ),
                 'defaultaccountinactiveexpire' => array(
                     'type'         => 'expiry',
