@@ -1261,6 +1261,20 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Visit a Mahara extension configuration page with the specified name
+     *
+     * @Given I go to the :plugin plugin :name configuration
+     * @Given I go to the :plugin plugin :name configuration :type type
+     */
+    public function i_go_to_extension_configuration($plugin, $name, $type=null) {
+        $path = "/admin/extensions/pluginconfig.php?plugintype=" . $plugin . "&pluginname=" . $name;
+        if ($type) {
+            $path .= "&type=" . $type;
+        }
+        $this->visitPath($path);
+    }
+
+    /**
      * Expand a collapsible section containing the specified text.
      *
      * @When /^I expand the section "(?P<text>(?:[^"]|\\")*)"$/

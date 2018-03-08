@@ -13,8 +13,7 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
     # Modifying user quota quota to 2MB
-    And I choose "Extensions" from administration menu
-    And I go to "admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=file&type=file"
+    And I go to the "artefact" plugin "file" configuration "file" type
     And I follow "Default user quota"
     # Clearning the tex box first to enter 2 MB
     And I fill in "Default quota" with ""
