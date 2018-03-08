@@ -20,11 +20,17 @@ $path = realpath('../lib');
 set_include_path($path . PATH_SEPARATOR . get_include_path());
 
 // calculate the log process name
-$LOG_PROCESS = explode('.', $_SERVER['HTTP_HOST']);
+$LOG_PROCESS = explode('.', get_config('wwwroot'));
 $LOG_PROCESS = 'ssphp-' . array_shift($LOG_PROCESS);
 
 $metadata_files = glob(AuthSaml::get_metadata_path() . '*.xml');
 $metadata_sources = array();
+
+//This must be first so we always prefer the meta refresh metadata files
+//over the xml files wherever we can
+$metadata_sources[] = array('type' => 'flatfile', 'directory' => Metarefresh::get_metadata_path());
+
+//Now load any xml files from the xml style metadata
 foreach ($metadata_files as $file) {
     $metadata_sources[]= array('type' => 'xml', 'file' => $file);
 }
@@ -112,7 +118,7 @@ $config = array (
      * A possible way to generate a random salt is by running the following command from a unix shell:
      * tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo
      */
-    'secretsalt' => get_config('installation_key') . $_SERVER['HTTP_HOST'],
+    'secretsalt' => get_config('installation_key') . get_config('wwwroot'),
 
     /*
      * Some information about the technical persons running this installation.

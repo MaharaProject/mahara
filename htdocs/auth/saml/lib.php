@@ -4,6 +4,7 @@
  * @package    mahara
  * @subpackage auth-saml
  * @author     Piers Harding <piers@catalyst.net.nz>
+ * @author     Francis Devine <francis@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
@@ -348,8 +349,28 @@ class PluginAuthSaml extends PluginAuth {
         'loginlink'              => 0,
         'institutionidpentityid' => '',
         'active'                 => 1,
-        'authloginmsg'           => ''
+        'authloginmsg'           => '',
+        'metarefresh_metadata_url'         => '',
     );
+
+    public static function get_cron() {
+        return array(
+            (object)array(
+                'callfunction' => 'auth_saml_refresh_cron',
+                'minute' => '30',
+                'hour' => '*',
+            ),
+        );
+    }
+
+    /*
+     * This will trigger the simplesamlphp metadata module to do a refresh
+     * in a similar way to as if we had configured a simplesamlphp web cron
+     */
+    public static function auth_saml_refresh_cron() {
+        Metarefresh::metadata_refresh_hook();
+    }
+
 
     public static function can_be_disabled() {
         return true;
@@ -878,14 +899,16 @@ jQuery('document').ready(function($) {
         if (idp == 'new') {
             // clear the metadata box
             $('#auth_config_institutionidp').val('');
+            // clear the entity url box
+            $('#auth_config_metarefresh_metadata_url').val('');
             update_idp_label(false);
         }
         else {
-            // fetch the metadata info and update the textarea
-            idpsafe = idp.replace(/[\/:\.]/g, '_'); // change dots to underscores as that is how we save file
-            sendjsonrequest(config.wwwroot + 'auth/saml/idpmetadata.json.php', {'idp': idpsafe}, 'POST', function (data) {
+            // fetch the metadata info and update the textarea and url if configured
+            sendjsonrequest(config.wwwroot + 'auth/saml/idpmetadata.json.php', {'idp': idp}, 'POST', function (data) {
                 if (!data.error) {
                     $('#auth_config_institutionidp').val(data.data.metadata);
+                    $('#auth_config_metarefresh_metadata_url').val(data.data.metarefresh_metadata_url);
                 }
             });
             update_idp_label(idp);
@@ -930,6 +953,16 @@ EOF;
                 'options' => $entityidps,
                 'defaultvalue' => ($entityid ? $entityid : 'new'),
                 'hiddenlabel' => $entityidp_hiddenlabel,
+            ),
+            'metarefresh_metadata_url' => array(
+                'type'  => 'text',
+                'size' => 100,
+                'title' => get_string('metarefresh_metadata_url', 'auth.saml'),
+                'rules' => array(
+                    'required' => false,
+                ),
+                'defaultvalue' => self::$default_config['metarefresh_metadata_url'],
+                'help'  => true,
             ),
             'institutionidp' => array(
                 'type'  => 'textarea',
@@ -1183,7 +1216,6 @@ EOF;
            $changedxml = true;
            $SESSION->add_ok_msg(get_string('idpentityadded', 'auth.saml'));
         }
-
         self::$default_config = array(
             'user_attribute' => $values['user_attribute'],
             'weautocreateusers' => $values['weautocreateusers'],
@@ -1199,6 +1231,7 @@ EOF;
             'institutionregex' => $values['institutionregex'],
             'institutionidpentityid' => $entityid,
             'authloginmsg' => $values['authloginmsg'],
+            'metarefresh_metadata_url' => $values['metarefresh_metadata_url'],
         );
 
         foreach(self::$default_config as $field => $value) {
@@ -1287,6 +1320,176 @@ if (file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/Simp
             $idpList = $this->filterList($idpList);
             $preferredIdP = $this->getRecommendedIdP();
             return array('list' => $idpList, 'preferred' => $preferredIdP);
+        }
+    }
+}
+
+
+/*
+ * Provides any mahara specific wrappers for the metarefresh plugin from simplesamlphp that is used to refresh IDP metadata
+ */
+class Metarefresh {
+    /*
+     * Path that the metarefresh module should write it's metadata file to
+     *
+     * It is also used to store the metarefresh state file
+     */
+    public static function get_metadata_path() {
+        check_dir_exists(get_config('dataroot') . 'metadata/refresh/');
+        return get_config('dataroot') . 'metadata/refresh/';
+    }
+
+    /*
+     * Return all configured metadataurls for idps if any found
+     */
+    public static function get_metadata_urls() {
+        $finalarr = array();
+        $sites = get_records_menu('auth_instance_config', 'field', 'institutionidpentityid', '', 'instance, value');
+        $urls = get_records_array('auth_instance_config', 'field', 'metarefresh_metadata_url', '', 'field, value, instance');
+        if ( ( !$sites || count($sites) <= 0 ) || ( !$urls || count($urls) <= 0 ) ) {
+            log_warn("Could not get any valid urls for metadata refresh url list", false, false);
+            return array();//could not get any valid urls to fetch metadata from
+        }
+        foreach($urls as $url) {
+            if ( isset($url->value) && !empty($url->value) ) {
+                if ( isset($sites[$url->instance]) ) {
+                    $finalarr[$sites[$url->instance]] = $url->value;
+                }
+            }
+        }
+        return $finalarr;
+    }
+
+    /*
+     * Given an IDP entity id, find the source url for it
+     */
+    public static function get_metadata_url($idp) {
+        $sources = self::get_metadata_urls();
+        if (isset($sources[$idp])) {
+            return $sources[$idp];
+        }
+        return '';
+    }
+
+
+
+    /**
+    * Hook to try a metarefresh using the metarefresh module in simplesaml from mahara
+    *
+    * Most of this code was based on the  cron_hook in the metarefresh module
+    *
+    * With only minimal mahara specific tweaks around config and data paths
+    *
+    */
+    function metadata_refresh_hook() {
+        try {
+            //Include autoloader and setup config dir correctly
+            PluginAuthSaml::init_simplesamlphp();
+
+            $config = SimpleSAML_Configuration::getInstance();
+            $mconfig = SimpleSAML_Configuration::getOptionalConfig('config-metarefresh.php');
+
+            $sets = $mconfig->getConfigList('sets', array());
+
+            //Store our metarefresh state file in the sitedata for the site
+            $stateFile = self::get_metadata_path() . 'metarefresh-state.php';
+
+            foreach ($sets AS $setkey => $set) {
+
+                SimpleSAML_Logger::info('Mahara [metarefresh]: Executing set [' . $setkey . ']');
+
+                $expireAfter = $set->getInteger('expireAfter', NULL);
+                if ($expireAfter !== NULL) {
+                    $expire = time() + $expireAfter;
+                }
+                else {
+                    $expire = NULL;
+                }
+
+                $outputDir = $set->getString('outputDir');
+                $outputDir = $config->resolvePath($outputDir);
+                $outputFormat = $set->getValueValidate('outputFormat', array('flatfile', 'serialize'), 'flatfile');
+
+                $oldMetadataSrc = SimpleSAML_Metadata_MetaDataStorageSource::getSource(array(
+                    'type' => $outputFormat,
+                    'directory' => $outputDir,
+                ));
+
+                $metaloader = new sspmod_metarefresh_MetaLoader($expire, $stateFile, $oldMetadataSrc);
+
+                # Get global blacklist, whitelist and caching info
+                $blacklist = $mconfig->getArray('blacklist', array());
+                $whitelist = $mconfig->getArray('whitelist', array());
+                $conditionalGET = $mconfig->getBoolean('conditionalGET', FALSE);
+
+                // get global type filters
+                $available_types = array(
+                    'saml20-idp-remote',
+                    'saml20-sp-remote',
+                    'shib13-idp-remote',
+                    'shib13-sp-remote',
+                    'attributeauthority-remote'
+                );
+                $set_types = $set->getArrayize('types', $available_types);
+
+                foreach($set->getArray('sources') AS $source) {
+
+                    // filter metadata by type of entity
+                    if (isset($source['types'])) {
+                        $metaloader->setTypes($source['types']);
+                    }
+                    else {
+                        $metaloader->setTypes($set_types);
+                    }
+
+                    # Merge global and src specific blacklists
+                    if (isset($source['blacklist'])) {
+                        $source['blacklist'] = array_unique(array_merge($source['blacklist'], $blacklist));
+                    }
+                    else {
+                        $source['blacklist'] = $blacklist;
+                    }
+
+                    # Merge global and src specific whitelists
+                    if (isset($source['whitelist'])) {
+                        $source['whitelist'] = array_unique(array_merge($source['whitelist'], $whitelist));
+                    }
+                    else {
+                        $source['whitelist'] = $whitelist;
+                    }
+
+                    # Let src specific conditionalGET override global one
+                    if (!isset($source['conditionalGET'])) {
+                        $source['conditionalGET'] = $conditionalGET;
+                    }
+
+                    SimpleSAML_Logger::debug('cron [metarefresh]: In set [' . $setkey . '] loading source ['  . $source['src'] . ']');
+                    $metaloader->loadSource($source);
+                }
+
+                // Write state information back to disk
+                $metaloader->writeState();
+
+                switch ($outputFormat) {
+                    case 'flatfile':
+                        $metaloader->writeMetadataFiles($outputDir);
+                        break;
+                    case 'serialize':
+                        $metaloader->writeMetadataSerialize($outputDir);
+                        break;
+                }
+
+                if ($set->hasValue('arp')) {
+                    $arpconfig = SimpleSAML_Configuration::loadFromArray($set->getValue('arp'));
+                    $metaloader->writeARPfile($arpconfig);
+                }
+            }
+            return true;//we were able to update successfully
+
+        }
+        catch (Exception $e) {
+            SimpleSAML_Logger::info('Mahara [metarefresh]: Error during metadata refresh ' . $e->getMessage());
+            return false;//fetch failed
         }
     }
 }
