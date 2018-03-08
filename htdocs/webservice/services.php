@@ -246,6 +246,24 @@ $functions = array(
         'description' => 'Unlock view that has been used for an assessment',
         'type'        => 'write',
     ),
+
+    // === blog related functions ===
+
+    'mahara_blog_get_blogs_for_user' => array(
+        'classname'   => 'mahara_blog_external',
+        'methodname'  => 'get_blogs_for_user',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Get blogs/posts for a specific user',
+        'type'        => 'read',
+    ),
+
+    'mahara_blog_create_blogpost' => array(
+        'classname'   => 'mahara_blog_external',
+        'methodname'  => 'create_blogpost',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Add blogpost to specified blog for a specific user',
+        'type'        => 'write',
+    ),
 );
 
 /**

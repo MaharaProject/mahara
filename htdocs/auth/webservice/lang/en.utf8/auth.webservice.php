@@ -391,3 +391,5 @@ $string['membersinvalidaction'] = 'invalid action "%s" for user "%s" on group "%
 $string['passwordmustbechangedviawebsite'] = 'You need to change your password. Please log in via a web browser in order to update your password.';
 $string['featuredisabled'] = 'This web services feature is not enabled. Please contact your site administrator for more information.';
 $string['institutionunknown'] = '- unknown -';
+
+$string['notuserblog'] = 'The journal is not owned by "%s"';
