@@ -1,0 +1,11 @@
+Bootstrap Datetimepicker
+========================
+
+Website: https://eonasdan.github.io/bootstrap-datetimepicker/
+Version: 4.17.47
+
+The bootstrap datetimepicker makes it easy to select dates and times on input fields by using a popup selector. It runs using bootstrap and moment.js.
+
+Changes:
+- Added aria-labels
+- Added function, press h, to switch between the date and time picker pages

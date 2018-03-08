@@ -1,0 +1,9 @@
+Moment.js
+=========
+
+Website: http://momentjs.com/
+Version: 2.20.1
+
+Moment.js makes use of javascript to parse, validate, manipulate, and display dates and times in Mahara. It is used in conjunction with the bootstrap datetimepicker.
+
+Changes: none

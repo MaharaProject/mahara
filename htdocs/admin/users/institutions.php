@@ -326,13 +326,16 @@ if ($institution || $add) {
     }
     if ($USER->get('admin') && $institution != 'mahara') {
        $elements['expiry'] = array(
-            'type'         => 'date',
+            'type'         => 'calendar',
             'title'        => get_string('institutionexpiry', 'admin'),
             'description'  => get_string('institutionexpirydescription', 'admin', hsc($sitename)),
             'defaultvalue' => is_null($data->expiry) ? null : strtotime($data->expiry),
             'help'         => true,
             'minyear'      => date('Y') - 2,
             'maxyear'      => date('Y') + 10,
+            'caloptions' => array(
+                'showsTime'      => false,
+            ),
         );
     }
     if ($USER->get('admin')) {

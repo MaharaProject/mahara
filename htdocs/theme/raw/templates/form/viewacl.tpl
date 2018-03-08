@@ -89,12 +89,12 @@
     </td>
     <td class="text-center js-date short" data-name='from'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}">
-            <span class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][startdate]" class="form-control pull-left" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" {% if (o.presets.locked) { %}disabled{% } %}></span>
+            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][startdate]" class="form-control pull-left" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" aria-label="Date from (Edit the field using the following format, year / month / day, hours colon minutes, a m or p m.)" {% if (o.presets.locked) { %}disabled{% } %}></div>
         </div>
     </td>
     <td class="text-center js-date short" data-name='to'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}">
-            <span class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][stopdate]" class="form-control pull-left " data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}"  {% if (o.presets.locked) { %}disabled{% } %}></span>
+            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][stopdate]" class="form-control pull-left " data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="Date to (Edit the field using the following format, year / month / day, hours colon minutes, a m or p m.)" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %}></div>
         </div>
     </td>
     {% if (o.viewtype !== "profile") { %}
@@ -134,36 +134,21 @@ jQuery(function($) {
         });
 
         function setDatePicker(target) {
+            var loc = '{{strstr(current_language(), '.', true)}}'; // Get current langauge to use for locale
             target.datetimepicker({
-                dateFormat: "{{str(tag='pieform_calendar_dateformat' section='langconfig')|pieform_element_calendar_convert_dateformat}}",
-                showOtherMonths: true,
-                selectOtherMonths: true,
-                showButtonPanel: true,
-                beforeShow: function(input, inst) {
-                    setTimeout(function() {
-                        add_prev_next_year(inst);
-                    }, 1);
+                useCurrent: false,
+                format: "{{str(tag='pieform_calendar_dateformat' section='langconfig')|pieform_element_calendar_convert_dateformat}} {{str(tag='pieform_calendar_timeformat' section='langconfig')|pieform_element_calendar_convert_timeformat}}",
+                locale: loc,
+                showClear: true,
+                showTodayButton: true,
+                tooltips: {{$datepickertooltips|safe}},
+                icons: {
+                    clear: "icon icon-trash",
+                    today: "icon icon-crosshairs",
                 },
-                onChangeMonthYear: function(y, m, inst) {
-                    setTimeout(function() {
-                        add_prev_next_year(inst);
-                    }, 1);
-                },
-                onClose: function( selectedDate ) {
-                    var setmin = $(this).attr('data-setmin'),
-                        setmax = $(this).attr('data-setmax'),
-                        setdatatarget =  $(this).attr('data-setdatatarget'),
-                        settarget = $(this).closest('td').siblings(['data-name="' + setdatatarget + '"']).find('input');
-
-                    if (setmin !== undefined) {
-                        settarget.datetimepicker( "option", "minDate", selectedDate);
-                    }
-                    if (setmax !== undefined) {
-                        settarget.datetimepicker( "option", "maxDate", selectedDate);
-                    }
-                    if ((setmin !== undefined || setmax !== undefined ) && selectedDate !== "") {
-                        formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
-                    }
+            }).on('dp.hide', function(selectedDate) {
+                if (selectedDate !== "") {
+                    formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
                 }
             });
         }
@@ -330,7 +315,7 @@ jQuery(function($) {
         function attachEventListeners(id) {
             var newrow = $('#accesslistitems').find('[data-id="' + id + '"]');
             attachShareTypeEvent(newrow);
-            setDatePicker($(newrow).find('.js-date-picker > span > input'));
+            setDatePicker($(newrow).find('.js-date-picker > div > input'));
             attachSelect2Search($(newrow).find('.js-select2-search'));
             attachCommentEvents($(newrow));
             onChange($(newrow));
@@ -563,7 +548,7 @@ jQuery(function($) {
             shareoptions = shareWithOptions(rows[i]);
 
         renderAccessList(shareoptions);
-        setDatePicker($( ".js-date-picker > span > input" ));
+        setDatePicker($( ".js-date-picker > div > input" ));
     });
 });
 
