@@ -32,6 +32,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Web services sub-menu'       => array(".webservices", "css_element"),
     'H1 heading'                  => array("h1", "css_element"),
     'Collections text-box'        => array(".select2-selection__rendered", "css_element"),
+    'Videojs time remaining'      =>  array(".vjs-remaining-time-display", "css_element"),
     'Annotation'                  => array("#activate_blocktype_annotation", "css_element"),
     'Smartevidence'               => array("#activate_module_framework", "css_element"),
     'Make comment public status'  => array("#add_feedback_form_ispublic_container", "css_element"),
