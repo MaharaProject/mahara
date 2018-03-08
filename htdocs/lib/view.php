@@ -706,7 +706,18 @@ class View {
 
     public function get_tags() {
         if (!isset($this->tags)) {
-            $this->tags = get_column_sql('SELECT tag FROM {tag} WHERE resourcetype = ? AND resourceid = ? ORDER BY tag', array('view', $this->get('id')));
+            $typecast = is_postgres() ? '::varchar' : '';
+            $this->tags = get_column_sql("
+            SELECT
+                (CASE
+                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                    ELSE t.tag
+                END) AS tag
+            FROM {tag} t
+            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+            LEFT JOIN {institution} i ON i.name = t2.ownerid
+            WHERE t.resourcetype = ? AND t.resourceid = ?
+            ORDER BY tag", array('view', $this->get('id')));
         }
         return $this->tags;
     }
@@ -800,6 +811,9 @@ class View {
             foreach ($this->get_tags() as $tag) {
                 //truncate the tag before insert it into the database
                 $tag = substr($tag, 0, 128);
+                if ($institutiontag = get_record('tag', 'tag', $tag, 'resourcetype', 'institution', 'ownertype', 'institution')) {
+                    $tag = 'tagid_' . $institutiontag->id;
+                }
                 insert_record('tag',
                     (object)array(
                         'resourcetype' => 'view',

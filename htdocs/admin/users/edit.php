@@ -270,7 +270,25 @@ $elements['externalauthjs'] = array(
     'value'        => $js,
 );
 
-$tags = get_column_sql('SELECT tag FROM {tag} WHERE resourcetype = ? AND resourceid = ? AND NOT tag ' . db_ilike() . " 'lastinstitution:%'", array('usr', $user->id));
+$tags = array();
+if ($tagsarray = get_records_sql_array("SELECT t.tag, t.prefix, t.ownerid
+    FROM (
+        SELECT ut.tag, NULL AS prefix, 0 AS ownerid
+        FROM {tag} ut
+        WHERE resourcetype = ? AND resourceid = ? AND ownertype <> 'instituion'
+        AND NOT tag " . db_ilike() . " 'lastinstitution:%'
+        UNION
+        SELECT it.tag, it.ownerid AS prefix, i.id AS ownerid
+        FROM {tag} it
+        JOIN {institution} i ON i.name = it.ownerid
+        WHERE resourcetype = ? AND resourceid = ?
+        AND tag " . db_ilike() . " 'lastinstitution:%'
+    ) t
+    GROUP BY t.tag, t.prefix, t.ownerid", array('usr', $user->id, 'usr', $user->id))) {
+    foreach ($tagsarray as $k => $v) {
+        $tags[] = $v->tag;
+    }
+}
 
 $elements['tags'] = array(
     'defaultvalue' => $tags,
@@ -610,6 +628,9 @@ function edituser_site_submit(Pieform $form, $values) {
             if (empty($tag)) {
                 continue;
             }
+            if ($tagid = get_field('tag', 'resourceid', 'resourcetype', 'institution', 'tag', $tag)) {
+                $tag = 'tagid_' . $tagid;
+            }
             insert_record(
                 'tag',
                 (object) array(
@@ -617,7 +638,7 @@ function edituser_site_submit(Pieform $form, $values) {
                     'resourceid' => $user->id,
                     'ownertype' => 'user',
                     'ownerid' => $user->id,
-                    'tag' => strtolower($tag),
+                    'tag' => $tag,
                     'ctime' => db_format_timestamp(time()),
                     'editedby' => $USER->get('id'),
                 )

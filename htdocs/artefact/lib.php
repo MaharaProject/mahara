@@ -653,9 +653,13 @@ abstract class ArtefactType implements IArtefactType {
                 $ownerid = $this->owner;
             }
             $this->tags = check_case_sensitive($this->tags, 'tag');
+
             foreach (array_unique($this->tags) as $tag) {
                 if (empty($tag)) {
                     continue;
+                }
+                if ($institutiontag = get_record('tag', 'tag', $tag, 'resourcetype', 'institution', 'ownertype', 'institution')) {
+                    $tag = 'tagid_' . $institutiontag->id;
                 }
                 insert_record('tag',
                     (object) array(
@@ -1233,8 +1237,18 @@ abstract class ArtefactType implements IArtefactType {
         if (empty($artefactids)) {
             return array();
         }
+        $typecast = is_postgres() ? '::varchar' : '';
         $artefactids = join("','", array_map('intval', $artefactids));
-        $tags = get_records_sql_array("SELECT tag, resourceid FROM {tag} WHERE resourcetype = 'artefact' AND resourceid IN ('" . $artefactids . "')");
+        $tags = get_records_sql_array("
+            SELECT
+                (CASE
+                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                    ELSE t.tag
+                END) AS tag, t.resourceid
+            FROM {tag} t
+            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+            LEFT JOIN {institution} i ON i.name = t2.ownerid
+            WHERE t.resourcetype = 'artefact' AND t.resourceid IN ('" . $artefactids . "')");
         if (!$tags) {
             return array();
         }
@@ -1249,8 +1263,18 @@ abstract class ArtefactType implements IArtefactType {
             ORDER BY a.title', array($this->id));
 
         // load tags
+        $typecast = is_postgres() ? '::varchar' : '';
         if ($list) {
-            $tags = get_records_sql_array("SELECT tag, resourceid FROM {tag} WHERE resourcetype = 'artefact' AND resourceid IN ('" . join("','", array_keys($list)) . "')");
+            $tags = get_records_sql_array("
+                SELECT
+                    (CASE
+                        WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                        ELSE t.tag
+                    END) AS tag, t.resourceid
+                FROM {tag} t
+                LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+                LEFT JOIN {institution} i ON i.name = t2.ownerid
+                WHERE t.resourcetype = 'artefact' AND t.resourceid IN ('" . join("','", array_keys($list)) . "')");
             if ($tags) {
                 foreach ($tags as $t) {
                     $list[$t->resourceid]->tags[] = $t->tag;
@@ -1356,7 +1380,18 @@ abstract class ArtefactType implements IArtefactType {
         if (empty($id)) {
             return array();
         }
-        $tags = get_column_sql('SELECT tag FROM {tag} WHERE resourcetype = ? AND resourceid = ? ORDER BY tag', array('artefact', $id));
+        $typecast = is_postgres() ? '::varchar' : '';
+        $tags = get_column_sql("
+            SELECT
+                (CASE
+                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                    ELSE t.tag
+                END) AS tag
+            FROM {tag} t
+            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+            LEFT JOIN {institution} i ON i.name = t2.ownerid
+            WHERE t.resourcetype = ? AND t.resourceid = ?
+            ORDER BY tag", array('artefact', $id));
         if (!$tags) {
             return array();
         }
