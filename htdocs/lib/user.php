@@ -1908,6 +1908,8 @@ function get_new_profile_urlid($desired) {
 function profile_url($user, $full=true, $useid=false) {
     $wantclean = !$useid && get_config('cleanurls');
 
+    $urlid = null;
+    $id = null;
     if ($user instanceof User) {
         $id = $user->get('id');
         $urlid = $wantclean ? $user->get('urlid') : null;
