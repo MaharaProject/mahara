@@ -694,7 +694,17 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 }
             }
             $tagwhere = "'" . join("','", array_keys($filedata)) . "'";
-            $tags = get_records_sql_array("SELECT tag, resourceid FROM {tag} WHERE resourcetype = 'artefact' AND resourceid IN (" . $tagwhere . ")");
+            $typecast = is_postgres() ? '::varchar' : '';
+            $tags = get_records_sql_array("
+                SELECT
+                    (CASE
+                        WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                        ELSE t.tag
+                    END) AS tag, t.resourceid
+                FROM {tag} t
+                LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+                LEFT JOIN {institution} i ON i.name = t2.ownerid
+                WHERE t.resourcetype = 'artefact' AND t.resourceid IN (" . $tagwhere . ")");
             if ($tags) {
                 foreach ($tags as $t) {
                     $filedata[$t->resourceid]->tags[] = $t->tag;

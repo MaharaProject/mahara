@@ -39,6 +39,13 @@ Scenario: Creating institution tags
     And I follow "Display page"
     Then I should see "Institution One: One tag"
 
+    Given I choose "Files" in "Content" from main menu
+    And I attach the file "Image2.png" to "files_filebrowser_userfile"
+    And I click on "Edit" in "Image2.png" row
+    And I fill in select2 input "files_filebrowser_edit_tags" with "One tag" and select "Institution One: One tag (1)"
+    And I fill in select2 input "files_filebrowser_edit_tags" with "Image" and select "Image"
+    And I press "Save changes"
+
     Given I choose "Pages and collections" in "Portfolio" from main menu
     And I follow "Tags"
     And I follow "Edit tags"
