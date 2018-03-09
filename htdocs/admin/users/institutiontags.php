@@ -152,9 +152,44 @@ function institutiontag_validate(Pieform $form, $values) {
     }
 }
 
-// Get the exiting institution tags.
-$id   = get_field('institution', 'id', 'name', $institution);
-$tags = get_records_sql_array("SELECT * FROM {tag} t WHERE resourcetype = 'institution' AND resourceid = ?", array($id));
+// Get the institution tags and their used status.
+$typecast = is_postgres() ? '::varchar' : '';
+$sql = "
+    SELECT id, tag, SUM(count) AS count
+    FROM (
+        SELECT id, tag, 0 AS count
+        FROM {tag}
+        WHERE resourcetype = 'institution'
+        AND ownertype = 'institution' AND ownerid IN (?)
+        UNION
+        SELECT t2.id, t2.tag AS tag, COUNT(t2.tag) AS count
+        FROM {tag} t
+        JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+        JOIN {institution} i ON i.name = t2.ownerid
+        WHERE t.resourcetype IN ('artefact', 'view', 'collection') AND i.name = ?
+        GROUP BY 1, 2
+    ) AS tags
+    GROUP BY tags.tag, tags.id
+    ORDER BY LOWER(tags.tag)";
+$tags = get_records_sql_assoc($sql, array($institution, $institution));
+
+// Delete tag.
+$delete = param_integer('delete', null);
+if ($delete) {
+    db_begin();
+    if (isset($tags[$delete]) && $tags[$delete]->count == 0 && delete_records_select('tag', " ownertype = 'institution' AND ownerid = ? AND id = ?", array($institution, $delete))) {
+        $SESSION->add_ok_msg(get_string('institutiontagdeleted'));
+    }
+    else {
+        $SESSION->add_error_msg(get_string('institutiontagdeletefail'));
+    }
+    db_commit();
+    redirect("/admin/users/institutiontags.php?institution=" . $institution);
+}
+
+if (!$tags) {
+    $tags = array();
+}
 
 $smarty = smarty(array('paginator'));
 setpageicon($smarty, 'icon-university');

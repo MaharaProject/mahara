@@ -219,15 +219,20 @@ $string['allowinstitutiontags'] = 'Allow institution tags';
 $string['allowinstitutiontagsdescription'] = 'Administrators can define a set of tags that institution members can use.';
 $string['cantlistinstitutiontags'] = 'You are not allowed to list institution tags.';
 $string['createtag'] = 'Create tag';
+$string['deleteinstitutiontag'] = 'Delete institution tag';
+$string['editinstitutiontag'] = 'Edit institution tag';
 $string['error:duplicatetag'] = 'Institutional tag already exists.';
 $string['error:emptytag'] = 'Institutional tag cannot be empty.';
 $string['institutiontagcantbesaved'] = 'Institution tag can\'t be saved.';
 $string['institutiontag'] = 'Institution tag';
 $string['institutiontagdesc'] = 'You can add one tag at a time';
+$string['institutiontagdeleted'] = 'Institution tag deleted successfully.';
+$string['institutiontagdeletefail'] = 'Failed to delete institution tag.';
 $string['institutiontags'] = 'Institution tags';
 $string['institutiontagsdescription'] = 'The institution tags are predefined by the institution and available for use by all institution members. You can create as many tags as you like.';
 $string['institutiontagsaved'] = 'Institution tag saved.';
 $string['notags'] = 'No tags for this institution.';
+$string['timesused'] = 'Times used:';
 
 // License metadata
 $string['license'] = 'License';

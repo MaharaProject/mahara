@@ -35,6 +35,11 @@ Scenario: Creating institution tags
     And I set the field "Institution tag" to "One tag"
     And I press "Save"
     Then I should see "Institution tag saved"
+    And I follow "Create tag"
+    And I set the field "Institution tag" to "Two tag"
+    And I press "Save"
+    And I follow "Delete institution tag" in "Two tag" row
+    Then I should see "Institution tag deleted successfully"
     And I log out
 
     Given I log in as "UserA" with password "Kupuh1pa!"
