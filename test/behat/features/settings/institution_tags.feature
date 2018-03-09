@@ -34,6 +34,13 @@ Scenario: Creating institution tags
     And I click on "Edit" in "Page UserA_01" panel menu
     And I follow "Settings" in the "Toolbar buttons" property
     And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (0)"
+    And I fill in select2 input "settings_tags" with "Test" and select "Test"
     And I press "Save"
     And I follow "Display page"
     Then I should see "Institution One: One tag"
+
+    Given I choose "Pages and collections" in "Portfolio" from main menu
+    And I follow "Tags"
+    And I follow "Edit tags"
+    Then I should see "Test" in the "My tags list" property
+    Then I should not see "Institution One: One tag" in the "My tags list" property

@@ -29,6 +29,14 @@ $owner  = (object) array('type' => 'user', 'id' => $USER->get('id'));
 $data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort, $type);
 build_portfolio_search_html($data);
 $data->tagdisplay = is_null($tag) ? get_string('alltags') : hsc(str_shorten_text($tag, 50));
+
+$data->is_institution_tag = false;
+if ($tag) {
+    $tagname = strpos($tag, ':') ? explode(': ', $tag)[1] : $tag;
+    if ($institution = get_field('tag', 'ownerid', 'tag', $tagname)) {
+        $data->is_institution_tag = get_field('institution', 'displayname', 'name', $institution);
+    }
+}
 $data->tagurl = urlencode($tag);
 
 json_reply(false, array('data' => $data));

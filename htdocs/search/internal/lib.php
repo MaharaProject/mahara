@@ -1025,8 +1025,21 @@ class PluginSearchInternal extends PluginSearch {
 
         if (!is_null($tag)) {
             $artefacttypefilter .= ' AND at.tag = ?';
-            $viewfilter .= ' AND vt.tag = ?';
-            $collectionfilter .= ' AND (ct.tag = ? OR vt.tag = ?)';
+            $viewfilter         .= ' AND vt.tag = ?';
+            $collectionfilter   .= ' AND (ct.tag = ? OR vt.tag = ?)';
+
+            // Test if this is an institutionally defined
+            // tag and strip the displayname prefix out.
+            // $tagid = null;
+            $split = explode(':', $tag);
+            if (count($split) == 2) {
+                $prefix = trim($split[0]);
+                $tag    = trim($split[1]);
+                $tag = get_field_sql("SELECT CONCAT('tagid_', t.id)
+                    FROM {tag} t
+                    JOIN {institution} i ON i.name = t.ownerid
+                    WHERE i.displayname = ? AND t.tag = ?", array($prefix, $tag));
+            }
             $values = array($owner->id, $tag, $owner->id, $tag, $owner->id, $tag, $tag);
         }
         else {
@@ -1136,23 +1149,49 @@ class PluginSearchInternal extends PluginSearch {
                         }
                     }
                     if (!empty($ids['view'])) {
-                        if ($viewtags = get_records_select_array('tag', "resourcetype = 'view' AND resourceid IN ('" . join("','", array_keys($ids['view'])) . "')")) {
+                        $viewtags = get_records_sql_array("
+                            SELECT
+                                (CASE
+                                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                                    ELSE t.tag
+                                END) AS tag, t.resourceid
+                            FROM {tag} t
+                            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+                            LEFT JOIN {institution} i ON i.name = t2.ownerid
+                            WHERE t.resourcetype = 'view' AND t.resourceid IN ('" . join("','", array_keys($ids['view'])) . "')");
+                        if ($viewtags) {
                             foreach ($viewtags as &$vt) {
                                 $data['view:' . $vt->resourceid]->tags[] = $vt->tag;
                             }
                         }
                     }
                     if (!empty($ids['collection'])) {
-                        if ($collectiontags = get_records_select_array('tag', "resourcetype = 'collection' AND resourceid IN ('" . join("','", array_keys($ids['collection'])) . "')")) {
+                        $collectiontags = get_records_sql_array("
+                            SELECT
+                                (CASE
+                                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                                    ELSE t.tag
+                                END) AS tag, t.resourceid
+                            FROM {tag} t
+                            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+                            LEFT JOIN {institution} i ON i.name = t2.ownerid
+                            WHERE t.resourcetype = 'collection' AND t.resourceid IN ('" . join("','", array_keys($ids['collection'])) . "')");
+                        if ($collectiontags) {
                             foreach ($collectiontags as &$ct) {
                                 $data['collection:' . $ct->resourceid]->tags[] = $ct->tag;
                             }
                         }
                         if ($collectionviewtags = get_records_sql_array("
-                                SELECT vt.tag, c.id, cv.view
+                                SELECT c.id, cv.view,
+                                    (CASE
+                                        WHEN vt.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                                        ELSE vt.tag
+                                    END) AS tag
                                 FROM {collection} c
                                 JOIN {collection_view} cv ON cv.collection = c.id
                                 LEFT JOIN {tag} vt ON (vt.resourcetype = 'view' AND vt.resourceid = cv.view" . $typecast . ")
+                                LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(vt.tag, 7)
+                                LEFT JOIN {institution} i ON i.name = t2.ownerid
                                 WHERE c.id IN (" . join(',', array_keys($ids['collection'])) . ")
                                 AND vt.tag IS NOT NULL")) {
                             foreach ($collectionviewtags as &$cvt) {
@@ -1163,16 +1202,32 @@ class PluginSearchInternal extends PluginSearch {
                         }
                     }
                     if (!empty($ids['artefact'])) {
-                        if ($artefacttags = get_records_select_array('tag', "resourcetype = 'artefact' AND resourceid IN ('" . join("','", array_keys($ids['artefact'])) . "')", NULL, 'tag')) {
+                        $artefacttags = get_records_sql_array("
+                            SELECT
+                                (CASE
+                                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                                    ELSE t.tag
+                                END) AS tag, t.resourceid
+                            FROM {tag} t
+                            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+                            LEFT JOIN {institution} i ON i.name = t2.ownerid
+                            WHERE t.resourcetype = 'artefact' AND t.resourceid IN ('" . join("','", array_keys($ids['artefact'])) . "')");
+                        if ($artefacttags) {
                             foreach ($artefacttags as &$at) {
                                 $data['artefact:' . $at->resourceid]->tags[] = $at->tag;
                             }
                         }
                         if (!empty($viewids) && $artefactviewtags = get_records_sql_array("
-                                SELECT vt.tag, a.id, va.view
+                                SELECT a.id, va.view,
+                                    (CASE
+                                        WHEN vt.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                                        ELSE vt.tag
+                                    END) AS tag
                                 FROM {artefact} a
                                 JOIN {view_artefact} va ON va.artefact = a.id
                                 LEFT JOIN {tag} vt ON (vt.resourcetype = 'view' AND vt.resourceid = va.view" . $typecast . ")
+                                LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(vt.tag, 7)
+                                LEFT JOIN {institution} i ON i.name = t2.ownerid
                                 WHERE a.id IN ('" . join("','", array_keys($ids['artefact'])) . "')
                                 AND va.view IN ('" . join("','", $viewids) . "')")) {
                             foreach ($artefactviewtags as &$avt) {

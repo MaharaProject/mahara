@@ -15,7 +15,7 @@ require('init.php');
 
 define('TITLE', get_string('edittags'));
 
-$tags = get_my_tags();
+$tags = get_my_tags(null, true, 'freq', true);
 
 if ($tag = param_variable('tag', null)) {
     $edittagform = pieform(array(
