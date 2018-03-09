@@ -282,6 +282,15 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             if ($key > 0) {
                 $tagstr .= ', ';
             }
+            if (strpos($tag, 'tagid_') !== false) {
+                $tags = get_records_sql_array("
+                    SELECT CONCAT(i.displayname, ': ', t.tag) AS tag, t.resourceid
+                    FROM {tag} t
+                    LEFT JOIN {institution} i ON i.name = t.ownerid
+                    WHERE t.id = ?", array(substr($tag, 6, 5))
+                );
+                $tag = $tags[0]->tag;
+            }
             $tagstr .= ($USER->id != $owner) ? '"<a href="' . get_config('wwwroot') . 'relatedtags.php?tag=' . urlencode($tag) . '&view=' . $view . '">' . hsc($tag) . '</a>"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($tag) . '&sort=name&type=text">' . hsc($tag) . '</a>"';
         }
         if (!empty($tagsout)) {
@@ -345,7 +354,18 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
         $elements = array();
         if (!empty($tags)) {
             $tagselect = array();
-            $tagrecords = get_records_array('blocktype_taggedposts_tags', 'block_instance', $instance->get('id'), 'tagtype desc, tag', 'tag, tagtype');
+            $typecast = is_postgres() ? '::varchar' : '';
+            $tagrecords = get_records_sql_array("
+                 SELECT
+                     (CASE
+                         WHEN bt.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t.tag)
+                         ELSE bt.tag
+                     END) AS tag, bt.tagtype
+                 FROM {blocktype_taggedposts_tags} bt
+                 LEFT JOIN {tag} t ON t.id" . $typecast . " = SUBSTRING(bt.tag, 7)
+                 LEFT JOIN {institution} i ON i.name = t.ownerid
+                 WHERE bt.block_instance = ?
+                ORDER BY tagtype DESC", array($instance->get('id')));
             if ($tagrecords) {
                 foreach ($tagrecords as $tag) {
                     if ($tag->tagtype == PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE) {
@@ -458,6 +478,16 @@ EOF;
                 if (substr($tag, 0, 1) == '-') {
                     $value = PluginBlocktypeTaggedposts::TAGTYPE_EXCLUDE;
                     $tag = substr($tag, 1);
+                }
+                // If tag is institution tag, save it's correct form.
+                if (strpos($tag, ':')) {
+                    $tagarray = explode(': ', $tag);
+                    $sql = "SELECT t.id
+                        FROM {tag} t
+                        JOIN {institution} i ON i.name = t.ownerid
+                        WHERE t.tag = ? AND t.resourcetype = 'institution' AND i.displayname = ?";
+                    $insttagid = get_field_sql($sql, array($tagarray[1], $tagarray[0]));
+                    $tag = 'tagid_' . $insttagid;
                 }
                 $todb = new stdClass();
                 $todb->block_instance = $instance->get('id');

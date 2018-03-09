@@ -17,6 +17,14 @@ Background:
     | title | description | ownertype | ownername |
     | Page UserA_01 | Page 01| user | UserA |
 
+    And the following "journals" exist:
+    | owner | ownertype | title | description | tags |
+    | UserA | user | Mars journal | My Mars Mission | Mars |
+
+    And the following "journalposts" exist:
+    | owner | ownertype | title | entry | blog | tags | draft |
+    | UserA | user | Mars party | I just landed on Mars, mission success | Mars journal | Mars | 0 |
+
 Scenario: Creating institution tags
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
@@ -30,19 +38,32 @@ Scenario: Creating institution tags
     And I log out
 
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Journals" in "Content" from main menu
+    And I click on "Mars journal"
+    And I click on "Edit" in "Mars party" row
+    And I fill in select2 input "editpost_tags" with "One tag" and select "Institution One: One tag (0)"
+    And I press "Save entry"
+
+    Given I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Edit" in "Page UserA_01" panel menu
     And I follow "Settings" in the "Toolbar buttons" property
-    And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (0)"
+    And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
     And I fill in select2 input "settings_tags" with "Test" and select "Test"
     And I press "Save"
+    And I expand "Journals" node in the "blocktype sidebar" property
+    And I follow "Tagged journal entries"
+    And I press "Add"
+    And I fill in select2 input "instconf_tagselect" with "One tag" and select "Institution One: One tag"
+    And I press "Save"
+    Then I should see "Journal entries with tag \"Institution One: One tag\""
+
     And I follow "Display page"
     Then I should see "Institution One: One tag"
 
     Given I choose "Files" in "Content" from main menu
     And I attach the file "Image2.png" to "files_filebrowser_userfile"
     And I click on "Edit" in "Image2.png" row
-    And I fill in select2 input "files_filebrowser_edit_tags" with "One tag" and select "Institution One: One tag (1)"
+    And I fill in select2 input "files_filebrowser_edit_tags" with "One tag" and select "Institution One: One tag (2)"
     And I fill in select2 input "files_filebrowser_edit_tags" with "Image" and select "Image"
     And I press "Save changes"
 
