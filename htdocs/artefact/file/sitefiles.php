@@ -15,6 +15,7 @@ define('MENUITEM', 'configsite/sitefiles');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'file');
 define('SECTION_PAGE', 'sitefiles');
+define('FOLDER_SIZE', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
