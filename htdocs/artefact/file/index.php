@@ -14,6 +14,7 @@ define('MENUITEM', 'content/files');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'file');
 define('SECTION_PAGE', 'index');
+define('FOLDER_SIZE', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('Files', 'artefact.file'));
