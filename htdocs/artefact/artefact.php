@@ -152,7 +152,7 @@ $javascript = array('paginator', 'viewmenu');
 
 if ($artefact->get('allowcomments') && ( $USER->is_logged_in() || (!$USER->is_logged_in() && get_config('anonymouscomments')))) {
     $commenttype = $view->user_comments_allowed($USER);
-    $moderate = isset($commenttype) && $commenttype === 'private';
+    $moderate = !$USER->is_logged_in() || (isset($commenttype) && $commenttype === 'private');
 
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form(false, $moderate));
 }
