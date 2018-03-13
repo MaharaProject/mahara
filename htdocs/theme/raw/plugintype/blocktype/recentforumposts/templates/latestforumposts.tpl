@@ -12,7 +12,11 @@
                          <a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}&post={$postinfo->id}">
                             {$postinfo->topicname}
                             <span class="metadata text-small">
-                                - {$postinfo->author|display_name}
+                                {if !$postinfo->author->deleted}
+                                    - {$postinfo->author|display_name}
+                                {else}
+                                    - {$postinfo->author|full_name}
+                                {/if}
                             </span>
                         </a>
                     </h4>

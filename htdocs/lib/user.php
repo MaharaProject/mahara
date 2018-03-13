@@ -1189,13 +1189,22 @@ function full_name($user=null) {
     global $USER;
 
     if ($user === null) {
-        $user = new StdClass;
-        $user->firstname = $USER->get('firstname');
-        $user->lastname  = $USER->get('lastname');
-        $user->deleted   = $USER->get('deleted');
+       $userobj = new StdClass;
+       $userobj->firstname = $USER->get('firstname');
+       $userobj->lastname  = $USER->get('lastname');
+       $userobj->deleted   = $USER->get('deleted');
+    }
+    else if ($user instanceof User) {
+       $userobj = new StdClass;
+       $userobj->firstname = $user->get('firstname');
+       $userobj->lastname  = $user->get('lastname');
+       $userobj->deleted   = $user->get('deleted');
+    }
+    else {
+       $userobj = $user;
     }
 
-    return isset($user->deleted) && $user->deleted ? get_string('deleteduser') : $user->firstname . ' ' . $user->lastname;
+   return isset($userobj->deleted) && $userobj->deleted ? get_string('deleteduser') : $userobj->firstname . ' ' . $userobj->lastname;
 }
 
 /**

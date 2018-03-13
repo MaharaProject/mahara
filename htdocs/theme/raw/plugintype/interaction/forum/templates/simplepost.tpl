@@ -5,12 +5,20 @@
 
     <div class="media forum-post">
         <div class="forumpostleft media-left text-small">
-            <img src="{profile_icon_url user=$post->poster maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$post->poster|display_default_name}" class="media-object">
+            {if $deleteduser}
+                <img src="{profile_icon_url user=null maxwidth=40 maxheight=40}" valign="middle" alt="{str tag=profileimagetextanonymous}" class="media-object">
 
-            <div class="poster">
-                <a href="{profile_url($post->poster)}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name}
-                </a>
-            </div>
+                <div class="poster">
+                    <span>{$poster|full_name}</span>
+                </div>
+            {else}
+                <img src="{profile_icon_url user=$post->poster maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$post->poster|display_default_name}" class="media-object">
+
+                <div class="poster">
+                    <a href="{profile_url($post->poster)}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name}
+                    </a>
+                </div>
+            {/if}
 
             {if $post->postcount}
             <div class="postcount text-midtone">
@@ -47,14 +55,19 @@
                 <ul class="list-unstyled text-small">
                     {foreach from=$post->edit item=edit}
                     <li>
-                        <a href="{profile_url($edit.editor)}"
-                        {if $edit.editor == $groupowner} class="groupowner"
-                        {elseif $edit.moderator} class="moderator"
+                        {if $edit.deleteduser}
+                            <img src="{profile_icon_url user=null maxheight=20 maxwidth=20}" alt="{str tag=profileimagetextanonymous}"/>
+                            {str tag=deleteduser}
+                        {else}
+                            <a href="{profile_url($edit.editor)}"
+                            {if $edit.editor == $groupowner} class="groupowner"
+                            {elseif $edit.moderator} class="moderator"
+                            {/if}
+                            >
+                            <img src="{profile_icon_url user=$edit.editor maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$edit.editor|display_default_name}">
+                            {$edit.editor|display_name}
+                            </a> -
                         {/if}
-                        >
-                        <img src="{profile_icon_url user=$edit.editor maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$edit.editor|display_default_name}">
-                        {$edit.editor|display_name}
-                    </a> -
                     <span class="posttime text-muted">
                         {$edit.edittime}
                     </span>
