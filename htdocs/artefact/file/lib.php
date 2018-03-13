@@ -677,7 +677,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     }
                 }
                 if ($item->artefacttype == 'folder') {
-                    if ($item->childcount > 0) {
+                    if ($item->childcount > 0 && defined('FOLDER_SIZE')) {
                         $foldersize = get_record_sql("SELECT SUM(aff.size) AS size FROM {artefact} a
                                                       JOIN {artefact_file_files} aff ON aff.artefact = a.id
                                                       WHERE a.path LIKE ?", array('%/' . $item->id . '/%'));
