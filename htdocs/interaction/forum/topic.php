@@ -310,9 +310,13 @@ function renderpost($post, $indent, $mode) {
         }
     }
 
+    $poster = new User();
+    $poster->find_by_id($post->poster);
     $smarty = smarty_core();
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     $smarty->assign('post', $post);
+    $smarty->assign('poster', $poster);
+    $smarty->assign('deleteduser', $poster->get('deleted'));
     $smarty->assign('width', 100 - $indent*2);
     $smarty->assign('groupadmins', $groupadmins);
     $smarty->assign('moderator', $moderator);
@@ -414,7 +418,7 @@ function get_postcount($posterid) {
  */
 function get_postedits($postid) {
     ($postedits = get_records_sql_array(
-       'SELECT ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor, m2.user AS editormoderator
+       'SELECT ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor, m2.user AS editormoderator, us.deleted
         FROM {interaction_forum_edit} e
         LEFT JOIN {interaction_forum_post} p ON p.id = e.post
         LEFT JOIN {interaction_forum_topic} t ON t.id = p.topic
@@ -423,6 +427,7 @@ function get_postedits($postid) {
             FROM {interaction_forum_moderator} m
             INNER JOIN {usr} u ON (m.user = u.id AND u.deleted = 0)
         ) m2 ON (m2.forum = t.forum AND m2.user = e.user)
+        LEFT JOIN {usr} us ON us.id = e.user
         WHERE e.post = ?
         ORDER BY e.ctime',
         array($postid)
@@ -430,7 +435,12 @@ function get_postedits($postid) {
     $editrecs = array();
     foreach ($postedits as $postedit) {
         $postedit->edittime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $postedit->edittime);
-        $editrecs[] = array('editormoderator' => $postedit->editormoderator, 'editor' => $postedit->editor, 'edittime' => $postedit->edittime, );
+        $editrecs[] = array(
+            'editormoderator' => $postedit->editormoderator,
+            'editor' => $postedit->editor,
+            'edittime' => $postedit->edittime,
+            'deleteduser' => $postedit->deleted,
+        );
     }
     return $editrecs;
 }

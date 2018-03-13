@@ -123,11 +123,14 @@ function deletetopic_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('deletetopicsuccess', 'interaction.forum'));
     redirect('/interaction/forum/view.php?id=' . $values['forum']);
 }
-
+$poster = new User();
+$poster->find_by_id($topic->poster);
 $smarty = smarty();
 $smarty->assign('forum', $topic->title);
 $smarty->assign('subheading', TITLE);
 $smarty->assign('topic', $topic);
+$smarty->assign('poster', $poster);
+$smarty->assign('deleteduser', $poster->get('deleted'));
 $smarty->assign('groupadmins', group_get_admin_ids($topic->group));
 $smarty->assign('deleteform', $form);
 $smarty->display('interaction:forum:deletetopic.tpl');

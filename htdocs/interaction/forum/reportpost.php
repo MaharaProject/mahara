@@ -106,9 +106,14 @@ function reportpost_submit(Pieform $form, $values) {
     redirect($redirecturl);
 }
 
+$poster = new User();
+$poster->find_by_id($post->poster);
+
 $smarty = smarty();
+$smarty->assign('deleteduser', $poster->get('deleted'));
 $smarty->assign('subheading', TITLE);
 $smarty->assign('post', $post);
+$smarty->assign('poster', $poster);
 $smarty->assign('reportform', $form);
 $smarty->assign('groupadmins', group_get_admin_ids($post->group));
 $smarty->display('interaction:forum:reportpost.tpl');
