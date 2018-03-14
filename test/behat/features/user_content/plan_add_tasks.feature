@@ -97,3 +97,15 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
  Then I should see "Build utopia"
  And I follow "Next page"
  Then I should see "Social collapse"
+
+ # Edit title of plan and then delete plan (Bug 1755680)
+ And I choose "Plans" in "Content" from main menu
+ And I click on "Edit \"Plan 9 from outer space\""
+ And I set the field "Title" to "Life on Mars"
+ And I press "Save plan"
+ Then I should see "Plan saved successfully"
+ And I should not see "outer space"
+ And I click on "Delete \"Life on Mars\""
+ And I should see "Are you sure you wish to delete this plan?"
+ And I press "Delete plan"
+ Then I should see "No plans yet. Add one!"
