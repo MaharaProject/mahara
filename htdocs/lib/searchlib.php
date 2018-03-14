@@ -1031,7 +1031,7 @@ function get_portfolio_types_from_param($filter) {
     return array('view' => false, 'collection' => false, 'artefact' => artefact_get_types_from_filter($filter));
 }
 
-function get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort='name', $type=null, $returntags=true) {
+function get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort='name', $type=null, $returntags=true, $viewids=array()) {
     // For now, can only be used to search a user's portfolio
     if (empty($owner->id) || empty($owner->type)) {
         throw new SystemException('get_views_and_artefacts_by_tag: invalid owner');
@@ -1045,7 +1045,7 @@ function get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort='name',
     $plugin = 'internal';
     safe_require('search', $plugin);
 
-    $result = call_static_method(generate_class_name('search', $plugin), 'portfolio_search_by_tag', $tag, $owner, $limit, $offset, $sort, $types, $returntags);
+    $result = call_static_method(generate_class_name('search', $plugin), 'portfolio_search_by_tag', $tag, $owner, $limit, $offset, $sort, $types, $returntags, $viewids);
     $result->filter = $result->type = $type ? $type : 'all';
     return $result;
 }

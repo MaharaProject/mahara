@@ -281,14 +281,14 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             if ($key > 0) {
                 $tagstr .= ', ';
             }
-            $tagstr .= ($viewownerdisplay) ? '"' . $tag . '"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($tag) . '&sort=name&type=text">' . hsc($tag) . '</a>"';
+            $tagstr .= ($USER->id != $owner) ? '"<a href="' . get_config('wwwroot') . 'relatedtags.php?tag=' . urlencode($tag) . '&view=' . $view . '">' . hsc($tag) . '</a>"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($tag) . '&sort=name&type=text">' . hsc($tag) . '</a>"';
         }
         if (!empty($tagsout)) {
             foreach ($tagsout as $key => $tag) {
                 if ($key > 0) {
                     $tagomitstr .= ', ';
                 }
-                $tagomitstr .= ($viewownerdisplay) ? '"' . $tag . '"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($tag) . '&sort=name&type=text">' . hsc($tag) . '</a>"';
+                $tagomitstr .= ($USER->id != $owner) ? '"<a href="' . get_config('wwwroot') . 'relatedtags.php?tag=' . urlencode($tag) . '&view=' . $view . '">' . hsc($tag) . '</a>"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($tag) . '&sort=name&type=text">' . hsc($tag) . '</a>"';
             }
         }
         if (empty($tagsin)) {

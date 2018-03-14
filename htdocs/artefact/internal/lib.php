@@ -1000,6 +1000,7 @@ class ArtefactTypeHtml extends ArtefactType {
             }
             $smarty->assign('attachments', $attachments);
         }
+        $smarty->assign('view', (isset($options['viewid']) ? $options['viewid'] : null));
         return array(
             'html' => $smarty->fetch('artefact.tpl'),
             'javascript'=>''

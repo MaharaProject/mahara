@@ -1,27 +1,11 @@
 {include file="header.tpl"}
-{if $tags}
-    <div class="btn-top-right btn-group btn-group-top">
-        <a class="btn btn-default" href="{$WWWROOT}edittags.php"><span class="icon icon-lg icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=edittags}</a>
-    </div>
-    <ul class="nav nav-tabs">
-    {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
-        <li{if $selectedsort} class="active"{/if}><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden sr-only">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
-    {/foreach}
-    </ul>
-    <div class="mytags">
-        <ul class="list-unstyled">
-        {foreach from=$tags item=t}
-            <li class="text-inline"><a id="tag:{$t->tag|urlencode|safe}" class="tag {if $t->tag == $tag}selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode|safe}">{$t->tag|str_shorten_text:30}&nbsp;<span class="tagfreq badge">{$t->count}</span></a></li>
-        {/foreach}
-        </ul>
-    </div>
+{if $noresultsmessage}
+    <div class="no-results">{$noresultsmessage}</div>
+{else}
     <div id="results_container" class="panel panel-default tag-results">
         <h2 id="results_heading" class="panel-heading">{str tag=searchresultsfor}
-            <a class="tag secondary-link" href="{$WWWROOT}tags.php{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
+            <a class="tag secondary-link" href="{$results->baseurl}">{$tag|str_shorten_text:50}</a>
         </h2>
-        <div class="btn-top-right btn-group btn-group-top">
-            <a class="btn btn-default edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
-        </div>
         <div class="tag-filters">
             <div id="results_sort" class="pull-right">
                 <strong>{str tag=sortresultsby}</strong>
@@ -54,8 +38,6 @@
         </div>
     </div>
     {$results->pagination|safe}
-{else}
-    <div class="no-results">{str tag=youhavenottaggedanythingyet}</div>
 {/if}
 
 {include file="footer.tpl"}

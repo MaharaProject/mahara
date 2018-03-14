@@ -22,7 +22,7 @@
     {if $tags}
     <tr>
         <th>{str tag=tags}:</th>
-        <td>{list_tags owner=$owner tags=$tags}</td>
+        <td>{list_tags owner=$owner tags=$tags view=$view}</td>
     </tr>
     {/if}
     {if $ownername}

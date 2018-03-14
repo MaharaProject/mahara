@@ -76,6 +76,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                     'jsonscript' => 'artefact/plans/viewtasks.json.php',
                 );
             }
+            $configdata['view'] = $instance->get('view');
             ArtefactTypeTask::render_tasks($tasks, $template, $configdata, $pagination);
 
             if ($exporter && $tasks['count'] > $tasks['limit']) {
@@ -87,6 +88,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
             $smarty->assign('owner', $plan->get('owner'));
             $smarty->assign('tags', $plan->get('tags'));
             $smarty->assign('tasks', $tasks);
+            $smarty->assign('view', $instance->get('view'));
         }
         else {
             $smarty->assign('noplans','blocktype.plans/plans');

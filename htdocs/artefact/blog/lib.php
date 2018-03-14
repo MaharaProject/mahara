@@ -145,7 +145,8 @@ class PluginArtefactBlog extends PluginArtefact {
 
     public static function get_artefact_type_content_types() {
         return array(
-            'blogpost' => array('text'),
+            'blog' => array('blog'),
+            'blogpost' => array('blogpost'),
         );
     }
 
@@ -354,9 +355,11 @@ class ArtefactTypeBlog extends ArtefactType {
             $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'artefact/artefact.php?artefact='
                                              . $this->get('id') . '&view=' . $options['viewid']
                                              . '">' . hsc($this->get('title')) . '</a>');
+            $smarty->assign('view', $options['viewid']);
         }
         else {
             $smarty->assign('artefacttitle', hsc($this->get('title')));
+            $smarty->assign('view', null);
         }
 
         if (!empty($options['details']) and get_config('licensemetadata')) {
@@ -886,6 +889,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefacttags', $this->get('tags'));
         $smarty->assign('artefactowner', $this->get('owner'));
+        $smarty->assign('artefactview', (isset($options['viewid']) ? $options['viewid'] : null));
         if (!empty($options['details']) and get_config('licensemetadata')) {
             $smarty->assign('license', render_license($this));
         }
@@ -1061,6 +1065,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             else {
                 $by = $post->author ? display_default_name($post->author) : $post->authorname;
                 $post->postedby = ArtefactTypeBlog::display_postedby($post->ctime, $by);
+                $post->owner = $post->author;
                 // Get comment counts
                 if (!empty($viewoptions['countcomments'])) {
                     safe_require('artefact', 'comment');

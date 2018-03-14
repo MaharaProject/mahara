@@ -20,20 +20,34 @@
  * @param Smarty
  * @return Internationalized string
  */
-function Dwoo_Plugin_list_tags(Dwoo $dwoo, $tags, $owner) {
+function Dwoo_Plugin_list_tags(Dwoo $dwoo, $tags, $owner, $view = null) {
     global $USER;
     if (!is_array($tags)) {
         return '';
     }
 
-    if ($owner != $USER->get('id')) {
-        return join(', ', array_map('hsc', $tags));
+    foreach ($tags as &$t) {
+        if ($owner != $USER->get('id')) {
+            if (is_array($t)) {
+                $t = '<a class="tag" href="' . get_config('wwwroot') . 'relatedtags.php?tag=' . urlencode($t['tag']) . '&view=' . $t['view'] . '">' . hsc(str_shorten_text($t['tag'], 50)) . '</a>';
+            }
+            else if ($view) {
+                $t = '<a class="tag" href="' . get_config('wwwroot') . 'relatedtags.php?tag=' . urlencode($t) . '&view=' . $view . '">' . hsc(str_shorten_text($t, 50)) . '</a>';
+            }
+            else {
+                $t = hsc(str_shorten_text($t, 50));
+            }
+        }
+        else {
+            if (is_array($t)) {
+                $t = '<a class="tag" href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($t['tag']) . '&view=' . $t['view'] . '">' . hsc(str_shorten_text($t['tag'], 50)) . '</a>';
+            }
+            else {
+                $t = '<a class="tag" href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($t) . '">' . hsc(str_shorten_text($t, 50)) . '</a>';
+            }
+        }
     }
 
-    foreach ($tags as &$t) {
-        $t = '<a class="tag" href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($t) . '">' . hsc(str_shorten_text($t, 50)) . '</a>';
-    }
-    
     return join(', ', $tags);
 }
 

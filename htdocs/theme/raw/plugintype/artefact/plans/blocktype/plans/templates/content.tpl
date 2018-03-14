@@ -1,9 +1,9 @@
 <div class="panel-body flush">
     <p>{$description}</p>
-    
+
     {if $tags}
     <div class="tags">
-        <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}
+        <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags view=$view}
     </div>
     {/if}
 

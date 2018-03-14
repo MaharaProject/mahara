@@ -885,7 +885,7 @@ abstract class ArtefactType implements IArtefactType {
         else {
             $smarty->assign('license', false);
         }
-
+        $smarty->assign('view', (!empty($options['viewid']) ? $options['viewid'] : null));
         return array(
             'html' => $smarty->fetch('artefact.tpl'),
             'javascript'=>''

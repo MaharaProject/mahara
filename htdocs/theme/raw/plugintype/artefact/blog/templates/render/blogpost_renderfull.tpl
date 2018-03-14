@@ -20,11 +20,11 @@
         {/if}
     </div>
 
-    {if $artefact->get('tags')}
+    {if $artefacttags}
     <div class="tags metadata">
         <span class="icon icon-tags" role="presentation" aria-hidden="true"></span>
         <strong>{str tag=tags}:</strong>
-        {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}
+        {list_tags owner=$artefactowner tags=$artefacttags view=$artefactview}
     </div>
     {/if}
 

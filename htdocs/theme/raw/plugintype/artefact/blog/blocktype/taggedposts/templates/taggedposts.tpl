@@ -24,12 +24,6 @@
 
 <div class="taggedpost-title text-midtone panel-body flush">
     {$blockheading|clean_html|safe}
-{if $viewowner}
-    {$tag} {str tag='by' section='artefact.blog'}
-    <a href="{profile_url($viewowner)}">{$viewowner|display_name}</a>
-{else}
-    <a href="{$WWWROOT}tags.php?tag={$tag}&sort=name&type=text">{$tag}</a>
-{/if}
 </div>
 
 {if $configerror}
@@ -57,7 +51,7 @@
             <div class="tags metadata">
                 <span class="icon icon-tags" role="presentation" aria-hidden="true"></span>
                 <strong>{str tag=tags}:</strong>
-                {list_tags owner=$post->owner tags=$post->taglist}
+                {list_tags owner=$post->owner tags=$post->taglist view=$view}
             </div>
 
             <div class="detail list-group-item-detail">
