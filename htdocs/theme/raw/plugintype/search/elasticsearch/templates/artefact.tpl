@@ -89,61 +89,39 @@
         <div class="usedon">
             {if $record->views|count gt 1}
                 <strong>{str tag=usedonpages section=search.elasticsearch}:</strong>
-                <ul class="list-group list-unstyled">
-                {foreach from=$record->views key=id item=view}
-                    <li>
-                        <a href="{$WWWROOT}view/view.php?id={$id}">{$view|str_shorten_html:50:true|safe}</a>
-                        <!-- Profile artefact can only be displayed in views -->
-                        {if $secfacetterm != "Profile"} |
-                        <span class="viewartefact">
-                            <a href="{$WWWROOT}artefact/artefact.php?artefact={$record->id}&view={$id}">
-                            view
-                            {if $secfacetterm == "Journalentry"}
-                                {str tag=blogpost section=search.elasticsearch}
-                            {elseif $secfacetterm == "Forumpost"}
-                                {str tag=forumpost section=search.elasticsearch}
-                            {elseif $secfacetterm == "Resume"}
-                                {str tag=resume section=search.elasticsearch}
-                            {elseif $secfacetterm == "Wallpost"}
-                                {str tag=wallpost section=search.elasticsearch}
-                            {else}
-                                {$secfacetterm|lower}
-                            {/if}
-                            </a>
-                        </span>
-                    {/if}
-                    </li>
-                {/foreach}
-                </ul>
-                {else}
+            {else}
                 <strong>{str tag=usedonpage section=search.elasticsearch}:</strong>
-                <ul class="list-group list-unstyled">
-                {foreach from=$record->views key=id item=view}
-                    <li>
-                        <a href="{$WWWROOT}view/view.php?id={$id}">{$view|str_shorten_html:50:true|safe}</a>
-                        <!-- Profile artefact can only be displayed in views -->
-                        {if $secfacetterm != "Profile"} |
-                            <span class="viewartefact">
-                                <a href="{$WWWROOT}artefact/artefact.php?artefact={$record->id}&view={$id}">
-                                    view
-                                    {if $secfacetterm == "Journalentry"}
-                                        {str tag=blogpost section=search.elasticsearch}
-                                    {elseif $secfacetterm == "Forumpost"}
-                                        {str tag=forumpost section=search.elasticsearch}
-                                    {elseif $secfacetterm == "Resume"}
-                                        {str tag=resume section=search.elasticsearch}
-                                    {elseif $secfacetterm == "Wallpost"}
-                                        {str tag=wallpost section=search.elasticsearch}
-                                    {else}
-                                        {$secfacetterm|lower}
-                                    {/if}
-                                </a>
-                            </span>
-                    {/if}
-                    </li>
-                {/foreach}
-                </ul>
             {/if}
+            <ul class="list-group list-unstyled">
+            {foreach from=$record->views key=id item=view}
+                <li>
+                    <a href="{$WWWROOT}view/view.php?id={$id}">{$view|str_shorten_html:50:true|safe}</a>
+                    <!-- Profile artefact can only be displayed in views -->
+                    {if $secfacetterm != "Profile"} |
+                    <span class="viewartefact">
+                        <a href="{$WWWROOT}artefact/artefact.php?artefact={$record->id}&view={$id}">
+                        {str tag=viewartefact}
+                        {if $secfacetterm == "Journalentry"}
+                            {str tag=blogpost section=search.elasticsearch}
+                        {elseif $secfacetterm == "Forumpost"}
+                            {str tag=forumpost section=search.elasticsearch}
+                        {elseif $secfacetterm == "Resume"}
+                            {str tag=resume section=search.elasticsearch}
+                        {elseif $secfacetterm == "Wallpost"}
+                            {str tag=wallpost section=search.elasticsearch}
+                        {elseif $result->artefacttype == "blog"}
+                            {str tag=blog section=search.elasticsearch}
+                        {elseif $result->artefacttype == "html"}
+                            {str tag=html section=search.elasticsearch}
+                        {else}
+                            {$secfacetterm|lower}
+                        {/if}
+                        </a>
+                    </span>
+                {/if}
+                </li>
+            {/foreach}
+            </ul>
         </div>
         {/if}
     </div>
