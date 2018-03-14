@@ -45,3 +45,10 @@ Feature: Mahara users can create their blogs
   And I fill in select2 input "instconf_tagselect" with "blogentry" and select "blogentry"
   And I press "Save"
   Then I should see "Journal entries with tag \"blogentry\""
+  And I choose "Journals" in "Content" from main menu
+  And I follow "My new journal"
+  And I click on "Delete \"Journal entry 1\""
+  And I choose "Journals" in "Content" from main menu
+  And I should see "My new journal No entries yet."
+  And I click on "Delete \"My new journal\""
+  Then I should not see "My new journal"
