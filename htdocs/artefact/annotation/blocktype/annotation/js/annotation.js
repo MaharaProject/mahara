@@ -25,7 +25,7 @@ function getURLParameter(variable) {
 }
 
 function isTinyMceUsed(elementname) {
-    return (tinyMCE !== undefined && tinyMCE.get(elementname) !== undefined);
+    return (typeof tinyMCE !== 'undefined' && typeof tinyMCE.get(elementname) !== 'undefined');
 }
 
 function initTinyMCE(formname){
