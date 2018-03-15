@@ -89,7 +89,7 @@
                 {if $showtags}
                     {if $file->tags}
                     <div class="tags filetags text-small">
-                        <strong>{str tag=tags}:</strong>
+                        {str tag=tags}:
                         <span>
                             {list_tags tags=$file->tags owner=$showtags}
                         </span>
