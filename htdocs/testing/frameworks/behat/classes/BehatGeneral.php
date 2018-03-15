@@ -365,21 +365,6 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
-    * @Given I click on the :selector element
-    * @param string $selector - css selector
-    */
-    public function i_click_on_the($selector) {
-        $page = $this->getSession()->getPage();
-        $element = $page->find('css', $selector);
-
-        if (empty($element)) {
-            throw new Exception("No html element found for the selector ('$selector')");
-        }
-
-        $element->click();
-    }
-
-    /**
      * Click on the link or button which is located inside the second element.
      *
      * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
@@ -687,6 +672,18 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+    * @Given /^I click on the "(?P<element>(?:[^"]|\\")*)" "(?P<tselectortype>[^"]*)"$/
+    *
+    * calls function in parent class
+    *
+    * @param string $element - thing to look for
+    * @param string $selectortype - e.g. css/xpath
+    */
+    public function i_click_on_element($element, $selectortype='css_element') {
+        parent::i_click_on_element($element, $selectortype);
+    }
+
+    /**
      * Click on the delete button inside a list/table row containing the specified text.
      *
      * @When /^I delete the "(?P<row_text_string>(?:[^"]|\\")*)" row$/
@@ -882,7 +879,7 @@ class BehatGeneral extends BehatBase {
     */
     public function click_on_property($property) {
         $property = get_property($property);
-        $this->i_click_on_the($property[0]);
+        $this->i_click_on_element($property[0], $property[1]);
     }
 
     /**
