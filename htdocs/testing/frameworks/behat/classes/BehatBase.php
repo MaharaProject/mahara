@@ -718,4 +718,25 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
         return false;
     }
 
+    /**
+   * @param string $element - thing to look for
+   * @param string $selectortype - e.g. css/xpath
+   */
+   protected function i_click_on_element($element, $selectortype='css_element') {
+
+       // Getting Mink selector and locator.
+       list($selector, $locator) = $this->transform_selector($selectortype, $element);
+       // Will throw an ElementNotFoundException if it does not exist.
+       $this->find($selector, $locator);
+       $page = $this->getSession()->getPage();
+       $element = $page->find($selector , $locator);
+
+       if (empty($element)) {
+           throw new Exception("No html element found for the selector ('$element')");
+       }
+
+       $element->click();
+   }
+
+
 }
