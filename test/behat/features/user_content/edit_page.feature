@@ -4,6 +4,12 @@ In order to change the settings of a block
 As an admin
 I need to be able to click on delete and config of a block
 
+Background:
+  # Skins need to be enabled
+  Given the following site settings are set:
+  | field | value |
+  | skins | 1 |
+
 Scenario: Clicking ID's (Bug 1428456)
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Portfolio" from main menu
@@ -95,6 +101,7 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  When I follow "Edit layout"
  And I should see "Layout"
  And I should not see "Basics"
+ And I should see "Skin"
  And I press "Save"
  And I should see "Page saved successfully"
 
