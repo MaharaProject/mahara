@@ -1539,7 +1539,7 @@ class Metarefresh {
 
             foreach ($sets AS $setkey => $set) {
 
-                SimpleSAML_Logger::info('Mahara [metarefresh]: Executing set [' . $setkey . ']');
+                SimpleSAML\Logger::info('Mahara [metarefresh]: Executing set [' . $setkey . ']');
 
                 $expireAfter = $set->getInteger('expireAfter', NULL);
                 if ($expireAfter !== NULL) {
@@ -1606,7 +1606,7 @@ class Metarefresh {
                         $source['conditionalGET'] = $conditionalGET;
                     }
 
-                    SimpleSAML_Logger::debug('cron [metarefresh]: In set [' . $setkey . '] loading source ['  . $source['src'] . ']');
+                    SimpleSAML\Logger::debug('cron [metarefresh]: In set [' . $setkey . '] loading source ['  . $source['src'] . ']');
                     $metaloader->loadSource($source);
                 }
 
@@ -1631,7 +1631,7 @@ class Metarefresh {
 
         }
         catch (Exception $e) {
-            SimpleSAML_Logger::info('Mahara [metarefresh]: Error during metadata refresh ' . $e->getMessage());
+            SimpleSAML\Logger::info('Mahara [metarefresh]: Error during metadata refresh ' . $e->getMessage());
             return false;//fetch failed
         }
     }

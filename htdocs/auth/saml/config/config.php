@@ -152,7 +152,7 @@ $config = array (
      * Options: [syslog,file,errorlog]
      *
      */
-    'logging.level'         => !get_config('productionmode') ? SimpleSAML_Logger::DEBUG : SimpleSAML_Logger::ERR,
+    'logging.level'         => !get_config('productionmode') ? SimpleSAML\Logger::DEBUG : SimpleSAML\Logger::ERR,
     'logging.handler'       => 'errorlog',
 
     /*

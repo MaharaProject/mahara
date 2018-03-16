@@ -81,7 +81,7 @@ try {
 
     if (!file_exists($path)) {
         // file not found
-        SimpleSAML_Logger::info('Could not find file \''.$path.'\'.');
+        SimpleSAML\Logger::info('Could not find file \''.$path.'\'.');
         throw new SimpleSAML_Error_NotFound('The URL wasn\'t found in the module.');
     }
 
