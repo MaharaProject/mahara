@@ -368,9 +368,16 @@ class PluginAuthSaml extends PluginAuth {
      * in a similar way to as if we had configured a simplesamlphp web cron
      */
     public static function auth_saml_refresh_cron() {
-        Metarefresh::metadata_refresh_hook();
+        // we only want to run this if there are any saml instances containing the metarefresh_metadata_url
+        if ($urls = get_records_sql_array("SELECT ai.id FROM {auth_instance} ai
+                                           JOIN {auth_instance_config} aic ON aic.instance = ai.id
+                                           WHERE ai.authname = 'saml'
+                                           AND ai.active = 1
+                                           AND aic.field = 'metarefresh_metadata_url'
+                                           AND (aic.value IS NOT NULL and aic.value != '')", array())) {
+            Metarefresh::metadata_refresh_hook();
+        }
     }
-
 
     public static function can_be_disabled() {
         return true;
