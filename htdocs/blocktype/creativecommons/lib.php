@@ -94,11 +94,8 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
         else if (2 == $values['noderivatives']) {
             $license .= '-' . self::noderivatives;
         }
-
-        $configdata = array('title' => $values['title'],
-                            'license' => $license,
-                            'version' => $values['version']);
-        return $configdata;
+        $values['license'] = $license;
+        return $values;
     }
 
     public static function instance_config_form(BlockInstance $instance) {
