@@ -520,13 +520,13 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
             reset($reffields);
         }
         while (($field = current($fields)) && ($col = current($colrecs))) {
-            if (!$field == $col->column_name) {
+            if ($field !== $col->column_name) {
                 // This constraint has a non-matching column; try the next constraint
                 continue 2;
             }
             if ($isfk) {
                 $reffield = current($reffields);
-                if (!$reffield == $col->refcolumn_name) {
+                if ($reffield !== $col->refcolumn_name) {
                     // This constraint has a non-matching column; try the next constraint
                     continue 2;
                 }
