@@ -73,7 +73,7 @@ abstract class PluginArtefact extends Plugin implements IPluginArtefact {
      * - url relative to wwwroot
      * @return array
      */
-    public static function group_tabs($groupid) {
+    public static function group_tabs($groupid, $role) {
         return array();
     }
 

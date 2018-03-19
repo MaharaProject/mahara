@@ -1753,4 +1753,16 @@ class BlockInstance {
         }
         return $js;
     }
+
+    /**
+     * This function returns an array of menu items to be displayed
+     * on a group page when viewed by group members.
+     * Each item should be a StdClass object containing -
+     * - title language pack key
+     * - url relative to wwwroot
+     * @return array
+     */
+    public static function group_tabs($groupid, $role) {
+        return array();
+    }
 }

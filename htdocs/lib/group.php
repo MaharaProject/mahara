@@ -2062,16 +2062,16 @@ function group_get_menu_tabs() {
         );
     }
 
-    if ($role) {
-        safe_require('grouptype', $group->grouptype);
-        $artefactplugins = call_static_method('GroupType' . $group->grouptype, 'get_group_artefact_plugins');
-        if ($plugins = plugins_installed('artefact')) {
-            foreach ($plugins as &$plugin) {
-                if (!in_array($plugin->name, $artefactplugins)) {
-                    continue;
-                }
-                safe_require('artefact', $plugin->name);
-                $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'group_tabs', $group->id);
+    foreach (plugin_types_installed() as $plugin_type_installed) {
+        foreach (plugins_installed($plugin_type_installed) as $plugin) {
+            safe_require($plugin_type_installed, $plugin->name);
+            if (method_exists(generate_class_name($plugin_type_installed, $plugin->name),'group_tabs')) {
+                $plugin_menu = call_static_method(
+                      generate_class_name($plugin_type_installed, $plugin->name),
+                      'group_tabs',
+                      $group->id,
+                      $role
+                );
                 $menu = array_merge($menu, $plugin_menu);
             }
         }
