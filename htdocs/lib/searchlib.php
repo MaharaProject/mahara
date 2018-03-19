@@ -53,7 +53,7 @@ function search_user($query_string, $limit, $offset = 0, $data = array()) {
 
     if ($results['data']) {
         foreach ($results['data'] as &$result) {
-            $result['name'] = display_name($result);
+            $result['name'] = display_name($result, null, false, false, true);
             $result['url']  = profile_url($result);
         }
     }
