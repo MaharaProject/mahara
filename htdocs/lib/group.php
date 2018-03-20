@@ -1331,6 +1331,10 @@ function group_get_adduser_form($userid, $groupid) {
                 'type'  => 'hidden',
                 'value' => $userid,
             ),
+            'adduser' => array(
+                'type' => 'hidden',
+                'value' => true,
+            ),
             'submit' => array(
                 'type'  => 'button',
                 'usebuttontag' => true,
@@ -1361,6 +1365,10 @@ function group_get_removeuser_form($userid, $groupid) {
                 'value' => $userid,
             ),
             'removeuser' => array(
+                'type'  => 'hidden',
+                'value' => true,
+            ),
+            'submit' => array(
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default',
@@ -1389,6 +1397,10 @@ function group_get_denyuser_form($userid, $groupid) {
                 'value' => $userid,
             ),
             'denyuser' => array(
+                'type'  => 'hidden',
+                'value' => true,
+            ),
+            'submit' => array(
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default',
