@@ -58,6 +58,16 @@ if ($remove && $member) {
     group_get_removeuser_form($member, $group->id);
 }
 
+$denyuser = param_variable('denyuser', null);
+if ($denyuser && $member) {
+    group_get_denyuser_form($member, $group->id);
+}
+
+$adduser = param_variable('adduser', null);
+if ($adduser && $member) {
+    group_get_adduser_form($member, $group->id);
+}
+
 // Search related stuff for member pager
 $query  = trim(param_variable('query', ''));
 // pagination params
