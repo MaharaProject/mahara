@@ -79,7 +79,7 @@
             swapNodes(oldblock.get()[0], newblock.get()[0]); // using DOM objects, not jQuery objects so we needn't worry about IDs
 
             var embedjs = data.data.javascript;
-            if (embedjs.includes("AC_Voki_Embed")) {
+            if (embedjs.indexOf("AC_Voki_Embed") !== -1) {
                 var paramsstr = embedjs.substring(embedjs.lastIndexOf("(")+1,embedjs.lastIndexOf(")"));
                 var params = paramsstr.split(',');
                 if (params.length == 7 ) { // old voki embed code has only 7 parameters
