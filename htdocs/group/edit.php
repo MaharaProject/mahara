@@ -72,6 +72,11 @@ else {
         'hidemembers'    => GROUP_HIDE_NONE,
         'hidemembersfrommembers'  => GROUP_HIDE_NONE,
     );
+    // If the user belongs to an institution we need to set the default institution as one of theirs
+    $userinstitutions = array_keys($USER->get('institutions'));
+    if (!empty($userinstitutions)) {
+        $group_data->institution = $userinstitutions[0]; // assign the first one
+    }
 }
 
 $form = array(
