@@ -1458,10 +1458,12 @@ function jsstrings() {
                 'toggletoolbarsoff',
                 'imagexofy',
                 'remove',
+                'errorprocessingform',
             ),
             'pieforms' => array(
                 'element.calendar.opendatepicker',
-                'rule.maxlength.maxlength'
+                'rule.maxlength.maxlength',
+                'rule.required.required',
             )
         ),
         'tablerenderer' => array(

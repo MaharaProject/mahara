@@ -125,11 +125,23 @@ jQuery(function($) {
             $j('#{{$formname}} select:required').each(function() {
                 if ($j(this).val()) {
                     $j(this).prop("required", false);
+                    $j(this).parent().parent().find('div.errmsg').remove();
                 }
                 else {
+                    var b = $j(this).attr("data-type");
+                    $j('#messages').html('<div class="alert alert-danger"><div>' + get_string('errorprocessingform', 'mahara') + '</div></div>');
+                    if ($j(this).parent().parent().find('div.errmsg').length === 0) {
+                        $j(this).parent().parent().append('<div class="errmsg"><span class="input-short-error"></span><span id="' + $j(this).prop('id') + '_error">' + get_string('rule.required.required', 'pieforms') + '</span></div>');
+                    }
                     e.preventDefault();
                     e.stopPropagation();
                 }
+            });
+        });
+        // Remove 'required' on cancel
+        $j('#cancel_{{$formname}}_submit').click(function(e) {
+            $j('#{{$formname}} select:required').each(function() {
+                $j(this).prop("required", false);
             });
         });
 
