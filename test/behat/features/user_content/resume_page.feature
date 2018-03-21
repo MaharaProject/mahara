@@ -108,6 +108,10 @@ Scenario: Editing Education and Employment info
     Then I should see "Saved successfully"
     And I click on "Move down" in "Test Analyst" row
     And I click on "Move up" in "Test Analyst" row
+    # delete employment and education history  (Bug 1755669)
+    And I scroll to the top
+    Given I click on "Delete \"North American Cultural Studies (Masters of Arts) at University of Life\""
+    Given I click on "Delete \"Code Ninja: Xero\""
 
     # When entire resume is displayed on Profile page, it should include employment address (Bug 1529750)
     Given I choose "Pages and collections" in "Portfolio" from main menu
@@ -119,6 +123,9 @@ Scenario: Editing Education and Employment info
     And I press "Save"
     And I display the page
     And I expand "My entire résumé" node
+    # Check employment and education history deleted successfully (Bug 1755669)
+    Then I should not see "Code Ninja"
+    And I should not see "North American Cultural Studies"
     # Test whether Employment history shows address
     When I follow "Test Analyst at Catalyst IT"
     Then I should see "Address: 150 Willis St"
@@ -213,6 +220,10 @@ Scenario: Adding Achievements
     And I should see "Saved successfully"
     And I click on "Move down" in "Accredited Technologist" row
     And I click on "Move up" in "Accredited Technologist" row
+    # check achievements can be deleted (Bug 1755669)
+    And I click on "Delete \"sdrtyh\""
+    And I wait "1" seconds
+    And I should not see "sdrtyh"
 
 Scenario: Adding Goals and Skills
     Given I log in as "UserA" with password "Kupuh1pa!"
