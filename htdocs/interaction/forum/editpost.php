@@ -72,6 +72,7 @@ define('GROUP', $parent->group);
 $membership = user_can_access_forum((int)$parent->forum);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 $admintutor = (bool) group_get_user_admintutor_groups();
+$poster = new User();
 
 if (!isset($postid)) { // post reply
     if ($parent->deleted) {
@@ -88,6 +89,7 @@ if (!isset($postid)) { // post reply
     }
     $action = get_string('postreply', 'interaction.forum');
     define('TITLE', $parent->topicsubject . ' - ' . $action);
+    $poster->find_by_id($parent->poster);
 }
 else { // edit post
     if (!group_within_edit_window($parent->group)) {
@@ -110,6 +112,7 @@ else { // edit post
     }
     $action = get_string('editpost', 'interaction.forum');
     define('TITLE', $parent->topicsubject . ' - ' . $action);
+    $poster->find_by_id($post->poster);
 }
 
 $parent->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $parent->ctime);
@@ -272,6 +275,8 @@ function addpost_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+$smarty->assign('deleteduser', $poster->get('deleted'));
+$smarty->assign('poster', $poster);
 $smarty->assign('editform', $editform);
 $smarty->assign('parent', $parent);
 $smarty->assign('action', $action);
