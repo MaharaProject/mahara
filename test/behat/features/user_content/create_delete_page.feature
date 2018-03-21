@@ -51,3 +51,10 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # Verifying the page title and description changed
     Then I should see "This is the edited page title"
     Then I should see "This is the edited description"
+    # check page can be deleted (Bug 1755682)
+    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I click on "Delete" in "This is the edited page" panel menu
+    And I should see "Do you really want to delete this page?"
+    And I press "Yes"
+    Then I should see "Page deleted"
+    And I should not see "This is the edited page"
