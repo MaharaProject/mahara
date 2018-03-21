@@ -108,6 +108,11 @@
             line-height: $input-height-base / 2;
         }
     }
+    .input-short-error {
+        max-width: 205px;
+        display: inline-block;
+        width: 230px;
+    }
 }
 
 
