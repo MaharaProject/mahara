@@ -630,6 +630,7 @@ function core_postinst() {
     set_config('installation_key', get_random_key());
     set_config('installation_time', $now);
     set_config('stats_installation_time', $now);
+    set_config('passwordpolicy', '8_ulns');
 
     // Pre-define SMTP settings
     set_config('smtphosts', '');
