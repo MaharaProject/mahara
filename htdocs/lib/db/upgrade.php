@@ -5797,5 +5797,19 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018022503) {
+        if (!get_config('passwordpolicy')) {
+            log_debug('Force users to change their password to fix new password policy');
+            execute_sql("UPDATE {usr} SET passwordchange = 1
+                         WHERE authinstance IN (
+                             SELECT ai.id
+                             FROM {auth_instance} ai
+                             WHERE ai.authname = 'internal'
+                         )
+                         AND id != 0"); // Ignore the root user
+            set_config('passwordpolicy', '8_ulns');
+        }
+    }
+
     return $status;
 }
