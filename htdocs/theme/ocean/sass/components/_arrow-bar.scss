@@ -40,18 +40,16 @@
         }
     }
 
-    &.notifications {
-        .nav-inpage {
-            &.nav > li {
-                &.active > a,
-                &.active > button  {
-                    color: $arrow-link-active-color;
-                    background-color: $arrow-link-background-color;
-                }
-                & > a:hover {
-                    color: $arrow-link-hover-color;
-                    background-color:$arrow-link-background-color;
-                }
+    .nav-inpage {
+        &.nav > li {
+            &.active > a,
+            &.active > button  {
+                color: $arrow-link-active-color;
+                background-color: $arrow-link-background-color;
+            }
+            & > a:hover {
+                color: $arrow-link-hover-color;
+                background-color:$arrow-link-background-color;
             }
         }
     }
