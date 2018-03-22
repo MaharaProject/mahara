@@ -62,7 +62,7 @@ class PluginModuleFramework extends PluginModule {
         }
     }
 
-    public function matrix_is_valid_json($filename) {
+    public static function matrix_is_valid_json($filename) {
 
         $ok = array('error' => false);
         $matrix = file_get_contents($filename);
@@ -103,7 +103,7 @@ class PluginModuleFramework extends PluginModule {
         return $ok;
     }
 
-    public function add_matrix_to_db($filename) {
+    public static function add_matrix_to_db($filename) {
         $ok = self::matrix_is_valid_json($filename);
         if ($ok['error']) {
             return false;
@@ -572,7 +572,7 @@ class Framework {
      *
      * @return frameworks
      */
-    public function get_frameworks($institution = 'any', $shared = false) {
+    public static function get_frameworks($institution = 'any', $shared = false) {
         global $USER;
 
         $sql = "SELECT * FROM {framework}";
@@ -805,7 +805,7 @@ class Framework {
      * Add/update an annotation status form on the framework matrix page.
      * This uses a feedback style config form with some extra bits.
      */
-    public function annotation_feedback_form($data) {
+    public static function annotation_feedback_form($data) {
         global $USER;
 
         require_once(get_config('docroot') . 'blocktype/lib.php');
