@@ -151,7 +151,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button class="close" data-dismiss="modal-docked" aria-label="Close">
+                        <button class="close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
                             <span class="times">&times;</span>
                             <span class="sr-only">{str tag=Close}</span>
                         </button>
@@ -173,7 +173,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
                             <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=reportobjectionablematerial}
@@ -190,7 +190,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
                             <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=confirmcopytitle section=view}

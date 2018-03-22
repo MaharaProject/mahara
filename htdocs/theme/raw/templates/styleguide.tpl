@@ -157,7 +157,7 @@ Switchboxes are used for Yes/No, On/Off or other true/false type fields. They ar
 ```
 <div class="form-switch ">
     <div class="switch " style="width:61px">
-        <input type="checkbox" class="switchbox" name="dropdownmenu" tabindex="0" aria-describedby="siteoptions_dropdownmenu_description " aria-label="Drop-down navigation">
+        <input type="checkbox" class="switchbox" name="dropdownmenu" tabindex="0">
         <label class="switch-label" for="siteoptions_dropdownmenu" aria-hidden="true">
             <span class="switch-inner"></span>
             <span class="switch-indicator"></span>
@@ -1037,7 +1037,7 @@ A fold down modal. This is typially used to report objectionable content.
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
                     <span aria-hidden="true">×</span>
                 </button>
                 <h4 class="modal-title">

@@ -32,7 +32,9 @@ $string['element.calendar.format.help.minute2digits'] = 'MM';
 $string['element.calendar.format.help.second2digits'] = 'SS';
 $string['element.calendar.format.help.ampmlowercase'] = 'am';
 $string['element.calendar.format.help.ampmuppercase'] = 'AM';
-
+$string['element.calendar.format.arialabel'] = 'Edit the field using the following format: YYYY / MM / DD, hours : minutes.';
+$string['element.calendar.datefrom'] = 'Date from';
+$string['element.calendar.dateto'] = 'Date to';
 
 $string['element.date.monthnames'] = 'January,February,March,April,May,June,July,August,September,October,November,December';
 $string['element.date.specify'] = 'Set date';
