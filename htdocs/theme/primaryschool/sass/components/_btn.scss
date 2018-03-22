@@ -55,7 +55,7 @@
 
 
 // makes certain buttons primary colour
-.col-collapse-offset.col-with-collapse .btn { 
+.col-collapse-offset.col-with-collapse .btn {
     color: #fff;
     background-color: $brand-primary;
     border-color: darken($btn-primary-bg, 5%);
@@ -90,7 +90,7 @@
     &:hover {
         background-color: lighten($brand-primary, 5%);
         color: #fff;
-    }   
+    }
 }
 
 .panel-secondary .blockinstance-controls .btn-group-top .btn {
@@ -100,5 +100,39 @@
     }
     &:hover {
         background-color: #ccc;
+    }
+}
+
+// Tinymce primary button
+.mce-container,
+.mce-widget,
+.mce-reset {
+    .mce-primary {
+        background-color: $btn-primary-bg;
+        border-color: $btn-primary-border;
+        font-family: $font-family-sans-serif;
+
+        &:hover {
+            background-color: lighten($btn-primary-bg, 5%);
+        }
+
+        .mce-txt {
+            color: $btn-primary-color;
+        }
+    }
+}
+
+.modal-tinymce {
+    .pieform {
+        button.btn-default {
+            background-color: $btn-primary-bg;
+            border-color: $btn-primary-border;
+            font-family: $font-family-sans-serif;
+            color: $btn-primary-color;
+
+            &:hover {
+                background-color: lighten($btn-primary-bg, 5%);
+            }
+        }
     }
 }

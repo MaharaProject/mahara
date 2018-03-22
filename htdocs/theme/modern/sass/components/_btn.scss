@@ -21,3 +21,41 @@
     }
   }
 }
+
+// Tinymce primary button
+.mce-container,
+.mce-widget,
+.mce-reset {
+    .mce-primary {
+        background-color: $btn-primary-bg;
+        border-color: $btn-primary-border;
+        font-family: $font-family-sans-serif;
+
+        &:hover {
+            background-color: darken($btn-primary-bg, 5%);
+        }
+
+        .mce-txt {
+            color: $btn-primary-color;
+        }
+    }
+    // Vertically center Raleway font
+    .mce-abs-layout-item button .mce-txt {
+        vertical-align: baseline;
+    }
+}
+
+.modal-tinymce {
+    .pieform {
+        button.btn-default {
+            background-color: $btn-primary-bg;
+            border-color: $btn-primary-border;
+            font-family: $font-family-sans-serif;
+            color: $btn-primary-color;
+
+            &:hover {
+                background-color: darken($btn-primary-bg, 5%);
+            }
+        }
+    }
+}
