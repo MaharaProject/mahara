@@ -5413,7 +5413,8 @@ class View {
                     continue;
                 }
                 else {
-                    $viewids[] = $v->id;
+                    $viewid = (isset($v->viewid) && !empty($v->viewid)) ? $v->viewid : $v->id;
+                    $viewids[] = $viewid;
                 }
                 if (!empty($v->owner) && !isset($owners[$v->owner])) {
                     $owners[$v->owner] = (int)$v->owner;
@@ -5462,7 +5463,11 @@ class View {
                         else {
                             // Need to find the views to add it to
                             foreach ($viewdata as $k => $v) {
-                                if ($v->id == $tag->view) {
+                                if (is_null($v->id)) {
+                                    continue;
+                                }
+                                $viewid = (isset($v->viewid) && !empty($v->viewid)) ? $v->viewid : $v->id;
+                                if ($viewid == $tag->view) {
                                     $viewdata[$k]->tags[] = $tag->tag;
                                 }
                             }
@@ -5510,13 +5515,14 @@ class View {
                     $v = (array)$v;
                     continue;
                 }
+                $viewid = (isset($v->viewid) && !empty($v->viewid)) ? $v->viewid : $v->id;
                 $v->anonymous = FALSE;
                 if (!empty($v->owner)) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
                     $v->user = $owners[$v->owner];
 
                     // Get a real view object so we can do the checks.
-                    $view_obj = new View($v->id);
+                    $view_obj = new View($viewid);
                     $v->anonymous = $view_obj->is_anonymous();
                     $v->staff_or_admin = $view_obj->is_staff_or_admin_for_page();
                 }
@@ -5532,7 +5538,7 @@ class View {
 
                 // Now that we have the owner & group records, create a temporary View object
                 // so that we can use display_title_editing and get_url methods.
-                $view = new View(0, $v);
+                $view = new View($viewid);
                 $view->set('dirty', false);
                 $v['displaytitle'] = $view->display_title_editing();
                 $v['url'] = $view->get_url(false);
