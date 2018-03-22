@@ -367,8 +367,8 @@
                     helper = $("<div />").append(original.clone());
 
                 helper.children().each(function(index) {
-                    // Set helper cell sizes to match the original sizes
-                    $(this).width(original.eq(index).outerWidth());
+                    // Set helper cell sizes to match at least the original sizes
+                    $(this).css('min-width', '200px');
                 });
 
                 return helper;
