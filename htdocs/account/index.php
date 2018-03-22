@@ -79,6 +79,12 @@ if ($authobj->authname == 'internal') {
         'title' => get_string('changeusername', 'account'),
         'description' => get_string('changeusernamedesc', 'account', hsc(get_config('sitename'))),
     );
+    $elements['oldpasswordchangeuser'] = array(
+        'type' => 'password',
+        'title' => get_string('oldpassword'),
+        'help'  => false,
+        'autocomplete' => 'off',
+    );
 }
 
 if (get_config('cleanurls') && get_config('cleanurlusereditable')) {
@@ -145,7 +151,6 @@ function accountprefs_validate(Pieform $form, $values) {
 
     if (isset($values['oldpassword'])) {
         if ($values['oldpassword'] !== '') {
-            global $USER, $authtype, $authclass;
             try {
                 if (!$authobj->authenticate_user_account($USER, $values['oldpassword'])) {
                     $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
@@ -154,7 +159,7 @@ function accountprefs_validate(Pieform $form, $values) {
             }
             // propagate error correctly for User validation issues - this should
             // be catching AuthUnknownUserException and AuthInstanceException
-             catch  (UserException $e) {
+            catch  (UserException $e) {
                  $form->set_error('oldpassword', $e->getMessage());
                  return;
             }
@@ -162,6 +167,31 @@ function accountprefs_validate(Pieform $form, $values) {
         }
         else if ($values['password1'] !== '' || $values['password2'] !== '') {
             $form->set_error('oldpassword', get_string('mustspecifyoldpassword'));
+        }
+    }
+
+    if (isset($values['username']) && $values['username'] != $USER->get('username')) {
+        if (isset($values['oldpasswordchangeuser'])) {
+            if ($values['oldpasswordchangeuser'] !== '') {
+                try {
+                    if (!$authobj->authenticate_user_account($USER, $values['oldpasswordchangeuser'])) {
+                        $form->set_error('oldpasswordchangeuser', get_string('oldpasswordincorrect', 'account'));
+                        return;
+                    }
+                }
+                // propagate error correctly for User validation issues - this should
+                // be catching AuthUnknownUserException and AuthInstanceException
+                catch  (UserException $e) {
+                     $form->set_error('oldpasswordchangeuser', $e->getMessage());
+                     return;
+                }
+            }
+            else {
+                $form->set_error('oldpasswordchangeuser', get_string('mustspecifycurrentpassword'));
+            }
+        }
+        else {
+            $form->set_error('oldpasswordchangeuser', get_string('mustspecifycurrentpassword'));
         }
     }
 
@@ -194,7 +224,6 @@ function accountprefs_submit(Pieform $form, $values) {
     db_begin();
     $ispasswordchanged = false;
     if (isset($values['password1']) && $values['password1'] !== '') {
-        global $authclass;
         $password = $authobj->change_password($USER, $values['password1']);
         $USER->password = $password;
         $USER->passwordchange = 0;
@@ -305,6 +334,13 @@ var clearPasswords = (function($) {
       }
   }
 }(jQuery))
+
+$(function() {
+    $('#accountprefs_oldpasswordchangeuser_container').hide();
+    $('#accountprefs_username').on('change', function() {
+        $('#accountprefs_oldpasswordchangeuser_container').show();
+    });
+});
 EOF;
 
 $request = get_record('usr_pendingdeletion', 'usr', $USER->id);
