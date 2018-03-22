@@ -55,17 +55,19 @@
         }
     }
 
-    &.notifications {
-        .nav-inpage {
-            &.nav > li {
-                & > a {
-                    color: $arrow-text-color;
-                }
-                &.active > a,
-                &.active > button  {
-                    color: $link-color;
-                    background-color: $arrow-link-background-color;
-                }
+    .nav-inpage {
+        &.nav > li {
+            & > a {
+                color: $arrow-text-color;
+            }
+            &.active > a,
+            &.active > button  {
+                color: $link-color;
+                background-color: $arrow-link-background-color;
+            }
+            & > a:hover {
+                color: $arrow-link-hover-color;
+                background-color:$arrow-link-background-color;
             }
         }
     }
