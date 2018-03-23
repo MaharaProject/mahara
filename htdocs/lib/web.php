@@ -1452,6 +1452,7 @@ function jsstrings() {
                 'youhavenottaggedanythingyet',
                 'wanttoleavewithoutsaving?',
                 'Help',
+                'Close',
                 'closehelp',
                 'tabs',
                 'toggletoolbarson',

@@ -60,7 +60,7 @@ function pieform_element_calendar(Pieform $form, $element) {
     $result = '<span class="hasDatepickerwrapper"><input type="text"'
         . $form->element_attributes($element)
         . ' value="' . $value . '"
-        aria-label="Edit the field using the following format YYYY / MM / DD, HH colon MM, a m or p m"
+        aria-label="' . get_string('element.calendar.format.arialabel', 'pieforms') . '"
         ></span>';
     $result .= '
         <script type="application/javascript">
