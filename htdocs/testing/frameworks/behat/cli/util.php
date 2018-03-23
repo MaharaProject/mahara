@@ -139,6 +139,9 @@ try {
             // Update behat and dependencies using composer
             testing_update_dependencies();
         }
+        //now composer is updated, apply custom styling to the html report
+        set_report_styling();
+
         BehatConfigManager::update_config_file();
         // Other possible actions we may need to take.
         switch ($statuscode) {

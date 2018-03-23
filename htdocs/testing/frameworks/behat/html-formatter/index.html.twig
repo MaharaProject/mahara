@@ -1,0 +1,292 @@
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Behat report</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                {#<li class="active"><a href="#">Home</a></li>#}
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container theme-showcase" role="main">
+    <div class="row charts">
+        <div class="col-sm-4">
+            <div class="canvas-holder">
+                <canvas id="chart-features" width="300" height="300"/>
+            </div>
+            {{ failedFeatures|length }} features failed of {{ (failedFeatures|length) + (passedFeatures|length) }}
+            features
+        </div>
+        <div class="col-sm-4">
+            <div class="canvas-holder">
+                <canvas id="chart-scenarios" width="300" height="300"/>
+            </div>
+            {{ failedScenarios|length }} scenarios failed of {{ (failedScenarios|length) + (passedScenarios|length) }}
+            scenarios
+        </div>
+        <div class="col-sm-4">
+            <div class="canvas-holder">
+                <canvas id="chart-steps" width="300" height="300"/>
+            </div>
+            {{ failedSteps|length }} steps failed of {{ (failedSteps|length) + (passedSteps|length) }}
+        </div>
+    </div>
+    <hr>
+    <div class="filters">
+        <a class="btn btn-default" id="feature-all-filter" role="button">All</a>
+        <a class="btn btn-success" id="feature-passed-filter" role="button">Passed</a>
+        <a class="btn btn-danger" id="feature-failed-filter" role="button">Failed</a>
+    </div>
+    <hr>
+    <div id="feature-overview">
+        {% for suite in suites %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>Suite: {{ suite.name }}</h2>
+
+                    <div class="row">
+                        {% for feature in suite.features %}
+                            <div class="col-sm-4 feature" data-id="feature-{{ feature.id }}">
+                                <div class="card {{ feature.getPassedClass }}">
+                                    <div class="header">
+                                        <h2>Feature: {{ feature.name }}</h2>
+                                    </div>
+                                    <div class="info">
+                                        <p>{{ feature.description|raw|nl2br }}</p>
+                                    </div>
+                                    <div class="footer">
+                                        <div class="tags">
+                                            {% for tag in feature.tags %}
+                                                <span class="badge">{{ tag }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        {% if feature.getTotalAmountOfScenarios > 0 %}
+                                            <div class="progress">
+
+                                                <div class="progress-bar progress-bar-green" role="progressbar"
+                                                     style="width: {{ feature.getPercentPassed }}%">
+                                                    <span class="sr-only">40% Complete (success)</span>
+                                                </div>
+                                                <div class="progress-bar progress-bar-red" role="progressbar"
+                                                     style="width: {{ feature.getPercentFailed }}%">
+                                                    <span class="sr-only">40% Complete (success)</span>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+    <div id="scenario-overview" class="row">
+        {% for suite in suites %}
+            {% for feature in suite.features %}
+                <div class="feature" data-id="feature-{{ feature.id }}">
+                    <div class="col-sm-4">
+                        <div class="card {{ feature.getPassedClass }}">
+                            <div class="header">
+                                <h2>Feature: {{ feature.name }}</h2>
+                            </div>
+                            <div class="info">
+                                <p>{{ feature.description|raw|nl2br }}</p>
+                            </div>
+                            <div class="footer">
+                                <div class="tags">
+                                    {% for tag in feature.tags %}
+                                        <span class="badge">{{ tag }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% if feature.getTotalAmountOfScenarios > 0 %}
+                                    <div class="progress">
+
+                                        <div class="progress-bar progress-bar-green" role="progressbar"
+                                             style="width: {{ feature.getPercentPassed }}%">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                        <div class="progress-bar progress-bar-red" role="progressbar"
+                                             style="width: {{ feature.getPercentFailed }}%">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8 details panel-group" role="tablist" aria-multiselectable="true">
+                        {% for scenario in feature.scenarios %}
+                            <div class="panel panel-default {% if scenario.isPassed %}passed{% else %}failed{% endif %}">
+                                <div class="panel-heading" role="tab">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion"
+                                           href="#scenario-{{ feature.id }}-{{ scenario.id }}"
+                                           aria-expanded="true"
+                                           aria-controls="scenario-{{ feature.id }}-{{ scenario.id }}">
+                                            Scenario: {{ scenario.name }}
+                                        </a>
+
+                                        <div class="tags pull-right">
+                                            {% for tag in scenario.tags %}
+                                                <span class="badge">{{ tag }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </h4>
+                                </div>
+                                <div id="scenario-{{ feature.id }}-{{ scenario.id }}" class="panel-collapse collapse in"
+                                     role="tabpanel"
+                                     aria-labelledby="headingOne">
+                                    <ul class="list-group">
+                                        {% for step in scenario.steps %}
+                                            <li class="list-group-item alert alert-{% if step.isPassed %}success{% elseif step.isSkipped %}info{% elseif step.isPending %}warning{% else %}danger{% endif %}">
+                                                <b>{{ step.keyword }}</b> {{ step.text }}
+                                                {% if printStepArgs is not null %}
+                                                    {% for argument in step.arguments %}
+                                                        <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">{{ argument | nl2br }}</p>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if step.exception is not null %}
+                                                    <br>
+                                                    <p style="padding-left:2em ; color:gray">({{ step.exception }})</p>
+                                                {% endif %}
+                                                {% if step.output is not null %}
+                                                    <br>
+                                                    <p style="padding-left:2em ; color:black">| {{ step.output }}</p>
+                                                {% endif %}
+                                                {% if printLoopBreak is not null and ( loop.index % scenario.getLoopSize ) == 0 and loop.last != true  %}
+                                                    </li><li class="list-group-item break">
+                                                {% endif %}
+                                            </li>
+                                            {#<div class="bs-callout bs-callout-{% if step.passed %}success{% else %}danger{% endif %}" id="callout-collapse-accessibility">#}
+                                            {#<b>{{ step.keyword }}</b> {{ step.text }}#}
+                                            {#</div>#}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+<!-- /container -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="assets/Twig/js/jquery.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="assets/Twig/js/bootstrap.js"></script>
+
+<script type="text/javascript">
+    var featureData = [
+        {
+            value: {{  failedFeatures|length}},
+            color: "#c9302c",
+            highlight: "#d9534f",
+            label: "Failed"
+        },
+        {
+            value: {{  passedFeatures|length}},
+            color: "#3a4a22",
+            highlight: "#556d32",
+            label: "Passed"
+        },
+    ];
+
+    var scenarioData = [
+        {
+            value: {{  failedScenarios|length}},
+            color: "#c9302c",
+            highlight: "#d9534f",
+            label: "Failed"
+        },
+        {
+            value: {{  passedScenarios|length}},
+            color: "#3a4a22",
+            highlight: "#556d32",
+            label: "Passed"
+        },
+    ];
+
+    var stepData = [
+        {
+            value: {{  failedSteps|length}},
+            color: "#c9302c",
+            highlight: "#d9534f",
+            label: "Failed"
+        },
+        {
+            value: {{  passedSteps|length}},
+            color: "#3a4a22",
+            highlight: "#556d32",
+            label: "Passed"
+        },
+    ];
+
+    window.onload = function () {
+        var featureChart = document.getElementById("chart-features").getContext("2d");
+        var scenarioChart = document.getElementById("chart-scenarios").getContext("2d");
+        var stepChart = document.getElementById("chart-steps").getContext("2d");
+        new Chart(featureChart).Doughnut(featureData);
+        new Chart(scenarioChart).Doughnut(scenarioData);
+        new Chart(stepChart).Doughnut(stepData);
+    };
+</script>
+<script type="text/javascript">
+    function showOverview() {
+        $("#feature-overview").show();
+        $("#scenario-overview").hide();
+    }
+    function showDetails() {
+        $("#feature-overview").hide();
+        $("#scenario-overview").show();
+    }
+    function showFeatureDetail(featureId) {
+        $("#scenario-overview .feature").hide();
+        $("#scenario-overview .feature[data-id='" + featureId + "']").show();
+    }
+    $(function () {
+        $('.filters').click()
+        {
+            showOverview();
+        }
+
+        $('.filters #feature-failed-filter').click(function () {
+            showOverview();
+            $('.feature').hide();
+            $('.card.failed').parent().show();
+        });
+        $('.filters #feature-passed-filter').click(function () {
+            showOverview();
+            $('.feature').hide();
+            $('.card.passed').parent().show();
+        });
+        $('.filters #feature-all-filter').click(function () {
+            showOverview();
+            $('.feature').show();
+        });
+    });
+
+    $(function () {
+        $(".feature").click(function () {
+            var featureId = $(this).data("id");
+            showDetails();
+            showFeatureDetail(featureId);
+        });
+    });
+</script>
