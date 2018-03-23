@@ -89,12 +89,12 @@
     </td>
     <td class="text-center js-date short" data-name='from'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}">
-            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][startdate]" class="form-control pull-left" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" aria-label="Date from (Edit the field using the following format, year / month / day, hours colon minutes, a m or p m.)" {% if (o.presets.locked) { %}disabled{% } %}></div>
+            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][startdate]" class="form-control pull-left" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" aria-label="Date from (Edit the field using the following format, YYYY / MM / DD, hours colon minutes, a m or p m.)" {% if (o.presets.locked) { %}disabled{% } %}></div>
         </div>
     </td>
     <td class="text-center js-date short" data-name='to'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}">
-            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][stopdate]" class="form-control pull-left " data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="Date to (Edit the field using the following format, year / month / day, hours colon minutes, a m or p m.)" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %}></div>
+            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][stopdate]" class="form-control pull-left " data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="Date to (Edit the field using the following format, YYYY / MM / DD, hours colon minutes, a m or p m.)" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %}></div>
         </div>
     </td>
     {% if (o.viewtype !== "profile") { %}

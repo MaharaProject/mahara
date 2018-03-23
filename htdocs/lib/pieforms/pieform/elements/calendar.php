@@ -59,7 +59,9 @@ function pieform_element_calendar(Pieform $form, $element) {
     // Build the HTML
     $result = '<span class="hasDatepickerwrapper"><input type="text"'
         . $form->element_attributes($element)
-        . ' value="' . $value . '"></span>';
+        . ' value="' . $value . '"
+        aria-label="Edit the field using the following format YYYY / MM / DD, HH colon MM, a m or p m"
+        ></span>';
     $result .= '
         <script type="application/javascript">
         var input_' . $id . ' = jQuery("input#' . $id . '");
@@ -205,15 +207,16 @@ function pieform_element_calendar_convert_timeformat($format) {
     // they get passed through printf.
     $format = str_replace('%%', '%', $format);
 
+    // Replacements as per http://momentjs.com/docs/#/displaying/format/
     $replacements = array(
             '%k' => "H", // Hour (24-hour, no leading 0)
-            '%H' => 'hh', // Hour (24-hour, 2 digits)
+            '%H' => 'HH', // Hour (24-hour, 2 digits)
             '%l' => "h", // Hour (12-hour, no leading 0)
             '%I' => 'hh', // Hour (12-hour, 2 digits)
             '%M' => 'mm', // Minute (2 digits)
-            '%S' => 'a', // Second (2 digits)
-            '%P' => 't', // am or pm for AM/PM
-            '%p' => 'T', // AM or PM for AM/PM
+            '%S' => 'ss', // Second (2 digits)
+            '%P' => 'a', // am or pm for AM/PM
+            '%p' => 'A', // AM or PM for AM/PM
     );
     return str_replace(
             array_keys($replacements),
