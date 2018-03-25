@@ -328,8 +328,8 @@ $siteoptionform = array(
                 ),
                 'defaultreviewselfdeletion' => array(
                     'type'         => 'switchbox',
-                    'title'        => get_string('defaultreviewselfdeletion', 'admin'),
-                    'description'  => get_string('defaultreviewselfdeletiondescription', 'admin'),
+                    'title'        => get_string('defaultreviewsselfdeletion', 'admin'),
+                    'description'  => get_string('defaultreviewsselfdeletiondescription', 'admin'),
                     'defaultvalue' => get_config('defaultreviewselfdeletion'),
                     'disabled'     => in_array('defaultreviewselfdeletion', $OVERRIDDEN),
                 ),
