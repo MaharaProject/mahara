@@ -10,7 +10,7 @@
             <tr class="{cycle values='r0,r1'}">
                     <td class="pendinginfo">
                             <div id="pendinginfo_{$deletion->id}">
-                                <h3 class="title">{$deletion->displayname}</h3>
+                                <h3 class="title"><a href="{$deletion->displayurl}">{$deletion->displayname}</a></h3>
                                 <div class="detail">{$deletion->username}</div>
                             </div>
                     </td>
