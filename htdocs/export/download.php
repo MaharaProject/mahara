@@ -14,7 +14,9 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . '/lib/htmloutput.php');
 
 // Download the export file if it's been generated
-if ($exportfile = $SESSION->get('exportfile')) {
+$downloadfile = param_variable('file', null);
+if ($downloadfile) {
+    $exportfile = get_config('dataroot') . 'export/' . $USER->get('id') . '/' . $downloadfile;
     $SESSION->set('exportdata', '');
     $SESSION->set('exportfile', '');
     require_once('file.php');
@@ -104,6 +106,7 @@ try {
 // the download. Here it would be nice to trigger the download for everyone,
 // but alas this is not possible for people without javascript.
 $SESSION->set('exportfile', $exporter->get('exportdir') . $zipfile);
+$filepath = str_replace(get_config('dataroot') . 'export/' . $USER->get('id') . '/', '', $exporter->get('exportdir') . $zipfile);
 $continueurl = 'download.php';
 $continueurljs = get_config('wwwroot') . 'export/index.php';
 $result = $SESSION->get('messages');
@@ -114,4 +117,4 @@ else {
     $SESSION->clear('messages');
     $strexport   = get_string('exportgeneratedwitherrors', 'export');
 }
-print_export_footer($strexport, $continueurl, $continueurljs, $result, 'download.php');
+print_export_footer($strexport, $continueurl, $continueurljs, $result, get_config('wwwroot') . 'export/download.php?file=' . $filepath);
