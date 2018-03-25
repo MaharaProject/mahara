@@ -690,7 +690,7 @@ $siteoptionform = array(
                 'registerterms' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('registerterms', 'admin'),
-                    'description'  => get_string('registertermsdescription', 'admin'),
+                    'description'  => get_string('registertermsdescription1', 'admin'),
                     'defaultvalue' => get_config('registerterms'),
                     'disabled'     => in_array('registerterms', $OVERRIDDEN),
                 ),
