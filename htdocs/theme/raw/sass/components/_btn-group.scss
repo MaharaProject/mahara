@@ -77,15 +77,35 @@
 
 // If there are not-button siblings of group button elements
 .btn-group > .no-delete-btn {
-    margin-right: 27px;
+    margin-right: 28px;
 }
 
 .btn-group > .btn.btn-group-first {
     border-top-left-radius: 3px !important;
     border-bottom-left-radius: 3px !important;
 }
+.btn-group > .btn-group-first:not(.btn-group-last) {
+    display: inline-block;
+    .btn {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+}
 
 .btn-group > .btn.btn-group-last {
     border-top-right-radius: 3px !important;
     border-bottom-right-radius: 3px !important;
+}
+.btn-group > .btn-group-last:not(.btn-group-first) {
+    display: inline-block;
+    margin-left: -4px;
+    .btn {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+    }
+}
+
+.btn-group > .btn-group-first.btn-group-last {
+    display: inline-block;
+    margin-left: -4px;
 }
