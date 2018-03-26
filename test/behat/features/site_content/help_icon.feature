@@ -98,13 +98,13 @@ Scenario: Showing correct external manual help file for mahara page
   And I choose "Pages and collections" in "Institutions" from administration menu
   And I follow "Help" in the ".footer-nav" "css_element"
   And I switch to the new window
-  And I should see "10.6.11. Institution pages and collections"
+  And I should see "10.6.12. Institution pages and collections"
   And I switch to the main window
   When I am on homepage
   And I choose "Pages and collections" in "Configure site" from administration menu
   And I follow "Help" in the ".footer-nav" "css_element"
   And I switch to the new window
-  And I should see "10.3.6. Site pages and collections"
+  And I should see "10.3.7. Site pages and collections"
   And I switch to the main window
   When I am on homepage
   And I follow "GroupA"
