@@ -73,7 +73,7 @@ Scenario: Clicking ID's (Bug 1428456)
  And I scroll to the top
 
  # Checking if we can change page layout
- When I follow "Edit layout"
+ And I follow "Settings" in the "Toolbar buttons" property
  And I expand all fieldsets
  And I scroll to the base of id "addrow"
  And I press "Add a row"
@@ -98,7 +98,7 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  And I follow "Profile page"
  And I scroll to the base of id "viewh1"
  And I follow "Edit"
- When I follow "Edit layout"
+ And I follow "Settings" in the "Toolbar buttons" property
  And I should see "Layout"
  And I should not see "Basics"
  And I should see "Skin"
@@ -108,7 +108,7 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  # Dashboard page
  And I choose "Dashboard" from main menu
  And I follow "Edit dashboard"
- When I follow "Edit layout"
+ And I follow "Settings" in the "Toolbar buttons" property
  And I should see "Layout"
  And I should not see "Basics"
  And I should see "Skin"
