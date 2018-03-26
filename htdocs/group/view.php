@@ -32,6 +32,12 @@ if (!is_logged_in() && !$group->public) {
     throw new AccessDeniedException();
 }
 
+if ($usetemplate = param_integer('usetemplate', null)) {
+    // If a form has been submitted, build it now and pieforms will
+    // call the submit function straight away
+    pieform(create_view_form(null, null, $usetemplate));
+}
+
 define('TITLE', $group->name);
 define('SUBSECTIONHEADING', get_string('about'));
 $group->role = group_user_access($group->id);
