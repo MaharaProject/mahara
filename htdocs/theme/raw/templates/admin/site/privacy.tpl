@@ -1,6 +1,12 @@
 {include file="header.tpl"}
     {if $versionid && in_array($versionid, $latestVersions)}
-        <div class="lead">{str tag="privacypagedescription" section="admin"}</div>
+        <div class="lead">
+        {if $selectedtab == 'termsandconditions'}
+            {str tag="termspagedescription" section="admin"}
+        {else}
+            {str tag="privacypagedescription" section="admin"}
+        {/if}
+        </div>
             {if $pageeditform}
             <div class="col-md-9">
                 <div class="panel panel-default">

@@ -22,7 +22,7 @@ if (!is_logged_in()) {
     throw new AccessDeniedException();
 }
 
-$form = privacy_form();
+$form = privacy_form(!get_config('institutionstrictprivacy'), !get_config('institutionstrictprivacy'));
 
 // JQuery logic for panel hide/show submit button.
 $js = <<< EOF
@@ -39,5 +39,5 @@ setpageicon($smarty, 'icon-umbrella');
 
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('description', get_string('userprivacypagedescription', 'admin'));
+$smarty->assign('description', get_string('userprivacypagedescription1', 'admin'));
 $smarty->display('account/userprivacy.tpl');
