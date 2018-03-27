@@ -75,6 +75,7 @@ if (!isset($pending) || !$pending) {
 function build_pending_html($data, $institution) {
     foreach ($data as $d) {
         $d->displayname = display_name($d->userid, null, true);
+        $d->displayurl = profile_url($d->userid);
     }
     $smarty = smarty_core();
     $smarty->assign('data', isset($data) ? $data : null);
