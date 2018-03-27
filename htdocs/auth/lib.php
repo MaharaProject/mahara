@@ -2307,6 +2307,9 @@ function user_login_tries_to_zero() {
 }
 
 function auth_generate_registration_form($formname, $authname='internal', $goto) {
+
+    $registerterms = get_config('registerterms');
+    $strictprivacy = get_config('institutionstrictprivacy');
     require_once(get_config('libroot').'antispam.php');
     $elements = array(
         'firstname' => array(
@@ -2406,6 +2409,10 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
             'value' => '<p class="text-midtone">' . get_string('registerprivacy1') . '</p>',
         );
         foreach ($sitecontent as $content) {
+            // Show nothing if we are NOT forcing registering user to agree to anything
+            if (!$registerterms && !$strictprivacy) {
+                continue;
+            }
             $elements[$content->type] = array(
                 'type' => 'markup',
                 'value' => '<div id ="siteprivacy">' .
@@ -2413,36 +2420,42 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
                                 '<div id ="siteprivacytext">' . $content->content . '</div>' .
                             '</div>',
             );
-            $elements[$content->type . 'switch'] = array(
-                'type'         => 'switchbox',
-                'title'        => get_string('privacyagreement', 'admin', get_string($content->type . 'lowcase', 'admin')),
-                'description'  => get_string('register' . $content->type, 'admin'),
-                'required' => true,
-            );
+            if ($strictprivacy || $registerterms) {
+                $elements[$content->type . 'switch'] = array(
+                    'type'         => 'switchbox',
+                    'title'        => get_string('privacyagreement', 'admin', get_string($content->type . 'lowcase', 'admin')),
+                    'description'  => get_string('register' . $content->type, 'admin'),
+                    'required' => true,
+                );
+            }
             $elements[$content->type . 'id'] = array(
                 'type'         => 'hidden',
                 'value'        => $content->id,
             );
         }
     }
-    // Add institution privacy if an institution has been selected.
-    $elements['instprivacy'] = array(
-        'type' => 'markup',
-        'value' => '<div id ="instprivacy" class ="inst js-hidden">' .
-                        '<h2>' . get_string('institutionprivacystatement', 'admin') . '</h2>' .
-                        '<div id ="instprivacytext" class="insttext"></div>' .
-                    '</div>',
-    );
-    $elements['instprivacyswitch'] = array(
-        'type'         => 'switchbox',
-        'title'        => get_string('privacyagreement', 'admin', get_string('privacylowcase', 'admin')),
-        'description'  => get_string('registerprivacy1'),
-        'class'         => 'instprivacyswitch js-hidden',
-    );
-    $elements['instprivacyid'] = array(
-        'type' => 'text',
-        'class' => 'js-hidden',
-    );
+    // Add institution privacy if an institution has been selected and we are forcing registering user to agree to them
+    if ($strictprivacy || $registerterms) {
+        $elements['instprivacy'] = array(
+            'type' => 'markup',
+            'value' => '<div id ="instprivacy" class ="inst js-hidden">' .
+                            '<h2>' . get_string('institutionprivacystatement', 'admin') . '</h2>' .
+                            '<div id ="instprivacytext" class="insttext"></div>' .
+                        '</div>',
+        );
+
+        $elements['instprivacyswitch'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('privacyagreement', 'admin', get_string('privacylowcase', 'admin')),
+            'description'  => get_string('registerprivacy1'),
+            'class'         => 'instprivacyswitch js-hidden',
+        );
+
+        $elements['instprivacyid'] = array(
+            'type' => 'text',
+            'class' => 'js-hidden',
+        );
+    }
     // Add institution terms if an institution has been selected.
     $elements['insttermsandconditions'] = array(
         'type' => 'markup',
@@ -2451,32 +2464,18 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
                         '<div id ="insttermsandconditionstext" class="insttext"></div>' .
                     '</div>',
     );
-    $elements['insttermsandconditionsswitch'] = array(
-        'type'         => 'switchbox',
-        'title'        => get_string('privacyagreement', 'admin', get_string('termsandconditionslowcase', 'admin')),
-        'description'  => get_string('registertermsandconditions', 'admin'),
-        'class'         => 'insttermsandconditionsswitch js-hidden',
-    );
+    if ($strictprivacy || $registerterms) {
+        $elements['insttermsandconditionsswitch'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('privacyagreement', 'admin', get_string('termsandconditionslowcase', 'admin')),
+            'description'  => get_string('registertermsandconditions', 'admin'),
+            'class'         => 'insttermsandconditionsswitch js-hidden',
+        );
+    }
     $elements['insttermsandconditionsid'] = array(
         'type' => 'text',
         'class' => 'js-hidden',
     );
-
-    $registerterms = get_config('registerterms');
-    if ($registerterms) {
-        $elements['tandc'] = array(
-            'type' => 'radio',
-            'title' => get_string('iagreetothetermsandconditions', 'auth.internal'),
-            'options' => array(
-                'yes' => get_string('yes'),
-                'no'  => get_string('no')
-            ),
-            'defaultvalue' => 'no',
-            'rules' => array(
-                'required' => true
-            )
-        );
-    }
 
     if (call_static_method('Auth'.ucfirst($authname), 'can_use_registration_captcha')) {
         $elements['captcha'] = array(
@@ -2514,7 +2513,7 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
         'spam' => array(
             'secret'       => get_config('formsecret'),
             'mintime'      => 5,
-            'hash'         => array('firstname', 'lastname', 'email', 'institution', 'reason', 'tandc', 'submit'),
+            'hash'         => array('firstname', 'lastname', 'email', 'institution', 'reason', 'submit'),
         ),
     );
 
@@ -2629,6 +2628,7 @@ function auth_register_validate(Pieform $form, $values) {
     global $SESSION;
 
     $registerterms = get_config('registerterms');
+    $strictprivacy = get_config('institutionstrictprivacy');
 
     $spamtrap = new_spam_trap(array(
         array(
@@ -2658,23 +2658,25 @@ function auth_register_validate(Pieform $form, $values) {
     $institution = $values['institution'];
     safe_require('auth', 'internal');
 
-    // Privacy statements must have been accepted by the user.
-    if (!$values['privacyswitch']) {
-        $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
-        $form->set_error('privacyswitch', get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
-    }
-    if (!$values['instprivacyswitch'] && $values['instprivacyid'] != '') {
-        $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
-        $form->set_error('instprivacyswitch', get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
-    }
-    // Terms and conditions must have been accepted by the user.
-    if (!$values['termsandconditionsswitch']) {
-        $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
-        $form->set_error('termsandconditionsswitch', get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
-    }
-    if (!$values['insttermsandconditionsswitch'] && $values['insttermsandconditionsid'] != '') {
-        $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
-        $form->set_error('insttermsandconditionsswitch', get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
+    if ($strictprivacy || $registerterms) {
+        // Privacy statements must have been accepted by the user.
+        if (!$values['privacyswitch']) {
+            $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
+            $form->set_error('privacyswitch', get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
+        }
+        if (!$values['instprivacyswitch'] && $values['instprivacyid'] != '') {
+            $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
+            $form->set_error('instprivacyswitch', get_string('registerrefusal', 'admin', get_string('privacylowcase', 'admin')));
+        }
+        // Terms and conditions must have been accepted by the user.
+        if (!$values['termsandconditionsswitch']) {
+            $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
+            $form->set_error('termsandconditionsswitch', get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
+        }
+        if (!$values['insttermsandconditionsswitch'] && $values['insttermsandconditionsid'] != '') {
+            $SESSION->add_error_msg(get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
+            $form->set_error('insttermsandconditionsswitch', get_string('registerrefusal', 'admin', get_string('termsandconditionslowcase', 'admin')));
+        }
     }
 
     // First name and last name must contain at least one non whitespace
@@ -2692,11 +2694,6 @@ function auth_register_validate(Pieform $form, $values) {
         && (record_exists('usr', 'email', $values['email'])
         || record_exists('artefact_internal_profile_email', 'email', $values['email']))) {
         $form->set_error('email', get_string('emailalreadytaken', 'auth.internal'));
-    }
-
-    // If the user hasn't agreed to the terms and conditions, don't bother
-    if ($registerterms && $values['tandc'] != 'yes') {
-        $form->set_error('tandc', get_string('youmaynotregisterwithouttandc', 'auth.internal'), false);
     }
 
     $institution = get_record_sql('
@@ -2762,14 +2759,27 @@ function auth_register_submit(Pieform $form, $values) {
     if (function_exists('local_register_submit')) {
         local_register_submit($values);
     }
-    $extra = new StdClass;
-    $extra->privacy = array($values['privacyid'], $values['termsandconditionsid']);
+    // If local register sets extra fields
+    if (isset($values['extra'])) {
+        $extra = unserialize($values['extra']);
+    }
+    else {
+        $extra = new StdClass();
+    }
+    $extraprivacy = array();
+    if (isset($values['privacyid']) && !empty($values['privacyid'])) {
+        array_push($extraprivacy, $values['privacyid']);
+    }
+    if (isset($values['termsandconditionsid']) && !empty($values['termsandconditionsid'])) {
+        array_push($extraprivacy, $values['termsandconditionsid']);
+    }
     if (isset($values['instprivacyid']) && !empty($values['instprivacyid'])) {
-        array_push($extra->privacy, $values['instprivacyid']);
+        array_push($extraprivacy, $values['instprivacyid']);
     }
     if (isset($values['insttermsandconditionsid']) && !empty($values['insttermsandconditionsid'])) {
-        array_push($extra->privacy, $values['insttermsandconditionsid']);
+        array_push($extraprivacy, $values['insttermsandconditionsid']);
     }
+    $extra->privacy = $extraprivacy;
     $values['extra'] = serialize($extra);
     try {
         if (!record_exists('usr_registration', 'email', $values['email'])) {
