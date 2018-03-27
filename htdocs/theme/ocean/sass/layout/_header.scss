@@ -12,11 +12,4 @@
             }
         }
     }
-
-    + .container {
-        margin-top: 0;
-        @media (min-width: $screen-sm-min) {
-            margin-top: 50px;
-        }
-    }
 }

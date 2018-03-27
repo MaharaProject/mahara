@@ -32,13 +32,15 @@
 
         ~ .container {
             .toolbar-affix.affix {
-                margin-top: $i * 33px;
+                @media (min-width: $screen-sm-min) {
+                    margin-top: $navbar-height + ($i * 33px);
+                }
             }
         }
 
         + .main-content {
             @media (min-width: $screen-sm-min) {
-                margin-top: $i * 33px;
+                margin-top: $navbar-height + ($i * 33px);
             }
         }
     }
@@ -48,6 +50,13 @@
 .no-site-messages {
     top: 0;
     padding-top: 0;
+
+    + .main-content,
+    + .main-content .toolbar-affix.affix {
+        @media (min-width: $screen-sm-min) {
+            margin-top: $navbar-height;
+        }
+    }
 }
 
 .errmsg {
