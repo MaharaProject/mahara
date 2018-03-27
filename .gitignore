@@ -3,6 +3,7 @@
 .settings/
 .settings
 logs
+htdocs/config.php
 htdocs/.project
 htdocs/.projectOptions
 htdocs/.settings/
