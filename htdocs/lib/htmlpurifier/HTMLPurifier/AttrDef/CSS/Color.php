@@ -7,6 +7,16 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
 {
 
     /**
+     * @type HTMLPurifier_AttrDef_CSS_AlphaValue
+     */
+    protected $alpha;
+
+    public function __construct()
+    {
+        $this->alpha = new HTMLPurifier_AttrDef_CSS_AlphaValue();
+    }
+
+    /**
      * @param string $color
      * @param HTMLPurifier_Config $config
      * @param HTMLPurifier_Context $context
@@ -29,211 +39,104 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
             return $colors[$lower];
         }
 
-        if (strpos($color, 'rgb(') !== false) {
-            // rgb literal handling
+        if (preg_match('#(rgb|rgba|hsl|hsla)\(#', $color, $matches) === 1) {
             $length = strlen($color);
             if (strpos($color, ')') !== $length - 1) {
                 return false;
             }
-            $triad = substr($color, 4, $length - 4 - 1);
-            $parts = explode(',', $triad);
-            if (count($parts) !== 3) {
+
+            // get used function : rgb, rgba, hsl or hsla
+            $function = $matches[1];
+
+            $parameters_size = 3;
+            $alpha_channel = false;
+            if (substr($function, -1) === 'a') {
+                $parameters_size = 4;
+                $alpha_channel = true;
+            }
+
+            /*
+             * Allowed types for values :
+             * parameter_position => [type => max_value]
+             */
+            $allowed_types = array(
+                1 => array('percentage' => 100, 'integer' => 255),
+                2 => array('percentage' => 100, 'integer' => 255),
+                3 => array('percentage' => 100, 'integer' => 255),
+            );
+            $allow_different_types = false;
+
+            if (strpos($function, 'hsl') !== false) {
+                $allowed_types = array(
+                    1 => array('integer' => 360),
+                    2 => array('percentage' => 100),
+                    3 => array('percentage' => 100),
+                );
+                $allow_different_types = true;
+            }
+
+            $values = trim(str_replace($function, '', $color), ' ()');
+
+            $parts = explode(',', $values);
+            if (count($parts) !== $parameters_size) {
                 return false;
             }
-            $type = false; // to ensure that they're all the same type
+
+            $type = false;
             $new_parts = array();
+            $i = 0;
+
             foreach ($parts as $part) {
+                $i++;
                 $part = trim($part);
+
                 if ($part === '') {
                     return false;
                 }
-                $length = strlen($part);
-                if ($part[$length - 1] === '%') {
-                    // handle percents
-                    if (!$type) {
-                        $type = 'percentage';
-                    } elseif ($type !== 'percentage') {
+
+                // different check for alpha channel
+                if ($alpha_channel === true && $i === count($parts)) {
+                    $result = $this->alpha->validate($part, $config, $context);
+
+                    if ($result === false) {
                         return false;
                     }
-                    $num = (float)substr($part, 0, $length - 1);
-                    if ($num < 0) {
-                        $num = 0;
-                    }
-                    if ($num > 100) {
-                        $num = 100;
-                    }
-                    $new_parts[] = "$num%";
+
+                    $new_parts[] = (string)$result;
+                    continue;
+                }
+
+                if (substr($part, -1) === '%') {
+                    $current_type = 'percentage';
                 } else {
-                    // handle integers
-                    if (!$type) {
-                        $type = 'integer';
-                    } elseif ($type !== 'integer') {
-                        return false;
-                    }
-                    $num = (int)$part;
-                    if ($num < 0) {
-                        $num = 0;
-                    }
-                    if ($num > 255) {
-                        $num = 255;
-                    }
-                    $new_parts[] = (string)$num;
+                    $current_type = 'integer';
                 }
-            }
-            $new_triad = implode(',', $new_parts);
-            $color = "rgb($new_triad)";
-        } else if (strpos($color, 'rgba(') !== false) {
-            // rgba literal handling
-            $length = strlen($color);
-            if (strpos($color, ')') !== $length - 1) {
-                return false;
-            }
-            $quartet = substr($color, 5, $length - 5 - 1);
-            $parts = explode(',', $quartet);
-            if (count($parts) !== 4) {
-                return false;
-            }
-            $opacity = trim(array_pop($parts));
-            if (!is_numeric($opacity)) {
-                return false;
-            }
-            $opacity = (float) $opacity;
-            if ($opacity < 0.0 || $opacity > 1.0) {
-                return false;
-            }
-            $type = false; // to ensure that the first three parts are integers
-            $new_parts = array();
-            foreach ($parts as $part) {
-                $part = trim($part);
-                if ($part === '') {
+
+                if (!array_key_exists($current_type, $allowed_types[$i])) {
                     return false;
                 }
-                $length = strlen($part);
-                if ($part[$length - 1] === '%') {
-                    // handle percents
-                    if (!$type) {
-                        $type = 'percentage';
-                    } elseif ($type !== 'percentage') {
-                        return false;
-                    }
-                    $num = (float)substr($part, 0, $length - 1);
-                    if ($num < 0) {
-                        $num = 0;
-                    }
-                    if ($num > 100) {
-                        $num = 100;
-                    }
-                    $new_parts[] = "$num%";
-                } else {
-                    // handle integers
-                    if (!$type) {
-                        $type = 'integer';
-                    } elseif ($type !== 'integer') {
-                        return false;
-                    }
-                    $num = (int)$part;
-                    if ($num < 0) {
-                        $num = 0;
-                    }
-                    if ($num > 255) {
-                        $num = 255;
-                    }
-                    $new_parts[] = (string)$num;
+
+                if (!$type) {
+                    $type = $current_type;
                 }
-            }
-            $new_triad = implode(',', $new_parts);
-            $color = "rgba($new_triad,$opacity)";
-        } else if (strpos($color, 'hsl(') !== false) {
-            // hsl literal handling hsl(hue(0-360), saturation%, lightness%)
-            $length = strlen($color);
-            if (strpos($color, ')') !== $length - 1) {
-                return false;
-            }
-            $triad = substr($color, 4, $length - 4 - 1);
-            $parts = explode(',', $triad);
-            if (count($parts) !== 3) {
-                return false;
-            }
-            $hue = trim(array_shift($parts));
-            if (!is_numeric($hue)) {
-                return false;
-            }
-            $hue = (float) $hue;
-            if ($hue < 0 || $hue > 360) {
-                return false;
-            }
-            // to ensure that saturation and lightness are valid percentage values
-            $new_parts = array();
-            foreach ($parts as $part) {
-                $part = trim($part);
-                if ($part === '') {
+
+                if ($allow_different_types === false && $type != $current_type) {
                     return false;
                 }
-                $length = strlen($part);
-                if ($part[$length - 1] !== '%') {
-                    return false;
+
+                $max_value = $allowed_types[$i][$current_type];
+
+                if ($current_type == 'integer') {
+                    // Return value between range 0 -> $max_value
+                    $new_parts[] = (int)max(min($part, $max_value), 0);
+                } elseif ($current_type == 'percentage') {
+                    $new_parts[] = (float)max(min(rtrim($part, '%'), $max_value), 0) . '%';
                 }
-                // handle percents
-                $num = (float)substr($part, 0, $length - 1);
-                if ($num < 0) {
-                    $num = 0;
-                }
-                if ($num > 100) {
-                    $num = 100;
-                }
-                $new_parts[] = "$num%";
             }
-            $new_triad = implode(',', $new_parts);
-            $color = "hsl($hue,$new_triad)";
-        } else if (strpos($color, 'hsla(') !== false) {
-            // hsla literal handling hsla(hue(0-360), saturation%, lightness%, opacity)
-            $length = strlen($color);
-            if (strpos($color, ')') !== $length - 1) {
-                return false;
-            }
-            $quartet = substr($color, 5, $length - 5 - 1);
-            $parts = explode(',', $quartet);
-            if (count($parts) !== 4) {
-                return false;
-            }
-            $hue = trim(array_shift($parts));
-            if (!is_numeric($hue)) {
-                return false;
-            }
-            $hue = (float) $hue;
-            if ($hue < 0 || $hue > 360) {
-                return false;
-            }
-            $opacity = trim(array_pop($parts));
-            if (!is_numeric($opacity)) {
-                return false;
-            }
-            $opacity = (float) $opacity;
-            if ($opacity < 0.0 || $opacity > 1.0) {
-                return false;
-            }
-            $new_parts = array();
-            foreach ($parts as $part) {
-                $part = trim($part);
-                if ($part === '') {
-                    return false;
-                }
-                $length = strlen($part);
-                if ($part[$length - 1] !== '%') {
-                    return false;
-                }
-                // handle percents
-                $num = (float)substr($part, 0, $length - 1);
-                if ($num < 0) {
-                    $num = 0;
-                }
-                if ($num > 100) {
-                    $num = 100;
-                }
-                $new_parts[] = "$num%";
-            }
-            $new_triad = implode(',', $new_parts);
-            $color = "hsla($hue,$new_triad,$opacity)";
+
+            $new_values = implode(',', $new_parts);
+
+            $color = $function . '(' . $new_values . ')';
         } else {
             // hexadecimal handling
             if ($color[0] === '#') {
@@ -252,6 +155,7 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
         }
         return $color;
     }
+
 }
 
 // vim: et sw=4 sts=4
