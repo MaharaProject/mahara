@@ -594,8 +594,8 @@ if ($institution || $add) {
     );
     $elements['reviewselfdeletion'] = array(
         'type'         => 'switchbox',
-        'title'        => get_string('reviewselfdeletion', 'admin'),
-        'description'  => get_string('reviewselfdeletiondescription','admin'),
+        'title'        => get_string('reviewsselfdeletion', 'admin'),
+        'description'  => get_string('reviewsselfdeletiondescription','admin'),
         'disabled'     => get_config('defaultreviewselfdeletion') == true,
         'defaultvalue' => get_config('defaultreviewselfdeletion') ? get_config('defaultreviewselfdeletion') : (isset($data->reviewselfdeletion) && $data->reviewselfdeletion),
     );
