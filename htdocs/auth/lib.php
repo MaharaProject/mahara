@@ -745,11 +745,13 @@ function auth_get_available_auth_types($institution=null) {
 /**
  * Build the agree with or withdraw consent to privacy statement
  *
- * @param ignoreagreevalue true when a new privacy statement needs to be accepted,
- * false when the form will be displayed to allow the consent withdraw.
- * @return form
+ * @param ignoreagreevalue true  - when a new privacy statement needs to be accepted,
+ *                         false - when the form will be displayed to allow the consent withdraw.
+ * @param ignoreformswitch If true we do not show the form's switch fields. Useful if strict privacy is off.
+ *
+ * @return pieform form
  */
-function privacy_form($ignoreagreevalue = false) {
+function privacy_form($ignoreagreevalue = false, $ignoreformswitch = false) {
     global $USER;
 
     // Get all institutions of a user.
@@ -782,6 +784,7 @@ function privacy_form($ignoreagreevalue = false) {
         $smarty->assign('privacytitle', $title);
         $smarty->assign('privacytime', format_date(strtotime($privacy->ctime)));
         $smarty->assign('ignoreagreevalue', $ignoreagreevalue);
+        $smarty->assign('ignoreformswitch', $ignoreformswitch);
         $htmlbegin = $smarty->fetch('privacy_panel_begin.tpl');
 
         //Build form elements.
@@ -793,21 +796,21 @@ function privacy_form($ignoreagreevalue = false) {
             'type' => 'hidden',
             'value' => $privacy->id,
         );
-
-        $elements[$privacy->institution . $privacy->type] = array(
-            'type'         => 'switchbox',
-            'title'        => get_string('privacyagreement', 'admin', get_string($privacy->type . 'lowcase', 'admin')),
-            'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin',
-                get_string($privacy->type . 'lowcase', 'admin'), format_date(strtotime($privacy->agreedtime))) : '',
-            'defaultvalue' => $privacy->agreed ? true : false,
-            'disabled'     => ($privacy->agreed && $ignoreagreevalue) ? true : false,
-            'required' => true,
-        );
-        $elements[$privacy->institution . $privacy->type . 'switch'] = array(
-            'type' => 'hidden',
-            'value' => ($privacy->agreed && $ignoreagreevalue) ? 'disabled' : 'enabled',
-        );
-
+        if (!$ignoreformswitch) {
+            $elements[$privacy->institution . $privacy->type] = array(
+                'type'         => 'switchbox',
+                'title'        => get_string('privacyagreement', 'admin', get_string($privacy->type . 'lowcase', 'admin')),
+                'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin',
+                    get_string($privacy->type . 'lowcase', 'admin'), format_date(strtotime($privacy->agreedtime))) : '',
+                'defaultvalue' => $privacy->agreed ? true : false,
+                'disabled'     => ($privacy->agreed && $ignoreagreevalue) ? true : false,
+                'required' => true,
+            );
+            $elements[$privacy->institution . $privacy->type . 'switch'] = array(
+                'type' => 'hidden',
+                'value' => ($privacy->agreed && $ignoreagreevalue) ? 'disabled' : 'enabled',
+            );
+        }
         $smarty = smarty_core();
         $smarty->assign('ignoreagreevalue', $ignoreagreevalue);
         $htmlend = $smarty->fetch('privacy_panel_end.tpl');
@@ -818,15 +821,19 @@ function privacy_form($ignoreagreevalue = false) {
 
     }
     $classhidden = $ignoreagreevalue ? '' : 'js-hidden';
-    $elements['submit'] = array(
-        'class' => 'btn-primary ' . $classhidden,
-        'type'  => 'submit',
-        'value' => get_string('savechanges', 'admin')
-    );
+    if (!$ignoreformswitch) {
+        $elements['submit'] = array(
+            'class' => 'btn-primary ' . $classhidden,
+            'type'  => 'submit',
+            'value' => get_string('savechanges', 'admin')
+        );
+    }
+
     $form = pieform(array(
         'name'       => 'agreetoprivacy',
         'elements' => $elements,
     ));
+
     return $form;
 }
 /**

@@ -146,6 +146,7 @@ else {
 setpageicon($smarty, 'icon-umbrella');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('results', $data);
+$smarty->assign('selectedtab', $selectedtab);
 $smarty->assign('latestVersions', $latestVersions);
 $smarty->assign('versionid', $versionid);
 $smarty->assign('link', "admin/site/privacy.php?id=");
