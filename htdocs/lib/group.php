@@ -183,14 +183,19 @@ function group_role_can_edit_views($group, $role) {
  * the window.
  * @param object $group the group to check
  * @param bool $admin_always whether the admin should be OK regardless of time
+ * @param bool $tutor_always whether the tutor should be OK regardless of time
  */
-function group_within_edit_window($group, $admin_always=true) {
+function group_within_edit_window($group, $admin_always=true, $tutor_always=true) {
     if (is_numeric($group)) {
         $group = get_group_by_id($group, true);
     }
 
     if ($admin_always && group_user_access($group->id) == 'admin') {
-      return true;
+        return true;
+    }
+
+    if ($tutor_always && group_user_access($group->id) == 'tutor') {
+        return true;
     }
 
     $start = !empty($group->editwindowstart) ? strtotime($group->editwindowstart) : null;
