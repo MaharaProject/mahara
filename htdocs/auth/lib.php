@@ -2416,18 +2416,23 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
             'type' => 'markup',
             'value' => '<p class="text-midtone">' . get_string('registerprivacy1') . '</p>',
         );
+
         foreach ($sitecontent as $content) {
+            $smarty = smarty_core();
+            $smarty->assign('privacy', $content);
+            $smarty->assign('privacytitle', get_string('site' . $content->type, 'admin'));
+            $htmlbegin = $smarty->fetch('privacy_panel_begin.tpl');
+            $htmlend = $smarty->fetch('privacy_panel_end.tpl');
+
             // Show nothing if we are NOT forcing registering user to agree to anything
             if (!$registerterms && !$strictprivacy) {
                 continue;
             }
             $elements[$content->type] = array(
                 'type' => 'markup',
-                'value' => '<div id ="siteprivacy">' .
-                                '<h2>' . get_string('site' . $content->type, 'admin') . '</h2>' .
-                                '<div id ="siteprivacytext">' . $content->content . '</div>' .
-                            '</div>',
+                'value' => $htmlbegin,
             );
+
             if ($strictprivacy || $registerterms) {
                 $elements[$content->type . 'switch'] = array(
                     'type'         => 'switchbox',
@@ -2440,38 +2445,59 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
                 'type'         => 'hidden',
                 'value'        => $content->id,
             );
+
+            $elements[$content->type . 'close'] = array(
+                'type' => 'markup',
+                'value' => $htmlend,
+            );
         }
     }
+
     // Add institution privacy if an institution has been selected and we are forcing registering user to agree to them
     if ($strictprivacy || $registerterms) {
+        $smarty = smarty_core();
+        $smarty->assign('institutionprivacy', true);
+        $smarty->assign('privacytitle', get_string('institutionprivacystatement', 'admin'));
+        $htmlbegin = $smarty->fetch('privacy_panel_begin.tpl');
+        $htmlend = $smarty->fetch('privacy_panel_end.tpl');
         $elements['instprivacy'] = array(
             'type' => 'markup',
-            'value' => '<div id ="instprivacy" class ="inst js-hidden">' .
-                            '<h2>' . get_string('institutionprivacystatement', 'admin') . '</h2>' .
-                            '<div id ="instprivacytext" class="insttext"></div>' .
-                        '</div>',
-        );
-
-        $elements['instprivacyswitch'] = array(
-            'type'         => 'switchbox',
-            'title'        => get_string('privacyagreement', 'admin', get_string('privacylowcase', 'admin')),
-            'description'  => get_string('registerprivacy1'),
-            'class'         => 'instprivacyswitch js-hidden',
+            'value' => $htmlbegin,
         );
 
         $elements['instprivacyid'] = array(
             'type' => 'text',
             'class' => 'js-hidden',
         );
+
+        $elements['instprivacyswitch'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('privacyagreement', 'admin', get_string('privacylowcase', 'admin')),
+            'description'  => get_string('registerprivacy1'),
+        );
+
+        $elements['instprivacyclose'] = array(
+            'type' => 'markup',
+            'value' => $htmlend,
+        );
     }
     // Add institution terms if an institution has been selected.
+    $smarty = smarty_core();
+    $smarty->assign('institutionterms', true);
+    $smarty->assign('privacytitle', get_string('institutiontermsandconditions', 'admin'));
+    $htmlbegin = $smarty->fetch('privacy_panel_begin.tpl');
+    $htmlend = $smarty->fetch('privacy_panel_end.tpl');
+
     $elements['insttermsandconditions'] = array(
         'type' => 'markup',
-        'value' => '<div id ="insttermsandconditions" class ="inst js-hidden">' .
-                        '<h2>' . get_string('institutiontermsandconditions', 'admin') . '</h2>' .
-                        '<div id ="insttermsandconditionstext" class="insttext"></div>' .
-                    '</div>',
+        'value' => $htmlbegin,
     );
+
+    $elements['insttermsandconditionsid'] = array(
+        'type' => 'text',
+        'class' => 'js-hidden',
+    );
+
     if ($strictprivacy || $registerterms) {
         $elements['insttermsandconditionsswitch'] = array(
             'type'         => 'switchbox',
@@ -2480,9 +2506,10 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
             'class'         => 'insttermsandconditionsswitch js-hidden',
         );
     }
-    $elements['insttermsandconditionsid'] = array(
-        'type' => 'text',
-        'class' => 'js-hidden',
+
+    $elements['insttermsandconditionsclose'] = array(
+        'type' => 'markup',
+        'value' => $htmlend,
     );
 
     if (call_static_method('Auth'.ucfirst($authname), 'can_use_registration_captcha')) {
