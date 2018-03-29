@@ -1333,6 +1333,23 @@ $string['cli_unabletoupdatecron'] = 'Unable to update the search cron database r
 $string['cli_problemindexing'] = 'A problem occurred while indexing';
 $string['cli_done'] = 'Indexing finished';
 
+// Clean up old users
+$string['cli_deleteinactiveusers_dryrun'] = 'Dry run to indicate what will happen. Set to "true" by default. Need to set -d=false to actually update database.';
+$string['cli_deleteinactiveusers_beforedate'] = 'Delete users that have not logged in after this date';
+$string['cli_deleteinactiveusers_limit'] = 'Limit of users to work with for each delete run';
+$string['cli_deleteinactiveusers_cleanusers'] = 'Delete users from the "usr" table as well';
+$string['cli_deleteinactiveusers_info'] = 'This command-line PHP script allows you to delete old users. This will only work for users who either have not logged in or have never made a forum post.';
+$string['cli_deleteinactiveusers_neverloggedin'] = 'Delete users that have never logged in (were setup by an admin)';
+$string['cli_deleteinactiveusers_baddate'] = 'The supplied date "%s" is not valid.';
+$string['cli_deleteinactiveusers_usercount'] = 'There are "%s" users to delete';
+$string['cli_deleteinactiveusers_userunabletoclean'] = 'Unable to fully delete user "%s" (ID %s)';
+$string['cli_deleteinactiveusers_nouserstodelete'] = 'There are no users to delete.';
+$string['cli_deleteinactiveusers_onlydryrun'] = 'This is only a dry run with the following settings
+Institution: %s
+Before date: %s
+Delete users from "usr" table: %s
+Never logged in: %s';
+
 $string['withselectedcontentexport'] = 'Re-queue items into the export queue';
 $string['withselectedcontentdelete'] = 'Delete selected items from the export queue';
 $string['allothers'] = 'All others';
