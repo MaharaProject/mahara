@@ -54,7 +54,7 @@ $string['idpentityupdatedduplicates'] = array(
     0 => "Updated the Identity Provider metadata for this and 1 other SAML instance.",
     1 => "Updated the Identity Provider metadata for this and %s other SAML instances."
 );
-$string['metarefresh_metadata_url'] = 'Metadata URL to auto refresh from';
+$string['metarefresh_metadata_url'] = 'Metadata URL for auto-refresh';
 $string['idpprovider'] = 'Provider';
 $string['institutionattribute'] = 'Institution attribute (contains "%s")';
 $string['institutionidp'] = 'Institution Identity Provider SAML metadata';

@@ -1,4 +1,5 @@
 <!-- @license http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later -->
 <!-- @copyright For copyright information on Mahara, please see the README file distributed with this software. -->
-<h3>Metadata Refresh URL</h3>
-<p>If a valid URL is provided in this field the SAML plugin will automatically download the latest metadata and store it locally, this removes the need to manually update the metadata when it changes on your Identity Provider. Note that the data fetched from this URL will take precedence over the XML metadata and replace it</p>
+<h3>Metadata refresh URL</h3>
+<p>If a valid URL is provided in this field, the SAML plugin will automatically download the latest metadata and store it locally. This removes the need to update the metadata manually when it changes on your Identity Provider. You will need to have cron running in order for the metadata to be checked.</p>
+<p><strong>Note</strong>: The data fetched from this URL will take precedence over the XML metadata (if any were entered) and replace it.</p>
