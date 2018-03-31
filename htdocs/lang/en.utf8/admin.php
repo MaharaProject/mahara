@@ -1388,7 +1388,7 @@ $string['hasrefused'] = 'has refused the %s';
 $string['privacyandtotheterms'] = 'privacy statement and to the terms and conditions';
 $string['privacyandtheterms'] = 'privacy statement and the terms and conditions';
 $string['consentdate'] = 'Date of consent / rejection';
-$string['useragreements'] = 'User agreements';
+$string['legalconsent'] = 'Legal consent';
 $string['userprivacyagreements'] = 'Displayed below are all the privacy statements the user has agreed to.';
 $string['usertermsagreements'] = 'Displayed below are all the terms and conditions the user has agreed to.';
 
