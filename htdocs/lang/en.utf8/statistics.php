@@ -285,7 +285,7 @@ $string['reportdescpageactivity'] = '<ul>
 </ul><p>Displayed are pages that were modified during the reporting time period.</p>';
 $string['allothers'] = 'All others';
 
-$string['reportuseragreement'] = 'User agreements';
+$string['reportuseragreement'] = 'Legal consent';
 $string['reportdescuseragreement'] = '<ul>
 <li>First name</li>
 <li>Last name</li>
