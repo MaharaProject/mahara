@@ -1232,7 +1232,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 'submit' => array(
                     'type' => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-default btn-sm',
+                    'class' => 'btn-default btn-sm last',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
                     'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('deletespecific', 'mahara', $title) . '</span>',
