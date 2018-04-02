@@ -21,7 +21,7 @@ $versionid = param_integer('versionid', null);
 $activetab = param_alpha('activetab', null);
 
 $user = get_record('usr', 'id', $userid);
-define('SUBSECTIONHEADING', get_string('useragreements', 'admin'));
+define('SUBSECTIONHEADING', get_string('legalconsent', 'admin'));
 define('TITLE', display_name($user, null, true));
 
 $usercontent = array();
