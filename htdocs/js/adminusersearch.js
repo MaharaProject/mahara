@@ -198,7 +198,7 @@ var UserSearch = (function($) {
               pager.sendQuery();
               return false;
           });
-          $('#loggedinform_loggedindate').change(function() {
+          input_loggedinform_loggedindate.on("dp.change", function(e) {
               // Set handler directly so that calendar works
               pager.params.offset = 0;
               pager.params.loggedindate = $(this).val();
