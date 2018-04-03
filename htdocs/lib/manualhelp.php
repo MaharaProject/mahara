@@ -119,7 +119,7 @@ function _get_manual_language() {
 function _get_mahara_version() {
     $release = get_config("release");
     $series = get_config("series");
-    if (preg_match('/dev$/', $release) || preg_match('/rc/', $release)) {
+    if (preg_match('/dev$/', $release)) {
         list($year, $month) = explode('.', $series);
         if ($month == '04') {
             $month = '10';
