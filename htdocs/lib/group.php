@@ -706,21 +706,22 @@ function group_update($new, $create=false) {
     // to the group artefacts are updated
     if ($old->grouptype != $new->grouptype) {
         if ($new->grouptype == 'course') {
-            $ids = get_records_select_array('artefact',
+            if ($ids = get_records_select_array('artefact',
                       '"group" = ' . $new->id . ' AND artefacttype IN (\'blog\', \'blogpost\')',
-                      null, '', 'id');
-            $access = ($old->editroles == 'all' || $old->editroles == 'notmember');
-            db_begin();
-            foreach ($ids as $i => $artefact) {
-                insert_record('artefact_access_role', (object) array(
-                    'artefact'      => $artefact->id,
-                    'role'          => 'tutor',
-                    'can_view'      => 1,
-                    'can_edit'      => (int) $access,
-                    'can_republish' => (int) $access,
-                ));
+                      null, '', 'id')) {
+                $access = ($old->editroles == 'all' || $old->editroles == 'notmember');
+                db_begin();
+                foreach ($ids as $i => $artefact) {
+                    insert_record('artefact_access_role', (object) array(
+                        'artefact'      => $artefact->id,
+                        'role'          => 'tutor',
+                        'can_view'      => 1,
+                        'can_edit'      => (int) $access,
+                        'can_republish' => (int) $access,
+                    ));
+                }
+                db_commit();
             }
-            db_commit();
         }
         else { //grouptype = standard
             $query = 'DELETE FROM {artefact_access_role}
