@@ -26,7 +26,7 @@
             <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
             <FIELD NAME="width" TYPE="int" LENGTH="10" NOTNULL="false" />
             <FIELD NAME="height" TYPE="int" LENGTH="10" NOTNULL="false" />
-            <FIELD NAME="orientation" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="'0'" ENUM="true" ENUMVALUES="'0','90','180','270'" />
+            <FIELD NAME="orientation" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="'0'" ENUM="true" ENUMVALUES="'0','90','180','270'" />
         </FIELDS>
         <KEYS>
             <KEY NAME="artefactpk" TYPE="primary" FIELDS="artefact" />

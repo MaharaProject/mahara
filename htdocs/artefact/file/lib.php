@@ -1112,7 +1112,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         if (!empty($this->contenthash)) {
             $this->dirty = true;
-            $this->commit();
         }
     }
 
