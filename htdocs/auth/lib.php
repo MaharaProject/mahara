@@ -1182,9 +1182,10 @@ function requiredfields_submit(Pieform $form, $values) {
                 $oldemail = get_field('usr', 'email', 'id', $USER->get('id'));
                 if ($oldemail == 'admin@example.org') {
                     // we are dealing with the dummy email that is set on install
-                    update_record('usr', array('email' => $email), array('id' => $USER->get('id')));
                     update_record('artefact_internal_profile_email', array('email' => $email), array('owner' => $USER->get('id')));
                     update_record('artefact', array('title' => $email), array('owner' => $USER->get('id'), 'artefacttype' => 'email'));
+                    $USER->email = $email;
+                    $USER->commit();
                 }
             }
             // Check if a validation email has been sent, if not send one
