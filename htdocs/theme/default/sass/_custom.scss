@@ -1,6 +1,10 @@
 // viewfooter
 .viewfooter {
-    padding: 15px;
+    padding: 0 15px;
     background-color: #f7f7f7;
     border-radius: 10px;
+
+    .title {
+        padding-top: 15px;
+    }
 }

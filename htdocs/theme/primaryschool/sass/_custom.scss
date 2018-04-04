@@ -2,7 +2,11 @@
 
 // viewfooter
 .viewfooter {
-    padding: 15px;
+    padding: 0 15px;
     background-color: $panel-default-heading-bg;
     border-radius: 10px;
+
+    .title {
+        padding-top: 15px;
+    }
 }
