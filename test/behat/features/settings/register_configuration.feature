@@ -20,6 +20,9 @@ Scenario: Registering as a new student and checking switch can flick back and fo
  # we wait a human amount of time so the spam trap is avoided
  And I wait "4" seconds
  And I press "Register"
+ # Check for conformation message
+ Then I should be on "/register.php"
+ And I should see "You have successfully submitted your application for registration. The institution administrator has been notified, and you will receive an email as soon as your application has been processed."
  And I follow "Login"
  And I log in as "admin" with password "Kupuh1pa!"
  And I choose "Pending registrations" in "Institutions" from administration menu
