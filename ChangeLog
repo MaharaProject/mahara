@@ -1,3 +1,10 @@
+16.10.9 (2018-04-06)
+- Bug 1744789 	Avoid relying on TinyMCE code stipping alone
+- Bug 1749269 	Fixing for update user via webservices for 16.10
+- Bug 1752442 	Problems with group forums / topics
+- Bug 1761037 	Installing a site doesn't update email correctly
+- Bug 1742579 	Update readme file to mention the max versions of things the version of mahara has been tested with
+
 16.10.8 (2018-02-02)
 - Bug 1744797: SAML plugin not working correctly with SimpleSamlPhp 1.15
 - Bug 1738898: Elasticsearch not updating indexed items when access rules change
