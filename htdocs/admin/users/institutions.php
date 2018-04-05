@@ -869,6 +869,11 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->commentthreaded       = (!empty($values['commentthreaded'])) ? 1 : 0;
 
     if ($newinstitution->theme == 'custom') {
+        // remove flag to add warning for configurable theme update if it exists.
+        if (get_config_institution($institution, 'customthemeupdate')) {
+            set_config_institution($institution, 'customthemeupdate', false);
+        }
+
         if (!empty($oldinstitution->style)) {
             $styleid = $oldinstitution->style;
             delete_records('style_property', 'style', $styleid);

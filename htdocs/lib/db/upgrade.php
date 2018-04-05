@@ -5923,5 +5923,23 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    // add customtheme field to act as a flag for configurable theme bug 1760732
+    if ($oldversion < 2018070500) {
+        // workaround for $oldversion check in minaccept
+        $old = $oldversion;
+        // Check whether institution uses configurable theme and upgrade is from earlier than 16.10.
+        // If so, set a customthemeupdate field to 1. 2016090237 is latest version of 16.10_STABLE as of 20180427.
+        if ($old <= 2016090237) {
+            $custom_themes = get_records_sql_array("SELECT name FROM {institution} WHERE theme = ?", array('custom'));
+            if ($custom_themes) {
+                // set_config_institution requires the Institution class.
+                require_once(get_config('docroot') . 'lib/institution.php');
+                foreach ($custom_themes as $inst) {
+                    set_config_institution($inst->name, 'customthemeupdate', true);
+                }
+            }
+        }
+    }
+
     return $status;
 }
