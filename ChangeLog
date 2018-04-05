@@ -1,3 +1,17 @@
+17.04.7 (2018-04-06)
+- Bug 1744789: Avoid relying on TinyMCE code stipping alone
+- Bug 1748782: "Inactive user" highlight disappeared
+- Bug 1749834: Not showing username to users when "never display usernames" is set to no
+- Bug 1752442: Problems with group forums / topics
+- Bug 1755329: Working out folder size slows down opening of image block config
+- Bug 1755331: Cannot copy group pages when pagination is used
+- Bug 1755508: Unable to remove users from group when pagination is used
+- Bug 1755611: Should not call non static function statically in framework module
+- Bug 1755674: tinyMCE not defined error in comment on SE colection
+- Bug 1761037: Installing a site doesn't update email correctly
+- Bug 1742579: Update readme file to mention the max versions of things the version of mahara has been tested with
+- Bug 1760742: Empty foreach() error when switching a group from standard to course
+
 17.04.6 (2018-02-02)
 - Bug 1744797: SAML plugin not working correctly with SimpleSamlPhp 1.15
 - Bug 1738898: Elasticsearch not updating indexed items when access rules change
