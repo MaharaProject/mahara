@@ -1,3 +1,277 @@
+18.04.0 (2018-04-06)
+- New feature highlights:
+- 
+- GDPR compliance
+- Password policy
+- Copy portfolios in Leap2A formats
+- Outsource files to object storage
+- Link to an internal Mahara page
+- Link to text within text
+- Rotate images
+- Link to the user manual in the footer
+- Associate an institution with a group
+- Decide which assessment statuses to display in SmartEvidence
+- Automatic SAML metadata refresh
+- Modern date picker
+- Make certain tasks faster
+- No more Flash
+- Expiry of internal notifications
+- 
+- For the full list of new feature see https://tinyurl.com/mahara1804features
+- 
+- Security bug:
+- Security bug 1728473: The page forgotpass.php should come with catcha feature to prevent abusing it
+- Security bug 1732987: Fix user input from direct get post usage
+- Security bug 1734767: Mahara needing the HTTP Strict Transport
+- Security (HSTS) header when site is https
+- Security bug 1744789: Avoid relying on TinyMCE code stipping alone
+- Security bug 1422492: Mahara doesn't ask you for your password before changing your username
+- Security bug 1471103: Make the password reset CLI script log out the user
+- 
+- Other bugs:
+- Bug 1734194: Infinite redirect loop caused by logged out user in usr_session table
+- Bug 1744797: SAML plugin not working correctly with SimpleSamlPhp 1.15
+- Bug 1443284: "Unsubscribe" link for feedback notifications due to watchlist
+- Bug 1487274: Elasticsearch choking on non-ASCII characters
+- Bug 1560739: Can't build CSS if you have npm gulp-bless version 3.1.0
+- Bug 1572825: voki externalmedia embed code changed
+- Bug 1660237: Remove "Mobile access token" from account settings
+- Bug 1698251: Improving gulp packages
+- Bug 1715776: Update the chromedriver to 2.32 / selenium to 2.5.3
+- Bug 1720264: Missing string 'information' in Upgrade page
+- Bug 1724415: Compliance with EU GDPR privacy regulations
+- Bug 1724603: update_hierarchy_path in artefacts/lib.php hammers sql when copying collections
+- Bug 1726655: Mahara logo is cut off at the bottom in IE 11
+- Bug 1728472: make htm/text strings for emai subject - personal information screen
+- Bug 1728815: Upgrading from 15.10.2 to 17.10.0 causes unknown column 'i.logoxs' error
+- Bug 1729140: Configure icon only visible on hover in block config
+- Bug 1729423: Can't choose which comment to make public
+- Bug 1730497: Missing stylesheet warning in notifications outbox
+- Bug 1731067: Some cron jobs cause elasticsearch queue to populate when it doesn't need to
+- Bug 1731082: internal media style.css missing from old_raw
+- Bug 1731330: Delete button style/placement inconsistent
+- Bug 1731404: Suspended / expired users select not working on Admin -> Users -> Suspended and expired users
+- Bug 1732328: Interaction forum post indexer for elasticsearch is too short
+- Bug 1732848: images not displayed in shared page in tagged journal entries element
+- Bug 1733722: Mahara not clearing messages for PHP session correctly for PHP7.1 using files store
+- Bug 1733998: behat resume_page.feature causes false fails in Jenkins
+- Bug 1734164: Update privacy statement and terms and conditions for GDPR
+- Bug 1734186: Remove mention of username and email once account is deleted
+- Bug 1735027: Internet explorer P&C 'show more' broken js
+- Bug 1735072: Event log error during upgrade from 16.10 to 17.10
+- Bug 1735442: Buttons w/ white background are invisible in the configurable theme
+- Bug 1735585: Problem with watchlist for a page
+- Bug 1736800: Update npm packages related to bootstrap-sass / mahara-themes
+- Bug 1736843: Missing directories in <sitedata>/sessions makes login fail
+- Bug 1737447: Page activity report: Show information by modified time rather than created time
+- Bug 1737581: Add a spinner icon when copying collections
+- Bug 1737631: Fail to upgrade to 17.10 when db prefix being used in postgres
+- Bug 1737851: Unable to view public group homepage when logged out
+- Bug 1738898: Elasticsearch not updating indexed items when access rules change
+- Bug 1739331: Upgrade simplesamlphp to version 1.15.0
+- Bug 1739688: Turn on "strict privacy" modus on the site level
+- Bug 1740208: Elasticsearch - display link to related view for artefacts in search results
+- Bug 1741799: Strict privacy: Require everyone to accept the T&C and privacy statement
+- Bug 1741814: error when navigating to My groups page
+- Bug 1742600: chromedriver version needs updating for running tests
+- Bug 1746346: Unable to add/edit skin for profile & dashboard page in 17.10+
+- Bug 1747795: Importing leap2A file does not respect the locked fields rules
+- Bug 1748079: Can't delete institution when users have accepted its privacy statement
+- Bug 1748782: "Inactive user" highlight disappeared
+- Bug 1749402: Views and collection list (in group) throws MySQL error
+- Bug 1749834: Not showing username to users when "never display usernames" is set to no
+- Bug 1750477: Elasticsearch: JSON_PRESERVE_ZERO_FRACTION not defined for php < 5.6.6
+- Bug 1751869: Correct alignment of column headings in "User agreements" report
+- Bug 1751931: Institution privacy statement and T&C created during upgrade though no custom statements before
+- Bug 1752442: Problems with group forums / topics
+- Bug 1752688: MariaDB fails to upgrade - unable to CAST as JSON
+- Bug 1753041: SAML has "Parent authority" field that shouldn't be there
+- Bug 1753359: Always take public anonymous comments through moderation
+- Bug 1754208: Review lang strings for Mahara 18.04.0 release
+- Bug 1755329: Working out folder size slows down opening of image block config
+- Bug 1755331: Cannot copy group pages when pagination is used
+- Bug 1755508: Unable to remove users from group when pagination is used
+- Bug 1755611: Should not call non static function statically in framework module
+- Bug 1755674: tinyMCE not defined error in comment on SE colection
+- Bug 1756153: Collapse configurable theme menu on Esc / mouse click
+- Bug 1756154: Fix link color in Primary School and Ocean themes for "Notifications"
+- Bug 1756216: Only run simplesaml cron job if there are saml auth instances
+- Bug 1756631: Setting up group when user is in 2 institutions and not site admin brings error
+- Bug 1756726: Password policy should be applied upon upgrade
+- Bug 1757254: The page "more" link menu sometimes looks broken
+- Bug 1757283: The views.js file uses the javascript 'includes' function but this is not available to IE11
+- Bug 1757330: Export file Session Data not saved in PHP 7.1+
+- Bug 1758139: Set password policy explicitly during install
+- Bug 1758613: Intro text to T&C legal page refers to privacy statement
+- Bug 1758733: Correct T&C and privacy statement displays when not in "Strict privacy" mode
+- Bug 1759367: Update html purifier to 4.10.0
+- Bug 1759698: Date picker is not actioning date change
+- Bug 1760970: Upgraded site doesn't rotate images
+- Bug 1761037: Installing a site doesn't update email correctly
+- Bug 1053308: plural strings in export
+- Bug 1215271: Show the admin a warning if the DB version number is greater than the code version number
+- Bug 1513665: Get an HTML5 "click-to-copy" widget
+- Bug 1529750: Employer and educational institution address don't show up anywhere in resume block
+- Bug 1542154: upgrade pdfjs to current stable (currently 1.9.426)
+- Bug 1594192: Leap2a: Importing a file artefact has failed
+- Bug 1667526: Rename "Edit this page" to "Edit"
+- Bug 1677929: behat test for profile info block
+- Bug 1679886: behat test for files/folders blocktypes
+- Bug 1692746: Behat test for shared access to pages
+- Bug 1692757: Collapse main menu by pressing Esc key
+- Bug 1692761: Label combo boxes correctly on "External apps"
+- Bug 1694874: Quotation marks not escaped in name in group members block and when masquerading
+- Bug 1698257: Ensure that the header displays correctly with or without site message
+- Bug 1703465: Masquerading sessions show deleted users
+- Bug 1703751: behat change_account_settings.feature doesn't test functionality
+- Bug 1708959: Webservice create group missing some settings
+- Bug 1713908: Doubled up functionality in navigation tests
+- Bug 1715299: make adding_pages_collections a user, not admin behat test
+- Bug 1719216: Participation report doesn't show pages in a collection
+- Bug 1719221: small fixes to some behat tests
+- Bug 1719222: consolidate behat messages tests
+- Bug 1720237: User registration username selection
+- Bug 1723286: Rerunning unit tests fails with DB error
+- Bug 1724743: SAML metadata page shouldn't redirect to main page when a site is in maintenance mode
+- Bug 1724968: SmartEvidence matrix headers jump when collapsed
+- Bug 1729490: set correct order in menu items: Web services & Extensions
+- Bug 1731793: Add Kosovo in list of countries
+- Bug 1731807: Remove unused code from lib/view.php that was never used correctly
+- Bug 1732046: Need to consolidate country code information for Mahara 18.04.0
+- Bug 1732297: Remove unnecessary steps from behat tests
+- Bug 1733448: behat page_number_interval_sharedwithme.feature is broken
+- Bug 1733454: behat copy_note_content.feature needs fixing
+- Bug 1733473: Friend icon only partially shows person's name
+- Bug 1733735: Behat test for resume address display on profile page
+- Bug 1733938: Duplicate key error on block edit page in Postgres
+- Bug 1733963: Users are autoadded to the deleted groups
+- Bug 1734006: Error indexing to elasticsearch 6.0.0
+- Bug 1734197: Check if SAML logo lang is set before getting its value
+- Bug 1734557: Allow SAML plugin to have custom auth error message - like Xmlrpc
+- Bug 1735252: Country in elasticsearch searches on/displaying as ISO code
+- Bug 1735256: Elasticsearch results not displayed when on paginated page
+- Bug 1736033: Show site and institution privacy statements in footer when an institution member is logged in
+- Bug 1737038: Error about table missing on install
+- Bug 1737057: editmatrix_update() complains that hastinymce is undefined
+- Bug 1737059: Artefact annotation blocktype js not using correct path when in cleanurls mode
+- Bug 1738055: Avoid committing behat tests with 'And I insert breakpoint' in them
+- Bug 1738303: Legacy code passes around a $new value when creating a new page but it is not needed
+- Bug 1738667: behat steps using bad grammar
+- Bug 1739561: Remove option to link to external T&C and privacy statements
+- Bug 1739687: allow non install/update cli scripts to fail with message if upgrade is needed for site
+- Bug 1740207: Elasticsearch - remove obsolete thumbnail files
+- Bug 1740330: Improve inactivity and expiry warning messages
+- Bug 1742354: missing help file Site options/Account settings
+- Bug 1743286: styling changes for behat html report
+- Bug 1743955: Make collection navigation more compact
+- Bug 1745042: Social profile icon causing warning in Elasticsearch display
+- Bug 1745278: Publicaly viewable group with submissions
+- Bug 1745886: Remove persona plugin: we need to remove lang directories inside auth/browserid folder
+- Bug 1745890: Behat test needed for "User search" box
+- Bug 1745911: No explicit behat test for logout
+- Bug 1746127: Review theme variables and put more colors into variables
+- Bug 1747856: Macrons not shown in proper font character in the "Configurable theme"
+- Bug 1748350: Need to remove the obsolete loginas / masquerading report files
+- Bug 1749403: Code correction in function find_key_name of lib/ddl.php
+- Bug 1749836: 'Deleted user' author on 'Legal' admin page showing with link
+- Bug 1750478: Legal agreement acceptance should be in collapsible panels
+- Bug 1750485: remove old raw theme
+- Bug 1750700: combine T&C and privacy footer links into one
+- Bug 1750931: $availableCerts not defined in auth/saml/sp/metadata.php
+- Bug 1752181: "Deleted user" in group page comments / forum posts shows with link
+- Bug 1752389: Warning Undefined property: stdClass::$name on upgrade
+- Bug 1752477: Behat test for image gallery block
+- Bug 1752489: Behat test for One resume field block
+- Bug 1752497: Behat test for Creative Commons license block
+- Bug 1753312: Add block modal legend has not needed background color/padding
+- Bug 1753634: Behat test for Recent forum post block
+- Bug 1753841: Behat test: image/text blocks can be deleted
+- Bug 1753911: Behat: Files to download block test
+- Bug 1754207: Make SmartEvidence strings for statuses configurable
+- Bug 1754239: Behat: Embedded Media test
+- Bug 1755431: Don't bold "Tags" in file browser description in blocks
+- Bug 1755630: Creative commons block not retractable
+- Bug 1755662: Behat: test for renaming a file and adding description
+- Bug 1755669: Behat: test resume elements can be deleted
+- Bug 1755678: Behat: test that journal entries/journals can be deleted
+- Bug 1755682: Behat: test a page can be deleted
+- Bug 1756736: Primary button colour error TinyMCE link
+- Bug 1756764: share/edit access cancel button not working
+- Bug 1758135: Long block titles overflow block title area when dragging
+- Bug 1758153: There are 'aria-label' values that are not being translated
+- Bug 1758728: Pending deletion screen should link to user profile
+- Bug 1758735: Consolidate styles of registration agreements
+- Bug 1758757: Leap2A export warnings on comment/annotation
+- Bug 1759048: datepicker text for screen readers
+- Bug 1760742: Empty foreach() error when switching a group from standard to course
+- Bug 1760766: User manual link goes to previous version also when on RC
+- Bug 1017785: Empty blog should display "No entries yet." and "Add one" link
+- Bug 1287344: artefact installed upgrade problem
+- Bug 1482471: It would be nice to have a <legend> for the cell selector in the position block dialog
+- Bug 1482479: Combo boxes in custom layout creator should have better labels
+- Bug 1508300: Embedded PDFs aren't always displayed
+- Bug 1711968: HTML export doesn't show icons on file browser page
+- Bug 1731333: When requiring profile information for 'country' get error if site has also not set country value
+- Bug 1732273: Forgot password 'change password' screen submit button missing style
+- Bug 1733709: filechooser edit file form misisng closing </span> tag
+- Bug 1742579: Update readme file to mention the max versions of things the version of mahara has been tested with
+- Bug 1743926: Behat: Add title and description to page creation feature
+- Bug 1743933: Behat: Copy a page or collection directly from its location via the "Copy" button on the page
+- Bug 1744351: Public key expiration date is current date for service access tokens
+- Bug 1745079: Jenkins looking for styling for html report when it shouldn't be running
+- Bug 1749892: Problems with webservices testclient logging one out
+- Bug 1750925: Blocks that have override_instance_title() don't need to record their title in block_instance table
+- Bug 1750932: behat test create_page fails too often
+- Bug 1751132: DB: mtime in group table is never modified
+- Bug 1753612: Behat test for adding a navigation block to a page
+- Bug 1758226: Group edit homepage "Settings" button shows wrong message with skins enabled
+- Bug 785469: Support for storing sessions in memcache/redis
+- Bug 845263: Password policy
+- Bug 970537: Institution staff members should also be contactable directly from institution homepage
+- Bug 993121: Show group quota in admin area
+- Bug 1185188: Add a button to a page allowing to download it in Leap2A format
+- Bug 1272122: Rotate images
+- Bug 1334576: Read notifications are not deleted
+- Bug 1440619: Counter for page visits also for profile page and group homepage
+- Bug 1446400: Add anchor button to tinymce
+- Bug 1520028: TinyMCE plugin to make links to a Mahara page
+- Bug 1528117: Collection export options need bulk options
+- Bug 1530045: Pending friends aren't shown on person's "My friends" page who sent the request
+- Bug 1560780: Allow 'button' tags to be valid in clean_html
+- Bug 1638128: Delete the "resized" dataroot dirs on clear_all_caches()
+- Bug 1658395: Show institution in group settings
+- Bug 1667521: Make "Registration reason" mandatory when "Confirm registration" is turned on
+- Bug 1677408: Helper for behat steps used and where to find them
+- Bug 1685049: Modifications to filesystem to allow object storage
+- Bug 1696627: Creating a html report and a screenshot for behat tests
+- Bug 1705622: behat properties file to store css elements
+- Bug 1714868: mysql special characters. utf8mb4 collation
+- Bug 1722435: SAML plugin automatic refresh of metadata support
+- Bug 1722855: Add userleavesgroup event trigger
+- Bug 1724724: Clear cache inside the upgrade process
+- Bug 1724797: Add all assessment statuses to the SmartEvidence matrix
+- Bug 1726560: Add recaptcha field to contact us form when logged out
+- Bug 1729079: Have a link to the Mahara user manual on a page
+- Bug 1730530: Allow elasticsearch to handle different auth for read from vs write to index
+- Bug 1732565: Allow faster indexing of elasticsearch via cli script
+- Bug 1732810: Pdf viewer download button save file as real title of pdf
+- Bug 1734166: Change terms and conditions infrastructure for GDPR
+- Bug 1734169: Explicit consent switches on the privacy statement for the GDPR
+- Bug 1734170: New admin menu item "Legal"
+- Bug 1734171: Revoke privacy consent
+- Bug 1734174: Re-trigger consent to privacy statement when they change or when user changes institutions
+- Bug 1734178: Everybody should be allowed to delete their account themselves
+- Bug 1734182: Keep old versions of the privacy statement and make them available
+- Bug 1734188: Admin report on privacy
+- Bug 1738686: Need a generic create blogpost for webservices
+- Bug 1740329: Bulk select on page "Suspended and expired users" in the admin area
+- Bug 1740425: Display last login date and time on the user accounts page in the admin area
+- Bug 1744191: Changing Datepicker
+- Bug 1746259: Make the T&C have the same behaviour as the privacy statement
+- Bug 1747297: Adding session storage for Redis
+- Bug 1747730: Allow module add custom css to the plugin extension configure page
+- Bug 1748784: Styleguide Maintenance for Mahara 18.04
+
 18.04rc2 (2018-03-23)
 
 18.04rc1 (2018-03-08)
