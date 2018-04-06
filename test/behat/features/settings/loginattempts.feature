@@ -14,6 +14,9 @@ Background:
 Scenario: Too many bad password attempts
   # I should not see any error message on the first 5 attempts
   When I log in as "UserA" with password "wrongpassword"
+  # Check for error message for first attempt invalid login
+  Then I should see "You have not provided the correct credentials to log in. Please check your username and password are correct."
+  And I should see "There was an error with submitting this form. Please check the marked fields and try again."
   And I log in as "UserA" with password "wrongpassword"
   And I log in as "UserA" with password "wrongpassword"
   And I log in as "UserA" with password "wrongpassword"
