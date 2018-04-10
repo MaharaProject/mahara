@@ -74,9 +74,9 @@
     <h2 class="access-title">{str tag=sharedwithothers section=view}</h2>
     <!-- Access -->
     {$form|safe}
+    {include file="progress_meter.tpl"}
 
 </div>
 
 </div>
-
 {include file="footer.tpl"}
