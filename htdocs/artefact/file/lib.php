@@ -2246,8 +2246,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     // append the view id to to the end of image and anchor urls so they are visible to logged out users also
     public static function append_view_url($postcontent, $view_id) {
-        $postcontent = preg_replace('#(<a[^>]+href="[^>]+artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id , $postcontent);
-        $postcontent = preg_replace('#(<img[^>]+src="[^>]+artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id, $postcontent);
+        $postcontent = preg_replace('#(<a[^>]+href="(/|' . get_config('wwwroot') . ')artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id , $postcontent);
+        $postcontent = preg_replace('#(<img[^>]+src="(/|' . get_config('wwwroot') . ')artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id, $postcontent);
 
         // Find images inside <a> tags and temporarily draft them out of the
         // content. This is so we can link up unlinked images to open to
