@@ -179,6 +179,46 @@ class BehatForms extends BehatBase {
     }
 
     /**
+    *
+    * Open select2 share menu and choose item by value from optgroup label
+    *
+    * @When I select :value from :label in shared with select2 box
+    * @When /^I select "(?P<value>(?:[^"]|\\")*)" from  "(?P<label>(?:[^"]|\\")*)" in shared with select2 box$/
+    * @param string $value
+    * @param string $label
+    */
+    public function share_with_select2($value, $label) {
+        //make select2 list visible on page
+        $this->i_click_on_element("span.picker.input-short", "css_element");
+        //set id for option list
+        $locator = "";
+        $selectortype = "css_element";
+        switch ($label) {
+            case "Search for...":
+              $id = substr($value, 0, -1);
+              $locator = "#$id";
+              break;
+            case "General":
+              $value = strtolower($value);
+              $id = "#potentialpresetitemssharewith";
+              $value = ($value == "registered users" ? "loggedin" : $value);
+              break;
+            //works on name, not display name
+            case "Institutions":
+              $id = "#potentialpresetitemsinstitutions";
+              break;
+            case "Groups":
+              $id = "potentialpresetitemsgroups";
+              $selectortype = "xpath_element";
+              $locator = "//*[@id=\"$id\"]/option[contains(., \"$value\")]";
+              break;
+        }
+        //set css to find
+        $locator = (empty($locator) ? "$id>option[value='$value']" : $locator);
+        $this->i_click_on_element($locator, $selectortype);
+    }
+
+    /**
      * Select value in choice list
      *
      * @param DocumentElement $page
