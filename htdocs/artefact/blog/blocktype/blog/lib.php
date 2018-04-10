@@ -114,6 +114,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
             $smarty->assign('editing', $editing);
             $smarty->assign('canaddpost', $canaddpost);
             $smarty->assign('blogid', $blog->get('id'));
+            $smarty->assign('view', $instance->get('view'));
             $smarty->assign('posts', $posts);
 
             $result = $smarty->fetch('artefact:blog:blog.tpl');

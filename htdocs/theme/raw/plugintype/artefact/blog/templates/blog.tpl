@@ -15,7 +15,7 @@
     <div id="blogdescription" class="content-text">{$description|clean_html|safe}
     {if $tags}
     <div class="tags">
-        <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}
+        <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags view=$view}
     </div>
     {/if}
     </div>

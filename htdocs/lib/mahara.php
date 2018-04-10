@@ -4510,8 +4510,15 @@ function build_portfolio_search_html(&$data) {
         else if ($item->type == 'collection') {
             $item->typestr = $item->type;
             $item->typelabel = get_string('Collection', 'collection');
+            // Because our 'views' array clashes with a collection objects 'views' array we need to move it out of the way
+            // before calling the get_url() function
+            $viewarray = $item->views;
+            $dummy = new stdClass();
+            $dummy->id = $item->viewid;
+            $item->views = array('views' => array(0 => $dummy));
             $c = new Collection(0, (array)$item);
             $item->url = $c->get_url();
+            $item->views = $viewarray;
         }
         else { // artefact
             safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);
@@ -4527,7 +4534,15 @@ function build_portfolio_search_html(&$data) {
         }
     }
 
-    $data->baseurl = get_config('wwwroot') . 'tags.php' . (is_null($data->tag) ? '' : '?tag=' . urlencode($data->tag));
+    if (isset($data->isrelated) && $data->isrelated) {
+        $data->baseurl = get_config('wwwroot') . 'relatedtags.php' . (is_null($data->tag) ? '' : '?tag=' . urlencode($data->tag) . '&view=' . $data->viewid);
+        $data->basejsonurl = 'json/relatedtagsearch.php';
+    }
+    else {
+        $data->baseurl = get_config('wwwroot') . 'tags.php' . (is_null($data->tag) ? '' : '?tag=' . urlencode($data->tag));
+        $data->basejsonurl = 'json/tagsearch.php';
+    }
+
     $data->sortcols = array('name', 'date');
     $data->filtercols = array(
         'all'        => get_string('tagfilter_all'),
@@ -4536,6 +4551,10 @@ function build_portfolio_search_html(&$data) {
         'text'       => get_string('tagfilter_text'),
         'view'       => get_string('tagfilter_view'),
         'collection' => get_string('tagfilter_collection'),
+        'blog'       => get_string('tagfilter_blog'),
+        'blogpost'   => get_string('tagfilter_blogpost'),
+        'plan'       => get_string('tagfilter_plan'),
+        'task'       => get_string('tagfilter_task'),
     );
 
     $smarty = smarty_core();
@@ -4546,7 +4565,7 @@ function build_portfolio_search_html(&$data) {
         'id' => 'results_pagination',
         'class' => 'center',
         'url' => $data->baseurl . ($data->sort == 'name' ? '' : '&sort=' . $data->sort) . ($data->filter == 'all' ? '' : '&type=' . $data->filter),
-        'jsonscript' => 'json/tagsearch.php',
+        'jsonscript' => $data->basejsonurl,
         'datatable' => 'results',
         'count' => $data->count,
         'limit' => $data->limit,

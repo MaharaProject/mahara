@@ -45,7 +45,8 @@ class PluginArtefactPlans extends PluginArtefact {
 
     public static function get_artefact_type_content_types() {
         return array(
-            'task' => array('text'),
+            'plan' => array('plan'),
+            'task' => array('task'),
         );
     }
 
@@ -304,6 +305,7 @@ class ArtefactTypePlan extends ArtefactType {
         else {
             $smarty->assign('license', false);
         }
+        $smarty->assign('view', (!empty($options['viewid']) ? $options['viewid'] : null));
         $smarty->assign('owner', $this->get('owner'));
         $smarty->assign('tags', $this->get('tags'));
 
@@ -661,6 +663,7 @@ class ArtefactTypeTask extends ArtefactType {
         $smarty = smarty_core();
         $smarty->assign('tasks', $tasks);
         $smarty->assign('options', $options);
+        $smarty->assign('view', (!empty($options['view']) ? $options['view'] : null));
         $tasks['tablerows'] = $smarty->fetch($template);
 
         if ($tasks['limit'] && $pagination) {

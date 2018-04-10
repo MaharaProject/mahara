@@ -279,8 +279,8 @@ class PluginArtefactFile extends PluginArtefact {
     public static function get_artefact_type_content_types() {
         return array(
             'file'        => array('file'),
-            'image'       => array('file', 'image'),
-            'profileicon' => array('file', 'image'),
+            'image'       => array('image'),
+            'profileicon' => array('image'),
             'archive'     => array('file'),
             'video'       => array('file'),
             'audio'       => array('file'),
@@ -1355,6 +1355,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         if ($USER->is_logged_in()) {
             $smarty->assign('ownername', $this->display_owner());
         }
+        $smarty->assign('view', (isset($options['viewid']) ? $options['viewid'] : null));
         $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
         $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
         $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');

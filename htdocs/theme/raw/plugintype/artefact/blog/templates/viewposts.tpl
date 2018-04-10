@@ -17,7 +17,7 @@
             <div class="tags metadata">
                 <span class="icon icon-tags left" role="presentation" aria-hidden="true"></span>
                 <strong>{str tag=tags}:</strong>
-                {list_tags owner=$post->owner tags=$post->tags}
+                {list_tags owner=$post->owner tags=$post->tags view=$options.viewid}
             </div>
             {/if}
         </div>

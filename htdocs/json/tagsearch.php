@@ -14,6 +14,8 @@ define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('searchlib.php');
+require_once('view.php');
+require_once('collection.php');
 
 if ($tag = param_variable('tag', null)) {
     $tag = urldecode($tag);

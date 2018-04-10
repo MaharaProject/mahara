@@ -1,4 +1,4 @@
-{if $tags}<p class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}</p>{/if}
+{if $tags}<p class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags view=$view}</p>{/if}
 <div class="">
     <ul id="tasklist" class="list-group list-unstyled">
         {$tasks.tablerows|safe}

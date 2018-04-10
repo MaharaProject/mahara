@@ -7,7 +7,7 @@
 {if $tags}
 <div class="tags">
     <strong>{str tag=tags}</strong>:
-    {list_tags owner=$owner tags=$tags}
+    {list_tags owner=$owner tags=$tags view=$viewid}
 </div>
 {/if}
 

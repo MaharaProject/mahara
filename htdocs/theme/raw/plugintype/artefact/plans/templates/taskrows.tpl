@@ -1,8 +1,8 @@
 {foreach from=$tasks.data item=task}
     {if $task->completed == -1}
-        <div class="task-item plan_incomplete list-group-item {if $task->description}list-group-item-default{/if}">
+        <div class="task-item plan_incomplete list-group-item {if $task->description || $task->tags}list-group-item-default{/if}">
 
-            {if $task->description}<a class="link-block collapsed" href="#expand-task-{$task->id}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}">{/if}
+            {if $task->description || $task->tags}<a class="link-block collapsed" href="#expand-task-{$task->id}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}">{/if}
 
                 <span class="overdue-task">
                     <span class="icon icon-times text-danger icon-lg left" role="presentation" aria-hidden="true"></span>
@@ -10,19 +10,21 @@
                     <span class="text-small text-midtone">
                         {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
                     </span>
-                    {if $task->description}
+                    {if $task->description || $task->tags}
                     <span class="icon icon-chevron-down right collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
                     {/if}
                 </span>
-            {if $task->description}</a>{/if}
+            {if $task->description || $task->tags}</a>{/if}
 
-            {if $task->description}
+            {if $task->description || $task->tags}
             <div class="collapse" id="expand-task-{$task->id}">
                  <div class="panel-body">
-                    {$task->description|clean_html|safe}
+                    {if $task->description}
+                        {$task->description|clean_html|safe}
+                    {/if}
                     {if $task->tags}
                     <div class="tags">
-                        <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags}
+                        <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags view=$view}
                     </div>
                     {/if}
                 </div>
@@ -30,9 +32,9 @@
             {/if}
         </div>
     {else}
-        <div class="task-item list-group-item {if $task->description}list-group-item-default{/if}">
+        <div class="task-item list-group-item {if $task->description || $task->tags}list-group-item-default{/if}">
 
-            {if $task->description}<a class="link-block collapsed" href="#expand-task-{$task->id}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}">{/if}
+            {if $task->description || $task->tags}<a class="link-block collapsed" href="#expand-task-{$task->id}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}">{/if}
 
                 <span class="complete-task">
                     {if $task->completed == 1}
@@ -48,25 +50,24 @@
                         {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
                     </span>
 
-                    {if $task->description}
+                    {if $task->description || $task->tags}
                     <span class="icon icon-chevron-down right collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
                     {/if}
                 </span>
 
-            {if $task->description}</a>{/if}
+            {if $task->description || $task->tags}</a>{/if}
 
-            {if $task->description}
+            {if $task->description || $task->tags}
             <div class="collapse" id="expand-task-{$task->id}">
-                <div class="panel-body">
-
-                    {$task->description|clean_html|safe}
-
+                 <div class="panel-body">
+                    {if $task->description}
+                        {$task->description|clean_html|safe}
+                    {/if}
                     {if $task->tags}
                     <div class="tags">
-                        <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags}
+                        <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags view=$view}
                     </div>
                     {/if}
-
                 </div>
             </div>
             {/if}

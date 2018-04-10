@@ -1006,8 +1006,9 @@ class PluginSearchInternal extends PluginSearch {
      * @param string   $sort
      * @param array    $types view/artefacttype filters
      * @param boolean  $returntags Return all the tags that have been attached to each result
+     * @param array    $viewids Only return specified views / artefacts in specified views - combined with $tag
      */
-    public static function portfolio_search_by_tag($tag, $owner, $limit, $offset, $sort, $types, $returntags) {
+    public static function portfolio_search_by_tag($tag, $owner, $limit, $offset, $sort, $types, $returntags, $viewids = array()) {
         $viewfilter = is_null($types) || $types['view'] == true ? 'AND TRUE' : 'AND FALSE';
         $collectionfilter = is_null($types) || $types['collection'] == true ? 'AND TRUE' : 'AND FALSE';
 
@@ -1024,29 +1025,49 @@ class PluginSearchInternal extends PluginSearch {
         if (!is_null($tag)) {
             $artefacttypefilter .= ' AND at.tag = ?';
             $viewfilter .= ' AND vt.tag = ?';
-            $collectionfilter .= ' AND ct.tag = ?';
-            $values = array($owner->id, $tag, $owner->id, $tag, $owner->id, $tag);
+            $collectionfilter .= ' AND (ct.tag = ? OR vt.tag = ?)';
+            $values = array($owner->id, $tag, $owner->id, $tag, $owner->id, $tag, $tag);
         }
         else {
             $values = array($owner->id, $owner->id, $owner->id);
+        }
+        if (!empty($viewids) && is_array($viewids)) {
+            $viewidstr = implode(',', $viewids);
+            $artefactjoin = ' JOIN {view_artefact} va ON (va.artefact = a.parent OR va.artefact = a.id)
+                              LEFT JOIN {artefact_blog_blogpost} abb ON abb.blogpost = a.id ';
+            $artefactwhere = ' AND va.view IN (' . $viewidstr . ') AND (abb.published IS NULL OR abb.published = 1) ';
+            $viewwhere = ' AND v.id IN (' . $viewidstr . ') ';
+            $collectionwhere = ' AND cv.view IN (' . $viewidstr . ') ';
+        }
+        else {
+            $artefactjoin = '';
+            $artefactwhere = '';
+            $viewwhere = '';
+            $collectionwhere = '';
         }
 
         $from = "
         FROM (
            (SELECT a.id, a.title, a.description, 'artefact' AS type, a.artefacttype, " . db_format_tsfield('a.ctime', 'ctime') . ",
                 a.owner, a.group, a.institution, NULL AS urlid
-            FROM {artefact} a JOIN {artefact_tag} at ON (a.id = at.artefact)
-            WHERE a.owner = ?" . $artefacttypefilter . ")
+            FROM {artefact} a
+            JOIN {artefact_tag} at ON (a.id = at.artefact) " . $artefactjoin . "
+            WHERE a.owner = ?" . $artefactwhere . $artefacttypefilter . ")
            UNION
            (SELECT v.id, v.title, v.description, 'view' AS type, NULL AS artefacttype, " . db_format_tsfield('v.ctime', 'ctime') . ",
                 v.owner, v.group, v.institution, v.urlid
-            FROM {view} v JOIN {view_tag} vt ON (v.id = vt.view)
-            WHERE v.owner = ? " . $viewfilter . ")
+            FROM {view} v
+            JOIN {view_tag} vt ON (v.id = vt.view)
+            LEFT JOIN {collection_view} cv ON cv.view = v.id
+            WHERE v.owner = ? AND cv.view IS NULL " . $viewwhere . $viewfilter . ")
            UNION
            (SELECT c.id, c.name, c.description, 'collection' AS type, NULL AS artefacttype, " . db_format_tsfield('c.ctime', 'ctime') . ",
                 c.owner, c.group, c.institution, NULL AS urlid
-            FROM {collection} c JOIN {collection_tag} ct ON (c.id = ct.collection)
-            WHERE c.owner = ? " . $collectionfilter . ")
+            FROM {collection} c
+            JOIN {collection_view} cv ON cv.collection = c.id
+            LEFT JOIN {collection_tag} ct ON (c.id = ct.collection)
+            LEFT JOIN {view_tag} vt ON vt.view = cv.view
+            WHERE c.owner = ? " . $collectionwhere . $collectionfilter . ")
         ) p";
 
         $result = (object) array(
@@ -1067,6 +1088,51 @@ class PluginSearchInternal extends PluginSearch {
                     $ids = array('view' => array(), 'collection' => array(), 'artefact' => array());
                     foreach ($data as &$d) {
                         $ids[$d->type][$d->id] = 1;
+                        if ($d->type == 'artefact') {
+                            // VIEWS get all the views the artefact is included into.
+                            // artefact parents are folder, blog, plan, cpd
+                            $sql = 'SELECT COALESCE(v.id, vp.id) AS id, COALESCE(v.title, vp.title) AS title
+                                    FROM {artefact} a
+                                    LEFT OUTER JOIN {view_artefact} va ON va.artefact = a.id
+                                    LEFT OUTER JOIN {view} v ON v.id = va.view
+                                    LEFT OUTER JOIN {artefact} parent ON parent.id = a.parent
+                                    LEFT OUTER JOIN {view_artefact} vap ON (vap.artefact = parent.id and parent.artefacttype in (\'plan\', \'folder\'))
+                                    LEFT OUTER JOIN {view} vp ON vp.id = vap.view
+                                    WHERE a.id = ?';
+                            if (!empty($viewids)) {
+                               $sql .= ' AND (va.view IN (' . $viewidstr . ')
+                                         OR vap.view IN (' . $viewidstr . '))';
+                            }
+                            $views = get_records_sql_array($sql, array($d->id));
+                            if ($views) {
+                                $record_views = array ();
+                                foreach ( $views as $view ) {
+                                    if (isset ( $view->id )) {
+                                        $record_views[$view->id] = $view->title;
+                                        $d->viewid = $view->id; // just needs to be any valid view
+                                    }
+                                }
+                                $d->views = $record_views;
+                            }
+                        }
+                        else if ($d->type == 'collection') {
+                            $c = new Collection($d->id);
+                            $views = $c->get('views');
+                            if ($views) {
+                                // Get first view of collection
+                                $d->viewid = $views['views'][0]->view;
+                                $record_views = array ();
+                                foreach ($views['views'] as $view) {
+                                    if (isset($view->view)) {
+                                        $record_views[$view->view] = $view->title;
+                                    }
+                                }
+                                $d->views = $record_views;
+                            }
+                        }
+                        else {
+                            $d->viewid = $d->id;
+                        }
                     }
                     if (!empty($ids['view'])) {
                         if ($viewtags = get_records_select_array('view_tag', 'view IN (' . join(',', array_keys($ids['view'])) . ')')) {
@@ -1081,11 +1147,37 @@ class PluginSearchInternal extends PluginSearch {
                                 $data['collection:' . $ct->collection]->tags[] = $ct->tag;
                             }
                         }
+                        if ($collectionviewtags = get_records_sql_array('
+                                SELECT vt.tag, c.id, cv.view
+                                FROM {collection} c
+                                JOIN {collection_view} cv ON cv.collection = c.id
+                                LEFT JOIN {view_tag} vt ON vt.view = cv.view
+                                WHERE c.id IN (' . join(',', array_keys($ids['collection'])) . ')
+                                AND vt.tag IS NOT NULL')) {
+                            foreach ($collectionviewtags as &$cvt) {
+                                if (!isset($data['collection:' . $cvt->id]->viewtags) || !in_array($cvt->tag, $data['collection:' . $cvt->id]->viewtags)) {
+                                    $data['collection:' . $cvt->id]->viewtags[] = array('view' => $cvt->view, 'tag' => $cvt->tag);
+                                }
+                            }
+                        }
                     }
                     if (!empty($ids['artefact'])) {
                         if ($artefacttags = get_records_select_array('artefact_tag', 'artefact IN (' . join(',', array_keys($ids['artefact'])) . ')', NULL, 'tag')) {
                             foreach ($artefacttags as &$at) {
                                 $data['artefact:' . $at->artefact]->tags[] = $at->tag;
+                            }
+                        }
+                        if (!empty($viewids) && $artefactviewtags = get_records_sql_array('
+                                SELECT vt.tag, a.id, va.view
+                                FROM {artefact} a
+                                JOIN {view_artefact} va ON va.artefact = a.id
+                                LEFT JOIN {view_tag} vt ON vt.view = va.view
+                                WHERE a.id IN (' . join(',', array_keys($ids['artefact'])) . ')
+                                AND va.view IN (' . join(',', $viewids) . ')')) {
+                            foreach ($artefactviewtags as &$avt) {
+                                if (!isset($data['artefact:' . $avt->id]->viewtags) || !in_array($avt->tag, $data['artefact:' . $avt->id]->viewtags)) {
+                                    $data['artefact:' . $avt->id]->viewtags[] = array('view' => $avt->view, 'tag' => $avt->tag);
+                                }
                             }
                         }
                     }
