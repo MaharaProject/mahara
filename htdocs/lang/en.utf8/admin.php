@@ -1335,7 +1335,7 @@ $string['cli_done'] = 'Indexing finished';
 
 // Clean up old users
 $string['cli_deleteinactiveusers_dryrun'] = 'Dry run to indicate what will happen. Set to "true" by default. Need to set -d=false to actually update database.';
-$string['cli_deleteinactiveusers_beforedate'] = 'Delete users that have not logged in after this date';
+$string['cli_deleteinactiveusers_beforedate'] = 'Delete users where their last login date is earlier than this date. Date can be any datetime string, eg: "2018-02-25" or "-6 months"';
 $string['cli_deleteinactiveusers_limit'] = 'Limit of users to work with for each delete run';
 $string['cli_deleteinactiveusers_cleanusers'] = 'Delete users from the "usr" table as well';
 $string['cli_deleteinactiveusers_info'] = 'This command-line PHP script allows you to delete old users. This will only work for users who either have not logged in or have never made a forum post.';
