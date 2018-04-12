@@ -23,3 +23,6 @@ Scenario: Checking navigation of the big homepage buttons
  And I press "Save"
  And I am on homepage
  Then I should see "Find people and join groups"
+ # check for bug 1493199 name changed from “Latest pages” to “Latest changes I can view”
+ And I should see "Latest changes I can view"
+ And I should not see "Latest pages"
