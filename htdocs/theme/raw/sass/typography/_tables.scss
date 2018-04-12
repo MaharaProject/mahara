@@ -45,6 +45,10 @@ td.tiny {
         .search-results-sort-column {
             position: relative;
 
+            &:last-child {
+                min-width: 100px;
+            }
+
             & > a::after {
                 right: 4px;
                 text-decoration: none;
