@@ -7,10 +7,10 @@
 </div>
 <div id="planswrap" class="plan-wrapper view-container">
     {if $tags}
-    <p class="tags">
+    <div class="tags">
         <strong>{str tag=tags}:</strong>
         {list_tags owner=$owner tags=$tags}
-    </p>
+    </div>
     {/if}
 {if !$tasks.data}
     <div class="no-results">

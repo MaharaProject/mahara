@@ -10,6 +10,7 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
@@ -29,6 +30,7 @@ if ($blockid && !$artefactid) {
         json_reply(true, get_string('accessdenied', 'error'));
     }
     $options = $configdata = $bi->get('configdata');
+    $options['view'] = $bi->get('view');
 
     // If block sets limit use that instead
     $limit = !empty($configdata['count']) ? $configdata['count'] : $limit;

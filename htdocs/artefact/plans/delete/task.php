@@ -31,6 +31,13 @@ else {
     $view = null;
 }
 
+if ($view && $USER->can_edit_view($view)) {
+    $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+}
+else {
+    $returnurl = get_config('wwwroot') . '/artefact/plans/plan.php?id=' . $todelete->get('parent');
+}
+
 $deleteform = array(
     'name' => 'deletetaskform',
     'class' => 'form-delete',
@@ -42,7 +49,7 @@ $deleteform = array(
             'type' => 'submitcancel',
             'class' => 'btn-default',
             'value' => array(get_string('deletetask','artefact.plans'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . '/artefact/plans/plan.php?id='.$todelete->get('parent'),
+            'goto' => $returnurl,
         ),
     )
 );

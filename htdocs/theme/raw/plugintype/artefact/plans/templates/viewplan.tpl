@@ -1,5 +1,5 @@
-{if $tags}<p class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags view=$view}</p>{/if}
-<div class="">
+{if $tags}<div class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags view=$view}</div>{/if}
+<div>
     <ul id="tasklist" class="list-group list-unstyled">
         {$tasks.tablerows|safe}
     </ul>

@@ -64,7 +64,7 @@ $smarty->display('artefact:plans:delete.tpl');
 
 // calls this function first so that we can get the artefact and call delete on it
 function deleteplanform_submit(Pieform $form, $values) {
-    global $SESSION, $todelete, $view;
+    global $SESSION, $USER, $todelete, $view;
 
     $todelete->delete();
     $SESSION->add_ok_msg(get_string('plandeletedsuccessfully', 'artefact.plans'));

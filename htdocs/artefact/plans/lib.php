@@ -690,6 +690,7 @@ class ArtefactTypeTask extends ArtefactType {
      * @return  array   $tasks      The tasks array updated with rendered table html
      */
     public function render_tasks(&$tasks, $template, $options, $pagination, $editing=false) {
+        global $USER;
 
         $smarty = smarty_core();
         $smarty->assign('tasks', $tasks);
@@ -697,6 +698,15 @@ class ArtefactTypeTask extends ArtefactType {
         $smarty->assign('view', (!empty($options['view']) ? $options['view'] : null));
         $smarty->assign('block', (!empty($options['block']) ? $options['block'] : null));
         $smarty->assign('editing', $editing);
+        if (!empty($options['view'])) {
+            require_once('view.php');
+            $view = new View($options['view']);
+            $owner = $view->get('owner');
+            if ($owner && $owner == $USER->get('id')) {
+                $smarty->assign('canedit', true);
+            }
+        }
+
         $tasks['tablerows'] = $smarty->fetch($template);
 
         if ($tasks['limit'] && $pagination) {

@@ -30,7 +30,7 @@ function changeCheckBox(taskid, state) {
     }
 }
 
-function saveCheckBoxChange(el, taskid) {
+function saveCheckBoxChange(taskid) {
     var params = {};
     params.taskid = taskid;
     sendjsonrequest(config.wwwroot + 'artefact/plans/checktask.json.php', params, 'POST', function(data) {
@@ -39,3 +39,24 @@ function saveCheckBoxChange(el, taskid) {
         }
     });
 }
+
+function enableCheckBoxes() {
+    jQuery('.plan-task-icon').off('click');
+    jQuery('.plan-task-icon').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var taskid = jQuery(e.target).data('task');
+        saveCheckBoxChange(taskid);
+    });
+}
+
+// Wire up the checkboxes
+jQuery(document).on('pageupdated', function(e, data) {
+    // When using pagination
+    enableCheckBoxes();
+});
+
+jQuery(function() {
+    // On page load
+    enableCheckBoxes();
+});
