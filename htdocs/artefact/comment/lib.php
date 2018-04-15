@@ -776,17 +776,26 @@ class ArtefactTypeComment extends ArtefactType {
                 $item->highlight = 1;
             }
             $is_export_preview = param_integer('export',0);
-            if ($item->deletedby) {
-                $item->deletedmessage = $deletedmessage[$item->deletedby];
-            }
-            else if (($candelete || $item->isauthor) && !$is_export_preview) {
-                $item->deleteform = pieform(self::delete_comment_form($item->id));
-            }
 
             // Comment authors can edit recent comments if they're private or if no one has replied yet.
             if (!$item->deletedby && $item->isauthor && !$is_export_preview
                 && ($item->private || $item->id == $lastcomment->id) && $item->ts > $editableafter) {
                 $item->canedit = 1;
+            }
+            else {
+                $item->canedit = 0;
+            }
+
+            if ($item->deletedby) {
+                $item->deletedmessage = $deletedmessage[$item->deletedby];
+            }
+            else if (($candelete || $item->isauthor) && !$is_export_preview) {
+                $check = get_record_sql('SELECT v.* FROM {view} v WHERE v.id = ?', array($data->view), ERROR_MULTIPLE);
+                if ($check->submittedstatus == View::UNSUBMITTED ||
+                    ($item->canedit && $item->id == $lastcomment->id && $item->ts > $editableafter)
+                   ) {
+                    $item->deleteform = pieform(self::delete_comment_form($item->id));
+                }
             }
 
             // Form to make private comment public, or request that a
@@ -1420,69 +1429,82 @@ function delete_comment_submit(Pieform $form, $values) {
         $url = $view->get_url(false);
     }
 
-    db_begin();
-
-    $comment->set('deletedby', $deletedby);
-
-    if (!$comment->has_visible_descendants()) {
-        $comment->set('hidden', 1);
+    // If this page is being marked, make comments un-deletable until released
+    // unless it is the last comment still with in the editable timeframe
+    $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
+    $lastcomment = $comment::last_public_comment($viewid, null);
+    if ($comment->get('id') == $lastcomment->id && $comment->get('mtime') > $editableafter) {
+        $candelete = 1;
+    }
+    else {
+        $candelete = 0;
     }
 
-    $comment->commit();
+    if ($view->get('submittedstatus') == View::UNSUBMITTED || $candelete) {
+        db_begin();
 
-    // If this comment was hidden, check to see if its parent now also needs to be
-    // hidden (i.e. has no visible replies). And then its grandparent, etc
-    if ($comment->get('hidden')) {
-        $comment->hide_deleted_parents();
-    }
+        $comment->set('deletedby', $deletedby);
 
-    if ($deletedby != 'author') {
-        // Notify author
-        if ($artefact) {
-            $title = get_field('artefact', 'title', 'id', $artefact);
+        if (!$comment->has_visible_descendants()) {
+            $comment->set('hidden', 1);
         }
-        else {
-            $title = get_field('view', 'title', 'id', $comment->get('onview'));
+
+        $comment->commit();
+
+        // If this comment was hidden, check to see if its parent now also needs to be
+        // hidden (i.e. has no visible replies). And then its grandparent, etc
+        if ($comment->get('hidden')) {
+            $comment->hide_deleted_parents();
         }
-        $title = hsc($title);
-        $data = (object) array(
-            'subject'   => false,
-            'message'   => false,
-            'strings'   => (object) array(
-                'subject' => (object) array(
-                    'key'     => 'commentdeletednotificationsubject',
-                    'section' => 'artefact.comment',
-                    'args'    => array($title),
-                ),
-                'message' => (object) array(
-                    'key'     => 'commentdeletedauthornotification',
-                    'section' => 'artefact.comment',
-                    'args'    => array($title, html2text($comment->get('description'))),
-                ),
-                'urltext' => (object) array(
-                    'key'     => $artefact ? 'artefact' : 'view',
-                ),
-            ),
-            'users'     => array($comment->get('author')),
-            'url'       => $url,
-        );
-        activity_occurred('maharamessage', $data);
-    }
-    if ($deletedby != 'owner' && $comment->get('owner') != $USER->get('id')) {
-        // Notify owner
-        $data = (object) array(
-            'commentid' => $comment->get('id'),
-            'viewid'    => $view->get('id'),
-        );
-        activity_occurred('feedback', $data, 'artefact', 'comment');
-    }
 
-    // Delete embedded images in the comment
-    require_once('embeddedimage.php');
-    EmbeddedImage::delete_embedded_images('comment', $comment->get('id'));
-    db_commit();
+        if ($deletedby != 'author') {
+            // Notify author
+            if ($artefact) {
+                $title = get_field('artefact', 'title', 'id', $artefact);
+            }
+            else {
+                $title = get_field('view', 'title', 'id', $comment->get('onview'));
+            }
+            $title = hsc($title);
+            $data = (object) array(
+                'subject'   => false,
+                'message'   => false,
+                'strings'   => (object) array(
+                    'subject' => (object) array(
+                        'key'     => 'commentdeletednotificationsubject',
+                        'section' => 'artefact.comment',
+                        'args'    => array($title),
+                    ),
+                    'message' => (object) array(
+                        'key'     => 'commentdeletedauthornotification',
+                        'section' => 'artefact.comment',
+                        'args'    => array($title, html2text($comment->get('description'))),
+                    ),
+                    'urltext' => (object) array(
+                        'key'     => $artefact ? 'artefact' : 'view',
+                    ),
+                ),
+                'users'     => array($comment->get('author')),
+                'url'       => $url,
+            );
+            activity_occurred('maharamessage', $data);
+        }
+        if ($deletedby != 'owner' && $comment->get('owner') != $USER->get('id')) {
+            // Notify owner
+            $data = (object) array(
+                'commentid' => $comment->get('id'),
+                'viewid'    => $view->get('id'),
+            );
+            activity_occurred('feedback', $data, 'artefact', 'comment');
+        }
 
-    $SESSION->add_ok_msg(get_string('commentremoved', 'artefact.comment'));
+        // Delete embedded images in the comment
+        require_once('embeddedimage.php');
+        EmbeddedImage::delete_embedded_images('comment', $comment->get('id'));
+        db_commit();
+
+        $SESSION->add_ok_msg(get_string('commentremoved', 'artefact.comment'));
+    }
     redirect(get_config('wwwroot') . $url);
 }
 
