@@ -110,9 +110,11 @@ class module_lti_launch extends external_api {
 
         // User not found - try to match on email
         if (!$userid && isset($params['lis_person_contact_email_primary'])) {
-            log_debug('User not found in auth_remote_user with user_id:'.$params['user_id']);
-            $userid = get_field('artefact_internal_profile_email', 'owner', 'email', $params['lis_person_contact_email_primary'], 'verified', 1);
-
+            log_debug('User not found in auth_remote_user with user_id:' . $params['user_id']);
+            $userid = get_field_sql("SELECT owner
+                                     FROM {artefact_internal_profile_email}
+                                     WHERE LOWER(email) = ?
+                                     AND verified = ?", array(strtolower($params['lis_person_contact_email_primary']), 1));
             $updateremote = true;
         }
 
@@ -158,7 +160,9 @@ class module_lti_launch extends external_api {
                 $user->authinstance = !empty($parentauthid) ? $parentauthid : $authinstanceid;
 
                 // Make sure that the username doesn't already exist
-                if (get_record('usr', 'username', $user->email)) {
+                if (get_field_sql("SELECT username
+                                   FROM {usr}
+                                   WHERE LOWER(username) = ?", array(strtolower($user->email)))) {
                     $USER->logout();
                     throw new WebserviceInvalidParameterException(get_string('usernameexists1', 'module.lti', $user->email));
                 }
@@ -187,7 +191,9 @@ class module_lti_launch extends external_api {
 
         $user = get_record('usr', 'id', $userid, 'deleted', 0);
         if ($updateuser) {
-            $user->email = $params['lis_person_contact_email_primary'];
+            if (strtolower($user->email) != strtolower($params['lis_person_contact_email_primary'])) {
+                $user->email = $params['lis_person_contact_email_primary'];
+            }
             $user->firstname = $params['lis_person_name_given'];
             $user->lastname = $params['lis_person_name_family'];
             $user->authinstance = !empty($parentauthid) ? $parentauthid : $authinstanceid;
@@ -215,7 +221,7 @@ class module_lti_launch extends external_api {
             insert_record('auth_remote_user', $authremoteuser);
         }
 
-        log_debug('reanimating: '.var_export($user->username, true));
+        log_debug('reanimating: ' . var_export($user->username, true));
         $USER->reanimate($user->id, $authinstanceid);
 
         if (isset($params['launch_presentation_return_url'])) {
