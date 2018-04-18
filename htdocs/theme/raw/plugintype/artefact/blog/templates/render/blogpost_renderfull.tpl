@@ -2,7 +2,7 @@
 * This template displays a blog post.
 *}
 {if $published}
-<div id="blogpost-{$postid}" class="panel-body flush">
+<div id="blogpost-{$postid}" class="card-body flush">
 
     {if $artefacttitle && $simpledisplay}
     <h2 class="title">

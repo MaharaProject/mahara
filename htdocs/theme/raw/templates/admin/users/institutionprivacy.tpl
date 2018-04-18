@@ -18,19 +18,19 @@
     <br>
 {/if}
 <div id="privacy-text" class="tab">
-    <div class="panel panel-default" id="privacyst">
+    <div class="card card-default" id="privacyst">
         <div class="last form-group collapsible-group">
             <fieldset class="pieform-fieldset last collapsible">
                 <legend>
                     <h4>
                         <a href="#dropdown-privacyst-{$sitecontent['privacy']->id}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                             {str tag="siteprivacy" section="admin"}
-                            <span class="icon icon-chevron-down collapse-indicator right pull-right"> </span>
+                            <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
                         </a>
                     </h4>
                 </legend>
                 <div class="fieldset-body collapse" id="dropdown-privacyst-{$sitecontent['privacy']->id}">
-                    <span class="text-midtone pull-right">
+                    <span class="text-midtone float-right">
                         {str tag="lastupdated" section="admin"} {$sitecontent['privacy']->ctime|date_format:'%d %B %Y %H:%M %p'}
                     </span>
                     <div class="last-updated-offset">
@@ -43,19 +43,19 @@
     <div class="lead">{str tag="institutionprivacypagedescription" section="admin"}</div>
 </div>
 <div id="termsandconditions-text" class="tab">
-    <div class="panel panel-default" id="terms">
+    <div class="card card-default" id="terms">
         <div class="last form-group collapsible-group">
             <fieldset class="pieform-fieldset last collapsible">
                 <legend>
                     <h4>
                         <a href="#dropdown-terms-{$sitecontent['termsandconditions']->id}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                             {str tag="sitetermsandconditions" section="admin"}
-                            <span class="icon icon-chevron-down collapse-indicator right pull-right"> </span>
+                            <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
                         </a>
                     </h4>
                 </legend>
                 <div class="fieldset-body collapse" id="dropdown-terms-{$sitecontent['termsandconditions']->id}">
-                    <span class="text-midtone pull-right">
+                    <span class="text-midtone float-right">
                         {str tag="lastupdated" section="admin"} {$sitecontent['termsandconditions']->ctime|date_format:'%d %B %Y %H:%M %p'}
                     </span>
                     <div class="last-updated-offset">
@@ -68,13 +68,13 @@
     <div class="lead">{str tag="institutiontermspagedescription" section="admin"}</div>
 </div>
 {if $versionid !== null && in_array($versionid, $latestVersions)}
-    <div class="panel panel-default">
-         <div class="panel-body">
+    <div class="card card-default">
+         <div class="card-body">
             {$pageeditform|safe}
         </div>
     </div>
 {else}
-    <div id="results" class="panel panel-default">
+    <div id="results" class="card card-default">
         <div class="table-responsive">
             <table id="adminstitutionslist" class="fullwidth table table-striped">
                 <thead>
@@ -103,7 +103,7 @@
             </table>
         </div>
     </div>
-    <div id="no-results" class="panel panel-default js-hidden">
+    <div id="no-results" class="card card-default js-hidden">
         <div id="institutionprivacylistcontainer">
             <div class="no-results ">
                 <span id="no-privacy" class="nocontent">{str tag="noinstitutionprivacy" section="admin"}</span>

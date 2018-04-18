@@ -27,15 +27,15 @@
         </div>
 
         {if $post->files}
-        <div class="has-attachment panel panel-default collapsible" id="blockpostfiles-{$post->id}">
-            <h5 class="panel-heading">
+        <div class="has-attachment card card-default collapsible" id="blockpostfiles-{$post->id}">
+            <h5 class="card-heading">
                 <a class="text-left collapsed" data-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
                     <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                      <span class="metadata">
                         ({$post->files|count})
                     </span>
-                    <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 </a>
             </h5>
             <div class="collapse" id="post-attach-{$post->id}">
@@ -60,7 +60,7 @@
                                 </span>
                             </a>
                         </span>
-                        <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                     </li>
                 {/foreach}
                 </ul>
@@ -91,13 +91,13 @@
                                 <span class="times">&times;</span>
                                 <span class="sr-only">{str tag=Close}</span>
                             </button>
-                            <h4 class="modal-title pull-left">
+                            <h4 class="modal-title float-left">
                                 <span class="icon icon-lg icon-comments" role="presentation" aria-hidden="true"></span>
                                 {str tag=Comments section=artefact.comment} |
                                 {$post->title}
                             </h4>
                             {if $post->allowcomments}
-                            <a class="addcomment pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
+                            <a class="addcomment float-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
                                 {str tag=addcomment section=artefact.comment}
                                 <span class="icon icon-arrow-right right" role="presentation" aria-hidden="true"></span>
                             </a>

@@ -18,14 +18,14 @@
                     </div>
 
                     {if $task->description || $task->tags}
-                    <span class="icon icon-chevron-down right collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down right collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                     {/if}
                 </span>
             {if $task->description || $task->tags}</a>{/if}
 
             {if $task->description || $task->tags}
             <div class="collapse" id="expand-task-{$task->id}{if $block}-{$block}{/if}">
-                 <div class="panel-body">
+                 <div class="card-body">
                     {if $task->description}
                         {$task->description|clean_html|safe}
                     {/if}
@@ -63,7 +63,7 @@
                     </div>
 
                     {if $task->description || $task->tags}
-                    <span class="icon icon-chevron-down right collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down right collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                     {/if}
                 </span>
 
@@ -71,7 +71,7 @@
 
             {if $task->description || $task->tags}
             <div class="collapse" id="expand-task-{$task->id}{if $block}-{$block}{/if}">
-                 <div class="panel-body">
+                 <div class="card-body">
                     {if $task->description}
                         {$task->description|clean_html|safe}
                     {/if}

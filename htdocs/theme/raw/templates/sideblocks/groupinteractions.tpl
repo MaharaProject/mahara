@@ -1,5 +1,5 @@
-<div class="panel panel-default">
-    <h3 class="panel-heading">{str tag="groupinteractions" section="group"}</h3>
+<div class="card card-default">
+    <h3 class="card-heading">{str tag="groupinteractions" section="group"}</h3>
     
     {if $sbdata}
         <ul class="list-group">
@@ -27,7 +27,7 @@
         {/foreach} 
         </ul>
     {else}
-        <div class="panel-body">
+        <div class="card-body">
             <p class="metadata">{str tag=nointeractions section=group}</p>
         </div>
     {/if}

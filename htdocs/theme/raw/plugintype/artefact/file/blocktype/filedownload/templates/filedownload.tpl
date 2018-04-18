@@ -25,7 +25,7 @@
             {$file.ctime|format_date:'strftimedaydate'}
             [{$file.size|display_size}]
         </span>
-        <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
         {if $file.description}
         <div class="file-description">
             <p class="text-small">

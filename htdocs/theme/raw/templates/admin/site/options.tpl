@@ -6,7 +6,7 @@
 		</p>
 	</div>
 
-	<div class="col-md-9 as-panel">
+	<div class="col-md-9 as-card">
 		{$siteoptionform|safe}
 	</div>
 </div>

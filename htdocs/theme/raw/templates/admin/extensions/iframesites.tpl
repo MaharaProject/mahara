@@ -2,7 +2,7 @@
 <p class="lead">{str tag=allowediframesitesdescription section=admin}</p>
 <p class="lead">{str tag=allowediframesitesdescriptiondetail section=admin}</p>
 
-<div class="panel panel-default">
+<div class="card card-default">
   {if $editurls}
   <table class="iframesources fullwidth table">
     <thead>
@@ -21,7 +21,7 @@
         <td class="buttonscell">
           <div class="btn-group">
 
-            <a id="edit-{$item.id}" class="url-open-editform btn btn-default btn-sm pull-left closed" title="{str tag=edit}" href="">
+            <a id="edit-{$item.id}" class="url-open-editform btn btn-secondary btn-sm float-left closed" title="{str tag=edit}" href="">
               <span class="icon icon-pencil" role="presentation" aria-hidden="true"></span>
               <span class="icon icon-chevron-down icon-sm" role="presentation" aria-hidden="true"></span>
               <span class="sr-only">{str(tag=editspecific arg1=$item.name)|escape:html|safe}</span>
@@ -40,7 +40,7 @@
   {/if}
 
 
-  <div class="panel-body">
+  <div class="card-body">
     {$newform|safe}
   </div>
 </div>

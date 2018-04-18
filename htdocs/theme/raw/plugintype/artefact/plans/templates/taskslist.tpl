@@ -37,11 +37,11 @@
     {/if}
             <td class="planscontrols control-buttons text-right">
                 <div class="btn-group">
-                    <a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" title="{str tag=edit}" class="btn btn-default btn-xs">
+                    <a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" title="{str tag=edit}" class="btn btn-secondary btn-sm">
                         <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str(tag=editspecific arg1=$task->title)|escape:html|safe}</span>
                     </a>
-                    <a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" title="{str tag=delete}" class="btn btn-default btn-xs">
+                    <a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" title="{str tag=delete}" class="btn btn-secondary btn-sm">
                         <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str(tag=deletespecific arg1=$task->title)|escape:html|safe}</span>
                     </a>

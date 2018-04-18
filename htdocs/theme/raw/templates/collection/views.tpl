@@ -3,13 +3,13 @@
     <div class="row manage-collection-pages" id="collectionpages" data-collectionid="{$id}">
         <div class="col-md-12">
             <p class="lead">{str tag=collectiondragupdate1 section=collection}</p>
-            <fieldset class="panel panel-default panel-half first pagelist draggable " id="pagestoadd">
-                <h3 class="panel-heading">
+            <fieldset class="card card-default card-half first pagelist draggable " id="pagestoadd">
+                <h3 class="card-heading">
                     {str tag=addviewstocollection section=collection}
                     {if $viewsform}
                         <span class="btn-group select-pages" role="group">
-                            <a class="btn btn-xs btn-default" href="" id="selectall">{str tag=All}</a>
-                            <a class="btn btn-xs btn-default" href="" id="selectnone">{str tag=none}</a>
+                            <a class="btn btn-sm btn-secondary" href="" id="selectall">{str tag=All}</a>
+                            <a class="btn btn-sm btn-secondary" href="" id="selectnone">{str tag=none}</a>
                         </span>
                     {/if}
                 </h3>
@@ -22,8 +22,8 @@
                     </div>
                 </div>
             </fieldset>
-            <fieldset class="panel panel-default panel-half collection-pages droppable" id="pagesadded">
-                <h3 class="panel-heading">{str tag=viewsincollection section=collection}</h3>
+            <fieldset class="card card-default card-half collection-pages droppable" id="pagesadded">
+                <h3 class="card-heading">{str tag=viewsincollection section=collection}</h3>
                 {if !$views}
                     <div class="message dropzone-previews full-width">
                         <div class="dz-message">
@@ -36,21 +36,21 @@
                         <li class="list-group-item" id="row_{$view->view}">
                             {if $views.count > 1}
                                 {if $view->displayorder == $views.min}
-                                    <a class="btn btn-xs text-default order-sort-control single-arrow-down text-midtone" href="{$displayurl}&amp;view={$view->view}&amp;direction=down">
+                                    <a class="btn btn-sm text-default order-sort-control single-arrow-down text-midtone" href="{$displayurl}&amp;view={$view->view}&amp;direction=down">
                                         <span class="icon icon-lg icon-long-arrow-down" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag=moveitemdown}</span>
                                     </a>
                                 {elseif $view->displayorder == $views.max}
-                                    <a class="btn btn-xs text-default order-sort-control single-arrow-up text-midtone" href="{$displayurl}&amp;view={$view->view}&amp;direction=up">
+                                    <a class="btn btn-sm text-default order-sort-control single-arrow-up text-midtone" href="{$displayurl}&amp;view={$view->view}&amp;direction=up">
                                         <span class="icon icon-lg icon-long-arrow-up left" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag=moveitemup}</span>
                                     </a>
                                 {else}
-                                    <a class="btn btn-xs text-default order-sort-control" href="{$displayurl}&amp;view={$view->view}&amp;direction=up">
+                                    <a class="btn btn-sm text-default order-sort-control" href="{$displayurl}&amp;view={$view->view}&amp;direction=up">
                                         <span class="icon icon-lg icon-long-arrow-up left text-midtone" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag=moveitemup}</span>
                                     </a>
-                                    <a class="btn btn-xs text-default order-sort-control" href="{$displayurl}&amp;view={$view->view}&amp;direction=down">
+                                    <a class="btn btn-sm text-default order-sort-control" href="{$displayurl}&amp;view={$view->view}&amp;direction=down">
                                         <span class="icon icon-lg icon-long-arrow-down text-midtone" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag=moveitemdown}</span>
                                     </a>

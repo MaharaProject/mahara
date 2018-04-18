@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 {if $tags}
     <div class="btn-top-right btn-group btn-group-top">
-        <a class="btn btn-default" href="{$WWWROOT}edittags.php"><span class="icon icon-lg icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=edittags}</a>
+        <a class="btn btn-secondary" href="{$WWWROOT}edittags.php"><span class="icon icon-lg icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=edittags}</a>
     </div>
     <ul class="nav nav-tabs">
     {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
@@ -15,24 +15,24 @@
         {/foreach}
         </ul>
     </div>
-    <div id="results_container" class="panel panel-default tag-results">
-        <h2 id="results_heading" class="panel-heading">{str tag=searchresultsfor}
+    <div id="results_container" class="card card-default tag-results">
+        <h2 id="results_heading" class="card-heading">{str tag=searchresultsfor}
             <a class="tag secondary-link" href="{$results->baseurl}{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
         </h2>
         {if $not_institution_tag}
-            <div class="btn-top-right btn-group btn-group-top">
-                <a class="btn btn-default edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
-            </div>
+        <div class="btn-top-right btn-group btn-group-top">
+            <a class="btn btn-secondary edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
+        </div>
         {/if}
         <div class="tag-filters">
-            <div id="results_sort" class="pull-right">
+            <div id="results_sort" class="float-right">
                 <strong>{str tag=sortresultsby}</strong>
                 {foreach from=$results->sortcols item=sortfield name=sortcols}
                     <a href="{$results->baseurl}{$results->queryprefix}sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span>{/if}
                 {/foreach}
             </div>
             <div class="btn-group">
-                <button type="button" class="btn btn-default select-title dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-secondary select-title dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="icon icon-filter left" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=filterresultsby}</span>
                     {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
@@ -42,7 +42,7 @@
                 </button>
                 <ul class="dropdown-menu" id="results_filter">
                 {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
-                    <li>
+                    <li class="dropdown-item">
                         <a href="{$results->baseurl}{$results->queryprefix}type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>
                     </li>
                 {/foreach}

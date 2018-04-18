@@ -124,7 +124,7 @@
 }
 
 .dashboard-widget-container .logged-in .widget-heading p,
-a.panel-footer:hover .icon.pull-right,
+a.card-footer:hover .icon.float-right,
 .modal-docked .modal-header .close:hover .times,
 .modal-docked .modal-header .close:focus .times {
     color: #767676;
@@ -213,7 +213,7 @@ a:focus, a:hover {
   text-decoration-color: {$data.link};
 }
 
-.btn-default, a.btn-default {
+.btn-secondary, a.btn-secondary {
   color: #333;
 }
 

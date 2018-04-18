@@ -1,7 +1,7 @@
 {include file="header.tpl"}
-<div class="panel panel-default">
-    <h3 class="panel-heading">{str tag="adminauthorities" section="admin"}</h3>
-    <div class="panel-body">
+<div class="card card-default">
+    <h3 class="card-heading">{str tag="adminauthorities" section="admin"}</h3>
+    <div class="card-body">
     {$auth_imap_form|safe}
     </div>
 </div>

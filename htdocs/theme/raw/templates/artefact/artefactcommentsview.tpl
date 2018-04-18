@@ -1,5 +1,5 @@
-{if !$editing && !$versioning}
-    <div class="comments pull-left">
+{if !$editing}
+    <div class="comments float-left">
         {if $commentcount > 0}
         <a class="commentlink link-blocktype" id="block_{$blockid}" data-toggle="modal-docked" data-target="#feedbacktable_{$blockid}" href="#">
             <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
@@ -22,12 +22,12 @@
                         <span class="times">&times;</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>
-                    <h4 class="modal-title pull-left">
+                    <h4 class="modal-title float-left">
                         <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
                         {str tag=Comments section=artefact.comment} - {$artefacttitle}
                     </h4>
                     {if $allowcomments}
-                    <a class="addcomment pull-right" href="{$artefacturl}">
+                    <a class="addcomment float-right" href="{$artefacturl}">
                         {str tag=addcomment section=artefact.comment}
                         <span class="icon icon-arrow-right right" role="presentation" aria-hidden="true"></span>
                     </a>

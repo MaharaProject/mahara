@@ -11,7 +11,7 @@
 </div>
 {/if}
 
-<div id="commentfiles" class="folder-panel">
+<div id="commentfiles" class="folder-card">
     {if (isset($children))}
     <h4 class="sr-only">
         {str tag=foldercontents section=artefact.file}:
@@ -46,7 +46,7 @@
                     {/if}
                 </h4>
                 {if $child->artefacttype != 'folder'}
-                <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                 {/if}
                 {if $child->description}
                 <p class="file-description text-small text-midtone">

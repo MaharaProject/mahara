@@ -1,7 +1,7 @@
 {if $MAINNAV}
 
 <nav>
-  <div id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main" role="tabpanel">
+  <div id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main" role="tabcard">
     <ul id="nav" class="nav navbar-nav">
         {strip}
             {foreach from=$MAINNAV item=item name=menu}
@@ -59,7 +59,7 @@
   </div>
 </nav>
 <nav>
-  <div id="main-nav-admin" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main-admin" role="tabpanel">
+  <div id="main-nav-admin" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main-admin" role="tabcard">
     <ul id="navadmin" class="nav navbar-nav">
     {strip}
         {foreach from=$MAINNAVADMIN item=item name=menu}
@@ -120,7 +120,7 @@
 
 {if $RIGHTNAV}
 <nav>
-  <div id="main-nav-user" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{/if} nav collapse navbar-collapse nav-main-user" role="tabpanel">
+  <div id="main-nav-user" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{/if} nav collapse navbar-collapse nav-main-user" role="tabcard">
     <ul id="navuser" class="nav navbar-nav">
       {strip}
         {foreach from=$RIGHTNAV item=item}

@@ -11,7 +11,7 @@
 {/if}
 {if $viewtypes}
     <h4>{str tag=viewsbytype section=admin}</h4>
-    <div class="panel-body">
+    <div class="card-body">
         <canvas class="graphcanvas" id="sitestatsviewtypesgraph"></canvas>
         <script>
         {literal}

@@ -1,11 +1,11 @@
-        <div class="has-attachment panel panel-default collapsible">
-            <h3 class="panel-heading">
+        <div class="has-attachment card card-default collapsible">
+            <h3 class="card-heading">
                 <a class="text-left collapsed" aria-expanded="false" href="#blog-attach-{$postid}" data-toggle="collapse">
                     <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
 
                     <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                     <span class="metadata">({$attachments|count})</span>
-                    <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
                 </a>
             </h3>
             <!-- Attachment list with view and download link -->
@@ -34,7 +34,7 @@
                             </span>
                         </span>
 
-                        <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                     </li>
                 {/foreach}
                 </ul>

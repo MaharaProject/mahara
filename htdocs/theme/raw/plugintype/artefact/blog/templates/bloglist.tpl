@@ -1,6 +1,6 @@
 {foreach from=$blogs->data item=blog}
-<div class="panel {if $blog->locked}panel-warning{else} panel-default{/if} blog panel-half">
-    <h3 class="panel-heading has-link">
+<div class="card {if $blog->locked}card bg-warning{else} card-default{/if} blog card-half">
+    <h3 class="card-heading has-link">
         <a class="title-link title" href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">
         {$blog->title}
         {if $blog->postcount == 0}
@@ -12,29 +12,29 @@
                 {str tag=nposts section=artefact.blog arg1=$blog->postcount}
             </span>
         {/if}
-         <span class="icon icon-arrow-right pull-right link-indicator" role="presentation" aria-hidden="true"></span>
+         <span class="icon icon-arrow-right float-right link-indicator" role="presentation" aria-hidden="true"></span>
         </a>
     </h3>
 
-    <div id="blogdesc" class="panel-body">
+    <div id="blogdesc" class="card-body">
         <a class="link-unstyled" href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">
         {$blog->description|clean_html|safe}
         </a>
     </div>
 
     {if $blog->canedit}
-    <div class="panel-footer has-form">
-        <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-default btn-sm">
+    <div class="card-footer has-form">
+        <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-secondary btn-sm">
             <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag=addpostspecific arg1=$blog->title section=artefact.blog |escape:html|safe}</span>
             {str tag=addpost section=artefact.blog}
         </a>
 
-        <div class="btn-group pull-right">
+        <div class="btn-group float-right">
             {if $blog->locked}
                 <span class="text-small">{str tag=submittedforassessment section=view}</span>
             {else}
-            <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-default btn-sm btn-group-item">
+            <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-secondary btn-sm btn-group-item">
                 <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=editspecific arg1=$blog->title}</span>
             </a>

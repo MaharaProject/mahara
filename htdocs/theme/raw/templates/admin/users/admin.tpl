@@ -2,7 +2,7 @@
 <div class="lead">
 {str tag="adminuserspagedescription1" section="admin"}
 </div>
-<div class="panel panel-default panel-body">
+<div class="card card-default card-body">
 
     <div class="userlistform">
     {$adminusersform|safe}

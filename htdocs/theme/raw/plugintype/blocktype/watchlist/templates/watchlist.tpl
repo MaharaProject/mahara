@@ -1,5 +1,5 @@
 {if $watchlistempty}
-    <div class="panel-body">
+    <div class="card-body">
         <p class="lead text-small">{str tag=nopages section=blocktype.watchlist}</p>
     </div>
 {else}

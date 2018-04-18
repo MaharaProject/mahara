@@ -16,7 +16,7 @@
                 </h3>
             {else}
                 <h3 class="title list-group-item-heading text-inline">
-                <span class="icon left pull-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
+                <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
                 {if $result->link}
                     <a href="{$WWWROOT}{$result->link}">
                         {$result->title|str_shorten_html:50:true|safe}
@@ -138,7 +138,7 @@
         {else}
             <div class="col-md-8">
                 <h3 class="list-group-item-heading title text-inline">
-                    <span class="icon left pull-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
+                    <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
                     <a href="{$result->url}">{$result->title}</a>
                 </h3>
                 <span class="tag-type text-midtone">({$result->typelabel})</span>

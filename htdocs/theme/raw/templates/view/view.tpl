@@ -43,7 +43,7 @@
 
 
     {if $editurl}{strip}
-        <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-default">
+        <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-secondary">
             <span class="icon icon-pencil icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=editthisview section=view}
         </a>
@@ -51,9 +51,9 @@
 
     {if $copyurl}{strip}
         {if $downloadurl}
-            <a id="downloadview-button" title="{str tag=copythisview section=view}" href="{$downloadurl}" class="btn btn-default">
+            <a id="downloadview-button" title="{str tag=copythisview section=view}" href="{$downloadurl}" class="btn btn-secondary">
         {else}
-            <a id="copyview-button" title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn btn-default">
+            <a id="copyview-button" title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn btn-secondary">
         {/if}
         <span class="icon icon-files-o icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag=copy section=mahara}
@@ -61,18 +61,18 @@
     {/strip}{/if}
 
     {if $mnethost}
-    <a href="{$mnethost.url}" class="btn btn-default">
+    <a href="{$mnethost.url}" class="btn btn-secondary">
         <span class="icon icon-long-arrow-right icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag=backto arg1=$mnethost.name}
     </a>
     {/if}
 
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag="more..."}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-        <li>
+        <li class="dropdown-item">
             <a title="{str tag=print section=view}" id="print_link" href="#" onclick="window.print(); return false;">
                 <span class="icon icon-print left" role="presentation" aria-hidden="true"></span>
                 {str tag=print section=view}
@@ -80,7 +80,7 @@
         </li>
         {if $LOGGEDIN}
             {if !$userisowner}
-            <li>
+            <li class="dropdown-item">
                 <a id="toggle_watchlist_link" class="watchlist" href="">
                     {if $viewbeingwatched}
                    <span class="icon icon-eye-slash left" role="presentation" aria-hidden="true"></span>
@@ -91,7 +91,7 @@
                    {/if}
                 </a>
             </li>
-            <li>
+            <li class="dropdown-item">
                 {if $objector}
                     <span class="nolink">
                         <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
@@ -114,13 +114,13 @@
             </li>
             {/if}
             {if $userisowner || $canremove}
-            <li>
-                <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
-                    <span class="icon icon-lg icon-trash text-danger" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
-                    {str tag=deletethisview section=view}
-                </a>
-            </li>
+                <li class="dropdown-item">
+                  <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
+                      <span class="icon icon-lg icon-trash text-danger" role="presentation" aria-hidden="true"></span>
+                      <span class="sr-only">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
+                      {str tag=deletethisview section=view}
+                  </a>
+                </li>
             {/if}
         {/if}
         {if $versionurl}
@@ -313,8 +313,8 @@
                     <div class="modal-body">
                         <p>{str tag=confirmcopydesc section=view}</p>
                         <div class="btn-group">
-                            <button id="copy-collection-button" type="button" class="btn btn-default"><span class="icon icon-folder-open" role="presentation" aria-hidden="true"></span> {str tag=Collection section=collection}</button>
-                            <button id="copy-view-button" type="button" class="btn btn-default"><span class="icon icon-file-text " role="presentation" aria-hidden="true"></span> {str tag=view}</button>
+                            <button id="copy-collection-button" type="button" class="btn btn-secondary"><span class="icon icon-folder-open" role="presentation" aria-hidden="true"></span> {str tag=Collection section=collection}</button>
+                            <button id="copy-view-button" type="button" class="btn btn-secondary"><span class="icon icon-file-text " role="presentation" aria-hidden="true"></span> {str tag=view}</button>
                         </div>
                     </div>
                 </div>

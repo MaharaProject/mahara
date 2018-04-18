@@ -18,12 +18,12 @@
   <tr class="table-pager">
     <td colspan="{$colspan}">&nbsp;</td>
     <td colspan="{$viewcount}" class="special">
-        <button class="btn btn-default" id="prev">
+        <button class="btn btn-secondary" id="prev">
             <span class="icon left icon-chevron-left" aria-hidden="true" role="presentation"></span>
             Prev
             <span class="sr-only">{str tag="goprevpages" section="module.framework"}</span>
         </button>
-        <button class="btn btn-default next" id="next">
+        <button class="btn btn-secondary next" id="next">
             Next
             <span class="icon right icon-chevron-right" aria-hidden="true" role="presentation"></span>
             <span class="sr-only">{str tag="gonextpages" section="module.framework"}</span>
@@ -80,7 +80,7 @@
         <td colspan="{$viewcount + $colspan}">
             <div class="shortname-container">
                 <span class="sr-only">{str tag="standardbegin" section="module.framework"}</span>
-                <span class="icon icon-chevron-down collapse-indicator right pull-right"></span>
+                <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
                 <h3>{$standard->name}</h3>
                 <span class="sr-only status">{if $standard->settingstate == 'closed'}{str tag="collapsedsection" section="module.framework"}{/if}</span>
                 <a href="#">
@@ -222,7 +222,7 @@
                     <span class="sr-only">Close configuration</span>
                 </button>
                 <h4 class="modal-title blockinstance-header text-inline"></h4>
-                <span aria-hidden="true" role="presentation" class="icon icon-cogs icon-2x pull-right"></span>
+                <span aria-hidden="true" role="presentation" class="icon icon-cogs icon-2x float-right"></span>
             </div>
             <div class="modal-body blockinstance-content">
             </div>

@@ -1,4 +1,4 @@
-<div class="panel-body flush">
+<div class="card-body flush">
     <table class="table resumepersonalinfo profile-info">
     {foreach from=$fields key='field' item='value'}
         {if $value}

@@ -4,8 +4,8 @@
 <p class="lead">{str tag='labelsubject' section='module.multirecipientnotification'} {$messages.[0]->subject}</p>
 <div id="messagethread" class="collapsible-group">
 {foreach from=$messages item=message name='message'}
-    <div class="message-item panel panel-default collapsible collapsible-group {if $dwoo.foreach.message.first}first{/if}">
-        <h2 class="message-preview panel-heading">
+    <div class="message-item card card-default collapsible collapsible-group {if $dwoo.foreach.message.first}first{/if}">
+        <h2 class="message-preview card-heading">
             <span class="user-icon left" role="presentation" aria-hidden="true">
                 <img src="{profile_icon_url user=$message->fromid maxwidth=60 maxheight=60}" alt="{$message->fromusrname}">
             </span>
@@ -24,7 +24,7 @@
                 <span class="metadata">
                     - {$message->ctime|strtotime|format_date}
                 </span>
-                <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 <span class="content-preview">
                     <p class="content">{$message->message}</p>
                 </span>
@@ -32,7 +32,7 @@
         </h2>
 
         <div id="message-{$message->id}" class=" message-wrap collapse {if $dwoo.foreach.message.last}in{/if}">
-            <div class="message-content panel-body">
+            <div class="message-content card-body">
                 <p class="recipients">
                     <strong>
                         {str tag='labelrecipients' section='module.multirecipientnotification'}
@@ -67,7 +67,7 @@
 
             </div>
             {if $dwoo.foreach.message.last == 0}
-            <div class="panel-footer">
+            <div class="card-footer">
                 <a href="{$link}?replyto={$message->id}&returnto={$returnto}">
                     <span class="icon icon-reply" role="presentation" aria-hidden="true"></span>
                     {str tag=reply section=module.multirecipientnotification}
@@ -78,8 +78,8 @@
     </div>
 {/foreach}
 </div>
-<div class="form-sendmessage panel panel-default collapsible">
-    <div class="panel-footer">
+<div class="form-sendmessage card card-default collapsible">
+    <div class="card-footer">
         {$form|safe}
     </div>
 </div>

@@ -13,13 +13,13 @@
             <td class="control-buttons">
                 {if $result->id == $result->current}
                     <div class="btn-group">
-                        <a href="{$WWWROOT}{$link}{$result->id}" title="{str tag=editversion section='admin' arg1='$result->version'}" class="btn btn-default btn-xs">
+                        <a href="{$WWWROOT}{$link}{$result->id}" title="{str tag=editversion section='admin' arg1='$result->version'}" class="btn btn-secondary btn-sm">
                             <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                         </a>
                     </div>
                 {else}
                     <div class="btn-group">
-                        <a href="{$WWWROOT}{$link}{$result->id}" title="{str tag=viewversion section='admin' arg1='$result->version'}" class="btn btn-default btn-xs">
+                        <a href="{$WWWROOT}{$link}{$result->id}" title="{str tag=viewversion section='admin' arg1='$result->version'}" class="btn btn-secondary btn-sm">
                             <span class="icon icon-eye icon-lg" role="presentation" aria-hidden="true"></span>
                         </a>
                     </div>

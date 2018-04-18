@@ -9,7 +9,7 @@
 </div>
 {if $data}
     <h4>{str tag="usersbyinstitution" section="statistics"}</h4>
-    <div class="panel-body">
+    <div class="card-body">
         <canvas class="graphcanvas" id="sitestatsusersgraph"></canvas>
         <script>
         {literal}

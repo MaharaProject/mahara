@@ -2,7 +2,7 @@
     {if $feedimage}<div class="feedlogoimage">{$feedimage|safe}</div>{/if}
     <div id="blocktype_externalfeed_title" >
         {if $description && $description != $entries[0]->description}
-        <div class="panel-body flush">
+        <div class="card-body flush">
             <div id="blocktype_externalfeed_desc" class="feed-decription text-midtone text-small">
                 {$description|clean_html|safe}
             </div>

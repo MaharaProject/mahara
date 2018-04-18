@@ -4,7 +4,7 @@
             <span class="sr-only">{$view.title}</span>
         </a>
         <div class="clearfix">
-            <h5 class="pull-left list-group-item-heading">
+            <h5 class="float-left list-group-item-heading">
                 {$view.title}
                 <span class="text-small text-midtone">{if $view.collid}({str tag=nviews section=view arg1=$view.numpages}){/if}</span>
                 <br>

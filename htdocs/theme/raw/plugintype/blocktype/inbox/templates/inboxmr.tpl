@@ -1,11 +1,11 @@
 {if !$items}
-    <div class="panel-body">
+    <div class="card-body">
         <p class="lead text-small">{str tag=nomessages section=blocktype.inbox}</p>
     </div>
 {else}
     <div id="inboxblock" class="inboxblock list-group">
         {foreach from=$items item=i}
-        <div class="has-attachment panel-default collapsible list-group-item{if !$i->read} js-panel-unread{/if}" data-requesturl="{$WWWROOT}module/multirecipientnotification/indexin.json.php">
+        <div class="has-attachment card-default collapsible list-group-item{if !$i->read} js-card-unread{/if}" data-requesturl="{$WWWROOT}module/multirecipientnotification/indexin.json.php">
             {if $i->message}
                 <a class="collapsed link-block{if !$i->read} unread{/if}" data-toggle="collapse" href="#message_content_{$i->type}_{$i->id}" data-id="{$i->id}" aria-expanded="false">
                     {if $i->type == 'usermessage'}
@@ -23,7 +23,7 @@
                     {/if}
                     <span class="sr-only">{$i->strtype}</span>
                     {$i->subject|truncate:50}
-                    <span class="icon icon-chevron-down collapse-indicator pull-right text-small" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-right text-small" role="presentation" aria-hidden="true"></span>
                 </a>
             {/if}
             <div class="collapse" id="message_content_{$i->type}_{$i->id}">

@@ -1,6 +1,6 @@
 {include file='header.tpl'}
 <div class="btn-group btn-group-top">
-    <button id="configbtn" type="button" class="btn btn-default" data-toggle="modal-docked" data-target="#modal-configs">
+    <button id="configbtn" type="button" class="btn btn-secondary" data-toggle="modal-docked" data-target="#modal-configs">
         <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
         {str tag="configurereport" section="admin"}
     </button>
@@ -10,14 +10,14 @@
 {if $institutiondata || $subpagedata}
     <div>
     {if $institutiondata}
-        <div class="subpage panel-body row">
+        <div class="subpage card-body row">
         {include file='admin/users/stats.tpl' cron=1}
         </div>
     {/if}
     {if $subpagedata && $subpagedata.notvalid_errorstring}
         <div class="alert alert-info postlist">{$subpagedata.notvalid_errorstring|safe}</div>
     {elseif $subpagedata}
-            <div class="subpage panel-body row statistics">
+            <div class="subpage card-body row statistics">
                 {if $subpagedata.table.count == 0}
                 {else}
                     <div id="statistics_table_container" class="col-md-12">
@@ -39,7 +39,7 @@
                             {$subpagedata.table.pagination|safe}
                         </div>
                         {if $subpagedata.table.csv}
-                            <a href="{$WWWROOT}download.php" id="csvdownload" class="csv-button pull-right" title="{str tag="exportstatsascsv" section="admin"}">
+                            <a href="{$WWWROOT}download.php" id="csvdownload" class="csv-button float-right" title="{str tag="exportstatsascsv" section="admin"}">
                             <span class="icon icon-download" role="presentation" aria-hidden="true"></span>
                             <span>{str tag="Download" section="admin"}</span></a>
                         {/if}

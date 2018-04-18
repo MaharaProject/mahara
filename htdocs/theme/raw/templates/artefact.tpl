@@ -8,14 +8,14 @@
 <p>{$description|clean_html|safe}</p>
 
 {if isset($attachments)}
-<div class="has-attachment panel panel-default collapsible">
-    <h5 class="panel-heading">
+<div class="has-attachment card card-default collapsible">
+    <h5 class="card-heading">
         <a href="#atrtefact-attach" class="text-left collapsed" aria-expanded="false" data-toggle="collapse">
             <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
 
             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
             <span class="metadata">({$attachments|count})</span>
-            <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
         </a>
     </h5>
         <!-- Attachment list with view and download link -->
@@ -43,7 +43,7 @@
                         [{$item->size|display_size}]
                     </span>
                 </span>
-                <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
             </li>
             {/foreach}
         </ul>

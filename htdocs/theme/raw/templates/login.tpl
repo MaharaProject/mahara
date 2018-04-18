@@ -1,13 +1,13 @@
 {include file="header.tpl"}
 
 <div class="row">
-<div class="col-md-3 login-panel">
-	<div class="panel panel-default">
-	    <h3 class="panel-heading">
+<div class="col-md-3 login-card">
+	<div class="card card-default">
+	    <h3 class="card-heading">
 	        {str tag="login"}
-	        <span class="pull-right">{contextualhelp plugintype='core' pluginname='core' section='loginbox'}</span>
+	        <span class="float-right">{contextualhelp plugintype='core' pluginname='core' section='loginbox'}</span>
 	    </h3>
-	    <div class="panel-body">
+	    <div class="card-body">
 	        <noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
 	        {dynamic}{$messages.loginbox|safe}{/dynamic}
 	        <div id="loginform_container">

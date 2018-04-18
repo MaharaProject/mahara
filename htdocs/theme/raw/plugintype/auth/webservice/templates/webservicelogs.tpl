@@ -1,10 +1,10 @@
 {include file="header.tpl"}
 
-<div id="logsearchformcontainer" class="panel panel-default panel-body">
+<div id="logsearchformcontainer" class="card card-default card-body">
 {$form|safe}
 </div>
-<div id="results" class="section panel panel-default">
-    <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
+<div id="results" class="section card card-default">
+    <h2 class="card-heading" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
     <div class="table-responsive">
     <table id="searchresults" class="table table-striped fullwidth listing">
@@ -40,7 +40,7 @@
     {/if}
     </div>
     {else}
-        <div class="panel-body">
+        <div class="card-body">
             <p class="no-results">{str tag="noresultsfound"}</p>
         </div>
     {/if}

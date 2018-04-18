@@ -5,7 +5,7 @@
     <div class="row" id="friendinfo_{$user->id}">
         <div class="col-md-8">
             <div class="usericon-heading">
-                <div class="user-icon pull-left">
+                <div class="user-icon float-left">
                     <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
                 </div>
                 <h4 class="list-group-item-heading middle">

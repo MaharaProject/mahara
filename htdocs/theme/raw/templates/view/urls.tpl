@@ -16,8 +16,8 @@
     {/if}
 
     {if $editurls}
-    <div class="panel panel-default">
-        <h2 class="panel-heading">
+    <div class="card card-default">
+        <h2 class="card-heading">
             {str tag=secreturls section=view}
         </h2>
         <div class="secreturls list-group">
@@ -30,11 +30,11 @@
                         <div class="col-xs-12 col-sm-3">
                             <div class="btn-action-list">
                                 <div class="btn-top-right btn-group btn-group-top">
-                                    <a id="copytoclipboard-{$item.id}" data-clipboard-text="{$item.url}" class="url-copytoclipboardbutton btn btn-default btn-xs" title="{str tag=copytoclipboard}" href="#">
+                                    <a id="copytoclipboard-{$item.id}" data-clipboard-text="{$item.url}" class="url-copytoclipboardbutton btn btn-secondary btn-sm" title="{str tag=copytoclipboard}" href="#">
                                         <span class="icon icon-files-o icon-lg" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag=copytoclipboard}</span>
                                     </a>
-                                    <a id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline btn btn-default closed" title="{str tag=edit}" href="">
+                                    <a id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline btn btn-secondary closed" title="{str tag=edit}" href="">
                                         <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                                         <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag=edit}</span>

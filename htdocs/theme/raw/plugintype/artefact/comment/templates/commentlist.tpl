@@ -3,14 +3,14 @@
 {foreach from=$data item=item}
     <div id="comment{$item->id}" class="comment-item list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if $item->indent} indent-{$item->indent}{/if} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
         <div class="usericon-heading">
-            <span class="user-icon pull-left" role="presentation" aria-hidden="true">
+            <span class="user-icon float-left" role="presentation" aria-hidden="true">
                 {if $item->author && !$item->author->deleted}
                     <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/>
                 {else}
                     <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
                 {/if}
             </span>
-            <h5 class="pull-left list-group-item-heading">
+            <h5 class="float-left list-group-item-heading">
                 {if $item->author && !$item->author->deleted}
                 <a href="{$item->author->profileurl}">
                 <span>{$item->author|display_name}</span>
@@ -41,7 +41,7 @@
             <div class="btn-group btn-group-top comment-item-buttons">
                 {if !$onview}
                     {if $item->canedit}
-                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default btn-group-item form-as-button pull-left">
+                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-secondary btn-group-item form-as-button float-left">
                         <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag=edit}</span>
                     </a>
@@ -51,7 +51,7 @@
                     {$item->deleteform|safe}
                 {/if}
                 {if $item->canreply}
-                <button class="btn btn-default pull-left commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}">
+                <button class="btn btn-secondary float-left commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}">
                     <span class="icon icon-reply icon-lg" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=reply section=artefact.comment}</span>
                 </button>
@@ -94,12 +94,12 @@
 
         {if !$item->deletedmessage && $item->attachments}
         <div class="comment-attachment">
-            <div class="panel panel-default has-attachment collapsible">
-                <h4 class="panel-heading">
+            <div class="card card-default has-attachment collapsible">
+                <h4 class="card-heading">
                     <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
                         <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
                         <span class="text-small">{str tag=Attachments section=artefact.comment} ({$item->filescount})</span>
-                        <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
                 <div id="attachments_{$item->id}" class="collapse" aria-expanded="false">
@@ -116,7 +116,7 @@
                                     [{$a->attachsize}]
                                 </span>
                             </span>
-                            <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                         </li>
                         {/foreach}
                     {/strip}

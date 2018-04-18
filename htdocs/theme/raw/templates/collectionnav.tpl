@@ -22,10 +22,10 @@
       </nav>
 
       {if count($collection) > 1}
-          <button type="button" class="btn btn-default prevpage disabled" title='{str tag="prevpage"}'>
+          <button type="button" class="btn btn-secondary prevpage disabled" title='{str tag="prevpage"}'>
               <span class="icon left icon-chevron-left" role="presentation" aria-hidden="true"></span>
           </button>
-          <button type="button" class="btn btn-default nextpage disabled" title='{str tag="nextpage"}'>
+          <button type="button" class="btn btn-secondary nextpage disabled" title='{str tag="nextpage"}'>
               <span class="icon right icon-chevron-right" role="presentation" aria-hidden="true"></span>
           </button>
       {/if}

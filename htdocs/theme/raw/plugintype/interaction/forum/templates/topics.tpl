@@ -14,7 +14,7 @@
 {/if}
     <td class="narrow">
         {if $membership && (!$forum->subscribed || $moderator)}
-        <input type="checkbox" name="checked[{$topic->id}]" id="topic_{$topic->id}" class="topic-checkbox checkbox">
+        <input type="checkbox" name="checked[{$topic->id}]" id="topic_{$topic->id}" class="topic-checkbox form-check">
         {/if}
     </td>
     <td class="topic">
@@ -85,13 +85,13 @@
     {if $moderator}
     <td class="control-buttons">
         <div class="btn-group">
-            <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="edit"}">
+            <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-secondary btn-sm" title="{str tag="edit"}">
                 <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">
                     {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>
             </a>
-            <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="delete"}">
+            <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-secondary btn-sm" title="{str tag="delete"}">
                 <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">
                     {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}

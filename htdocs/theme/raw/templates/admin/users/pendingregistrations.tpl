@@ -1,6 +1,6 @@
 {include file="header.tpl"}
-<div class="lead">{str tag="pendingregistrationspagedescription1" section="admin"}</div>
-<div class="panel panel-default">
+<div class="lead">{str tag="pendingregistrationspagedescription" section="admin"}</div>
+<div class="card card-default">
     <div id="pendingonlineistcontainer">
         {$data|safe}
     </div>

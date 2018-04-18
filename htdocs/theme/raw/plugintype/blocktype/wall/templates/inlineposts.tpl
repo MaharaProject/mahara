@@ -4,8 +4,8 @@
     {/if}
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}
-            <div class="panel {if $wallpost->private}panel-warning{else}panel-default{/if} wallpost">
-                <h4 class="panel-heading has-link">
+            <div class="card {if $wallpost->private}card bg-warning{else}card-default{/if} wallpost">
+                <h4 class="card-heading has-link">
                     <a href="{$wallpost->profileurl}" class="userinfo has-user-icon">
                         <span class="user-icon left">
                             <img src="{profile_icon_url user=$wallpost maxheight=60 maxwidth=60}" alt="{str tag=profileimagetext arg1=$wallpost|display_default_name}" />
@@ -13,20 +13,20 @@
                             {$wallpost->displayname}<span class="postedon text-small text-midtone"> - {$wallpost->postdate|format_date}</span>
                     </a>
                 {if $wallpost->deletable}
-                    <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="panel-control panel-header-action">
+                    <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="card-control card-header-action">
                         <span class="icon icon-trash left text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag='delete' section='blocktype.wall'}</span>
                     </a>
                 {/if}
                 </h4>
-                <div class="panel-body">
+                <div class="card-body">
                     {$wallpost->text|safe}
                     <div class="metadata">
                     {if $wallpost->private}<em class="privatemessage">{str tag='wallpostprivate' section='blocktype.wall'}</em>{/if}
                     </div>
                 </div>
                 {* {if $ownwall}
-                <div class="panel-footer">
+                <div class="card-footer">
                     <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}">
                         <span class="icon icon-reply left" role="presentation" aria-hidden="true"></span>
                         <span class="pull">{str tag='reply' section='blocktype.wall'}</span>

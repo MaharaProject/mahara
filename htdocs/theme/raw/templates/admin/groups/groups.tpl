@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {$searchform|safe}
-<div class="panel panel-default view-container">
+<div class="card card-default view-container">
 
     <table id="admgroupslist" class="fullwidth table table-striped table-group-list">
         <thead>
@@ -23,7 +23,7 @@
         </tbody>
     </table>
     {if $results.csv}
-        <a href="{$WWWROOT}download.php" class="panel-footer"><span class="icon icon-table" role="presentation" aria-hidden="true"></span> {str tag=exportgroupscsv section=admin}</a>
+        <a href="{$WWWROOT}download.php" class="card-footer"><span class="icon icon-table" role="presentation" aria-hidden="true"></span> {str tag=exportgroupscsv section=admin}</a>
     {/if}
 </div>
 {$results.pagination|safe}

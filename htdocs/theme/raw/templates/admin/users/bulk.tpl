@@ -1,6 +1,6 @@
 {include file="header.tpl"}
-<div class="panel panel-default">
-    <div id="edit-users" class="panel-body admin-edit-users bulk jstabs">
+<div class="card card-default">
+    <div id="edit-users" class="card-body admin-edit-users bulk jstabs">
         <p class="lead">{str tag=editselectedusersdescription1 section=admin}</p>
         <ul class="nav nav-tabs" role="tablist">
             <li id="suspend-user-tab" class="active" role="presentation" aria-hidden="true">
@@ -32,16 +32,16 @@
         </ul>
 
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane" id="changeauth-form">
+            <div role="tabcard" class="tab-pane" id="changeauth-form">
                 {$changeauthform|safe}
             </div>
-            <div role="tabpanel" class="tab-pane" id="probation-form">
+            <div role="tabcard" class="tab-pane" id="probation-form">
                 {$probationform|safe}
             </div>
-            <div role="tabpanel" class="tab-pane active" id="suspend-form">
+            <div role="tabcard" class="tab-pane active" id="suspend-form">
                 {$suspendform|safe}
             </div>
-            <div role="tabpanel" class="tab-pane" id="delete-form">
+            <div role="tabcard" class="tab-pane" id="delete-form">
                 {$deleteform|safe}
             </div>
         </div>

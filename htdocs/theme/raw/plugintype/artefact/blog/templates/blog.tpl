@@ -3,7 +3,7 @@
         {str tag='alldraftposts' section='artefact.blog'}
     {/if}
     {if ($editing && $canaddpost)}
-        <a class="panel-footer" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}">
+        <a class="card-footer" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}">
             <span class="icon icon-plus text-success left" role="presentation" aria-hidden="true"></span>
             {str tag='shortcutnewentry' section='artefact.blog'}
         </a>

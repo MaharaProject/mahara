@@ -1,9 +1,9 @@
 {if $institutionprivacy}
-<div id="instprivacy" class="inst js-hidden panel panel-default">
+<div id="instprivacy" class="inst js-hidden card card-default">
 {elseif $institutionterms}
-<div id ="insttermsandconditions" class ="inst js-hidden panel panel-default">
+<div id ="insttermsandconditions" class ="inst js-hidden card card-default">
 {else}
-<div class="panel panel-default">
+<div class="card card-default">
 {/if}
     <div class="last form-group collapsible-group">
         <fieldset class="pieform-fieldset last collapsible">
@@ -20,7 +20,7 @@
                     {/if}
                     data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                         {$privacytitle}
-                        <span class="icon icon-chevron-down collapse-indicator right pull-right"></span>
+                        <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
                     </a>
                 </h4>
             </legend>
@@ -33,7 +33,7 @@
                   id="dropdown{$privacy->id}">
               {/if}
                 {if $privacytime}
-                    <span class="text-midtone pull-right">{str tag='lastupdated' section='admin'} {$privacytime} </span>
+                    <span class="text-midtone float-right">{str tag='lastupdated' section='admin'} {$privacytime} </span>
                 {/if}
                 {if $institutionprivacy}
                     <div id ="instprivacytext" class="insttext"></div>

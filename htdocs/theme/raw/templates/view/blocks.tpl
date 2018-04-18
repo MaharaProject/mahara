@@ -61,29 +61,29 @@
 
         <div id="view-wizard-controls" class="col-collapse-offset col-with-collapse">
             {if !$issitetemplate}
-            <a class="btn btn-default" href="{$displaylink}">
+            <a class="btn btn-secondary" href="{$displaylink}">
                 {str tag=displayview section=view}
                 <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
             </a>
             {/if}
             {if !$groupid && !$institution}
-            <a class="btn btn-default" href="{$WWWROOT}view/index.php">
+            <a class="btn btn-secondary" href="{$WWWROOT}view/index.php">
                 {str tag=returntoviews section=view}
                 <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
             </a>
             {/if}
             {if $groupid}
-            <a class="btn btn-default" href="{$WWWROOT}view/groupviews.php?group={$groupid}">
-                {str tag=returntogroupportfolios section=group}
+            <a class="btn btn-secondary" href="{$WWWROOT}view/groupviews.php?group={$groupid}">
+                {str tag=returntogrouppages section=group}
                 <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
             </a>
             {/if}
             {if $institution}
                 {if $institution == 'mahara'}
-                    <a class="btn btn-default" href="{$WWWROOT}admin/site/views.php">
+                    <a class="btn btn-secondary" href="{$WWWROOT}admin/site/views.php">
                     {str tag=returntositeportfolios section=view}
                 {else}
-                    <a class="btn btn-default" href="{$WWWROOT}view/institutionviews.php?institution={$institution}">
+                    <a class="btn btn-secondary" href="{$WWWROOT}view/institutionviews.php?institution={$institution}">
                     {str tag=returntoinstitutionportfolios section=view}
                 {/if}
                 <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
@@ -157,7 +157,7 @@
                     <span class="sr-only">{str tag=closeconfiguration section=view}</span>
                 </button>
                 <h4 class="modal-title blockinstance-header text-inline"></h4>
-                <span class="icon icon-cogs icon-2x pull-right" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-cogs icon-2x float-right" role="presentation" aria-hidden="true"></span>
             </div>
             <div class="modal-body blockinstance-content">
             </div>

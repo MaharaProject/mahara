@@ -1,7 +1,7 @@
 {include file='header.tpl'}
 <p class="lead">{str tag=htmlfiltersdescription section=admin}</p>
 
-<div class="panel panel-default panel-body">
+<div class="card card-default card-body">
 	{if $filters}
 	<h3>{str tag=installed section=admin}:</h3>
 	<ul>

@@ -6,7 +6,7 @@
 $html = $form_tag;
 
 $html .= $form_tag;
-$html .= '<div id="wall-wrap" class="panel-form">';
+$html .= '<div id="wall-wrap" class="card-form">';
 $html .= '<p class="metadata">' . $elements['postsizelimit']['html'] . '</p>';
 $html .= '<div>' . $elements['text']['labelhtml'] . $elements['text']['html'] .'</div>';
 if (isset($elements['text']['error'])) {

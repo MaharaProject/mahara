@@ -1,8 +1,8 @@
                 {foreach from=$views item=view name=loopidx}
-                <div class="panel-quarter {if $view.collid}panel-collection{else}panel-view{/if}">
-                    <div class="panel panel-default {if $view.submittedto} panel-warning {/if}{if $view.manageaccesssuspended} panel-danger {/if}
+                <div class="card-quarter {if $view.collid}card-collection{else}card-view{/if}">
+                    <div class="card card-default {if $view.submittedto} bg-warning {/if}
                     {if $view.template == $sitetemplate} site-template{/if}">
-                        <h3 class="panel-heading has-link">
+                        <h3 class="card-heading has-link">
                             <a class="title-link title"
                             href="
                                 {if $view.template == $sitetemplate}
@@ -16,7 +16,7 @@
                                 {$view.displaytitle}
                             </a>
                         </h3>
-                        <div class="panel-body">
+                        <div class="card-body">
                             <div class="detail">
                                 {if $view.type == 'profile'}
                                     <div class="detail">{str tag=profiledescription}</div>
@@ -37,8 +37,8 @@
                                 {/if}
                             </div>
                         </div>
-                        <div class="panel-footer">
-                            {* Note: This is positioned relative to base of panel-quarter *}
+                        <div class="card-footer">
+                            {* Note: This is positioned relative to base of card-quarter *}
                             <div class="page-access">
                                 {if $view.accesslist || $view.manageaccess}
                                     <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='manageaccess' section='view'}">
@@ -51,7 +51,7 @@
                                         <li class="view-details">{str tag="pending" section="view"}</li>
                                       {else}
                                         {foreach from=$view.manageaccess item=manageitem}
-                                        <li>
+                                        <li class="dropdown-item">
                                             {if $manageitem->accesstype == 'managesharing'}
                                             <a class="seperator" href="{$WWWROOT}view/accessurl.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
                                                 <span class="icon {if $view.locked}icon-lock{else}icon-unlock-alt{/if} left" role="presentation" aria-hidden="true"></span>
@@ -62,7 +62,7 @@
                                         </li>
                                         {/foreach}
                                         {foreach from=$view.accesslist item=accessitem}
-                                        <li>
+                                        <li class="dropdown-item">
                                             <a href="{$WWWROOT}view/accessurl.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
                                             {if $accessitem->accesstype == 'loggedin'}
                                                 <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
@@ -102,7 +102,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 {if $view.collid && !$view.submittedto && !$noedit}
-                                    <li>
+                                    <li class="dropdown-item">
                                         <a href="{$WWWROOT}collection/views.php?id={$view.collid}" title="{str tag=manageviews section=collection}">
                                             <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
                                             <span class="link-text">{str tag="manage" section="collection"}</span>
@@ -111,7 +111,7 @@
                                     </li>
                                 {/if}
                                 {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked)}
-                                    <li>
+                                    <li class="dropdown-item">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">
                                     {else}
@@ -124,7 +124,7 @@
                                     </li>
                                 {/if}
                                 {if !$view.submittedto && $view.removable && !$noedit && (!$view.locked || $editlocked)}
-                                    <li>
+                                    <li class="dropdown-item">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/delete.php?id={$view.collid}" title="{str tag=deletecollection section=collection}">
                                     {else}
@@ -136,7 +136,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                <li class="view-details">
+                                <li class="view-details dropdown-item">
                                     {str tag=Created section=mahara} {format_date(strtotime($view.vctime), 'strftimerecentyear')}
                                     <br>
                                     {str tag=modified section=mahara} {format_date(strtotime($view.vmtime), 'strftimerecentyear')}
@@ -179,7 +179,7 @@
                                     {if $view.collid && $view.collviews > 0}
                                     <ul class="dropdown-menu" role="menu">
                                         {if $view.framework}
-                                        <li>
+                                        <li class="dropdown-item">
                                             <a href="{$view.framework->fullurl}">
                                                 <span class="icon icon-clipboard left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{$view.framework->title}</span>
@@ -187,7 +187,7 @@
                                         </li>
                                         {/if}
                                         {foreach from=$view.collviews.views item=cview}
-                                        <li>
+                                        <li class="dropdown-item">
                                             <a href="{$cview->fullurl}">
                                                 <span class="icon icon-file-o left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{$cview->title}</span>
@@ -202,7 +202,7 @@
                         </div>
                     </div>
                     {if $view.collid}
-                        <div class="collection-stack {if $view.submittedto} panel-warning{/if}"></div>
+                        <div class="collection-stack {if $view.submittedto} card bg-warning{/if}"></div>
                     {/if}
                 </div>
                 {/foreach}

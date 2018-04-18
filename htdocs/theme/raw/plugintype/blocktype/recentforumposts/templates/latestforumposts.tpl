@@ -66,13 +66,13 @@
             </li>
             {/foreach}
         </ul>
-        <a href="{$WWWROOT}interaction/forum/index.php?group={$group->id}" class="panel-footer text-small">
+        <a href="{$WWWROOT}interaction/forum/index.php?group={$group->id}" class="card-footer text-small">
         {str tag=gotoforums section=interaction.forum}
         <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
         </a>
     </div>
 {else}
-    <div class="panel-body">
+    <div class="card-body">
         <span class="text-small no-results">{str tag=noforumpostsyet section=interaction.forum}</span>
     </div>
 {/if}
