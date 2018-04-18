@@ -40,6 +40,9 @@
                                 .attr('width', '{$width}')
                                 .attr('height', '{$height}')
                                 .attr('frameborder', '0')
+                                .attr('allowfullscreen', '')
+                                .attr('mozallowfullscreen', '')
+                                .attr('webkitallowfullscreen', '')
                                 .appendTo($j('#vid_{$blockid}'))
                                 .load(function() {
                                     blockinstance_{$blockid}_loaded = true;
