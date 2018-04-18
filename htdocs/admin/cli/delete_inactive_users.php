@@ -31,6 +31,13 @@ $options['institution'] = (object) array(
         'defaultvalue' => false,
         'examplevalue' => 'mahara',
 );
+$options['group'] = (object) array(
+        'shortoptions' => array('g'),
+        'description' => get_string('groupid', 'admin'),
+        'required' => false,
+        'defaultvalue' => false,
+        'examplevalue' => '123',
+);
 $options['beforedate'] = (object) array(
         'shortoptions' => array('b'),
         'description' => get_string('cli_deleteinactiveusers_beforedate', 'admin'),
@@ -66,6 +73,7 @@ $cli->setup($settings);
 
 $dryrun = $cli->get_cli_param_boolean('dryrun');
 $institution = $cli->get_cli_param('institution');
+$group = $cli->get_cli_param('group');
 // Retrieve & validate the before date
 $beforedate = $cli->get_cli_param('beforedate');
 if ($beforedate) {
@@ -108,7 +116,11 @@ if ($institution) {
     $wheresql .= " AND ui.institution = ?";
     $values[] = $institution;
 }
-
+if ($group) {
+    $joinsql .= " JOIN {group_member} gm ON gm.member = u.id";
+    $wheresql .= " AND gm.group = ?";
+    $values[] = $group;
+}
 if ($beforedate && $neverloggedin) {
     $wheresql .= " AND (u.lastlogin < DATE(?) OR u.lastlogin IS NULL)";
     $values[] = $beforedate;
@@ -131,7 +143,7 @@ else if (!$cleanusers) {
 }
 
 if ($dryrun) {
-    $cli->cli_print(get_string('cli_deleteinactiveusers_onlydryrun', 'admin', $institution, $beforedate, $cleanusers, $neverloggedin));
+    $cli->cli_print(get_string('cli_deleteinactiveusers_onlydryrun1', 'admin', $institution, $group, $beforedate, $cleanusers, $neverloggedin));
 }
 
 if ($records = get_records_sql_array($selectsql . $joinsql . $wheresql, $values)) {

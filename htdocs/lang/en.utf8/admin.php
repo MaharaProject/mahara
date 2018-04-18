@@ -1344,8 +1344,9 @@ $string['cli_param_baddate'] = 'The supplied date "%s" is not valid.';
 $string['cli_deleteinactiveusers_usercount'] = 'There are "%s" users to delete';
 $string['cli_deleteinactiveusers_userunabletoclean'] = 'Unable to fully delete user "%s" (ID %s)';
 $string['cli_deleteinactiveusers_nouserstodelete'] = 'There are no users to delete.';
-$string['cli_deleteinactiveusers_onlydryrun'] = 'This is only a dry run with the following settings
+$string['cli_deleteinactiveusers_onlydryrun1'] = 'This is only a dry run with the following settings
 Institution: %s
+Group: %s
 Before date: %s
 Delete users from "usr" table: %s
 Never logged in: %s';
@@ -1448,3 +1449,4 @@ $string['pendingdeletionspagedescription'] = '<p>On this page you can see users 
 $string['userdeletiondeniedsuccessful'] = 'Request denied successfully.';
 $string['userdeletiondeniedunsuccessful'] = 'The attempted user account deletion denial failed.';
 $string['consented'] = 'Consented';
+$string['groupid'] = 'Group ID';
