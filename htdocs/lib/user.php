@@ -1473,6 +1473,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
                 get_config('sitename'), display_name($suspendinguserid, $suspendeduserid), $reason);
         }
     }
+    $message->includesuspendedusers = true;
     require_once('activity.php');
     activity_occurred('maharamessage', $message);
 
@@ -1497,6 +1498,7 @@ function unsuspend_user($userid) {
     $message->users = array($userid);
     $message->subject = get_string_from_language($lang, 'youraccounthasbeenunsuspended');
     $message->message = get_string_from_language($lang, 'youraccounthasbeenunsuspendedtext2', 'mahara', get_config('sitename'));
+
     require_once('activity.php');
     activity_occurred('maharamessage', $message);
 
