@@ -3650,7 +3650,7 @@ class View {
      *
      * @param int $limit Sets the LIMIT value in sql query
      * @param int $offset Sets the OFFSET value in sql query
-     * @param string $query Text to search for
+     * @param string $query Text to search for (treated as comma separated list when $searchin = tagsonly)
      * @param string $tag Text to search for in the tags. Not used anymore, we use $query instead
      * @param int $groupid Contains the group, if searching in group pages ans collections
      * @param string $institution Contains the institution, if searching in institution pages and collections
@@ -3658,9 +3658,10 @@ class View {
      *        values: tagsonly, titleanddescription, titleanddescriptionandtags
      * @param string $orderby Sets the order of the results
      *        values: latestcreated, latestmodified, latestviewed, mostvisited, mostcomments
+     * @param bool $alltags Used in conjunction with $serachin = tagsonly. When true it only returns results with all supplied tags
      * @return object containing views matching the query and their count
      */
-    public static function get_myviews_data($limit=12, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null, $searchin=null) {
+    public static function get_myviews_data($limit=12, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null, $searchin=null, $alltags=false) {
         global $USER;
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
 
@@ -3751,21 +3752,48 @@ class View {
                         LEFT JOIN {view_tag} vt ON (vt.view = v.id)";
                     $colltagstr = "
                         LEFT JOIN {collection_tag} ct ON (ct.collection = c.id)";
+                    $query_arr = array_map('trim', explode(',', $query));
+
+                    if ($alltags && count($query_arr) > 1) {
+                        $tagwhere = "vt.tag = ? ";
+                        foreach ($query_arr as $qk => $qv) {
+                            if ($qk > 0) {
+                                $tagstr .= " LEFT JOIN {view_tag} vt" . $qk . " ON vt" . $qk . ".view = vt.view ";
+                                $tagwhere .= " AND vt" . $qk . ".tag = ? ";
+                            }
+                        }
+                        $where .= " AND " . $tagwhere;
+                        $colltagwhere = "ct.tag = ? ";
+                        reset($query_arr);
+                        foreach ($query_arr as $qk => $qv) {
+                            if ($qk > 0) {
+                                $colltagstr .= " LEFT JOIN {collection_tag} ct" . $qk . " ON ct" . $qk . ".collection = ct.collection ";
+                                $colltagwhere .= " AND ct" . $qk . ".tag = ? ";
+                            }
+                        }
+                        $collwhere .= " AND ((" . $tagwhere . ") OR (" . $colltagwhere . "))";
+                        $collvalues = array_merge($query_arr, $query_arr);
+                        $emptycollwhere .= " AND " . $colltagwhere;
+                        $emptycollvalues = $query_arr;
+                    }
+                    else {
+                        $tagwhere = "vt.tag IN(" . implode(',', array_fill(0, count($query_arr), '?')) . ")";
+                        $colltagwhere = "ct.tag IN(" . implode(',', array_fill(0, count($query_arr), '?')) . ")";
+                        $where .= "
+                            AND " . $tagwhere;
+                        $collwhere .= "
+                            AND (" . $tagwhere . " OR " . $colltagwhere . ")";
+                        $emptycollwhere .= "
+                            AND " . $colltagwhere;
+                        $collvalues = array_merge($query_arr, $query_arr);
+                        $emptycollvalues = $query_arr;
+                    }
+
                     $from .= $tagstr;
                     $collfrom .= $tagstr . $colltagstr;
                     $emptycollfrom .= $colltagstr;
-                    $values[] = $query;
+                    $values = $query_arr;
 
-                    $tagwhere = "vt.tag = ?";
-                    $colltagwhere = "ct.tag = ?";
-                    $where .= "
-                        AND " . $tagwhere;
-                    $collwhere .= "
-                        AND (" . $tagwhere . " OR " . $colltagwhere . ")";
-                    $emptycollwhere .= "
-                        AND " . $colltagwhere;
-                    array_push($collvalues, $query, $query);
-                    $emptycollvalues[] = $query;
                     break;
                 case 'titleanddescription':
                     // Include matches on the title or description
@@ -3961,7 +3989,7 @@ class View {
         );
     }
 
-    public static function get_myviews_url($group=null, $institution=null, $query=null, $searchin=null, $orderby=null) {
+    public static function get_myviews_url($group=null, $institution=null, $query=null, $searchin=null, $orderby=null, $matchalltags=false) {
         $queryparams = array();
 
         if ($query != '') {
@@ -3973,7 +4001,9 @@ class View {
         if (!empty($orderby)) {
             $queryparams[] = 'orderby=' . urlencode($orderby);
         }
-
+        if (!empty($matchalltags)) {
+            $queryparams[] = 'matchalltags=' . urldecode($matchalltags);
+        }
         if ($group) {
             $url = get_config('wwwroot') . 'view/groupviews.php';
             $queryparams[] = 'group=' . $group;
@@ -4017,7 +4047,7 @@ class View {
         if ($usersettingsearchin !== $searchin) {
             set_account_preference($USER->get('id'), 'searchinfields', $searchin);
         }
-
+        $matchalltags = param_boolean('matchalltags', false);
         $query  = param_variable('query', null);
 
         $searchoptions = array(
@@ -4076,6 +4106,13 @@ class View {
                             'value' => get_string('search')
                         )
                     )
+                ),
+                'matchalltags' => array (
+                    'type' => 'checkbox',
+                    'class' => 'matchalltags',
+                    'title' => get_string('matchalltags', 'view'),
+                    'defaultvalue' => $matchalltags,
+                    'description' => get_string('matchalltagsdesc', 'view'),
                 )
             )
         );
@@ -4089,9 +4126,9 @@ class View {
 
         $searchform = pieform($searchform);
 
-        $data = self::get_myviews_data($limit, $offset, $query, null, $group, $institution, $orderby, $searchin);
+        $data = self::get_myviews_data($limit, $offset, $query, null, $group, $institution, $orderby, $searchin, $matchalltags);
 
-        $url = self::get_myviews_url($group, $institution, $query, $searchin, $orderby);
+        $url = self::get_myviews_url($group, $institution, $query, $searchin, $orderby, $matchalltags);
 
         $pagination = build_showmore_pagination(array(
             'count'  => $data->count,
@@ -6908,9 +6945,10 @@ function searchviews_submit(Pieform $form, $values) {
     }
     $searchin = isset($values['type']) ? $values['type'] : null;
     $orderby = isset($values['orderby']) ? $values['orderby'] : null;
+    $matchalltags = isset($values['matchalltags']) ? $values['matchalltags'] : false;
     $group = isset($values['group']) ? $values['group'] : null;
     $institution = isset($values['institution']) ? $values['institution'] : null;
-    redirect(View::get_myviews_url($group, $institution, $query, $searchin, $orderby));
+    redirect(View::get_myviews_url($group, $institution, $query, $searchin, $orderby, $matchalltags));
 }
 
 /**
