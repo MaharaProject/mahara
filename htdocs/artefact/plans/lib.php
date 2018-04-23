@@ -159,7 +159,7 @@ class ArtefactTypePlan extends ArtefactType {
     }
 
     public static function submit(Pieform $form, $values) {
-        global $USER, $SESSION;
+        global $USER, $SESSION, $view;
 
         $new = false;
 
@@ -185,12 +185,17 @@ class ArtefactTypePlan extends ArtefactType {
 
         $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));
 
-        if ($new) {
-            redirect('/artefact/plans/plan.php?id='.$artefact->get('id'));
+        if ($view && $USER->can_edit_view($view)) {
+            $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+        }
+        else if ($new) {
+            $returnurl = get_config('wwwroot') . 'artefact/plans/plan.php?id=' . $artefact->get('id');
         }
         else {
-            redirect('/artefact/plans/index.php');
+            $returnurl = get_config('wwwroot') . 'artefact/plans/index.php';
         }
+
+        redirect($returnurl);
     }
 
     /**
@@ -198,13 +203,22 @@ class ArtefactTypePlan extends ArtefactType {
     *
     */
     public static function get_form($plan=null) {
+        global $USER, $view;
+
+        if ($view && $USER->can_edit_view($view)) {
+            $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+        }
+        else {
+            $returnurl = get_config('wwwroot') . 'artefact/plans/index.php';
+        }
+
         require_once('license.php');
         $elements = call_static_method(generate_artefact_class_name('plan'), 'get_planform_elements', $plan);
         $elements['submit'] = array(
             'type' => 'submitcancel',
             'class' => 'btn-primary',
             'value' => array(get_string('saveplan','artefact.plans'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'artefact/plans/index.php',
+            'goto' => $returnurl,
         );
         $planform = array(
             'name' => empty($plan) ? 'addplan' : 'editplan',
@@ -279,11 +293,12 @@ class ArtefactTypePlan extends ArtefactType {
         if (!empty($options['viewid'])) {
             $baseurl .= '&view=' . $options['viewid'];
         }
+        $baseurl .= '&planid=' . $this->id;
 
         $pagination = array(
             'baseurl' => $baseurl,
             'id' => 'task_pagination',
-            'datatable' => 'tasktable',
+            'datatable' => 'tasklist',
             'jsonscript' => 'artefact/plans/viewtasks.json.php',
         );
 
@@ -308,7 +323,6 @@ class ArtefactTypePlan extends ArtefactType {
         $smarty->assign('view', (!empty($options['viewid']) ? $options['viewid'] : null));
         $smarty->assign('owner', $this->get('owner'));
         $smarty->assign('tags', $this->get('tags'));
-
         return array('html' => $smarty->fetch('artefact:plans:viewplan.tpl'), 'javascript' => '');
     }
 
@@ -440,13 +454,22 @@ class ArtefactTypeTask extends ArtefactType {
     *
     */
     public static function get_form($parent, $task=null) {
+        global $USER, $view;
+
+        if ($view && $USER->can_edit_view($view)) {
+            $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+        }
+        else {
+            $returnurl = get_config('wwwroot') . 'artefact/plans/plan.php?id=' . $parent;
+        }
+
         require_once('license.php');
         $elements = call_static_method(generate_artefact_class_name('task'), 'get_taskform_elements', $parent, $task);
         $elements['submit'] = array(
             'type' => 'submitcancel',
             'class' => 'btn-primary',
             'value' => array(get_string('savetask','artefact.plans'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'artefact/plans/plan.php?id=' . $parent,
+            'goto' => $returnurl,
         );
         $taskform = array(
             'name' => empty($task) ? 'addtasks' : 'edittask',
@@ -545,7 +568,7 @@ class ArtefactTypeTask extends ArtefactType {
     }
 
     public static function submit(Pieform $form, $values) {
-        global $USER, $SESSION;
+        global $USER, $SESSION, $view;
 
         if (!empty($values['task'])) {
             $id = (int) $values['task'];
@@ -571,7 +594,14 @@ class ArtefactTypeTask extends ArtefactType {
 
         $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));
 
-        redirect('/artefact/plans/plan.php?id='.$values['parent']);
+        if ($view && $USER->can_edit_view($view)) {
+            $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+        }
+        else {
+            $returnurl = get_config('wwwroot') . 'artefact/plans/plan.php?id=' . $values['parent'];
+        }
+
+       redirect($returnurl);
     }
 
     /**
@@ -590,7 +620,7 @@ class ArtefactTypeTask extends ArtefactType {
                 FROM {artefact} a
             JOIN {artefact_plans_task} at ON at.artefact = a.id
             WHERE a.artefacttype = 'task' AND a.parent = ?
-            ORDER BY at.completiondate ASC, a.id", array($plan), $offset, $limit))
+            ORDER BY at.completed, at.completiondate ASC, a.id", array($plan), $offset, $limit))
             || ($results = array());
 
         // format the date and setup completed for display if task is incomplete
@@ -655,15 +685,28 @@ class ArtefactTypeTask extends ArtefactType {
      * @param   string  $template   The name of the template to use for rendering
      * @param   array   $options    The block instance options
      * @param   array   $pagination The pagination data
+     * @param   boolean $editing    True if page is being edited
      *
      * @return  array   $tasks      The tasks array updated with rendered table html
      */
-    public function render_tasks(&$tasks, $template, $options, $pagination) {
+    public function render_tasks(&$tasks, $template, $options, $pagination, $editing=false) {
+        global $USER;
 
         $smarty = smarty_core();
         $smarty->assign('tasks', $tasks);
         $smarty->assign('options', $options);
         $smarty->assign('view', (!empty($options['view']) ? $options['view'] : null));
+        $smarty->assign('block', (!empty($options['block']) ? $options['block'] : null));
+        $smarty->assign('editing', $editing);
+        if (!empty($options['view'])) {
+            require_once('view.php');
+            $view = new View($options['view']);
+            $owner = $view->get('owner');
+            if ($owner && $owner == $USER->get('id')) {
+                $smarty->assign('canedit', true);
+            }
+        }
+
         $tasks['tablerows'] = $smarty->fetch($template);
 
         if ($tasks['limit'] && $pagination) {

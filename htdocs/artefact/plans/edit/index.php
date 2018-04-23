@@ -23,12 +23,18 @@ if (!PluginArtefactPlans::is_active()) {
 define('TITLE', get_string('editplan','artefact.plans'));
 
 $id = param_integer('id');
-
+$viewid = param_integer('view', 0);
+if ($viewid) {
+    require_once('view.php');
+    $view = new View($viewid);
+}
+else {
+    $view = null;
+}
 $artefact = new ArtefactTypePlan($id);
 if (!$USER->can_edit_artefact($artefact)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
-
 $editform = ArtefactTypePlan::get_form($artefact);
 
 $smarty = smarty();

@@ -5811,5 +5811,31 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018040900) {
+        log_debug('Change the artefactid (integer) in the configdata of the existing plan blocktypes to artefactids (array). This change will allow plan blocktypes to contain more than one plan.');
+
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        $instances = get_records_array('block_instance', 'blocktype', 'plans');
+        if ($instances) {
+            foreach ($instances as $instance) {
+                $blockinstance = new BlockInstance($instance->id);
+                $configdata = $blockinstance->get('configdata');
+
+                if (isset($configdata['artefactid'])) {
+                    $configdata['artefactids'] = array($configdata['artefactid']);
+                    unset($configdata['artefactid']);
+                    $blockinstance->set('configdata', $configdata);
+                    $blockinstance->commit();
+                }
+                else if (is_null($configdata['artefactid'])) {
+                    $configdata['artefactids'] = array();
+                    unset($configdata['artefactid']);
+                    $blockinstance->set('configdata', $configdata);
+                    $blockinstance->commit();
+                }
+            }
+        }
+    }
+
     return $status;
 }

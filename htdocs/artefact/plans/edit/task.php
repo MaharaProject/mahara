@@ -28,6 +28,14 @@ $task = new ArtefactTypeTask($id);
 if (!$USER->can_edit_artefact($task)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
+$viewid = param_integer('view', 0);
+if ($viewid) {
+    require_once('view.php');
+    $view = new View($viewid);
+}
+else {
+    $view = null;
+}
 
 $form = ArtefactTypeTask::get_form($task->get('parent'), $task);
 

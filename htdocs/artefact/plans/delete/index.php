@@ -22,6 +22,21 @@ $todelete = new ArtefactTypePlan($id);
 if (!$USER->can_edit_artefact($todelete)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
+$viewid = param_integer('view', 0);
+if ($viewid) {
+    require_once('view.php');
+    $view = new View($viewid);
+}
+else {
+    $view = null;
+}
+
+if ($view && $USER->can_edit_view($view)) {
+    $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+}
+else {
+    $returnurl = get_config('wwwroot') . '/artefact/plans/index.php';
+}
 
 $deleteform = array(
     'name' => 'deleteplanform',
@@ -34,7 +49,7 @@ $deleteform = array(
             'type' => 'submitcancel',
             'class' => 'btn-default',
             'value' => array(get_string('deleteplan','artefact.plans'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . '/artefact/plans/index.php',
+            'goto' => $returnurl,
         ),
     )
 );
@@ -49,10 +64,18 @@ $smarty->display('artefact:plans:delete.tpl');
 
 // calls this function first so that we can get the artefact and call delete on it
 function deleteplanform_submit(Pieform $form, $values) {
-    global $SESSION, $todelete;
+    global $SESSION, $USER, $todelete, $view;
 
     $todelete->delete();
     $SESSION->add_ok_msg(get_string('plandeletedsuccessfully', 'artefact.plans'));
 
-    redirect('/artefact/plans/index.php');
+    // Redirect to view edit screen if plan was deleted from a block.
+    if ($view && $USER->can_edit_view($view)) {
+        $returnurl = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+    }
+    else {
+        $returnurl = get_config('wwwroot') . 'artefact/plans/index.php';
+    }
+
+    redirect($returnurl);
 }
