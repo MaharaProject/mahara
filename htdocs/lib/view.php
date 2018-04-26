@@ -224,7 +224,7 @@ class View {
             ),
     );
 
-    public static $maxlayoutrows = 6; // see number of colours avail in layoutpreview.php
+    public static $maxlayoutrows = 20;
 
     /**
      * For retrieving and checking numbers of columnns in any given row

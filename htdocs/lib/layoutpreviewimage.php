@@ -25,6 +25,7 @@ class LayoutPreviewImage {
     private static $one_row_height = 65;
     private static $two_row_height = 31;
     private static $three_row_height = 20;
+    private static $six_row_height = 8;
     private static $spacer = 3;
 
     /* Constructor.
@@ -93,6 +94,9 @@ class LayoutPreviewImage {
         if ($this->rows == 1) {
             return self::$one_row_height;
         }
+        if ($this->rows > 5) {
+            return $this->rows * self::$six_row_height + ($this->rows - 1) * self::$spacer;
+        }
         if ($this->rows > 2) {
             return $this->rows * self::$three_row_height + ($this->rows - 1) * self::$spacer;
         }
@@ -102,6 +106,9 @@ class LayoutPreviewImage {
     private function get_preview_column_height() {
         if ($this->rows == 1) {
             return self::$one_row_height;
+        }
+        if ($this->rows > 5) {
+            return self::$six_row_height;
         }
         if ($this->rows > 2) {
             return self::$three_row_height;
