@@ -288,11 +288,11 @@ EOF;
         $params = array($instance->get('id'));
 
         if ($records = get_records_sql_array($sql, $params, $nolimit ? '' : 0, $nolimit ? '' : 10)) {
-            return array_map(function($item) {
+            return array_map(function($item) use ($owner) {
                 $item->displayname = display_name($item);
                 $item->text = clean_html($item->text);
                 $item->profileurl = profile_url($item);
-                $item->deletable = PluginBlocktypeWall::can_delete_wallpost($item->from, ' . intval($owner) .');
+                $item->deletable = PluginBlocktypeWall::can_delete_wallpost($item->from, $owner);
                 return $item;
             }, $records);
         }
