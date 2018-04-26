@@ -58,6 +58,7 @@ Scenario: Creating a collection AND adding pages
     And I scroll to the id "whatcollections"
 
     And I should see "Collections to export"
+    And I scroll to the top
     And I select the radio "All my data"
     #give time to hide the sections
     And I wait "1" seconds
