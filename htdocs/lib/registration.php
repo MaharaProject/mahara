@@ -20,7 +20,7 @@ defined('INTERNAL') || die();
  * @return string that is the registation form
  * @ingroup Registration
  */
-function register_site()  {
+function register_site($registered = null)  {
     $strfield = get_string('Field', 'admin');
     $strvalue = get_string('Value', 'admin');
     $info = <<<EOF
@@ -35,10 +35,14 @@ function register_site()  {
     <tbody>
 EOF;
     $data = registration_data();
+    // Format each line of data to be sent.
     foreach($data as $key => $val) {
         $info .= '<tr><th>'. hsc($key) . '</th><td>' . hsc($val) . "</td></tr>\n";
     }
     $info .= '</tbody></table>';
+
+    // Check if site is already registered and set the text for the Register swithbox accordingly
+    $register_label = ($registered) ? get_string('remainregistered', 'admin') : get_string('registerwithmahara', 'admin');
 
     $form = array(
         'name' => 'register',
@@ -46,7 +50,7 @@ EOF;
         'elements' => array(
             'whatsent' => array(
                 'type' => 'fieldset',
-                'legend' => get_string('datathatwillbesent', 'admin'),
+                'legend' => get_string('dataincluded', 'admin'),
                 'collapsible'  => true,
                 'collapsed'    => true,
                 'class' => 'last',
@@ -57,15 +61,15 @@ EOF;
                     ),
                 )
             ),
-            'sendweeklyupdates' => array(
+            'registeryesno' => array(
                 'type' => 'switchbox',
-                'title' => get_string('sendweeklyupdates', 'admin'),
-                'defaultvalue' => true,
+                'title' => $register_label,
+                'defaultvalue' => get_config('registration_sendweeklyupdates'),
             ),
             'register' => array(
                 'type' => 'submitcancel',
                 'class' => 'btn-primary',
-                'value' => array(get_string('Register', 'admin'), get_string('cancel', 'mahara')),
+                'value' => array(get_string('save', 'mahara'), get_string('cancel', 'mahara')),
             ),
         )
      );
@@ -78,6 +82,25 @@ EOF;
 function register_submit(Pieform $form, $values) {
     global $SESSION;
 
+    // If there is a timecode in this field, the site was registered at this time.
+    $registered = get_config('registration_lastsent');
+
+    // Depending on if the site was registered previously and what value was submitted in the 'registeryesno' field,
+    // there are three options:
+    // 1. cancel (i.e, the user made no changes)
+    if (!$registered && !$values['registeryesno'] || $registered && $values['registeryesno']) {
+        // Not registered, not registering OR registered and registering - cancel
+        if ($registered && !get_config ('registration_firstsent')) {
+            set_config('registration_firstsent', time());
+        }
+        register_cancel_register();
+    }
+    // 2. remove registation
+    else if ($registered && !$values['registeryesno']) {
+        remove_registration();
+    }
+    // 3. registering, continue
+
     $result = registration_send_data();
     $data = json_decode($result->data);
 
@@ -87,7 +110,10 @@ function register_submit(Pieform $form, $values) {
     }
     else {
         set_config('registration_lastsent', time());
-        set_config('registration_sendweeklyupdates', $values['sendweeklyupdates']);
+        if (!get_config('registration_firstsent')) {
+            set_config('registration_firstsent', time());
+        }
+        set_config('registration_sendweeklyupdates', $values['registeryesno']);
         if (get_config('new_registration_policy')) {
             set_config('new_registration_policy', false);
         }
@@ -115,13 +141,28 @@ function register_submit(Pieform $form, $values) {
 }
 
 /**
+ * Runs when the 'Remove' button is clicked
+ */
+
+function remove_registration() {
+    global $SESSION;
+    set_config('registration_lastsent', 0);
+    set_config('registration_sendweeklyupdates', 0);
+    if (get_config('new_registration_policy')) {
+        set_config('new_registration_policy', 0);
+    }
+    $SESSION->add_ok_msg(get_string('registrationremoved', 'admin'));
+    redirect('/admin/index.php');
+}
+
+/**
  * Runs when registration form is cancelled
  */
 function register_cancel_register() {
     global $SESSION;
 
     if (get_config('new_registration_policy')) {
-        set_config('new_registration_policy', -1);
+        set_config('new_registration_policy', 0);
         $SESSION->add_ok_msg(get_string('registrationcancelled', 'admin', get_config('wwwroot')), false);
     }
 

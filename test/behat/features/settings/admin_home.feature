@@ -9,7 +9,7 @@ Scenario: Closing the site
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Admin home" from administration menu
  # Verifying I'm on the right page
- And I should see "Register your Mahara site"
+ And I should see "Site registration"
  And I scroll to the base of id "close_site"
  And I press "Close"
  And I should see "Reopen site"

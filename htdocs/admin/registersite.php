@@ -18,11 +18,22 @@ define('SECTION_PLUGINNAME', 'admin');
 
 require(dirname(dirname(__FILE__)).'/init.php');
 require(get_config('libroot') . 'registration.php');
-define('TITLE', get_string('Register', 'admin'));
+define('TITLE', get_string('Registration', 'admin'));
 
-if (!get_config('registration_lastsent')
-    || get_config('new_registration_policy')) {
+// This runs register_site in registration.php, which is what displays the form and the button for emails.
+if (!get_config('registration_lastsent')) {
     $register = register_site();
+}
+else {
+    if (get_config('new_registration_policy')) {
+        $registration_update = get_string('newregistrationpolicyinfo', 'admin');
+    }
+    $registered = register_site(true);
+    $firstregistered = (get_config('registration_firstsent'));
+    // The $firstregistered might be false if site registered before we kept this info. Otherwise format as date.
+    if ($firstregistered) {
+        $firstregistered = format_date($firstregistered);
+    }
 }
 
 $smarty = smarty();
@@ -31,6 +42,10 @@ setpageicon($smarty, 'icon-star');
 
 if (isset($register)) {
     $smarty->assign('register', $register);
+}
+else if (isset($registered)) {
+    $smarty->assign('registered', $registered);
+    $smarty->assign('firstregistered', $firstregistered);
 }
 
 $smarty->display('admin/registersite.tpl');

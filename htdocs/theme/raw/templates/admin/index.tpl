@@ -75,11 +75,20 @@
     {if $register}
 
         <div class="panel panel-success register-site">
-            <h3 class="panel-heading">{str tag=registeryourmaharasite section=admin} <span class="icon icon-star pull-right" role="presentation" aria-hidden="true"></span></h3>
+            <h3 class="panel-heading">{str tag=registermaharasite section=admin} <span class="icon icon-star pull-right" role="presentation" aria-hidden="true"></span></h3>
             <div class="panel-body">
-                {str tag=registeryourmaharasitesummary section=admin args=$WWWROOT}
+                {if $newregisterpolicy}
+                    <strong>{str tag=newregistrationpolicyinfo section=admin}</strong>
+                {/if}
+            {str tag=registeryoursitesummary section=admin args=$WWWROOT}
+            {if $firstregistered}
+                <p>{str tag=siteisregisteredsince section=admin args=$firstregistered}</p>
+            {/if}
+            {if $sendweeklyupdates}
+                <p>{str tag=sendingweeklyupdates section=admin}</p>
+            {/if}
             </div>
-            <a class="panel-footer" href="{$WWWROOT}admin/registersite.php">{str tag=Register section=admin} <span class="icon icon-arrow-circle-right pull-right" role="presentation" aria-hidden="true"></span></a>
+            <a class="panel-footer" href="{$WWWROOT}admin/registersite.php">{str tag=Registration section=admin} <span class="icon icon-arrow-circle-right pull-right" role="presentation" aria-hidden="true"></span></a>
         </div>
 
     {/if}
