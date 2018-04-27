@@ -17,7 +17,7 @@
     </div>
     <div id="results_container" class="panel panel-default tag-results">
         <h2 id="results_heading" class="panel-heading">{str tag=searchresultsfor}
-            <a class="tag secondary-link" href="{$WWWROOT}tags.php{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
+            <a class="tag secondary-link" href="{$results->baseurl}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
         </h2>
         <div class="btn-top-right btn-group btn-group-top">
             <a class="btn btn-default edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
