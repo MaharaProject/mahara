@@ -1334,13 +1334,13 @@ $string['cli_problemindexing'] = 'A problem occurred while indexing';
 $string['cli_done'] = 'Indexing finished';
 
 // Clean up old users
-$string['cli_deleteinactiveusers_dryrun'] = 'Dry run to indicate what will happen. Set to "true" by default. Need to set -d=false to actually update database.';
+$string['cli_param_dryrun'] = 'Dry run to indicate what will happen. Set to "true" by default. Need to set -d=false to actually update database.';
 $string['cli_deleteinactiveusers_beforedate'] = 'Delete users where their last login date is earlier than this date. Date can be any datetime string, eg: "2018-02-25" or "-6 months"';
 $string['cli_deleteinactiveusers_limit'] = 'Limit of users to work with for each delete run';
-$string['cli_deleteinactiveusers_cleanusers'] = 'Delete users from the "usr" table as well';
+$string['cli_deleteinactiveusers_cleanusers'] = 'Try to delete users from the "usr" table as well';
 $string['cli_deleteinactiveusers_info'] = 'This command-line PHP script allows you to delete old users. This will only work for users who either have not logged in or have never made a forum post.';
 $string['cli_deleteinactiveusers_neverloggedin'] = 'Delete users that have never logged in (were setup by an admin)';
-$string['cli_deleteinactiveusers_baddate'] = 'The supplied date "%s" is not valid.';
+$string['cli_param_baddate'] = 'The supplied date "%s" is not valid.';
 $string['cli_deleteinactiveusers_usercount'] = 'There are "%s" users to delete';
 $string['cli_deleteinactiveusers_userunabletoclean'] = 'Unable to fully delete user "%s" (ID %s)';
 $string['cli_deleteinactiveusers_nouserstodelete'] = 'There are no users to delete.';
@@ -1349,6 +1349,27 @@ Institution: %s
 Before date: %s
 Delete users from "usr" table: %s
 Never logged in: %s';
+
+// Clean up old groups
+$string['cli_deleteinactivegroups_info'] = 'This command-line PHP script allows you to delete old groups. This will only work for groups who currently have no members. This will also include groups with only one owner/administrator if the "onlyadmins" flag is set.';
+$string['cli_deleteinactivegroups_beforedate'] = 'Delete groups where their last modification date is earlier than this date. Date can be any datetime string, eg: "2018-02-25" or "-6 months"';
+$string['cli_deleteinactivegroups_limit'] = 'Limit of groups to work with for each delete run';
+$string['cli_deleteinactivegroups_cleangroups'] = 'Try to delete groups from the "group" table as well';
+$string['cli_deleteinactivegroups_onlyadmins'] = 'Also include groups that only have owner/administrator as members';
+$string['cli_deleteinactivegroups_onlydryrun'] = 'This is only a dry run with the following settings
+Institution: %s
+Before date: %s
+Delete groups from "group" table: %s
+Also delete groups that only contain owner/admin: %s
+%s';
+$string['cli_deleteinactivegroups_danger'] = '
+*** The settings chosen will delete all groups ***
+If this is what you desire then set the --beforedate to a date in the future
+';
+$string['cli_deleteinactivegroups_groupcount'] = 'There are "%s" groups to delete';
+$string['cli_deleteinactivegroups_nogroupstodelete'] = 'There are no groups to delete.';
+$string['cli_deleteinactivegroups_emptygroups'] = 'Only delete groups that have no members';
+$string['cli_deleteinactivegroups_groupunabletoclean'] = 'Unable to fully delete group "%s" (ID %s)';
 
 $string['withselectedcontentexport'] = 'Re-queue items into the export queue';
 $string['withselectedcontentdelete'] = 'Delete selected items from the export queue';
