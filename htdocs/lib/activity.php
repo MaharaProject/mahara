@@ -106,11 +106,12 @@ function get_activity_type_classname($activitytype) {
  * @return array of users
  */
 function activity_get_users($activitytype, $userids=null, $userobjs=null, $adminonly=false,
-                            $admininstitutions = array()) {
+                            $admininstitutions = array(), $includesuspendedusers=false) {
     $values = array($activitytype);
     $sql = '
         SELECT
             u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
+            u.suspendedctime,
             p.method, ap.value AS lang, apm.value AS maildisabled, aic.value AS mnethostwwwroot,
             h.appname AS mnethostapp
         FROM {usr} u
@@ -138,10 +139,14 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userids)) . ')';
         $values = array_merge($values, $userids);
     }
+    if (!$includesuspendedusers) {
+        $sql .= ' AND u.suspendedctime IS NULL ';
+    }
     if (!empty($admininstitutions)) {
         $sql .= '
         GROUP BY
             u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
+            u.suspendedctime,
             p.method, ap.value, apm.value, aic.value, h.appname
         HAVING (u.admin = 1 OR SUM(ui.admin) > 0)';
     } else if ($adminonly) {
@@ -1108,7 +1113,8 @@ class ActivityTypeMaharamessage extends ActivityType {
      */
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
-        $this->users = activity_get_users($this->get_id(), $this->users);
+        $includesuspendedusers = isset($data->includesuspendedusers) && $data->includesuspendedusers;
+        $this->users = activity_get_users($this->get_id(), $this->users, null, false, array(), $includesuspendedusers);
     }
 
     public function get_required_parameters() {
