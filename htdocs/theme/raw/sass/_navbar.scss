@@ -1,0 +1,127 @@
+/*
+ * Modification to bootstraps default navbar components
+ */
+// Login link and language form
+.topright-menu {
+    float: right;
+    padding-top: 10px;
+
+    li {
+        display: inline-block;
+        float: right;
+    }
+
+    .login-link a {
+        margin-left: 15px;
+        padding: 7px 15px;
+        // color: $navbar-default-link-color;
+
+        &:focus,
+        &:hover {
+          // color: $navbar-default-link-hover-color;
+          // background-color: $navbar-default-link-hover-bg;
+        }
+    }
+}
+
+// Header search form
+.navbar-form.navbar-collapse {
+    padding: 15px;
+    margin-bottom: 0;
+    border: 0;
+    @include media-breakpoint-up(md) {
+        position: absolute;
+        display: block;
+        max-width: none;
+        visibility: visible;
+        top: 10px;
+        right: 163px;
+        margin: 0 30px 0 0;
+        padding: 0;
+        box-shadow: none;
+        height: auto !important;
+    }
+
+    .header-search-form {
+        input[type=text] {
+            width: calc(100% - 43px);
+            float: left;
+            @include media-breakpoint-up(md) {
+                width: auto;
+            }
+        }
+        .input-group-btn {
+            display: block !important;
+            float: left;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            // border-left: 1px solid $btn-default-border;
+            margin-left: -1px;
+            @include media-breakpoint-up(md) {
+                float: right;
+            }
+        }
+    }
+}
+// Allowing the public search to sit in right place
+// when lang selector exists or not
+.loggedout .navbar-form.navbar-collapse {
+    @include media-breakpoint-down(md) {
+        right: 0px;
+        margin-right: 15px;
+
+        &.with-langform {
+            right: 270px;
+        }
+        &.with-langform-login {
+            right: 370px;
+        }
+    }
+}
+
+.navbar-default {
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    //
+    // height: 60px;
+    // /* border-left-color: #fff; */
+    // /* border-right-color: #fff; */
+    // /* border-bottom-color: #fff; */
+    // background-color: #0162a7;
+}
+
+.nav-toggle-area {
+    float: right;
+    padding: 10px 0;
+}
+
+.navbar-main {
+    background-color: #fff;
+    top: 0;
+    .navbar-toggle {
+        display: block;
+        margin: 0;
+        border-color: transparent;
+        border-left-width: 0;
+        border-radius: 3px;
+        min-width: 45px;
+        color: #556d32;
+        padding: 6px 10px;
+        background-color: transparent;
+        position: relative;
+        float: right;
+        &.search-toggle {
+            @include media-breakpoint-up(md) {
+                display: none;
+            }
+        }
+        &.user-toggle {
+            padding-left: 40px;
+        }
+        &:hover,
+        &:focus {
+            background-color: #f1f1f1;
+        }
+    }
+}

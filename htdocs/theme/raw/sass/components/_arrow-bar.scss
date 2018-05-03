@@ -52,7 +52,6 @@
             width: 40px;
         }
         .text {
-            @include ellipsis(true);
             display: block;
             color: $arrow-text-color;
             font-weight: 700;
@@ -69,7 +68,6 @@
 .nav-inpage {
     &.nav > li {
         > a, button {
-            @include transition-duration(0.3s);
             border-radius: $border-radius-base;
             padding: 0 8px;
             line-height: 2em;
@@ -77,7 +75,6 @@
             margin-bottom: 9px;
             &:hover,
             &:focus {
-                @include transition-duration(0.3s);
                 background: $navbar-default-bg;
                 color: $link-color;
             }

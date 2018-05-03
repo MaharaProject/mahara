@@ -1,0 +1,31 @@
+
+.link-blocktype {
+    font-size: $font-size-base - 0.1;
+    float: left;
+    margin: 10px 0;
+    padding: 5px 7px;
+    &:hover {
+        background-color: $secondary;
+        text-decoration: none;
+    }
+    .icon {
+        display: none;
+        @include media-breakpoint-up(sm) {
+            display: inline-block;
+        }
+    }
+}
+
+pre {
+    display: block;
+    padding: 10px;
+    margin: 0 0 10.5px;
+    font-size: 13px;
+    line-height: 1.5;
+    word-break: break-all;
+    word-wrap: break-word;
+    color: #333;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}

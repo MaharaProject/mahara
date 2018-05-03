@@ -63,7 +63,7 @@ $colors: map-merge((
 ), $colors);
 
 $primary:       $blue !default;
-$secondary:     $gray-600 !default;
+$secondary:     $gray-100 !default;
 $success:       $green !default;
 $info:          $cyan !default;
 $warning:       $yellow !default;
@@ -167,7 +167,7 @@ $paragraph-margin-bottom:   1rem !default;
 
 $grid-breakpoints: (
   xs: 0,
-  sm: 576px,
+  sm: 480px,
   md: 768px,
   lg: 992px,
   xl: 1200px

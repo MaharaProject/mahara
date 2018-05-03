@@ -23,6 +23,7 @@
                     <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
                 </button>
                 {/if}
+                {if !$lockblocks}
                 <button class="deletebutton btn btn-inverse btn-sm" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
                     <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                 </button>
