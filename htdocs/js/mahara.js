@@ -154,7 +154,7 @@ function formStartProcessing(form, btn) {
         }
 
         button.prop('disabled', true);
-        button.blur();
+        button.trigger("blur");
 
         // Start the progress meter if it is enabled.
         if (form && form.elements && form.elements['progress_meter_token']) {
@@ -415,9 +415,9 @@ function basename(path) {
 
 jQuery(function($) {
     // Autofocus the first element with a class of 'autofocus' on page load (@todo: move this to pieforms.js)
-    $('.autofocus').first().focus();
-    if ($('.autofocus').first().focus().prop('id') == 'settings_title' && getUrlParameter('new', window.location.href)) {
-        $('.autofocus').first().select();
+    $('.autofocus').first().trigger("focus");
+    if ($('.autofocus').first().trigger("focus").prop('id') == 'settings_title' && getUrlParameter('new', window.location.href)) {
+        $('.autofocus').first().trigger('select');
     }
 });
 
@@ -436,7 +436,7 @@ function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, se
             '<span class="icon icon-info-circle" alt="' + get_string('Help') + '></span>' +
         '</a>'
     );
-    link.click(function(e) {
+    link.on("click", function(e) {
         contextualHelp(formName, helpName, pluginType, pluginName, page, section, link);
         e.preventDefault();
     });
@@ -568,13 +568,13 @@ function buildContextualHelpBox(content) {
         '<div id="helpstop">' + content +  '</div>'
     );
 
-    jQuery('#helpstop').click(function(e) {
+    jQuery('#helpstop').on("click", function(e) {
         if (e.target.nodeName != "A") {
             e.preventDefault();
             e.stopPropagation();
         }
     });
-    contextualHelpContainer.find('.help-dismiss').focus();
+    contextualHelpContainer.find('.help-dismiss').trigger("focus");
 }
 
 /*
@@ -646,14 +646,14 @@ function ensureHelpIsOnScreen(container, position) {
 /* Only works in non-ie at the moment. Using 'document' as the element
    makes IE detect the event, but then makes it so you need to click on
    the help twice before it opens. */
-jQuery(document).click(function(e) {
+jQuery(document).on("click", function(e) {
     if (contextualHelpOpened && !badIE) {
         contextualHelpContainer.remove();
         contextualHelpContainer = null;
         contextualHelpSelected = null;
         contextualHelpOpened = false;
         if (contextualHelpLink) {
-            contextualHelpLink.focus();
+            contextualHelpLink.trigger("focus");
             contextualHelpLink = null;
         }
     }
@@ -852,9 +852,9 @@ jQuery(document).ready(function($) {
 
     // Fix for Chrome and IE, which don't change focus when going to a fragment identifier link
     // Manually focuses the main content when the "skip to main content" link is activated
-    $('a.skiplink').click(function() {
+    $('a.skiplink').on("click", function() {
         var id = $j(this).attr('href');
-        $(id).attr('tabIndex', -1).focus();
+        $(id).attr('tabIndex', -1).trigger("focus");
     });
 });
 
@@ -1045,15 +1045,15 @@ function parseQueryString(encodedString, useArrays) {
  * Make sure the previous/next key tabbing will move within the dialog
  */
 function keytabbinginadialog(dialog, firstelement, lastelement) {
-    firstelement.keydown(function(e) {
+    firstelement.on("keydown", function(e) {
         if (e.keyCode === $j.ui.keyCode.TAB && e.shiftKey) {
-            lastelement.focus();
+            lastelement.trigger("focus");
             e.preventDefault();
         }
     });
-    lastelement.keydown(function(e) {
+    lastelement.on("keydown", function(e) {
         if (e.keyCode === $j.ui.keyCode.TAB && !e.shiftKey) {
-            firstelement.focus();
+            firstelement.trigger("focus");
             e.preventDefault();
         }
     });

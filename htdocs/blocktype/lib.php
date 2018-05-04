@@ -1321,7 +1321,7 @@ class BlockInstance {
 
         $js .= "
             jQuery(function ($) {
-                $('#instconf_title').change(function() {
+                $('#instconf_title').on('change', function() {
                     $('#instconf_retractable').prop('disabled', ($('#instconf_title').prop('value') == ''));
                 });
             });";

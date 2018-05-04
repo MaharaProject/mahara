@@ -25,7 +25,7 @@
 <script type="application/javascript">
 jQuery(function() {
     jQuery('.pseudofieldset').each(function(index) {
-        jQuery(this).find('.pseudolegend').click(function(event) {
+        jQuery(this).find('.pseudolegend').on("click", function(event) {
             jQuery(event.target).find('.panel-body').collapse('toggle');
         });
         // Keep open current section after save/reload of page.

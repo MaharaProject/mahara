@@ -59,7 +59,7 @@
         }
 
         // Register the click events
-        this.find("span.ratingicon").click(function() {
+        this.find("span.ratingicon").on("click", function() {
             if (settings.readonly !== true) {
                 rating = $(this).attr('data-value')
                 $(this).parent().attr('data-rating',rating);

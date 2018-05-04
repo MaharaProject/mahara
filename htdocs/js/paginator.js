@@ -213,17 +213,17 @@ return function(id, list, heading, script, extradata) {
 
         // Focus management based on whether the user searched for something or just changed the page
         if (self.heading && !changedPage) {
-            self.heading.focus();
+            $(self.heading).trigger("focus");
         }
         else if (container) {
             var firstLink = $(container).find('a').first();
             if (firstLink.length) {
-                firstLink.focus();
+                firstLink.trigger("focus");
             }
             else if (results && results.length > 0) {
                 results.prop('tabindex', -1)
                     .addClass('hidefocus')
-                    .focus();
+                    .trigger("focus");
             }
         }
 

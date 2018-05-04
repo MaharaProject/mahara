@@ -12,7 +12,7 @@
 
         jQuery('#{{$name}}_list').append({{$name}}_newref);
 
-        {{$name}}_newrefinput.focus();
+        {{$name}}_newrefinput.trigger("focus");
     }
 </script>
 <div id="{{$name}}_list">

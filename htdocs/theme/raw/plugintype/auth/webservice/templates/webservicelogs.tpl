@@ -49,7 +49,7 @@
 <script type="application/javascript">
 // to clear any offset when submitting form again
 jQuery(function() {
-    jQuery('#logsearchform').submit(function(e) {
+    jQuery('#logsearchform').on('submit', function(e) {
         jQuery('.currentoffset').attr('value', 0);
     });
 });

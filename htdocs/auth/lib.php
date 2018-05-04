@@ -2637,7 +2637,7 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
             }
 
             // For when select changes
-            $("#' . $institutionid . '").change(function() {
+            $("#' . $institutionid . '").on("change", function() {
                 if (this.value) {
                     if (registerconfirm[this.value] == 1) {
                         show_reason(reasonid, this.value);

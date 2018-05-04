@@ -87,7 +87,7 @@ jQuery(function($) {
       $('#menuitemlist').empty().append(form);
 
       if (data.focusid) {
-          $('#item' + data.focusid).focus();
+          $('#item' + data.focusid).trigger("focus");
       }
   }
 
@@ -166,7 +166,7 @@ jQuery(function($) {
       // A text field for the name
       var label = $('<label>', {'for':'name'+item.id,'class':'accessible-hidden'}).text(item.label);
       var name = $('<input>', {'type':'text','class':'text form-control input-sm','id':'name'+item.id,'value':item.name});
-      name.keydown(function(e) {
+      name.on('keydown', function(e) {
           if (e.keyCode == 13) {
             save.trigger('click');
               e.preventDefault();
@@ -199,7 +199,7 @@ jQuery(function($) {
       menuitem.addClass('hidden');
       var newrow = editform(item);
       newrow.insertBefore(menuitem)
-      $('#name' + item.id).focus();
+      $('#name' + item.id).trigger("focus");
   }
 
   // Receive standard json error message

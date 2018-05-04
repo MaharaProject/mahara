@@ -773,7 +773,7 @@ $newform = $allownew ? pieform($newform) : null;
 
 $js .= <<<EOF
 jQuery(function($) {
-    $('.url-open-editform').click(function(e) {
+    $('.url-open-editform').on("click", function(e) {
         e.preventDefault();
         $('#' + this.id).addClass('collapse-indicator');
         $('#' + this.id).toggleClass('open');

@@ -91,11 +91,11 @@
 </div>
 <script type="application/javascript">
     jQuery(function() {
-        jQuery("a.tasktitle").click(function(e) {
+        jQuery("a.tasktitle").on("click", function(e) {
             e.preventDefault();
             jQuery("#" + this.id + "_desc").toggleClass("hidden");
         });
-        jQuery("input.plandecision").change(function(e) {
+        jQuery("input.plandecision").on("change", function(e) {
             e.preventDefault();
             if (this.value == '1') {
             // The import decision for the plan is IGNORE

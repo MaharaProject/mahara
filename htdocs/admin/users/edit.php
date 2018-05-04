@@ -237,7 +237,7 @@ $js = "<script type='application/javascript'>
         is_external(authinstanceid);
 
         // update display as auth method dropdown changes
-        jQuery('#edituser_site_authinstance').change(function() {
+        jQuery('#edituser_site_authinstance').on('change', function() {
             authinstanceid = jQuery('#edituser_site_authinstance :selected').val();
             is_external(authinstanceid);
         });

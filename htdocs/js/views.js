@@ -64,13 +64,13 @@
             });
             var newblock = temp.find('div.blockinstance');
 
-            $('.blockinstance-header', newblock).mousedown(function() {
+            $('.blockinstance-header', newblock).on("mousedown", function() {
                     $('.js-col-row .column-content').each(function() {
                         $(this).addClass('block-drop-on', 100);
                     });
                 });
 
-            $('.blockinstance-header', newblock).mouseup(function() {
+            $('.blockinstance-header', newblock).on("mouseup", function() {
                 $('.js-col-row .column-content').each(function() {
                     $(this).removeClass('block-drop-on', 500);
                 });
@@ -114,7 +114,7 @@
         hideDock();
         showMediaPlayers();
         setTimeout(function() {
-            newblock.find('.configurebutton').focus();
+            newblock.find('.configurebutton').trigger("focus");
         }, 1);
     };
 
@@ -400,7 +400,7 @@
                 addNewBlock(options, element.find('.blocktype-radio').val());
             }
             else {
-                element.focus();
+                element.trigger("focus");
             }
         });
 
@@ -410,7 +410,7 @@
         addblockdialog.find('.cell-chooser input:first').prop('checked', true);
         addblockdialog.find('.cell-chooser input:first').parent().addClass('focused active');
 
-        addblockdialog.find('.deletebutton').focus();
+        addblockdialog.find('.deletebutton').trigger("focus");
         keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
     }
 
@@ -535,7 +535,7 @@
             } else {
                 // if block has has_instance_config() set to false, eg 'comment' block
                 rewriteDeleteButton(blockinstance.find('.deletebutton'));
-                blockinstance.find('.deletebutton').focus();
+                blockinstance.find('.deletebutton').trigger("focus");
             }
         },
         function() {
@@ -561,11 +561,11 @@
     }
 
     function showColumnBackgroundsOnSort() {
-        $('.blockinstance .blockinstance-header, .blocktype-list .blocktype').mousedown(function() {
+        $('.blockinstance .blockinstance-header, .blocktype-list .blocktype').on("mousedown", function() {
             showColumnBackgrounds();
         });
 
-        $('.blockinstance .blockinstance-header, .blocktype-list .blocktype').mouseup(function() {
+        $('.blockinstance .blockinstance-header, .blocktype-list .blocktype').on("mouseup", function() {
             hideColumnBackgrounds();
         });
     }
@@ -658,7 +658,7 @@
                     if (!$('#configureblock').hasClass('hidden')) {
                         hideDock();
                         showMediaPlayers();
-                        self.focus();
+                        self.trigger("focus");
                     }
                     //reset column heights
                     $('.column-content').each(function() {
@@ -713,8 +713,8 @@
                 };
 
 
-            radio.change(changefunction);
-            radio.prop('checked', true).change();
+            radio.on('change', changefunction);
+            radio.prop('checked', true).trigger('change');
 
             $('#addblock_position').prop('selectedIndex', order);
 
@@ -745,12 +745,12 @@
                 }
 
                 radio.off('change', changefunction);
-                self.focus();
+                self.trigger("focus");
             });
 
             addblockdialog.find('h4.modal-title').text(self.attr('alt'));
 
-            addblockdialog.find('.deletebutton').focus();
+            addblockdialog.find('.deletebutton').trigger("focus");
 
             keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
         });
@@ -858,7 +858,7 @@
                 if (!$('#configureblock').hasClass('hidden')) {
                     hideDock();
                     showMediaPlayers();
-                    button.focus();
+                    button.trigger("focus");
                 }
             });
 
@@ -1095,7 +1095,7 @@
 
         hideDock();
         showMediaPlayers();
-        button.focus();
+        button.trigger("focus");
     }
 
     function limitHeight(target) {
@@ -1147,9 +1147,9 @@
             return;
         }
         var currentTheme = $('option:selected', viewThemeSelect).val();
-        viewThemeSelect.change(function() {
+        viewThemeSelect.on('change', function() {
                 if ($('option:selected', viewThemeSelect).val() != currentTheme) {
-                    $(viewThemeSelect).closest('form').submit();
+                    $(viewThemeSelect).closest('form').trigger('submit');
                 }
         });
     }
@@ -1175,7 +1175,7 @@
         deletebutton.off().attr('name', 'action_removeblockinstance_id_' + blockinstanceId);
 
         // Lock focus to the newly opened dialog
-        deletebutton.focus();
+        deletebutton.trigger("focus");
 
         if (removeoncancel !== undefined) {
             rewriteDeleteButton(deletebutton, blockinstanceId);
@@ -1197,7 +1197,7 @@
                 showMediaPlayers();
 
                 setTimeout(function() {
-                    oldblock.find('.configurebutton').focus();
+                    oldblock.find('.configurebutton').trigger("focus");
                 }, 1);
             });
         }

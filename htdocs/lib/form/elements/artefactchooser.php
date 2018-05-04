@@ -163,7 +163,7 @@ jQuery(function($) {
                   $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
                   $(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
                   $(browseA.parentNode).addClass('active');
-                  browseA.blur();
+                  $(browseA).trigger("blur");
                   $('#artefactchooser-searchfield').val(''); // forget the search for now, easier than making the tabs remember it
                   if (!browseTabCurrent) {
                       {$artefactchooserdata}
@@ -213,7 +213,7 @@ jQuery(function($) {
                           {$artefactchooserselect}
                       });
                   });
-                  $('#artefactchooser-searchfield').focus();
+                  $('#artefactchooser-searchfield').trigger("focus");
                   if (browseTabCurrent) {
                       {$artefactchooserdata}
                       browseTabCurrent = false;

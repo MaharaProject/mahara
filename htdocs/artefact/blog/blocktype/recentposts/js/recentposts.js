@@ -1,6 +1,6 @@
 function addNewPostShortcut(blockid) {
     var addentry = jQuery('#blockinstance_' + blockid + ' .blockinstance-content');
-    addentry.find('a').first().click(function(e) {
+    addentry.find('a').first().on("click", function(e) {
         e.preventDefault();
         var blogselect = addentry.find('select').first().val();
         if (!blogselect) {

@@ -29,11 +29,11 @@ $skills = ArtefactTypeResumeGoalAndSkill::get_goals_and_skills('skills');
 
 $js = '
 jQuery(function($) {
-    $("a.goaltitle").click(function(e) {
+    $("a.goaltitle").on("click", function(e) {
         e.preventDefault();
         $j("#" + this.id + "_desc").toggleClass("hidden");
     });
-    $("a.skilltitle").click(function(e) {
+    $("a.skilltitle").on("click", function(e) {
         e.preventDefault();
         $("#" + this.id + "_desc").toggleClass("hidden");
     });

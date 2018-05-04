@@ -1041,16 +1041,16 @@ jQuery(document).ready(function() {
         }
     }
     // when default account lifetime changes rerun the override account lifetime checks
-    defaultaccountlifetime.change(function() {
+    defaultaccountlifetime.on("change", function() {
         overrideuseraccountlife(defaultaccountlifetime.val());
     });
     // initial setup
     overrideuseraccountlife(defaultaccountlifetime.val());
 
-    jQuery('#siteoptions_institutionstrictprivacy').click(function() {
+    jQuery('#siteoptions_institutionstrictprivacy').on("click", function() {
         multipleinstitutionscheckallowed();
     });
-    jQuery('#siteoptions_usersallowedmultipleinstitutions').click(function() {
+    jQuery('#siteoptions_usersallowedmultipleinstitutions').on("click", function() {
         strictprivacycheckallowed();
     });
     multipleinstitutionscheckallowed();

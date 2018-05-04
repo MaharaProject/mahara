@@ -121,7 +121,7 @@ jQuery(function($) {
         // does not work properly on Microsoft Edge
         // This is a workaround
         // It will check if the required select is not empty and remove the attribute 'required'
-        $j('#{{$formname}}_submit').click(function(e) {
+        $j('#{{$formname}}_submit').on("click", function(e) {
             $j('#{{$formname}} select:required').each(function() {
                 if ($j(this).val()) {
                     $j(this).prop("required", false);
@@ -139,7 +139,7 @@ jQuery(function($) {
             });
         });
         // Remove 'required' on cancel
-        $j('#cancel_{{$formname}}_submit').click(function(e) {
+        $j('#cancel_{{$formname}}_submit').on("click", function(e) {
             $j('#{{$formname}} select:required').each(function() {
                 $j(this).prop("required", false);
             });

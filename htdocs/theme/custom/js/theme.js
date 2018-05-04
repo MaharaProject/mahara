@@ -61,7 +61,7 @@ jQuery(function($) {
      */
     function focusOnOpen() {
         $('[data-action~="focus-on-open"]').on('shown.bs.collapse', function() {
-            $(this).find('form input').first().focus();
+            $(this).find('form input').first().trigger("focus");
         });
     }
 
@@ -169,7 +169,7 @@ jQuery(function($) {
          */
 
         // open the dropdown when it is clicked
-        $('.custom-dropdown > .picker').click(function() {
+        $('.custom-dropdown > .picker').on("click", function() {
             $(this).parent().children('ul').toggleClass('hidden');
         });
 

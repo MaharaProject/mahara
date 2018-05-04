@@ -95,7 +95,7 @@ function contentSaved(form, data) {
     updateSiteDefault(false);
 }
 
-jQuery(window).load(function() {
+jQuery(window).on('load', function() {
   connectElements();
   // need to wait until tinyMCE editor is loaded before updating editor's text
   var checkExists = setInterval(function() {

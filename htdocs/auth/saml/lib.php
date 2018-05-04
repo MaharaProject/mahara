@@ -559,7 +559,7 @@ class PluginAuthSaml extends PluginAuth {
             ),
             'makereallysure' => array(
                 'type'         => 'html',
-                'value'        => "<script>jQuery('document').ready(function() {     jQuery('#pluginconfig_save').on('click', function() {
+                'value'        => "<script>jQuery(function() {     jQuery('#pluginconfig_save').on('click', function() {
                 return confirm('" . get_string('reallyreallysure1', 'auth.saml') . "');
             });});</script>",
             ),
@@ -1047,7 +1047,7 @@ class PluginAuthSaml extends PluginAuth {
 
         $idpselectjs = <<< EOF
 <script type="application/javascript">
-jQuery('document').ready(function($) {
+jQuery(function($) {
 
     function update_idp_label(idp) {
         var idplabel = $('label[for="auth_config_institutionidp"]').html();

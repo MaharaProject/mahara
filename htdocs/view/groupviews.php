@@ -98,10 +98,10 @@ EOF;
 if ($offset > 0) {
     $js .= <<< EOF
     if ($('#groupviews').length) {
-        $('#groupviews a:first').focus();
+        $('#groupviews a:first').trigger("focus");
     }
     if ($('#myviews').length) {
-        $('#myviews a:first').focus();
+        $('#myviews a:first').trigger("focus");
     }
 EOF;
 }
@@ -110,7 +110,7 @@ else {
     if ($('#searchresultsheading').length) {
         $('#searchresultsheading').addClass('hidefocus')
             .prop('tabIndex', -1)
-            .focus();
+            .trigger("focus");
     }
 EOF;
 }

@@ -1288,7 +1288,7 @@ jQuery(function($) {
     if ($("#institution_theme").val() === "custom") {
         $(".customtheme").removeClass("js-hidden");
     }
-    $("#institution_theme").change(function() {
+    $("#institution_theme").on("change", function() {
         if ($(this).val() === "custom") {
             $(".customtheme").removeClass("js-hidden");
         }

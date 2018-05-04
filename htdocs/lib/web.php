@@ -379,7 +379,7 @@ tinyMCE.init({
         ed.on('init', function(ed) {
         {$tinymceinitbehatsetup}
             if (typeof(editor_to_focus) == 'string' && ed.editorId == editor_to_focus) {
-                ed.focus();
+                ed.trigger("focus");
             }
         });
         ed.on('keyup change', function (e) {

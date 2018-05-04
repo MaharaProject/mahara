@@ -4,7 +4,7 @@
     {if $jsurl}
         <script type="application/javascript">
         var blockinstance_{$blockid}_loaded = false;
-        $j('#blockinstance_{$blockid} .js-heading a[data-toggle="collapse"]').click(function() {
+        $j('#blockinstance_{$blockid} .js-heading a[data-toggle="collapse"]').on("click", function() {
             if (blockinstance_{$blockid}_loaded === false) {
                 {if $jsflashvars}
                 var embedobj = $j('<object />').attr('width', '{$width}')
@@ -44,7 +44,7 @@
                                 .attr('mozallowfullscreen', '')
                                 .attr('webkitallowfullscreen', '')
                                 .appendTo($j('#vid_{$blockid}'))
-                                .load(function() {
+                                .on("load", function() {
                                     blockinstance_{$blockid}_loaded = true;
                                     $j('#user_block_{$blockid}_waiting').css('display','none');
                                 });

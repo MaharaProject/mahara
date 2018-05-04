@@ -56,12 +56,12 @@
     });
 
     $('.modal').on('shown.bs.modal', function() {
-        $('#confirm-no-button').focus();
+        $('#confirm-no-button').trigger("focus");
     });
     $('.modal').on('hidden.bs.modal', function() {
         if (!acceptprivacy) {
             formAbortProcessing($j("#agreetoprivacy_submit"));
-            $('#agreetoprivacy_submit').focus();
+            $('#agreetoprivacy_submit').trigger("focus");
         }
     });
     </script>
