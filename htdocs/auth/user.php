@@ -186,10 +186,12 @@ class User {
                 FROM
                     {usr} u
                 WHERE u.id IN (
-                    SELECT u.id FROM {usr} u
-                    JOIN {artefact} a ON a.owner = u.id
-                    JOIN {artefact_internal_profile_email} ae ON (ae.owner = u.id and ae.artefact = a.id)
-                    WHERE a.artefacttype = ? AND (LOWER(u.email) = ? OR LOWER(a.title) = ?) GROUP BY u.id
+                    SELECT id FROM (
+                        SELECT u2.id FROM {usr} u2
+                        JOIN {artefact} a ON a.owner = u2.id
+                        JOIN {artefact_internal_profile_email} ae ON (ae.owner = u2.id and ae.artefact = a.id)
+                        WHERE a.artefacttype = ? AND (LOWER(u2.email) = ? OR LOWER(a.title) = ?) GROUP BY u2.id
+                    ) AS f
                 )';
 
         $user = get_record_sql($sql, array('email', $email, $email));
