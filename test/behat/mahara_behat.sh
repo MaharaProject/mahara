@@ -28,7 +28,11 @@ function is_selenium_running {
 
 function cleanup {
     echo "Shutdown Selenium"
-    curl -o /dev/null --silent http://localhost:${SELENIUM_PORT}/selenium-server/driver/?cmd=shutDownSeleniumServer
+    # we cant kill it this way anymore as the option has been removed
+    # curl -o /dev/null --silent http://localhost:${SELENIUM_PORT}/selenium-server/driver/?cmd=shutDownSeleniumServer
+    # so find the process running on the prot and kill it
+    lsof -t -i :${SELENIUM_PORT} | xargs kill
+
 
     if [[ $REPORT == 'html' ]]
     then
@@ -105,13 +109,13 @@ then
     else
         echo "Start Selenium..."
 
-        SELENIUM_VERSION_MAJOR=2.53
-        SELENIUM_VERSION_MINOR=1
+        SELENIUM_VERSION_MAJOR=3.11
+        SELENIUM_VERSION_MINOR=0
 
         SELENIUM_FILENAME=selenium-server-standalone-$SELENIUM_VERSION_MAJOR.$SELENIUM_VERSION_MINOR.jar
         SELENIUM_PATH=./test/behat/$SELENIUM_FILENAME
         # @todo make this more flexible, cross-platform?
-        CHROMEDRIVER_PATH=./test/behat/chromedriver-2.35-linux64
+        CHROMEDRIVER_PATH=./test/behat/chromedriver-2.38-linux64
 
         # If no Selenium installed, download it
         if [ ! -f $SELENIUM_PATH ]; then
