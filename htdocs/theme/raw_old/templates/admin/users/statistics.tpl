@@ -15,7 +15,7 @@
         </div>
     {/if}
     {if $subpagedata && $subpagedata.notvalid_errorstring}
-        <div class="alert alert-info postlist">{$subpagedata.notvalid_errorstring}</div>
+        <div class="alert alert-info postlist">{$subpagedata.notvalid_errorstring|safe}</div>
     {elseif $subpagedata}
             <div class="subpage panel-body row statistics">
                 {if $subpagedata.table.count == 0}
