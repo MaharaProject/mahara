@@ -55,6 +55,10 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Shared with this group report'=> array("#sharedviewsreport", "css_element"),
     'Matrix table'                => array("#tablematrix", "css_element"),
     'Toolbar buttons'             => array("#toolbar-buttons", "css_element"),
+    'User menu'         => array(".icon-chevron-down.collapsed", "css_element"),
+    'Settings sub-menu'         => array("//span[@innertext='Settings']", "xpath_element"),
+    'Settings'         => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Settings']", "xpath_element"),
+     'Legal'         => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Legal']", "xpath_element"),
     #xpath_elements
     'Secret urls - table row 1'   => array("//table/tbody/tr[1]/td[4]/a", "xpath_element"),
     'Multirecipientnotification'  => array("//li[@id='module.multirecipientnotification']", "xpath_element"),
