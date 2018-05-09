@@ -104,9 +104,9 @@
                             <td colspan="6">
                                 <div>
                                 {if $content->type == 'termsandconditions'}
-                                    {str tag=privacyversionfor section=admin arg1="$content->version"}
-                                {else}
                                     {str tag=termsversionfor section=admin arg1="$content->version"}
+                                {else}
+                                    {str tag=privacyversionfor section=admin arg1="$content->version"}
                                 {/if}
                                 </div>
                                 {$content->content|clean_html|safe}
