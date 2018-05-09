@@ -9,80 +9,84 @@ Background:
      | name | displayname | registerallowed | registerconfirm |
      | instone | Institution One | ON | OFF |
      | insttwo | Institution Two | ON | OFF |
-    Given the following "users" exist:
+
+    And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | instone | internal | staff |
      | UserB | Kupuh1pa! | UserB@example.org | Bob | User | instone | internal | member |
      | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | instone | internal | member |
+
     And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
      | GroupA | UserA | GroupA owned by UserA | standard | ON | OFF | all | ON | OFF | UserB, UserC |  |
      | GroupB | UserA | GroupB owned by UserA | standard | ON | OFF | all | OFF | OFF | UserB, UserC |  |
      | GroupC | UserA | GroupC owned by UserA | course | ON | OFF | all | ON | OFF | UserC | UserB |
      | GroupD | UserA | GroupD owned by UserA | standard | ON | OFF | all | ON | OFF | UserB, UserC |  |
+
     And the following "pages" exist:
-      | title | description | ownertype | ownername |
-      | Page UserA_01 | Page 01 | user | UserA |
-      | Page UserA_02 | Page 02 | user | UserA |
-      | Page UserA_03 | Page 03 | user | UserA |
-      | Page UserA_04 | Page 04 | user | UserA |
-      | Page UserA_05 | Page 05 | user | UserA |
-      | Page UserA_06 | Page 06 | user | UserA |
-      | Page UserA_07 | Page 07 | user | UserA |
-      | Page UserA_08 | Page 08 | user | UserA |
-      | Page UserA_09 | Page 09 | user | UserA |
-      | Page UserA_10 | Page 10 | user | UserA |
-      | Page UserA_11 | Page 11 | user | UserA |
-      | Page UserA_12 | Page 12 | user | UserA |
-      | Page UserB_01 | UserB's page 01 | user | UserB |
-      | Page UserB_02 | UserB's page 02 | user | UserB |
-      | Page UserB_03 | UserB's page 03 | user | UserB |
-      | Page UserB_04 | UserB's page 04 | user | UserB |
-      | Page UserB_05 | UserB's page 05 | user | UserB |
-      | Page UserB_06 | UserB's page 06 | user | UserB |
-      | Page UserB_07 | UserB's page 07 | user | UserB |
-      | Page GroupA_01 | Group page 01 | group | GroupA |
-      | Page GroupA_02 | Group page 02 | group | GroupA |
-      | Page GroupA_03 | Group page 03 | group | GroupA |
-      | Page GroupA_04 | Group page 04 | group | GroupA |
-      | Page GroupA_05 | Group page 05 | group | GroupA |
-      | Page GroupA_06 | Group page 06 | group | GroupA |
-      | Page GroupA_07 | Group page 07 | group | GroupA |
-      | Page GroupA_08 | Group page 08 | group | GroupA |
-      #to test shared/submitted views
-      | Page UserC_01 | Page 01 | user | UserC |
-      | Page UserC_02 | Page 02 | user | UserC |
-      | Page UserC_03 | Page 03 | user | UserC |
-      | Page UserC_04 | Page 04 | user | UserC |
-      | Page UserC_05 | Page 05 | user | UserC |
-      | Page UserC_06 | Page 06 | user | UserC |
-      | Page UserC_07 | Page 07 | user | UserC |
-      | Page UserC_08 | Page 08 | user | UserC |
-      | Page UserC_09 | Page 09 | user | UserC |
-      | Page UserC_10 | Page 10 | user | UserC |
-      | Page UserC_11 | Page 11 | user | UserC |
-      | Page UserC_12 | Page 12 | user | UserC |
-      | Page UserC_13 | Page 13 | user | UserC |
-      | Page UserC_14 | Page 14 | user | UserC |
-      | Page UserC_15 | Page 15 | user | UserC |
-      | Page UserC_16 | Page 16 | user | UserC |
+     | title | description | ownertype | ownername |
+     | Page UserA_01 | Page 01 | user | UserA |
+     | Page UserA_02 | Page 02 | user | UserA |
+     | Page UserA_03 | Page 03 | user | UserA |
+     | Page UserA_04 | Page 04 | user | UserA |
+     | Page UserA_05 | Page 05 | user | UserA |
+     | Page UserA_06 | Page 06 | user | UserA |
+     | Page UserA_07 | Page 07 | user | UserA |
+     | Page UserA_08 | Page 08 | user | UserA |
+     | Page UserA_09 | Page 09 | user | UserA |
+     | Page UserA_10 | Page 10 | user | UserA |
+     | Page UserA_11 | Page 11 | user | UserA |
+     | Page UserA_12 | Page 12 | user | UserA |
+     | Page UserB_01 | UserB's page 01 | user | UserB |
+     | Page UserB_02 | UserB's page 02 | user | UserB |
+     | Page UserB_03 | UserB's page 03 | user | UserB |
+     | Page UserB_04 | UserB's page 04 | user | UserB |
+     | Page UserB_05 | UserB's page 05 | user | UserB |
+     | Page UserB_06 | UserB's page 06 | user | UserB |
+     | Page UserB_07 | UserB's page 07 | user | UserB |
+     | Page GroupA_01 | Group page 01 | group | GroupA |
+     | Page GroupA_02 | Group page 02 | group | GroupA |
+     | Page GroupA_03 | Group page 03 | group | GroupA |
+     | Page GroupA_04 | Group page 04 | group | GroupA |
+     | Page GroupA_05 | Group page 05 | group | GroupA |
+     | Page GroupA_06 | Group page 06 | group | GroupA |
+     | Page GroupA_07 | Group page 07 | group | GroupA |
+     | Page GroupA_08 | Group page 08 | group | GroupA |
+    # To test shared/submitted views
+     | Page UserC_01 | Page 01 | user | UserC |
+     | Page UserC_02 | Page 02 | user | UserC |
+     | Page UserC_03 | Page 03 | user | UserC |
+     | Page UserC_04 | Page 04 | user | UserC |
+     | Page UserC_05 | Page 05 | user | UserC |
+     | Page UserC_06 | Page 06 | user | UserC |
+     | Page UserC_07 | Page 07 | user | UserC |
+     | Page UserC_08 | Page 08 | user | UserC |
+     | Page UserC_09 | Page 09 | user | UserC |
+     | Page UserC_10 | Page 10 | user | UserC |
+     | Page UserC_11 | Page 11 | user | UserC |
+     | Page UserC_12 | Page 12 | user | UserC |
+     | Page UserC_13 | Page 13 | user | UserC |
+     | Page UserC_14 | Page 14 | user | UserC |
+     | Page UserC_15 | Page 15 | user | UserC |
+     | Page UserC_16 | Page 16 | user | UserC |
+
     And the following "collections" exist:
-      | title | description | ownertype | ownername | pages |
-      | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_06, Page UserA_12 |
-      | Collection UserA_02 | Collection 02 | user | UserA | Page UserA_07 |
-      | Collection UserA_03 | Collection 03 | user | UserA | Page UserA_08 |
-      | Collection UserA_04 | Collection 04 | user | UserA | Page UserA_09 |
-      | Collection UserA_05 | Collection 05 | user | UserA | Page UserA_10 |
-      | Collection UserA_06 | Collection 06 | user | UserA | Page UserA_11 |
-      #to test shared/submitted views
-      | Collection UserC_01 | Collection 01 | user | UserC | Page UserC_05 |
-      | Collection UserC_02 | Collection 02 | user | UserC | Page UserC_06 |
-      | Collection UserC_03 | Collection 03 | user | UserC | Page UserC_07 |
-      | Collection UserC_04 | Collection 04 | user | UserC | Page UserC_08 |
-      | Collection UserC_05 | Collection 05 | user | UserC | Page UserC_13 |
-      | Collection UserC_06 | Collection 06 | user | UserC | Page UserC_14 |
-      | Collection UserC_07 | Collection 07 | user | UserC | Page UserC_15 |
-      | Collection UserC_08 | Collection 08 | user | UserC | Page UserC_16 |
+     | title | description | ownertype | ownername | pages |
+     | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_06, Page UserA_12 |
+     | Collection UserA_02 | Collection 02 | user | UserA | Page UserA_07 |
+     | Collection UserA_03 | Collection 03 | user | UserA | Page UserA_08 |
+     | Collection UserA_04 | Collection 04 | user | UserA | Page UserA_09 |
+     | Collection UserA_05 | Collection 05 | user | UserA | Page UserA_10 |
+     | Collection UserA_06 | Collection 06 | user | UserA | Page UserA_11 |
+    # To test shared/submitted views
+     | Collection UserC_01 | Collection 01 | user | UserC | Page UserC_05 |
+     | Collection UserC_02 | Collection 02 | user | UserC | Page UserC_06 |
+     | Collection UserC_03 | Collection 03 | user | UserC | Page UserC_07 |
+     | Collection UserC_04 | Collection 04 | user | UserC | Page UserC_08 |
+     | Collection UserC_05 | Collection 05 | user | UserC | Page UserC_13 |
+     | Collection UserC_06 | Collection 06 | user | UserC | Page UserC_14 |
+     | Collection UserC_07 | Collection 07 | user | UserC | Page UserC_15 |
+     | Collection UserC_08 | Collection 08 | user | UserC | Page UserC_16 |
 
 Scenario: The list of group pages, shared/submitted pages and collections should
 be displayed page by page and sorted by "page title (A-Z)" or "most recently updated".
