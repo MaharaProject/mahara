@@ -154,6 +154,7 @@ class Collection {
         delete_records('collection_view','collection',$this->id);
         delete_records('collection_tag','collection',$this->id);
         delete_records('collection','id',$this->id);
+        delete_records('existingcopy', 'collection', $this->id);
 
         // Secret url records belong to the collection, so remove them from the view.
         // @todo: add user message to whatever calls this.
@@ -243,6 +244,8 @@ class Collection {
      * @param int $userid     The user who has issued the command to create the
      *                        collection.
      * @param int $checkaccess Whether to check that the user can see the collection before copying it
+     * @param boolean $titlefromtemplate  Title of new collection or view will be exactly copied from the template
+     *
      * @return array A list consisting of the new collection, the template collection and
      *               information about the copy - i.e. how many blocks and
      *               artefacts were copied

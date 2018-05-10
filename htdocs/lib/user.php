@@ -1585,6 +1585,7 @@ function delete_user($userid) {
     delete_records('usr_login_data', 'usr', $userid);
     delete_records('usr_pendingdeletion', 'usr', $userid); // just in case
     delete_records('usr_agreement', 'usr', $userid);
+    delete_records('existingcopy', 'usr', $userid);
 
     if (is_plugin_active('framework', 'module')) {
         delete_records('framework_assessment_feedback', 'usr', $userid);

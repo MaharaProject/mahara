@@ -135,7 +135,7 @@ if ($group && in_array($USER->get('id'), $admintutorids, true)) {
             'type'         => 'switchbox',
             'title'        => get_string('existinggroupmembercopy', 'view'),
             'description'  => get_string('existinggroupmembercopydesc1', 'view'),
-            'defaultvalue' => $view->get('existinggroupmembercopy'),
+            'defaultvalue' => 0,
     )));
 }
 
@@ -431,7 +431,7 @@ function accessurl_submit(Pieform $form, $values) {
 
         // Add functionality here which copies the page into existing
         // group members pages.
-        if ($viewconfig['existinggroupmembercopy'] && !$view->get('existinggroupmembercopy')) {
+        if ($viewconfig['existinggroupmembercopy']) {
             $groupmembers = group_get_member_ids($group, array('member'));
             $key = 0;
             $total = count($groupmembers);

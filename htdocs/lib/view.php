@@ -63,7 +63,6 @@ class View {
     private $urlid;
     private $skin;
     private $anonymise = 0;
-    private $existinggroupmembercopy = 0;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -884,6 +883,7 @@ class View {
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('view_visit','view',$this->id);
+        delete_records('existingcopy', 'view', $this->id);
         $eventdata = array('id' => $this->id, 'eventfor' => 'view');
         if ($collection = $this->get_collection()) {
             $eventdata['collection'] = $collection->get('id');
@@ -1057,9 +1057,6 @@ class View {
             }
             if (isset($config['copynewgroups'])) {
                 $v->set('copynewgroups', $config['copynewgroups']);
-            }
-            if (isset($config['existinggroupmembercopy'])) {
-                $v->set('existinggroupmembercopy', $config['existinggroupmembercopy']);
             }
             $v->commit();
         }

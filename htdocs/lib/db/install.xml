@@ -806,7 +806,6 @@
                 <FIELD NAME="locked" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="urlid" TYPE="char" LENGTH="100" NOTNULL="false" />
                 <FIELD NAME="anonymise" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="existinggroupmembercopy" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -1141,6 +1140,21 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="collection,tag" />
                 <KEY NAME="collectionfk" TYPE="foreign" FIELDS="collection" REFTABLE="collection" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="existingcopy">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+                <KEY NAME="collectionfk" TYPE="foreign" FIELDS="collection" REFTABLE="collection" REFFIELDS="id" />
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="iframe_source_icon">
