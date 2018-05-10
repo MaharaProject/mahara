@@ -2991,6 +2991,10 @@ function can_view_view($view, $user_id=null) {
             if ($publicviews) {
                 return true;
             }
+            else if ($view->get('type') == 'grouphomepage') {
+                // If the group is public then the homepage should be available
+                return true;
+            }
             else if ($publicprofiles && $view->get('type') == 'profile') {
                 return true;
             }
