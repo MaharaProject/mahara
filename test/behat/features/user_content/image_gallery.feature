@@ -19,6 +19,9 @@ Scenario:
   And I attach the file "Image1.jpg" to "File"
   And I attach the file "Image2.png" to "File"
   And I attach the file "Image3.png" to "File"
+  # check that folder size is displayed after uploading 3 images
+  And I reload the page
+  And I should see "1.5M" in the "Folder1" row
   # Creating folder 1
   Given I choose "Pages and collections" in "Portfolio" from main menu
   And I click on "Edit" in "Page UserA_01" panel menu
