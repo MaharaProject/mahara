@@ -37,8 +37,8 @@
 .highlight {
     border-radius: 4px;
     width: 100%;
-    background-color: $panel-warning-heading-bg;
-    border: 2px dashed scale-color($panel-warning-border, $lightness: -9.50%);
+    background-color: $card-warning-heading-bg;
+    border: 2px dashed scale-color( $card-warning-border, $lightness: -9.50%);
 }
 
 // Extending dropzone-previews for adding artefact to a page

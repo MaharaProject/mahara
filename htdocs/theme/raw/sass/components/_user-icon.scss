@@ -1,6 +1,6 @@
 .user-icon {
     border-radius: 3px;
-    background-color: $panel-bg;
+    background-color: $card-bg;
     padding: 5px;
     display: table;
     border: 1px solid $thumbnail-border;
@@ -82,13 +82,13 @@
     padding-left: 53px;
 }
 
-.panel-heading {
+.card-heading {
     a.has-user-icon , a.has-user-icon.collapsed {
         padding-left:65px; //make room for user image
     }
 }
 
-.panel-body {
+.card-body {
     .with-user-icon-lg {
         padding-right: 67px;
     }

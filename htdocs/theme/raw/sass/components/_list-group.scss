@@ -1,6 +1,6 @@
 // // modifications for list elements such a list of pages, collections
 
-// Left panel
+// Left card
 .list-group {
     margin-bottom: 0;
     a {
@@ -17,11 +17,11 @@
         }
 
     }
-    .panel &,
-    .panel-body & {
+    .card &,
+    .card-body & {
         margin-bottom: 0;
     }
-    .user-panel & {
+    .user-card & {
         min-height: 41px;
     }
 
@@ -31,7 +31,7 @@
             padding: 3px 15px;
         }
         small {
-            // @extend .text-midtone; //replace
+            @extend .text-midtone;
         }
     }
     &.list-group-unbordered {
@@ -110,7 +110,7 @@ h4.list-group-item-heading {
 .list-group-item-link {
     padding: 0;
     a {
-        // @extend .text-default; //replace
+        @extend .text-default;
         font-size: $font-size-small;
         display: block;
         padding: 10px 15px;
@@ -159,7 +159,7 @@ h4.list-group-item-heading {
         @extend .list-group-item-warning;
     }
     &.published {
-        background: scale-color($panel-default-heading-bg, $lightness: 50%);
+        background: scale-color($card-default-heading-bg, $lightness: 50%);
     }
     &.flush {
         padding: 10px 0;
@@ -172,7 +172,7 @@ h4.list-group-item-heading {
         @media (min-width: $screen-sm-min) {
             float: left;
         }
-        .panel & {
+        .card & {
             float: none;
         }
     }
@@ -238,8 +238,8 @@ h4.list-group-item-heading {
     margin-top: 5px;
 }
 
-// Modifiy for list-groups in panels
-.panel > .block {
+// Modifiy for list-groups in cards
+.card > .block {
     > .list-group {
         margin-bottom: 0;
     }
@@ -269,7 +269,7 @@ h4.list-group-item-heading {
     }
 }
 
-.panel-heading + .block > .list-group .list-group-item:first-child {
+.card-heading + .block > .list-group .list-group-item:first-child {
     border-top-width: 0;
 }
 

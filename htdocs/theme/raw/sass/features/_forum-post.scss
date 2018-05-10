@@ -42,7 +42,7 @@
     .collapsible a {
         &:focus,
         &:hover {
-            background: scale-color($panel-default-heading-bg, $lightness: -1.40%) !important;
+            background: scale-color($card-default-heading-bg, $lightness: -1.40%) !important;
         }
     }
 }

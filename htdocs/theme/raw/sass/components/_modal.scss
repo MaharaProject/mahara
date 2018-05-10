@@ -18,7 +18,7 @@ $width-sm: 90%;
     @extend .icon;
     @extend .icon-spinner;
     @extend .icon-3x;
-    // @extend .text-watermark; //replace
+    @extend .text-watermark;
     &::before {
         @extend .icon-pulse;
     }
@@ -88,8 +88,8 @@ $width-sm: 90%;
 }
 
 .modal-header,
-.mce-panel .mce-window-head {
-    background: $panel-default-heading-bg;
+.mce-card .mce-window-head {
+    background: $card-default-heading-bg;
     padding: 10px 15px;
     h4, .mce-title {
         font-family: $font-family-base;

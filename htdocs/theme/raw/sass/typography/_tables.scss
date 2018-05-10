@@ -140,7 +140,7 @@ td.tiny {
             }
         }
         &:hover {
-            background: scale-color($table-bg-active, $lightness: 60%);
+            background: scale-color($table-bg-hover, $lightness: 60%);
 
             cursor: pointer;
             .filename {

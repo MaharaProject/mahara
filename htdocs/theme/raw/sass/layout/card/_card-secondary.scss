@@ -1,0 +1,73 @@
+// card-secondary is the style used for the user-editable cards used across Mahara
+
+.card-secondary {
+    &.card {
+        @include box-shadow(none);
+    }
+    .admin & {
+        border-color: $card-default-border;
+    }
+    > .card-heading {
+        font-family: $font-family-serif;
+    }
+    &.blockinstance.card {
+        background-color: transparent;
+        .card-heading {
+            background-color: $card-default-heading-bg;
+        }
+    }
+    > .card-heading, .card-heading-nested {
+        border-bottom: 2px solid $card-default-border;
+        padding-left: 8px;
+        padding-right: 8px;
+
+        // In page builder we can choose to not have a heading,
+        // but we still need a dragable object.
+        // Use a placeholder for visual help
+        // will appear with the no-heading class in view mode
+        &.card-heading-placeholder {
+            border: 1px solid darken($gray-lighter, 5%);
+            border-style: dashed;
+            background-color: $card-default-heading-bg;
+            .blockinstance-header {
+                opacity:0.6;
+            }
+        }
+    }
+    &.card-warning {
+         > .card-heading, .card-heading-nested {
+            border-left: 4px solid $card-secondary-border;
+            background-color: $card-warning-heading-bg;
+            border-bottom: 1px solid $card-warning-border;
+        }
+    }
+    & .card-warning .card-body {
+            background-color: $card-warning-heading-bg;
+    }
+    .card-heading-plain {
+        border: 1px solid darken($gray-lighter, 5%);
+    }
+    .list-group .list-group-item {
+        border-left: 0;
+        border-right: 0;
+        &:first-child {
+            border-top:0;
+        }
+    }
+    > .card-body,
+    > .block > .card-body {
+        padding: 15px 8px;
+        &.flush {
+            padding: 15px 0 0 0;
+        }
+    }
+    // If there is no heading we don't want padding on the card-body
+    > .no-heading {
+        > .card-body {
+            padding: 0;
+        }
+        .has-attachment {
+            margin: 0;
+        }
+    }
+}

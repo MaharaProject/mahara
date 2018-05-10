@@ -29,7 +29,7 @@ select {
 
 label,
 .pseudolabel {
-    @extend .control-label;
+    // @extend .control-label;
     max-width: 100%;
     padding-right: 10px;
     font-weight: normal;

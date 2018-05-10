@@ -135,8 +135,8 @@
     }
 }
 
-// Specific panel-secondary styling for the edit page layout
-.panel-secondary.blockinstance > .panel-heading > .blockinstance-header {
+// Specific card-secondary styling for the edit page layout
+.card-secondary.blockinstance > .card-heading > .blockinstance-header {
     display: block;
     padding-left: 10px;
     padding-right: 80px;
@@ -206,7 +206,7 @@
     border-bottom: 0 none;
 }
 
-// Login panel
+// Login card
 .login-externallink {
     display: inline-block;
 }
@@ -269,7 +269,7 @@
 }
 .thumbnail {
     margin: 0 15px 0 0;
-    .panel-body & {
+    .card-body & {
         margin-bottom: 10px;
     }
 }
@@ -354,7 +354,7 @@
     }
 }
 
-.panel-secondary > .panel-heading {
+.card-secondary > .card-heading {
     font-size: 18px;
 }
 
@@ -428,7 +428,7 @@
 
 // Remove the link colour from a comment that has an attachement
 @media (min-width: 992px) {
-    .viewfooter .comment-item .comment-attachment .panel.collapsible h4 a.collapsed {
+    .viewfooter .comment-item .comment-attachment .card.collapsible h4 a.collapsed {
         color: $text-color;
     }
 }
@@ -573,7 +573,7 @@
 }
 
 // Used to remove the second border around the legal information
-#agreetoprivacy .panel {
+#agreetoprivacy .card {
     border: 0;
 }
 

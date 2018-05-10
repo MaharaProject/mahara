@@ -5,7 +5,7 @@
 }
 
 .drag-default-button:not(.ui-draggable-dragging) {
-    border-left: none; // Don't need side borders because the elements are inside panel
+    border-left: none; // Don't need side borders because the elements are inside card
     border-right: none;
 }
 
@@ -66,7 +66,7 @@
 }
 
 .icon-drag-current {
-    border: 1px dashed scale-color($panel-default-border, $lightness: -6%);
+    border: 1px dashed scale-color($card-default-border, $lightness: -6%);
     min-width: 200px;
 }
 
@@ -79,13 +79,13 @@
 .ui-sortable-helper .blockinstance-controls {
     display: none;
 }
-.ui-sortable-helper.panel-secondary.blockinstance > .panel-heading > .blockinstance-header {
+.ui-sortable-helper.card-secondary.blockinstance > .card-heading > .blockinstance-header {
     padding-right: 0;
 }
 
 // Droppable area background indicator
 .block-drop-on {
-    background: scale-color($panel-default-heading-bg, $lightness: -5.25%);
+    background: scale-color($card-default-heading-bg, $lightness: -5.25%);
 }
 
 .drag-handle,

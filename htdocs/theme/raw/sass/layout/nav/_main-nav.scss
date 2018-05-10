@@ -6,7 +6,7 @@
     position:relative;
     border: 0;
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         position:fixed;
     }
 }
@@ -29,7 +29,7 @@
         clear: both;
         max-height: none;
 
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             position: absolute;
             right: 15px;
             top: $navbar-height - 2px;
@@ -52,7 +52,7 @@
     .navbar-nav {
         margin: 0;
 
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             width: 300px;
         }
 
@@ -63,7 +63,7 @@
 
         // Styles for all links inside navbar-nav
         a  {
-            @include text-overflow;
+            // @include text-overflow;
             display: block;
             width: 100%;
         }
@@ -81,7 +81,7 @@
                 text-decoration:none;
                 color: $navbar-default-link-hover-color;
             }
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 border: 1px solid $navbar-default-border;
             }
             .icon {

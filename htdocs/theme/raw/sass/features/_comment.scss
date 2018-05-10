@@ -29,8 +29,8 @@
                 float: left;
                 width: 32%;
 
-                .panel {
-                    // @include panel-as-link(); // replace
+                .card {
+                    // @include card-as-link(); // replace
                     width: 100%;
                 }
                 .collapsed {
@@ -72,7 +72,7 @@
     }
     .collapse & {
         &:first-child {
-            // To override panel listgroup no top border on first-child
+            // To override card listgroup no top border on first-child
             border-top: 1px solid $list-group-border !important;
             border-bottom: 0;
         }

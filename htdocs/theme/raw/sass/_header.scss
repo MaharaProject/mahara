@@ -61,7 +61,7 @@
     .navbar-main.navbar {
         min-height: auto;
         @include media-breakpoint-up(md) {
-            // height: $navbar-height; // CHANGE this value
+            height: $navbar-height; // CHANGE this value
         }
     }
 }

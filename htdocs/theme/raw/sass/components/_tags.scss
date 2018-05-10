@@ -41,7 +41,7 @@
 }
 .tag-filters {
     @extend .clearfix;
-    background: scale-color($panel-default-heading-bg, $lightness: -1.40%);
+    background: scale-color($card-default-heading-bg, $lightness: -1.40%);
     padding: 10px 15px;
 }
 
