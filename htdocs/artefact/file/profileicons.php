@@ -132,18 +132,6 @@ var table = new TableRenderer(
 );
 table.updateOnLoad();
 table.emptycontent = {$strnoimagesfound};
-table.updatecallback = function(response) {
-    var defaultIcon = filter(function (i) { return i.isdefault == 't'; }, response.data);
-
-    if (defaultIcon.length) {
-        defaultIcon = defaultIcon[0].id;
-        jQuery('#column-right img').each(function() {
-          if (jQuery(this).prop('src').match(/thumb\.php\?type=profileiconbyid/)) {
-              jQuery(this).prop('src',  jQuery(this).prop('src').replace(/id=[0-9]+/, 'id=' + String(defaultIcon)));
-          }
-        });
-    }
-};
 
 table.postupdatecallback = function(response) {
     profileiconschecker.init();
