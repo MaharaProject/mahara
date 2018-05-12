@@ -120,14 +120,8 @@ class upload_manager {
         }
 
         if (get_config('viruschecking')) {
-            $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
-            if ($pathtoclam && file_exists($pathtoclam) && is_executable($pathtoclam)) {
-                if ($errormsg = mahara_clam_scan_file($file, $this->inputindex)) {
-                    return $errormsg;
-                }
-            }
-            else {
-                clam_mail_admins(get_string('clamlost', 'mahara', $pathtoclam));
+            if ($errormsg = mahara_clam_scan_file($file, $this->inputindex)) {
+                return $errormsg;
             }
         }
 

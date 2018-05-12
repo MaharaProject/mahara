@@ -61,28 +61,42 @@ if (!empty($folderid)) {
 
 // Read the archive information, throw an ArchiveException if error
 $zipinfo = $file->read_archive();
-
+$message = $error = false;
 if ($zipinfo) {
+    $badzipfile = false;
+    if (get_config('viruschecking')) {
+        // Need to double-check the contents of zip file for viruses in case file
+        // was uploaded before virus check turned on.
+        require_once('uploadmanager.php');
+        $path = $file->get_path();
+        if ($errormsg = mahara_clam_scan_file($path)) {
+            $badzipfile = true;
+            $file->delete();
+        }
+    }
+
     $quotaallowed = false;
-    if ($file->get('owner')) {
-        $quotaallowed = $USER->quota_allowed($zipinfo->totalsize);
+    if (!$badzipfile) {
+        if ($file->get('owner')) {
+            $quotaallowed = $USER->quota_allowed($zipinfo->totalsize);
+        }
+        else if ($file->get('group')) {
+            $quotaallowed = group_quota_allowed($file->get('group'), $zipinfo->totalsize);
+        }
+        else {
+            // no institution quotas yet
+            $quotaallowed = true;
+        }
     }
-    else if ($file->get('group')) {
-        $quotaallowed = group_quota_allowed($file->get('group'), $zipinfo->totalsize);
+
+    $goto = files_page($file);
+    if ($parent = $file->get('parent')) {
+        $goto .= (strpos($goto, '?') === false ? '?' : '&') . 'folder=' . $parent;
     }
-    else {
-        // no institution quotas yet
-        $quotaallowed = true;
-    }
-    $message = $quotaerror = false;
-    if ($quotaallowed) {
+
+    if ($quotaallowed && !$badzipfile) {
         $name = $file->unzip_directory_name();
         $message = get_string('fileswillbeextractedintofolder', 'artefact.file', $name['fullname']);
-
-        $goto = files_page($file);
-        if ($parent = $file->get('parent')) {
-            $goto .= (strpos($goto, '?') === false ? '?' : '&') . 'folder=' . $parent;
-        }
 
         $form = pieform(array(
             'name' => 'unzip_artefact',
@@ -100,9 +114,13 @@ if ($zipinfo) {
             ),
         ));
     }
+    else if ($badzipfile) {
+        $form = '<a class="btn btn-primary" href="' . $goto . '">' . get_string('back') . '</a>';
+        $error = get_string('viruszipfile', 'artefact.file');
+    }
     else {
-        $form = '';
-        $quotaerror = '<div class="error alert alert-danger">' . get_string('insufficientquotaforunzip', 'artefact.file') . "</div>";
+        $form = '<a class="btn btn-primary" href="' . $goto . '">' . get_string('back') . '</a>';
+        $error = get_string('insufficientquotaforunzip', 'artefact.file');
     }
 }
 
@@ -110,7 +128,7 @@ $smarty = smarty(array(), array(), array(), $smartyconfig);
 $smarty->assign('file', $file);
 $smarty->assign('zipinfo', $zipinfo);
 $smarty->assign('message', $message);
-$smarty->assign('quotaerror', $quotaerror);
+$smarty->assign('error', $error);
 $smarty->assign('form', $form);
 $smarty->display('artefact:file:extract.tpl');
 
