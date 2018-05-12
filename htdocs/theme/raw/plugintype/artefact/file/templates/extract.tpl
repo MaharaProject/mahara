@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-6">
             <p class="detail">
-                <strong>{str tag=Files section=artefact.file}:</strong> 
+                <strong>{str tag=Files section=artefact.file}:</strong>
                 {$zipinfo->files}
                 <br>
                 <strong>{str tag=Folders section=artefact.file}:</strong>
@@ -15,12 +15,14 @@
                 <strong>{str tag=spacerequired section=artefact.file}:</strong>
                 {$zipinfo->displaysize}
             </p>
-            {if $quotaerror}
-                {$quotaerror|safe}
+            {if $error}
+                <div class="error alert alert-danger">
+                {$error|safe}
+                </div>
             {else}
-            <div class="alert alert-info">
+                <div class="alert alert-info">
                 {$message}
-            </div>
+                </div>
             {/if}
             {$form|safe}
         </div>
