@@ -372,3 +372,4 @@ $string['progress_video'] = array(
     'Add %s videos',
 );
 $string['anytypeoffile'] = 'File (any type)';
+$string['viruszipfile'] = 'Clam AV has found a file that is infected with a virus. The compressed file has been quarantined and removed from your account.';

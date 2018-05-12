@@ -82,6 +82,14 @@ class PluginImportLeap extends PluginImport {
 
     public static function validate_transported_data(ImporterTransport $transport) {
         $importdata = $transport->files_info();
+        if (get_config('viruschecking')) {
+            // Need to check the contents of zip file for viruses in case file
+            require_once('uploadmanager.php');
+            $path = $importdata['importfile'];
+            if ($errormsg = mahara_clam_scan_file($path)) {
+                throw new ImportException($transport, $errormsg);
+            }
+        }
         if (!$file = self::find_file($importdata)) {
             throw new ImportException(null, 'Missing leap xml file');
         }
