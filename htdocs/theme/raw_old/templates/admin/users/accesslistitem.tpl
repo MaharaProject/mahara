@@ -1,4 +1,5 @@
 {if $item->access}
+    {strip}
     {foreach from=$item->access item=row name=ags}
         {if $row->accesstype == 'loggedin'}
             {str tag="registeredusers" section="view"}
@@ -25,4 +26,5 @@
         {if $row->secreturls}{str tag=secreturls section=view} ({$row->secreturls}){/if}
         {if !$dwoo.foreach.ags.last}, {/if}
     {/foreach}
+    {/strip}
 {/if}
