@@ -20,7 +20,7 @@ $cli = get_cli();
 $options = array();
 $options['dryrun'] = (object) array(
         'shortoptions' => array('d'),
-        'description' => get_string('cli_deleteinactiveusers_dryrun', 'admin'),
+        'description' => get_string('cli_param_dryrun', 'admin'),
         'required' => false,
         'defaultvalue' => true,
 );
@@ -73,7 +73,7 @@ if ($beforedate) {
         $beforedate = date('Y-m-d H:i:s', strtotime($beforedate));
     }
     else {
-        $cli->cli_exit(get_string('cli_deleteinactiveusers_baddate', 'admin', $beforedate), true);
+        $cli->cli_exit(get_string('cli_param_baddate', 'admin', $beforedate), true);
     }
 }
 
@@ -98,7 +98,7 @@ else {
 
 
 // Find all the users we need to deal with based on the params provided
-$selectsql = "SELECT u.id, u.username FROM {usr} u";
+$selectsql = "SELECT u.id, u.username, u.lastlogin FROM {usr} u";
 $joinsql = "";
 $wheresql = " WHERE u.id != 0";
 $values = array();
@@ -161,6 +161,20 @@ if ($records = get_records_sql_array($selectsql . $joinsql . $wheresql, $values)
             }
         }
         $cli->cli_print("--- " . date('Y-m-d H:i:s', time()) . " ---");
+    }
+    else {
+        $verbose = $cli->get_cli_setting_value('verbose');
+        if ($verbose) {
+            $file_content = generate_csv($records, array('id','username','lastlogin'));
+            $filename = 'delete-inactive-users.csv';
+            $dir = get_config('dataroot') . 'temp/';
+            if (check_dir_exists($dir) && file_put_contents($dir . $filename, $file_content)) {
+                $cli->cli_print("Saved CSV file to " . $dir . $filename);
+            }
+            else {
+                $cli->cli_print($file_content);
+            }
+        }
     }
 }
 else {

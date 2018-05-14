@@ -207,6 +207,13 @@ class cli {
         $this->shortoptions = $shortoption;
     }
 
+    public function get_cli_setting_value($setting) {
+        if (isset($this->settings->options[$setting]) && isset($this->arguments[$setting])) {
+            return $this->arguments[$setting];
+        }
+        return null;
+    }
+
     /**
      * Compile the list of CLI arguments
      *
