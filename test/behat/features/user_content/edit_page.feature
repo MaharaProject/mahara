@@ -67,6 +67,7 @@ Scenario: Clicking ID's (Bug 1428456)
  # Checking if we can change page layout
  When I follow "Edit layout"
  And I scroll to the id "createcustomlayoutpane"
+ And I expand all fieldsets
  And I press "Add a row"
  And I select "25 - 50 - 25" from "selectcollayoutrow_2"
  And I press "Add a row"
