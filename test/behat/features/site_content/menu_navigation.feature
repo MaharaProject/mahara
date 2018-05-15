@@ -55,7 +55,6 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  And I should see "Institution membership" in the "Groups sub-menu" property
  And I should see "Topics" in the "Groups sub-menu" property
 
-
 Scenario: Checking menu items are available as site staff (Bug 1467368)
  Given I log in as "UserB" with password "Kupuh1pa!"
  Then I should not see "Administration" in the "Main menu" property
@@ -64,7 +63,6 @@ Scenario: Checking menu items are available as site staff (Bug 1467368)
  And I follow "User search"
  And I click on "Show administration menu"
  Then I follow "Reports"
-
 
 Scenario: Checking menu items are available as Admin User (Bug 1467368)
  Given I log in as "admin" with password "Kupuh1pa!"
@@ -181,3 +179,15 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Pending registrations" in the "Institutions sub-menu" property
  # Checking Reports menu
  And I should see "Reports"
+ #Checking the user menu navigation headings
+ Scenario: Checking User menu items
+ Given I log in as "UserA" with password "Kupuh1pa!"
+ And I click on the "User menu" property
+ And I should see "Settings"
+ And I should see "unread"
+ And I should see "Settings"
+ When I press "Show menu for Settings"
+ Then I should see "Settings"
+ And I should see "Legal"
+ And I should see "Notifications"
+ And I should see "Logout"
