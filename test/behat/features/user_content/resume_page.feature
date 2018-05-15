@@ -18,6 +18,16 @@ Background:
      | title | description | ownertype | ownername |
      | Page UserA_01 | Page 01| user | UserA |
 
+Scenario: Creating a Cover letter
+    Given I log in as "UserA" with password "Kupuh1pa!"
+    When I choose "Résumé" in "Content" from main menu
+    And I follow "Introduction"
+    And I click on "Edit"
+    And I fill in "A whole bunch of Texty text" in first editor
+    And I click on "Save"
+    Then I should see "Saved successfully"
+    And I should see "A whole bunch of Texty text"
+
 Scenario: Editing admin resume page (Bug 1426983)
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
