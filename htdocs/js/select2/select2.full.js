@@ -4231,9 +4231,8 @@ S2.define('select2/dropdown/attachBody',[
     };
 
     // Fix positioning with static parents
-    if (this.$dropdownParent[0].style.position !== 'static') {
+    if (this.$dropdownParent[0].style.position !== 'static' && !this.$dropdownParent.is('body')) {
       var parentOffset = this.$dropdownParent.offset();
-
       css.top -= parentOffset.top;
       css.left -= parentOffset.left;
     }
