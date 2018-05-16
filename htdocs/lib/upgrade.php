@@ -100,7 +100,9 @@ function check_upgrades($name=null) {
                                             . "Please make sure you have the correct Mahara files in place.");
             }
             else {
-                define('SITEOUTOFSYNC', 'core');
+                if (!defined('SITEOUTOFSYNC')) {
+                    define('SITEOUTOFSYNC', 'core');
+                }
             }
         }
         else {
@@ -322,7 +324,9 @@ function check_upgrades($name=null) {
         }
     }
     if (!empty($outofsyncplugins)) {
-        define('SITEOUTOFSYNC', implode(', ', $outofsyncplugins));
+        if (!defined('SITEOUTOFSYNC')) {
+            define('SITEOUTOFSYNC', implode(', ', $outofsyncplugins));
+        }
     }
     // if we've just asked for one, don't return an array...
     if (!empty($name)) {
