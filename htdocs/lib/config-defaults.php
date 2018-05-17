@@ -618,14 +618,6 @@ $cfg->usersuniquebyusername = false;
 $cfg->dbprefix = '';
 
 /**
- * @global string $cfg->dbtimezone Sets the timezone for your database connection. This is only necessary if your
- * database server has a different timezone than your web server (which is most likely to happen in cloud hosting).
- * Consult your database's manual for legal values.
- */
-// $cfg->dbtimezone = '+10:00';
-// $cfg->dbtimezone = 'Europe/Rome';
-
-/**
  * @global bool $cfg->publicsearchallowed Activates the display of the search box for logged-out users
  */
 $cfg->publicsearchallowed = false;

@@ -1546,6 +1546,9 @@ function site_warnings() {
     if ($tz_count == 0 || $tz_count == FALSE) {
         $warnings[] = get_string('timezoneidentifierunusable', 'error');
     }
+    if (get_config('dbtimezone')) {
+        $warnings[] = get_string('updatesitetimezone', 'error');
+    }
 
     // Check for low security (i.e. not random enough) session IDs
     if (version_compare(PHP_VERSION, '7.1.0') < 0 && (int)ini_get('session.entropy_length') < 16) {

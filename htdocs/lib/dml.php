@@ -1544,12 +1544,45 @@ function configure_dbconnection() {
 
     $db->SetTransactionMode('READ COMMITTED');
 
-    if (!empty($CFG->dbtimezone)) {
-        if (is_postgres()) {
-            $db->_Execute("SET SESSION TIME ZONE '{$CFG->dbtimezone}'");
+    // Bug 1771362: Set timezone for PHP and the DB to a user selected timezone or the country
+    // selected in site settings (if no timezone selected) to avoid innaccurate times being shown.
+    try {
+        $timezoners = $db->_Execute("SELECT value FROM " . db_table_name('config') . " WHERE field = 'timezone' LIMIT 1");
+        if (!$timezoners->fields || $timezoners->fields['value'] == "") {
+            $countryrs = $db->_Execute("SELECT value FROM " . db_table_name('config') . " WHERE field = 'country' LIMIT 1");
+            if ($countryrs->fields && $countryrs->fields['value'] != "") {
+                // Get the two letter country identifier.
+                $country = $countryrs->fields['value'];
+                // Country ID has to be uppercase or this won't work.
+                $timezone = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, strtoupper($country))[0];
+                if (!$timezoners->fields) {
+                    $db->_Execute("INSERT INTO " . db_table_name('config') . " (field, value) VALUES ('timezone', '" . $timezone . "')");
+                }
+                else {
+                    $db->_Execute("UPDATE " . db_table_name('config') . " SET value = '" . $timezone . "' WHERE field = 'timezone'");
+                }
+            }
         }
-        if (is_mysql()) {
-            $db->_Execute("SET time_zone='{$CFG->dbtimezone}'");
+        else {
+            $timezone = $timezoners->fields['value'];
+        }
+
+        if (!empty($timezone)) {
+            date_default_timezone_set($timezone); // For PHP.
+            $timediff = date('P'); // MySQL doesn't always have the timezone table populated
+                                   // so we set it using the offset from UTC in hours.
+            if (is_postgres()) {
+                $db->_Execute("SET SESSION TIME ZONE '{$timezone}'");
+            }
+            if (is_mysql() && $timediff) {
+                $db->_Execute("SET time_zone='{$timediff}'");
+            }
+        }
+    }
+    catch (Exception $e) {
+        // Site probably not installed yet, but throw exception if it is.
+        if (get_config('installed')) {
+          throw new SQLException('Unable to set timezone for connection: ' . $e);
         }
     }
 }
