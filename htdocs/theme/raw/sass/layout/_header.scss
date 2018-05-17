@@ -1,6 +1,6 @@
 .header {
     top: 0;
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         top: 30px;
     }
 
@@ -50,7 +50,7 @@
 
     .admin-title {
         @extend .sr-only;
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             position: static;
             width: auto;
             height: auto;
@@ -60,7 +60,7 @@
 
     .navbar-main.navbar {
         min-height: auto;
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             height: $navbar-height; // CHANGE this value
         }
     }

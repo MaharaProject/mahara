@@ -25,12 +25,12 @@
     }
     .admin-user-search .dropdown-group{
         .picker {
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 width: 300px;
             }
         }
         .dropdown-group .with-dropdown {
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 width: 282px;
             }
         }

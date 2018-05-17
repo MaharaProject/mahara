@@ -20,19 +20,19 @@
 }
 
 .form-group {
-    border-bottom: 1px solid $list-group-border;
+    border-bottom: 1px solid $list-group-border-color;
     margin: 0;
     padding: 20px 0;
     position: relative;
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         &.input-pair {
             max-width: 48%;
             padding-top: 0;
             padding-bottom: 0;
         }
         &.input-pair ~ .input-pair {
-            border-left: 1px solid $list-group-border;
+            border-left: 1px solid $list-group-border-color;
             padding-left: 20px;
             margin-left: 15px;
             padding-top: 0;
@@ -137,7 +137,7 @@
     //used when adding email addresses to profiles (anywhere else?)
     .message {
         font-size: 0.9em;
-        color: $gray;
+        color: $gray-500;
     }
 
     .form-inline & {
@@ -272,13 +272,13 @@
      &.tags {
         .tag-wrapper {
             display: block;
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 display: inline-block;
             }
             input {
                 max-width: 85%;
                 display: inline-block;
-                @media (min-width: $screen-sm-min) {
+                @include media-breakpoint-up(md) {
                     max-width: 100%;
                 }
             }
@@ -289,7 +289,7 @@
         label {
             &:first-child {
                 display: block;
-                @media (min-width: $screen-sm-min) {
+                @include media-breakpoint-up(md) {
                     display: inline-block;
                 }
             }
@@ -309,7 +309,7 @@
             margin: 0;
         }
         &.htmldescription {
-            border-bottom: 1px solid $list-group-border;
+            border-bottom: 1px solid $list-group-border-color;
         }
     }
     &.double {
@@ -322,10 +322,10 @@
         select {
             max-width: 45%;
             display: inline-block;
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 width: 150px;
             }
-            @media (min-width: $screen-lg-min) {
+            @include media-breakpoint-up(xl) {
                 width: 150px;
             }
         }
@@ -340,10 +340,10 @@
         input[type=text],
         input[type=password],
         select {
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 width: 155px;
             }
-            @media (min-width: $screen-lg-min) {
+            @include media-breakpoint-up(xl) {
                 width: 150px;
             }
         }
@@ -380,7 +380,7 @@
                 &.customrowtitle {
                     width: 70px;
                     margin-top: 28px;
-                    @media (max-width: $screen-xs-max) {
+                    @include media-breakpoint-down(sm) {
                         width: 100%;
                         margin-top: 15px;
                     }
@@ -398,7 +398,7 @@
         }
     }
       h3 {
-        font-size: $font-size-large;
+        font-size: $font-size-lg;
         padding-bottom: 10px;
     }
 
@@ -406,7 +406,7 @@
     .form-control {
         display: inline-block;
         max-width: calc(100% - 30px);
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             width: 370px;
             .columns3 &,
             .form-inline & {
@@ -416,7 +416,7 @@
                 width: 100%;
             }
         }
-        @media (min-width: $screen-lg-min) {
+        @include media-breakpoint-up(xl) {
             width: 500px;
         }
     }
@@ -432,7 +432,7 @@
     }
 
     .modal .fieldset & {
-        border-bottom: 1px solid $list-group-border;;
+        border-bottom: 1px solid $list-group-border-color;;
     }
 
     &.wysiwyg {
@@ -445,14 +445,14 @@
         }
     }
     .mce-tinymce {
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             width: 420px;
             max-width: 100%;
             .columns3 & {
                 max-width: 100%;
             }
         }
-        @media (min-width: $screen-lg-min) {
+        @include media-breakpoint-up(xl) {
             width: 500px;
         }
     }
@@ -464,7 +464,7 @@
             display: inline-block;
         }
         .pseudolabel {
-            @media (max-width: $screen-sm-min - 1) {
+            @include media-breakpoint-down(md) {
                 display: block;
                 min-width: auto;
                 max-width: none;
@@ -473,7 +473,7 @@
         .modal-docked & {
             .pseudolabel,
             .radio-wrapper {
-                @media (max-width: $screen-md-min) {
+                @include media-breakpoint-down(lg) {
                     display: block;
                 }
             }
@@ -482,7 +482,7 @@
 
     .form-group.radio,
     .radio {
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             margin-top: 0;
         }
         input[type=radio] {
@@ -510,18 +510,18 @@
 
     .errmsg {
         @extend .align-with-input;
-        color: $brand-danger;
+        color: theme-color("danger");
         font-size: $font-size-base - 1;
         display: block;
         padding-top: 10px;
 
-        @media (min-width: $screen-md-min) {
+        @include media-breakpoint-up(lg) {
             margin-left: 265px;
         }
     }
 
     .description:not(.html) {
-        color: $gray-light;
+        color: $gray-300;
         font-style: italic;
         font-size: $font-size-base - 1;
         max-width: 90%;
@@ -545,7 +545,7 @@
         background-color: $gray-lighter;
     }
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         &.input-small {
             max-width: 100%;
             width: 25%;
@@ -556,12 +556,12 @@
     }
 
     &.top-line {
-        border-top: 1px solid $list-group-border;
+        border-top: 1px solid $list-group-border-color;
     }
 
     input[type=text].secondary-textbox {
         margin-top: 15px;
-        @media (min-width: $screen-lg-min) {
+        @include media-breakpoint-up(xl) {
             margin-left: 265px;
         }
     }
@@ -573,16 +573,16 @@
 
 // Style placeholder text
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color: $gray-light !important;
+    color: $gray-300 !important;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color: $gray-light !important;
+   color: $gray-300 !important;
    opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color: $gray-light !important;
+   color: $gray-300 !important;
    opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color: $gray-light !important;
+   color: $gray-300 !important;
 }

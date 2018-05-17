@@ -28,11 +28,11 @@
         .cell {
             min-width: 0;
             float: left;
-            background-color: $gray-lighter;
-            border: 1px solid scale-color($gray-lighter, $lightness: -5.5%);
+            background-color: $gray-100;
+            border: 1px solid scale-color($gray-300, $lightness: -5.5%);
             margin: 2% 2% 0 0;
             &.active {
-                background-color: scale-color($gray-lighter, $lightness: -10.5%);
+                background-color: scale-color($gray-300, $lightness: -10.5%);
             }
             input {
                 display: inline;

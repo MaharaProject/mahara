@@ -12,7 +12,7 @@
     min-width:0;
 }
 
-@mixin panel-as-link() {
+@mixin card-as-link() {
     border: 0;
     background: transparent;
     &.collapsible {
@@ -58,4 +58,33 @@
     appearance: $var;
     -webkit-appearance: $var;
     -moz-appearance: $var;
+}
+
+/*
+* BOOTSTRAP 3 MIXINS that Mahara uses
+*/
+
+@mixin text-overflow() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin transition-duration($transition-duration...) {
+  -webkit-transition-duration: $transition-duration;
+          transition-duration: $transition-duration;
+}
+
+@mixin box-sizing($boxmodel) {
+  -webkit-box-sizing: $boxmodel;
+     -moz-box-sizing: $boxmodel;
+          box-sizing: $boxmodel;
+}
+
+@mixin tab-focus() {
+  // Default
+  outline: thin dotted;
+  // WebKit
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
 }

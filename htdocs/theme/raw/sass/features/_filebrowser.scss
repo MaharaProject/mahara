@@ -1,12 +1,12 @@
 .fileupload {
     padding: 20px;
-    border: 1px solid $gray-lighter;
+    border: 1px solid $gray-100;
     background-color: $body-bg;
     .intro {
         font-weight: bold;
     }
     .description {
-        color: $gray-light;
+        color: $gray-300;
         font-size: $font-size-base - 1;
     }
     .title {
@@ -15,7 +15,7 @@
     }
 }
 
-.card-fake {
+.panel-fake {
     margin-bottom: 15px;
     .title {
         padding: 0;
@@ -51,16 +51,18 @@
     input, .picker {
         max-width: 200px;
     }
-    @media (min-width: $screen-md-min) and (max-width: $screen-lg-min) {
-        label {
-            min-width: 100%;
+    @include media-breakpoint-up(lg) {
+        @include media-breakpoint-down(xl) {
+            label {
+                min-width: 100%;
+            }
         }
     }
 }
 
 // reset padding and margin inside collapsible
 .filelist.table,
-.filelist-wrapper.card,
+.filelist-wrapper.panel,
 .filebrowser.form-group {
     margin-bottom: 0;
     padding: 0 !important // override form-group padding;
@@ -88,7 +90,7 @@
 }
 
 .fileedittablewrap {
-    background-color: $card-default-heading-bg;
+    background-color: $card-bg;
 }
 
 // file browser inside modal screen
@@ -125,7 +127,7 @@
 }
 
 .filelist-wrapper {
-    .card-heading {
+    .panel-heading {
         padding: 10px 0 10px 20px;
         margin-bottom: 10px;
     }

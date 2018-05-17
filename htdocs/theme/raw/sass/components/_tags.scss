@@ -18,7 +18,7 @@
     margin-top: 25px;
     .tagfreq.badge {
         color: inherit;
-        border: 1px solid $brand-primary;
+        border: 1px solid theme-color("primary");
         background-color: transparent;
     }
     .tag {
@@ -28,11 +28,11 @@
 .mytags .selected,
 .tag-results .selected {
     font-weight: bold;
-    color: $gray;
+    color: $gray-500;
     .badge {
         border: 1px solid transparent;
         color: #fff;
-        background-color: $gray;
+        background-color: $gray-500;
     }
 }
 .tag-results .btn-top-right {
@@ -41,7 +41,7 @@
 }
 .tag-filters {
     @extend .clearfix;
-    background: scale-color($card-default-heading-bg, $lightness: -1.40%);
+    background: scale-color($card-bg, $lightness: -1.40%);
     padding: 10px 15px;
 }
 

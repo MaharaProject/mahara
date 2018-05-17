@@ -7,18 +7,9 @@
  *
  * This file is licensed under the same terms as Mahara itself
  */
-
-// Import bootstrap files
-@import 'lib/bootstrap4/utilities/theme-variables';
-@import 'lib/bootstrap4/bootstrap';
-
-@import 'utilities/variables';
+@import "utilities/theme-variables"; // Import our theme variables
+@import "utilities/bootstrap-index"; // bootstrap scss dependecy file
 @import "utilities/bootstrap-variables";  // ...and our custom bootstrap variables file
+@import "utilities/custom-variables";  // ...and our custom variables file
 
-@import 'utilities/index';
-
-// // Import custom bootstrap files
-// @import 'buttons';
-// @import 'switch';
-// @import 'typography';
-// @import 'header';
+@import "utilities/index"; //include the index of our sass partials

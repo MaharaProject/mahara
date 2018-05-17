@@ -42,7 +42,7 @@ $columns: 8; //up to 8
         padding-right:0;
     }
 
-    @media (max-width: $screen-sm-min) {
+    @include media-breakpoint-down(md) {
         padding: 0 0 10px 0;
         &:first-child {
             max-width: 100%;
@@ -54,10 +54,10 @@ $columns: 8; //up to 8
 .column-layout {
     max-width: 98%;
     float: left;
-    @media (min-width: $screen-sm-min + 1) {
+    @include media-breakpoint-up(md) {
         margin-left: 2%;
     }
-    @media (max-width: $screen-sm-min) {
+    @include media-breakpoint-down(md) {
         max-width: 100%;
         width: 100% !important; // override inline style
     }
@@ -66,7 +66,7 @@ $columns: 8; //up to 8
 // Target all 3 col layouts with equal width
 .column-layout.columns3.col-width-33 {
     width: 31.3% !important; // override inline style with a more accurate width
-    @media (max-width: $screen-sm-min) {
+    @include media-breakpoint-down(md) {
         width: 100% !important; // override inline style
     }
 }
@@ -74,7 +74,7 @@ $columns: 8; //up to 8
 
 .row-content {
     clear: both;
-    @media (min-width: $screen-sm-min + 1) {
+    @include media-breakpoint-up(md) {
         margin-left: -2%;
     }
 }

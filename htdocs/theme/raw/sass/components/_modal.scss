@@ -88,8 +88,8 @@ $width-sm: 90%;
 }
 
 .modal-header,
-.mce-card .mce-window-head {
-    background: $card-default-heading-bg;
+.mce-panel .mce-window-head {
+    background: $card-bg;
     padding: 10px 15px;
     h4, .mce-title {
         font-family: $font-family-base;
@@ -143,7 +143,7 @@ $width-sm: 90%;
         .modal-dialog {
             @include transition(right 0.5s ease-in-out);
             right: -($width + 5);
-            @media (max-width: $screen-sm-min) {
+            @include media-breakpoint-down(md) {
                 right: -($width-sm + 5);
             }
         }
@@ -155,17 +155,17 @@ $width-sm: 90%;
         position: fixed;
         top: 0px;
         bottom: 0px;
-        @media (max-width: $screen-sm-min) {
+        @include media-breakpoint-down(md) {
             width: ($width-sm + 5);
         }
     }
 
     .modal-header {
-        background:  $brand-primary;
+        background:  theme-color("primary");
         padding: 10px 15px;
-        color: $modal-docked-header;
+        color: $modal-header-color;
          h4, a {
-            color: $modal-docked-header;
+            color: $modal-header-color;
         }
         &.modal-section {
             margin: 0 0 10px 0;
@@ -178,11 +178,11 @@ $width-sm: 90%;
             top: 1px;
             left: -29px;
             padding: 10px 7px 9px;
-            background: $modal-docked-header;
+            background: $modal-header-color;
             border: 1px solid $modal-header-border-color;
             border-right:0;
 
-            @media (max-width: $screen-sm-min) {
+            @include media-breakpoint-down(md) {
                 left:-22px;
                 padding: 10px 4px 9px 3px;
             }

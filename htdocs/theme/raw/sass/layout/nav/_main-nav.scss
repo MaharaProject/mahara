@@ -63,7 +63,7 @@
 
         // Styles for all links inside navbar-nav
         a  {
-            // @include text-overflow;
+            @include text-overflow;
             display: block;
             width: 100%;
         }

@@ -1,4 +1,4 @@
-.card {
+.panel {
     form {
         margin:0;
     }
@@ -8,7 +8,7 @@
     small {
         margin-top:5px;
         line-height: 1.5em;
-        color: $gray;
+        color: $gray-500;
         display: block;
     }
 
@@ -29,7 +29,7 @@
         }
 
         dd {
-            color: $gray;
+            color: $gray-500;
             line-height: 1.5em;
             font-size: 0.9em;
         }

@@ -7,7 +7,7 @@ $logged-in-height-mobile: 100px;
     margin-top: $grid-gutter-width;
 
     .remove-widgets {
-        font-size: $font-size-small - 2;
+        font-size: $font-size-sm - 2;
     }
     .hide-info{
         clear: both;
@@ -20,8 +20,8 @@ $logged-in-height-mobile: 100px;
         border-top: 3px solid $dashboard-widget-color;
         background-color: scale-color($dashboard-widget-bg, $lightness: -3.25%);
 
-        @include media-breakpoint-up(md) {
-            @include media-breakpoint-down(lg) {
+        @include media-breakpoint-up(md ) {
+            @include media-breakpoint-down(xl) {
                 height: $logged-in-height-mobile;
                 padding: 7px 15px;
             }
@@ -34,8 +34,8 @@ $logged-in-height-mobile: 100px;
 
         p {
             margin: 0;
-            font-size: $font-size-small;
-            color: $gray;
+            font-size: $font-size-sm;
+            color: $gray-500;
         }
         a {
             color: $link-color;
@@ -64,11 +64,11 @@ $logged-in-height-mobile: 100px;
 
     .widget-detail {
         padding: 10px 15px;
-        border: 1px solid $gray-lighter;
+        border: 1px solid $gray-100;
 
         p {
             margin-bottom: 0;
-            color: $text-color;
+            color: $theme-text-color;
         }
     }
 
@@ -76,7 +76,7 @@ $logged-in-height-mobile: 100px;
         position: relative;
         display: block;
         margin-bottom: 10px;
-        @include media-breakpoint-up(md) {
+        @include media-breakpoint-up(md ) {
             float:left;
             width: 10 / 3 * 10%;
             padding-left: 2%;
@@ -91,16 +91,16 @@ $logged-in-height-mobile: 100px;
         height: $logged-in-height;
         overflow:hidden;
 
-        @include media-breakpoint-up(md) {
+        @include media-breakpoint-down(md) {
             height: auto;
         }
 
         .widget-heading {
             @include clearfix;
-            border-radius: $border-radius-base;
+            border-radius: $border-radius;
 
-            @include media-breakpoint-up(md) {
-                border-radius: $border-radius-base $border-radius-base 0 0;
+            @include media-breakpoint-down(md) {
+                border-radius: $border-radius $border-radius 0 0;
             }
 
             h2 {
@@ -110,14 +110,14 @@ $logged-in-height-mobile: 100px;
 
             p {
                 margin: 0;
-                font-size: $font-size-small;
+                font-size: $font-size-sm;
                 color: $link-color;
             }
         }
 
         .widget-detail {
             @include transition(0.03s);
-            border-radius: $border-radius-base;
+            border-radius: $border-radius;
             opacity:0;
             margin-top: -$logged-in-height * 2;
             border: none;
@@ -130,14 +130,16 @@ $logged-in-height-mobile: 100px;
             margin-right: 15px;
             vertical-align: top;
             width:100%;
-            @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
-                margin-top: -$logged-in-height-mobile * 2;
-                height: $logged-in-height-mobile;
+            @include media-breakpoint-up(md) {
+                @include media-breakpoint-down(xl) {
+                    margin-top: -$logged-in-height-mobile * 2;
+                    height: $logged-in-height-mobile;
+                }
             }
-            @media (max-width: $screen-sm-min) {
-                border-radius: 0 0 $border-radius-base $border-radius-base;
+            @include media-breakpoint-down(md) {
+                border-radius: 0 0 $border-radius $border-radius;
                 margin-top: 0;
-                border: 1px solid $gray-lighter;
+                border: 1px solid $gray-100;
                 background-color: $body-bg;
                 font-weight: normal;
                 opacity: 1;
@@ -145,7 +147,7 @@ $logged-in-height-mobile: 100px;
             p {
                 color: #fff;
 
-                @media (max-width: $screen-sm-min) {
+                @include media-breakpoint-down(md) {
                     color:$theme-text-color;
                 }
             }
@@ -154,18 +156,20 @@ $logged-in-height-mobile: 100px;
 
     .logged-in:hover {
         .widget-heading {
-            @media (max-width: $screen-sm-min) {
-                background: scale-color($gray-lighter, $lightness: -10.5%);
+            @include media-breakpoint-down(md) {
+                background: scale-color($gray-300, $lightness: -10.5%);
             }
         }
         .widget-detail {
             @include transition(0.3s);
             opacity: 1;
             margin-top: -$logged-in-height;
-            @media  (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
-                margin-top: -$logged-in-height-mobile;
+            @include media-breakpoint-up(md) {
+                @include media-breakpoint-down(xl) {
+                    margin-top: -$logged-in-height-mobile;
+                }
             }
-            @media (max-width: $screen-sm-min) {
+            @include media-breakpoint-down(md) {
                 margin-top: 0;
                 p {
                     color: $link-color;
@@ -178,5 +182,5 @@ $logged-in-height-mobile: 100px;
 .dashboard-editable {
     margin-top: $grid-gutter-width;
     padding: ($grid-gutter-width - 10) 0;
-    border-top: 1px solid $btn-default-border;
+    border-top: 1px solid $btn-secondary-border;
 }

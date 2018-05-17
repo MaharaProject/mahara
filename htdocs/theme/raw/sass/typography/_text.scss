@@ -1,6 +1,6 @@
 // Text modifying class (start with .text-)
 .text-default {
-    color: $text-color;
+    color: $theme-text-color;
 }
 
 .text-lighttone {
@@ -21,11 +21,11 @@
 }
 
 .text-small {
-    font-size: $font-size-small;
+    font-size: $font-size-sm;
 }
 
 .text-tiny {
-    font-size: $font-size-small - 3;
+    font-size: $font-size-sm - 3;
 }
 
 .text-regular {

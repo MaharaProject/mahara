@@ -1,7 +1,7 @@
 
 .collapsible legend h4,
 .collapsible legend h3,
-.card-heading {
+.panel-heading {
     position: relative;
     display: block;
     font-family: $font-family-sans-serif;
@@ -27,18 +27,18 @@
         color: inherit;
         padding: 10px 15px;
 
-        .card-secondary > & {
+        .panel-secondary > & {
             padding: 10px 8px;
         }
 
         &.collapsed {
-            background-color: $card-default-heading-bg;
+            background-color: $card-bg;
             color: $theme-text-color;
             padding: 10px 15px;
             &.outer-link {
                 background: none;
             }
-            .card-secondary > & {
+            .panel-secondary > & {
                 padding: 10px 8px;
             }
         }
@@ -47,7 +47,7 @@
             text-decoration: none;
         }
         .pieform > .collapsible-group:first-child &,
-        .card.first & {
+        .panel.first & {
             @include border-top-radius(3px);
         }
     }
@@ -60,7 +60,7 @@
 }
 
 
-.card-small .card-heading {
+.panel-small .panel-heading {
     font-size: 12px;
     padding-right:40px;
     h4 {
@@ -68,7 +68,7 @@
     }
 }
 
-.card-heading .btn-link {
+.panel-heading .btn-link {
     &:hover{
         .icon {
             color: $link-color;

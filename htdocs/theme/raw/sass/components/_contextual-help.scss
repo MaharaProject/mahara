@@ -39,7 +39,7 @@ span.help {
     background-clip: padding-box;
     border: 1px solid $popover-fallback-border-color;
     border: 1px solid $popover-border-color;
-    border-radius: $border-radius-large;
+    border-radius: $border-radius-lg;
     padding: 0 14px 8px;
     font-size: $font-size-base - 1;
     @include box-shadow(0 5px 10px rgba(0,0,0,.2));
@@ -50,16 +50,16 @@ span.help {
 
     .help-dismiss {
         font-size: 16px;
-        color: $gray;
+        color: $gray-500;
     }
 
     h3 {
         margin: 0 -14px 20px;
         font-size: $font-size-base;
         padding:8px 14px;
-        background-color: $popover-title-bg;
-        border-bottom: 1px solid scale-color($popover-title-bg, $lightness: -5%);
-        border-radius: ($border-radius-large - 1) ($border-radius-large - 1) 0 0;
+        background-color: $popover-header-bg;
+        border-bottom: 1px solid scale-color($popover-header-bg, $lightness: -5%);
+        border-radius: ($border-radius-lg - 1) ($border-radius-lg - 1) 0 0;
         font-weight: $headings-font-weight;
     }
 }

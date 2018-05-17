@@ -1,6 +1,6 @@
 .loading-inner {
     margin: 15px 10px 5px 0;
-    @media (max-width: $screen-sm-min) {
+    @include media-breakpoint-down(md) {
         margin-top: 10px;
     }
 }

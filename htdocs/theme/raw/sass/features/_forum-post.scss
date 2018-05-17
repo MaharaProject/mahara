@@ -3,7 +3,7 @@
 }
 
 .forum-post {
-    border-left: 5px solid $brand-default;
+    border-left: 5px solid theme-color("secondary");
     padding-left: 15px;
     .forumpostleft {
         min-width: 120px;
@@ -42,7 +42,7 @@
     .collapsible a {
         &:focus,
         &:hover {
-            background: scale-color($card-default-heading-bg, $lightness: -1.40%) !important;
+            background: scale-color($card-bg, $lightness: -1.40%) !important;
         }
     }
 }
@@ -52,6 +52,6 @@
     font-style: italic;
     padding: 5px 10px;
     color: $theme-text-midtone-color;
-    background: $gray-lighter;
+    background: $gray-100;
     border-radius: 5px;
 }

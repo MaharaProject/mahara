@@ -3,7 +3,7 @@
     background-color: $card-bg;
     padding: 5px;
     display: table;
-    border: 1px solid $thumbnail-border;
+    border: 1px solid $thumbnail-border-color;
     overflow: hidden;
     position: relative;
 
@@ -82,13 +82,13 @@
     padding-left: 53px;
 }
 
-.card-heading {
+.panel-heading {
     a.has-user-icon , a.has-user-icon.collapsed {
         padding-left:65px; //make room for user image
     }
 }
 
-.card-body {
+.panel-body {
     .with-user-icon-lg {
         padding-right: 67px;
     }
@@ -98,7 +98,7 @@ a.user-icon, a .user-icon {
     &:hover,
     &:focus {
         opacity:1;
-        background-color: scale-color($thumbnail-border, $lightness: 75%);
+        background-color: scale-color($thumbnail-border-color, $lightness: 75%);
 
         img {
             opacity: 1;

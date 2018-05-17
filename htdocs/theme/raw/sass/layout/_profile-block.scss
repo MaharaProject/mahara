@@ -1,4 +1,4 @@
-.profile-block.card-heading {
+.profile-block.panel-heading {
     padding:0;
     .username {
         padding: 10px 75px 10px 15px;
@@ -27,8 +27,8 @@
             @include fa-icon();
             border-radius: 3px;
             bottom: 0px;
-            background: $gray-lighter;
-            color: $gray-dark;
+            background: $gray-100;
+            color: $gray-700;
             padding:3px;
             content: "\f040";
             display: block;

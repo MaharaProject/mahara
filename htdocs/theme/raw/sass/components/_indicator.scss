@@ -6,10 +6,10 @@
     opacity: 0.7;
 
     a:hover &,
-    .card-heading:hover & {
+    .panel-heading:hover & {
         opacity: 1;
     }
-    .card-secondary & {
+    .panel-secondary & {
         float: left;
         margin-top: 5px;
         margin-left: 0;
@@ -19,7 +19,7 @@
 
 //dash
 .collapse-indicator {
-    color: scale-color($gray, $lightness: 37.5%);
+    color: scale-color($gray-500, $lightness: 37.5%);
     font-size: 13px;
     display: block;
     transition-duration: 0.3s;
@@ -30,11 +30,11 @@
         font-size: 11px;
     }
     .collapsed & {
-        color: scale-color($gray, $lightness: 37.5%);
+        color: scale-color($gray-500, $lightness: 37.5%);
     }
     a:hover &,
     a:focus & {
-        color: $gray;
+        color: $gray-500;
     }
     .collapsed ~ & {
         transform: rotate(180deg);
@@ -47,12 +47,12 @@ tr[data-toggle="collapse"],
 a[data-toggle="collapse"] {
     &:hover .collapse-indicator,
     &:focus .collapse-indicator{
-        color: $gray;
+        color: $gray-500;
     }
     .collapse-indicator {
         transform: rotate(-180deg);
         transition-duration: 0.3s;
-        color: scale-color($gray, $lightness: 37.5%);
+        color: scale-color($gray-500, $lightness: 37.5%);
         margin-top: 5px;
         line-height: 13px;
         height: auto;
@@ -69,9 +69,9 @@ a[data-toggle="collapse"] {
     font-size: 12px;
     padding-right: 5px;
     + .icon {
-        color: $text-color;
+        color: $theme-text-color;
         &:hover, &:focus {
-            color: scale-color($text-color, $lightness: 12.5%);
+            color: scale-color($theme-text-color, $lightness: 12.5%);
         }
     }
 }
@@ -80,13 +80,13 @@ a[data-toggle="collapse"] {
 [data-toggle="collapse"].outer-link {
     &.collapsed {
         ~ .collapse-indicator {
-            color: scale-color($gray, $lightness: 37.5%);
+            color: scale-color($gray-500, $lightness: 37.5%);
         }
     }
     &:hover,
     &:focus {
         ~ .collapse-indicator {
-            color:$gray;
+            color:$gray-500;
         }
     }
 }

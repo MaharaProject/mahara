@@ -11,27 +11,27 @@
 }
 .notification-parent {
     .bulk-actions {
-        @media (min-width: $screen-xs-min) {
+        @include media-breakpoint-up(sm) {
             float: left;
         }
     }
     .form-select-filter {
         margin-top: 10px;
-        @media (min-width: $screen-xs-min) {
+        @include media-breakpoint-up(sm) {
             margin-top: 0;
             float: right;
         }
         .input-group .form-group,
         .input-group-addon {
             width: auto;
-            @media screen and (max-width: $screen-xs-min - 1) {
+            @include media-breakpoint-up(sm) {
                 display: table-cell;
             }
         }
     }
 }
 .notification {
-    .card-control {
+    .panel-control {
         top: 5px;
         + a[data-toggle="collapse"] {
             padding-left: 60px;
@@ -71,7 +71,7 @@
         white-space: nowrap;
         max-width: 100%;
     }
-    .card-heading {
+    .panel-heading {
         font-weight: 300;
     }
 }

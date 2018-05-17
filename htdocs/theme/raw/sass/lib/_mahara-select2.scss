@@ -6,14 +6,14 @@
 }
 
 .select2.select2-container .select2-selection {
-    // min-height: $input-height-base; // make select2 look more like a regular select //replace
+    min-height: $input-height; // make select2 look more like a regular select
     font-size: $font-size-base;
     line-height: $line-height-base;
     color: $input-color;
     &.select2-selection--multiple {
         &:after {
             content: "\f002";
-            color: scale-color($text-color, $lightness: 62.5%);
+            color: scale-color($theme-text-color, $lightness: 62.5%);
             font-family: FontAwesome;
             font-size: 1em;
             display:inline-block;
@@ -35,17 +35,17 @@
 
 .select2-container--default {
     .select2-selection--multiple {
-        border: 1px solid $input-border;
-        border-radius: $border-radius-base;
+        border: 1px solid $input-border-color;
+        border-radius: $border-radius;
 
         &:focus {
-            border: 1px solid $input-border-focus;
+            border: 1px solid $input-focus-border-color;
         }
 
         .select2-selection__choice {
-            color: $text-color;
-            border-radius: $border-radius-base;
-            background-color: $brand-default;
+            color: $theme-text-color;
+            border-radius: $border-radius;
+            background-color: theme-color("secondary");
         }
 
         .select2-selection__choice__remove {
@@ -64,17 +64,17 @@
     }
 
     &.select2-container--focus .select2-selection--multiple {
-        border: 1px solid $input-border;
+        border: 1px solid $input-border-color;
     }
 
     .select2-dropdown {
-        border-color: $input-border;
+        border-color: $input-border-color;
 
         .select2-search {
             position: relative;
             &:after {
                 content: "\f002";
-                color: scale-color($text-color, $lightness: 62.5%);
+                color: scale-color($theme-text-color, $lightness: 62.5%);
                 font-family: FontAwesome;
                 font-size: 1em;
                 display:inline-block;
@@ -96,10 +96,10 @@
 .select2-container-multi {
     max-width: 85% !important;
     display: inline-block;
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         width: 420px !important;
     }
-    @media (min-width: $screen-lg-min) {
+    @include media-breakpoint-up(xl) {
         width: 500px !important;
     }
     &.select2-dropdown-open {

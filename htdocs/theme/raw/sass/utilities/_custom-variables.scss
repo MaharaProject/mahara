@@ -1,30 +1,29 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow component variables
-$arrow-color: scale-color($brand-primary, $lightness: 80%) !default;
+$arrow-color: scale-color(theme-color("primary"), $lightness: 80%) !default;
 
-$arrow-text-color: $text-color !default;
+$arrow-text-color: $theme-text-color !default;
 $arrow-link-color: $link-color !default;
-$arrow-link-hover-color: $text-color !default;
-$arrow-link-active-color: $text-color !default;
+$arrow-link-hover-color: $theme-text-color !default;
+$arrow-link-active-color: $theme-text-color !default;
 
 // color for the secondary title in sections (cf. groups)
 $section-heading-color: #999 !default;
 $admin-title-color: #fff !default;
-$admin-title-bg: $brand-primary !default;
+$admin-title-bg: theme-color("primary") !default;
 
 $dashboard-widget-bg: #f4f4f4 !default;
-$dashboard-widget-color: $brand-primary !default;
+$dashboard-widget-color: theme-color("primary") !default;
 
-$help-icon-color: $state-info-text !default;
+$help-icon-color: theme-color("statetext") !default;
 $rss-icon-color: #FE6500 !default;
 
 // Smart Evidence status colors
 $assessment-begun-color: #5b9aa9 !default;
-$assessment-incomplete-color: $brand-danger !default;
-$assessment-partial-color: $brand-warning !default;
-$assessment-completed-color: $brand-success !default;
+$assessment-incomplete-color: theme-color("danger") !default;
+$assessment-partial-color: theme-color("warning") !default;
+$assessment-completed-color: theme-color("success") !default;
 
-// Navbar message notification count
 $navbar-notification-count-bg: #FC9F1A !default;
 $navbar-notification-count-text: #000000 !default;

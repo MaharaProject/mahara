@@ -9,8 +9,8 @@ h1 {
     @extend .page-header;
     .admin & {
         text-shadow: 1px 1px 0 rgba($text-shadow, 0.5);
-        color: $gray;
-        border-bottom-color: $list-group-border;
+        color: $gray-500;
+        border-bottom-color: $list-group-border-color;
     }
 
     .page-header & {
@@ -32,7 +32,7 @@ h1 {
     margin-bottom:20px;
     ~ .with-heading {
         margin-top: -16px;
-        @media (max-width: $screen-xs-min) {
+        @include media-breakpoint-down(sm) {
             margin-top: 0;
         }
     }
@@ -40,34 +40,34 @@ h1 {
     ~ form .with-heading,
     ~ .form.with-heading {
         @include border-bottom-radius(3px);
-        background-color: scale-color($gray-lighter, $lightness: 35%);
+        background-color: scale-color($gray-300, $lightness: 35%);
         padding: 20px 10px 10px 10px;
         margin-top: -20px;
-        border-bottom: 1px solid $gray-lighter;
+        border-bottom: 1px solid $gray-100;
         &.invite-friend {
             padding-bottom: 5px;
             .input-group {
                 margin-top: 0;
-                @media (min-width: $screen-sm-min) {
+                @include media-breakpoint-up(md) {
                     margin-top:10px;
                 }
             }
         }
-        @media (max-width: $screen-xs-min) {
+        @include media-breakpoint-down(sm) {
             margin-top: 5px;
         }
-        @media (max-width: $screen-sm-min) {
+        @include media-breakpoint-down(md) {
             padding: 10px;
             > .input-group {
                 padding-top: 10px;
             }
         }
         .admin & {
-            background-color: scale-color($gray-lighter, $lightness: -2.4%);
+            background-color: scale-color($gray-300, $lightness: -2.4%);
 
-            border-color: $list-group-border;
-            border-left: 1px solid $gray-lighter;
-            border-right: 1px solid $gray-lighter;
+            border-color: $list-group-border-color;
+            border-left: 1px solid $gray-100;
+            border-right: 1px solid $gray-100;
         }
         ~ form.with-heading {
             padding-top: 0;
@@ -83,8 +83,8 @@ h1 {
     ~ div.with-heading {
         padding-bottom: 10px;
         margin-bottom: 10px;
-        @media (max-width: $screen-xs-min) {
-            border-bottom: 1px solid $gray-lighter;
+        @include media-breakpoint-down(sm) {
+            border-bottom: 1px solid $gray-100;
         }
         a {
             margin-right: 5px;
@@ -110,7 +110,7 @@ h2 {
 }
 
 h2, h3, h4, h5, legend {
-    &.card-heading {
+    &.panel-heading {
         margin: 0;
         font-size: 16px;
     }
@@ -134,7 +134,7 @@ a {
     &:focus,
     &:hover {
         text-decoration-color: $link-hover-color;
-        outline-color: $input-border-focus;
+        outline-color: $input-focus-border-color;
         .text-orange {
             color: $link-color;
         }
@@ -148,7 +148,7 @@ a {
 }
 
 .link-unstyled {
-    color: $gray-dark;
+    color: $gray-700;
     &:hover {
         text-decoration: none;
         color: inherit;
@@ -161,7 +161,7 @@ a {
     .col-width-100 &,
     .col-width-50 & {
         padding: 5px 8px;
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             padding: 5px 20px;
         }
     }
@@ -170,12 +170,12 @@ a {
     margin: 10px 0;
     padding: 5px 7px;
     &:hover {
-        background-color: $btn-default-bg;
+        background-color: $btn-secondary-bg;
         text-decoration: none;
     }
     .icon {
         display: none;
-        @media (min-width: $screen-xs-min) {
+        @include media-breakpoint-up(sm) {
             display: inline-block;
         }
     }
@@ -193,7 +193,7 @@ img {
 }
 
 hr {
-    margin-top: $line-height-computed / 2;
+    margin-top: $line-height-base / 2;
 }
 
 ul {
@@ -222,7 +222,7 @@ blockquote {
     line-height: 1.4;
     margin-bottom: 15px;
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         font-size: ($font-size-base * 1.2);
     }
 
@@ -247,7 +247,7 @@ label.lead {
 .metadata {
     font-family: $font-family-sans-serif;
     font-size: 0.8em;
-    color: $gray;
+    color: $gray-500;
     .title & {
         margin-left: 5px;
     }
@@ -274,7 +274,7 @@ pre {
 
         .wsrequired {
             font-weight: bold;
-            color: $brand-danger;
+            color: theme-color("danger");
         }
         .wsoptional {
             font-weight: bold;
@@ -288,7 +288,7 @@ pre {
 /* headings in html entered by user neutralised */
 .myblogs,
 .content-text,
-.card-body,
+.panel-body,
 #resumefieldform_coverletterdisplay_container,
 #resumefieldform_interestdisplay_container,
 .note-name div,
@@ -298,7 +298,7 @@ pre {
   h1, h2, h3, h4, h5, h6  {
     font-family: $font-family-base;
     font-weight: bold;
-    color: $text-color;
+    color: $theme-text-color;
 
     /* but not some titles */
     &.list-group-item-heading,

@@ -20,7 +20,7 @@
                 color: scale-color($link-color, $lightness: -16%);
                 border: 1px solid transparent;
                 border-bottom: 3px solid $nav-tabs-link-hover-border-color;
-                background: scale-color($gray-lighter, $lightness: 45%);
+                background: scale-color($gray-300, $lightness: 45%);
             }
         }
     }
@@ -35,7 +35,7 @@
 .nav-tabs>li.active>a {
     color: $link-color;
     border: 1px solid transparent;
-    border-bottom: 3px solid $nav-tabs-active-link-hover-border-color;
+    border-bottom: 3px solid $link-hover-color;
     &:hover,
     &:focus {
         border: 1px solid transparent;

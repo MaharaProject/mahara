@@ -8,7 +8,7 @@
         border-radius: 0;
         padding: 5px 15px;
     }
-    @media (max-width: $screen-sm-min - 1) {
+    @include media-breakpoint-down(md) {
         display: none;
     }
 
@@ -26,20 +26,20 @@
     .header.message-count-#{$i} {
         top: 33px * $i;
 
-        @media (max-width: $screen-sm-min - 1) {
+        @include media-breakpoint-down(md) {
             top: 0;
         }
 
         ~ .container {
             .toolbar-affix.affix {
-                @media (min-width: $screen-sm-min) {
+                @include media-breakpoint-up(md) {
                     margin-top: $navbar-height + ($i * 33px);
                 }
             }
         }
 
         + .main-content {
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 margin-top: $navbar-height + ($i * 33px);
             }
         }
@@ -53,18 +53,18 @@
 
     + .main-content,
     + .main-content .toolbar-affix.affix {
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             margin-top: $navbar-height;
         }
     }
 }
 
 .errmsg {
-    color: $brand-danger;
+    color: theme-color("danger");
 }
 
 .sidebar,
-.login-card {
+.login-panel {
     .errmsg {
         margin-left: 0;
     }

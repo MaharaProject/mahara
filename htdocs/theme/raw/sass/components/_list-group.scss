@@ -1,6 +1,6 @@
 // // modifications for list elements such a list of pages, collections
 
-// Left card
+// Left panel
 .list-group {
     margin-bottom: 0;
     a {
@@ -17,11 +17,11 @@
         }
 
     }
-    .card &,
-    .card-body & {
+    .panel &,
+    .panel-body & {
         margin-bottom: 0;
     }
-    .user-card & {
+    .user-panel & {
         min-height: 41px;
     }
 
@@ -53,13 +53,13 @@
     }
 
     &.attachment-incontent {
-        border-left: 1px solid $list-group-border; // Full Journal attachment list block
+        border-left: 1px solid $list-group-border-color; // Full Journal attachment list block
     }
 }
 
 
 .list-group-item-heading {
-    font-family: $font-family-serif;
+    font-family: $font-family-sans-serif;
     font-weight: 300;
     a {
         &:hover {
@@ -77,7 +77,7 @@
     }
 
     .collection-item & {
-        font-size: $font-size-h3;
+        font-size: $h3-font-size;
     }
 }
 
@@ -111,7 +111,7 @@ h4.list-group-item-heading {
     padding: 0;
     a {
         @extend .text-default;
-        font-size: $font-size-small;
+        font-size: $font-size-sm;
         display: block;
         padding: 10px 15px;
         &:hover {
@@ -159,7 +159,7 @@ h4.list-group-item-heading {
         @extend .list-group-item-warning;
     }
     &.published {
-        background: scale-color($card-default-heading-bg, $lightness: 50%);
+        background: scale-color($card-bg, $lightness: 50%);
     }
     &.flush {
         padding: 10px 0;
@@ -169,26 +169,26 @@ h4.list-group-item-heading {
     }
     .list-group-item-heading {
         float: none;
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             float: left;
         }
-        .card & {
+        .panel & {
             float: none;
         }
     }
     .list-group-item-controls {
         float: none;
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             float: right;
         }
         // For planlist page
         .btn-group-top {
             margin-top: 0;
             float:none;
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 margin-top: 5px;
             }
-            @media (min-width: $screen-md-min) {
+            @include media-breakpoint-up(lg) {
                 margin-top: -10px;
             }
         }
@@ -198,7 +198,7 @@ h4.list-group-item-heading {
     }
     .btn-title {
         padding-left: 5px;
-        @media (max-width: $screen-sm-min) {
+        @include media-breakpoint-down(md) {
             @include sr-only;
         }
     }
@@ -231,15 +231,15 @@ h4.list-group-item-heading {
 }
 
 .list-group-item-default{
-    background-color: rgba($brand-default, 0.5);
+    background-color: rgba(theme-color("secondary"), 0.5);
 }
 
 .list-group-item-text {
     margin-top: 5px;
 }
 
-// Modifiy for list-groups in cards
-.card > .block {
+// Modifiy for list-groups in panels
+.panel > .block {
     > .list-group {
         margin-bottom: 0;
     }
@@ -269,7 +269,7 @@ h4.list-group-item-heading {
     }
 }
 
-.card-heading + .block > .list-group .list-group-item:first-child {
+.panel-heading + .block > .list-group .list-group-item:first-child {
     border-top-width: 0;
 }
 
@@ -285,7 +285,7 @@ h4.list-group-item-heading {
 }
 
 .annotation-feedback {
-    border-top: 1px solid $list-group-border !important;
+    border-top: 1px solid $list-group-border-color !important;
 }
 
 .feedback.modal {
@@ -301,7 +301,7 @@ h4.list-group-item-heading {
     -webkit-column-gap: 20px;
     column-count: 3;
     column-gap: 20px;
-    @media (max-width: $screen-sm-min) {
+    @include media-breakpoint-down(md) {
         -moz-column-count: 2;
         -moz-column-gap: 20px;
         -webkit-column-count: 2;

@@ -8,7 +8,7 @@ body {
         margin: 0 0 20px;
         padding-top: 30px;
         padding-bottom: 0;
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             padding-bottom:50px;
         }
     }
@@ -19,21 +19,21 @@ body {
 }
 
 .content-main {
-    @media (min-width: 768px) {
+    @include media-breakpoint-up(md) {
         margin-left: 250px;
     }
 }
 
 .sidebar {
     padding-top: 0;
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         padding-top: 30px;
     }
 }
 
 // Expose a section of the page
 .expose {
-    background-color: $brand-default;
+    background-color: theme-color("secondary");
     margin-bottom: 40px;
     margin-top: -109px;
     padding: 40px 0px 20px;
@@ -55,7 +55,7 @@ body {
 .columns3,
 .columns4,
 .columns5 {
-    .wallpost .card-heading {
+    .wallpost .panel-heading {
         font-size: 12px;
         padding-right:40px;
         h4 {
@@ -112,7 +112,7 @@ iframe {
 .toolbar + .lead {
     clear: both;
     margin-top: 15px;
-    @media (min-width: $screen-xs-min) {
+    @include media-breakpoint-up(sm) {
         margin-top: 60px;
     }
 }
@@ -129,7 +129,7 @@ iframe {
 
 .view-description {
     margin-top: 15px;
-    @media (min-width: $screen-xs-min) {
+    @include media-breakpoint-up(sm) {
         margin-top: 30px;
     }
     &.with-toolbar {
