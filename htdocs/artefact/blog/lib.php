@@ -154,15 +154,20 @@ class PluginArtefactBlog extends PluginArtefact {
         return 'artefact/blog/view/index.php';
     }
 
-    public static function group_tabs($groupid) {
-        return array(
-            'blogs' => array(
-                'path' => 'groups/blogs',
-                'url' => 'artefact/blog/index.php?group=' . $groupid,
-                'title' => get_string('Blogs', 'artefact.blog'),
-                'weight' => 65,
-            ),
-        );
+    public static function group_tabs($groupid, $role) {
+        if ($role) {
+            return array(
+                'blogs' => array(
+                    'path' => 'groups/blogs',
+                    'url' => 'artefact/blog/index.php?group=' . $groupid,
+                    'title' => get_string('Blogs', 'artefact.blog'),
+                    'weight' => 65,
+                ),
+            );
+        }
+        else {
+            return array();
+        }
     }
 }
 

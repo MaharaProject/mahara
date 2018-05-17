@@ -91,8 +91,4 @@ abstract class GroupType implements IGroupType {
     public static function can_become_admin($userid) {
         return true;
     }
-
-    public static function get_group_artefact_plugins() {
-        return array('file', 'blog');
-    }
 }
