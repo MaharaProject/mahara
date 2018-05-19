@@ -347,6 +347,21 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Click on the delete confirm link or button.
+     *
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" delete button$/
+     * @param string $link_or_button we look for
+     */
+    public function i_click_on_delete($link_or_button) {
+
+        // Gets the node based on the requested selector type and locator.
+        $node = $this->get_selected_node('link_or_button', $link_or_button);
+        $this->ensure_node_is_visible($node);
+        $node->click();
+        $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+    }
+
+    /**
      * Press the key.
      *
      * @When /^I press the key "(?P<key>(?:[^"]|\\")*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" field$/
