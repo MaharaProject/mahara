@@ -416,6 +416,9 @@ function basename(path) {
 jQuery(function($) {
     // Autofocus the first element with a class of 'autofocus' on page load (@todo: move this to pieforms.js)
     $('.autofocus').first().focus();
+    if ($('.autofocus').first().focus().prop('id') == 'settings_title' && getUrlParameter('new', window.location.href)) {
+        $('.autofocus').first().select();
+    }
 });
 
 // Contextual Help
