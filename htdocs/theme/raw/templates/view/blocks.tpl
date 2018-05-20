@@ -56,7 +56,7 @@
             {/if}
             {if $groupid}
             <a class="btn btn-default" href="{$WWWROOT}view/groupviews.php?group={$groupid}">
-                {str tag=returntogrouppages section=group}
+                {str tag=returntogroupportfolios section=group}
                 <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
             </a>
             {/if}
