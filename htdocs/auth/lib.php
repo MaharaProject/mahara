@@ -1072,7 +1072,7 @@ function auth_check_required_fields() {
             'action'   => '',
             'elements' => $elements,
             'dieaftersubmit' => FALSE,
-            'backoutaftersubmit' => TRUE,
+            'backoutaftersubmit' => FALSE,
         ));
     }
 
@@ -1253,9 +1253,6 @@ function requiredfields_submit(Pieform $form, $values) {
     }
 
     $SESSION->set('nocheckrequiredfields', true);
-    if ($form->get_property('backoutaftersubmit')) {
-        return;
-    }
 
     redirect();
 }
@@ -1818,15 +1815,10 @@ function login_submit(Pieform $form, $values) {
         }
     }
 
-    auth_check_admin_section();
+    // Do redirect on login to avoid browser back button exploit
+    $requesturi = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
+    redirect($requesturi);
 
-    // This is also checked in $USER->login(), but it's good to check it again here in case a buggy auth plugin
-    // lets a suspended user through somehow.
-    ensure_user_account_is_active();
-
-    // User is allowed to log in
-    //$USER->login($userdata);
-    auth_check_required_fields();
 }
 
 /**
