@@ -60,8 +60,8 @@ Scenario: Student can't change password to anything on suckypasswords list (Bug 
   And I press "Save"
   And I should see "Password must be at least 8 characters long"
   And I fill in "Current password" with "Kupuh1pa!"
-  And I fill in "New password" with "p@ssw0rd"
-  And I fill in "Confirm password" with "p@ssw0rd"
+  And I fill in "New password" with "P@ssw0rd"
+  And I fill in "Confirm password" with "P@ssw0rd"
   And I press "Save"
   Then I should see "Your password is too easy"
   And I log out
