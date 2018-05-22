@@ -5,14 +5,15 @@
             <a data-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="{if $retractedonload}false{else}true{/if}" aria-controls="blockinstance_{$id}_target" class="outer-link{if $retractedonload} collapsed{/if}"></a>
             {/if}
 
-            {$title}
-            {if $feedlink}
-                <a href="{$feedlink}" class="secondary-link inner-link">
-                    <span class="icon-rss icon icon-large mahara-rss-icon right" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">RSS</span>
-                </a>
-            {/if}
-
+            <div class="collapse-inline">
+                {$title}
+                {if $feedlink}
+                    <a href="{$feedlink}" class="secondary-link inner-link">
+                        <span class="icon-rss icon icon-large mahara-rss-icon right" role="presentation" aria-hidden="true"></span>
+                        <span class="sr-only">RSS</span>
+                    </a>
+                {/if}
+            </div>
 
             {if $retractable}
             <span class="icon icon-chevron-up collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>

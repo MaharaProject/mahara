@@ -90,3 +90,73 @@ a[data-toggle="collapse"] {
         }
     }
 }
+
+// Align text and chevron across multiple layouts
+.collapse-inline {
+    display: inline-block;
+    width: 90%;
+}
+
+.columns5 .collapse-inline {
+    width: 80%;
+}
+
+@media (min-width: $screen-sm-min) {
+    .columns3.col-width-15 .collapse-inline {
+        width: 70%;
+    }
+}
+
+// Align in edit mode
+.editing {
+    .icon-chevron-down {
+        padding-right: 5px;
+    }
+    .columns1,
+    .columns2,
+    .columns3,
+    .columns4,
+    .columns5 {
+        .collapse-inline {
+            width: 65%;
+        }
+    }
+    @media (min-width: $screen-sm-min) {
+        .columns1 .collapse-inline {
+            width: 85%;
+        }
+        .columns2.col-width-33,
+        .columns3.col-width-33 {
+            .collapse-inline {
+                width: 50%;
+            }
+        }
+    }
+    @media (min-width: $screen-md-min) {
+        .columns4.col-width-25,
+        .columns3.col-width-25 {
+            .collapse-inline {
+                width: 50%;
+            }
+        }
+    }
+    @media (min-width: $screen-lg-min) {
+        .columns3.col-width-25,
+            {
+            width: 60%;
+        }
+        .columns1,
+        .columns2.col-width-33,
+        .columns3.col-width-33,
+        .columns4 {
+            .collapse-inline {
+                width: 70%;
+            }
+        }
+        .columns5 {
+            .collapse-inline {
+                width: 50%;
+            }
+        }
+    }
+}

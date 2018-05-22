@@ -175,6 +175,12 @@ class BehatNavigation extends BehatBase {
             // We just want to expand the node, we don't want to follow it.
             $node = $node->getParent();
         }
+        // Check if the node is wrapped in an inner div
+        if ($node->find('css', '.collapse-inline')) {
+            // We just want to expand the parent node as this doesn't align top left to the outer-link a link.
+            $node = $node->getParent();
+        }
+
         $node->click();
     }
 
