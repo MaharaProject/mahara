@@ -124,7 +124,7 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   | Last name * | Mc |
   | Email * | UserA@example.org |
   | Username * | UserA |
-  | Password * | KKJHH$$67686 |
+  | Password * | KKJhh$$67686 |
   And I press "Create user"
   # Logging in as new user
   And I follow "Log in as this user"

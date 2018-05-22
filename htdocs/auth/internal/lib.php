@@ -85,18 +85,21 @@ class AuthInternal extends Auth {
             return false;
         }
 
-        $containsLetter = preg_match('/\pL/',       $password); // '/[a-zA-Z]/'
+        // for unicode character properties in php see:
+        // http://php.net/manual/en/regexp.reference.unicode.php
+        $containsUppercase = preg_match('/\p{Lu}/',       $password); // '/[A-Z]/'
+        $containsLowercase = preg_match('/\p{Ll}/',       $password); // '/[a-z]/'
         $containsNumber = preg_match('/\pN/',       $password); // '/\d/'
         $containsSymbol = preg_match('/[^\pL\pN]/', $password); // '/[^a-zA-Z\d]/'
 
         if ($format == 'ul') {
-            return $containsLetter;
+            return $containsUppercase && $containsLowercase;
         }
         if ($format == 'uln') {
-            return ($containsLetter && $containsNumber);
+            return ($containsUppercase && $containsLowercase && $containsNumber);
         }
         if ($format == 'ulns') {
-            return ($containsLetter && $containsNumber && $containsSymbol);
+            return ($containsUppercase && $containsLowercase && $containsNumber && $containsSymbol);
         }
 
         return false;
