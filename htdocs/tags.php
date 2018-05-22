@@ -94,8 +94,11 @@ jQuery(function($) {
           e.preventDefault();
           var reqparams = {};
           var currenthref = $(this).prop('href');
-
-          reqparams[replace] = getUrlParameter(replace, currenthref);
+          for (var i = 0; i < replace.length; i++) {
+              if (getUrlParameter(replace[i], currenthref)) {
+                  reqparams[replace[i]] = getUrlParameter(replace[i], currenthref);
+              }
+          }
           for (var i = 0; i < keep.length; i++) {
               if (params[keep[i]]) {
                   if (getUrlParameter(keep[i], currenthref)) {
@@ -143,7 +146,7 @@ jQuery(function($) {
               }
 
               // Rewrite tag links in the results list:
-              $('#results a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
+              $('#results a.tag').each(function () {rewriteTagLink(this, [], ['tag'])});
               // Change selected Sort By links above the Search results:
               if (data.data.sort != params.sort) {
                   $('#results_sort a').each(function () {
@@ -185,11 +188,11 @@ jQuery(function($) {
   mytags_container = $('#main-column-container .mytags').first();
   p = {$data->pagination_js}
 
-  mytags_container.find('a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
-  $('#sb-tags a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
-  $('#results a.tag').each(function () {rewriteTagLink(this, [], 'tag')});
-  $('#results_sort a').each(function () {rewriteTagLink(this, ['tag', 'type', 'sort'], 'tag')});
-  $('#results_filter a').each(function () {rewriteTagLink(this, ['tag', 'type', 'sort'], 'tag')});
+  mytags_container.find('a.tag').each(function () {rewriteTagLink(this, [], ['tag'])});
+  $('#sb-tags a.tag').each(function () {rewriteTagLink(this, [], ['tag'])});
+  $('#results a.tag').each(function () {rewriteTagLink(this, [], ['tag'])});
+  $('#results_sort a').each(function () {rewriteTagLink(this, ['tag', 'type', 'sort'], ['tag', 'sort'])});
+  $('#results_filter a').each(function () {rewriteTagLink(this, ['tag', 'type', 'sort'], ['tag', 'type'])});
 });
 EOF;
 
@@ -198,12 +201,7 @@ foreach (array('alpha', 'freq') as $option) {
     $tagsortoptions[$option] = $option == $tagsort;
 }
 
-if (strpos($data->baseurl, 'tags.php?') !== 0) {
-    $data->queryprefix = '?';
-}
-else {
-    $data->queryprefix = '&';
-}
+$data->queryprefix = (strpos($data->baseurl, '?') === false ? '?' : '&');
 
 $smarty = smarty(array('paginator'));
 $smarty->assign('tags', $tags);
