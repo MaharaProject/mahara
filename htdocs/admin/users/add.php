@@ -204,7 +204,7 @@ function adduser_validate(Pieform $form, $values) {
         }
     }
     if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', array(strtolower($username)))) {
-        $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
+        $form->set_error('username', get_string('usernamealreadytaken1', 'auth.internal'));
     }
 
     if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
