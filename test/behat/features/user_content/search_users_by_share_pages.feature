@@ -16,6 +16,8 @@ Background:
      | Page UserA_02 | Page 02 | user | UserA |
      | Page UserB_01 | Page 03 | user | UserB |
      | Page UserB_02 | Page 04 | user | UserB |
+     | Page UserB_03 | Page 05 | user | UserB |
+     | Page UserB_04 | Page 06 | user | UserB |
 
 Scenario: Create users and search for them (Bug 897586)
     # Log in as the student user
@@ -33,7 +35,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I log in as "UserB" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Bob User"
-    # Sharing both of the pages Bob created
+    # Sharing 2 of the pages Bob created to public
     And I choose "Shared by me" in "Portfolio" from main menu
     And I click on "Edit access" in "Page UserB_01" row
     And I set the select2 value "Page UserB_01, Page UserB_02" for "editaccess_views"
@@ -41,6 +43,15 @@ Scenario: Create users and search for them (Bug 897586)
     And I press "Save"
     # Verifying that both of the pages have been shared
     And I should see "Access rules were updated for 2 pages."
+    # Sharing 1 of the pages Bob created to admin user
+    And I choose "Shared by me" in "Portfolio" from main menu
+    And I click on "Edit access" in "Page UserB_01" row
+    And I set the select2 value "Page UserB_03" for "editaccess_views"
+    And I select "Users" from "accesslist[0][searchtype]"
+    And I select "Admin User" from select2 search box in row number "1"
+    And I press "Save"
+    # Verifying that the page has been shared
+    And I should see "Access rules were updated for 1 page."
     And I log out
     # Logging back in as admin to search for users on the shared with me page
     And I log in as "admin" with password "Kupuh1pa!"
@@ -50,9 +61,16 @@ Scenario: Create users and search for them (Bug 897586)
     | Search: | Angela |
     And I check "Public"
     And I press "search_submit"
-    # Verifying I can see Angela's pages
+    # Verifying I can see an Angela's page
     Then I should see "Page UserA_01"
-    And I should see "Page UserA_02"
-    # Verifying I cannot see Bob's pages
-    And I should not see "Page UserB_03"
+    # Verifying I can see some of Bob's pages
+    # Entering Bob name in the search box
+    And I fill in the following:
+    | Search: | Bob |
+    And I check "Public"
+    And I press "search_submit"
+    And I should see "Page UserB_02"
+    And I should see "Page UserB_03"
+    # Verifying I cannot see Bob's page not shared
     And I should not see "Page UserB_04"
+    And I should not see "Page UserA_01"

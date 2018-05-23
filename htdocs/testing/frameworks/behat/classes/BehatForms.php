@@ -219,6 +219,28 @@ class BehatForms extends BehatBase {
     }
 
     /**
+    *
+    * Step to select from a previously hidden search box
+    * needs to be called after calling with share_with_select2's "Search for..." option
+    *
+    * @When I select :user from select2 search box in row number :row_num
+    * @param string $user
+    * @param int $row_num
+    */
+
+    public function select_from_search_box($user, $row_num) {
+        $row_num = $row_num -1;
+        //create xpath for correct search box
+        $search_xpath = "//*[@id=\"select2-hidden-user-search-[$row_num]-container\"]";
+        $this->i_click_on_element($search_xpath, 'xpath_element');
+        //create xpath for the user being searched for
+        $user_xpath = "//*[@id[starts-with(., 'select2-hidden-user-search')]]/span[contains(text(),  \"$user\")]";
+        $this->i_click_on_element($user_xpath, 'xpath_element');
+    }
+
+
+
+    /**
      * Select value in choice list
      *
      * @param DocumentElement $page
