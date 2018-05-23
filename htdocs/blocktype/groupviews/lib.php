@@ -51,7 +51,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
      * @param array options
      * @param array pagination
      */
-    public function render_items(&$items, $template, $options, $pagination) {
+    public static function render_items(&$items, $template, $options, $pagination) {
         $smarty = smarty_core();
         $smarty->assign('options', $options);
         $smarty->assign('items', $items['data']);
