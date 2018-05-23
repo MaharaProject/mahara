@@ -19,7 +19,7 @@ $string['changeusernameheading'] = 'Change username';
 $string['changeusername'] = 'New username';
 $string['changeusernamedesc'] = 'The username you use to log into %s. Usernames are 3-30 characters long and may contain letters, numbers, and most common symbols excluding spaces.';
 
-$string['usernameexists'] = 'This username is taken, please choose another one.';
+$string['usernameexists1'] = 'You can\'t use this username, please choose another one.';
 
 $string['accountoptionsdesc'] = 'General account options';
 

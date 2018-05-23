@@ -164,7 +164,7 @@ class module_lti_launch extends external_api {
                                    FROM {usr}
                                    WHERE LOWER(username) = ?", array(strtolower($user->email)))) {
                     $USER->logout();
-                    throw new WebserviceInvalidParameterException(get_string('usernameexists1', 'module.lti', $user->email));
+                    throw new WebserviceInvalidParameterException(get_string('usernameexists2', 'module.lti', $user->email));
                 }
 
                 $user->username = $user->email;
