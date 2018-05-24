@@ -276,7 +276,10 @@ class BehatHooks extends BehatBase {
                 // the following scenarios. Some browsers already closes the alert, so
                 // wrapping in a try & catch.
                 try {
-                    $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+                    $tags = $scope->getFeature()->getTags();
+                    if (!in_array('allow_popups', $tags)) {
+                        $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+                    }
                 }
                 catch (Exception $e) {
                     // Catching the generic one as we never know how drivers reacts here.

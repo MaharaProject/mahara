@@ -21,7 +21,8 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException,
     Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException,
     Behat\Mink\Exception\DriverException as DriverException,
     WebDriver\Exception\NoSuchElement as NoSuchElement,
-    WebDriver\Exception\StaleElementReference as StaleElementReference;
+    WebDriver\Exception\StaleElementReference as StaleElementReference,
+    WebDriver\Exception\NoAlertOpenError;
 
 /**
  * Cross plugin steps definitions.
@@ -247,6 +248,21 @@ class BehatGeneral extends BehatBase {
      */
     public function i_should_see_in_popup($text) {
         return $text == $this->getSession()->getDriver()->getWebDriverSession()->getAlert_text();
+    }
+
+    /**
+     * Assert the text is not in a popup window. This step does not work in all the browsers, consider it experimental.
+     * @Then /^I should not see a popup$/
+     * @return bool
+     */
+    public function i_should_not_see_a_popup() {
+        try {
+            $text = $this->getSession()->getDriver()->getWebDriverSession()->getAlert_text();
+            throw new Exception('Popup window found when none expected.');
+        }
+        catch (NoAlertOpenError $e) {
+            return true;
+        }
     }
 
     /**
