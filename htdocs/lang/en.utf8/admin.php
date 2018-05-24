@@ -1343,6 +1343,7 @@ $string['cli_deleteinactiveusers_neverloggedin'] = 'Delete users that have never
 $string['cli_param_baddate'] = 'The supplied date "%s" is not valid.';
 $string['cli_deleteinactiveusers_usercount'] = 'There are "%s" users to delete';
 $string['cli_deleteinactiveusers_userunabletoclean'] = 'Unable to fully delete user "%s" (ID %s)';
+$string['cli_deleteinactiveusers_userunabletodelete'] = 'Unable to delete user "%s" (ID %s)';
 $string['cli_deleteinactiveusers_nouserstodelete'] = 'There are no users to delete.';
 $string['cli_deleteinactiveusers_onlydryrun1'] = 'This is only a dry run with the following settings
 Institution: %s
