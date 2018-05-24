@@ -74,6 +74,7 @@ $danger:        $red !default;
 $light:         $gray-100 !default;
 $dark:          $gray-800 !default;
 $statetext:     $midblue !default;
+$text:          $gray-700 !default;
 
 $theme-colors: () !default;
 $theme-colors: map-merge((
@@ -86,7 +87,8 @@ $theme-colors: map-merge((
   "danger":     	$danger,
   "light":      	$light,
   "dark":       	$dark,
-  "statetext":  	$midblue
+  "statetext":  	$midblue,
+  "text":           $text
 ), $theme-colors);
 // stylelint-enable
 
@@ -276,12 +278,12 @@ $font-weight-bold:            700 !default;
 $font-weight-base:            $font-weight-normal !default;
 $line-height-base:            1.5 !default;
 
-$h1-font-size:                $font-size-base * 2.5 !default;
-$h2-font-size:                $font-size-base * 2 !default;
-$h3-font-size:                $font-size-base * 1.75 !default;
-$h4-font-size:                $font-size-base * 1.5 !default;
-$h5-font-size:                $font-size-base * 1.25 !default;
-$h6-font-size:                $font-size-base !default;
+$h1-font-size:                floor(($font-size-base * 2.15)) !default;
+$h2-font-size:                floor(($font-size-base * 1.7)) !default;
+$h3-font-size:                ceil(($font-size-base * 1.5)) !default;
+$h4-font-size:                ceil(($font-size-base * 1.25)) !default;
+$h5-font-size:                $font-size-base !default;
+$h6-font-size:                ceil(($font-size-base * 0.85)) !default;
 
 $headings-margin-bottom:      ($spacer / 2) !default;
 $headings-font-family:        inherit !default;
@@ -777,7 +779,7 @@ $navbar-inverse-border:                     scale-color($navbar-inverse-bg, $lig
 $navbar-inverse-link-color:                 $link-color !default;
 $navbar-inverse-link-hover-color:           $link-hover-color !default;
 $navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%) !default;
-$navbar-inverse-link-active-color:          $theme-text-color !default;
+$navbar-inverse-link-active-color:          theme-color("text") !default;
 $navbar-inverse-link-active-bg:             #F1F1F1 !default;
 $navbar-inverse-link-disabled-color:        #444 !default;
 $navbar-inverse-link-disabled-bg:           transparent !default;

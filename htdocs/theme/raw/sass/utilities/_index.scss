@@ -2,7 +2,7 @@
 
 // Libraries (Please, do not amend content of these folders)
 @import "../lib/font-awesome/font-awesome";
-// @import "../lib/select2/core";
+@import "../lib/select2/core";
 
 @import "mixins";
 @import "classes"; // Custom utility classes
@@ -20,7 +20,7 @@
 @import "../layout/columns";
 @import "../layout/footer";
 @import "../layout/header";
-// @import "../layout/profile-block";
+@import "../layout/profile-block";
 
 // cards are a very commonly used layout component
 @import "../layout/card/card";

@@ -1,0 +1,11 @@
+Bootstrap for Sass
+==================
+
+Website: https://getbootstrap.com/
+Version: 4.1
+
+The most popular HTML, CSS, and JavaScript framework for developing responsive, mobile first projects on the web.
+
+Changes:
+- Only kept the 'javaScripts/' directory
+- used the information from 'scss/' directory in the 'theme/raw/sass/lib/' directory but highly customised
