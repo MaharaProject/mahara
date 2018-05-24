@@ -1480,15 +1480,20 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         // Get all files so that we can delete the files on filesystem
         $filerecords = get_records_sql_assoc('
-            SELECT aff1.*, a.artefacttype
-            FROM {artefact_file_files} aff1
-            JOIN {artefact} a ON aff1.artefact = a.id
-            WHERE artefact IN (' . $idstr . ')
-            GROUP BY fileid
-            HAVING COUNT(aff1.artefact) IN
-               (SELECT COUNT(aff2.artefact)
-                FROM {artefact_file_files} aff2
-                WHERE aff1.fileid = aff2.fileid)'
+            SELECT aff.*, art.artefacttype
+            FROM {artefact_file_files} aff
+            JOIN {artefact} art ON aff.artefact = art.id
+            WHERE fileid IN (
+                SELECT fileid
+                FROM {artefact_file_files} aff1
+                JOIN {artefact} a ON aff1.artefact = a.id
+                WHERE artefact IN (' . $idstr . ')
+                GROUP BY fileid
+                HAVING COUNT(aff1.artefact) IN
+                   (SELECT COUNT(aff2.artefact)
+                    FROM {artefact_file_files} aff2
+                    WHERE aff1.fileid = aff2.fileid)
+            )'
         );
 
         // The current rule is that file deletion should be logged in the artefact_log table
