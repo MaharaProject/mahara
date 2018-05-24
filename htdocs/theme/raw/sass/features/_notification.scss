@@ -31,7 +31,7 @@
     }
 }
 .notification {
-    .panel-control {
+    .card-control {
         top: 5px;
         + a[data-toggle="collapse"] {
             padding-left: 60px;
@@ -71,7 +71,7 @@
         white-space: nowrap;
         max-width: 100%;
     }
-    .panel-heading {
+    .card-heading {
         font-weight: 300;
     }
 }

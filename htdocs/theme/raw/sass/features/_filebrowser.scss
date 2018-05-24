@@ -15,7 +15,7 @@
     }
 }
 
-.panel-fake {
+.card-fake {
     margin-bottom: 15px;
     .title {
         padding: 0;
@@ -62,7 +62,7 @@
 
 // reset padding and margin inside collapsible
 .filelist.table,
-.filelist-wrapper.panel,
+.filelist-wrapper.card,
 .filebrowser.form-group {
     margin-bottom: 0;
     padding: 0 !important // override form-group padding;
@@ -127,7 +127,7 @@
 }
 
 .filelist-wrapper {
-    .panel-heading {
+    .card-heading {
         padding: 10px 0 10px 20px;
         margin-bottom: 10px;
     }

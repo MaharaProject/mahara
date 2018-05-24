@@ -1,12 +1,12 @@
 
-.panel-items {
-    margin-left: -3%; //take away left margin added again by .panel
+.card-items {
+    margin-left: -3%; //take away left margin added again by .card
     margin-bottom: 100px; //buffer
     margin-top: 30px;
-    &.panel-items-no-margin {
+    &.card-items-no-margin {
         margin-bottom: 0px;
     }
-    .panel {
+    .card {
         width: 30.3%;
         float:left;
         margin-left:3%;
@@ -18,13 +18,13 @@
             width: 97%;
         }
         &.double {
-            width: 30.3% * 2 + 3%; //double width panel
+            width: 30.3% * 2 + 3%; //double width card
             @include media-breakpoint-down(sm) {
                 margin-top: 50px;
                 width: 100% - 3;
             }
         }
-        &.panel-half {
+        &.card-half {
             width: 50 - 3%;
             @include media-breakpoint-down(md) {
             width: 97%;

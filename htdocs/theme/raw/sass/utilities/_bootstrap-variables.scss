@@ -13,7 +13,7 @@
 $white:    #fff !default;
 $black:    #000 !default;
 $gray-100: lighten($black, 93.5%) !default; // #eee
-$gray-200: #e9ecef !default;
+$gray-200: #ececec !default;
 $gray-300: lighten($black, 46.7%) !default; // #777
 $gray-400: #ced4da !default;
 $gray-500: lighten($black, 33.5%) !default; // #555
@@ -40,12 +40,12 @@ $midblue: #31708f !default;
 $indigo:  #6610f2 !default;
 $purple:  #6f42c1 !default;
 $pink:    #e83e8c !default;
-$red:     #dc3545 !default;
+$red:     #d9534f !default;
 $orange:  #fd7e14 !default;
-$yellow:  #ffc107 !default;
+$yellow:  #f0ad4e !default;
 $green:   #556d32 !default;
 $teal:    #20c997 !default;
-$cyan:    #17a2b8 !default;
+$cyan:    #5bc0de !default;
 
 $colors: () !default;
 $colors: map-merge((
@@ -66,7 +66,7 @@ $colors: map-merge((
 ), $colors);
 
 $primary:       $green !default;
-$secondary:     $gray-100 !default;
+$secondary:     $gray-200 !default;
 $success:       $green !default;
 $info:          $cyan !default;
 $warning:       $yellow !default;
@@ -262,14 +262,14 @@ $transition-collapse:         height .35s ease !default;
 // Font, line-height, and color for body text, headings, and more.
 
 // stylelint-disable value-keyword-case
-$font-family-sans-serif:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
-$font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-sans-serif:     'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-monospace:       Menlo, Monaco, Consolas, "Courier New", monospace !default;
 $font-family-base:            $font-family-sans-serif !default;
 // stylelint-enable value-keyword-case
 
-$font-size-base:              1rem !default; // Assumes the browser default, typically `16px`
+$font-size-base:              0.875rem !default; // Assumes the browser default, typically `16px`
 $font-size-lg:                ($font-size-base * 1.25) !default;
-$font-size-sm:                ($font-size-base * .875) !default;
+$font-size-sm:                ($font-size-base * 0.85) !default;
 
 $font-weight-light:           300 !default;
 $font-weight-normal:          400 !default;
@@ -278,12 +278,12 @@ $font-weight-bold:            700 !default;
 $font-weight-base:            $font-weight-normal !default;
 $line-height-base:            1.5 !default;
 
-$h1-font-size:                floor(($font-size-base * 2.15)) !default;
-$h2-font-size:                floor(($font-size-base * 1.7)) !default;
-$h3-font-size:                ceil(($font-size-base * 1.5)) !default;
-$h4-font-size:                ceil(($font-size-base * 1.25)) !default;
+$h1-font-size:                $font-size-base * 2.15 !default;
+$h2-font-size:                $font-size-base * 1.7 !default;
+$h3-font-size:                $font-size-base * 1.5 !default;
+$h4-font-size:                $font-size-base * 1.25 !default;
 $h5-font-size:                $font-size-base !default;
-$h6-font-size:                ceil(($font-size-base * 0.85)) !default;
+$h6-font-size:                $font-size-base * 0.85 !default;
 
 $headings-margin-bottom:      ($spacer / 2) !default;
 $headings-font-family:        inherit !default;

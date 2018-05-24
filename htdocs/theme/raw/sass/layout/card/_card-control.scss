@@ -1,7 +1,7 @@
 /*
- * Input boxes, links, or buttons positioned over the panel header
+ * Input boxes, links, or buttons positioned over the card header
  */
-.panel-control {
+.card-control {
     display: block;
     font-size: $font-size-base - 2;
     margin: 0;
@@ -10,14 +10,14 @@
     position: absolute;
     width: auto;
     z-index: 5;
-    &.panel-header-action {
+    &.card-header-action {
         right:0;
         top:0;
         .btn {
             padding-top:0;
         }
     }
-     &.panel-header-form-actions {
+     &.card-header-form-actions {
         right:0;
         top:0;
         padding:0;
@@ -40,7 +40,7 @@
         color: $link-color;
     }
 }
-a.panel-control {
+a.card-control {
     &:hover, &:hover span {
         color: $link-color;
     }

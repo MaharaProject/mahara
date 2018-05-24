@@ -5,7 +5,7 @@
 }
 
 .drag-default-button:not(.ui-draggable-dragging) {
-    border-left: none; // Don't need side borders because the elements are inside panel
+    border-left: none; // Don't need side borders because the elements are inside card
     border-right: none;
 }
 
@@ -79,7 +79,7 @@
 .ui-sortable-helper .blockinstance-controls {
     display: none;
 }
-.ui-sortable-helper.panel-secondary.blockinstance > .panel-heading > .blockinstance-header {
+.ui-sortable-helper.card-secondary.blockinstance > .card-heading > .blockinstance-header {
     padding-right: 0;
 }
 
