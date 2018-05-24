@@ -55,29 +55,30 @@ if ($config->getBoolean('admin.protectmetadata', false)) {
 $sourceId = 'default-sp';
 $source = SimpleSAML_Auth_Source::getById($sourceId);
 if ($source === null) {
-    throw new SimpleSAML_Error_NotFound('Could not find authentication source with id ' . $sourceId);
+    throw new SimpleSAML_Error_AuthSource($sourceId, 'Could not find authentication source.');
 }
 
 if (!($source instanceof sspmod_saml_Auth_Source_SP)) {
-    throw new SimpleSAML_Error_NotFound('Source isn\'t a SAML SP: ' . var_export($sourceId, true));
+    throw new SimpleSAML_Error_AuthSource($sourceId,
+        'The authentication source is not a SAML Service Provider.');
 }
 
 $entityId = $source->getEntityId();
 $spconfig = $source->getMetadata();
-$store = SimpleSAML_Store::getInstance();
+$store = \SimpleSAML\Store::getInstance();
 
 $metaArray20 = array();
 
 $slosvcdefault = array(
-    SAML2_Const::BINDING_HTTP_REDIRECT,
-    SAML2_Const::BINDING_SOAP,
+    \SAML2\Constants::BINDING_HTTP_REDIRECT,
+    \SAML2\Constants::BINDING_SOAP,
 );
 
 $slob = $spconfig->getArray('SingleLogoutServiceBinding', $slosvcdefault);
 $slol = get_config('wwwroot') . "auth/saml/sp/module.php/saml/sp/saml2-logout.php/{$sourceId}";
 
 foreach ($slob as $binding) {
-    if ($binding == SAML2_Const::BINDING_SOAP && !($store instanceof SimpleSAML_Store_SQL)) {
+    if ($binding == \SAML2\Constants::BINDING_SOAP && !($store instanceof \SimpleSAML\Store\SQL)) {
         // we cannot properly support SOAP logout
         continue;
     }
@@ -107,7 +108,7 @@ foreach ($assertionsconsumerservices as $services) {
     $acsArray = array('index' => $index);
     switch ($services) {
         case 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST':
-            $acsArray['Binding'] = SAML2_Const::BINDING_HTTP_POST;
+            $acsArray['Binding'] = \SAML2\Constants::BINDING_HTTP_POST;
             $acsArray['Location'] = get_config('wwwroot') . "auth/saml/sp/module.php/saml/sp/saml2-acs.php/{$sourceId}";
             break;
         case 'urn:oasis:names:tc:SAML:1.0:profiles:browser-post':
@@ -125,7 +126,7 @@ foreach ($assertionsconsumerservices as $services) {
         case 'urn:oasis:names:tc:SAML:2.0:profiles:holder-of-key:SSO:browser':
             $acsArray['Binding'] = 'urn:oasis:names:tc:SAML:2.0:profiles:holder-of-key:SSO:browser';
             $acsArray['Location'] = get_config('wwwroot') . "auth/saml/sp/module.php/saml/sp/saml2-acs.php/{$sourceId}";
-            $acsArray['hoksso:ProtocolBinding'] = SAML2_Const::BINDING_HTTP_REDIRECT;
+            $acsArray['hoksso:ProtocolBinding'] = \SAML2\Constants::BINDING_HTTP_REDIRECT;
             break;
     }
     $eps[] = $acsArray;

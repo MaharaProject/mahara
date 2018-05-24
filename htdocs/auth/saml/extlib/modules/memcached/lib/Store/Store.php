@@ -19,7 +19,7 @@
  * Infrastructure Group in the Faculty of Engineering, Architecture
  * and Information Technology.
  */
-class sspmod_memcached_Store_Store extends SimpleSAML_Store {
+class sspmod_memcached_Store_Store extends SimpleSAML\Store {
     /**
      * Initialize the memcache datastore.
      */

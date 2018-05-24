@@ -58,7 +58,7 @@ if ($store_type == 'phpsession' || $session_handler == 'phpsession' || (empty($s
 // do we have a logout request?
 if (param_variable("logout", false)) {
     // logout the saml session
-    $as = new SimpleSAML_Auth_Simple($sp);
+    $as = new SimpleSAML\Auth\Simple($sp);
     $as->logout($CFG->wwwroot);
 }
 
@@ -88,7 +88,7 @@ if (!validateUrlSyntax($wantsurl, 's?H?S?F?E?u-P-a?I?p?f?q?r?')) {
 // trim off any reference to login and stash
 $SESSION->wantsurl = preg_replace('/\&login$/', '', $wantsurl);
 
-$as = new SimpleSAML_Auth_Simple($sp);
+$as = new SimpleSAML\Auth\Simple($sp);
 $idp_entityid = null;
 if (! $as->isAuthenticated()) {
     if (param_variable("idpentityid", false)) {
@@ -117,7 +117,7 @@ if (! $as->isAuthenticated()) {
 
 // reinitialise config to pickup idp entityID
 SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
-$as = new SimpleSAML_Auth_Simple('default-sp');
+$as = new SimpleSAML\Auth\Simple('default-sp');
 $as->requireAuth(array('ReturnTo' => get_config('wwwroot') . "auth/saml/index.php"));
 
 // ensure that $_SESSION is cleared for simplesamlphp
