@@ -4547,6 +4547,13 @@ function build_portfolio_search_html(&$data) {
         $data->basejsonurl = 'json/tagsearch.php';
     }
 
+    if (isset($data->sort) && $data->sort != 'name') {
+        $data->baseurl .= (strpos($data->baseurl, '?') ? '&' : '?') . 'sort=' . $data->sort;
+    }
+    if (isset($data->filter) && $data->filter != 'all') {
+        $data->baseurl .= (strpos($data->baseurl, '?') ? '&' : '?') . 'type=' . $data->filter;
+    }
+
     $data->sortcols = array('name', 'date');
     $data->filtercols = array(
         'all'        => get_string('tagfilter_all'),
@@ -4568,7 +4575,7 @@ function build_portfolio_search_html(&$data) {
     $pagination = build_pagination(array(
         'id' => 'results_pagination',
         'class' => 'center',
-        'url' => $data->baseurl . ($data->sort == 'name' ? '' : '&sort=' . $data->sort) . ($data->filter == 'all' ? '' : '&type=' . $data->filter),
+        'url' => $data->baseurl,
         'jsonscript' => $data->basejsonurl,
         'datatable' => 'results',
         'count' => $data->count,
