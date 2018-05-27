@@ -921,7 +921,7 @@ class User {
         if (!is_null($themeinstitution)) {
             $themename  = $institutions[$themeinstitution]->theme;
             $headerlogo = $institutions[$themeinstitution]->logo;
-            $headerlogosmall = $institutions[$themeinstitution]->logoxs;
+            $headerlogosmall = isset($institutions[$themeinstitution]->logoxs) ? $institutions[$themeinstitution]->logoxs : null;
             if ($institutions[$themeinstitution]->style) {
                 $stylesheet = get_config('wwwroot') . 'style.php?id=' . $institutions[$themeinstitution]->style;
                 if ($nocachecss) {
