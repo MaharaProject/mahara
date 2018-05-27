@@ -155,7 +155,14 @@ if ($records = get_records_sql_array($selectsql . $joinsql . $wheresql, $values)
     if (!$dryrun) {
         $cli->cli_print("--- " . date('Y-m-d H:i:s', time()) . " ---");
         foreach ($records as $record) {
-            delete_user($record->id);
+            try {
+                $DB_IGNORE_SQL_EXCEPTIONS = true;
+                delete_user($record->id);
+                $DB_IGNORE_SQL_EXCEPTIONS = false;
+            }
+            catch (SQLException $e) {
+                $cli->cli_print(get_string('cli_deleteinactiveusers_userunabletodelete', 'admin', $record->username, $record->id));
+            }
             if ($cleanusers) {
                 try {
                     $DB_IGNORE_SQL_EXCEPTIONS = true;
