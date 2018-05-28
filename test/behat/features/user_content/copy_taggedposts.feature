@@ -51,7 +51,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   # Copy the page as another user
   And I log out
   Given I log in as "UserB" with password "Kupuh1pa!"
-  And I scroll to the id "view"
+  And I scroll to the id "editdashboard"
   And I follow "Page UserA_01"
   And I scroll to the base of id "copyview-button"
   And I follow "Copy"
