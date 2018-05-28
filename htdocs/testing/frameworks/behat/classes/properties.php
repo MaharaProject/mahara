@@ -26,6 +26,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'File download heading 1'     => array(".filedownload-item:nth-of-type(1)>h4", "css_element"),
     'File download heading 2'     => array(".filedownload-item:nth-of-type(2)>h4", "css_element"),
     'Filelist table'              => array(".filelist", "css_element"),
+    'Footer'                      => array(".footer", "css_element"),
     'Pages and Collections boxes' => array(".grouppageswrap", "css_element"),
     'Groups sub-menu'             => array(".groups", "css_element"),
     'Admin Groups sub-menu'       => array(".managegroups ul", "css_element"),
