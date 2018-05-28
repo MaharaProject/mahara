@@ -48,8 +48,8 @@ Scenario: Student can't change password to anything not fitting password policy
  And I press "Save"
  And I should see "Password must contain upper and lowercase letters, numbers, symbols."
  And I fill in "Current password" with "Kupuh1pa!"
- And I fill in "New password" with "p@ssw0rd"
- And I fill in "Confirm password" with "p@ssw0rd"
+ And I fill in "New password" with "P@ssw0rd"
+ And I fill in "Confirm password" with "P@ssw0rd"
  And I press "Save"
  And I should see "Your password is too easy"
  And I log out
