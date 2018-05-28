@@ -56,58 +56,65 @@ class Behat2Renderer
     public function renderAfterExercise($obj) {
         //--> features results
         $strFeatPassed = '' ;
-        if (count($obj->getPassedFeatures()) > 0) {
+        $featTotal = 0;
+        $sceTotal = 0;
+        $stepsTotal = 0;
+
+        if (null!==$obj->getPassedFeatures() && count($obj->getPassedFeatures()) > 0) {
             $strFeatPassed = ' <strong class="passed">'.count($obj->getPassedFeatures()).' success</strong>';
+            $featTotal += count($obj->getPassedFeatures());
         }
 
         $strFeatFailed = '' ;
         $sumRes = 'passed' ;
-        if (count($obj->getFailedFeatures()) > 0) {
+        if (null!==$obj->getFailedFeatures() && count($obj->getFailedFeatures()) > 0) {
             $strFeatFailed = ' <strong class="failed">'.count($obj->getFailedFeatures()).' fail</strong>';
             $sumRes = 'failed' ;
+            $featTotal += count($obj->getFailedFeatures());
         }
 
         //--> scenarios results
         $strScePassed = '' ;
-        if (count($obj->getPassedScenarios()) > 0) {
+        if (null!==$obj->getPassedScenarios() && count($obj->getPassedScenarios()) > 0) {
             $strScePassed = ' <strong class="passed">'.count($obj->getPassedScenarios()).' success</strong>';
+            $sceTotal += count($obj->getPassedScenarios());
         }
 
         $strSceFailed = '' ;
-        if (count($obj->getFailedScenarios()) > 0) {
+        if (null!==$obj->getFailedScenarios() && count($obj->getFailedScenarios()) > 0) {
             $strSceFailed = ' <strong class="failed">'.count($obj->getFailedScenarios()).' fail</strong>';
+            $sceTotal += count($obj->getFailedScenarios());
         }
 
         //--> steps results
         $strStepsPassed = '' ;
-        if (count($obj->getPassedSteps()) > 0) {
+        if (null!==$obj->getPassedSteps() && count($obj->getPassedSteps()) > 0) {
             $strStepsPassed = ' <strong class="passed">'.count($obj->getPassedSteps()).' success</strong>';
+            $stepsTotal += count($obj->getPassedSteps());
         }
 
         $strStepsPending = '' ;
-        if (count($obj->getPendingSteps()) > 0) {
+        if (null!==$obj->getPendingSteps() && count($obj->getPendingSteps()) > 0) {
             $strStepsPending = ' <strong class="pending">'.count($obj->getPendingSteps()).' pending</strong>';
+            $stepsTotal += count($obj->getPendingSteps());
         }
 
         $strStepsSkipped = '' ;
-        if (count($obj->getSkippedSteps()) > 0) {
+        if (null!==$obj->getSkippedSteps() && count($obj->getSkippedSteps()) > 0) {
             $strStepsSkipped = ' <strong class="skipped">'.count($obj->getSkippedSteps()).' skipped</strong>';
+            $stepsTotal += count($obj->getSkippedSteps());
         }
 
         $strStepsFailed = '' ;
-        if (count($obj->getFailedSteps()) > 0) {
+        if (null!==$obj->getFailedSteps() && count($obj->getFailedSteps()) > 0) {
             $strStepsFailed = ' <strong class="failed">'.count($obj->getFailedSteps()).' fail</strong>';
+            $stepsTotal += count($obj->getFailedSteps());
         }
 
 
-        //totals
-        $featTotal = (count($obj->getFailedFeatures()) + count($obj->getPassedFeatures()));
-        $sceTotal = (count($obj->getFailedScenarios()) + count($obj->getPassedScenarios())) ;
-        $stepsTotal = (count($obj->getFailedSteps()) + count($obj->getPassedSteps()) + count($obj->getSkippedSteps()) + count($obj->getPendingSteps())) ;
-
         //list of pending steps to display
         $strPendingList = '' ;
-        if (count($obj->getPendingSteps()) > 0) {
+        if (null!==$obj->getPendingSteps() && count($obj->getPendingSteps()) > 0) {
             foreach($obj->getPendingSteps() as $pendingStep) {
                 $strPendingList .= '
                     <li>' . $pendingStep->getKeyword() . ' ' . $pendingStep->getText() . '</li>' ;
