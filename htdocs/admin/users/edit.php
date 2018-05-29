@@ -270,7 +270,7 @@ $elements['externalauthjs'] = array(
     'value'        => $js,
 );
 
-$tags = get_column_sql('SELECT tag FROM {usr_tag} WHERE usr = ? AND NOT tag ' . db_ilike() . " 'lastinstitution:%'", array($user->id));
+$tags = get_column_sql('SELECT tag FROM {tag} WHERE resourcetype = ? AND resourceid = ? AND NOT tag ' . db_ilike() . " 'lastinstitution:%'", array('usr', $user->id));
 
 $elements['tags'] = array(
     'defaultvalue' => $tags,
@@ -603,18 +603,23 @@ function edituser_site_submit(Pieform $form, $values) {
     // Update user's primary email address
     set_user_primary_email($user->id, $values['email']);
 
-    delete_records('usr_tag', 'usr', $user->id);
+    delete_records('tag', 'resourcetype', 'usr', 'resourceid', $user->id);
     if (is_array($values['tags'])) {
-        $values['tags'] = check_case_sensitive($values['tags'], 'usr_tag');
+        $values['tags'] = check_case_sensitive($values['tags'], 'tag');
         foreach(array_unique($values['tags']) as $tag) {
             if (empty($tag)) {
                 continue;
             }
             insert_record(
-                'usr_tag',
+                'tag',
                 (object) array(
-                    'usr' => $user->id,
+                    'resourcetype' => 'usr',
+                    'resourceid' => $user->id,
+                    'ownertype' => 'user',
+                    'ownerid' => $user->id,
                     'tag' => strtolower($tag),
+                    'ctime' => db_format_timestamp(time()),
+                    'editedby' => $USER->get('id'),
                 )
             );
         }

@@ -129,10 +129,10 @@ class ElasticsearchType_view extends ElasticsearchType {
             return false;
         }
 
-        $tags = get_records_array ( 'view_tag', 'view', $id );
+        $tags = get_column ( 'tag', 'tag', 'resourcetype', 'view', 'resourceid', $id );
         if ($tags != false) {
             foreach ( $tags as $tag ) {
-                $record->tags [] = $tag->tag;
+                $record->tags [] = $tag;
             }
         }
         else {
@@ -158,10 +158,10 @@ class ElasticsearchType_view extends ElasticsearchType {
             $record->createdbyname = display_name ( $record->createdby );
         }
         // Tags
-        $tags = get_records_array ( 'view_tag', 'view', $id );
+        $tags = get_column ( 'tag', 'tag', 'resourcetype', 'view', 'resourceid', $id );
         if ($tags != false) {
             foreach ( $tags as $tag ) {
-                $record->tags [] = $tag->tag;
+                $record->tags [] = $tag;
             }
         }
         else {

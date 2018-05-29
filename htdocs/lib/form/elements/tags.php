@@ -81,16 +81,17 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null) {
     if ($USER->is_logged_in()) {
         $usertags = "";
         $userid = $USER->get('id');
+        $typecast = is_postgres() ? '::varchar' : '';
         if ($USER->get('admin')) {
             $usertags = "
                 UNION ALL
-                SELECT tag,COUNT(*) AS count FROM {usr_tag} t INNER JOIN {usr} u ON t.usr=u.id GROUP BY 1";
+                SELECT tag, COUNT(*) AS count FROM {tag} t INNER JOIN {usr} u ON (t.resourcetype = 'usr' AND t.resourceid = u.id" . $typecast . ") GROUP BY 1";
         }
         else if ($admininstitutions = $USER->get('admininstitutions')) {
             $insql = "'" . join("','", $admininstitutions) . "'";
             $usertags = "
                 UNION ALL
-                SELECT tag,COUNT(*) AS count FROM {usr_tag} t INNER JOIN {usr} u ON t.usr=u.id INNER JOIN {usr_institution} ui ON ui.usr=u.id WHERE ui.institution IN ($insql) GROUP BY 1";
+                SELECT tag, COUNT(*) AS count FROM {tag} t INNER JOIN {usr} u ON (t.resourcetype = 'usr' AND t.resourceid = u.id" . $typecast . ") INNER JOIN {usr_institution} ui ON ui.usr=u.id WHERE ui.institution IN ($insql) GROUP BY 1";
         }
         $values = array($userid, $userid, $userid);
         $querystr = '';
@@ -101,11 +102,11 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null) {
         $sql = "
             SELECT tag, SUM(count) AS count
             FROM (
-                SELECT tag,COUNT(*) AS count FROM {artefact_tag} t INNER JOIN {artefact} a ON t.artefact=a.id WHERE a.owner=? GROUP BY 1
+                SELECT tag,COUNT(*) AS count FROM {tag} t INNER JOIN {artefact} a ON (t.resourcetype = 'artefact' AND t.resourceid = a.id" . $typecast . ") WHERE a.owner=? GROUP BY 1
                 UNION ALL
-                SELECT tag,COUNT(*) AS count FROM {view_tag} t INNER JOIN {view} v ON t.view=v.id WHERE v.owner=? GROUP BY 1
+                SELECT tag,COUNT(*) AS count FROM {tag} t INNER JOIN {view} v ON (t.resourcetype = 'view' AND t.resourceid = v.id" . $typecast . ") WHERE v.owner=? GROUP BY 1
                 UNION ALL
-                SELECT tag,COUNT(*) AS count FROM {collection_tag} t INNER JOIN {collection} c ON t.collection=c.id WHERE c.owner=? GROUP BY 1
+                SELECT tag,COUNT(*) AS count FROM {tag} t INNER JOIN {collection} c ON (t.resourcetype = 'collection' AND t.resourceid = c.id" . $typecast . ") WHERE c.owner=? GROUP BY 1
                 " . $usertags . "
             ) tags
             " . $querystr . "

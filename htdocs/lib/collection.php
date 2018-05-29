@@ -152,7 +152,7 @@ class Collection {
         }
 
         delete_records('collection_view','collection',$this->id);
-        delete_records('collection_tag','collection',$this->id);
+        delete_records('tag', 'resourcetype', 'collection', 'resourceid', $this->id);
         delete_records('collection','id',$this->id);
         delete_records('existingcopy', 'collection', $this->id);
 
@@ -173,6 +173,7 @@ class Collection {
      * This method updates the contents of the collection table only.
      */
     public function commit() {
+        global $USER;
 
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
@@ -196,12 +197,34 @@ class Collection {
         }
 
         if (isset($this->tags)) {
-            delete_records('collection_tag', 'collection', $this->get('id'));
-            $tags = check_case_sensitive($this->get_tags(), 'collection_tag');
+            if ($this->group) {
+                $ownertype = 'group';
+                $ownerid = $this->group;
+            }
+            else if ($this->institution) {
+                $ownertype = 'institution';
+                $ownerid = $this->institution;
+            }
+            else {
+                $ownertype = 'user';
+                $ownerid = $this->owner;
+            }
+            delete_records('tag', 'resourcetype', 'collection', 'resourceid', $this->get('id'));
+            $tags = check_case_sensitive($this->get_tags(), 'tag');
             foreach ($tags as $tag) {
                 //truncate the tag before insert it into the database
                 $tag = substr($tag, 0, 128);
-                insert_record('collection_tag', (object)array( 'collection' => $this->get('id'), 'tag' => $tag));
+                insert_record('tag',
+                    (object)array(
+                        'resourcetype' => 'collection',
+                        'resourceid' => $this->get('id'),
+                        'ownertype' => $ownertype,
+                        'ownerid' => $ownerid,
+                        'tag' => $tag,
+                        'ctime' => db_format_timestamp(time()),
+                        'editedby' => $USER->get('id'),
+                    )
+                );
             }
         }
 
@@ -1332,7 +1355,7 @@ class Collection {
      */
     public function get_tags() {
         if (!isset($this->tags)) {
-            $this->tags = get_column('collection_tag', 'tag', 'collection', $this->get('id'));
+            $this->tags = get_column_sql('SELECT tag FROM {tag} WHERE resourcetype = ? AND resourceid = ? ORDER BY tag', array('collection', $this->get('id')));
         }
         return $this->tags;
     }

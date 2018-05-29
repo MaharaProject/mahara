@@ -5915,6 +5915,11 @@ function xmldb_core_upgrade($oldversion=0) {
                          FROM {usr_tag} ut
                          JOIN {usr} u ON u.id = ut.usr
                          WHERE u.deleted = 0");
+            // Drop old *_tag tables
+            execute_sql("DROP TABLE {artefact_tag}");
+            execute_sql("DROP TABLE {usr_tag}");
+            execute_sql("DROP TABLE {view_tag}");
+            execute_sql("DROP TABLE {collection_tag}");
         }
     }
 

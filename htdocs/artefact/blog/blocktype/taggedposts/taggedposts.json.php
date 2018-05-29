@@ -28,9 +28,12 @@ if ($page < 1) {
 }
 $tagsperpage = 5;
 $values = array($USER->id);
-$sql = "SELECT at.tag FROM {artefact_tag} at
-        JOIN {artefact} a ON a.id = at.artefact
+$typecast = is_postgres() ? '::varchar' : '';
+$sql = "SELECT at.tag FROM {tag} at
+        JOIN {artefact} a ON (at.resourcetype = 'artefact' AND at.resourceid = a.id" . $typecast . ")
         WHERE a.owner = ?
+        AND at.resourcetype = 'artefact'
+        AND at.resourceid = a.id" . $typecast . "
         AND a.artefacttype = 'blogpost'";
 if ($request !== '') {
     $sql .= " AND at.tag LIKE '%' || ? || '%'";

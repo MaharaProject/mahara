@@ -693,13 +693,14 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     }
                 }
             }
-            $where = 'artefact IN (' . join(',', array_keys($filedata)) . ')';
-            $tags = get_records_select_array('artefact_tag', $where);
+            $tagwhere = "'" . join("','", array_keys($filedata)) . "'";
+            $tags = get_records_sql_array("SELECT tag, resourceid FROM {tag} WHERE resourcetype = 'artefact' AND resourceid IN (" . $tagwhere . ")");
             if ($tags) {
                 foreach ($tags as $t) {
-                    $filedata[$t->artefact]->tags[] = $t->tag;
+                    $filedata[$t->resourceid]->tags[] = $t->tag;
                 }
             }
+            $where = 'artefact IN (' . join(',', array_keys($filedata)) . ')';
             if ($group) {  // Fetch permissions for each artefact
                 $perms = get_records_select_array('artefact_access_role', $where);
                 if ($perms) {

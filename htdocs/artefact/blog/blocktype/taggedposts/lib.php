@@ -107,31 +107,32 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             }
             $tagsout = array_filter($tagsout);
             $sqlvalues = array($view);
+            $typecast = is_postgres() ? '::varchar' : '';
             $sql =
-                'SELECT a.title, p.title AS parenttitle, a.id, a.parent, a.owner, a.description, a.allowcomments, at.tag, a.ctime, a.mtime
+                "SELECT a.title, p.title AS parenttitle, a.id, a.parent, a.owner, a.description, a.allowcomments, at.tag, a.ctime, a.mtime
                 FROM {artefact} a
                 JOIN {artefact} p ON a.parent = p.id
                 JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
-                JOIN {artefact_tag} at ON (at.artefact = a.id)
-                WHERE a.artefacttype = \'blogpost\'
-                AND a.owner = (SELECT "owner" from {view} WHERE id = ?)';
+                JOIN {tag} at ON (at.resourcetype = 'artefact' AND at.resourceid = a.id" . $typecast . ")
+                WHERE a.artefacttype = 'blogpost'
+                AND a.owner = (SELECT \"owner\" from {view} WHERE id = ?)";
             if (!empty($tagsin)) {
                 foreach ($tagsin as $tagin) {
-                    $sql .= ' AND EXISTS (
-                        SELECT * FROM {artefact_tag} AS at
-                        WHERE a.id = at.artefact
+                    $sql .= " AND EXISTS (
+                        SELECT * FROM {tag} AS at
+                        WHERE at.resourcetype = 'artefact' AND at.resourceid = a.id" . $typecast . "
                         AND at.tag = ?
-                    )';
+                    )";
                 }
                 $sqlvalues = array_merge($sqlvalues, $tagsin);
             }
             if (!empty($tagsout)) {
                 foreach ($tagsout as $tagout) {
-                    $sql .= ' AND NOT EXISTS (
-                        SELECT * FROM {artefact_tag} AS at
-                        WHERE a.id = at.artefact
+                    $sql .= " AND NOT EXISTS (
+                        SELECT * FROM {tag} AS at
+                        WHERE at.resourcetype = 'artefact' AND at.resourceid = a.id" . $typecast . "
                         AND at.tag = ?
-                    )';
+                    )";
                 }
                 $sqlvalues = array_merge($sqlvalues, $tagsout);
             }
@@ -234,7 +235,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
                 $result->comments = $comments;
 
                 // get all tags for this post
-                $taglist = get_records_array('artefact_tag', 'artefact', $result->id, "tag DESC");
+                $taglist = get_records_sql_array("SELECT tag FROM {tag} WHERE resourcetype = 'artefact' AND resourceid = ? ORDER BY tag DESC", array($result->id));
                 foreach ($taglist as $t) {
                     $result->taglist[] = $t->tag;
                 }
@@ -318,12 +319,11 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
     private static function get_chooseable_tags() {
         global $USER;
 
+        $typecast = is_postgres() ? '::varchar' : '';
         return get_records_sql_array("
             SELECT at.tag
-            FROM
-                {artefact_tag} at
-                JOIN {artefact} a
-                ON a.id = at.artefact
+            FROM {tag} at
+            JOIN {artefact} a ON (at.resourcetype ='artefact' AND at.resourceid = a.id" . $typecast . ")
             WHERE
                 a.owner = ?
                 AND a.artefacttype = 'blogpost'

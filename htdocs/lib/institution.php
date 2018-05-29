@@ -343,9 +343,9 @@ class Institution {
         insert_record('usr_institution', $userinst);
         delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
         execute_sql("
-            DELETE FROM {usr_tag}
-            WHERE usr = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
-            array($user->id)
+            DELETE FROM {tag}
+            WHERE resourcetype = ? AND resourceid = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
+            array('usr', $user->id)
         );
         // Copy institution views and collection to the user's portfolio
         $checkviewaccess = empty($user->newuser) && !$USER->get('admin');
@@ -677,16 +677,21 @@ class Institution {
         );
 
         execute_sql("
-            DELETE FROM {usr_tag}
-            WHERE usr = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
-            array($user->id)
+            DELETE FROM {tag}
+            WHERE resourcetype = ? AND resourceid = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
+            array('usr', $user->id)
         );
 
         insert_record(
-            'usr_tag',
+            'tag',
             (object) array(
-                'usr' => $user->id,
+                'resourcetype' => 'usr',
+                'resourceid' => $user->id,
+                'ownertype' => 'institution',
+                'ownerid' => $this->name,
                 'tag' => 'lastinstitution:' . strtolower($this->name),
+                'ctime' => db_format_timestamp(time()),
+                'editedby' => $USER->get('id'),
             )
         );
 
