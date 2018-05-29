@@ -26,7 +26,7 @@
             <div id="results_sort" class="pull-right">
                 <strong>{str tag=sortresultsby}</strong>
                 {foreach from=$results->sortcols item=sortfield name=sortcols}
-                    <a href="{$results->baseurl}{$results->queryprefix}type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span>{/if}
+                    <a href="{$results->baseurl}{$results->queryprefix}sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span>{/if}
                 {/foreach}
             </div>
             <div class="btn-group">
@@ -41,7 +41,7 @@
                 <ul class="dropdown-menu" id="results_filter">
                 {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
                     <li>
-                        <a href="{$results->baseurl}{$results->queryprefix}sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>
+                        <a href="{$results->baseurl}{$results->queryprefix}type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>
                     </li>
                 {/foreach}
                 </ul>

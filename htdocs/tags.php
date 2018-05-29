@@ -159,6 +159,7 @@ jQuery(function($) {
                           $(this).addClass('selected');
                       }
                   });
+                  $('#results_filter a').each(function () {rewriteTagLink(this, ['tag', 'sort'], ['type'])});
                   params.sort = data.data.sort;
               }
 
@@ -174,6 +175,7 @@ jQuery(function($) {
                           $('#results_filter').parent().removeClass('open');
                       }
                   });
+                  $('#results_sort a').each(function () {rewriteTagLink(this, ['tag', 'type'], [ 'sort'])});
                   params.type = data.data.type;
               }
 
