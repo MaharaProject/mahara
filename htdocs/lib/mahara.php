@@ -4532,6 +4532,14 @@ function build_portfolio_search_html(&$data) {
     }
 
     $data->baseurl = get_config('wwwroot') . 'tags.php' . (is_null($data->tag) ? '' : '?tag=' . urlencode($data->tag));
+
+    if (isset($data->sort) && $data->sort != 'name') {
+        $data->baseurl .= (strpos($data->baseurl, '?') ? '&' : '?') . 'sort=' . $data->sort;
+    }
+    if (isset($data->filter) && $data->filter != 'all') {
+        $data->baseurl .= (strpos($data->baseurl, '?') ? '&' : '?') . 'type=' . $data->filter;
+    }
+
     $data->sortcols = array('name', 'date');
     $data->filtercols = array(
         'all'        => get_string('tagfilter_all'),
@@ -4549,7 +4557,7 @@ function build_portfolio_search_html(&$data) {
     $pagination = build_pagination(array(
         'id' => 'results_pagination',
         'class' => 'center',
-        'url' => $data->baseurl . ($data->sort == 'name' ? '' : '&sort=' . $data->sort) . ($data->filter == 'all' ? '' : '&type=' . $data->filter),
+        'url' => $data->baseurl,
         'jsonscript' => 'json/tagsearch.php',
         'datatable' => 'results',
         'count' => $data->count,

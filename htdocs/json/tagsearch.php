@@ -21,7 +21,7 @@ if ($tag = param_variable('tag', null)) {
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 $sort   = param_alpha('sort', 'name');
-$type   = param_alpha('type', null);
+$type   = param_alpha('type', 'all');
 $owner  = (object) array('type' => 'user', 'id' => $USER->get('id'));
 
 $data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort, $type);
