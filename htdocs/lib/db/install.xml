@@ -238,16 +238,6 @@
                 <INDEX NAME="usrix" UNIQUE="false" FIELDS="usr"/>
             </INDEXES>
         </TABLE>
-        <TABLE NAME="usr_tag">
-            <FIELDS>
-                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true"/>
-                <FIELD NAME="tag" TYPE="char" LENGTH="128" NOTNULL="true"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="usr,tag"/>
-                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
-            </KEYS>
-        </TABLE>
         <TABLE NAME="auth_remote_user">
             <FIELDS>
                 <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -555,16 +545,6 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="artefact_tag">
-            <FIELDS>
-                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="tag" TYPE="char" LENGTH="128" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="artefact,tag" />
-                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="artefact_access_usr">
             <FIELDS>
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -850,16 +830,6 @@
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
-        <TABLE NAME="view_tag">
-            <FIELDS>
-                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="tag" TYPE="char" LENGTH="128" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="view,tag" />
-                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="view_autocreate_grouptype">
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -1131,16 +1101,6 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="view" />
                 <KEY NAME="collectionfk" TYPE="foreign" FIELDS="collection" REFTABLE="collection" REFFIELDS="id"  />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"  />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="collection_tag">
-            <FIELDS>
-                <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="tag" TYPE="char" LENGTH="128" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="collection,tag" />
-                <KEY NAME="collectionfk" TYPE="foreign" FIELDS="collection" REFTABLE="collection" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="existingcopy">
@@ -1428,7 +1388,7 @@
                 <KEY NAME="sitecontentfk" TYPE="foreign" FIELDS="sitecontentid" REFTABLE="site_content_version" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
-	<TABLE NAME="usr_pendingdeletion">
+        <TABLE NAME="usr_pendingdeletion">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -1438,6 +1398,23 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="tag">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="tag" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="resourcetype" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="resourceid" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="ownertype" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="ownerid" TYPE="char" LENGTH="100" NOTNULL="false" />
+                <FIELD NAME="editedby" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="false"  />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="editedbyfk" TYPE="foreign" FIELDS="editedby" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
     </TABLES>
