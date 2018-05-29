@@ -419,8 +419,8 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
 
         $result = mahara_http_request($config, true);
 
-        if ($result->error) {
-            throw new MaharaException('Feed url returned error', $result->error);
+        if ($result->errno) {
+            throw new MaharaException('Feed url returned error: ' . $result->error, $result->errno);
         }
 
         if (empty($result->data)) {
