@@ -37,10 +37,11 @@ if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
     exit;
 }
 
-if (!get_config('registration_lastsent')
-    || get_config('new_registration_policy')) {
-    $register = true;
+// If this is true, we changed to make weekly updates mandatory since this site registered. So tell them.
+if (get_config('registration_lastsent') && !get_config('registration_firstsent')) {
+    set_config('new_registration_policy', true);
 }
+
 
 $closed = get_config('siteclosedbyadmin');
 $closeform = pieform(array(
@@ -84,11 +85,12 @@ $smarty->assign('upgrades', $upgrades);
 if (isset($sitedata)) {
     $smarty->assign('sitedata', $sitedata);
 }
+$firstregistered = get_config('registration_firstsent');
+$smarty->assign('firstregistered', $firstregistered ?  format_date($firstregistered) : false);
 
-if (isset($register)) {
-    $smarty->assign('register', $register);
-}
-
+$smarty->assign('register', true);
+$smarty->assign('newregisterpolicy', get_config('new_registration_policy'));
+$smarty->assign('sendweeklyupdates', get_config('registration_sendweeklyupdates'));
 $smarty->assign('closed', $closed);
 $smarty->assign('closeform', $closeform);
 $smarty->assign('clearcachesform', $clearcachesform);

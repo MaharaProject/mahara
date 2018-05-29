@@ -240,25 +240,28 @@ $string['filemissingdesc'] = 'File %s%s is missing from server';
 // Register your Mahara
 $string['Field'] = 'Field';
 $string['Value'] = 'Value';
-$string['datathatwillbesent'] = 'Data that will be sent';
+$string['dataincluded'] = 'Data included';
 $string['datathathavebeensent'] = 'Data that has been sent';
-$string['sendweeklyupdates'] = 'Send weekly updates?';
-$string['sendweeklyupdatesdescription2'] = 'Allow your site to send weekly updates to mahara.org with some statistics about your site.';
+$string['newregistrationpolicyinfo'] = '<p>We have updated our registration data policy to require registered sites to provide weekly updates of their data. Please follow the link below to confirm or remove your registration.</p>';
+$string['registerwithmahara'] = 'Register with mahara.org?';
+$string['remainregistered'] = 'Remain registered?';
 $string['Register'] = 'Register';
+$string['Registration'] = 'Registration';
 $string['registrationcancelled'] = 'You can choose to register at any time by going to the <a href="%sadmin/registersite.php">site registration page</a>.';
 $string['registrationfailedtrylater'] = 'Registration failed with error code %s. Please try again later.';
 $string['registrationsuccessfulthanksforregistering'] = 'Registration successful - thanks for registering.';
-$string['registeryourmaharasite'] = 'Register your Mahara site';
-$string['registeryourmaharasitesummary'] = '
-<p>You can choose to register your Mahara site with <a href="https://mahara.org/">mahara.org</a> and help us to build up a picture of the Mahara installations around the world. Registering will remove this notice.</p>
-<p>You can register your site and preview the information that will be sent on the <strong><a href="%sadmin/registersite.php">site registration page.</a></strong></p>';
+$string['registermaharasite'] = 'Site registration';
+$string['registeryoursitesummary'] = '
+<p>Registering your Mahara site with <a href="https://mahara.org/">mahara.org</a> helps us to build up a picture of the Mahara installations around the world.</p>';
 $string['registeryourmaharasitedetail'] = '
 <p>You can choose to register your Mahara site with <a href="https://mahara.org/">mahara.org</a>. Registration is free and helps us build up a picture of the Mahara installations around the world.</p>
-<p>You can see the information that will be sent to mahara.org - nothing that can personally identify any of your users will be sent.</p>
-<p>If you tick &quot;send weekly updates&quot;, Mahara will automatically send an update to mahara.org once a week with your updated information.</p>
-<p>Registering will remove this notice. You will be able to change whether you send weekly updates on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
-$string['siteregistered'] = 'Your site has been registered. You can turn weekly updates on and off on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
-$string['newsiteregistrationpolicy'] = '<p>In Mahara 15.10, we have updated the policy to send data to mahara.org. Please confirm your registration.</p>';
+<p>You can see the information that will be sent to mahara.org. Nothing that can personally identify any of your users will be sent. If you choose to register, Mahara will automatically send your updated information to mahara.org once a week.</p>';
+$string['registrationremoved'] = 'Your site\'s registration has been removed. You can re-register with mahara.org at any time.';
+$string['sendingweeklyupdates'] = 'You are currently sending weekly updates.';
+$string['siteisregisteredsince'] = 'Your site has been registered with <a href="https://mahara.org/">mahara.org</a> since %s.';
+$string['siteisregistered'] = 'Your site is registered with <a href="https://mahara.org/">mahara.org</a>.';
+$string['registeredinfo'] = 'Updated information about your site is being sent to mahara.org weekly. You can see what is being sent in the &quot;Data included&quot; section below. Nothing that can personally identify any of your users is sent.</p><p>To remove registration of your site, change the  &quot;Remain registered&quot; switch to &quot;No&quot; and press the &quot;Save&quot; button.';
+$string['siteregistrationpolicy'] = '<p>To ensure our statistics accurately show how Mahara is being used, registration now includes sending us weekly updates. Please review and confirm your registration by clicking &quot;Save&quot; below.</p>';
 
 // Close site
 $string['Close'] = 'Close';

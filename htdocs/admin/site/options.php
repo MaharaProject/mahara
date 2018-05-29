@@ -94,14 +94,6 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('homepageinfo'),
                     'disabled'     => in_array('homepageinfo', $OVERRIDDEN),
                 ),
-                'registration_sendweeklyupdates' => array(
-                    'type'         => 'switchbox',
-                    'title'        => get_string('sendweeklyupdates', 'admin'),
-                    'description'  => get_string('sendweeklyupdatesdescription2', 'admin'),
-                    'defaultvalue' => get_config('registration_sendweeklyupdates'),
-                    'help'         => true,
-                    'disabled'     => in_array('registration_sendweeklyupdates', $OVERRIDDEN),
-                ),
             ),
         ),
         'usersettings' => array(
@@ -821,7 +813,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'sitename','lang','theme',
         'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'allowanonymouspages', 'generatesitemap',
-        'registration_sendweeklyupdates', 'mathjax', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
+         'mathjax', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
         'institutionstrictprivacy',
         'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'userscanchooseviewthemes', 'internalnotificationexpire',

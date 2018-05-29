@@ -13,7 +13,6 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
  # Changing all the switches from their default settings
  And I set the following fields to these values:
 | Show homepage / dashboard information | 0 |
-| Send weekly updates? | 1 |
 | Users can choose page themes | 1 |
 | Display remote avatars | 1 |
 | Users can hide real names | 1 |
