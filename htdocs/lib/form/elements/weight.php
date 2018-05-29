@@ -101,9 +101,8 @@ function pieform_element_weight_validate_element($element) {
  */
 function pieform_element_weight_returnpolicy_renumber_from_zero($element, $value) {
     $element['existing'] = pieform_element_weight_renumber_existing_from_zero($element['existing']);
-
     $element['existing'][] = array('weight' => $value - 0.5, 'id' => null);
-    usort($element['existing'], create_function('$a, $b', 'return $a["weight"] > $b["weight"];'));
+    usort($element['existing'], function($a, $b) { return $a["weight"] > $b["weight"]; });
 
     $return = array();
     foreach ($element['existing'] as $existing) {
@@ -113,7 +112,7 @@ function pieform_element_weight_returnpolicy_renumber_from_zero($element, $value
 }
 
 function pieform_element_weight_renumber_existing_from_zero($existing) {
-    usort($existing, create_function('$a, $b', 'return $a["weight"] > $b["weight"];'));
+    usort($existing, function($a, $b) { return $a["weight"] > $b["weight"]; });
 
     $i = 0;
     foreach ($existing as &$item) {

@@ -27,7 +27,7 @@ $element_required = ArtefactTypeProfile::get_mandatory_fields();
 
 // load existing profile fields
 $profilefields = array();
-$profile_data = get_records_select_array('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->get('id')));
+$profile_data = get_records_select_array('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(function($a) { return db_quote($a); },array_keys($element_list))) . ")", array($USER->get('id')));
 
 if ($profile_data) {
     foreach ($profile_data as $field) {

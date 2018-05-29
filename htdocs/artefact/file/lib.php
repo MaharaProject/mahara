@@ -311,7 +311,7 @@ class PluginArtefactFile extends PluginArtefact {
             GROUP BY a.owner", array()
         );
         if ($data) {
-            return array_map(create_function('$a', 'return $a->bytes;'), $data);
+            return array_map(function($a) { return $a->bytes; }, $data);
         }
         return array();
     }
@@ -326,7 +326,7 @@ class PluginArtefactFile extends PluginArtefact {
             GROUP BY a.group", array()
         );
         if ($data) {
-            return array_map(create_function('$a', 'return $a->bytes;'), $data);
+            return array_map(function($a) { return $a->bytes; }, $data);
         }
         return array();
     }

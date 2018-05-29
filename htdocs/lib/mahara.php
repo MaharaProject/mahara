@@ -2154,19 +2154,6 @@ function event_find_owner_type($event) {
 }
 
 /**
- * function to convert an array of objects to
- * an array containing one field per place
- *
- * @param array $array input array
- * @param mixed $field field to look for in each object
- */
-function mixed_array_to_field_array($array, $field) {
-    $repl_fun = create_function('$n, $field', '$n = (object)$n; return $n->{$field};');
-    $fields = array_pad(array(), count($array), $field);
-    return array_map($repl_fun, $array, $fields);
-}
-
-/**
  * Used by XMLDB
  */
 function debugging($message, $level) {
@@ -3644,7 +3631,8 @@ function get_real_size($size=0) {
         'k'  => 1024,
     );
 
-    while (list($key) = each($scan)) {
+    $keys = array_keys($scan);
+    foreach ($keys as $key) {
         if (strlen($size) > strlen($key) && substr($size, -strlen($key)) == $key) {
             $size = substr($size, 0, -strlen($key)) * $scan[$key];
             return $size;
@@ -3944,7 +3932,7 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq', $excludeinstitution
                 $t->size = sprintf("%0.1f", $minsize + ($maxsize - $minsize) * $weight);
             }
         }
-        usort($tagrecords, create_function('$a,$b', 'return strnatcasecmp($a->tag, $b->tag);'));
+        usort($tagrecords, function($a, $b) { return strnatcasecmp($a->tag, $b->tag); });
     }
     foreach ($tagrecords as &$t) {
         $t->tagurl = urlencode($t->tag);

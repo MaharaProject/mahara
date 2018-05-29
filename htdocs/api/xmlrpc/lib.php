@@ -253,7 +253,7 @@ function user_authorise($token, $useragent) {
 
     // load existing profile information
     $profilefields = array();
-    $profile_data = get_records_select_assoc('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->get('id')), '','artefacttype, title');
+    $profile_data = get_records_select_assoc('artefact', "owner=? AND artefacttype IN (" . join(",",array_map( function($a) { return db_quote($a); },array_keys($element_list))) . ")", array($USER->get('id')), '','artefacttype, title');
     if ($profile_data == false) {
         $profile_data = array();
     }

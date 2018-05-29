@@ -738,7 +738,14 @@ function auth_get_available_auth_types($institution=null) {
             $row->description = get_string('notusable', 'auth.' . $row->name);
         }
     }
-    usort($result, create_function('$a, $b', 'if ($a->is_usable != $b->is_usable) return $b->is_usable; return strnatcasecmp($a->title, $b->title);'));
+    usort($result, function($a, $b) {
+        if ($a->is_usable != $b->is_usable) {
+            return $b->is_usable;
+        }
+        else {
+            return strnatcasecmp($a->title, $b->title);
+        }
+    });
 
     return $result;
 }
@@ -1716,89 +1723,91 @@ function login_submit(Pieform $form, $values) {
             $USER->username = $username;
 
             reset($authinstances);
-            while ((list(, $authinstance) = each($authinstances)) && false == $authenticated) {
-                $auth = AuthFactory::create($authinstance->id);
-                if (!$auth->can_auto_create_users()) {
-                    continue;
-                }
-                // catch semi-fatal auth errors, but allow next auth instance to be
-                // tried
-                try {
-                    if ($auth->authenticate_user_account($USER, $password)) {
-                        $authenticated = true;
-                    }
-                    else {
+            foreach ($authinstances as $authinstance) {
+                if (false == $authenticated) {
+                    $auth = AuthFactory::create($authinstance->id);
+                    if (!$auth->can_auto_create_users()) {
                         continue;
                     }
-                }
-                catch  (AuthInstanceException $e) {
-                    continue;
-                }
-                catch (UninitialisedAuthException $ue) {
-                    log_info('Malformed auth instance "' . $auth->instancename . '" for institution "' . $auth->institution . '"');
-                    continue;
-                }
-
-                // Check now to see if the institution has its maximum quota of users
-                require_once('institution.php');
-                $institution = new Institution($authinstance->institution);
-                if ($institution->isFull()) {
-                    $institution->send_admin_institution_is_full_message();
-                    throw new AuthUnknownUserException('Institution has too many users');
-                }
-
-                $USER->authinstance = $authinstance->id;
-                $userdata = $auth->get_user_info($username);
-                if ($userdata instanceof User) {
-                    $userdata->reanimate($userdata->id, $authinstance->id);
-                    return;
-                }
-                if (empty($userdata)) {
-                    throw new AuthUnknownUserException("\"$username\" is not known");
-                }
-
-                // Check for a suspended institution
-                if ($authinstance->suspended) {
-                    $sitename = get_config('sitename');
-                    throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $authinstance->displayname, $sitename));
-                }
-
-                // We have the data - create the user
-                $USER->lastlogin = db_format_timestamp(time());
-                if (isset($userdata->firstname)) {
-                    $USER->firstname = sanitize_firstname($userdata->firstname);
-                }
-                if (isset($userdata->lastname)) {
-                    $USER->lastname = sanitize_firstname($userdata->lastname);
-                }
-                if (isset($userdata->email)) {
-                    $USER->email = sanitize_email($userdata->email);
-                }
-                else {
-                    // The user will be asked to populate this when they log in.
-                    $USER->email = null;
-                }
-
-                $profilefields = array();
-                foreach (array('studentid', 'preferredname') as $pf) {
-                    if (isset($userdata->$pf)) {
-                        $sanitize = 'sanitize_' . $pf;
-                        if (($USER->$pf = $sanitize($userdata->$pf)) !== '') {
-                            $profilefields[$pf] = $USER->$pf;
+                    // catch semi-fatal auth errors, but allow next auth instance to be
+                    // tried
+                    try {
+                        if ($auth->authenticate_user_account($USER, $password)) {
+                            $authenticated = true;
+                        }
+                        else {
+                            continue;
                         }
                     }
-                }
+                    catch  (AuthInstanceException $e) {
+                        continue;
+                    }
+                    catch (UninitialisedAuthException $ue) {
+                        log_info('Malformed auth instance "' . $auth->instancename . '" for institution "' . $auth->institution . '"');
+                        continue;
+                    }
 
-                try {
-                    // If this authinstance is a parent auth for some xmlrpc authinstance, pass it along to create_user
-                    // so that this username also gets recorded as the username for sso from the remote sites.
-                    $remoteauth = $auth->is_parent_authority();
-                    create_user($USER, $profilefields, $institution, $remoteauth);
-                    $USER->reanimate($USER->id, $authinstance->id);
-                }
-                catch (Exception $e) {
-                    db_rollback();
-                    throw $e;
+                    // Check now to see if the institution has its maximum quota of users
+                    require_once('institution.php');
+                    $institution = new Institution($authinstance->institution);
+                    if ($institution->isFull()) {
+                        $institution->send_admin_institution_is_full_message();
+                        throw new AuthUnknownUserException('Institution has too many users');
+                    }
+
+                    $USER->authinstance = $authinstance->id;
+                    $userdata = $auth->get_user_info($username);
+                    if ($userdata instanceof User) {
+                        $userdata->reanimate($userdata->id, $authinstance->id);
+                        return;
+                    }
+                    if (empty($userdata)) {
+                        throw new AuthUnknownUserException("\"$username\" is not known");
+                    }
+
+                    // Check for a suspended institution
+                    if ($authinstance->suspended) {
+                        $sitename = get_config('sitename');
+                        throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $authinstance->displayname, $sitename));
+                    }
+
+                    // We have the data - create the user
+                    $USER->lastlogin = db_format_timestamp(time());
+                    if (isset($userdata->firstname)) {
+                        $USER->firstname = sanitize_firstname($userdata->firstname);
+                    }
+                    if (isset($userdata->lastname)) {
+                        $USER->lastname = sanitize_firstname($userdata->lastname);
+                    }
+                    if (isset($userdata->email)) {
+                        $USER->email = sanitize_email($userdata->email);
+                    }
+                    else {
+                        // The user will be asked to populate this when they log in.
+                        $USER->email = null;
+                    }
+
+                    $profilefields = array();
+                    foreach (array('studentid', 'preferredname') as $pf) {
+                        if (isset($userdata->$pf)) {
+                            $sanitize = 'sanitize_' . $pf;
+                            if (($USER->$pf = $sanitize($userdata->$pf)) !== '') {
+                                $profilefields[$pf] = $USER->$pf;
+                            }
+                        }
+                    }
+
+                    try {
+                        // If this authinstance is a parent auth for some xmlrpc authinstance, pass it along to create_user
+                        // so that this username also gets recorded as the username for sso from the remote sites.
+                        $remoteauth = $auth->is_parent_authority();
+                        create_user($USER, $profilefields, $institution, $remoteauth);
+                        $USER->reanimate($USER->id, $authinstance->id);
+                    }
+                    catch (Exception $e) {
+                        db_rollback();
+                        throw $e;
+                    }
                 }
             }
 

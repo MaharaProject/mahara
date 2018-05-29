@@ -3015,7 +3015,7 @@ function main_nav($type = null) {
         $menu = json_decode($cachemenu, true);
     }
     else {
-        $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
+        $menu = array_filter($menu, function($a) { return empty($a["ignore"]); });
 
         // enable plugins to augment the menu structure
         foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {

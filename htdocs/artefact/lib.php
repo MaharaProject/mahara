@@ -1102,7 +1102,7 @@ abstract class ArtefactType implements IArtefactType {
             $this->set('parent', $artefactcopies[$copyinfo->oldparent]->newid);
         }
         else {
-            $this->set('parent', $this->default_parent_for_copy($view, $template, array_map(create_function('$a', 'return $a->newid;'), $artefactcopies)));
+            $this->set('parent', $this->default_parent_for_copy($view, $template, array_map(function($a) { return $a->newid; }, $artefactcopies)));
         }
     }
 

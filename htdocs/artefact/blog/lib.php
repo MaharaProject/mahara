@@ -1040,7 +1040,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
 
         // Get the attached files.
-        $postids = array_map(create_function('$a', 'return $a->id;'), $data);
+        $postids = array_map(function ($a) { return $a->id; }, $data);
         $files = ArtefactType::attachments_from_id_list($postids);
         if ($files) {
             safe_require('artefact', 'file');

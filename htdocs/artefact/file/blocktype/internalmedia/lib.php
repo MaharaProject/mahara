@@ -165,7 +165,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
                 'defaultvalue' => in_array($filetype, $currenttypes),
             );
         }
-        uasort($filetypes, create_function('$a, $b', 'return $a["title"] > $b["title"];'));
+        uasort($filetypes, function($a, $b) { return $a["title"] > $b["title"]; });
         $options = array_merge(
             array(
                 'description' => array(
