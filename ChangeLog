@@ -1,3 +1,18 @@
+17.04.8 (2018-05-30)
+- Bug 1763581: Capitalisation of username / email address issue with LTI
+- Bug 1767220: Error when viewing a profile page with wall post as an Institution admin
+- Bug 1769546: Backporting to 17.10 or ealier branches needs raw_old theme updated
+- Bug 1770496: Group member can't paginate through group pages
+- Bug 1770535: Able to upload a virus file to Files section
+- Bug 1770561: Browser back and refresh button attack vulnerability
+- Bug 1772773: Need to call render_items in the static way
+- Bug 1772774: change error message when changing username
+- Bug 1767882: "tablerenderer call updatecallback" js error in profileicons.php
+- Bug 1768685: Upgrade chromedriver / selenium
+- Bug 1769581: Remove info on subscribe / unsubscribe from topics in group forums
+- Bug 1771473: No sorting of tags according to "date" when clicked on a tag
+- Bug 1694563: create behat step to insert breakpoint
+
 17.04.7 (2018-04-06)
 - Bug 1744789: Avoid relying on TinyMCE code stipping alone
 - Bug 1748782: "Inactive user" highlight disappeared
