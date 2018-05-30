@@ -52,14 +52,8 @@ class PluginImportFile extends PluginImport {
                 continue;
             }
             if (get_config('viruschecking')) {
-                $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
-                if ($pathtoclam && file_exists($pathtoclam) && is_executable($pathtoclam)) {
-                    if ($errormsg = mahara_clam_scan_file($uzd . $f)) {
-                        throw new ImportException($this, $errormsg);
-                    }
-                }
-                else {
-                    clam_mail_admins(get_string('clamlost', 'mahara', $pathtoclam));
+                if ($errormsg = mahara_clam_scan_file($uzd . $f)) {
+                    throw new ImportException($this, $errormsg);
                 }
             }
             $sha1 = sha1_file($uzd . $f);
