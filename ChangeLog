@@ -1,3 +1,19 @@
+17.10.5 (2018-05-30)
+- 1763581 	Capitalisation of username / email address issue with LTI
+- 1767220 	Error when viewing a profile page with wall post as an Institution admin
+- 1769512 	find_by_email_address() and MySql problem
+- 1769546 	Backporting to 17.10 or ealier branches needs raw_old theme updated
+- 1770496 	Group member can't paginate through group pages
+- 1770535 	Able to upload a virus file to Files section
+- 1770561 	Browser back and refresh button attack vulnerability
+- 1772773 	Need to call render_items in the static way
+- 1772774 	change error message when changing username
+- 1767882 	"tablerenderer call updatecallback" js error in profileicons.php
+- 1768685 	Upgrade chromedriver / selenium
+- 1769581 	Remove info on subscribe / unsubscribe from topics in group forums
+- 1771473 	No sorting of tags according to "date" when clicked on a tag
+- 1773043 	Undefined property: stdClass::$logoxs due to wrong order of the upgrade tasks (upgrading from 16.10.9 to 17.10.4)
+
 17.10.4 (2018-04-06)
 - Bug 1737447 	Page activity report: Show information by modified time rather than created time
 - Bug 1744789 	Avoid relying on TinyMCE code stipping alone
