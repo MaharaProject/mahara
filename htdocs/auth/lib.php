@@ -1122,7 +1122,7 @@ function requiredfields_validate(Pieform $form, $values) {
                 $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
             }
             if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', array(strtolower($values['username'])))) {
-                $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
+                $form->set_error('username', get_string('usernamealreadytaken1', 'auth.internal'));
             }
         }
     }
