@@ -2163,6 +2163,25 @@ function getoptions_country() {
 }
 
 /**
+ * Returns an assoc array of timezones suitable for use with the "select" form
+ * element
+ *
+ * @return array Associative array of timezone => timezone
+ */
+function getoptions_timezone() {
+    static $timezones;
+    if (!empty($timezones)) {
+        return $timezones;
+    }
+    $zones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
+
+    foreach ($zones as $z) {
+        $timezones[$z] = $z;
+    };
+    return $timezones;
+}
+
+/**
  * Returns an HTML string with a help icon image that can be used on a page.
  * When the icon is clicked, a dialog box will be shown with contextual help
  * for the element or page the icon is connected to.

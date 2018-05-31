@@ -500,7 +500,9 @@ $string['reviewsselfdeletiondescription'] = 'An institution administrator must a
 $string['mathjax'] = 'Enable MathJax';
 $string['mathjaxdescription'] = 'MathJax renders LaTeX markup into properly formatted math and science equations on portfolio pages.';
 $string['mathjaxconfig'] = 'MathJax configuration';
-
+$string['timezone'] = 'Timezone';
+$string['sitetimezonedescription'] = 'The default timezone for the site. If not selected one will be chosen based on country, but this can be innaccurate if the counrty has multiple timezones.';
+$string['notimezoneselected'] = 'No Timezone Selected';
 // Site content
 $string['about']               = 'About';
 $string['discardpageedits']    = 'Discard your changes to this page?';

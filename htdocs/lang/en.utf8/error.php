@@ -151,3 +151,4 @@ $string['nophpextension'] = 'The PHP extension "%s" is not enabled. Please enabl
 $string['nomemcacheserversdefined'] = 'The session save handler "%s" has no related servers defined. Please set the $cfg->memcacheservers value, e.g. "localhost:11211".';
 $string['memcacheusememcached'] = 'The "memcache" session storage is obsolete. Please use "memcached".';
 $string['siteoutofsyncfor'] = 'This site has database information newer than %s files indicate it should be.';
+$string['updatesitetimezone'] = 'The timezone for the site now needs to be set via Configure site →  Site options →  Site settings. Please set it there and delete the $cfg->dbtimezone line from your config.php file.';

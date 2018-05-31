@@ -29,6 +29,7 @@ unset($themeoptions['custom']); // Only available for institution configurable t
 $searchpluginoptions = get_search_plugins();
 
 $countries = getoptions_country();
+$timezones = getoptions_timezone();
 
 $notificationelements = get_notification_settings_elements(null, true);
 
@@ -76,6 +77,15 @@ $siteoptionform = array(
                     'options'      => array('' => get_string('nocountryselected')) + $countries,
                     'help'         => true,
                     'disabled'     => in_array('country', $OVERRIDDEN),
+                ),
+                'timezone' => array(
+                    'type'         => 'select',
+                    'title'        => get_string('timezone', 'admin'),
+                    'description'  => get_string('sitetimezonedescription', 'admin'),
+                    'defaultvalue' => get_config('timezone'),
+                    'options'      => array('' => get_string('notimezoneselected', 'admin')) + $timezones,
+                    'help'         => true,
+                    'disabled'     => in_array('timezone', $OVERRIDDEN),
                 ),
                 'theme' => array(
                     'type'         => 'select',
@@ -816,7 +826,7 @@ function siteoptions_submit(Pieform $form, $values) {
          'mathjax', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
         'institutionstrictprivacy',
         'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
-        'tagssideblockmaxtags', 'country', 'userscanchooseviewthemes', 'internalnotificationexpire',
+        'tagssideblockmaxtags', 'country', 'timezone', 'userscanchooseviewthemes', 'internalnotificationexpire',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'passwordpolicy',
         'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
