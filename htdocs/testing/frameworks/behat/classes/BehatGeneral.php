@@ -1304,6 +1304,29 @@ EOF;
         $this->visitPath("/view/view.php?id={$view->id}");
     }
 
+    /**
+     * Visit a Mahara Profile Page with the specified owner
+     *
+     * @Given /^I go to the profile page of "([^"]*)"$/
+     */
+    public function i_go_to_profile_view($user) {
+        // Find the page's ID number
+        $views = get_records_sql_array("SELECT v.id FROM {view} v
+                                       JOIN {usr} u ON u.id = v.owner
+                                       WHERE (u.username = ? OR CONCAT(u.firstname, ' ', u.lastname) = ?)
+                                       AND v.type = ?", array($user, $user, 'profile'));
+        if (!$views) {
+            throw new Exception(sprintf('Invalid user name. No profile view found for "%s".', $user));
+        }
+        if (count($views) > 1) {
+            throw new Exception(sprintf('Invalid useer name. More than one profile view found for "%s".', $user));
+        }
+
+        $view = reset($views);
+
+        // success
+        $this->visitPath("/view/view.php?id={$view->id}");
+    }
 
     /**
      * Visit a Mahara group Page with the specified Group name
