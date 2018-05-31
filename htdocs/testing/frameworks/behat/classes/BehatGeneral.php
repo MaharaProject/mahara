@@ -425,6 +425,36 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Check if the page contains the specified text within viewport
+     *
+     * @Then I should see :text in :element on the screen
+     */
+    public function i_see_in_viewport($text, $element) {
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the element "' . $element . '"');
+        $xpath = "//" . $element . "[contains(normalize-space(.), " . $textliteral . ")]";
+        $node = $this->find('xpath', $xpath, $exception);
+        $this->ensure_node_is_visible($node);
+        // now that we know it exists on the page and is not a 'hidden' element
+        // we check if it is within the viewport
+        $textliteraljs = $this->escapeDoubleQuotes($textliteral);
+        $jscode = <<<EOF
+(function isScrolledIntoView() {
+    var elem = jQuery("$element:contains($textliteraljs)")[0];
+    var docViewTop = jQuery(window).scrollTop();
+    var docViewBottom = docViewTop + jQuery(window).height();
+    var elemTop = jQuery(elem).offset().top;
+    var elemBottom = elemTop + jQuery(elem).height();
+    return (docViewBottom >= elemTop && docViewTop <= elemBottom);
+})();
+EOF;
+        $result = $this->getSession()->evaluateScript("return $jscode");
+        if (!$result) {
+            throw new Exception("Element $element containing $text not within the viewport.");
+        }
+    }
+
+    /**
      * Checks the list/table row containing the specified text.
      *
      * @Then I should see :text in the :rowtext row
@@ -1516,6 +1546,32 @@ JS;
             throw new \Exception("scrollIntoView failed");
         }
     }
+
+/**
+ * Scroll element into view and align top of element with the center of the visible area.
+ *
+ * @When I scroll to the center of id :id
+ *
+ */
+    public function i_scroll_into_view_center($id) {
+        $function = <<<JS
+          (function(){
+              var elem = document.getElementById("$id");
+              var elementRect = elem.getBoundingClientRect();
+              var absoluteElementTop = elementRect.top + window.pageYOffset;
+              var middle = absoluteElementTop - (window.innerHeight / 2);
+              window.scrollTo(0, middle);
+              return 1;
+          })()
+JS;
+        try {
+            $this->getSession()->wait(5000, $function);
+        }
+        catch(Exception $e) {
+            throw new \Exception("scrollIntoView failed");
+        }
+    }
+
 
 /**
  * Check if images exist in the block given its title
