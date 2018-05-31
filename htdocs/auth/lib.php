@@ -1816,7 +1816,7 @@ function login_submit(Pieform $form, $values) {
     }
 
     // Do redirect on login to avoid browser back button exploit
-    $requesturi = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
+    $requesturi = $_SERVER['SCRIPT_NAME'] . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
     redirect($requesturi);
 
 }
