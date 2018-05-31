@@ -1529,6 +1529,26 @@ class User {
         $this->copy_collections($templatecollectionids, false);
     }
 
+    /**
+     * Makes a literal copy of a list of views and collections for existing group members.
+     *
+     * @param array values            .
+     * @param boolean collection
+     */
+    public function copy_group_views_collections_to_existing_members($views, $collection = false) {
+        if (empty($views)) {
+            return;
+        }
+
+        if ($collection) {
+            // Copy the collection to the current users portfolio
+            $this->copy_collections($views, false);
+        }
+        else {
+            // Copy the page to the current users portfolio
+            $this->copy_views($views, false);
+        }
+    }
 }
 
 

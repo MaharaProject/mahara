@@ -5837,5 +5837,13 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018050200) {
+        log_debug('Create new "existinggroupmembercopy" field to "view" table');
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('existinggroupmembercopy');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
     return $status;
 }

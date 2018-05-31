@@ -68,6 +68,11 @@ $form = array(
             'type' => 'hidden',
             'value' => $view->get('id'),
         ),
+        'progress_meter_token' => array(
+            'type' => 'hidden',
+            'value' => 'copyviewexistingmembersprogress',
+            'readonly' => TRUE,
+        ),
     )
 );
 
@@ -191,6 +196,16 @@ $form['elements']['more'] = array(
         ),
     ),
 );
+
+$admintutorids = group_get_member_ids($group, array('admin', 'tutor'));
+if ($group && in_array( $USER->get('id'), $admintutorids, true )) {
+    $form['elements']['more']['elements'] = array_merge($form['elements']['more']['elements'], array('existinggroupmembercopy' => array(
+            'type'         => 'switchbox',
+            'title'        => get_string('existinggroupmembercopy', 'view'),
+            'description'  => get_string('existinggroupmembercopydesc1', 'view'),
+            'defaultvalue' => $view->get('existinggroupmembercopy'),
+    )));
+}
 
 $form['elements']['accesslist'] = array(
     'type'          => 'viewacl',
@@ -468,7 +483,7 @@ function editaccess_cancel_submit() {
 }
 
 function editaccess_submit(Pieform $form, $values) {
-    global $SESSION, $institution, $collections, $views, $view;
+    global $SESSION, $institution, $collections, $views, $view, $group;
 
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
@@ -491,6 +506,33 @@ function editaccess_submit(Pieform $form, $values) {
     );
 
     $toupdate = array();
+
+    if ($group) {
+        $viewconfig['existinggroupmembercopy'] = !empty($values['existinggroupmembercopy']) ? $values['existinggroupmembercopy'] : 0;
+
+        // Add funtionality here which copies the page into existing group members pages.
+        if ($viewconfig['existinggroupmembercopy'] && !$view->get('existinggroupmembercopy')) {
+            $groupmembers = group_get_member_ids($group, array('member'));
+            $key = 0;
+            $total = count($groupmembers);
+            foreach ($groupmembers as $groupmember) {
+                if (!($key % 25)) {
+                    set_progress_info('copyviewexistingmembersprogress', $key, $total, get_string('copyforexistingmembersprogress', 'view'));
+                }
+                $key++;
+
+                $userobj = new User();
+                $userobj->find_by_id($groupmember);
+                if (!empty($values['collections'])) {
+                    $userobj->copy_group_views_collections_to_existing_members($values['collections'], true);
+                }
+                if (!empty($values['views'])) {
+                    $userobj->copy_group_views_collections_to_existing_members($values['views']);
+                }
+            }
+            set_progress_done('copyviewexistingmembersprogress');
+        }
+    }
 
     if ($institution) {
         if (isset($values['copynewuser'])) {

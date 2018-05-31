@@ -63,6 +63,7 @@ class View {
     private $urlid;
     private $skin;
     private $anonymise = 0;
+    private $existinggroupmembercopy = 0;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -1056,6 +1057,9 @@ class View {
             }
             if (isset($config['copynewgroups'])) {
                 $v->set('copynewgroups', $config['copynewgroups']);
+            }
+            if (isset($config['existinggroupmembercopy'])) {
+                $v->set('existinggroupmembercopy', $config['existinggroupmembercopy']);
             }
             $v->commit();
         }
