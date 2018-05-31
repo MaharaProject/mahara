@@ -1408,9 +1408,11 @@ class User {
     /**
      * Makes a literal copy of a list of views for this user.
      *
-     * @param array $templateids A list of viewids to copy.
+     * @param array   $templateids      A list of viewids to copy.
+     * @param boolean $checkviewaccess  Check that the user can see the view before copying it.
+     * @param boolean $onlyonce         Check that the user already has a copy of the view.
      */
-    public function copy_views($templateids, $checkviewaccess=true) {
+    public function copy_views($templateids, $checkviewaccess=true, $onlyonce=false) {
         if (!$templateids) {
             // Nothing to do
             return;
@@ -1428,23 +1430,31 @@ class User {
 
         db_begin();
         $artefactcopies = array();
+        $copied = array();
         foreach ($templateids as $tid) {
-            View::create_from_template(array(
+            if ($onlyonce && get_field('existingcopy', 'id', 'view', $tid, 'usr', $this->get('id'))) {
+                continue;
+            }
+            list($view) = View::create_from_template(array(
                 'owner' => $this->get('id'),
                 'title' => $views[$tid]->title,
                 'description' => $views[$tid]->description,
                 'type' => $views[$tid]->type == 'profile' && $checkviewaccess ? 'portfolio' : $views[$tid]->type,
             ), $tid, $this->get('id'), $checkviewaccess, false, $artefactcopies);
+            $copied[$tid] = $view->get('id');
         }
         db_commit();
+        return $copied;
     }
 
     /**
      * Makes a literal copy of a list of collections for this user.
      *
      * @param array $templateids A list of collectionids to copy.
+     * @param boolean $checkviewaccess  Check that the user can see the view before copying it.
+     * @param boolean $onlyonce         Check that the user already has a copy of the collection and all views within it.
      */
-    public function copy_collections($templateids, $checkviewaccess=true) {
+    public function copy_collections($templateids, $checkviewaccess=true, $onlyonce=false) {
         if (!$templateids) {
             // Nothing to do
             return;
@@ -1462,10 +1472,42 @@ class User {
 
         db_begin();
         foreach ($templateids as $tid) {
-            Collection::create_from_template(array(
-                'owner' => $this->get('id'),
-                'title' => $collections[$tid]->name,
-            ), $tid, $this->get('id'), $checkviewaccess);
+            $anyexistingviews = get_records_sql_array("
+               SELECT cv.*, (
+                   CASE WHEN EXISTS (
+                       SELECT 1 FROM {existingcopy} ec
+                       WHERE ec.collection = cv.collection
+                       AND ec.view = cv.view
+                       AND ec.usr = ?) THEN 1 ELSE 0 END
+                   ) AS hascopy
+               FROM {collection_view} cv
+               WHERE cv.collection = ?", array($this->get('id'), $tid));
+            $sum = 0;
+            foreach ($anyexistingviews as $item) {
+                $sum += $item->hascopy;
+            }
+            if ($onlyonce && $sum > 0 && $sum === count($anyexistingviews)) {
+                // We have all views for this collection so skip
+                continue;
+            }
+            else if ($onlyonce && $sum > 0 && $sum < count($anyexistingviews)) {
+                // We have some but not all views so we need to add missing ones to the collection
+                foreach ($anyexistingviews as $ev) {
+                    if (!$ev->hascopy) {
+                        $copied = $this->copy_views(array($ev->view), $checkviewaccess, $onlyonce);
+                        // @TODO add copied page to user's collection
+                        // We can't do this yet as we don't know what id of collection that was made or if it still exists
+                        // so we just add the singular page - the user can add it their collection if they wish
+                    }
+                }
+            }
+            else {
+                // Copy full collection
+                Collection::create_from_template(array(
+                    'owner' => $this->get('id'),
+                    'title' => $collections[$tid]->name,
+                ), $tid, $this->get('id'), $checkviewaccess);
+            }
         }
         db_commit();
     }
@@ -1532,21 +1574,43 @@ class User {
     /**
      * Makes a literal copy of a list of views and collections for existing group members.
      *
-     * @param array values            .
-     * @param boolean collection
+     * @param array    $templateids Array of either view ids or collection ids
+     * @param boolean  $collection  Are the supplied ids collection ids
      */
-    public function copy_group_views_collections_to_existing_members($views, $collection = false) {
-        if (empty($views)) {
+    public function copy_group_views_collections_to_existing_members($templateids, $collection = false) {
+        if (empty($templateids)) {
             return;
         }
 
         if ($collection) {
             // Copy the collection to the current users portfolio
-            $this->copy_collections($views, false);
+            $this->copy_collections($templateids, false, true);
+            // Need to loop thru collections to find the list of viewids
+            $results = get_records_select_array('collection_view', 'collection IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'collection, view, displayorder');
+            foreach ($results as $result) {
+                $where = new StdClass;
+                $where->view = $result->view;
+                $where->collection = $result->collection;
+                $where->usr = $this->id;
+
+                $record = clone $where;
+                $record->ctime = db_format_timestamp(time());
+                ensure_record_exists('existingcopy', $where, $record);
+            }
         }
         else {
             // Copy the page to the current users portfolio
-            $this->copy_views($views, false);
+            $this->copy_views($templateids, false, true);
+            // Loop thru viewids to add them to the done table
+            foreach ($templateids as $id) {
+                $where = new StdClass;
+                $where->view = $id;
+                $where->usr = $this->id;
+
+                $record = clone $where;
+                $record->ctime = db_format_timestamp(time());
+                ensure_record_exists('existingcopy', $where, $record);
+            }
         }
     }
 }
