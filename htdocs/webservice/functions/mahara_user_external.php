@@ -397,6 +397,10 @@ class mahara_user_external extends external_api {
                 throw new WebserviceInvalidParameterException('delete_users | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $user->id));
             }
 
+            if ($USER->get('id') == $user->id) {
+                throw new WebserviceInvalidParameterException('delete_users | ' . get_string('unabletodeleteself1', 'admin'));
+            }
+
             // only allow deletion of users that have not signed in
             if (!empty($user->lastlogin) && !$user->suspendedcusr) {
                 throw new WebserviceInvalidParameterException('delete_users | ' . get_string('cannotdeleteaccount', 'auth.webservice', $user->id));
@@ -404,11 +408,9 @@ class mahara_user_external extends external_api {
 
             // must not allow deleting of admins or self!!!
             if ($user->admin) {
-                throw new MaharaException('useradminodelete', 'error');
+                throw new WebserviceInvalidParameterException('delete_users | ' . get_string('unabletodeleteadmin', 'auth.webservice', $user->id));
             }
-            if ($USER->get('id') == $user->id) {
-                throw new MaharaException('usernotdeletederror', 'error');
-            }
+
             delete_user($user->id);
         }
         db_commit();
