@@ -58,7 +58,7 @@
         customlayout_change_layout(pieformname);
 
         if (parseInt($('#' + pieformname + '_customlayoutnumrows').val(), 10) < get_max_custom_rows()) {
-            $('#addrow').removeAttr('disabled');
+            $('#addrow').prop('disabled', false);
         }
     };
 

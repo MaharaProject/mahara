@@ -70,7 +70,7 @@ var checkReload = (function($) {
           $('#siteoptions_allowpublicprofiles').prop('disabled', 'disabled');
       }
       else {
-          $('#siteoptions_allowpublicprofiles').removeAttr('disabled');
+          $('#siteoptions_allowpublicprofiles').prop('disabled', false);
       }
   }
 
