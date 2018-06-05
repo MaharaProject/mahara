@@ -1816,7 +1816,14 @@ function login_submit(Pieform $form, $values) {
     }
 
     // Do redirect on login to avoid browser back button exploit
-    $requesturi = $_SERVER['SCRIPT_NAME'] . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
+    // We need to strip the path from domain set in $wwwroot from the path we are trying
+    // to get to.
+    $wwwroot = get_config('wwwroot');
+    $path = parse_url($wwwroot, PHP_URL_PATH);
+    $path = substr($path, 0, -1); // Remove the last '/' character
+    $scriptname = $_SERVER['SCRIPT_NAME'];
+    $scriptname = str_replace($path, '', $scriptname);
+    $requesturi = $scriptname . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
     redirect($requesturi);
 
 }
