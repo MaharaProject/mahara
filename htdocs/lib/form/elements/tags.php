@@ -110,6 +110,10 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null) {
         if ($query) {
             $querystr = " WHERE tag LIKE '%' || ? || '%'";
             $values[] = $query;
+            // Also do matching by institution name so we can list valid institution tags
+            // if we only know institution name
+            $querystr .= " OR prefix LIKE '%' || ? || '%'";
+            $values[] = $query;
         }
         $sql = "
             SELECT tag, SUM(count) AS count, prefix
@@ -122,7 +126,7 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null) {
                 FROM {tag} t
                 LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
                 LEFT JOIN {institution} i ON i.name = t2.ownerid
-                WHERE t.ownerid=? AND t.resourcetype IN ('artefact', 'view', 'collection')
+                WHERE t.ownerid=? AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
                 GROUP BY 1, 3
                 UNION ALL
                 SELECT t.tag, 0 AS count, i.displayname AS prefix

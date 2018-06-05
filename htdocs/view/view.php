@@ -333,6 +333,18 @@ jQuery(function($) {
             e.preventDefault();
         });
     });
+
+    $('.moretags').on('click', function(e) {
+        e.preventDefault();
+        var params = {
+            'viewid': viewid
+        }
+        sendjsonrequest(config['wwwroot'] + 'view/viewtags.json.php',  params, 'POST', function(data) {
+            if (data.count) {
+                $('.tags').html(data.html);
+            }
+        });
+    });
 });
 
 jQuery(window).on('pageupdated', {}, function() {
@@ -360,7 +372,9 @@ $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
 $smarty->assign('owner', $owner);
-$smarty->assign('tags', $view->get('tags'));
+list($tagcount, $alltags) = $view->get_all_tags_for_view(10);
+$smarty->assign('alltags', $alltags);
+$smarty->assign('moretags', ($tagcount > sizeof($alltags) ? true : false));
 $smarty->assign('PAGEHEADING', null);
 if ($view->is_anonymous()) {
   $smarty->assign('PAGEAUTHOR', get_string('anonymoususer'));

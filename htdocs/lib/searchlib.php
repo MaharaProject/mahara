@@ -1021,14 +1021,23 @@ function get_portfolio_types_from_param($filter) {
     if (is_null($filter) || $filter == 'all') {
         return null;
     }
+    $types = array('view' => false, 'collection' => false, 'artefact' => false, 'blocktype' => false);
     if ($filter == 'view') {
-        return array('view' => true, 'collection' => false, 'artefact' => false);
+        $types['view'] = true;
+        return $types;
     }
     if ($filter == 'collection') {
-        return array('view' => false, 'collection' => true, 'artefact' => false);
+        $types['collection'] = true;
+        return $types;
     }
     require_once(get_config('docroot') . 'artefact/lib.php');
-    return array('view' => false, 'collection' => false, 'artefact' => artefact_get_types_from_filter($filter));
+    $artefactfilter = artefact_get_types_from_filter($filter);
+    $types['artefact'] = $artefactfilter;
+
+    require_once(get_config('docroot') . 'blocktype/lib.php');
+    $blocktypefilter = blocktype_get_types_from_filter($filter);
+    $types['blocktype'] = $blocktypefilter;
+    return $types;
 }
 
 function get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort='name', $type=null, $returntags=true, $viewids=array()) {

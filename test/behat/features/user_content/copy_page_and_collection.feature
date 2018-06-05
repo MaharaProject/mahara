@@ -6,10 +6,10 @@ I need to be able to click on the links
 
 Background:
   Given the following "pages" exist:
-     | title | description | ownertype | ownername |
-     | Page admin_01 | Page 01 | admin | admin |
-     | Page admin_02 | Page 02 | admin | admin |
-     | Page admin_03 | Page 03 | admin | admin |
+     | title | description | ownertype | ownername | tags |
+     | Page admin_01 | Page 01 | admin | admin | page,one |
+     | Page admin_02 | Page 02 | admin | admin | page,two |
+     | Page admin_03 | Page 03 | admin | admin | page,three |
 
   Given the following "collections" exist:
      | title | description | ownertype | ownername | pages |
@@ -32,6 +32,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I press "Add"
   And I set the field "Block title" to "Text Block 1"
   And I set the field "Block content" to "Here is a new block."
+  And I fill in select2 input "instconf_tags" with "block" and select "block"
   And I press "Save"
 
   # Copy a page directly from its location
@@ -40,6 +41,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I press "Save"
   And I display the page
   And I should see "Page admin_02 v.2"
+  And I should see "Tags: block, page, two"
 
   # Copy a page
   And I choose "Pages and collections" in "Portfolio" from main menu

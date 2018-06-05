@@ -1015,18 +1015,28 @@ class PluginSearchInternal extends PluginSearch {
 
         if (is_null($types)) {
             $artefacttypefilter = '';
-        }
-        else if (!empty($types['artefact'])) {
-            $artefacttypefilter = ' AND a.artefacttype IN (' . join(',', array_map('db_quote', $types['artefact'])) . ')';
+            $blocktypefilter = '';
         }
         else {
-            $artefacttypefilter = ' AND FALSE';
+            if (!empty($types['artefact'])) {
+                $artefacttypefilter = ' AND a.artefacttype IN (' . join(',', array_map('db_quote', $types['artefact'])) . ')';
+            }
+            else {
+                $artefacttypefilter = ' AND FALSE';
+            }
+            if (!empty($types['blocktype'])) {
+                $blocktypefilter = ' AND b.blocktype IN (' . join(',', array_map('db_quote', $types['blocktype'])) . ')';
+            }
+            else {
+                $blocktypefilter = ' AND FALSE';
+            }
         }
 
         if (!is_null($tag)) {
             $artefacttypefilter .= ' AND at.tag = ?';
             $viewfilter         .= ' AND vt.tag = ?';
             $collectionfilter   .= ' AND (ct.tag = ? OR vt.tag = ?)';
+            $blocktypefilter   .= ' AND bt.tag = ?';
 
             // Test if this is an institutionally defined
             // tag and strip the displayname prefix out.
@@ -1040,22 +1050,26 @@ class PluginSearchInternal extends PluginSearch {
                     JOIN {institution} i ON i.name = t.ownerid
                     WHERE i.displayname = ? AND t.tag = ?", array($prefix, $tag));
             }
-            $values = array($owner->id, $tag, $owner->id, $tag, $owner->id, $tag, $tag);
+            $values = array($owner->id, $tag, $owner->id, $tag, $owner->id, $tag, $tag, $owner->id, $tag);
         }
         else {
-            $values = array($owner->id, $owner->id, $owner->id);
+            $values = array($owner->id, $owner->id, $owner->id, $owner->id);
         }
         if (!empty($viewids) && is_array($viewids)) {
             $viewidstr = implode(',', $viewids);
             $artefactjoin = ' JOIN {view_artefact} va ON (va.artefact = a.parent OR va.artefact = a.id)
                               LEFT JOIN {artefact_blog_blogpost} abb ON abb.blogpost = a.id ';
             $artefactwhere = ' AND va.view IN (' . $viewidstr . ') AND (abb.published IS NULL OR abb.published = 1) ';
+            $blocktypejoin = ' JOIN {view_artefact} va ON va.block = b.id ';
+            $blocktypewhere = ' AND va.view IN (' . $viewidstr . ') ';
             $viewwhere = ' AND v.id IN (' . $viewidstr . ') ';
             $collectionwhere = ' AND cv.view IN (' . $viewidstr . ') ';
         }
         else {
             $artefactjoin = '';
             $artefactwhere = '';
+            $blocktypejoin = '';
+            $blocktypewhere = '';
             $viewwhere = '';
             $collectionwhere = '';
         }
@@ -1082,6 +1096,12 @@ class PluginSearchInternal extends PluginSearch {
             LEFT JOIN {tag} ct ON (ct.resourcetype = 'collection' AND ct.resourceid = c.id" . $typecast . ")
             LEFT JOIN {tag} vt ON (vt.resourcetype = 'view' AND vt.resourceid = cv.view" . $typecast . ")
             WHERE c.owner = ? " . $collectionwhere . $collectionfilter . ")
+           UNION
+           (SELECT b.id, b.title, NULL AS description, 'blocktype' AS type, b.blocktype, NULL AS ctime,
+                NULL AS owner, NULL AS group, NULL AS institution, NULL AS urlid
+            FROM {block_instance} b
+            JOIN {tag} bt ON (bt.resourcetype = 'blocktype' AND bt.resourceid = b.id" . $typecast . ") " . $blocktypejoin . "
+            WHERE bt.ownertype = 'user' AND bt.ownerid = ?" . $blocktypewhere . $blocktypefilter . ")
         ) p";
 
         $result = (object) array(
@@ -1099,7 +1119,7 @@ class PluginSearchInternal extends PluginSearch {
             $sort = $sort == 'date' ? 'ctime DESC' : 'title ASC';
             if ($data = get_records_sql_assoc("SELECT type || ':' || id AS tid, p.* " . $from . ' ORDER BY ' . $sort, $values, $offset, $limit)) {
                 if ($returntags) {
-                    $ids = array('view' => array(), 'collection' => array(), 'artefact' => array());
+                    $ids = array('view' => array(), 'collection' => array(), 'artefact' => array(), 'blocktype' => array());
                     foreach ($data as &$d) {
                         $ids[$d->type][$d->id] = 1;
                         if ($d->type == 'artefact') {
@@ -1144,10 +1164,32 @@ class PluginSearchInternal extends PluginSearch {
                                 $d->views = $record_views;
                             }
                         }
+                        else if ($d->type == 'blocktype') {
+                            // Get the view the blocktype is included into.
+                            $sql = 'SELECT v.id, v.title
+                                    FROM {block_instance} b
+                                    JOIN {view} v ON v.id = b.view
+                                    WHERE b.id = ?';
+                            if (!empty($viewids)) {
+                               $sql .= ' AND (b.view IN (' . $viewidstr . '))';
+                            }
+                            $views = get_records_sql_array($sql, array($d->id));
+                            if ($views) {
+                                $record_views = array ();
+                                foreach ( $views as $view ) {
+                                    if (isset ( $view->id )) {
+                                        $record_views[$view->id] = $view->title;
+                                        $d->viewid = $view->id; // just needs to be any valid view
+                                    }
+                                }
+                                $d->views = $record_views;
+                            }
+                        }
                         else {
                             $d->viewid = $d->id;
                         }
                     }
+                    // Add tags array for each item
                     if (!empty($ids['view'])) {
                         $viewtags = get_records_sql_array("
                             SELECT
@@ -1233,6 +1275,42 @@ class PluginSearchInternal extends PluginSearch {
                             foreach ($artefactviewtags as &$avt) {
                                 if (!isset($data['artefact:' . $avt->id]->viewtags) || !in_array($avt->tag, $data['artefact:' . $avt->id]->viewtags)) {
                                     $data['artefact:' . $avt->id]->viewtags[] = array('view' => $avt->view, 'tag' => $avt->tag);
+                                }
+                            }
+                        }
+                    }
+                    if (!empty($ids['blocktype'])) {
+                        $blocktypetags = get_records_sql_array("
+                            SELECT
+                                (CASE
+                                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                                    ELSE t.tag
+                                END) AS tag, t.resourceid
+                            FROM {tag} t
+                            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+                            LEFT JOIN {institution} i ON i.name = t2.ownerid
+                            WHERE t.resourcetype = 'blocktype' AND t.resourceid IN ('" . join("','", array_keys($ids['blocktype'])) . "')");
+                        if ($blocktypetags) {
+                            foreach ($blocktypetags as &$bt) {
+                                $data['blocktype:' . $bt->resourceid]->tags[] = $bt->tag;
+                            }
+                        }
+                        if (!empty($viewids) && $blocktypeviewtags = get_records_sql_array("
+                                SELECT b.id, va.view,
+                                    (CASE
+                                        WHEN vt.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                                        ELSE vt.tag
+                                    END) AS tag
+                                FROM {block_instance} b
+                                JOIN {view_artefact} va ON va.block = b.id
+                                LEFT JOIN {tag} vt ON (vt.resourcetype = 'view' AND vt.resourceid = va.view" . $typecast . ")
+                                LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(vt.tag, 7)
+                                LEFT JOIN {institution} i ON i.name = t2.ownerid
+                                WHERE b.id IN ('" . join("','", array_keys($ids['blocktype'])) . "')
+                                AND va.view IN ('" . join("','", $viewids) . "')")) {
+                            foreach ($blocktypeviewtags as &$bvt) {
+                                if (!isset($data['blocktype:' . $bvt->id]->viewtags) || !in_array($bvt->tag, $data['blocktype:' . $bvt->id]->viewtags)) {
+                                    $data['blocktype:' . $bvt->id]->viewtags[] = array('view' => $bvt->view, 'tag' => $bvt->tag);
                                 }
                             }
                         }

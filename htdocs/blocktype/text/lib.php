@@ -38,6 +38,10 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         return $artefacts;
     }
 
+    public static function get_blocktype_type_content_types() {
+        return array('text' => array('text'));
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         safe_require('artefact', 'file');
         $configdata = $instance->get('configdata');
@@ -79,6 +83,13 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
                 'defaultvalue' => $text,
                 'rules' => array('maxlength' => 65536),
             ),
+            'tags'  => array(
+                'type'         => 'tags',
+                'title'        => get_string('tags'),
+                'description'  => get_string('tagsdescblock'),
+                'defaultvalue' => $instance->get('tags'),
+                'help'         => false,
+            )
         );
         return $elements;
     }

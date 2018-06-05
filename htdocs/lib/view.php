@@ -722,6 +722,64 @@ class View {
         return $this->tags;
     }
 
+    public function get_all_tags_for_view($limit = null) {
+        $count = 0;
+        $alltags = array();
+
+        $artefactids = get_column_sql("
+            SELECT artefact
+            FROM {view_artefact}
+            WHERE view = ?
+            UNION
+            SELECT id AS artefact
+            FROM {artefact}
+            WHERE parent IN (
+                SELECT artefact
+                FROM {view_artefact}
+                WHERE view = ?)", array($this->id, $this->id));
+        $blockids = get_column('block_instance', 'id', 'view', $this->id);
+        $typecast = is_postgres() ? '::varchar' : '';
+        $alltags = get_column_sql("
+            SELECT (
+                CASE
+                   WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                   ELSE t.tag
+                END) AS tag
+            FROM {tag} t
+            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+            LEFT JOIN {institution} i ON i.name = t2.ownerid
+            WHERE t.resourcetype = ? AND t.resourceid = ?
+            UNION
+            SELECT (
+                CASE
+                   WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                   ELSE t.tag
+                END) AS tag
+            FROM {tag} t
+            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+            LEFT JOIN {institution} i ON i.name = t2.ownerid
+            WHERE t.resourcetype = ? AND t.resourceid IN ('" . join("','", $blockids) . "')
+            GROUP BY 1
+            UNION
+            SELECT (
+                CASE
+                   WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                   ELSE t.tag
+                END) AS tag
+            FROM {tag} t
+            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+            LEFT JOIN {institution} i ON i.name = t2.ownerid
+            WHERE t.resourcetype = ? AND t.resourceid IN ('" . join("','", $artefactids) . "')
+            GROUP BY 1
+            ORDER BY tag", array('view', $this->id, 'blocktype', 'artefact'));
+
+        $count = sizeof($alltags);
+        if ($limit && $count > $limit) {
+            $alltags = array_slice($alltags, 0, $limit);
+        }
+        return array($count, $alltags);
+    }
+
     public function get_collection() {
         if (!isset($this->collection)) {
             require_once(get_config('libroot') . 'collection.php');

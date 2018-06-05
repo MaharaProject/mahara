@@ -60,6 +60,10 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
         }
     }
 
+    public static function get_blocktype_type_content_types() {
+        return array('externalfeed' => array('media'));
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         if (!empty($configdata['feedid'])) {
@@ -203,6 +207,13 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
                 'description'  => get_string('showfeeditemsinfulldesc', 'blocktype.externalfeed'),
                 'defaultvalue' => (bool)$full,
             ),
+            'tags'  => array(
+                'type'         => 'tags',
+                'title'        => get_string('tags'),
+                'description'  => get_string('tagsdescblock'),
+                'defaultvalue' => $instance->get('tags'),
+                'help'         => false,
+            )
         );
     }
 

@@ -562,6 +562,7 @@ EOF;
         unset($values['chooseartefact']);
         unset($values['managenotes']);
         unset($values['allowcomments']);
+        unset($values['tags']); // We save the tags against the artefact so don't need to save again against the block
 
         // Pass back a list of any other blocks that need to be rendered
         // due to this change.

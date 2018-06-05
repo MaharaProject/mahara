@@ -74,6 +74,10 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return self::$source;
     }
 
+    public static function get_blocktype_type_content_types() {
+        return array('openbadgedisplayer' => array('media'));
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         if (empty($configdata) || !isset($configdata['badgegroup']) || !get_config('openbadgedisplayer_source')) {
@@ -320,6 +324,13 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
                         'value' => json_encode($current_values),
                     ),
                 )
+            ),
+            'tags'  => array(
+                'type'         => 'tags',
+                'title'        => get_string('tags'),
+                'description'  => get_string('tagsdescblock'),
+                'defaultvalue' => $instance->get('tags'),
+                'help'         => false,
             )
         );
 
