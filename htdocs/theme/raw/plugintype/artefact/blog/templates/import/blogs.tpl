@@ -10,7 +10,7 @@
                 {$blog.title|str_shorten_text:80:true}
                 {if $blog.description}</a>{/if}
                 </h3>
-                <div id="{$blog.id}_desc" class="detail hidden">{$blog.description|clean_html|safe}</div>
+                <div id="{$blog.id}_desc" class="detail d-none">{$blog.description|clean_html|safe}</div>
                 {if $blog.tags}
                 <div class="tags">
                     <strong>{str tag=tags}:</strong> {list_tags owner=0 tags=$blog.tags}
@@ -66,7 +66,7 @@
                                 ({str tag=draft section=artefact.blog})
                             {/if}
                         </span>
-                        <div id="{$post.id}_desc" class="detail hidden text-small">
+                        <div id="{$post.id}_desc" class="detail d-none text-small">
                             {$post.description|clean_html|safe}
                         </div>
                         <p id="postdetails_{$post.id}" class="postdetails text-small">
@@ -115,11 +115,11 @@
     jQuery(function() {
         jQuery("a.blogtitle").on("click", function(e) {
             e.preventDefault();
-            jQuery("#" + this.id + "_desc").toggleClass("hidden");
+            jQuery("#" + this.id + "_desc").toggleClass("d-none");
         });
         jQuery("a.posttitle").on("click", function(e) {
             e.preventDefault();
-            jQuery("#" + this.id + "_desc").toggleClass("hidden");
+            jQuery("#" + this.id + "_desc").toggleClass("d-none");
         });
         jQuery("input.blogdecision").on("change", function(e) {
             e.preventDefault();

@@ -196,7 +196,7 @@ $js = '
 jQuery(function($) {
     $("a.notetitle").on("click", function(e) {
         e.preventDefault();
-        $("#" + this.id + "_desc").toggleClass("hidden");
+        $("#" + this.id + "_desc").toggleClass("d-none");
     });
 });';
 
@@ -225,7 +225,7 @@ function deletenote_form($id, $notedata) {
             'submit' => array(
                 'type' => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-default btn-xs last',
+                'class' => 'btn-secondary btn-xs last',
                 'elementtitle' => get_string('delete'),
                 'value' => '<span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span> ',
             ),

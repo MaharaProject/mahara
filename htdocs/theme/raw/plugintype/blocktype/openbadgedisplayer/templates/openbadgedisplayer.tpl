@@ -9,7 +9,7 @@
             $('#openbadges{{$id}}').on('keypress', 'img', function (event) {
                 if (event.keyCode == 13) {
                     showBadgeContent({html: buildBadgeContent($(this).data('assertion'))});
-                    $('#badge-content-dialog').on("hidden.bs.modal", function () {
+                    $('#badge-content-dialog').on("d-none.bs.modal", function () {
                         $('#' + $(event.target).attr('id')).trigger("focus");
                     });
                 }

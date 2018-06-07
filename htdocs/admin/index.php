@@ -55,7 +55,7 @@ $closeform = pieform(array(
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string($closed ? 'Open' : 'Close', 'admin'),
-            'class' => $closed ? 'btn-primary' : 'btn-default'
+            'class' => $closed ? 'btn-primary' : 'btn-secondary'
         ),
     ),
 ));
@@ -68,7 +68,7 @@ $clearcachesform = pieform(array(
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string('clearcachessubmit', 'admin'),
-            'class' => 'btn-default',
+            'class' => 'btn-secondary',
         ),
     ),
 ));

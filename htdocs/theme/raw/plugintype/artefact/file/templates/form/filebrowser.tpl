@@ -45,7 +45,7 @@
             </div>
 
             <div id="artefactchooser-body">
-                <div id="{$prefix}_ownersubtabs" {if !$tabs.subtabs}class="hidden"{/if}>
+                <div id="{$prefix}_ownersubtabs" {if !$tabs.subtabs}class="d-none"{/if}>
                 {if $tabs.subtabs}
                     {include file="artefact:file:form/ownersubtabs.tpl" tabs=$tabs prefix=$prefix querybase=$querybase}
                 {/if}
@@ -53,7 +53,7 @@
         {/if}
 
         {if $config.upload}
-        <div id="{$prefix}_upload_container" class="clearfix {if $config.selectone || $config.selectmodal} card-fake{else} card card-default fileupload {/if} {if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
+        <div id="{$prefix}_upload_container" class="clearfix {if $config.selectone || $config.selectmodal} card-fake{else} card card-secondary fileupload {/if} {if ($tabs && !$tabs.upload) || $uploaddisabled} d-none{/if}">
             {* config.uploadagreement: disable the file chooser unless the agreement is checked *}
             {* config.simpleupload: the form only contains a file chooser *}
             {* config.submitbutton: add submit button even if js is enabled & don't start uploading as soon as a file is chosen *}
@@ -136,7 +136,7 @@
         {/if}
 
         {if $config.upload}
-        <div id="{$prefix}_upload_disabled" class="uploaddisabled{if !$uploaddisabled} hidden{/if}">
+        <div id="{$prefix}_upload_disabled" class="uploaddisabled{if !$uploaddisabled} d-none{/if}">
             <div class="alert alert-warning">
             {str tag="cannotuploadtofolder" section=artefact.file}
             </div>
@@ -149,7 +149,7 @@
         {/if}
 
         {if $config.createfolder}
-            <div id="createfolder" class="{if $uploaddisabled}hidden{/if} form-group">
+            <div id="createfolder" class="{if $uploaddisabled}d-none{/if} form-group">
                 <div id="{$prefix}_createfolder_messages"></div>
                 <label for="{$prefix}_createfolder_name" class="accessible-hidden sr-only">
                     {str tag=createfolder section=artefact.file}
@@ -178,7 +178,7 @@
 
         {* Edit form used when js is available *}
         {if $edit <= 0}
-        <table class="hidden">
+        <table class="d-none">
             <tbody id="{$prefix}_edit_placeholder">
             {include file="artefact:file:form/editfile.tpl" prefix=$prefix groupinfo=$groupinfo colspan=$colspan}
             </tbody>

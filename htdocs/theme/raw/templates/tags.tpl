@@ -15,13 +15,13 @@
         {/foreach}
         </ul>
     </div>
-    <div id="results_container" class="card card-default tag-results">
+    <div id="results_container" class="card card-secondary tag-results">
         <h2 id="results_heading" class="card-heading">{str tag=searchresultsfor}
             <a class="tag secondary-link" href="{$results->baseurl}{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
         </h2>
         {if $not_institution_tag}
         <div class="btn-top-right btn-group btn-group-top">
-            <a class="btn btn-secondary edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
+            <a class="btn btn-secondary edit-tag{if !$tag} d-none{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
         </div>
         {/if}
         <div class="tag-filters">
@@ -36,7 +36,7 @@
                     <span class="icon icon-filter left" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=filterresultsby}</span>
                     {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
-                        <span id="currentfilter" {if $results->filter != $filtername} class="hidden"{/if}>{$filterdisplay}</span>
+                        <span id="currentfilter" {if $results->filter != $filtername} class="d-none"{/if}>{$filterdisplay}</span>
                     {/foreach}
                     <span class="icon icon-caret-down right" role="presentation" aria-hidden="true"></span>
                 </button>

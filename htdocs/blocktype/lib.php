@@ -1346,7 +1346,7 @@ class BlockInstance {
         // Add submit/cancel buttons
         $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
             'type' => 'submitcancel',
-            'class' => 'btn-default',
+            'class' => 'btn-secondary',
             'value' => array(get_string('save'), $cancel),
             'goto' => View::make_base_url(),
         );

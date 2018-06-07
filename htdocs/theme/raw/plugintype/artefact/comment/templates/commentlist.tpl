@@ -94,7 +94,7 @@
 
         {if !$item->deletedmessage && $item->attachments}
         <div class="comment-attachment">
-            <div class="card card-default has-attachment collapsible">
+            <div class="card card-secondary has-attachment collapsible">
                 <h4 class="card-heading">
                     <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
                         <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>

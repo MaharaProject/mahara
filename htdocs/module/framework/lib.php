@@ -888,7 +888,7 @@ class Framework {
         if ($options) {
             $form['elements']['submitcancel'] = array(
                 'type' => 'submitcancel',
-                'class' => 'btn-default',
+                'class' => 'btn-secondary',
                 'value' => array(get_string('save'), get_string('cancel')),
                 'goto' => $frameworkurl->fullurl,
             );

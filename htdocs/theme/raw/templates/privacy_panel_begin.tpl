@@ -1,9 +1,9 @@
 {if $institutionprivacy}
-<div id="instprivacy" class="inst js-hidden card card-default">
+<div id="instprivacy" class="inst js-hidden card card-secondary">
 {elseif $institutionterms}
-<div id ="insttermsandconditions" class ="inst js-hidden card card-default">
+<div id ="insttermsandconditions" class ="inst js-hidden card card-secondary">
 {else}
-<div class="card card-default">
+<div class="card card-secondary">
 {/if}
     <div class="last form-group collapsible-group">
         <fieldset class="pieform-fieldset last collapsible">

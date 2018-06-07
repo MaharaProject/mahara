@@ -1,6 +1,6 @@
 <tr id="buttonsrow">
     <td colspan="{math equation="x-2" x=count($cols)}">
-        <div id="nousersselected" class="hidden error">{str tag=nousersselected section=admin}</div>
+        <div id="nousersselected" class="d-none error">{str tag=nousersselected section=admin}</div>
     </td>
     <td>
         <form class="nojs-hidden-inline" id="archive" action="{$WWWROOT}admin/users/exportqueue.php" method="post">

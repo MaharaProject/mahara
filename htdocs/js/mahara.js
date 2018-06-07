@@ -262,7 +262,7 @@ function processingStart(msg) {
         msg = get_string('loading');
     }
 
-    jQuery('.loading-box').removeClass('hidden').html(
+    jQuery('.loading-box').removeClass('d-none').html(
         '<div class="loading-inner">' +
             '<span class="icon-spinner icon-pulse icon icon-lg"></span>' +
             '<span class="loading-message"></span>' +
@@ -276,7 +276,7 @@ function processingStart(msg) {
  */
 function processingStop() {
     setTimeout(function() {
-        jQuery('.loading-box').addClass('hidden');
+        jQuery('.loading-box').addClass('d-none');
     }, 100); //give users enough time to see the loading indicator
     window.isRequestProcessing = false;
 }
@@ -485,7 +485,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
 
     // create and display the container
     contextualHelpContainer = jQuery(
-        '<div style="position: absolute" class="contextualHelp hidden" role="dialog">' +
+        '<div style="position: absolute" class="contextualHelp d-none" role="dialog">' +
             '<span class="icon icon-spinner icon-pulse"></span>' +
         '</div>'
     );
@@ -509,7 +509,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
 
     // Once it has been positioned, make it visible
     contextualHelpContainer.offset(position);
-    contextualHelpContainer.removeClass('hidden');
+    contextualHelpContainer.removeClass('d-none');
 
     contextualHelpSelected = key;
 
@@ -576,7 +576,7 @@ function buildContextualHelpBox(content) {
  * Positions the box so that it's next to the link that was activated
  */
 function contextualHelpPosition(container) {
-    contextualHelpContainer.css('visibility', 'hidden').removeClass('hidden');
+    contextualHelpContainer.css('visibility', 'hidden').removeClass('d-none');
     var position = contextualHelpLink.offset();
     var containerwidth = contextualHelpContainer.outerWidth(true);
 
@@ -733,10 +733,10 @@ function progressbarUpdate(artefacttype, remove) {
 
             // when progress is met
             if ((counting - completed) <= 0) {
-                progressitem.closest('li').addClass('hidden');
+                progressitem.closest('li').addClass('d-none');
             }
             else {
-                progressitem.closest('li').removeClass('hidden');
+                progressitem.closest('li').removeClass('d-none');
             }
             // now update the totals if we need to
             if ((oldcompleted > 0 && oldcompleted <= counting && remove ) || (completed <= counting && !remove)) {

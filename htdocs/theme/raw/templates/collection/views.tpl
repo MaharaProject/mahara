@@ -3,7 +3,7 @@
     <div class="row manage-collection-pages" id="collectionpages" data-collectionid="{$id}">
         <div class="col-md-12">
             <p class="lead">{str tag=collectiondragupdate1 section=collection}</p>
-            <fieldset class="card card-default card-half first pagelist draggable " id="pagestoadd">
+            <fieldset class="card card-secondary card-half first pagelist draggable " id="pagestoadd">
                 <h3 class="card-heading">
                     {str tag=addviewstocollection section=collection}
                     {if $viewsform}
@@ -17,12 +17,12 @@
                     {if $viewsform}
                     {$viewsform|safe}
                     {/if}
-                    <div id="nopagetoadd" class="no-results lead text-small {if $viewsform} hidden{/if}">
+                    <div id="nopagetoadd" class="no-results lead text-small {if $viewsform} d-none{/if}">
                         {str tag=noviewsavailable section=collection}
                     </div>
                 </div>
             </fieldset>
-            <fieldset class="card card-default card-half collection-pages droppable" id="pagesadded">
+            <fieldset class="card card-secondary card-half collection-pages droppable" id="pagesadded">
                 <h3 class="card-heading">{str tag=viewsincollection section=collection}</h3>
                 {if !$views}
                     <div class="message dropzone-previews full-width">

@@ -56,7 +56,7 @@
             min-width: 35px;
             min-width: 40px;
             text-decoration: none;
-            color: $text-color;
+            color: $theme-text-color;
             .open-indicator {
                 display: none;
             }
@@ -142,8 +142,8 @@
         }
         .collection-indicator {
             position: absolute;
-            border-right: 1px solid $text-color;
-            border-bottom: 1px solid $text-color;
+            border-right: 1px solid $theme-text-color;
+            border-bottom: 1px solid $theme-text-color;
             width: 12px;
             height: 12px;
 

@@ -179,7 +179,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                 });
             }
 
-            jQuery(browser).removeClass('hidden');
+            jQuery(browser).removeClass('d-none');
 
             // execute additional js for the config block
             eval(configblock.data.javascript);
@@ -313,7 +313,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                     waitLoad(imgElm);
                 });
                 if (jQuery('#configureblock').length) {
-                    jQuery('#configureblock').removeClass('hidden');
+                    jQuery('#configureblock').removeClass('d-none');
                 }
                 removeImageBrowser();
             }
@@ -323,7 +323,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             setTimeout(function() {
                 jQuery('body').removeClass('modal-open');
                 jQuery('#imagebrowser div.configure').each( function() {
-                    jQuery(this).addClass('hidden');
+                    jQuery(this).addClass('d-none');
                 });
                 jQuery('#imagebrowser').remove();
             }, 1);

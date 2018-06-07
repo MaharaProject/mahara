@@ -1,5 +1,5 @@
 .drag-default-button {
-    @extend .btn-default; // Button like styling for drag element
+    @extend .btn-secondary; // Button like styling for drag element
     background-color: #fff;
     border-color: $list-group-border-color;
 }
@@ -79,7 +79,7 @@
 .ui-sortable-helper .blockinstance-controls {
     display: none;
 }
-.ui-sortable-helper.card-secondary.blockinstance > .card-heading > .blockinstance-header {
+.ui-sortable-helper.card-block.blockinstance > .card-heading > .blockinstance-header {
     padding-right: 0;
 }
 

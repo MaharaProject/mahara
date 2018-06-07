@@ -22,10 +22,10 @@ var toggle_seal = jQuery(function($) {
       }
 
       if (freeculture) {
-          sealimage.removeClass("hidden");
+          sealimage.removeClass("d-none");
       }
       else {
-          sealimage.addClass("hidden");
+          sealimage.addClass("d-none");
       }
   };
 });

@@ -2367,7 +2367,7 @@ function addfriend_form($friendid) {
             'addfriend_submit' => array(
                 'type' => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-default last',
+                'class' => 'btn-secondary last',
                 'value' => '<span class="icon icon-user-plus icon-lg left" role="presentation"></span>' . get_string('addtofriendslist', 'group'),
             ),
             'id' => array(

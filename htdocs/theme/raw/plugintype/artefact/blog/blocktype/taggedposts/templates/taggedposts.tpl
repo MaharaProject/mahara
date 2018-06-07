@@ -1,6 +1,6 @@
 {if ($editing)}
 <div class="shortcut nojs-hidden-block">
-    <div class="card-footer {if (count($blogs) == 1)}hidden{/if}">
+    <div class="card-footer {if (count($blogs) == 1)}d-none{/if}">
         <label class="text">{str tag='shortcutaddpost' section='artefact.blog'} </label>
         <div class="input-group">
             <span class="picker">
@@ -15,7 +15,7 @@
             </span>
         </div>
     </div>
-    <a class="btn btnshortcut feedback card-footer mtl {if (count($blogs) != 1)} hidden{/if}">
+    <a class="btn btnshortcut feedback card-footer mtl {if (count($blogs) != 1)} d-none{/if}">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag='shortcutnewentry' section='artefact.blog'}
     </a>

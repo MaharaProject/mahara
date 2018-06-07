@@ -98,7 +98,7 @@ function pieform_element_layout(Pieform $form, $element) {
               . '</div>'; //closing customrow_1
 
       // 'Add row' button
-      $output .='<button type="button" name="addrow" class="btn btn-sm btn-default" id="addrow" onclick="CustomLayoutManager.customlayout_add_row(\'' . $form->get_property('name') . '\')">'
+      $output .='<button type="button" name="addrow" class="btn btn-sm btn-secondary" id="addrow" onclick="CustomLayoutManager.customlayout_add_row(\'' . $form->get_property('name') . '\')">'
               .'<span class="icon icon-lg icon-plus-circle left" role="presentation" aria-hidden="true"></span>'
               . get_string('addarow', 'view')
               .'</button>'
@@ -110,7 +110,7 @@ function pieform_element_layout(Pieform $form, $element) {
   // preview pane
   $output .= '<div id="previewcustomlayoutpane">'
 
-          . '<button type="button" name="submitlayout" id="addlayout" class="btn btn-default" onclick="CustomLayoutManager.customlayout_submit_layout(\'' . $form->get_property('name') . '\')">'
+          . '<button type="button" name="submitlayout" id="addlayout" class="btn btn-secondary" onclick="CustomLayoutManager.customlayout_submit_layout(\'' . $form->get_property('name') . '\')">'
           . '<span class="icon icon-lg icon-check left" role="presentation" aria-hidden="true"></span>'
           . get_string('createnewlayout', 'view')
           . '</button>'

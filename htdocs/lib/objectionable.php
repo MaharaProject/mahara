@@ -41,7 +41,7 @@ function objection_form() {
 
     $form['elements']['submit'] = array(
         'type'    => 'submitcancel',
-        'class'   => 'btn-default',
+        'class'   => 'btn-secondary',
         'value'   => array(get_string('notifyadministrator'), get_string('cancel')),
         'confirm' => array(get_string('notifyadministratorconfirm')),
     );
@@ -499,4 +499,3 @@ function review_form_cancel_submit(Pieform $form) {
         )
     );
 }
-

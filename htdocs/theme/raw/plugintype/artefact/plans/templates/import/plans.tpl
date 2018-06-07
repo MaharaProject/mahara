@@ -8,7 +8,7 @@
                     {$plan.title|str_shorten_text:80:true}
                 </h3>
                 {if $plan.description}
-                <div id="{$plan.id}_desc" class="detail hidden">
+                <div id="{$plan.id}_desc" class="detail d-none">
                     {$plan.description|clean_html|safe}
                 </div>
                 {/if}{if $plan.tags}
@@ -63,7 +63,7 @@
                             ({str tag=completed section=artefact.plans})
                         </span>
                         {/if}
-                        <div id="{$task.id}_desc" class="detail hidden">
+                        <div id="{$task.id}_desc" class="detail d-none">
                             {$task.description|clean_html|safe}
                         </div>
                         <div class="completiondate text-small">
@@ -93,7 +93,7 @@
     jQuery(function() {
         jQuery("a.tasktitle").on("click", function(e) {
             e.preventDefault();
-            jQuery("#" + this.id + "_desc").toggleClass("hidden");
+            jQuery("#" + this.id + "_desc").toggleClass("d-none");
         });
         jQuery("input.plandecision").on("change", function(e) {
             e.preventDefault();

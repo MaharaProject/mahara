@@ -24,6 +24,10 @@
     color: $navbar-default-toggle-icon-bar-bg;
     padding: 6px 10px;
     background-color: $navbar-default-toggle-hover-bg;
+    position: relative;
+    float: right;
+    background-image: none;
+    border: 1px solid transparent;
 
     &:hover,
     &:focus {

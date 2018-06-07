@@ -1,5 +1,5 @@
 {if $sbdata.data || $sbdata.preview || $sbdata.count > 1}
-<div class="card card-default">
+<div class="card card-secondary">
     <h3 class="card-heading">
         {if $sbdata.preview}{str tag="profilecompletenesspreview"}{else}{str tag="profilecompleteness"}{/if}
     </h3>
@@ -25,14 +25,14 @@
                     </div>
                 </div>
                 <div id="profile_completeness_tips" class="list-group">
-                    <span class="hidden" id="progress_counting_total">{$sbdata.totalcounting}</span>
-                    <span class="hidden" id="progress_completed_total">{$sbdata.totalcompleted}</span>
+                    <span class="d-none" id="progress_counting_total">{$sbdata.totalcounting}</span>
+                    <span class="d-none" id="progress_completed_total">{$sbdata.totalcompleted}</span>
                     <div class="list-group-item-heading">{str tag=profilecompletenesstips}</div>
                     <ul class="list-nested list-group-item-text list-unstyled list-group-item-link">
                         {foreach from=$sbdata.data item=item}
-                        <li{if $item.display <= 0} class="hidden"{/if}>
-                            <span id="progress_counting_{$item.artefact}" class="hidden">{$item.counting}</span>
-                            <span id="progress_completed_{$item.artefact}" class="hidden">{$item.completed}</span>
+                        <li{if $item.display <= 0} class="d-none"{/if}>
+                            <span id="progress_counting_{$item.artefact}" class="d-none">{$item.counting}</span>
+                            <span id="progress_completed_{$item.artefact}" class="d-none">{$item.completed}</span>
                             {if $item.link}<a href="{$WWWROOT}{$item.link}">{/if}<span id="progress_item_{$item.artefact}">{$item.label}</span>{if $item.link}</a>{/if}
                         </li>
                         {/foreach}

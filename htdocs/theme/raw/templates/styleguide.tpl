@@ -427,7 +427,7 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
                 </select>
             </span>
             <input class="currentoffset" type="hidden" name="offset" value="0">
-            <input class="pagination js-hidden hidden" type="submit" name="submit" value="Change">
+            <input class="pagination js-hidden d-none" type="submit" name="submit" value="Change">
         </form>
     </div>
 </div>
@@ -459,7 +459,7 @@ These are tabs to switch between pages within one section, for example in the "P
 This style of tabs is used for third-level navigation in areas where each page within this section is saved separately, for example in a group, in the résumé or in the web services configuration. When the primary school theme is selected, each arrow bar can be a different colour. This is determined by the class in the very first div. The 2 choices are 'group' (green) and 'resume' (red). There is a default option (blue) when no extra class is given.
 ```
 <div class="arrow-bar group">
-    <span class="arrow hidden-sm">
+    <span class="arrow d-sm-none d-md-block">
         <span class="text">
             Tabs
         </span>
@@ -501,7 +501,7 @@ This style of tabs is used for third-level navigation in areas where each page w
 ### card
 A basic card.
 ```
-<div class="card card-default">
+<div class="card card-secondary">
     <h3 class="card-heading has-link">
         <a href="#">Basic card</a>
     </h3>
@@ -536,7 +536,7 @@ A delete card.
 A side card is used in the sideblock area, e.g. on the dashboard for "Online users".
 ```
 <div class="col-md-3 sidebar">
-    <div class="card card-default">
+    <div class="card card-secondary">
         <h3 class="card-heading">
             Side card
             <br>
@@ -564,7 +564,7 @@ A side card without a footer. An examples is the "Tags" sideblock on the dashboa
 ```
 <div class="col-md-3 sidebar">
     <div id="sb-tags">
-        <div class="card card-default">
+        <div class="card card-secondary">
             <h3 class="card-heading has-link">
                 <a href="">Side card<span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
             </h3>
@@ -611,7 +611,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
     </h3>
     <div class="block collapse in" id="target" aria-expanded="true">
         <div class="inboxblock list-group">
-            <div class="has-attachment card-default collapsible list-group-item">
+            <div class="has-attachment card-secondary collapsible list-group-item">
                 <a class="collapsed link-block" data-toggle="collapse" href="#item1" aria-expanded="false">
                     <span class="icon icon-university text-default left" role="presentation" aria-hidden="true"></span>
                     Item 1
@@ -624,7 +624,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
                 </div>
             </div>
 
-            <div class="has-attachment card-default collapsible list-group-item">
+            <div class="has-attachment card-secondary collapsible list-group-item">
                 <a class="collapsed link-block" data-toggle="collapse" href="#item2" aria-expanded="false">
                     <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
                     Item 2
@@ -699,7 +699,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
     <h2>{str tag=Collection section=collection}: Collection 1</h2>
     <p class="navlabel">{str tag=navtopage section=collection}</p>
     <nav class="custom-dropdown dropdown">
-        <ul class="hidden">
+        <ul class="d-none">
             <li>
                 <a href="" data-index="0">Page 1</a>
             </li>
@@ -724,7 +724,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
 This card is used to show a page.
 ```
 <div class="card-quarter card-view">
-    <div class="card card-default">
+    <div class="card card-secondary">
         <h3 class="card-heading has-link">
             <a class="title-link title" href="" title="Dashboard page">Dashboard page</a>
         </h3>
@@ -774,7 +774,7 @@ This card is used to show a submitted page.
 </style>
 ```
 <div class="card-quarter card-view">
-    <div class="card card-default card bg-warning">
+    <div class="card card-secondary card bg-warning">
         <h3 class="card-heading has-link">
             <a class="title-link title" href="" title="Dashboard page">Unnamed page</a>
         </h3>
@@ -847,7 +847,7 @@ This card is used to show a collection.
 </style>
 ```
 <div class="card-quarter card-collection">
-    <div class="card card-default
+    <div class="card card-secondary
         ">
         <h3 class="card-heading has-link">
             <a class="title-link title" href="" title="collection uno">
@@ -1220,7 +1220,7 @@ The profile picture size that is used on side cards. The example is the profile 
 ```
 <div class="col-md-3 sidebar">
     <div id="sb-profile" class="sideblock-1 user-card">
-        <div class="card card-default">
+        <div class="card card-secondary">
             <h3 class="card-heading profile-block">
                 <a href="" class="username">Side card</a> <a href="" title="{str tag=editprofileicon section=artefact.file}" class="user-icon">
                     <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag=editprofileicon section=artefact.file}">

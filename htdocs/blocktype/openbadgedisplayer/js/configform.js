@@ -34,7 +34,7 @@ var selectedbadgegroups = JSON.parse(jQuery("input#instconf_selectedbadgegroups"
 if ((badgegroups_hosts instanceof Array && badgegroups_hosts.length >= 1)
     && (badgegroups_emails instanceof Array && badgegroups_emails.length >= 1)) {
     var count=0;
-    jQuery("div#instconf_loadinginfo_container > p.alert").removeClass('hidden');
+    jQuery("div#instconf_loadinginfo_container > p.alert").removeClass('d-none');
     for (var i=0; i < badgegroups_hosts.length; i++) {
         var h = badgegroups_hosts[i];
         for (var j=0; j < badgegroups_emails.length; j++) {
@@ -60,8 +60,8 @@ if ((badgegroups_hosts instanceof Array && badgegroups_hosts.length >= 1)
                         '<div id="instconf_' + data.host + '_container" class="checkboxes form-group">' +
                             '<span class="pseudolabel">' + data["hosttitle"] + '</span>' +
                             '<div class="btn-group">' +
-                                '<a href="" class="btn btn-default btn-xs" onclick="pieform_element_checkboxes_update(\'instconf_' + data["host"] + '_container\', true); return false;">' + get_string_ajax('selectall','blocktype.openbadgedisplayer') + '</a>' +
-                                '<a href="" class="btn btn-default btn-xs" onclick="pieform_element_checkboxes_update(\'instconf_' + data["host"] + '_container\', false); return false;">' + get_string_ajax('selectnone','blocktype.openbadgedisplayer') + '</a>&nbsp;' +
+                                '<a href="" class="btn btn-secondary btn-xs" onclick="pieform_element_checkboxes_update(\'instconf_' + data["host"] + '_container\', true); return false;">' + get_string_ajax('selectall','blocktype.openbadgedisplayer') + '</a>' +
+                                '<a href="" class="btn btn-secondary btn-xs" onclick="pieform_element_checkboxes_update(\'instconf_' + data["host"] + '_container\', false); return false;">' + get_string_ajax('selectnone','blocktype.openbadgedisplayer') + '</a>&nbsp;' +
                             '</div>';
                     for (var badgegroupid in data.badgegroups) {
                         var badgegroupname = data.badgegroups[badgegroupid];
@@ -88,7 +88,7 @@ if ((badgegroups_hosts instanceof Array && badgegroups_hosts.length >= 1)
 
                 count--;
                 if (count == 0) {
-                    jQuery("div#instconf_loadinginfo_container > p.alert").addClass('hidden');
+                    jQuery("div#instconf_loadinginfo_container > p.alert").addClass('d-none');
                 }
             });
         }

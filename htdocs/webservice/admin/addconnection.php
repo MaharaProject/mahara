@@ -236,49 +236,49 @@ function update_auth_options() {
     var current = jQuery('#allocate_client_connection_authtype').val();
 
     if ('token' == current || 'cert' == current) {
-        jQuery('#allocate_client_connection_token_container').removeClass('hidden');
-        jQuery('#allocate_client_connection_useheader_container').removeClass('hidden');
+        jQuery('#allocate_client_connection_token_container').removeClass('d-none');
+        jQuery('#allocate_client_connection_useheader_container').removeClass('d-none');
         update_useheader_options();
     }
     else {
-        jQuery('#allocate_client_connection_token_container').addClass('hidden');
-        jQuery('#allocate_client_connection_useheader_container').addClass('hidden');
-        jQuery('#allocate_client_connection_header_container').addClass('hidden');
+        jQuery('#allocate_client_connection_token_container').addClass('d-none');
+        jQuery('#allocate_client_connection_useheader_container').addClass('d-none');
+        jQuery('#allocate_client_connection_header_container').addClass('d-none');
     }
 
     if ('oauth1' == current) {
-        jQuery('#allocate_client_connection_consumer_container').removeClass('hidden');
-        jQuery('#allocate_client_connection_secret_container').removeClass('hidden');
+        jQuery('#allocate_client_connection_consumer_container').removeClass('d-none');
+        jQuery('#allocate_client_connection_secret_container').removeClass('d-none');
     }
     else {
-        jQuery('#allocate_client_connection_consumer_container').addClass('hidden');
-        jQuery('#allocate_client_connection_secret_container').addClass('hidden');
+        jQuery('#allocate_client_connection_consumer_container').addClass('d-none');
+        jQuery('#allocate_client_connection_secret_container').addClass('d-none');
     }
 
     if ('user' == current || 'cert' == current || 'wsse' == current) {
-        jQuery('#allocate_client_connection_username_container').removeClass('hidden');
-        jQuery('#allocate_client_connection_password_container').removeClass('hidden');
+        jQuery('#allocate_client_connection_username_container').removeClass('d-none');
+        jQuery('#allocate_client_connection_password_container').removeClass('d-none');
     }
     else {
-        jQuery('#allocate_client_connection_username_container').addClass('hidden');
-        jQuery('#allocate_client_connection_password_container').addClass('hidden');
+        jQuery('#allocate_client_connection_username_container').addClass('d-none');
+        jQuery('#allocate_client_connection_password_container').addClass('d-none');
     }
 
     if ('cert' == current) {
-        jQuery('#allocate_client_connection_certificate_container').removeClass('hidden');
+        jQuery('#allocate_client_connection_certificate_container').removeClass('d-none');
     }
     else {
-        jQuery('#allocate_client_connection_certificate_container').addClass('hidden');
+        jQuery('#allocate_client_connection_certificate_container').addClass('d-none');
     }
 }
 
 function update_type_options() {
     var current = jQuery('#allocate_client_connection_type').val();
     if ('rest' == current || 'oauth1' == current) {
-        jQuery('#allocate_client_connection_json_container').removeClass('hidden');
+        jQuery('#allocate_client_connection_json_container').removeClass('d-none');
     }
     else {
-        jQuery('#allocate_client_connection_json_container').addClass('hidden');
+        jQuery('#allocate_client_connection_json_container').addClass('d-none');
     }
 }
 
@@ -286,10 +286,10 @@ function update_type_options() {
 function update_useheader_options() {
     var checked = jQuery('#allocate_client_connection_useheader:checked').length;
     if (checked) {
-        jQuery('#allocate_client_connection_header_container').removeClass('hidden');
+        jQuery('#allocate_client_connection_header_container').removeClass('d-none');
     }
     else {
-        jQuery('#allocate_client_connection_header_container').addClass('hidden');
+        jQuery('#allocate_client_connection_header_container').addClass('d-none');
     }
 }
 

@@ -58,7 +58,7 @@
     $('.modal').on('shown.bs.modal', function() {
         $('#confirm-no-button').trigger("focus");
     });
-    $('.modal').on('hidden.bs.modal', function() {
+    $('.modal').on('d-none.bs.modal', function() {
         if (!acceptprivacy) {
             formAbortProcessing($j("#agreetoprivacy_submit"));
             $('#agreetoprivacy_submit').trigger("focus");

@@ -175,9 +175,9 @@ $table-border-color:            #ddd;
 
 $btn-font-weight:                normal;
 
-$btn-default-color:              #333333;
-$btn-default-bg:                 #F3F3F3;
-$btn-default-border:             #CCCCCC;
+$btn-secondary-color:              #333333;
+$btn-secondary-bg:                 #F3F3F3;
+$btn-secondary-border:             #CCCCCC;
 
 $btn-primary-color:              #FFFFFF;
 $btn-primary-bg:                 #556d32;
@@ -874,7 +874,7 @@ $blockquote-font-size:        ($font-size-base * 1.25);
 //** Blockquote border color
 $blockquote-border-color:     $brand-primary;
 //** Page header border color
-$page-header-border-color:    $btn-default-border;
+$page-header-border-color:    $btn-secondary-border;
 //** Width of horizontal description list titles
 $dl-horizontal-offset:        $component-offset-horizontal;
 //** Horizontal line color.

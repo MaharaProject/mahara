@@ -188,7 +188,7 @@ $form = pieform_instance(array(
             'isformgroup' => false,
             'elements'  => array(
                 'unsuspend' => array(
-                    'class' => 'btn-default text-inline',
+                    'class' => 'btn-secondary text-inline',
                     'type' => 'submit',
                     'isformgroup' => false,
                     'renderelementsonly' => true,
@@ -196,7 +196,7 @@ $form = pieform_instance(array(
                     'value' => get_string('unsuspendusers', 'admin')
                 ),
                 'unexpire' => array(
-                    'class' => 'btn-default text-inline',
+                    'class' => 'btn-secondary text-inline',
                     'type' => 'submit',
                     'isformgroup' => false,
                     'renderelementsonly' => true,
@@ -204,7 +204,7 @@ $form = pieform_instance(array(
                     'value' => get_string('unexpireusers', 'admin')
                 ),
                 'delete' => array(
-                    'class' => 'btn-default text-inline',
+                    'class' => 'btn-secondary text-inline',
                     'type'    => 'submit',
                     'isformgroup' => false,
                     'renderelementsonly' => true,

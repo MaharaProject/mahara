@@ -79,8 +79,17 @@
     }
 }
 
+.navbar {
+    border: 1px solid transparent;
+    > .container {
+        display: block;
+    }
+}
+
 .navbar-default {
     border-left: 0;
     border-right: 0;
     border-top: 0;
+    background-color: $body-bg;
+        border-color: #eee;
 }

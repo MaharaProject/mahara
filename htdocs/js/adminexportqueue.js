@@ -166,7 +166,7 @@ var ExportQueue = (function($) {
                           'type': 'checkbox',
                           'name': 'deleterows[' + j + ']',
                           'value': j,
-                          'class': 'hidden',
+                          'class': 'd-none',
                           'checked': 'checked'
                       }));
                       countdelete++;
@@ -180,7 +180,7 @@ var ExportQueue = (function($) {
                           'type': 'checkbox',
                           'name': 'exportrows[' + j + ']',
                           'value': j,
-                          'class': 'hidden',
+                          'class': 'd-none',
                           'checked': 'checked'
                       }));
                       countarchive++;
@@ -188,7 +188,7 @@ var ExportQueue = (function($) {
               }
 
               if ((countdelete && $(this).attr('name') == 'delete') || (countarchive && $(this).attr('name') == 'export')) {
-                  $('#nousersselected').addClass('hidden');
+                  $('#nousersselected').addClass('d-none');
                   $('#' + formid).append($('<input>', {
                       'type': 'hidden',
                       'name': 'action',
@@ -197,7 +197,7 @@ var ExportQueue = (function($) {
                   $('#' + formid).trigger('submit');
                   return false;
               }
-              $('#nousersselected').removeClass('hidden');
+              $('#nousersselected').removeClass('d-none');
               return false;
           });
       };

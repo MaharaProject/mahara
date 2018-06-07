@@ -208,7 +208,7 @@ if ($institution || $add) {
                 ),
                 'submit' => array(
                     'type' => 'submitcancel',
-                    'class' => 'btn-default',
+                    'class' => 'btn-secondary',
                     'value' => array(get_string('yes'), get_string('no'))
                 )
             )
@@ -1243,7 +1243,7 @@ if ($institution && $institution != 'mahara') {
                     'submit' => array(
                         'type'        => 'button',
                         'usebuttontag' => true,
-                        'class'       => 'btn-default',
+                        'class'       => 'btn-secondary',
                         'value'       => '<span class="icon icon-lg text-danger icon-ban left" role="presentation" aria-hidden="true"></span>' . get_string('suspendinstitution','admin'),
                     ),
                 )
@@ -1265,7 +1265,7 @@ if ($institution && $institution != 'mahara') {
                     'submit' => array(
                         'type'        => 'button',
                         'usebuttontag' => true,
-                        'class'       => 'btn-default',
+                        'class'       => 'btn-secondary',
                         'value'       => '<span class="icon icon-lg text-success icon-check left" role="presentation" aria-hidden="true"></span>' . get_string('unsuspendinstitution','admin'),
                     ),
                 )

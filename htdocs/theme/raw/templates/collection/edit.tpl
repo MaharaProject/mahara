@@ -2,7 +2,7 @@
 {if $ADMIN || $INSTITUTIONALADMIN}
 <div class="row">
     <div class="col-md-9">
-        <div class="card card-default">
+        <div class="card card-secondary">
             <div class="card-body">
                 {$form|safe}
             </div>

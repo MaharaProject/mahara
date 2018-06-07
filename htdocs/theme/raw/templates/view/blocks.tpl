@@ -27,7 +27,7 @@
 
     {if $columns}
         <form action="{$formurl}" method="post">
-            <input type="submit" name="{$action_name}" id="action-dummy" class="hidden">
+            <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
             <input type="hidden" id="viewid" name="id" value="{$view}">
             <input type="hidden" name="change" value="1">
             <input type="hidden" id="category" name="c" value="{$category}">
@@ -93,7 +93,7 @@
 
     {elseif $block}
         <form action="{$formurl}" method="post">
-            <input type="submit" name="{$action_name}" id="action-dummy" class="hidden">
+            <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
             <input type="hidden" id="viewid" name="id" value="{$view}">
             <input type="hidden" name="change" value="1">
             <input type="hidden" id="category" name="c" value="{$category}">

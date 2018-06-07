@@ -26,11 +26,11 @@
             newrow.find('label[for="selectcollayoutrow_' + numrows + '"]').attr('for', newid).html(labelValue2);
 
             if ((oldremovebutton = $(newrow).find('button')).length != 0) {
-                oldremovebutton.attr('class', 'pull-left btn btn-sm btn-default removecustomrow_' + (numrows + 1));
+                oldremovebutton.attr('class', 'pull-left btn btn-sm btn-secondary removecustomrow_' + (numrows + 1));
             }
             else {
                 // warning: classes are modified above for any subsequent button instances
-                newrow.append('<button name="removerow" class="pull-left btn btn-sm btn-default removecustomrow_' + (numrows + 1) + '" onclick="CustomLayoutManager.customlayout_remove_row(\'' + pieformname + '\', this)"><span class="icon icon-lg icon-trash text-danger"></span><span class="hidden-xs pls"> ' + get_string('removethisrow', 'view') + '</span></button>');
+                newrow.append('<button name="removerow" class="pull-left btn btn-sm btn-secondary removecustomrow_' + (numrows + 1) + '" onclick="CustomLayoutManager.customlayout_remove_row(\'' + pieformname + '\', this)"><span class="icon icon-lg icon-trash text-danger"></span><span class="d-none d-sm-block pls"> ' + get_string('removethisrow', 'view') + '</span></button>');
             }
             $('#customrow_' + numrows).after(newrow);
             $('#' + pieformname + '_customlayoutnumrows').val(numrows + 1);

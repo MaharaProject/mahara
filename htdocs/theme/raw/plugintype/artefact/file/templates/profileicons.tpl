@@ -1,7 +1,7 @@
 {include file="header.tpl"}
     {$settingsformtag|safe}
     <div class="table-responsive">
-        <table id="profileicons" class="hidden fullwidth table table-striped">
+        <table id="profileicons" class="d-none fullwidth table table-striped">
             <thead>
                 <tr>
                     <th class="profileiconcell">{str tag="image"}</th>

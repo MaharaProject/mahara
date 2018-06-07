@@ -171,7 +171,7 @@ $allowcomments = $view->get('allowcomments');
 
 $form['elements']['more'] = array(
     'type' => 'fieldset',
-    'class' => $view->get('type') == 'profile' ? ' hidden' : 'last form-condensed as-link link-expand-right with-heading',
+    'class' => $view->get('type') == 'profile' ? ' d-none' : 'last form-condensed as-link link-expand-right with-heading',
     'collapsible' => true,
     'collapsed' => true,
     'legend' => get_string('moreoptions', 'view'),
@@ -264,10 +264,10 @@ if ($institution) {
 jQuery(function($) {
     function update_retainview() {
         if ($('#editaccess_template').prop('checked')) {
-            $('#editaccess_retainview_container').removeClass('hidden');
+            $('#editaccess_retainview_container').removeClass('d-none');
         }
         else {
-            $('#editaccess_retainview_container').addClass('hidden');
+            $('#editaccess_retainview_container').addClass('d-none');
             $('#editaccess_retainview').prop('checked',false);
             update_loggedin_access();
         }
@@ -281,7 +281,7 @@ EOF;
 }
 
 if (!$allowcomments) {
-    $form['elements']['more']['elements']['approvecomments']['class'] = 'hidden';
+    $form['elements']['more']['elements']['approvecomments']['class'] = 'd-none';
 }
 $allowcomments = json_encode((int) $allowcomments);
 
@@ -291,17 +291,17 @@ jQuery(function($) {
     function update_comment_options() {
         allowcomments = $('#editaccess_allowcomments').prop('checked');
         if (allowcomments) {
-            $('#editaccess_approvecomments').removeClass('hidden');
-            $('#editaccess_approvecomments_container').removeClass('hidden');
+            $('#editaccess_approvecomments').removeClass('d-none');
+            $('#editaccess_approvecomments_container').removeClass('d-none');
             $('#accesslisttable .commentcolumn').each(function () {
-                $(this).addClass('hidden');
+                $(this).addClass('d-none');
             });
         }
         else {
 
-            $('#editaccess_approvecomments_container').addClass('hidden');
+            $('#editaccess_approvecomments_container').addClass('d-none');
             $('#accesslisttable .commentcolumn').each(function () {
-                $(this).removeClass('hidden');
+                $(this).removeClass('d-none');
             });
         }
     }

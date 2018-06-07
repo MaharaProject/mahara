@@ -7290,7 +7290,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             'submit' => array(
                 'type'  => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-default',
+                'class' => 'btn-secondary',
                 'value' => '<span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>' . get_string('createview', 'view'),
             )
         )
@@ -7321,7 +7321,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
         $form['elements']['submitcollection'] = array(
             'type'  => 'button',
             'usebuttontag' => true,
-            'class' => 'btn-default btn-xs btn-group-item',
+            'class' => 'btn-secondary btn-xs btn-group-item',
             'value' => get_string('copycollection', 'collection'),
         );
     }
@@ -7331,7 +7331,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             'value' => $template,
         );
         $form['elements']['submit']['value'] = get_string('copyview', 'view');
-        $form['elements']['submit']['class'] = 'btn-default btn-xs btn-group-item';
+        $form['elements']['submit']['class'] = 'btn-secondary btn-xs btn-group-item';
         if ($collection !== null) {
             $form['elements']['submit']['class'] .= ' last';
         }

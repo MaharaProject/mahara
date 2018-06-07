@@ -119,7 +119,7 @@
             </select>
 
             {if $moderator && !empty($otherforums) && (count($otherforums) > 0)}
-            <select name="newforum" id="otherforums" class="hidden form-control select">
+            <select name="newforum" id="otherforums" class="d-none form-control select">
                 {foreach from=$otherforums item=otherforum}
                 <option value="{$otherforum->id}">
                     {$otherforum->title}

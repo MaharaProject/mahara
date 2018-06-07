@@ -132,10 +132,10 @@ jQuery(function($) {
                   if (edit_tag_link.length) {
                       if (data.data.tag && !data.data.is_institution_tag) {
                           edit_tag_link.prop('href', config.wwwroot + 'edittags.php?tag=' + data.data.tagurl);
-                          edit_tag_link.removeClass('hidden');
+                          edit_tag_link.removeClass('d-none');
                       }
                       else {
-                          edit_tag_link.addClass('hidden');
+                          edit_tag_link.addClass('d-none');
                       }
                   }
 

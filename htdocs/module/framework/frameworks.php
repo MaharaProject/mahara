@@ -65,7 +65,7 @@ if ($frameworks) {
                     'elements' => array(
                         'submit' => array(
                             'type'         => 'button',
-                            'class'        => 'btn-default btn-xs button',
+                            'class'        => 'btn-secondary btn-xs button',
                             'usebuttontag' => true,
                             'value'        => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
                             'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
@@ -87,7 +87,7 @@ if ($frameworks) {
                 'elements' => array(
                     'submit' => array(
                         'type'         => 'button',
-                        'class'        => 'btn-default btn-xs button',
+                        'class'        => 'btn-secondary btn-xs button',
                         'usebuttontag' => true,
                         'value'        => '<span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('edit') . '</span>',
                     ),

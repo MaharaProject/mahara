@@ -36,7 +36,7 @@ if (method_exists($authobj, 'change_password')) {
         'password' => array(
             'type' => 'password',
             'title' => '',
-            'class' => 'hidden',
+            'class' => 'd-none',
             'value' => 'decoypassword',
         ),
         'oldpassword' => array(

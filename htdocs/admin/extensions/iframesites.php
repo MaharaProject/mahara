@@ -99,7 +99,7 @@ foreach ($iframesources as $url => $name) {
             'elements'         => array(
                 'submit' => array(
                     'type'         => 'button',
-                    'class'        => 'btn-default btn-sm',
+                    'class'        => 'btn-secondary btn-sm',
                     'usebuttontag' => true,
                     'value'          => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
 

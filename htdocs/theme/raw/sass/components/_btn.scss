@@ -193,7 +193,7 @@ td.action-list-copy {
     }
 }
 // Edit page configure buttons
-.card-secondary .blockinstance-controls .btn-group-top {
+.card-block .blockinstance-controls .btn-group-top {
     position: absolute;
     top: 11px;
     right: 10px;
@@ -412,7 +412,7 @@ td.action-list-copy {
 
 .modal-tinymce {
     .pieform {
-            button.btn-default {
+            button.btn-secondary {
             background-color: $btn-primary-bg;
             border-color: $btn-primary-border;
             font-family: $font-family-sans-serif;

@@ -92,7 +92,7 @@
                       {/if}
                   </span>
                 </a>
-                <div class="matrixtooltip popover hidden">
+                <div class="matrixtooltip popover d-none">
                     <h3 class="popover-title">{$standard->name}</h3>
                     <div class="popover-content">
                         {$standard->description|clean_html|safe}
@@ -104,7 +104,7 @@
     {if $standard->options}
         {foreach from=$standard->options key=ok item=option}
         {if $option->children}
-        <tr class="matrixlevel{$option->level} examplefor{$standard->id}{if $standard->settingstate == 'closed'} hidden{/if}">
+        <tr class="matrixlevel{$option->level} examplefor{$standard->id}{if $standard->settingstate == 'closed'} d-none{/if}">
             <td colspan="{$viewcount + 2}" class="code">
                 <div class="shortname-container">
                     <span class="sr-only">{str tag="headerrow" section="module.framework"}</span>
@@ -115,7 +115,7 @@
                     {/for}
                     {$option->name}
                     <span class="sr-only">{str tag="showelementdetails" section="module.framework"}</span>
-                    <div class="matrixtooltip popover hidden">
+                    <div class="matrixtooltip popover d-none">
                         <h3 class="popover-title">{$option->name}</h3>
                         <div class="popover-content">
                             {$option->description|clean_html|safe}
@@ -125,7 +125,7 @@
             </td>
         </tr>
         {else}
-        <tr class="matrixlevel{$option->level} examplefor{$standard->id}{if $standard->settingstate == 'closed'} hidden{/if}">
+        <tr class="matrixlevel{$option->level} examplefor{$standard->id}{if $standard->settingstate == 'closed'} d-none{/if}">
             <td class="code">
                 <div class="shortname-container" tabindex="0">
                     <span class="sr-only">{str tag="headerrow" section="module.framework"}</span>
@@ -136,7 +136,7 @@
                     {/for}
                     {$option->shortname}
                     <span class="sr-only">{str tag="showelementdetails" section="module.framework"}</span>
-                    <div class="matrixtooltip popover hidden">
+                    <div class="matrixtooltip popover d-none">
                         <h3 class="popover-title">{$option->name}</h3>
                         <div class="popover-content">
                             {$option->description|clean_html|safe}

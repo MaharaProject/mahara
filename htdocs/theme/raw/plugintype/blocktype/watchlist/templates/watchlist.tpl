@@ -7,13 +7,13 @@
         {$watchlist.tablerows|safe}
     </ul>
     {if $watchlist.pagination}
-        <div id="watchlist_page_container" class="hidden">{$watchlist.pagination|safe}</div>
+        <div id="watchlist_page_container" class="d-none">{$watchlist.pagination|safe}</div>
     {/if}
     {if $watchlist.pagination_js}
     <script>
         jQuery(function($) {literal}{{/literal}
             {$watchlist.pagination_js|safe}
-            $('#watchlist_page_container').removeClass('hidden');
+            $('#watchlist_page_container').removeClass('d-none');
         {literal}}{/literal});
     </script>
     {/if}

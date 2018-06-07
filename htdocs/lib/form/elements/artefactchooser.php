@@ -158,7 +158,7 @@ jQuery(function($) {
 
               // Hide the search form
               $(a).on('click', function(e) {
-                  $('#artefactchooser-searchform').addClass('hidden');
+                  $('#artefactchooser-searchform').addClass('d-none');
                   $(searchA.parentNode).removeClass('active');
                   $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
                   $(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
@@ -178,7 +178,7 @@ jQuery(function($) {
               // Display the search form
               $(a).on('click', function(e) {
                   $('#artefactchooser-searchform').show();
-                  $('#artefactchooser-searchform').removeClass('hidden');
+                  $('#artefactchooser-searchform').removeClass('d-none');
                   $(browseA.parentNode).removeClass('active');
                   $(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
                   $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');

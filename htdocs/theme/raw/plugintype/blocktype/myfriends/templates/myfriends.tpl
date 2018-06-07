@@ -3,13 +3,13 @@
     <div id="userfriendstable">
        {$friends.tablerows|safe}
     </div>
-    <div id="myfriends_page_container" class="hidden ">
+    <div id="myfriends_page_container" class="d-none ">
         {$friends.pagination|safe}
     </div>
     <script>
     jQuery(function($) {literal}{{/literal}
         {$friends.pagination_js|safe}
-        $('#myfriends_page_container').removeClass('hidden');
+        $('#myfriends_page_container').removeClass('d-none');
         $(window).on('pageupdated', { }, function() {
             $('.js-masonry.user-thumbnails').masonry({ itemSelector: '.user-icon' });
         });

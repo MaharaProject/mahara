@@ -135,8 +135,8 @@
     }
 }
 
-// Specific card-secondary styling for the edit page layout
-.card-secondary.blockinstance > .card-heading > .blockinstance-header {
+// Specific card-block styling for the edit page layout
+.card-block.blockinstance > .card-heading > .blockinstance-header {
     display: block;
     padding-left: 10px;
     padding-right: 80px;
@@ -354,8 +354,8 @@
     }
 }
 
-.card-secondary > .card-heading {
-    font-size: 18px;
+.card-block > .card-heading {
+    font-size: 1.125rem;
 }
 
 .table thead {
@@ -515,7 +515,7 @@
   display: table;
 }
 
-.notification-parent .bulk-actions label.btn-default {
+.notification-parent .bulk-actions label.btn-secondary {
   padding-bottom: 3px;
 }
 

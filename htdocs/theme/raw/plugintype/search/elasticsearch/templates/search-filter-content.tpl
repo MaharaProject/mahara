@@ -13,7 +13,7 @@
         <span class="icon icon-filter left" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag=filterresultsby section=search.elasticsearch}</span>
         {foreach from=$contentfilter item=term}
-            <span {if $term.term != $contentfilterselected} class="hidden"{/if}>{$term.display} ({$term.count})</span>
+            <span {if $term.term != $contentfilterselected} class="d-none"{/if}>{$term.display} ({$term.count})</span>
         {/foreach}
         <span class="icon icon-caret-down right" role="presentation" aria-hidden="true"></span>
     </button>

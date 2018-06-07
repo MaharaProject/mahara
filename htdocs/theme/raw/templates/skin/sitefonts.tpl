@@ -14,7 +14,7 @@
         {if $query}
             <h2 id="searchresultsheading" class="accessible-hidden sr-only">{str tag=Results}</h2>
         {/if}
-        <div id="fontlist" class="card-default fullwidth listing">
+        <div id="fontlist" class="card-secondary fullwidth listing">
             {$sitefontshtml|safe}
         </div>
     {else}

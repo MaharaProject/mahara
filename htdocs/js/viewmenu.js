@@ -16,7 +16,7 @@ function addFeedbackError(form, data) {
     if (isTinyMceUsed()) {
         var mce = tinyMCE.get('add_feedback_form_message');
         mce.show();
-        jQuery('.mce-toolbar.mce-first').siblings().toggleClass('hidden');
+        jQuery('.mce-toolbar.mce-first').siblings().toggleClass('d-none');
         mce.focus();
     }
     if (jQuery('#feedback-form').hasClass('modal-docked')) {
@@ -89,7 +89,7 @@ function reviewSuccess(form, data) {
 function resetFeedbackReplyto() {
     jQuery('#comment_reply_parent').hide();
     jQuery('#add_feedback_form_replyto').val('');
-    jQuery('#add_feedback_form_ispublic_container .form-switch').show().removeClass('hidden');
+    jQuery('#add_feedback_form_ispublic_container .form-switch').show().removeClass('d-none');
     jQuery('#add_feedback_form_ispublic_container .add_feedback_form_privacy_message').remove();
 }
 
@@ -154,7 +154,7 @@ jQuery(function($) {
             // Disable the action buttons from the display copy
             commentcopy.find('.comment-item-buttons').remove();
             commentcopy.appendTo(replyview);
-            replyview.show().removeClass('hidden');
+            replyview.show().removeClass('d-none');
 
             // Check whether we need to force a "private" or "public" message
             // (This is only for display. We'll also check & enforce this on the server side.)
@@ -162,7 +162,7 @@ jQuery(function($) {
             $('#add_feedback_form_ispublic_container .add_feedback_form_privacy_message').remove();
             if (canpublicreply && canprivatereply) {
                 // If they have both options, show the normal switch
-                makepublicswitch.show().removeClass('hidden');
+                makepublicswitch.show().removeClass('d-none');
             }
             else {
 
@@ -171,12 +171,12 @@ jQuery(function($) {
                 // They can only post a public reply
                 if (!canprivatereply) {
                     makepublicswitch.find("input#add_feedback_form_ispublic").prop('checked', true);
-                    msg = $(".add_feedback_form_forcepublic_message").clone().show().removeClass("hidden");
+                    msg = $(".add_feedback_form_forcepublic_message").clone().show().removeClass("d-none");
                 }
                 // They can only post a private reply
                 else {
                     makepublicswitch.find("input#add_feedback_form_ispublic").prop('checked', false);
-                    msg = $(".add_feedback_form_forceprivate_message").clone().show().removeClass("hidden");
+                    msg = $(".add_feedback_form_forceprivate_message").clone().show().removeClass("d-none");
                 }
 
                 $('#add_feedback_form_ispublic_container').append(msg);

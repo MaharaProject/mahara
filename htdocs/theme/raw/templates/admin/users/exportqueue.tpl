@@ -49,7 +49,7 @@
     </div>
 </form>
 
-<div class="card card-default view-container" id="results">
+<div class="card card-secondary view-container" id="results">
     <h2 class="card-heading" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
         <table id="searchresults" class="tablerenderer table fullwidth">

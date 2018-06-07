@@ -33,12 +33,12 @@ function pieform_element_passwordnoread(Pieform $form, $element) {
         $linktext = isset($element['expandtext']) ? hsc($element['expandtext']) : get_string('changepassword');
         $html = '<a href="" '
                 . "onclick=\""
-                . "jQuery('#${inputid}_expand').addClass('hidden'); "
+                . "jQuery('#${inputid}_expand').addClass('d-none'); "
                 . "jQuery('#{$inputid}').attr('name', '{$element['name']}');"
-                . "jQuery('#{$inputid}').removeClass('hidden'); "
+                . "jQuery('#{$inputid}').removeClass('d-none'); "
                 . "return false;"
                 . "\" id=\"${inputid}_expand\">" . $linktext . '</a>';
-                $element['class'] .= ' hidden';
+                $element['class'] .= ' d-none';
         // This password input starts out invisible, and with a placeholder name (so that
         // it won't be processed by the form). When you click the link, it becomes visible
         // and gains its real name.

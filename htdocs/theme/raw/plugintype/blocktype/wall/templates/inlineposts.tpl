@@ -4,7 +4,7 @@
     {/if}
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}
-            <div class="card {if $wallpost->private}card bg-warning{else}card-default{/if} wallpost">
+            <div class="card {if $wallpost->private}card bg-warning{else}card-secondary{/if} wallpost">
                 <h4 class="card-heading has-link">
                     <a href="{$wallpost->profileurl}" class="userinfo has-user-icon">
                         <span class="user-icon left">

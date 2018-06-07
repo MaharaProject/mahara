@@ -32,7 +32,7 @@ $deleteform = pieform(array(
               'rules' => array('required' => true),
           ),
         'submit' => array(
-            'class' => 'btn-default',
+            'class' => 'btn-secondary',
             'type' => 'submit',
             'value' => get_string('resenddeletionnotification', 'account'),
         ),

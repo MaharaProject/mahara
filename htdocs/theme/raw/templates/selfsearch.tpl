@@ -10,7 +10,7 @@
                 </div>
                 <div id="selfsearchresults">
                     <h2>{str tag="Results"}</h2>
-                    <table id="searchresults" class="hidden tablerenderer fullwidth">
+                    <table id="searchresults" class="d-none tablerenderer fullwidth">
                         <tbody>
                         </tbody>
                     </table>

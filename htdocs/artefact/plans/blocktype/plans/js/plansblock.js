@@ -4,7 +4,7 @@ function rewriteTaskTitles(blockid, planid) {
       jQuery(this).on('click', function(e) {
           e.preventDefault();
           var description = jQuery(this).parent().find('div.task-desc');
-          description.toggleClass('hidden');
+          description.toggleClass('d-none');
       });
   });
 }

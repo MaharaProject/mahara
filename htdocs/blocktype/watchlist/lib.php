@@ -190,7 +190,7 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
         $configdata = $instance->get('configdata');
         $classes = 'first last';
         if (!isset($configdata) || (isset($configdata['mode']) && $configdata['mode'] == 'watchlist')) {
-            $classes .= ' hidden';
+            $classes .= ' d-none';
         }
 
         return array(

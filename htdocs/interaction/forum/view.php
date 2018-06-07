@@ -184,7 +184,7 @@ if ($membership && ( !isset($allowunsubscribe) || $allowunsubscribe == 1)) {
             'submit' => array(
                 'type' => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-default',
+                'class' => 'btn-secondary',
                 'value' => $forum->subscribed ? '<span class="icon icon-lg icon-times left text-danger" role="presentation" aria-hidden="true"></span> ' . get_string('unsubscribefromforum', 'interaction.forum') : '<span class="icon icon-lg icon-star left" role="presentation" aria-hidden="true"></span> ' .  get_string('subscribetoforum', 'interaction.forum'),
                 'help' => false
             ),
@@ -298,10 +298,10 @@ jQuery(function($) {
     if (action = document.getElementById('action')) {
         $(action).on('change', function(e) {
             if (this.options[this.selectedIndex].value == 'moveto') {
-                $('#otherforums').removeClass('hidden');
+                $('#otherforums').removeClass('d-none');
             }
             else {
-                $('#otherforums').addClass('hidden');
+                $('#otherforums').addClass('d-none');
             }
         });
     }

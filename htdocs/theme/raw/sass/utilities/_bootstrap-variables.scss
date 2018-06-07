@@ -263,11 +263,12 @@ $transition-collapse:         height .35s ease !default;
 
 // stylelint-disable value-keyword-case
 $font-family-sans-serif:     'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-serif:       'Roboto Slab', Georgia, "Times New Roman", Times, serif !default;
 $font-family-monospace:       Menlo, Monaco, Consolas, "Courier New", monospace !default;
 $font-family-base:            $font-family-sans-serif !default;
 // stylelint-enable value-keyword-case
 
-$font-size-base:              0.875rem !default; // Assumes the browser default, typically `16px`
+$font-size-base:              0.875rem !default; // ~14px
 $font-size-lg:                ($font-size-base * 1.25) !default;
 $font-size-sm:                ($font-size-base * 0.85) !default;
 
@@ -278,6 +279,8 @@ $font-weight-bold:            700 !default;
 $font-weight-base:            $font-weight-normal !default;
 $line-height-base:            1.5 !default;
 
+$line-height-computed:        $font-size-base * $line-height-base !default; // ~20px
+
 $h1-font-size:                $font-size-base * 2.15 !default;
 $h2-font-size:                $font-size-base * 1.7 !default;
 $h3-font-size:                $font-size-base * 1.5 !default;
@@ -286,7 +289,7 @@ $h5-font-size:                $font-size-base !default;
 $h6-font-size:                $font-size-base * 0.85 !default;
 
 $headings-margin-bottom:      ($spacer / 2) !default;
-$headings-font-family:        inherit !default;
+$headings-font-family:        $font-family-serif !default;
 $headings-font-weight:        500 !default;
 $headings-line-height:        1.2 !default;
 $headings-color:              inherit !default;
@@ -467,7 +470,7 @@ $btn-danger-color:               #fff !default;
 $btn-danger-bg:                  theme-color("danger") !default;
 $btn-danger-border:              scale-color($btn-danger-bg, $lightness: -10%) !default;
 
-$btn-link-disabled-color:        $gray-light !default;
+$btn-link-disabled-color:        $gray-300 !default;
 
 
 // Forms
@@ -860,9 +863,9 @@ $card-primary-text:                 $gray-700 !default;
 $card-primary-border:               #ddd !default;
 $card-primary-heading-bg:           #fff !default;
 
-$card-secondary-text:               $gray-700 !default;
-$card-secondary-border:             theme-color("primary") !default;
-$card-secondary-heading-bg:         darken($card-heading-bg, 2%) !default;
+$card-block-text:               $gray-700 !default;
+$card-block-border:             theme-color("primary") !default;
+$card-block-heading-bg:         darken($card-heading-bg, 2%) !default;
 
 $card-success-text:                 $state-success-text !default;
 $card-success-border:               $state-success-border !default;
@@ -1035,7 +1038,7 @@ $progress-bg:                 #f5f5f5 !default;
 //** Progress bar text color
 $progress-bar-color:          #fff !default;
 //** Variable for setting rounded corners on progress bar.
-$progress-border-radius:      $border-radius-base !default;
+$progress-border-radius:      $border-radius !default;
 
 //** Default progress bar color
 $progress-bar-bg:             theme-color("primary") !default;
@@ -1058,7 +1061,7 @@ $list-group-bg:                 #fff !default;
 //** `.list-group-item` border color
 $list-group-border:             #ddd !default;
 //** List group border radius
-$list-group-border-radius:      $border-radius-base !default;
+$list-group-border-radius:      $border-radius !default;
 
 //** Background color of single list items on hover
 $list-group-hover-bg:           #f5f5f5 !default;
@@ -1071,9 +1074,9 @@ $list-group-active-border:      $list-group-active-bg !default;
 //** Text color for content within active list items
 $list-group-active-text-color:  scale-color($list-group-active-bg, $lightness: 50%);
 //** Text color of disabled list items
-$list-group-disabled-color:      $gray-light !default;
+$list-group-disabled-color:      $gray-300 !default;
 //** Background color of disabled list items
-$list-group-disabled-bg:         $gray-lighter !default;
+$list-group-disabled-bg:         $gray-100 !default;
 //** Text color for content within disabled list items
 $list-group-disabled-text-color: $list-group-disabled-color !default;
 
@@ -1082,7 +1085,7 @@ $list-group-link-hover-color:   $list-group-link-color !default;
 $list-group-link-heading-color: #333 !default;
 
 
-//== Panels
+//== cards
 //
 // Define alert colors, border radius, and padding.
 
@@ -1105,9 +1108,9 @@ $alert-info-bg:                     $state-info-bg !default;
 $alert-info-text:                   $state-info-text !default;
 $alert-info-border:                 $state-info-border !default;
 
-$panel-secondary-text:         $gray-900 !default;
-$panel-secondary-border:       theme-color("primary") !default;
-$panel-secondary-heading-bg:   scale-color($panel-default-heading-bg, $lightness: -2%) !default;
+$card-secondary-text:         $gray-900 !default;
+$card-secondary-border:       theme-color("primary") !default;
+// $card-secondary-heading-bg:   scale-color($card-secondary-heading-bg, $lightness: -2%) !default;
 
 $alert-warning-bg:                  $state-warning-bg !default;
 $alert-warning-text:                $state-warning-text !default;
@@ -1136,23 +1139,23 @@ $list-group-border-color:           rgba($black, .125) !default;
 $list-group-border-width:           $border-width !default;
 $list-group-border-radius:          $border-radius !default;
 
-$panel-background: (
-    danger: scale-color($panel-danger-heading-bg, $lightness: -3.25%),
-    info: scale-color($panel-info-heading-bg, $lightness: -3.5%),
-    success: scale-color($panel-success-heading-bg, $lightness: -3.75%),
-    primary: scale-color($panel-primary-heading-bg, $lightness: -3.25%),
-    warning: scale-color($panel-warning-heading-bg, $lightness: -3.15%)
+$card-background: (
+    danger: scale-color($card-danger-heading-bg, $lightness: -3.25%),
+    info: scale-color($card-info-heading-bg, $lightness: -3.5%),
+    success: scale-color($card-success-heading-bg, $lightness: -3.75%),
+    primary: scale-color($card-primary-heading-bg, $lightness: -3.25%),
+    warning: scale-color($card-warning-heading-bg, $lightness: -3.15%)
 );
 
-$panel-border: (
-  danger: scale-color($panel-danger-heading-bg, $lightness: -16.5%),
-  info: scale-color($panel-info-heading-bg, $lightness: -16.5%),
-  success: scale-color($panel-success-heading-bg, $lightness: -17.85%),
-  primary: scale-color($panel-primary-heading-bg, $lightness: -15%),
-  warning: scale-color($panel-warning-heading-bg, $lightness: -16%)
+$card-border: (
+  danger: scale-color($card-danger-heading-bg, $lightness: -16.5%),
+  info: scale-color($card-info-heading-bg, $lightness: -16.5%),
+  success: scale-color($card-success-heading-bg, $lightness: -17.85%),
+  primary: scale-color($card-primary-heading-bg, $lightness: -15%),
+  warning: scale-color($card-warning-heading-bg, $lightness: -16%)
 );
 $list-group-item-padding-y:         .75rem !default;
-$list-group-item-padding-x:         1.25rem !default;
+$list-group-item-padding-x:         0.9375rem !default;
 
 $list-group-hover-bg:               $gray-100 !default;
 $list-group-active-color:           $component-active-color !default;

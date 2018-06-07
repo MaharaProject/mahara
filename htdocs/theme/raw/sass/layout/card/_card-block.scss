@@ -1,8 +1,9 @@
 // card-secondary is the style used for the user-editable cards used across Mahara
 
-.card-secondary {
+.card-block {
     &.card {
         @include box-shadow(none);
+        border-color: transparent;
     }
     .admin & {
         border-color: $card-border-color;
@@ -36,7 +37,7 @@
     }
     &.card-warning {
          > .card-heading, .card-heading-nested {
-            border-left: 4px solid $card-secondary-border;
+            border-left: 4px solid $card-block-border;
             background-color: $card-warning-heading-bg;
             border-bottom: 1px solid $card-warning-border;
         }

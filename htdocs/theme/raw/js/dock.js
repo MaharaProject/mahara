@@ -52,14 +52,14 @@ jQuery(function($) {
             }
             else {
                 contentArea.append(content);
-                contentArea.find('.block-inner').addClass('hidden');
+                contentArea.find('.block-inner').addClass('d-none');
             }
         }
 
         // Prevent disappearing scroll bars from interfering with smooth animation
         $('body, .navbar-fixed-top').width($('body').width());
         $('body').addClass('modal-open modal-open-docked');
-        newblock.removeClass('hidden').removeClass('closed').addClass('active');
+        newblock.removeClass('d-none').removeClass('closed').addClass('active');
     };
 
     dock.getLoadingIndicator = function() {

@@ -2,7 +2,7 @@
 {if $noresultsmessage}
     <div class="no-results">{$noresultsmessage}</div>
 {else}
-    <div id="results_container" class="card card-default tag-results">
+    <div id="results_container" class="card card-secondary tag-results">
         <h2 id="results_heading" class="card-heading">{str tag=searchresultsfor}
             <a class="tag secondary-link" href="{$results->baseurl}">{$tag|str_shorten_text:50}</a>
         </h2>
@@ -18,7 +18,7 @@
                     <span class="icon icon-filter left" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=filterresultsby}</span>
                     {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
-                        <span id="currentfilter" {if $results->filter != $filtername} class="hidden"{/if}>{$filterdisplay}</span>
+                        <span id="currentfilter" {if $results->filter != $filtername} class="d-none"{/if}>{$filterdisplay}</span>
                     {/foreach}
                     <span class="icon icon-caret-down right" role="presentation" aria-hidden="true"></span>
                 </button>

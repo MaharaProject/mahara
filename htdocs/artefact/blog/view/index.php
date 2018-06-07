@@ -172,11 +172,11 @@ function changepoststatus_success(form, data) {
     }
 }
 function delete_success(form, data) {
-    jQuery('#postdetails_' + data.id).addClass('hidden');
+    jQuery('#postdetails_' + data.id).addClass('d-none');
     if (jQuery('#postfiles_' + data.id).length) {
       jQuery('#postfiles_' + data.id).addClass('hidden');
     }
-    jQuery('#postdescription_' + data.id).addClass('hidden');
+    jQuery('#postdescription_' + data.id).addClass('d-none');
     jQuery('#posttitle_' + data.id).addClass('hidden');
     var results = jQuery('#blogpost_pagination div.results').html();
     var oldcount = parseInt(results, 10);

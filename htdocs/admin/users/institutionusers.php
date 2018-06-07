@@ -177,14 +177,14 @@ if ($usertype == 'lastinstitution') {
 if ($usertype == 'requesters') {
     $userlistform['elements']['reject'] = array(
         'type' => 'submit',
-        'class' => 'btn-default',
+        'class' => 'btn-secondary',
         'value' => get_string('declinerequests', 'admin'),
     );
 }
 if (($usertype == 'nonmembers' || $usertype == 'lastinstitution') && $USER->get('admin')) {
     $userlistform['elements']['add'] = array(
         'type' => 'submit',
-         'class' => 'btn-default',
+         'class' => 'btn-secondary',
         'value' => get_string('addmembers', 'admin'),
     );
 }

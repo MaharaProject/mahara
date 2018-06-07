@@ -27,7 +27,7 @@
         color: inherit;
         padding: 10px 15px;
 
-        .card-secondary > & {
+        .card-block > & {
             padding: 10px 8px;
         }
 
@@ -38,7 +38,7 @@
             &.outer-link {
                 background: none;
             }
-            .card-secondary > & {
+            .card-block > & {
                 padding: 10px 8px;
             }
         }

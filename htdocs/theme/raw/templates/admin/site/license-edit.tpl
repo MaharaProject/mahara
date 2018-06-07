@@ -1,6 +1,6 @@
 {include file="header.tpl"}
     <p class="lead">{str tag=sitelicensesdescription section=admin}</p>
-    <div class="card card-default">
+    <div class="card card-secondary">
         <div class="card-body">
         {if !$enabled}
         <p class="alert alert-warning">{str tag=sitelicensesdisablednote section=admin args=$WWWROOT}</p>
