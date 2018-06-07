@@ -198,6 +198,10 @@ These list must take into account the sort option chosen in the block config (Bu
     And I scroll to the id "settings_submit"
     And I press "Save"
     And I display the page
+    #add test for group button lang string (Bug 1772327)
+    And I click on "Edit"
+    And I click on "Return to group pages and collections"
+    And I should see "Pages and collections | GroupA"
     # Check if it is now in the first page of the list of group pages
     And I choose "Groups" from main menu
     And I scroll to the base of id "mygroups"
