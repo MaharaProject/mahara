@@ -373,10 +373,8 @@ td.action-list-copy {
 // edit page btn-group
 .btn-toolbar .btn-title {
     padding-left: 5px;
-    @include media-breakpoint-up(sm) {
-        @include media-breakpoint-down(lg) {
-            @include sr-only;
-        }
+	@include media-breakpoint-between(sm, md) {
+        @include sr-only;
     }
 }
 

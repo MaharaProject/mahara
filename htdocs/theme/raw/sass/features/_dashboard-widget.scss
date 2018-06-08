@@ -20,11 +20,9 @@ $logged-in-height-mobile: 100px;
         border-top: 3px solid $dashboard-widget-color;
         background-color: scale-color($dashboard-widget-bg, $lightness: -3.25%);
 
-        @include media-breakpoint-up(md ) {
-            @include media-breakpoint-down(xl) {
-                height: $logged-in-height-mobile;
-                padding: 7px 15px;
-            }
+	@include media-breakpoint-between(md, lg) {
+            height: $logged-in-height-mobile;
+            padding: 7px 15px;
         }
 
         h2 {
@@ -76,7 +74,7 @@ $logged-in-height-mobile: 100px;
         position: relative;
         display: block;
         margin-bottom: 10px;
-        @include media-breakpoint-up(md ) {
+        @include media-breakpoint-up(md) {
             float:left;
             width: 10 / 3 * 10%;
             padding-left: 2%;
@@ -130,11 +128,9 @@ $logged-in-height-mobile: 100px;
             margin-right: 15px;
             vertical-align: top;
             width:100%;
-            @include media-breakpoint-up(md) {
-                @include media-breakpoint-down(xl) {
-                    margin-top: -$logged-in-height-mobile * 2;
-                    height: $logged-in-height-mobile;
-                }
+            @include media-breakpoint-between(md, lg) {
+                margin-top: -$logged-in-height-mobile * 2;
+                height: $logged-in-height-mobile;
             }
             @include media-breakpoint-down(md) {
                 border-radius: 0 0 $border-radius $border-radius;
@@ -164,10 +160,8 @@ $logged-in-height-mobile: 100px;
             @include transition(0.3s);
             opacity: 1;
             margin-top: -$logged-in-height;
-            @include media-breakpoint-up(md) {
-                @include media-breakpoint-down(xl) {
-                    margin-top: -$logged-in-height-mobile;
-                }
+            @include media-breakpoint-between(md, lg) {
+                margin-top: -$logged-in-height-mobile;
             }
             @include media-breakpoint-down(md) {
                 margin-top: 0;

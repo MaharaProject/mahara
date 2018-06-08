@@ -9,7 +9,7 @@
         border-color: $card-border-color;
     }
     > .card-heading {
-        font-family: $font-family-sans-serif;
+        font-family: $font-family-serif;
     }
     &.blockinstance.card {
         background-color: transparent;
@@ -19,8 +19,7 @@
     }
     > .card-heading, .card-heading-nested {
         border-bottom: 2px solid $card-border-color;
-        padding-left: 8px;
-        padding-right: 8px;
+        padding: 10px 8px;
 
         // In page builder we can choose to not have a heading,
         // but we still need a dragable object.

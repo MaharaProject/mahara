@@ -103,10 +103,8 @@
 // User search dropdown-group
 .admin-user-search {
     .usersearchform {
-        @include media-breakpoint-up(sm) {
-            @include media-breakpoint-down(lg) {
-                width: 65%;
-            }
+        @include media-breakpoint-between(sm, md) {
+            width: 65%;
         }
     }
     .dropdown-group {
