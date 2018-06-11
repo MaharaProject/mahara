@@ -1148,6 +1148,17 @@ class PluginSearchInternal extends PluginSearch {
                                 }
                                 $d->views = $record_views;
                             }
+                            // Check if the file is a pdf
+                            if ($d->artefacttype == 'file') {
+                                if (get_field_sql("SELECT artefact
+                                                   FROM {artefact_file_files}
+                                                   WHERE artefact = ?
+                                                   AND filetype IN (
+                                                       SELECT mimetype FROM {artefact_file_mime_types}
+                                                       WHERE description = ?)", array($d->id, 'pdf'))) {
+                                    $d->specialtype = 'pdf';
+                                }
+                            }
                         }
                         else if ($d->type == 'collection') {
                             $c = new Collection($d->id);
@@ -1319,6 +1330,7 @@ class PluginSearchInternal extends PluginSearch {
                 $result->data = $data;
             }
         }
+
         return $result;
     }
 

@@ -233,6 +233,25 @@ function get_basic_elements() {
         $ownerformatoptions[FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
     }
 
+    $createtagsoptions = array();
+    $typecast = is_postgres() ? '::varchar' : '';
+    if ($selecttags = get_records_sql_array("
+        SELECT (
+            CASE
+                WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                ELSE t.tag
+            END) AS tag, t.resourcetype, t.id
+        FROM {tag} t
+        LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+        LEFT JOIN {institution} i ON i.name = t2.ownerid
+        WHERE t.ownertype = ? AND t.ownerid = ?
+        AND t.resourcetype IN ('artefact', 'blocktype')
+        ORDER BY tag ASC", array('user', $USER->id))) {
+        foreach ($selecttags as $k => $tag) {
+            $createtagsoptions[$tag->tag] = $tag->tag;
+        }
+    }
+
     $elements = array(
         'title'       => array(
             'type'         => 'text',
@@ -266,6 +285,20 @@ function get_basic_elements() {
             'help'         => true,
         )
     );
+    if (!($group || $institution) && $createtagsoptions) {
+        $elements['createtags'] = array(
+            'type'         => 'select',
+            'title'        => get_string('createtags', 'view'),
+            'description'  => get_string('createtagsdesc', 'view'),
+            'options'      => $createtagsoptions,
+            'isSelect2'    => true,
+            'class'        => 'js-select2',
+            'multiple'     => true,
+            'defaultvalue' => null,
+            'width'        => '280px',
+            'help'         => true,
+        );
+    }
     if ($group) {
         $grouproles = $USER->get('grouproles');
         if ($grouproles[$group] == 'admin') {
@@ -636,8 +669,39 @@ function set_view_layout(Pieform $form, $values){
     $view->set('layout', $newlayout); //layout
 }
 
+function create_block($bt, $configdata, $view, $column, $blocktags = null) {
+    if ($bt == 'taggedposts') {
+        $tagselect = $configdata['tagselect'];
+        unset($configdata['tagselect']);
+    }
+    safe_require('blocktype', $bt);
+    $bi = new BlockInstance(0, array('blocktype' => $bt, 'view' => $view->get('id')));
+    $blocktypeclass = generate_class_name('blocktype', $bt);
+    if (method_exists($blocktypeclass, 'get_instance_title')) {
+        $title = call_static_method($blocktypeclass, 'get_instance_title', $bi);
+    }
+    else {
+        $title = $blocktypeclass::get_title();
+    }
+    $bi->set('title', $title);
+    $bi->set('row', 1);
+    $bi->set('column', $column);
+    $bi->set('order', $view->get_current_max_order(1, $column) + 1);
+    $configdata['retractable'] = false;
+    $configdata['retractedonload'] = false;
+    $bi->set('configdata', $configdata);
+    $bi->commit();
+    if ($blocktags) {
+        $bi->set('tags', $blocktags);
+    }
+    if ($bt == 'taggedposts') {
+        $blocktypeclass::save_tag_selection($tagselect, $bi);
+    }
+    return $bi->get('id');
+}
+
 function set_view_title_and_description(Pieform $form, $values){
-    global $view, $urlallowed, $new;
+    global $view, $urlallowed, $new, $USER;
 
     $view->set('title', $values['title']);
     if (trim($values['description']) !== '') {
@@ -651,6 +715,215 @@ function set_view_title_and_description(Pieform $form, $values){
     }
     $tags = $values['tags'] ? $values['tags'] : array();
     $view->set('tags', $tags);
+    if (isset($values['createtags'])) {
+        $createtags = $values['createtags'] ? $values['createtags'] : array();
+        if ($createtags) {
+            $currentcolumn = 1;
+            $maxcols = get_field_sql("
+                SELECT vlc.columns
+                FROM {view_layout_rows_columns} vlrc
+                JOIN {view_layout_columns} vlc ON vlc.id = vlrc.columns
+                WHERE vlrc.viewlayout = ? and vlrc.row = ?", array($values['currentlayoutselect'], 1));
+            require_once('searchlib.php');
+            $data = array();
+            // Get all the items containing any of the tags
+            foreach ($createtags as $tag) {
+                $tagowner  = (object) array('type' => 'user', 'id' => $USER->get('id'));
+                $tagdata = get_portfolio_items_by_tag($tag, $tagowner, 0, 0, 'date', 'all');
+                $data = array_merge($data, $tagdata->data);
+            }
+
+            if ($data) {
+                $combineddata = array();
+                // Now check what we have so we know what to do with them
+                foreach ($data as $item) {
+                    // Check that the block has all of the tags we entered, and if not skip it
+                    if (array_diff($createtags, $item->tags)) {
+                        continue;
+                    }
+                    // Check if the block we are about to add is from the current page, and if so skip it
+                    if (isset($item->views) && isset($item->views[$view->get('id')])) {
+                        continue;
+                    }
+                    $type = isset($item->specialtype) ? $item->specialtype : $item->artefacttype;
+                    if (!isset($combineddata[$item->type])) {
+                        $combineddata[$item->type] = array();
+                    }
+                    if (!isset($combineddata[$item->type][$type])) {
+                        $combineddata[$item->type][$type] = array('count' => 1, 'ids' => array($item->id));
+                    }
+                    else {
+                        $combineddata[$item->type][$type]['count'] ++;
+                        $combineddata[$item->type][$type]['ids'][] = $item->id;
+                    }
+                }
+                // Now lets make decisions about what we have
+                if (!empty($combineddata['blocktype'])) {
+                    foreach ($combineddata['blocktype'] as $bk => $bv) {
+                        $bt = false;
+                        foreach($bv['ids'] as $bid) {
+                            $configdata = unserialize(get_field('block_instance', 'configdata', 'id', $bid));
+                            $tags = get_column('tag', 'tag', 'resourcetype', 'blocktype', 'resourceid', $bid);
+                            $id = create_block($bk, $configdata, $view, $currentcolumn, $tags);
+                            $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                        }
+                    }
+                }
+                if (!empty($combineddata['artefact'])) {
+                    $filedownload = array();
+                    $plans = array();
+                    foreach ($combineddata['artefact'] as $ak => $av) {
+                        safe_require('artefact', 'file');
+                        $bt = false;
+                        if ($ak == 'plan') {
+                            // Pass to plans to create later
+                            $plans = array_merge($plans, $av['ids']);
+                        }
+                        if ($ak == 'task') {
+                            // We need to add the plan block that the task(s) relate to
+                            $taskplans = get_column_sql("SELECT DISTINCT parent FROM {artefact}
+                                                         WHERE id IN (" . join(',', $av['ids']) . ")");
+                            $plans = array_unique(array_merge($plans, $taskplans));
+                        }
+                        if ($ak == 'html') { // This is an artefact related to the 'note' block (not 'html' block)
+                            // Need to do a loop for each folder
+                            foreach($av['ids'] as $noteid) {
+                                // Need to add a note block
+                                $bt = 'textbox';
+                                $configdata = array('artefactid' => $noteid,
+                                                    'licensereadonly' => '', // default license placeholder
+                                                    'tagsreadonly' => '', // default tag placeholder
+                                                   );
+                                // We need to get an example of an existing note (textbox) block to find out
+                                // if there are meant to be attachments for the note
+                                // @TODO: fix this up - we should have a artefact_note_attachment table rather than
+                                //        having every note block containing the info
+                                if ($oldconfigdata = get_field_sql("
+                                        SELECT bi.configdata
+                                        FROM {block_instance} bi
+                                        JOIN {view_artefact} va ON va.block = bi.id
+                                        WHERE va.artefact = ?
+                                        AND bi.blocktype = ?
+                                        LIMIT 1", array($noteid, 'textbox'))) {
+                                    $oldconfigdata = unserialize($oldconfigdata);
+                                    $configdata['artefactids'] = !empty($oldconfigdata['artefactids']) ? $oldconfigdata['artefactids'] : null;
+                                }
+                                $id = create_block($bt, $configdata, $view, $currentcolumn);
+                                $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                            }
+                            $bt = false;
+                        }
+                        if ($ak == 'blog') {
+                            // Need to do a loop for each folder
+                            foreach($av['ids'] as $blogid) {
+                                // Need to add a blog block
+                                $bt = 'blog';
+                                $configdata = array('artefactid' => $blogid,
+                                                    'count' => '5', // default number of posts to display
+                                                    'copytype' => 'nocopy', // default copy type
+                                                   );
+                                $id = create_block($bt, $configdata, $view, $currentcolumn);
+                                $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                            }
+                            $bt = false;
+                        }
+                        if ($ak == 'blogpost') {
+                            // Need to add a taggedpost block
+                            $bt = 'taggedposts';
+                            $configdata = array('tagselect' => $createtags,
+                                                'count' => '10', // default number of posts to display
+                                                'copytype' => 'nocopy', // default copy type
+                                                'full' => false,
+                                               );
+                        }
+                        if ($ak == 'folder') {
+                            // Need to do a loop for each folder
+                            foreach($av['ids'] as $folderid) {
+                                // Need to add a folder block
+                                $bt = 'folder';
+                                $configdata = array('artefactid' => $folderid,
+                                                    'sortorder' => 'asc',
+                                                   );
+                                $id = create_block($bt, $configdata, $view, $currentcolumn);
+                                $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                            }
+                            $bt = false;
+                        }
+                        if ($ak == 'video' || $ak == 'audio') {
+                            if ($av['count'] > 1) {
+                                // Need to add a files to download block
+                                $filedownload = array_merge($filedownload, $av['ids']);
+                            }
+                            else {
+                                // Need to add an internalmedia block
+                                $bt = 'internalmedia';
+                                $configdata = array('artefactid' => $av['ids'][0]);
+                            }
+                        }
+                        if ($ak == 'file') {
+                            // Need to add a files to download block
+                            $filedownload = array_merge($filedownload, $av['ids']);
+                        }
+                        if ($ak == 'pdf') {
+                            if ($av['count'] > 1) {
+                                // Need to add a files to download block
+                                $filedownload = array_merge($filedownload, $av['ids']);
+                            }
+                            else {
+                                // Need to add a pdf block
+                                $bt = 'pdf';
+                                $configdata = array('artefactid' => $av['ids'][0],
+                                                    'pdfwarning' => get_string('pdfwarning', 'blocktype.file/pdf'),
+                                                   );
+                            }
+                        }
+                        if ($ak == 'image') {
+                            if ($av['count'] > 1) {
+                                // Need to add an image gallery block
+                                $bt = 'gallery';
+                                $configdata = array('artefactids' => $av['ids'],
+                                                    'user' => $view->get('owner'), // normally 'user' is for external gallery but we set it to page owner for interal gallery
+                                                    'select' => '1', // to select images by ids
+                                                    'style' => '1',  // to display the images as slideshow
+                                                    'showdescription' => false,
+                                                    'width' => '75', // the default value added to config form
+                                                   );
+                            }
+                            else {
+                                // Need to add an image block
+                                $bt = 'image';
+                                $configdata = array('artefactid' => $av['ids'][0],
+                                                    'showdescription' => false,
+                                                   'width' => "",
+                                                   );
+                            }
+                        }
+                        if ($bt) {
+                            // Add the block to the page
+                            $id = create_block($bt, $configdata, $view, $currentcolumn);
+                            $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                        }
+                    }
+                    // We add the plan block now
+                    if (!empty($plans)) {
+                        $bt = 'plans';
+                        $configdata = array('artefactids' => $plans,
+                                            'count' => 10, // default tasks
+                                           );
+                        $id = create_block($bt, $configdata, $view, $currentcolumn);
+                        $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                    }
+                    // We add in the file to download block once we work out what should be in it
+                    if (!empty($filedownload)) {
+                        $bt = 'filedownload';
+                        $configdata = array('artefactids' => $filedownload);
+                        $id = create_block($bt, $configdata, $view, $currentcolumn);
+                        $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                    }
+                }
+            }
+        }
+    }
     if (isset($values['locked'])) {
         $view->set('locked', (int)$values['locked']);
     }

@@ -736,6 +736,10 @@ class BlockInstance {
     private function set_tags($tags) {
         global $USER;
 
+        if (empty($this->view_obj)) {
+            $this->get_view();
+        }
+
         if ($this->view_obj->get('group')) {
             $ownertype = 'group';
             $ownerid = $this->view_obj->get('group');

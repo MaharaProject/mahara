@@ -4542,7 +4542,7 @@ function build_portfolio_search_html(&$data) {
             safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);
             $links = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_links', $item->id);
             $item->url     = $links['_default'];
-            $item->typestr = $item->artefacttype;
+            $item->typestr = isset($item->specialtype) ? $item->specialtype : $item->artefacttype;
             if ($item->artefacttype == 'task') {
                 $item->typelabel = get_string('Task', 'artefact.plans');
             }

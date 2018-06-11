@@ -1,0 +1,77 @@
+<!-- @license http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later -->
+<!-- @copyright For copyright information on Mahara, please see the README file distributed with this software. -->
+<h3>Create page via tags</h3>
+<p>You can select some tags to populate the page with content containing those tags.</p>
+<p>The resulting page will contain the content (artefacts and blocks) that you tagged. You can then re-arrange the blocks on the page.</p>
+<p>For example, if you tag:<p>
+<ul>
+<li>One image and then select that tag here, it will be added as an image block to the page.</li>
+<li>Three images with the same two tags and select these tags here, the images will be displayed in an image gallery.</li>
+<li>One PDF and select that tag here, the PDF block will be added to the page.</li>
+<li>An existing block on another page, e.g. the "Text" block, it will copy that block to this page.</li>
+</ul>
+<h4>Content mappings:</h4>
+<table>
+<tr>
+<th>Type</th>
+<th>Count</th>
+<th>Block</th>
+</tr>
+<tr>
+<td rowspan="2" valign="top">Image</td>
+<td>1</td>
+<td valign="top">Image</td>
+</tr>
+<tr>
+<td valign="top">2+</td>
+<td valign="top">Image gallery slideshow</td>
+</tr>
+<td rowspan="2" valign="top">PDF</td>
+<td valign="top">1</td>
+<td valign="top">PDF block</td>
+</tr>
+<tr>
+<td valign="top">2+</td>
+<td valign="top">Files to download</td>
+</tr>
+<td valign="top">Generic files</td>
+<td valign="top">1+</td>
+<td>Files to download</td>
+</tr>
+<tr>
+<td rowspan="2" valign="top">Audio/video</td>
+<td valign="top">1</td>
+<td valign="top">Internal media</td>
+</tr>
+<tr>
+<td valign="top">2+</td>
+<td valign="top">Files to download</td>
+</tr>
+<tr>
+<td valign="top">Folder</td>
+<td valign="top">1+</td>
+<td valign="top">Folder block per folder</td>
+</tr>
+<tr>
+<td valign="top">Journal</td>
+<td valign="top">1+</td>
+<td valign="top">Journal block per journal</td>
+</tr>
+<tr>
+<td valign="top">Journal entry</td>
+<td valign="top">1+</td>
+<td valign="top">Tagged journal entries</td>
+</tr>
+<tr>
+<td valign="top">Notes</td>
+<td valign="top">1+</td>
+<td valign="top">Note block per note</td>
+</tr>
+<tr>
+<td valign="top">Plan/tasks</td>
+<td valign="top">1+</td>
+<td valign="top">Plan, i.e. the entire plan(s) that contain the tagged tasks</td>
+</tr>
+</table>
+<p><strong>Note</strong>: The selected tags are only used to add the initial blocks to the page. If you tag other content afterwards, you would need to add that to the page yourself. Also, when you remove a block, it will not be added back automatically.</p>
+<p>If you select a different tag (or the same again) the next time, the new content will be added to the page.</p>

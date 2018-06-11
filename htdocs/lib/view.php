@@ -2916,7 +2916,7 @@ class View {
     /**
      * returns the current max block position within a column
      */
-    private function get_current_max_order($row, $column) {
+    public function get_current_max_order($row, $column) {
         return get_field('block_instance', 'max("order")', 'column', $column, 'view', $this->get('id'), 'row', $row);
     }
 
