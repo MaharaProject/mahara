@@ -1,3 +1,9 @@
+17.10.6 (2018-06-11)
+- 1773864 	ExternalFeed block cron task fails when SSL cert is not valid for a feed
+- 1774309 	Getting an Undefined index: QUERY_STRING when logging in
+- 1774334 	Redirecting to wrong adminurl post login
+- 1767867 	'Search results for' link in My Tags page not working correctly
+
 17.10.5 (2018-05-30)
 - 1763581 	Capitalisation of username / email address issue with LTI
 - 1767220 	Error when viewing a profile page with wall post as an Institution admin
