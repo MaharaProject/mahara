@@ -1,3 +1,9 @@
+18.04.2 (2018-06-11)
+- 1773864 	ExternalFeed block cron task fails when SSL cert is not valid for a feed
+- 1774309 	Getting an Undefined index: QUERY_STRING when logging in
+- 1774334 	Redirecting to wrong adminurl post login
+- 1767867 	'Search results for' link in My Tags page not working correctly
+
 18.04.1 (2018-05-30)
 - 1763581 	Capitalisation of username / email address issue with LTI
 - 1766041 	Password policy setting for only upper and lowercase letters doesn't require uppercase
