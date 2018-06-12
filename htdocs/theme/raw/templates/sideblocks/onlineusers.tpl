@@ -1,5 +1,5 @@
 <div class="card card-secondary">
-    <h3 class="card-heading">
+    <h3 class="card-header">
         {str tag="onlineusers" args=$sbdata.count}
         <br>
         <span id="lastminutes" class="text-small text-midtone">({str tag="lastminutes" args=$sbdata.lastminutes})</span>

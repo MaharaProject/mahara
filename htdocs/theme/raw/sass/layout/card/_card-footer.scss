@@ -9,11 +9,11 @@ a.card-footer {
         .icon {
             color: $gray-300;
         }
-        .icon.pull-right { //only apply link colorto right aligned icons
+        .icon.float-right { //only apply link colorto right aligned icons
             color: $link-color;
         }
     }
-    .icon.pull-right {
+    .icon.float-right {
         margin-top: 3px;
     }
 }

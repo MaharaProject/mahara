@@ -283,7 +283,7 @@ $line-height-computed:        $font-size-base * $line-height-base !default; // ~
 
 $h1-font-size:                $font-size-base * 2.15 !default;
 $h2-font-size:                $font-size-base * 1.7 !default;
-$h3-font-size:                $font-size-base * 1.5 !default;
+$h3-font-size:                $font-size-base * 1.14285 !default;
 $h4-font-size:                $font-size-base * 1.25 !default;
 $h5-font-size:                $font-size-base !default;
 $h6-font-size:                $font-size-base * 0.85 !default;
@@ -393,8 +393,8 @@ $input-btn-padding-x:         .75rem !default;
 $input-btn-line-height:       $line-height-base !default;
 
 $input-btn-focus-width:       .2rem !default;
-$input-btn-focus-color:       rgba($component-active-bg, .25) !default;
-$input-btn-focus-box-shadow:  0 0 0 $input-btn-focus-width $input-btn-focus-color !default;
+$input-btn-focus-color:       rgba(#666, .6) !default;
+$input-btn-focus-box-shadow:  inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($input-btn-focus-color,.6) !default;
 
 $input-btn-padding-y-sm:      .25rem !default;
 $input-btn-padding-x-sm:      .5rem !default;
@@ -511,7 +511,7 @@ $input-border-radius-lg:                $border-radius-lg !default;
 $input-border-radius-sm:                $border-radius-sm !default;
 
 $input-focus-bg:                        $input-bg !default;
-$input-focus-border-color:              lighten($component-active-bg, 25%) !default;
+$input-focus-border-color:              #666 !default;
 $input-focus-color:                     $input-color !default;
 $input-focus-width:                     $input-btn-focus-width !default;
 $input-focus-box-shadow:                $input-btn-focus-box-shadow !default;
@@ -699,10 +699,10 @@ $nav-link-padding-y:                .5rem !default;
 $nav-link-padding-x:                1rem !default;
 $nav-link-disabled-color:           $gray-600 !default;
 
-$nav-tabs-border-color:             $gray-300 !default;
+$nav-tabs-border-color:             $gray-100 !default;
 $nav-tabs-border-width:             $border-width !default;
 $nav-tabs-border-radius:            $border-radius !default;
-$nav-tabs-link-hover-border-color:  $gray-200 $gray-200 $nav-tabs-border-color !default;
+$nav-tabs-link-hover-border-color:  theme-color('primary') !default;
 $nav-tabs-link-active-color:        $gray-700 !default;
 $nav-tabs-link-active-bg:           $body-bg !default;
 $nav-tabs-link-active-border-color: $gray-300 $gray-300 $nav-tabs-link-active-bg !default;
@@ -838,8 +838,8 @@ $jumbotron-bg:                      $gray-200 !default;
 
 // Cards
 
-$card-spacer-y:                     .75rem !default;
-$card-spacer-x:                     1.25rem !default;
+$card-spacer-y:                     0.625rem !default;
+$card-spacer-x:                     0.9375rem !default;
 $card-border-width:                 $border-width !default;
 $card-border-radius:                $border-radius !default;
 $card-border-color:                 rgba($black, .125) !default;

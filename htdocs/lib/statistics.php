@@ -4379,7 +4379,7 @@ function report_config_form($extra, $institutionelement) {
         'plugintype'      => 'core',
         'pluginname'      => 'admin',
         'renderer'        => 'div',
-        'class'           => 'form-as-button pull-left',
+        'class'           => 'form-as-button float-left',
         'elements'   => array(
             'type' => array(
                 'type' => 'hidden',

@@ -161,7 +161,7 @@ else {
                     'renderer'        => 'div',
                     'elementclasses'  => false,
                     'successcallback' => 'webservices_user_token_submit',
-                    'class'           => 'form-as-button pull-left',
+                    'class'           => 'form-as-button float-left',
                     'jsform'          => false,
                     'elements' => array(
                         'token'    => array('type' => 'hidden', 'value' => $service->token),
@@ -216,7 +216,7 @@ if (get_config_plugin('module', 'mobileapi', 'manualtokens')) {
                         'renderer'        => 'div',
                         'elementclasses'  => false,
                         'successcallback' => 'webservices_user_token_submit',
-                        'class'           => 'form-as-button pull-left',
+                        'class'           => 'form-as-button float-left',
                         'jsform'          => false,
                         'elements' => array(
                             'action'     => array('type' => 'hidden', 'value' => 'generate'),

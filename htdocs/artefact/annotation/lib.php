@@ -1385,7 +1385,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             'renderer'          => 'oneline',
             'plugintype'        => 'artefact',
             'pluginname'        => 'annotation',
-            'class' => 'form-as-button pull-left delete-comment btn-group-item',
+            'class' => 'form-as-button float-left delete-comment btn-group-item',
             'jsform'            => true,
             'successcallback'   => 'delete_annotation_feedback_submit',
             'jssuccesscallback' => 'modifyAnnotationFeedbackSuccess',

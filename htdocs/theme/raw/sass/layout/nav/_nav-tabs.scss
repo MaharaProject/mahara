@@ -6,7 +6,7 @@
             font-weight: 300;
             border-bottom: 3px solid transparent;
             padding: 8px 10px;
-            font-size: $font-size-base + 1;
+            font-size: $font-size-base * 1.07142857;
             &.inactive {
                 color: $theme-text-lighttone-color;
                 &:hover {
@@ -20,7 +20,7 @@
                 color: scale-color($link-color, $lightness: -16%);
                 border: 1px solid transparent;
                 border-bottom: 3px solid $nav-tabs-link-hover-border-color;
-                background: scale-color($gray-300, $lightness: 45%);
+                background: scale-color($gray-100, $lightness: 45%);
             }
         }
     }
@@ -35,7 +35,7 @@
 .nav-tabs>li.active>a {
     color: $link-color;
     border: 1px solid transparent;
-    border-bottom: 3px solid $link-hover-color;
+    border-bottom: 3px solid $nav-tabs-link-hover-border-color;
     &:hover,
     &:focus {
         border: 1px solid transparent;

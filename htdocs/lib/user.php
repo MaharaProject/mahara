@@ -2362,7 +2362,7 @@ function addfriend_form($friendid) {
         'successcallback'  => 'addfriend_submit',
         'renderer' => 'div',
         'autofocus' => 'false',
-        'class' => 'form-as-button pull-right',
+        'class' => 'form-as-button float-right',
         'elements' => array(
             'addfriend_submit' => array(
                 'type' => 'button',
