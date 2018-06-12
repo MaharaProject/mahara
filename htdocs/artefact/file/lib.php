@@ -1108,7 +1108,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     protected function save_content_hash() {
-        $this->contenthash = self::generate_content_hash($this->get_local_path());
+        // We set generateifpossible = false because if we dont have a hash, then the file must be local or missing.
+        // This also avoids calling ensure_local for images, which would call this infinitely.
+        $this->contenthash = self::generate_content_hash($this->get_local_path(array(), false));
 
         if (!empty($this->contenthash)) {
             $this->dirty = true;
@@ -1138,7 +1140,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
     }
 
-    public function get_local_path($data = array()) {
+    public function get_local_path($data = array(), $generateifpossible = true) {
         return get_config('dataroot') . self::get_file_directory($this->fileid) . '/' .  $this->fileid;
     }
 
@@ -2386,9 +2388,9 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return $url;
     }
 
-    public function get_local_path($data=array()) {
+    public function get_local_path($data=array(), $generateifpossible = true) {
         require_once('file.php');
-        $result = get_dataroot_image_path('artefact/file/', $this->fileid, $data, $this->orientation);
+        $result = get_dataroot_image_path('artefact/file/', $this->fileid, $data, $this->orientation, $generateifpossible);
         return $result;
     }
 
@@ -2488,9 +2490,9 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         return $url;
     }
 
-    public function get_local_path($data=array()) {
+    public function get_local_path($data=array(), $generateifpossible = true) {
         require_once('file.php');
-        $result = get_dataroot_image_path('artefact/file/profileicons/', $this->fileid, $data, $this->orientation);
+        $result = get_dataroot_image_path('artefact/file/profileicons/', $this->fileid, $data, $this->orientation, $generateifpossible);
         return $result;
     }
 

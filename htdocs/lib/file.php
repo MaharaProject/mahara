@@ -490,6 +490,8 @@ function is_image_file($path) {
  * If the file with the ID exists but not of the correct size, this function
  * will make a copy that is resized to the correct size.
  *
+ * If generateifpossible is false, it may return a path where the file is not readable.
+ *
  * @param string $path The base path in dataroot where the image is stored. For
  *                     example, 'artefact/file/profileicons/' for profile
  *                     icons
@@ -516,10 +518,12 @@ function is_image_file($path) {
  *                                          90 (90 deg clockwise),
  *                                         180 (inverted),
  *                                         270 (90 deg anti-clockwise)
+ *
+ * @param bool $generateifpossible Whether to attempt to create the file if it doesnt exist
  * @return string The path on disk where the appropriate file resides, or false
- *                if an appropriate file could not be located or generated
+ *                if an appropriate file could not be located or generated.
  */
-function get_dataroot_image_path($path, $id, $size=null, $orientation = 0) {
+function get_dataroot_image_path($path, $id, $size=null, $orientation = 0, $generateifpossible = true) {
     global $THEME;
     $dataroot = get_config('dataroot');
     $imagepath = $dataroot . $path;
@@ -534,19 +538,21 @@ function get_dataroot_image_path($path, $id, $size=null, $orientation = 0) {
     // Work out the location of the original image
     $originalimage = $imagepath . '/originals/' . ($id % 256) . "/$id";
 
-    // We have to have an original image locally to be able to build preview,
-    // because image functions like getimagesize do not work with stream wrappers
-    // So if the original image is not readable, try to download it from an external system (if enabled).
-    if (!is_readable($originalimage) && is_using_external_filesystem()) {
-        $image = artefact_instance_from_id($id);
-        $image->ensure_local();
-    }
+    if ($generateifpossible) {
+        // We have to have an original image locally to be able to build preview,
+        // because image functions like getimagesize do not work with stream wrappers
+        // So if the original image is not readable, try to download it from an external system (if enabled).
+        if (is_using_external_filesystem()) {
+            $image = artefact_instance_from_id($id);
+            $image->ensure_local();
+        }
 
-    // If the original has been deleted, then don't show any image, even a cached one.
-    // delete_image only deletes the original, not any cached ones, so we have
-    // to make sure the original is still around
-    if (!is_readable($originalimage)) {
-        return false;
+        // If the original has been deleted, then don't show any image, even a cached one.
+        // delete_image only deletes the original, not any cached ones, so we have
+        // to make sure the original is still around
+        if (!is_readable($originalimage)) {
+            return false;
+        }
     }
 
     if (!$size && $orientation == 0) {
@@ -576,7 +582,7 @@ function get_dataroot_image_path($path, $id, $size=null, $orientation = 0) {
         }
         $resizedimagefile = "{$resizedimagedir}{$md5}.{$orientation}.$id";//.$sizestr";
 
-        if (is_readable($resizedimagefile)) {
+        if (is_readable($resizedimagefile) || !$generateifpossible) {
             return $resizedimagefile;
         }
 
