@@ -20,7 +20,7 @@ $logged-in-height-mobile: 100px;
         border-top: 3px solid $dashboard-widget-color;
         background-color: scale-color($dashboard-widget-bg, $lightness: -3.25%);
 
-	@include media-breakpoint-between(md, lg) {
+        @include media-breakpoint-between(md, lg) {
             height: $logged-in-height-mobile;
             padding: 7px 15px;
         }

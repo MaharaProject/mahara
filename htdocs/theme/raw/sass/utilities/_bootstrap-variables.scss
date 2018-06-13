@@ -13,7 +13,7 @@
 $white:    #fff !default;
 $black:    #000 !default;
 $gray-100: lighten($black, 93.5%) !default; // #eee
-$gray-200: #ececec !default;
+$gray-200: #cccccc !default;
 $gray-300: lighten($black, 46.7%) !default; // #777
 $gray-400: #ced4da !default;
 $gray-500: lighten($black, 33.5%) !default; // #555
@@ -291,8 +291,8 @@ $h6-font-size:                $font-size-base * 0.85 !default;
 $headings-margin-bottom:      ($spacer / 2) !default;
 $headings-font-family:        $font-family-serif !default;
 $headings-font-weight:        300 !default;
-$headings-line-height:        1.2 !default;
-$headings-color:              inherit !default;
+$headings-line-height:        1.3 !default;
+$headings-color:              rgb(51, 51, 51) !default;
 
 $display1-size:               6rem !default;
 $display2-size:               5.5rem !default;
@@ -445,7 +445,7 @@ $btn-transition:              color .15s ease-in-out, background-color .15s ease
 
 $btn-secondary-color:              #333 !default;
 $btn-secondary-bg:                 #F9F9F9 !default;
-$btn-secondary-border:             #ccc !default;
+$btn-secondary-border:             $secondary !default;
 
 $btn-primary-color:              #fff !default;
 $btn-primary-bg:                 theme-color("primary") !default;

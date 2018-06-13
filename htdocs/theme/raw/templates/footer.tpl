@@ -39,7 +39,7 @@
                 {if $item.fullurl}
                 {$item.fullurl|safe}
                 {else}
-                <a href="{$item.url}">{$item.title}</a>
+                <a href="{$item.url}" class="nav-link">{$item.title}</a>
                 {/if}
             </li>
         {/foreach}

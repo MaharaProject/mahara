@@ -1,5 +1,5 @@
 <div class="card card-secondary">
-    <h3 class="card-heading">
+    <h3 class="card-header">
         {str tag="login"}
         <span class="float-right">{contextualhelp plugintype='core' pluginname='core' section='loginbox'}</span>
     </h3>

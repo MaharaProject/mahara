@@ -9,16 +9,16 @@
     }
 }
 
-.mce-card.mce-tinymce {
+.mce-panel.mce-tinymce {
     background: $card-bg;
     border: 0;
-    .mce-card {
-        background: $card-bg;
+    .mce-panel {
+        background: $card-heading-bg;
     }
 
     .mce-statusbar.mce-container{
         margin-top: 5px;
-        background: $card-bg;
+        background: $card-heading-bg;
     }
 }
 

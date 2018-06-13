@@ -29,7 +29,9 @@ h1 {
 }
 
 .page-header {
-    margin-bottom:20px;
+    padding-bottom: $line-height-computed / 2;
+    margin-bottom: 20px;
+    border-bottom: 1px solid $gray-200;
     ~ .with-heading {
         margin-top: -16px;
         @include media-breakpoint-down(sm) {
