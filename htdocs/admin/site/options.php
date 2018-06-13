@@ -1011,7 +1011,7 @@ $usermultipleinstitutions = (!empty(users_in_multiple_institutions()) ? "true" :
 
 $js = <<<EOF
 var usersinmultipleinstitutions = {$usermultipleinstitutions};
-jQuery(document).ready(function() {
+jQuery(function() {
     var j = jQuery.noConflict();
     var overrideuseraccountlifetime = j('#siteoptions input[name=defaultaccountlifetimeupdate]');
     var defaultaccountlifetime = j('#siteoptions_defaultaccountlifetime_units');

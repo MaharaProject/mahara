@@ -846,7 +846,7 @@ function escapeRegExp(string) {
   return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
 
-jQuery(document).ready(function($) {
+jQuery(function($) {
     // Allow the js / no-js toggle on all pages for theme styling
     $('body').removeClass('no-js').addClass('js');
 
@@ -1071,7 +1071,7 @@ Number.isInteger = Number.isInteger || function(value) {
 /**
  * Wire up the 'help' footer link so it opens help in a new window/tab
  */
-jQuery(document).ready(function($) {
+jQuery(function($) {
     if ($('#footerhelp').length > 0) {
         var link = $('#footerhelp');
         link.off('click');
@@ -1088,7 +1088,7 @@ jQuery(document).ready(function($) {
 /**
  * Wire up the 'help' in blocks edit page so it opens help in a new window/tab
  */
-jQuery(document).ready(function($) {
+jQuery(function($) {
     if ($('#blockshelp').length > 0) {
         var link = $('#blockshelp');
         link.off('click');

@@ -51,7 +51,7 @@ $js = <<< EOF
 function reloadTags() {
     window.location.href = '{$wwwroot}admin/users/institutiontags.php?institution='+$('#usertypeselect_institution').val();
 }
-$(document).ready(function() {
+$(function() {
     $('#usertypeselect_institution').on('change', reloadTags);
 });
 EOF;

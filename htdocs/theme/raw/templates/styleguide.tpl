@@ -1198,7 +1198,7 @@ This drop-down select box allows you to enter text which is then searched using 
 This drop-down select box uses the select2 library. An example can be found on the compose message page in user's inbox.
 ```
 <script type="text/javascript">
-jQuery(document).ready(function() {
+jQuery(function() {
   jQuery(".js-example-basic-single").select2();
 });
 </script>

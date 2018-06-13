@@ -314,7 +314,7 @@ var Pieform = (function($) {
         // Form configuration data passed from PHP
         this.data = data;
 
-        $(document).ready(self.init);
+        $(self.init);
 
     };
 }(jQuery));

@@ -152,21 +152,19 @@ $count = count($records);
 if ($count) {
     $js = <<<EOF
 jQuery(function($) {
-    $(document).ready(function() {
-            for (i = 0; i < {$count}; i++) {
-                var element = document.getElementById("copytoclipboard-" + i);
-                try {
-                    var client = new ClipboardJS(element);
-                    client.on("error", function(e) {
-                        var element = document.getElementById("copytoclipboard-" + e.client.id);
-                        $(element).hide();
-                    });
-                }
-                catch(err) {
-                    $(element).hide();
-                }
-            }
-    });
+    for (i = 0; i < {$count}; i++) {
+        var element = document.getElementById("copytoclipboard-" + i);
+        try {
+            var client = new ClipboardJS(element);
+            client.on("error", function(e) {
+                var element = document.getElementById("copytoclipboard-" + e.client.id);
+                $(element).hide();
+            });
+        }
+        catch(err) {
+            $(element).hide();
+        }
+    }
 });
 
 EOF;

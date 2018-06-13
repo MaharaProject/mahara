@@ -1377,7 +1377,7 @@
      * Initialise
      *
      */
-    $(document).ready(function() {
+    $(function() {
         init();
         /**
          * changes the intructions so they are for ajax

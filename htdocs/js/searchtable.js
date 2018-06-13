@@ -67,7 +67,7 @@ var SearchTable = (function($) {
         });
     };
 
-    $(document).ready(self.init);
+    $(self.init);
   };
 }(jQuery));
 

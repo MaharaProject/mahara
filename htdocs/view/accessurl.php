@@ -638,7 +638,7 @@ $count = count($records);
 if ($count) {
     $js .= <<<EOF
 jQuery(function($) {
-      $(document).ready(function() {
+      $(function() {
             for (i = 0; i < {$count}; i++) {
                 var element = document.getElementById("copytoclipboard-" + i);
                 try {

@@ -122,7 +122,7 @@ function pieform_element_color_get_headdata($element, Pieform $form) {
     $result = '<script type="application/javascript">';
     $result .= "var initjscolor = false; \n";
     $result .= "PieformManager.connect('onload', null, function() {\n";
-    $result .= "  jQuery('document').ready(function($) { \n";
+    $result .= "  jQuery(function($) { \n";
     $result .= "    if (initjscolor === true) { \n";
     $result .= "      // rewire up the picker to show up\n";
     $result .= "      var jsc = new jscolor('" . $name . "'); \n";

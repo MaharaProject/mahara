@@ -129,7 +129,7 @@ function editsitepage_submit(Pieform $form, $values) {
 
 // JQuery logic for tab hide/show and to keep the same tab active on page refresh.
 $js = <<< EOF
-$(document).ready(function() {
+$(function() {
     checkActiveTab('$selectedtab');
 })
 EOF;

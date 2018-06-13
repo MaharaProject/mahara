@@ -8,7 +8,7 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 
-jQuery(document).ready(function($) {
+jQuery(function($) {
     var navigationkeys = {
         LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, SPACE: 32, ENTER: 13, ESC: 27, TAB: 9
     };

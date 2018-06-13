@@ -9,7 +9,7 @@
  *
  */
 
-jQuery(document).ready(function() {
+jQuery(function() {
     jQuery(this).find('textarea').each(function(i, textarea) {
         var textarea = jQuery(textarea);
         var maxlength = textarea.attr('maxlength');

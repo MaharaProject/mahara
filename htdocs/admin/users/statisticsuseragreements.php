@@ -41,7 +41,7 @@ if ($userid) {
 $link = get_config('wwwroot') . 'admin/users/statisticsuseragreements.php?userid=' . $userid;
 
 $js = <<< EOF
-$(document).ready(function(){
+$(function() {
     checkActiveTab('$activetab');
 })
 EOF;

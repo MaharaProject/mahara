@@ -149,8 +149,7 @@ var FileBrowser = (function($) {
                 'class':'file',
                 'id':self.id+'_userfile',
                 'name':'userfile[]',
-                'multiple':'',
-                'size':40
+                'multiple':''
             })
         );
         $('#' + self.id + '_userfile').on('change', self.upload_submit);

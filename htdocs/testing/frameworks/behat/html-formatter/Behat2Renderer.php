@@ -439,7 +439,7 @@ class Behat2Renderer
 
         return "<script type='text/javascript' src='assets/Twig/js/jquery.js'></script>
         <script type='text/javascript'>
-            $(document).ready(function(){
+            $(function() {
                 Array.prototype.diff = function(a) {
                     return this.filter(function(i) {return a.indexOf(i) < 0;});
                 };

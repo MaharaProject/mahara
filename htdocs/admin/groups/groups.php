@@ -74,7 +74,7 @@ $searchform = pieform(array(
 ));
 
 $js = <<< EOF
-jQuery(document).ready(function() {
+jQuery(function() {
   p = {$data['pagination_js']}
   jQuery('#search_submit').on('click', function(event) {
     jQuery('#messages').empty();

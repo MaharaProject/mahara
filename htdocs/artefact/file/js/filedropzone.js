@@ -9,7 +9,7 @@
  */
 
 // set up the dropzone
-jQuery(document).ready(function() {
+jQuery(function() {
 
     // to avoid any clashes with other javascript
     var j = jQuery.noConflict();

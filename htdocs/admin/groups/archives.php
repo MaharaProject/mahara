@@ -48,7 +48,7 @@ else {
 list($html, $columns, $pagination, $search) = build_admin_archived_submissions_results($search, $offset, $limit);
 
 $js = <<<EOF
-jQuery(document).ready(function() {
+jQuery(function() {
     var p = {$pagination['javascript']}
 
     new UserSearch(p);

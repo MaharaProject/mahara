@@ -186,7 +186,7 @@ return function (target, source, columns, options) {
             self.doupdate();
         }
         else {
-            $(document).ready(self.doupdate.bind(null, request_args, null));
+            $(self.doupdate.bind(null, request_args, null));
         }
     };
 
@@ -194,7 +194,7 @@ return function (target, source, columns, options) {
         this.init();
     }
     else {
-        $(document).ready(this.init);
+        $(this.init);
     }
 };
 }(jQuery));
