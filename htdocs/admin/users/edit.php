@@ -158,97 +158,117 @@ if (is_using_probation($user->id)) {
     );
 }
 
-$authinstances = auth_get_auth_instances();
-if (count($authinstances) > 1) {
-    $options = array();
+$options = array();
+$external = false;
+$externalauthjs = array();
 
-    // NOTE: This is a little broken at the moment. The "username in the remote
-    // system" setting is only actively used by the XMLRPC authentication
-    // plugin, and thus only makes sense when the user is authenticating in
-    // this manner.
-    //
-    // We hope to one day make it possible for users to get into accounts via
-    // multiple methods, at which time we can tie the username-in-remote-system
-    // setting to the XMLRPC plugin only, making the UI a bit more consistent
-    $external = false;
-    $externalauthjs = array();
-    foreach ($authinstances as $authinstance) {
-        // If a user has a "No Institution" auth method (institution "mahara", id = 1) and he belongs to an Institution,
-        // his Institution Admin will be able to change his auth method away to one of the Institution's auth methods
-        // that's the second part of the "if"
-        if ($USER->can_edit_institution($authinstance->name) || ($authinstance->id == 1 && $user->authinstance == 1)) {
+// Get a list of the user's institutions
+$user_insts = $user->institutions;
+
+// Confirm that the auth method is valid.
+$valid_auth = false;
+foreach ($user_insts as $inst) {
+    if (record_exists('auth_instance', 'id', $user->authinstance , 'institution', $inst->institution)) {
+        $valid_auth = true;
+    }
+    if (!$valid_auth) {
+        // If their auth method doesn't work for any of their insts, change it to internal.
+        $internal = get_field('auth_instance', 'id', 'authname', 'internal', 'institution', $inst->institution);
+        if (!$internal) {
+            // Institution has no internal auth instance. Create one.
+            $todb = new stdClass();
+            $todb->instancename = 'internal';
+            $todb->authname = 'internal';
+            $todb->active = 1;
+            $todb->institution = $inst->institution;
+            $max = get_field('auth_instance', 'MAX(priority)', 'institution', $inst->institution);
+            $todb->priority = $max ? $max + 1 : 0;
+            $internal = insert_record('auth_instance', $todb, 'id', true);
+        }
+        // Now we know we have an internal auth for the user, set it
+        set_field('usr', 'authinstance', $internal);
+        $user->authinstance = $internal;
+    }
+}
+
+$authinstances = auth_get_auth_instances();
+// If the user has no institution, their inst is mahara
+if (!$user_insts) {
+    $mahara = new stdClass();
+    $mahara->institution = "mahara";
+    $user_insts[] = $mahara;
+}
+
+// Now add the valid auth methods for institutions the user is in to the page.
+foreach ($authinstances as $authinstance) {
+    foreach ($user_insts as $inst) {
+        if ($authinstance->name == $inst->institution || $authinstance->name == 'mahara') {
             $options[$authinstance->id] = $authinstance->displayname . ': ' . $authinstance->instancename;
-            $authobj = AuthFactory::create($authinstance->id);
-            if ($authobj->needs_remote_username()) {
-                $externalauthjs[] = $authinstance->id;
-                $external = true;
+        }
+    }
+}
+
+$elements['authinstance'] = array(
+    'type'         => 'select',
+    'title'        => get_string('authenticatedby', 'admin'),
+    'description'  => get_string('authenticatedbydescription', 'admin'),
+    'options'      => $options,
+    'defaultvalue' => $user->authinstance,
+    'help'         => true,
+);
+$un = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
+$elements['remoteusername'] = array(
+    'type'         => 'text',
+    'title'        => get_string('remoteusername', 'admin'),
+    'description'  => get_string('remoteusernamedescription1', 'admin', hsc(get_config('sitename'))),
+    'help'         => true,
+);
+if ($un) {
+    $elements['remoteusername']['defaultvalue'] = $un;
+}
+
+$remoteusernames = json_encode(get_records_menu('auth_remote_user', 'localusr', $id));
+$js = "<script type='application/javascript'>
+        var externalauths = ['" . implode("','", $externalauthjs) . "'];
+        var remoteusernames = " . $remoteusernames . ";
+        jQuery(document).ready(function() {
+        // set up initial display
+        var authinstanceid = jQuery('#edituser_site_authinstance :selected').val();
+        is_external(authinstanceid);
+
+        // update display as auth method dropdown changes
+        jQuery('#edituser_site_authinstance').change(function() {
+            authinstanceid = jQuery('#edituser_site_authinstance :selected').val();
+            is_external(authinstanceid);
+        });
+
+        function is_external(id) {
+            if (jQuery.inArray(authinstanceid,externalauths) != -1) {
+                // is external option so show external auth field and help text rows
+                jQuery('#edituser_site_remoteusername_container').css('display','block');
+                jQuery('#edituser_site_remoteusername_container').next('div').css('display','block');
+                if (remoteusernames[id]) {
+                    // if value exists in auth_remote_user display it
+                    jQuery('#edituser_site_remoteusername').val(remoteusernames[id]);
+                }
+                else {
+                    jQuery('#edituser_site_remoteusername').val('');
+                }
+            }
+            else {
+                // is internal option so hide external auth field and help text rows
+                jQuery('#edituser_site_remoteusername_container').css('display','none');
+                jQuery('#edituser_site_remoteusername_container').next('div').css('display','none');
             }
         }
-    }
+    });
+    </script>";
 
-    if (isset($options[$user->authinstance])) {
-        $elements['authinstance'] = array(
-            'type'         => 'select',
-            'title'        => get_string('authenticatedby', 'admin'),
-            'description'  => get_string('authenticatedbydescription', 'admin'),
-            'options'      => $options,
-            'defaultvalue' => $user->authinstance,
-            'help'         => true,
-        );
-        $un = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
-        $elements['remoteusername'] = array(
-            'type'         => 'text',
-            'title'        => get_string('remoteusername', 'admin'),
-            'description'  => get_string('remoteusernamedescription1', 'admin', hsc(get_config('sitename'))),
-            'help'         => true,
-        );
-        if ($un) {
-            $elements['remoteusername']['defaultvalue'] = $un;
-        }
-    }
-    $remoteusernames = json_encode(get_records_menu('auth_remote_user', 'localusr', $id));
-    $js = "<script type='application/javascript'>
-          var externalauths = ['" . implode("','", $externalauthjs) . "'];
-          var remoteusernames = " . $remoteusernames . ";
-          jQuery(document).ready(function() {
-          // set up initial display
-          var authinstanceid = jQuery('#edituser_site_authinstance :selected').val();
-          is_external(authinstanceid);
-
-          // update display as auth method dropdown changes
-          jQuery('#edituser_site_authinstance').change(function() {
-              authinstanceid = jQuery('#edituser_site_authinstance :selected').val();
-              is_external(authinstanceid);
-          });
-
-          function is_external(id) {
-              if (jQuery.inArray(authinstanceid,externalauths) != -1) {
-                  // is external option so show external auth field and help text rows
-                  jQuery('#edituser_site_remoteusername_container').css('display','block');
-                  jQuery('#edituser_site_remoteusername_container').next('div').css('display','block');
-                  if (remoteusernames[id]) {
-                      // if value exists in auth_remote_user display it
-                      jQuery('#edituser_site_remoteusername').val(remoteusernames[id]);
-                  }
-                  else {
-                      jQuery('#edituser_site_remoteusername').val('');
-                  }
-              }
-              else {
-                  // is internal option so hide external auth field and help text rows
-                  jQuery('#edituser_site_remoteusername_container').css('display','none');
-                  jQuery('#edituser_site_remoteusername_container').next('div').css('display','none');
-              }
-          }
-      });
-      </script>";
-
-    $elements['externalauthjs'] = array(
-        'type'         => 'html',
-        'class'        => 'hidden',
-        'value'        => $js,
-    );
-}
+$elements['externalauthjs'] = array(
+    'type'         => 'html',
+    'class'        => 'hidden',
+    'value'        => $js,
+);
 
 $tags = get_column_sql('SELECT tag FROM {usr_tag} WHERE usr = ? AND NOT tag ' . db_ilike() . " 'lastinstitution:%'", array($user->id));
 
