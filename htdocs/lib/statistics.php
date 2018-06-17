@@ -2482,13 +2482,17 @@ function view_statistics($limit, $offset, $extra) {
 }
 
 function view_stats_table($limit, $offset, $extra) {
-    global $USER;
+    global $USER, $SESSION;
 
     $start = !empty($extra['start']) ? $extra['start'] : null;
     $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    $users = $SESSION->get('usersforstats');
     require_once('view.php');
     $where = "(v.owner != 0 OR v.owner IS NULL) AND v.type != ? AND v.template != ?";
     $values = array('dashboard', View::SITE_TEMPLATE);
+    if ($users) {
+      $where .= " AND v.owner IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+    }
     if (get_config('eventloglevel') == 'all') {
         if ($start) {
             $where .= " AND e.ctime >= DATE(?) AND e.ctime <= DATE(?)
@@ -2530,6 +2534,7 @@ function view_stats_table($limit, $offset, $extra) {
     );
     $result['settings']['start'] = ($start) ? $start : null;
     $result['settings']['end'] = $end;
+    $result['settings']['users'] = count($users);
     if ($count < 1) {
         return $result;
     }
@@ -2694,15 +2699,19 @@ function institution_view_statistics($limit, $offset, &$institutiondata, $extra)
 }
 
 function institution_view_stats_table($limit, $offset, &$institutiondata, $extra) {
-    global $USER;
+    global $USER, $SESSION;
 
     $start = !empty($extra['start']) ? $extra['start'] : null;
     $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
+    $users = $SESSION->get('usersforstats');
     if ($institutiondata['views'] != 0) {
         $start = !empty($extra['start']) ? $extra['start'] : null;
         $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('now'));
         $where = 'v.id IN (' . $institutiondata['viewssql'] . ') AND v.type != ?';
         $values = array_merge($institutiondata['viewssqlparam'], array('dashboard'));
+        if ($users) {
+            $where .= " AND v.owner IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+        }
         if (get_config('eventloglevel') == 'all') {
             if ($start) {
                 $where .= " AND e.ctime >= DATE(?) AND e.ctime <= DATE(?)
@@ -2748,6 +2757,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
     );
     $result['settings']['start'] = ($start) ? $start : null;
     $result['settings']['end'] = $end;
+    $result['settings']['users'] = count($users);
     if ($count < 1) {
         return $result;
     }
