@@ -275,7 +275,7 @@ if ($tagsarray = get_records_sql_array("SELECT t.tag, t.prefix, t.ownerid
     FROM (
         SELECT ut.tag, NULL AS prefix, 0 AS ownerid
         FROM {tag} ut
-        WHERE resourcetype = ? AND resourceid = ? AND ownertype <> 'instituion'
+        WHERE resourcetype = ? AND resourceid = ? AND ownertype != 'instituion'
         AND NOT tag " . db_ilike() . " 'lastinstitution:%'
         UNION
         SELECT it.tag, it.ownerid AS prefix, i.id AS ownerid
@@ -628,16 +628,22 @@ function edituser_site_submit(Pieform $form, $values) {
             if (empty($tag)) {
                 continue;
             }
-            if ($tagid = get_field('tag', 'resourceid', 'resourcetype', 'institution', 'tag', $tag)) {
-                $tag = 'tagid_' . $tagid;
+            $tag = check_if_institution_tag($tag);
+            if (preg_match("/^lastinstitution\:(.*)/", $tag, $matches)) {
+                $ownertype = 'institution';
+                $ownerid = $matches[1];
+            }
+            else {
+                $ownertype = 'user';
+                $ownerid = $user->id;
             }
             insert_record(
                 'tag',
                 (object) array(
                     'resourcetype' => 'usr',
                     'resourceid' => $user->id,
-                    'ownertype' => 'user',
-                    'ownerid' => $user->id,
+                    'ownertype' => $ownertype,
+                    'ownerid' => $ownerid,
                     'tag' => $tag,
                     'ctime' => db_format_timestamp(time()),
                     'editedby' => $USER->get('id'),

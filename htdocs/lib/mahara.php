@@ -4702,6 +4702,31 @@ function generate_csv($data, $csvfields, $csvheaders = array()) {
 }
 
 /**
+ *
+ */
+function check_if_institution_tag($tag) {
+    global $USER;
+    $institutions = $USER->get('institutions');
+    if ($institutions && $institutiontags = get_records_sql_array("
+        SELECT id FROM {tag}
+        WHERE tag = ?
+        AND resourcetype = ?
+        AND ownertype = ?
+        AND ownerid IN ('" . join("','", array_keys($institutions)) . "')
+        UNION
+        SELECT t.id FROM {tag} t
+        JOIN {institution} i ON i.name = t.ownerid
+        WHERE resourcetype = ?
+        AND ownertype = ?
+        AND ownerid IN ('" . join("','", array_keys($institutions)) . "')
+        AND CONCAT(i.displayname, ': ', t.tag) = ?",
+        array($tag, 'institution', 'institution', 'institution', 'institution', $tag))) {
+        $tag = 'tagid_' . $institutiontags[0]->id;  // if same tag in multiple institutions just pick first
+    }
+    return $tag;
+}
+
+/**
  * Check to make sure table is case sensitive (currently only for MySql)
  * If it is not then reduce supplied array to a case insensitive version
  * Preserving the first occurance of any duplicates.

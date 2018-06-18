@@ -1044,11 +1044,13 @@ class PluginSearchInternal extends PluginSearch {
             $split = explode(':', $tag);
             if (count($split) == 2) {
                 $prefix = trim($split[0]);
-                $tag    = trim($split[1]);
-                $tag = get_field_sql("SELECT CONCAT('tagid_', t.id)
-                    FROM {tag} t
-                    JOIN {institution} i ON i.name = t.ownerid
-                    WHERE i.displayname = ? AND t.tag = ?", array($prefix, $tag));
+                $itag    = trim($split[1]);
+                if ($checktag = get_field_sql("SELECT CONCAT('tagid_', t.id)
+                        FROM {tag} t
+                        JOIN {institution} i ON i.name = t.ownerid
+                        WHERE i.displayname = ? AND t.tag = ?", array($prefix, $itag))) {
+                    $tag = $checktag;
+                }
             }
             $values = array($owner->id, $tag, $owner->id, $tag, $owner->id, $tag, $tag, $owner->id, $tag);
         }

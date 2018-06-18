@@ -869,9 +869,7 @@ class View {
             foreach ($this->get_tags() as $tag) {
                 //truncate the tag before insert it into the database
                 $tag = substr($tag, 0, 128);
-                if ($institutiontag = get_record('tag', 'tag', $tag, 'resourcetype', 'institution', 'ownertype', 'institution')) {
-                    $tag = 'tagid_' . $institutiontag->id;
-                }
+                $tag = check_if_institution_tag($tag);
                 insert_record('tag',
                     (object)array(
                         'resourcetype' => 'view',
