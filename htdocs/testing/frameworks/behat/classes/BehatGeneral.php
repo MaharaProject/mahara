@@ -881,25 +881,10 @@ class BehatGeneral extends BehatBase {
             throw new ExpectationException('"A property called "' . $property . '" was not found in the properties.php file. Check that file or try passing a css locator directly"',
             $this->getSession());
         }
+
         else {
+            $step_funct = $this->switch_funct($step_funct);
             // switch covers steps in BehatGeneral that pass a css_locator
-            switch ($step_funct) {
-                case "click on":
-                    $funct = "i_click_on_in_the";
-                    break;
-                case "follow":
-                    $funct = "i_follow_in_the";
-                    break;
-                case "press":
-                    $funct = "i_press_in_the";
-                    break;
-                case "should see":
-                    $funct = "assert_element_contains_text";
-                    break;
-                case "should not see":
-                    $funct = "assert_element_not_contains_text";
-                    break;
-            }
             $this->$funct($text, $css_locator[0], $css_locator[1]);
         }
     }
@@ -1794,6 +1779,49 @@ JS;
         $token = $tokens[0]->unsubscribetoken;
         // Go to the unsubscribe page
         $this->visitPath("/view/unsubscribe.php?a=watchlist&t={$token}");
+    }
+
+    /**
+    * Switch to assign the secondary function to be called by a
+    * generic primary function
+    *
+    */
+    private function switch_action($action) {
+        switch ($action) {
+            case "click on":
+                $funct = "i_click_on_in_the";
+                break;
+            case "follow":
+                $funct = "i_follow_in_the";
+                break;
+            case "press":
+                $funct = "i_press_in_the";
+                break;
+            case "should see":
+                $funct = "assert_element_contains_text";
+                break;
+            case "should not see":
+                $funct = "assert_element_not_contains_text";
+                break;
+        }
+        return $funct;
+    }
+
+    /**
+     * Allows interaction with comments in a list using text
+     * contained in the comment, as the id tags are dynamic.
+     *
+     * @Then /^I (?P<action>.*) "(?P<element>(?:[^"]|\\")*)" in the "(?P<text>(?:[^"]|\\")*)" comment$/
+     *
+     * @param string $action the first element of the step used to call
+     *              a secondary function.
+     * @param string $element part of the comment id to interact with
+     * @param string $text part of the comment text
+     */
+    public function i_interact_comment($action, $element, $text) {
+        $xpath = "//*[@id=\"feedbacktable\"]/*/div[contains(normalize-space(.), '$text')]";
+        $action = $this->switch_action($action);
+        $this->$action($element, $xpath, "xpath_element");
     }
 
 }

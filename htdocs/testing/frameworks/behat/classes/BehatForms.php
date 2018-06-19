@@ -195,7 +195,8 @@ class BehatForms extends BehatBase {
         $selectortype = "css_element";
         switch ($label) {
             case "Search for...":
-              $id = substr($value, 0, -1);
+              //format string - ids are user/group, not Users/Groups
+              $id = strtolower(substr($value, 0, -1));
               $locator = "#$id";
               break;
             case "General":
