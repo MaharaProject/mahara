@@ -13,7 +13,7 @@
 
 {if $upgrades['settings']['toupgradecount']}
 <div class="card card bg-warning" id="">
-    <h3 class="card-heading">{str tag="upgrades" section=admin}</h3>
+    <h3 class="card-header">{str tag="upgrades" section=admin}</h3>
     <div class="card-body">
         <p>{str tag=thefollowingupgradesareready section=admin}</p>
         <table id="upgrades-table" class="table">
@@ -43,7 +43,7 @@
 
 {if $upgrades['settings']['newinstallcount']}
 <div class="card card bg-warning" id="runinstall">
-    <h3 class="card-heading">{str tag="newplugins" section=admin}</h3>
+    <h3 class="card-header">{str tag="newplugins" section=admin}</h3>
     <div class="card-body">
         <p>{str tag=thefollowingpluginsareready section=admin}</p>
         <table id="upgradestable" class="table">
@@ -75,7 +75,7 @@
     {if $register}
 
         <div class="card card bg-success text-white register-site">
-            <h3 class="card-heading">{str tag=registermaharasite section=admin} <span class="icon icon-star float-right" role="presentation" aria-hidden="true"></span></h3>
+            <h3 class="card-header">{str tag=registermaharasite section=admin} <span class="icon icon-star float-right" role="presentation" aria-hidden="true"></span></h3>
             <div class="card-body">
                 {if $newregisterpolicy}
                     <strong>{str tag=newregistrationpolicyinfo section=admin}</strong>
@@ -98,7 +98,7 @@
     {if $sitedata}
 
         <div class="card card bg-info text-white site-stats">
-            <h3 class="card-heading">{$sitedata.displayname}: {str tag=siteinformation section=admin} <span class="icon icon-area-chart float-right" role="presentation" aria-hidden="true"></span></h3>
+            <h3 class="card-header">{$sitedata.displayname}: {str tag=siteinformation section=admin} <span class="icon icon-area-chart float-right" role="presentation" aria-hidden="true"></span></h3>
             {include file='admin/users/stats.tpl' institutiondata=$sitedata showall='_all' fromindex='1'}
             <a class="card-footer text-small" href="{$WWWROOT}admin/users/statistics.php?type=information&subtype=information">{str tag=viewfullsitestatistics section=admin} <span class="icon icon-arrow-circle-right float-right" role="presentation" aria-hidden="true"></span></a>
         </div>
@@ -107,13 +107,13 @@
 
     <div class="card close-site {if $closed}card bg-success text-white{else}card bg-danger text-white{/if}">
         {if $closed}
-            <h3 class="card-heading">{str tag=reopensite section=admin} <span class="icon icon-lock float-right" role="presentation" aria-hidden="true"></span></h3>
+            <h3 class="card-header">{str tag=reopensite section=admin} <span class="icon icon-lock float-right" role="presentation" aria-hidden="true"></span></h3>
             <div class="card-body">
                 <p>{str tag=reopensitedetail section=admin}</p>
                 {$closeform|safe}
             </div>
         {else}
-            <h3 class="card-heading">{str tag=closesite section=admin} <span class="icon icon-unlock-alt float-right" role="presentation" aria-hidden="true"></span></h3>
+            <h3 class="card-header">{str tag=closesite section=admin} <span class="icon icon-unlock-alt float-right" role="presentation" aria-hidden="true"></span></h3>
             <div class="card-body">
                 <p>{str tag=closesitedetail section=admin}</p>
                 {$closeform|safe}
@@ -122,7 +122,7 @@
     </div>
 
     <div class="card card-secondary">
-        <h3 class="card-heading">{str tag=clearcachesheading section=admin} <span class="icon icon-refresh float-right" role="presentation" aria-hidden="true"></span></h3>
+        <h3 class="card-header">{str tag=clearcachesheading section=admin} <span class="icon icon-refresh float-right" role="presentation" aria-hidden="true"></span></h3>
         <div class="card-body">
             <p>{str tag=cliclearcachesdescription section=admin}</p>
             {$clearcachesform|safe}
@@ -130,7 +130,7 @@
     </div>
 
     <div class="card card-secondary">
-        <h3 class="card-heading">{str tag=configsite section=admin} <span class="icon icon-cogs float-right" role="presentation" aria-hidden="true"></span></h3>
+        <h3 class="card-header">{str tag=configsite section=admin} <span class="icon icon-cogs float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/site/options.php">{str tag=siteoptions section=admin}</a>
@@ -189,7 +189,7 @@
         </ul>
     </div>
     <div class="card card-secondary">
-        <h3 class="card-heading">{str tag=configusers section=admin} <span class="icon icon-user float-right" role="presentation" aria-hidden="true"></span></h3>
+        <h3 class="card-header">{str tag=configusers section=admin} <span class="icon icon-user float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/users/search.php">{str tag=usersearch section=admin}</a>
@@ -225,7 +225,7 @@
 
 
     <div class="card card-secondary">
-        <h3 class="card-heading">{str tag=managegroups section=admin} <span class="icon icon-users float-right" role="presentation" aria-hidden="true"></span></h3>
+        <h3 class="card-header">{str tag=managegroups section=admin} <span class="icon icon-users float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/groups/groups.php">{str tag=administergroups section=admin}</a>
@@ -252,7 +252,7 @@
 
 
     <div class="card card-secondary">
-        <h3 class="card-heading">{str tag=manageinstitutions section=admin} <span class="icon icon-university float-right" role="presentation" aria-hidden="true"></span></h3>
+        <h3 class="card-header">{str tag=manageinstitutions section=admin} <span class="icon icon-university float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/users/institutions.php">{str tag=settings section=mahara}</a>
@@ -320,7 +320,7 @@
     </div>
 
     <div class="card card-secondary">
-        <h3 class="card-heading">{str tag=configextensions section=admin} <span class="icon icon-puzzle-piece float-right" role="presentation" aria-hidden="true"></span></h3>
+        <h3 class="card-header">{str tag=configextensions section=admin} <span class="icon icon-puzzle-piece float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=pluginadmin section=admin}</a>

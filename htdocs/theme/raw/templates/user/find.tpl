@@ -2,7 +2,7 @@
     {$form|safe}
 {if $results}
 <div class="card card-secondary view-container">
-    <h2 id="searchresultsheading" class="card-heading">{str tag=Results}</h2>
+    <h2 id="searchresultsheading" class="card-header">{str tag=Results}</h2>
     <div id="friendslist" class="list-group">
         {$results.tablerows|safe}
     </div>
