@@ -97,6 +97,7 @@ class BehatDataGenerators extends BehatBase {
                 'staff'            => 'text',
                 'admins'           => 'text',
                 'authname'         => 'string',
+                'tags'             => 'bool',
             ),
             'required' => array('name', 'displayname')
         ),

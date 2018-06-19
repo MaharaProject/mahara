@@ -115,9 +115,9 @@ function change_language($userid, $oldlang, $newlang) {
         safe_require('artefact', 'file');
         ArtefactTypeFolder::change_language($userid, $oldlang, $newlang);
     }
-    set_field_select('artefact_tag', 'tag', get_string_from_language($newlang, 'profile'), 'WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE "owner" = ?)', array(get_string_from_language($oldlang, 'profile'), $userid));
-    set_field_select('view_tag', 'tag', get_string_from_language($newlang, 'profile'), 'WHERE tag = ? AND "view" IN (SELECT id FROM {view} WHERE "owner" = ?)', array(get_string_from_language($oldlang, 'profile'), $userid));
-    set_field_select('collection_tag', 'tag', get_string_from_language($newlang, 'profile'), 'WHERE tag = ? AND "collection" IN (SELECT id FROM {collection} WHERE "owner" = ?)', array(get_string_from_language($oldlang, 'profile'), $userid));
+    set_field_select('tag', 'tag', get_string_from_language($newlang, 'profile'), "WHERE tag = ? AND resourcetype = 'artefact' AND resourceid IN (SELECT id FROM {artefact} WHERE \"owner\" = ?)", array(get_string_from_language($oldlang, 'profile'), $userid));
+    set_field_select('tag', 'tag', get_string_from_language($newlang, 'profile'), "WHERE tag = ? AND resourcetype = 'view' AND resourceid IN (SELECT id FROM {view} WHERE \"owner\" = ?)", array(get_string_from_language($oldlang, 'profile'), $userid));
+    set_field_select('tag', 'tag', get_string_from_language($newlang, 'profile'), "WHERE tag = ? AND resourcetype = 'collection' AND resourceid IN (SELECT id FROM {collection} WHERE \"owner\" = ?)", array(get_string_from_language($oldlang, 'profile'), $userid));
 }
 
 /**
@@ -1822,11 +1822,13 @@ function load_user_institutions($userid) {
     $table = new XMLDBTable('institution');
     $field = new XMLDBField('logoxs');
     $logoxs = field_exists($table, $field) ? ',i.logoxs' : '';
+    $field = new XMLDBField('tags');
+    $tags = field_exists($table, $field) ? ',i.tags' : '';
     if ($userid !== 0 && $institutions = get_records_sql_assoc('
         SELECT u.institution, ' . db_format_tsfield('ctime') . ',' . db_format_tsfield('u.expiry', 'membership_expiry') . ',
                u.studentid, u.staff, u.admin, i.displayname, i.theme, i.registerallowed, i.showonlineusers,
                i.allowinstitutionpublicviews, i.logo' . $logoxs . ', i.style, i.licensemandatory, i.licensedefault,
-               i.dropdownmenu, i.skins, i.suspended
+               i.dropdownmenu, i.skins, i.suspended' . $tags . '
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
         WHERE u.usr = ? ORDER BY i.priority DESC', array($userid))) {
         return $institutions;

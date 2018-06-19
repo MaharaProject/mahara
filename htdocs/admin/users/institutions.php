@@ -267,6 +267,7 @@ if ($institution || $add) {
         $data->showonlineusers = 2;
         $data->allowinstitutionpublicviews = get_config('allowpublicviews') ? 1 : 0;
         $data->allowinstitutionsmartevidence = 0;
+        $data->tags = 0;
         $data->licensemandatory = 0;
         $data->licensedefault = '';
         $data->dropdownmenu = get_config('dropdownmenu') ? 1 : 0;
@@ -592,6 +593,13 @@ if ($institution || $add) {
         'disabled'     => is_plugin_active('framework', 'module') == false,
         'help'         => true,
     );
+    $elements['allowinstitutiontags'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('allowinstitutiontags'),
+        'description'  => get_string('allowinstitutiontagsdescription'),
+        'defaultvalue' => $data->tags,
+        'help'         => true,
+    );
     $elements['reviewselfdeletion'] = array(
         'type'         => 'switchbox',
         'title'        => get_string('reviewsselfdeletion', 'admin'),
@@ -828,8 +836,6 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution = new Institution($institution);
         $newinstitution->displayname = $values['displayname'];
         $oldinstitution = get_record('institution', 'name', $institution);
-        // Clear out any cached menus for this institution
-        clear_menu_cache($institution);
     }
 
     $newinstitution->showonlineusers              = !isset($values['showonlineusers']) ? 2 : $values['showonlineusers'];
@@ -945,6 +951,7 @@ function institution_submit(Pieform $form, $values) {
 
     $newinstitution->allowinstitutionpublicviews  = (isset($values['allowinstitutionpublicviews']) && $values['allowinstitutionpublicviews']) ? 1 : 0;
     $newinstitution->allowinstitutionsmartevidence  = (isset($values['allowinstitutionsmartevidence']) && $values['allowinstitutionsmartevidence']) ? 1 : 0;
+    $newinstitution->tags  = (isset($values['allowinstitutiontags']) && $values['allowinstitutiontags']) ? 1 : 0;
 
     // do not set 'reviewselfdeletion' if it has never been changed at institution level
     // and the value is the same as site setting 'defaultreviewselfdeletion'
@@ -1164,7 +1171,8 @@ function institution_submit(Pieform $form, $values) {
         $SESSION->add_ok_msg($message);
         $nexturl = '/admin/users/institutions.php';
     }
-
+    // Clear out any cached menus for this institution
+    clear_menu_cache();
     redirect($nexturl);
 }
 

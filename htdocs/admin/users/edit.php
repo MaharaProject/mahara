@@ -270,7 +270,25 @@ $elements['externalauthjs'] = array(
     'value'        => $js,
 );
 
-$tags = get_column_sql('SELECT tag FROM {usr_tag} WHERE usr = ? AND NOT tag ' . db_ilike() . " 'lastinstitution:%'", array($user->id));
+$tags = array();
+if ($tagsarray = get_records_sql_array("SELECT t.tag, t.prefix, t.ownerid
+    FROM (
+        SELECT ut.tag, NULL AS prefix, 0 AS ownerid
+        FROM {tag} ut
+        WHERE resourcetype = ? AND resourceid = ? AND ownertype <> 'instituion'
+        AND NOT tag " . db_ilike() . " 'lastinstitution:%'
+        UNION
+        SELECT it.tag, it.ownerid AS prefix, i.id AS ownerid
+        FROM {tag} it
+        JOIN {institution} i ON i.name = it.ownerid
+        WHERE resourcetype = ? AND resourceid = ?
+        AND tag " . db_ilike() . " 'lastinstitution:%'
+    ) t
+    GROUP BY t.tag, t.prefix, t.ownerid", array('usr', $user->id, 'usr', $user->id))) {
+    foreach ($tagsarray as $k => $v) {
+        $tags[] = $v->tag;
+    }
+}
 
 $elements['tags'] = array(
     'defaultvalue' => $tags,
@@ -603,18 +621,26 @@ function edituser_site_submit(Pieform $form, $values) {
     // Update user's primary email address
     set_user_primary_email($user->id, $values['email']);
 
-    delete_records('usr_tag', 'usr', $user->id);
+    delete_records('tag', 'resourcetype', 'usr', 'resourceid', $user->id);
     if (is_array($values['tags'])) {
-        $values['tags'] = check_case_sensitive($values['tags'], 'usr_tag');
+        $values['tags'] = check_case_sensitive($values['tags'], 'tag');
         foreach(array_unique($values['tags']) as $tag) {
             if (empty($tag)) {
                 continue;
             }
+            if ($tagid = get_field('tag', 'resourceid', 'resourcetype', 'institution', 'tag', $tag)) {
+                $tag = 'tagid_' . $tagid;
+            }
             insert_record(
-                'usr_tag',
+                'tag',
                 (object) array(
-                    'usr' => $user->id,
-                    'tag' => strtolower($tag),
+                    'resourcetype' => 'usr',
+                    'resourceid' => $user->id,
+                    'ownertype' => 'user',
+                    'ownerid' => $user->id,
+                    'tag' => $tag,
+                    'ctime' => db_format_timestamp(time()),
+                    'editedby' => $USER->get('id'),
                 )
             );
         }

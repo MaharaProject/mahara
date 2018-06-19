@@ -13,6 +13,7 @@ Scenario: Creating an institution (selenium test)
     And I press "Add institution"
     And I fill in the following:
     | Institution name | Institution One |
+    And I enable the switch "Allow institution tags"
     And I press "Submit"
     # Verifying the institution has been created
     Then I should see "Institution added successfully"
@@ -35,7 +36,13 @@ Scenario: Creating an institution (selenium test)
     And I attach the file "Image2.png" to "Logo"
     And I press "Submit"
 
+    # Checking that institution tags is available
+    And I choose "Tags" in "Institutions" from administration menu
+    And I should see "Institution tags"
+
     # Delete the institution
+    And I choose "Settings" in "Institutions" from administration menu
     And I click on "Delete" in "Institution One" row
     And I press "Yes"
     Then I should see "Institution deleted successfully"
+    And I should not see "Tags" in the "Institutions sub-menu" property

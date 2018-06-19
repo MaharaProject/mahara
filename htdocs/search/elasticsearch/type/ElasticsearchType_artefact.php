@@ -151,10 +151,10 @@ class ElasticsearchType_artefact extends ElasticsearchType {
         }
 
         // Tags
-        $tags = get_records_array ( 'artefact_tag', 'artefact', $id );
+        $tags = get_column ( 'tag', 'tag', 'resourcetype', 'artefact', 'resourceid', $id );
         if ( $tags != false ) {
             foreach ( $tags as $tag ) {
-                $record->tags [] = $tag->tag;
+                $record->tags [] = $tag;
             }
         }
         else {
@@ -383,10 +383,10 @@ class ElasticsearchType_artefact extends ElasticsearchType {
         }
 
         // Tags
-        $tags = get_records_array ( 'artefact_tag', 'artefact', $id );
+        $tags = get_column ( 'tag', 'tag', 'resourcetype', 'artefact', 'resourceid', $id );
         if ($tags != false) {
             foreach ( $tags as $tag ) {
-                $record->tags [] = $tag->tag;
+                $record->tags [] = $tag;
             }
         }
         else {

@@ -348,13 +348,13 @@ function search_folders_and_files($username, $search='') {
     $filetypesql = "('" . join("','", $filetypes) . "')";
 
     $ownersql = artefact_owner_sql($user->id);
-
-    //retrieve folders and files of a specific Mahara folder
+    $typecast = is_postgres() ? '::varchar' : '';
+    // Retrieve folders and files of a specific Mahara folder
     $sql = "SELECT
                 *
             FROM
                 {artefact} a
-            LEFT JOIN {artefact_tag} at ON (at.artefact = a.id)
+            LEFT JOIN {tag} at ON (at.resourcetype = 'artefact' AND at.resourceid = a.id" . $typecast . ")
             WHERE
                 $ownersql
                 AND

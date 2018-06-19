@@ -588,6 +588,8 @@ abstract class ArtefactType implements IArtefactType {
      * this method, and call parent::commit() in your own function.
      */
     public function commit() {
+        global $USER;
+
         static $last_source, $last_output;
 
         $is_new = false;
@@ -634,20 +636,40 @@ abstract class ArtefactType implements IArtefactType {
         }
 
         if (!$is_new) {
-          $deleted = delete_records('artefact_tag', 'artefact', $this->id);
+          $deleted = delete_records('tag', 'resourcetype', 'artefact', 'resourceid', $this->id);
         }
 
         if (is_array($this->tags)) {
-            $this->tags = check_case_sensitive($this->tags, 'artefact_tag');
+            if ($this->group) {
+                $ownertype = 'group';
+                $ownerid = $this->group;
+            }
+            else if ($this->institution) {
+                $ownertype = 'institution';
+                $ownerid = $this->institution;
+            }
+            else {
+                $ownertype = 'user';
+                $ownerid = $this->owner;
+            }
+            $this->tags = check_case_sensitive($this->tags, 'tag');
+
             foreach (array_unique($this->tags) as $tag) {
                 if (empty($tag)) {
                     continue;
                 }
-                insert_record(
-                    'artefact_tag',
+                if ($institutiontag = get_record('tag', 'tag', $tag, 'resourcetype', 'institution', 'ownertype', 'institution')) {
+                    $tag = 'tagid_' . $institutiontag->id;
+                }
+                insert_record('tag',
                     (object) array(
-                        'artefact' => $this->id,
-                        'tag'      => $tag,
+                        'resourcetype' => 'artefact',
+                        'resourceid' => $this->get('id'),
+                        'ownertype' => $ownertype,
+                        'ownerid' => $ownerid,
+                        'tag' => $tag,
+                        'ctime' => db_format_timestamp(time()),
+                        'editedby' => $USER->get('id'),
                     )
                 );
             }
@@ -831,7 +853,7 @@ abstract class ArtefactType implements IArtefactType {
         BlockInstance::bulk_remove_artefacts($artefactids);
 
         delete_records_select('view_artefact', "artefact IN $idstr");
-        delete_records_select('artefact_tag', "artefact IN $idstr");
+        delete_records_select('tag', "resourcetype = 'artefact' AND resourceid IN ('" . join("','", array_map('intval', $artefactids)) . "')");
         delete_records_select('artefact_access_role', "artefact IN $idstr");
         delete_records_select('artefact_access_usr', "artefact IN $idstr");
         execute_sql("UPDATE {usr} SET profileicon = NULL WHERE profileicon IN $idstr");
@@ -1215,8 +1237,18 @@ abstract class ArtefactType implements IArtefactType {
         if (empty($artefactids)) {
             return array();
         }
-        $artefactids = join(',', array_map('intval', $artefactids));
-        $tags = get_records_select_array('artefact_tag', 'artefact IN (' . $artefactids . ')');
+        $typecast = is_postgres() ? '::varchar' : '';
+        $artefactids = join("','", array_map('intval', $artefactids));
+        $tags = get_records_sql_array("
+            SELECT
+                (CASE
+                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                    ELSE t.tag
+                END) AS tag, t.resourceid
+            FROM {tag} t
+            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+            LEFT JOIN {institution} i ON i.name = t2.ownerid
+            WHERE t.resourcetype = 'artefact' AND t.resourceid IN ('" . $artefactids . "')");
         if (!$tags) {
             return array();
         }
@@ -1231,11 +1263,21 @@ abstract class ArtefactType implements IArtefactType {
             ORDER BY a.title', array($this->id));
 
         // load tags
+        $typecast = is_postgres() ? '::varchar' : '';
         if ($list) {
-            $tags = get_records_select_array('artefact_tag', 'artefact IN (' . join(',', array_keys($list)) . ')');
+            $tags = get_records_sql_array("
+                SELECT
+                    (CASE
+                        WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                        ELSE t.tag
+                    END) AS tag, t.resourceid
+                FROM {tag} t
+                LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+                LEFT JOIN {institution} i ON i.name = t2.ownerid
+                WHERE t.resourcetype = 'artefact' AND t.resourceid IN ('" . join("','", array_keys($list)) . "')");
             if ($tags) {
                 foreach ($tags as $t) {
-                    $list[$t->artefact]->tags[] = $t->tag;
+                    $list[$t->resourceid]->tags[] = $t->tag;
                 }
                 foreach ($list as &$attachment) {
                     if (!empty($attachment->tags)) {
@@ -1338,7 +1380,18 @@ abstract class ArtefactType implements IArtefactType {
         if (empty($id)) {
             return array();
         }
-        $tags = get_column_sql('SELECT tag FROM {artefact_tag} WHERE artefact = ? ORDER BY tag', array($id));
+        $typecast = is_postgres() ? '::varchar' : '';
+        $tags = get_column_sql("
+            SELECT
+                (CASE
+                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                    ELSE t.tag
+                END) AS tag
+            FROM {tag} t
+            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+            LEFT JOIN {institution} i ON i.name = t2.ownerid
+            WHERE t.resourcetype = ? AND t.resourceid = ?
+            ORDER BY tag", array('artefact', $id));
         if (!$tags) {
             return array();
         }

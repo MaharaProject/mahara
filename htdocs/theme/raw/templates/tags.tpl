@@ -11,17 +11,19 @@
     <div class="mytags">
         <ul class="list-unstyled">
         {foreach from=$tags item=t}
-            <li class="text-inline"><a id="tag:{$t->tag|urlencode|safe}" class="tag {if $t->tag == $tag}selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode|safe}">{$t->tag|str_shorten_text:30}&nbsp;<span class="tagfreq badge">{$t->count}</span></a></li>
+            <li class="text-inline"><a id="tag:{$t->tag|urlencode|safe}" class="tag {if $t->tag == $tag}selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode|safe}">{$t->tag|str_shorten_text:30}&nbsp;{if $t->owner}({$t->owner}){/if}<span class="tagfreq badge">{$t->count}</span></a></li>
         {/foreach}
         </ul>
     </div>
     <div id="results_container" class="panel panel-default tag-results">
         <h2 id="results_heading" class="panel-heading">{str tag=searchresultsfor}
-            <a class="tag secondary-link" href="{$results->baseurl}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
+            <a class="tag secondary-link" href="{$results->baseurl}{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
         </h2>
-        <div class="btn-top-right btn-group btn-group-top">
-            <a class="btn btn-default edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
-        </div>
+        {if $not_institution_tag}
+            <div class="btn-top-right btn-group btn-group-top">
+                <a class="btn btn-default edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
+            </div>
+        {/if}
         <div class="tag-filters">
             <div id="results_sort" class="pull-right">
                 <strong>{str tag=sortresultsby}</strong>

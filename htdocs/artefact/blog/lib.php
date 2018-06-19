@@ -1056,7 +1056,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
         if ($tags = ArtefactType::tags_from_id_list($postids)) {
             foreach($tags as &$at) {
-                $data[$at->artefact]->tags[] = $at->tag;
+                $data[$at->resourceid]->tags[] = $at->tag;
             }
         }
 

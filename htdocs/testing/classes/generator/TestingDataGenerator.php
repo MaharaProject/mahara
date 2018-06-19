@@ -488,6 +488,7 @@ EOD;
         $newinstitution->theme = (empty($record['theme']) || $record['theme'] == 'sitedefault') ? null : $record['theme'];
         $newinstitution->dropdownmenu = (!empty($record['dropdownmenu'])) ? 1 : 0;
         $newinstitution->skins = (!empty($record['skins'])) ? 1 : 0;
+        $newinstitution->tags = (!empty($record['tags'])) ? 1 : 0;
         $newinstitution->style = null;
 
         if (get_config('licensemetadata')) {

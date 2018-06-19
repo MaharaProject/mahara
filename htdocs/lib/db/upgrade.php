@@ -5837,19 +5837,8 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2018050200) {
-        log_debug('Create new "existinggroupmembercopy" field to "view" table');
-        $table = new XMLDBTable('view');
-        $field = new XMLDBField('existinggroupmembercopy');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
-        add_field($table, $field);
-    }
-
     if ($oldversion < 2018050201) {
-        log_debug('Create new "existingcopy" table to map who already has what. Also drop "existinggroupmembercopy" field');
-        $table = new XMLDBTable('view');
-        $field = new XMLDBField('existinggroupmembercopy');
-        drop_field($table, $field);
+        log_debug('Create new "existingcopy" table to map who already has what.');
 
         $table = new XMLDBTable('existingcopy');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
@@ -5872,6 +5861,66 @@ function xmldb_core_upgrade($oldversion=0) {
             'name'  => 'userchangegrouprole'
         );
         ensure_record_exists('event_type', $event, $event);
+    }
+
+    if ($oldversion < 2018061800) {
+        log_debug('Add a "tags" field to the institution table');
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('tags');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+    }
+
+    if ($oldversion < 2018061801) {
+        log_debug('Add a "tag" table to migrate all the tag information to');
+        $table = new XMLDBTable('tag');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('tag', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('resourcetype', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('resourceid', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ownertype', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ownerid', XMLDB_TYPE_CHAR, 100);
+        $table->addFieldInfo('editedby', XMLDB_TYPE_INTEGER, 10);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('mtime', XMLDB_TYPE_DATETIME);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('editedbyfk', XMLDB_KEY_FOREIGN, array('editedby'), 'usr', array('id'));
+
+        if (create_table($table)) {
+            log_debug('Move the data from the old *_tag tables');
+            $types = array('artefact', 'collection', 'view');
+            $typecast = is_postgres() ? '::varchar' : '';
+            foreach ($types as $type) {
+                execute_sql("INSERT INTO {tag} (tag,resourcetype,resourceid,ownertype,ownerid,editedby,ctime,mtime)
+                             SELECT xt.tag, '" . $type . "' AS resourcetype, xt." . $type . " AS resourceid,
+                                    CASE WHEN x.owner IS NOT NULL THEN 'user'
+                                         WHEN x.group IS NOT NULL THEN 'group'
+                                         ELSE 'institution'
+                                    END AS ownertype,
+                                    CASE WHEN x.owner IS NOT NULL THEN x.owner" . $typecast . "
+                                         WHEN x.group IS NOT NULL THEN x.group" . $typecast . "
+                                         ELSE x.institution
+                                    END AS ownerid,
+                                    NULL AS editedby, x.ctime AS ctime, x.mtime AS mtime
+                             FROM {" . $type . "_tag} xt
+                             JOIN {" . $type . "} x ON x.id = xt." . $type);
+            }
+            execute_sql("INSERT INTO {tag} (tag,resourcetype,resourceid,ownertype,ownerid,editedby,ctime,mtime)
+                         SELECT ut.tag, 'usr' AS resourcetype, ut.usr AS resourceid, 'institution' AS ownertype,
+                            SUBSTRING(ut.tag, LENGTH('lastinstitution:') + 1, 255) AS ownerid,
+                            NULL as editedby, u.ctime AS ctime, NULL AS mtime
+                         FROM {usr_tag} ut
+                         JOIN {usr} u ON u.id = ut.usr
+                         WHERE u.deleted = 0");
+            // Drop old *_tag tables
+            execute_sql("DROP TABLE {artefact_tag}");
+            execute_sql("DROP TABLE {usr_tag}");
+            execute_sql("DROP TABLE {view_tag}");
+            execute_sql("DROP TABLE {collection_tag}");
+        }
     }
 
     return $status;

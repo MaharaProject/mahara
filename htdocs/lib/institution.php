@@ -58,7 +58,8 @@ class Institution {
         'licensedefault' => null,
         'licensemandatory' => 0,
         'dropdownmenu' => 0,
-        'skins' => true
+        'skins' => true,
+        'tags' => false
     );
 
     // This institution's config settings
@@ -124,6 +125,7 @@ class Institution {
             // int 1 (i.e. true/false)
             case 'registerallowed':
             case 'skins':
+            case 'tags':
             case 'suspended':
             case 'licensemandatory':
             case 'expirymailsent':
@@ -341,9 +343,9 @@ class Institution {
         insert_record('usr_institution', $userinst);
         delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
         execute_sql("
-            DELETE FROM {usr_tag}
-            WHERE usr = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
-            array($user->id)
+            DELETE FROM {tag}
+            WHERE resourcetype = ? AND resourceid = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
+            array('usr', $user->id)
         );
         // Copy institution views and collection to the user's portfolio
         $checkviewaccess = empty($user->newuser) && !$USER->get('admin');
@@ -675,16 +677,21 @@ class Institution {
         );
 
         execute_sql("
-            DELETE FROM {usr_tag}
-            WHERE usr = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
-            array($user->id)
+            DELETE FROM {tag}
+            WHERE resourcetype = ? AND resourceid = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
+            array('usr', $user->id)
         );
 
         insert_record(
-            'usr_tag',
+            'tag',
             (object) array(
-                'usr' => $user->id,
+                'resourcetype' => 'usr',
+                'resourceid' => $user->id,
+                'ownertype' => 'institution',
+                'ownerid' => $this->name,
                 'tag' => 'lastinstitution:' . strtolower($this->name),
+                'ctime' => db_format_timestamp(time()),
+                'editedby' => $USER->get('id'),
             )
         );
 
@@ -909,10 +916,12 @@ class Institution {
  * @param bool $includesitestaff         To allow site staff to see dropdown like the site admin would
  * @param bool $includeinstitutionstaff  To allow institution staff to see dropdown like institution admin would
  * @param bool $allselector              To add an 'all' option to the dropdown where it makes sense, eg in institution statistics page
+ * @param bool $withactiveinstitutiontags To only fetch institutions which are configured to define their own tags
  *
  * @return null or array suitable for pieform element
  */
-function get_institution_selector($includedefault = true, $assumesiteadmin=false, $includesitestaff=false, $includeinstitutionstaff=false, $allselector=false) {
+function get_institution_selector($includedefault = true, $assumesiteadmin=false, $includesitestaff=false, $includeinstitutionstaff=false,
+    $allselector=false, $withactiveinstitutiontags=false) {
     global $USER;
 
     if (($assumesiteadmin || $USER->get('admin')) || ($includesitestaff && $USER->get('staff'))) {
@@ -958,8 +967,17 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
     if ($allselector) {
         $options['all'] = get_string('Allinstitutions', 'mahara');
     }
-    foreach ($institutions as $i) {
-        $options[$i->name] = $i->displayname;
+    if ($withactiveinstitutiontags) {
+        foreach ($institutions as $i) {
+            if ($i->tags) {
+                $options[$i->name] = $i->displayname;
+            }
+        }
+    }
+    else {
+        foreach ($institutions as $i) {
+            $options[$i->name] = $i->displayname;
+        }
     }
     $institution = key($options);
     $institutionelement = array(

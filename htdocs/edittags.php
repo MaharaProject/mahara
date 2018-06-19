@@ -15,7 +15,7 @@ require('init.php');
 
 define('TITLE', get_string('edittags'));
 
-$tags = get_my_tags();
+$tags = get_my_tags(null, true, 'freq', true);
 
 if ($tag = param_variable('tag', null)) {
     $edittagform = pieform(array(
@@ -69,16 +69,8 @@ function edit_tag_submit(Pieform $form, $values) {
     }
     db_begin();
     execute_sql(
-        "UPDATE {view_tag} SET tag = ? WHERE tag = ? AND \"view\" IN (SELECT id FROM {view} WHERE \"owner\" = ?)",
-        array($values['tagname'], $tag, $userid)
-    );
-    execute_sql(
-        "UPDATE {collection_tag} SET tag = ? WHERE tag = ? AND \"collection\" IN (SELECT id FROM {collection} WHERE \"owner\" = ?)",
-        array($values['tagname'], $tag, $userid)
-    );
-    execute_sql(
-        "UPDATE {artefact_tag} SET tag = ? WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE \"owner\" = ?)",
-        array($values['tagname'], $tag, $userid)
+        "UPDATE {tag} SET tag = ? WHERE tag = ? AND ownertype = ? AND ownerid = ? AND resourcetype IN ('artefact', 'view', 'collection')",
+        array($values['tagname'], $tag, 'user', $userid)
     );
     db_commit();
     $SESSION->add_ok_msg(get_string('tagupdatedsuccessfully'));
@@ -92,16 +84,8 @@ function delete_tag_submit(Pieform $form, $values) {
     }
     db_begin();
     execute_sql(
-        "DELETE FROM {view_tag} WHERE tag = ? AND view IN (SELECT id FROM {view} WHERE \"owner\" = ?)",
-        array($tag, $userid)
-    );
-    execute_sql(
-        "DELETE FROM {collection_tag} WHERE tag = ? AND collection IN (SELECT id FROM {collection} WHERE \"owner\" = ?)",
-        array($tag, $userid)
-    );
-    execute_sql(
-        "DELETE FROM {artefact_tag} WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE \"owner\" = ?)",
-        array($tag, $userid)
+        "DELETE FROM {tag} WHERE tag = ? AND ownertype = ? AND ownerid = ? AND resourcetype IN ('artefact', 'view', 'collection')",
+        array($tag, 'user', $userid)
     );
     db_commit();
     $SESSION->add_ok_msg(get_string('tagdeletedsuccessfully'));

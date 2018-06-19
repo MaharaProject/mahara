@@ -706,7 +706,18 @@ class View {
 
     public function get_tags() {
         if (!isset($this->tags)) {
-            $this->tags = get_column('view_tag', 'tag', 'view', $this->get('id'));
+            $typecast = is_postgres() ? '::varchar' : '';
+            $this->tags = get_column_sql("
+            SELECT
+                (CASE
+                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                    ELSE t.tag
+                END) AS tag
+            FROM {tag} t
+            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+            LEFT JOIN {institution} i ON i.name = t2.ownerid
+            WHERE t.resourcetype = ? AND t.resourceid = ?
+            ORDER BY tag", array('view', $this->get('id')));
         }
         return $this->tags;
     }
@@ -753,6 +764,8 @@ class View {
      * This method updates the contents of the view table only.
      */
     public function commit() {
+        global $USER;
+
         if (empty($this->dirty)) {
             return;
         }
@@ -781,12 +794,37 @@ class View {
         }
 
         if (isset($this->tags)) {
-            $this->tags = check_case_sensitive($this->tags, 'view_tag');
-            delete_records('view_tag', 'view', $this->get('id'));
+            if ($this->group) {
+                $ownertype = 'group';
+                $ownerid = $this->group;
+            }
+            else if ($this->institution) {
+                $ownertype = 'institution';
+                $ownerid = $this->institution;
+            }
+            else {
+                $ownertype = 'user';
+                $ownerid = $this->owner;
+            }
+            $this->tags = check_case_sensitive($this->tags, 'tag');
+            delete_records('tag', 'resourcetype', 'view', 'resourceid', $this->get('id'));
             foreach ($this->get_tags() as $tag) {
                 //truncate the tag before insert it into the database
                 $tag = substr($tag, 0, 128);
-                insert_record('view_tag', (object)array( 'view' => $this->get('id'), 'tag' => $tag));
+                if ($institutiontag = get_record('tag', 'tag', $tag, 'resourcetype', 'institution', 'ownertype', 'institution')) {
+                    $tag = 'tagid_' . $institutiontag->id;
+                }
+                insert_record('tag',
+                    (object)array(
+                        'resourcetype' => 'view',
+                        'resourceid' => $this->get('id'),
+                        'ownertype' => $ownertype,
+                        'ownerid' => $ownerid,
+                        'tag' => $tag,
+                        'ctime' => db_format_timestamp(time()),
+                        'editedby' => $USER->get('id'),
+                    )
+                );
             }
         }
 
@@ -881,7 +919,7 @@ class View {
         ArtefactTypeComment::delete_view_comments($this->id);
         delete_records('view_access','view',$this->id);
         delete_records('view_autocreate_grouptype', 'view', $this->id);
-        delete_records('view_tag','view',$this->id);
+        delete_records('tag', 'resourcetype', 'view', 'resourceid', $this->id);
         delete_records('view_visit','view',$this->id);
         delete_records('existingcopy', 'view', $this->id);
         $eventdata = array('id' => $this->id, 'eventfor' => 'view');
@@ -3745,21 +3783,22 @@ class View {
             ORDER BY ' . $order . ' vtitle, vid';
 
         $values = $collvalues = $emptycollvalues = array();
+        $typecast = is_postgres() ? '::varchar' : '';
 
         if (!empty($searchin) && $query != '') {
             switch($searchin) {
                 case 'tagsonly':
                     $tagstr = "
-                        LEFT JOIN {view_tag} vt ON (vt.view = v.id)";
+                        LEFT JOIN {tag} vt ON (vt.resourcetype = 'view' AND vt.resourceid = v.id" . $typecast . ")";
                     $colltagstr = "
-                        LEFT JOIN {collection_tag} ct ON (ct.collection = c.id)";
+                        LEFT JOIN {tag} ct ON (ct.resourcetype = 'collection' AND ct.resourceid = c.id" . $typecast . ")";
                     $query_arr = array_map('trim', explode(',', $query));
 
                     if ($alltags && count($query_arr) > 1) {
                         $tagwhere = "vt.tag = ? ";
                         foreach ($query_arr as $qk => $qv) {
                             if ($qk > 0) {
-                                $tagstr .= " LEFT JOIN {view_tag} vt" . $qk . " ON vt" . $qk . ".view = vt.view ";
+                                $tagstr .= " LEFT JOIN {tag} vt" . $qk . " ON (vt" . $qk . ".resourcetype = 'view' AND vt" . $qk . ".resourceid = v.id" . $typecast . ")";
                                 $tagwhere .= " AND vt" . $qk . ".tag = ? ";
                             }
                         }
@@ -3768,7 +3807,7 @@ class View {
                         reset($query_arr);
                         foreach ($query_arr as $qk => $qv) {
                             if ($qk > 0) {
-                                $colltagstr .= " LEFT JOIN {collection_tag} ct" . $qk . " ON ct" . $qk . ".collection = ct.collection ";
+                                $colltagstr .= " LEFT JOIN {tag} ct" . $qk . " ON (ct" . $qk . ".resourcetype = 'collection' AND ct" . $qk . ".resourceid = c.id" . $typecast .")";
                                 $colltagwhere .= " AND ct" . $qk . ".tag = ? ";
                             }
                         }
@@ -3811,9 +3850,9 @@ class View {
                 case 'titleanddescriptionandtags':
                     // Include matches on the title, description or tag
                     $tagstr = "
-                        LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
+                        LEFT JOIN {tag} vt ON (vt.resourcetype = 'view' AND vt.resourceid = v.id" . $typecast . " AND vt.tag = ?)";
                     $colltagstr = "
-                        LEFT JOIN {collection_tag} ct ON (ct.collection = c.id AND ct.tag = ?)";
+                        LEFT JOIN {tag} ct ON (ct.resourcetype = 'collection' AND ct.resourceid = c.id" . $typecast . " AND ct.tag = ?)";
                     $from .= $tagstr;
                     $collfrom .= $tagstr . $colltagstr;
                     $emptycollfrom .= $colltagstr;
@@ -4322,6 +4361,7 @@ class View {
             LEFT OUTER JOIN {usr} qu ON (v.owner = qu.id)
             LEFT OUTER JOIN {group} sg ON sg.id = v.group
         ';
+        $typecast = is_postgres() ? '::varchar' : '';
         $where = '';
         if ($excludeowner) {
             $where .= ' WHERE (v.owner IS NULL OR (v.owner > 0 AND v.owner != ?))';
@@ -4384,7 +4424,7 @@ class View {
             // when $ownerquery is specified. Hence, the extra 'q' on the
             // table alias.
             $from .= "
-                LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)
+                LEFT JOIN {tag} vt ON (vt.resourcetype = 'view' AND vt.resourceid = v.id" . $typecast . " AND vt.tag = ?)
                 LEFT OUTER JOIN {group} qqg ON (v.group = qqg.id)
                 LEFT OUTER JOIN {institution} qqi ON (v.institution = qqi.name)";
             if (strpos(strtolower(get_config('sitename')), strtolower($query)) !== false) {
@@ -4427,10 +4467,10 @@ class View {
                             ON v2.id=cv2.view
                         INNER JOIN {collection} c2
                             ON c2.id = cv2.collection
-                        LEFT OUTER JOIN {view_tag} vt
-                            ON (vt.view = v2.id AND vt.tag = ?)
-                        LEFT OUTER JOIN {collection_tag} ct
-                            ON (ct.collection = cv2.collection AND ct.tag = ?)
+                        LEFT OUTER JOIN {tag} vt
+                            ON (vt.resourcetype = 'view' AND vt.resourceid = v2.id" . $typecast . " AND vt.tag = ?)
+                        LEFT OUTER JOIN {tag} ct
+                            ON (ct.resourcetype = 'collection' AND ct.resourceid = cv2.collection" . $typecast . " AND ct.tag = ?)
                     WHERE
                         cv2.collection = cv.collection
                         AND (
@@ -4458,7 +4498,7 @@ class View {
         }
         else if ($tag) { // Filter by the tag
             $from .= "
-                INNER JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
+                INNER JOIN {tag} vt ON (vt.resourcetype = 'view' AND vt.resourceid = v.id" . $typecast . " AND vt.tag = ?)";
             $fromparams[] = $tag;
         }
 
@@ -5492,11 +5532,11 @@ class View {
                 }
             }
             if ($gettags && !empty($viewidlist)) {
-                $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
+                $tags = get_records_select_array('tag', "resourcetype = 'view' AND resourceid IN ('" . join("','", array_map('intval', $viewids)) . "')");
                 if ($tags) {
                     foreach ($tags as &$tag) {
-                        if (isset($viewdata[$tag->view])) {
-                            $viewdata[$tag->view]->tags[] = $tag->tag;
+                        if (isset($viewdata[$tag->resourceid])) {
+                            $viewdata[$tag->resourceid]->tags[] = $tag->tag;
                         }
                         else {
                             // Need to find the views to add it to
@@ -5505,7 +5545,7 @@ class View {
                                     continue;
                                 }
                                 $viewid = (isset($v->viewid) && !empty($v->viewid)) ? $v->viewid : $v->id;
-                                if ($viewid == $tag->view) {
+                                if ($viewid == $tag->resourceid) {
                                     $viewdata[$k]->tags[] = $tag->tag;
                                 }
                             }
@@ -5619,11 +5659,11 @@ class View {
                 }
             }
             if ($gettags) {
-                $collectionidlist = join(',', array_map('intval', array_keys($collectiondata)));
-                $tags = get_records_select_array('collection_tag', 'collection IN (' . $collectionidlist . ')');
+                $collectionidlist = join("','", array_map('intval', array_keys($collectiondata)));
+                $tags = get_records_select_array('tag', "resourcetype = 'collection' AND resourceid IN ('" . $collectionidlist . "')");
                 if ($tags) {
                     foreach ($tags as &$tag) {
-                        $collectiondata[$tag->collection]->tags[] = $tag->tag;
+                        $collectiondata[$tag->resourceid]->tags[] = $tag->tag;
                     }
                 }
             }

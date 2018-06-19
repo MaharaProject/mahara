@@ -126,10 +126,10 @@ class ElasticsearchType_collection extends ElasticsearchType {
         if (! $record) {
             return false;
         }
-        $tags = get_records_array ('collection_tag', 'collection', $id);
+        $tags = get_column ('tag', 'tag', 'resourcetype', 'collection', 'resourceid', $id);
         if ($tags != false) {
             foreach ($tags as $tag) {
-                $record->tags [] = $tag->tag;
+                $record->tags [] = $tag;
             }
         }
         else {
@@ -192,10 +192,10 @@ class ElasticsearchType_collection extends ElasticsearchType {
             $record->views = $record_views;
         }
         // Tags
-        $tags = get_records_array('collection_tag', 'collection', $id);
+        $tags = get_column('tag', 'tag', 'resourcetype', 'collection', 'resourceid', $id);
         if ($tags != false) {
             foreach ($tags as $tag) {
-                $record->tags [] = $tag->tag;
+                $record->tags [] = $tag;
             }
         }
         else {

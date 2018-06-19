@@ -3738,13 +3738,14 @@ function profile_sideblock() {
         }
     }
 
+    $typecast = is_postgres() ? '::varchar' : '';
     $data['grouplimitstr'] = $limitstr;
     $data['views'] = get_records_sql_array(
-        'SELECT v.id, v.title, v.urlid, v.owner
-        FROM {view} v
-        INNER JOIN {view_tag} vt ON (vt.tag = ? AND vt.view = v.id)
-        WHERE v.owner = ?
-        ORDER BY v.title',
+        "SELECT v.id, v.title, v.urlid, v.owner
+         FROM {view} v
+         INNER JOIN {tag} vt ON (vt.tag = ? AND vt.resourcetype = 'view' AND vt.resourceid = v.id" . $typecast . ")
+         WHERE v.owner = ?
+         ORDER BY v.title",
         array(get_string('profile'), $USER->get('id'))
     );
     if ($data['views']) {
@@ -3756,12 +3757,12 @@ function profile_sideblock() {
         }
     }
     $data['artefacts'] = get_records_sql_array(
-         'SELECT a.id, a.artefacttype, a.title
+        "SELECT a.id, a.artefacttype, a.title
          FROM {artefact} a
-         INNER JOIN {artefact_tag} at ON (a.id = at.artefact AND tag = ?)
+         INNER JOIN {tag} at ON (at.tag = ? AND at.resourcetype = 'artefact' AND at.resourceid = a.id" . $typecast . ")
          WHERE a.owner = ?
-         ORDER BY a.title',
-         array(get_string('profile'), $USER->get('id'))
+         ORDER BY a.title",
+        array(get_string('profile'), $USER->get('id'))
     );
     if (!empty($data['artefacts'])) {
         // check if we have any blogposts and fetch their blog id if we do
@@ -3852,34 +3853,32 @@ function tag_weight($freq) {
     // return log10($freq);
 }
 
-function get_my_tags($limit=null, $cloud=true, $sort='freq') {
+function get_my_tags($limit=null, $cloud=true, $sort='freq', $excludeinstitutiontags=false) {
     global $USER;
     $id = $USER->get('id');
     if ($limit || $sort != 'alpha') {
-        $sort = 'COUNT(t.tag) DESC';
+        $sort = 'COUNT(1) DESC';  // In this instance '1' is not a number but the column reference to 'tag' column
     }
     else {
-        $sort = 't.tag ASC';
+        $sort = '1 ASC';
     }
+    $excludeinstitutiontagssql = $excludeinstitutiontags ? " AND t.tag NOT LIKE 'tagid_%'" : '';
+    $typecast = is_postgres() ? '::varchar' : '';
     $tagrecords = get_records_sql_array("
         SELECT
-            t.tag, COUNT(t.tag) AS count
-        FROM (
-           (SELECT at.tag, a.id, 'artefact' AS type
-            FROM {artefact_tag} at JOIN {artefact} a ON a.id = at.artefact
-            WHERE a.owner = ?)
-           UNION
-           (SELECT vt.tag, v.id, 'view' AS type
-            FROM {view_tag} vt JOIN {view} v ON v.id = vt.view
-            WHERE v.owner = ?)
-           UNION
-           (SELECT ct.tag, c.id, 'collection' AS type
-            FROM {collection_tag} ct JOIN {collection} c ON c.id = ct.collection
-            WHERE c.owner = ?)
-    ) t
-        GROUP BY t.tag
+            (CASE
+                WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                ELSE t.tag
+            END) AS tag, COUNT(t.tag) AS count
+        FROM {tag} t
+        LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+        LEFT JOIN {institution} i ON i.name = t2.ownerid
+        WHERE t.resourcetype IN ('artefact', 'view', 'collection')
+        AND t.ownertype = 'user'
+        AND t.ownerid = ?" . $excludeinstitutiontagssql . "
+        GROUP BY 1
         ORDER BY " . $sort . (is_null($limit) ? '' : " LIMIT $limit"),
-        array($id, $id, $id)
+        array($id)
     );
     if (!$tagrecords) {
         return array();
@@ -3901,10 +3900,8 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq') {
         }
         usort($tagrecords, create_function('$a,$b', 'return strnatcasecmp($a->tag, $b->tag);'));
     }
-    else {
-        foreach ($tagrecords as &$t) {
-            $t->tagurl = urlencode($t->tag);
-        }
+    foreach ($tagrecords as &$t) {
+        $t->tagurl = urlencode($t->tag);
     }
     return $tagrecords;
 }
