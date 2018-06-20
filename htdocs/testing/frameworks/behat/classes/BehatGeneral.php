@@ -913,9 +913,9 @@ EOF;
         }
 
         else {
-            $step_funct = $this->switch_funct($step_funct);
+            $step_funct = $this->switch_action($step_funct);
             // switch covers steps in BehatGeneral that pass a css_locator
-            $this->$funct($text, $css_locator[0], $css_locator[1]);
+            $this->$step_funct($text, $css_locator[0], $css_locator[1]);
         }
     }
 
