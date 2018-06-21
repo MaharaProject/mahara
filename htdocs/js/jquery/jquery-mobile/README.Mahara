@@ -3,10 +3,16 @@ jQuery Mobile in Mahara
 
 This javascript library is required for the mobile specific touch/swipe option.
 
-Website: http://jqueryui.com/
-Version: 1.4.5
+Website: http://jquerymobile.com/
+Version: 1.5.0-alpha.1
 
 Changes:
 
 * Have only included the Touch events to allow us to use swipe event
   features of this library via http://jquerymobile.com/download-builder/
+
+* Upgraded to alpha version for the virtual mouse part of the code.
+  It breaks with jQuery 3 and its fixed in alpha version.
+  For this lib we make a custom download only with the touch events
+  (this part wasn't changed in alpha version) but this comes with
+  3 core components: Namespace, touch support test and virtual mouse.
