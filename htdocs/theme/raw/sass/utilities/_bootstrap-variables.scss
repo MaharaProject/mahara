@@ -79,7 +79,7 @@ $text:          $gray-700 !default;
 $theme-colors: () !default;
 $theme-colors: map-merge((
   "primary":    	$primary,
-  "primary-dark":	darken($primary, 15%),
+  "primary-dark":	darken($primary, 5%),
   "secondary":  	$secondary,
   "success":    	$success,
   "info":       	$info,
@@ -205,10 +205,10 @@ $grid-breakpoints: (
 // Define the maximum width of `.container` for different screen sizes.
 
 $container-max-widths: (
-  sm: 540px,
-  md: 720px,
-  lg: 960px,
-  xl: 1140px
+  // sm: 540px,
+  md: 750px,
+  lg: 970px,
+  xl: 1170px
 ) !default;
 
 //** Global textual link color.
@@ -716,8 +716,8 @@ $nav-divider-margin-y:              ($spacer / 2) !default;
 
 // Navbar
 
-$navbar-padding-y:                  ($spacer / 2) !default;
-$navbar-padding-x:                  $spacer !default;
+$navbar-padding-y:                  0 !default;
+$navbar-padding-x:                  0 !default;
 
 $navbar-nav-link-padding-x:         .5rem !default;
 

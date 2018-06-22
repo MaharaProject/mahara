@@ -24,10 +24,13 @@
     }
 
     .navbar-collapse {
+        margin-right: -15px;
+        margin-left: -15px;
         padding: 0;
         position: static;
         clear: both;
         max-height: none;
+        border: 1px solid $navbar-default-border;
 
         @include media-breakpoint-up(md) {
             position: absolute;
@@ -51,6 +54,7 @@
     // Top level navigation items use colour variables from "navbar-default"
     .navbar-nav {
         margin: 0;
+        flex-grow: 1;
 
         @include media-breakpoint-up(md) {
             width: 300px;
@@ -59,6 +63,11 @@
         li {
             float: none;
             display: block;
+            position: relative;
+
+            @include media-breakpoint-up(md) {
+                border-bottom: 1px solid transparent;
+            }
         }
 
         // Styles for all links inside navbar-nav
@@ -78,6 +87,7 @@
             margin-top: -1px;
             &:hover,
             &:focus {
+                background-color: $navbar-inverse-bg;
                 text-decoration:none;
                 color: $navbar-default-link-hover-color;
             }

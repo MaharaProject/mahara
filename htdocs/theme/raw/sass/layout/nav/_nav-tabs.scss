@@ -3,7 +3,10 @@
     margin-bottom: 0 !important;
     &.nav {
         li > a {
+            margin-right: 2px;
+            display: block;
             font-weight: 300;
+            border: 1px solid transparent;
             border-bottom: 3px solid transparent;
             padding: 8px 10px;
             font-size: $font-size-base * 1.07142857;
