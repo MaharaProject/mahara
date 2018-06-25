@@ -1,6 +1,6 @@
 <?php
 /*
- @version   v5.20.9  21-Dec-2016
+ @version   v5.20.12  30-Mar-2018
  @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
  @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license.
@@ -109,6 +109,8 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 	// which makes obsolete the LIMIT limit,offset syntax
 	function SelectLimit($sql,$nrows=-1,$offset=-1,$inputarr=false,$secs2cache=0)
 	{
+		$nrows = (int) $nrows;
+		$offset = (int) $offset;
 		$offsetStr = ($offset >= 0) ? " OFFSET ".((integer)$offset) : '';
 		$limitStr  = ($nrows >= 0)  ? " LIMIT ".((integer)$nrows) : '';
 		if ($secs2cache)
@@ -320,7 +322,6 @@ class ADORecordSet_postgres7 extends ADORecordSet_postgres64{
 			$this->_currentRow++;
 			if ($this->_numOfRows < 0 || $this->_numOfRows > $this->_currentRow) {
 				$this->fields = @pg_fetch_array($this->_queryID,$this->_currentRow,$this->fetchMode);
-
 				if ($this->fields!==FALSE) {
 					if (isset($this->_blobArr)) $this->_fixblobs();
 					return true;
