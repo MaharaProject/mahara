@@ -111,6 +111,16 @@ else if ($delete) {
 
     db_begin();
     $countdeleted = 0;
+
+    $plugins = plugin_all_installed();
+    foreach ($plugins as $key => $plugin) {
+        $classname = generate_class_name($plugin->plugintype, $plugin->name);
+        safe_require($plugin->plugintype, $plugin->name);
+        if (!is_callable(array($classname, 'notification_delete'))) {
+            unset ($plugins[$key]);
+        }
+    }
+
     foreach ($ids as $list => $idsperlist) {
         if ('module_multirecipient_notification' === $list) {
             delete_messages_mr($idsperlist, $USER->get('id'));
@@ -147,6 +157,11 @@ else if ($delete) {
             }
         }
         $countdeleted += ($ids) ? count($ids) : count($idsperlist);
+
+        foreach ($plugins as $plugin) {
+            $classname = generate_class_name($plugin->plugintype, $plugin->name);
+            call_static_method($classname, 'notification_delete', $idsperlist, $USER->get('id'), $list);
+        }
     }
     db_commit();
     $message = get_string('deletednotifications1', 'activity', $countdeleted);
