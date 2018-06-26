@@ -200,6 +200,12 @@ class csstidy_print {
 					$this->import[$i] = '"' . substr($this->import[$i], 4, -1) . '"';
 					$this->parser->log('Optimised @import : Removed "url("', 'Information');
 				}
+				else if (!preg_match('/^".+"$/',$this->import[$i])) {
+					// fixes a bug for @import ".." instead of the expected @import url("..")
+					// If it comes in due to @import ".." the "" will be missing and the output will become @import .. (which is an error)
+					$this->import[$i] = '"' . $this->import[$i] . '"';
+				}
+
 				$output .= $template[0] . '@import ' . $template[5] . $this->import[$i] . $template[6] . $template[13];
 			}
 		}
@@ -241,17 +247,11 @@ class csstidy_print {
 
 				case VALUE:
 					$out .= $this->_htmlsp($token[1], $plain);
-                    // If the next token is a comment, remove the '\n' from the template[6]
-                    $valuetemplate = $template[6];
-                    if ($this->_isnextcomment($key)) {
-                        $valuetemplate = str_replace("\n", ' ', $template[6]);
-                    }
-                    if (!$this->_isnextcomment($key) && $this->_seeknocomment($key, 1) == SEL_END && $this->parser->get_cfg('remove_last_;')) {
-                        $out .= str_replace(';', '', $valuetemplate);
-                    }
-                    else {
-                        $out .= $valuetemplate;
-                    }
+					if ($this->_seeknocomment($key, 1) == SEL_END && $this->parser->get_cfg('remove_last_;')) {
+						$out .= str_replace(';', '', $template[6]);
+					} else {
+						$out .= $template[6];
+					}
 					break;
 
 				case SEL_END:
@@ -270,7 +270,7 @@ class csstidy_print {
 					break;
 
 				case COMMENT:
-                    $out .= $template[11] . '/* ' . $this->_htmlsp($token[1], $plain) . ' */' . $template[12];
+					$out .= $template[11] . '/*' . $this->_htmlsp($token[1], $plain) . '*/' . $template[12];
 					break;
 			}
 		}
@@ -285,17 +285,6 @@ class csstidy_print {
 			$this->output_css_plain = str_replace('&#160;', '', $output);
 		}
 	}
-
-    /**
-     * Checks if the next token  is a comment
-     * @param integer $key current position
-     * @return bool
-     * @access private
-     * @version 1.0
-     */
-    private function _isnextcomment($key) {
-        return (isset($this->tokens[$key + 1][0]) && $this->tokens[$key + 1][0] == COMMENT);
-    }
 
 	/**
 	 * Gets the next token type which is $move away from $key, excluding comments
@@ -345,9 +334,6 @@ class csstidy_print {
 			foreach ($val as $selector => $vali) {
 				if ($sort_properties)
 					ksort($vali);
-                    if (!empty($this->parser->comments[$medium.$selector])) {
-                        $this->parser->_add_token(COMMENT, implode('. ', $this->parser->comments[$medium.$selector]), true);
-                    }
 				$this->parser->_add_token(SEL_START, $selector, true);
 
 				$invalid = array(
@@ -364,9 +350,6 @@ class csstidy_print {
 						} else {
 							$this->parser->_add_token(PROPERTY, $property, true);
 							$this->parser->_add_token(VALUE, $valj, true);
-                            if (!empty($this->parser->comments[$medium.$selector.$property])) {
-                                $this->parser->_add_token(COMMENT, implode('. ', $this->parser->comments[$medium.$selector.$property]), true);
-                            }
 						}
 					}
 				}

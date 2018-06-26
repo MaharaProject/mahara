@@ -74,7 +74,7 @@ class csstidy_optimise {
 			return;
 		}
 
-		if ($this->parser->get_cfg('merge_selectors') === 2) {
+		if ((int)$this->parser->get_cfg('merge_selectors') === 2) {
 			foreach ($this->css as $medium => $value) {
 				$this->merge_selectors($this->css[$medium]);
 			}
@@ -400,9 +400,9 @@ class csstidy_optimise {
 				if ($number[1] == '' && in_array($this->property, $unit_values, true)) {
 					$number[1] = 'px';
 				}
-			} else {
-				$number[1] = '';
-			}
+                        } elseif ($number[1] != 's' && $number[1] != 'ms') {
+                                $number[1] = '';
+                        }
 
 			$temp[$l] = $number[0] . $number[1];
 		}
