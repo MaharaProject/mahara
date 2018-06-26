@@ -16,6 +16,8 @@ class PluginNotificationInternal extends PluginNotification {
     static $userdata = array('urltext', 'subject', 'message');
 
     public static function notify_user($user, $data) {
+        static $pluginlist = null;
+
         $toinsert = new stdClass();
         $toinsert->type = $data->type;
         $toinsert->usr = $user->id;
@@ -40,7 +42,28 @@ class PluginNotificationInternal extends PluginNotification {
             $toinsert->from = $data->fromuser;
         }
 
-        return insert_record('notification_internal_activity', $toinsert, 'id', true);
+        $messageid = insert_record('notification_internal_activity', $toinsert, 'id', true);
+
+        // If unread, check if any plugins want to do anything with this. (Handled this way as cheaper than using events.)
+        if (!$toinsert->read) {
+            // Only do the include process once - don't even try to do inclusion if we know we already have.
+            if ($pluginlist === null) {
+                $pluginlist = plugin_all_installed();
+                foreach ($pluginlist as $plugin) {
+                    safe_require($plugin->plugintype, $plugin->name);
+                }
+            }
+            foreach ($pluginlist as $key => $plugin) {
+                $classname = generate_class_name($plugin->plugintype, $plugin->name);
+                if (!is_callable(array($classname, 'notification_created'))) {
+                    unset ($pluginlist[$key]);
+                    continue;
+                }
+                call_static_method($classname, 'notification_created', $messageid, $toinsert, 'notification_internal_activity');
+            }
+        }
+
+        return $messageid;
     }
 
     public static function postinst($prevversion) {
