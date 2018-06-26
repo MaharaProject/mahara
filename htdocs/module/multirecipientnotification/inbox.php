@@ -156,6 +156,15 @@ function delete_all_notifications_submit() {
     $userid = $USER->get('id');
     $type = param_variable('type', 'all');
 
+    $plugins = plugin_all_installed();
+    foreach ($plugins as $key => $plugin) {
+        $classname = generate_class_name($plugin->plugintype, $plugin->name);
+        safe_require($plugin->plugintype, $plugin->name);
+        if (!is_callable(array($classname, 'notification_delete'))) {
+            unset ($plugins[$key]);
+        }
+    }
+
     db_begin();
 
     // delete multirecipient-message separately
@@ -184,6 +193,11 @@ function delete_all_notifications_submit() {
                 $msgids[] = $record->id;
             }
            delete_messages_mr($msgids, $userid);
+
+            foreach ($plugins as $plugin) {
+                $classname = generate_class_name($plugin->plugintype, $plugin->name);
+                call_static_method($classname, 'notification_delete', $msgids, $userid, 'module_multirecipient_notification');
+            }
         }
         $count = count($msgids);
     }
@@ -226,6 +240,12 @@ function delete_all_notifications_submit() {
         );
         // The update_unread_delete db trigger on notification_internal_activity
         // will update the unread column on the usr table.
+
+        // And make sure any plugins that want to handle it can do so.
+        foreach ($plugins as $plugin) {
+            $classname = generate_class_name($plugin->plugintype, $plugin->name);
+            call_static_method($classname, 'notification_delete', $ids, $userid, 'notification_internal_activity');
+        }
     }
 
     db_commit();
