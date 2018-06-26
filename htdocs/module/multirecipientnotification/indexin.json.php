@@ -36,6 +36,13 @@ if ($readone) {
         'newunreadcount' => $unread,
         'newunreadcounttext' => get_string('unread', 'mahara', $unread)
     );
+    foreach (plugin_all_installed() as $plugin) {
+        $classname = generate_class_name($plugin->plugintype, $plugin->name);
+        safe_require($plugin->plugintype, $plugin->name);
+        if (is_callable(array($classname, 'notification_read'))) {
+            call_static_method($classname, 'notification_read', array($readone), $USER->get('id'), $list);
+        }
+    }
     json_reply(false, array('data' => $data));
 }
 
@@ -57,6 +64,14 @@ if ($markasread) {
             $ids[$list][] = $m[2];
         }
     }
+    $plugins = plugin_all_installed();
+    foreach ($plugins as $key => $plugin) {
+        $classname = generate_class_name($plugin->plugintype, $plugin->name);
+        safe_require($plugin->plugintype, $plugin->name);
+        if (!is_callable(array($classname, 'notification_read'))) {
+            unset ($plugins[$key]);
+        }
+    }
     foreach ($ids as $list => $idsperlist) {
         if ($idsperlist) {
             if ('module_multirecipient_notification' === $list) {
@@ -72,6 +87,11 @@ if ($markasread) {
                 array($USER->get('id'))
             );
             $newunread = $USER->add_unread(-count($idsperlist));
+
+            foreach ($plugins as $plugin) {
+                $classname = generate_class_name($plugin->plugintype, $plugin->name);
+                call_static_method($classname, 'notification_read', $idsperlist, $USER->get('id'), $list);
+            }
         }
     }
     $message = get_string('markedasread', 'activity');
