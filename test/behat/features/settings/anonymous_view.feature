@@ -38,11 +38,13 @@ Scenario: Testing that views & collections are collated properly
 
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I am on homepage
+    And I scroll to the id 'bottom-pane'
     Then I should see "(Author's name hidden)"
     And I log out
 
     Given I log in as "admin" with password "Kupuh1pa!"
     And I am on homepage
+    And I scroll to the id 'bottom-pane'
     Then should see "(Author's name hidden)"
     And I follow "(Author's name hidden)"
     Then I should see "UserA"
