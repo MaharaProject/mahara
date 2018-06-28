@@ -1749,7 +1749,10 @@ function login_submit(Pieform $form, $values) {
 
                 $USER->authinstance = $authinstance->id;
                 $userdata = $auth->get_user_info($username);
-
+                if ($userdata instanceof User) {
+                    $userdata->reanimate($userdata->id, $authinstance->id);
+                    return;
+                }
                 if (empty($userdata)) {
                     throw new AuthUnknownUserException("\"$username\" is not known");
                 }

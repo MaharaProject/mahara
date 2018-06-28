@@ -42,6 +42,7 @@ $string['ldapfieldforfirstname'] = 'LDAP field for first name';
 $string['ldapfieldforsurname'] = 'LDAP field for surname';
 $string['ldapfieldforstudentid'] = 'LDAP field for student ID';
 $string['ldapversion'] = 'LDAP version';
+$string['loginlink'] = 'Allow users to link their own account';
 $string['nocreate']= 'Do not create new accounts';
 $string['nocreatemissinggroups']='Do not create LDAP groups if they are not already set up in the institution.';
 $string['nomatchingauths']='No LDAP authentication plugin found for this institution';
