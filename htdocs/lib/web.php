@@ -9,12 +9,13 @@
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
  */
 
+use Mahara\Dwoo_Mahara as Dwoo_Mahara;
 defined('INTERNAL') || die();
 
 
 function smarty_core() {
-    require_once 'dwoo/dwoo/dwooAutoload.php';
-    require_once 'dwoo/mahara/Dwoo_Mahara.php';
+    require_once(__DIR__ . '/dwoo/vendor/autoload.php');
+    require_once(__DIR__ . '/dwoo/mahara/Dwoo_Mahara.php');
 
     return new Dwoo_Mahara();
 }

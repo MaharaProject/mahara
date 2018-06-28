@@ -8,7 +8,7 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0" />
-    {if isset($PAGEAUTHOR)}<meta name="author" content="{$PAGEAUTHOR}">{/if}
+    {if $PAGEAUTHOR}<meta name="author" content="{$PAGEAUTHOR}">{/if}
     <title>{$PAGETITLE}</title>
     <script type="application/javascript">
     var config = {literal}{{/literal}
@@ -29,7 +29,7 @@
     <script type="application/javascript" src="{$script}"></script>
 {/foreach}
     <script type="application/javascript" src="{$WWWROOT}/js/select2/select2.full.js?v={$CACHEVERSION}"></script>
-{if isset($INLINEJAVASCRIPT)}
+{if $INLINEJAVASCRIPT}
     <script type="application/javascript">
 {$INLINEJAVASCRIPT|safe}
     </script>

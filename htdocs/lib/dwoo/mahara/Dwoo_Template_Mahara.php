@@ -23,7 +23,13 @@
  * files that live outside of the {$plugintype}/{$pluginname} directory, then it will need to provide
  * its own implementation of get_theme_path().
  */
-class Dwoo_Template_Mahara extends Dwoo_Template_File {
+namespace Mahara;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Dwoo\Template\File as File;
+
+class Dwoo_Template_Mahara extends File {
     /**
      * Convert a Mahara plugin template file path into a normal template file path with extra search paths.
      *
