@@ -873,6 +873,7 @@ jQuery(document).ready(function($) {
  */
 var chartobject;
 var canvascontext;
+var trueMaxHeight = 0;
 function fetch_graph_data(opts) {
 
     if (typeof opts.extradata != 'undefined') {
@@ -916,13 +917,27 @@ function fetch_graph_data(opts) {
             }
             chartobject = new Chart(canvascontext)[json.data.graph](JSON.parse(json.data.datastr),JSON.parse(json.data.configstr));
             legendtype = (typeof chartobject.options.datasetStroke !== 'undefined' && chartobject.options.datasetStroke == true) ? 'stroke' : 'fill';
-            chartobject.options.legendTemplate = "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i]." + legendtype + "Color%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>";
-
+            if (typeof chartobject.segments != 'undefined') {
+                chartobject.options.legendTemplate = "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++) {%><li><span style=\"background-color:<%=segments[i]." + legendtype + "Color%>\"></span><%if (segments[i].label)  {%><%=segments[i].label%><%}%></li><%}%></ul>";
+            }
+            else {
+                chartobject.options.legendTemplate = "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++) {%><li><span style=\"background-color:<%=datasets[i]." + legendtype + "Color%>\"></span><%if (datasets[i].label)  {%><%=datasets[i].label%><%}%></li><%}%></ul>";
+            }
             var legendHolder = document.createElement('div');
             legendHolder.innerHTML = chartobject.generateLegend();
             document.getElementById(opts.id + 'legend').appendChild(legendHolder.firstChild);
             if (json.data.title) {
                 jQuery('#' + opts.id + 'title').text(json.data.title);
+            }
+            if ($('.statinfoblock').length > 0) {
+                function delayResize() {
+                    var maxHeight = Math.max.apply(null, $(".statinfoblock").map(function () {
+                        return $(this).height();
+                    }).get());
+                    trueMaxHeight = Math.max(trueMaxHeight, maxHeight);
+                    $('.statinfoblock').css('height', trueMaxHeight + 'px');
+                }
+                var timeoutID = window.setTimeout(delayResize, 500);
             }
         }
     });
