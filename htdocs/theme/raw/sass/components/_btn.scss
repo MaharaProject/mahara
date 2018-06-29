@@ -1,5 +1,18 @@
 // Modifications and extra use cases for bootstrap  buttons
 
+.btn-secondary {
+	color: $btn-secondary-color;
+	background-color: $btn-secondary-bg;
+	border-color: $btn-secondary-border;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+	color: inherit;
+	background-color: transparent;
+	border-color: transparent
+	box-shadow: none;
+}
+
 .btn.text-left {
     text-align:left;
 }

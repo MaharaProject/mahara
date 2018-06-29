@@ -1,7 +1,7 @@
 {if $controls}
 <div class="card card-secondary">
     {if !$hidetitle}
-    <h3 class="resumeh3 card-heading">
+    <h3 class="resumeh3 card-header">
         {str tag='book' section='artefact.resume'}
         {contextualhelp plugintype='artefact' pluginname='resume' section='addbook'}
     </h3>{/if}

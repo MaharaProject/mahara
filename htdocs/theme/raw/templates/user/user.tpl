@@ -1,5 +1,5 @@
 <div class="{if $user->pending || $user->requestedfriendship}pending card bg-warning{else}card-secondary{/if} card card-half myfriend">
-    <h3 class="card-heading profile-block">
+    <h3 class="card-header profile-block">
         <a href="{profile_url($user)}" class="username">
             {$user->display_name}
             {if $user->pending}

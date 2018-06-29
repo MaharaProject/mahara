@@ -2,7 +2,7 @@
                 <div class="card-quarter {if $view.collid}card-collection{else}card-view{/if}">
                     <div class="card card-secondary {if $view.submittedto} bg-warning {/if}
                     {if $view.template == $sitetemplate} site-template{/if}">
-                        <h3 class="card-heading has-link">
+                        <h3 class="card-header has-link">
                             <a class="title-link title"
                             href="
                                 {if $view.template == $sitetemplate}

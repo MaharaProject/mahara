@@ -1,6 +1,6 @@
 {loadquota}
 <div class="card card-secondary">
-    <h3 class="card-heading">
+    <h3 class="card-header">
         {str tag="quota"}
         <span class="float-right">
         {contextualhelp plugintype='artefact' pluginname='file' section='quota_message'}
