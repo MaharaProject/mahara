@@ -732,7 +732,10 @@ class View {
 
     public function get_columnsperrow() {
         if (!isset($this->columnsperrow)) {
-            $this->columnsperrow = get_records_assoc('view_rows_columns', 'view', $this->get('id'), 'row', 'row, columns');
+            $this->columnsperrow = get_records_sql_assoc('SELECT "row", columns
+                                                          FROM {view_rows_columns}
+                                                          WHERE view = ?
+                                                          ORDER BY "row" ASC', array($this->get('id')));
         }
         return $this->columnsperrow;
     }
