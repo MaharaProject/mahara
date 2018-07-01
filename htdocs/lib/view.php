@@ -5903,7 +5903,8 @@ class View {
             $this->set('description', '');
         }
         else {
-            $this->set('description', $this->copy_description($template, $artefactcopies));
+            require_once('embeddedimage.php');
+            $this->set('description', EmbeddedImage::prepare_embedded_images($this->copy_description($template, $artefactcopies), 'description', $this->get('id')));
         }
         $this->set('tags', $template->get('tags'));
         $this->set('columnsperrow', $template->get('columnsperrow'));
