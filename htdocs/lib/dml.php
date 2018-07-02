@@ -1866,11 +1866,11 @@ function mysql_has_trigger_privilege() {
     // seems to be quite hard.  It would require parsing the output
     // from SHOW GRANTS.  It's much easier to try and create one.
 
-    execute_sql("CREATE TABLE {testtable} (testcolumn INT);");
+    execute_sql("CREATE TABLE IF NOT EXISTS {testtable} (testcolumn INT);");
 
     try {
-        execute_sql("CREATE TRIGGER {testtrigger} BEFORE INSERT ON {testtable} FOR EACH ROW BEGIN END;");
-        execute_sql("DROP TRIGGER {testtrigger};");
+        db_create_trigger('testtrigger', 'AFTER', 'UPDATE', 'testtable', 'BEGIN END;');
+        db_drop_trigger('testtrigger', 'testtable');
         $success = true;
     }
     catch (SQLException $e) {
@@ -1880,7 +1880,7 @@ function mysql_has_trigger_privilege() {
         $success = false;
     }
 
-    execute_sql("DROP TABLE {testtable};");
+    execute_sql("DROP TABLE IF EXISTS {testtable};");
     return $success;
 }
 

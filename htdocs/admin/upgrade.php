@@ -56,6 +56,7 @@ else {
     }
     ensure_upgrade_sanity();
     $smarty->assign('upgradeheading', get_string('performingupgrades', 'admin'));
+    log_info(get_string('performingupgrades', 'admin'));
 }
 
 // Remove the "settings" component, which is not a real component (see check_upgrades())
