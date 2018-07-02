@@ -17,7 +17,7 @@
 
     {if $editurls}
     <div class="card card-secondary">
-        <h2 class="card-heading">
+        <h2 class="card-header">
             {str tag=secreturls section=view}
         </h2>
         <div class="secreturls list-group">

@@ -43,16 +43,17 @@
 {foreach from=$STYLESHEETLIST item=cssurl}
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
-    <script src="{$WWWROOT}/lib/bootstrap/assets/javascripts/bootstrap.js?v={$CACHEVERSION}"></script>
-    <script src="{$WWWROOT}/js/javascript-templates/js/tmpl.min.js?v={$CACHEVERSION}"></script>
-    <script src="{$WWWROOT}/js/masonry/masonry.min.js?v={$CACHEVERSION}"></script>
-    <script src="{theme_url filename='js/pieform.js'}?v={$CACHEVERSION}"></script>
-    <script src="{theme_url filename='js/formtabs.js'}?v={$CACHEVERSION}"></script>
-    <script src="{theme_url filename='js/filebrowser.js'}?v={$CACHEVERSION}"></script>
-    <script src="{theme_url filename='js/access.js'}?v={$CACHEVERSION}"></script>
-    <script src="{theme_url filename='js/notification.js'}?v={$CACHEVERSION}"></script>
-    <script src="{theme_url filename='js/dock.js'}?v={$CACHEVERSION}"></script>
-    <script src="{theme_url filename='js/theme.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{$WWWROOT}/lib/popper/popper.min.js?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{$WWWROOT}/lib/bootstrap/assets/javascripts/bootstrap.js?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{$WWWROOT}/js/javascript-templates/js/tmpl.min.js?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/masonry.min.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/pieform.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/formtabs.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/filebrowser.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/access.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/notification.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/dock.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/theme.js'}?v={$CACHEVERSION}"></script>
 
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico?v={$CACHEVERSION}" type="image/vnd.microsoft.icon">
     <link rel="image_src" href="{$sitelogo}">

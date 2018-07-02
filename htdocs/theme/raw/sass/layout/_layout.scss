@@ -29,6 +29,11 @@ body {
     @include media-breakpoint-up(md) {
         padding-top: 30px;
     }
+    .card {
+        .list-group-item {
+            border: none
+        }
+    }
 }
 
 // Expose a section of the page
