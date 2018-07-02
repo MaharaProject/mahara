@@ -3427,7 +3427,7 @@ class View {
                 else {
                     $sortorder .= ', ';
                 }
-                $fieldname = $field['fieldname'];
+                $fieldname = 'a.' . $field['fieldname'];
                 if (!empty($field['fieldvalue'])) {
                     $fieldname .= " = '" . $field['fieldvalue'] . "'";
                 }
@@ -3459,10 +3459,10 @@ class View {
                 $extraselect .= ' AND ';
 
                 if (count($values) > 1) {
-                    $extraselect .= $field['fieldname'] . ' IN (' . implode(', ', $values) . ')';
+                    $extraselect .= 'a.' . $field['fieldname'] . ' IN (' . implode(', ', $values) . ')';
                 }
                 else {
-                    $extraselect .= $field['fieldname'] . ' = ' . reset($values);
+                    $extraselect .= 'a.' . $field['fieldname'] . ' = ' . reset($values);
                 }
             }
         }
@@ -3471,6 +3471,15 @@ class View {
              || $data['blocktype'] == 'recentposts');
 
         $from = ' FROM {artefact} a ';
+        // To also check tags
+        require_once('ddl.php');
+        if (!table_exists(new XMLDBTable("tag"))) {
+            $from .= " LEFT JOIN {artefact_tag} t ON t.artefact = a.id ";
+        }
+        else {
+            $typecast = is_postgres() ? '::varchar' : '';
+            $from .= " LEFT JOIN {tag} t ON t.resourcetype = 'artefact' AND a.id" . $typecast . " = t.resourceid ";
+        }
 
         if ($group) {
             // Get group-owned artefacts that the user has view
@@ -3579,7 +3588,10 @@ class View {
 
         if (!empty($data['search'])) {
             $search = db_quote('%' . str_replace('%', '%%', $data['search']) . '%');
-            $select .= 'AND (title ' . db_ilike() . '(' . $search . ') OR description ' . db_ilike() . '(' . $search . ') )';
+            $select .= 'AND (title ' . db_ilike() . '(' . $search . ')
+                             OR description ' . db_ilike() . '(' . $search . ')
+                             OR t.tag ' . db_ilike() . '(' . $search . ')
+                        )';
         }
 
         $select .= $extraselect;
@@ -3625,9 +3637,10 @@ class View {
         }
 
         $artefacts = get_records_sql_assoc(
-            'SELECT ' . $cols . $from . ' WHERE ' . $select . $sortorder, $selectph, $offset, $limit
+            'SELECT DISTINCT agg.* FROM (SELECT ' . $cols . $from . ' WHERE ' . $select . $sortorder . ') AS agg', $selectph, $offset, $limit
         );
-        $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $from . ' WHERE ' . $select, $countph);
+        $totalartefacts = count_records_sql('SELECT COUNT(DISTINCT agg.id) FROM (SELECT a.* ' . $from . ' WHERE ' . $select . ') AS agg', $countph);
+
         // If our profile artefact is saving it's data to a special place
         if (!empty($data['artefacttypes'])) {
             safe_require('artefact', 'internal');

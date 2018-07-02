@@ -138,7 +138,18 @@ function updateTextContent(a) {
     jQuery('#instconf_licensorurl').prop('value', a.licensorurl);
     jQuery('#instconf_textreadonly_display').html(a.safedescription);
     jQuery('#instconf_licensereadonly_display').html(a.safelicense);
-    jQuery('#instconf_tags').prop('value', a.tags);
+    if (a.tags && a.tags.length > 0) {
+        for (var i = 0; i < a.tags.length; i++) {
+            // Set the value, creating a new option if necessary
+            if (!$('#instconf_tags').find("option[value='" + a.tags[i] + "']").length) {
+                // Create a DOM Option and pre-select by default
+                var newOption = new Option(a.tags[i], a.tags[i], true, true);
+                // Append it to the select
+                $('#instconf_tags').append(newOption);
+            }
+        }
+        $('#instconf_tags').val(a.tags).trigger('change');
+    }
     jQuery('#instconf_textreadonly_display').html(a.safedescription);
     jQuery('#instconf_tagsreadonly_display').html(a.safetags);
     jQuery('#instconf_makecopy').prop('checked', false);
