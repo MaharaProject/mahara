@@ -81,41 +81,45 @@ $string['manageinstitutions'] = 'Manage institutions';
 
 // Admin homepage strings
 $string['siteoptions']    = 'Site options';
-$string['siteoptionsdescription'] = 'Configure basic site options such as the name, language and theme';
+$string['siteoptionsdesc'] = 'Configure basic site options such as the name, language, and theme';
 $string['staticpages']     = 'Static pages';
 $string['institutionstaticpages']     = 'Institution static pages';
 $string['staticpageinstitutionbad'] = "You can't access and/or edit static pages for institution '%s'";
 $string['usedefault'] = 'Use site default';
 $string['usedefaultdescription3'] = 'Use the site\'s default text for the selected page type.';
-$string['staticpagesdescription'] = 'Edit the content of static pages in Mahara (Home, Terms and Conditions, etc.)';
+$string['staticpagesdesc'] = 'Edit the content of the hompage and "About"';
+$string['staticpagesinstdesc'] = 'Edit the content of an institution\'s static pages';
 $string['institutionprivacypagedescription'] = 'Edit the privacy statement for your institution, which is displayed in addition to the site privacy statement. The version you edited last becomes the current privacy statement automatically. You see the current site privacy statement as reference.';
 $string['institutiontermspagedescription'] = 'Edit the terms and conditions for your institution, which are displayed in addition to the site terms and conditions. The version you edited last becomes the current terms and conditions automatically. You see the current site terms and conditions as reference.';
+$string['institutionprivacytermsdesc'] = 'Add or edit an institution\'s privacy statement or terms and conditions';
 $string['noinstitutionprivacy'] = 'There is no privacy statement for this institution yet.';
 $string['noinstitutionterms'] = 'There are no terms and conditions for this institution yet.';
 $string['menus'] = 'Menus';
 $string['menusdescription'] = 'Manage the links and files within the "Links and resources" and footer menus';
+$string['sharesitefilesdesc'] = 'Share site pages and collections';
+$string['shareinstitutionfilesdesc'] = 'Share institution pages and collections';
 $string['sitefiles']          = 'Site files';
 $string['sitefonts'] = 'Fonts';
-$string['sitefontsdescription'] = 'Upload and manage fonts usable in skins by all users on the site';
+$string['sitefontsdesc'] = 'Upload and manage fonts that everyone can use in skins';
 $string['sitelicenses'] = 'Licenses';
 $string['sitelicensesadd'] = 'Add license';
-$string['sitelicensesdescription']     = 'Configure the list of licenses that users can use for content.';
+$string['sitelicensesdesc']     = 'Configure the list of licenses that people can use on their content';
 $string['sitelicensesdisablednote']     = '<b>Note</b>: License metadata is currently disabled. You will need to enable it in the "General settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before users will be able to specify licenses.';
 $string['sitelicensesedit'] = 'Edit license';
 $string['sitefilesdescription'] = 'Upload and administer files that can be put in the "Links and resources" menu and in site pages';
 $string['siteskins'] = 'Site skins';
-$string['siteskinsdescription'] = 'Create and administer page skins usable by all users on the site';
+$string['siteskinsdesc'] = 'Create and administer page skins that can be used by everyone';
 $string['siteviews']          = 'Site pages';
 $string['siteviewscollections'] = 'Site pages and collections';
-$string['siteviewsdescription'] = 'Create and administer pages and page templates for the entire site';
+$string['siteviewsdesc'] = 'Create and administer pages, page templates, and collections for the entire site';
 $string['networking']          = 'Networking';
-$string['networkingdescription'] = 'Configure networking for Mahara';
+$string['networkingdesc'] = 'Configure networking to another site';
 $string['cookieconsent'] = 'Cookie Consent';
-$string['cookieconsentdescription'] = 'Configure the "Cookie Consent" user privacy system.';
+$string['cookieconsentdesc'] = 'Configure the "Cookie Consent" user privacy system';
 $string['thememissing'] = 'The theme "%s" is missing. The theme has been set to the default theme.';
 $string['parentthememissing'] = 'Theme "%s" has its parent theme "%s" missing and needs to be fixed. The theme has been set to the default theme.';
 $string['staffusers'] = 'Staff users';
-$string['staffusersdescription'] = 'Assign users staff permissions';
+$string['staffusersdesc'] = 'Assign site staff permissions to users';
 $string['adminusers'] = 'Admin users';
 $string['adminusersdescription'] = 'Assign site administrator access rights';
 $string['settings']   = 'Settings';
@@ -124,12 +128,12 @@ $string['institutions']   = 'institutions';
 $string['Institutions']   = 'Institutions';
 $string['institutiondetails']   = 'Institution details';
 $string['institutionauth']   = 'Institution authorities';
-$string['institutionsdescription'] = 'Install and manage installed institutions';
+$string['institutionsettingsdesc'] = 'Set up and manage institutions';
 $string['lastinstitution'] = 'Previous institution';
 $string['adminnotifications'] = 'Admin notifications';
 $string['adminnotificationsdescription'] = 'Overview of how administrators receive system notifications';
 $string['uploadcsv'] = 'Add users by CSV';
-$string['uploadcsvdescription'] = 'Upload a CSV file containing new users';
+$string['uploadcsvdesc'] = 'Upload a CSV file containing new users or update existing ones';
 $string['uploadgroupcsv'] = 'Add groups by CSV';
 $string['uploadgroupmemberscsv'] = 'Update group members by CSV';
 $string['usersearch'] = 'User search';
@@ -140,16 +144,16 @@ $string['inactive'] = 'User not active';
 $string['inactivefor'] = 'User "%s" is currently not active';
 
 $string['administergroups'] = 'Administer groups';
-$string['administergroupsdescription'] = 'Appoint group administrators and delete groups';
+$string['administergroupsdesc'] = 'Manage groups, their administrators, and space available';
 $string['groupcategoriesdescription'] = 'Add and edit group categories';
-$string['uploadgroupcsvdescription'] = 'Upload a CSV file containing new groups';
+$string['uploadgroupcsvdesc'] = 'Upload a CSV file containing new groups or update existing ones';
 $string['uploadgroupmemberscsvdescription'] = 'Upload a CSV file containing members for groups';
 
 $string['institutionmembersdescription'] = 'Associate users with institutions';
-$string['institutionstaffdescription'] = 'Assign users staff permissions';
+$string['institutionstaffdesc'] = 'Assign institution staff permissions to users';
 $string['institutionadminsdescription'] = 'Assign institution administrator access rights';
 $string['institutionviews']          = 'Institution pages';
-$string['institutionviewsdescription'] = 'Create and administer pages and page templates for an institution';
+$string['institutionviewsdesc'] = 'Create and administer pages, page templates, and collections for an institution';
 $string['institutionfiles']          = 'Institution files';
 $string['institutionfilesdescription'] = 'Upload and manage files for use in institution pages';
 $string['pluginsfields'] = 'Plugins settings';
@@ -167,7 +171,7 @@ $string['filtersinstalled'] = 'Filters installed.';
 $string['nofiltersinstalled'] = 'No HTML filters installed.';
 
 $string['allowediframesites'] = 'Allowed iframe sources';
-$string['allowediframesitesdescriptionshort'] = 'Configure permissions for embedding external iframe content';
+$string['iframesitesdescriptionshort'] = 'Whitelist the embedding of external content available via iframes';
 $string['allowediframesitesdescription'] = 'Users are allowed to embed content from the following external sites on their pages, inside HTML &lt;iframe&gt; elements. Typically this is used to display content hosted elsewhere. The list of allowed sites can be modified on this page.';
 $string['allowediframesitesdescriptiondetail'] = 'The icon and display name will be visible to users when they configure an external media block. All sites with the same display name are grouped together in the configuration form, but iframe source text matching any of the sites will be allowed.';
 $string['iframeurldescription'] = "Text to match at the beginning of the iframe source URL (without the http://). Only letters, digits and the characters '.', '/', '_', and '-' are allowed.";
@@ -230,6 +234,7 @@ $string['groupadminsupdated'] = 'Group administrators have been updated';
 $string['groupquotaupdated'] = 'Group quota has been updated';
 $string['addnewgroupcategory'] = 'Enter new group category';
 $string['archivedsubmissions'] = 'Archived submissions';
+$string['archivedsubmissionsdesc'] = 'Administer archived submissions';
 $string['submittedto'] = 'Submitted to';
 $string['ID'] = 'ID';
 $string['filenameleap'] = 'Leap2A file';
@@ -790,7 +795,7 @@ $string['suspendeduserstitle'] = 'Suspended and expired users';
 $string['suspendedusers'] = 'Suspended users';
 $string['suspensionreason'] = 'Suspension reason';
 $string['errorwhilesuspending'] = 'An error occurred while trying to suspend';
-$string['suspendedusersdescription'] = 'Suspend or reactivate users from using the site.';
+$string['suspendedusersdesc'] = 'View suspended and expired users and reactivate or delete them';
 $string['unsuspendusers'] = 'Unsuspend users';
 $string['usersdeletedsuccessfully'] = 'Users deleted successfully';
 $string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
@@ -860,6 +865,7 @@ $string['disableemail'] = 'Disable email';
 
 // Export queue
 $string['exportqueue'] = 'Export queue';
+$string['exportqueuedesc'] = 'View pending content exports';
 $string['exportcontentname'] = 'Export content';
 $string['selectuserexport'] = 'Select content "%s" to export';
 $string['selectuserexportdelete'] = 'Select content "%s" to delete from export queue';
@@ -988,7 +994,6 @@ $string['institutionsettings'] = 'Institution settings';
 $string['institutionsettingsdescription'] = 'Here you can change settings regarding this user\'s membership for institutions you are an administrator of.';
 $string['changeinstitution'] = 'Change institution';
 $string['institutionstaff'] = 'Institution staff';
-$string['institutionadmins'] = 'Institution administrators';
 $string['institutionadmin'] = 'Institution administrator';
 $string['institutionadministrator'] = 'Institution administrator';
 $string['institutionadmindescription1'] = 'Allow the user to administer all users in this institution.';
@@ -1080,6 +1085,7 @@ $string['disabledlockedfieldhelp1'] = 'Note: If you cannot change one of the opt
 
 $string['defaultinstitutionquotadescription'] = 'You can set the amount of disk space new users in this institution will have as their quota.';
 $string['updateinstitutionuserquotasdesc2'] = 'Apply the default quota you choose above to all existing members.';
+$string['institutiontagsdesc'] = 'If institution tags are enabled, set up tags that members can use';
 
 // pending institution registrations
 $string['approve'] = 'Approve';
@@ -1094,6 +1100,8 @@ $string['pendingregistrations'] = 'Pending registrations';
 $string['pendingregistrationspagedescription'] = '<p>On this page you can see users who have self-registered and requested membership of your institution and approve or deny their registration.<p>
 
 <p>On approving their registration, you are also adding them as members of the institution, and they will be notified with further instructions about activating their account. On denying their registration, they will be notified that their application was denied by an automated response email.</p>';
+$string['pendingregistrationdesc'] = 'Approve or deny membership of your institution to self-registering users';
+$string['pendingdeletiondesc'] = 'Approve or deny the deletion of users who wish to remove their accounts';
 $string['nosuchinstitution'] = 'No such institution.';
 $string['registrationapprovedsuccessfully'] = 'Registration approved successfully.';
 $string['registrationdeniedreason'] = 'Denial reason';
@@ -1263,7 +1271,7 @@ $string['showprogressbar'] = 'Show profile completion';
 $string['progressbarsaved'] = 'Progress bar saved successfully.';
 $string['showprogressbardescription1'] = 'Display a progress bar with tips about what to complete in the user profile as a sidebar to users. They have the option to disable it.';
 $string['progressbardisablednote'] = '<b>Note</b>: Profile completion is currently disabled. You will need to enable it in the "User settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before users will be able to track their progress towards completing their profile.';
-
+$string['profilecompletiondesc'] = 'If profile completion is enabled, select content that counts towards a completed profile';
 $string['profilecompletenessdesc1'] = 'The profile completion allows your users to have a visual indicator in the sidebar showing them how complete their profile already is. You can choose the artefacts that will count towards the profile completion. All other artefacts can be used, but do not factor into the completion count.';
 $string['profilecompletenesspreview'] = 'You can preview what the profile completion looks like in the "Profile completion preview" side block.';
 
@@ -1436,6 +1444,7 @@ $string['consentdate'] = 'Date of consent / rejection';
 $string['legalconsent'] = 'Legal consent';
 $string['userprivacyagreements'] = 'Displayed below are all the privacy statements the user has agreed to.';
 $string['usertermsagreements'] = 'Displayed below are all the terms and conditions the user has agreed to.';
+$string['privacytermsdesc'] = 'Edit the privacy statement or terms and conditions for your site';
 
 // pending user account deletions
 $string['approveuserdeletionfor'] = 'Approve user account deletion for %s %s <%s>';

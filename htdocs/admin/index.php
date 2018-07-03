@@ -96,7 +96,14 @@ $smarty->assign('closeform', $closeform);
 $smarty->assign('clearcachesform', $clearcachesform);
 
 $smarty->assign('warnings', site_warnings());
-
+// Add the menu items for tags, if that feature is enabled in a visible institution.
+if (($selector = get_institution_selector(false, false, false, false, false, true)) && !empty($selector['options'])) {
+    $smarty->assign('institutiontags', true);
+}
+safe_require('module', 'framework');
+if (PluginModuleFramework::is_active()) {
+    $smarty->assign('framework', true);
+}
 $smarty->display('admin/index.tpl');
 
 function close_site_submit(Pieform $form, $values) {

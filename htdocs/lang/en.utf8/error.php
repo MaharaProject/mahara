@@ -152,3 +152,4 @@ $string['nomemcacheserversdefined'] = 'The session save handler "%s" has no rela
 $string['memcacheusememcached'] = 'The "memcache" session storage is obsolete. Please use "memcached".';
 $string['siteoutofsyncfor'] = 'This site has database information newer than %s files indicate it should be.';
 $string['updatesitetimezone'] = 'The timezone for the site now needs to be set via Configure site →  Site options →  Site settings. Please set it there and delete the $cfg->dbtimezone line from your config.php file.';
+$string['pluginnotactive'] = 'The plugin "%s" is not enabled. Please got to Administration →  Extensions to enable it.';
