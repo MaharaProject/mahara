@@ -647,6 +647,7 @@ class BlockInstance {
     private $maxorderincolumn;
     private $artefacts = array();
     private $temp = array();
+    private $tags = array();
 
     public function __construct($id=0, $data=null) {
          if (!empty($id)) {
@@ -685,6 +686,20 @@ class BlockInstance {
                 $this->configdata = unserialize($this->configdata);
             }
         }
+        if ($field == 'tags') {
+            $typecast = is_postgres() ? '::varchar' : '';
+            $this->tags = get_column_sql("
+            SELECT
+                (CASE
+                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
+                    ELSE t.tag
+                END) AS tag, t.resourceid
+            FROM {tag} t
+            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
+            LEFT JOIN {institution} i ON i.name = t2.ownerid
+            WHERE t.resourcetype = ? AND t.resourceid = ?
+            ORDER BY tag", array('blocktype', $this->get('id')));
+        }
         if (strpos($field, 'canmove') === 0) {
             return $this->can_move(substr($field, strlen('canmove'))); // needs to be calculated.
         }
@@ -702,6 +717,9 @@ class BlockInstance {
 
     public function set($field, $value) {
         if (property_exists($this, $field)) {
+            if ($field == 'tags') {
+                $this->set_tags($value);
+            }
             if ($field == 'configdata') {
                 $value = serialize($value);
             }
@@ -713,6 +731,43 @@ class BlockInstance {
             return true;
         }
         throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
+    }
+
+    private function set_tags($tags) {
+        global $USER;
+
+        if ($this->view_obj->get('group')) {
+            $ownertype = 'group';
+            $ownerid = $this->view_obj->get('group');
+        }
+        else if ($this->view_obj->get('institution')) {
+            $ownertype = 'institution';
+            $ownerid = $this->view_obj->get('institution');
+        }
+        else {
+            $ownertype = 'user';
+            $ownerid = $this->view_obj->get('owner');
+        }
+        $this->tags = check_case_sensitive($tags, 'tag');
+        delete_records('tag', 'resourcetype', 'blocktype', 'resourceid', $this->get('id'));
+        foreach ($this->tags as $tag) {
+            // truncate the tag before insert it into the database
+            $tag = substr($tag, 0, 128);
+            if ($institutiontag = get_record('tag', 'tag', $tag, 'resourcetype', 'institution', 'ownertype', 'institution')) {
+                $tag = 'tagid_' . $institutiontag->id;
+            }
+            insert_record('tag',
+                (object)array(
+                    'resourcetype' => 'blocktype',
+                    'resourceid' => $this->get('id'),
+                    'ownertype' => $ownertype,
+                    'ownerid' => $ownerid,
+                    'tag' => $tag,
+                    'ctime' => db_format_timestamp(time()),
+                    'editedby' => $USER->get('id'),
+                )
+            );
+        }
     }
 
     // returns false if it finds a bad attachment
@@ -808,6 +863,11 @@ class BlockInstance {
 
         $title = (isset($values['title'])) ? $values['title'] : '';
         unset($values['title']);
+
+        if (isset($values['tags'])) {
+            $this->set('tags', $values['tags']);
+            unset($values['tags']);
+        }
 
         // A block may return a list of other blocks that need to be
         // redrawn after configuration of this block.
@@ -1604,6 +1664,12 @@ class BlockInstance {
         if (($sameowner && $copytype != 'fullinclself') || $copytype == 'reference') {
             $newblock->set('configdata', $configdata);
             $newblock->commit();
+            // Copy any tagged block tags - we need to commit before here so the block instance has an ID value
+            if ($tags = $this->get('tags')) {
+                $newblock->set('tags', $tags);
+                $newblock->commit();
+            }
+
             if ($this->get('blocktype') == 'taggedposts' && $copytype == 'tagsonly') {
                 $this->copy_tags($newblock->get('id'));
             }
@@ -1686,6 +1752,11 @@ class BlockInstance {
 
         $newblock->set('configdata', $configdata);
         $newblock->commit();
+        // Copy any tagged block tags - we need to commit before here so the block instance has an ID value
+        if ($tags = $this->get('tags')) {
+            $newblock->set('tags', $tags);
+            $newblock->commit();
+        }
         if ($this->get('blocktype') == 'taggedposts' && $copytype == 'tagsonly') {
             $this->copy_tags($newblock->get('id'));
         }
@@ -1765,4 +1836,43 @@ class BlockInstance {
     public static function group_tabs($groupid, $role) {
         return array();
     }
+}
+
+function require_blocktype_plugins() {
+    static $plugins = null;
+    if (is_null($plugins)) {
+        $plugins = plugins_installed('blocktype');
+        foreach ($plugins as $plugin) {
+            safe_require('blocktype', $plugin->name);
+        }
+    }
+    return $plugins;
+}
+
+function blocktype_get_types_from_filter($filter) {
+    static $contenttype_blocktype = null;
+
+    if (is_null($contenttype_blocktype)) {
+        $contenttype_blocktype = array();
+        foreach (require_blocktype_plugins() as $plugin) {
+            $classname = generate_class_name('blocktype', $plugin->name);
+            if (!is_callable($classname . '::get_blocktype_type_content_types')) {
+                continue;
+            }
+            $blocktypetypes = call_static_method($classname, 'get_blocktype_type_content_types');
+            foreach ($blocktypetypes as $blocktype => $contenttypes) {
+                if (!empty($contenttypes)) {
+                    foreach ($contenttypes as $ct) {
+                        $contenttype_blocktype[$ct][] = $blocktype;
+                    }
+                }
+            }
+        }
+    }
+
+    if (empty($contenttype_blocktype[$filter])) {
+        return null;
+    }
+
+    return $contenttype_blocktype[$filter];
 }

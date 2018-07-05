@@ -74,13 +74,34 @@ Background:
    And I press "Add"
    And I fill in select2 input "instconf_tags" with "black" and select "black"
    And I press "Save"
-   And I go to "/view/index.php"
+   # Creating a Text block with a tag
+   And I follow "Text" in the "blocktype sidebar" property
+   And I press "Add"
+   And I fill in select2 input "instconf_tags" with "brown" and select "brown"
+   And I press "Save"
+   # Creating an external video block with a tag
+   And I expand "External" node
+   And I follow "External media" in the "blocktype sidebar" property
+   And I press "Add"
+   And I fill in "URL or embed code" with "https://youtu.be/VeS1iqQ6VIc"
+   And I fill in select2 input "instconf_tags" with "green" and select "green"
+   And I press "Save"
+   # Creating a resume field with a tag
+   And I expand "Personal info" node
+   And I follow "One résumé field" in the "blocktype sidebar" property
+   And I press "Add"
+   And I fill in select2 input "instconf_tags" with "yellow" and select "yellow"
+   And I press "Save"
+   And I choose "Pages and collections" in "Portfolio" from main menu
    Then I follow "Tags"
    # Verifying tags are saved
    And I should see "blue"
    And I should see "black"
    And I should see "orange"
    And I should see "red"
+   And I should see "brown"
+   And I should see "green"
+   And I should see "yellow"
    #Check the repeated tags
    And I follow "blue"
    And I should see "Journal one"

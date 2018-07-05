@@ -607,6 +607,10 @@ EOD;
         if (empty($userid)) {
             $userid = $this->get_first_site_admin_id();
         }
+        if (!empty($record['tags'])) {
+            $record['tags'] = array_map('trim', explode(',', $record['tags']));
+        }
+
         require_once('view.php');
         $view = View::create($record, $userid);
     }
@@ -894,7 +898,9 @@ EOD;
             throw new systemException("The " . $record['title'] . " cannot be empty");
         }
         safe_require('artefact', 'blog');
-        $tags = array_map('trim', explode(',', $record['tags']));
+        if (!empty($record['tags'])) {
+            $tags = array_map('trim', explode(',', $record['tags']));
+        }
         $blogobj = new ArtefactTypeBlog(null, (object) array(
             'title' => trim($record['title']),
             'description' => trim($record['description']),

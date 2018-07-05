@@ -28,7 +28,8 @@ $smarty->assign('collectiontitle', $collection->get('name'));
 $smarty->assign('ownername', $firstview->formatted_owner());
 $smarty->assign('collectiondescription', $collection->get('description'));
 $smarty->assign('viewcontent', $firstview->build_rows(false, true));
-$smarty->assign('tags', $firstview->get('tags'));
+list($tagcount, $alltags) = $firstview->get_all_tags_for_view();
+$smarty->assign('tags', $alltags);
 
 $shownav = $collection->get('navigation');
 if ($shownav) {

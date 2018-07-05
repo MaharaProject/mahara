@@ -28,6 +28,10 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         return array('external' => 36000);
     }
 
+    public static function get_blocktype_type_content_types() {
+        return array('googleapps' => array('media'));
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         if (!isset($configdata['appsid'])) {
@@ -89,6 +93,13 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
                 ),
                 'defaultvalue' => (!empty($configdata['height'])) ? $configdata['height'] : self::$default_height,
             ),
+            'tags'  => array(
+                'type'         => 'tags',
+                'title'        => get_string('tags'),
+                'description'  => get_string('tagsdescblock'),
+                'defaultvalue' => $instance->get('tags'),
+                'help'         => false,
+            )
         );
     }
 

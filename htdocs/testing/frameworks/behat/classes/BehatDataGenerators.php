@@ -109,6 +109,7 @@ class BehatDataGenerators extends BehatBase {
                 'ownertype'        => 'text',
                 'ownername'        => 'text',
                 'layout'           => 'text',
+                'tags'             => 'text',
             ),
             'required' => array('title', 'ownertype', 'ownername'),
         ),

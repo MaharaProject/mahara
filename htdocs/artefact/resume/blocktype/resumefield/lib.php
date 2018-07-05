@@ -25,7 +25,11 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
         return array('internal' => 30000);
     }
 
-     /**
+    public static function get_blocktype_type_content_types() {
+        return array('resumefield' => array('resume'));
+    }
+
+    /**
      * Optional method. If exists, allows this class to decide the title for
      * all blockinstances of this type
      */
@@ -73,7 +77,13 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
             'type' => 'html',
             'value' => '<p class="alert alert-info">' . get_string('filloutyourresume', 'blocktype.resume/resumefield', '<a href="' . get_config('wwwroot') . 'artefact/resume/index.php">', '</a>') .'</p>',
         );
-
+        $form['tags'] = array(
+            'type'         => 'tags',
+            'title'        => get_string('tags'),
+            'description'  => get_string('tagsdescblock'),
+            'defaultvalue' => $instance->get('tags'),
+            'help'         => false,
+        );
         return $form;
     }
 

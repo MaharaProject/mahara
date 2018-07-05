@@ -37,7 +37,7 @@
                 {elseif $result->artefacttype == "wallpost"}
                     ({str tag=wallpost section=search.elasticsearch})
                 {else}
-                    ({$result->artefacttype})
+                    ({$result->typelabel})
                 {/if}
                 </span>
                 <div class="detail">
@@ -49,7 +49,7 @@
                     <strong>{str tag=tags}: </strong>
                     {list_tags tags=$result->tags owner=$owner view=$result->viewid}
                 </div>
-            {/if}
+                {/if}
             </div>
             <div class="col-md-4">
             <!-- VIEWS -->
@@ -87,6 +87,48 @@
                                 </a>
                             </span>
                         {/if}
+                    </li>
+                    {/foreach}
+                    </ul>
+                </div>
+            {/if}
+            </div>
+        {elseif $result->type == 'blocktype'}
+            <div class="col-md-8">
+                <h3 class="title list-group-item-heading text-inline">
+                <span class="icon left pull-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
+                {if $result->link}
+                    <a href="{$WWWROOT}{$result->link}">
+                        {$result->title|str_shorten_html:50:true|safe}
+                    </a>
+                {else}
+                    {$result->title|str_shorten_html:50:true|safe}
+                {/if}
+                </h3>
+
+                <span class="artefacttype text-midtone">
+                    ({$result->typelabel})
+                </span>
+                <div class="detail">
+                {$result->description|str_shorten_html:140:true|safe}
+                </div>
+                <!-- TAGS -->
+                {if $result->tags|count gt 0}
+                <div class="tags">
+                    <strong>{str tag=tags}: </strong>
+                    {list_tags tags=$result->tags owner=$owner view=$result->viewid}
+                </div>
+                {/if}
+            </div>
+            <div class="col-md-4">
+            <!-- VIEWS -->
+            {if $result->views|count gt 0}
+                <div class="usedon">
+                    <strong>{str tag=usedonpage section=search.elasticsearch}:</strong>
+                    <ul class="list-group list-unstyled">
+                    {foreach from=$result->views key=id item=view}
+                    <li>
+                        <a href="{$WWWROOT}view/view.php?id={$id}">{$view|str_shorten_html:50:true|safe}</a>
                     </li>
                     {/foreach}
                     </ul>

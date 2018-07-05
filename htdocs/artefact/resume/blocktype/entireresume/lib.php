@@ -25,6 +25,10 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
         return array('internal' => 29000);
     }
 
+    public static function get_blocktype_type_content_types() {
+        return array('entireresume' => array('resume'));
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();
@@ -50,15 +54,21 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:entireresume:content.tpl');
     }
 
-    // Yes, we do have instance config. People are allowed to specify the title
-    // of the block, nothing else at this time. So in the next two methods we
-    // say yes and return no fields, so the title will be configurable.
     public static function has_instance_config() {
         return true;
     }
 
     public static function instance_config_form(BlockInstance $instance) {
-        return array();
+        $elements = array(
+            'tags'  => array(
+                'type'         => 'tags',
+                'title'        => get_string('tags'),
+                'description'  => get_string('tagsdescblock'),
+                'defaultvalue' => $instance->get('tags'),
+                'help'         => false,
+            )
+        );
+        return $elements;
     }
 
     public static function artefactchooser_element($default=null) {

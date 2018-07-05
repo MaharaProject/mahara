@@ -93,10 +93,16 @@
 <div class="with-heading text-small">
     {include file=author.tpl}
 
-    {if $tags}
+    {if $alltags}
     <div class="tags">
         <strong>{str tag=tags}:</strong>
-        {list_tags owner=$owner tags=$tags view=$viewid}
+        {list_tags owner=$owner tags=$alltags view=$viewid}
+        {if $moretags}
+            <a href="#" class="moretags">
+            <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
+            <span class="sr-only">{str tag="more..."}</span>
+            </a>
+        {/if}
     </div>
     {/if}
 </div>

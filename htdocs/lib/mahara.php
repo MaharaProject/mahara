@@ -3873,7 +3873,7 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq', $excludeinstitution
         FROM {tag} t
         LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
         LEFT JOIN {institution} i ON i.name = t2.ownerid
-        WHERE t.resourcetype IN ('artefact', 'view', 'collection')
+        WHERE t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
         AND t.ownertype = 'user'
         AND t.ownerid = ?" . $excludeinstitutiontagssql . "
         GROUP BY 1
@@ -4521,6 +4521,23 @@ function build_portfolio_search_html(&$data) {
             $item->url = $c->get_url();
             $item->views = $viewarray;
         }
+        else if ($item->type == 'blocktype') {
+            safe_require('blocktype', $item->artefacttype);
+            $bi = new BlockInstance($item->id);
+            $bi->set('dirty', false);
+            $item->title = $bi->get_title();
+            $item->url = $bi->get_view()->get_url();
+            // Get the correct css icon
+            $namespaced = blocktype_single_to_namespaced($item->artefacttype, $bi->get('artefactplugin'));
+            $classname = generate_class_name('blocktype', $namespaced);
+            $item->typestr = call_static_method($classname, 'get_css_icon', $item->artefacttype);
+            if (in_array($item->artefacttype, array('entireresume', 'resumefield'))) {
+                $item->typelabel = get_string('title', 'blocktype.resume/' . $item->artefacttype);
+            }
+            else {
+                $item->typelabel = get_string('title', 'blocktype.' . $item->artefacttype);
+            }
+        }
         else { // artefact
             safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);
             $links = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_links', $item->id);
@@ -4563,6 +4580,8 @@ function build_portfolio_search_html(&$data) {
         'blogpost'   => get_string('tagfilter_blogpost'),
         'plan'       => get_string('tagfilter_plan'),
         'task'       => get_string('tagfilter_task'),
+        'media'      => get_string('tagfilter_external'),
+        'resume'     => get_string('tagfilter_resume'),
     );
 
     $smarty = smarty_core();
@@ -4694,6 +4713,19 @@ function generate_csv($data, $csvfields, $csvheaders = array()) {
  * @return array    Array of strings
  */
 function check_case_sensitive($a, $table) {
+    // Need to avoid tags that could clash with institution tag format
+    // So we remove or strip anything beginning with tagid/tagid_
+    foreach ($a as $k => $v) {
+        if (preg_match("/^tagid(\_*)(.*)/i", $v, $matches)) {
+            if (empty($matches[2])) {
+                unset($a[$k]);
+            }
+            else {
+                $a[$k] = $matches[2];
+            }
+        }
+    }
+
     if (is_mysql()) {
         $db = get_config('dbname');
         $table = get_config('dbprefix') . $table;

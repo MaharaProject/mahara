@@ -114,6 +114,10 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         return '<iframe width="' . $width . '" height="' . $height . '" src="' . $url . '" frameborder=0 allowfullscreen mozallowfullscreen webkitallowfullscreen></iframe>';
     }
 
+    public static function get_blocktype_type_content_types() {
+        return array('externalvideo' => array('media'));
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $THEME;
 
@@ -236,6 +240,13 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
                 ),
                 'defaultvalue' => (!empty($configdata['height'])) ? $configdata['height'] : 0,
             ),
+            'tags'  => array(
+                'type'         => 'tags',
+                'title'        => get_string('tags'),
+                'description'  => get_string('tagsdescblock'),
+                'defaultvalue' => $instance->get('tags'),
+                'help'         => false,
+            )
         );
     }
 

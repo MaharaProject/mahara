@@ -13,25 +13,23 @@ define('INTERNAL', 1);
 define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
-safe_require('artefact', 'file');
 
-$id = param_integer('id');
+$id = param_integer('viewid');
 if (!can_view_view($id)) {
     json_reply('local', get_string('accessdenied', 'error'));
 }
 $view = new View($id);
+list($tagcount, $alltags) = $view->get_all_tags_for_view();
 
 $smarty = smarty_core();
-$smarty->assign('viewtitle', $view->get('title'));
-$smarty->assign('ownername', $view->formatted_owner());
-$smarty->assign('viewdescription', ArtefactTypeFolder::append_view_url($view->get('description'), $view->get('id')));
-$smarty->assign('viewcontent', $view->build_rows(false, true));
-
-list($tagcount, $alltags) = $view->get_all_tags_for_view();
+$smarty->assign('view', $id);
+$smarty->assign('owner', $view->get('owner'));
 $smarty->assign('tags', $alltags);
-$html = $smarty->fetch('view/viewcontent.tpl');
+$html = $smarty->fetch('taglist.tpl');
 
 json_reply(false, array(
     'message' => null,
+    'count' => $tagcount,
+    'tags' => $alltags,
     'html' => $html,
 ));
