@@ -212,21 +212,6 @@ function init(pieformname) {
     });
 
     link_thumbs_to_radio_buttons(pieformname);
-
-    $('#basiclayouthelp').on("click", function(event) {
-        contextualHelp("viewlayout","layoutselect","core","view","","",this);
-        return false;
-    });
-    $('#customlayouthelp').on("click", function(event) {
-        contextualHelp("viewlayout","createcustomlayouttitle","core","view","","",this);
-        return false;
-    });
-
-    $('#togglecustomlayoutoptions').hide();
-    $('#createcustomlayouttitle').on("click", function(event) {
-        $('#' + pieformname + '_createcustomlayout_container').toggleClass("collapsed");
-        $('#togglecustomlayoutoptions').toggle();
-    });
 }
 
 function link_thumbs_to_radio_buttons(pieformname) {
