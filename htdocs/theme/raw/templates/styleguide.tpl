@@ -2115,8 +2115,8 @@ Used as icon for a system notification.
     <a href="#top" class="btn btn-primary">{$scrollup}</a>
 </div>
 
-<script type="text/javascript" src="https://cdn.rawgit.com/chjj/marked/v0.3.5/marked.min.js"></script>
-<script src="https://cdn.rawgit.com/zenorocha/clipboard.js/v1.5.1/dist/clipboard.min.js"></script>
+<script src="{$wwwroot}js/marked/marked.min.js"></script>
+<script src="{$wwwroot}js/clipboard/clipboard.min.js"></script>
 <script type="text/javascript">
     // using inline js here because it's so specific to the use case of the style guide
     // this is all done on the client side and would be to inefficient for anything other than the styleguide
@@ -2157,7 +2157,7 @@ Used as icon for a system notification.
       });
 
       // init copy to clipboard buttons
-      new Clipboard('.copy');
+      new ClipboardJS('.copy');
 
       // build section tabs
       $j.each(categories, function(i, category) {
