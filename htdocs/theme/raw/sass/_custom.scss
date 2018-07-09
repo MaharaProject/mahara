@@ -84,6 +84,15 @@
 // Show that layout thumbnails can be clicked (Bug 1543358)
 .layoutoption > .thumbnail {
     cursor: pointer;
+    // Add border around layout thumbnails
+    display: block;
+    padding: 4px;
+    margin-bottom: 21px;
+    line-height: $line-height-base;
+    background-color: transparent;
+    border: 1px solid $card-border;
+    border-radius: 2px;
+    transition: border .2s ease-in-out;
 }
 
 .blocktype-radio {
@@ -197,7 +206,7 @@
 }
 .exportable-artefact-container {
     padding: 15px 15px 0;
-    background-color: rgba(theme-color("secondary"), 0.2);
+    background-color: rgba($artefact-bg, 0.2);
 }
 
 // reset the padding when the individual font file is collapsed in font install
@@ -646,4 +655,8 @@ div.toolbarhtml {
 }
 #pendinglist {
     margin-bottom: 0;
+// Stop btn links displaying as buttons
+[type="button"].btn-link,
+.card-header a[type="button"] {
+    -webkit-appearance: none;
 }

@@ -129,6 +129,7 @@ h1 ~ div > .btn-group-top,
 .page-header + .btn-action-list .btn-group-top,
 .nav-tabs +  div.btn-group-top {
     margin-top: -20px;
+	margin-left: -100%;
     @include media-breakpoint-down(sm) {
         margin: 0 0 10px 0;
         width: 100%;
