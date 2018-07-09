@@ -105,7 +105,7 @@ $state = get_string('settings', 'view');
 $pieformname = 'settings';
 list($form, $inlinejavascript) = create_settings_pieform();
 
-$javascript = array('jquery','js/jquery/jquery-ui/js/jquery-ui.min.js', 'js/jquery/modernizr.custom.js');
+$javascript = array('jquery','js/jquery/jquery-ui/js/jquery-ui.min.js');
 $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/smoothness/jquery-ui.min.css') . '">';
 
 $smarty = smarty($javascript, $stylesheets, array('view' => array('Row', 'removethisrow', 'rownr', 'nrrows')), array('sidebars' => false));
