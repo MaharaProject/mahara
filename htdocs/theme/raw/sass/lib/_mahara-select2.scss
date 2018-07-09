@@ -45,7 +45,7 @@
         .select2-selection__choice {
             color: $theme-text-color;
             border-radius: $border-radius;
-            background-color: theme-color("secondary");
+            background-color: $gray-100;
         }
 
         .select2-selection__choice__remove {

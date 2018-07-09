@@ -29,7 +29,8 @@ select {
 
 label,
 .pseudolabel {
-    @extend .col-form-label;
+    // .col-form-label is adding too much padding to <label> commenting out
+    // @extend .col-form-label;
     max-width: 100%;
     padding-right: 10px;
     font-weight: normal;

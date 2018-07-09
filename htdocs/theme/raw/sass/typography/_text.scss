@@ -25,7 +25,7 @@
 }
 
 .text-tiny {
-    font-size: $font-size-sm - 3;
+    font-size: ($font-size-sm * .75);
 }
 
 .text-regular {
