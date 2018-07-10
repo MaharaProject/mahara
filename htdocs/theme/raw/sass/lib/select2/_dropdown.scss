@@ -28,6 +28,9 @@
 
 .select2-results__option {
   padding: 4px;
+
+  user-select: none;
+  -webkit-user-select: none;
   overflow: auto;
   img {
     margin-right: 4px;
@@ -38,9 +41,6 @@
     line-height: 1;
     vertical-align: text-top;
   }
-
-  user-select: none;
-  -webkit-user-select: none;
 
   &[aria-selected] {
     cursor: pointer;

@@ -268,6 +268,13 @@ jQuery(function($) {
                 }
                 formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
             });
+
+            /* Select2 lib does not hide the element with "style=display:none"
+             * anymore. see https://github.com/select2/select2/issues/3065
+             * We need the line below to let Chome know the text is not visible
+             * and behat tests won't break
+             */
+            $('.select2-hidden-accessible').hide();
         }
 
         /*

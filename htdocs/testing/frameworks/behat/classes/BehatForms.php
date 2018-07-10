@@ -232,10 +232,10 @@ class BehatForms extends BehatBase {
     public function select_from_search_box($user, $row_num) {
         $row_num = $row_num -1;
         //create xpath for correct search box
-        $search_xpath = "//*[@id=\"select2-hidden-user-search-[$row_num]-container\"]";
+        $search_xpath = "//*[@id=\"select2-hidden-user-search-$row_num-container\"]";
         $this->i_click_on_element($search_xpath, 'xpath_element');
         //create xpath for the user being searched for
-        $user_xpath = "//*[@id[starts-with(., 'select2-hidden-user-search')]]/span[contains(text(),  \"$user\")]";
+        $user_xpath = "//*[@id[starts-with(., 'select2-hidden-user-search')]]/li/span[contains(text(),  \"$user\")]";
         $this->i_click_on_element($user_xpath, 'xpath_element');
     }
 

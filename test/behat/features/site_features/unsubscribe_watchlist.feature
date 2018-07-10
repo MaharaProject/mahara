@@ -25,6 +25,7 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  And I select "Email" from "Watchlist"
  And I press "Save"
  And I am on homepage
+ And I scroll to the id 'bottom-pane'
  And I follow "Page UserA_01"
  And I press "More..."
  And I follow "Add page to watchlist"
