@@ -61,7 +61,7 @@
         }
 
         {{$name}}_newrefinput = jQuery('<input>', {'type': 'text', 'id': 'addnew{{$name}}', 'class': 'form-control'});
-        {{$name}}_newrefsubmit = jQuery('<input>', {'type': 'submit', 'class': 'btn btn-secondary', 'value': '{{$addbuttonstr}}'});
+        {{$name}}_newrefsubmit = jQuery('<input>', {'type': 'submit', 'class': 'btn btn-secondary input-group-append', 'value': '{{$addbuttonstr}}'});
         {{$name}}_newref = jQuery('<div>', {'class': 'input-group'}).append({{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
 
         jQuery('#{{$name}}_list').append({{$name}}_newref);
