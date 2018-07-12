@@ -155,3 +155,5 @@ $string['memcacheusememcached'] = 'The "memcache" session storage is obsolete. P
 $string['siteoutofsyncfor'] = 'This site has database information newer than %s files indicate it should be.';
 $string['updatesitetimezone'] = 'The time zone for the site now needs to be set via "Configure site" →  "Site options" →  "Site settings". Please set it there and delete the $cfg->dbtimezone line from your config.php file.';
 $string['pluginnotactive1'] = 'The plugin "%s" is not enabled. Please got to "Administration" →  "Extensions" →  "Plugin administration" to enable it.';
+
+$string['fileuploadtoobig'] = 'The file upload is too big as it is bigger than "%s"';

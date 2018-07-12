@@ -88,6 +88,7 @@ var FileBrowser = (function($) {
                 }
             });
         }
+        $('#' + self.id + '_userfile').off('change');
         $('#' + self.id + '_userfile').on('change', self.upload_submit);
     };
 
@@ -100,7 +101,13 @@ var FileBrowser = (function($) {
 
     this.upload_validate = function () {
         if ($('#' + self.id + '_notice').length && !$('#' + self.id + '_notice').prop('checked')) {
-            $('#' + self.id+'_upload_messages').append($('<div>', {'class':'error'}), get_string('youmustagreetothecopyrightnotice'));
+            $('#' + self.id+'_upload_messages').append($('<div>', {'class':'alert alert-danger', 'text':get_string('youmustagreetothecopyrightnotice')}));
+            return false;
+        }
+        if (!($('#' + self.id + '_userfile')[0].files[0].size < globalconfig.maxuploadsize)) {
+            var errmsg = $('<div>', {'class':'alert alert-danger'});
+            errmsg.html(get_string_ajax('fileuploadtoobig', 'error', globalconfig.maxuploadsizepretty));
+            $('#' + self.id+'_upload_messages').append(errmsg);
             return false;
         }
         return !$.isEmptyObject($('#' + self.id + '_userfile').val());
@@ -152,6 +159,7 @@ var FileBrowser = (function($) {
                 'multiple':''
             })
         );
+        $('#' + self.id + '_userfile').off('change');
         $('#' + self.id + '_userfile').on('change', self.upload_submit);
         $('#' + self.id + '_upload').val(0);
         return false;
