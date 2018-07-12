@@ -658,9 +658,7 @@ abstract class ArtefactType implements IArtefactType {
                 if (empty($tag)) {
                     continue;
                 }
-                if ($institutiontag = get_record('tag', 'tag', $tag, 'resourcetype', 'institution', 'ownertype', 'institution')) {
-                    $tag = 'tagid_' . $institutiontag->id;
-                }
+                $tag = check_if_institution_tag($tag);
                 insert_record('tag',
                     (object) array(
                         'resourcetype' => 'artefact',

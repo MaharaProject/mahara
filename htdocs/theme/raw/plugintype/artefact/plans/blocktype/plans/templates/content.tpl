@@ -26,6 +26,7 @@
         <strong>{str tag=tags}:</strong> {list_tags owner=$plan.owner tags=$plan.tags view=$plan.view}
     </div>
     {/if}
+    {if !$plan.description && !$plan.tags} &nbsp; {/if}
 
     {if $plan.numtasks != 0}
         {foreach from=$alltasks item=tasks}

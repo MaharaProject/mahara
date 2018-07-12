@@ -1044,11 +1044,13 @@ class PluginSearchInternal extends PluginSearch {
             $split = explode(':', $tag);
             if (count($split) == 2) {
                 $prefix = trim($split[0]);
-                $tag    = trim($split[1]);
-                $tag = get_field_sql("SELECT CONCAT('tagid_', t.id)
-                    FROM {tag} t
-                    JOIN {institution} i ON i.name = t.ownerid
-                    WHERE i.displayname = ? AND t.tag = ?", array($prefix, $tag));
+                $itag    = trim($split[1]);
+                if ($checktag = get_field_sql("SELECT CONCAT('tagid_', t.id)
+                        FROM {tag} t
+                        JOIN {institution} i ON i.name = t.ownerid
+                        WHERE i.displayname = ? AND t.tag = ?", array($prefix, $itag))) {
+                    $tag = $checktag;
+                }
             }
             $values = array($owner->id, $tag, $owner->id, $tag, $owner->id, $tag, $tag, $owner->id, $tag);
         }
@@ -1147,6 +1149,17 @@ class PluginSearchInternal extends PluginSearch {
                                     }
                                 }
                                 $d->views = $record_views;
+                            }
+                            // Check if the file is a pdf
+                            if ($d->artefacttype == 'file') {
+                                if (get_field_sql("SELECT artefact
+                                                   FROM {artefact_file_files}
+                                                   WHERE artefact = ?
+                                                   AND filetype IN (
+                                                       SELECT mimetype FROM {artefact_file_mime_types}
+                                                       WHERE description = ?)", array($d->id, 'pdf'))) {
+                                    $d->specialtype = 'pdf';
+                                }
                             }
                         }
                         else if ($d->type == 'collection') {
@@ -1319,6 +1332,7 @@ class PluginSearchInternal extends PluginSearch {
                 $result->data = $data;
             }
         }
+
         return $result;
     }
 

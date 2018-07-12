@@ -41,11 +41,22 @@ function translate_tags_to_names(array $ids) {
     global $USER;
     // for an empty list, the element '' is transmitted
     $ids = array_diff($ids, array(''));
-
-    $ids = array_map(function($a) {
-        if (strpos($a, ':')) {
-            $arr = explode(': ', $a);
-            return $arr[1];
+    $institutions = $USER->get('institutions');
+    if (!empty($institutions)) {
+        $institutions = array_keys($institutions);
+        // Fetch valid institution tags
+        $validinstitutiontags = get_column_sql("SELECT tag FROM {tag}
+                                                WHERE ownertype = 'institution' AND ownerid IN ('" . join("','", $institutions) . "')");
+    }
+    else {
+        $validinstitutiontags = array();
+    }
+    $ids = array_map(function($a) use ($validinstitutiontags) {
+        if (strpos($a, ': ')) {
+            if (in_array($a, $validinstitutiontags)) {
+                $arr = explode(': ', $a);
+                return trim($arr[1]);
+            }
         }
         return $a;
     }, $ids);
@@ -94,25 +105,14 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null) {
         $usertags = "";
         $userid = $USER->get('id');
         $typecast = is_postgres() ? '::varchar' : '';
-        if ($USER->get('admin')) {
-            $usertags = "
-                UNION ALL
-                SELECT tag, COUNT(*) AS count, 'lastinstitution' AS prefix FROM {tag} t INNER JOIN {usr} u ON (t.resourcetype = 'usr' AND t.resourceid = u.id" . $typecast . ") GROUP BY 1";
-        }
-        else if ($admininstitutions = $USER->get('admininstitutions')) {
-            $insql = "'" . join("','", $admininstitutions) . "'";
-            $usertags = "
-                UNION ALL
-                SELECT tag, COUNT(*) AS count, 'lastinstitution' AS prefix FROM {tag} t INNER JOIN {usr} u ON (t.resourcetype = 'usr' AND t.resourceid = u.id" . $typecast . ") INNER JOIN {usr_institution} ui ON ui.usr=u.id WHERE ui.institution IN ($insql) GROUP BY 1";
-        }
         $values = array($userid, $userid);
         $querystr = '';
         if ($query) {
-            $querystr = " WHERE tag LIKE '%' || ? || '%'";
+            $querystr = " WHERE tag " . db_ilike() . " '%' || ? || '%'";
             $values[] = $query;
             // Also do matching by institution name so we can list valid institution tags
             // if we only know institution name
-            $querystr .= " OR prefix LIKE '%' || ? || '%'";
+            $querystr .= " OR prefix " . db_ilike() . " '%' || ? || '%'";
             $values[] = $query;
         }
         $sql = "
@@ -133,7 +133,7 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null) {
                 FROM {tag} t
                 JOIN {institution} i ON i.name = t.ownerid AND i.tags = 1
                 JOIN {usr_institution} ui ON ui.institution = i.name AND ui.usr = ?
-                " . $usertags . "
+                WHERE t.resourcetype != 'usr'
             ) tags
             " . $querystr . "
             GROUP BY tag, prefix

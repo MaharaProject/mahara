@@ -472,31 +472,35 @@ EOF;
         $tagselect = $values['tagselect'];
         unset($values['tagselect']);
         if (!empty($tagselect)) {
-            delete_records('blocktype_taggedposts_tags', 'block_instance', $instance->get('id'));
-            foreach ($tagselect as $tag) {
-                $value = PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE;
-                if (substr($tag, 0, 1) == '-') {
-                    $value = PluginBlocktypeTaggedposts::TAGTYPE_EXCLUDE;
-                    $tag = substr($tag, 1);
-                }
-                // If tag is institution tag, save it's correct form.
-                if (strpos($tag, ':')) {
-                    $tagarray = explode(': ', $tag);
-                    $sql = "SELECT t.id
-                        FROM {tag} t
-                        JOIN {institution} i ON i.name = t.ownerid
-                        WHERE t.tag = ? AND t.resourcetype = 'institution' AND i.displayname = ?";
-                    $insttagid = get_field_sql($sql, array($tagarray[1], $tagarray[0]));
-                    $tag = 'tagid_' . $insttagid;
-                }
-                $todb = new stdClass();
-                $todb->block_instance = $instance->get('id');
-                $todb->tag = htmlspecialchars_decode($tag);
-                $todb->tagtype = $value;
-                insert_record('blocktype_taggedposts_tags', $todb);
-            }
+            self::save_tag_selection($tagselect, $instance);
         }
         return $values;
+    }
+
+    public static function save_tag_selection($tagselect, BlockInstance $instance) {
+        delete_records('blocktype_taggedposts_tags', 'block_instance', $instance->get('id'));
+        foreach ($tagselect as $tag) {
+            $value = PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE;
+            if (substr($tag, 0, 1) == '-') {
+                $value = PluginBlocktypeTaggedposts::TAGTYPE_EXCLUDE;
+                $tag = substr($tag, 1);
+            }
+            // If tag is institution tag, save it's correct form.
+            if (strpos($tag, ':')) {
+                $tagarray = explode(': ', $tag);
+                $sql = "SELECT t.id
+                    FROM {tag} t
+                    JOIN {institution} i ON i.name = t.ownerid
+                    WHERE t.tag = ? AND t.resourcetype = 'institution' AND i.displayname = ?";
+                $insttagid = get_field_sql($sql, array($tagarray[1], $tagarray[0]));
+                $tag = 'tagid_' . $insttagid;
+            }
+            $todb = new stdClass();
+            $todb->block_instance = $instance->get('id');
+            $todb->tag = htmlspecialchars_decode($tag);
+            $todb->tagtype = $value;
+            insert_record('blocktype_taggedposts_tags', $todb);
+        }
     }
 
     /**

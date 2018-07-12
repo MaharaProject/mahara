@@ -869,9 +869,7 @@ class View {
             foreach ($this->get_tags() as $tag) {
                 //truncate the tag before insert it into the database
                 $tag = substr($tag, 0, 128);
-                if ($institutiontag = get_record('tag', 'tag', $tag, 'resourcetype', 'institution', 'ownertype', 'institution')) {
-                    $tag = 'tagid_' . $institutiontag->id;
-                }
+                $tag = check_if_institution_tag($tag);
                 insert_record('tag',
                     (object)array(
                         'resourcetype' => 'view',
@@ -2916,7 +2914,7 @@ class View {
     /**
      * returns the current max block position within a column
      */
-    private function get_current_max_order($row, $column) {
+    public function get_current_max_order($row, $column) {
         return get_field('block_instance', 'max("order")', 'column', $column, 'view', $this->get('id'), 'row', $row);
     }
 

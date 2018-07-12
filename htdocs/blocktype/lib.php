@@ -736,6 +736,10 @@ class BlockInstance {
     private function set_tags($tags) {
         global $USER;
 
+        if (empty($this->view_obj)) {
+            $this->get_view();
+        }
+
         if ($this->view_obj->get('group')) {
             $ownertype = 'group';
             $ownerid = $this->view_obj->get('group');
@@ -753,9 +757,7 @@ class BlockInstance {
         foreach ($this->tags as $tag) {
             // truncate the tag before insert it into the database
             $tag = substr($tag, 0, 128);
-            if ($institutiontag = get_record('tag', 'tag', $tag, 'resourcetype', 'institution', 'ownertype', 'institution')) {
-                $tag = 'tagid_' . $institutiontag->id;
-            }
+            $tag = check_if_institution_tag($tag);
             insert_record('tag',
                 (object)array(
                     'resourcetype' => 'blocktype',
