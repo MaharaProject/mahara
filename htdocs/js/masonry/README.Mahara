@@ -1,0 +1,15 @@
+Masonry
+=======
+
+Name   :	Masonry - Cascading grid layout library
+Website:	https://masonry.desandro.com/
+Author :	Made by David DeSandro
+Version:	4.2.2
+Licence:	MIT
+
+Masonry works by placing elements in optimal position based on available
+vertical space, sort of like a mason fitting stones in a wall.
+
+Changes:
+
+* none
