@@ -232,13 +232,6 @@ jQuery(function ($) {
 
     $('#messages .alert-success').delay(1000).hide("slow");
     update_table_headers(null);
-
-    if ($('.statinfoblock').length > 0) {
-        var maxHeight = Math.max.apply(null, $(".statinfoblock").map(function () {
-            return $(this).height();
-        }).get());
-        $('.statinfoblock').css('height', maxHeight + 'px');
-    }
 });
 
 JS;
