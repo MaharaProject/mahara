@@ -74,7 +74,7 @@
 <div class="card-items js-masonry" data-masonry-options='{ "itemSelector": ".card" }'>
     {if $register}
 
-        <div class="card card bg-success text-white register-site">
+        <div class="card card bg-success register-site">
             <h3 class="card-header">{str tag=registermaharasite section=admin} <span class="icon icon-star float-right" role="presentation" aria-hidden="true"></span></h3>
             <div class="card-body">
                 {if $newregisterpolicy}
@@ -97,7 +97,7 @@
 
     {if $sitedata}
 
-        <div class="card card bg-info text-white site-stats">
+        <div class="card card bg-info site-stats">
             <h3 class="card-header">{$sitedata.displayname}: {str tag=siteinformation section=admin} <span class="icon icon-area-chart float-right" role="presentation" aria-hidden="true"></span></h3>
             {include file='admin/users/stats.tpl' institutiondata=$sitedata showall='_all' fromindex='1'}
             <a class="card-footer text-small" href="{$WWWROOT}admin/users/statistics.php?type=information&subtype=information">{str tag=viewfullsitestatistics section=admin} <span class="icon icon-arrow-circle-right float-right" role="presentation" aria-hidden="true"></span></a>
@@ -105,7 +105,7 @@
 
     {/if}
 
-    <div class="card close-site {if $closed}card bg-success text-white{else}card bg-danger text-white{/if}">
+    <div class="card close-site {if $closed}card bg-success {else}card bg-danger {/if}">
         {if $closed}
             <h3 class="card-header">{str tag=reopensite section=admin} <span class="icon icon-lock float-right" role="presentation" aria-hidden="true"></span></h3>
             <div class="card-body">

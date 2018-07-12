@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-8">
               <div class="card card-secondary">
-                 <h3 class="card-heading">
+                 <h3 class="card-header">
                     {str tag=directive2009136 section=cookieconsent}
                  </h3>
 
@@ -18,7 +18,7 @@
         </div>
         <div class="col-md-4">
               <div class="card card-secondary last">
-                <h3 class="card-heading">
+                <h3 class="card-header">
                     <span class="icon-language icon left" role="presentation" aria-hidden="true"></span>
                     {str tag=readfulltext1 section=cookieconsent}
                 </h3>
@@ -28,7 +28,7 @@
                     <ul class="list-inline unstyled">
                         {foreach from=$languages item=lang name=languages}
                         <li class="list-inline-item list-tile">
-                            <a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2009:337:0011:0036:{$lang}:PDF" title="{str tag=readdirective$lang section=cookieconsent}" class="link-thumb card card-body>{$lang} <span class="metadata">.pdf</span></a>
+                            <a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2009:337:0011:0036:{$lang}:PDF" title="{str tag=readdirective$lang section=cookieconsent}" class="link-thumb card card-body">{$lang} <span class="metadata">.pdf</span></a>
                         </li>
                         {/foreach}
                     </ul>

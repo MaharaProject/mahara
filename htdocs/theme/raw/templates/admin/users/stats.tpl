@@ -1,5 +1,5 @@
 {if !$fromindex}
-<div class="statinfoblock card card bg-info text-white">
+<div class="statinfoblock card card bg-info">
   <h3>{str tag="Overview" section=statistics}</h3>
 {/if}
   <table class="table">
@@ -62,25 +62,25 @@
 </div>
 {/if}
 {if $institutiondata.usersinfo}
-<div class="statinfoblock card card bg-info text-white">
+<div class="statinfoblock card card bg-info">
     <h3>{str tag="usersinfo" section=statistics}</h3>
     {$institutiondata.usersinfo|safe}
 </div>
 {/if}
 {if $institutiondata.viewsinfo}
-<div class="statinfoblock card card bg-info text-white">
+<div class="statinfoblock card card bg-info">
     <h3>{str tag="viewsinfo" section=statistics}</h3>
     {$institutiondata.viewsinfo|safe}
 </div>
 {/if}
 {if $institutiondata.groupinfo}
-<div class="statinfoblock card card bg-info text-white">
+<div class="statinfoblock card card bg-info">
     <h3>{str tag="groupinfo" section=statistics}</h3>
     {$institutiondata.groupinfo|safe}
 </div>
 {/if}
 {if $institutiondata.weekly}
-<div class="statinfoblock card card bg-info text-white">
+<div class="statinfoblock card card bg-info">
     <h3>{str tag="weeklytrend" section=statistics}</h3>
     <div class="card-body">
         <canvas class="graphcanvas" id="sitestatsgraph"></canvas>

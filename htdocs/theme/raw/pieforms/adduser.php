@@ -4,7 +4,7 @@ echo $form_tag;
 
     <div class="card-items card-items-no-margin">
         <div class="step step1 card card-secondary first" id="step1">
-            <h3 class="card-heading"><?php echo get_string('usercreationmethod', 'admin'); ?></h3>
+            <h3 class="card-header"><?php echo get_string('usercreationmethod', 'admin'); ?></h3>
             <div class="card-body">
                 <div class="choice">
                     <input type="radio" name="createmethod" class="ic"<?php if (!param_exists('createmethod') || param_alphanum('createmethod') == 'scratch') { ?> checked="checked"<?php } ?> id="createfromscratch" value="scratch">
@@ -38,7 +38,7 @@ echo $form_tag;
 
 
         <div class="step step2 card card-secondary">
-            <h3 class="card-heading"><?php echo get_string('basicdetails', 'admin'); ?></h3>
+            <h3 class="card-header"><?php echo get_string('basicdetails', 'admin'); ?></h3>
             <div class="card-body">
                 <?php foreach (array('username', 'password', 'staff', 'admin', 'authinstance', 'quota', 'institutionadmin') as $field) { ?>
                     <?php if (isset($elements[$field]['type'])) { ?>
@@ -61,7 +61,7 @@ echo $form_tag;
         </div>
 
         <div class="step step3 card card-secondary">
-            <h3 class="card-heading"><?php echo get_string('create', 'admin'); ?></h3>
+            <h3 class="card-header"><?php echo get_string('create', 'admin'); ?></h3>
             <div class="card-body">
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-link" data-toggle="modal-docked" data-target="#general-account-options">

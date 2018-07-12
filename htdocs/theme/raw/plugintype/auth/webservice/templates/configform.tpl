@@ -5,7 +5,7 @@
 {foreach from=$form.elements item=element name=elements}
     {if $element.type == 'fieldset'}
     <div class="pseudofieldset card card-secondary collapsible collapsible-group{if $.foreach.elements.last} last{/if}">
-        <h2 class="pseudolegend card-heading has-link">
+        <h2 class="pseudolegend card-header has-link">
         <a class="{if !$.foreach.elements.first}collapsed{/if}" href="#{$element.name}_pseudofieldset" data-toggle="collapse" aria-expanded="{if $.foreach.elements.first}true{else}false{/if}" aria-controls="{$element.name}_pseudofieldset" data-parent="#accordion">
         {$element.legend}
          <span class="icon icon-chevron-down right collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
