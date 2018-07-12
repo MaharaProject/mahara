@@ -19,6 +19,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # This is the test for manually creating a page
     And I choose "Portfolio" from main menu
     And I scroll to the base of id "addview-button"
+    And I should see "Pages and collections" in the "h1 heading" property
     And I follow "Add"
     And I click on "Page" in the dialog
     And I fill in the following:
@@ -41,6 +42,13 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Save"
     # Adding media blockAnd I fill in the following:
     | Page title | This is the edited page title |
+    # confirm h1 page title displayed
+    And I should see "This is the edited page title" in the "h1 heading" property
+    # confirm settings, edit and share buttons displayed
+    And I should see "Settings" in the ".editlayout .btn-title" element
+    And I should see "Edit" in the ".editcontent .btn-title" element
+    And I should see "Share" in the ".editshare .btn-title" element
+    # Adding media block
     And I expand "Media" node
     And I follow "File(s) to download"
     And I press "Add"
@@ -63,6 +71,9 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Add"
     And I press "Remove"
 
+    # verify page elements are displayed Display page and Return to pages and collections buttons
+    And I should see "Display page" in the "#view-wizard-controls .btn-default:nth-of-type(1)" element
+    And I should see "Return to pages and collections" in the "#view-wizard-controls .btn-default:nth-of-type(2)" element
     And I display the page
     # Show last updated date and time when seeing a portfolio page (Bug 1634591)
     And I should see "Updated on" in the ".text-right" element
