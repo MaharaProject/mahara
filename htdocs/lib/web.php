@@ -3080,17 +3080,7 @@ function right_nav() {
             'weight' => 10,
             'iconclass' => 'cogs'
         ),
-        'inbox' => array(
-            'path' => 'inbox',
-            'url' => 'account/activity/index.php',
-            'title' => get_string('inbox'),
-            'alt' => get_string('inbox'),
-            'count' => $unread,
-            'countclass' => 'unreadmessagecount',
-            'linkid' => 'mail',
-            'weight' => 20,
-            'iconclass' => 'envelope'
-        ),
+        'inbox' => array(), // overriden by module 'multirecipientnotification'
         'settings/account' => array(
             'path' => 'settings/account',
             'url' => 'account/index.php',

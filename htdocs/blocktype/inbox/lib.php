@@ -30,14 +30,8 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
     }
 
     public static function get_link(BlockInstance $instance) {
-        safe_require('module', 'multirecipientnotification');
-        if (PluginModuleMultirecipientnotification::is_active()) {
-            $data = get_config('wwwroot') . 'module/multirecipientnotification/inbox.php';
-        }
-        else {
-            $data = get_config('wwwroot') . 'account/activity/index.php';
-        }
-        return sanitize_url($data);
+        $data = get_config('wwwroot') . 'module/multirecipientnotification/inbox.php';
+        return $data;
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
@@ -60,44 +54,10 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
 
         $maxitems = isset($configdata['maxitems']) ? $configdata['maxitems'] : 5;
 
-        // check if multirecipientnotification plugin is active or if we proceed here
-        if (record_exists('module_installed', 'name', 'multirecipientnotification', 'active', '1') && safe_require_plugin('module', 'multirecipientnotification')) {
-            global $USER;
-            $userid = $USER->get('id');
-            $activitylist = activityblocklistin(join(',', $desiredtypes), $maxitems);
-            $records = $activitylist->records;
-            $showmore = ($activitylist->count > $maxitems);
-            // use a different template
-            $smartytemplate = 'blocktype:inbox:inboxmr.tpl';
-        }
-        else {
-            $records = array();
-            if ($desiredtypes) {
-                $sql = "
-                    SELECT n.id, n.subject, n.message, n.url, n.urltext, n.read, t.name AS type
-                    FROM {notification_internal_activity} n JOIN {activity_type} t ON n.type = t.id
-                    WHERE n.usr = ?
-                    AND t.name IN (" . join(',', array_map('db_quote', $desiredtypes)) . ")
-                    ORDER BY n.ctime DESC
-                    LIMIT ?;";
-
-                $records = get_records_sql_array($sql, array(
-                    $USER->get('id'),
-                    $maxitems + 1 // Hack to decide whether to show the More... link
-                ));
-            }
-
-            // Hack to decide whether to show the More... link
-            if ($showmore = count($records) > $maxitems) {
-                unset($records[$maxitems]);
-            }
-            if ($records) {
-                foreach ($records as &$r) {
-                    $r->message = format_notification_whitespace($r->message, $r->type);
-                }
-            }
-            $smartytemplate = 'blocktype:inbox:inbox.tpl';
-        }
+        safe_require_plugin('module', 'multirecipientnotification');
+        $activitylist = activityblocklistin(join(',', $desiredtypes), $maxitems);
+        $records = $activitylist->records;
+        $showmore = ($activitylist->count > $maxitems);
 
         if ($records) {
             require_once('activity.php');
@@ -114,7 +74,7 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
         $smarty->assign('blockid', 'blockinstance_' . $instance->get('id'));
         $smarty->assign('items', $records);
 
-        return $smarty->fetch($smartytemplate);
+        return $smarty->fetch('blocktype:inbox:inboxmr.tpl');
     }
 
     public static function has_instance_config() {
