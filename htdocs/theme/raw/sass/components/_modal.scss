@@ -98,6 +98,7 @@ $width-sm: 90%;
     }
     .close,
     .mce-close {
+        order: 1;
         opacity: 1;
         &:hover,
         &:focus {
