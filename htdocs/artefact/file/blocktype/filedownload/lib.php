@@ -25,7 +25,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 3000);
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $configdata = $instance->get('configdata');
 

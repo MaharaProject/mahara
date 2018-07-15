@@ -78,7 +78,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         );
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
         $configdata['viewid'] = $instance->get('view');
         $style = isset($configdata['style']) ? intval($configdata['style']) : 2;
@@ -328,6 +328,9 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
             if (isset($configdata['select']) && $configdata['select'] == 1 && is_array($configdata['artefactids'])) {
                 $artefactids = $configdata['artefactids'];
             }
+            else if ($versioning && !empty($configdata['existing_artefacts'])) {
+                $artefactids = (array) $configdata['existing_artefacts'];
+            }
             else if (!empty($configdata['artefactid'])) {
                 // Get descendents of this folder.
                 $artefactids = artefact_get_descendants(array(intval($configdata['artefactid'])));
@@ -425,7 +428,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
             require_once(get_config('docroot') . 'artefact/comment/lib.php');
             require_once(get_config('docroot') . 'lib/view.php');
             $view = new View($configdata['viewid']);
-            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing);
+            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
             $smarty->assign('commentcount', $commentcount);
             $smarty->assign('comments', $comments);
         }
@@ -835,5 +838,15 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
 
     public static function default_copy_type() {
         return 'full';
+    }
+
+    public static function get_current_artefacts(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        $artefacts = array();
+        if (isset($configdata['artefactid'])) {
+            safe_require('artefact', 'file');
+            $artefacts = artefact_get_descendants(array(intval($configdata['artefactid'])));
+        }
+        return $artefacts;
     }
 }

@@ -50,7 +50,7 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
         return true;
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER;
 
         $configdata = $instance->get('configdata');

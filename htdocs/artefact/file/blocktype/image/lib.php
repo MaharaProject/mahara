@@ -32,7 +32,7 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
         return array('shortcut' => 2000);
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
 
         if (!isset($configdata['artefactid'])) {
@@ -61,7 +61,7 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
         require_once(get_config('docroot') . 'artefact/comment/lib.php');
         require_once(get_config('docroot') . 'lib/view.php');
         $view = new View($viewid);
-        list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($image, $view, $instance->get('id'), true, $editing);
+        list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($image, $view, $instance->get('id'), true, $editing, $versioning);
         $smarty = smarty_core();
         $smarty->assign('commentcount', $commentcount);
         $smarty->assign('comments', $comments);

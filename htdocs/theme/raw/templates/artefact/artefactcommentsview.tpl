@@ -1,4 +1,4 @@
-{if !$editing}
+{if !$editing && !$versioning}
     <div class="comments pull-left">
         {if $commentcount > 0}
         <a class="commentlink link-blocktype" id="block_{$blockid}" data-toggle="modal-docked" data-target="#feedbacktable_{$blockid}" href="#">

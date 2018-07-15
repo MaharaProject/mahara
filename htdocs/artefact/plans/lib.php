@@ -703,7 +703,12 @@ class ArtefactTypeTask extends ArtefactType {
             $view = new View($options['view']);
             $owner = $view->get('owner');
             if ($owner && $owner == $USER->get('id')) {
-                $smarty->assign('canedit', true);
+                if (!empty($options) && !empty($options['versioning'])) {
+                    $smarty->assign('canedit', false);
+                }
+                else {
+                    $smarty->assign('canedit', true);
+                }
             }
         }
 

@@ -26,8 +26,7 @@ Scenario: Create and delete text block
     And I set the field "Block content" to "Here is a new block."
     And I press "Save"
     And I should see "Text block 1" in the "div#column-container" element
-    And I scroll to the top
-    And I follow "Display page"
+    And I display the page
     Then I should see "Here is a new block"
     # delete block
     And I follow "Edit"

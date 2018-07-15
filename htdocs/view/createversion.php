@@ -46,6 +46,20 @@ if ($blocks) {
             $bi->row = $oldblock->get('row');
             $bi->column = $oldblock->get('column');
             $bi->order = $oldblock->get('order');
+            if (isset($bi->configdata['artefactid']) && !empty($bi->configdata['artefactid'])) {
+                // The block is for one artefact so lets see if it displays more than one artefact
+                if ($artefacts = call_static_method(generate_class_name('blocktype', $oldblock->get('blocktype')), 'get_current_artefacts', $oldblock)) {
+                    // We need to ignore the parent artefactid
+                    foreach ($artefacts as $key => $artefact) {
+                        if ($bi->configdata['artefactid'] == $artefact) {
+                            unset($artefacts[$key]);
+                        }
+                    }
+                    if (!empty($artefacts)) {
+                        $bi->configdata['existing_artefacts'] = $artefacts;
+                    }
+                }
+            }
             $version->blocks[$k] = $bi;
         }
     }

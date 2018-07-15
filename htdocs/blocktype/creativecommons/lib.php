@@ -35,7 +35,7 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
         return array('general' => 15000);
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $THEME;
         $configdata = $instance->get('configdata');
         if (!isset($configdata['license'])) {

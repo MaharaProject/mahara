@@ -34,7 +34,7 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
         return array('dashboard');
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
 
         $smarty = smarty_core();
         $views = self::fetch_items($instance, 0, $editing);

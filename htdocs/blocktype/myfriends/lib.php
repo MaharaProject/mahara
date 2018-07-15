@@ -65,7 +65,7 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
         $friends['pagination_js'] = $pagination['javascript'];
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER, $exporter;
 
         $userid = $instance->get_view()->get('owner');

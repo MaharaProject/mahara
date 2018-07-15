@@ -78,7 +78,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return array('openbadgedisplayer' => array('media'));
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata');
         if (empty($configdata) || !isset($configdata['badgegroup']) || !get_config('openbadgedisplayer_source')) {
             return;

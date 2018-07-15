@@ -38,7 +38,7 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
         return '';
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata');
         $smarty = smarty_core();
 

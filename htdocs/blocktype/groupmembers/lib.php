@@ -40,7 +40,7 @@ class PluginBlocktypeGroupMembers extends MaharaCoreBlocktype {
         return true;
     }
 
-    public static function render_instance (BlockInstance $instance, $editing = false) {
+    public static function render_instance (BlockInstance $instance, $editing = false, $versioning=false) {
         global $USER;
 
         // Not render if the block is in a template

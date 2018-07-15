@@ -38,7 +38,7 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 4000);
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $configdata = $instance->get('configdata');
         $configdata['viewid'] = $instance->get('view');
@@ -56,7 +56,7 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
             require_once(get_config('docroot') . 'artefact/comment/lib.php');
             require_once(get_config('docroot') . 'lib/view.php');
             $view = new View($configdata['viewid']);
-            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing);
+            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
         }
         $smarty = smarty_core();
         if ($artefactid) {
@@ -204,4 +204,19 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         return 'full';
     }
 
+    public static function get_current_artefacts(BlockInstance $instance) {
+
+        $configdata = $instance->get('configdata');
+        $artefacts = array();
+        if (isset($configdata['artefactid'])) {
+            $folder = $instance->get_artefact_instance($configdata['artefactid']);
+            if ($files = $folder->get_children_instances()) {
+                foreach ($files as $file) {
+                    $artefacts[] = $file->get('id');
+                }
+            }
+            $artefacts = array_unique($artefacts);
+        }
+        return $artefacts;
+    }
 }

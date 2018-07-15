@@ -54,7 +54,7 @@ class PluginBlocktypeRecentForumPosts extends MaharaCoreBlocktype {
         return $groups[$block];
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         if ($group = self::get_group($instance)) {
 
             require_once('group.php');

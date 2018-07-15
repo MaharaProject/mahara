@@ -44,7 +44,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         }
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         list($artefact, $width, $height) = self::get_mediaplayer_details($instance);
         if (!$artefact) {
             return '';
@@ -73,7 +73,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         require_once(get_config('docroot') . 'artefact/comment/lib.php');
         require_once(get_config('docroot') . 'lib/view.php');
         $view = new View($instance->get('view'));
-        list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing);
+        list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
 
         $smarty = smarty_core();
 

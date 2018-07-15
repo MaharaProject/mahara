@@ -46,7 +46,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
         }
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $exporter;
         $configdata = $instance->get('configdata');
 
@@ -56,6 +56,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
             $configdata['hidetitle'] = true;
             $configdata['countcomments'] = true;
+            $configdata['versioning'] = $versioning;
             $configdata['viewid'] = $instance->get('view');
             if ($instance->get_view()->is_submitted()) {
                 // Don't display posts added after the submitted date.
@@ -67,7 +68,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
             $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
             $posts = ArtefactTypeBlogpost::get_posts($blog->get('id'), $limit, 0, $configdata);
             $template = 'artefact:blog:viewposts.tpl';
-            if ($exporter) {
+            if ($exporter || $versioning) {
                 $pagination = false;
             }
             else {
@@ -217,6 +218,25 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
                     if ($blogpost->get('published')) {
                         $artefacts[] = $blogpost->get('id');
                         $artefacts = array_merge($artefacts, $blogpost->get_referenced_artefacts_from_postbody());
+                    }
+                }
+                $artefacts = array_unique($artefacts);
+            }
+        }
+        return $artefacts;
+    }
+
+    public static function get_current_artefacts(BlockInstance $instance) {
+
+        $configdata = $instance->get('configdata');
+        $artefacts = array();
+
+        if (isset($configdata['artefactid'])) {
+            $blog = $instance->get_artefact_instance($configdata['artefactid']);
+            if ($blogposts = $blog->get_children_instances()) {
+                foreach ($blogposts as $blogpost) {
+                    if ($blogpost->get('published')) {
+                        $artefacts[] = $blogpost->get('id');
                     }
                 }
                 $artefacts = array_unique($artefacts);

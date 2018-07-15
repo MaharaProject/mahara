@@ -118,7 +118,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         return array('externalvideo' => array('media'));
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $THEME;
 
         $configdata = $instance->get('configdata');

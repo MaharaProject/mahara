@@ -68,7 +68,7 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
         }
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $userid = $instance->get_view()->get('owner');
         if (!$userid) {
             return '';

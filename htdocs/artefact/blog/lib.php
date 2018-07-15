@@ -1016,6 +1016,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
             $draftentries = count_records_sql('SELECT COUNT(*) ' . $from, array($id));
             $from .= ' AND bp.published = 1';
+            if (!empty($viewoptions['existing_artefacts'])) {
+                $from .= ' AND bp.blogpost IN (' . join(',', (array)$viewoptions['existing_artefacts']) . ')';
+            }
         }
 
         $results['count'] = count_records_sql('SELECT COUNT(*) ' . $from, array($id));
@@ -1078,9 +1081,12 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     require_once(get_config('docroot') . 'lib/view.php');
                     $view = new View($viewoptions['viewid']);
                     $artefact = artefact_instance_from_id($post->id);
-                    list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, null, false);
+                    list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, null, false, false, $viewoptions['versioning']);
                     $post->commentcount = $commentcount;
                     $post->comments = $comments;
+                    if ($viewoptions['versioning']) {
+                        $post->allowcomments = false;
+                    }
                 }
             }
             if ($post->ctime != $post->mtime) {

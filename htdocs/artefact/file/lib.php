@@ -2143,7 +2143,15 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty->assign('folderid', $this->get('id'));
         $smarty->assign('downloadfolderzip', get_config_plugin('blocktype', 'folder', 'folderdownloadzip') ? !empty($options['folderdownloadzip']) : false);
 
-        if ($childrecords = $this->folder_contents()) {
+        $childrecords = false;
+        if (!empty($options['existing_artefacts'])) {
+            $childrecords = get_records_sql_array("SELECT * FROM {artefact} WHERE id IN (" . join(',', (array)$options['existing_artefacts']) . ")");
+        }
+        else {
+            $childrecords = $this->folder_contents();
+        }
+
+        if ($childrecords) {
             $sortorder = (isset($options['sortorder']) && $options['sortorder'] == 'desc') ? 'my_files_cmp_desc' : 'my_files_cmp';
             usort($childrecords, array('ArtefactTypeFileBase', $sortorder));
             $children = array();

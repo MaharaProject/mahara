@@ -27,8 +27,7 @@ Scenario: Create and delete image block
     Then I should see "Image - Image1.jpg"
     And I enable the switch "Show description"
     And I press "Save"
-    And I scroll to the top
-    And I follow "Display page"
+    And I display the page
     And I should see "Image1.jpg"
     # delete image block
     And I follow "Edit"

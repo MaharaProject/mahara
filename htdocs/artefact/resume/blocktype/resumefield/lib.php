@@ -42,8 +42,8 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
         return '';
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
-        safe_require('artefact', 'resume');
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
+        require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();
         $configdata = $instance->get('configdata');
         $configdata['viewid'] = $instance->get('view');

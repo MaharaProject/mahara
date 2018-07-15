@@ -64,7 +64,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
         return array('externalfeed' => array('media'));
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata');
         if (!empty($configdata['feedid'])) {
 

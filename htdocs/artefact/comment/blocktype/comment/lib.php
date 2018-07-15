@@ -38,7 +38,7 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
         return array('portfolio');
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER;
 
         if ($editing) {

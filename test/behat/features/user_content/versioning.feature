@@ -23,8 +23,7 @@ Scenario: Add blocks and create versions
     And I set the field "Block title" to "Text block version 1"
     And I set the field "Block content" to "Here is the first version of the block."
     And I press "Save"
-    And I scroll to the top
-    And I follow "Display page"
+    And I display the page
     And I press "More..."
     And I follow "Save to timeline"
     And I should see "Saved to timeline"
@@ -33,8 +32,7 @@ Scenario: Add blocks and create versions
     And I set the field "Block title" to "Text block version 2"
     And I set the field "Block content" to "Here is the second version of the block."
     And I press "Save"
-    And I scroll to the top
-    And I follow "Display page"
+    And I display the page
     And I press "More..."
     And I follow "Save to timeline"
     And I press "More..."

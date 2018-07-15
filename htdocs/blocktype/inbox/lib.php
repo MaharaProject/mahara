@@ -34,7 +34,7 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
         return $data;
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER, $THEME;
         $configdata = $instance->get('configdata');
         require_once('activity.php');

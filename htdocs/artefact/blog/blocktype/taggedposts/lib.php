@@ -168,7 +168,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
         return $results;
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER;
 
         $configdata = $instance->get('configdata');
@@ -231,7 +231,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
                     $result->commentcount = null;
                 }
 
-                list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $viewobj, null, false);
+                list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $viewobj, null, false, false, $versioning);
                 $result->comments = $comments;
 
                 // get all tags for this post

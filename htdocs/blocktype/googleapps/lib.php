@@ -32,7 +32,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         return array('googleapps' => array('media'));
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata');
         if (!isset($configdata['appsid'])) {
             return;

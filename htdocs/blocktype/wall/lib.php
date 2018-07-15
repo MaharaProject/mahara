@@ -38,7 +38,7 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
         return array('profile');
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER;
         $owner = $instance->get_view()->get('owner');
         if (!$owner) {

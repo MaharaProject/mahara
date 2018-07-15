@@ -65,7 +65,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
         }
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata');
         $sort = !empty($configdata['sort']) ? $configdata['sort'] : null;
         $limit = !empty($configdata['limitto']) ? $configdata['limitto'] : null;

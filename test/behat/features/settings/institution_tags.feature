@@ -62,7 +62,7 @@ Scenario: Creating institution tags
     And I press "Save"
     Then I should see "Journal entries with tag \"Institution One: One tag\""
 
-    And I follow "Display page"
+    And I display the page
     Then I should see "Institution One: One tag"
 
     Given I choose "Files" in "Create" from main menu

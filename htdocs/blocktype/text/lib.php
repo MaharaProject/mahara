@@ -42,7 +42,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         return array('text' => array('text'));
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         safe_require('artefact', 'file');
         $configdata = $instance->get('configdata');
         $smarty = smarty_core();

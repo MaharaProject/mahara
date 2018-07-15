@@ -29,7 +29,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
         return array('entireresume' => array('resume'));
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();
         // Get data about the resume fields the user has

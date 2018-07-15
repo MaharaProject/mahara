@@ -29,7 +29,7 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
         return array('dashboard');
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER;
         require_once('view.php');
         $configdata = $instance->get('configdata');

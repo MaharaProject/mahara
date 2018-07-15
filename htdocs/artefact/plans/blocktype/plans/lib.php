@@ -52,7 +52,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
         );
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $exporter;
 
         require_once(get_config('docroot') . 'artefact/lib.php');
@@ -70,7 +70,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                 $tasks = ArtefactTypeTask::get_tasks($planid, 0, $limit);
                 $template = 'artefact:plans:taskrows.tpl';
                 $blockid = $instance->get('id');
-                if ($exporter) {
+                if ($exporter || $versioning) {
                     $pagination = false;
                 }
                 else {
@@ -85,6 +85,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                 }
                 $configdata['view'] = $instance->get('view');
                 $configdata['block'] = $blockid;
+                $configdata['versioning'] = $versioning;
                 ArtefactTypeTask::render_tasks($tasks, $template, $configdata, $pagination, $editing);
 
                 if ($exporter && $tasks['count'] > $tasks['limit']) {
@@ -115,6 +116,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
             $smarty->assign('noplans', get_string('noplansselectone', 'blocktype.plans/plans'));
         }
         $smarty->assign('blockid', $instance->get('id'));
+        $smarty->assign('versioning', $versioning);
         return $smarty->fetch('blocktype:plans:content.tpl');
     }
 

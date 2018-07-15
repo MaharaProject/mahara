@@ -2251,13 +2251,14 @@ class View {
      * Build_rows - for each row build_columms
      * @param boolean $editing    whether we are in the edit more or not
      * @param boolean $exporting  whether we are in the process of an export
+     * @param boolean $versioning Whether we are in the process of view version
      * Returns the HTML for the rows of this view
      */
-    public function build_rows($editing=false, $exporting=false) {
+    public function build_rows($editing=false, $exporting=false, $versioning=false) {
         $numrows = $this->get('numrows');
         $result = '';
         for ($i = 1; $i <= $numrows; $i++) {
-            $result .= $this->build_columns($i, $editing, $exporting);
+            $result .= $this->build_columns($i, $editing, $exporting, $versioning);
         }
         return $result;
     }
@@ -2265,14 +2266,14 @@ class View {
     /**
      * Returns the HTML for the columns of this view
      */
-    public function build_columns($row, $editing=false, $exporting=false) {
+    public function build_columns($row, $editing=false, $exporting=false, $versioning=false) {
         global $USER;
         $columnsperrow = $this->get('columnsperrow');
         $currentrownumcols = $columnsperrow[$row]->columns;
 
         $result = '';
         for ($i = 1; $i <= $currentrownumcols; $i++) {
-            $result .= $this->build_column($row, $i, $editing, $exporting);
+            $result .= $this->build_column($row, $i, $editing, $exporting, $versioning);
         }
 
         $smarty = smarty_core();
@@ -2295,8 +2296,9 @@ class View {
      * @param int $column   The column to build
      * @param boolean $editing    Whether the view is being built in edit mode
      * @param boolean $exporting  Whether the view is being built for export
+     * @param boolean $versioning Whether the view is being built for versioning
      */
-    public function build_column($row, $column, $editing=false, $exporting=false) {
+    public function build_column($row, $column, $editing=false, $exporting=false, $versioning=false) {
         global $USER;
         $data = $this->get_column_datastructure($row, $column);
         static $installed = array();
@@ -2318,7 +2320,7 @@ class View {
                 // for configuring block instances only, is not necessary
             }
             else {
-                $result = $blockinstance->render_viewing($exporting);
+                $result = $blockinstance->render_viewing($exporting, $versioning);
                 if ($exporting) {
                     // Blocks with toolbars will export with their info withing the block itself instead
                     $classname = generate_class_name('blocktype', $blockinstance->get('blocktype'));
@@ -2341,7 +2343,6 @@ class View {
                         }
                     }
                 }
-
                 $blockcontent .= $result;
             }
         }
@@ -7193,6 +7194,7 @@ class View {
         $html = '';
         if (!empty($data->blocks)) {
             require_once(get_config('docroot') . 'blocktype/lib.php');
+            usort($data->blocks, function($a, $b) { return $a->order > $b->order; });
             foreach ($data->blocks as $k => $v) {
                 safe_require('blocktype', $v->blocktype);
                 $bi = new BlockInstance(0,
@@ -7207,10 +7209,11 @@ class View {
                         'configdata' => serialize((array)$v->configdata),
                     )
                 );
+                // Add a fake unique id to allow for pagination etc
                 $this->columns[$v->row][$v->column]['blockinstances'][] = $bi;
             }
         }
-        $html = $this->build_rows();
+        $html = $this->build_rows(false, false, true);
         $data->html = $html;
         return $data;
     }

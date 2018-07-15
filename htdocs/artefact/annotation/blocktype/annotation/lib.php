@@ -115,7 +115,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return false;
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $smarty = smarty_core();
         $artefactid = '';
         $text = '';
@@ -131,7 +131,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             $text = $artefact->get('description');
             require_once(get_config('docroot') . 'lib/view.php');
             $view = new View($viewid);
-            list($feedbackcount, $annotationfeedback) = ArtefactTypeAnnotationfeedback::get_annotation_feedback_for_view($artefact, $view, $instance->get('id'), true, $editing);
+            list($feedbackcount, $annotationfeedback) = ArtefactTypeAnnotationfeedback::get_annotation_feedback_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
             $smarty->assign('annotationfeedback', $annotationfeedback);
         }
         $smarty->assign('text', $text);

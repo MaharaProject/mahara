@@ -49,7 +49,7 @@ interface IPluginBlocktype {
      */
     public static function get_categories();
 
-    public static function render_instance(BlockInstance $instance, $editing=false);
+    public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false);
 }
 
 /**
@@ -263,6 +263,17 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
             return array($configdata['artefactid']);
         }
         return false;
+    }
+    /**
+    * Some blocktype plugins will have related artefacts based on artefactid.
+    * They should implement this function to keep a list of which ones. The
+    * result of this method is used to work out what artefacts where present at
+    * the time of the version creation to save in view_versioning.
+    *
+    * Note that it should just handle child level artefacts.
+    */
+    public static function get_current_artefacts(BlockInstance $instance) {
+        return array();
     }
 
     /**
@@ -1130,9 +1141,11 @@ class BlockInstance {
      *
      * @param boolean $exporting  Indicate the rendering is for an export
      *                            If we are doing an export we can't render the block to be loaded via ajax
+     * @param boolean $versioning Indicate the rendering is for an older view version
+     *
      * @return the rendered block
      */
-    public function render_viewing($exporting=false) {
+    public function render_viewing($exporting=false, $versioning=false) {
         global $USER;
 
         if (!safe_require_plugin('blocktype', $this->get('blocktype'))) {
@@ -1156,7 +1169,7 @@ class BlockInstance {
         else {
             $smarty->assign('loadbyajax', false);
             try {
-                $content = call_static_method($classname, 'render_instance', $this);
+                $content = call_static_method($classname, 'render_instance', $this, false, $versioning);
             }
             catch (NotFoundException $e) {
                 // Whoops - where did the image go? There is possibly a bug
@@ -1212,7 +1225,7 @@ class BlockInstance {
                 $smarty->assign('retractedonload', $configdata['retractedonload']);
             }
         }
-
+        $smarty->assign('versioning', $versioning);
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');
     }
 

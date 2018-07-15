@@ -677,11 +677,12 @@ class ArtefactTypeComment extends ArtefactType {
      * @param   int     $blockid  The id of the block instance that connects the artefact to the view
      * @param   bool    $html     Whether to return the information rendered as html or not
      * @param   bool    $editing  Whether we are view edit mode or not
+     * @param   bool    $versioning  Whether we are view versioning mode or not
      *
      * @return  array   $commentcount, $comments   The count of comments and either the comments
      *                                             or the html to render them.
      */
-    public function get_artefact_comments_for_view(ArtefactType $artefact, $view, $blockid, $html = true, $editing = false) {
+    public function get_artefact_comments_for_view(ArtefactType $artefact, $view, $blockid, $html = true, $editing = false, $versioning = false) {
         global $USER;
 
         if (!is_object($artefact) || !is_object($view)) {
@@ -712,6 +713,7 @@ class ArtefactTypeComment extends ArtefactType {
             $smarty->assign('commentcount', $commentcount);
             $smarty->assign('comments', $comments);
             $smarty->assign('editing', $editing);
+            $smarty->assign('versioning', $versioning); // Do not show comments in versioning
             $smarty->assign('allowcomments', $artefact->get('allowcomments'));
             $smarty->assign('allowcommentsadd', ($artefact->get('allowcomments') && ( $USER->is_logged_in() || (!$USER->is_logged_in() && get_config('anonymouscomments')))));
             $render = $smarty->fetch('artefact/artefactcommentsview.tpl');
