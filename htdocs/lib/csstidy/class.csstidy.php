@@ -73,7 +73,7 @@ define('DEFAULT_AT', 41);
 /**
  * Contains a class for printing CSS code
  *
- * @version 1.0
+ * @version 1.1.0
  */
 require('class.csstidy_print.php');
 
@@ -94,7 +94,7 @@ require('class.csstidy_optimise.php');
  * An online version should be available here: http://cdburnerxp.se/cssparse/css_optimiser.php
  * @package csstidy
  * @author Florian Schmitz (floele at gmail dot com) 2005-2006
- * @version 1.5.5
+ * @version 1.5.7
  */
 class csstidy {
 
@@ -104,18 +104,6 @@ class csstidy {
 	 * @access public
 	 */
 	public $css = array();
-    /**
-     * Saves the comments.
-     * @var array
-     * @access public
-     */
-    public $comments = array();
-    /**
-     * Saves the current comments of the selectors
-     * @var array
-     * @access public
-     */
-    public $cur_comments = array();
 	/**
 	 * Saves the parsed CSS (raw)
 	 * @var array
@@ -159,7 +147,7 @@ class csstidy {
 	 * @var string
 	 * @access private
 	 */
-	public $version = '1.5.5';
+	public $version = '1.5.7';
 	/**
 	 * Stores the settings
 	 * @var array
@@ -854,7 +842,6 @@ class csstidy {
 								}
 							}
 
-							$previous_property = $this->property;
 							$this->property = '';
 							$this->sub_value_arr = array();
 							$this->value = '';
@@ -961,7 +948,7 @@ class csstidy {
 					if ($string{$i} === '*' && $string{$i + 1} === '/') {
 						$this->status = array_pop($this->from);
 						$i++;
-                        if ($this->get_cfg('preserve_css_comment')) {
+						if ($this->get_cfg('preserve_css_comment')) {
                             $this->css_add_comment($this->at, $this->selector, $previous_property, $this->status, $cur_comment);
                         }
 						$this->_add_token(COMMENT, $cur_comment);
@@ -1075,7 +1062,7 @@ class csstidy {
             default:
                 break;
         }
-    }
+	}
 
 	/**
 	 * Adds a property with value to the existing CSS code
@@ -1097,10 +1084,6 @@ class csstidy {
 				$this->css[$media][$selector][$property] = trim($new_val);
 			}
 		} else {
-            if (!empty($this->cur_comments)) {
-                $this->comments[$media.$selector] = $this->cur_comments;
-                $this->cur_comments = array();
-            }
 			$this->css[$media][$selector][$property] = trim($new_val);
 		}
 	}
@@ -1125,7 +1108,7 @@ class csstidy {
 			return $media;
 		}
 		end($this->css);
-		list($at,) = each($this->css);
+		$at = key($this->css);
 		if ($at == $media) {
 			return $media;
 		}
@@ -1164,7 +1147,7 @@ class csstidy {
 
 			// if last is the same, keep it
 			end($this->css[$media]);
-			list($sel,) = each($this->css[$media]);
+			$sel = key($this->css[$media]);
 			if ($sel == $selector) {
 				return $selector;
 			}
