@@ -94,7 +94,13 @@ return function (target, source, columns, options) {
                       tr.append($('<td>').append(row[column]));
                     }
                     else if ( typeof(column) == 'function' ) {
-                      tr.append($('<td>').append(column(row,data)));
+                        var columncontent = column(row,data);
+                        if (columncontent.nodeName == 'TD') {
+                            tr.append(columncontent);
+                        }
+                        else {
+                            tr.append($('<td>').append(columncontent));
+                        }
                     }
                     else if ( typeof(column) == 'undefined' ) {
                         return;
