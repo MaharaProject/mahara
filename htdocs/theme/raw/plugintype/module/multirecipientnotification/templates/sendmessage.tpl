@@ -62,7 +62,7 @@
                 </p>
 
                 <p class="messagebody">
-                    {$message->message}
+                    {$message->message|safe}
                 </p>
 
             </div>

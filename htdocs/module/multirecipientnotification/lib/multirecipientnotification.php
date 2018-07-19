@@ -369,6 +369,7 @@ function get_message_mr($usr, $msgid) {
     if (((int) $usr !== (int) $message->fromid) && !in_array($usr, $message->userids)) {
         return null;
     }
+    $message->message = format_whitespace($message->message);
     return $message;
 }
 
