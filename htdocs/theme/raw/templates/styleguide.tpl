@@ -104,7 +104,6 @@ A group of buttons.
     <a href="#" class="btn btn-default">
         Button group
     </a>
-
 </div>
 ```
 </section>
@@ -183,7 +182,6 @@ This button is used to show there are more options available. An example can be 
             <a id="toggle_watchlist_link" class="watchlist" href="">
                 <span class="icon icon-eye left" role="presentation" aria-hidden="true"></span>
                 {str tag=addtowatchlist section=view}
-
             </a>
         </li>
         <li>
@@ -254,7 +252,6 @@ details on navigation styles.
                 <span class="nav-title sr-only">{str tag=showsearch}</span>
             </button>
         </div>
-
         <!-- Nav One -->
         <nav id="nav-one" class="nav collapse navbar-collapse nav-one" role="tabpanel">
            <ul id="navone" class="nav navbar-nav">
@@ -296,7 +293,6 @@ details on navigation styles.
               </li>
            </ul>
         </nav>
-
         <!-- Nav Two -->
         <nav id="nav-two" class="nav navbar-collapse nav-two collapse" role="tabpanel" aria-expanded="false">
             <ul id="navtwo" class="nav navbar-nav">
@@ -320,7 +316,6 @@ details on navigation styles.
                     <ul id="subnavfive" class=" collapse child-nav" role="menu">
                         <li><a href="">Sublink 1</a></li>
                         <li><a href="">Sublink 2</a></li>
-
                     </ul>
                 </li>
                 <li>
@@ -336,7 +331,6 @@ details on navigation styles.
                 </li>
             </ul>
         </nav>
-
         <!-- Nav Three -->
         <nav id="nav-three" class=" nav collapse navbar-collapse nav-three" role="tabpanel">
             <ul id="navthree" class="nav navbar-nav">
@@ -439,7 +433,6 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
 </div>
 ```
 </section>
-
 <section data-markdown data-category="navigation">
 ### Navigation tabs
 These are tabs to switch between pages within one section, for example in the "Profile" under "Content". The tabs navigation style is used when the entire section has only one "Save" button.
@@ -503,7 +496,6 @@ This style of tabs is used for third-level navigation in areas where each page w
 ```
 </section>
 
-
 <section data-markdown data-category="panels">
 ### Panel
 A basic panel.
@@ -533,7 +525,6 @@ A delete panel.
             <button type="submit" class="btn-default submitcancel submit btn" tabindex="0">{str tag='yes'}</button>
             <input type="submit" class="btn-default submitcancel cancel" tabindex="0" value="{str tag='no'}">
         </div>
-
     </div>
 </div>
 ```
@@ -556,7 +547,6 @@ A side panel is used in the sideblock area, e.g. on the dashboard for "Online us
                     Side panel link
                 </a>
             </li>
-
         </ul>
         <a href="" class="panel-footer text-small">
             Side panel footer
@@ -618,7 +608,6 @@ This type of drop-down panel is used in blocks, for example the "Inbox" block.
         Blocks drop-down
         <span class="icon icon-chevron-up collapse-indicator pull-right inner-link" role="presentation" aria-hidden="true"></span>
     </h3>
-
     <div class="block collapse in" id="target" aria-expanded="true">
         <div class="inboxblock list-group">
             <div class="has-attachment panel-default collapsible list-group-item">
@@ -627,14 +616,12 @@ This type of drop-down panel is used in blocks, for example the "Inbox" block.
                     Item 1
                     <span class="icon icon-chevron-down collapse-indicator pull-right text-small" role="presentation" aria-hidden="true"></span>
                 </a>
-
                 <div class="collapse" id="item1">
                     <p class="content-text">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at turpis commodo, pretium turpis ac, porttitor dolor.
                     </p>
                 </div>
             </div>
-
             <div class="has-attachment panel-default collapsible list-group-item">
                 <a class="collapsed link-block" data-toggle="collapse" href="#item2" aria-expanded="false">
                     <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
@@ -648,7 +635,6 @@ This type of drop-down panel is used in blocks, for example the "Inbox" block.
                 </div>
             </div>
         </div>
-
         <div class="artefact-detail-link">
             <a class="link-blocktype last" href="">
                 <span class="icon icon-arrow-circle-right" role="presentation" aria-hidden="true"></span>
@@ -708,9 +694,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
         {str tag=nextpage section=collection}
         <span class="icon right icon-chevron-right" role="presentation" aria-hidden="true"></span>
     </button>
-
     <h2>{str tag=Collection section=collection}: Collection 1</h2>
-
     <p class="navlabel">{str tag=navtopage section=collection}</p>
     <nav class="custom-dropdown dropdown">
         <ul class="hidden">
@@ -776,10 +760,10 @@ This panel is used to show a page.
 </div>
 ```
 </section>
-
 <section data-markdown data-category="panels">
 ## Submitted Page Panel
 This panel is used to show a submitted page.
+
 <style>
 /* Styles for submitted and collection panels */
 .panel-quarter:nth-child(4n) .page-access .dropdown-menu {
@@ -798,7 +782,6 @@ This panel is used to show a submitted page.
             </div>
         </div>
         <div class="panel-footer">
-
             <div class="page-access">
                 <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
@@ -849,10 +832,10 @@ This panel is used to show a submitted page.
 ```
 </section>
 
-
 <section data-markdown data-category="panels">
 ## Collections Panel
 This panel is used to show a collection.
+
 <style>
 /* Styles for submitted and collection panels */
 .panel-quarter:nth-child(4n) .page-access .dropdown-menu {
@@ -997,8 +980,6 @@ Used to show information about Mahara. Usually, this is only shown to administra
 ```
 </section>
 
-
-
 <section data-markdown data-category="modals">
 ### Modal docked
 A slide-out modal. This is used to show a block's configuration for example.
@@ -1006,7 +987,6 @@ A slide-out modal. This is used to show a block's configuration for example.
 <button type="button" class="btn btn-primary" data-toggle="modal-docked" data-target="#modal-docks">
     Launch demo modal
 </button>
-
 <div class="modal modal-docked modal-docked-right modal-shown closed" id="modal-docks" tabindex="-1" role="dialog" aria-labelledby="#modal-docks-label">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -1090,7 +1070,6 @@ This is a normal table, e.g. found in a forum.
                 <h3 class="title">
                     <a href="">Item 1</a>
                 </h3>
-
                 <div class="forumpath text-small text-midtone">
                     Some description information <a href="" class="topicforum  text-midtone">Description link</a>
                 </div>
@@ -1118,7 +1097,6 @@ A striped table is most frequently found in the administration area where tables
             <th class="center">Column 2</th>
             <th class="center">Column 3</th>
             <th>Column 4</th>
-
             <th>Column 5</th>
             <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
         </tr>
@@ -1146,7 +1124,6 @@ A striped table is most frequently found in the administration area where tables
             <td class="center">5</td>
             <td class="center">2</td>
             <td>Item 2 info</td>
-
             <td>Item 2 stuff</td>
             <td class="right">
                 <div class="btn-group">
@@ -1225,7 +1202,6 @@ jQuery(document).ready(function() {
   jQuery(".js-example-basic-single").select2();
 });
 </script>
-
 <select class="js-example-basic-single">
     <option value="AK">Auckland</option>
     <option value="WN">Wellington</option>
@@ -1276,10 +1252,8 @@ This size and style of profile picture is used in the friends list.
         <p class="member-name">John Smith</p>
     </a>
 </div>
-
 ```
 </section>
-
 
 <section data-markdown data-category="text">
 ### Heading 1
@@ -1346,7 +1320,6 @@ Used as a description for an item. Note: the div is only there to apply the form
 </div>
 ```
 </section>
-
 
 <section data-markdown data-category="icons">
 ### Add user
@@ -2115,8 +2088,8 @@ Used as icon for a system notification.
     <a href="#top" class="btn btn-primary">{$scrollup}</a>
 </div>
 
-<script type="text/javascript" src="https://cdn.rawgit.com/chjj/marked/v0.3.5/marked.min.js"></script>
-<script src="https://cdn.rawgit.com/zenorocha/clipboard.js/v1.5.1/dist/clipboard.min.js"></script>
+<script src="{$wwwroot}js/marked/marked.min.js"></script>
+<script src="{$wwwroot}js/clipboard/clipboard.min.js"></script>
 <script type="text/javascript">
     // using inline js here because it's so specific to the use case of the style guide
     // this is all done on the client side and would be to inefficient for anything other than the styleguide
@@ -2129,7 +2102,7 @@ Used as icon for a system notification.
 
         // modified from https://gist.github.com/paulirish/1343518
         // strip leading whitespace so it isn't evaluated as code
-        var text      = elem.innerHTML.replace(/\n\s*\n/g,'\n'),
+        var text      = elem.innerHTML.replace(/\n\s*\n/g,'\n\n'),
             // set indentation level so your markdown can be indented within your HTML
             leadingws = text.match(/^\n?(\s*)/)[1].length,
             regex     = new RegExp('\\n?\\s{' + leadingws + '}','g'),
@@ -2157,7 +2130,7 @@ Used as icon for a system notification.
       });
 
       // init copy to clipboard buttons
-      new Clipboard('.copy');
+      new ClipboardJS('.copy');
 
       // build section tabs
       $j.each(categories, function(i, category) {

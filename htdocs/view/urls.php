@@ -156,7 +156,7 @@ jQuery(function($) {
             for (i = 0; i < {$count}; i++) {
                 var element = document.getElementById("copytoclipboard-" + i);
                 try {
-                    var client = new Clipboard(element);
+                    var client = new ClipboardJS(element);
                     client.on("error", function(e) {
                         var element = document.getElementById("copytoclipboard-" + e.client.id);
                         $(element).hide();

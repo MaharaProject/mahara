@@ -131,4 +131,5 @@ $smarty->assign('copy', get_string('copy'));
 $smarty->assign('scrollup', get_string('scroll_to_top'));
 $smarty->assign('SIDEBARS', false);
 $smarty->assign('ADDITIONALHTMLHEAD', $inlinecss);
+$smarty->assign('wwwroot', get_config('wwwroot'));
 $smarty->display('styleguide.tpl');
