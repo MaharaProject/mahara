@@ -1561,6 +1561,20 @@ function site_warnings() {
         $warnings[] = get_string('noreplyaddressmissingorinvalid', 'error', get_config('wwwroot') . 'admin/site/options.php?fs=emailsettings');
     }
 
+    // If the configurable themes bug 1760732 was triggered by a recent upgrade, provide a warning that the theme needs resaving.
+    $custom_themes = get_records_sql_array("SELECT i.displayname FROM {institution} i
+                                            JOIN {institution_config} ic ON ic.institution = i.name
+                                            WHERE ic.field = ? AND ic.value = ?
+                                            ORDER BY i.displayname", array('customthemeupdate', '1'));
+    if ($custom_themes) {
+        $warning = get_string('resavecustomthemes', 'error') . "<ul>";
+        foreach ($custom_themes as $theme) {
+            $warning .= "<li>" . hsc($theme->displayname) . "</li>";
+        }
+        $warning .= "</ul>";
+        $warnings[] = $warning;
+    }
+
     safe_require('auth', 'saml');
     if (PluginAuthSaml::is_active()) {
         // Check if the saml plugin config needs updating
