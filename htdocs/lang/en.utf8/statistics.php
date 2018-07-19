@@ -202,6 +202,7 @@ $string['activeusers'] = "Active users";
 $string['logins'] = "Logins";
 
 $string['reports'] = 'Reports';
+$string['reportsdesc'] = 'View statistics about the site and learning analytics data about users';
 $string['reportsfor'] = 'Reports for %s';
 $string['reporttype'] = 'Report type';
 $string['reportconfig'] = 'Report configuration';
