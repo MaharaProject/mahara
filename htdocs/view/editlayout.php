@@ -289,12 +289,13 @@ function get_basic_elements() {
         $elements['createtags'] = array(
             'type'         => 'select',
             'title'        => get_string('createtags', 'view'),
-            'description'  => get_string('createtagsdesc', 'view'),
+            'description'  => get_string('createtagsdesc1', 'view'),
             'options'      => $createtagsoptions,
             'isSelect2'    => true,
             'class'        => 'js-select2',
             'multiple'     => true,
             'defaultvalue' => null,
+            'collapseifoneoption' => false,
             'width'        => '280px',
             'help'         => true,
         );
