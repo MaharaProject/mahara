@@ -28,7 +28,7 @@ Background: Setting up test data for users and portfolio pages
     And I should see "Hide" in the "smartevidence" property
     # Make sure we have a matrix config form
     And I choose "SmartEvidence" in "Extensions" from administration menu
-    And I follow "Add framework"
+    And I follow "Import" in the "Arrow-bar nav" property
     And I attach the file "example.matrix" to "Matrix file"
     And I press "Upload matrix"
     # Check that we have new framework

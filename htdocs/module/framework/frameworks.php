@@ -18,57 +18,244 @@ define('SECTION_PAGE', 'frameworks');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-define('TITLE', get_string('Framework', 'module.framework'));
+define('TITLE', get_string('frameworknav', 'module.framework'));
 safe_require('module', 'framework');
 if (!PluginModuleFramework::is_active()) {
     throw new AccessDeniedException(get_string('pluginnotactive1', 'error', get_string('frameworknav', 'module.framework')));
 }
 
 $upload = param_boolean('upload');
+$uploadmatrix = param_boolean('uploadmatrix');
 
-if ($upload) {
+function get_institutions() {
+    $insts = get_records_array('institution');
+    $inst_names = array();
+    foreach ($insts as $inst) {
+        array_push($inst_names, $inst->displayname);
+    }
+    return $inst_names;
+}
+//set up 3rd level nav for upload json file vs. edit
+function submenu_items($active_tab = null) {
+    $tabs = array(
+        'subnav' => array(
+            'class' => 'smartevidenceframework'
+        ),
+        'overview' => array(
+            'page' => 'overview',
+            'url'  => 'module/framework/frameworks.php',
+            'title'=>  get_string('overview'),
+        ),
+        'editor' => array(
+            'page'  => 'editor',
+            'url'   => 'module/framework/frameworks.php?upload=1',
+            'title' => get_string('editor', 'module.framework'),
+        ),
+        'import' => array(
+            'page'  => 'import',
+            'url'   => 'module/framework/frameworks.php?uploadmatrix=1',
+            'title' => get_string('Import', 'admin'),
+        ),
+    );
+    if ($active_tab && isset($tabs[$active_tab])) {
+        $tabs[$active_tab]['selected'] = true;
+    }
+    return $tabs;
+}
+
+if ($uploadmatrix) {
+    //show Browse for matrix file form.
     define('SUBSECTIONHEADING', get_string('upload'));
+    $active_tab = 'import';
     $form = upload_matrix_form();
     $smarty = smarty();
     setpageicon($smarty, 'icon-th');
     $smarty->assign('wwwroot', get_config('wwwroot'));
+    $smarty->assign('SUBPAGENAV', submenu_items($active_tab));
     $smarty->assign('form', $form);
     $smarty->display('module:framework:uploadframework.tpl');
     exit;
 }
 
-$frameworks = Framework::get_frameworks('any');
-if ($frameworks) {
-    foreach ($frameworks as $framework) {
-        $fk = new Framework($framework->id);
-        if ($fk->get('active')) {
-            $framework->active = array(
-                'title' => 'Enabled',
-                'classes' => 'icon icon-lg icon-check text-success displayicon'
-            );
+else if ($upload) {
+    //jsoneditor page:
+    //get existing frameworks.
+    define('MENUITEM-SUBPAGE', 'editor');
+    $active_tab = 'editor';
+    $fw = array();
+    array_push($fw, get_string('copyframework', 'module.framework'));
+    $copy_desc = get_string('copyframeworkdescription', 'module.framework');
+
+    $fw_edit = array();
+    array_push($fw_edit, get_string('editframework', 'module.framework'));
+    $content = $SESSION->get('jsoneditorcontent');
+    $content = !empty($content) ? json_encode($content) : '';
+
+    $frameworks = Framework::get_frameworks('any');
+    if ($frameworks) {
+        foreach ($frameworks as $framework) {
+            $framework = new Framework($framework->id);
+            $framework->collections = count($framework->get_collectionids());
+            $fw[$framework->get('id')] = $framework->get('name');
+            if (!$framework->get('active') && !$framework->collections) {
+                $fw_edit[$framework->get('id')] = $framework->get('name');
+            }
         }
-        else {
-            $framework->active = array(
-                'title' => 'Disabled',
-                'classes' => 'icon icon-lg icon-times text-danger displayicon'
-            );
-        }
-        $framework->collections = count($fk->get_collectionids());
-        $framework->delete = false;
-        if (empty($framework->collections)) {
-            $framework->delete = pieform(
+            if (count($fw_edit)<2) {
+                $edit_desc = get_string('editdescription1', 'module.framework');
+            }
+            else {
+                $edit_desc = get_string('editdescription2', 'module.framework');
+            }
+     }
+     //add strings needed to var strings on editor.js
+     $jsoneditor_strings = array(
+        'institution' => 'mahara',
+        'instdescription' => 'module.framework',
+        'titledesc' => 'module.framework',
+        'Framework' => 'module.framework',
+        'frameworknav' => 'module.framework',
+        'name' => 'mahara',
+        'frameworktitle' => 'module.framework',
+        'description' => 'mahara',
+        'defaultdescription' => 'module.framework',
+        'descriptioninfo' => 'module.framework',
+        'selfassessed' => 'module.framework',
+        'evidencestatuses' => 'module.framework',
+        'evidencedesc' => 'module.framework',
+        'Begun' => 'module.framework',
+        'begun' => 'module.framework',
+        'Incomplete' => 'module.framework',
+        'incomplete' => 'module.framework',
+        'Partialcomplete' => 'module.framework',
+        'partialcomplete' => 'module.framework',
+        'Completed' => 'module.framework',
+        'completed' => 'module.framework',
+        'standard' => 'module.framework',
+        'standards' => 'module.framework',
+        'Shortname' => 'admin',
+        'shortnamestandard' => 'module.framework',
+        'titlestandard' => 'module.framework',
+        'descstandard' => 'module.framework',
+        'descstandarddefault' => 'module.framework',
+        'standardid' => 'module.framework',
+        'standardiddesc' => 'module.framework',
+        'standardelements' => 'module.framework',
+        'standardelement' => 'module.framework',
+        'standardelementdesc' => 'module.framework',
+        'standardelementdefault' => 'module.framework',
+        'standardiddesc1' => 'module.framework',
+        'elementid' => 'module.framework',
+        'elementiddesc' => 'module.framework',
+        'invalidjson' => 'module.framework',
+        'validjson' => 'module.framework',
+        'moveright' => 'module.framework',
+        'moveleft' => 'module.framework',
+        'deletelast' => 'module.framework',
+        'collapse' => 'mahara',
+        'add' => 'mahara',
+        'expand' => 'mahara',
+        'deleteall' => 'module.framework',
+        'selfassesseddescription' => 'module.framework',
+        'standardsdescription' => 'module.framework',
+        'no' => 'mahara',
+        'yes' => 'mahara',
+        'parentelementid' => 'module.framework',
+        'parentelementdesc' => 'module.framework',
+        'standardelementsdescription' => 'module.framework',
+        'all' => 'module.framework',
+    );
+
+    //set up variables for correct selection of framework from dropdowns
+    $fw_list = json_encode($fw);
+    $fwe = json_encode($fw_edit);
+    $fwe = preg_replace('/^\{(.*)\}$/', '[{$1}]', $fwe);
+    $fwe = preg_replace('/,/', '},{', $fwe );
+    $fw_list = preg_replace('/^\{(.*)\}$/', '[{$1}]', $fw_list);
+    $fw_list = preg_replace('/,/', '},{', $fw_list );
+
+    $inst_names = get_institutions();
+    $inst_stg = get_string('all', 'module.framework') . ',';
+    foreach ($inst_names as $inst) {
+        $inst_stg .= $inst . ',';
+    }
+    $inst_stg = preg_replace('/(.*)\,$/', '$1', $inst_stg);
+    $inlinejs = "var inst_names='{$inst_stg}';";
+    //want to have the id for the fw available to use because using name to save with causes problems
+    $inlinejs .= "var fws='{$fw_list}';";
+    $inlinejs .= "var fw_edit='{$fwe}';";
+
+    //2nd nav should be this.
+    $smarty = smarty(array('js/jsoneditor/src/dist/jsoneditor.js', 'module/framework/js/editor.js'), array(), $jsoneditor_strings);
+    $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+    setpageicon($smarty, 'icon-th');
+    $smarty->assign('wwwroot', get_config('wwwroot'));
+    $smarty->assign('SUBPAGENAV', submenu_items($active_tab));
+    $smarty->assign('fw_edit', $fw_edit);
+    $smarty->assign('edit_desc', $edit_desc);
+    $smarty->assign('copy_desc', $copy_desc);
+    $smarty->assign('fw', $fw);
+    $smarty->display('module:framework:jsoneditor.tpl');
+    exit;
+}
+
+//for overview page
+else {
+    $active_tab = 'overview';
+}
+    $frameworks = Framework::get_frameworks('any');
+    if ($frameworks) {
+        foreach ($frameworks as $framework) {
+            $fk = new Framework($framework->id);
+            if ($fk->get('active')) {
+                $framework->active = array(
+                    'title' => 'Enabled',
+                    'classes' => 'icon icon-lg icon-check text-success displayicon'
+                );
+            }
+            else {
+                $framework->active = array(
+                    'title' => 'Disabled',
+                    'classes' => 'icon icon-lg icon-times text-danger displayicon'
+                );
+            }
+            $framework->collections = count($fk->get_collectionids());
+            $framework->delete = false;
+            if (empty($framework->collections)) {
+                $framework->delete = pieform(
+                    array(
+                        'name' => 'framework_delete_' . $framework->id,
+                        'successcallback' => 'framework_delete_submit',
+                        'renderer' => 'div',
+                        'class' => 'btn-group-last',
+                        'elements' => array(
+                            'submit' => array(
+                                'type'         => 'button',
+                                'class'        => 'btn-secondary btn-sm button',
+                                'usebuttontag' => true,
+                                'value'        => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
+                                'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
+                            ),
+                            'framework'  => array(
+                                'type'         => 'hidden',
+                                'value'        => $framework->id,
+                            )
+                        ),
+                    )
+                );
+            }
+            $framework->config = pieform(
                 array(
-                    'name' => 'framework_delete_' . $framework->id,
-                    'successcallback' => 'framework_delete_submit',
+                    'name' => 'framework_config_' . $framework->id,
+                    'successcallback' => 'framework_config_submit',
                     'renderer' => 'div',
-                    'class' => 'btn-group-last',
+                    'class' => (empty($framework->collections) ? 'btn-group-first' : 'btn-group-first btn-group-last'),
                     'elements' => array(
                         'submit' => array(
                             'type'         => 'button',
                             'class'        => 'btn-secondary btn-sm button',
                             'usebuttontag' => true,
-                            'value'        => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
-                            'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
+                            'value'        => '<span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('edit') . '</span>',
                         ),
                         'framework'  => array(
                             'type'         => 'hidden',
@@ -78,50 +265,31 @@ if ($frameworks) {
                 )
             );
         }
-        $framework->config = pieform(
-            array(
-                'name' => 'framework_config_' . $framework->id,
-                'successcallback' => 'framework_config_submit',
-                'renderer' => 'div',
-                'class' => (empty($framework->collections) ? 'btn-group-first' : 'btn-group-first btn-group-last'),
-                'elements' => array(
-                    'submit' => array(
-                        'type'         => 'button',
-                        'class'        => 'btn-secondary btn-sm button',
-                        'usebuttontag' => true,
-                        'value'        => '<span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('edit') . '</span>',
-                    ),
-                    'framework'  => array(
-                        'type'         => 'hidden',
-                        'value'        => $framework->id,
-                    )
-                ),
-            )
-        );
-    }
-}
-
-function framework_delete_submit(Pieform $form, $values) {
-    global $SESSION;
-
-    $framework = new Framework($values['framework']);
-    if (!$framework->is_in_collections()) {
-        $framework->delete();
-        $SESSION->add_ok_msg(get_string('itemdeleted'));
-    }
-    else {
-        $SESSION->add_error_msg(get_string('deletefailed', 'admin'));
     }
 
-    redirect('/module/framework/frameworks.php');
-}
 
-function framework_config_submit(Pieform $form, $values) {
-    redirect(get_config('wwwroot') . 'module/framework/frameworkmanager.php?id=' . $values['framework']);
-}
+    //on frameworks page (rubbish bin icon)
+    function framework_delete_submit(Pieform $form, $values) {
+        global $SESSION;
+        $framework = new Framework($values['framework']);
+        if (!$framework->is_in_collections()) {
+            $framework->delete();
+            $SESSION->add_ok_msg(get_string('itemdeleted'));
+        }
+        else {
+            $SESSION->add_error_msg(get_string('deletefailed', 'admin'));
+        }
 
-$smarty = smarty();
-setpageicon($smarty, 'icon-th');
-$smarty->assign('frameworks', $frameworks);
-$smarty->assign('wwwroot', get_config('wwwroot'));
-$smarty->display('module:framework:frameworks.tpl');
+        redirect('/module/framework/frameworks.php');
+    }
+    //edit framework on main page
+    function framework_config_submit(Pieform $form, $values) {
+        redirect(get_config('wwwroot') . 'module/framework/frameworkmanager.php?id=' . $values['framework']);
+    }
+
+    $smarty = smarty();
+    setpageicon($smarty, 'icon-th');
+    $smarty->assign('frameworks', $frameworks);
+    $smarty->assign('SUBPAGENAV', submenu_items($active_tab));
+    $smarty->assign('wwwroot', get_config('wwwroot'));
+    $smarty->display('module:framework:frameworks.tpl');

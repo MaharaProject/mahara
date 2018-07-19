@@ -63,7 +63,7 @@ class PluginModuleFramework extends PluginModule {
     }
 
     public static function matrix_is_valid_json($filename) {
-
+        global $SESSION;
         $ok = array('error' => false);
         $matrix = file_get_contents($filename);
         if (!$matrix) {
@@ -97,6 +97,8 @@ class PluginModuleFramework extends PluginModule {
                         }
                         unset($content->framework->standardelements);
                     }
+                    //put ok content into session variable
+                    $SESSION->set('jsoneditorcontent', $content);
                 }
             }
         }
@@ -162,14 +164,13 @@ class Framework {
     const EVIDENCE_COMPLETED = 3;
 
     public function __construct($id=0, $data=null) {
-
         if (!empty($id)) {
             $tempdata = get_record('framework', 'id', $id);
             if (empty($tempdata)) {
                 throw new FrameworkNotFoundException("Framework with id $id not found");
             }
             if (!empty($data)) {
-                $data = array_merge((array)$tempdata, $data);
+                $data = array_merge((array)$tempdata, (array)$data);
             }
             else {
                 $data = $tempdata; // use what the database has
@@ -238,7 +239,9 @@ class Framework {
         delete_records('framework_evidence', 'framework', $this->id);
         delete_records('framework_evidence_statuses', 'framework', $this->id);
         delete_records('framework_assessment_feedback', 'framework', $this->id);
-        delete_records_sql('DELETE FROM {framework_standard_element} WHERE standard IN (' . join(',', array_map('intval', $standards)) . ')');
+        if ($standards) {
+            delete_records_sql('DELETE FROM {framework_standard_element} WHERE standard IN (' . join(',', array_map('intval', $standards)) . ')');
+        }
         delete_records('framework_standard', 'framework', $this->id);
         delete_records('framework_config', 'framework', $this->id);
         delete_records('framework', 'id', $this->id);
@@ -308,67 +311,72 @@ class Framework {
                 }
             }
         }
-        // update standards
         $standardsvars = array('shortname','name','description');
         if (isset($this->standards) && is_array($this->standards)) {
             foreach ($this->standards['standards'] as $key => $standard) {
                 $sfordb = new stdClass();
                 $sfordb->framework = $this->id;
                 $sfordb->mtime = db_format_timestamp(time());
-                $sfordb->priority = $key;
+                $sfordb->priority = $key;//needs to be a number, works if array of objects
                 foreach ($standardsvars as $v) {
                     $sfordb->{$v} = isset($standard->{$v}) ? $standard->{$v} : null;
                 }
+                //update each standard
                 if (!empty($standard->id)) {
+                    $sid = $standard->id;
                     $sfordb->id = $standard->id;
                     update_record('framework_standard', $sfordb, 'id');
+
                 }
+                //create new standard
                 else {
                     $sfordb->ctime = db_format_timestamp(time());
                     $sid = insert_record('framework_standard', $sfordb, 'id', true);
+                }
                     // From .matrix file reading
-                    if (isset($standard->standardelement) && is_array($standard->standardelement)) {
-                        $standard->options = $standard->standardelement;
-                    }
-                    if ($sid && isset($standard->options) && is_array($standard->options)) {
-                        $uniqueids = array();
-                        $priority = 0;
-                        foreach ($standard->options as $option) {
-                            $priority++;
-                            $sofordb = new stdClass();
-                            $sofordb->standard = $sid;
-                            $sofordb->mtime = db_format_timestamp(time());
-                            foreach ($standardsvars as $ov) {
-                                $sofordb->{$ov} = isset($option->{$ov}) ? $option->{$ov} : null;
+                if (isset($standard->standardelement) && is_array($standard->standardelement)) {
+                    $standard->options = $standard->standardelement;
+                }
+                if ($sid && isset($standard->options) && is_array($standard->options)) {
+                    $uniqueids = array();
+                    $priority = 0;
+                    foreach ($standard->options as $option) {
+                        $priority++;
+                        $sofordb = new stdClass();
+                        $sofordb->standard = $sid;
+                        $sofordb->mtime = db_format_timestamp(time());
+                        foreach ($standardsvars as $ov) {
+                            $sofordb->{$ov} = isset($option->{$ov}) ? $option->{$ov} : null;
+                        }
+                        // set priority based on the order the array is passed in
+                        $sofordb->priority = $priority;
+                        if (!empty($option->id)) {//if existing se
+                            $sofordb->id = $option->id;
+                            if (!empty($option->elementid)) {
+                                $uniqueids[$option->id] = $option->elementid;
                             }
-                            // set priority based on the order the array is passed in
-                            $sofordb->priority = $priority;
-                            if (!empty($option->id)) {
-                                $sofordb->id = $option->id;
-                                if (!empty($option->elementid)) {
-                                    $uniqueids[$option->id] = $option->elementid;
-                                }
-                                if (($index = array_search($option->parentelementid, $uniqueids)) !== false) {
-                                    $option->parentelementid = $index;
-                                }
-                                update_record('framework_standard', $sofordb, 'id');
+                            if (($index = array_search($option->parentelementid, $uniqueids)) !== false) {
+                                $option->parentelementid = $index;
                             }
-                            else {
-                                $sofordb->ctime = db_format_timestamp(time());
-                                if (isset($option->parentelementid) && ($index = array_search($option->parentelementid, $uniqueids)) !== false) {
-                                    $option->parentelementid = $index;
-                                }
-                                $sofordb->parent = !empty($option->parentelementid) ? $option->parentelementid : null;
-                                $inserted = insert_record('framework_standard_element', $sofordb, 'id', true);
-                                if (!empty($option->elementid)) {
-                                    $uniqueids[$inserted] = $option->elementid;
-                                }
+                            update_record('framework_standard_element', $sofordb, 'id');
+                        }
+                        else {//otherwise it's new
+                            $sofordb->ctime = db_format_timestamp(time());
+                            if (isset($option->parentelementid) && ($index = array_search($option->parentelementid, $uniqueids)) !== false) {
+                                $option->parentelementid = $index;//db id for the parent
+                            }
+                            $sofordb->parent = !empty($option->parentelementid) ? $option->parentelementid : null;
+                            //where se record goes in
+                            $inserted = insert_record('framework_standard_element', $sofordb, 'id', true);
+                            if (!empty($option->elementid)) {
+                                $uniqueids[$inserted] = $option->elementid;
+                            }
                             }
                         }
                     }
                 }
             }
-        }
+
 
         db_commit();
     }

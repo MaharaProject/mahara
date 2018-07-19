@@ -1,12 +1,5 @@
 {include file="header.tpl"}
 
-<div class="btn-group btn-group-top only-button">
-    <a class="btn btn-secondary btn-group-item float-left" href="{$wwwroot}module/framework/frameworks.php?upload=1">
-        <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
-        <span class="btn-title">{str tag="addframework" section="module.framework"}</span>
-    </a>
-</div>
-
 <h4>{str tag="frameworks" section="module.framework"}</h4>
 <p class="lead">{str tag="frameworksdesc" section="module.framework"}</p>
 

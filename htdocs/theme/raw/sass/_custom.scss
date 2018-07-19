@@ -800,4 +800,19 @@ a[type="submit"],
 // Backup for libraries that still need hidden class instead of bootstrap 4s new .d-none
 .hidden {
     display: none;
+
+//used for Smart Evidence json-editor
+#editor_holder .well {
+    background: #FFF !important;
+}
+
+div.form-group .control-label {
+    vertical-align: top;
+}
+
+//@TODO - doesn't work -why?
+//[class^="json-editor-btn-"] {
+.json-editor-btntype-properties span {
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
 }
