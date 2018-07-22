@@ -995,6 +995,7 @@ $string['institutionsettingsdescription'] = 'Here you can change settings regard
 $string['changeinstitution'] = 'Change institution';
 $string['institutionstaff'] = 'Institution staff';
 $string['institutionadmin'] = 'Institution administrator';
+$string['institutionadmins'] = 'Institution administrators';
 $string['institutionadministrator'] = 'Institution administrator';
 $string['institutionadmindescription1'] = 'Allow the user to administer all users in this institution.';
 $string['settingsfor'] = 'Settings for:';
