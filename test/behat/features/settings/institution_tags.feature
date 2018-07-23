@@ -73,7 +73,7 @@ Scenario: Creating institution tags
     And I press "Save changes"
 
     Given I choose "Pages and collections" in "Portfolio" from main menu
-    And I follow "Tags"
+    And I follow "Tags" in the "#sb-tags" "css_element"
     And I follow "Edit tags"
     Then I should see "Test" in the "My tags list" property
     Then I should not see "Institution One: One tag" in the "My tags list" property
