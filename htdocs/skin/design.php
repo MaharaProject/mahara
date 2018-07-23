@@ -83,9 +83,8 @@ else {
             'public' => get_string('publicskinaccess', 'skin'),
     );
 }
-// because the page has two artefact choosers in the form
-// we need to handle how the browse works differently from normal
-$folder = param_integer('folder', null);
+$folder = param_integer('folder', 0);
+$browse = (int) param_variable('browse', 0);
 $highlight = null;
 if ($file = param_integer('file', 0)) {
     $highlight = array($file);
@@ -160,11 +159,11 @@ if (!$designsiteskin) {
         'body_background_image' => array(
                 'type'         => 'filebrowser',
                 'title'        => get_string('bodybgimage1', 'skin'),
-                'folder'       => ((isset($folder)) ? $folder : 0),
+                'folder'       => $folder,
                 'highlight'    => $highlight,
-                'browse'       => ((isset($folder)) ? 1 : 0),
+                'browse'       => $browse,
                 'filters'      => array(
-                         'artefacttype' => array('image', 'profileicon'),
+                         'artefacttype' => array('image'),
                 ),
                 'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&fs=skinbg',
                 'config'       => array(
@@ -212,156 +211,6 @@ if (!$designsiteskin) {
         )
     ));
 }
-$elements['viewbg'] = array( // TODO remove this
-    'type'   => 'fieldset',
-    'legend' => get_string('viewbackgroundoptions', 'skin'),
-    'class'  => 'hidden',
-    'elements'     => array(
-            'view_background_color' => array(
-                    'type' => 'color',
-                    'title' => get_string('viewbgcolor', 'skin'),
-                    'defaultvalue' => (!empty($viewskin['view_background_color']) ? $viewskin['view_background_color'] : '#FFFFFF'),
-                    'size' => 7,
-                    'options' => array(
-                        'transparent' => true,
-                    ),
-            )
-    )
-);
-if (!$designsiteskin) {  // TODO remove this
-    $elements['viewbg']['elements'] = array_merge($elements['viewbg']['elements'], array(
-        'view_background_image' => array(
-                'type'         => 'filebrowser',
-                'title'        => get_string('viewbgimage', 'skin'),
-                'folder'       => ((isset($folder)) ? $folder : 0),
-                'highlight'    => $highlight,
-                'browse'       => ((isset($folder)) ? 1 : 0),
-                'filters'      => array(
-                         'artefacttype' => array('image', 'profileicon'),
-                ),
-                'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&fs=viewbg',
-                'config'       => array(
-                        'upload'          => false,
-                        'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
-                        'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
-                        'resizeonuploaduserdefault' => $USER->get_account_preference('resizeonuploaduserdefault'),
-                        'createfolder'    => false,
-                        'edit'            => false,
-                        'select'          => true,
-                        'selectone'       => true,
-                ),
-                'defaultvalue'       => (!empty($viewskin['view_background_image']) ? array(intval($viewskin['view_background_image'])) : array()),
-                'selectlistcallback' => 'artefact_get_records_by_id',
-                // TODO: make this work, so skins can include site files
-                // 'tabs' => true,
-        ),
-        'view_background_repeat' => array(
-                'type' => 'select',
-                'title' => get_string('backgroundrepeat', 'skin'),
-                'defaultvalue' => (!empty($viewskin['view_background_repeat']) ? intval($viewskin['view_background_repeat']) : 4),
-                'options' => array(
-                        Skin::BACKGROUND_REPEAT_NO => get_string('backgroundrepeatno', 'skin'),
-                        Skin::BACKGROUND_REPEAT_X => get_string('backgroundrepeatx', 'skin'),
-                        Skin::BACKGROUND_REPEAT_Y => get_string('backgroundrepeaty', 'skin'),
-                        Skin::BACKGROUND_REPEAT_BOTH => get_string('backgroundrepeatboth', 'skin'),
-                ),
-        ),
-        'view_background_attachment' => array(
-                'type' => 'radio',
-                'title' => get_string('backgroundattachment', 'skin'),
-                'defaultvalue' => (!empty($viewskin['view_background_repeat']) ? $viewskin['view_background_attachment'] : 'scroll'),
-                'options' => array(
-                        'fixed' => get_string('backgroundfixed', 'skin'),
-                        'scroll' => get_string('backgroundscroll', 'skin'),
-                ),
-        ),
-        'view_background_position' => array(
-                'type' => 'radio',
-                'title' => get_string('backgroundposition', 'skin'),
-                'defaultvalue' => (!empty($viewskin['view_background_position']) ? intval($viewskin['view_background_position']) : 1),
-                'rowsize' => 3,
-                'hiddenlabels' => false,
-                'options' => $positions,
-        ),
-        'view_background_width' => array(
-                'type' => 'select',
-                'title' => get_string('viewwidth', 'skin'),
-                'defaultvalue' => (!empty($viewskin['view_background_width']) ? intval($viewskin['view_background_width']) : 90),
-                'options' => array(
-                        50 => '50%',
-                        60 => '60%',
-                        70 => '70%',
-                        80 => '80%',
-                        90 => '90%',
-                        100 => '100%',
-                ),
-        ),
-    ));
-}
-$elements['viewheader'] = array(  // TODO remove this
-        'type'   => 'fieldset',
-        'legend' => get_string('viewheaderoptions', 'skin'),
-        'class'  => 'hidden',
-        'elements'     => array(
-                'header_background_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('backgroundcolor', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['header_background_color']) ? $viewskin['header_background_color'] : '#CCCCCC'),
-                        'size' => 7,
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'header_text_font_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('textcolor', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['header_text_font_color']) ? $viewskin['header_text_font_color'] : '#000000'),
-                        'size' => 7,
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'header_link_normal_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('normallinkcolor', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['header_link_normal_color']) ? $viewskin['header_link_normal_color'] : '#0000EE'),
-                        'size' => 7,
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'header_link_normal_underline' => array(
-                        'type' => 'switchbox',
-                        'title' => get_string('linkunderlined', 'skin'),
-                        'defaultvalue' => (isset($viewskin['header_link_normal_underline']) and intval($viewskin['header_link_normal_underline']) == 1 ? 'checked' : ''),
-                ),
-                'header_link_hover_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('hoverlinkcolor', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['header_link_hover_color']) ? $viewskin['header_link_hover_color'] : '#EE0000'),
-                        'size' => 7,
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'header_link_hover_underline' => array(
-                        'type' => 'switchbox',
-                        'title' => get_string('linkunderlined', 'skin'),
-                        'defaultvalue' => (isset($viewskin['header_link_hover_underline']) and intval($viewskin['header_link_hover_underline']) == 1 ? 'checked' : ''),
-                ),
-                'header_logo_image' => array(
-                        'type' => 'radio',
-                        'id' => 'designskinform_header_logo',
-                        'title' => get_string('headerlogoimage1', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['header_logo_image']) ? $viewskin['header_logo_image'] : 'normal'),
-                        'options' => array(
-                                'normal' => get_string('headerlogoimagenormal', 'skin'),
-                                'light' => get_string('headerlogoimagelight1', 'skin'),
-                                'dark' => get_string('headerlogoimagedark1', 'skin'),
-                        )
-                ),
-        ),
-);
 $elements['viewcontent'] = array(
         'type'   => 'fieldset',
         'legend' => get_string('viewcontentoptions1', 'skin'),
@@ -456,82 +305,6 @@ $elements['viewcontent'] = array(
                 ),
         ),
 );
-$elements['viewtable'] = array(  // TODO remove this
-        'type'   => 'fieldset',
-        'legend' => get_string('viewtableoptions', 'skin'),
-        'class'  => 'hidden',
-        'elements'     => array(
-                'view_table_border_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('tableborder', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_table_border_color']) ? $viewskin['view_table_border_color'] : '#CCCCCC'),
-                        'size' => 7,
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'view_table_header_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('tableheader', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_table_header_color']) ? $viewskin['view_table_header_color'] : '#CCCCCC'),
-                        'size' => 7,
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'view_table_header_text_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('tableheadertext', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_table_header_text_color']) ? $viewskin['view_table_header_text_color'] : '#000000'),
-                        'size' => 7,
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'view_table_odd_row_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('tableoddrows', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_table_odd_row_color']) ? $viewskin['view_table_odd_row_color'] : '#EEEEEE'),
-                        'size' => 7,
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'view_table_even_row_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('tableevenrows', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_table_even_row_color']) ? $viewskin['view_table_even_row_color'] : '#FFFFFF'),
-                        'size' => 7,
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'view_button_normal_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('normalbuttoncolor', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_button_normal_color']) ? $viewskin['view_button_normal_color'] : '#CCCCCC'),
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'view_button_hover_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('hoverbuttoncolor', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_button_hover_color']) ? $viewskin['view_button_hover_color'] : '#EEEEEE'),
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'view_button_text_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('buttontextcolor', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_button_text_color']) ? $viewskin['view_button_text_color'] : '#FFFFFF'),
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-        ),
-);
 $elements['viewadvanced'] = array(
         'type'   => 'fieldset',
         'legend' => get_string('viewadvancedoptions', 'skin'),
@@ -554,7 +327,7 @@ $elements['fs'] = array(
         'type' => 'hidden',
         'value' => $fieldset,
 );
-$elements['submit'] = array(
+$elements['submitform'] = array(
         'type' => 'submitcancel',
         'class' => 'btn-primary',
         'value' => array(get_string('save', 'mahara'), get_string('cancel', 'mahara')),
@@ -565,7 +338,10 @@ $designskinform = pieform(array(
         'name'       => 'designskinform',
         'class'      => 'jstabs form-group-nested',
         'method'     => 'post',
-        //'jsform'     => true,
+        'jsform'     => true,
+        'newiframeonsubmit' => true,
+        'jssuccesscallback' => 'designskinform_callback',
+        'jserrorcallback'   => 'designskinform_callback',
         'plugintype' => 'core',
         'pluginname' => 'skin',
         'renderer'   => 'div',  // don't change unless you also modify design.js to not require tables.
@@ -574,6 +350,11 @@ $designskinform = pieform(array(
         'elements' => $elements
 ));
 
+$javascript = <<<EOF
+  function designskinform_callback(form, data) {
+      designskinform_body_background_image.callback(form, data);
+  };
+EOF;
 
 $smarty = smarty(array(), array(), array(
     'mahara' => array(
@@ -583,6 +364,7 @@ $smarty = smarty(array(), array(), array(
 ));
 $smarty->assign('LANG', substr($CFG->lang, 0, 2));
 $smarty->assign('USER', $USER);
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('designskinform', $designskinform);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('skin/design.tpl');
@@ -592,8 +374,7 @@ function designskinform_validate(Pieform $form, $values) {
 
     if (isset($values['viewskin_access']) && !($values['viewskin_access'] == 'site')) {
         $artefactfields = array(
-            'body_background_image',
-            'view_background_image'
+            'body_background_image'
         );
         foreach ($artefactfields as $field) {
             if (empty($values[$field])) {
@@ -628,21 +409,6 @@ function designskinform_submit(Pieform $form, $values) {
         $skin['body_background_attachment'] = $values['body_background_attachment'];
         $skin['body_background_position'] = $values['body_background_position'];
     }
-    $skin['header_background_color'] = $values['header_background_color']; // TODO remove this
-    $skin['header_text_font_color'] = $values['header_text_font_color']; // TODO remove this
-    $skin['header_link_normal_color'] = $values['header_link_normal_color']; // TODO remove this
-    $skin['header_link_normal_underline'] = $values['header_link_normal_underline']; // TODO remove this
-    $skin['header_link_hover_color'] = $values['header_link_hover_color']; // TODO remove this
-    $skin['header_link_hover_underline'] = $values['header_link_hover_underline']; // TODO remove this
-    $skin['header_logo_image'] = $values['header_logo_image']; // TODO remove this
-    $skin['view_background_color'] = $values['view_background_color']; // TODO remove this
-    if (!$siteskin) {  // TODO remove this
-        $skin['view_background_image'] = $values['view_background_image'];
-        $skin['view_background_repeat'] = $values['view_background_repeat'];
-        $skin['view_background_attachment'] = $values['view_background_attachment'];
-        $skin['view_background_position'] = $values['view_background_position'];
-        $skin['view_background_width'] = $values['view_background_width'];
-    }
     $skin['view_text_font_family'] = $values['view_text_font_family'];
     $skin['view_heading_font_family'] = $values['view_heading_font_family'];
     $skin['view_text_font_size'] = $values['view_text_font_size'];
@@ -653,14 +419,6 @@ function designskinform_submit(Pieform $form, $values) {
     $skin['view_link_normal_underline'] = $values['view_link_normal_underline'];
     $skin['view_link_hover_color'] = $values['view_link_hover_color'];
     $skin['view_link_hover_underline'] = $values['view_link_hover_underline'];
-    $skin['view_table_border_color'] = $values['view_table_border_color']; // TODO remove this
-    $skin['view_table_header_color'] = $values['view_table_header_color']; // TODO remove this
-    $skin['view_table_header_text_color'] = $values['view_table_header_text_color']; // TODO remove this
-    $skin['view_table_odd_row_color'] = $values['view_table_odd_row_color']; // TODO remove this
-    $skin['view_table_even_row_color'] = $values['view_table_even_row_color']; // TODO remove this
-    $skin['view_button_normal_color'] = $values['view_button_normal_color']; // TODO remove this
-    $skin['view_button_hover_color'] = $values['view_button_hover_color']; // TODO remove this
-    $skin['view_button_text_color'] = $values['view_button_text_color']; // TODO remove this
     $skin['view_custom_css'] = clean_css($values['view_custom_css'], $preserve_css=true);
 
     $viewskin = array();
@@ -674,6 +432,16 @@ function designskinform_submit(Pieform $form, $values) {
     $viewskin['viewskin'] = $skin;
 
     Skin::create($viewskin);
+    if ($form->submitted_by_js()) {
+        $result = array(
+            'error'   => false,
+            'message' => get_string('skinsaved', 'skin'),
+            'goto'    => $redirect,
+        );
+        // Redirect back to the page from within the iframe
+        $SESSION->add_ok_msg($result['message']);
+        $form->json_reply(PIEFORM_OK, $result, false);
+    }
 
     $SESSION->add_ok_msg(get_string('skinsaved', 'skin'));
     redirect($redirect);

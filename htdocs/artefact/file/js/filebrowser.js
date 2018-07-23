@@ -542,6 +542,7 @@ var FileBrowser = (function($) {
         if (self.config.select) {
             if (self.config.selectone) {
                 var selectedid = Object.keys(self.selecteddata)[0];
+                self.selectoneid = selectedid;
                 self.add_to_selected_list(selectedid);
             }
             self.connect_select_buttons();
@@ -887,6 +888,11 @@ var FileBrowser = (function($) {
         if (window.imgbrowserconf_artefactid) {
             // propagate the click
             $('#filebrowserupdatetarget').click();
+        }
+        if (self.config.selectone && self.selectoneid !== id) {
+            // Need to close modal on selection
+            self.selectoneid = id;
+            $('#' + self.id + '_upload_browse').modal('hide');
         }
     };
 
