@@ -73,6 +73,11 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I should see "This is the edited description"
     # Check that the image is displayed on page and ensure the link is correct
     Then I should see image "Image2.png" on the page
+    # The "..." button should only have the option to print and delete the page
+    And I should see "More..."
+    And I press "More..."
+    Then I should see "Print"
+    And I should see "Delete this page"
     # User share page with public and enable copy page functionality
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Manage access" in "This is the edited page title" panel access menu
