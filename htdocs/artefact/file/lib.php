@@ -2553,8 +2553,8 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         }
 
         // No profile icon file selected. Go through fallback icons.
-        // Look for an appropriate image on gravatar.com
-        $useremail = !empty($data) ? $data->email : false;
+        // Look for an appropriate image on gravatar.com if not 'root' user
+        $useremail = (!empty($data) && $userid !== 0) ? $data->email : false;
         if ($useremail and $gravatarurl = remote_avatar_url($useremail, $size)) {
             redirect($gravatarurl);
         }

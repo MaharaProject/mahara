@@ -15,5 +15,5 @@ $string['addresstag'] = 'Address: %s';
 $string['address'] = 'Address';
 $string['title'] = 'My entire résumé';
 $string['description'] = 'A quick way to show your whole résumé';
-
+$string['noresumeselectone'] = 'Résumé items will automatically display here';
 $string['History'] = 'History';

@@ -46,6 +46,11 @@ class BehatDataGenerators extends BehatBase {
                 'role'         => 'text',
                 'authname'     => 'text',
                 'remoteusername' => 'text',
+                'studentid'    => 'text',
+                'preferredname' => 'text',
+                'town'         => 'text',
+                'country'      => 'text',
+                'occupation'   => 'text',
             ),
             'required' => array('username', 'password', 'email', 'firstname', 'lastname')
         ),

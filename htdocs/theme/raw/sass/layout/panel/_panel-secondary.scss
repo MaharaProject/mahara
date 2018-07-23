@@ -15,6 +15,16 @@
         .panel-heading {
             background-color: $panel-default-heading-bg;
         }
+        .blockinstance-content {
+            .editor-description {
+                color: $gray-light;
+                font-style: italic;
+                font-size: $font-size-base - 1;
+                display: block;
+                padding: 5px 10px 0 5px;
+                text-align: center;
+            }
+        }
     }
     > .panel-heading, .panel-heading-nested {
         border-bottom: 2px solid $panel-default-border;

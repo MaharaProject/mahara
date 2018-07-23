@@ -113,7 +113,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
                 $html .= '<ul>' . implode('', array_map(function ($item) { return "<li>{$item}</li>"; }, $items)) . '</ul>';
             }
             else {
-                $html .= get_string('nobadgegroups', 'blocktype.openbadgedisplayer');
+                $html .= '<p class="editor-description">' . get_string('nobadgesselectone', 'blocktype.openbadgedisplayer') . '</p>';
             }
 
             return $html;
@@ -253,7 +253,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
 
     public static function instance_config_form(BlockInstance $instance) {
         global $USER;
-
+        $owner = $instance->get_view()->get('owner');
         $sources = self::get_backpack_source();
         if ($sources === false) {
             $fields = array(
@@ -267,7 +267,10 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         }
 
         $configdata = $instance->get('configdata');
-        $addresses = get_column('artefact_internal_profile_email', 'email', 'owner', $USER->id, 'verified', 1);
+        $addresses = array();
+        if ($owner) {
+            $addresses = get_column('artefact_internal_profile_email', 'email', 'owner', $USER->id, 'verified', 1);
+        }
         $current_values = array();
 
         if (isset($configdata['badgegroup'])) {
@@ -294,14 +297,13 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
                 $sourcelinks[] = '<a href="' . $url . '">' . $title . '</a>';
             }
         }
-
-        $fields = array(
-            'message' => array(
-                'type' => 'html',
-                'class' => '',
-                'value' => '<p class="message">'. get_string('confighelp', 'blocktype.openbadgedisplayer', implode(', ', $sourcelinks)) .'</p>'
-            ),
-            'badgegroups' => array(
+        $fields['message'] = array(
+            'type' => 'html',
+            'class' => '',
+            'value' => '<p class="message">'. get_string('confighelp', 'blocktype.openbadgedisplayer', implode(', ', $sourcelinks)) .'</p>'
+        );
+        if ($owner) {
+            $fields['badgegroups'] = array(
                 'type' => 'container',
                 'class' => '',
                 'elements' => array(
@@ -324,14 +326,24 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
                         'value' => json_encode($current_values),
                     ),
                 )
-            ),
-            'tags'  => array(
-                'type'         => 'tags',
-                'title'        => get_string('tags'),
-                'description'  => get_string('tagsdescblock'),
-                'defaultvalue' => $instance->get('tags'),
-                'help'         => false,
-            )
+            );
+        }
+        else {
+            $fields['blocktemplatehtml'] = array(
+                'type' => 'html',
+                'value' => get_string('blockinstanceconfigownerchange', 'mahara'),
+            );
+            $fields['blocktemplate'] = array(
+                'type'    => 'hidden',
+                'value'   => 1,
+            );
+        }
+        $fields['tags'] = array(
+            'type'         => 'tags',
+            'title'        => get_string('tags'),
+            'description'  => get_string('tagsdescblock'),
+            'defaultvalue' => $instance->get('tags'),
+            'help'         => false,
         );
 
         return $fields;
@@ -560,6 +572,9 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
     }
 
     public static function allowed_in_view(View $view) {
+        if ($view->get('type') == 'portfolio') {
+            return true;
+        }
         return $view->get('owner') != null;
     }
 
@@ -571,4 +586,11 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return true;
     }
 
+    public static function rewrite_blockinstance_config(View $view, $configdata) {
+        if ($view->get('owner') !== null && !empty($configdata['blocktemplate'])) {
+            unset($configdata['blocktemplatehtml']);
+            unset($configdata['blocktemplate']);
+        }
+        return $configdata;
+    }
 }
