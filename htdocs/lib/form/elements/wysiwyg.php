@@ -23,7 +23,7 @@ $_PIEFORM_WYSIWYGS = array();
  */
 function pieform_element_wysiwyg(Pieform $form, $element) {
     global $_PIEFORM_WYSIWYGS;
-    $_PIEFORM_WYSIWYGS[$form->get_name()] = $form->get_name() . '_' . $element['name'];
+    $_PIEFORM_WYSIWYGS[$form->get_name()][$element['name']] = $form->get_name() . '_' . $element['name'];
     if (is_html_editor_enabled()) {
         if (!$form->get_property('elementclasses')) {
             $element['class'] = isset($element['class']) && $element['class'] !== '' ? $element['class'] . ' wysiwyg' : 'wysiwyg';
@@ -85,18 +85,22 @@ function pieform_element_wysiwyg_get_headdata() {
          . "\nvar editor_to_focus;"
          . "\nPieformManager.connect('onsubmit', null, tinyMCE.triggerSave);"
          . "\nPieformManager.connect('onload', null, function() {\n";
-        foreach ($_PIEFORM_WYSIWYGS as $name => $editor) {
+        foreach ($_PIEFORM_WYSIWYGS as $name => $editors) {
             $result .= "    if (!arguments[0] || arguments[0]=='{$name}') {\n";
-            $result .= "        tinyMCE.execCommand('mceAddEditor', false, '$editor');\n";
-            $result .= "        jQuery('#{$editor}').on('focus', function() {\n";
-            $result .= "            editor_to_focus = '$editor';\n";
-            $result .= "        });\n";
+            foreach($editors as $editorname => $editor) {
+                $result .= "        tinyMCE.execCommand('mceAddEditor', false, '$editor');\n";
+                $result .= "        jQuery('#{$editor}').on('focus', function() {\n";
+                $result .= "            editor_to_focus = '$editor';\n";
+                $result .= "        });\n";
+            }
             $result .= "    };\n";
         }
         $result .= "});\nPieformManager.connect('onreply', null, function() {\n";
-        foreach ($_PIEFORM_WYSIWYGS as $name => $editor) {
+        foreach ($_PIEFORM_WYSIWYGS as $name => $editors) {
             $result .= "    if (!arguments[0] || arguments[0]=='{$name}') {\n";
-            $result .= "        tinyMCE.execCommand('mceRemoveEditor', false, '$editor');\n";
+            foreach($editors as $editorname => $editor) {
+                $result .= "        tinyMCE.execCommand('mceRemoveEditor', false, '$editor');\n";
+            }
             $result .= "    };\n";
         }
         $result .= "});</script>";
