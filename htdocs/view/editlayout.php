@@ -123,7 +123,7 @@ $smarty->assign('issitetemplate', $issitetemplate);
 $smarty->assign('PAGEHEADING', $state);
 $smarty->display('view/editlayout.tpl');
 
-function create_settings_pieform(){
+function create_settings_pieform() {
     global $view, $pieformname, $issiteview, $issitetemplate,
     $canedittitle, $canuseskins;
     $inlinejavascript = '';
@@ -131,6 +131,7 @@ function create_settings_pieform(){
     //get elements for each section of the form
     if ($canedittitle) {
         $basicelements = get_basic_elements();
+        $advancedelements = get_advanced_elements();
     }
 
     list($layoutelements, $hiddenlayoutelements, $inlinejs) = get_layout_elements();
@@ -156,6 +157,13 @@ function create_settings_pieform(){
             'collapsed'   => false,
             'legend'      => get_string('basics', 'view'),
             'elements'    => $basicelements
+        );
+        $formelements['advanced'] = array(
+            'type'        => 'fieldset',
+            'collapsible' => true,
+            'collapsed'   => true,
+            'legend'      => get_string('advanced', 'view'),
+            'elements'    => $advancedelements
         );
     }
 
@@ -259,15 +267,6 @@ function get_basic_elements() {
             'defaultvalue' => $view->get('title'),
             'rules'        => array( 'required' => true ),
         ),
-        'urlid'       => array(
-            'type'         => 'text',
-            'title'        => get_string('viewurl', 'view'),
-            'prehtml'      => '<span class="description">' . (isset($cleanurlbase) ? $cleanurlbase : '') . '</span> ',
-            'description'  => get_string('viewurldescription', 'view') . ' ' . get_string('cleanurlallowedcharacters'),
-            'defaultvalue' => $view->get('urlid'),
-            'rules'        => array('maxlength' => 100, 'regex' => get_config('cleanurlvalidate')),
-            'ignore'       => !$urlallowed,
-        ),
         'description' => array(
             'type'         => 'wysiwyg',
             'title'        => get_string('description','view'),
@@ -318,6 +317,56 @@ function get_basic_elements() {
             );
         }
     }
+    if (get_config('allowanonymouspages')) {
+        $elements['anonymise'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('anonymise','view'),
+            'description'  => get_string('anonymisedescription','view'),
+            'defaultvalue' => $view->get('anonymise'),
+        );
+    }
+    return $elements;
+}
+
+function get_advanced_elements() {
+    global $view, $urlallowed, $group, $institution, $USER;
+
+    $formatstring = '%s (%s)';
+    $ownerformatoptions = array(
+        FORMAT_NAME_FIRSTNAME => sprintf($formatstring, get_string('firstname'), $USER->get('firstname')),
+        FORMAT_NAME_LASTNAME => sprintf($formatstring, get_string('lastname'), $USER->get('lastname')),
+        FORMAT_NAME_FIRSTNAMELASTNAME => sprintf($formatstring, get_string('fullname'), full_name())
+    );
+
+    $displayname = display_name($USER);
+    if ($displayname !== '') {
+        $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('preferredname'), $displayname);
+    }
+    $studentid = (string)get_field('artefact', 'title', 'owner', $USER->get('id'), 'artefacttype', 'studentid');
+    if ($studentid !== '') {
+        $ownerformatoptions[FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
+    }
+
+    $elements = array(
+        'instructions' => array(
+            'type'         => 'wysiwyg',
+            'title'        => get_string('instructions','view'),
+            'rows'         => 5,
+            'cols'         => 70,
+            'class'        => 'view-description',
+            'defaultvalue' => $view->get('instructions'),
+            'rules'        => array('maxlength' => 65536),
+        ),
+        'urlid'       => array(
+            'type'         => 'text',
+            'title'        => get_string('viewurl', 'view'),
+            'prehtml'      => '<span class="description">' . (isset($cleanurlbase) ? $cleanurlbase : '') . '</span> ',
+            'description'  => get_string('viewurldescription', 'view') . ' ' . get_string('cleanurlallowedcharacters'),
+            'defaultvalue' => $view->get('urlid'),
+            'rules'        => array('maxlength' => 100, 'regex' => get_config('cleanurlvalidate')),
+            'ignore'       => !$urlallowed,
+        ),
+    );
     if (!($group || $institution)) {
         $default = $view->get('ownerformat');
         if (!$default) {
@@ -330,15 +379,6 @@ function get_basic_elements() {
             'options'      => $ownerformatoptions,
             'defaultvalue' => $default,
             'rules'        => array('required' => true),
-        );
-    }
-
-    if (get_config('allowanonymouspages')) {
-        $elements['anonymise'] = array(
-            'type'         => 'switchbox',
-            'title'        => get_string('anonymise','view'),
-            'description'  => get_string('anonymisedescription','view'),
-            'defaultvalue' => $view->get('anonymise'),
         );
     }
     return $elements;
@@ -596,6 +636,7 @@ function settings_submit(Pieform $form, $values) {
 
     if ($canedittitle) {
         set_view_title_and_description($form, $values);
+        set_view_advanced($form, $values);
     }
 
     set_view_layout($form, $values);
@@ -958,6 +999,21 @@ function set_view_title_and_description(Pieform $form, $values) {
     }
     if (isset($values['anonymise'])) {
         $view->set('anonymise', (int)$values['anonymise']);
+    }
+}
+
+function set_view_advanced(Pieform $form, $values) {
+    global $view, $urlallowed, $new;
+
+    if (trim($values['instructions']) !== '') {
+        require_once('embeddedimage.php');
+        $view->set('instructions', EmbeddedImage::prepare_embedded_images($values['instructions'], 'instructions', $view->get('id')));
+    }
+    else {
+        $view->set('instructions', '');
+    }
+    if (isset($values['ownerformat']) && $view->get('owner')) {
+        $view->set('ownerformat', $values['ownerformat']);
     }
     // Change the 'untitled' urlid on first save
     if ($new && $urlallowed) {

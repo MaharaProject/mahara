@@ -63,6 +63,8 @@ class View {
     private $skin;
     private $anonymise = 0;
     private $lockblocks = 0;
+    private $instructions;
+    private $instructionscollapsed=0;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -1008,6 +1010,7 @@ class View {
         }
         require_once('embeddedimage.php');
         EmbeddedImage::delete_embedded_images('description', $this->id);
+        EmbeddedImage::delete_embedded_images('instructions', $this->id);
         $this->deleted = true;
         db_commit();
     }
@@ -3230,6 +3233,7 @@ class View {
             'tags'        => $this->get('tags'),
             'numrows'     => $this->get('numrows'),
             'ownerformat' => $this->get('ownerformat'),
+            'instructions' => $this->get('instructions'),
         );
 
         // Export view content
@@ -3266,9 +3270,9 @@ class View {
         if (!$aids = get_column_sql("
             SELECT fileid
             FROM {artefact_file_embedded}
-            WHERE resourcetype = ?
+            WHERE resourcetype IN (?,?)
                 AND resourceid IN (" . join(',', array_map('intval', $viewids)) . ')'
-            , array('description'))) {
+            , array('description', 'instructions'))) {
             return array();
         }
         return $aids;
@@ -3294,6 +3298,7 @@ class View {
             'tags'        => $config['tags'],
             'numrows'     => $config['numrows'],
             'ownerformat' => $config['ownerformat'],
+            'instructions' => $config['instructions'],
         );
         if (isset($config['owner'])) {
             $viewdata['owner'] = $config['owner'];

@@ -1,9 +1,27 @@
 {include file="header.tpl"}
 
 {include file="view/editviewtabs.tpl" selected='content' issiteview=$issiteview}
-<div id="blocksinstruction" class="lead view-description">
+{if $instructions}
+    <div id="viewinstructions" class="last form-group collapsible-group small-group">
+    <fieldset  class="pieform-fieldset collapsible collapsible-small">
+        <legend>
+            <h4>
+                <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
+                    {str tag='instructions' section='view'}
+                    <span class="icon icon-chevron-down collapse-indicator right pull-right"></span>
+                </a>
+            </h4>
+        </legend>
+        <div class="fieldset-body collapse viewinstructions {if !$instructionscollapsed} in {/if}" id="viewinstructions-dropdown">
+            {$instructions|clean_html|safe}
+        </div>
+    </fieldset>
+    </div>
+{else}
+    <div id="blocksinstruction" class="lead view-description">
         {str tag='blocksintructionnoajax' section='view'}
-</div>
+    </div>
+{/if}
 
 <div class="row view-container" selected='content' data-target="col-collapse">
 

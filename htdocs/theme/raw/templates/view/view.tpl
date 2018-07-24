@@ -150,6 +150,24 @@
     {$viewdescription|clean_html|safe}
 </div>
 
+{if $viewinstructions}
+    <div id="viewinstructions" class="pageinstructions view-instructions last form-group collapsible-group small-group {if $toolbarhtml}with-toolbar{/if}">
+    <fieldset  class="pieform-fieldset collapsible collapsible-small">
+        <legend>
+            <h4>
+                <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="collapsed">
+                    {str tag='instructions' section='view'}
+                    <span class="icon icon-chevron-down collapse-indicator right pull-right"></span>
+                </a>
+            </h4>
+        </legend>
+        <div class="viewinstructions fieldset-body collapse" id="viewinstructions-dropdown">
+            {$viewinstructions|clean_html|safe}
+        </div>
+    </fieldset>
+    </div>
+{/if}
+
 <div id="view" class="view-container">
     <div id="bottom-pane">
         <div id="column-container" class="user-page-content">

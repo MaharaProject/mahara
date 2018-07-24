@@ -291,4 +291,6 @@ $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'))
 
 $smarty->assign('issitetemplate', $view->is_site_template());
 $smarty->assign('PAGEHEADING', $state);
+$smarty->assign('instructions', $view->get('instructions'));
+$smarty->assign('instructionscollapsed', $view->get('instructionscollapsed'));
 $smarty->display('view/blocks.tpl');

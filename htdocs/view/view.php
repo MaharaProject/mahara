@@ -452,6 +452,7 @@ if ($showmnetlink) {
 }
 
 $smarty->assign('viewdescription', ArtefactTypeFolder::append_view_url($view->get('description'), $view->get('id')));
+$smarty->assign('viewinstructions', ArtefactTypeFolder::append_view_url($view->get('instructions'), $view->get('id')));
 $smarty->assign('viewcontent', (isset($viewcontent) ? $viewcontent : null));
 $smarty->assign('releaseform', $releaseform);
 if (isset($addfeedbackform)) {

@@ -39,6 +39,12 @@ if ($viewid && $fileid) {
         $artefactok = EmbeddedImage::can_see_embedded_image($fileid, 'description', $resourceid);
     }
 
+    // Check if the artefact is embedded in the page instructions
+    $resourceid = param_integer('instructions', null);
+    if ($resourceid && $file instanceof ArtefactTypeImage) {
+        $artefactok = EmbeddedImage::can_see_embedded_image($fileid, 'instructions', $resourceid);
+    }
+
     if (!$artefactok && artefact_in_view($file, $viewid)) {
         $artefactok = true;
     }

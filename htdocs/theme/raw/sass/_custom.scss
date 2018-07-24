@@ -624,6 +624,12 @@ div.toolbarhtml {
     }
 }
 
-.view-instructions.with-toolbar {
-    margin-right: 20px;
+#viewinstructions,
+.peerinstructions {
+    &.with-toolbar {
+        margin-right: 20px;
+    }
+    div.fieldset-body {
+        background-color: $gray-lighter !important;
+    }
 }

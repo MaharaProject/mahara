@@ -1383,6 +1383,15 @@
          * changes the intructions so they are for ajax
          */
         $('#blocksinstruction').html(strings['blocksinstructionajaxlive']);
+        $('#viewinstructions-dropdown').on('hide.bs.collapse show.bs.collapse', function(event) {
+            var pd = {
+                'viewid': $('#viewid').val(),
+                'action': event.type
+            };
+            sendjsonrequest(config['wwwroot'] + 'view/instructions.json.php',
+                pd, 'POST', function() {}
+            );
+        });
     });
 
 }( window.ViewManager = window.ViewManager || {}, jQuery ));

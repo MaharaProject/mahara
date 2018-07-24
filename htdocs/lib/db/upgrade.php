@@ -1075,5 +1075,17 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018090400) {
+        log_debug('Add instuctions column in view table');
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('instructions');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+
+        $field = new XMLDBField('instructionscollapsed');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
     return $status;
 }

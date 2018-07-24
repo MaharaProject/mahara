@@ -515,3 +515,5 @@ $string['theme'] = 'Theme';
 
 $string['lockblocks'] = "Lock blocks";
 $string['lockblocksdescription'] = "You can lock the blocks on the page and prevent that they are removed when people copy the page.";
+$string['instructions'] = 'Instructions';
+$string['advanced']     = 'Advanced';
