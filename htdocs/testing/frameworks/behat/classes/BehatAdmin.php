@@ -121,6 +121,73 @@ class BehatAdmin extends BehatBase {
 
     /**
      * Sets the specified plugin settings.
+     * A table with | Plugintype | Plugin | value | is expected.
+     *
+     * @Given /^the following plugins are set:$/
+     * @param TableNode $table
+     * @throws SystemException
+     */
+    public function plugin_activation_set(TableNode $table) {
+
+        $settings = array();
+        foreach ($table->getHash() as $pluginsetting) {
+            $settings[$pluginsetting['plugintype']][$pluginsetting['plugin']] = $pluginsetting['value'];
+        }
+
+        // Validate the settings
+        $allowsettings = array(
+            'blocktype' => array (
+                'annotation',
+                'blog',
+                'comment',
+            ),
+            'artefact' => array (
+                'blog',
+                'plans',
+                'resume',
+            ),
+            'grouptype' => array(
+                'course',
+            ),
+            'module' => array(
+                'smartevidence',
+                'lti',
+                'mobileapi',
+            ),
+        );
+        // Update plugin settings
+        foreach ($settings as $plugintype => $plugins) {
+            if (!isset($allowsettings[$plugintype])) {
+                throw new SystemException("Not a valid plugintype \"$plugintype\"");
+            }
+            else {
+                foreach ($plugins as $plugin => $value) {
+                    if (!in_array($plugin, $allowsettings[$plugintype])) {
+                        throw new SystemException("\"$plugin\" is not a valid plugin for plugintype \"$plugintype\"");
+                    }
+                    else {
+                        if ($plugintype == 'blocktype') {
+                            // Don't enable blocktypes unless the artefact plugin that provides them is also enabled
+                            $artefact = get_field('blocktype_installed', 'artefactplugin', 'name', $plugin);
+                            if (!empty($value) && !empty($artefact)) {
+                                set_field('artefact_installed', 'active', 1, 'name', $artefact);
+                            }
+                        }
+                        else if ($plugintype == 'artefact' && empty($value)) {
+                            // Disable all the artefact's blocktypes too
+                            set_field('blocktype_installed', 'active', 0, 'artefactplugin', $plugin);
+                        }
+                        if (!set_field($plugintype . '_installed', 'active', $value, 'name', $plugin)) {
+                            throw new SystemException("Can not activate / deactivate the \"$plugintype\" \"$plugin\"");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets the specified plugin settings.
      * A table with | Plugintype | Plugin | Setting label | value | is expected.
      *
      * @Given /^the following plugin settings are set:$/
