@@ -5959,5 +5959,13 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018080900) {
+        log_debug('Create a new "lockblock" field in "view" table');
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('lockblocks');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
     return $status;
 }
