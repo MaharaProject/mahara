@@ -33,7 +33,7 @@ Scenario: Selection options to filter messages (Bug 1433342)
  # First check what options an admin has
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "mail" from user menu by id
- And the "Activity type:" select box should contain all "Administration messages | Comment | Contact us | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content | Objectionable content in forum | Repeat virus upload | System message | Virus flag release | Watchlist"
+ And the "Activity type:" select box should contain all "Administration messages | Comment | Contact us | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content | Objectionable content in forum | Peer assessment | Repeat virus upload | System message | Virus flag release | Watchlist"
  And I log out
 
  # Then check what options a normal user has

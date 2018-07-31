@@ -1068,5 +1068,12 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {blocktype_config} SET field = 'usefancybox' WHERE plugin = 'gallery' AND field = 'useslimbox2'");
     }
 
+    if ($oldversion < 2018081700) {
+        log_debug('Force install of peerassessment plugin');
+        if ($data = check_upgrades('artefact.peerassessment')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }

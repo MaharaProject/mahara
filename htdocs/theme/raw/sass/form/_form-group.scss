@@ -241,7 +241,8 @@
     }
 
     // reset bootstrap button style for cancel button
-    &.submitcancel {
+    &.submitcancel,
+    &.multisubmit {
         border-bottom: none;
         .cancel {
             background-color: transparent;

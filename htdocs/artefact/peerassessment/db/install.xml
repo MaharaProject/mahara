@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20100319" COMMENT="Peer assessment table"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+<TABLES>
+     <TABLE NAME="artefact_peer_assessment">
+        <FIELDS>
+            <FIELD NAME="assessment" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="private" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="assessmentpk" TYPE="primary" FIELDS="assessment"/>
+            <KEY NAME="assessmentfk" TYPE="foreign" FIELDS="assessment" REFTABLE="artefact" REFFIELDS="id"/>
+            <KEY NAME="blockfk" TYPE="foreign" FIELDS="block" REFTABLE="block_instance" REFFIELDS="id"/>
+            <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
+            <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"/>
+        </KEYS>
+    </TABLE>
+    <TABLE NAME="view_signoff_verify">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="verifier" TYPE="int" LENGTH="10" NOTNULL="false"/>
+            <FIELD NAME="verifiedtime" TYPE="datetime" NOTNULL="false"/>
+            <FIELD NAME="signofftime" TYPE="datetime" NOTNULL="false"/>
+            <FIELD NAME="signoff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true"/>
+            <FIELD NAME="verified" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="verifierfk" TYPE="foreign" FIELDS="verifier" REFTABLE="usr" REFFIELDS="id"/>
+            <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"/>
+        </KEYS>
+    </TABLE>
+</TABLES>
+</XMLDB>

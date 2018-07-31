@@ -33,15 +33,16 @@
  * @return string           The HTML for the element
  */
 function pieform_element_multisubmit(Pieform $form, $element) {
-    if (!isset($element['value']) || !is_array($element['value']) || count($element['value']) != 2) {
+    if (!isset($element['value']) || !is_array($element['value']) || count($element['value']) < 2) {
         throw new PieformException('The multisubmit element "' . $element['name']
-            . '" must have a two element array for its value otherwise use "submit" element');
+            . '" must have at least two element array for its value otherwise use "submit" element');
     }
     $form->include_plugin('element', 'button');
     $form->include_plugin('element', 'submit');
+    $form->include_plugin('element', 'cancel');
 
     // first try for string indices
-    $plugins = array('button');
+    $plugins = array('button', 'cancel');
     $elems = '';
     foreach ($element['options'] as $key => $value) {
         if (!is_numeric($key) && in_array($key, $plugins)) {
@@ -53,7 +54,17 @@ function pieform_element_multisubmit(Pieform $form, $element) {
         }
         if (function_exists($function)) {
             $item = $element;
-            $item['class'] = isset($element['class']) ? $element['class'] . ' ' . $key : $key;
+            $itemclass = '';
+            if (isset($element['classes']) && isset($element['classes'][$key])) {
+                $itemclass = $element['classes'][$key];
+            }
+            else if (isset($element['class'])) {
+                $itemclass = $element['class'];
+            }
+            if (!is_numeric($key)) {
+                $itemclass .= ' ' . $key;
+            }
+            $item['class'] = $itemclass;
             // A primary choice will give the submit option the btn-primary class
             if (isset($element['primarychoice']) && $element['primarychoice'] === $value) {
                 $item['class'] .= ' btn-primary';

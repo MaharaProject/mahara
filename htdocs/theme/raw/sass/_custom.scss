@@ -606,3 +606,11 @@
         }
     }
 }
+
+.assessment-item-buttons {
+    .assessbtn + .assessbtn {
+        button {
+            @include border-left-radius(0);
+        }
+    }
+}
