@@ -1,5 +1,8 @@
 <input type="hidden" name="accesslist" value="">
-<div class="panel panel-secondary view-container" id="editaccesswrap" data-viewtype="{{$viewtype}}">
+<div class="panel panel-secondary view-container" id="editaccesswrap"
+    data-viewtype="{{$viewtype}}"
+    data-user-roles='{{$userroles}}'
+    data-group-roles='{{$grouproles}}' >
     {{if  $viewtype == "profile" }}
         <h2 class="panel-heading">{{str tag=profile section=view}}</h2>
     {{/if}}
@@ -82,7 +85,12 @@
             </div>
             <span class="picker input-short{% if (!o.presets.role) { %} hidden{% } %}">
                 <select data-roles="grouproles" name="accesslist[{%=o.id%}][role]" class="form-control input-small select">
-                    {% if (o.presets.role) { %}<option value="{%=o.presets.role%}" selected>{%=o.presets.roledisplay%}</option>{% } %}
+                    {% if (o.presets.role) { %}
+                        <option value="" >{%=o.defaultText%}</option>
+                        {% for (var i=0; i<o.roles.length; i++) { %}
+                             <option value="{%=o.roles[i].name%}" {% if (o.presets.role == o.roles[i].name) { %} selected {% } %}>{%=o.roles[i].display%}</option>
+                        {% } %}
+                    {% } %}
                 </select>
             </span>
         </div>
@@ -302,7 +310,10 @@ jQuery(function($) {
             var data,
                 lastrow,
                 id,
-                viewtype = $('[data-viewtype]').attr('data-viewtype');
+                viewtype = $('[data-viewtype]').attr('data-viewtype'),
+                roles,
+                defaultText,
+                grouproles;
 
             if($('#accesslistitems tr').length > 0){
                 lastrow = $('#accesslistitems tr:last-child');
@@ -312,11 +323,30 @@ jQuery(function($) {
                 id = 0;
             }
 
+            if (!presets.empty) {
+                if (presets.type == 'user') {
+                    roles = JSON.parse($('[data-user-roles]').attr('data-user-roles'));
+                    defaultText = {{jstr tag=nospecialrole section=view}};
+                }
+                else {
+                    // group
+                    grouproles = JSON.parse($('[data-group-roles]').attr('data-group-roles'));
+                    defaultText = {{jstr tag=everyoneingroup section=view}};
+                    if (presets.grouptype == 'course') {
+                        roles = grouproles.course;
+                    }
+                    else {
+                        roles = grouproles.standard;
+                    }
+                }
+            }
             data = {
                 id: id,
                 shareoptions: shareoptions,
                 presets: presets,
-                viewtype: viewtype
+                viewtype: viewtype,
+                roles: roles,
+                defaultText: defaultText
             };
 
             $('#accesslistitems').append(tmpl("row-template", data));
@@ -435,18 +465,26 @@ jQuery(function($) {
         function showRoleSelect(e, self) {
 
             var roles = JSON.parse($(self).attr('data-roles')),
-                grouptype = $(self).parent().find('[data-grouptype]').attr('data-grouptype'),
                 data,
-                defaultText = {{jstr tag=everyoneingroup section=view}},
                 id = $(self).closest('tr').attr('data-id'),
                 select = $(self).closest('.dropdown-group').find('[data-roles="grouproles"]');
-
-            data = {
-                id: id,
-                defaultText: defaultText,
-                roles: roles[grouptype]
-            };
-
+            if ($(self).attr('data-type') == 'group') {
+                var grouptype = $(self).parent().find('[data-grouptype]').attr('data-grouptype'),
+                    defaultText = {{jstr tag=everyoneingroup section=view}};
+                data = {
+                    id: id,
+                    defaultText: defaultText,
+                    roles: roles[grouptype]
+                };
+            }
+            else {
+                var defaultText = {{jstr tag=nospecialrole section=view}};
+                data = {
+                    id: id,
+                    defaultText: defaultText,
+                    roles: roles
+                };
+            }
             select.html(tmpl("roles-template", data));
             select.prop('disabled', false).parent().removeClass('hidden');
         }

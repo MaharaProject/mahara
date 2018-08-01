@@ -80,6 +80,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
                         $item[$datetype] = Pieform::hsc(strftime($datetimeformat, $item[$datetype]));
                     }
                 }
+                if ($item['type'] == 'group') {
+                    $item['grouptype'] = get_field('group', 'grouptype', 'id', $item['id']);
+                }
 
                 // only show access that is still current. Expired access will be deleted if the form is saved
                 if ($form->is_submitted() || !$rawstopdate || (time() <= $rawstopdate)) {
@@ -203,6 +206,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
         }
     }
 
+    $userroles = View::get_user_access_roles();
+    $grouproles = get_group_access_roles();
+
     $smarty->assign('datepickeroptions', $datepickeroptionstr);
     $smarty->assign('datepickertooltips', json_encode($tooltips));
     $smarty->assign('viewtype', $element['viewtype']);
@@ -217,6 +223,8 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $smarty->assign('allgroups', json_encode($allgroups));
     $smarty->assign('mygroups', json_encode($mygroups));
     $smarty->assign('faves', json_encode($faves));
+    $smarty->assign('userroles', json_encode($userroles));
+    $smarty->assign('grouproles', json_encode($grouproles));
     return $smarty->fetch('form/viewacl.tpl');
 }
 

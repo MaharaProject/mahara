@@ -1037,10 +1037,11 @@ class View {
     public function process_access_records($data=array(), $timeformat=null) {
         $rolegroups = array();
         foreach ($data as &$item) {
-            if ($item->role && !isset($roledata[$item->group])) {
+            if (isset($item->group) && $item->role && !isset($roledata[$item->group])) {
                 $rolegroups[$item->group] = 1;
             }
         }
+
         if ($rolegroups) {
             $grouptypes = get_records_sql_assoc('
                 SELECT id, grouptype
@@ -1082,8 +1083,11 @@ class View {
                 $item['locked'] = true;
             }
 
-            if ($item['role']) {
+            if ($item['role'] && isset($item['group'])) {
                 $item['roledisplay'] = get_string($item['role'], 'grouptype.'.$grouptypes[$item['group']]->grouptype);
+            }
+            else {
+                $item['roledisplay'] = get_string($item['role'], 'view');
             }
             if ($timeformat) {
                 if ($item['startdate']) {
@@ -1446,6 +1450,15 @@ class View {
                 switch ($item['type']) {
                 case 'user':
                     $accessrecord->usr = $item['id'];
+                    if (isset($item['role']) && strlen($item['role'])) {
+                        $roleinfo = get_column('usr_roles', 'role');
+                        foreach ($roleinfo as $key => $role) {
+                            if ($role == $item['role']) {
+                                $accessrecord->role = $item['role'];
+                            }
+                        }
+                    }
+
                     break;
                 case 'group':
                     $accessrecord->group = $item['id'];
@@ -1697,6 +1710,15 @@ class View {
         }
 
         return true;
+    }
+
+    public static function  get_user_access_roles() {
+        $roles = get_records_array('usr_roles');
+        $data =  array();
+        foreach ($roles as $r) {
+            $data[] = array('name' => $r->role, 'display' => get_string($r->role, 'view'));
+        }
+        return $data;
     }
 
     public function get_autocreate_grouptypes() {
@@ -6683,6 +6705,9 @@ class View {
             if ($access->usr) {
                 $access->accesstype = 'user';
                 $access->id = $access->usr;
+                if ($access->role) {
+                    $access->roledisplay = get_string($access->role, 'view');
+                }
             }
             else if ($access->group) {
                 $access->accesstype = 'group';
