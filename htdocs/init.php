@@ -15,7 +15,7 @@ if (defined('CLI') && php_sapi_name() != 'cli') {
     die();
 }
 
-$CFG = new StdClass;
+$CFG = new stdClass();
 $CFG->docroot = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 //array containing site options from database that are overrided by $CFG
 $OVERRIDDEN = array();
@@ -520,7 +520,7 @@ function init_performance_info() {
 
     global $PERF;
 
-    $PERF = new StdClass;
+    $PERF = new stdClass();
     $PERF->dbreads = $PERF->dbwrites = $PERF->dbcached = 0;
     $PERF->logwrites = 0;
     if (function_exists('microtime')) {

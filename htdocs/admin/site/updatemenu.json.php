@@ -23,7 +23,7 @@ $linkedto = param_variable('linkedto');
 $itemid   = param_variable('itemid');
 $public   = (int) param_boolean('public');
 
-$data = new StdClass;
+$data = new stdClass();
 if ($type == 'sitefile') {
     // Get file id.
     $data->file = $linkedto;

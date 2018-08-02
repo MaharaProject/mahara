@@ -48,7 +48,7 @@ if ($install) {
         log_info('- ' . $data['key']);
         if ($name == 'localpostinst') {
             // Update local version
-            $config = new StdClass;
+            $config = new stdClass();
             require(get_config('docroot') . 'local/version.php');
             set_config('localversion', $config->version);
             set_config('localrelease', $config->release);

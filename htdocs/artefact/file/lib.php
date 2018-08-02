@@ -1911,7 +1911,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 }
             }
         }
-        $data = new StdClass;
+        $data = new stdClass();
         $data->name    = 'uploadcopyright';
         $data->content = $values['customagreement'];
         $data->mtime   = db_format_timestamp(time());
@@ -2254,7 +2254,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             if (!$create) {
                 return false;
             }
-            $data = new StdClass;
+            $data = new stdClass();
             $data->title = $name;
             $data->description = $description;
             $data->owner = $userid;

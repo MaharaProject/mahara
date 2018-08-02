@@ -112,7 +112,7 @@ function editsitepage_validate(Pieform $form, $values) {
 
 function editsitepage_submit(Pieform $form, $values) {
     global $USER;
-    $data = new StdClass;
+    $data = new stdClass();
     $data->name    = $values['pagename'];
     if (empty($values['pageusedefault'])) {
         $id = get_field('site_content', 'id', 'name', $values['pagename'], 'institution', $values['pageinstitution']);
@@ -126,7 +126,7 @@ function editsitepage_submit(Pieform $form, $values) {
     $data->institution = $values['pageinstitution'];
     // update the institution config if needed
     if (isset($values['pageusedefault'])) {
-        $configdata = new StdClass;
+        $configdata = new stdClass();
         $configdata->institution = $data->institution;
         $configdata->field = 'sitepages_' . $data->name;
         $whereobj = clone $configdata;

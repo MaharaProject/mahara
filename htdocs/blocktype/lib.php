@@ -1363,7 +1363,7 @@ class BlockInstance {
         if (empty($this->dirty)) {
             return;
         }
-        $fordb = new StdClass;
+        $fordb = new stdClass();
         foreach (get_object_vars($this) as $k => $v) {
             // The configdata is initially fetched from the database in string
             // form. Calls to get() will convert it to an array on the fly. We
@@ -1432,7 +1432,7 @@ class BlockInstance {
             true
         );
 
-        $va = new StdClass;
+        $va = new stdClass();
         $va->view = $this->get('view');
         $va->block = $this->id;
 
@@ -1846,7 +1846,7 @@ class BlockInstance {
     /**
      * This function returns an array of menu items to be displayed
      * on a group page when viewed by group members.
-     * Each item should be a StdClass object containing -
+     * Each item should be a stdClass() object containing -
      * - title language pack key
      * - url relative to wwwroot
      * @return array

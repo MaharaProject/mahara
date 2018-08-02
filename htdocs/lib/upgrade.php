@@ -124,7 +124,7 @@ function check_upgrades($name=null) {
             $localrelease = 0;
         }
 
-        $config = new StdClass;
+        $config = new stdClass();
         require(get_config('docroot') . 'local/version.php');
 
         if ($config->version > $localversion) {
@@ -229,7 +229,7 @@ function check_upgrades($name=null) {
             }
         }
 
-        $config = new StdClass;
+        $config = new stdClass();
         require(get_config('docroot') . $pluginpath . '/version.php');
 
         $classname = generate_class_name($plugintype, $pluginname);
@@ -242,7 +242,7 @@ function check_upgrades($name=null) {
             if (empty($installing) && $pluginkey != $name) {
                 $newinstall = true;
             }
-            $plugininfo = new StdClass;
+            $plugininfo = new stdClass();
             $plugininfo->install = true;
             $plugininfo->to = $config->version;
             $plugininfo->torelease = $config->release;
@@ -282,7 +282,7 @@ function check_upgrades($name=null) {
                                           . " (you have $pluginversion ($pluginrelease))");
             }
             $toupgradecount++;
-            $plugininfo = new StdClass;
+            $plugininfo = new stdClass();
             $plugininfo->upgrade = true;
             $plugininfo->from = $pluginversion;
             $plugininfo->fromrelease = $pluginrelease;
@@ -331,7 +331,7 @@ function check_upgrades($name=null) {
     // if we've just asked for one, don't return an array...
     if (!empty($name)) {
         if (count($toupgrade) == 1) {
-            $upgrade = new StdClass;
+            $upgrade = new stdClass();
             $upgrade->name = $name;
             foreach ((array)$toupgrade[$name] as $key => $value) {
                 $upgrade->{$key} = $value;
@@ -453,7 +453,7 @@ function upgrade_plugin($upgrade) {
         }
     }
 
-    $installed = new StdClass;
+    $installed = new stdClass();
     $installed->name = $pluginname;
     $installed->version = $upgrade->to;
     $installed->release = $upgrade->torelease;
@@ -583,7 +583,7 @@ function upgrade_plugin($upgrade) {
             foreach ($types as $type) {
                 $ph[] = '?';
                 if (!record_exists('artefact_installed_type', 'plugin', $pluginname, 'name', $type)) {
-                    $t = new StdClass;
+                    $t = new stdClass();
                     $t->name = $type;
                     $t->plugin = $pluginname;
                     insert_record('artefact_installed_type',$t);
@@ -741,7 +741,7 @@ function core_postinst() {
 function core_install_lastcoredata_defaults() {
     global $USER;
     db_begin();
-    $institution = new StdClass;
+    $institution = new stdClass();
     $institution->name = 'mahara';
     $institution->displayname = 'No Institution';
     $institution->authplugin  = 'internal';
@@ -749,7 +749,7 @@ function core_install_lastcoredata_defaults() {
     $institution->priority = 0;
     insert_record('institution', $institution);
 
-    $auth_instance = new StdClass;
+    $auth_instance = new stdClass();
     $auth_instance->instancename  = 'Internal';
     $auth_instance->priority='1';
     $auth_instance->institution   = 'mahara';
@@ -759,7 +759,7 @@ function core_install_lastcoredata_defaults() {
 
     // Insert the root user
     $userid = 0;
-    $user = new StdClass;
+    $user = new stdClass();
     $user->id = $userid;
     $user->username = 'root';
     $user->password = '*';
@@ -828,7 +828,7 @@ function core_install_lastcoredata_defaults() {
     update_record('usr', $user, array('id' => 0));
 
     // Insert the admin user
-    $user = new StdClass;
+    $user = new stdClass();
     $user->username = 'admin';
     $user->salt = auth_get_random_salt();
     $user->password = crypt('mahara', '$2a$' . get_config('bcrypt_cost') . '$' . substr(md5(get_config('passwordsaltmain') . $user->salt), 0, 22));
@@ -865,7 +865,7 @@ function core_install_lastcoredata_defaults() {
 
     $roles = array('peer' => 0, 'manager' => 1, 'peermanager' => 1);
     foreach ($roles as $role => $state) {
-        $obj = new StdClass;
+        $obj = new stdClass();
         $obj->role              = $role;
         $obj->see_block_content = $state;
         insert_record('usr_roles', $obj);
@@ -904,7 +904,7 @@ function core_install_firstcoredata_defaults() {
     set_config('watchlistnotification_delay', 20);
 
     // install the applications
-    $app = new StdClass;
+    $app = new stdClass();
     $app->name = 'mahara';
     $app->displayname = 'Mahara';
     $app->xmlrpcserverurl = '/api/xmlrpc/server.php';
@@ -957,7 +957,7 @@ function core_install_firstcoredata_defaults() {
     );
 
     foreach ($eventtypes as $et) {
-        $e = new StdClass;
+        $e = new stdClass();
         $e->name = $et;
         insert_record('event_type', $e);
     }
@@ -1009,7 +1009,7 @@ function core_install_firstcoredata_defaults() {
     );
 
     foreach ($activitytypes as $at) {
-        $a = new StdClass;
+        $a = new stdClass();
         $a->name = $at[0];
         $a->admin = $at[1];
         $a->delay = $at[2];
@@ -1048,7 +1048,7 @@ function core_install_firstcoredata_defaults() {
         'watchlist_process_notifications'           => array('*', '*', '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
-        $cron = new StdClass;
+        $cron = new stdClass();
         $cron->callfunction = $callfunction;
         $cron->minute       = $times[0];
         $cron->hour         = $times[1];

@@ -207,7 +207,7 @@ class WebServiceUserTest extends WebServiceTestBase {
             }
         }
         db_begin();
-        $new_user = new StdClass;
+        $new_user = new stdClass();
         $new_user->authinstance = $authinstance->id;
         $new_user->username     = 'deletetestusername1';
         $new_user->firstname    = $new_user->username;
@@ -216,7 +216,7 @@ class WebServiceUserTest extends WebServiceTestBase {
         $new_user->email        = $new_user->username . '@hogwarts.school.nz';
         $new_user->passwordchange = 0;
         $new_user->admin        = 0;
-        $profilefields = new StdClass;
+        $profilefields = new stdClass();
         $userid = create_user($new_user, $profilefields, $institution, $authinstance);
         db_commit();
         $dbuser1 = get_record('usr', 'username', $new_user->username);
@@ -224,7 +224,7 @@ class WebServiceUserTest extends WebServiceTestBase {
         $this->created_users[]= $dbuser1->id;
 
         db_begin();
-        $new_user = new StdClass;
+        $new_user = new stdClass();
         $new_user->authinstance = $authinstance->id;
         $new_user->username     = 'deletetestusername2';
         $new_user->firstname    = $new_user->username;
@@ -233,7 +233,7 @@ class WebServiceUserTest extends WebServiceTestBase {
         $new_user->email        = $new_user->username . '@hogwarts.school.nz';
         $new_user->passwordchange = 0;
         $new_user->admin        = 0;
-        $profilefields = new StdClass;
+        $profilefields = new stdClass();
         $userid = create_user($new_user, $profilefields, $institution, $authinstance);
         db_commit();
         $dbuser2 = get_record('usr', 'username', $new_user->username);

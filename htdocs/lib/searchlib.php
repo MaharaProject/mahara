@@ -86,7 +86,7 @@ function search_all($query_string, $limit, $offset = 0, $data = array(), $type =
  */
 
 function get_institutional_admin_search_results($search, $limit) {
-    $institution = new StdClass;
+    $institution = new stdClass();
     $institution->name = $search->institution;
     foreach (array('member', 'requested', 'invitedby', 'lastinstitution') as $p) {
         $institution->{$p} = $search->{$p};

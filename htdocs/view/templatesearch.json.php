@@ -17,7 +17,7 @@ require_once(get_config('libroot') . 'view.php');
 $group = param_integer('group', null);
 $institution = param_alphanum('institution', null);
 
-$views = new StdClass;
+$views = new stdClass();
 $views->query       = trim(param_variable('viewquery', ''));
 $views->ownerquery  = trim(param_variable('ownerquery', ''));
 $views->offset      = param_integer('viewoffset', 0);

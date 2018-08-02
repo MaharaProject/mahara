@@ -509,7 +509,7 @@ function uploadcsv_submit(Pieform $form, $values) {
         }
         $key++;
 
-        $user = new StdClass;
+        $user = new stdClass();
         foreach ($FORMAT as $field) {
             if ($field == 'username'  ||
                 $field == 'firstname' ||
@@ -526,7 +526,7 @@ function uploadcsv_submit(Pieform $form, $values) {
             $user->quota        = $values['quota'];
         }
 
-        $profilefields = new StdClass;
+        $profilefields = new stdClass();
         $remoteuser = null;
         foreach ($FORMAT as $field) {
             if ($field == 'username' || $field == 'password') {

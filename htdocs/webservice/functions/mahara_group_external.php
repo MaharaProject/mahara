@@ -142,7 +142,7 @@ class mahara_group_external extends external_api {
                     $groupcategoryid = $groupcategory->id;
                 }
                 else if (!empty($group['forcecategory'])) {
-                    $categorydata = new StdClass;
+                    $categorydata = new stdClass();
                     $categorydata->title = $group['category'];
                     $categorydata->displayorder = 0; // Place holder is updated when we call group_sort_categories.
                     $groupcategoryid = insert_record('group_category', $categorydata, 'id', true);
@@ -449,7 +449,7 @@ class mahara_group_external extends external_api {
                     $groupcategoryid = $groupcategory->id;
                 }
                 else if (!empty($group['forcecategory'])) {
-                    $categorydata = new StdClass;
+                    $categorydata = new stdClass();
                     $categorydata->title = $group['category'];
                     $categorydata->displayorder = 0; // Place holder is updated when we call group_sort_categories.
                     $groupcategoryid = insert_record('group_category', $categorydata, 'id', true);

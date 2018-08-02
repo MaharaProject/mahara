@@ -102,7 +102,7 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
                     false  // $groupbycollection
                 );
 
-                $options = new StdClass();
+                $options = new stdClass();
                 $options->period = $period;
                 $options->orderby = $orderby;
                 if ($results->count > 0) {

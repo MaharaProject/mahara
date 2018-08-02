@@ -491,7 +491,7 @@ function edituser_site_submit(Pieform $form, $values) {
     if ($values['maildisabled'] == 0 && get_account_preference($user->id, 'maildisabled') == 1) {
         // Reset the sent and bounce counts otherwise mail will be disabled
         // on the next send attempt
-        $u = new StdClass;
+        $u = new stdClass();
         $u->email = $user->email;
         $u->id = $user->id;
         update_bounce_count($u,true);

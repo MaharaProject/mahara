@@ -4435,7 +4435,7 @@ function mahara_http_request($config, $quiet=false) {
         }
     }
 
-    $result = new StdClass();
+    $result = new stdClass();
     $result->data = curl_exec($ch);
     $result->info = curl_getinfo($ch);
     $result->error = curl_error($ch);
@@ -4480,7 +4480,7 @@ function mahara_shorturl_request($url, $quiet=false) {
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
     curl_setopt($ch, CURLOPT_MAXREDIRS, 1);
 
-    $result = new StdClass();
+    $result = new stdClass();
     $result->shorturl = $url;
     $result->data = curl_exec($ch);
     $result->error = curl_error($ch);

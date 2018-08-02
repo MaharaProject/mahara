@@ -97,7 +97,7 @@ function deletetopic_submit(Pieform $form, $values) {
 
     if ($objectionable !== false) {
         // Trigger activity.
-        $data = new StdClass;
+        $data = new stdClass();
         $data->postid     = $objectionable->id;
         $data->message    = '';
         $data->reporter   = $USER->get('id');

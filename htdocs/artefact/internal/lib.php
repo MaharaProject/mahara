@@ -347,7 +347,7 @@ class PluginArtefactInternal extends PluginArtefact {
     public static function progressbar_metaartefact_count($name) {
         global $USER;
 
-        $meta = new StdClass();
+        $meta = new stdClass();
         $meta->artefacttype = $name;
         $meta->completed = 0;
         switch ($name) {

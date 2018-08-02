@@ -623,7 +623,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             foreach ($_POST as $k => $v) {
                 if (preg_match('/^' . $prefix . '_permission:([a-z]+):([a-z]+)$/', $k, $m)) {
                     if (!isset($data['permissions'][$m[1]])) {
-                        $data['permissions'][$m[1]] = new stdClass;
+                        $data['permissions'][$m[1]] = new stdClass();
                     }
                     $data['permissions'][$m[1]]->{$m[2]} = (bool) $v;
                 }
@@ -909,7 +909,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
         $parentfolder = null;
     }
 
-    $data             = new StdClass;
+    $data             = new stdClass();
     $data->parent     = $parentfolder;
     $data->owner = $data->group = $data->institution = null;
     if (get_config('licensemetadata')) {

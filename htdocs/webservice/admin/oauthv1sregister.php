@@ -658,7 +658,7 @@ function update_oauth_server_config($serverid, $key, $value) {
         }
     }
     else {
-        $config = new StdClass;
+        $config = new stdClass();
         $config->oauthserverregistryid = $serverid;
         $config->field = $key;
         $config->value = $value;

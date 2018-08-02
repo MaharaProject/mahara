@@ -378,7 +378,7 @@ function clam_mail_admins($notice) {
     $adminusers = get_records_array('usr', 'admin', 1);
     if ($adminusers) {
         foreach ($adminusers as $admin) {
-            $message = new StdClass;
+            $message = new stdClass();
             $message->users = array($admin->id);
 
             $message->subject = $subject;

@@ -8,7 +8,7 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 
-$theme = new StdClass;
+$theme = new stdClass();
 
 $theme->displayname  = 'Raw';
 $theme->formrenderer = 'div';

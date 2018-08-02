@@ -222,7 +222,7 @@ abstract class InteractionInstance implements IInteractionInstance {
         if (empty($this->dirty)) {
             return;
         }
-        $fordb = new StdClass;
+        $fordb = new stdClass();
         foreach (get_object_vars($this) as $k => $v) {
             if ($k == 'ctime') {
                 $v = db_format_timestamp($v);

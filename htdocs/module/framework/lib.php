@@ -254,7 +254,7 @@ class Framework {
      */
     public function commit() {
 
-        $fordb = new StdClass;
+        $fordb = new stdClass();
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
         }
@@ -295,7 +295,7 @@ class Framework {
                  default:
                     $key = $k;
                 }
-                $cfordb = new StdClass;
+                $cfordb = new stdClass();
                 $cfordb->framework = $this->id;
                 $cfordb->name = isset($choice->{$keystr}) ? $choice->{$keystr} : '';
                 $cfordb->type = $key;
@@ -312,7 +312,7 @@ class Framework {
         $standardsvars = array('shortname','name','description');
         if (isset($this->standards) && is_array($this->standards)) {
             foreach ($this->standards['standards'] as $key => $standard) {
-                $sfordb = new StdClass;
+                $sfordb = new stdClass();
                 $sfordb->framework = $this->id;
                 $sfordb->mtime = db_format_timestamp(time());
                 $sfordb->priority = $key;
@@ -335,7 +335,7 @@ class Framework {
                         $priority = 0;
                         foreach ($standard->options as $option) {
                             $priority++;
-                            $sofordb = new StdClass;
+                            $sofordb = new stdClass();
                             $sofordb->standard = $sid;
                             $sofordb->mtime = db_format_timestamp(time());
                             foreach ($standardsvars as $ov) {
@@ -375,7 +375,7 @@ class Framework {
 
     function set_config_fields() {
         if (table_exists(new XMLDBTable('framework_config'))) {
-            $status = new StdClass;
+            $status = new stdClass();
 
             $status->framework = $this->get('id');
             $status->field     = 'completed_field_enabled';

@@ -79,7 +79,7 @@ function editsitepage_submit(Pieform $form, $values) {
     $pagetext = EmbeddedImage::prepare_embedded_images($values['pagetext'], 'staticpages', $id);
 
     global $USER;
-    $data = new StdClass;
+    $data = new stdClass();
     $data->name    = $values['pagename'];
     $data->content = $pagetext;
     $data->mtime   = db_format_timestamp(time());

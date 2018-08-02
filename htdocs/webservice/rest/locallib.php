@@ -619,7 +619,7 @@ function webservice_http_request($config, $quiet=false) {
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     // curl_setopt($ch, CURLOPT_FAILONERROR, false);
 
-    $result = new StdClass();
+    $result = new stdClass();
     $result->data = curl_exec($ch);
     $result->info = curl_getinfo($ch);
     $result->error = curl_error($ch);

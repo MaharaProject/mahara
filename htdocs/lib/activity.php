@@ -32,7 +32,7 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
         $delay = !empty($at->delay);
     }
     if ($delay) {
-        $delayed = new StdClass;
+        $delayed = new stdClass();
         $delayed->type = $at->id;
         $delayed->data = serialize($data);
         $delayed->ctime = db_format_timestamp(time());
@@ -772,7 +772,7 @@ abstract class ActivityType {
     }
 
     public function notify_user($user) {
-        $changes = new stdClass;
+        $changes = new stdClass();
 
         $userdata = $this->to_stdclass();
         // some stuff gets overridden by user specific stuff

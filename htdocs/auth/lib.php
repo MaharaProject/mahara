@@ -1950,7 +1950,7 @@ function _email_or_notify($user, $subject, $bodytext, $bodyhtml) {
     }
     catch (EmailException $e) {
         // Send a notification instead - email is invalid or disabled for this user
-        $message = new StdClass;
+        $message = new stdClass();
         $message->users = array($user->id);
         $message->subject = $subject;
         $message->message = $bodytext;
@@ -2810,7 +2810,7 @@ function auth_register_submit(Pieform $form, $values) {
         $extra = unserialize($values['extra']);
     }
     else {
-        $extra = new StdClass();
+        $extra = new stdClass();
     }
     $extraprivacy = array();
     if (isset($values['privacyid']) && !empty($values['privacyid'])) {
@@ -2917,7 +2917,7 @@ class PluginAuth extends Plugin {
     public static function get_event_subscriptions() {
         $subscriptions = array();
 
-        $activecheck = new StdClass;
+        $activecheck = new stdClass();
         $activecheck->plugin = 'internal';
         $activecheck->event  = 'suspenduser';
         $activecheck->callfunction = 'update_active_flag';

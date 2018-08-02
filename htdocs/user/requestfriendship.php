@@ -80,11 +80,11 @@ function requestfriendship_submit(Pieform $form, $values) {
     $user = get_record('usr', 'id', $id);
 
     // friend db record
-    $f = new StdClass;
+    $f = new stdClass();
     $f->ctime = db_format_timestamp(time());
 
     // notification info
-    $n = new StdClass;
+    $n = new stdClass();
     $n->url = profile_url($USER, false);
     $n->users = array($user->id);
     $n->fromuser = $loggedinid;

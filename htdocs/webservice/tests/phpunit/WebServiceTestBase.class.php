@@ -125,7 +125,7 @@ class WebServiceTestBase extends MaharaUnitTest {
         // create the new test user
         if (!$dbuser = get_record('usr', 'username', $this->testuser)) {
             db_begin();
-            $new_user = new StdClass;
+            $new_user = new stdClass();
             $new_user->authinstance = $authinstance->id;
             $new_user->username     = $this->testuser;
             $new_user->firstname    = 'Firstname';
@@ -134,7 +134,7 @@ class WebServiceTestBase extends MaharaUnitTest {
             $new_user->email        = $this->testuser . '@hogwarts.school.nz';
             $new_user->passwordchange = 0;
             $new_user->admin        = 1;
-            $profilefields = new StdClass;
+            $profilefields = new stdClass();
             $userid = create_user($new_user, $profilefields, $this->institution, $authinstance);
             $dbuser = get_record('usr', 'username', $this->testuser);
             db_commit();
@@ -227,7 +227,7 @@ class WebServiceTestBase extends MaharaUnitTest {
         $dbinstitution = get_record('institution', 'name', $this->testinstitution);
         if (empty($dbinstitution)) {
             db_begin();
-            $newinstitution = new StdClass;
+            $newinstitution = new stdClass();
             $institution = $newinstitution->name    = $this->testinstitution;
             $newinstitution->displayname            = $institution . ' - display name';
             $newinstitution->authplugin             = 'internal';
@@ -558,7 +558,7 @@ class WebServiceTestBase extends MaharaUnitTest {
         $user1->preferredname = 'Hello World!';
         $user1->city = 'testcity1';
         $user1->country = 'au';
-        $profilefields = new StdClass;
+        $profilefields = new stdClass();
         db_begin();
         $userid = create_user($user1, $profilefields, $this->institution, $this->authinstance);
         db_commit();
@@ -596,7 +596,7 @@ class WebServiceTestBase extends MaharaUnitTest {
         $user2->firstname = 'testfirstname2';
         $user2->lastname = 'testlastname2';
         $user2->email = 'testemail1@hogwarts.school.nz';
-        $profilefields = new StdClass;
+        $profilefields = new stdClass();
         db_begin();
         $userid = create_user($user2, $profilefields, $this->institution, $this->authinstance);
         db_commit();

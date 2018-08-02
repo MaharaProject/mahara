@@ -52,7 +52,7 @@ class BehatAccount extends BehatBase {
         if (isset($prefs['maildisabled']) && $prefs['maildisabled'] == 0 && get_account_preference($USER->get('id'), 'maildisabled') == 1) {
             // Reset the sent and bounce counts otherwise mail will be disabled
             // on the next send attempt
-            $u = new StdClass;
+            $u = new stdClass();
             $u->email = $USER->get('email');
             $u->id = $USER->get('id');
             update_bounce_count($u,true);

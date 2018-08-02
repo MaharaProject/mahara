@@ -1552,7 +1552,7 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
 
     foreach ($daterange as $k => $v) {
         list ($year, $week) = explode('_', $k);
-        $obj = new StdClass();
+        $obj = new stdClass();
         $obj->date = get_string('collaborationdate', 'statistics', format_date(strtotime($year . "W" . $week . '1'), 'strfdaymonthyearshort'));
         $obj->yearweek = $k;
         $obj->comments = !empty($aggmap[$k . '|saveartefact|comment']) ? $aggmap[$k . '|saveartefact|comment'] : 0;
@@ -3898,7 +3898,7 @@ function institution_comparison_stats_table($limit, $offset, $extra, $urllink) {
 
     $registrationdata = array();
     foreach ($institutions as $i) {
-        $d = new StdClass;
+        $d = new stdClass();
         $d->name = $i->name;
         $d->displayname = $i->displayname;
         $current = get_records_select_array('institution_registration_data',

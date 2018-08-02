@@ -75,7 +75,7 @@ function objection_form_submit(Pieform $form, $values) {
 
     insert_record('objectionable', $objection);
 
-    $data = new StdClass();
+    $data = new stdClass();
     $data->view       = $view->get('id');
     $data->message    = $values['message'];
     $data->reporter   = $USER->get('id');
@@ -340,7 +340,7 @@ function stillrude_form_submit(Pieform $form, $values) {
     if ($objection->suspended) {
         $message .= "\n\n" . get_string('stillobjectionablecontentsuspended', 'activity');
     }
-    $data = new StdClass();
+    $data = new stdClass();
     $data->view       = $view->get('id');
     $data->message    = $message;
     $data->reporter   = $USER->get('id');
@@ -462,7 +462,7 @@ function review_form_submit(Pieform $form, $values) {
     }
     $artefact = ($objection->objecttype == 'artefact') ? $objection->objectid : null;
 
-    $data = new StdClass();
+    $data = new stdClass();
     $data->view       = $view->get('id');
     $data->message    = $reviewmessage;
     $data->reporter   = $USER->get('id');

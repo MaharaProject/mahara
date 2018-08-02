@@ -211,7 +211,7 @@ class PluginSearchInternal extends PluginSearch {
         $required[] = 'username'; // Not a profile field, but used in the search query.
 
         // Get a list of match expressions to use in the WHERE clause
-        $matches = new StdClass;
+        $matches = new stdClass();
         $valuecount = 0;
         foreach (array_merge($required, $optional) as $f) {
             list ($matchsql, $matchcount) = self::match_user_field_expression($f, $usralias);

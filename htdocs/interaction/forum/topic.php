@@ -383,7 +383,7 @@ function postnotobjectionable_submit(Pieform $form, $values) {
     }
 
     // Trigger activity.
-    $data = new StdClass();
+    $data = new stdClass();
     $data->postid     = $values['postid'];
     $data->message    = '';
     $data->reporter   = $USER->get('id');

@@ -16,7 +16,7 @@ require_once(get_config('docroot') . 'notification/lib.php');
 class PluginNotificationEmaildigest extends PluginNotification {
 
     public static function notify_user($user, $data) {
-        $toinsert = new StdClass;
+        $toinsert = new stdClass();
         $toinsert->type = $data->type;
         $toinsert->usr = $user->id;
         // Some messages are all html (or the message is not required).
@@ -32,7 +32,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
     }
 
     public static function get_cron() {
-        $emaildigest = new StdClass;
+        $emaildigest = new stdClass();
         $emaildigest->callfunction = 'send_digest';
         $emaildigest->hour = '6';
         $emaildigest->minute = '0';
@@ -64,9 +64,9 @@ class PluginNotificationEmaildigest extends PluginNotification {
         if ($tosend = get_records_sql_array($sql, array())) {
             foreach ($tosend as $queue) {
                 if (!isset($users[$queue->usr])) {
-                    $users[$queue->usr] = new StdClass;
+                    $users[$queue->usr] = new stdClass();
 
-                    $users[$queue->usr]->user = new StdClass;
+                    $users[$queue->usr]->user = new stdClass();
                     $users[$queue->usr]->user->username      = $queue->username;
                     $users[$queue->usr]->user->firstname     = $queue->firstname;
                     $users[$queue->usr]->user->lastname      = $queue->lastname;

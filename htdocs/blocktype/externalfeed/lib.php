@@ -310,12 +310,12 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
     }
 
     public static function get_cron() {
-        $refresh = new StdClass;
+        $refresh = new stdClass();
         $refresh->callfunction = 'refresh_feeds';
         $refresh->hour = '*';
         $refresh->minute = '0';
 
-        $cleanup = new StdClass;
+        $cleanup = new stdClass();
         $cleanup->callfunction = 'cleanup_feeds';
         $cleanup->hour = '3';
         $cleanup->minute = '30';
@@ -448,7 +448,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
             // really bad happened
         }
 
-        $data = new StdClass;
+        $data = new stdClass();
         $data->title = $reader->get_channel_title();
         $data->url = $source;
         $data->authuser = $authuser;

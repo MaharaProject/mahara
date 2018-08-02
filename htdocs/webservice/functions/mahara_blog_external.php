@@ -153,7 +153,7 @@ class mahara_blog_external extends external_api {
 
             $auth_instance = get_record('auth_instance', 'id', $user->authinstance, 'active', 1);
             $USER->reanimate($user->id, $user->authinstance);
-            $data = new StdClass();
+            $data = new stdClass();
             list($data->count, $data->data) = ArtefactTypeBlog::get_blog_list(null, null);
             $blogs = array('count' => $data->count, 'ids' => array(), 'data' => array(), 'blogposts' => array());
             foreach ($data->data as $blog) {

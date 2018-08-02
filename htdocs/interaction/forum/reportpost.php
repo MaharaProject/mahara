@@ -92,7 +92,7 @@ function reportpost_submit(Pieform $form, $values) {
     insert_record('objectionable',  $objection);
 
     // Trigger activity.
-    $data = new StdClass();
+    $data = new stdClass();
     $data->postid     = $postid;
     $data->message    = $values['message'];
     $data->reporter   = $USER->get('id');

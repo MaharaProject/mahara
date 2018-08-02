@@ -678,7 +678,7 @@ function xmldb_core_upgrade($oldversion=0) {
         if ($records = get_records_array('site_content', 'name', 'privacy')) {
             foreach ($records as $data) {
                 if ($data->institution == 'mahara' || $instconfigs[$data->institution]->value == $data->institution) {
-                    $record = new stdClass;
+                    $record = new stdClass();
                     $record->type = 'privacy';
                     $record->content = $data->content;
                     $record->author = $data->mauthor;
@@ -727,7 +727,7 @@ function xmldb_core_upgrade($oldversion=0) {
         if ($records = get_records_array('site_content', 'name', 'termsandconditions')) {
             foreach ($records as $data) {
                 if ($data->institution == 'mahara' || $instconfigs[$data->institution]->value == $data->institution) {
-                    $record = new stdClass;
+                    $record = new stdClass();
                     $record->type = 'termsandconditions';
                     $record->content = $data->content;
                     $record->author = $data->mauthor;
@@ -1014,7 +1014,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
         $roles = array('peer' => 0, 'manager' => 1, 'peermanager' => 1);
         foreach ($roles as $role => $state) {
-            $obj = new StdClass;
+            $obj = new stdClass();
             $obj->role              = $role;
             $obj->see_block_content = $state;
             insert_record('usr_roles', $obj);

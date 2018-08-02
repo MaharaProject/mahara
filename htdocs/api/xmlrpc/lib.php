@@ -501,7 +501,7 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
     }
 
 
-    $result = new StdClass;
+    $result = new stdClass();
     if ($fetchnow && PluginImport::import_immediately_allowed()) {
         // either immediately spawn a curl request to go fetch the file
         $importer = PluginImport::create_importer($queue->id, $tr, $queue);
@@ -669,7 +669,7 @@ function get_groups_for_user($username) {
     require_once('group.php');
     $USER->reanimate($user->id, $authinstance->instanceid);
     $groupdata = group_get_associated_groups($USER->get('id'), 'all', null, null);
-    $data = new stdclass();
+    $data = new stdClass();
     $data->data = array();
     $data->count = $groupdata['count'];
     $data->displayname = display_name($user);
@@ -714,7 +714,7 @@ function get_notifications_for_user($username, $notificationtypes, $maxitems) {
     $params[] = $maxitems;
     $records = get_records_sql_array($sql, $params);
 
-    $data = new stdclass;
+    $data = new stdClass();
     $data->data = $records;
     $data->count = count($records);
     $data->displayname = display_name($user);
@@ -743,7 +743,7 @@ function get_watchlist_for_user($username, $maxitems) {
 
     $records = get_records_sql_array($sql, array($USER->get('id'), $maxitems));
 
-    $data = new stdclass;
+    $data = new stdClass();
     $data->data = array();
     $data->count = count($records);
     $data->displayname = display_name($user);

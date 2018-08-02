@@ -16,7 +16,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('auth', 'saml');
 
 $idp = param_variable('idp', null);
-$data = new StdClass();
+$data = new stdClass();
 $data->error = false;
 if (file_exists(AuthSaml::prepare_metadata_path($idp))) {
     // Double check that the idp is not being used
