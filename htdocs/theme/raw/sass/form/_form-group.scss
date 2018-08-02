@@ -351,7 +351,7 @@
             margin-left: 5px;
         }
         label + select {
-            margin-left: 0px; // padding provided by label instead
+            margin-left: 0; // padding provided by label instead
         }
         &.multi-label {
             &.customrow {

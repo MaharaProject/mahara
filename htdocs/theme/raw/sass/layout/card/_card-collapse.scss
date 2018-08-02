@@ -184,30 +184,6 @@
     &.last .card-heading a.collapsed {
         border-bottom-width: 1px;
     }
-    // Style variations
-    // @each $status, $bgcolor in $card-background {
-    //      &.card-#{$status} {
-    //         .card-heading a {
-    //             background-color: darken($bgcolor, 3%);
-    //             &.collapsed {
-    //                 background-color: $bgcolor;
-    //             }
-    //             &:hover,
-    //             &:focus {
-    //                background-color: darken($bgcolor, 3%);
-    //             }
-    //         }
-    //         .card-footer,
-    //         .card-body,
-    //         .card-heading a {
-    //             border: 1px solid darken($bgcolor, 15%);
-    //         }
-    //         .card-heading a,
-    //         .card-body:not(.no-footer) {
-    //             border-bottom-width:0;
-    //         }
-    //     }
-    // }
 }
 
 .collapse > .collapse {
