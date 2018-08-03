@@ -40,10 +40,6 @@ if (get_field('auth_installed', 'active', 'name', 'saml') != 1) {
     redirect();
 }
 
-if (get_config('memcacheservers') && !extension_loaded('mcrypt')) {
-    throw new AuthInstanceException(get_string_php_version('errornomcrypt', 'auth.saml'));
-}
-
 PluginAuthSaml::init_simplesamlphp();
 
 // Bug #1693426: destroy mahara session when Single Logout is initiated by IdP

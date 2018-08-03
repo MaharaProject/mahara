@@ -59,9 +59,15 @@ if (empty(get_config('ssphpsessionhandler'))) {
 }
 else {
     $sessionhandler = get_config('ssphpsessionhandler');
-    $method = 'get_' . $sessionhandler . '_config';
-    if (method_exists('PluginAuthSaml', $method)) {
-        ${$sessionhandler . "_config"} = call_static_method('PluginAuthSaml', $method);
+    if ($sessionhandler == 'memcached') {
+        $sessionhandler = 'memcache'; // set it to 'memcache' for correct store.type later
+        $memcache_config = PluginAuthSaml::get_memcache_servers();
+    }
+    else {
+        $method = 'get_' . $sessionhandler . '_config';
+        if (method_exists('PluginAuthSaml', $method)) {
+            ${$sessionhandler . "_config"} = call_static_method('PluginAuthSaml', $method);
+        }
     }
 }
 

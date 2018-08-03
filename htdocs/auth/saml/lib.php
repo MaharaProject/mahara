@@ -393,7 +393,7 @@ class PluginAuthSaml extends PluginAuth {
 
     public static function install_auth_default() {
         // Set library version to download
-        set_config_plugin('auth', 'saml', 'version', '1.15.1');
+        set_config_plugin('auth', 'saml', 'version', '1.16.1');
     }
 
     private static function create_certificates($numberofdays = 3650) {
@@ -599,10 +599,6 @@ class PluginAuthSaml extends PluginAuth {
 
         // check extensions are loaded
         $libchecks = '';
-        // Make sure mcrypt exists
-        if (get_config('memcacheservers') && !extension_loaded('mcrypt')) {
-            $libchecks .= '<li>' . get_string_php_version('errornomcrypt', 'auth.saml') . '</li>';
-        }
         // Make sure the simplesamlphp files have been installed via 'make ssphp'
         if (!self::is_simplesamlphp_installed()) {
             $libchecks .= '<li>' . get_string('errorbadlib', 'auth.saml', get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php') . '</li>';
@@ -793,30 +789,38 @@ class PluginAuthSaml extends PluginAuth {
         if (!self::is_simplesamlphp_installed()) {
             return false;
         }
+        $ishandler = false;
 
-        if (get_config('ssphpsessionhandler') == 'memcached' && self::is_memcache_configured()) {
-            return true;
+        switch (get_config('ssphpsessionhandler')) {
+            case 'memcache':
+                //make people use memcached, not memcache
+                throw new ConfigSanityException(get_string('memcacheusememcached', 'error'));
+                break;
+            case 'memcached':
+                if (self::is_memcache_configured()) {
+                    $ishandler = true;
+                    break;
+                }
+            case 'redis':
+                if (self::is_redis_configured()) {
+                    $ishandler = true;
+                    break;
+                }
+            case 'sql':
+                if (self::is_sql_configured()) {
+                    $ishandler = true;
+                    break;
+                }
+            default:
+                // Check Redis
+                $ishandler = self::is_redis_configured();
+                // And check Memcache if no Redis
+                $ishandler = $ishandler ? $ishandler : self::is_memcache_configured();
+                // And check Sql if no Memcache
+                $ishandler = $ishandler ? $ishandler : self::is_sql_configured();
         }
 
-        if (get_config('ssphpsessionhandler') == 'redis' && self::is_redis_configured()) {
-            return true;
-        }
-
-        if (get_config('ssphpsessionhandler') == 'sql' && self::is_sql_configured()) {
-            return true;
-        }
-
-        if (empty(get_config('ssphpsessionhandler'))) {
-            // Check Redis
-            $ishandler = self::is_redis_configured();
-            // And check Memcache if no Redis
-            $ishandler = $ishandler ? $ishandler : self::is_memcache_configured();
-            // And check Sql if no Memcache
-            $ishandler = $ishandler ? $ishandler : self::is_sql_configured();
-            return $ishandler;
-        }
-
-        return false;
+        return $ishandler;
     }
 
     public static function is_simplesamlphp_installed() {
@@ -838,16 +842,19 @@ class PluginAuthSaml extends PluginAuth {
 
         SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
     }
-
     public static function is_memcache_configured() {
         $is_configured = false;
 
-        if (extension_loaded('memcache')) {
+        if (extension_loaded('memcached')) {
             foreach (self::get_memcache_servers() as $server) {
-                $memcache = new Memcache;
+                $memcached = new Memcached;
 
                 if (!empty($server['hostname']) && !empty($server['port'])) {
-                    if ($memcache->connect($server['hostname'], $server['port'])) {
+                    $memcached->addServer($server['hostname'], $server['port']);
+                    // addServer doesn't make a connection to the server
+                    // but if the server is added, but not running pid will be -1
+                    $server_stats = $memcached->getStats();
+                    if ($server_stats[$server['hostname'] . ":" . $server['port']]['pid'] > 0) {
                         $is_configured = true;
                         break;
                     }

@@ -40,10 +40,6 @@ if (get_field('auth_installed', 'active', 'name', 'saml') != 1) {
     redirect();
 }
 
-if (get_config('memcacheservers') && !extension_loaded('mcrypt')) {
-    throw new AuthInstanceException(get_string_php_version('errornomcrypt', 'auth.saml'));
-}
-
 PluginAuthSaml::init_simplesamlphp();
 
 require('../extlib/simplesamlphp/modules/saml/www/sp/saml1-acs.php');
