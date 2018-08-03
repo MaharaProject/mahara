@@ -63,7 +63,7 @@ h1 {
             }
         }
         .admin & {
-            background-color: scale-color($gray-300, $lightness: -2.4%);
+            background-color: scale-color($gray-100, $lightness: -2.4%);
 
             border-color: $list-group-border-color;
             border-left: 1px solid $gray-100;
