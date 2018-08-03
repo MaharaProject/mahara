@@ -115,9 +115,10 @@ function change_language($userid, $oldlang, $newlang) {
         safe_require('artefact', 'file');
         ArtefactTypeFolder::change_language($userid, $oldlang, $newlang);
     }
-    set_field_select('tag', 'tag', get_string_from_language($newlang, 'profile'), "WHERE tag = ? AND resourcetype = 'artefact' AND resourceid IN (SELECT id FROM {artefact} WHERE \"owner\" = ?)", array(get_string_from_language($oldlang, 'profile'), $userid));
-    set_field_select('tag', 'tag', get_string_from_language($newlang, 'profile'), "WHERE tag = ? AND resourcetype = 'view' AND resourceid IN (SELECT id FROM {view} WHERE \"owner\" = ?)", array(get_string_from_language($oldlang, 'profile'), $userid));
-    set_field_select('tag', 'tag', get_string_from_language($newlang, 'profile'), "WHERE tag = ? AND resourcetype = 'collection' AND resourceid IN (SELECT id FROM {collection} WHERE \"owner\" = ?)", array(get_string_from_language($oldlang, 'profile'), $userid));
+    $typecast = is_postgres() ? '::varchar' : '';
+    set_field_select('tag', 'tag', get_string_from_language($newlang, 'profile'), "WHERE tag = ? AND resourcetype = 'artefact' AND resourceid IN (SELECT id" . $typecast . " FROM {artefact} WHERE \"owner\" = ?)", array(get_string_from_language($oldlang, 'profile'), $userid));
+    set_field_select('tag', 'tag', get_string_from_language($newlang, 'profile'), "WHERE tag = ? AND resourcetype = 'view' AND resourceid IN (SELECT id" . $typecast . " FROM {view} WHERE \"owner\" = ?)", array(get_string_from_language($oldlang, 'profile'), $userid));
+    set_field_select('tag', 'tag', get_string_from_language($newlang, 'profile'), "WHERE tag = ? AND resourcetype = 'collection' AND resourceid IN (SELECT id" . $typecast . " FROM {collection} WHERE \"owner\" = ?)", array(get_string_from_language($oldlang, 'profile'), $userid));
 }
 
 /**
