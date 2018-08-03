@@ -4873,6 +4873,7 @@ function is_valid_url($url) {
             CURLOPT_URL => $url,
             CURLOPT_HEADER => true,
             CURLOPT_NOBODY => true,
+            CURLOPT_CONNECTTIMEOUT => 2,
         ),
         true
     );
