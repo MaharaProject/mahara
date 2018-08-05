@@ -64,12 +64,13 @@
 
 .layoutthumb {
     rect.layout1 {
-        fill: darken($panel-default-heading-bg, 10%);
+        fill: scale-color($panel-default-heading-bg, $lightness: -10%);
         stroke: $panel-default-border;
     }
 
     rect.layout0 {
-        fill: darken($panel-default-heading-bg, 15%);
+        fill: scale-color($panel-default-heading-bg, $lightness: -5.25%);
+
         stroke: $panel-default-border;
     }
 

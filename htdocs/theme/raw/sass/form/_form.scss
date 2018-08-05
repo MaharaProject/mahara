@@ -194,7 +194,7 @@ textarea.resizable {
     font-family: "FontAwesome";
     font-size: 16px;
     content: "\f073";
-    color: lighten($text-color, 20%);
+    color: scale-color($text-color, $lightness: 25%);
     position:relative;
     right: 20px;
 }
@@ -202,7 +202,7 @@ textarea.resizable {
     font-family: "FontAwesome";
     font-size: 16px;
     content: "\f073";
-    color: lighten($text-color, 20%);
+    color: scale-color($text-color, $lightness: 25%);
     right: 10px;
     position: absolute;
     font-size: 16px;

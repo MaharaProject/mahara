@@ -115,9 +115,9 @@ h4.list-group-item-heading {
         display: block;
         padding: 10px 15px;
         &:hover {
-            background: darken(#f0f0f0, 0.5%);
+            background: #efefef;
             text-decoration: none;
-            color: darken($link-color, 5%);
+            color: scale-color($link-color, $lightness: -16%);
         }
         small {
             color: $link-color;
@@ -159,7 +159,7 @@ h4.list-group-item-heading {
         @extend .list-group-item-warning;
     }
     &.published {
-        background: lighten($panel-default-heading-bg, 1%);
+        background: scale-color($panel-default-heading-bg, $lightness: 50%);
     }
     &.flush {
         padding: 10px 0;

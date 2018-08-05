@@ -13,7 +13,7 @@
     &.select2-selection--multiple {
         &:after {
             content: "\f002";
-            color: lighten($text-color, 50%);
+            color: scale-color($text-color, $lightness: 62.5%);
             font-family: FontAwesome;
             font-size: 1em;
             display:inline-block;
@@ -74,7 +74,7 @@
             position: relative;
             &:after {
                 content: "\f002";
-                color: lighten($text-color, 50%);
+                color: scale-color($text-color, $lightness: 62.5%);
                 font-family: FontAwesome;
                 font-size: 1em;
                 display:inline-block;

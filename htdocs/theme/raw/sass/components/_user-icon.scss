@@ -98,7 +98,7 @@ a.user-icon, a .user-icon {
     &:hover,
     &:focus {
         opacity:1;
-        background-color: lighten($thumbnail-border, 10%);
+        background-color: scale-color($thumbnail-border, $lightness: 75%);
 
         img {
             opacity: 1;

@@ -18,7 +18,7 @@ $logged-in-height-mobile: 100px;
         padding: 13px 15px;
         height: $logged-in-height;
         border-top: 3px solid $dashboard-widget-color;
-        background-color: darken($dashboard-widget-bg, 3%);
+        background: scale-color($dashboard-widget-bg, $lightness: -3.25%);
 
         @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
             height: $logged-in-height-mobile;
@@ -153,7 +153,7 @@ $logged-in-height-mobile: 100px;
     .logged-in:hover {
         .widget-heading {
             @media (max-width: $screen-sm-min) {
-                background: darken($gray-lighter, 10%);
+                background: scale-color($gray-lighter, $lightness: -10.5%);
             }
         }
         .widget-detail {

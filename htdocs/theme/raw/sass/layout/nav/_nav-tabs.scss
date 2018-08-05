@@ -17,10 +17,10 @@
             }
             &:hover,
             &:focus {
-                color: darken($link-color, 5%);
+                color: scale-color($link-color, $lightness: -16%);
                 border: 1px solid transparent;
                 border-bottom: 3px solid $nav-tabs-link-hover-border-color;
-                background: lighten($gray-lighter, 3%);
+                background: scale-color($gray-lighter, $lightness: 45%);
             }
         }
     }

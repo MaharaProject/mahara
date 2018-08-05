@@ -19,7 +19,7 @@
 
 //dash
 .collapse-indicator {
-    color: lighten($gray, 25%);
+    color: scale-color($gray, $lightness: 37.5%);
     font-size: 13px;
     display: block;
     transition-duration: 0.3s;
@@ -30,7 +30,7 @@
         font-size: 11px;
     }
     .collapsed & {
-        color: lighten($gray, 25%);
+        color: scale-color($gray, $lightness: 37.5%);
     }
     a:hover &,
     a:focus & {
@@ -52,7 +52,7 @@ a[data-toggle="collapse"] {
     .collapse-indicator {
         transform: rotate(-180deg);
         transition-duration: 0.3s;
-        color: lighten($gray, 25%);
+        color: scale-color($gray, $lightness: 37.5%);
         margin-top: 5px;
         line-height: 13px;
         height: auto;
@@ -71,7 +71,7 @@ a[data-toggle="collapse"] {
     + .icon {
         color: $text-color;
         &:hover, &:focus {
-            color: lighten($text-color, 10%);
+            color: scale-color($text-color, $lightness: 12.5%);
         }
     }
 }
@@ -80,7 +80,7 @@ a[data-toggle="collapse"] {
 [data-toggle="collapse"].outer-link {
     &.collapsed {
         ~ .collapse-indicator {
-            color: lighten($gray, 25%);
+            color: scale-color($gray, $lightness: 37.5%);
         }
     }
     &:hover,
@@ -141,8 +141,7 @@ a[data-toggle="collapse"] {
         }
     }
     @media (min-width: $screen-lg-min) {
-        .columns3.col-width-25,
-            {
+        .columns3.col-width-25 {
             width: 60%;
         }
         .columns1,

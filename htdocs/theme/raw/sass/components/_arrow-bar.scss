@@ -7,7 +7,7 @@
     color: $popover-arrow-color;
     display: block;
     width: 100%;
-    background-color: lighten($arrow-color, 5%);
+    background-color: scale-color($arrow-color, $lightness: 35%);
 
     .right-text,
     .arrow {

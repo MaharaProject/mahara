@@ -1,7 +1,7 @@
 .table>thead>tr>th {
     border-color: $table-border-color;
     &.active {
-        background: lighten($table-bg-active, 3%);
+        background: scale-color($table-bg-active, $lightness: 75%);
     }
 }
 td.short {
@@ -140,7 +140,8 @@ td.tiny {
             }
         }
         &:hover {
-            background: lighten($table-bg-hover, 2.5%);
+            background: scale-color($table-bg-active, $lightness: 60%);
+
             cursor: pointer;
             .filename {
                 color: $link-hover-color;

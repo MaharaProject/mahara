@@ -1,7 +1,8 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow component variables
-$arrow-color: lighten($brand-primary, 55%) !default;
+$arrow-color: scale-color($brand-primary, $lightness: 80%) !default;
+
 $arrow-text-color: $text-color !default;
 $arrow-link-color: $link-color !default;
 $arrow-link-hover-color: $text-color !default;
@@ -12,7 +13,7 @@ $section-heading-color: #999 !default;
 $admin-title-color: #fff !default;
 $admin-title-bg: $brand-primary !default;
 
-$dashboard-widget-bg: darken(#f9f9f9, 2%) !default;
+$dashboard-widget-bg: #f4f4f4 !default;
 $dashboard-widget-color: $brand-primary !default;
 
 $help-icon-color: $state-info-text !default;

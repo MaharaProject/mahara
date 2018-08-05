@@ -66,7 +66,7 @@
 }
 
 .icon-drag-current {
-    border: 1px dashed darken($panel-default-border, 5%);
+    border: 1px dashed scale-color($panel-default-border, $lightness: -6%);
     min-width: 200px;
 }
 
@@ -85,7 +85,7 @@
 
 // Droppable area background indicator
 .block-drop-on {
-    background: darken($panel-default-heading-bg, 5%);
+    background: scale-color($panel-default-heading-bg, $lightness: -5.25%);
 }
 
 .drag-handle,
