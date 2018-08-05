@@ -186,8 +186,8 @@ foreach ($user_insts as $inst) {
             $internal = insert_record('auth_instance', $todb, 'id', true);
         }
         // Now we know we have an internal auth for the user, set it
-        set_field('usr', 'authinstance', $internal);
         $user->authinstance = $internal;
+        $user->commit();
     }
 }
 
