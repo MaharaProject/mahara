@@ -588,6 +588,19 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         return true;
     }
 
+    /**
+     * Defines if the block is viewable by the logged in user
+     *
+     * This method should be overridden in the child class, if peer role
+     * should be able to see the block
+     *
+     * @param array user access role for the view
+     * @return boolean whether display the block content for the roles
+     */
+    public static function display_for_roles($roles) {
+        return !(count($roles) == 1 && $roles[0] == 'peer');
+    }
+
 }
 
 
@@ -956,6 +969,8 @@ class BlockInstance {
      *               javascript to run
      */
     public function render_editing($configure=false, $new=false, $jsreply=false) {
+        global $USER;
+
         safe_require('blocktype', $this->get('blocktype'));
         $movecontrols = array();
 
@@ -973,11 +988,19 @@ class BlockInstance {
         }
         else {
             try {
+              $user_roles = get_column('view_access', 'role', 'usr', $USER->get('id'), 'view', $this->view);
+              if (!call_static_method($blocktypeclass, 'display_for_roles', $user_roles)) {
+                  $content = '';
+                  $css = '';
+                  $js = '';
+              }
+              else   {
                 $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this, true);
                 $jsfiles = call_static_method($blocktypeclass, 'get_instance_javascript', $this);
                 $inlinejs = call_static_method($blocktypeclass, 'get_instance_inline_javascript', $this);
                 $js = $this->get_get_javascript_javascript($jsfiles) . $inlinejs;
                 $css = '';
+              }
             }
             catch (NotFoundException $e) {
                 // Whoops - where did the image go? There is possibly a bug
@@ -1101,6 +1124,7 @@ class BlockInstance {
      * @return the rendered block
      */
     public function render_viewing($exporting=false) {
+        global $USER;
 
         if (!safe_require_plugin('blocktype', $this->get('blocktype'))) {
             return;
@@ -1108,8 +1132,15 @@ class BlockInstance {
 
         $smarty = smarty_core();
 
+        $user_roles = get_column('view_access', 'role', 'usr', $USER->get('id'), 'view', $this->view);
+
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
-        if (get_config('ajaxifyblocks') && call_static_method($classname, 'should_ajaxify') && $exporting === false) {
+        $displayforrole = call_static_method($classname, 'display_for_roles', $user_roles);
+        if (!$displayforrole) {
+            $content = '';
+            $smarty->assign('loadbyajax', false);
+        }
+        else if (get_config('ajaxifyblocks') && call_static_method($classname, 'should_ajaxify') && $exporting === false) {
             $content = '';
             $smarty->assign('loadbyajax', true);
         }
@@ -1150,20 +1181,20 @@ class BlockInstance {
         // If this block is for just one artefact, we set the title of the
         // block to be a link to view more information about that artefact
         $configdata = $this->get('configdata');
-        if (!empty($configdata['artefactid'])) {
+        if (!empty($configdata['artefactid']) && $displayforrole) {
             if (call_static_method($classname, 'has_title_link')) {
                 $smarty->assign('viewartefacturl', get_config('wwwroot') . 'artefact/artefact.php?artefact='
                     . $configdata['artefactid'] . '&view=' . $this->get('view') . '&block=' . $this->get('id'));
             }
         }
 
-        if (method_exists($classname, 'feed_url')) {
-            $smarty->assign('feedlink', call_static_method($classname, 'feed_url', $this));
+        if ($displayforrole) {
+            if (method_exists($classname, 'feed_url')) {
+                $smarty->assign('feedlink', call_static_method($classname, 'feed_url', $this));
+            }
+
+            $smarty->assign('link', call_static_method($classname, 'get_link', $this));
         }
-
-
-        $smarty->assign('link', call_static_method($classname, 'get_link', $this));
-
 
         $smarty->assign('content', $content);
         if (isset($configdata['retractable']) && $title) {

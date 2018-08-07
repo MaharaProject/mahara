@@ -343,7 +343,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
         }
         $userid = $USER->get('id');
         $viewid = $view->get('id');
-        $canedit = get_field_sql("SELECT role FROM {view_access} WHERE view = ? AND usr = ? AND role IN('peer','peermanager')", array($viewid, $userid));
+        $canedit = $USER->can_peer_assess($view);
         $owner = $view->get('owner');
         $isowner = $userid && $userid == $owner;
 
@@ -360,13 +360,14 @@ class ArtefactTypePeerassessment extends ArtefactType {
             'data'     => array(),
         );
 
-        $where = 'pa.view = ' . (int)$viewid;
-        if (!$canedit) {
-            $where .= ' AND (';
-            $where .= 'pa.private = 0 '; // assessment is public
-            $where .= 'OR a.author = ' . (int) $userid; // You are the peer assessment author
-            $where .= ')';
-        }
+        $where = 'pa.view = ? ';
+
+        // select assessments that are published
+        // or select assessments where the user is the author, published or not
+        $where.= 'AND ( (pa.private = 0) ';
+        $where.= '    OR (a.author = ?))';
+
+        $values = array((int)$viewid, (int)$userid, $block);
 
         $result->count = count_records_sql('
             SELECT COUNT(*)
@@ -377,7 +378,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
                 LEFT JOIN {artefact} p
                     ON a.parent = p.id
             WHERE ' . $where . '
-            AND pa.block = ?', array($block));
+            AND pa.block = ?', $values);
 
         if ($result->count > 0) {
 
@@ -402,7 +403,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
                             WHERE ' . $where . '
                             AND pa.block = ?
                             ORDER BY ' . $orderby,
-                            array($block)
+                            $values
                     );
                     $found = false;
                     foreach ($ids as $k => $v) {
@@ -433,7 +434,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
                     LEFT JOIN {usr} u ON a.author = u.id
                 WHERE ' . $where . '
                 AND pa.block = ?
-                ORDER BY ' . $orderby, array($block), $offset, $limit);
+                ORDER BY ' . $orderby, $values, $offset, $limit);
 
             $result->data = array_values($assessments);
         }

@@ -38,6 +38,10 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         return array('portfolio');
     }
 
+    public static function display_for_roles($roles) {
+        return true;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $USER;
 
@@ -73,9 +77,9 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         $smarty = smarty_core();
         $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('instructions', $instructions);
-        $smarty->assign('allowfeedback', true); // @TODO: restrict to peer/manager
+        $smarty->assign('allowfeedback', $feedback->canedit);
         $smarty->assign('addassessmentfeedbackform', pieform($feedbackform));
-        if ($feedback && $feedback->count > 0) {
+        if ($feedback && !$editing) {
             $smarty->assign('feedback', $feedback);
         }
         else {

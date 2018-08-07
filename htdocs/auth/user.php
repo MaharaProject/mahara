@@ -1289,6 +1289,22 @@ class User {
     }
 
     /**
+     * Function to check if the user can add peer assessments to the view
+     *
+     * @param $v  View object where to add the peer assessment
+     */
+     public function can_peer_assess($v) {
+        $user_roles = get_column('view_access', 'role', 'usr', $this->get('id'), 'view', $v->get('id'));
+        if (!empty($user_roles)) {
+            foreach ($user_roles as $i => $role) {
+               if ($role == 'peer' || $role == 'peermanager') {
+                  return true;
+               }
+            }
+        }
+        return false;
+     }
+    /**
      * Function to check current user can edit collection
      *
      * This is fairly straightforward at the moment but it might require more
