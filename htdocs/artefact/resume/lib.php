@@ -987,7 +987,7 @@ function compositeSaveCallback(form, data) {
     \$j('#' + key + 'form').collapse('hide');
 
     tableRenderers[key].doupdate(null, { focusid: data['focusid'] });
-    \$j('#add' + key + 'button').focus();
+    \$j('#add' + key + 'button').trigger("focus");
     // Do a double check to make sure the formchange checker for the submitted form is actually reset
     tableRenderers[key].postupdatecallback = function(response) {
         var checkers = formchangemanager.formcheckers;

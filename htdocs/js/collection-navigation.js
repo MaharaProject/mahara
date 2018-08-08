@@ -33,7 +33,7 @@ jQuery(function($) {
         if (currentIndex !== 0) {
             $('.prevpage').removeClass('disabled');
 
-            $('.prevpage').click(function() {
+            $('.prevpage').on("click", function() {
                 var target = currentIndex - 1;
                 findLink(target);
             });
@@ -48,7 +48,7 @@ jQuery(function($) {
         if (currentIndex !== (indexLength - 1)) {
             $('.nextpage').removeClass('disabled');
 
-            $('.nextpage').click(function() {
+            $('.nextpage').on("click", function() {
                 var target = currentIndex + 1;
                 findLink(target);
             });

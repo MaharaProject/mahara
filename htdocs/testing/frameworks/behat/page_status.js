@@ -40,7 +40,7 @@ function isMaharaPageReady() {
         && (document.readyState === "complete");
 }
 
-jQuery(document).ready(function() {
+jQuery(function() {
     /**
      * Listening for ajax events
      */

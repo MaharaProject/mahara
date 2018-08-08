@@ -97,5 +97,6 @@ Scenario: Comments update the page's mtime
     And I disable the switch "Make comment public"
     And I press "Comment"
     And I choose "Dashboard" from main menu
+    And I scroll to the id "column-container"
     Then I should see "Page UserA_02" in the ".bt-newviews" element
     And I should not see "Page UserA_01" in the ".bt-newviews" element

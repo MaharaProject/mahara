@@ -88,9 +88,9 @@ function pieform_element_wysiwyg_get_headdata() {
         foreach ($_PIEFORM_WYSIWYGS as $name => $editor) {
             $result .= "    if (!arguments[0] || arguments[0]=='{$name}') {\n";
             $result .= "        tinyMCE.execCommand('mceAddEditor', false, '$editor');\n";
-            $result .= "        jQuery('#{$editor}').focus = function() {\n";
+            $result .= "        jQuery('#{$editor}').on('focus', function() {\n";
             $result .= "            editor_to_focus = '$editor';\n";
-            $result .= "        };\n";
+            $result .= "        });\n";
             $result .= "    };\n";
         }
         $result .= "});\nPieformManager.connect('onreply', null, function() {\n";

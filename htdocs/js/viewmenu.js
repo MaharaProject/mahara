@@ -86,7 +86,7 @@ function isTinyMceUsed() {
 jQuery(function($) {
     // Watchlist
     if ($('#toggle_watchlist_link').length) {
-        $('#toggle_watchlist_link').click(function (e) {
+        $('#toggle_watchlist_link').on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
             if (typeof artefactid === 'undefined') {
@@ -110,12 +110,12 @@ jQuery(function($) {
     $("#copy-view-button").on('click', function() {
         // drop the collection bit from the url
         var url = copyurl.replace(/collection=(.*)/, '');
-        $(this).text(get_string('processing') + ' ...').prop('disabled', true).blur();
+        $(this).text(get_string('processing') + ' ...').prop('disabled', true).trigger("blur");
         processingStart();
         window.location = url;
     });
     $("#copy-collection-button").on('click', function() {
-        $(this).text(get_string('processing') + ' ...').prop('disabled', true).blur();
+        $(this).text(get_string('processing') + ' ...').prop('disabled', true).trigger("blur");
         processingStart();
         window.location = copyurl;
     });
@@ -177,7 +177,7 @@ jQuery(function($) {
         setupCommentButton(replybutton);
 
         if (replybutton.parents('.js-feedbackbase').length) {
-            $('#add_feedback_heading').focus();
+            $('#add_feedback_heading').trigger("focus");
             jQuery('html, body').animate({ scrollTop: jQuery('#add_feedback_heading').offset().top }, 'fast');
             return false;
         }

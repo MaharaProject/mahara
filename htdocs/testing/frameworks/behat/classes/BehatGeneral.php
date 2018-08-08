@@ -728,7 +728,7 @@ EOF;
 
         // For some reasons, the Mink function click() and check() do not work
         // Using jQuery as a workaround
-        $jscode = "jQuery(\".tablematrix tr:eq('" . $point[1] . "') td:eq('" . $point[0] . "') span\").click();";
+        $jscode = "jQuery(\".tablematrix tr:eq('" . $point[1] . "') td:eq('" . $point[0] . "') span\").trigger('click');";
         $this->getSession()->executeScript($jscode);
     }
 

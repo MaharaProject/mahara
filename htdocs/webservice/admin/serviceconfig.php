@@ -207,7 +207,7 @@ $form = pieform($form);
 $inlinejs = <<<EOF
 <script type="application/javascript">
 jQuery(function($) {
-    $(".dialogue").click(function(e) {
+    $(".dialogue").on("click", function(e) {
         e.preventDefault();
         e.stopPropagation();
         // fetch the info for the method

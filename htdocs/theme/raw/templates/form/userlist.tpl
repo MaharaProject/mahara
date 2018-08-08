@@ -41,7 +41,7 @@
 
                 jQuery('#{{$name}}_potential').empty().append(results);
                 if (typeof params.query != 'undefined') {
-                    jQuery('#{{$name}}_potential')[0].focus();
+                    jQuery( jQuery('#{{$name}}_potential')[0]).trigger('focus');
                 }
 
                 if(users.count > users.limit) {
@@ -65,14 +65,14 @@
 
         {{$name}}_searchfunc({});
 
-        $('#{{$name}}_search').keypress(function(k) {
+        $('#{{$name}}_search').on('keypress', function(k) {
             if (k.keyCode == 13) {
                 {{$name}}_searchfunc({'query': $('#{{$name}}_search').val()});
                 k.preventDefault();
             }
         });
 
-        $('#{{$name}}_search_btn').click(function(e) {
+        $('#{{$name}}_search_btn').on("click", function(e) {
             {{$name}}_searchfunc({'query': $('#{{$name}}_search').val()});
             e.preventDefault();
         });
@@ -123,7 +123,7 @@
             formchangemanager.setFormState(form, FORM_CHANGED);
         }
 
-        to.focus();
+        to.trigger('focus');
     };
 
     jQuery(function ($) {

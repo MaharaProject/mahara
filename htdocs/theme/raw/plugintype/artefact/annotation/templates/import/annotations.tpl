@@ -99,7 +99,7 @@
 </div>
 <script type="application/javascript">
     jQuery(function() {
-        jQuery("input.annotationdecision").change(function(e) {
+        jQuery("input.annotationdecision").on("change", function(e) {
             e.preventDefault();
             if (this.value == '1') {
                 // The import decision for the annotation is IGNORE

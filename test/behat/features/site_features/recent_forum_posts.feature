@@ -39,6 +39,8 @@ Scenario: Create forum and add block to group page
     And I press "Post"
     And I log out
     And I log in as "UserB" with password "Kupuh1pa!"
+    And I wait "1" seconds
+    And I scroll to the id 'inboxblock'
     And I follow "Taking photos of cats"
     And I follow "Topic"
     And I follow "Reply"

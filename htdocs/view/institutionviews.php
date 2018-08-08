@@ -50,7 +50,7 @@ EOF;
 if ($offset > 0) {
     $js .= <<< EOF
     if ($('#myviews').length) {
-        $('#myviews a').focus();
+        $('#myviews a').trigger("focus");
     }
 EOF;
 }
@@ -59,7 +59,7 @@ else {
     if ($('#searchresultsheading').length) {
         $('#searchresultsheading').addClass('hidefocus')
             .prop('tabIndex', -1)
-            .focus();
+            .trigger("focus");
     }
 EOF;
 }

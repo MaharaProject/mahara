@@ -261,29 +261,28 @@
         $("#scenario-overview .feature[data-id='" + featureId + "']").show();
     }
     $(function () {
-        $('.filters').click()
-        {
+        $('.filters').on('click', function() {
             showOverview();
-        }
+        });
 
-        $('.filters #feature-failed-filter').click(function () {
+        $('.filters #feature-failed-filter').on('click', function () {
             showOverview();
             $('.feature').hide();
             $('.card.failed').parent().show();
         });
-        $('.filters #feature-passed-filter').click(function () {
+        $('.filters #feature-passed-filter').on('click', function () {
             showOverview();
             $('.feature').hide();
             $('.card.passed').parent().show();
         });
-        $('.filters #feature-all-filter').click(function () {
+        $('.filters #feature-all-filter').on('click', function () {
             showOverview();
             $('.feature').show();
         });
     });
 
     $(function () {
-        $(".feature").click(function () {
+        $(".feature").on('click', function () {
             var featureId = $(this).data("id");
             showDetails();
             showFeatureDetail(featureId);

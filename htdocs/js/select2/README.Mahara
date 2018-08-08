@@ -24,3 +24,6 @@ Changes:
   * Make "Remove tag" button work with the keyboard
   * Adding the 'aria-hidden="true"' to presentation icons
   * Adding ability to remove tag via 'enter' key if one is focused on the 'x' of a tag
+*
+* set background for exclude tags (commit 1f9bbefe1ddbada754591eb0503a4f5d628fe4ab)
+* user profile picture in select2 styling (commit 1bdfef8ca2056a17ce14268970be9f969d6d6930)

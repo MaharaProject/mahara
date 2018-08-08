@@ -35,7 +35,7 @@
             $('#customrow_' + numrows).after(newrow);
             $('#' + pieformname + '_customlayoutnumrows').val(numrows + 1);
             customlayout_change_layout(pieformname);
-            newrow.find('select').first().focus();
+            newrow.find('select').first().trigger("focus");
         }
 
         if (parseInt($('#' + pieformname + '_customlayoutnumrows').val(), 10) >= get_max_custom_rows()) {
@@ -58,7 +58,7 @@
         customlayout_change_layout(pieformname);
 
         if (parseInt($('#' + pieformname + '_customlayoutnumrows').val(), 10) < get_max_custom_rows()) {
-            $('#addrow').removeAttr('disabled');
+            $('#addrow').prop('disabled', false);
         }
     };
 
@@ -144,7 +144,7 @@
             highlight_layout($(radio).parent());
             link_thumbs_to_radio_buttons();
 
-            $(radio).focus();
+            $(radio).trigger("focus");
 
         });
     };
@@ -190,7 +190,7 @@ function init(pieformname) {
     $('#' + pieformname + '_basic_container legend a, ' +
       '#' + pieformname + '_layout_container legend a, ' +
       '#' + pieformname + '_skin_container legend a'
-    ).click(function(event) {
+    ).on("click", function(event) {
 
         var layoutselected = $('#' + pieformname + '_currentlayoutselect').val();
         var layoutfallback = $('#' + pieformname + '_layoutfallback').val();
@@ -203,27 +203,27 @@ function init(pieformname) {
         }
     });
 
-    $("input[name='layoutselect']").change(function(event) {
+    $("input[name='layoutselect']").on("change", function(event) {
         $('#' + pieformname + '_currentlayoutselect').val($(this).val());
     });
 
-    $("input[name='advancedlayoutselect']").change(function(event) {
+    $("input[name='advancedlayoutselect']").on("change", function(event) {
         $('#' + pieformname + '_currentlayoutselect').val($(this).val());
     });
 
     link_thumbs_to_radio_buttons(pieformname);
 
-    $('#basiclayouthelp').click(function(event) {
+    $('#basiclayouthelp').on("click", function(event) {
         contextualHelp("viewlayout","layoutselect","core","view","","",this);
         return false;
     });
-    $('#customlayouthelp').click(function(event) {
+    $('#customlayouthelp').on("click", function(event) {
         contextualHelp("viewlayout","createcustomlayouttitle","core","view","","",this);
         return false;
     });
 
     $('#togglecustomlayoutoptions').hide();
-    $('#createcustomlayouttitle').click(function(event) {
+    $('#createcustomlayouttitle').on("click", function(event) {
         $('#' + pieformname + '_createcustomlayout_container').toggleClass("collapsed");
         $('#togglecustomlayoutoptions').toggle();
     });
@@ -231,7 +231,7 @@ function init(pieformname) {
 
 function link_thumbs_to_radio_buttons(pieformname) {
     $('.layoutoption > .thumbnail').each(function(event) {
-        $(this).click(function(e) {
+        $(this).on("click", function(e) {
             $(this).find(':radio').prop('checked', true);
             $('#' + pieformname + '_currentlayoutselect').val( $(this).find(':radio').val() );
         });

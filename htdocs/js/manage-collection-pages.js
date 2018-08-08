@@ -74,7 +74,7 @@ jQuery(function($) {
                 }
             })
             .disableSelection()
-            .hover(function() {
+            .on("mouseenter mouseleave", function() {
                 $(this).css('cursor', 'move');
             });
         };
@@ -85,7 +85,7 @@ jQuery(function($) {
                 cursor: 'move',
                 revert: 'invalid',
                 helper: 'clone'
-            }).hover(function() {
+            }).on('mouseenter mouseleave', function() {
                 $(this).css('cursor', 'move');
             });
         };
@@ -108,14 +108,14 @@ jQuery(function($) {
         };
 
         var wireselectall = function() {
-            $("#selectall").click(function(e) {
+            $("#selectall").on("click", function(e) {
                 e.preventDefault();
                 $("#addviews :checkbox").prop("checked", true);
             });
         };
 
         var wireselectnone = function() {
-            $("#selectnone").click(function(e) {
+            $("#selectnone").on("click", function(e) {
                 e.preventDefault();
                 $("#addviews :checkbox").prop("checked", false);
             });

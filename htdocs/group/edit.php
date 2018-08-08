@@ -570,56 +570,56 @@ function editgroup_submit(Pieform $form, $values) {
 
 $js = '
 jQuery(function($) {
-    $("#editgroup_controlled").click(function() {
+    $("#editgroup_controlled").on("click", function() {
         if (this.checked) {
-            $("#editgroup_request").removeAttr("disabled");
-            $("#editgroup_open").removeAttr("checked");
+            $("#editgroup_request").prop("disabled", false);
+            $("#editgroup_open").prop("checked", false);
             if (!$("#editgroup_request").attr("checked")) {
-                $("#editgroup_suggestfriends").removeAttr("checked");
-                $("#editgroup_suggestfriends").attr("disabled", true);
+                $("#editgroup_suggestfriends").prop("checked", false);
+                $("#editgroup_suggestfriends").prop("disabled", true);
             }
         }
     });
-    $("#editgroup_open").click(function() {
+    $("#editgroup_open").on("click", function() {
         if (this.checked) {
-            $("#editgroup_controlled").removeAttr("checked");
-            $("#editgroup_request").removeAttr("checked");
-            $("#editgroup_request").attr("disabled", true);
-            $("#editgroup_suggestfriends").removeAttr("disabled");
+            $("#editgroup_controlled").prop("checked", false);
+            $("#editgroup_request").prop("checked", false);
+            $("#editgroup_request").prop("disabled", true);
+            $("#editgroup_suggestfriends").prop("disabled", false);
         }
         else {
-            $("#editgroup_request").removeAttr("disabled");
+            $("#editgroup_request").prop("disabled", false);
             if (!$("#editgroup_request").attr("checked")) {
-                $("#editgroup_suggestfriends").removeAttr("checked");
-                $("#editgroup_suggestfriends").attr("disabled", true);
+                $("#editgroup_suggestfriends").prop("checked", false);
+                $("#editgroup_suggestfriends").prop("disabled", true);
             }
         }
     });
-    $("#editgroup_request").click(function() {
+    $("#editgroup_request").on("click", function() {
         if (this.checked) {
-            $("#editgroup_suggestfriends").removeAttr("disabled");
+            $("#editgroup_suggestfriends").prop("disabled", false);
         }
         else {
             if (!$("#editgroup_open").attr("checked")) {
-                $("#editgroup_suggestfriends").removeAttr("checked");
-                $("#editgroup_suggestfriends").attr("disabled", true);
+                $("#editgroup_suggestfriends").prop("checked", false);
+                $("#editgroup_suggestfriends").prop("disabled", true);
             }
         }
     });
-    $("#editgroup_invitefriends").click(function() {
+    $("#editgroup_invitefriends").on("click", function() {
         if (this.checked) {
             if ($("#editgroup_request").attr("checked") || $("#editgroup_open").attr("checked")) {
-                $("#editgroup_suggestfriends").removeAttr("disabled");
+                $("#editgroup_suggestfriends").prop("disabled", false);
             }
-            $("#editgroup_suggestfriends").removeAttr("checked");
+            $("#editgroup_suggestfriends").prop("checked", false);
         }
     });
-    $("#editgroup_suggestfriends").click(function() {
+    $("#editgroup_suggestfriends").on("click", function() {
         if (this.checked) {
-            $("#editgroup_invitefriends").removeAttr("checked");
+            $("#editgroup_invitefriends").prop("checked", false);
         }
     });
-    $("#editgroup_hidemembersfrommembers").change(function() {
+    $("#editgroup_hidemembersfrommembers").on("change", function() {
         if ($("#editgroup_hidemembersfrommembers option:selected").val() != "0") {
             $("#editgroup_hidemembers").prop("selectedIndex", $("#editgroup_hidemembersfrommembers option:selected").val());
             $("#editgroup_hidemembers").prop("disabled", "disabled");
@@ -628,13 +628,13 @@ jQuery(function($) {
             $("#editgroup_hidemembers").prop("disabled", false);
         }
     });
-    $("#editgroup_submittableto").click(function() {
+    $("#editgroup_submittableto").on("click", function() {
         if (this.checked) {
-            $("#editgroup_allowarchives").attr("disabled", false);
+            $("#editgroup_allowarchives").prop("disabled", false);
         }
         else {
-            $("#editgroup_allowarchives").removeAttr("checked");
-            $("#editgroup_allowarchives").attr("disabled", true);
+            $("#editgroup_allowarchives").prop("checked", false);
+            $("#editgroup_allowarchives").prop("disabled", true);
         }
     });
 });

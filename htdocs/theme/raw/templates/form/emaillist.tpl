@@ -56,7 +56,7 @@
 
     function {{$name}}_new() {
         if ( {{$name}}_newref ) {
-            {{$name}}_newrefinput.focus();
+            {{$name}}_newrefinput.trigger("focus");
             return false;
         }
 
@@ -66,7 +66,7 @@
 
         jQuery('#{{$name}}_list').append({{$name}}_newref);
 
-        {{$name}}_newrefinput.focus();
+        {{$name}}_newrefinput.trigger("focus");
 
         {{$name}}_newrefinput.on('change', function(k) {
             if (typeof formchangemanager !== 'undefined') {

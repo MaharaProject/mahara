@@ -12,7 +12,7 @@ var addNewTaggedPostShortcut = (function($) {
                   var myForm = $('<form>', {'action': config.wwwroot + 'artefact/blog/post.php', 'method': 'POST'});
                   myForm.append(BlogIDInput[0], TagInput);
                   document.body.appendChild(myForm[0]);
-                  myForm.submit();
+                  myForm.trigger('submit');
               });
           }
       );

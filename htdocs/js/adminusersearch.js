@@ -44,7 +44,7 @@ var UserSearch = (function($) {
               var sortby = getUrlParameter('sortby', href);
               var sortdir = getUrlParameter('sortdir', href);
 
-              $(this).click(function() {
+              $(this).on("click", function() {
                   var header = $(this).parent();
                   if (!(header.hasClass('asc') || header.hasClass('desc'))) {
                       sortdir = 'asc';
@@ -73,13 +73,13 @@ var UserSearch = (function($) {
 
       this.rewriteInitials = function() {
           $('#firstnamelist span.first-initial').each(function() {
-              $(this).click(function() {
+              $(this).on("click", function() {
                   self.searchInitial('f', $(this));
                   return false;
               });
           });
           $('#lastnamelist span.last-initial').each(function() {
-              $(this).click(function() {
+              $(this).on("click", function() {
                   self.searchInitial('l', $(this));
                   return false;
               });
@@ -106,7 +106,7 @@ var UserSearch = (function($) {
       };
 
       this.rewriteQueryButton = function() {
-          $('#query-button').click(function() {
+          $('#query-button').on("click", function() {
               self.submitUserQuery();
           });
       };
@@ -137,7 +137,7 @@ var UserSearch = (function($) {
       this.rewriteCheckboxes = function() {
           $('#searchresults input.selectusers').each(function() {
               var value = $(this).val();
-              $(this).change(function() {
+              $(this).on('change', function() {
                   if ($(this).prop('checked')) {
                       $(this).closest('tr').addClass('warning'); // visual selected indicator
                       self.selectusers[value] = 1;
@@ -159,7 +159,7 @@ var UserSearch = (function($) {
               }
           });
           if ($('#selectall').length) {
-              $('#selectall').click(function() {
+              $('#selectall').on("click", function() {
                   $(this).addClass('active');
                   $(this).siblings().removeClass('active');
                   $('.withselectedusers button').removeClass('disabled');
@@ -170,7 +170,7 @@ var UserSearch = (function($) {
                   });
                   return false;
               });
-              $('#selectnone').click(function() {
+              $('#selectnone').on("click", function() {
                   $(this).addClass('active');
                   $(this).siblings().removeClass('active');
                   $('.withselectedusers button').addClass('disabled');
@@ -185,7 +185,7 @@ var UserSearch = (function($) {
       };
 
       this.rewriteLoggedInFilter = function() {
-          $('#loggedin').change(function() {
+          $('#loggedin').on('change', function() {
               var type = $(this).val();
               pager.params.offset = 0;
               pager.params.loggedin = type;
@@ -207,7 +207,7 @@ var UserSearch = (function($) {
       };
 
       this.rewriteDuplicateEmailFilter = function() {
-          $('#duplicateemail').click(function() {
+          $('#duplicateemail').on("click", function() {
               pager.params.offset = 0;
               pager.params.duplicateemail = $(this).prop('checked');
               pager.sendQuery();
@@ -215,7 +215,7 @@ var UserSearch = (function($) {
       };
 
       this.connectSelectedUsersForm = function(i, formid) {
-          $('#' + formid + ' button').click(function() {
+          $('#' + formid + ' button').on("click", function() {
               // Some of the selected users aren't on the page, so just add them all to the
               // form now.
               var count = 0;
@@ -238,7 +238,7 @@ var UserSearch = (function($) {
                       'name': 'action',
                       'value': $(this).attr('name')
                   }));
-                  $('#' + formid).submit();
+                  $('#' + formid).trigger('submit');
                   return false;
               }
               $('#nousersselected').removeClass('hidden');

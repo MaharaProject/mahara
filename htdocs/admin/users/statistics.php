@@ -211,7 +211,7 @@ jQuery(function ($) {
 
     // We need to show/hide modal explicitly so the on 'show.bs.modal' fires allowing
     // us to do ajax call for form as modal opens
-    $('#configbtn').click(function() {
+    $('#configbtn').on("click", function() {
         $("#modal-configs").modal("show");
     });
     $("#modal-configs").on('show.bs.modal', function () {

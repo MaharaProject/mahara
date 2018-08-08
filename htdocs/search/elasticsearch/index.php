@@ -128,10 +128,10 @@ jQuery(function ($) {
                 firstpage = false;
                 $('#totalresultsdisplay').addClass('hidefocus')
                   .prop('tabindex', -1)
-                  .focus();
+                  .trigger("focus");
             }
             else {
-                $('#universalsearchresults a:first').focus();
+                $('#universalsearchresults a:first').trigger("focus");
             }
         });
     }
@@ -162,7 +162,7 @@ if (!empty($query)) {
 jQuery(function($) {
     $('#totalresultsdisplay').addClass('hidefocus')
         .prop('tabindex', -1)
-        .focus();
+        .trigger("focus");
 });
 EOF;
 }

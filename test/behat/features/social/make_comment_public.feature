@@ -36,6 +36,7 @@ Background:
     And I log out
 
     And I log in as "UserB" with password "Kupuh1pa!"
+    And I scroll to the base of id 'bottom-pane'
     And I follow "Page UserA_03"
     And I fill in "This is comment 1" in editor "Comment"
     And I disable the switch "Make comment public"
@@ -106,6 +107,7 @@ Background:
     And I log out
 
     And I log in as "UserB" with password "Kupuh1pa!"
+    And I scroll to the id 'bottom-pane'
     And I follow "Collection UserA_01"
     And I should see "This is comment 3"
     And I should not see "This is comment 2"

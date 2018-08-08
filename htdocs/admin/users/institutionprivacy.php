@@ -171,7 +171,7 @@ function editsitepage_submit(Pieform $form, $values) {
 }
 
 $js = <<< EOF
-$(document).ready(function() {
+$(function() {
   checkActiveTab('$selectedtab');
   $('#usertypeselect_institution').on('change', reloadUsers);
 });

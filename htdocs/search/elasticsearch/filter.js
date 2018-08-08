@@ -1,4 +1,4 @@
-jQuery(document).ready(function() {
+jQuery(function() {
 
     jQuery(document).on("change", "#universalsearchresult select", function() {
         var selectid = new String(jQuery(this).attr('id'));

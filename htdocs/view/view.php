@@ -314,9 +314,9 @@ jQuery(function($) {
             var chtml = commentlink.parent().parent().find('#feedbacktable_' + blockid).parent();
             // add a 'close' link at the bottom of the list for convenience
             if ($('#closer_' + blockid).length == 0) {
-                var closer = $('<a id="closer_' + blockid + '" href="#" class="close-link">Close</a>').click(function(e) {
+                var closer = $('<a id="closer_' + blockid + '" href="#" class="close-link">Close</a>').on("click", function(e) {
                     $(this).parent().toggle(400, function() {
-                        commentlink.focus();
+                        commentlink.trigger("focus");
                     });
                     e.preventDefault();
                 });
@@ -324,10 +324,10 @@ jQuery(function($) {
             }
             chtml.toggle(400, function() {
                 if (chtml.is(':visible')) {
-                    chtml.find('a').first().focus();
+                    chtml.find('a').first().trigger("focus");
                 }
                 else {
-                    commentlink.focus();
+                    commentlink.trigger("focus");
                 }
             });
             e.preventDefault();

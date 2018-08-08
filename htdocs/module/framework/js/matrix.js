@@ -79,7 +79,7 @@ jQuery(function($) {
                 });
                 deletebutton = newpagemodal.find('.deletebutton');
                 // Lock focus to the newly opened dialog
-                deletebutton.focus();
+                deletebutton.trigger("focus");
                 deletebutton.off('click'); // Remove any previous click event
                 deletebutton.on('click', function(e) {
                     e.stopPropagation();
@@ -104,7 +104,7 @@ jQuery(function($) {
                         }
                         hide_dock();
                         //focus on matrix annotation
-                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').focus();
+                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').trigger("focus");
                     }
                 });
                 cancelbutton = newpagemodal.find('.submitcancel.cancel');
@@ -131,7 +131,7 @@ jQuery(function($) {
                         }
                         hide_dock();
                         //focus on matrix annotation
-                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').focus();
+                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').trigger("focus");
                     }
                 });
                 if (hastinymce) {
@@ -192,7 +192,7 @@ jQuery(function($) {
                         editmatrix_update(values);
                         hide_dock();
                         //focus on matrix annotation
-                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').focus();
+                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').trigger("focus");
                     }
                 });
                 // When we are saving the annotation feedback form - changing the evidence status
@@ -222,7 +222,7 @@ jQuery(function($) {
                         }
                         hide_dock();
                         //focus on matrix annotation
-                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').focus();
+                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').trigger("focus");
                     }
                 });
                 // When we are saving the annotation feedback form - adding new feedback
@@ -327,10 +327,12 @@ jQuery(function($) {
     carousel_matrix();
 
     // show / hide tooltips for standard elements
-    $('tr.standard div').hover(
+    $('tr.standard div')
+        .on('mouseenter',
         function() {
             $(this).find('.popover').removeClass('hidden');
-        },
+        })
+        .on('mouseleave',
         function() {
             $(this).find('.popover').addClass('hidden');
         }
@@ -357,7 +359,7 @@ jQuery(function($) {
         },
         keyup: function(event) {
             if (event.keyCode == 13) {
-                $(this).click();
+                $(this).trigger("click");
             }
         },
         focusout: function() {

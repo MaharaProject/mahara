@@ -113,15 +113,15 @@
 </div>
 <script type="application/javascript">
     jQuery(function() {
-        jQuery("a.blogtitle").click(function(e) {
+        jQuery("a.blogtitle").on("click", function(e) {
             e.preventDefault();
             jQuery("#" + this.id + "_desc").toggleClass("hidden");
         });
-        jQuery("a.posttitle").click(function(e) {
+        jQuery("a.posttitle").on("click", function(e) {
             e.preventDefault();
             jQuery("#" + this.id + "_desc").toggleClass("hidden");
         });
-        jQuery("input.blogdecision").change(function(e) {
+        jQuery("input.blogdecision").on("change", function(e) {
             e.preventDefault();
             if (this.value == '1') {
             // The import decision for the blog is IGNORE

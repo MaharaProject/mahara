@@ -60,7 +60,7 @@ jQuery(function($) {
      */
     function focusOnOpen() {
         $('[data-action~="focus-on-open"]').on('shown.bs.collapse', function() {
-            $(this).find('form input').first().focus();
+            $(this).find('form input').first().trigger("focus");
         });
     }
 
@@ -167,7 +167,7 @@ jQuery(function($) {
          */
 
         // open the dropdown when it is clicked
-        $('.custom-dropdown > .picker').click(function() {
+        $('.custom-dropdown > .picker').on("click", function() {
             $(this).parent().children('ul').toggleClass('hidden');
         });
 
@@ -207,10 +207,16 @@ jQuery(function($) {
         responsiveObjectVideo()
     });
 
-    $(window).on('load', function() {
-        carouselHeight();
-        initUserThumbnailMasonry();
-    });
+    if (document.readyState === "complete") {
+      carouselHeight();
+      initUserThumbnailMasonry();
+    }
+    else {
+        $(window).on('load', function() {
+            carouselHeight();
+            initUserThumbnailMasonry();
+        });
+    }
 
     $('.block.collapse').on('shown.bs.collapse', function() {
         carouselHeight();

@@ -218,6 +218,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     // Make jQuery accessible with $j (Mochikit has $)
     $javascript_array[] = $jsroot . 'jquery/jquery.js';
     $headers[] = '<script type="application/javascript">$j=jQuery;</script>';
+    $headers[] = '<script src="https://code.jquery.com/jquery-migrate-3.0.1.js"></script>';
 
     // If necessary, load MathJax configuration
     if (get_config('mathjax')) {
@@ -378,7 +379,7 @@ tinyMCE.init({
         ed.on('init', function(ed) {
         {$tinymceinitbehatsetup}
             if (typeof(editor_to_focus) == 'string' && ed.editorId == editor_to_focus) {
-                ed.focus();
+                ed.trigger("focus");
             }
         });
         ed.on('keyup change', function (e) {

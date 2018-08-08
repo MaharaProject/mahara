@@ -44,7 +44,7 @@ var ExportQueue = (function($) {
               var sortby = getUrlParameter('sortby', href);
               var sortdir = getUrlParameter('sortdir', href);
 
-              $(this).click(function() {
+              $(this).on("click", function() {
                   var header = $(this).parent();
                   if (!(header.hasClass('asc') || header.hasClass('desc'))) {
                       sortdir = 'asc';
@@ -72,7 +72,7 @@ var ExportQueue = (function($) {
       };
 
       this.rewriteQueryButton = function() {
-          $('#query-button').click(function() {
+          $('#query-button').on("click", function() {
               pager.params.query = $('#query').val();
               var institution = $('#institution');
               if (institution.length) {
@@ -91,7 +91,7 @@ var ExportQueue = (function($) {
           // For the export checkboxes
           $('#searchresults input.selectusersexport').each(function() {
               var value = $(this).val();
-              $(this).change(function() {
+              $(this).on('change', function() {
                   if ($(this).prop('checked')) {
                       self.selectusersexport[value] = 1;
                   }
@@ -104,7 +104,7 @@ var ExportQueue = (function($) {
               }
           });
           if ($('#selectallexport').length) {
-              $('#selectallexport').click(function() {
+              $('#selectallexport').on("click", function() {
                   $('#searchresults input.selectusersexport').each(function() {
                       if (!$(this).is(':disabled')) {
                           self.selectusersexport[$(this).val()] = 1;
@@ -113,7 +113,7 @@ var ExportQueue = (function($) {
                   });
                   return false;
               });
-              $('#selectnoneexport').click(function() {
+              $('#selectnoneexport').on("click", function() {
                   $('#searchresults input.selectusersexport').each(function() {
                       delete self.selectusersexport[$(this).val()];
                       $(this).prop('checked', false);
@@ -125,7 +125,7 @@ var ExportQueue = (function($) {
           // For the delete checkboxes
           $('#searchresults input.selectusersexportdelete').each(function() {
               var value = $(this).val();
-              $(this).change(function() {
+              $(this).on('change', function() {
                   if ($(this).prop('checked')) {
                       self.selectusersdelete[value] = 1;
                   }
@@ -138,14 +138,14 @@ var ExportQueue = (function($) {
               }
           });
           if ($('#selectalldelete').length) {
-              $('#selectalldelete').click(function() {
+              $('#selectalldelete').on("click", function() {
                   $('#searchresults input.selectusersexportdelete').each(function() {
                       self.selectusersdelete[$(this).val()] = 1;
                       $(this).prop('checked', true);
                   });
                   return false;
               });
-              $('#selectnonedelete').click(function() {
+              $('#selectnonedelete').on("click", function() {
                   $('#searchresults input.selectusersexportdelete').each(function() {
                       delete self.selectusersdelete[$(this).val()];
                       $(this).prop('checked', false);
@@ -156,7 +156,7 @@ var ExportQueue = (function($) {
       };
 
       this.connectSelectedUsersForm = function(i, formid) {
-          $('#' + formid + ' input.button').click(function() {
+          $('#' + formid + ' input.button').on("click", function() {
               // Some of the selected users aren't on the page, so just add them all to the
               // form now.
               var countdelete = 0;
@@ -194,7 +194,7 @@ var ExportQueue = (function($) {
                       'name': 'action',
                       'value': $(this).attr('name')
                   }));
-                  $('#' + formid).submit();
+                  $('#' + formid).trigger('submit');
                   return false;
               }
               $('#nousersselected').removeClass('hidden');

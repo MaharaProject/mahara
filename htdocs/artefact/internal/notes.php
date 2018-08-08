@@ -194,7 +194,7 @@ $pagination = build_pagination(array(
 
 $js = '
 jQuery(function($) {
-    $("a.notetitle").click(function(e) {
+    $("a.notetitle").on("click", function(e) {
         e.preventDefault();
         $("#" + this.id + "_desc").toggleClass("hidden");
     });

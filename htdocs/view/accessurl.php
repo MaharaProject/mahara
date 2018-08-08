@@ -638,7 +638,7 @@ $count = count($records);
 if ($count) {
     $js .= <<<EOF
 jQuery(function($) {
-      $(document).ready(function() {
+      $(function() {
             for (i = 0; i < {$count}; i++) {
                 var element = document.getElementById("copytoclipboard-" + i);
                 try {
@@ -773,7 +773,7 @@ $newform = $allownew ? pieform($newform) : null;
 
 $js .= <<<EOF
 jQuery(function($) {
-    $('.url-open-editform').click(function(e) {
+    $('.url-open-editform').on("click", function(e) {
         e.preventDefault();
         $('#' + this.id).addClass('collapse-indicator');
         $('#' + this.id).toggleClass('open');

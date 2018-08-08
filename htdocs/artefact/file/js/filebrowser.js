@@ -149,8 +149,7 @@ var FileBrowser = (function($) {
                 'class':'file',
                 'id':self.id+'_userfile',
                 'name':'userfile[]',
-                'multiple':'',
-                'size':40
+                'multiple':''
             })
         );
         $('#' + self.id + '_userfile').on('change', self.upload_submit);
@@ -586,7 +585,7 @@ var FileBrowser = (function($) {
         cancellink.on('click keydown', function(e) {
             if ((e.type === 'click' || e.keyCode === 32) && !e.isDefaultPrevented()) {
                 wrapper.remove();
-                icon.focus();
+                icon.trigger("focus");
                 self.move_list = null;
                 e.preventDefault();
             }
@@ -605,7 +604,7 @@ var FileBrowser = (function($) {
             if (e.type === 'click' || e.keyCode === 32 || e.keyCode === 13) {
                 var folderlist = self.create_move_list(icon, id);
                 $(icon).closest('tr').find('.filename').append(folderlist);
-                folderlist.find('a').first().focus();
+                folderlist.find('a').first().trigger("focus");
                 e.preventDefault();
             }
         });
@@ -887,7 +886,7 @@ var FileBrowser = (function($) {
         // are we running inside tinymce imagebrowser plugin?
         if (window.imgbrowserconf_artefactid) {
             // propagate the click
-            $('#filebrowserupdatetarget').click();
+            $('#filebrowserupdatetarget').trigger("click");
         }
         if (self.config.selectone && self.selectoneid !== id) {
             // Need to close modal on selection
@@ -983,11 +982,11 @@ var FileBrowser = (function($) {
 
             // Focus management
             if (self.setfocus) {
-                $('#' + self.setfocus)[0].focus();
+                $( $('#' + self.setfocus)[0] ).trigger('focus');
                 self.setfocus = null;
             }
             else if (data.foldercreated) {
-                $('[id="changefolder:' + data.highlight + '"]')[0].focus();
+                $( $('[id="changefolder:' + data.highlight + '"]')[0]).trigger('focus');
             }
 
             if (data.changedfolder && data.newpath) {

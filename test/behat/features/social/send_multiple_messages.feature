@@ -37,6 +37,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    Then I log in as "UserA" with password "Kupuh1pa!"
    # Confirming all messages has been received
    And I am on homepage
+   And I scroll to the id 'bottom-pane'
    And I should see "Hi there"
    And I choose "mail" from user menu by id
    And I should see "Hi there"

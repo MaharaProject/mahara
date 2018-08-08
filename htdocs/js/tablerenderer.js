@@ -113,7 +113,7 @@ return function (target, source, columns, options) {
                 self.tbody.append(tr);
                 if (options && row.id == options.focusid && self.options.focusElement) {
                     if (tr.find(self.options.focusElement).length) {
-                        tr.find(self.options.focusElement).focus();
+                        tr.find(self.options.focusElement).trigger("focus");
                     }
                 }
             });
@@ -186,7 +186,7 @@ return function (target, source, columns, options) {
             self.doupdate();
         }
         else {
-            $(document).ready(self.doupdate.bind(null, request_args, null));
+            $(self.doupdate.bind(null, request_args, null));
         }
     };
 
@@ -194,7 +194,7 @@ return function (target, source, columns, options) {
         this.init();
     }
     else {
-        $(document).ready(this.init);
+        $(this.init);
     }
 };
 }(jQuery));

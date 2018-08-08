@@ -101,6 +101,7 @@ Scenario: Installing framework module and activating for an institution
 
  # Try as another admin
  Given  I log in as "UserA" with password "Kupuh1pa!"
+ And I wait "1" seconds
  And I follow "Collection admin_01"
  And I click on the matrix point "3,4"
  And I wait "1" seconds

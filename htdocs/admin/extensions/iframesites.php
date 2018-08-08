@@ -250,7 +250,7 @@ function process_allowed_iframe_url($url) {
 
 $js = <<<EOF
 jQuery(function($) {
-    $('.url-open-editform').click(function(e) {
+    $('.url-open-editform').on("click", function(e) {
         e.preventDefault();
         $('#' + this.id).addClass('collapse-indicator');
         $('#' + this.id).toggleClass('open');

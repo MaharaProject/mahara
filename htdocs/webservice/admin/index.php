@@ -78,16 +78,16 @@ $inlinejs = <<<JS
         }
 
         // saving the form when switching the protocols
-        $('#webservice_provider_protocols_soap_enabled').change(function() {
+        $('#webservice_provider_protocols_soap_enabled').on('change', function() {
             save_protos_switch('soap');
         });
-        $('#webservice_provider_protocols_xmlrpc_enabled').change(function() {
+        $('#webservice_provider_protocols_xmlrpc_enabled').on('change', function() {
             save_protos_switch('xmlrpc');
         });
-        $('#webservice_provider_protocols_rest_enabled').change(function() {
+        $('#webservice_provider_protocols_rest_enabled').on('change', function() {
             save_protos_switch('rest');
         });
-        $('#webservice_provider_protocols_oauth_enabled').change(function() {
+        $('#webservice_provider_protocols_oauth_enabled').on('change', function() {
             save_protos_switch('oauth');
         });
 

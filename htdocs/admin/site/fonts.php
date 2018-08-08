@@ -144,7 +144,7 @@ EOF;
 if ($offset > 0) {
     $js .= <<< EOF
     if ($('#fontlist').length) {
-      $('#fontlist a:first').focus();
+      $('#fontlist a:first').trigger("focus");
     }
 EOF;
 }
@@ -154,7 +154,7 @@ else {
       $('#searchresultsheading')
       .addClass('hidefocus')
       .prop('tabIndex', 0)
-      .focus();
+      .trigger("focus");
     }
 EOF;
 }

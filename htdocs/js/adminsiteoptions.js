@@ -70,7 +70,7 @@ var checkReload = (function($) {
           $('#siteoptions_allowpublicprofiles').prop('disabled', 'disabled');
       }
       else {
-          $('#siteoptions_allowpublicprofiles').removeAttr('disabled');
+          $('#siteoptions_allowpublicprofiles').prop('disabled', false);
       }
   }
 
@@ -84,10 +84,10 @@ var checkReload = (function($) {
       isReloadRequired = false;
       connectElements();
 
-      jQuery('#siteoptions_institutionstrictprivacy').click(function() {
+      jQuery('#siteoptions_institutionstrictprivacy').on("click", function() {
           multipleinstitutionscheckallowed();
       });
-      jQuery('#siteoptions_usersallowedmultipleinstitutions').click(function() {
+      jQuery('#siteoptions_usersallowedmultipleinstitutions').on("click", function() {
           strictprivacycheckallowed();
       });
       multipleinstitutionscheckallowed();

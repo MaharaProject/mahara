@@ -57,10 +57,10 @@ var PieformManager = (function($) {
                         return;
                     }
                     try { // If element is invisible, IE will throw an error
-                        element.focus();
+                        $(element).trigger("focus");
                         if ($(element).hasClass('autoselect')
                             && (typeof(element.select) == 'function' || (element.focus && element.select.call))) {
-                            element.select();
+                            $(element).trigger('select');
                         }
                     }
                     catch (e) {}
@@ -127,7 +127,7 @@ var PieformManager = (function($) {
             'onreply' : []   // when a response is received
         };
 
-        $(window).load(self.init);
+        $(window).on('load', self.init);
 
     };
 }(jQuery));
@@ -314,7 +314,7 @@ var Pieform = (function($) {
         // Form configuration data passed from PHP
         this.data = data;
 
-        $(document).ready(self.init);
+        $(self.init);
 
     };
 }(jQuery));

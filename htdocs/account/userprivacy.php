@@ -26,8 +26,8 @@ $form = privacy_form(!get_config('institutionstrictprivacy'), !get_config('insti
 
 // JQuery logic for panel hide/show submit button.
 $js = <<< EOF
-    $( document ).ready(function() {
-        $(".state-label").click(function() {
+    $(function() {
+        $(".state-label").on("click", function() {
             $(this).siblings( ".switch-inner" ).toggleClass("redraw-consent");
             showSubmitButton();
         });

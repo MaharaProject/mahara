@@ -48,7 +48,7 @@ function pieform_element_password(Pieform $form, $element) {/*{{{*/
             . '</div>';
         $result .= <<<EOJS
 <script type="application/javascript">
-jQuery('#{$id}').keyup(function() {
+jQuery('#{$id}').on("keyup", function() {
     var result = zxcvbn(jQuery('#{$id}').val());
     var score  = result.score;
 

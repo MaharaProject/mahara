@@ -10,7 +10,7 @@
  */
 
 jQuery(function($) {
-    $(window).keypress(function(e) {
+    $(window).on("keypress", function(e) {
         var targetType = e.target.nodeName;
 
         if (
@@ -52,7 +52,7 @@ jQuery(function($) {
                     document.location.href = config.wwwroot + 'artefact/plans';
                     break;
                 case '/':
-                    document.usf.query.focus();
+                    $(document.usf.query).trigger("focus");
                     break;
             }
             config.commandMode = false;

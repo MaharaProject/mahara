@@ -4,12 +4,11 @@ jQuery UI in Mahara
 This javascript library is required for the flexible page layout feature developed by Mike Kelly.
 
 Website: http://jqueryui.com/
-Version: 1.11.4
+Version: 1.12.1
 
 Changes:
 
-* Added call to function after datepicker arrow key is pressed - to
-allow the year arrows to be re-added on day change
+* Fixed deprecated .unique to .uniqueSort
 
 Notes:
 

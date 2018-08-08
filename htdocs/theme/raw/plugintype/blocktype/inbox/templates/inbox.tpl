@@ -35,10 +35,10 @@
     <script type="application/javascript">
         var blockid = '{$blockid}';
         {literal}
-        jQuery(window).ready(function() {
+        jQuery(function() {
             jQuery("#" + blockid + " a.inbox-showmessage").each(function() {
                 var el = jQuery(this);
-                el.click(function(e) {
+                el.on("click", function(e) {
                     e.preventDefault();
                     var message = jQuery(e.target).parent().find(".inbox-message");
                     message.toggleClass('hidden');

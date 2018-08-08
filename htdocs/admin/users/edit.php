@@ -231,13 +231,13 @@ $remoteusernames = json_encode(get_records_menu('auth_remote_user', 'localusr', 
 $js = "<script type='application/javascript'>
         var externalauths = ['" . implode("','", $externalauthjs) . "'];
         var remoteusernames = " . $remoteusernames . ";
-        jQuery(document).ready(function() {
+        jQuery(function() {
         // set up initial display
         var authinstanceid = jQuery('#edituser_site_authinstance :selected').val();
         is_external(authinstanceid);
 
         // update display as auth method dropdown changes
-        jQuery('#edituser_site_authinstance').change(function() {
+        jQuery('#edituser_site_authinstance').on('change', function() {
             authinstanceid = jQuery('#edituser_site_authinstance :selected').val();
             is_external(authinstanceid);
         });

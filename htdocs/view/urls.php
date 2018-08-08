@@ -152,21 +152,19 @@ $count = count($records);
 if ($count) {
     $js = <<<EOF
 jQuery(function($) {
-    $(document).ready(function() {
-            for (i = 0; i < {$count}; i++) {
-                var element = document.getElementById("copytoclipboard-" + i);
-                try {
-                    var client = new ClipboardJS(element);
-                    client.on("error", function(e) {
-                        var element = document.getElementById("copytoclipboard-" + e.client.id);
-                        $(element).hide();
-                    });
-                }
-                catch(err) {
-                    $(element).hide();
-                }
-            }
-    });
+    for (i = 0; i < {$count}; i++) {
+        var element = document.getElementById("copytoclipboard-" + i);
+        try {
+            var client = new ClipboardJS(element);
+            client.on("error", function(e) {
+                var element = document.getElementById("copytoclipboard-" + e.client.id);
+                $(element).hide();
+            });
+        }
+        catch(err) {
+            $(element).hide();
+        }
+    }
 });
 
 EOF;
@@ -279,7 +277,7 @@ $newform = $allownew ? pieform($newform) : null;
 
 $js .= <<<EOF
 jQuery(function($) {
-    $('.url-open-editform').click(function(e) {
+    $('.url-open-editform').on("click", function(e) {
         e.preventDefault();
         $('#' + this.id).addClass('collapse-indicator');
         $('#' + this.id).toggleClass('open');

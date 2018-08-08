@@ -10,7 +10,7 @@
                 if (event.keyCode == 13) {
                     showBadgeContent({html: buildBadgeContent($(this).data('assertion'))});
                     $('#badge-content-dialog').on("hidden.bs.modal", function () {
-                        $('#' + $(event.target).attr('id')).focus();
+                        $('#' + $(event.target).attr('id')).trigger("focus");
                     });
                 }
             });

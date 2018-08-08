@@ -74,10 +74,10 @@
     });
 
     $('.modal').on('shown.bs.modal', function() {
-        $('#add-collection-button').focus();
+        $('#add-collection-button').trigger("focus");
     });
     $('.modal').on('hidden.bs.modal', function() {
-        $('#addview-button').focus();
+        $('#addview-button').trigger("focus");
     });
     </script>
 

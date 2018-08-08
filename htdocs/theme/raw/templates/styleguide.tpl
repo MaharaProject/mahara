@@ -1198,7 +1198,7 @@ This drop-down select box allows you to enter text which is then searched using 
 This drop-down select box uses the select2 library. An example can be found on the compose message page in user's inbox.
 ```
 <script type="text/javascript">
-jQuery(document).ready(function() {
+jQuery(function() {
   jQuery(".js-example-basic-single").select2();
 });
 </script>
@@ -2143,7 +2143,7 @@ Used as icon for a system notification.
       });
 
       // handle tab click
-      $j('#category-tabs a').click(function(event) {
+      $j('#category-tabs a').on("click", function(event) {
           var category = $j(this).data('category');
           event.preventDefault();
           $j(this).parent().siblings().removeClass('active');
@@ -2161,12 +2161,12 @@ Used as icon for a system notification.
 
       // prevent example clicks going elsewhere unless it is a link
       // we do want a user to follow, eg help info
-      $j('[data-markdown] a:not(.follow)').click(function(event) {
+      $j('[data-markdown] a:not(.follow)').on("click", function(event) {
           event.preventDefault();
       });
 
       // scroll to top button position
-      $j(window).scroll(function() {
+      $j(window).on("scroll", function() {
           var scroll = $j(window).scrollTop();
           if (scroll < 100) {
               $j('#scroll-to-top').removeClass('fixed');
@@ -2175,7 +2175,7 @@ Used as icon for a system notification.
           }
       });
 
-      $j('#scroll-to-top a').click(function(event) {
+      $j('#scroll-to-top a').on("click", function(event) {
           event.preventDefault();
           $j(window).scrollTop(0);
       });
