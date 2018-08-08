@@ -36,7 +36,7 @@
                 blockinstance_{$blockid}_loaded = true;
                 $j('#user_block_{$blockid}_waiting').css('display','none');
                 {else}
-                $j('<iframe />').attr('src', '{$jsurl}')
+                $j('<iframe />').attr('src', '{$jsurl|safe}')
                                 .attr('width', '{$width}')
                                 .attr('height', '{$height}')
                                 .attr('frameborder', '0')
