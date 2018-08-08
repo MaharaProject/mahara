@@ -28,7 +28,48 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
     }
 
     public static function get_instance_javascript(BlockInstance $instance) {
-        return array();
+        $blockid = $instance->get('id');
+        // The initjs for the fancybox will be applied to all galleries on the page
+        return array(
+            array(
+                'file'   => get_config('wwwroot') . 'js/fancybox/jquery.fancybox.min.js',
+                'initjs' => " $('[data-fancybox]').fancybox({
+                      buttons : [
+                               'zoom',
+                               'slideShow',
+                               'download',
+                               'close'
+                               ],
+                      loop : true,
+                      lang : '" . current_language() . "',
+                      i18n : {
+                          '" . current_language() . "' : {
+                              CLOSE: \"" . get_string('CLOSE', 'blocktype.file/gallery') . "\",
+                              NEXT: \"" . get_string('NEXT', 'blocktype.file/gallery') . "\",
+                              PREV: \"" . get_string('PREV', 'blocktype.file/gallery') . "\",
+                              ERROR: \"" . get_string('ERROR', 'blocktype.file/gallery') . "\",
+                              PLAY_START: \"" . get_string('PLAY_START', 'blocktype.file/gallery') . "\",
+                              PLAY_STOP: \"" . get_string('PLAY_STOP', 'blocktype.file/gallery') . "\",
+                              FULL_SCREEN: \"" . get_string('FULL_SCREEN', 'blocktype.file/gallery') . "\",
+                              THUMBS: \"" . get_string('THUMBS', 'blocktype.file/gallery') . "\",
+                              DOWNLOAD: \"" . get_string('DOWNLOAD', 'blocktype.file/gallery') . "\",
+                              SHARE: \"" . get_string('SHARE', 'blocktype.file/gallery') . "\",
+                              ZOOM: \"" . get_string('ZOOM', 'blocktype.file/gallery') . "\"
+                          }
+                      }
+                });"
+            ),
+            array(
+                'file'   => get_config('wwwroot') . 'js/masonry/masonry.min.js',
+                'initjs' => " $('.js-masonry.thumbnails').masonry({ itemSelector: '.thumb' });"
+            )
+        );
+    }
+
+    public static function get_instance_css(BlockInstance $instance) {
+        return array(
+            get_config('wwwroot') . 'js/fancybox/jquery.fancybox.min.css'
+        );
     }
 
     public static function get_instance_config_javascript(BlockInstance $instance) {
@@ -58,13 +99,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         }
 
         $images = array();
-        $slimbox2 = get_config_plugin('blocktype', 'gallery', 'useslimbox2');
-        if ($slimbox2) {
-            $slimbox2attr = 'lightbox_' . $instance->get('id');
-        }
-        else {
-            $slimbox2attr = null;
-        }
+        $fancyboxattr = get_config_plugin('blocktype', 'gallery', 'usefancybox') ? 'lightbox_' . $instance->get('id') : null;
 
         // if we're trying to embed external gallery (thumbnails or slideshow)
         if (isset($configdata['select']) && $configdata['select'] == 2) {
@@ -136,7 +171,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                                 'link' => str_replace($small, $big, $thumb),
                                 'source' => $thumb,
                                 'title' => $description,
-                                'slimbox2' => $slimbox2attr
+                                'fancybox' => $fancyboxattr
                             );
                         }
                     }
@@ -182,7 +217,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                                 'link' => $link,
                                 'source' => $thumb,
                                 'title' => $description,
-                                'slimbox2' => $slimbox2attr
+                                'fancybox' => $fancyboxattr
                             );
                         }
                     }
@@ -223,7 +258,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                                 'link' => $link,
                                 'source' => $thumb,
                                 'title' => $description,
-                                'slimbox2' => $slimbox2attr
+                                'fancybox' => $fancyboxattr
                             );
                         }
                     }
@@ -291,7 +326,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                                 'link' => $link,
                                 'source' => $thumb,
                                 'title' => $description,
-                                'slimbox2' => $slimbox2attr
+                                'fancybox' => $fancyboxattr
                             );
                         }
                     }
@@ -321,7 +356,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                                 'link' => str_replace(array('\x3a','\x2f','\x25','\x3fpsid\x3d1'), array(':','/','%',''), $photos[1][$i]),
                                 'source' => str_replace(array('\x3a','\x2f','\x25','\x3fpsid\x3d1'), array(':','/','%',''), $thumbs[1][$i]),
                                 'title' => null,
-                                'slimbox2' => $slimbox2attr
+                                'fancybox' => $fancyboxattr
                             );
                         }
                     }
@@ -360,7 +395,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                     continue;
                 }
 
-                if ($slimbox2) {
+                if ($fancyboxattr) {
                     $link = $src . '&maxwidth=' . get_config_plugin('blocktype', 'gallery', 'previewwidth');
                 }
                 else {
@@ -371,7 +406,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                 if ($style == 2) {
                     // Determine the scaling for the fitting the image in the square of $width size
                     // Calculate the bigger, width vs height, to work out the ratio
-                    $configwidth = $width - (get_config_plugin('blocktype', 'gallery', 'photoframe') ? 8 : 0); // $width - photo frame padding
+                    $configwidth = $width - (!empty($configdata['photoframe']) ? 8 : 0); // $width - photo frame padding
                     $imagewidth = $image->get('width');
                     $imageheight = $image->get('height');
                     if ($imagewidth > $imageheight) {
@@ -404,7 +439,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                     'height' => $height,
                     'width' => (!empty($ratiowidth) ? $ratiowidth : null),
                     'title' => $image->get('description'),
-                    'slimbox2' => $slimbox2attr,
+                    'fancybox' => $fancyboxattr,
                     'squaredimensions' => $width,
                     'squaretop' => (!empty($topoffset) ? $topoffset : null),
                 );
@@ -423,7 +458,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         if (isset($needsapikey)) {
             $smarty->assign('needsapikey', $needsapikey);
         }
-        $smarty->assign('frame', get_config_plugin('blocktype', 'gallery', 'photoframe'));
+        $smarty->assign('frame', !empty($configdata['photoframe']));
         $smarty->assign('copyright', $copyright);
         if (!empty($configdata['artefactid'])) {
             $artefact = $instance->get_artefact_instance($configdata['artefactid']);
@@ -449,17 +484,11 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
             'legend' => get_string('gallerysettings', 'blocktype.file/gallery'),
             'collapsible' => true,
             'elements' => array(
-                'useslimbox2' => array(
+                'usefancybox' => array(
                     'type'         => 'switchbox',
-                    'title'        => get_string('useslimbox2', 'blocktype.file/gallery'),
-                    'description'  => get_string('useslimbox2desc2', 'blocktype.file/gallery'),
-                    'defaultvalue' => get_config_plugin('blocktype', 'gallery', 'useslimbox2'),
-                ),
-                'photoframe' => array(
-                    'type'         => 'switchbox',
-                    'title'        => get_string('photoframe', 'blocktype.file/gallery'),
-                    'description'  => get_string('photoframedesc2', 'blocktype.file/gallery'),
-                    'defaultvalue' => get_config_plugin('blocktype', 'gallery', 'photoframe'),
+                    'title'        => get_string('usefancybox', 'blocktype.file/gallery'),
+                    'description'  => get_string('usefancyboxdesc', 'blocktype.file/gallery'),
+                    'defaultvalue' => get_config_plugin('blocktype', 'gallery', 'usefancybox'),
                 ),
                 'previewwidth' => array(
                     'type'         => 'text',
@@ -517,8 +546,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
     }
 
     public static function save_config_options(Pieform $form, $values) {
-        set_config_plugin('blocktype', 'gallery', 'useslimbox2', (int)$values['useslimbox2']);
-        set_config_plugin('blocktype', 'gallery', 'photoframe', (int)$values['photoframe']);
+        set_config_plugin('blocktype', 'gallery', 'usefancybox', (int)$values['usefancybox']);
         set_config_plugin('blocktype', 'gallery', 'previewwidth', (int)$values['previewwidth']);
         set_config_plugin('blocktype', 'gallery', 'flickrapikey', $values['flickrapikey']);
         set_config_plugin('blocktype', 'gallery', 'pbapikey', $values['pbapikey']);
@@ -527,9 +555,8 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-            set_config_plugin('blocktype', 'gallery', 'useslimbox2', 1); // Use Slimbox 2 by default
-            set_config_plugin('blocktype', 'gallery', 'photoframe', 1); // Show frame around photos
-            set_config_plugin('blocktype', 'gallery', 'previewwidth', 1024); // Maximum photo width for slimbox2 preview
+            set_config_plugin('blocktype', 'gallery', 'usefancybox', 1); // Use Fancybox 3 by default
+            set_config_plugin('blocktype', 'gallery', 'previewwidth', 1024); // Maximum photo width for fancybox preview
         }
     }
 
@@ -595,6 +622,12 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                 'title' => get_string('showdescriptions', 'blocktype.file/gallery'),
                 'description' => get_string('showdescriptionsdescription', 'blocktype.file/gallery'),
                 'defaultvalue' => !empty($configdata['showdescription']) ? true : false,
+            ),
+            'photoframe' => array(
+                'type'         => 'switchbox',
+                'title'        => get_string('photoframe', 'blocktype.file/gallery'),
+                'description'  => get_string('photoframedesc2', 'blocktype.file/gallery'),
+                'defaultvalue' => !empty($configdata['photoframe']) ? true : false,
             ),
             'width' => array(
                 'type' => 'text',

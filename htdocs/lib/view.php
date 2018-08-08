@@ -2522,7 +2522,7 @@ class View {
                     );
                     foreach($instancejs as $jsfile) {
                         if (is_array($jsfile) && isset($jsfile['file'])) {
-                            $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);;
+                            $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);
                             if (isset($jsfile['initjs'])) {
                                 $initjavascripts[] = $jsfile['initjs'];
                             }
@@ -2571,7 +2571,13 @@ class View {
                     }
                     $hrefs = $THEME->get_url('style/style.css', true, $artefactdir . 'blocktype/' . $pluginname);
                     $hrefs = array_reverse($hrefs);
-
+                    $classname = generate_class_name('blocktype', $pluginname);
+                    $instancecss = call_static_method(
+                        $classname,
+                        'get_instance_css',
+                        $blockinstance
+                    );
+                    $hrefs = array_merge($hrefs, $instancecss);
                     foreach ($hrefs as $href) {
                         $cssfiles[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($href) . '">';
                     }

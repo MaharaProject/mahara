@@ -1,4 +1,4 @@
-<div class="js-blockinstance blockinstance panel panel-secondary clearfix {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
+<div class="bt-{$blocktype}-editor js-blockinstance blockinstance panel panel-secondary clearfix {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
     <h3 class="panel-heading js-heading drag-handle {if !$title}panel-heading-placeholder{/if}">
         <span class="icon icon-arrows move-indicator" role="presentation" aria-hidden="true"></span>
         <span class="blockinstance-header">

@@ -189,6 +189,15 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
     }
 
     /**
+    * This function must be implemented in the subclass if it requires
+    * css file outside of sass compiled css. It returns an array of css files, either local
+    * or remote.
+    */
+    public static function get_instance_css(BlockInstance $instance) {
+        return array();
+    }
+
+    /**
      * Inline js to be executed when a block is rendered.
      */
     public static function get_instance_inline_javascript(BlockInstance $instance) {
@@ -1028,7 +1037,7 @@ class BlockInstance {
         $smarty->assign('row',    $this->get('row'));
         $smarty->assign('column', $this->get('column'));
         $smarty->assign('order',  $this->get('order'));
-
+        $smarty->assign('blocktype', $this->get('blocktype'));
         $smarty->assign('movecontrols', $movecontrols);
         $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config'));
         $smarty->assign('configure', $configure); // Used by the javascript to rewrite the block, wider.
