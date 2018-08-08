@@ -32,6 +32,11 @@ switch ($type) {
         break;
     case 'user':
         $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
+        $roles = get_records_array('usr_roles');
+        $data['roles'] =  array();
+        foreach ($roles as $r) {
+            $data['roles'][] = array('name' => $r->role, 'display' => get_string($r->role, 'view'));
+        }
         break;
     case 'group':
         require_once('group.php');

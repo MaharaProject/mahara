@@ -16,7 +16,7 @@
           {elseif $accessgroup.accesstype == 'institution'}
             <a href="{$WWWROOT}account/institutions.php">{$accessgroup.id|institution_display_name}</a>
           {elseif $accessgroup.accesstype == 'user'}
-            <a href="{profile_url($accessgroup.id)}">{$accessgroup.id|display_name}</a>
+            <a href="{profile_url($accessgroup.id)}">{$accessgroup.id|display_name}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
           {/if}
           {if $accessgroup.startdate}
             {if $accessgroup.stopdate}

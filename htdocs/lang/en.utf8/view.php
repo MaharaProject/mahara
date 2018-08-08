@@ -134,6 +134,10 @@ $string['friends'] = 'Friends';
 $string['groups'] = 'Groups';
 $string['users'] = 'Users';
 $string['everyoneingroup'] = 'Everyone in group';
+$string['nospecialrole'] = 'No special role';
+$string['peer'] = 'Peer';
+$string['manager'] = 'Manager';
+$string['peermanager'] = 'Peer and manager';
 
 // secret url
 $string['token'] = 'Secret URL';

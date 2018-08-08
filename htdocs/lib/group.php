@@ -3143,3 +3143,12 @@ function group_sort_categories() {
         }
     }
 }
+
+function get_group_access_roles() {
+    $roles = get_records_array('grouptype_roles');
+    $data = array();
+    foreach ($roles as $r) {
+        $data[$r->grouptype][] = array('name' => $r->role, 'display' => get_string($r->role, 'grouptype.' . $r->grouptype));
+    }
+    return $data;
+}
