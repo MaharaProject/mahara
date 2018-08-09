@@ -51,14 +51,14 @@ jQuery(function($) {
   };
 
   function sortTagAlpha(a, b) {
-      var aid = $(a).prop('id');
-      var bid = $(b).prop('id');
+      var aid = $(a).children().prop('id');
+      var bid = $(b).children().prop('id');
       return aid.toLowerCase() < bid.toLowerCase() ? -1 : (aid.toLowerCase() > bid.toLowerCase() ? 1 : 0);
   }
 
   function sortTagFreq(a, b) {
-      var aid = $(a).prop('id');
-      var bid = $(b).prop('id');
+      var aid = $(a).children().prop('id');
+      var bid = $(b).children().prop('id');
       return mytags[bid] - mytags[aid];
   }
 
@@ -67,14 +67,11 @@ jQuery(function($) {
   function rewriteTagSortLink(id, elem) {
       $(elem).on('click', function(e) {
           e.preventDefault();
-          var elems = $(mytags_container).find('a.tag');
-          elems.sort(sort_functions[getUrlParameter('ts', $(this).prop('href'))]);
+          var ul = $(mytags_container).children();
+          var li = ul.children("li");
+          li.detach().sort(sort_functions[getUrlParameter('ts', $(this).prop('href'))]);
+          ul.append(li);
 
-          // FF needs spaces in between each element for wrapping
-          $(mytags_container).empty();
-          elems.each(function () {
-              $(mytags_container).append(this, ' ')
-          });
           // set all tabs to inactive
           $('ul.nav-tabs li').each(function() {
               $(this).removeClass('active');
