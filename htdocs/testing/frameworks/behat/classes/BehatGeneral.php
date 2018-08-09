@@ -1639,6 +1639,23 @@ JS;
         );
     }
 
+    /**
+     * Check if image with title exists on the page
+     *
+     * @Then I should see image :imagetitle on the page
+     *
+     */
+    public function i_should_see_image_on_page($imagetitle) {
+        // Find the image.
+        $imagetitleliteral = $this->escaper->escapeLiteral($imagetitle);
+        $exception = new ElementNotFoundException($this->getSession(), 'image');
+        $xpath = "//img[contains(concat(' ', normalize-space(@alt), ' '), " . $imagetitleliteral . ")]";
+        $image = $this->find('xpath', $xpath, $exception);
+        if (!$image->isVisible()) {
+            throw new ExpectationException('The image with alt ' . $imagetitleliteral . ' was not visible', $this->getSession());
+        }
+    }
+
 /**
  * Check if text exist in the block given its title
  *
