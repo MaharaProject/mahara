@@ -904,6 +904,7 @@ class Collection {
                 'allowcomments'   => $firstview->get('allowcomments'),
                 'approvecomments' => (int) ($firstview->get('allowcomments') && $firstview->get('approvecomments')),
                 'accesslist'      => $firstview->get_access(),
+                'lockblocks'      => $firstview->get('lockblocks'),
             );
             View::update_view_access($viewconfig, $viewids);
         }

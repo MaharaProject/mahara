@@ -277,6 +277,12 @@ function get_basic_elements() {
             'defaultvalue' => $view->get('description'),
             'rules'        => array('maxlength' => 65536),
         ),
+        'lockblocks' => array(
+            'type'         => 'switchbox',
+            'title'        => get_string('lockblocks', 'view'),
+            'description'  => get_string('lockblocksdescription', 'view'),
+            'defaultvalue' => $view->get('lockblocks'),
+        ),
         'tags'        => array(
             'type'         => 'tags',
             'title'        => get_string('tags'),
@@ -927,6 +933,9 @@ function set_view_title_and_description(Pieform $form, $values){
     }
     if (isset($values['locked'])) {
         $view->set('locked', (int)$values['locked']);
+    }
+    if (isset($values['lockblocks'])) {
+        $view->set('lockblocks', (int)$values['lockblocks']);
     }
     if (isset($values['ownerformat']) && $view->get('owner')) {
         $view->set('ownerformat', $values['ownerformat']);

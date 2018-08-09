@@ -12,7 +12,6 @@
 defined('INTERNAL') || die();
 
 class View {
-
     private $dirty;
     private $deleted;
     private $id;
@@ -63,6 +62,7 @@ class View {
     private $urlid;
     private $skin;
     private $anonymise = 0;
+    private $lockblocks = 0;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -464,6 +464,9 @@ class View {
             return array(null, $template, array('quotaexceeded' => true));
         }
 
+        // Lockblocks if set on template
+        $view->set('lockblocks', $template->get('lockblocks'));
+
         $view->commit();
 
         // if layout is set, and it's not a default layout
@@ -604,6 +607,7 @@ class View {
             'type'          => 'portfolio',
             'title'         => (array_key_exists('title', $viewdata)) ? $viewdata['title'] : self::new_title(get_string('Untitled', 'view'), (object)$viewdata),
             'anonymise'     => 0,
+            'lockblocks'    => 0,
         );
 
         $data = (object)array_merge($defaultdata, $viewdata);
@@ -1131,7 +1135,8 @@ class View {
                     || ($c = strcmp($a->startdate, $b->startdate))
                     || ($c = !empty($a->stopdate) - !empty($b->stopdate))
                     || ($c = strcmp($a->stopdate, $b->stopdate))
-                    || ($c = $a->allowcomments - $b->allowcomments)) {
+                    || ($c = $a->allowcomments - $b->allowcomments)
+                    || ($c = $a->lockblocks - $b->lockblocks)) {
                     return $c;
                 }
                 return $a->approvecomments - $b->approvecomments;
@@ -5896,6 +5901,7 @@ class View {
 
     public function copy_contents($template, &$artefactcopies) {
 
+        $this->set('lockblocks', $template->get('lockblocks'));
         $this->set('numrows', $template->get('numrows'));
         $this->set('layout', $template->get('layout'));
         if ($template->get('template') == self::SITE_TEMPLATE

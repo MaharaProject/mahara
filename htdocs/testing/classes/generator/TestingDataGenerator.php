@@ -780,6 +780,7 @@ EOD;
             'allowcomments'   => (int) (isset($record['allowcomments']) ? $record['allowcomments'] : 1),
             'approvecomments' => (int) (isset($record['approvecomments']) ? $record['approvecomments'] : 0),
             'accesslist'      => $accesslist,
+            'lockblocks'      => (int) (isset($record['lockblocks']) ? $record['lockblocks'] : 0),
         );
 
         require_once('view.php');
