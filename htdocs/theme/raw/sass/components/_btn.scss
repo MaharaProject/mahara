@@ -202,7 +202,7 @@ td.action-list-copy {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         border-top: 0;
-        background: lighten($btn-default-bg, 0.8);
+        background: scale-color($btn-default-bg, $lightness: 40%);
         &:hover {
             background: rgba($btn-default-bg, 1);
         }
@@ -276,7 +276,7 @@ td.action-list-copy {
         // To override btn-primary colour
         .btn-primary {
             color: $gray-dark;
-            background: darken($brand-default, 10%);
+            background: scale-color($brand-default, $lightness: -10.5%);
             border-color: $btn-default-border;
         }
     }
@@ -320,7 +320,8 @@ td.action-list-copy {
 
                 &:hover {
                     +.btn {
-                        border-top-color: darken($btn-default-border, 12%);
+                        border-top-color: scale-color($btn-default-border, $lightness: -15%);
+                    ;
                     }
                 }
             }
@@ -397,7 +398,8 @@ td.action-list-copy {
         font-family: $font-family-sans-serif;
 
         &:hover {
-            background-color: darken($btn-primary-bg, 10%);
+            background-color: scale-color($btn-primary-bg, $lightness: -32%);
+
         }
 
         .mce-txt {
@@ -415,7 +417,7 @@ td.action-list-copy {
             color: $btn-primary-color;
 
             &:hover {
-                background-color: darken($btn-primary-bg, 10%);
+                background-color: scale-color($btn-primary-bg, $lightness: -32%);
             }
         }
     }

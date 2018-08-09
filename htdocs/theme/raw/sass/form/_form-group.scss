@@ -528,11 +528,11 @@
         padding-top: 10px;
     }
     .requiredmarker {
-        color: darken($brand-danger, 5%);
+        color: scale-color($brand-danger, $lightness: -8.5%);
     }
 
     &.requiredmarkerdesc {
-        color: darken($brand-danger, 5%);
+        color: scale-color($brand-danger, $lightness: -8.5%);
         border: 0;
         font-style: italic;
         font-size: $font-size-base - 1;

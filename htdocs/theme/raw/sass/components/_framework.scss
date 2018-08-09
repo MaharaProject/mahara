@@ -4,7 +4,8 @@
 
     tr {
         &.standard {
-            background: darken($table-bg-accent, 2%) !important;
+            background: scale-color($table-bg-accent, $lightness: -2%) !important;
+
             cursor: pointer;
         }
     }
@@ -40,11 +41,11 @@
                 }
                 &.dot {
                     font-size: 0.8em;
-                    color: lighten($gray-light, 15%);
+                    color: scale-color($gray-light, $lightness: 28%);
                 }
                 &.dot.disabled {
                     font-size: 1em;
-                    color: lighten($gray-light, 15%);
+                    color: scale-color($gray-light, $lightness: 28%);
                     cursor: $cursor-disabled;
                     // Override dot icon with minus icon
                     &:before {
@@ -186,7 +187,7 @@ th.statusheader {
         }
         &.dot {
             font-size: 0.8em;
-            color: lighten($gray-light, 15%);
+            color: scale-color($gray-light, $lightness: 28%);
         }
     }
 }

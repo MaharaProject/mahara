@@ -13,11 +13,15 @@ $bootstrap-sass-asset-helper: (twbs-font-path("") != unquote('twbs-font-path("")
 //## Gray and brand colors for use across Bootstrap.
 
 $gray-base:              #000 !default;
-$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
-$gray-dark:              lighten($gray-base, 20%) !default;   // #333
-$gray:                   lighten($gray-base, 33.5%) !default; // #555
-$gray-light:             lighten($gray-base, 46.7%) !default; // #777
-$gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
+$gray-darker:            scale-color($gray-base, $lightness: 13.5%) !default; // #222
+
+$gray-dark:              scale-color($gray-base, $lightness: 20%) !default; // #333
+
+$gray:                   scale-color($gray-base, $lightness: 33.5%) !default; // #555
+
+$gray-light:             scale-color($gray-base, $lightness: 46.7%) !default; // #777
+
+$gray-lighter:           scale-color($gray-base, $lightness: 93.5%) !default; // #eee
 
 
 $brand-default:         #ECECEC !default;
@@ -33,21 +37,20 @@ $brand-danger:          #d9534f !default;
 //## Define colors for form feedback states and, by default, alerts.
 
 $state-success-text:             $brand-success !default;
-$state-success-bg:               mix($brand-success, #fff, 20%) !default;
-$state-success-border:           darken(adjust-hue($state-success-bg, -10), 10%) !default;
+$state-success-bg:               mix($brand-success, #fff, 20%) !default;  //#d9e0cc
+$state-success-border:           scale-color(adjust-hue($state-success-bg, -10), $lightness: -12%) !default;
 
 $state-info-text:                #31708f !default;
 $state-info-bg:                  #d9edf7 !default;
-$state-info-border:              darken(adjust-hue($state-info-bg, -10), 7%) !default;
+$state-info-border:              scale-color(adjust-hue($state-info-bg, -10), $lightness: -7.5%) !default;
 
 $state-warning-text:             #8a6d3b !default;
 $state-warning-bg:               #fcf8e3 !default;
-$state-warning-border:           darken(adjust-hue($state-warning-bg, -10), 5%) !default;
+$state-warning-border:           scale-color(adjust-hue($state-warning-bg, -10), $lightness: -5.3%) !default;
 
 $state-danger-text:              #a94442 !default;
 $state-danger-bg:                #f2dede !default;
-$state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%) !default;
-
+$state-danger-border:            scale-color(adjust-hue($state-danger-bg, -10), $lightness: -5.5%) !default;
 
 //== Scaffolding
 //
@@ -60,8 +63,10 @@ $text-color:            $theme-text-color !default;
 
 //** Global textual link color.
 $link-color:            $theme-primary-color !default;
-//** Link hover color set via `darken()` or `lighten()` function.
-$link-hover-color:      darken($theme-primary-color, 5%) !default;
+
+//** Link hover color set via `scale-color()' function.
+$link-hover-color:      scale-color($theme-primary-color, $lightness: -16%) !default;
+
 //** Link hover decoration.
 $link-hover-decoration: underline !default;
 
@@ -184,23 +189,26 @@ $btn-default-border:             #ccc !default;
 
 $btn-primary-color:              #fff !default;
 $btn-primary-bg:                 $brand-primary !default;
-$btn-primary-border:             darken($brand-primary, 5%) !default;
+$btn-primary-border:             scale-color($brand-primary, $lightness: -16%) !default;
 
 $btn-success-color:              #fff !default;
 $btn-success-bg:                 $brand-success !default;
-$btn-success-border:             darken($btn-success-bg, 5%) !default;
+$btn-success-border:             scale-color($btn-success-bg, $lightness: -25%) !default;
+
 
 $btn-info-color:                 $state-info-text !default;
 $btn-info-bg:                    $state-info-bg !default;
-$btn-info-border:                darken($btn-info-bg, 5%) !default;
+$btn-info-border:                scale-color($btn-info-bg, $lightness: -5.5%) !default;
+
 
 $btn-warning-color:              $state-warning-text !default;
 $btn-warning-bg:                 $state-warning-bg !default;
-$btn-warning-border:             darken($btn-warning-bg, 15%) !default;
+$btn-warning-border:             scale-color($btn-warning-bg, $lightness: -16%) !default;
+
 
 $btn-danger-color:               #fff !default;
 $btn-danger-bg:                  $brand-danger !default;
-$btn-danger-border:              darken($btn-danger-bg, 5%) !default;
+$btn-danger-border:              scale-color($btn-danger-bg, $lightness: -10%) !default;
 
 $btn-link-disabled-color:        $gray-light !default;
 
@@ -267,13 +275,16 @@ $dropdown-divider-bg:            #e5e5e5 !default;
 
 //** Dropdown link text color.
 $dropdown-link-color:            $gray-dark !default;
+
 //** Hover color for dropdown links.
-$dropdown-link-hover-color:      darken($gray-dark, 5%) !default;
+$dropdown-link-hover-color:      scale-color($gray-dark, $lightness: -25%);
+
 //** Hover background for dropdown links.
 $dropdown-link-hover-bg:         #f5f5f5 !default;
 
 //** Active dropdown menu item text color.
 $dropdown-link-active-color:     $component-active-color !default;
+
 //** Active dropdown menu item background color.
 $dropdown-link-active-bg:        $component-active-bg !default;
 
@@ -390,20 +401,22 @@ $navbar-collapse-max-height:       none !default;
 
 $navbar-default-color:             $link-color !default;
 $navbar-default-bg:                #fff !default;
-$navbar-default-border:            darken($navbar-default-bg, 6.5%) !default;
+$navbar-default-border:            scale-color($navbar-default-bg, $lightness: -6.5%) !default;
 
 // Navbar links
 $navbar-default-link-color:                $link-color !default;
 $navbar-default-link-hover-color:          $link-hover-color !default;
 $navbar-default-link-hover-bg:             #F1F1F1 !default;
 $navbar-default-link-active-color:         #333 !default;
-$navbar-default-link-active-bg:            darken(#F1F1F1, 2%) !default;
+$navbar-default-link-active-bg:            scale-color($navbar-default-link-hover-bg, $lightness: -2%) !default;
+
 $navbar-default-link-disabled-color:       #ccc !default;
 $navbar-default-link-disabled-bg:          transparent !default;
 
 // Navbar brand label
 $navbar-default-brand-color:               $navbar-default-link-color !default;
-$navbar-default-brand-hover-color:         darken($navbar-default-brand-color, 10%) !default;
+$navbar-default-brand-hover-color:         scale-color($navbar-default-brand-color, $lightness: -10%) !default;
+
 $navbar-default-brand-hover-bg:            transparent !default;
 
 // Navbar toggle
@@ -416,12 +429,12 @@ $navbar-default-toggle-border-color:       transparent !default;
 // Reset inverted navbar basics
 $navbar-inverse-color:                      #fff !default;
 $navbar-inverse-bg:                         #F1F1F1 !default;
-$navbar-inverse-border:                     darken($navbar-inverse-bg, 5%) !default;
+$navbar-inverse-border:                     scale-color($navbar-inverse-bg, $lightness: -5.5%) !default;
 
 // Inverted navbar links
 $navbar-inverse-link-color:                 $link-color !default;
 $navbar-inverse-link-hover-color:           $link-hover-color !default;
-$navbar-inverse-link-hover-bg:              darken($navbar-inverse-bg, 5%) !default;
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%) !default;
 $navbar-inverse-link-active-color:          $text-color !default;
 $navbar-inverse-link-active-bg:             #F1F1F1 !default;
 $navbar-inverse-link-disabled-color:        #444 !default;
@@ -434,7 +447,7 @@ $navbar-inverse-brand-hover-bg:             transparent !default;
 
 // Inverted navbar toggle
 $navbar-inverse-toggle-hover-bg:            $navbar-inverse-bg !default;
-$navbar-inverse-toggle-icon-bar-bg:         lighten($gray, 25%) !default;
+$navbar-inverse-toggle-icon-bar-bg:         scale-color($gray, $lightness: 37.5%);
 $navbar-inverse-toggle-border-color:        #333 !default;
 
 
@@ -549,7 +562,7 @@ $popover-border-color:                rgba(0,0,0,.2) !default;
 $popover-fallback-border-color:       #ccc !default;
 
 //** Popover title background color
-$popover-title-bg:                    darken($popover-bg, 5%) !default;
+$popover-title-bg:                    scale-color($popover-bg, $lightness: -5%) !default;  //#f2f2f2
 
 //** Popover arrow width
 $popover-arrow-width:                 10px !default;
@@ -561,10 +574,10 @@ $popover-arrow-outer-width:           ($popover-arrow-width + 1) !default;
 //** Popover outer arrow color
 $popover-arrow-outer-color:           fade_in($popover-border-color, 0.05) !default;
 //** Popover outer arrow fallback color
-$popover-arrow-outer-fallback-color:  darken($popover-fallback-border-color, 20%) !default;
+$popover-arrow-outer-fallback-color:  scale-color($popover-fallback-border-color, $lightness: -25%) !default;
 
 
-//== Labels
+  //== Labels
 //
 //##
 
@@ -690,8 +703,7 @@ $list-group-active-bg:          $component-active-bg !default;
 //** Border color of active list elements
 $list-group-active-border:      $list-group-active-bg !default;
 //** Text color for content within active list items
-$list-group-active-text-color:  lighten($list-group-active-bg, 40%) !default;
-
+$list-group-active-text-color:  scale-color($list-group-active-bg, $lightness: 50%);
 //** Text color of disabled list items
 $list-group-disabled-color:      $gray-light !default;
 //** Background color of disabled list items
@@ -729,7 +741,8 @@ $panel-primary-heading-bg:    #fff !default;
 
 $panel-secondary-text:         $gray-dark !default;
 $panel-secondary-border:       $brand-primary !default;
-$panel-secondary-heading-bg:   darken($panel-default-heading-bg, 2%) !default;
+$panel-secondary-heading-bg:   scale-color($panel-default-heading-bg, $lightness: -2%) !default;
+
 
 $panel-success-text:          $state-success-text !default;
 $panel-success-border:        $state-success-border !default;
@@ -749,11 +762,19 @@ $panel-danger-heading-bg:     $state-danger-bg !default;
 
 
 $panel-background: (
-    danger: $panel-danger-heading-bg,
-    info: $panel-info-heading-bg,
-    success: $panel-success-heading-bg,
-    primary: $panel-primary-heading-bg,
-    warning : $panel-warning-heading-bg // should be last so we can use it as a highlight by adding a class
+    danger: scale-color($panel-danger-heading-bg, $lightness: -3.25%),
+    info: scale-color($panel-info-heading-bg, $lightness: -3.5%),
+    success: scale-color($panel-success-heading-bg, $lightness: -3.75%),
+    primary: scale-color($panel-primary-heading-bg, $lightness: -3.25%),
+    warning: scale-color($panel-warning-heading-bg, $lightness: -3.15%)
+);
+
+$panel-border: (
+  danger: scale-color($panel-danger-heading-bg, $lightness: -16.5%),
+  info: scale-color($panel-info-heading-bg, $lightness: -16.5%),
+  success: scale-color($panel-success-heading-bg, $lightness: -17.85%),
+  primary: scale-color($panel-primary-heading-bg, $lightness: -15%),
+  warning: scale-color($panel-warning-heading-bg, $lightness: -16%)
 );
 
 //== Thumbnails
@@ -780,7 +801,7 @@ $thumbnail-caption-padding:   9px !default;
 //##
 
 $well-bg:                     #f5f5f5 !default;
-$well-border:                 darken($well-bg, 7%) !default;
+$well-border:                scale-color($well-bg, $lightness: -7.5%);
 
 
 //== Badges

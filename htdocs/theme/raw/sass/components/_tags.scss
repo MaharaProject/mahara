@@ -41,7 +41,7 @@
 }
 .tag-filters {
     @extend .clearfix;
-    background-color: darken($panel-default-heading-bg, 1%);
+    background: scale-color($panel-default-heading-bg, $lightness: -1.40%);
     padding: 10px 15px;
 }
 

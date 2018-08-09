@@ -184,23 +184,28 @@
     &.last .panel-heading a.collapsed {
         border-bottom-width: 1px;
     }
-    // Style variations
+
     @each $status, $bgcolor in $panel-background {
          &.panel-#{$status} {
             .panel-heading a {
-                background-color: darken($bgcolor, 3%);
+                background-color: $bgcolor;
                 &.collapsed {
                     background-color: $bgcolor;
                 }
                 &:hover,
                 &:focus {
-                   background-color: darken($bgcolor, 3%);
+                   background-color: $bgcolor;
                 }
             }
+        }
+    }
+
+    @each $status, $bgcolor in $panel-border {
+        &.panel-#{$status} {
             .panel-footer,
             .panel-body,
             .panel-heading a {
-                border: 1px solid darken($bgcolor, 15%);
+                border: 1px solid $bgcolor;
             }
             .panel-heading a,
             .panel-body:not(.no-footer) {
@@ -220,7 +225,7 @@
     legend h3 {
         a {
             text-shadow: 1px 0 0 $text-shadow;
-            background-color: darken($panel-default-heading-bg, 1%);
+            background: scale-color($panel-default-heading-bg, $lightness: -1.40%);
             border: 1px solid $panel-default-border;
             border-bottom: 0;
             padding: 10px 15px;

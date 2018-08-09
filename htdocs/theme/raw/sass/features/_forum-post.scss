@@ -36,7 +36,7 @@
     .collapsible a {
         &:focus,
         &:hover {
-            background: darken($panel-default-heading-bg, 1%) !important;
+            background: scale-color($panel-default-heading-bg, $lightness: -1.40%) !important;
         }
     }
 }

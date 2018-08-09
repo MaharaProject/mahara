@@ -8,7 +8,7 @@
 }
 
 .elasticsearch-filters {
-    background-color: darken($panel-default-heading-bg, 1%);
+    background-color: scale-color($panel-default-heading-bg, $lightness: -1.40%);
     + .no-results {
         border-top: 1px solid $panel-default-border;
     }
@@ -65,6 +65,6 @@
 }
 
 .elasticsearch-status {
-    color: darken($link-color, 10%);
+    color: scale-color($link-color, $lightness: -31.75%);
     font-weight: bold;
 }
