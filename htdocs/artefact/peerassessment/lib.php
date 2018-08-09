@@ -238,6 +238,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
 
         if ($new) {
             insert_record('artefact_peer_assessment', $data);
+            ensure_record_exists('view_signoff_verify', (object) array('view' => $this->get('view')), (object) array('view' => $this->get('view')), 'id', true);
         }
         else {
             update_record('artefact_peer_assessment', $data, 'assessment');
@@ -343,7 +344,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
         }
         $userid = $USER->get('id');
         $viewid = $view->get('id');
-        $canedit = $USER->can_peer_assess($view);
+        $canedit = ($USER->can_peer_assess($view) && !self::is_signed_off($view));
         $owner = $view->get('owner');
         $isowner = $userid && $userid == $owner;
 
@@ -362,12 +363,14 @@ class ArtefactTypePeerassessment extends ArtefactType {
 
         $where = 'pa.view = ? ';
 
-        // select assessments that are published
-        // or select assessments where the user is the author, published or not
-        $where.= 'AND ( (pa.private = 0) ';
-        $where.= '    OR (a.author = ?))';
+        // If the view is signed off, select public assessments
+        // or if viewing as page owner, select public assessments
+        // or if viewing as assessment author, select assessments owned by author
+        $where.= 'AND ((vsv.signoff = 1 AND pa.private = 0) ';
+        $where.= '    OR (a.author = ?)';
+        $where.= '    OR (pa.private = 0 AND a.owner = ?))';
 
-        $values = array((int)$viewid, (int)$userid, $block);
+        $values = array($viewid, $userid, $userid, $block);
 
         $result->count = count_records_sql('
             SELECT COUNT(*)
@@ -375,6 +378,8 @@ class ArtefactTypePeerassessment extends ArtefactType {
                 {artefact} a
                 JOIN {artefact_peer_assessment} pa
                     ON a.id = pa.assessment
+                JOIN {view_signoff_verify} vsv
+                    ON vsv.view = pa.view
                 LEFT JOIN {artefact} p
                     ON a.parent = p.id
             WHERE ' . $where . '
@@ -399,6 +404,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
                     $ids = get_column_sql('
                             SELECT a.id
                             FROM {artefact} a JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
+                            JOIN {view_signoff_verify} vsv ON vsv.view = pa.view
                                 LEFT JOIN {artefact} p ON a.parent = p.id
                             WHERE ' . $where . '
                             AND pa.block = ?
@@ -429,6 +435,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
                     u.deleted, u.profileicon, u.urlid, p.id AS parent, p.author AS parentauthor
                 FROM {artefact} a
                     INNER JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
+                    JOIN {view_signoff_verify} vsv ON vsv.view = pa.view
                     LEFT JOIN {artefact} p
                         ON a.parent = p.id
                     LEFT JOIN {usr} u ON a.author = u.id
@@ -443,6 +450,44 @@ class ArtefactTypePeerassessment extends ArtefactType {
 
         self::build_html($result);
         return $result;
+    }
+
+    public static function is_signable(View $view) {
+        global $USER;
+
+        $signable = false;
+        if ($view->get('owner')) {
+            $signable = ($view->get('owner') == $USER->get('id')) ? true : false;
+        }
+        return $signable;
+    }
+
+    public static function is_signed_off(View $view) {
+        if (!$view->get('owner')) {
+            return false;
+        }
+        return (bool)get_field_sql("SELECT signoff FROM {view_signoff_verify} WHERE view = ? LIMIT 1", array($view->get('id')));
+    }
+
+    public static function is_verifiable(View $view) {
+        global $USER;
+
+        if (!$view->get('owner')) {
+            return false;
+        }
+        $verifiable = get_field_sql("SELECT va.usr FROM {view_access} va
+                                     JOIN {usr_roles} ur ON ur.role = va.role
+                                     WHERE ur.see_block_content = ?
+                                     AND va.view = ? AND va.usr = ?
+                                     LIMIT 1", array(1, $view->get('id'), $USER->get('id')));
+        return (bool)$verifiable;
+    }
+
+    public static function is_verified(View $view) {
+        if (!$view->get('owner')) {
+            return false;
+        }
+        return (bool)get_field_sql("SELECT verified FROM {view_signoff_verify} WHERE view = ? LIMIT 1", array($view->get('id')));
     }
 
     public static function count_assessments($viewids=null) {

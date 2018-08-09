@@ -607,6 +607,15 @@
     }
 }
 
+div.toolbarhtml {
+    margin-top: 5px;
+    clear: both;
+    float: right;
+    div {
+        text-align: right;
+    }
+}
+
 .assessment-item-buttons {
     .assessbtn + .assessbtn {
         button {

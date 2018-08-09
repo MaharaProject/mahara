@@ -188,6 +188,15 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         return array();
     }
 
+   /**
+    * This function must be implemented in the subclass if it requires
+    * toolbar options for the view. It returns an array of button <a> tags and/or
+    * html to display in the toobar area.
+    */
+    public static function get_instance_toolbars(BlockInstance $instance) {
+        return array();
+    }
+
     /**
     * This function must be implemented in the subclass if it requires
     * css file outside of sass compiled css. It returns an array of css files, either local

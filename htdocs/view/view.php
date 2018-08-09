@@ -371,6 +371,10 @@ if ($collection) {
     }
 }
 
+$blocktype_toolbar = $view->get_all_blocktype_toolbar();
+if (!empty($blocktype_toolbar['toolbarhtml'])) {
+    $smarty->assign('toolbarhtml', join("\n", $blocktype_toolbar['toolbarhtml']));
+}
 $smarty->assign('canremove', $can_edit);
 $smarty->assign('INLINEJAVASCRIPT', $javascript . $inlinejs);
 $smarty->assign('viewid', $viewid);

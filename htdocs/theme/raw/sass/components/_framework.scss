@@ -170,7 +170,8 @@ div.statusheader{
 }
 
 div.statusheader,
-th.statusheader {
+th.statusheader,
+div.toolbarhtml {
     .icon {
         font-size: 1.2em;
         &.begun {
@@ -188,6 +189,15 @@ th.statusheader {
         &.dot {
             font-size: 0.8em;
             color: scale-color($gray-light, $lightness: 28%);
+        }
+        &.dot.disabled {
+            font-size: 1em;
+            color: scale-color($gray-light, $lightness: 28%);
+            cursor: $cursor-disabled;
+            // Override dot icon with minus icon
+            &:before {
+                content: "\f068";
+            }
         }
     }
 }

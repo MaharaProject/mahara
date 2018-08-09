@@ -2552,6 +2552,52 @@ class View {
     }
 
     /**
+     * Returns a list of toolbar code based on the blockinstances present in the view.
+     */
+    public function get_all_blocktype_toolbar() {
+        global $CFG;
+
+        $buttons = array();
+        $toolbarhtml = array();
+        $view_data = $this->get_row_datastructure();
+        $loadajax = false;
+        foreach ($view_data as $row_data) {
+            foreach($row_data as $column) {
+                foreach($column['blockinstances'] as $blockinstance) {
+                    $pluginname = $blockinstance->get('blocktype');
+                    if (!safe_require_plugin('blocktype', $pluginname)) {
+                        continue;
+                    }
+                    $classname = generate_class_name('blocktype', $pluginname);
+                    $instanceinfo = call_static_method(
+                        $classname,
+                        'get_instance_toolbars',
+                        $blockinstance
+                    );
+                    foreach($instanceinfo as $info) {
+                        if (is_array($info)) {
+                            if (isset($info['buttons'])) {
+                                $buttons[] = $info['buttons'];
+                            }
+                            if (isset($info['toolbarhtml'])) {
+                                $toolbarhtml[] = $info['toolbarhtml'];
+                            }
+                        }
+                        else if (is_string($info)) {
+                            $buttons[] = $info;
+                        }
+                    }
+                }
+            }
+        }
+
+        return array(
+            'buttons' => array_unique($buttons), // @TODO - make a way to add in abutton to toolbar
+            'toolbarhtml' => array_unique($toolbarhtml)
+        );
+    }
+
+    /**
      * Returns a list of required css files.
      */
     public function get_all_blocktype_css() {

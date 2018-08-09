@@ -123,6 +123,11 @@
         {/if}
     </ul>
 </div>
+<div class="btn-group-top-below">
+    {if $toolbarhtml}
+        {$toolbarhtml|safe}
+    {/if}
+</div>
 
 <div class="with-heading text-small">
     {include file=author.tpl}
