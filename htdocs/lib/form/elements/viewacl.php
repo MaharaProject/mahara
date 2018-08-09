@@ -55,7 +55,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $lockedpreset = null;
     if ($value) {
         foreach ($value as $item) {
-            if (is_array($item)) {
+            if (is_array($item) && !empty($item['type'])) {
                 if ($item['type'] == 'public') {
                     $item['publicallowed'] = (int)$public;
                 }
