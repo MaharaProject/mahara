@@ -1,0 +1,10 @@
+gridstack
+-----
+
+Website: https://github.com/gridstack/gridstack.js
+Version: 0.4.0
+
+Modifications:
+
+- Moved scss file from src/gridstack.scss to
+  theme/raw/sass/lib/_gridstack.scss
