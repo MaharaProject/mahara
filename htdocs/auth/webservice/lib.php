@@ -12,9 +12,6 @@
 defined('INTERNAL') || die();
 require_once(get_config('docroot') . 'auth/internal/lib.php');
 
-$path = get_config('docroot') . 'webservice/libs/zend';
-set_include_path($path . PATH_SEPARATOR . get_include_path());
-
 require_once(get_config('docroot') . '/webservice/lib.php');
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 

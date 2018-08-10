@@ -139,7 +139,7 @@ else if ($_SERVER['PATH_INFO'] == '/authorize') {
         );
 
         $form = pieform($form);
-        $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+        $smarty = smarty();
         $smarty->assign('form', $form);
         $smarty->assign('PAGEHEADING', get_string('authorise', 'auth.webservice'));
         $smarty->display('form.tpl');
@@ -170,7 +170,7 @@ else if ($_SERVER['PATH_INFO'] == '/oob') {
             ),
         );
         $form = pieform($form);
-        $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+        $smarty = smarty();
         $smarty->assign('form', $form);
         $smarty->assign('PAGEHEADING', get_string('oob', 'auth.webservice'));
         $smarty->display('form.tpl');

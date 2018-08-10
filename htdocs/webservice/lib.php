@@ -11,8 +11,6 @@
 
 defined('INTERNAL') || die();
 
-$path = get_config('docroot') . 'webservice/libs/zend';
-set_include_path($path . PATH_SEPARATOR . get_include_path());
 require_once(get_config('docroot') . 'webservice/locallib.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 require_once(get_config('docroot') . 'webservice/libs/net.php');
@@ -743,6 +741,80 @@ class external_api {
             throw new WebserviceInvalidResponseException(get_string('errorinvalidresponsedesc', 'auth.webservice'));
         }
     }
+
+    /**
+     * Returns detailed function information
+     *
+     * @param string|object $function name of external function or record from external_function
+     * @param int $strictness IGNORE_MISSING means compatible mode, false returned if record not found, debug message if more found;
+     *                        MUST_EXIST means throw exception if no record or multiple records found
+     * @return stdClass description or false if not found or exception thrown
+     */
+    public static function external_function_info($function, $strictness=MUST_EXIST) {
+
+        if (!is_object($function)) {
+            if (!$function = get_record('external_functions', 'name', $function)) {
+                return false;
+            }
+        }
+
+        // First try class autoloading.
+        if (!class_exists($function->classname)) {
+            if ($function->classpath == 'webservice') {
+                $function->classpath = get_config('docroot') . $function->classpath . '/functions/' . $function->classname . '.php';
+            }
+            else {
+                $function->classpath = get_config('docroot') . $function->classpath;
+                if (!preg_match('/\.php$/', $function->classpath)) {
+                    $function->classpath .= '/functions/' . $function->classname . '.php';
+                }
+            }
+            if (!file_exists($function->classpath)) {
+                throw new MaharaException('Cannot find file with external function implementation');
+            }
+            require_once($function->classpath);
+            if (!class_exists($function->classname)) {
+                throw new MaharaException('Cannot find external class');
+            }
+        }
+
+        $function->ajax_method = $function->methodname . '_is_allowed_from_ajax';
+        $function->parameters_method = $function->methodname . '_parameters';
+        $function->returns_method    = $function->methodname . '_returns';
+        $function->deprecated_method = $function->methodname . '_is_deprecated';
+
+        // Make sure the implementaion class is ok.
+        if (!method_exists($function->classname, $function->methodname)) {
+            throw new MaharaException('Missing implementation method of ' . $function->classname . '::' . $function->methodname);
+        }
+        if (!method_exists($function->classname, $function->parameters_method)) {
+            throw new MaharaException('Missing parameters description');
+        }
+        if (!method_exists($function->classname, $function->returns_method)) {
+            throw new MaharaException('Missing returned values description');
+        }
+        if (method_exists($function->classname, $function->deprecated_method)) {
+            if (call_user_func(array($function->classname, $function->deprecated_method)) === true) {
+                $function->deprecated = true;
+            }
+        }
+        $function->allowed_from_ajax = false;
+
+        // Fetch the parameters description.
+        $function->parameters_desc = call_user_func(array($function->classname, $function->parameters_method));
+        if (!($function->parameters_desc instanceof external_function_parameters)) {
+            throw new MaharaException('Invalid parameters description');
+        }
+
+        // Fetch the return values description.
+        $function->returns_desc = call_user_func(array($function->classname, $function->returns_method));
+        // Null means void result or result is ignored.
+        if (!is_null($function->returns_desc) and !($function->returns_desc instanceof external_description)) {
+            throw new MaharaException('Invalid return description');
+        }
+
+        return $function;
+    }
 }
 
 /**
@@ -1131,7 +1203,6 @@ abstract class webservice_server implements webservice_server_interface {
             $wsparamname = 'maharawssetting' . $name;
 
             // Retrieve and remove the setting parameter from the request.
-            // $value = optional_param($wsparamname, $default, PARAM_BOOL);
             $value = param_variable($wsparamname, $default);
             unset($_GET[$wsparamname]);
             unset($_POST[$wsparamname]);
@@ -1234,533 +1305,6 @@ abstract class webservice_server implements webservice_server_interface {
         }
         return $serviceids;
     }
-}
-
-/**
- * Special abstraction of our srvices that allows
- * interaction with stock Zend ws servers.
- * @author Petr Skoda (skodak)
- */
-abstract class webservice_zend_server extends webservice_server {
-
-    /** @property string name of the zend server class : Zend_XmlRpc_Server, Zend_Soap_Server, Zend_Soap_AutoDiscover, ...*/
-    protected $zend_class;
-
-    /** @property object Zend server instance */
-    protected $zend_server;
-
-    /** @property string $service_class virtual web service class with all functions user name execute, created on the fly */
-    protected $service_class;
-
-    /** @property string $functionname the name of the function that is executed */
-    protected $functionname = null;
-
-    /**
-     * Contructor
-     * @param integer $authmethod authentication method - one of WEBSERVICE_AUTHMETHOD_*
-     */
-    public function __construct($authmethod, $zend_class) {
-        parent::__construct($authmethod);
-        $this->zend_class = $zend_class;
-    }
-
-    /**
-     * Process request from client.
-     * @param bool $simple use simple authentication
-     * @return void
-     */
-    public function run() {
-        global $WEBSERVICE_FUNCTION_RUN, $USER, $WEBSERVICE_INSTITUTION, $WEBSERVICE_START;
-        $WEBSERVICE_START = microtime(true);
-
-        // we will probably need a lot of memory in some functions
-        raise_memory_limit('128M');
-
-        // set some longer timeout, this script is not sending any output,
-        // this means we need to manually extend the timeout operations
-        // that need longer time to finish
-        external_api::set_timeout();
-
-        // now create the instance of zend server
-        $this->init_zend_server();
-
-        // set up exception handler first, we want to sent them back in correct format that
-        // the other system understands
-        // we do not need to call the original default handler because this ws handler does everything
-        set_exception_handler(array($this, 'exception_handler'));
-
-        // init all properties from the request data
-        $this->parse_request();
-
-        // process wsdl only, and without a user
-        $xml = null;
-        if ($this->service && isset($_REQUEST['wsdl'])) {
-            $dbservice = get_record('external_services', 'name', $this->service);
-            if (empty($dbservice)) {
-                // throw error
-                throw new WebserviceAccessException(get_string('invalidservice', 'auth.webservice'));
-            }
-            $serviceids = array($dbservice->id);
-            $this->load_services($serviceids);
-        }
-        else {
-            // Manipulate the payload if necessary
-            $xml = $this->modify_payload();
-
-            // this sets up $USER and $SESSION and context restrictions
-            $this->authenticate_user();
-        }
-
-        // make a list of all functions user is allowed to excecute
-        $this->init_service_class();
-
-        // tell server what functions are available
-        $this->zend_server->setClass($this->service_class);
-
-        // set additional functions
-        $this->fixup_functions();
-
-        //send headers
-        $this->send_headers();
-
-        // execute and return response, this sends some headers too
-        $response = $this->zend_server->handle($xml);
-        // store the info of the error
-        if (is_object($response) && get_class($response) == 'Zend_XmlRpc_Server_Fault') {
-            $ex = $response->getException();
-            $this->info = 'exception: ' . get_class($ex) . ' message: ' . $ex->getMessage() . ' debuginfo: ' . (isset($ex->debuginfo) ? $ex->debuginfo : '');
-        }
-
-        // session cleanup
-        $this->session_cleanup();
-
-        // allready all done if we were doing wsdl
-        if (param_variable('wsdl', 0)) {
-            die;
-        }
-
-        // modify the result
-        $response = $this->modify_result($response);
-
-        $time_end = microtime(true);
-        $time_taken = $time_end - $WEBSERVICE_START;
-
-        //log the web service request
-        if (!isset($_REQUEST['wsdl']) && !empty($WEBSERVICE_FUNCTION_RUN)) {
-            $class = get_class($this);
-            if (preg_match('/soap/', $class)) {
-                $class = 'SOAP';
-            }
-            else if (preg_match('/xmlrpc/', $class)) {
-                $class = 'XML-RPC';
-            }
-            $log = (object)  array('timelogged' => time(),
-                                   'userid' => $USER->get('id'),
-                                   'externalserviceid' => $this->restricted_serviceid,
-                                   'institution' => $WEBSERVICE_INSTITUTION,
-                                   'protocol' => $class,
-                                   'auth' => $this->auth,
-                                   'functionname' => $WEBSERVICE_FUNCTION_RUN,
-                                   'timetaken' => "" . $time_taken,
-                                   'uri' => $_SERVER['REQUEST_URI'],
-                                   'info' => ($this->info ? $this->info : ''),
-                                   'ip' => getremoteaddr());
-            insert_record('external_services_logs', $log, 'id', true);
-        }
-        else {
-            // this is WSDL or methodsignature for XML-RPC
-        }
-
-        //finally send the result
-        // force the content length as this was going wrong
-        header('Content-Length: ' . strlen($response));
-        echo $response;
-        flush();
-        die;
-    }
-
-    /**
-     * Chance for each protocol to modify the function processing list
-     *
-     */
-    protected function fixup_functions() {
-
-        return null;
-    }
-
-    /**
-     * Chance for each protocol to modify the incoming
-     * raw payload - eg: SOAP and auth headers
-     *
-     * @return content
-     */
-    protected function modify_payload() {
-
-        return null;
-    }
-
-    /**
-     * Chance for each protocol to modify the out going
-     * raw payload - eg: SOAP encryption and signatures
-     *
-     * @param string $response The raw response value
-     *
-     * @return content
-     */
-    protected function modify_result($response) {
-
-        return $response;
-    }
-
-    /**
-     * Load virtual class needed for Zend api
-     * @return void
-     */
-    protected function init_service_class() {
-        global $USER;
-
-        $serviceids = $this->get_allowed_services($this->restricted_serviceid);
-        $this->load_services($serviceids);
-    }
-
-    /**
-     * load service function definitions for service discovery and exectution
-     *
-     * @param array $serviceids
-     */
-    protected function load_services($serviceids) {
-        global $USER;
-
-        // now get the list of all functions
-        $wsmanager = new webservice();
-        $functions = $wsmanager->get_external_functions($serviceids);
-
-        // now make the virtual WS class with all the fuctions for this particular user
-        $methods = '';
-        foreach ($functions as $function) {
-            $methods .= $this->get_virtual_method_code($function);
-        }
-
-        // let's use unique class name, there might be problem in unit tests
-        $classname = 'webservices_virtual_class_000000';
-        while (class_exists($classname)) {
-            $classname++;
-        }
-
-        $code = '
-/**
- * Virtual class web services for user id ' . $USER->get('id') . '
- */
-class ' . $classname . ' {
-' . $methods . '
-
-    public function Header ($data) {
-        return true;
-    }
-
-    public function Security ($data) {
-        //throw new WebserviceAccessException(get_string("accessnotallowed", "webservice"));
-        return true;
-    }
-}
-';
-
-        // load the virtual class definition into memory
-        eval($code);
-        $this->service_class = $classname;
-    }
-
-    /**
-     * returns virtual method code
-     * @param object $function
-     * @return string PHP code
-     */
-    protected function get_virtual_method_code($function) {
-        $function = webservice_function_info($function);
-
-        //arguments in function declaration line with defaults.
-        $paramanddefaults      = array();
-        //arguments used as parameters for external lib call.
-        $params      = array();
-        $params_desc = array();
-        foreach ($function->parameters_desc->keys as $name=>$keydesc) {
-            $param = '$' . $name;
-            $paramanddefault = $param;
-            //need to generate the default if there is any
-            if ($keydesc instanceof external_value) {
-                if ($keydesc->required == VALUE_DEFAULT) {
-                    if ($keydesc->default === null) {
-                        $paramanddefault .= '=null';
-                    }
-                    else {
-                        switch($keydesc->type) {
-                            case PARAM_BOOL:
-                                $paramanddefault .= '='. (int) $keydesc->default; break;
-                            case PARAM_INT:
-                                $paramanddefault .= '=' . $keydesc->default; break;
-                            case PARAM_FLOAT;
-                            $paramanddefault .= '=' . $keydesc->default; break;
-                            default:
-                                $paramanddefault .= '=\'' . $keydesc->default . '\'';
-                        }
-                    }
-                }
-                else if ($keydesc->required == VALUE_OPTIONAL) {
-                    //it does make sens to declare a parameter VALUE_OPTIONAL
-                    //VALUE_OPTIONAL is used only for array/object key
-                    throw new WebserviceException('parametercannotbevalueoptional');
-                }
-                //for the moment we do not support default for other structure types
-            }
-            else {
-                if ($keydesc->required == VALUE_DEFAULT) {
-                    //accept empty array as default
-                    if (isset($keydesc->default) and is_array($keydesc->default)
-                    and empty($keydesc->default)) {
-                        $paramanddefault .= '=array()';
-                    }
-                    else {
-                        throw new WebserviceException('errornotemptydefaultparamarray', $name);
-                    }
-                }
-                if ($keydesc->required == VALUE_OPTIONAL) {
-                    throw new WebserviceException('erroroptionalparamarray', $name);
-                }
-            }
-            $params[] = $param;
-            $paramanddefaults[] = $paramanddefault;
-            $type = $this->get_phpdoc_type($keydesc);
-            $params_desc[] = '     * @param ' . $type . ' $' . $name . ' ' . $keydesc->desc;
-        }
-        $params                = implode(', ', $params);
-        $paramanddefaults      = implode(', ', $paramanddefaults);
-        $params_desc           = implode("\n", $params_desc);
-
-        $serviceclassmethodbody = $this->service_class_method_body($function, $params);
-
-        if (is_null($function->returns_desc)) {
-            $return = '     * @return void';
-        }
-        else {
-            $type = $this->get_phpdoc_type($function->returns_desc);
-            $return = '     * @return ' . $type . ' ' . $function->returns_desc->desc;
-        }
-
-        // now crate the virtual method that calls the ext implementation
-
-        $code = '
-    /**
-     * ' . $function->description . '
-     *
-' . $params_desc . '
-' . $return . '
-     */
-    public function ' . $function->name . '(' . $paramanddefaults . ') {
-        global $WEBSERVICE_FUNCTION_RUN;
-        $WEBSERVICE_FUNCTION_RUN = \'' . $function->name . '\';
-' . $serviceclassmethodbody . '
-    }
-';
-        return $code;
-    }
-
-    /**
-     * Get phpdoc type
-     *
-     * @param object $keydesc
-     * @return string $type
-     */
-    protected function get_phpdoc_type($keydesc) {
-        if ($keydesc instanceof external_value) {
-            switch($keydesc->type) {
-                // 0 or 1 only for now
-                case PARAM_BOOL:
-                case PARAM_INT:
-                    $type = 'int'; break;
-                case PARAM_FLOAT;
-                $type = 'double'; break;
-                default:
-                    $type = 'string';
-            }
-
-        }
-        else if ($keydesc instanceof external_single_structure) {
-            $classname = $this->generate_simple_struct_class($keydesc);
-            $type = $classname;
-
-        }
-        else if ($keydesc instanceof external_multiple_structure) {
-            $type = 'array';
-        }
-
-        return $type;
-    }
-
-    /**
-     * generate simple structure class
-     *
-     * @param object $structdesc
-     * @return string
-     */
-    protected function generate_simple_struct_class(external_single_structure $structdesc) {
-        //only 'object' is supported by SOAP, 'struct' by XML-RPC MDL-23083
-        return 'object|struct';
-    }
-
-    /**
-     * You can override this function in your child class to add extra code into the dynamically
-     * created service class. For example it is used in the amf server to cast types of parameters and to
-     * cast the return value to the types as specified in the return value description.
-     * @param stdClass $function
-     * @param array $params
-     * @return string body of the method for $function ie. everything within the {} of the method declaration.
-     */
-    protected function service_class_method_body($function, $params) {
-        //cast the param from object to array (validate_parameters except array only)
-        $castingcode = '';
-        if ($params) {
-            $paramstocast = explode(',', $params);
-            foreach ($paramstocast as $paramtocast) {
-                //clean the parameter from any white space
-                $paramtocast = trim($paramtocast);
-                $castingcode .= $paramtocast .
-                '=webservice_zend_server::cast_objects_to_array(' . $paramtocast . ');';
-            }
-
-        }
-
-        $descriptionmethod = $function->methodname . '_returns()';
-        $callforreturnvaluedesc = $function->classname . '::' . $descriptionmethod;
-        return $castingcode . '    if (' . $callforreturnvaluedesc . ' == null)  {' .
-        $function->classname . '::' . $function->methodname . '(' . $params . ');
-                        return null;
-                    }
-                    return external_api::clean_returnvalue(' . $callforreturnvaluedesc . ', ' . $function->classname . '::' . $function->methodname . '(' . $params . '));';
-    }
-
-    /**
-     * Recursive function to recurse down into a complex variable and convert all
-     * objects to arrays.
-     * @param mixed $param value to cast
-     * @return mixed Cast value
-     */
-    public static function cast_objects_to_array($param) {
-        if (is_object($param)) {
-            $param = (array)$param;
-        }
-        if (is_array($param)) {
-            $toreturn = array();
-            foreach ($param as $key=> $param) {
-                $toreturn[$key] = self::cast_objects_to_array($param);
-            }
-            return $toreturn;
-        }
-        else {
-            return $param;
-        }
-    }
-
-    /**
-     * Set up zend service class
-     * @return void
-     */
-    protected function init_zend_server() {
-        $this->zend_server = new $this->zend_class();
-    }
-
-    /**
-     * This method parses the $_POST and $_GET superglobals and looks for
-     * the following information:
-     *  1/ user authentication - username+password or token (wsusername, wspassword and wstoken parameters)
-     *
-     * @return void
-     */
-    protected function parse_request() {
-
-        // We are going to clean the POST/GET parameters from the parameters specific to the server.
-        parent::set_web_service_call_settings();
-
-        //Get GET and POST paramters
-        $methodvariables = array_merge($_GET,$_POST);
-
-        if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
-            //note: some clients have problems with entity encoding :-(
-            if (isset($methodvariables['wsusername'])) {
-                $this->username = $methodvariables['wsusername'];
-            }
-            if (isset($methodvariables['wspassword'])) {
-                $this->password = $methodvariables['wspassword'];
-            }
-            if (isset($methodvariables['wsservice'])) {
-                $this->service = $methodvariables['wsservice'];
-            }
-        }
-        else {
-            if (isset($methodvariables['wstoken'])) {
-                $this->token = $methodvariables['wstoken'];
-            }
-        }
-
-        $this->parameters = $methodvariables;
-    }
-
-    /**
-     * Internal implementation - sending of page headers.
-     * @return void
-     */
-    protected function send_headers() {
-        header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0');
-        header('Expires: ' . gmdate('D, d M Y H:i:s', 0) . ' GMT');
-        header('Pragma: no-cache');
-        header('Accept-Ranges: none');
-    }
-
-    /**
-     * Specialised exception handler, we can not use the standard one because
-     * it can not just print html to output.
-     *
-     * @param exception $ex
-     * @return void does not return
-     */
-    public function exception_handler($ex) {
-        // detect active db transactions, rollback and log as error
-        db_rollback();
-
-        // some hacks might need a cleanup hook
-        $this->session_cleanup($ex);
-
-        // now let the plugin send the exception to client
-        $this->send_error($ex);
-
-        // not much else we can do now, add some logging later
-        exit(1);
-    }
-
-    /**
-     * Send the error information to the WS client
-     * formatted as XML document.
-     * @param exception $ex
-     * @return void
-     */
-    protected function send_error($ex=null) {
-        $this->send_headers();
-        echo $this->zend_server->fault($ex);
-    }
-
-    /**
-     * Future hook needed for emulated sessions.
-     * @param exception $exception null means normal termination, $exception received when WS call failed
-     * @return void
-     */
-    protected function session_cleanup($exception=null) {
-        if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
-            // nothing needs to be done, there is no persistent session
-        }
-        else {
-            // close emulated session if used
-        }
-    }
-
 }
 
 /**
@@ -1888,7 +1432,7 @@ abstract class webservice_base_server extends webservice_server {
                                'externalserviceid' => $this->restricted_serviceid,
                                'institution' => $WEBSERVICE_INSTITUTION,
                                'protocol' => 'REST',
-                               'auth' => $this->auth,
+                               'auth' => $this->token,
                                'functionname' => ($WEBSERVICE_FUNCTION_RUN ? $WEBSERVICE_FUNCTION_RUN : $this->functionname),
                                'timetaken' => '' . $time_taken,
                                'uri' => $_SERVER['REQUEST_URI'],

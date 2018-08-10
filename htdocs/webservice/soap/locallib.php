@@ -20,439 +20,423 @@
  */
 
 require_once(get_config('docroot') . 'webservice/lib.php');
-
- // must not cache wsdl - the list of functions is created on the fly
-ini_set('soap.wsdl_cache_enabled', '0');
-require_once 'Zend/Soap/Server.php';
-require_once 'Zend/Soap/AutoDiscover.php';
-
-/**
- * extend SOAP Server to add logging and error handling
- */
-class Zend_Soap_Server_Local extends Zend_Soap_Server {
-
-    /**
-    * Generate a server fault
-    *
-    * Note that the arguments are reverse to those of SoapFault.
-    *
-    * note: the difference with the Zend server is that we throw a SoapFault exception
-    * with the debuginfo integrated to the exception message when DEBUG >= NORMAL
-    *
-    * If an exception is passed as the first argument, its message and code
-    * will be used to create the fault object if it has been registered via
-    * {@Link registerFaultException()}.
-    *
-    * @link   http://www.w3.org/TR/soap12-part1/#faultcodes
-    * @param  string|Exception $fault
-    * @param  string $code SOAP Fault Codes
-    * @return SoapFault
-    */
-    public function fault($fault = null, $code = "Receiver") {
-
-        //run the zend code that clean/create a soapfault
-        $soapfault = parent::fault($fault, $code);
-
-        //intercept any exceptions and add the errorcode and debuginfo (optional)
-        $actor = null;
-        $details = null;
-        if ($fault instanceof Exception) {
-           //add the debuginfo to the exception message if debuginfo must be returned
-            if (ws_debugging() and isset($fault->debuginfo)) {
-                $details = $fault->debuginfo;
-            }
-        }
-
-        return new SoapFault($soapfault->faultcode,
-                $soapfault->getMessage() . ' | ERRORCODE: ' . (isset($fault->errorcode) ? $fault->errorcode : $code),
-                $actor, $details);
-    }
-
-    /**
-     * NOTE: this is basically a copy of the Zend handle()
-     *       but with $soap->fault returning faultactor + faultdetail
-     *
-     * Handle a request
-     *
-     * Instantiates SoapServer object with options set in object, and
-     * dispatches its handle() method.
-     *
-     * $request may be any of:
-     * - DOMDocument; if so, then cast to XML
-     * - DOMNode; if so, then grab owner document and cast to XML
-     * - SimpleXMLElement; if so, then cast to XML
-     * - stdClass; if so, calls __toString() and verifies XML
-     * - string; if so, verifies XML
-     *
-     * If no request is passed, pulls request using php:://input (for
-     * cross-platform compatability purposes).
-     *
-     * @param DOMDocument|DOMNode|SimpleXMLElement|stdClass|string $request Optional request
-     * @return void|string
-     */
-    public function handle($request = null)
-    {
-        if (null === $request) {
-            $request = file_get_contents('php://input');
-        }
-
-        // Set Zend_Soap_Server error handler
-        $displayErrorsOriginalState = $this->_initializeSoapErrorContext();
-
-        $setRequestException = null;
-        /**
-         * @see Zend_Soap_Server_Exception
-         */
-        require_once 'Zend/Soap/Server/Exception.php';
-        try {
-            $this->_setRequest($request);
-        } catch (Zend_Soap_Server_Exception $e) {
-            $setRequestException = $e;
-        }
-
-        $soap = $this->_getSoap();
-
-        ob_start();
-        if ($setRequestException instanceof Exception) {
-            // Send SOAP fault message if we've catched exception
-            $soap->fault("Sender", $setRequestException->getMessage());
-        }
-        else {
-            try {
-                $soap->handle($request);
-            } catch (Exception $e) {
-                //log the error on the web service request
-                global $WEBSERVICE_FUNCTION_RUN, $USER, $WEBSERVICE_INSTITUTION, $WEBSERVICE_START;
-
-                $time_end = microtime(true);
-                $time_taken = $time_end - $WEBSERVICE_START;
-
-                $log = (object)  array('timelogged' => time(),
-                                       'userid' => $USER->get('id'),
-                                       'externalserviceid' => 0,
-                                       'institution' => $WEBSERVICE_INSTITUTION,
-                                       'protocol' => 'SOAP',
-                                       'auth' => 'unknown',
-                                       'functionname' => ($WEBSERVICE_FUNCTION_RUN ? $WEBSERVICE_FUNCTION_RUN : 'unknown'),
-                                       'timetaken' => '' . $time_taken,
-                                       'uri' => $_SERVER['REQUEST_URI'],
-                                       'info' => 'exception: ' . get_class($e) . ' message: ' . $e->getMessage() . ' debuginfo: ' . (isset($e->debuginfo) ? $e->debuginfo : ''),
-                                       'ip' => getremoteaddr());
-                insert_record('external_services_logs', $log, 'id', true);
-
-                // carry on with SOAP faulting
-                $fault = $this->fault($e);
-                if (isset($e->debuginfo)) {
-                    $fault->faultstring .= ' ' . $e->debuginfo;
-                }
-                $faultactor = isset($fault->faultactor) ? $fault->faultactor : null;
-                $detail = isset($fault->detail) ? $fault->detail : null;
-                $soap->fault($fault->faultcode, $fault->faultstring, $faultactor, $detail);
-            }
-        }
-        $this->_response = ob_get_clean();
-
-        // Restore original error handler
-        restore_error_handler();
-        ini_set('display_errors', $displayErrorsOriginalState);
-
-        if (!$this->_returnResponse) {
-            echo $this->_response;
-            return;
-        }
-
-        return $this->_response;
-     }
-}
+use webservice_soap\wsdl;
 
 /**
  * SOAP service server implementation.
  * @author Petr Skoda (skodak)
  */
-class webservice_soap_server extends webservice_zend_server {
+class webservice_soap_server extends webservice_base_server {
 
-    private $payload_signed = false;
-    private $payload_encrypted = false;
-    public $publickey = null;
+    /** @var mahara_url The server URL. */
+    protected $serverurl;
+
+    /** @var  SoapServer The Soap */
+    protected $soapserver;
+
+    /** @var  string The response. */
+    protected $response;
+
+    /** @var  string The class name of the virtual class generated for this web service. */
+    protected $serviceclass;
+
+    /** @var bool WSDL mode flag. */
+    protected $wsdlmode;
+
+    /** @var \webservice_soap\wsdl The object for WSDL generation. */
+    protected $wsdl;
 
     /**
-     * Contructor
-     * @param bool $simple use simple authentication
+     * Constructor
+     * @param string $authmethod authentication method of the web service (WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN, ...)
      */
     public function __construct($authmethod) {
-         // must not cache wsdl - the list of functions is created on the fly
+        parent::__construct($authmethod);
+        // must not cache wsdl - the list of functions is created on the fly
         ini_set('soap.wsdl_cache_enabled', '0');
-        require_once 'Zend/Soap/Server.php';
-        require_once 'Zend/Soap/AutoDiscover.php';
-
-        if (param_boolean('wsdl', 0)) {
-            parent::__construct($authmethod, 'Zend_Soap_AutoDiscover');
-        }
-        else {
-            parent::__construct($authmethod, 'Zend_Soap_Server_Local');
-        }
         $this->wsname = 'soap';
+        $this->wsdlmode = false;
     }
 
     /**
-     * Set up zend service class
-     * @return void
-     */
-    protected function init_zend_server() {
-        parent::init_zend_server();
-
-        if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
-            $username = param_variable('wsusername', '');
-            $password = param_variable('wspassword', '');
-            // aparently some clients and zend soap server does not work well with "&" in urls :-(
-            //TODO: the zend error has been fixed in the last Zend SOAP version, check that is fixed and remove obsolete code
-            $url = get_config('wwwroot') . 'webservice/soap/server.php/' . urlencode($username) . '/' . urlencode($password);
-            // the Zend server is using this uri directly in xml - weird :-(
-            $this->zend_server->setUri(htmlspecialchars($url));
-        }
-        else {
-            $wstoken = param_variable('wstoken', '');
-            $url = get_config('wwwroot') . 'webservice/soap/server.php?wstoken=' . urlencode($wstoken);
-            // the Zend server is using this uri directly in xml - weird :-(
-            $this->zend_server->setUri(htmlspecialchars($url));
-        }
-
-        if (!param_boolean('wsdl', 0)) {
-            $this->zend_server->setReturnResponse(true);
-            //TODO: the error handling in Zend Soap server is useless, XML-RPC is much, much better :-(
-            $this->zend_server->registerFaultException('MaharaException');
-            $this->zend_server->registerFaultException('UserException');
-            $this->zend_server->registerFaultException('NotFoundException');
-            $this->zend_server->registerFaultException('SystemException');
-            $this->zend_server->registerFaultException('InvalidArgumentException');
-            $this->zend_server->registerFaultException('AccessDeniedException');
-            $this->zend_server->registerFaultException('ParameterException');
-            $this->zend_server->registerFaultException('WebserviceException');
-            $this->zend_server->registerFaultException('WebserviceParameterException');  //deprecated - kept for backward compatibility
-            $this->zend_server->registerFaultException('WebserviceInvalidParameterException');
-            $this->zend_server->registerFaultException('WebserviceInvalidResponseException');
-            $this->zend_server->registerFaultException('WebserviceAccessException');
-            if (ws_debugging()) {
-                $this->zend_server->registerFaultException('SoapFault');
-            }
-        }
-    }
-
-    /**
-     * For SOAP - we want to inspect for auth headers
-     * and do decrypt / sigs
-     *
-     * @return $xml
-     */
-    protected function modify_payload() {
-
-        $xml = null;
-
-        // don't do any of this if we are in the WSDL phase
-        if (param_boolean('wsdl', 0)) {
-            return $xml;
-        }
-
-        // check for encryption and signatures
-        if ($this->authmethod == WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN) {
-            // we need the token so that we can find the key
-            if (!$dbtoken = get_record('external_tokens', 'token', $this->token, 'tokentype', EXTERNAL_TOKEN_PERMANENT)) {
-                // log failed login attempts
-                throw new WebserviceAccessException(get_string('invalidtoken', 'auth.webservice'));
-            }
-            // is WS-Security active ?
-            if ($dbtoken->wssigenc) {
-                $this->publickey = $dbtoken->publickey;
-            }
-        }
-        else if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME && !empty($this->username)) {
-            // get the user
-            $user = get_record('usr', 'username', $this->username);
-            if (empty($user)) {
-                throw new WebserviceAccessException(get_string('wrongusernamepassword', 'auth.webservice'));
-            }
-            // get the institution from the external user
-            $ext_user = get_record('external_services_users', 'userid', $user->id);
-            if (empty($ext_user)) {
-                throw new WebserviceAccessException(get_string('wrongusernamepassword', 'auth.webservice'));
-            }
-            // is WS-Security active ?
-            if ($ext_user->wssigenc) {
-                $this->publickey = $ext_user->publickey;
-            }
-        }
-
-        // only both if we can find a public key
-        if (!empty($this->publickey)) {
-            // A singleton provides our site's SSL info
-            require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
-            $rawHTTPdata = file_get_contents('php://input');
-            $openssl = OpenSslRepo::singleton();
-            $payload                 = $rawHTTPdata;
-            $this->payload_encrypted = false;
-            $this->payload_signed    = false;
-
-            try {
-                $xml = new SimpleXMLElement($payload);
-            } catch (Exception $e) {
-                throw new XmlrpcServerException('Payload is not a valid XML document', 6001);
-            }
-
-            // Cascading switch. Kinda.
-            try {
-                if ($xml->getName() == 'encryptedMessage') {
-                    $this->payload_encrypted = true;
-                    $payload                 = xmlenc_envelope_strip($xml);
-                }
-
-                if ($xml->getName() == 'signedMessage') {
-                    $this->payload_signed = true;
-
-                    $signature      = base64_decode($xml->Signature->SignatureValue);
-                    $payload        = base64_decode($xml->object);
-                    $timestamp      = $xml->timestamp;
-
-                    // Does the signature match the data and the public cert?
-                    $signature_verified = openssl_verify($payload, $signature, $this->publickey);
-                    if ($signature_verified == 1) {
-                        // Parse the XML
-                        try {
-                            $xml = new SimpleXMLElement($payload);
-                        } catch (Exception $e) {
-                            throw new MaharaException('Signed payload is not a valid XML document', 6007);
-                        }
-                    }
-                    else {
-                        throw new MaharaException('An error occurred while trying to verify your message signature', 6004);
-                    }
-                }
-                $xml = $payload;
-            }
-            catch (CryptException $e) {
-                if ($e->getCode() == 7025) {
-                    // The key they used to contact us is old, respond with the new key correctly
-                    // This sucks. Error handling of our mnet code needs to improve
-                    ob_start();
-                    xmlrpc_error($e->getMessage(), $e->getCode());
-                    $response = ob_get_contents();
-                    ob_end_clean();
-
-                    // Sign and encrypt our response, even though we don't know if the
-                    // request was signed and encrypted
-                    $response = xmldsig_envelope($response);
-                    $response = xmlenc_envelope($response, $this->publickey);
-                    $xml = $response;
-                }
-            }
-        }
-
-        // standard auth
-        if ((!isset($_REQUEST['wsusername']) && $this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) || !empty($this->publickey)) {
-            // wsse auth
-            // we may already have the xml if sig/enc
-            if (empty($xml)) {
-                $xml = file_get_contents('php://input');
-            }
-            $dom = new DOMDocument();
-            if (strlen($xml) == 0 || !$dom->loadXML($xml)) {
-                require_once 'Zend/Soap/Server/Exception.php';
-                throw new Zend_Soap_Server_Exception('Invalid XML');
-            }
-            else {
-                // now hunt for the user and password from the headers
-                $xpath = new DOMXpath($dom);
-                $xpath->registerNamespace('wsse', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
-                if ($q = $xpath->query("//wsse:Security/wsse:UsernameToken/wsse:Username/text()", $dom)) {
-                    if ($q->item(0)) {
-                        $this->username = (string) $q->item(0)->data;
-                        $this->password = (string) $xpath->query("//wsse:Security/wsse:UsernameToken/wsse:Password/text()", $dom)->item(0)->data;
-                        $this->authmethod = WEBSERVICE_AUTHMETHOD_USERNAME;
-                    }
-                }
-            }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * This method parses the $_REQUEST superglobal and looks for
-     * the following information:
-     *  1/ user authentication - username+password or token (wsusername, wspassword and wstoken parameters)
-     *
-     * @return void
+     * This method parses the $_POST and $_GET superglobals and looks for the following information:
+     * - User authentication parameters:
+     *   - Username + password (wsusername and wspassword), or
+     *   - Token (wstoken)
      */
     protected function parse_request() {
-        parent::parse_request();
+        require_once(get_config('docroot') . "webservice/mahara_url.php");
+        // Retrieve and clean the POST/GET parameters from the parameters specific to the server.
+        parent::set_web_service_call_settings();
 
-        if (!$this->username or !$this->password) {
-            //note: this is the workaround for the trouble with & in soap urls
-            $authdata = self::get_file_argument();
-            $authdata = explode('/', trim($authdata, '/'));
-            if (count($authdata) == 2) {
-                list($this->username, $this->password) = $authdata;
-            }
-        }
-    }
+        if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
+            $this->username = param_variable('wsusername', null);
+            $this->password = param_variable('wspassword', null);
+            if (!$this->username || !$this->password) {
+                $authdata = array();
+                if (isset($_SERVER['REQUEST_URI'])) {
+                    $uri = parse_url($_SERVER['REQUEST_URI']);
+                    $rawquery = preg_replace('/\&amp;/', '&', $uri['query']);
+                    parse_str($rawquery, $query);
+                    $authdata = array($query['wsusername'], $query['wspassword']);
+                }
 
-    /**
-     * Extracts file argument either from file parameter or PATH_INFO
-     * Note: $scriptname parameter is not needed anymore
-     *
-     * @global string
-     * @uses $_SERVER
-     * @uses PARAM_PATH
-     * @return string file path (only safe characters)
-     */
-    static function get_file_argument() {
-        global $SCRIPT;
-
-        $relativepath = clean_param(param_variable('file', FALSE), PARAM_PATH);
-
-        if ($relativepath !== false and $relativepath !== '') {
-            return $relativepath;
-        }
-        $relativepath = false;
-
-        // then try extract file from the slasharguments
-        if (stripos($_SERVER['SERVER_SOFTWARE'], 'iis') !== false) {
-            // NOTE: ISS tends to convert all file paths to single byte DOS encoding,
-            //       we can not use other methods because they break unicode chars,
-            //       the only way is to use URL rewriting
-            if (isset($_SERVER['PATH_INFO']) and $_SERVER['PATH_INFO'] !== '') {
-                // check that PATH_INFO works == must not contain the script name
-                if (strpos($_SERVER['PATH_INFO'], $SCRIPT) === false) {
-                    $relativepath = clean_param(urldecode($_SERVER['PATH_INFO']), PARAM_PATH);
+                if (count($authdata) == 2) {
+                    list($this->username, $this->password) = $authdata;
                 }
             }
+            $this->serverurl = new mahara_url('/webservice/soap/server.php');
+            $this->serverurl->param('wsusername', $this->username);
+            $this->serverurl->param('wspassword', $this->password);
         }
         else {
-            // all other apache-like servers depend on PATH_INFO
-            if (isset($_SERVER['PATH_INFO'])) {
-                if (isset($_SERVER['SCRIPT_NAME']) and strpos($_SERVER['PATH_INFO'], $_SERVER['SCRIPT_NAME']) === 0) {
-                    $relativepath = substr($_SERVER['PATH_INFO'], strlen($_SERVER['SCRIPT_NAME']));
-                }
-                else {
-                    $relativepath = $_SERVER['PATH_INFO'];
-                }
-                $relativepath = clean_param($relativepath, PARAM_PATH);
-            }
+            $this->token = param_alphanumext('wstoken', null);
+            $this->serverurl = new mahara_url('/webservice/soap/server.php');
+            $this->serverurl->param('wstoken', $this->token);
         }
 
-
-        return $relativepath;
+        if ($wsdl = param_integer('wsdl', 0)) {
+            $this->wsdlmode = true;
+        }
     }
 
     /**
-     * Send the error information to the WS client
-     * formatted as XML document.
-     * @param exception $ex
-     * @return void
+     * Runs the SOAP web service.
+     *
+     * @throws WebserviceCodingException
+     * @throws MaharaException
+     * @throws WebserviceAccessException
      */
-    protected function send_error($ex=null) {
-        // Zend Soap server fault handling is incomplete compared to XML-RPC :-(
-        // we can not use: echo $this->zend_server->fault($ex);
-        //TODO: send some better response in XML
+    public function run() {
+        // We will probably need a lot of memory in some functions.
+        raise_memory_limit('128M');
+
+        // Set some longer timeout since operations may need longer time to finish.
+        external_api::set_timeout();
+
+        // Set up exception handler.
+        set_exception_handler(array($this, 'exception_handler'));
+
+        // Init all properties from the request data.
+        $this->parse_request();
+
+        // Authenticate user, this has to be done after the request parsing. This also sets up $USER and $SESSION.
+        $this->authenticate_user();
+
+        // Make a list of all functions user is allowed to execute.
+        $this->init_service_class();
+
+        if ($this->wsdlmode) {
+            // Generate the WSDL.
+            $this->generate_wsdl();
+        }
+
+        // Handle the SOAP request.
+        $this->handle();
+
+        // Session cleanup.
+        $this->session_cleanup();
+        die;
+    }
+
+    /**
+     * Load the virtual class needed for the web service.
+     *
+     * Initialises the virtual class that contains the web service functions that the user is allowed to use.
+     * The web service function will be available if the user:
+     * - is validly registered in the external_services_users table.
+     * - has the required capability.
+     * - meets the IP restriction requirement.
+     * This virtual class can be used by web service protocols such as SOAP, especially when generating WSDL.
+     */
+    protected function init_service_class() {
+        global $USER;
+        // Initialise service methods and struct classes.
+        $this->servicemethods = array();
+        $this->servicestructs = array();
+        $params = array();
+        $wscond1 = '';
+        $wscond2 = '';
+        if ($this->restricted_serviceid) {
+            $params = array($this->restricted_serviceid, $this->restricted_serviceid);
+            $wscond1 = 'AND s.id = ?';
+            $wscond2 = 'AND s.id = ?';
+        }
+        else if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
+            $wscond1 = 'AND s.restrictedusers = 1';
+            $wscond2 = 'AND s.restrictedusers = 1';
+        }
+        $sql = "SELECT s.*, NULL AS iprestriction
+                FROM {external_services} s
+                JOIN {external_services_functions} sf ON (sf.externalserviceid = s.id AND s.restrictedusers = 0)
+                WHERE s.enabled = 1 " . $wscond1 . "
+                UNION
+                SELECT s.*, su.iprestriction
+                FROM {external_services} s
+                JOIN {external_services_functions} sf ON (sf.externalserviceid = s.id AND s.restrictedusers = 1)
+                JOIN {external_services_users} su ON (su.externalserviceid = s.id AND su.userid = ?)
+                WHERE s.enabled = 1 AND (su.validuntil IS NULL OR su.validuntil < ?) " . $wscond2;
+        $params = array_merge($params, array($USER->id, time()));
+        $serviceids = array();
+        $remoteaddr = getremoteaddr();
+        // Query list of external services for the user.
+        $rs = get_records_sql_array($sql, $params);
+        // Check which service ID to include.
+        foreach ($rs as $service) {
+            if (isset($serviceids[$service->id])) {
+                continue; // Service already added.
+            }
+            if ($service->iprestriction && !address_in_subnet($remoteaddr, $service->iprestriction)) {
+                continue; // Wrong request source ip, sorry.
+            }
+            $serviceids[$service->id] = $service->id;
+        }
+        // Generate the virtual class name.
+        $classname = 'webservices_virtual_class_000000';
+        while (class_exists($classname)) {
+            $classname++;
+        }
+        $this->serviceclass = $classname;
+        // Get the list of all available external functions.
+        $wsmanager = new webservice();
+        $functions = $wsmanager->get_external_functions($serviceids);
+        // Generate code for the virtual methods for this web service.
+        $methods = '';
+        foreach ($functions as $function) {
+            $methods .= $this->get_virtual_method_code($function);
+        }
+        $code = <<<EOD
+/**
+ * Virtual class web services for user id $USER->id.
+ */
+class $classname {
+    $methods
+}
+EOD;
+        // Load the virtual class definition into memory.
+        eval($code);
+    }
+
+    /**
+     * Returns a virtual method code for a web service function.
+     *
+     * @param stdClass $function a record from external_function
+     * @return string The PHP code of the virtual method.
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
+    protected function get_virtual_method_code($function) {
+        $function = external_api::external_function_info($function);
+        // Parameters and their defaults for the method signature.
+        $paramanddefaults = array();
+        // Parameters for external lib call.
+        $params = array();
+        $paramdesc = array();
+        // The method's input parameters and their respective types.
+        $inputparams = array();
+        // The method's output parameters and their respective types.
+        $outputparams = array();
+        foreach ($function->parameters_desc->keys as $name => $keydesc) {
+            $param = '$' . $name;
+            $paramanddefault = $param;
+            if ($keydesc->required == VALUE_OPTIONAL) {
+                // It does not make sense to declare a parameter VALUE_OPTIONAL. VALUE_OPTIONAL is used only for array/object key.
+                throw new moodle_exception('erroroptionalparamarray', 'webservice', '', $name);
+            }
+            else if ($keydesc->required == VALUE_DEFAULT) {
+                // Need to generate the default, if there is any.
+                if ($keydesc instanceof external_value) {
+                    if ($keydesc->default === null) {
+                        $paramanddefault .= ' = null';
+                    }
+                    else {
+                        switch ($keydesc->type) {
+                         case PARAM_BOOL:
+                            $default = (int)$keydesc->default;
+                            break;
+                         case PARAM_INT:
+                            $default = $keydesc->default;
+                            break;
+                            case PARAM_FLOAT;
+                            $default = $keydesc->default;
+                            break;
+                         default:
+                            $default = "'$keydesc->default'";
+                        }
+                        $paramanddefault .= " = $default";
+                    }
+                }
+                else {
+                    // Accept empty array as default.
+                    if (isset($keydesc->default) && is_array($keydesc->default) && empty($keydesc->default)) {
+                        $paramanddefault .= ' = array()';
+                    }
+                    else {
+                        // For the moment we do not support default for other structure types.
+                        throw new MaharaException('errornotemptydefaultparamarray', 'webservice', '', $name);
+                    }
+                }
+            }
+            $params[] = $param;
+            $paramanddefaults[] = $paramanddefault;
+            $type = $this->get_phpdoc_type($keydesc);
+            $inputparams[$name]['type'] = $type;
+            $paramdesc[] = '* @param ' . $type . ' $' . $name . ' ' . $keydesc->desc;
+        }
+        $paramanddefaults = implode(', ', $paramanddefaults);
+        $paramdescstr = implode("\n ", $paramdesc);
+        $serviceclassmethodbody = $this->service_class_method_body($function, $params);
+        if (empty($function->returns_desc)) {
+            $return = '* @return void';
+        }
+        else {
+            $type = $this->get_phpdoc_type($function->returns_desc);
+            $outputparams['return']['type'] = $type;
+            $return = '* @return ' . $type . ' ' . $function->returns_desc->desc;
+        }
+        // Now create the virtual method that calls the ext implementation.
+        $code = <<<EOD
+/**
+ */
+public function $function->name($paramanddefaults) {
+    $serviceclassmethodbody
+}
+EOD;
+        // Prepare the method information.
+        $methodinfo = new stdClass();
+        $methodinfo->name = $function->name;
+        $methodinfo->inputparams = $inputparams;
+        $methodinfo->outputparams = $outputparams;
+        $methodinfo->description = ''; // $function->description;
+        // Add the method information into the list of service methods.
+        $this->servicemethods[] = $methodinfo;
+        return $code;
+    }
+
+    /**
+     * Get the phpdoc type for an external_description object.
+     * external_value => int, double or string
+     * external_single_structure => object|struct, on-fly generated stdClass name.
+     * external_multiple_structure => array
+     *
+     * @param mixed $keydesc The type description.
+     * @return string The PHP doc type of the external_description object.
+     */
+    protected function get_phpdoc_type($keydesc) {
+        $type = null;
+        if ($keydesc instanceof external_value) {
+            switch ($keydesc->type) {
+             case PARAM_BOOL: // 0 or 1 only for now.
+             case PARAM_INT:
+                $type = 'int';
+                break;
+                case PARAM_FLOAT;
+                $type = 'double';
+                break;
+             default:
+                $type = 'string';
+            }
+        }
+        else if ($keydesc instanceof external_single_structure) {
+            $type = $this->generate_simple_struct_class($keydesc);
+        }
+        else if ($keydesc instanceof external_multiple_structure) {
+            $type = 'array';
+        }
+        return $type;
+    }
+
+    /**
+     * Generates the method body of the virtual external function.
+     *
+     * @param stdClass $function a record from external_function.
+     * @param array $params web service function parameters.
+     * @return string body of the method for $function ie. everything within the {} of the method declaration.
+     */
+    protected function service_class_method_body($function, $params) {
+        // Cast the param from object to array (validate_parameters except array only).
+        $castingcode = '';
+        $paramsstr = '';
+        if (!empty($params)) {
+            foreach ($params as $paramtocast) {
+                // Clean the parameter from any white space.
+                $paramtocast = trim($paramtocast);
+                $castingcode .= "    $paramtocast = json_decode(json_encode($paramtocast), true);\n";
+            }
+            $paramsstr = implode(', ', $params);
+        }
+        $descriptionmethod = $function->methodname . '_returns()';
+        $callforreturnvaluedesc = $function->classname . '::' . $descriptionmethod;
+        $methodbody = <<<EOD
+$castingcode
+    if ($callforreturnvaluedesc == null) {
+        $function->classname::$function->methodname($paramsstr);
+        return null;
+    }
+    return external_api::clean_returnvalue($callforreturnvaluedesc, $function->classname::$function->methodname($paramsstr));
+EOD;
+        return $methodbody;
+    }
+
+    /**
+     * Generates the WSDL.
+     */
+    protected function generate_wsdl() {
+        // Initialise WSDL.
+        $this->wsdl = new wsdl($this->serviceclass, $this->serverurl);
+        // Register service struct classes as complex types.
+        foreach ($this->servicestructs as $structinfo) {
+            $this->wsdl->add_complex_type($structinfo->classname, $structinfo->properties);
+        }
+        // Register the method for the WSDL generation.
+        foreach ($this->servicemethods as $methodinfo) {
+            $this->wsdl->register($methodinfo->name, $methodinfo->inputparams, $methodinfo->outputparams, $methodinfo->description);
+        }
+    }
+
+    /**
+     * Handles the web service function call.
+     */
+    protected function handle() {
+        if ($this->wsdlmode) {
+            // Prepare the response.
+            $this->response = $this->wsdl->to_xml();
+            // Send the results back in correct format.
+            $this->send_response();
+        }
+        else {
+            $wsdlurl = clone($this->serverurl);
+            $wsdlurl->param('wsdl', 1);
+            $options = array(
+                'uri' => $this->serverurl->out(false)
+            );
+            // Initialise the SOAP server.
+            $this->soapserver = new SoapServer($wsdlurl->out(false), $options);
+            if (!empty($this->serviceclass)) {
+                $this->soapserver->setClass($this->serviceclass);
+                // Get all the methods for the generated service class then register to the SOAP server.
+                $functions = get_class_methods($this->serviceclass);
+                $this->soapserver->addFunction($functions);
+            }
+
+            // Get soap request from raw POST data.
+            $soaprequest = file_get_contents('php://input');
+            // Handle the request.
+            try {
+                $this->soapserver->handle($soaprequest);
+            }
+            catch (Exception $e) {
+                $this->fault($e);
+            }
+        }
+    }
+
+    /**
+     * Send the error information to the WS client formatted as an XML document.
+     *
+     * @param Exception $ex the exception to send back
+     */
+    protected function send_error($ex = null) {
         if ($ex) {
             $info = $ex->getMessage();
             if (isset($ex->debuginfo)) {
@@ -463,95 +447,117 @@ class webservice_soap_server extends webservice_zend_server {
             $info = 'Unknown error';
         }
 
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-<SOAP-ENV:Body><SOAP-ENV:Fault>
-<faultcode>MAHARA:error</faultcode>
-<faultstring>' . $info . '</faultstring>
-</SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>';
+        // Initialise new DOM document object.
+        $dom = new DOMDocument('1.0', 'UTF-8');
 
+        // Fault node.
+        $fault = $dom->createElement('SOAP-ENV:Fault');
+        // Faultcode node.
+        $fault->appendChild($dom->createElement('faultcode', 'MOODLE:error'));
+        // Faultstring node.
+        $fault->appendChild($dom->createElement('faultstring', $info));
+
+        // Body node.
+        $body = $dom->createElement('SOAP-ENV:Body');
+        $body->appendChild($fault);
+
+        // Envelope node.
+        $envelope = $dom->createElement('SOAP-ENV:Envelope');
+        $envelope->setAttribute('xmlns:SOAP-ENV', 'http://schemas.xmlsoap.org/soap/envelope/');
+        $envelope->appendChild($body);
+        $dom->appendChild($envelope);
+
+        $this->response = $dom->saveXML();
+        $this->send_response();
+    }
+
+    /**
+     * Send the result of function call to the WS client.
+     */
+    protected function send_response() {
         $this->send_headers();
+        echo $this->response;
+    }
+
+    /**
+     * Internal implementation - sending of page headers.
+     */
+    protected function send_headers() {
+        header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0');
+        header('Expires: ' . gmdate('D, d M Y H:i:s', 0) . ' GMT');
+        header('Pragma: no-cache');
+        header('Accept-Ranges: none');
+        header('Content-Length: ' . strlen($this->response));
         header('Content-Type: application/xml; charset=utf-8');
         header('Content-Disposition: inline; filename="response.xml"');
-
-        echo $xml;
     }
 
     /**
-     * Chance for each protocol to modify the out going
-     * raw payload - eg: SOAP encryption and signatures
+     * Generate a server fault.
      *
-     * @param string $response The raw response value
+     * Note that the parameter order is the reverse of SoapFault's constructor parameters.
      *
-     * @return content
+     * Moodle note: basically we return the faultactor (errorcode) and faultdetails (debuginfo).
+     *
+     * If an exception is passed as the first argument, its message and code
+     * will be used to create the fault object.
+     *
+     * @link   http://www.w3.org/TR/soap12-part1/#faultcodes
+     * @param  string|Exception $fault
+     * @param  string $code SOAP Fault Codes
      */
-    protected function modify_result($response) {
-        if (!empty($this->publickey)) {
-            // do sigs + encrypt
-            require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
-            $openssl = OpenSslRepo::singleton();
-            if ($this->payload_signed) {
-                // Sign and encrypt our response, even though we don't know if the
-                // request was signed and encrypted
-                $response = xmldsig_envelope($response);
+    public function fault($fault = null, $code = 'Receiver') {
+        $allowedfaultmodes = array(
+            'VersionMismatch', 'MustUnderstand', 'DataEncodingUnknown',
+            'Sender', 'Receiver', 'Server'
+        );
+        if (!in_array($code, $allowedfaultmodes)) {
+            $code = 'Receiver';
+        }
+
+        // Intercept any exceptions and add the errorcode and debuginfo (optional).
+        $actor = null;
+        $details = null;
+        $errorcode = 'unknownerror';
+        $message = get_string($errorcode);
+        if ($fault instanceof Exception) {
+            // Add the debuginfo to the exception message if debuginfo must be returned.
+            $actor = isset($fault->errorcode) ? $fault->errorcode : null;
+            $errorcode = $actor;
+            if (ws_debugging()) {
+                $message = $fault->getMessage();
+                $details = isset($fault->debuginfo) ? $fault->debuginfo : null;
             }
-            if ($this->payload_encrypted) {
-                $response = xmlenc_envelope($response, $this->publickey);
-            }
         }
-        return $response;
-    }
-
-    /**
-     * Dynamically build a container class for the callback of SOAP API
-     * funcitons.
-     *
-     * @see webservice_zend_server::generate_simple_struct_class()
-     */
-    protected function generate_simple_struct_class(external_single_structure $structdesc) {
-        global $USER;
-        // let's use unique class name, there might be problem in unit tests
-        $classname = 'webservices_struct_class_000000';
-        while (class_exists($classname)) {
-            $classname++;
+        else if (is_string($fault)) {
+            $message = $fault;
         }
 
-        $fields = array();
-        foreach ($structdesc->keys as $name => $fieldsdesc) {
-            $type = $this->get_phpdoc_type($fieldsdesc);
-            $fields[] = '    /** @var ' . $type . " */\n" .
-                        '    public $' . $name . ';';
-        }
-
-        $code = '
-/**
- * Virtual struct class for web services for user id ' . $USER->get('id') . '.
- */
-class ' . $classname . ' {
-' . implode("\n", $fields) . '
-}
-';
-        eval($code);
-        return $classname;
+        $this->soapserver->fault($code, $message . ' | ERRORCODE: ' . $errorcode, $actor, $details);
     }
 }
 
 /**
  * SOAP test client class
+ *
+ * @package    webservice_soap
+ * @copyright  2009 Petr Skodak
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since Moodle 2.0
  */
 class webservice_soap_test_client implements webservice_test_client_interface {
+
     /**
      * Execute test client WS request
-     * @param string $serverurl
-     * @param string $function
-     * @param array $params
+     *
+     * @param string $serverurl server url (including token parameter or username/password parameters)
+     * @param string $function function name
+     * @param array $params parameters of the called function
      * @return mixed
      */
     public function simpletest($serverurl, $function, $params) {
-        //zend expects 0 based array with numeric indexes
-        $params = array_values($params);
-        require_once 'Zend/Soap/Client.php';
-        $client = new Zend_Soap_Client($serverurl . '&wsdl=1');
-        return $client->__call($function, $params);
+        require_once(get_config('docroot') . '/webservice/soap/lib.php');
+        $client = new webservice_soap_client($serverurl);
+        return $client->call($function, $params);
     }
 }

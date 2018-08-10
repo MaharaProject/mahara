@@ -14,8 +14,6 @@ define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('MENUITEM', 'webservices/config');
 
-$path = get_config('docroot') . 'lib/zend';
-set_include_path($path . PATH_SEPARATOR . get_include_path());
 require_once(get_config('docroot').'webservice/lib.php');
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 define('TITLE', get_string('webservices_title', 'auth.webservice'));

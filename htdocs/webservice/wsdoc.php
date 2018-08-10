@@ -46,7 +46,7 @@ define('TITLE', get_string('function', 'auth.webservice') . ': ' . $dbfunction->
 
 $fdesc = webservice_function_info($dbfunction->name);
 
-$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+$smarty = smarty();
 safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice');
 $smarty->assign('function', $dbfunction);

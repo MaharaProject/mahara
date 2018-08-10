@@ -195,7 +195,7 @@ $inlinejs = <<<EOF
   });
 EOF;
 
-$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+$smarty = smarty();
 safe_require('auth', 'webservice');
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('token', $dbtoken->token);

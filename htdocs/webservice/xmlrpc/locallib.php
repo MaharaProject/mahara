@@ -21,93 +21,6 @@
 
 require_once(get_config('docroot') . "webservice/lib.php");
 
-require_once 'Zend/XmlRpc/Server.php';
-
-/**
-* extend XML-RPC Server to add specific functions expected to support
-* MNet
-*/
-class Zend_XmlRpc_Server_Local extends Zend_XmlRpc_Server {
-
-    /**
-     * Here we need to be able to add new functions to the call list
-     *
-     * @param array $functions
-     */
-    public function addFunctionsAsMethods($functions) {
-        foreach ($functions as $key => $function) {
-
-            // do a reflection on the function interface
-            $reflection = new Zend_Server_Reflection_Function(new ReflectionFunction($function));
-
-            // build up the method definition
-            $definition = new Zend_Server_Method_Definition();
-            $definition->setName($key)
-                       ->setCallback($this->_buildCallback($reflection))
-                       ->setMethodHelp($reflection->getDescription())
-                       ->setInvokeArguments($reflection->getInvokeArguments());
-
-            // here is where the parameters really get built up
-            foreach ($reflection->getPrototypes() as $proto) {
-                $prototype = new Zend_Server_Method_Prototype();
-                $prototype->setReturnType($this->_fixType($proto->getReturnType()));
-                foreach ($proto->getParameters() as $parameter) {
-                    $param = new Zend_Server_Method_Parameter(array(
-                        'type'     => $this->_fixType($parameter->getType()),
-                        'name'     => $parameter->getName(),
-                        'optional' => $parameter->isOptional(),
-                    ));
-                    if ($parameter->isDefaultValueAvailable()) {
-                        $param->setDefaultValue($parameter->getDefaultValue());
-                    }
-                    $prototype->addParameter($param);
-                }
-                $definition->addPrototype($prototype);
-            }
-
-            // finally add the new function definition to the available call stack
-            $this->_table->addMethod($definition, $key);
-        }
-    }
-
-        /**
-    * Generate a server fault
-    *
-    * Note that the arguments are reverse to those of Zend_XmlRpc_Server_Fault.
-    *
-    * note: the difference with the Zend server is that we throw a Zend_XmlRpc_Server_Fault exception
-    * with the debuginfo integrated to the exception message when DEBUG >= NORMAL
-    *
-    * If an exception is passed as the first argument, its message and code
-    * will be used to create the fault object if it has been registered via
-    * {@Link registerFaultException()}.
-    *
-    * @param  string|Exception $fault
-    * @param  string $code XMLRPC Fault Codes
-    * @return Zend_XmlRpc_Server_Fault
-    */
-    public function fault($fault = null, $code = 404) {
-
-        //run the zend code that clean/create a xmlrpcfault
-        $xmlrpcfault = parent::fault($fault, $code);
-
-        //intercept any exceptions and add the errorcode and debuginfo (optional)
-        $actor = null;
-        $details = null;
-        if ($fault instanceof Exception) {
-           //add the debuginfo to the exception message if debuginfo must be returned
-            if (ws_debugging() and isset($fault->debuginfo)) {
-                $details = $fault->debuginfo;
-                $xmlrpcfault = new Zend_XmlRpc_Server_Fault($fault);
-                $xmlrpcfault->setCode($fault->getCode());
-                $xmlrpcfault->setMessage($fault->getMessage() . ' | ERRORCODE: ' . $fault->getCode() . ' | DETAILS: ' . $details);
-            }
-        }
-
-        return $xmlrpcfault;
-    }
-}
-
 /**
  *  wrapper function for MNet function user_authorise
  *
@@ -357,7 +270,7 @@ function webservice_list_services() {
  * XML-RPC service server implementation.
  * @author Petr Skoda (skodak)
  */
-class webservice_xmlrpc_server extends webservice_zend_server {
+class webservice_xmlrpc_server extends webservice_base_server {
 
     private $payload_signed = false;
     private $payload_encrypted = false;
@@ -368,16 +281,16 @@ class webservice_xmlrpc_server extends webservice_zend_server {
      * @param integer $authmethod authentication method one of WEBSERVICE_AUTHMETHOD_*
      */
     public function __construct($authmethod) {
-        require_once 'Zend/XmlRpc/Server.php';
-        parent::__construct($authmethod, 'Zend_XmlRpc_Server_Local');
+        parent::__construct($authmethod);
         $this->wsname = 'xmlrpc';
     }
 
     /**
      * Chance for each protocol to modify the function processing list
      */
+    // Looks to be mapping moodle paths to their equivalent mahara functions.
+    // - do we need this anymore?
     protected function fixup_functions() {
-        // tell server what extra functions are available
         $functions = array(
                     'auth/mnet/auth.php/user_authorise' => 'webservice_mnet_user_authorise',
                     'auth/mnet/auth.php/update_enrolments' => 'webservice_mnet_update_enrolments',
@@ -401,34 +314,8 @@ class webservice_xmlrpc_server extends webservice_zend_server {
                     'system.keyswap'           => 'webservice_keyswap',
                     'system/keyswap'           => 'webservice_keyswap',
             );
-        $this->zend_server->addFunctionsAsMethods($functions);
+        return $functions;
     }
-
-    /**
-     * Set up zend service class - mainly about fault handling
-     *
-     * @return void
-     */
-    protected function init_zend_server() {
-        parent::init_zend_server();
-        // this exception indicates request failed
-        Zend_XmlRpc_Server_Fault::attachFaultException('WebserviceException');
-        Zend_XmlRpc_Server_Fault::attachFaultException('MaharaException');
-        Zend_XmlRpc_Server_Fault::attachFaultException('UserException');
-        Zend_XmlRpc_Server_Fault::attachFaultException('NotFoundException');
-        Zend_XmlRpc_Server_Fault::attachFaultException('SystemException');
-        Zend_XmlRpc_Server_Fault::attachFaultException('InvalidArgumentException');
-        Zend_XmlRpc_Server_Fault::attachFaultException('AccessDeniedException');
-        Zend_XmlRpc_Server_Fault::attachFaultException('ParameterException');
-        Zend_XmlRpc_Server_Fault::attachFaultException('WebserviceParameterException');
-        Zend_XmlRpc_Server_Fault::attachFaultException('WebserviceInvalidParameterException');
-        Zend_XmlRpc_Server_Fault::attachFaultException('WebserviceInvalidResponseException');
-        if (ws_debugging()) {
-            Zend_XmlRpc_Server_Fault::attachFaultException('Exception');
-        }
-    }
-
-
 
     /**
      * Check that the signature has been signed by the remote host.
@@ -455,128 +342,144 @@ class webservice_xmlrpc_server extends webservice_zend_server {
         throw new MaharaException('An error occurred while trying to verify your message signature', 6004);
     }
 
-
     /**
-     * For XML-RPC - we want to check for enc / sigs
-     *
-     * @return $xml
+     * This method parses the request input, it needs to get:
+     *  1/ user authentication - username+password or token
+     *  2/ function name
+     *  3/ function parameters
      */
-    protected function modify_payload() {
-        $xml = null;
-
-        // check for encryption and signatures
-        if ($this->authmethod == WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN) {
-            // we need the token so that we can find the key
-            if (!$dbtoken = get_record('external_tokens', 'token', $this->token, 'tokentype', EXTERNAL_TOKEN_PERMANENT)) {
-                // log failed login attempts
-                throw new WebserviceAccessException(get_string('invalidtoken', 'auth.webservice'));
-            }
-            // is WS-Security active ?
-            if ($dbtoken->wssigenc) {
-                $this->publickey = $dbtoken->publickey;
-            }
-        }
-        else if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
-            // get the user
-            $user = get_record('usr', 'username', $this->username);
-            if (empty($user)) {
-                throw new WebserviceAccessException(get_string('wrongusernamepassword', 'auth.webservice'));
-            }
-            // get the institution from the external user
-            $ext_user = get_record('external_services_users', 'userid', $user->id);
-            if (empty($ext_user)) {
-                throw new WebserviceAccessException(get_string('wrongusernamepassword', 'auth.webservice'));
-            }
-            // is WS-Security active ?
-            if ($ext_user->wssigenc) {
-                $this->publickey = $ext_user->publickey;
-            }
-        }
-
-        // only both if we can find a public key
-        $rawHTTPdata = file_get_contents('php://input');
-        if (!empty($this->publickey)) {
-            // A singleton provides our site's SSL info
-            require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
-            $openssl = OpenSslRepo::singleton();
-            $payload                 = $rawHTTPdata;
-            $this->payload_encrypted = false;
-            $this->payload_signed    = false;
-
-            try {
-                $xml = new SimpleXMLElement($payload);
-            } catch (Exception $e) {
-                throw new XmlrpcServerException('Payload is not a valid XML document', 6001);
-            }
-
-            // Cascading switch. Kinda.
-            try {
-                if ($xml->getName() == 'encryptedMessage') {
-                    $this->payload_encrypted = true;
-                    $xml = xmlenc_envelope_strip($xml);
-                    $payload = $xml;
-                    $xml = new SimpleXMLElement($xml);
-                }
-
-                if ($xml->getName() == 'signedMessage') {
-                    $this->payload_signed = true;
-                    $payload = $this->xmldsig_envelope_strip($xml, $this->publickey);
-                }
-
-            }
-            catch (CryptException $e) {
-                if ($e->getCode() == 7025) {
-                    // The key they used to contact us is old, respond with the new key correctly
-                    // This sucks. Error handling of our mnet code needs to improve
-                    ob_start();
-                    xmlrpc_error($e->getMessage(), $e->getCode());
-                    $response = ob_get_contents();
-                    ob_end_clean();
-
-                    // Sign and encrypt our response, even though we don't know if the
-                    // request was signed and encrypted
-                    $response = xmldsig_envelope($response);
-                    $response = xmlenc_envelope($response, $this->publickey);
-                    $payload = $response;
-                }
-            }
+    protected function parse_request() {
+        // Retrieve and clean the POST/GET parameters from the parameters specific to the server.
+        parent::set_web_service_call_settings();
+        if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
+            $this->username = isset($_GET['wsusername']) ? $_GET['wsusername'] : null;
+            $this->password = isset($_GET['wspassword']) ? $_GET['wspassword'] : null;
         }
         else {
-            $payload = $rawHTTPdata;
+            $this->token = isset($_GET['wstoken']) ? $_GET['wstoken'] : null;
         }
 
-        // if XML has been grabbed already then it must be turned into a request object
-        if ($payload) {
-            $request = new Zend_XmlRpc_Request();
-            $result = $request->loadXML($payload);
-            $payload = $request;
+        // Get the XML-RPC request data.
+        $rawpostdata = $this->fetch_input_content();
+        $methodname = null;
+        // Decode the request to get the decoded parameters and the name of the method to be called.
+        $decodedparams = xmlrpc_decode_request(trim($rawpostdata), $methodname, 'UTF-8');
+        $methodinfo = external_api::external_function_info($methodname);
+        $methodparams = array_keys($methodinfo->parameters_desc->keys);
+        $methodvariables = [];
+        // Add the decoded parameters to the methodvariables array.
+        if (is_array($decodedparams)) {
+            foreach ($decodedparams as $index => $param) {
+                // See MDL-53962 - XML-RPC requests will usually be sent as an array (as in, one with indicies).
+                // We need to use a bit of "magic" to add the correct index back. Zend used to do this for us.
+                $methodvariables[$methodparams[$index]] = $param;
+            }
         }
-        return $payload;
+        $this->functionname = $methodname;
+        $this->parameters = $methodvariables;
     }
-
     /**
-     * Chance for each protocol to modify the out going
-     * raw payload - eg: SOAP encryption and signatures
+     * Fetch content from the client.
      *
-     * @param string $response The raw response value
-     *
-     * @return content
+     * @return string
      */
-    protected function modify_result($response) {
-        if (!empty($this->publickey)) {
-            // do sigs + encrypt
-            require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
-            $openssl = OpenSslRepo::singleton();
-            if ($this->payload_signed) {
-                // Sign and encrypt our response, even though we don't know if the
-                // request was signed and encrypted
-                $response = xmldsig_envelope($response);
-            }
-            if ($this->payload_encrypted) {
-                $response = xmlenc_envelope($response, $this->publickey);
+    protected function fetch_input_content() {
+        return file_get_contents('php://input');
+    }
+    /**
+     * Prepares the response.
+     */
+    protected function prepare_response() {
+        try {
+            if (!empty($this->function->returns_desc)) {
+                $validatedvalues = external_api::clean_returnvalue($this->function->returns_desc, $this->returns);
+                $encodingoptions = array(
+                    "encoding" => "UTF-8",
+                    "verbosity" => "no_white_space",
+                    // See MDL-54868.
+                    "escaping" => ["markup"]
+                );
+                // We can now convert the response to the requested XML-RPC format.
+                $this->response = xmlrpc_encode_request(null, $validatedvalues, $encodingoptions);
             }
         }
-        return $response;
+        catch (MaharaException $ex) {
+            $this->response = $this->generate_error($ex);
+        }
+    }
+    /**
+     * Send the result of function call to the WS client.
+     */
+    protected function send_response() {
+        $this->prepare_response();
+        $this->send_headers();
+        echo $this->response;
+    }
+    /**
+     * Send the error information to the WS client.
+     *
+     * @param Exception $ex
+     */
+    protected function send_error($ex = null) {
+        $this->response = $this->generate_error($ex);
+        $this->send_headers();
+        echo $this->response;
+    }
+    /**
+     * Sends the headers for the XML-RPC response.
+     */
+    protected function send_headers() {
+        // Standard headers.
+        header('HTTP/1.1 200 OK');
+        header('Connection: close');
+        header('Content-Length: ' . strlen($this->response));
+        header('Content-Type: text/xml; charset=utf-8');
+        header('Date: ' . gmdate('D, d M Y H:i:s', 0) . ' GMT');
+        header('Server: Moodle XML-RPC Server/1.0');
+        // Other headers.
+        header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0');
+        header('Expires: '. gmdate('D, d M Y H:i:s', 0) .' GMT');
+        header('Pragma: no-cache');
+        header('Accept-Ranges: none');
+        // Allow cross-origin requests only for Web Services.
+        // This allow to receive requests done by Web Workers or webapps in different domains.
+        header('Access-Control-Allow-Origin: *');
+    }
+    /**
+     * Generate the XML-RPC fault response.
+     *
+     * @param Exception $ex The exception.
+     * @param int $faultcode The faultCode to be included in the fault response
+     * @return string The XML-RPC fault response xml containing the faultCode and faultString.
+     */
+    protected function generate_error(Exception $ex, $faultcode = 404) {
+        $error = $ex->getMessage();
+        if (!empty($ex->errorcode)) {
+            // The faultCode must be an int, so we obtain a hash of the errorcode then get an integer value of the hash.
+            $faultcode = base_convert(md5($ex->errorcode), 16, 10);
+            // We strip the $code to 8 digits (and hope for no error code collisions).
+            // Collisions should be pretty rare, and if needed the client can retrieve
+            // the accurate errorcode from the last | in the exception message.
+            $faultcode = substr($faultcode, 0, 8);
+            // Add the debuginfo to the exception message if debuginfo must be returned.
+            if (ws_debugging() and isset($ex->debuginfo)) {
+                $error .= ' | DEBUG INFO: ' . $ex->debuginfo . ' | ERRORCODE: ' . $ex->errorcode;
+            }
+            else {
+                $error .= ' | ERRORCODE: ' . $ex->errorcode;
+            }
+        }
+        $fault = array(
+            'faultCode' => (int) $faultcode,
+            'faultString' => $error
+        );
+        $encodingoptions = array(
+            "encoding" => "UTF-8",
+            "verbosity" => "no_white_space",
+            // See MDL-54868.
+            "escaping" => ["markup"]
+        );
+        return xmlrpc_encode_request(null, $fault, $encodingoptions);
     }
 }
 
@@ -592,11 +495,13 @@ class webservice_xmlrpc_test_client implements webservice_test_client_interface 
      * @return mixed
      */
     public function simpletest($serverurl, $function, $params) {
-        //zend expects 0 based array with numeric indexes
         $params = array_values($params);
 
-        require_once 'Zend/XmlRpc/Client.php';
-        $client = new Zend_XmlRpc_Client($serverurl);
+        require_once(get_config('docroot') . "webservice/mahara_url.php");
+        $url = new mahara_url($serverurl);
+        $token = $url->get_param('wstoken');
+        require_once(get_config('docroot') . '/webservice/xmlrpc/lib.php');
+        $client = new webservice_xmlrpc_client($serverurl, $token);
         return $client->call($function, $params);
     }
 }

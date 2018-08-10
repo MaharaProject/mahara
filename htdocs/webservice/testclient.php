@@ -196,8 +196,8 @@ if (!empty($authtype)) {
             }
         }
         if ($authtype == 'user') {
-            $username = param_alphanum('cancel_submit', null) ? '' : param_alphanum('wsusername', '');
-            $password = param_alphanum('cancel_submit', null) ? '' : param_alphanum('wspassword', '');
+            $username = param_alphanum('cancel_submit', null) ? '' : param_variable('wsusername', '');
+            $password = param_alphanum('cancel_submit', null) ? '' : param_variable('wspassword', '');
             $elements['wsusername'] = array('title' => 'wsusername', 'type' => 'text', 'value' => $username, 'autocomplete' => 'off');
             $elements['wspassword'] = array('title' => 'wspassword', 'type' => 'password', 'value' => $password, 'autocomplete' => 'off');
             if ($username) {
@@ -456,22 +456,22 @@ function testclient_submit(Pieform $form, $values) {
                 break;
 
             case 'soap':
-                // stop failed to load external entity error - nolonger needed as use curl to
-                // prefetch WSDL
-                libxml_disable_entity_loader(true);
                 require_once(get_config('docroot') . 'webservice/soap/lib.php');
                 //force SOAP synchronous mode
                 $client = new webservice_soap_client(get_config('wwwroot') . 'webservice/soap/server.php',
                                 ($values['authtype'] == 'token' ? array('wstoken' => $values['wstoken']) :
                                                      array('wsusername' => $values['wsusername'], 'wspassword' => $values['wspassword'])),
                                 array("features" => SOAP_WAIT_ONE_WAY_CALLS, 'stream_context' => webservice_create_context(get_config('wwwroot') . 'webservice/soap/server.php')));
-                $client->setWsdlCache(false);
                 break;
         }
 
         try {
             $results = $client->call($dbsf->functionname, $inputs);
-            $results = array('url' => $client->serverurl,
+            $url = $client->serverurl;
+            if ($client->serverurl instanceof mahara_url) {
+                $url = $client->serverurl->raw_out(false);
+            }
+            $results = array('url' => $url,
                              'results' => $results,
                              'inputs' => $inputs);
         } catch (Exception $e) {

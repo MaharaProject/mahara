@@ -489,6 +489,8 @@ function webservice_download_file_content($url, $headers=null, $postdata=null, $
     // use POST if requested
     if (is_array($postdata)) {
         $postdata = format_postdata_for_curlcall($postdata);
+    }
+    if (!empty($postdata)) {
         $options[CURLOPT_POST] = true;
         $options[CURLOPT_POSTFIELDS] = $postdata;
     }
@@ -561,7 +563,7 @@ function webservice_download_file_content($url, $headers=null, $postdata=null, $
 
         }
         else {
-            $response = new stdClass();;
+            $response = new stdClass();
             $response->status        = (string)$info['http_code'];
             $response->headers       = $received->headers;
             $response->response_code = $received->headers[0];

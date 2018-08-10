@@ -9,95 +9,38 @@
  *
  */
 
-require_once 'Zend/Soap/Client.php';
-
 /**
  * Mahara SOAP client class
  */
-class webservice_soap_client extends Zend_Soap_Client {
+class webservice_soap_client {
 
     public $serverurl;
-    public $wsdl;
-    public $wsdlfile;
-    public $connection;
+    private $token;
+    private $user;
+    private $pass;
+    private $options;
 
     /**
      * Constructor
      * @param string $serverurl
-     * @param array $auth
+     * @param array $token
      * @param array $options PHP SOAP client options - see php.net
      */
-    public function __construct($serverurl, $auth, $options = null) {
-        $this->serverurl = $serverurl;
-        $values = array();
-        foreach ($auth as $k => $v) {
-            $values[]= "$k=" . urlencode($v);
-        }
-        $values []= 'wsdl=1';
-        $this->auth = implode('&', $values);
-        $this->wsdl = $this->serverurl . "?" . $this->auth;
-
-        libxml_disable_entity_loader(true);
-        $tempfile = tempnam(sys_get_temp_dir(), "wsdl_");
-        if (($fp = fopen($tempfile, "w")) == false) {
-            throw new Exception('Could not create local WDSL file ('.$tempfile.')');
-        }
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->wsdl);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-        curl_setopt($ch, CURLOPT_FILE, $fp);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_FAILONERROR, true);
-        if (get_config('disablesslchecks')) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        }
-        else {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        }
-
-        if (($xml = curl_exec($ch)) === false) {
-            fclose($fp);
-            unlink($tempfile);
-
-            throw new Exception(curl_error($ch));
-        }
-        curl_close($ch);
-        fwrite($fp, $xml);
-        fclose($fp);
-        $this->wsdlfile = $tempfile;
-        unset($options['wdsl_local_copy']);
-        unset($options['wdsl_force_local_copy']);
-        parent::__construct($this->wsdlfile, $options);
-    }
-
-    function __destruct() {
-        unlink($this->wsdlfile);
-    }
-
-    public function set_connection($c) {
-        $this->connection = $c;
+    public function __construct($serverurl, $token = null, array $options = null) {
+        require_once(get_config('docroot') . "webservice/mahara_url.php");
+        $this->serverurl = new mahara_url($serverurl);
+        $this->token = isset($token['wstoken']) ? $token['wstoken'] : null;
+        $this->user = isset($token['wsusername']) ? $token['wsusername'] : null;
+        $this->pass = isset($token['wspassword']) ? $token['wspassword'] : null;
+        $this->options = $options ? $options : array();
     }
 
     /**
      * Set the token used to do the SOAP call
-     * @param array $auth
+     * @param array $token
      */
-    public function set_auth($auth) {
-        $values = array();
-        foreach ($auth as $k => $v) {
-            $values[]= "$k=" . urlencode($v);
-        }
-        $values []= 'wsdl=1';
-        $this->auth = implode('&', $values);
-        $this->wsdl = $this->serverurl . "?" . $this->auth;
-        $this->setWsdl($this->wsdl);
+    public function set_token($token) {
+        $this->token = $token;
     }
 
     /**
@@ -106,30 +49,50 @@ class webservice_soap_client extends Zend_Soap_Client {
      * @param array $params
      * @return mixed
      */
-    public function call($functionname, $params=array()) {
-        //zend expects 0 based array with numeric indexes
+    public function call($functionname, $params) {
+        if ($this->token) {
+            $this->serverurl->param('wstoken', $this->token);
+        }
+        else if ($this->user) {
+            $this->serverurl->param('wsusername', $this->user);
+            $this->serverurl->param('wspassword', $this->pass);
+        }
+        $this->serverurl->param('wsdl', 1);
+
+        // expect 0 based array with numeric indexes
         $params = array_values($params);
 
-        //traditional Zend soap client call (integrating the token into the URL)
-        libxml_disable_entity_loader(false);
-        $result = $this->__call($functionname, $params);
-        libxml_disable_entity_loader(true);
+        $opts = array(
+            'http' => array(
+                'user_agent' => 'Mahara SOAP Client'
+            )
+        );
+        if (get_config('productionmode') === false) {
+            $opts['ssl'] = array(
+                'verify_peer'       => false,
+                'verify_peer_name'  => false,
+                'allow_self_signed' => true
+            );
+        }
 
-        return $result;
+        $context = stream_context_create($opts);
+        $this->options['stream_context'] = $context;
+        $this->options['cache_wsdl'] = WSDL_CACHE_NONE;
+        $client = new SoapClient($this->serverurl->out(false), $this->options);
+        return $client->__soapCall($functionname, $params);
     }
-
 }
 
 /**
  * Extended SOAP client class to handle WSSE authentication extension
  *
  */
-class webservice_soap_client_wsse extends Zend_Soap_Client_Common {
+class webservice_soap_client_wsse {
 
     private $username;
     private $password;
-    public $connection;
-    public $serverurl;
+    private $options;
+    private $serverurl;
 
     /**
      * Common Soap Client constructor
@@ -139,14 +102,9 @@ class webservice_soap_client_wsse extends Zend_Soap_Client_Common {
      * @param array $options
      */
     function __construct($doRequestCallback, $wsdl, $options) {
+        require_once(get_config('docroot') . "webservice/mahara_url.php");
+        $this->serverurl = new mahara_url($wsdl);
         $this->serverurl = $wsdl;
-
-        libxml_disable_entity_loader(false);
-        parent::__construct($doRequestCallback, $wsdl, $options);
-        libxml_disable_entity_loader(true);
-    }
-    public function set_connection($c) {
-        $this->connection = $c;
     }
 
     /*Generates de WSSecurity header*/
@@ -223,18 +181,15 @@ class webservice_soap_client_wsse extends Zend_Soap_Client_Common {
     public function __soapCall($function_name, $arguments, $options=null,
             $input_headers=null, &$output_headers=null) {
 
-        $result = parent::__soapCall($function_name, $arguments, $options,
-                $this->wssecurity_header());
-
-        return $result;
+        $client = new SoapClient($this->serverurl->out(false), $this->options);
+        return $client->__soapCall($functionname, $arguments, $options, $this->wssecurity_header());
     }
 
     /**
      * internal callback overridden with one_way set to 0
-     *
-     * @see Zend_Soap_Client_Common::__doRequest()
      */
     public function __doRequest($request,$location,$action,$version,$one_way = 0) {
-        return parent::__doRequest($request,$location,$action,$version,$one_way);
+        $client = new SoapClient($this->serverurl->out(false), $this->options);
+        return $client->__doRequest($request,$location,$action,$version,$one_way);
     }
 }

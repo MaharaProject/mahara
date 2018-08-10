@@ -32,7 +32,7 @@ define('PUBLIC', 1);
 define('XMLRPC', 1);
 define('TITLE', '');
 
-// Make sure OPcache does not strip comments, we need them for Zend!
+// Make sure OPcache does not strip comments!
 if (ini_get('opcache.enable') and strtolower(ini_get('opcache.enable')) !== 'off') {
     if (!ini_get('opcache.save_comments') or strtolower(ini_get('opcache.save_comments')) === 'off') {
         ini_set('opcache.enable', 0);
