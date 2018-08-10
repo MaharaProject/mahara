@@ -137,7 +137,7 @@
             <label for="{{$name}}_search" class="plain sr-only">{{str tag='filter'}}</label>
             <div class="input-group">
                 <input id="{{$name}}_search" type="text" class="text form-control">
-                <span class="input-group-btn">
+                <span class="input-group-append">
                     <button id="{{$name}}_search_btn" type="button" class="btn btn-primary">
                     {{str tag='search'}}
                     </button>
