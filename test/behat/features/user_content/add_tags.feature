@@ -72,11 +72,17 @@ Background:
    And I expand "General" node
    And I follow "Note" in the "blocktype sidebar" property
    And I press "Add"
+   # create a note block with a Unique name (Note Block 3304)
+   And I fill in the following:
+   | Block title | Note Block 3304 |
    And I fill in select2 input "instconf_tags" with "@black" and select "@black"
    And I press "Save"
    # Creating a Text block with a tag
    And I follow "Text" in the "blocktype sidebar" property
    And I press "Add"
+   # create a text block with a Unique name (Text Block 101)
+   And I fill in the following:
+   | Block title | Text Block 101 |
    And I fill in select2 input "instconf_tags" with "ébrown" and select "ébrown"
    And I press "Save"
    # Creating an external video block with a tag
@@ -110,7 +116,7 @@ Background:
    #Check single tag
    And I follow "#orange"
    And I should see "Page UserA_02"
-   And I should not see "Note"
+   And I should not see "Text Block 101"
    #Check tags can be deleted from a page - Bug 1715491
    Given I follow "Page UserA_02"
    And I follow "Edit"
@@ -119,3 +125,26 @@ Background:
    And I press "Save"
    And I display the page
    Then I should not see "#orange"
+
+   # Create Portfolio page via tags = blue
+  Given I choose "Pages and collections" in "Create" from main menu
+  And I scroll to the base of id "addview-button"
+  And I follow "Add"
+  And I click on "Page" in the dialog
+  And I fill in the following:
+  | Page title | Create portfolio via tags feature |
+  And I fill in "Create portfolio via tags feature description" in first editor
+  # verify help text for "Create via tags" is displayed
+  And I should see "Search for or enter tags to pull content into your page automatically. If you enter more than one tag, only content that is tagged with all these tags will appear on the page. You can then re-arrange and delete blocks."
+  And I fill in select2 input "settings_createtags" with "blue" and select "blue"
+  When I press "Save"
+  Then I should see "Tagged journal entries"
+  And I should see "Plans"
+  When I follow "Settings" in the "Toolbar buttons" property
+  And I fill in select2 input "settings_createtags" with "@black" and select "@black"
+  And I press "Save"
+  Then I should see "Note Block 3304"
+  When I follow "Settings" in the "Toolbar buttons" property
+  And I fill in select2 input "settings_createtags" with "ébrown" and select "ébrown"
+  And I press "Save"
+  Then I should see "Text Block 101"
