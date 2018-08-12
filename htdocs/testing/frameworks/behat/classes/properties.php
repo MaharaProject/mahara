@@ -62,13 +62,15 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Matrix table'                              => array("#tablematrix", "css_element"),
     'Toolbar buttons'                           => array("#toolbar-buttons", "css_element"),
     'User menu'                                 => array(".icon-chevron-down.collapsed", "css_element"),
-    'Settings sub-menu'                         => array("//span[@innertext='Settings']", "xpath_element"),
-    'Settings'                                  => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Settings']", "xpath_element"),
-    'Legal'                                     => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Legal']", "xpath_element"),
+    'Signoff page'                              => array("#signoff-confirm-form", "css_element"),
+    'Verify page'                               => array("#verify-confirm-form", "css_element"),
     #xpath_elements
     'Secret urls - table row 1'   => array("//table/tbody/tr[1]/td[4]/a", "xpath_element"),
     'File Size'                   => array("//table[@id='files_filebrowser_filelist']/tbody/tr[1]/td[4]", "xpath_element"),
     'Multirecipientnotification'  => array("//li[@id='module.multirecipientnotification']", "xpath_element"),
+    'Settings sub-menu'         => array("//span[@innertext='Settings']", "xpath_element"),
+    'Settings'         => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Settings']", "xpath_element"),
+    'Legal'         => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Legal']", "xpath_element"),
     // xpath related to participation report
     'Group views report tr1 tc1'  => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[1]", "xpath_element"),
     'Group views report tr1 tc2'  => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[2]", "xpath_element"),

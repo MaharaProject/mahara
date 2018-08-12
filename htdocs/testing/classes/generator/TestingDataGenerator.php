@@ -729,7 +729,7 @@ EOD;
 
     /**
      * A fixture to set up page & collection permissions. Currently it only supports setting a blanket permission of
-     * "public", "loggedin", "friends", or "private", and allowcomments & approvecomments
+     * "public", "loggedin", "friends", "private", "user + role", and allowcomments & approvecomments
      *
      * Example:
      * Given the following "permissions" exist:
@@ -768,6 +768,7 @@ EOD;
             $accesslist = array();
         }
         else {
+            $role = null;
             switch ($record['accesstype']) {
                 case 'user':
                     $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($record['accessname']))));
@@ -776,6 +777,9 @@ EOD;
                     }
                     $id = $ids[0]->id;
                     $type = 'user';
+                    if (!empty($record['role']) && $userrole = get_field('usr_roles', 'role', 'role', $record['role'])) {
+                        $role = $userrole;
+                    }
                     break;
                 case 'public':
                 case 'friends':
@@ -789,10 +793,18 @@ EOD;
                     'startdate' => null,
                     'stopdate' => null,
                     'type' => $type,
+                    'role' => $role,
                     'id' => $id,
                 )
             );
         }
+        if (!empty($record['multiplepermissions'])) {
+            require_once('view.php');
+            $firstview = new View($viewids[0]);
+            $currentaccess = $firstview->get_access();
+            $accesslist = array_merge($currentaccess, $accesslist);
+        }
+
         $viewconfig = array(
             'startdate'       => null,
             'stopdate'        => null,

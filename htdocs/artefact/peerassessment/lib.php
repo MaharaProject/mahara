@@ -238,7 +238,6 @@ class ArtefactTypePeerassessment extends ArtefactType {
 
         if ($new) {
             insert_record('artefact_peer_assessment', $data);
-            ensure_record_exists('view_signoff_verify', (object) array('view' => $this->get('view')), (object) array('view' => $this->get('view')), 'id', true);
         }
         else {
             update_record('artefact_peer_assessment', $data, 'assessment');
@@ -363,23 +362,35 @@ class ArtefactTypePeerassessment extends ArtefactType {
 
         $where = 'pa.view = ? ';
 
-        // If the view is signed off, select public assessments
-        // or if viewing as page owner, select public assessments
-        // or if viewing as assessment author, select assessments owned by author
-        $where.= 'AND ((vsv.signoff = 1 AND pa.private = 0) ';
-        $where.= '    OR (a.author = ?)';
-        $where.= '    OR (pa.private = 0 AND a.owner = ?))';
+        // If the signoff block is also present on the page then we restrict things differently
+        $withsignoff = record_exists('block_instance', 'view', $viewid, 'blocktype', 'signoff');
+        if ($withsignoff) {
+            // If the view is signed off, select public assessments
+            // or if viewing as page owner, select public assessments
+            // or if viewing as assessment author, select assessments owned by author
+            $where.= 'AND ((vsv.signoff = 1 AND pa.private = 0) ';
+            $where.= '    OR (a.author = ?)';
+            $where.= '    OR (pa.private = 0 AND a.owner = ?))';
 
-        $values = array($viewid, $userid, $userid, $block);
+            $values = array($viewid, $userid, $userid, $block);
+            $joinsignoff = ' JOIN {view_signoff_verify} vsv ON vsv.view = pa.view ';
+        }
+        else {
+            // select assessments that are published
+            // or select assessments where the user is the author, published or not
+            $where.= 'AND ( (pa.private = 0) ';
+            $where.= '    OR (a.author = ?))';
+
+            $values = array($viewid, $userid, $block);
+            $joinsignoff = '';
+        }
 
         $result->count = count_records_sql('
             SELECT COUNT(*)
             FROM
                 {artefact} a
                 JOIN {artefact_peer_assessment} pa
-                    ON a.id = pa.assessment
-                JOIN {view_signoff_verify} vsv
-                    ON vsv.view = pa.view
+                    ON a.id = pa.assessment' . $joinsignoff . '
                 LEFT JOIN {artefact} p
                     ON a.parent = p.id
             WHERE ' . $where . '
@@ -404,8 +415,8 @@ class ArtefactTypePeerassessment extends ArtefactType {
                     $ids = get_column_sql('
                             SELECT a.id
                             FROM {artefact} a JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
-                            JOIN {view_signoff_verify} vsv ON vsv.view = pa.view
-                                LEFT JOIN {artefact} p ON a.parent = p.id
+                            ' . $joinsignoff . '
+                            LEFT JOIN {artefact} p ON a.parent = p.id
                             WHERE ' . $where . '
                             AND pa.block = ?
                             ORDER BY ' . $orderby,
@@ -435,7 +446,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
                     u.deleted, u.profileicon, u.urlid, p.id AS parent, p.author AS parentauthor
                 FROM {artefact} a
                     INNER JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
-                    JOIN {view_signoff_verify} vsv ON vsv.view = pa.view
+                    ' . $joinsignoff . '
                     LEFT JOIN {artefact} p
                         ON a.parent = p.id
                     LEFT JOIN {usr} u ON a.author = u.id
@@ -521,8 +532,12 @@ class ArtefactTypePeerassessment extends ArtefactType {
         $authors = array();
         $lastcomment = self::last_public_assessment($data->view);
         $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
+        $signedoff = null;
         foreach ($data->data as &$item) {
-
+            if ($signedoff === null) {
+                $view = new View($item->view);
+                $signedoff = self::is_signed_off($view);
+            }
             $item->ts = strtotime($item->ctime);
             $timelapse = format_timelapse($item->ts);
             $item->date = ($timelapse) ? $timelapse : format_date($item->ts, 'strftimedatetime');
@@ -554,7 +569,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
             }
 
             $submittedcheck = get_record_sql('SELECT v.* FROM {view} v WHERE v.id = ?', array($data->view), ERROR_MULTIPLE);
-            if (($candelete || ($item->isauthor && !$is_export_preview)) && $submittedcheck->submittedstatus == View::UNSUBMITTED) {
+            if (($candelete || ($item->isauthor && !$signedoff && !$is_export_preview)) && $submittedcheck->submittedstatus == View::UNSUBMITTED) {
                 $item->deleteform = pieform(self::delete_assessment_form($item->id, $item->view, $item->block));
             }
             if ($item->canedit && $submittedcheck->submittedstatus == View::UNSUBMITTED) {

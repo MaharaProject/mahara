@@ -137,6 +137,8 @@ class BehatDataGenerators extends BehatBase {
                 'accessname'       => 'text',
                 'allowcomments'    => 'bool',
                 'approvecomments'  => 'bool',
+                'role'             => 'text',
+                'multiplepermissions'   => 'bool', // Set to true if wanting to add multiple access rules to a view
             ),
             'required' => array('title', 'accesstype'),
         ),

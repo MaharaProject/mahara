@@ -1229,6 +1229,8 @@ class BlockInstance {
             return $renderedform;
         }
 
+        $notretractable = get_config_plugin('blocktype', $this->get('blocktype'), 'notretractable');
+
         safe_require('blocktype', $this->get('blocktype'));
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
         $elements = call_static_method($blocktypeclass, 'instance_config_form', $this, $this->get_view()->get('template'));
@@ -1278,21 +1280,27 @@ class BlockInstance {
                     'value' => $new,
                 ),
             ),
-            $elements,
-            array (
-                'retractable' => array(
-                    'type'         => 'select',
-                    'title'        => get_string('retractable', 'view'),
-                    'description'  => get_string('retractabledescription', 'view'),
-                    'options' => array(
-                            BlockInstance::RETRACTABLE_NO => get_string('no'),
-                            BlockInstance::RETRACTABLE_YES => get_string('yes'),
-                            BlockInstance::RETRACTABLE_RETRACTED => get_string('retractedonload', 'view')
-                    ),
-                    'defaultvalue' => $retractable + $retractedonload,
-                ),
-            )
+            $elements
         );
+
+        if (!$notretractable) {
+            $elements = array_merge(
+                $elements,
+                array (
+                    'retractable' => array(
+                        'type'         => 'select',
+                        'title'        => get_string('retractable', 'view'),
+                        'description'  => get_string('retractabledescription', 'view'),
+                        'options' => array(
+                                BlockInstance::RETRACTABLE_NO => get_string('no'),
+                                BlockInstance::RETRACTABLE_YES => get_string('yes'),
+                                BlockInstance::RETRACTABLE_RETRACTED => get_string('retractedonload', 'view')
+                        ),
+                        'defaultvalue' => $retractable + $retractedonload,
+                    ),
+                )
+            );
+        }
 
         if ($new) {
             $cancel = get_string('remove');

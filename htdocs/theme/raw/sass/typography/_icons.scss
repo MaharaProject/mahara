@@ -24,6 +24,9 @@
 .icon-peerassessment:before {
     content: $fa-var-list-alt;
 }
+.icon-signoff:before {
+    content: $fa-var-check-square-o;
+}
 .icon-fileimagevideo:before,
 .icon-video:before {
     content: $fa-var-film;

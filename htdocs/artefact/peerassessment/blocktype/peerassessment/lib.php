@@ -142,26 +142,6 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         );
     }
 
-    public static function get_instance_toolbars(BlockInstance $bi) {
-        global $USER;
-
-        $view = $bi->get_view();
-        safe_require('artefact', 'peerassessment');
-        $smarty = smarty_core();
-        $smarty->assign('WWWROOT', get_config('wwwroot'));
-        $smarty->assign('view', $view->get('id'));
-        $smarty->assign('verifiable', ArtefactTypePeerassessment::is_verifiable($view));
-        $smarty->assign('signable', ArtefactTypePeerassessment::is_signable($view));
-        $smarty->assign('verified', ArtefactTypePeerassessment::is_verified($view));
-        $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($view));
-
-        return array(
-            array(
-                'toolbarhtml' => $smarty->fetch('blocktype:peerassessment:verifyform.tpl')
-            )
-        );
-    }
-
     public static function delete_instance(BlockInstance $instance) {
         $id = $instance->get('id');
         require_once('embeddedimage.php');

@@ -146,7 +146,7 @@
     {/if}
 </div>
 
-<div id="view-description" class="view-description">
+<div id="view-description" class="view-description {if $toolbarhtml}with-toolbar{/if}">
     {$viewdescription|clean_html|safe}
 </div>
 
