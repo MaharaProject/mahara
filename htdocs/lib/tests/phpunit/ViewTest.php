@@ -121,6 +121,9 @@ class ViewTest extends MaharaUnitTest {
             $this->fail("View wasn't deleted properly!");
         }
         catch (Exception $e) {}
+
+        $fromdb = get_field('view', 'type', 'id', $todeleteid);
+        $this->assertEquals(null, $fromdb);
     }
 
     public function testView_get_artefact_instances() {

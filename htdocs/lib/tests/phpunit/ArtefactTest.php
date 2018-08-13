@@ -81,6 +81,9 @@ class ArtefactTest extends MaharaUnitTest {
             $this->fail("Artefact wasn't deleted properly!");
         }
         catch (Exception $e) {}
+
+        $fromdb = get_field('artefact', 'artefacttype', 'id', $todeleteid);
+        $this->assertEquals(null, $fromdb);
     }
 
     /**
