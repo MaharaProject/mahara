@@ -12,7 +12,7 @@
         "fabpot/goutte": ">=3.1.2",
         "guzzlehttp/guzzle": ">=6.2.1",
 
-        "phpunit/phpunit": ">=3.7.38"
+        "phpunit/phpunit": "^6.0"
     },
 
     "autoload": {

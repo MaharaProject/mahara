@@ -143,10 +143,11 @@ class WebServiceTestBase extends MaharaUnitTest {
         // construct a test service from all available functions
         $dbservice = get_record('external_services', 'name', $this->servicename);
         if (empty($dbservice)) {
-            $service = array('name' => $this->servicename, 'tokenusers' => 0, 'restrictedusers' => 0, 'enabled' => 1, 'component' => 'webservice', 'ctime' => db_format_timestamp(time()));
+            $service = array('name' => $this->servicename, 'tokenusers' => 1, 'restrictedusers' => 0, 'enabled' => 1, 'component' => 'webservice', 'ctime' => db_format_timestamp(time()));
             insert_record('external_services', $service);
             $dbservice = get_record('external_services', 'name', $this->servicename);
         }
+
         $dbfunctions = get_records_array('external_functions', null, null, 'name');
         foreach ($dbfunctions as $function) {
             $sfexists = record_exists('external_services_functions', 'externalserviceid', $dbservice->id, 'functionname', $function->name);
@@ -155,6 +156,7 @@ class WebServiceTestBase extends MaharaUnitTest {
                 insert_record('external_services_functions', $service_function);
                 $dbservice->mtime = db_format_timestamp(time());
                 update_record('external_services', $dbservice);
+                $sfexists = record_exists('external_services_functions', 'externalserviceid', $dbservice->id, 'functionname', $function->name);
             }
         }
 
@@ -176,11 +178,10 @@ class WebServiceTestBase extends MaharaUnitTest {
         $this->consumer = (object) $store->getConsumer($this->consumer_key, $dbuser->id);
 
         // Now do the request and access token
-        $this->request_token  = $store->addConsumerRequestToken($this->consumer_key, array());
+        $this->request_token  = $store->addConsumerRequestToken($this->consumer_key, array('token_ttl' => 50000));
 
         // authorise
         $verifier = $store->authorizeConsumerRequestToken($this->request_token['token'], $dbuser->id, 'localhost');
-
         // exchange access token
         $options = array();
         $options['verifier'] = $verifier;
