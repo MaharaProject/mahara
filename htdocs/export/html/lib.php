@@ -365,6 +365,7 @@ class PluginExportHtml extends PluginExport {
             $this->notify_progress_callback(intval($progressstart + (++$i / $viewcount) * ($progressend - $progressstart)), get_string('exportingviewsprogress', 'export', $i, $viewcount));
             $smarty->assign('page_heading', $view->get('title'));
             $smarty->assign('viewdescription', $view->get('description'));
+            $smarty->assign('viewinstructions', $view->get('instructions'));
 
             if ($this->exportingoneview) {
                 $smarty->assign('nobreadcrumbs', true);

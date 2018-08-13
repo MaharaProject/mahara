@@ -13,6 +13,7 @@
 {/if}
 
 <p id="view-description">{$viewdescription|clean_html|safe}</p>
+<p id="view-instructions">{$viewinstructions|clean_html|safe}</p>
 
 {$view|safe}
 

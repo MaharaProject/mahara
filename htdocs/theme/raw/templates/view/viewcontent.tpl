@@ -8,6 +8,9 @@
     <p class="view-description">
         {$viewdescription|clean_html|safe}
     </p>
+    <p class="view-instructions">
+        {$viewinstructions|clean_html|safe}
+    </p>
     <div id="view" class="view-container">
         <div id="bottom-pane">
             <div id="column-container">

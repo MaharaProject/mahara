@@ -1046,6 +1046,14 @@ class PluginImportLeap extends PluginImport {
         );
         $view->set('description', $newdescription);
 
+        $newinstructions = EmbeddedImage::rewrite_embedded_image_urls_from_import(
+            $view->get('instructions'),
+            $this->artefactids,
+            'instructions',
+            $view->get('id')
+        );
+        $view->set('instructions', $newinstructions);
+
         if (isset($viewdata->ctime)) {
             $view->set('ctime', $viewdata->ctime);
         }
@@ -1165,7 +1173,6 @@ class PluginImportLeap extends PluginImport {
         $smarty->assign('entryviews', $entryviews);
         return $smarty->fetch('import/views.tpl');
     }
-
 
     /**
      * Logic for processing an $entry into a Mahara view.
@@ -1327,28 +1334,16 @@ class PluginImportLeap extends PluginImport {
         }
 
         // Extract the view description in the entry 'summary'
-        // A description may be wrapped in XHTML div
+        // and view instructions in entry 'subtitle'
+        // A description/instructions may be wrapped in XHTML div
         // See more PluginExportLeap::parse_xhtmlish_content()
-        $description = '';
-        if ((string) $entry->summary['type'] === 'xhtml'
-            || (string) $entry->summary['type'] === 'html'
-            ) {
-            $summaryelements =
-                ((string) $entry->summary['type'] === 'xhtml'
-                && $entry->summary->div->div) ?
-                $entry->summary->div->div
-                : $entry->summary;
-            $summarychildren = $summaryelements->children();
-            foreach ($summarychildren as $c) {
-                $description .= $c->asXML();
-            }
-        }
-        else {
-            $description = (string)$entry->summary;
-        }
+        $description = $this->extract_view_entry_field($entry->summary);
+        $instructions = $this->extract_view_entry_field($entry->subtitle);
+
         $config = array(
             'title'       => (string)$entry->title,
             'description' => $description,
+            'instructions' => $instructions,
             'type'        => $type,
             'layout'      => $layout->id,
             'tags'        => self::get_entry_tags($entry),
@@ -1418,6 +1413,32 @@ class PluginImportLeap extends PluginImport {
         } //rows
 
         return $config;
+    }
+
+    /**
+     * Extracts html from an entry XML element field.
+     * @param SimpleXMLElement $entry field
+     * @return array entry data as html/xhtml
+     */
+    private function extract_view_entry_field(SimpleXMLElement $xmlentryfield) {
+        $fieldtext = '';
+        if ((string) $xmlentryfield['type'] === 'xhtml'
+            || (string) $xmlentryfield['type'] === 'html'
+            ) {
+            $entryelements =
+                ((string) $xmlentryfield['type'] === 'xhtml'
+                && $xmlentryfield->div->div) ?
+                $xmlentryfield->div->div
+                : $xmlentryfield;
+            $entrychildren = $entryelements->children();
+            foreach ($entrychildren as $c) {
+                $fieldtext .= $c->asXML();
+            }
+        }
+        else {
+            $fieldtext = (string)$xmlentryfield;
+        }
+        return $fieldtext;
     }
 
     /**

@@ -6040,10 +6040,12 @@ class View {
         if ($template->get('template') == self::SITE_TEMPLATE
             && $template->get('type') == 'portfolio') {
             $this->set('description', '');
+            $this->set('instructions', '');
         }
         else {
             require_once('embeddedimage.php');
-            $this->set('description', EmbeddedImage::prepare_embedded_images($this->copy_description($template, $artefactcopies), 'description', $this->get('id')));
+            $this->set('description', EmbeddedImage::prepare_embedded_images($this->copy_setting_info($template, $artefactcopies, 'description'), 'description', $this->get('id')));
+            $this->set('instructions', EmbeddedImage::prepare_embedded_images($this->copy_setting_info($template, $artefactcopies, 'instructions'), 'instructions', $this->get('id')));
         }
         $this->set('tags', $template->get('tags'));
         $this->set('columnsperrow', $template->get('columnsperrow'));
@@ -6098,20 +6100,21 @@ class View {
     }
 
     /**
-     * Copy the description of the view template
+     * Copy the description/instructions field of the view template
      * and its embedded image artefacts
      *
      * @param View $template the view template
      * @param array &$artefactcopies the artefact mapping
-     * @return string updated description
+     * @param string $type contains 'description' or 'instructions'
+     * @return string updated field
      */
-    private function copy_description(View $template, array &$artefactcopies) {
+    private function copy_setting_info(View $template, array &$artefactcopies, $type) {
         safe_require('artefact', 'file');
-        $new_description = $template->get('description');
-        if (!empty($new_description)
-            && strpos($new_description, 'artefact/file/download.php?file=') !== false) {
+        $new_setting_field = $template->get($type);
+        if (!empty($new_setting_field)
+            && strpos($new_setting_field, 'artefact/file/download.php?file=') !== false) {
             // Get all possible embedded artefacts
-            $artefactids = array_unique(artefact_get_references_in_html($new_description));
+            $artefactids = array_unique(artefact_get_references_in_html($new_setting_field));
             // Copy these image artefacts
             foreach ($artefactids as $aid) {
                 try {
@@ -6128,11 +6131,11 @@ class View {
                     $artefactcopies[$aid]->newid = $a->copy_for_new_owner(
                         $this->get('owner'),
                         $this->get('group'),
-                        $this->get('institution')
+                        $this->get($type)
                     );
                 }
             }
-            // Update the image urls in the description
+            // Update the image urls in the settings field
             if (!empty($artefactcopies)) {
                 $regexp = array();
                 $replacetext = array();
@@ -6149,10 +6152,10 @@ class View {
                             . 'artefact/file/download.php?file=' . $newobj->newid
                             . '&embedded=1"';
                 }
-                $new_description = preg_replace($regexp, $replacetext, $new_description);
+                $new_setting_field = preg_replace($regexp, $replacetext, $new_setting_field);
             }
         }
-        return $new_description;
+        return $new_setting_field;
     }
 
     /**

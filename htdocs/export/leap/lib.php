@@ -269,13 +269,26 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('updated',     self::format_rfc3339_date(strtotime($view->get('mtime'))));
             $this->smarty->assign('created',     self::format_rfc3339_date(strtotime($view->get('ctime'))));
             $content = $config['description'];
+
             if ($newcontent = self::parse_xhtmlish_content($content)) {
                 $this->smarty->assign('summarytype', 'xhtml');
                 $this->smarty->assign('summary',     clean_html($newcontent, true));
-            } else {
+            }
+            else {
                 $this->smarty->assign('summarytype', 'text');
                 $this->smarty->assign('summary',     clean_html($content));
             }
+
+            $instructions = $config['instructions'];
+            if ($newinstructions = self::parse_xhtmlish_content($instructions)) {
+                $this->smarty->assign('instructionstype', 'xhtml');
+                $this->smarty->assign('instructions',     clean_html($newinstructions, true));
+            }
+            else {
+                $this->smarty->assign('instructionstype', 'text');
+                $this->smarty->assign('instructions',     clean_html($instructions));
+            }
+
             $this->smarty->assign('contenttype', 'xhtml');
             if ($viewcontent = self::parse_xhtmlish_content($view->build_rows(false, true), $view->get('id'))) {
                 $this->smarty->assign('content', clean_html($viewcontent, true));
