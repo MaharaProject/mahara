@@ -19,5 +19,5 @@ $config = new stdClass();
 $config->version = 2017092620;
 $config->series = '17.10';
 $config->release = '17.10.7testing';
-$config->minupgradefrom = 2015030409;
-$config->minupgraderelease = '15.04.0 (release tag 15.04.0_RELEASE)';
+$config->minupgradefrom = 2017031605;
+$config->minupgraderelease = '17.04.0 (release tag 17.04.0_RELEASE)';
