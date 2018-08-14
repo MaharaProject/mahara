@@ -49,3 +49,5 @@ $string['clickformore'] = '(Press \'Enter\' to display more information)';
 $string['labelsearch']          = 'Search';
 $string['labelall']             = 'All';
 $string['labelmessage']         = 'Message';
+
+$string['multirecipientnotificationnotenabled'] = 'The module multirecipientnotifications needs to be installed and active. If you are upgrading Mahara from a version older than 16.10.0 please upgrade to this point first and make sure the module is installed and active by visiting "Administration menu" → "Extensions".';
