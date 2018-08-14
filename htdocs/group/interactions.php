@@ -27,7 +27,7 @@ define('TITLE', get_string('groupinteractions', 'group'));
 
 $interactiontypes = array_flip(
     array_map(
-        create_function('$a', 'return $a->name;'),
+        function($a) { return $a->name; },
         plugins_installed('interaction')
     )
 );

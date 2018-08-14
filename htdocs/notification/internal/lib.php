@@ -131,7 +131,7 @@ class PluginNotificationInternal extends PluginNotification {
             AND "read" = 1
             AND type IN(
                 SELECT id FROM {activity_type}
-                WHERE name IN (' . join(",", array_map(create_function('$a', 'return db_quote($a);'), $types)) . '))';
+                WHERE name IN (' . join(",", array_map(function($a) { return db_quote($a); }, $types)) . '))';
 
         delete_records_select('notification_internal_activity', $select, array(db_format_timestamp($staletime)));
     }

@@ -2264,7 +2264,7 @@ class View {
         static $installed = array();
         if (empty($installed)) {
             $installed = plugins_installed('blocktype');
-            $installed = array_map(create_function('$a', 'return $a->name;'), $installed);
+            $installed = array_map(function($a) { return $a->name; }, $installed);
         }
 
         $blockcontent = '';

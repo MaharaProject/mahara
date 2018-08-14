@@ -280,7 +280,7 @@ class PluginImportLeap extends PluginImport {
         global $USER;
 
         $html = '<form name="ier" method="POST" action="">';
-        $installedplugins = array_map(create_function('$a', 'return $a->name;'), plugins_installed('artefact'));
+        $installedplugins = array_map(function($a) { return $a->name; }, plugins_installed('artefact'));
         $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans', 'annotation');
         foreach ($orderedimportplugins as $plugin) {
             if (!in_array($plugin, $installedplugins)) {
@@ -310,7 +310,7 @@ class PluginImportLeap extends PluginImport {
      * @param $method    method name
      */
     public function call_import_method_plugins($method) {
-        $installedplugins = array_map(create_function('$a', 'return $a->name;'), plugins_installed('artefact'));
+        $installedplugins = array_map(function($a) { return $a->name; }, plugins_installed('artefact'));
         $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans', 'annotation', 'comment');
         foreach ($orderedimportplugins as $plugin) {
             if (!in_array($plugin, $installedplugins)) {
@@ -626,8 +626,8 @@ class PluginImportLeap extends PluginImport {
         // NOTE: the strategy listing should already have the strategies for
         // each entry sorted from highest to lowest score. If it doesn't, these
         // two sorts fix that, but this should never happen.
-        //usort($a, create_function('$a, $b', 'return $a["score"] < $b["score"];'));
-        //usort($b, create_function('$a, $b', 'return $a["score"] < $b["score"];'));
+        //usort($a, function($a, $b) { return $a["score"] < $b["score"]; });
+        //usort($b, function($a, $b) { return $a["score"] < $b["score"]; });
         return $a[0]['score'] < $b[0]['score'];
     }
 
@@ -1385,7 +1385,7 @@ class PluginImportLeap extends PluginImport {
                     $this->trace("  Found block with type {$attrs['blocktype']} at [$rowindex][$colindex][$order]", self::LOG_LEVEL_VERBOSE);
 
                     if ($blocktypes_installed === null) {
-                        $blocktypes_installed = array_map(create_function('$a', 'return $a->name;'), plugins_installed('blocktype'));
+                        $blocktypes_installed = array_map(function($a) { return $a->name; }, plugins_installed('blocktype'));
                     }
 
                     if (in_array($attrs['blocktype'], $blocktypes_installed)) {

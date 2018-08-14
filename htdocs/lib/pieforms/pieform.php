@@ -233,7 +233,7 @@ class Pieform {/*{{{*/
         }
 
         $this->data['configdirs'] = array_map(
-            create_function('$a', 'return substr($a, -1) == "/" ? substr($a, 0, -1) : $a;'),
+            function($a) { return substr($a, -1) == "/" ? substr($a, 0, -1) : $a; },
             (array) $this->data['configdirs']);
 
 

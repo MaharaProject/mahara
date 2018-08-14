@@ -2058,7 +2058,7 @@ function get_users_data($userids, $getviews=true) {
 
 function build_userlist_html(&$data, $page, $admingroups) {
     if ($data['data']) {
-        $userlist = array_map(create_function('$u','return (int)$u[\'id\'];'), $data['data']);
+        $userlist = array_map(function($u) { return (int)$u['id']; }, $data['data']);
         $userdata = get_users_data($userlist, $page == 'myfriends');
     }
     $smarty = smarty_core();
@@ -3083,7 +3083,7 @@ function get_onlineusers($limit=10, $offset=0, $orderby='firstname,lastname') {
     else {
         $onlineusers = array();
     }
-    $result['data'] = array_map(create_function('$a', 'return $a->id;'), $onlineusers);
+    $result['data'] = array_map(function($a) { return $a->id; }, $onlineusers);
 
     return $result;
 }

@@ -1708,7 +1708,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         return;
     }
 
-    $groupids = array_map(create_function('$a', 'return $a->id;'), $groups);
+    $groupids = array_map(function($a) { return $a->id; }, $groups);
     $groupadmins = group_get_admins($groupids);
 
     $i = 0;
@@ -1778,7 +1778,7 @@ function build_grouplist_html($query, $limit, $offset, &$count=null, $institutio
     $groups = search_group($query, $limit, $offset, 'all', '', $institution);
     $count = $groups['count'];
 
-    if ($ids = array_map(create_function('$a', 'return intval($a->id);'), $groups['data'])) {
+    if ($ids = array_map(function($a) { return intval($a->id); }, $groups['data'])) {
         $sumsql = "(m.role = 'admin')";
         if (is_postgres()) {
             $sumsql .= '::int';
@@ -1960,7 +1960,7 @@ function group_get_grouptypes() {
 function group_get_grouptype_options($currentgrouptype=null) {
     $groupoptions = array();
     $grouptypes = group_get_grouptypes();
-    $enabled = array_map(create_function('$a', 'return $a->name;'), plugins_installed('grouptype'));
+    $enabled = array_map(function($a) { return $a->name; }, plugins_installed('grouptype'));
     if (is_null($currentgrouptype) || in_array($currentgrouptype, $enabled)) {
         $grouptypes = array_intersect($enabled, $grouptypes);
     }

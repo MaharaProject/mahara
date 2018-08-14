@@ -317,7 +317,8 @@ class User {
      */
     protected function populate($data) {
         reset($this->defaults);
-        while(list($key, ) = each($this->defaults)) {
+        $keys = array_keys($this->defaults);
+        foreach ($keys as $key) {
             if (property_exists($data, $key)) {
                 $this->set($key, $data->{$key});
             }
@@ -1627,7 +1628,8 @@ class LiveUser extends User {
 
         if ($this->SESSION->is_live()) {
             $this->authenticated  = true;
-            while(list($key,) = each($this->defaults)) {
+            $keys = array_keys($this->defaults);
+            foreach ($keys as $key) {
                 $this->get($key);
             }
         }

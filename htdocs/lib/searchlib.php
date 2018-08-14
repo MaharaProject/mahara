@@ -977,7 +977,7 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
     );
 
     if ($results['count']) {
-        $userids = array_map(create_function('$a', 'return $a["id"];'), $results['data']);
+        $userids = array_map(function($a) { return $a["id"];}, $results['data']);
         $introductions = get_records_sql_assoc("SELECT \"owner\", description
             FROM {artefact}
             WHERE artefacttype = 'introduction'

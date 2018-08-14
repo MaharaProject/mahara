@@ -61,7 +61,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         // Export all profile fields except 'socialprofile'
         unset($elementlist['socialprofile']);
         $profilefields = get_column_sql('SELECT id FROM {artefact} WHERE "owner" = ? AND artefacttype IN ('
-            . join(",",array_map(create_function('$a','return db_quote($a);'), array_keys($elementlist)))
+            . join(",",array_map(function($a) { return db_quote($a); }, array_keys($elementlist)))
             . ")", array($this->exporter->get('user')->get('id')));
         foreach ($profilefields as $id) {
             $artefact = artefact_instance_from_id($id);
@@ -92,7 +92,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
 
         // Sort the data and then drop the weighting information
         foreach ($sections as &$section) {
-            uasort($section, create_function('$a, $b', 'return $a["weight"] > $b["weight"];'));
+            uasort($section, function($a, $b) { return $a["weight"] > $b["weight"]; });
             foreach ($section as &$data) {
                 $data = $data['html'];
             }
