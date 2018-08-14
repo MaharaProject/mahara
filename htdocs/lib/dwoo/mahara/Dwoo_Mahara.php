@@ -8,6 +8,12 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
+namespace Mahara;
+
+use Dwoo\Core as Core;
+use Dwoo\Template\File as TemplateFile;
+use Dwoo\ITemplate as ITemplate;
+use Dwoo\Compiler as Compiler;
 
 // loading all dependencies
 require 'Dwoo_Template_Mahara.php';
@@ -18,7 +24,7 @@ require 'Dwoo_Template_Mahara.php';
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class Dwoo_Mahara extends Dwoo {
+class Dwoo_Mahara extends Core {
 
     /**
      * stores the data in the dwoo object, smarty style
@@ -126,10 +132,10 @@ class Dwoo_Mahara extends Dwoo {
     /**
      * returns a compiler object when one is required
      *
-     * @return Dwoo_Compiler
+     * @return Compiler
      */
     public function compilerFactory() {
-        $compiler = Dwoo_Compiler::compilerFactory();
+        $compiler = Compiler::compilerFactory();
 
         $compiler->setDelimiters($this->left_delimiter, $this->right_delimiter);
         $compiler->setAutoEscape(true);
@@ -145,14 +151,15 @@ class Dwoo_Mahara extends Dwoo {
      * @param int $cacheTime the cache time setting for this resource
      * @param string $cacheId the unique cache identifier
      * @param string $compileId the unique compiler identifier
-     * @return Dwoo_ITemplate
+     * @param ITemplate $parentTemplate the parent template
+     * @return ITemplate
      */
-    public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null) {
+    public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null) {
         if ($resourceName != 'file') {
             return new Dwoo_Template_Mahara("{$resourceName}:{$resourceId}", $cacheTime, $cacheId, $compileId, $this->template_dir);
         }
         else {
-            return new Dwoo_Template_File($resourceId, $cacheTime, $cacheId, $compileId, $this->template_dir);
+            return new TemplateFile($resourceId, $cacheTime, $cacheId, $compileId, $this->template_dir);
         }
     }
 }

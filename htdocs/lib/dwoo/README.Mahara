@@ -2,10 +2,49 @@ Dwoo in Mahara
 ======================
 
 Website: http://www.dwoo.org/
-Version: 1.2.0
+Version: 1.3.7
 
 This library is used for all the templating.
 
 Changes:
 
- * Make dwoo PHP7 compatable by fixing dynamic property references
+Move lib/Dwoo from the downloaded plugin to htdocs/lib/dwoo/Dwoo
+replace the CHANGELOG, README and LICENSE.md files with the new ones.
+We don't need .gitlab-ci.yml or travis.yml.
+
+You can delete the rest of the plugin (/tests, lib/cache/, lib/compiled).
+
+Copy the mahara directory from the previous version to htdocs/lib/dwoo/mahara.
+
+
+We pushed the composer autoloaded files in the /vendor directory and git ignored the
+composer.json. This was as a workaround to stop the Makefile needing to do the composer
+autoload, which it failed to do on Jenkins and wasn't easy to resolve.
+So to upgrade dwoo, you'll either need to resolve the composer issue or do what
+we did:
+add this to the composer.json:
+    "autoload": {
+        "psr-4": {
+            "Mahara\\": "dwoo/mahara/"
+        }
+    }
+We don't need to autoload the tests file (we deleted it) or to require phpunit or PHP,
+so you can remove those bits from the composer.json.
+
+To recompile the classpaths:
+cd htdocs/lib/dwoo
+composer dump-autoload -o
+
+Then remove the hashes from the auto-generated /vendor files: E.g.
+ComposerAutoloaderInit26e38f1cfb40040c9ff6097c09aee6d7::getLoader();
+becomes ComposerAutoloaderInit::getLoader();
+
+I found a bug in /Dwoo/Template/Str.php
+ This looks like a check for Windows OS, but 0 in strpos is a position,
+    so it runs if WIN is not in position 0. I changed it to false to stop
+    the following error on upgrade:
+    Unable to chmod /var/lib/maharadata/1704stable/dwoo/compile/raw/var/ to 511:
+    Array, referer: http://mahara/admin/upgrade.php
+line 524: if (strpos(PHP_OS, 'WIN') !== 0 && $baseDir !== null) {}
+replaced with:
+   if (strpos(PHP_OS, 'WIN') !== false && $baseDir !== null) {
