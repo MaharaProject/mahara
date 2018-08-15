@@ -14,6 +14,13 @@ Feature: Mahara users can create their blogs
 
  Scenario: Create blogs
   Given I log in as "UserA" with password "Kupuh1pa!"
+    # Confirm page contains text "No entries yet. Add one". (Bug 1017785)
+    When I choose "Journals" in "Content" from main menu
+    Then I should see "No entries yet."
+    # Confirm page contains link "Add one" that links to Create new Journal page. (Bug 1017785)
+    When I follow "Add one"
+    Then I should see "New journal entry in journal"
+    And I move backward one page
   And I choose "Settings" in "Setting" from user menu
   And I fill in the following:
     | tagssideblockmaxtags | 10 |
