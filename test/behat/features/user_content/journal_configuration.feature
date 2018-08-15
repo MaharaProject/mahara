@@ -64,6 +64,12 @@ Scenario: Creating a Journal entry
  When I choose "My groups" in "Groups" from main menu
  And I follow "GroupA"
  And I follow "Journals" in the "Arrow-bar nav" property
+ # Confirm page contains text "There are no journals in this group" (Bug 1017785)
+ Then I should see "There are no journals in this group."
+ # Confirm page contains link "Add one" that links to Create new Journal page. (Bug 1017785)
+ When I follow "Add one"
+ Then I should see "New journal | GroupA"
+ And I move backward one page
  And I follow "Create journal"
  And I fill in "Title *" with "My group journal"
  And I press "Create journal"
