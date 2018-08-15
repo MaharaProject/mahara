@@ -24,7 +24,7 @@
                     </a>
                 </h4>
             </legend>
-            <div class="fieldset-body collapse {if (!($privacy->agreed && $ignoreagreevalue) || $ignoreformswitch)}in{/if}"
+            <div class="fieldset-body collapse {if (!($privacy->agreed && $ignoreagreevalue) || $ignoreformswitch)}show{/if}"
               {if $institutionprivacy}
                   id="dropdowninstprivacy">
               {elseif $institutionterms}

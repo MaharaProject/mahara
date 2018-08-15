@@ -31,7 +31,7 @@
             </a>
         </h2>
 
-        <div id="message-{$message->id}" class=" message-wrap collapse {if $dwoo.foreach.message.last}in{/if}">
+        <div id="message-{$message->id}" class=" message-wrap collapse {if $dwoo.foreach.message.last}show{/if}">
             <div class="message-content card-body">
                 <p class="recipients">
                     <strong>
