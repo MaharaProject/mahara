@@ -1135,8 +1135,7 @@ class View {
                     || ($c = strcmp($a->startdate, $b->startdate))
                     || ($c = !empty($a->stopdate) - !empty($b->stopdate))
                     || ($c = strcmp($a->stopdate, $b->stopdate))
-                    || ($c = $a->allowcomments - $b->allowcomments)
-                    || ($c = $a->lockblocks - $b->lockblocks)) {
+                    || ($c = $a->allowcomments - $b->allowcomments)) {
                     return $c;
                 }
                 return $a->approvecomments - $b->approvecomments;
