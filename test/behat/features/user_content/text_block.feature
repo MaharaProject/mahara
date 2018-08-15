@@ -18,8 +18,10 @@ Scenario: Create and delete text block
     And I choose "Pages and collections" in "Portfolio" from main menu
     And I click on "Page UserA_01" panel menu
     And I click on "Edit" in "Page UserA_01" panel menu
-    And I follow "Text"
-    And I press "Add"
+    When I follow "Text"
+    # Confirm modal window has a Legend of "Cell" just above the grey blocks  (Bug 1482471)
+    Then I should see "Cell" in the "legend" element
+    When I press "Add"
     And I set the field "Block title" to "Text block 1"
     And I set the field "Block content" to "Here is a new block."
     And I press "Save"
