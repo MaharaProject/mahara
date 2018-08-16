@@ -1,0 +1,13 @@
+Fancybox in Mahara
+==================
+
+Website: https://fancyapps.com/fancybox/3/
+Version: 3.3.5
+
+Installation:
+
+* Copied the dist/jquery.fancybox.min.js and dist/jquery.fancybox.min.css to here
+
+Changes:
+
+* None

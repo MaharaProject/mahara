@@ -32,8 +32,8 @@ $string['showdescriptionsdescription'] = 'Select to caption each image with its 
 $string['cannotdisplayslideshow'] = 'Cannot display slideshow.';
 
 $string['gallerysettings'] = 'Gallery settings';
-$string['useslimbox2'] = 'Use Slimbox 2';
-$string['useslimbox2desc2'] = 'Use Slimbox 2 in your gallery. When you click on images in your gallery, they will open in an overlay on the current page.';
+$string['usefancybox'] = 'Use Fancybox 3';
+$string['usefancyboxdesc'] = 'Use Fancybox 3 in your gallery. When you click on images in your gallery, they will open in an overlay on the current page.';
 $string['photoframe'] = 'Use photo frame';
 $string['photoframedesc2'] = 'Show a frame around the thumbnail of each photo in the gallery.';
 $string['previewwidth'] = 'Maximum photo width';
@@ -63,3 +63,16 @@ $string['picasaalbums'] = 'Picasa albums';
 $string['windowslivephotoalbums'] = 'Windows Live photo gallery albums';
 
 $string['externalnotsupported'] = 'The external URL you provided is not supported';
+
+// Fancybox 3
+$string['CLOSE'] = "Close";
+$string['NEXT'] = "Next";
+$string['PREV'] = "Previous";
+$string['ERROR'] = "The requested content cannot be loaded. <br/> Please try again later.";
+$string['PLAY_START'] = "Start slideshow";
+$string['PLAY_STOP'] = "Pause slideshow";
+$string['FULL_SCREEN'] = "Full screen";
+$string['THUMBS'] = "Thumbnails";
+$string['DOWNLOAD'] = "Download";
+$string['SHARE'] = "Share";
+$string['ZOOM'] = "Zoom";

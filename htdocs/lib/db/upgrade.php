@@ -6000,5 +6000,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018081000) {
+        log_debug('Update gallery plugin to use Fancybox');
+        execute_sql("DELETE FROM {blocktype_config} WHERE plugin = 'gallery' AND field = 'photoframe'");
+        execute_sql("UPDATE {blocktype_config} SET field = 'usefancybox' WHERE plugin = 'gallery' AND field = 'useslimbox2'");
+    }
+
     return $status;
 }

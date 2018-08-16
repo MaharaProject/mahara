@@ -276,15 +276,6 @@ if (!$view->is_public()) {
     $headers[] = '<meta name="robots" content="noindex">';  // Tell search engines not to index non-public views
 }
 
-// include slimbox2 js and css files, if it is enabled...
-if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
-    $langdir = (get_string('thisdirection', 'langconfig') == 'rtl' ? '-rtl' : '');
-    $headers = array_merge($headers, array(
-        '<script type="application/javascript" src="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/js/slimbox2.js') . '"></script>',
-        '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/css/slimbox2' . $langdir . '.css') . '">'
-    ));
-}
-
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
 $can_copy = $view->is_copyable();
 

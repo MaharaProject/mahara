@@ -264,13 +264,23 @@
 .thumbnails {
     padding-top: 20px;
     .thumb {
-        margin: 5px;
+        margin: 5px 0px 10px 5px;
     }
 }
 .thumbnail {
     margin: 0 15px 0 0;
     .panel-body & {
         margin-bottom: 10px;
+    }
+}
+.bt-gallery,
+.bt-gallery-editor {
+    img.frame {
+        padding: 3px;
+        margin: 0;
+        border: 1px solid #ccc;
+        background: #fff;
+        box-shadow: 0 0 0 4px #fff, 0 0 1px 4px #333;
     }
 }
 
