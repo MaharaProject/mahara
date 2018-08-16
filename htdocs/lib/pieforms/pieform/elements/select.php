@@ -177,12 +177,11 @@ function pieform_element_select(Pieform $form, $element) {
 
 function pieform_element_select_render_options($options, $values, &$optionselected, $element) {
     $result = '';
-
     foreach ($options as $key => $value) {
         // Select the element if it's in the values or if there are no values
         // and this is the first option
+        $stringvalue = !is_array($values) && (string)$key === (string)$values;
 
-        $stringvalue = !is_array($values) && $key == $values;
         $inarrayvalue = is_array($values) && in_array($key, $values);
         $firstoption = isset($values[0]) && $values[0] === null && !$optionselected;
 

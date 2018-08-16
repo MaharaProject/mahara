@@ -74,6 +74,7 @@ Scenario: SmartEvidence interaction by member / staff
 
     # Log in as admin/staff to assess the collection pages and make comments
     Given I log in as "UserB" with password "Kupuh1pa!"
+    And I wait "1" seconds
     And I follow "Smart Evidence Collection 1"
     # Admin/staff selects the competencies ready for assessment and makes an annotation
     # And sets the standard status
