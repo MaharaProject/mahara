@@ -69,6 +69,8 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Group views report tr1 tc1'  => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[1]", "xpath_element"),
     'Group views report tr1 tc2'  => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[2]", "xpath_element"),
     'Group views report tr1 tc3'  => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[3]", "xpath_element"),
+    'First Legal'     => array("//a[contains(@href, 'fs=privacy')]/b", "xpath_element"),
+    'Second Legal'    => array("//a[contains(@href, 'fs=termsandconditions')]/b", "xpath_element"),
     'Group views report tr3 tc1'  => array("//*[@id='groupviewsreport']/tbody/tr[3]/td[1]", "xpath_element"),
     )));
 
