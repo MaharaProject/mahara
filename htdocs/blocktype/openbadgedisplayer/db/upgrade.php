@@ -50,5 +50,16 @@ function xmldb_blocktype_openbadgedisplayer_upgrade($oldversion = 0) {
         create_table($table);
     }
 
+    if ($oldversion < 2018081700) {
+        // Alter table blocktype_openbadgedisplayer_data make uid and badgegroupid char string
+        $table = new XMLDBTable('blocktype_openbadgedisplayer_data');
+        $field = new XMLDBField('uid');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        change_field_type($table, $field, true, true);
+        $field = new XMLDBField('badgegroupid');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        change_field_type($table, $field, true, true);
+    }
+
     return true;
 }

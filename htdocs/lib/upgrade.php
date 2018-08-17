@@ -94,6 +94,8 @@ function check_upgrades($name=null) {
             $core->fromrelease = $corerelease;
         }
         else if ($config->version < $coreversion) {
+            // Core can't be upgraded. Remove it from the list!
+            unset($toupgrade['core']);
             if (get_config('productionmode')) {
                 throw new ConfigSanityException("Database version of Mahara $corerelease ($coreversion) is newer "
                                             . "than files version $config->release ($config->version). "

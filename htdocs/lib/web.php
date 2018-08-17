@@ -3164,7 +3164,7 @@ function right_nav() {
     );
 
     // enable plugins to augment the menu structure
-    foreach (array('artefact', 'interaction', 'module') as $plugintype) {
+    foreach (array('artefact', 'blocktype', 'interaction', 'module') as $plugintype) {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin($plugintype, $plugin->name)) {

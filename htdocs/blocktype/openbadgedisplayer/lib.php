@@ -78,6 +78,18 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return array('openbadgedisplayer' => array('media'));
     }
 
+    public static function right_nav_menu_items() {
+        return array(
+            'settings/badgr' => array(
+                'path' => 'settings/badgr',
+                'url' => 'blocktype/openbadgedisplayer/badgrtoken.php',
+                'title' => get_string('badgrtokentitle', 'blocktype.openbadgedisplayer'),
+                'weight' => 60,
+                'iconclass' => 'flag'
+            ),
+        );
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata');
         if (empty($configdata) || !isset($configdata['badgegroup']) || !get_config('openbadgedisplayer_source')) {
@@ -165,18 +177,87 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
 
         $html = '';
         $existing = array();
-
         $backpack_url = self::get_backpack_url($host);
-        $url = $backpack_url . 'displayer/' . $uid . '/group/' . $badgegroupid . '.json';
-        $res = mahara_http_request(array(CURLOPT_URL => $url));
+        if ($host == 'badgr') {
+            $url = $backpack_url . 'v2/backpack/collections/' . $badgegroupid;
+            $res = mahara_http_request(
+                    array(
+                        CURLOPT_URL        => $url,
+                        CURLOPT_HTTPHEADER => array('Authorization: Token ' . $uid),
+                    )
+            );
+        }
+        else {
+            $url = $backpack_url . 'displayer/' . $uid . '/group/' . $badgegroupid . '.json';
+            $res = mahara_http_request(array(CURLOPT_URL => $url));
+        }
 
         if ($res->info['http_code'] != 200) {
             return '';
         }
 
         $json = json_decode($res->data);
+        if (isset($json->status) && $json->status->success) {
+            foreach ($json->result as $collection) {
+                foreach ($collection->assertions as $assertion) {
+                    // Currently I can't see a way to fetch the badge/assertion/issuer info
+                    // as one json blob/one curl request
+                    $url = $backpack_url . 'v2/backpack/assertions/' . $assertion;
+                    $res2 = mahara_http_request(
+                        array(
+                            CURLOPT_URL        => $url,
+                            CURLOPT_HTTPHEADER => array('Authorization: Token ' . $uid),
+                        )
+                    );
+                    $badge = json_decode($res2->data);
+                    $res3 = mahara_http_request(
+                        array(
+                            CURLOPT_URL        => $badge->result[0]->badgeclassOpenBadgeId,
+                            CURLOPT_HTTPHEADER => array('accept: application/json'),
+                        )
+                    );
+                    $badgeinfo = json_decode($res3->data);
+                    $res4 = mahara_http_request(
+                        array(
+                            CURLOPT_URL        => $badgeinfo->issuer,
+                            CURLOPT_HTTPHEADER => array('accept: application/json'),
+                        )
+                    );
+                    if (!empty($badgeinfo->id)) {
+                        $criteria = $badgeinfo->id;
+                    }
+                    else if (is_array($badgeinfo->criteria)) {
+                        $criteria = $badgeinfo->criteria->id;
+                    }
+                    else if (is_string($badgeinfo->criteria)) {
+                        $criteria = $badgeinfo->criteria;
+                    }
+                    else {
+                        $criteria = '';
+                    }
+                    $issuer = json_decode($res4->data);
+                    $data_assertion = $badge->result[0];
+                    $data_assertion->issued_on = strtotime($data_assertion->issuedOn);
+                    $data_assertion->expires = strtotime($data_assertion->expires);
+                    $data_assertion->badge = new stdClass();
+                    $data_assertion->badge->name = hsc($badgeinfo->name);
+                    $data_assertion->badge->description = hsc($badgeinfo->description);
+                    $data_assertion->badge->criteria = $criteria;
+                    $data_assertion->badge->_location = $data_assertion->openBadgeId;
+                    $data_assertion->badge->image = $data_assertion->image;
+                    $data_assertion->badge->issuer = new stdClass();
+                    $data_assertion->badge->issuer->origin = $issuer->url;
+                    $data_assertion->badge->issuer->name = $issuer->name;
+                    $data_assertion->badge->issuer->org = $issuer->email;
 
-        if (isset($json->badges) && is_array($json->badges)) {
+                    $html .= '<img tabindex="0" id="' . (preg_replace('/\:/', '_', $group)) . '" '
+                          . 'src="' . $badge->result[0]->image . '" '
+                          . 'title="' . $badge->result[0]->entityId . '" '
+                          . 'data-assertion="' . htmlentities(json_encode($data_assertion)) . '" />';
+                }
+            }
+        }
+        else if (isset($json->badges) && is_array($json->badges)) {
 
             foreach ($json->badges as $badge) {
                 $b = $badge->assertion->badge;
@@ -385,17 +466,36 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         }
 
         if ($backpack_url !== false) {
-            $res = mahara_http_request(
-                array(
-                    CURLOPT_URL        => $backpack_url . 'displayer/convert/email',
-                    CURLOPT_POST       => 1,
-                    CURLOPT_POSTFIELDS => 'email=' . urlencode($email)
-                )
-            );
-            $res = json_decode($res->data);
-            if (isset($res->userId)) {
-                $backpackids[$host][$email] = $res->userId;
-                return $res->userId;
+            if ($backpack_url == 'https://api.badgr.io/') {
+                $userid = get_field('artefact_internal_profile_email', 'owner', 'email', $email);
+                $token = get_field('usr_account_preference', 'value', 'field', 'badgr_token', 'usr', $userid);
+                if ($token) {
+                    $res = mahara_http_request(
+                        array(
+                            CURLOPT_URL        => $backpack_url . 'v2/users/self',
+                            CURLOPT_HTTPHEADER => array('Authorization: Token ' . $token),
+                        )
+                    );
+                    $res = json_decode($res->data);
+                    if (isset($res->status) && $res->status->success) {
+                        $backpackids[$host][$email] = $token;
+                        return $token;
+                    }
+                }
+            }
+            else {
+                $res = mahara_http_request(
+                    array(
+                        CURLOPT_URL        => $backpack_url . 'displayer/convert/email',
+                        CURLOPT_POST       => 1,
+                        CURLOPT_POSTFIELDS => 'email=' . urlencode($email)
+                    )
+                );
+                $res = json_decode($res->data);
+                if (isset($res->userId)) {
+                    $backpackids[$host][$email] = $res->userId;
+                    return $res->userId;
+                }
             }
         }
         return null;
@@ -466,7 +566,14 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
 
         $badgegroupnames[$host][$uid] = array();
         $backpack_url = self::get_backpack_url($host);
-        $res = mahara_http_request(array(CURLOPT_URL => $backpack_url . "displayer/{$uid}/groups.json"));
+        if ($backpack_url == 'https://api.badgr.io/') {
+            $res = mahara_http_request(array(CURLOPT_URL => $backpack_url . "v2/backpack/collections",
+                                             CURLOPT_HTTPHEADER => array('Authorization: Token ' . $uid,
+                                                                         'accept: application/json')));
+        }
+        else {
+            $res = mahara_http_request(array(CURLOPT_URL => $backpack_url . "displayer/{$uid}/groups.json"));
+        }
         $res = json_decode($res->data);
 
         if (!empty($res->groups)) {
@@ -492,6 +599,32 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
                         'host' => $host,
                         'uid' => $uid,
                         'badgegroupid' => $g->groupId,
+                        'name' => $name,
+                        'lastupdate' => db_format_timestamp(time())
+                    )
+                );
+            }
+        }
+        else if (isset($res->status) && isset($res->status->success) && $res->status->success) {
+            foreach ($res->result as $g) {
+                if (!$g->published) {
+                    continue;
+                }
+                $name = hsc($g->name);
+
+                $name .= ' (' . get_string('nbadges', 'blocktype.openbadgedisplayer', count($g->assertions)) . ')';
+                $badgegroupnames[$host][$uid][$g->entityId] = $name;
+                // Caching badge info into database for better performance
+                ensure_record_exists('blocktype_openbadgedisplayer_data',
+                    (object) array(
+                        'host' => $host,
+                        'uid' => $uid,
+                        'badgegroupid' => $g->entityId,
+                    ),
+                    (object) array(
+                        'host' => $host,
+                        'uid' => $uid,
+                        'badgegroupid' => $g->entityId,
                         'name' => $name,
                         'lastupdate' => db_format_timestamp(time())
                     )

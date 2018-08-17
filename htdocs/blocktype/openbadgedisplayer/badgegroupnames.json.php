@@ -29,11 +29,18 @@ if (!isset($emails) || !in_array($email, $emails)) {
 
 $uid = PluginBlocktypeOpenbadgedisplayer::get_backpack_id($host, $email);
 $hosttitle = get_string('title_' . $host, 'blocktype.openbadgedisplayer');
+$badgegroupnames = isset($uid) ? PluginBlocktypeOpenbadgedisplayer::get_badgegroupnames($host, $uid) : null;
+$nobadgegroup = get_string('nobadgegroupsin1', 'blocktype.openbadgedisplayer', $hosttitle, $email);
+$nobackpack = get_string('nobackpackidin1', 'blocktype.openbadgedisplayer', $email, $hosttitle);
+if ($host == 'badgr' && is_null($uid)) {
+    $nobackpack = get_string('nobadgruid', 'blocktype.openbadgedisplayer');
+}
+
 json_reply(false, array(
     'host' => $host,
     'hosttitle' => $hosttitle,
     'uid' => $uid,
-    'badgegroups' => isset($uid) ? PluginBlocktypeOpenbadgedisplayer::get_badgegroupnames($host, $uid) : null,
-    'nobackpackmsg' => get_string('nobackpackidin1', 'blocktype.openbadgedisplayer', $email, $hosttitle),
-    'nobadgegroupsmsg' => get_string('nobadgegroupsin1', 'blocktype.openbadgedisplayer', $hosttitle, $email)
+    'badgegroups' => $badgegroupnames,
+    'nobackpackmsg' => $nobackpack,
+    'nobadgegroupsmsg' => $nobadgegroup,
 ));
