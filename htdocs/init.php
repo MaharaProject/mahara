@@ -475,13 +475,13 @@ if (!defined('INSTALLER')) {
                 }
             }
         }
-    }
 
-    // Make sure that multirecipient notifications is installed and active
-    safe_require('module', 'multirecipientnotification');
-    if (!PluginModuleMultirecipientnotification::is_active()) {
-        throw new ConfigSanityException(get_string('multirecipientnotificationnotenabled',
-                                                   'module.multirecipientnotification'));
+        // Make sure that multirecipient notifications is installed and active
+        safe_require('module', 'multirecipientnotification');
+        if (!PluginModuleMultirecipientnotification::is_active()) {
+            throw new ConfigSanityException(get_string('multirecipientnotificationnotenabled',
+                                                       'module.multirecipientnotification'));
+        }
     }
 }
 
