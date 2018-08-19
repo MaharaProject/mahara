@@ -143,14 +143,14 @@ class PluginModuleMobileapi extends PluginModule {
         return true;
     }
 
-    public static function right_nav_menu_items() {
+    public static function app_tabs() {
         if (PluginModuleMobileapi::is_service_ready()) {
             return array(
-                'settings/webservice' => array(
+                'webservice' => array(
                     'path' => 'settings/webservice',
                     'url' => 'module/mobileapi/apps.php',
-                    'title' => get_string('mytokensmenutitle', 'module.mobileapi'),
-                    'weight' => 50,
+                    'title' => get_string('mytokensmenutitle1', 'module.mobileapi'),
+                    'weight' => 10,
                     'iconclass' => 'flag'
                 ),
             );

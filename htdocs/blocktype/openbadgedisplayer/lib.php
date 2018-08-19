@@ -78,13 +78,13 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return array('openbadgedisplayer' => array('media'));
     }
 
-    public static function right_nav_menu_items() {
+    public static function app_tabs() {
         return array(
-            'settings/badgr' => array(
+            'badgr' => array(
                 'path' => 'settings/badgr',
                 'url' => 'blocktype/openbadgedisplayer/badgrtoken.php',
                 'title' => get_string('badgrtokentitle', 'blocktype.openbadgedisplayer'),
-                'weight' => 60,
+                'weight' => 20,
                 'iconclass' => 'flag'
             ),
         );

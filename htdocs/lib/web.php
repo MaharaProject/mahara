@@ -791,6 +791,12 @@ EOF;
         }
     }
 
+    if (defined('APPS')) {
+       if (!defined('NOAPPSMENU')) {
+            $smarty->assign('SUBPAGENAV', apps_get_menu_tabs());
+        }
+    }
+
     // ---------- sideblock stuff ----------
     $sidebars = !isset($extraconfig['sidebars']) || $extraconfig['sidebars'] !== false;
     if ($sidebars && !defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
@@ -3154,6 +3160,12 @@ function right_nav() {
             'title' => get_string('legal', 'admin'),
             'weight' => 30
         ),
+        'settings/apps' => array(
+            'path' => 'settings/apps',
+            'url' => 'account/apps.php',
+            'title' => get_string('myapps'),
+            'weight' => 50
+        ),
         'settings/notifications' => array(
             'path' => 'settings/notifications',
             'url' => 'account/activity/preferences/index.php',
@@ -3277,6 +3289,33 @@ function footer_menu($all=false) {
     return $menu;
 }
 
+function apps_get_menu_tabs() {
+    $menu = array();
+
+    foreach (plugin_types_installed() as $plugin_type_installed) {
+        foreach (plugins_installed($plugin_type_installed) as $plugin) {
+            safe_require($plugin_type_installed, $plugin->name);
+            if (method_exists(generate_class_name($plugin_type_installed, $plugin->name), 'app_tabs')) {
+                $plugin_menu = call_static_method(
+                    generate_class_name($plugin_type_installed, $plugin->name),
+                    'app_tabs'
+                );
+                $menu = array_merge($menu, $plugin_menu);
+            }
+        }
+    }
+    if (defined('MENUITEM')) {
+        $key = substr(MENUITEM, strlen('settings/'));
+        if ($key && isset($menu[$key])) {
+            $menu[$key]['selected'] = true;
+        }
+    }
+
+    // Sort the menu items by weight
+    uasort($menu, "sort_menu_by_weight");
+
+    return $menu;
+}
 
 /**
  * Given a menu structure and a path, returns a data structure representing all
