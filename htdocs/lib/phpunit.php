@@ -137,7 +137,7 @@ class UnitTestBootstrap {
  * mocking events (or just ignoring them)
  * mocking the file system
  */
-class MaharaUnitTest extends PHPUnit_Framework_TestCase {
+class MaharaUnitTest extends PHPUnit\Framework\TestCase {
 
     /** @var array list of common last names */
     public $lastnames = array(

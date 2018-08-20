@@ -9,7 +9,7 @@
         "emuse/behat-html-formatter": "^0.1",
         "fabpot/goutte": "^3.2",
         "guzzlehttp/guzzle": "^6.3.0",
-        "phpunit/phpunit": "^4.5"
+        "phpunit/phpunit": "^6.0"
     },
 
     "autoload": {
