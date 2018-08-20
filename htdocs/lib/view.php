@@ -3591,14 +3591,8 @@ class View {
 
         $from = ' FROM {artefact} a ';
         // To also check tags
-        require_once('ddl.php');
-        if (!table_exists(new XMLDBTable("tag"))) {
-            $from .= " LEFT JOIN {artefact_tag} t ON t.artefact = a.id ";
-        }
-        else {
-            $typecast = is_postgres() ? '::varchar' : '';
-            $from .= " LEFT JOIN {tag} t ON t.resourcetype = 'artefact' AND a.id" . $typecast . " = t.resourceid ";
-        }
+        $typecast = is_postgres() ? '::varchar' : '';
+        $from .= " LEFT JOIN {tag} t ON t.resourcetype = 'artefact' AND a.id" . $typecast . " = t.resourceid ";
 
         if ($group) {
             // Get group-owned artefacts that the user has view
