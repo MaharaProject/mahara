@@ -676,7 +676,7 @@ function set_view_layout(Pieform $form, $values){
     $view->set('layout', $newlayout); //layout
 }
 
-function create_block($bt, $configdata, $view, $column, $blocktags = null) {
+function create_block($bt, $configdata, $view, $column, $blockinfo = null) {
     if ($bt == 'taggedposts') {
         $tagselect = $configdata['tagselect'];
         unset($configdata['tagselect']);
@@ -686,10 +686,13 @@ function create_block($bt, $configdata, $view, $column, $blocktags = null) {
     $blocktypeclass = generate_class_name('blocktype', $bt);
     if (method_exists($blocktypeclass, 'get_instance_title')) {
         $title = call_static_method($blocktypeclass, 'get_instance_title', $bi);
+        $defaulttitle = false;
     }
     else {
         $title = $blocktypeclass::get_title();
+        $defaulttitle = true;
     }
+
     $bi->set('title', $title);
     $bi->set('row', 1);
     $bi->set('column', $column);
@@ -698,16 +701,29 @@ function create_block($bt, $configdata, $view, $column, $blocktags = null) {
     $configdata['retractedonload'] = false;
     $bi->set('configdata', $configdata);
     $bi->commit();
-    if ($blocktags) {
-        $bi->set('tags', $blocktags);
+    // Now we have committed the block we can check if we can use something other than default block title
+    if ($defaulttitle) {
+        if (!empty($configdata['artefactid']) && $title = $bi->get_artefact_instance($configdata['artefactid'])->get('title')) {
+            $bi->set('title', $title);
+        }
+        else if (!empty($blockinfo)) {
+            $oldbi = new BlockInstance($blockinfo['oldid']);
+            $title = $oldbi->get('title');
+            $bi->set('title', $title);
+        }
+    }
+
+    if ($blockinfo['tags']) {
+        $bi->set('tags', $blockinfo['tags']);
     }
     if ($bt == 'taggedposts') {
         $blocktypeclass::save_tag_selection($tagselect, $bi);
     }
+    $bi->commit();
     return $bi->get('id');
 }
 
-function set_view_title_and_description(Pieform $form, $values){
+function set_view_title_and_description(Pieform $form, $values) {
     global $view, $urlallowed, $new, $USER;
 
     $view->set('title', $values['title']);
@@ -771,7 +787,7 @@ function set_view_title_and_description(Pieform $form, $values){
                         foreach($bv['ids'] as $bid) {
                             $configdata = unserialize(get_field('block_instance', 'configdata', 'id', $bid));
                             $tags = get_column('tag', 'tag', 'resourcetype', 'blocktype', 'resourceid', $bid);
-                            $id = create_block($bk, $configdata, $view, $currentcolumn, $tags);
+                            $id = create_block($bk, $configdata, $view, $currentcolumn, array('oldid' => $bid, 'tags' => $tags));
                             $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
                         }
                     }
