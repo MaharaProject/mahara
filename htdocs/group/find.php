@@ -191,6 +191,7 @@ function search_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-comments-o');
 $smarty->assign('groups', $groups['data']);
 $html = $smarty->fetch('group/mygroupresults.tpl');
 $smarty->assign('groupresults', $html);

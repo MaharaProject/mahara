@@ -75,6 +75,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
+            'class' => 'btn btn-primary',
             'value' => array(get_string('save', 'mahara'), get_string('cancel', 'mahara')),
             'goto' => get_config('wwwroot') . 'admin/site/fonts.php',
         ),
@@ -83,6 +84,7 @@ $form = pieform(array(
 
 
 $smarty = smarty(array('tablerenderer'));
+setpageicon($smarty, 'icon-text-width');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('form.tpl');

@@ -161,6 +161,7 @@ EOF;
 $js .= '});';
 
 $smarty = smarty(array('paginator'), $css, array(), array());
+setpageicon($smarty, 'icon-text-width');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('query', $query);
 $smarty->assign('sitefonts', $data->data);

@@ -31,6 +31,7 @@ define('TITLE', get_string('share', 'view'));
 
 if ($institution === false) {
     $smarty = smarty();
+    setpageicon($smarty, 'icon-university');
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
 }

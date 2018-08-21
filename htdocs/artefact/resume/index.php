@@ -119,6 +119,7 @@ $personalinformationform = pieform(array(
 
 
 $smarty = smarty(array('artefact/resume/js/simpleresumefield.js'));
+setpageicon($smarty, 'icon-star');
 $smarty->assign('coverletterform', $coverletterform);
 $smarty->assign('personalinformationform',$personalinformationform);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());

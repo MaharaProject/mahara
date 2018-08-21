@@ -20,5 +20,6 @@ define('SECTION_PAGE', 'share');
 $accesslists = View::get_accesslists($USER->get('id'));
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-share-alt');
 $smarty->assign('accesslists', $accesslists);
 $smarty->display('view/share.tpl');

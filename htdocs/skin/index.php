@@ -74,6 +74,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-paint-brush');
 $smarty->assign('skins', $data->data);
 $smarty->assign('user', $USER->get('id'));
 $smarty->assign('form', $form);

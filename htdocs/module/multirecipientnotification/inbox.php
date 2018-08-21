@@ -241,7 +241,7 @@ $smarty->assign('INLINEJAVASCRIPT', $paginationjavascript);
 // show urls and titles
 define('NOTIFICATION_SUBPAGE', 'inbox');
 $smarty->assign('SUBPAGENAV', PluginModuleMultirecipientnotification::submenu_items());
-
+setpageicon($smarty, 'icon-inbox');
 $searchtext = param_variable('search', null);
 $searcharea = param_variable('searcharea', null);
 

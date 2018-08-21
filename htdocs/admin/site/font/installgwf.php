@@ -56,6 +56,7 @@ $form = pieform(array(
 
 
 $smarty = smarty(array('tablerenderer'));
+setpageicon($smarty, 'icon-text-width');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('form.tpl');

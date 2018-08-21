@@ -230,6 +230,7 @@ function requestmembership_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-university');
 $smarty->assign('memberform', $memberform);
 $smarty->assign('requestedform', $requestedform);
 $smarty->assign('invitedform', $invitedform);

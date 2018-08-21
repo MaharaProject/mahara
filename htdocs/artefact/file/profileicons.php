@@ -332,6 +332,7 @@ $smarty = smarty(
         ),
     )
 );
+setpageicon($smarty, 'icon-id-badge');
 $smarty->assign('INLINEJAVASCRIPT', $IJS);
 $smarty->assign('uploadform', $uploadform);
 // This is a rare case where we don't actually care about the form, because

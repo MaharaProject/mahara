@@ -40,6 +40,7 @@ jQuery(function($) {
 });';
 
 $smarty = smarty(array('tablerenderer'));
+setpageicon($smarty, 'icon-star');
 $smarty->assign('goals', $goals);
 $smarty->assign('skills', $skills);
 $smarty->assign('INLINEJAVASCRIPT', $js);

@@ -158,6 +158,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-share-alt-square');
 $smarty->assign('views', $data->data);
 $smarty->assign('searchform', $searchform);
 $smarty->assign('pagination', $pagination['html']);

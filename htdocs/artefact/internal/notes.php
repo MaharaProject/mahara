@@ -201,6 +201,7 @@ jQuery(function($) {
 });';
 
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-pencil-square-o');
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('data', $data);

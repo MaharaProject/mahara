@@ -194,6 +194,7 @@ function delete_all_notifications_submit() {
 }
 
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-paper-plane');
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
 

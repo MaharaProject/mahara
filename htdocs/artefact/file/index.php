@@ -37,7 +37,7 @@ $smarty = smarty(
         ),
     )
 );
-
+setpageicon($smarty, 'icon-file-image-o');
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:file:files.tpl');

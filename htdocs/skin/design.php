@@ -362,6 +362,7 @@ $smarty = smarty(array(), array(), array(
         'selected',
     ),
 ));
+setpageicon($smarty, 'icon-paint-brush');
 $smarty->assign('LANG', substr($CFG->lang, 0, 2));
 $smarty->assign('USER', $USER);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

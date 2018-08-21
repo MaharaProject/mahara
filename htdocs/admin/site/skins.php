@@ -40,6 +40,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-paint-brush');
 $smarty->assign('skins', $data->data);
 $smarty->assign('siteskins', true);
 $smarty->assign('pagination', $pagination['html']);

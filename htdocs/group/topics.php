@@ -41,6 +41,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-commenting-o');
 $smarty->assign('topics', $data['data']);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('INLINEJAVASCRIPT', 'jQuery(function() { p = ' . $pagination['javascript'] . '});');

@@ -346,6 +346,7 @@ EOF;
 $request = get_record('usr_pendingdeletion', 'usr', $USER->id);
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-cogs');
 $smarty->assign('form', $prefsform);
 $smarty->assign('candeleteself', $USER->can_delete_self());
 $smarty->assign('deletionsent', !empty($request));

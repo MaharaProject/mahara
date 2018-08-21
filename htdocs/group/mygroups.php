@@ -96,6 +96,7 @@ $pagination = build_pagination(array(
 group_prepare_usergroups_for_display($results['groups'], 'mygroups');
 
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-comments');
 $smarty->assign('groups', $results['groups']);
 $smarty->assign('cancreate', group_can_create_groups());
 $smarty->assign('form', $form);

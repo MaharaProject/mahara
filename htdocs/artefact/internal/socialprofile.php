@@ -139,6 +139,7 @@ else {
 }
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-user');
 $smarty->assign('navtabs', PluginArtefactInternal::submenu_items());
 $smarty->assign('subheading', $subheading);
 $smarty->assign('form', $form);

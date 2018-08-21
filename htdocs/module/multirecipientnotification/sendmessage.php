@@ -241,6 +241,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-pencil-square-o');
 $smarty->assign('form', $form);
 $smarty->assign('user', $USER);
 $smarty->assign('messages', $messages);
