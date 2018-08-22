@@ -1,3 +1,6 @@
+{if $noplans && $editing}
+    <p class="editor-description">{$noplans}</p>
+{/if}
 {foreach from=$plans item=plan}
 <div class="panel-body flush">
     {if $editing}

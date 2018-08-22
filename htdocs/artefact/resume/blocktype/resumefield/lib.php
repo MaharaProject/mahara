@@ -43,7 +43,7 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
-        require_once(get_config('docroot') . 'artefact/lib.php');
+        safe_require('artefact', 'resume');
         $smarty = smarty_core();
         $configdata = $instance->get('configdata');
         $configdata['viewid'] = $instance->get('view');
@@ -57,9 +57,16 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
                 $result .= '<script type="application/javascript">' . $rendered['javascript'] . '</script>';
             }
             $smarty->assign('content', $result);
-            return $smarty->fetch('blocktype:resumefield:content.tpl');;
         }
-        return '';
+        else if ($editing && !empty($configdata['templateid'])) {
+            $result = '<p><strong>' . get_string($configdata['templateid'], 'artefact.resume') . '</strong></p>';
+            $smarty->assign('content', $result);
+        }
+        else {
+            $smarty->assign('editing', $editing);
+            $smarty->assign('nodata', get_string('noresumeitemselectone', 'blocktype.resume/resumefield'));
+        }
+        return $smarty->fetch('blocktype:resumefield:content.tpl');;
     }
 
     public static function has_instance_config() {
@@ -70,30 +77,64 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
         $configdata = $instance->get('configdata');
 
         $form = array();
-
-        // Which resume field does the user want
-        $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
-        $form['message'] = array(
-            'type' => 'html',
-            'value' => '<p class="alert alert-info">' . get_string('filloutyourresume', 'blocktype.resume/resumefield', '<a href="' . get_config('wwwroot') . 'artefact/resume/index.php">', '</a>') .'</p>',
-        );
-        $form['tags'] = array(
-            'type'         => 'tags',
-            'title'        => get_string('tags'),
-            'description'  => get_string('tagsdescblock'),
-            'defaultvalue' => $instance->get('tags'),
-            'help'         => false,
-        );
+        $owner = $instance->get_view()->get('owner');
+        if ($owner) {
+            // Which resume field does the user want
+            $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
+            $form['message'] = array(
+                'type' => 'html',
+                'value' => '<p class="alert alert-info">' . get_string('filloutyourresume', 'blocktype.resume/resumefield', '<a href="' . get_config('wwwroot') . 'artefact/resume/index.php">', '</a>') .'</p>',
+            );
+            $form['tags'] = array(
+                'type'         => 'tags',
+                'title'        => get_string('tags'),
+                'description'  => get_string('tagsdescblock'),
+                'defaultvalue' => $instance->get('tags'),
+                'help'         => false,
+            );
+        }
+        else {
+            if (isset($configdata['templateid']) && !empty($configdata['templateid'])) {
+                safe_require('artefact', 'resume');
+                $types = PluginArtefactResume::get_artefact_types();
+                $configdata['artefactid'] = array_search($configdata['templateid'], $types);
+                unset($configdata['templateid']);
+            }
+            $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $owner);
+            $form['blocktemplatehtml'] = array(
+                'type' => 'html',
+                'value' => get_string('blockinstanceconfigownerchange', 'mahara'),
+            );
+            $form['blocktemplate'] = array(
+                'type'    => 'hidden',
+                'value'   => 1,
+            );
+        }
         return $form;
     }
 
-    public static function instance_config_save($values) {
+    public static function instance_config_save($values, $instance) {
+        if (isset($values['blocktemplate']) && !empty($values['blocktemplate'])) {
+            // Need to adjust info to be a template
+            $owner = $instance->get_view()->get('owner');
+            $values['templateid'] = null;
+            $element = self::artefactchooser_element(null, $owner);
+            // Because the settings are radio we can treat empty response as picking the first option
+            if (!empty($element['artefacttypes'][$values['artefactid']])) {
+                $values['templateid'] = $element['artefacttypes'][$values['artefactid']];
+            }
+            else {
+                $values['templateid'] = $element['artefacttypes'][0];
+            }
+            unset($values['artefactid']);
+        }
+
         unset($values['message']);
         return $values;
     }
 
     // TODO: make decision on whether this should be abstract or not
-    public static function artefactchooser_element($default=null) {
+    public static function artefactchooser_element($default=null,$owner=true) {
         safe_require('artefact', 'resume');
         return array(
             'name'  => 'artefactid',
@@ -101,6 +142,7 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
             'title' => get_string('fieldtoshow', 'blocktype.resume/resumefield'),
             'defaultvalue' => $default,
             'blocktype' => 'resumefield',
+            'blocktemplate' => empty($owner),
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => true,
             'search'    => false,
@@ -118,16 +160,24 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
         return '';
     }
 
-    public static function rewrite_resume_config(View $view, $configdata) {
+    public static function rewrite_blockinstance_config(View $view, $configdata) {
         $artefactid = null;
         if ($view->get('owner') !== null) {
             $artefacttype = null;
-            if (!empty($configdata['artefactid'])) {
+            if (!empty($configdata['blocktemplate'])) {
+                if (!empty($configdata['templateid'])) {
+                    $artefacttype = $configdata['templateid'];
+                }
+                unset($configdata['blocktemplatehtml']);
+                unset($configdata['templateid']);
+                unset($configdata['blocktemplate']);
+            }
+            else if (!empty($configdata['artefactid'])) {
                 $artefacttype = get_field('artefact', 'artefacttype', 'id', $configdata['artefactid']);
             }
-            // @todo get artefacttype from a different field when copying from institution or group view.
+
             if ($artefacttype) {
-                $artefactid = get_field('artefact', 'id', 'artefacttype', $artefacttype, 'owner', $ownerid);
+                $artefactid = get_field('artefact', 'id', 'artefacttype', $artefacttype, 'owner', $view->get('owner'));
             }
         }
         $configdata['artefactid'] = $artefactid;
@@ -143,7 +193,7 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
      * there's no such thing as group/site resumes
      */
     public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
+        return true;
     }
 
     /**

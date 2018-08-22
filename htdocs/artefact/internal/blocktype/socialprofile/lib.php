@@ -32,35 +32,46 @@ class PluginBlocktypeSocialprofile extends MaharaCoreBlocktype {
         $type = (isset($configdata['displaytype']) ? $configdata['displaytype'] : 'texticon');
         $showicon = ($type == 'icononly' || $type == 'texticon' ? true : false);
         $showtext = ($type == 'textonly' || $type == 'texticon' ? true : false);
-        $owner = $instance->get('view_obj')->get('owner');
+        $owner = $instance->get_view()->get('owner');
 
         // Whether to include email button
-        if (isset($configdata['displayemail']) && $configdata['displayemail']) {
+        if (isset($configdata['displayemail']) && $configdata['displayemail'] && $owner) {
             $email = get_field('artefact_internal_profile_email', 'email', 'principal', 1, 'owner', $owner);
+        }
+        else if (isset($configdata['displayemail']) && $configdata['displayemail']) {
+            $email = true;
         }
         else {
             $email = false;
         }
 
-        if (!isset($configdata['artefactids']) || empty($configdata['artefactids'])) {
-            // When we first come into this block, it will have
-            // no social profiles configured yet.
-            $configdata['artefactids'] = array(0);
+        $data = array();
+        $smarty = smarty_core();
+        if (isset($configdata['artefactids']) && !empty($configdata['artefactids'])) {
+            // Include selected social profiles
+            $sql = 'SELECT title, description, note FROM {artefact}
+                WHERE id IN (' . join(',', $configdata['artefactids']) . ')
+                    AND owner = ? AND artefacttype = ?
+                ORDER BY description ASC';
+            $artefactdata = get_records_sql_array($sql, array($owner, 'socialprofile'));
+            $data = !empty($artefactdata) ? $artefactdata : $data;
         }
-
-        // Include selected social profiles
-        $sql = 'SELECT title, description, note FROM {artefact}
-            WHERE id IN (' . join(',', $configdata['artefactids']) . ')
-                AND owner = ? AND artefacttype = ?
-            ORDER BY description ASC';
-
-        if (!$data = get_records_sql_array($sql, array($owner, 'socialprofile'))) {
-            $data = array();
+        else if ($editing && !empty($configdata['templateids'])) {
+            foreach ($configdata['templateids'] as $socialtype) {
+                $stype = new stdClass();
+                $stype->title = '';
+                $stype->description = get_string($socialtype, 'artefact.internal');
+                $stype->note = $socialtype;
+                $data[] = $stype;
+            }
+        }
+        else if ($editing && !$email) {
+            $smarty->assign('editing', $editing);
+            $smarty->assign('noitems', get_string('noitemsselectone', 'blocktype.internal/socialprofile'));
         }
 
         safe_require('artefact', 'internal');
         $data = ArtefactTypeSocialprofile::get_profile_icons($data);
-        $smarty = smarty_core();
         $smarty->assign('showicon', $showicon);
         $smarty->assign('showtext', $showtext);
         $smarty->assign('profiles', $data);
@@ -75,11 +86,30 @@ class PluginBlocktypeSocialprofile extends MaharaCoreBlocktype {
 
     public static function instance_config_form(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
-
+        $owner = $instance->get_view()->get('owner');
         $form = array();
-
+        if (!$owner) {
+            $configdata['artefactids'] = array();
+            if (isset($configdata['templateids']) && !empty($configdata['templateids'])) {
+                $element = self::artefactchooser_element(null, $owner);
+                foreach ($element['artefacttypes'] as $key => $type) {
+                    if (array_search($type, $configdata['templateids']) !== false) {
+                        $configdata['artefactids'][] = $key;
+                    }
+                }
+                $configdata['templateids'] = array();
+            }
+            $form['blocktemplatehtml'] = array(
+                'type' => 'html',
+                'value' => get_string('blockinstanceconfigownerchange', 'mahara'),
+            );
+            $form['blocktemplate'] = array(
+                'type'    => 'hidden',
+                'value'   => 1,
+            );
+        }
         // Which social profiles does the user want
-        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
+        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $owner);
 
         $form['settings'] = array(
             'type'         => 'fieldset',
@@ -109,20 +139,66 @@ class PluginBlocktypeSocialprofile extends MaharaCoreBlocktype {
         return $form;
     }
 
-    public static function artefactchooser_element($default=null) {
+    public static function instance_config_save($values, $instance) {
+        if (isset($values['blocktemplate']) && !empty($values['blocktemplate'])) {
+            // Need to adjust info to be a template
+            $owner = $instance->get_view()->get('owner');
+            $values['templateids'] = array();
+            $element = self::artefactchooser_element(null, $owner);
+            foreach ($element['artefacttypes'] as $key => $type) {
+                if (array_search($key, $values['artefactids']) !== false) {
+                    $values['templateids'][] = $type;
+                }
+            }
+            $values['artefactids'] = array();
+        }
+        return $values;
+    }
+
+    public static function artefactchooser_element($default=null, $owner=true) {
         safe_require('artefact', 'internal');
+        if (!$owner) {
+            $artefacttypes = ArtefactTypeSocialprofile::$socialnetworks;
+        }
+        else {
+            $artefacttypes = array('socialprofile');
+        }
+
         return array(
             'name'  => 'artefactids',
             'type'  => 'artefactchooser',
             'title' => get_string('profilestoshow', 'blocktype.internal/socialprofile'),
             'defaultvalue' => $default,
             'blocktype' => 'socialprofile',
+            'blocktemplate' => empty($owner),
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => false,
             'search'    => false,
-            'artefacttypes' => array('socialprofile'),
+            'artefacttypes' => $artefacttypes,
             'template'  => 'artefact:internal:artefactchooser-element.tpl',
         );
+    }
+
+    public static function rewrite_blockinstance_config(View $view, $configdata) {
+        safe_require('artefact', 'internal');
+        $configdata['artefactids'] = array();
+        if ($view->get('owner') !== null) {
+            if (!empty($configdata['blocktemplate'])) {
+                if (!empty($configdata['templateids'])) {
+                    $artefactids = get_column_sql('
+                        SELECT a.id FROM {artefact} a
+                        WHERE a.owner = ? AND a.artefacttype = ? AND a.note IN (' . join(',', array_map('db_quote', $configdata['templateids'])) . ')', array($view->get('owner'), 'socialprofile'));
+                }
+                else {
+                    $artefactids = array();
+                }
+                unset($configdata['blocktemplatehtml']);
+                unset($configdata['templateids']);
+                unset($configdata['blocktemplate']);
+                $configdata['artefactids'] = $artefactids;
+            }
+        }
+        return $configdata;
     }
 
     public static function default_copy_type() {
@@ -138,7 +214,7 @@ class PluginBlocktypeSocialprofile extends MaharaCoreBlocktype {
      *                 given view.
      */
     public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
+        return true;
     }
 
     /**

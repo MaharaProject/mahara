@@ -3510,6 +3510,24 @@ class View {
      *
      */
     public static function get_artefactchooser_artefacts($data, $owner=null, $group=null, $institution=null, $short=false) {
+        // If this is in a blocktemplate we just want to return all possible options
+        if (isset($data['blocktemplate']) && !empty($data['blocktemplate'])) {
+            $artefacts = array();
+            $totalartefacts = count($data['artefacttypes']);
+            foreach ($data['artefacttypes'] as $key => $type) {
+                $a = new stdClass();
+                $a->id = $key;
+                $a->artefacttype = $type;
+                $a->title = '';
+                $a->description = null;
+                $artefacts[$key] = $a;
+            }
+            list($customprofile, $customtotals) = self::get_custom_profiles($data['artefacttypes']);
+            $artefacts = array_merge($artefacts, $customprofile);
+            $totalartefacts += $customtotals;
+            return array($artefacts, $totalartefacts);
+        }
+
         if ($owner === null) {
             global $USER;
             $user = $USER;
@@ -3754,24 +3772,34 @@ class View {
         );
         $totalartefacts = count_records_sql('SELECT COUNT(DISTINCT agg.id) FROM (SELECT a.* ' . $from . ' WHERE ' . $select . ') AS agg', $countph);
 
-        // If our profile artefact is saving it's data to a special place
         if (!empty($data['artefacttypes'])) {
-            safe_require('artefact', 'internal');
-            foreach ($data['artefacttypes'] as $type) {
-                $classname = 'ArtefactType' . ucfirst($type);
-                if (is_callable(array($classname, 'get_special_data'))) {
-                    $customprofile = call_static_method($classname, 'get_special_data', $user);
-                    if ($customprofile) {
-                        $customprofile->artefacttype = $type;
-                        $customprofile->title = $customprofile->{$type};
-                        $artefacts[] = $customprofile;
-                        $totalartefacts++;
-                    }
-                }
-            }
+            $artefacts = (!$artefacts) ? array() : $artefacts;
+            list($customprofile, $customtotals) = self::get_custom_profiles($data['artefacttypes']);
+            $artefacts = array_merge($artefacts, $customprofile);
+            $totalartefacts += $customtotals;
         }
 
         return array($artefacts, $totalartefacts);
+    }
+
+    public static function get_custom_profiles($artefacttypes) {
+        // If our profile artefact is saving it's data to a special place
+        safe_require('artefact', 'internal');
+        $customprofiles = array();
+        $customtotals = 0;
+        foreach ($artefacttypes as $type) {
+            $classname = 'ArtefactType' . ucfirst($type);
+            if (is_callable(array($classname, 'get_special_data'))) {
+                $customprofile = call_static_method($classname, 'get_special_data', $user);
+                if ($customprofile) {
+                    $customprofile->artefacttype = $type;
+                    $customprofile->title = $customprofile->{$type};
+                    $customprofiles[] = $customprofile;
+                    $customtotals++;
+                }
+            }
+        }
+        return array($customprofiles, $customtotals);
     }
 
     public static function owner_name($ownerformat, $user) {

@@ -1,3 +1,6 @@
+{if $noresume && $editing}
+    <p class="editor-description">{$noresume}</p>
+{else}
 <div class="list-group">
     {if $coverletter}
     <div class="list-group-item">
@@ -124,3 +127,4 @@
     </div>
     {/if}
 </div>
+{/if}

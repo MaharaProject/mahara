@@ -277,7 +277,28 @@ EOD;
             $record['remoteusername'] = null;
         }
 
-        $user->id = create_user($user, array(), $record['institution'], $remoteauth, $record['remoteusername'], $record);
+        $valid_profile_fields = array('studentid', 'preferredname', 'town', 'country', 'occupation');
+        $profiles = array();
+        foreach ($valid_profile_fields as $field) {
+            if (isset($record[$field]) && !empty($record[$field])) {
+                if ($field == 'country') {
+                    $countries = getoptions_country();
+                    $validcountry = false;
+                    if (array_key_exists($record[$field], $countries)) {
+                        $validcountry = $record[$field];
+                    }
+                    else if ($key = array_search($record[$field], $countries)) {
+                        $validcountry = $key;
+                    }
+                    else {
+                        throw new SystemException("Invalid profile country name '" . $record['country'] . "'");
+                    }
+                    $record[$field] = $validcountry;
+                }
+                $profiles[$field] = $record[$field];
+            }
+        }
+        $user->id = create_user($user, $profiles, $record['institution'], $remoteauth, $record['remoteusername'], $record);
 
         if (isset($user->admin) && $user->admin) {
             require_once('activity.php');

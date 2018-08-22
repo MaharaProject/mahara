@@ -23,3 +23,4 @@ $string['optiontexticon'] = 'buttons with icons and text';
 $string['optiontextonly'] = 'buttons with text only';
 $string['displaydefaultemail'] = 'Display default email link as button?';
 $string['displaymsgservices'] = 'Display messaging services as buttons?';
+$string['noitemsselectone'] = 'No social media selected';

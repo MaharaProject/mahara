@@ -32,9 +32,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();
-
         // Get data about the resume fields the user has
-        $return = '';
         if ($artefacts = get_records_sql_array('
             SELECT va.artefact, a.artefacttype
             FROM {view_artefact} va
@@ -51,6 +49,10 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
                 $smarty->assign($artefact->artefacttype, $result);
             }
         }
+        else {
+            $smarty->assign('editing', $editing);
+            $smarty->assign('noresume', get_string('noresumeselectone', 'blocktype.resume/entireresume'));
+        }
         return $smarty->fetch('blocktype:entireresume:content.tpl');
     }
 
@@ -59,15 +61,28 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
     }
 
     public static function instance_config_form(BlockInstance $instance) {
-        $elements = array(
-            'tags'  => array(
-                'type'         => 'tags',
-                'title'        => get_string('tags'),
-                'description'  => get_string('tagsdescblock'),
-                'defaultvalue' => $instance->get('tags'),
-                'help'         => false,
-            )
-        );
+        $owner = $instance->get_view()->get('owner');
+        if ($owner) {
+            $elements = array(
+                'tags'  => array(
+                    'type'         => 'tags',
+                    'title'        => get_string('tags'),
+                    'description'  => get_string('tagsdescblock'),
+                    'defaultvalue' => $instance->get('tags'),
+                    'help'         => false,
+                )
+            );
+        }
+        else {
+            $elements['blocktemplatehtml'] = array(
+                'type' => 'html',
+                'value' => get_string('blockinstanceconfigownerauto', 'mahara'),
+            );
+            $elements['blocktemplate'] = array(
+                'type'    => 'hidden',
+                'value'   => 1,
+            );
+        }
         return $elements;
     }
 
@@ -121,6 +136,28 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
         }
     }
 
+    public static function get_artefacts(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        $return = array();
+        safe_require('artefact', 'resume');
+        $artefacttypes = implode(', ', array_map('db_quote', PluginArtefactResume::get_artefact_types()));
+        // Get all artefacts that are resume related and belong to the correct owner
+        if ($artefacts = get_records_sql_array('
+                SELECT id
+                FROM {artefact}
+                WHERE artefacttype IN(' . $artefacttypes . ')
+                AND "owner" = (
+                    SELECT "owner"
+                    FROM {view}
+                    WHERE id = ?
+                )', array($instance->get('view')))) {
+            foreach ($artefacts as $artefact) {
+                $return[] = $artefact->id;
+            }
+        }
+        return $return;
+    }
+
     public static function default_copy_type() {
         return 'shallow';
     }
@@ -130,7 +167,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
      * there's no such thing as group/site resumes
      */
     public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
+        return true;
     }
 
 }

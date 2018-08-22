@@ -836,12 +836,18 @@ class BlockInstance {
         // make sure that user is allowed to publish artefact. This is to stop
         // hacking of form value to attach other users private data.
         $badattachment = false;
-        if (!empty($values['artefactid'])) {
-            $badattachment = !$this->verify_attachment_permissions($values['artefactid']);
+        if (isset($values['blocktemplate']) && !empty($values['blocktemplate'])) {
+            // Ignore check on artefactids as they are not relating to actual artefacts
         }
-        if (!empty($values['artefactids'])) {
-            $badattachment = !$this->verify_attachment_permissions($values['artefactids']);
+        else {
+            if (!empty($values['artefactid'])) {
+                $badattachment = !$this->verify_attachment_permissions($values['artefactid']);
+            }
+            if (!empty($values['artefactids'])) {
+                $badattachment = !$this->verify_attachment_permissions($values['artefactids']);
+            }
         }
+
         if ($badattachment) {
             $result['message'] = get_string('unrecoverableerror', 'error');
             $form->set_error(null, $result['message']);

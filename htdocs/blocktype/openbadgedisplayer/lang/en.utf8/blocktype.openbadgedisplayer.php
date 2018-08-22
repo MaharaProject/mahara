@@ -56,7 +56,7 @@ $string['nbadges'] = array('1 badge', '%s badges');
 $string['nobackpack'] = 'No Backpack found.<br> Please add your <a href="%s">Backpack</a> email address to your <a href="%s">profile</a>.';
 
 $string['nobadgegroups'] = 'No public badge collections / badges found.';
-
+$string['nobadgesselectone'] = 'No badges selected';
 $string['nobackpackidin1'] = 'Your email %s is not found in the service %s.';
 
 $string['nobadgegroupsin1'] = 'No public badge collections / badges found in the service %s for email %s.';

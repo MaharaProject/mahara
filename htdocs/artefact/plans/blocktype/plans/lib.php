@@ -111,7 +111,8 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
             $smarty->assign('alltasks', $alltasks);
         }
         else {
-            $smarty->assign('noplans','blocktype.plans/plans');
+            $smarty->assign('editing', $editing);
+            $smarty->assign('noplans', get_string('noplansselectone', 'blocktype.plans/plans'));
         }
         $smarty->assign('blockid', $instance->get('id'));
         return $smarty->fetch('blocktype:plans:content.tpl');
@@ -125,17 +126,28 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
     public static function instance_config_form(BlockInstance $instance) {
         $instance->set('artefactplugin', 'plans');
         $configdata = $instance->get('configdata');
-
+        $owner = $instance->get_view()->get('owner');
         $form = array();
-
-        // Which resume field does the user want
-        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
-        $form['count'] = array(
-            'type' => 'text',
-            'title' => get_string('taskstodisplay', 'blocktype.plans/plans'),
-            'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 10,
-            'size' => 3,
-        );
+        if ($owner) {
+            // Which resume field does the user want
+            $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
+            $form['count'] = array(
+                'type' => 'text',
+                'title' => get_string('taskstodisplay', 'blocktype.plans/plans'),
+                'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 10,
+                'size' => 3,
+            );
+        }
+        else {
+            $form['blocktemplatehtml'] = array(
+                'type' => 'html',
+                'value' => get_string('blockinstanceconfigownerchange', 'mahara'),
+            );
+            $form['blocktemplate'] = array(
+                'type'    => 'hidden',
+                'value'   => 1,
+            );
+        }
 
         return $form;
     }
@@ -156,6 +168,23 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
     }
 
     public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
+        return true;
+    }
+
+    public static function rewrite_blockinstance_config(View $view, $configdata) {
+        safe_require('artefact', 'plans');
+        if ($view->get('owner') !== null && !empty($configdata['blocktemplate'])) {
+            if ($artefactids = get_column_sql('
+                SELECT a.id FROM {artefact} a
+                WHERE a.owner = ? AND a.artefacttype = ?', array($view->get('owner'), 'plan'))) {
+                $configdata['artefactids'] = $artefactids;
+            }
+            else {
+                $configdata['artefactids'] = array();
+            }
+            unset($configdata['blocktemplatehtml']);
+            unset($configdata['blocktemplate']);
+        }
+        return $configdata;
     }
 }

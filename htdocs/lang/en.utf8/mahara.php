@@ -877,6 +877,7 @@ $string['nohelpfound'] = 'There was no help found for this item.';
 $string['nohelpfoundpage'] = 'There was no help found for this page.';
 $string['couldnotgethelp'] = 'An error occurred trying to retrieve the help page.';
 $string['profileimagetext'] = "%s's profile picture";
+$string['profileimagetexttemplate'] = "User's profile picture will go here";
 $string['profileimagetextanonymous'] = "anonymous profile picture";
 $string['primaryemailinvalid'] = 'Your primary email address is invalid.';
 $string['addemail'] = 'Add email address';
@@ -1290,6 +1291,9 @@ href="%s">Settings</a>.';
 
 // Blocktype
 $string['setblocktitle'] = 'Set a block title';
+$string['blockinstanceownerchange'] = 'Edit this block to choose content to display.';
+$string['blockinstanceconfigownerauto'] = 'This block will be automatically populated with data once it is copied as a user\'s portfolio page.';
+$string['blockinstanceconfigownerchange'] = 'This block will need to be edited / configured once it is copied as a user\'s portfolio page for content to show up.';
 
 // Download
 $string['filenotfound'] = 'File not found';
