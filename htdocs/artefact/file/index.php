@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/files');
+define('MENUITEM', 'create/files');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'file');
 define('SECTION_PAGE', 'index');

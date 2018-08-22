@@ -16,7 +16,7 @@ And the following "pages" exist:
 
 Scenario: Profile block displays my information correctly (Bug 1677929)
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Profile pictures" in "Content" from main menu
+  And I choose "Profile pictures" from user menu
   # Add profile image
   And I attach the file "Image2.png" to "Profile picture"
   And I set the field "Image title" to "Angela"
@@ -25,7 +25,7 @@ Scenario: Profile block displays my information correctly (Bug 1677929)
   And I press "Set default"
   Then I should see "Default profile picture set successfully"
   # Add profile block to page
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I follow "Page UserA_01"
   And I follow "Edit"
   And I expand "Personal info" node
@@ -45,7 +45,7 @@ Scenario: Profile block displays my information correctly (Bug 1677929)
   # This checks an image is displayed, not the specific image
   And I should see images within the block "Profile information"
   # Delete the profile picture
-  And I choose "Profile pictures" in "Content" from main menu
+  And I choose "Profile pictures" from user menu
   And I select the radio "Mark \"Angela\" for deletion"
   And I press "Delete"
   Then I should see "Profile picture deleted"

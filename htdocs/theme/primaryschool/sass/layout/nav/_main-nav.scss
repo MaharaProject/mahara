@@ -29,9 +29,9 @@ $groups-color: #799323;
 // 5) Darker shade (can be specified in hex,rgba value)
 $menu-styles: (
   ("home", $fa-var-tachometer, $home-color, lighten($home-color, 5%), darken($home-color, 5%)),
-  ("content", $fa-var-pencil-square, $content-color, lighten($content-color, 5%), darken($content-color, 5%)),
-  ("myportfolio", $fa-var-file, $myportfolio-color, lighten($myportfolio-color, 5%), darken($myportfolio-color, 5%)),
-  ("groups", $fa-var-users, $groups-color, lighten($groups-color, 5%), darken($groups-color, 5%))
+  ("create", $fa-var-pencil-square, $content-color, lighten($content-color, 5%), darken($content-color, 5%)),
+  ("engage", $fa-var-file, $myportfolio-color, lighten($myportfolio-color, 5%), darken($myportfolio-color, 5%)),
+  ("manage", $fa-var-users, $groups-color, lighten($groups-color, 5%), darken($groups-color, 5%))
 );
 
 .nav-main .navbar-nav {

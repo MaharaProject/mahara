@@ -30,13 +30,13 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     # Log in as user 1
     When I log in as "UserA" with password "Kupuh1pa!"
     # Upload files to reach quota threshold of 50%
-    And I choose "Files" in "Content" from main menu
+    And I choose "Files" in "Create" from main menu
     And I attach the file "Image1.jpg" to "File"
     And I attach the file "Image2.png" to "File"
     And I attach the file "Image3.png" to "File"
     # Verifying notification for reaching user quota threshold have been received
     And I am on homepage
-    And I choose "mail" from user menu by id
+    And I choose inbox
     # Regression testing for previous errors
     And I should not see "Call stack"
     And I should see "Your file storage is almost full"

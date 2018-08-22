@@ -149,8 +149,9 @@ jQuery(function($) {
     }
 
     function updateUnread(data, self) {
-        var inboxmenu = $('.header .inbox'),
+        var inboxmenu = $('#nav-inbox'),
             countnode,
+            countnodesr,
             notificationList = $('.notification-list');
 
         if (inboxmenu.length < 1) {
@@ -160,6 +161,10 @@ jQuery(function($) {
             countnode = inboxmenu.find('.unreadmessagecount');
             if (countnode.length > 0) {
                 countnode.html(data.data.newunreadcount);
+            }
+            countnodesr = inboxmenu.find('.unreadmessagecount-sr');
+            if (countnodesr.length > 0) {
+                countnodesr.html(data.data.newunreadcounttext);
             }
         }
         if (data.data.html) {

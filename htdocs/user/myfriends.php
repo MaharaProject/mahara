@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/myfriends');
+define('MENUITEM', 'engage/myfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('searchlib.php');
 define('TITLE', get_string('myfriends'));

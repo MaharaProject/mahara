@@ -7,13 +7,13 @@ Feature: Testing Behat's functionality
 Scenario: Meta test testing Behat's functionality (Bug #1387836)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I am on homepage
-    And I choose "Profile" in "Content" from main menu
+    And I choose "Profile" from user menu
     And I follow "About me"
     And I set the following fields to these values:
     | First name | test first name |
     | Last name | test last name |
     And I press "Save profile"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     # Creating a page
     And I follow "Add"
     And I click on "Page" in the dialog
@@ -22,7 +22,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     # Verifying it saved
     And I should see "Page saved successfully"
     # Creating a collection
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I follow "Add"
     And I click on "Collection" in the dialog
     And I fill in "Collection name" with "test collection name"
@@ -40,10 +40,10 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I click on "test collection name" panel menu
     And I should see "Delete"
     And I go to the homepage
-    And I choose "Export" in "Portfolio" from main menu
+    And I choose "Export" in "Manage" from main menu
     And I move backward one page
     And I move forward one page
-    And I choose "Profile" in "Content" from main menu
+    And I choose "Profile" from user menu
     And the "First name" field should not contain "Jinelle"
     And the "First name" field should contain "test first name"
 

@@ -15,7 +15,7 @@ Background:
 
 Scenario: Create and delete text block
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Page UserA_01" panel menu
     And I click on "Edit" in "Page UserA_01" panel menu
     When I follow "Text"

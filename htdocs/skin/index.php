@@ -11,7 +11,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/skins');
+define('MENUITEM', 'create/skins');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'skin');
 define('SECTION_PAGE', 'index');

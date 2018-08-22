@@ -28,7 +28,7 @@ And the following "groups" exist:
 Scenario: Check modal is working for the "Edit group memebership" on find people page (Bug 1513265)
    # Log in as "Admin" user
    Given I log in as "admin" with password "Kupuh1pa!"
-   And I choose "Find people" in "Groups" from main menu
+   And I choose "Find people" in "Engage" from main menu
    And I follow "2" in the "Find people results" property
    And I click on "Edit group membership" in "Liam User" row
    # allow the modal to open

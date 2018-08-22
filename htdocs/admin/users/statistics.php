@@ -275,6 +275,7 @@ JS;
 }
 
 $smarty = smarty(array('paginator','js/chartjs/Chart.min.js'));
+setpageicon($smarty, 'icon-pie-chart');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('institutiondata', $institutiondata);
 $smarty->assign('type', $type);

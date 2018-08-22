@@ -56,7 +56,7 @@ else if ($institution = param_alpha('institution', null)) {
     $params['institution'] = $institution;
 }
 else {
-    define('MENUITEM', 'content/notes');
+    define('MENUITEM', 'create/notes');
     $pageheading = get_string('mynotes', 'artefact.internal');
     $where = 'owner = ?';
     $values = array($USER->get('id'));

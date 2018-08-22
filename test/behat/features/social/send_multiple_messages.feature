@@ -14,14 +14,14 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    # Log in as "Admin" user
    Given I log in as "admin" with password "Kupuh1pa!"
    # Sending message 1
-   And I choose "Find people" in "Groups" from main menu
+   And I choose "Find people" in "Engage" from main menu
    And I follow "Angela"
    And I follow "Send message"
    And I fill in the following:
    | Subject   | Hi there |
    | Message   | This is a test message   |
    And I press "Send message"
-   And I choose "Find people" in "Groups" from main menu
+   And I choose "Find people" in "Engage" from main menu
    And I follow "Angela"
    And I follow "Request friendship"
    #Sending a friend request with more than 255 characters (Bug 1373670)
@@ -39,7 +39,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    And I am on homepage
    And I scroll to the id 'bottom-pane'
    And I should see "Hi there"
-   And I choose "mail" from user menu by id
+   And I choose inbox
    And I should see "Hi there"
    And I should not see "Call stack"
    # Log out as Angela
@@ -56,7 +56,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    And I follow "Become Admin User again"
    And I am on homepage
    # In my inbox block I'll see "New friend request"
-   And I choose "mail" from user menu by id
+   And I choose inbox
    And I expand the section "New friend request"
    # Clicking on the notification title to expand it
    And I follow "Requests"
@@ -65,7 +65,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    And I should see "Accepted friend request"
    And I follow "Log in as UserB"
    # In UserA's inbox block I'll see a "Friend request accepted" notification
-   And I choose "mail" from user menu by id
+   And I choose inbox
    And I expand the section "Friend request accepted"
    # Expanding it shows me another "More..." link which takes me to the inbox
    And I follow "More..."

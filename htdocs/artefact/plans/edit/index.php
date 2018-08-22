@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', true);
-define('MENUITEM', 'content/plans');
+define('MENUITEM', 'create/plans');
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('pieforms/pieform/elements/calendar.php');

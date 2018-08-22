@@ -142,9 +142,9 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
     And I follow "Log in as this user"
     And I follow "log in anyway"
     # Checking I can see the page ...
-    And I choose "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     Then I should see "Page mahara_01"
     # ... and the journal
-    And I choose "Journals" in "Content" from main menu
+    And I choose "Journals" in "Create" from main menu
     And I follow "Copy of Site journal 1"
     Then I should see "Spongebob"

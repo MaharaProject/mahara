@@ -37,17 +37,23 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function menu_items() {
         return array(
-            'content/files' => array(
-                'path' => 'content/files',
+            'create/files' => array(
+                'path' => 'create/files',
                 'url' => 'artefact/file/index.php',
                 'title' => get_string('Files', 'artefact.file'),
-                'weight' => 30,
+                'weight' => 20,
             ),
-            'content/profileicons' => array(
-                'path' => 'content/profileicons',
+        );
+    }
+
+    public static function right_nav_menu_items() {
+        return array(
+            'profileicons' => array(
+                'path' => 'profileicons',
                 'url' => 'artefact/file/profileicons.php',
                 'title' => get_string('profileicons', 'artefact.file'),
-                'weight' => 20,
+                'weight' => 15,
+                'iconclass' => 'id-badge',
             ),
         );
     }

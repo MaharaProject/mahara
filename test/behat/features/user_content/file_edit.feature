@@ -11,7 +11,7 @@ Given the following "users" exist:
 
 Scenario: Add file, rename and add description
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Files" in "Content" from main menu
+    And I choose "Files" in "Create" from main menu
     And I attach the file "mahara_about.pdf" to "File"
     And I press "Edit \"mahara_about.pdf\""
     And I set the field "Name" to "renamed.pdf"

@@ -13,7 +13,7 @@ Given the following "users" exist:
 Scenario: Creating a journal and editing it (Bug 1513716)
 Given I log in as "UserA" with password "Kupuh1pa!"
 # Creating a journal
-And I choose "Journals" in "Content" from main menu
+And I choose "Journals" in "Create" from main menu
 When I click on "New entry"
 And I set the following fields to these values:
  | Title | My new journal |

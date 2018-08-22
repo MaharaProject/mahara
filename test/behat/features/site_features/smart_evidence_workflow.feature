@@ -46,7 +46,7 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     4) Check that feedback comments made by Mahara admin/staff cannot be deleted
     # Creating a collection AND adding pages
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I follow "Add"
     When I click on "Collection" in the dialog
     And I fill in the following:

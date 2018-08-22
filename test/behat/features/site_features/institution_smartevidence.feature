@@ -38,7 +38,7 @@ And the following "pages" exist:
 Scenario: SmartEvidence interaction by member / staff
     # Creating a collection of existing pages
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I follow "Add"
     When I click on "Collection" in the dialog
     And I fill in the following:

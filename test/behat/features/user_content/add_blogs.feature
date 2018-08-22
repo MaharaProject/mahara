@@ -15,7 +15,7 @@ Feature: Mahara users can create their blogs
  Scenario: Create blogs
   Given I log in as "UserA" with password "Kupuh1pa!"
     # Confirm page contains text "No entries yet. Add one". (Bug 1017785)
-    When I choose "Journals" in "Content" from main menu
+    When I choose "Journals" in "Create" from main menu
     Then I should see "No entries yet."
     # Confirm page contains link "Add one" that links to Create new Journal page. (Bug 1017785)
     When I follow "Add one"
@@ -44,7 +44,7 @@ Feature: Mahara users can create their blogs
   And I scroll to the base of id "editpost_tags_container"
   And I fill in select2 input "editpost_tags" with "blogentry" and select "blogentry"
   And I press "Save entry"
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" panel menu
   And I expand "Journals" node in the "blocktype sidebar" property
   And I follow "Tagged journal entries"
@@ -52,10 +52,10 @@ Feature: Mahara users can create their blogs
   And I fill in select2 input "instconf_tagselect" with "blogentry" and select "blogentry"
   And I press "Save"
   Then I should see "Journal entries with tag \"blogentry\""
-  And I choose "Journals" in "Content" from main menu
+  And I choose "Journals" in "Create" from main menu
   And I follow "My new journal"
   And I click on "Delete \"Journal entry 1\""
-  And I choose "Journals" in "Content" from main menu
+  And I choose "Journals" in "Create" from main menu
   And I should see "My new journal No entries yet."
   And I click on "Delete \"My new journal\""
   Then I should not see "My new journal"

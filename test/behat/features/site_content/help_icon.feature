@@ -25,7 +25,7 @@ Background:
 Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   When I log in as "UserA" with password "Kupuh1pa!"
   # Test pages and collections help
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I click on "Help"
   And I should see "A page contains a selection of artefacts"
   And I should see "A collection is a set of pages that are linked to one another and have the same access permissions."
@@ -41,7 +41,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   # Tags
   Then I should see "You can add tags to artefacts, pages and collections you create."
   # Collections
-  Given I choose "Pages and collections" in "Portfolio" from main menu
+  Given I choose "Pages and collections" in "Create" from main menu
   And I click on "Add"
   And I click on "Collection"
   # Edit collection settings
@@ -55,15 +55,15 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I follow "Help"
   Then I should see "Here you can add pages to your collection and set the order in which they will be displayed in the collection navigation."
   # Shared by me
-  And I choose "Shared by me" in "Portfolio" from main menu
+  And I choose "Shared by me" in "Engage" from main menu
   And I click on "Help"
   Then I should see "When you have created portfolio pages and collections, you may wish to share them with others, e.g. to receive feedback on your work in form of comments."
   # Shared with me
-  And I choose "Shared with me" in "Portfolio" from main menu
+  And I choose "Shared with me" in "Engage" from main menu
   And I click on "Help"
   Then I should see "On this page you can list the most recently modified or commented on pages that have been shared with"
   # Skins
-  And I choose "Skins" in "Portfolio" from main menu
+  And I choose "Skins" in "Create" from main menu
   And I click on "Help"
   Then I should see "Skins help you customise the look of your portfolio pages to give them a personal touch."
   And I follow "Close help"
@@ -72,17 +72,17 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I click on "Help"
   Then I should see "You can design your own skin"
   # Import skin
-  And I choose "Skins" in "Portfolio" from main menu
+  And I choose "Skins" in "Create" from main menu
   And I follow "Import skin(s)"
   And I click on "Help"
   And I should see "You can import skins from other Mahara sites."
   # Export
   # Note: The export page is not available if the export plugins is not installed and the zip command is not installed
-  And I choose "Export" in "Portfolio" from main menu
+  And I choose "Export" in "Manage" from main menu
   And I click on "Help"
   And I should see "You can export your portfolio to keep your files and content offline."
   # Import
-  And I choose "Import" in "Portfolio" from main menu
+  And I choose "Import" in "Manage" from main menu
   And I click on "Help"
   Then I should see "You can import your (or any valid Leap2a) portfolio from another Mahara site yourself."
 
@@ -90,7 +90,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
 # Scenario: Showing correct external manual help file for mahara page
   # Test by going to pages and collections help for user / institution / site / group
   # When I log in as "admin" with password "Kupuh1pa!"
-  # And I choose "Pages and collections" in "Portfolio" from main menu
+  # And I choose "Pages and collections" in "Create" from main menu
   # And I follow "Help" in the ".footer-nav" "css_element"
   # And I switch to the new window
   # And I scroll to the center of id "overview-page"

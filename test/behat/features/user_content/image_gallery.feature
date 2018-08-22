@@ -12,7 +12,7 @@ Background:
 
 Scenario:
   Given I log in as "UserA" with password "Kupuh1pa!"
-  When I choose "Files" in "Content" from main menu
+  When I choose "Files" in "Create" from main menu
   And I fill in "Folder1" for "files_filebrowser_createfolder_name"
   And I press "Create folder"
   And I follow "Folder1"
@@ -23,7 +23,7 @@ Scenario:
   And I reload the page
   And I should see "1.5M" in the "Folder1" row
   # Creating folder 1
-  Given I choose "Pages and collections" in "Portfolio" from main menu
+  Given I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" panel menu
   And I expand "Media" node
   And I follow "Image gallery"

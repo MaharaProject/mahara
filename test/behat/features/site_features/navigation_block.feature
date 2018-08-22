@@ -23,7 +23,7 @@ Background:
 
 Scenario:
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I follow "Collection UserA_01"
   And I follow "Edit"
   And I expand "General" node

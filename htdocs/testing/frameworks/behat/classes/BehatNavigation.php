@@ -76,11 +76,23 @@ class BehatNavigation extends BehatBase {
         $exception = new ExpectationException('The sub menu item "' . $menuitemtext . '" not found or invisible in "' . $menu . '"', $this->getSession());
 
         $xpath = "//nav[@id='" . $menu . "']" .
-            "//li[contains(normalize-space(.), " . $menuitemtextliteral .")]" .
-            "//a[normalize-space(.)=" . $submenuitemtextliteral ."]";
+            "/ul/li[contains(normalize-space(.), " . $menuitemtextliteral .")]" .
+            "//li//a[normalize-space(.)=" . $submenuitemtextliteral ."]";
         $node = $this->find('xpath', $xpath, $exception);
 
         return $node;
+    }
+
+    /**
+     * Choose inbox from menu
+     *
+     * @Given /^I choose inbox$/
+     */
+    public function i_choose_inbox() {
+        $exception = new ExpectationException('The menu item inbox not found or invisible', $this->getSession());
+        $xpath = "//button[@id='nav-inbox']";
+        $inboxnode = $this->find('xpath', $xpath, $exception);
+        $inboxnode->click();
     }
 
     /**

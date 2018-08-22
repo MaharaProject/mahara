@@ -69,7 +69,7 @@ class PluginArtefactBlog extends PluginArtefact {
             define('MENUITEM', 'groups/blogs');
         }
         else {
-            define('MENUITEM', 'content/blogs');
+            define('MENUITEM', 'create/blogs');
         }
     }
 
@@ -80,12 +80,12 @@ class PluginArtefactBlog extends PluginArtefact {
     public static function menu_items() {
         global $USER;
         $tab = array(
-            'path'   => 'content/blogs',
-            'weight' => 40,
+            'path'   => 'create/blogs',
+            'weight' => 30,
             'url'    => 'artefact/blog/index.php',
             'title'  => get_string('Blogs', 'artefact.blog'),
         );
-        return array('content/blogs' => $tab);
+        return array('create/blogs' => $tab);
     }
 
     public static function get_cron() {

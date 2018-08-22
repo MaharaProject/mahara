@@ -13,11 +13,11 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
     # set up for being able to use an image in WYSIWYG editor
-    And I choose "Files" in "Content" from main menu
+    And I choose "Files" in "Create" from main menu
     And I attach the file "Image2.png" to "files_filebrowser_userfile"
     # Navigating to Portfolio to create a page
     # This is the test for manually creating a page
-    And I choose "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I scroll to the base of id "addview-button"
     And I should see "Pages and collections" in the "h1 heading" property
     And I follow "Add"
@@ -94,7 +94,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     Then I should see "Print"
     And I should see "Delete this page"
     # User share page with public and enable copy page functionality
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "This is the edited page title" panel access menu
     And I follow "Advanced options"
     And I enable the switch "Allow copying"
@@ -116,7 +116,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I log out
     # check page can be deleted (Bug 1755682)
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Delete" in "This is the edited page" panel menu
     And I should see "Do you really want to delete this page?"
     And I press "Yes"

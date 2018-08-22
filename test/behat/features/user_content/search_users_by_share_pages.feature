@@ -23,7 +23,7 @@ Scenario: Create users and search for them (Bug 897586)
     # Log in as the student user
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Sharing both of the pages that have been created
-    And I choose "Shared by me" in "Portfolio" from main menu
+    And I choose "Shared by me" in "Engage" from main menu
     And I click on "Edit access" in "Page UserA_01" row
     And I set the select2 value "Page UserA_01, Page UserA_02" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
@@ -36,7 +36,7 @@ Scenario: Create users and search for them (Bug 897586)
     # Verifying log in was successful
     And I should see "Bob User"
     # Sharing 2 of the pages Bob created to public
-    And I choose "Shared by me" in "Portfolio" from main menu
+    And I choose "Shared by me" in "Engage" from main menu
     And I click on "Edit access" in "Page UserB_01" row
     And I set the select2 value "Page UserB_01, Page UserB_02" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
@@ -44,7 +44,7 @@ Scenario: Create users and search for them (Bug 897586)
     # Verifying that both of the pages have been shared
     And I should see "Access rules were updated for 2 pages."
     # Sharing 1 of the pages Bob created to admin user
-    And I choose "Shared by me" in "Portfolio" from main menu
+    And I choose "Shared by me" in "Engage" from main menu
     And I click on "Edit access" in "Page UserB_01" row
     And I set the select2 value "Page UserB_03" for "editaccess_views"
     And I select "Users" from "accesslist[0][searchtype]"
@@ -55,7 +55,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I log out
     # Logging back in as admin to search for users on the shared with me page
     And I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Shared with me" in "Portfolio" from main menu
+    And I choose "Shared with me" in "Engage" from main menu
     # Entering Angela name in the search box
     And I fill in the following:
     | Search: | Angela |

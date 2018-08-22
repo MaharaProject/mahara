@@ -18,7 +18,7 @@ Background:
 Scenario: Find users in your institution and outside your institution
     # Log in as a user
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Find people" in "Groups" from main menu
+    And I choose "Find people" in "Engage" from main menu
 
     # Searching within my own institution, I should only find users in my institution
     And I select "My institutions" from "Filter"

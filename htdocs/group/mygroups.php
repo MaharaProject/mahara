@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/mygroups');
+define('MENUITEM', 'engage/mygroups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('mygroups'));
 define('SECTION_PLUGINTYPE', 'core');

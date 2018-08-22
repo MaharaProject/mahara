@@ -12,7 +12,7 @@ Background:
 Scenario: Admin user can add an image to the "Logged -out home" static page and see it displayed
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Upload an image
-    And I choose "Files" in "Content" from main menu
+    And I choose "Files" in "Create" from main menu
     And I attach the file "Image2.png" to "files_filebrowser_userfile"
     And I am on "admin/site/pages.php"
     And I select "Home (Dashboard)" from "pagename"
@@ -29,7 +29,7 @@ Scenario: Admin user can add an image to the "Logged -out home" static page and 
 Scenario: Admin user can add an image to the "Home (Dashboard)" static page and see it displayed
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Upload an image
-    And I choose "Files" in "Content" from main menu
+    And I choose "Files" in "Create" from main menu
     And I attach the file "Image2.png" to "files_filebrowser_userfile"
     And  I am on "admin/site/pages.php"
     And I select "Logged-out home" from "pagename"

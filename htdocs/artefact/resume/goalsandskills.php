@@ -9,7 +9,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/resume');
+define('MENUITEM', 'create/resume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'index');

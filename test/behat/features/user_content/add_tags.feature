@@ -18,7 +18,7 @@ Background:
    # Log in as the UserA
    Given I log in as "UserA" with password "Kupuh1pa!"
    # Creating a folder with a  tag
-   When I choose "Files" in "Content" from main menu
+   When I choose "Files" in "Create" from main menu
    And I set the following fields to these values:
    | Create folder | folder1 |
    # Pressing create folder button
@@ -31,7 +31,7 @@ Background:
    And I fill in select2 input "files_filebrowser_edit_tags" with "&red" and select "&red"
    And I press "Save changes"
    #Creating a Journal with tag
-   And I choose "Journals" in "Content" from main menu
+   And I choose "Journals" in "Create" from main menu
    And I follow "New entry"
    And I set the following fields to these values:
    | Title *  | Journal one  |
@@ -40,7 +40,7 @@ Background:
    And I fill in select2 input "editpost_tags" with "blue" and select "blue"
    And I press "Save entry"
    # Creating a Plan with a tag
-   And I choose "Plans" in "Content" from main menu
+   And I choose "Plans" in "Create" from main menu
    And I follow "New plan"
    And I fill in the following:
    | Title *  | Plan 9 from outer space  |
@@ -57,13 +57,13 @@ Background:
    And I fill in select2 input "addtasks_tags" with "blue" and select "blue"
    And I press "Save task"
    # Adding a tag to page 1
-   And I choose "Pages and collections" in "Portfolio" from main menu
+   And I choose "Pages and collections" in "Create" from main menu
    And I click on "Edit" in "Page UserA_01" panel menu
    And I follow "Settings" in the "#toolbar-buttons" "css_element"
    And I fill in select2 input "settings_tags" with "blue" and select "blue"
    And I press "Save"
    # Adding a tag to page 2
-   And I choose "Pages and collections" in "Portfolio" from main menu
+   And I choose "Pages and collections" in "Create" from main menu
    And I click on "Edit" in "Page UserA_02" panel menu
    And I follow "Settings" in the "#toolbar-buttons" "css_element"
    And I fill in select2 input "settings_tags" with "#orange" and select "#orange"
@@ -92,8 +92,8 @@ Background:
    And I press "Add"
    And I fill in select2 input "instconf_tags" with "êyellow" and select "êyellow"
    And I press "Save"
-   And I choose "Pages and collections" in "Portfolio" from main menu
-   Then I follow "Tags"
+   And I choose "Pages and collections" in "Create" from main menu
+   Then I follow "Tags" in the "#sb-tags" "css_element"
    # Verifying tags are saved
    And I should see "blue" in the "#results_container" element
    And I should see "@black" in the "#results_container" element

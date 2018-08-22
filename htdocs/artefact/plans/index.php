@@ -11,7 +11,7 @@
 
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/plans');
+define('MENUITEM', 'create/plans');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'plans');
 define('SECTION_PAGE', 'index');

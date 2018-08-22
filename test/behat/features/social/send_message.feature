@@ -13,7 +13,7 @@ Scenario: Selecting select2 option via ajax (Bug #1520011)
     # Log in as an Admin user
     Given I log in as "admin" with password "Kupuh1pa!"
     # Send a message
-    And I choose "mail" from user menu by id
+    And I choose inbox
     And I follow "Compose"
     Then I should see "Recipients *"
     And I should see "Subject *"

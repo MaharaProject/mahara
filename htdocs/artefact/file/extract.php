@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/files');
+define('MENUITEM', 'create/files');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 safe_require('artefact', 'file');

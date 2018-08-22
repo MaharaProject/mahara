@@ -36,7 +36,7 @@ if ($importsiteskins) {
     define('MENUITEM', 'configsite/siteskins');
 }
 else {
-    define('MENUITEM', 'myportfolio/myskins');
+    define('MENUITEM', 'create/skins');
 }
 
 $form = pieform(array(

@@ -86,6 +86,21 @@
                                 <span class="icon icon-chevron-down collapsed"></span>
                             </button>
                         {/if}
+                        {if $MESSAGEBOX}
+                            {foreach from=$MESSAGEBOX item=item}
+                            <a href="{$WWWROOT}{$item.url}" title="{$item.alt}">
+                                <button id="nav-{$item.path}" class="navbar-toggle navbar-messages collapsed">
+                                    <span class="sr-only">{$item.title} <span class="{$item.countclasssr}">{$item.unread}</span></span>
+                                    <span class="icon icon-{$item.iconclass} icon-lg" role="presentation" aria-hidden="true"></span>
+                                    {if $item.count}
+                                    <span class="navbar-messages-count">
+                                        <span class="{$item.countclass}">{$item.count}</span>
+                                    </span>
+                                    {/if}
+                                </button>
+                            </a>
+                            {/foreach}
+                        {/if}
                         <!-- HIDE WHEN ON DESKTOP -->
                         {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
                         <button class="search-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">

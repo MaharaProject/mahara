@@ -34,11 +34,11 @@ class PluginArtefactPlans extends PluginArtefact {
 
     public static function menu_items() {
         return array(
-            'content/plans' => array(
-                'path' => 'content/plans',
+            'create/plans' => array(
+                'path' => 'create/plans',
                 'url'  => 'artefact/plans/index.php',
                 'title' => get_string('Plans', 'artefact.plans'),
-                'weight' => 60,
+                'weight' => 50,
             ),
         );
     }

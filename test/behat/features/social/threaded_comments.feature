@@ -94,7 +94,7 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
     And I should see "Private reply by AdminA"
     And I should see "Private counter-reply by AdminB"
     # AdminB should receive a notification about AdminA's reply even though they unwatched the page
-    And I choose "mail" from user menu by id
+    And I choose inbox
     And I follow "New comment on Page AdminA_01"
     And I should see "Private reply by AdminA"
 

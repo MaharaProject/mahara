@@ -28,7 +28,7 @@ And the following "collections" exist:
 
 Scenario: Export collections in bulk as HTML
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Export" in "Portfolio" from main menu
+  And I choose "Export" in "Manage" from main menu
   # this tests the page default option "Standalone HTML website"
   When I select the radio "Just some of my collections"
   Then I should see "Select all"
@@ -47,7 +47,7 @@ Scenario: Export collections in bulk as HTML
 
 Scenario: Export collections in bulk as Leap2A
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Export" in "Portfolio" from main menu
+  And I choose "Export" in "Manage" from main menu
   # this tests the Leap2A export
   When I select the radio "Leap2A"
   And I select the radio "Just some of my collections"
@@ -82,7 +82,7 @@ Scenario: Institution One admin locks First name, Last name fields
     And I press "Submit"
     Then I log out
     Given I log in as "UserB" with password "Kupuh1pa!"
-    When I choose "Import" in "Portfolio" from main menu
+    When I choose "Import" in "Manage" from main menu
     # Upload the file "UserA.xml"  Leap2A file
     And I attach the file "leap2a.xml" to "import_leap2afile"
     And I press "Import"

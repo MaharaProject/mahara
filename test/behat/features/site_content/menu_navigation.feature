@@ -24,36 +24,32 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  Then I should not see "Administration" in the "Administration menu" property
  And I should not see "Site information" in the "Administration menu" property
  And I click on "Show main menu"
- And I should see "Content" in the "Main menu" property
- And I should see "Portfolio" in the "Main menu" property
- And I should see "Groups" in the "Main menu" property
- # Checking the sub navigation in Content
- When I follow "Content"
- And I click on "Show main menu"
- Then I should see "Profile" in the "Content sub-menu" property
- And I should see "Profile pictures" in the "Content sub-menu" property
- And I should see "Files" in the "Content sub-menu" property
- And I should see "Journals" in the "Content sub-menu" property
- And I should see "Résumé" in the "Content sub-menu" property
- And I should see "Plans" in the "Content sub-menu" property
- And I should see "Notes" in the "Content sub-menu" property
-# Checking the sub navigation in Portfolio
- When I follow "Portfolio"
- And I click on "Show main menu"
- Then I should see "Pages and collections" in the "Portfolio sub-menu" property
- And I should see "Shared by me" in the "Portfolio sub-menu" property
- And I should see "Shared with me" in the "Portfolio sub-menu" property
- And I should see "Export" in the "Portfolio sub-menu" property
- And I should see "Import" in the "Portfolio sub-menu" property
-# Checking the sub navigation in Groups
- When I follow "Groups"
- And I click on "Show main menu"
- Then I should see "My groups" in the "Groups sub-menu" property
- And I should see "Find groups" in the "Groups sub-menu" property
- And I should see "My friends" in the "Groups sub-menu" property
- And I should see "Find people" in the "Groups sub-menu" property
- And I should see "Institution membership" in the "Groups sub-menu" property
- And I should see "Topics" in the "Groups sub-menu" property
+ And I should see "Create" in the "Main menu" property
+ And I should see "Engage" in the "Main menu" property
+ And I should see "Manage" in the "Main menu" property
+ # Checking the sub navigation in Create
+ When I follow "Create"
+ Then I should see "Pages and collections" in the "Create sub-menu" property
+ And I should see "Files" in the "Create sub-menu" property
+ And I should see "Journals" in the "Create sub-menu" property
+ And I should see "Résumé" in the "Create sub-menu" property
+ And I should see "Plans" in the "Create sub-menu" property
+ And I should see "Notes" in the "Create sub-menu" property
+ # Checking the sub navigation in Engage
+ When I follow "Engage"
+ Then I should see "My groups" in the "Engage sub-menu" property
+ And I should see "Find groups" in the "Engage sub-menu" property
+ And I should see "My friends" in the "Engage sub-menu" property
+ And I should see "Find people" in the "Engage sub-menu" property
+ And I should see "Institution membership" in the "Engage sub-menu" property
+ And I should see "Topics" in the "Engage sub-menu" property
+ And I should see "Shared by me" in the "Engage sub-menu" property
+ And I should see "Shared with me" in the "Engage sub-menu" property
+
+ # Checking the sub navigation in Manage
+ When I follow "Manage"
+ And I should see "Export" in the "Manage sub-menu" property
+ And I should see "Import" in the "Manage sub-menu" property
 
 Scenario: Checking menu items are available as site staff (Bug 1467368)
  Given I log in as "UserB" with password "Kupuh1pa!"
@@ -179,12 +175,13 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Pending registrations" in the "Institutions sub-menu" property
  # Checking Reports menu
  And I should see "Reports"
+
  #Checking the user menu navigation headings
  Scenario: Checking User menu items
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I click on the "User menu" property
- And I should see "Settings"
- And I should see "unread"
+ Then I should see "Profile"
+ And I should see "Profile pictures"
  And I should see "Settings"
  When I press "Show menu for Settings"
  Then I should see "Settings"

@@ -1101,3 +1101,14 @@ jQuery(function($) {
         });
     }
 });
+
+/**
+ * Wire up menu so that links with submenu but no url just toggle the child collapse
+ */
+jQuery(function($) {
+    $('nav .menu-dropdown-toggle').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        $(this).next().trigger('click');
+    });
+});

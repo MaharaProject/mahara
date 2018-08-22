@@ -10,7 +10,7 @@ Background:
 
 Scenario: Creating a plan with 11 tasks (Bug #1503036)
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Plans" in "Content" from main menu
+    And I choose "Plans" in "Create" from main menu
     And I follow "New plan"
     And I fill in the following:
     | Title *  | Plan 9 from outer space  |
@@ -82,7 +82,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     And I follow "Next page"
     Then I should see "Alien invasion"
     # Add the plan to a page
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page admin_01" panel menu
     And I expand "General" node
     And I follow "Plans" in the "blocktype sidebar" property
@@ -110,7 +110,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     Then I should see "Social collapse"
 
     # Edit title of plan and then delete plan (Bug 1755680)
-    And I choose "Plans" in "Content" from main menu
+    And I choose "Plans" in "Create" from main menu
     And I click on "Edit \"Plan 9 from outer space\""
     And I set the field "Title" to "Life on Mars"
     And I press "Save plan"

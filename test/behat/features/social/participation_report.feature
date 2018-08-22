@@ -35,7 +35,7 @@ Scenario: In the participation report pages should be seen in a collection
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
- And I choose "Shared by me" in "Portfolio" from main menu
+ And I choose "Shared by me" in "Engage" from main menu
  And I follow "Pages"
  And I click on "Edit access" in "Page 03" row
  And I select "Group one" from "accesslist[0][searchtype]"
@@ -48,7 +48,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I fill in "accesslist[0][startdate]" with "2015/06/15 03:00"
  And I press "Save"
  # Enable the participation report and make the group public
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I click on "Settings" in "Group one" row
  And I enable the switch "Participation report"
  And I enable the switch "Publicly viewable group"
@@ -81,7 +81,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I enable the switch "Make comment public"
  And I press "Comment"
  # UserA comments on group page 03
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "Group one"
  And I click on "Pages and collections" in the "Arrow-bar nav" property
  And I follow "Group page 03"
@@ -89,7 +89,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I enable the switch "Make comment public"
  And I press "Comment"
  # UserA comments on group page 04
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "Group one"
  And I click on "Pages and collections" in the "Arrow-bar nav" property
  And I follow "Group page 04"
@@ -101,7 +101,7 @@ Scenario: In the participation report pages should be seen in a collection
  # Log in as UserB
  Given I log in as "UserB" with password "Kupuh1pa!"
  # UserB comments on the group page 01
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "Group one"
  And I follow "Pages and collections (tab)"
  And I follow "Group collection 01"
@@ -114,7 +114,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I enable the switch "Make comment public"
  And I press "Comment"
  # UserB comments on group page 03
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "Group one"
  And I follow "Pages and collections (tab)"
  And I follow "Group page 03"
@@ -122,7 +122,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I enable the switch "Make comment public"
  And I press "Comment"
  # UserB comments on group page 04
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "Group one"
  And I follow "Pages and collections (tab)"
  And I follow "Group page 04"
@@ -133,7 +133,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I log out
  # UserC comments on group page 01
  Given I log in as "UserC" with password "Kupuh1pa!"
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "searching for groups"
  And I follow "Group one"
  And I follow "Pages and collections (tab)"
@@ -147,7 +147,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I enable the switch "Make comment public"
  And I press "Comment"
  # UserC comments on group page 03
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "searching for groups"
  And I follow "Group one"
  And I follow "Pages and collections (tab)"
@@ -156,7 +156,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I enable the switch "Make comment public"
  And I press "Comment"
  # UserC comments on group page 04
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "searching for groups"
  And I follow "Group one"
  And I follow "Pages and collections (tab)"
@@ -168,7 +168,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I log out
  # Log in as UserA
  Given I log in as "UserA" with password "Kupuh1pa!"
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "Group one"
  And I click on "Report" in the "Arrow-bar nav" property
  # Check elements in Pages and collections shared with this group table

@@ -25,20 +25,20 @@ Scenario: Create groups and limit display on profile page (Bug 1426983)
     # Log in as a normal user
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Creating several groups to test
-    And I choose "Groups" from main menu
+    And I choose "My groups" in "Engage" from main menu
     And I follow "Create group"
     And I set the following fields to these values:
     | Group name | GroupK |
     | Group description | GroupA owned by UserA |
     And I press "Save group"
     # Changing the amount of groups seen in My groups block
-    And I choose "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I follow "Profile page"
     And I follow "Edit"
     And I configure the block "My groups"
     And I set the following fields to these values:
     | Maximum number of groups to display | 3 |
     And I press "Save"
-    And I choose "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I follow "Profile page"
     And I should see "11 groups"

@@ -16,7 +16,7 @@ Background:
 Scenario: Turning on and of switches in Journal configuration block (Bug 1431569)
  Given I log in as "admin" with password "Kupuh1pa!"
  # Navigating to switchbox in Journal block
- And I choose "Journals" in "Content" from main menu
+ And I choose "Journals" in "Create" from main menu
  And I follow "New entry"
  And I press "Save entry"
  And I should see "There was an error with submitting this form. Please check the marked fields and try again."
@@ -25,7 +25,7 @@ Scenario: Turning on and of switches in Journal configuration block (Bug 1431569
 Scenario: Creating a Journal entry
  Given I log in as "admin" with password "Kupuh1pa!"
  # Navigating to switchbox in Journal block
- And I choose "Journals" in "Content" from main menu
+ And I choose "Journals" in "Create" from main menu
  And I follow "New entry"
  And I fill in "Title *" with "Story of my life"
  And I set the following fields to these values:
@@ -61,7 +61,7 @@ Scenario: Creating a Journal entry
  And I press "Save entry"
 
  # Adding journal entry to group 'GroupA'
- When I choose "My groups" in "Groups" from main menu
+ When I choose "My groups" in "Engage" from main menu
  And I follow "GroupA"
  And I follow "Journals" in the "Arrow-bar nav" property
  # Confirm page contains text "There are no journals in this group" (Bug 1017785)
@@ -80,7 +80,7 @@ Scenario: Creating a Journal entry
  And I press "Save entry"
 
  # Adding journal blocks to a page
- And I choose "Pages and collections" in "Portfolio" from main menu
+ And I choose "Pages and collections" in "Create" from main menu
  And I follow "Page admin_01"
  And I follow "Edit"
  And I expand "Journals" node in the "blocktype sidebar" property

@@ -27,7 +27,7 @@ Scenario: Check share page with friends
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
- And I choose "Find people" in "Groups" from main menu
+ And I choose "Find people" in "Engage" from main menu
  And I click on "Send friend request" in "Bob User" row
  And I set the field "Message" to "Love me, love me, say you do!"
  And I press "Request friendship"
@@ -35,13 +35,13 @@ Scenario: Check share page with friends
  And I log in as "UserB" with password "Kupuh1pa!"
  And I follow "pending friend"
  And I click on "Approve request"
- And I choose "Pages and collections" in "Portfolio" from main menu
+ And I choose "Pages and collections" in "Create" from main menu
  And I click on "Manage access" in "Page UserB_02" panel access menu
  And I select "Friends" from "General" in shared with select2 box
  And I press "Save"
  And I log out
  Given I log in as "UserA" with password "Kupuh1pa!"
- And I choose "Shared with me" in "Portfolio" from main menu
+ And I choose "Shared with me" in "Engage" from main menu
  And I check "Friends"
  And I uncheck "Me"
  And I uncheck "My groups"
@@ -52,13 +52,13 @@ Scenario: Check share page with Registered Users
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
- And I choose "Pages and collections" in "Portfolio" from main menu
+ And I choose "Pages and collections" in "Create" from main menu
  And I click on "Manage access" in "Page UserA_03" panel access menu
  And I select "Registered users" from "General" in shared with select2 box
  And I press "Save"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
- And I choose "Shared with me" in "Portfolio" from main menu
+ And I choose "Shared with me" in "Engage" from main menu
  And I check "Registered users"
  And I uncheck "Me"
  And I uncheck "Friends"
@@ -71,7 +71,7 @@ Scenario: Check share page with groups and that copy options works
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
- And I choose "Pages and collections" in "Portfolio" from main menu
+ And I choose "Pages and collections" in "Create" from main menu
  And I click on "Manage access" in "Page UserA_03" panel access menu
  And I select "GroupA" from "Groups" in shared with select2 box
  And I select "GroupB" from "Groups" in shared with select2 box
@@ -82,7 +82,7 @@ Scenario: Check share page with groups and that copy options works
  And I press "Save"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
- And I choose "Shared with me" in "Portfolio" from main menu
+ And I choose "Shared with me" in "Engage" from main menu
  And I check "My groups"
  And I uncheck "Me"
  And I uncheck "Friends"

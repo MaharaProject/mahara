@@ -15,7 +15,7 @@ Background:
 
 Scenario:
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And  I choose "Pages and collections" in "Portfolio" from main menu
+  And  I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" panel menu
   And I expand "General" node
   And I follow "Creative Commons license"

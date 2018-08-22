@@ -745,6 +745,7 @@ EOF;
         }
         $mainnavsubnav = $SELECTEDSUBNAV;
         $smarty->assign('RIGHTNAV', right_nav());
+        $smarty->assign('MESSAGEBOX', message_nav());
         if (!$mainnavsubnav && $dropdownmenu) {
             // In drop-down navigation, the submenu is only usable if its parent is one of the top-level menu
             // items.  But if the submenu comes from something in right_nav (settings), it's unreachable.
@@ -807,7 +808,10 @@ EOF;
         }
 
         if ($USER->is_logged_in() && defined('MENUITEM') &&
-            (substr(MENUITEM, 0, 11) == 'myportfolio' || substr(MENUITEM, 0, 7) == 'content')) {
+            (
+                substr(MENUITEM, 0, 7) == 'profile' ||
+                in_array(substr(MENUITEM, 0, 6), array('create', 'engage', 'manage'))
+            )) {
             if (get_config('showselfsearchsideblock')) {
                 $sideblocks[] = array(
                     'name'   => 'selfsearch',
@@ -2259,6 +2263,7 @@ function admin_nav() {
             'title'  => get_string('adminhome', 'admin'),
             'weight' => 10,
             'accesskey' => 'a',
+            'iconclass' => 'home',
         ),
         'adminhome/home' => array(
             'path'   => 'adminhome/home',
@@ -2278,6 +2283,7 @@ function admin_nav() {
             'title'  => get_string('configsite', 'admin'),
             'weight' => 20,
             'accesskey' => 's',
+            'iconclass' => 'cogs',
         ),
         'configsite/siteoptions' => array(
             'path'   => 'configsite/siteoptions',
@@ -2345,6 +2351,7 @@ function admin_nav() {
             'title'  => get_string('users'),
             'weight' => 30,
             'accesskey' => 'u',
+            'iconclass' => 'user',
         ),
         'configusers/usersearch' => array(
             'path'   => 'configusers/usersearch',
@@ -2395,6 +2402,7 @@ function admin_nav() {
             'accessibletitle' => get_string('administergroups', 'admin'),
             'weight' => 40,
             'accesskey' => 'r',
+            'iconclass' => 'users',
         ),
         'managegroups/groups' => array(
             'path'   => 'managegroups/groups',
@@ -2432,6 +2440,7 @@ function admin_nav() {
             'title'  => get_string('Institutions', 'admin'),
             'weight' => 50,
             'accesskey' => 'i',
+            'iconclass' => 'university',
         ),
         'manageinstitutions/institutions' => array(
             'path'   => 'manageinstitutions/institutions',
@@ -2516,6 +2525,7 @@ function admin_nav() {
             'url'    => 'admin/users/statistics.php',
             'title'  => get_string('reports', 'statistics'),
             'weight' => 60,
+            'iconclass' => 'pie-chart',
         ),
         'configextensions' => array(
             'path'   => 'configextensions',
@@ -2523,6 +2533,7 @@ function admin_nav() {
             'title'  => get_string('Extensions', 'admin'),
             'weight' => 70,
             'accesskey' => 'e',
+            'iconclass' => 'puzzle-piece',
         ),
         'configextensions/pluginadmin' => array(
             'path'   => 'configextensions/pluginadmin',
@@ -2609,6 +2620,7 @@ function institutional_admin_nav() {
             'title'  => get_string('users'),
             'weight' => 10,
             'accesskey' => 'u',
+            'iconclass' => 'user',
         ),
         'configusers/usersearch' => array(
             'path'   => 'configusers/usersearch',
@@ -2647,6 +2659,7 @@ function institutional_admin_nav() {
             'accessibletitle' => get_string('administergroups', 'admin'),
             'weight' => 20,
             'accesskey' => 'g',
+            'iconclass' => 'users',
         ),
         'managegroups/archives' => array(
             'path'   => 'managegroups/archives',
@@ -2672,6 +2685,7 @@ function institutional_admin_nav() {
             'title'  => get_string('Institutions', 'admin'),
             'weight' => 30,
             'accesskey' => 'i',
+            'iconclass' => 'university',
         ),
         'manageinstitutions/institutions' => array(
             'path'   => 'manageinstitutions/institutions',
@@ -2750,6 +2764,7 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/statistics.php',
             'title'  => get_string('reports', 'statistics'),
             'weight' => 40,
+            'iconclass' => 'pie-chart',
         ),
     );
 
@@ -2794,6 +2809,7 @@ function staff_nav() {
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
             'accesskey' => 'u',
+            'iconclass' => 'user',
         ),
         'reports' => array(
             'path'   => 'reports',
@@ -2801,6 +2817,7 @@ function staff_nav() {
             'title'  => get_string('reports', 'statistics'),
             'weight' => 30,
             'accesskey' => 'i',
+            'iconclass' => 'pie-chart',
         ),
     );
 
@@ -2835,6 +2852,7 @@ function institutional_staff_nav() {
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
             'accesskey' => 'u',
+            'iconclass' => 'user',
         ),
         'reports' => array(
             'path'   => 'reports',
@@ -2842,6 +2860,7 @@ function institutional_staff_nav() {
             'title'  => get_string('reports', 'statistics'),
             'weight' => 20,
             'accesskey' => 'i',
+            'iconclass' => 'pie-chart',
         ),
     );
 }
@@ -2867,92 +2886,95 @@ function mahara_standard_nav() {
             'title' => get_string('dashboard', 'view'),
             'weight' => 10,
             'accesskey' => 'd',
+            'iconclass' => 'home'
         ),
-        'content' => array(
-            'path' => 'content',
-            'url'  => 'artefact/internal/index.php', // @todo possibly do path aliasing and dispatch?
-            'title' => get_string('Content'),
+        'create' => array(
+            'path' => 'create',
+            'url'  => null,
+            'title' => get_string('Create'),
             'weight' => 20,
-            'accesskey' => 'c',
+            'iconclass' => 'plus',
         ),
-        'content/tags' => array(
-            'path' => 'content/tags',
-            'url' => 'tags.php',
-            'title' => get_string('tags'),
-            'weight' => 70,
-        ),
-        'myportfolio' => array(
-            'path' => 'myportfolio',
-            'url' => 'view/index.php',
-            'title' => get_string('myportfolio'),
+        'engage' => array(
+            'path' => 'engage',
+            'url' => null,
+            'title' => get_string('Engage'),
             'weight' => 30,
-            'accesskey' => 'p',
+            'iconclass' => 'users',
         ),
-        'myportfolio/views' => array(
-            'path' => 'myportfolio/views',
+        'create/views' => array(
+            'path' => 'create/views',
             'url' => 'view/index.php',
             'title' => get_string('Viewscollections', 'view'),
             'weight' => 10,
+            'accesskey' => 'p',
         ),
-        'myportfolio/share' => array(
-            'path' => 'myportfolio/share',
+        'create/tags' => array(
+            'path' => 'create/tags',
+            'url' => 'tags.php',
+            'title' => get_string('tags'),
+            'weight' => 80,
+        ),
+        'engage/share' => array(
+            'path' => 'engage/share',
             'url' => 'view/share.php',
             'title' => get_string('sharedbyme', 'view'),
-            'weight' => 30,
-        ),
-        'myportfolio/sharedviews' => array(
-            'path' => 'myportfolio/sharedviews',
-            'url' => 'view/sharedviews.php',
-            'title' => get_string('sharedwithme', 'view'),
             'weight' => 60,
         ),
-        'myportfolio/export' => array(
-            'path' => 'myportfolio/export',
+        'engage/sharedviews' => array(
+            'path' => 'engage/sharedviews',
+            'url' => 'view/sharedviews.php',
+            'title' => get_string('sharedwithme', 'view'),
+            'weight' => 70,
+        ),
+        'manage/export' => array(
+            'path' => 'manage/export',
             'url' => 'export/index.php',
             'title' => get_string('Export', 'export'),
             'weight' => 70,
             'ignore' => !$exportenabled,
         ),
-        'myportfolio/import' => array(
-            'path' => 'myportfolio/import',
+        'manage/import' => array(
+            'path' => 'manage/import',
             'url' => 'import/index.php',
             'title' => get_string('Import', 'import'),
             'weight' => 80,
             'ignore' => !$importenabled,
         ),
-        'groups' => array(
-            'path' => 'groups',
-            'url' => 'group/mygroups.php',
-            'title' => get_string('groups'),
-            'weight' => 40,
-            'accesskey' => 'g',
+        'manage' => array(
+            'path' => 'manage',
+            'url' => null,
+            'title' => get_string('Manage'),
+            'weight' => 30,
+            'iconclass' => 'wrench',
         ),
-        'groups/mygroups' => array(
-            'path' => 'groups/mygroups',
+        'engage/mygroups' => array(
+            'path' => 'engage/mygroups',
             'url' => 'group/mygroups.php',
             'title' => get_string('mygroups'),
             'weight' => 10,
+            'accesskey' => 'g',
         ),
-        'groups/find' => array(
-            'path' => 'groups/find',
+        'engage/find' => array(
+            'path' => 'engage/find',
             'url' => 'group/find.php',
             'title' => get_string('findgroups'),
             'weight' => 20,
         ),
-        'groups/myfriends' => array(
-            'path' => 'groups/myfriends',
+        'engage/myfriends' => array(
+            'path' => 'engage/myfriends',
             'url' => 'user/myfriends.php',
             'title' => get_string('myfriends'),
             'weight' => 30,
         ),
-        'groups/findfriends' => array(
-            'path' => 'groups/findfriends',
+        'engage/findfriends' => array(
+            'path' => 'engage/findfriends',
             'url' => 'user/find.php',
             'title' => get_string('findpeople'),
             'weight' => 40,
         ),
-        'groups/institutionmembership' => array(
-            'path' => 'groups/institutions',
+        'engage/institutionmembership' => array(
+            'path' => 'engage/institutions',
             'url' => 'account/institutions.php',
             'title' => get_string('institutionmembership'),
             'weight' => 50,
@@ -2960,13 +2982,14 @@ function mahara_standard_nav() {
     );
 
     if (can_use_skins()) {
-        $menu['myportfolio/skins'] = array(
-           'path' => 'myportfolio/skins',
+        $menu['create/skins'] = array(
+           'path' => 'create/skins',
            'url' => 'skin/index.php',
            'title' => get_string('myskins', 'skin'),
-           'weight' => 65,
+           'weight' => 70,
         );
     }
+
     return $menu;
 }
 
@@ -3072,6 +3095,20 @@ function clear_menu_cache($institution = null) {
     }
 }
 
+function message_nav() {
+    global $USER, $THEME;
+    $menu = array(
+        'inbox' => array(),
+    );
+
+    if (safe_require_plugin('module', 'multirecipientnotification')) {
+        $plugin_nav_menu = call_static_method(generate_class_name('module', 'multirecipientnotification'),
+                                              'messages_menu_items');
+        $menu = array_merge($menu, $plugin_nav_menu);
+    }
+    return $menu;
+}
+
 function right_nav() {
     global $USER, $THEME;
 
@@ -3079,15 +3116,22 @@ function right_nav() {
     $unread = $USER->get('unread');
 
     $menu = array(
-        'settings' => array(
-            'path' => 'settings',
-            'url' => 'account/index.php',
-            'title' => get_string('settings'),
+        'userdashboard' => array(
+            'path' => 'userdashboard',
+            'url' => profile_url($USER, false),
+            'title' => display_default_name($USER),
             'alt' => '',
             'weight' => 10,
+            'iconclass' => 'user'
+        ),
+        'settings' => array(
+            'path' => 'settings',
+            'url' => null,
+            'title' => get_string('settings'),
+            'alt' => '',
+            'weight' => 20,
             'iconclass' => 'cogs'
         ),
-        'inbox' => array(), // overriden by module 'multirecipientnotification'
         'settings/account' => array(
             'path' => 'settings/account',
             'url' => 'account/index.php',

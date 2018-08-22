@@ -17,7 +17,7 @@ Background:
 Scenario: Creating a Journal, publishing a draft, using tagged entry block
  # Create draft entry
  Given I log in as "UserA" with password "Kupuh1pa!"
- When I choose "Journals" in "Content" from main menu
+ When I choose "Journals" in "Create" from main menu
  And I follow "New entry"
  And I fill in the following:
  | Title * | My diary entry one |
@@ -54,7 +54,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I should not see "mildred"
 
  # Display tagged journals in block
- And I choose "Portfolio" from main menu
+ And I choose "Pages and collections" in "Create" from main menu
  And I click on "Page UserA_01" panel menu
  And I click on "Edit" in "Page UserA_01" panel menu
  And I expand "Journals" node in the "blocktype sidebar" property

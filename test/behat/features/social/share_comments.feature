@@ -17,7 +17,7 @@ And the following "pages" exist:
 Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
 
  Given I log in as "admin" with password "Kupuh1pa!"
- And I choose "Pages and collections" in "Portfolio" from main menu
+ And I choose "Pages and collections" in "Create" from main menu
  And I click on "Edit" in "Page admin_01" panel menu
  # Sharing Page
  And I follow "Share" in the "Toolbar buttons" property
@@ -27,7 +27,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  And I scroll to the id "accessurl_submit_container"
  And I press "Save"
 
- When I choose "Pages and collections" in "Portfolio" from main menu
+ When I choose "Pages and collections" in "Create" from main menu
  And I click on "Edit" in "Page admin_01" panel menu
  When I follow "Share" in the "Toolbar buttons" property
  And I scroll to the base of id "accessurl_more_open"
@@ -35,7 +35,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  And I press "Save"
 
  # Checking if checked option worked
- When I choose "Pages and collections" in "Portfolio" from main menu
+ When I choose "Pages and collections" in "Create" from main menu
  And I click on "Edit" in "Page admin_01" panel menu
  When I follow "Share" in the "Toolbar buttons" property
  Then I should see "Edit access"

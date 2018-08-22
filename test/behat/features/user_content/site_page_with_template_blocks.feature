@@ -42,7 +42,7 @@ Scenario: Add a text block into the site default portfolio page and create a new
 
     # Copy site portfolio page for UserA
     And I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I follow "Copy"
     And I press "Copy page"
     And I follow "Display page"
@@ -51,7 +51,7 @@ Scenario: Add a text block into the site default portfolio page and create a new
 
     # Copy site portfolio page for UserB
     And I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I follow "Copy"
     And I press "Copy page"
     And I follow "Display page"

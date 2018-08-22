@@ -26,7 +26,7 @@ Background:
   Scenario:
     Given I log in as "UserA" with password "Kupuh1pa!"
     # what about making sharing a background step... permissions exist???
-    And I choose "Shared by me" in "Portfolio" from main menu
+    And I choose "Shared by me" in "Engage" from main menu
     And I follow "Collections"
     And I click on "Edit access" in "Collection UserA_01" row
     And I set the select2 value "Page UserA_03" for "editaccess_views"
@@ -83,7 +83,7 @@ Background:
 
     # log in as page owner to authorise the comment to be public
     And I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I follow "Page UserA_03"
     And I click on "Make comment public" in the "This is comment 2" comment
     And I should see "This comment is private" in the "This is comment 1" comment
@@ -92,7 +92,7 @@ Background:
     And I follow "Next page"
     And I click on "Make comment public" in the "This is comment 11" comment
     And I should see "A message has been sent to Bob User to request that the comment be made public."
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I follow "Collection UserA_01"
     And I fill in "This is comment 1" in editor "Comment"
     And I disable the switch "Make comment public"
@@ -112,7 +112,7 @@ Background:
     And I should see "This is comment 3"
     And I should not see "This is comment 2"
     And I should not see "This is comment 1"
-    And I choose "Shared with me" in "Portfolio" from main menu
+    And I choose "Shared with me" in "Engage" from main menu
     And I follow "Page UserA_03"
     And I should not see "This comment is private" in the "This is comment 2" comment
     And I follow "Next page"

@@ -60,7 +60,7 @@ Scenario: Add comments block to page
     And I enable the switch "Make comment public"
     And I press "Comment"
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Page UserA_01" panel menu
     And I click on "Edit" in "Page UserA_01" panel menu
     And I wait "1" seconds

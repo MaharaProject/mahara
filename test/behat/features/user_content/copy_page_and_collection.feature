@@ -17,7 +17,7 @@ Background:
 
 Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361450)
   Given I log in as "admin" with password "Kupuh1pa!"
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I follow "Copy"
   And I follow "Collection admin_01"
   And I should see "Collection admin_01 by admin"
@@ -25,7 +25,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   Then I should not see "Collection admin_01 by admin"
 
   # Add a block to the page
-  When I choose "Pages and collections" in "Portfolio" from main menu
+  When I choose "Pages and collections" in "Create" from main menu
   And I click on "Page admin_02" panel menu
   And I click on "Edit" in "Page admin_02" panel menu
   And I follow "Text"
@@ -44,14 +44,14 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I should see "Tags: block, page, two"
 
   # Copy a page
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I follow "Copy"
   And I click on "Copy page" in "Page admin_02" row
   And I press "Save"
   And I should see "Here is a new block."
 
   # Add the page to the collection which has block
-  When I choose "Pages and collections" in "Portfolio" from main menu
+  When I choose "Pages and collections" in "Create" from main menu
   And I click on "Collection admin_01" panel menu
   And I click on "Manage" in "Collection admin_01" panel menu
   And I check "Page admin_02"
@@ -60,7 +60,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I follow "Done"
 
   # Copy a collection directly from its location
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I click on "Collection admin_01"
   And I follow "Copy"
   And I press "Collection"
@@ -68,7 +68,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I follow "Done"
 
   # Copy a collection
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I follow "Copy"
   And I click on "Copy collection" in "Collection admin_01" row
   And I press "Next: Edit collection pages"
@@ -81,7 +81,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   Then I should see "Text Block 1"
 
   #Veryfying if the page that has block been copied to collection
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I click on "Collection admin_01 v.3"
   And I press "Next page"
   And I press "Next page"

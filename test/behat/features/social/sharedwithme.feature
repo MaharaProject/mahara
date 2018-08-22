@@ -36,26 +36,26 @@ Background:
 Scenario: Testing that views & collections are collated properly
     # Putting some comments on the pages
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Collection UserA_01" panel collection
     And I click on "Page UserA_01" in "Collection UserA_01" panel collection
     And I fill in "I am on UserA_01 page" in editor "Comment"
     And I press "Comment"
 
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Collection UserA_01" panel collection
     And I click on "Page UserA_02" in "Collection UserA_01" panel collection
     And I fill in "I am on UserA_02 page" in editor "Comment"
     And I press "Comment"
 
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click the panel "Page UserA_03"
     And I fill in "I am on Page UserA_03" in editor "Comment"
     And I press "Comment"
 
     When I log out
     And I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Shared with me" in "Portfolio" from main menu
+    And I choose "Shared with me" in "Engage" from main menu
     Then I should see "Page UserA_03"
     # I should see collections & individual pages
     And I should see "Collection UserA_01 (2 pages)"

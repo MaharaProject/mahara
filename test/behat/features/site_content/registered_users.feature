@@ -6,5 +6,5 @@
 
  Scenario: Changing "logged-in users" to "registered users" (Bug 1373095)
   Given I log in as "admin" with password "Kupuh1pa!"
-  When I choose "Shared by me" in "Portfolio" from main menu
+  When I choose "Shared by me" in "Engage" from main menu
   Then I should see "Registered users"

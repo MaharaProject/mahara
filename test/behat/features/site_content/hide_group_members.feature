@@ -18,14 +18,14 @@ Given the following "groups" exist:
 
 Scenario: Check if we can hide members of a group based on the 'Hide members' setting
     Given I log in as "groupadmin" with password "Kupuh1pa!"
-    And I choose "My groups" in "Groups" from main menu
+    And I choose "My groups" in "Engage" from main menu
     And I follow "Edit \"GroupA\" Settings"
     And I select "Hide tutors" from "editgroup_hidemembers"
     And I press "Save group"
     Then I should see "Group saved successfully"
     And I log out
     When I log in as "randomuser" with password "Kupuh1pa!"
-    And I choose "Find groups" in "Groups" from main menu
+    And I choose "Find groups" in "Engage" from main menu
     And I follow "GroupA"
     Then I should not see "Diligent Tutor"
     And I should see "Angela User"

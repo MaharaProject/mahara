@@ -5991,10 +5991,10 @@ class View {
             define('MENUITEM', $share ? 'manageinstitutions/share' : 'manageinstitutions/institutionviews');
         }
         else if ($collection) {
-            define('MENUITEM', 'myportfolio/collection');
+            define('MENUITEM', 'create/views');
         }
         else {
-            define('MENUITEM', $share ? 'myportfolio/share' : 'myportfolio/views');
+            define('MENUITEM', $share ? 'engage/share' : 'create/views');
         }
     }
 
@@ -6014,7 +6014,7 @@ class View {
             define('MENUITEM', 'manageinstitutions/institutionviews');
         }
         else {
-            define('MENUITEM', 'myportfolio/views');
+            define('MENUITEM', 'create/views');
         }
     }
 

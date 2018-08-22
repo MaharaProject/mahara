@@ -11,7 +11,7 @@ Background:
 
 Scenario:Injecting sql in groups search field
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "My groups" in "Groups" from main menu
+    And I choose "My groups" in "Engage" from main menu
     And I click on "Create group"
     And I set the following fields to these values:
     | Group name | <script>alert(1);</script> |
@@ -31,7 +31,7 @@ Scenario:Injecting sql in groups search field
 # admin inject javascript in Skin title field.  To see if mahara is secure enough
 Scenario: Skin title not escaped in page settings form (Bug 1707076)
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Skins" in "Portfolio" from main menu
+    And I choose "Skins" in "Create" from main menu
     And I click on "Create skin"
     When I set the following fields to these values:
     | Skin title | <script>alert(1);</script> |
@@ -44,7 +44,7 @@ Scenario: Skin title not escaped in page settings form (Bug 1707076)
 # check to see if "I should not see a popup" step definition fails when there is a page that has a popup
 Scenario: I should see a popup
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Résumé" in "Content" from main menu
+    And I choose "Résumé" in "Create" from main menu
     And I follow "Education and employment"
     # Adding Education history
     And I press "Add education history"

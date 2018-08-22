@@ -48,7 +48,7 @@ Background:
   And I should see "Groups" in the "Administration menu" property
   And I should not see "Extensions" in the "Administration menu" property
  #Checking  multiple journals
-  And I choose "Journals" in "Content" from main menu
+  And I choose "Journals" in "Create" from main menu
   And I should see "Create journal"
   And I log out
   # Test for logout confirmation
@@ -86,7 +86,7 @@ Scenario: Create users by csv (Bug 1426983)
   And I press "Submit"
   And I should see "Your new password has been saved"
   And I should see "Institution membership confirmation"
-  And I choose "Profile" in "Content" from main menu
+  And I choose "Profile" from user menu
   And the "Student ID" field should contain "64000005"
   And I follow "Contact information"
   And the "Town" field should contain "Stewarts River"

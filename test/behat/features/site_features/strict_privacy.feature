@@ -32,7 +32,7 @@ Scenario: Create user who logs in with strict privacy enabled
     Given I log in as "bob" with password "Kupuh1pa!"
     Then I should see "Before entering your account, please read the information displayed below."
     # Try to ignore privacy statement
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     Then I should see "Before entering your account, please read the information displayed below."
     And I press "Save changes"
     Then I should see "If you do not consent to the privacy statement(s) or terms and conditions, your account will be suspended."

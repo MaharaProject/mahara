@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/find');
+define('MENUITEM', 'engage/find');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('findgroups'));
 require_once('group.php');

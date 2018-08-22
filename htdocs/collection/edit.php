@@ -71,7 +71,7 @@ else if (!empty($institutionname)) {
     $urlparams['institution'] = $institutionname;
 }
 else {
-    define('MENUITEM', 'myportfolio/views');
+    define('MENUITEM', 'create/views');
     define('TITLE', get_string('editcollection', 'collection'));
     $baseurl = get_config('wwwroot') . 'view/index.php';
 }

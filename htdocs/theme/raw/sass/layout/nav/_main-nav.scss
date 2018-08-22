@@ -84,6 +84,10 @@
             @media (min-width: $screen-sm-min) {
                 border: 1px solid $navbar-default-border;
             }
+            .icon {
+                margin-right: 5px;
+                width: 1em;
+            }
         }
     }
 
@@ -97,7 +101,7 @@
         li > a {
             color: $navbar-inverse-link-color;
             background-color: $navbar-inverse-bg;
-            padding: 9px 29px;
+            padding: 9px 2.5em 9px;
             margin-top: -1px;
             font-weight: normal;
             &:hover,

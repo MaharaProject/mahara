@@ -43,13 +43,13 @@ Scenario: Creating institution tags
     And I log out
 
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Journals" in "Content" from main menu
+    And I choose "Journals" in "Create" from main menu
     And I click on "Mars journal"
     And I click on "Edit" in "Mars party" row
     And I fill in select2 input "editpost_tags" with "One tag" and select "Institution One: One tag (0)"
     And I press "Save entry"
 
-    Given I choose "Pages and collections" in "Portfolio" from main menu
+    Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" panel menu
     And I follow "Settings" in the "Toolbar buttons" property
     And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
@@ -65,14 +65,14 @@ Scenario: Creating institution tags
     And I follow "Display page"
     Then I should see "Institution One: One tag"
 
-    Given I choose "Files" in "Content" from main menu
+    Given I choose "Files" in "Create" from main menu
     And I attach the file "Image2.png" to "files_filebrowser_userfile"
     And I click on "Edit" in "Image2.png" row
     And I fill in select2 input "files_filebrowser_edit_tags" with "One tag" and select "Institution One: One tag (2)"
     And I fill in select2 input "files_filebrowser_edit_tags" with "Image" and select "Image"
     And I press "Save changes"
 
-    Given I choose "Pages and collections" in "Portfolio" from main menu
+    Given I choose "Pages and collections" in "Create" from main menu
     And I follow "Tags" in the "#sb-tags" "css_element"
     And I follow "Edit tags"
     Then I should see "Test" in the "My tags list" property

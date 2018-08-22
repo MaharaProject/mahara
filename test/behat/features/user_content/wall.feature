@@ -12,14 +12,14 @@ Background:
 Scenario: Wall post notifications
 The wall post must generate a notification (Bug 547333)
     Given I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Find people" in "Groups" from main menu
+    And I choose "Find people" in "Engage" from main menu
     And I follow "Angela User"
     And I scroll to the base of id "wall-wrap"
     And I set the field "Post" to "Hello"
     And I press "Post"
     And I log out
     And I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "mail" from user menu by id
+    And I choose inbox
     When I click on "New post on your wall"
     Then I should see "Hello"
     When I follow "View whole wall"

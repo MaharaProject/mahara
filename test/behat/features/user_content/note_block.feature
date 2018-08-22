@@ -16,7 +16,7 @@ Given the following "users" exist:
 Scenario: Adding and deleting a Note block (Bug 1424512)
     # Logging in as a user
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Page UserA_01" panel menu
     And I click on "Edit" in "Page UserA_01" panel menu
     # Configuring the block
@@ -40,12 +40,12 @@ Scenario: Adding and deleting a Note block (Bug 1424512)
     And I press "Save"
     And I should see "This is a test" in the block "Note block 2"
     # Verifying the attachment saved
-    And I choose "Notes" in "Content" from main menu
+    And I choose "Notes" in "Create" from main menu
     And I follow "Note block 1"
     And I should see "Image2.png"
     # Verifying the Note block saved
     And I follow "Page UserA_01"
-    And I choose "Notes" in "Content" from main menu
+    And I choose "Notes" in "Create" from main menu
     And I should see "Note block 1"
     # Verifying the Note block can be deleted
     And I delete the "Note block 1" row

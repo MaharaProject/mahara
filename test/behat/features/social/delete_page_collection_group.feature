@@ -31,14 +31,14 @@ Scenario: When a collection is shared and a page is deleted from the collection 
     And I should see "Angela"
     And I should see "GroupA"
     # Share page to the group
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I follow "Collection UserA_01"
     And I follow "Edit"
     And I follow "Share"
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"
     # Delete a page from the collection
-    Then I choose "Pages and collections" in "Portfolio" from main menu
+    Then I choose "Pages and collections" in "Create" from main menu
     And I click on "Collection UserA_01" panel menu
     And I click on "Manage" in "Collection UserA_01" panel menu
     And I click on "Remove" in "Page UserA_01" row
@@ -46,7 +46,7 @@ Scenario: When a collection is shared and a page is deleted from the collection 
 
     # Log in as UserB
    And I log in as "UserB" with password "Kupuh1pa!"
-   And I choose "Groups" from main menu
+   And I choose "My groups" in "Engage" from main menu
    And I follow "GroupA"
    And I follow "Collection UserA_01"
    And I should see "Page UserA_02"

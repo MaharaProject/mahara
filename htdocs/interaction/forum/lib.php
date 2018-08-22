@@ -378,8 +378,8 @@ EOF;
 
     public static function menu_items() {
         return array(
-            'groups/topics' => array(
-                'path' => 'groups/topics',
+            'engage/topics' => array(
+                'path' => 'engage/topics',
                 'url' => 'group/topics.php',
                 'title' => get_string('Topics', 'interaction.forum'),
                 'weight' => 70,

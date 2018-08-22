@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/profileicons');
+define('MENUITEM', 'profileicons');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'file');
 define('SECTION_PAGE', 'profileicons');

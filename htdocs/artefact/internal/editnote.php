@@ -38,7 +38,7 @@ else if ($institution = $artefact->get('institution')) {
     $goto .= '?institution=' . $institution;
 }
 else {
-    define('MENUITEM', 'content/notes');
+    define('MENUITEM', 'create/notes');
 }
 
 $folder = param_integer('folder', 0);

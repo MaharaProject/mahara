@@ -37,7 +37,7 @@ Scenario: Accessing annotation block
  Then I should see "Title of your framework"
 
  # Update 'Test collection' to have smart evidence
- And I choose "Pages and collections" in "Portfolio" from main menu
+ And I choose "Pages and collections" in "Create" from main menu
  And I click on "Collection admin_01" panel menu
  And I click on "Edit" in "Collection admin_01" panel menu
  And I select "Title of your framework" from "SmartEvidence framework"

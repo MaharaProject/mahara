@@ -112,19 +112,25 @@ class PluginArtefactInternal extends PluginArtefact {
         return get_field('artefact_installed', 'active', 'name', 'internal');
     }
 
-    public static function menu_items() {
+    public static function right_nav_menu_items() {
         return array(
-            'content/profile' => array(
-                'path' => 'content/profile',
+            'profile' => array(
+                'path' => 'profile',
                 'url' => 'artefact/internal/index.php',
                 'title' => get_string('profile', 'artefact.internal'),
                 'weight' => 10,
+                'iconclass' => 'id-card-o',
             ),
-            'content/notes' => array(
-                'path' => 'content/notes',
+        );
+    }
+
+    public static function menu_items() {
+        return array(
+            'create/notes' => array(
+                'path' => 'create/notes',
                 'url' => 'artefact/internal/notes.php',
                 'title' => get_string('Notes', 'artefact.internal'),
-                'weight' => 60,
+                'weight' => 40,
             ),
         );
     }

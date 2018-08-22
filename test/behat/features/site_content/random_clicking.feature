@@ -11,21 +11,21 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I should see "Admin User"
     # Checking Content Menu
     And I click on "Show main menu"
-    When I follow "Content"
+    And I choose "Profile" from user menu
     # Checking About me tabs
     And I follow "Contact information"
     And I follow "Social media"
     And I follow "General"
     And I follow "About me"
     # Checking Resume submenu and tabs
-    And I choose "Résumé" in "Content" from main menu
+    And I choose "Résumé" in "Create" from main menu
     And I follow "Education and employment"
     And I follow "Achievements"
     And I follow "Goals and skills"
     And I follow "Interests"
     And I follow "Introduction"
     # Checking messages
-    And I choose "mail" from user menu by id
+    And I choose inbox
     And I follow "Inbox" in the "Arrow-bar nav" property
     And I follow "Sent"
     And I follow "Compose"

@@ -16,7 +16,7 @@ Background:
 Scenario: Creating sub folder and attaching files (Bug 1426983)
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Creating folder 1
-    When I choose "Files" in "Content" from main menu
+    When I choose "Files" in "Create" from main menu
     And I fill in "Folder1" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
     And I follow "Folder1"
@@ -54,7 +54,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
 
     # Check folder can be inserted into block and image displayed on a page(Bug 1679886)
     # this could be expanded to check the other folder block options
-    Given I choose "Pages and collections" in "Portfolio" from main menu
+    Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" panel menu
     And I expand "Media" node
     And I follow "Folder"

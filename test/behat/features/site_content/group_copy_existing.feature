@@ -34,7 +34,7 @@ Scenario: Group admin pushes a Group page and collection to existing group membe
     # Verifying log in was successful
     And I should see "Angela"
     # Browse to the Share > Advanced options
-    When I choose "My groups" in "Groups" from main menu
+    When I choose "My groups" in "Engage" from main menu
     And I click on "GroupA"
     And I follow "Share (tab)"
     And I click on "Edit access" in "Collection GroupA_01" row
@@ -55,14 +55,14 @@ Scenario: Group admin pushes a Group page and collection to existing group membe
     And I log out
     # Group members (UserB) should have their Portfolios updated
     Given I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     # verify a group member has their Portfolio updated with the Group pages
     Then I should see "Page GroupA_01"
     And I should see "Collection GroupA_01"
     And I log out
     # Non group members (UserC) should not have their Protfolios updated
     Given I log in as "UserC" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     # verify a group member has their Pportfolio updated with the Group pages
     Then I should not see "Page GroupA_01"
     And I should not see "Collection GroupA_01"

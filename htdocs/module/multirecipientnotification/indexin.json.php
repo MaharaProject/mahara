@@ -33,7 +33,8 @@ if ($readone) {
     }
     $unread = $USER->add_unread(-1);
     $data = array(
-        'newunreadcount' => $unread
+        'newunreadcount' => $unread,
+        'newunreadcounttext' => get_string('unread', 'mahara', $unread)
     );
     json_reply(false, array('data' => $data));
 }
@@ -139,6 +140,7 @@ $newhtml = activitylistin_html($type, $limit, $offset);
 
 if (isset($newunread)) {
     $newhtml['newunreadcount'] = $newunread;
+    $newhtml['newunreadcounttext'] = get_string('unread', 'mahara', $newunread);
 }
 
 json_reply(false, (object) array('message' => $message, 'data' => $newhtml));

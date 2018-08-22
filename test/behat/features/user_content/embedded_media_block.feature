@@ -15,7 +15,7 @@ Background:
 
 Scenario: Embed and play mp4
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" panel menu
   And I expand "Media" node
   And I follow "Embedded media"
@@ -31,7 +31,7 @@ Scenario: Embed and play mp4
 
 Scenario: Embed and play mp3
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" panel menu
   And I expand "Media" node
   And I follow "Embedded media"
@@ -55,7 +55,7 @@ Scenario: Change settings and embed 3gp
   And I log out
   # Log in as user and check 3gp is uploadable
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" panel menu
   And I expand "Media" node
   And I follow "Embedded media"
@@ -69,7 +69,7 @@ Scenario: Change settings and embed 3gp
 
 Scenario: Embed unsupported file type
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Pages and collections" in "Portfolio" from main menu
+  And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" panel menu
   And I expand "Media" node
   And I follow "Embedded media"

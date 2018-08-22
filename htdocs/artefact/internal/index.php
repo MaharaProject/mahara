@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/profile');
+define('MENUITEM', 'profile');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'internal');
 define('SECTION_PAGE', 'index');

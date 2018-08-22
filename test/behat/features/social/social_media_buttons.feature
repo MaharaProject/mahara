@@ -16,7 +16,7 @@ And the following "pages" exist:
 
 Scenario: Creating and accessing social media buttons (Bug 1448948)
  Given I log in as "UserA" with password "Kupuh1pa!"
- And I choose "Content" from main menu
+ And I choose "Profile" from user menu
  And I follow "Social media"
  And I follow "New social media account"
  And I select "Facebook URL" from "Social network"
@@ -38,7 +38,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I select "Yahoo Messenger" from "Social network"
  And I fill in "maharayahoo" for "Your URL or username"
  And I press "Save"
- And I choose "Pages and collections" in "Portfolio" from main menu
+ And I choose "Pages and collections" in "Create" from main menu
  And I click on "Edit" in "Page UserA_01" panel menu
  And I expand "Personal info" node
  And I follow "Social media"

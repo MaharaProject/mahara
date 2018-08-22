@@ -33,13 +33,11 @@ if ($designsiteskin) {
         redirect();
     }
     define('MENUITEM', 'configsite/siteskins');
-    $goto = '/admin/site/skins.php';
-    $redirect = '/admin/site/skins.php';
+    $goto = get_config('wwwroot') . 'admin/site/skins.php';
 }
 else {
-    define('MENUITEM', 'myportfolio/skins');
-    $goto = '/skin/index.php';
-    $redirect = '/skin/index.php';
+    define('MENUITEM', 'create/skins');
+    $goto = get_config('wwwroot') . 'skin/index.php';
 }
 $id = param_integer('id', 0); // id of Skin to be edited...
 $skindata = null;
@@ -331,7 +329,7 @@ $elements['submitform'] = array(
         'type' => 'submitcancel',
         'class' => 'btn-primary',
         'value' => array(get_string('save', 'mahara'), get_string('cancel', 'mahara')),
-        'goto' => get_config('wwwroot') . $goto,
+        'goto' => $goto,
 );
 
 $designskinform = pieform(array(
@@ -393,7 +391,7 @@ function designskinform_validate(Pieform $form, $values) {
 }
 
 function designskinform_submit(Pieform $form, $values) {
-    global $USER, $SESSION, $redirect;
+    global $USER, $SESSION;
 
     $siteskin = (isset($values['viewskin_access']) && ($values['viewskin_access'] == 'site'));
     // Only an admin can create a site skin
@@ -432,12 +430,13 @@ function designskinform_submit(Pieform $form, $values) {
     $viewskin['type'] = $values['viewskin_access'];
     $viewskin['viewskin'] = $skin;
 
+    $submitelement = $form->get_element('submitform');
     Skin::create($viewskin);
     if ($form->submitted_by_js()) {
         $result = array(
             'error'   => false,
             'message' => get_string('skinsaved', 'skin'),
-            'goto'    => $redirect,
+            'goto'    => $submitelement['goto'],
         );
         // Redirect back to the page from within the iframe
         $SESSION->add_ok_msg($result['message']);

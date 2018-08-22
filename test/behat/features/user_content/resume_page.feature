@@ -20,7 +20,7 @@ Background:
 
 Scenario: Creating a Cover letter
     Given I log in as "UserA" with password "Kupuh1pa!"
-    When I choose "Résumé" in "Content" from main menu
+    When I choose "Résumé" in "Create" from main menu
     And I follow "Introduction"
     And I click on "Edit"
     And I fill in "A whole bunch of Texty text" in first editor
@@ -31,7 +31,7 @@ Scenario: Creating a Cover letter
 Scenario: Editing admin resume page (Bug 1426983)
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
-    When I choose "Résumé" in "Content" from main menu
+    When I choose "Résumé" in "Create" from main menu
     And I follow "Introduction"
     And I fill in the following:
     | Date of birth   | 1970/01/07 |
@@ -49,7 +49,7 @@ Scenario: Editing admin resume page (Bug 1426983)
 Scenario: Editing Education and Employment info
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
-    When I choose "Résumé" in "Content" from main menu
+    When I choose "Résumé" in "Create" from main menu
     And I follow "Education and employment"
     # Adding Education history
     And I press "Add education history"
@@ -124,7 +124,7 @@ Scenario: Editing Education and Employment info
     And I click on "Delete \"Code Ninja: Xero\"" delete button
 
     # When entire resume is displayed on Profile page, it should include employment address (Bug 1529750)
-    Given I choose "Pages and collections" in "Portfolio" from main menu
+    Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Profile page" panel menu
     And I expand "Personal info" node
     And I follow "My entire résumé" in the "blocktype sidebar" property
@@ -149,7 +149,7 @@ Scenario: Editing Education and Employment info
 Scenario: Adding Achievements
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
-    When I choose "Résumé" in "Content" from main menu
+    When I choose "Résumé" in "Create" from main menu
     And I follow "Achievements"
     And I click on "Add certifications, accreditations and awards"
     # Adding Certifications, accreditations and awards
@@ -238,7 +238,7 @@ Scenario: Adding Achievements
 Scenario: Adding Goals and Skills
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
-    When I choose "Résumé" in "Content" from main menu
+    When I choose "Résumé" in "Create" from main menu
     And I follow "Goals and skills"
     And I should see "My goals"
     And I should see "My skills"
@@ -298,14 +298,14 @@ Scenario: Adding Goals and Skills
 Scenario: Adding interests
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
-    When I choose "Résumé" in "Content" from main menu
+    When I choose "Résumé" in "Create" from main menu
     And I follow "Interests"
     And I press "Edit"
     And I set the following fields to these values:
     | Interest | running, swimming, skydiving, clarinet |
     And I press "Save"
     And I should see "Saved successfully"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" panel menu
     And I expand "Personal info" node
     And I follow "One résumé field"
@@ -318,7 +318,7 @@ Scenario: Adding interests
 Scenario: Adding license info
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
-    When I choose "Résumé" in "Content" from main menu
+    When I choose "Résumé" in "Create" from main menu
     And I follow "License"
     And I fill in the following:
     | License | http://creativecommons.org/licenses/by/4.0/ |

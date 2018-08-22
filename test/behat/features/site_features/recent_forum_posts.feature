@@ -21,7 +21,7 @@ Given the following "users" exist:
 
 Scenario: Create forum and add block to group page
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Groups" from main menu
+    And I choose "My groups" in "Engage" from main menu
     And I follow "Edit \"GroupA\" Settings"
     And I follow "Forums (tab)"
     And I follow "New forum"
@@ -48,7 +48,7 @@ Scenario: Create forum and add block to group page
     And I press "Post"
     And I log out
     And I log in as "UserC" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Portfolio" from main menu
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserC_01" panel menu
     And I expand "General" node
     And I follow "Recent forum posts"

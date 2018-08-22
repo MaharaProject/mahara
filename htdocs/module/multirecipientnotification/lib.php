@@ -52,7 +52,7 @@ class PluginModuleMultirecipientnotification extends PluginModule {
      *
      * @return array fully descripted new menuitems with menupath, title, url, etc.
      */
-    public static function right_nav_menu_items() {
+    public static function messages_menu_items() {
     global $USER;
     global $THEME;
     safe_require('notification', 'internal');
@@ -67,6 +67,7 @@ class PluginModuleMultirecipientnotification extends PluginModule {
             'count' => $unread,
             'unread' => get_string('unread', 'mahara', $unread),
             'countclass' => 'unreadmessagecount',
+            'countclasssr' => 'unreadmessagecount-sr',
             'linkid' => 'mail',
             'weight' => 20,
             'iconclass' => 'envelope'

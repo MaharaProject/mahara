@@ -30,7 +30,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/import');
+define('MENUITEM', 'manage/import');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'import');

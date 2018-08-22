@@ -30,7 +30,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I log out
  # Logging back in as a user
  And I log in as "UserA" with password "Kupuh1pa!"
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "Group Two"
  # Editing the group
  And I follow "Edit \"Group Two\" Settings"
@@ -42,7 +42,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
 
  Scenario: Editing groups as a user not via CSV
  Given I log in as "UserB" with password "Kupuh1pa!"
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "GroupA"
  # Editing the group
  And I follow "Edit \"GroupA\" Settings"
@@ -55,7 +55,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I log out
  # Logging in as Admin
  Given I log in as "admin" with password "Kupuh1pa!"
- And I choose "Groups" from main menu
+ And I choose "My groups" in "Engage" from main menu
  And I follow "Group awesome sauce"
  # Making sure I can't edit a group I am not owner of
  And I should not see "Edit"

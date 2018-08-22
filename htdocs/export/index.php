@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/export');
+define('MENUITEM', 'manage/export');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('view.php');
 require_once('collection.php');
