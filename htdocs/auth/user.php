@@ -1304,6 +1304,17 @@ class User {
         }
         return false;
      }
+
+   /**
+    * Function to check if the user has access role as peer only
+    *
+    * @param $v  View object to check the access to
+    */
+    public function has_peer_role_only($v) {
+       $user_roles = get_column('view_access', 'role', 'usr', $this->get('id'), 'view', $v->get('id'));
+       return (!empty($user_roles) && count($user_roles) == 1 && $user_roles[0] == 'peer');
+    }
+
     /**
      * Function to check current user can edit collection
      *

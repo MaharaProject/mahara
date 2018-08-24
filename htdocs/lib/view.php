@@ -6979,6 +6979,14 @@ class View {
     public function is_site_template() {
         return ($this->get('template') == View::SITE_TEMPLATE);
     }
+
+    /**
+     * Returns true if the view contains at least one peer assessment block
+     * @return boolean
+     */
+    public function has_peer_assessement_block() {
+        return get_records_select_assoc('block_instance', 'blocktype = ? AND view = ?', array('peerassessment', $this->get('id')));
+    }
 }
 
 class ViewSubmissionException extends UserException {

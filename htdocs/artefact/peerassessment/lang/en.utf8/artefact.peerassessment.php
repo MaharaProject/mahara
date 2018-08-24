@@ -46,3 +46,4 @@ $string['feedbacknotificationtext'] = "%s add a peer assessment on %s
 To see this peer assessment online, follow this link:
 %s";
 $string['typeassessmentfeedback'] = 'Peer assessment';
+$string['nopeerassessmentrequired'] = 'You cannot see the content on this page because it does not require a peer assessment.';

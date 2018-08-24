@@ -288,7 +288,11 @@ if ($owner && $owner == $USER->get('id')) {
     }
 }
 
-$viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+// Don't show page content to a user with peer role
+// if the view doesn't have a peer assessment block
+if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()) {
+    $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+}
 
 $smarty = smarty(
     $javascript,
@@ -448,7 +452,7 @@ if ($showmnetlink) {
 }
 
 $smarty->assign('viewdescription', ArtefactTypeFolder::append_view_url($view->get('description'), $view->get('id')));
-$smarty->assign('viewcontent', $viewcontent);
+$smarty->assign('viewcontent', (isset($viewcontent) ? $viewcontent : null));
 $smarty->assign('releaseform', $releaseform);
 if (isset($addfeedbackform)) {
     $smarty->assign('enablecomments', 1);
