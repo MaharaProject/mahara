@@ -1279,7 +1279,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                         // we are dealing with an annotation added since smartevidence was added
                         $defaultval = $evidence->state;
 
-                        if ($options = Framework::get_my_assessment_options_for_user($view->get('owner'), $evidence->framework)) {
+                        if ($options = Framework::get_my_assessment_options_for_user($view, $evidence->framework)) {
                             if (!array_key_exists($defaultval, $options)) {
                                 $defaultval = null;
                             }

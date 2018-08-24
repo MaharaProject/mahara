@@ -6922,7 +6922,7 @@ class View {
         return $data;
     }
 
-    public function submit($group) {
+    public function submit($group, $sendnotification=true) {
         global $USER;
 
         if ($this->is_submitted()) {
@@ -6937,31 +6937,34 @@ class View {
                                             'name' => $this->title,
                                             'group' => $group->id,
                                             'groupname' => $group->name));
-        activity_occurred(
-            'groupmessage',
-            array(
-                'group'         => $group->id,
-                'roles'         => $group->roles,
-                'url'           => $this->get_url(false),
-                'strings'       => (object) array(
-                    'urltext' => (object) array('key' => 'view'),
-                    'subject' => (object) array(
-                        'key'     => 'viewsubmittedsubject1',
-                        'section' => 'activity',
-                        'args'    => array($group->name),
-                    ),
-                    'message' => (object) array(
-                        'key'     => 'viewsubmittedmessage1',
-                        'section' => 'activity',
-                        'args'    => array(
-                            display_name($USER, null, false, true),
-                            $this->title,
-                            $group->name,
+
+        if ($sendnotification) {
+            activity_occurred(
+                'groupmessage',
+                array(
+                    'group'         => $group->id,
+                    'roles'         => $group->roles,
+                    'url'           => $this->get_url(false),
+                    'strings'       => (object) array(
+                        'urltext' => (object) array('key' => 'view'),
+                        'subject' => (object) array(
+                            'key'     => 'viewsubmittedsubject1',
+                            'section' => 'activity',
+                            'args'    => array($group->name),
+                        ),
+                        'message' => (object) array(
+                            'key'     => 'viewsubmittedmessage1',
+                            'section' => 'activity',
+                            'args'    => array(
+                                display_name($USER, null, false, true),
+                                $this->title,
+                                $group->name,
+                            ),
                         ),
                     ),
-                ),
-            )
-        );
+                )
+            );
+        }
     }
 
     /**

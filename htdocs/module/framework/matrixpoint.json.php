@@ -97,7 +97,7 @@ else if ($action == 'evidence') {
     }
     require_once('view.php');
     $view = new View($evidence->view);
-    if (!Framework::can_assess_user($view->get('owner'), $evidence->framework)) {
+    if (!Framework::can_assess_user($view, $evidence->framework)) {
         json_reply(true, get_string('accessdenied', 'error'));
         exit;
     }

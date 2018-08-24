@@ -30,5 +30,7 @@
           </button>
       {/if}
     </span>
-
+    {if $gradeselect}
+        {$gradeselect}
+    {/if}
 </div>

@@ -194,6 +194,12 @@
         </div>
         {/if}
 
+        {if $ltisubmissionform}
+        <div class="submissionform alert alert-default">
+            {$ltisubmissionform|safe}
+        </div>
+        {/if}
+
         {if $feedback->position eq 'base'}
         <div class="comment-container">
             {if $feedback->count || $enablecomments}

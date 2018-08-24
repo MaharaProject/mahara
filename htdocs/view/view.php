@@ -130,9 +130,19 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to release the view
     $submittedgroup = get_group_by_id($submittedgroup, true);
+
+    // Form for LTI grading
+    if ($collection) {
+        $ltigradeform = PluginModuleLti::get_grade_dialogue($collection->get('id'), null);
+    }
+    else {
+        $ltigradeform = PluginModuleLti::get_grade_dialogue(null, $view->get('id'));
+    }
+
     // If the view is part of a submitted collection, the whole
     // collection must be released at once.
-    $releasecollection = !empty($collection) && $collection->get('submittedgroup') == $submittedgroup->id;
+    $releasecollection = !empty($collection) && $collection->get('submittedgroup') == $submittedgroup->id && empty($ltigradeform);
+
     if ($releasecollection) {
         if ($ctime = $collection->get('submittedtime')) {
             $text = get_string(
@@ -150,7 +160,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     else {
         $text = get_string('viewsubmittedtogroup', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
     }
-    if (($releasecollection && $collection->get('submittedstatus') == Collection::SUBMITTED) || $view->get('submittedstatus') == View::SUBMITTED) {
+    if (($releasecollection && $collection->get('submittedstatus') == Collection::SUBMITTED) || $view->get('submittedstatus') == View::SUBMITTED && empty($ltigradeform)) {
         $releaseform = pieform(array(
             'name'     => 'releaseview',
             'method'   => 'post',
@@ -175,6 +185,11 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     else {
         $releaseform = $text . ' ' . get_string('submittedpendingrelease', 'view');
     }
+
+    if (!empty($ltigradeform)) {
+        $releaseform .= $ltigradeform;
+    }
+
 }
 else {
     $releaseform = '';
@@ -286,7 +301,12 @@ if ($owner && $owner == $USER->get('id')) {
             $viewgroupform = view_group_submission_form($view, $tutorgroupdata, 'view');
         }
     }
+
+    if (PluginModuleLti::can_submit_for_grading()) {
+        $ltisubmissionform = PluginModuleLti::submit_from_view_or_collection_form($view);
+    }
 }
+
 
 // Don't show page content to a user with peer role
 // if the view doesn't have a peer assessment block
@@ -455,6 +475,10 @@ $smarty->assign('viewdescription', ArtefactTypeFolder::append_view_url($view->ge
 $smarty->assign('viewinstructions', ArtefactTypeFolder::append_view_url($view->get('instructions'), $view->get('id')));
 $smarty->assign('viewcontent', (isset($viewcontent) ? $viewcontent : null));
 $smarty->assign('releaseform', $releaseform);
+if (isset($ltisubmissionform)) {
+    $smarty->assign('ltisubmissionform', $ltisubmissionform);
+}
+
 if (isset($addfeedbackform)) {
     $smarty->assign('enablecomments', 1);
     $smarty->assign('addfeedbackform', $addfeedbackform);

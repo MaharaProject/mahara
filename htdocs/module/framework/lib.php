@@ -828,7 +828,7 @@ class Framework {
             return false;
         }
 
-        $options = self::get_my_assessment_options_for_user($view->get('owner'), $evidence->framework);
+        $options = self::get_my_assessment_options_for_user($view, $evidence->framework);
         if (!$options) {
             // not allowed to set the assessment so we just show the current state as html
             $choices = self::get_evidence_statuses($collection->get('framework'));
@@ -942,25 +942,27 @@ class Framework {
     /**
      * Check to see if a user can set the assessment status for a piece of evidence.
      *
-     * @param string $ownerid   The owner of the smart evidence annotation
+     * @param string $view   The view being assessed
      * @param string $framework ID of the framework
      *
      * @return bool
      */
-    public static function can_assess_user($ownerid, $framework = null) {
-        return (boolean) static::get_my_assessment_options_for_user($ownerid, $framework);
+    public static function can_assess_user($view, $framework = null) {
+        return (boolean) static::get_my_assessment_options_for_user($view, $framework);
     }
 
     /**
      * Get assessment status options for a piece of evidence.
      *
-     * @param string $ownerid   The owner of the smart evidence annotation
+     * @param string $view The view being assessed
      * @param string $framework ID of the framework
 
      * @return array Options for select dropdown
      */
-    public static function get_my_assessment_options_for_user($ownerid, $framework = null) {
+    public static function get_my_assessment_options_for_user($view, $framework = null) {
         global $USER;
+
+        $ownerid = $view->get('owner');
 
         if (empty($ownerid) || !is_numeric($ownerid)) {
             return false;
@@ -979,6 +981,11 @@ class Framework {
             }
         }
         else if ($institution != 'mahara' && ($USER->is_institutional_admin($institution) || $USER->is_institutional_staff($institution))) {
+            if ($USER->get('id') != $owner->get('id')) {
+                $isadminofowner = true;
+            }
+        }
+        else if (!empty($USER->get('id')) && group_user_can_assess_submitted_views($view->get('submittedgroup'), $USER->get('id'))) {
             if ($USER->get('id') != $owner->get('id')) {
                 $isadminofowner = true;
             }
