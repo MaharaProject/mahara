@@ -606,7 +606,7 @@ function webservice_function_groups_form() {
                 'value'        => pieform(array(
                     'name'            => 'webservices_function_groups_edit_' . $service->id,
                     'renderer'        => 'div',
-                    'class'  => 'form-as-button pull-left',
+                    'class'  => 'btn-group-first' . (!$iscustomservice ? ' btn-group-last webservices' : ''),
                     'successcallback' => 'webservice_function_groups_submit',
                     'jsform'          => false,
                     'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
@@ -627,7 +627,7 @@ function webservice_function_groups_form() {
                         pieform(array(
                             'name'            => 'webservices_function_groups_delete_' . $service->id,
                             'renderer'        => 'div',
-                            'class'  => 'form-as-button pull-left',
+                            'class'  => 'btn-group-last',
                             'successcallback' => 'webservice_function_groups_submit',
                             'jsform'          => false,
                             'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
@@ -855,7 +855,7 @@ function webservice_tokens_form() {
                     'renderer'        => 'div',
                     'elementclasses'  => false,
                     'successcallback' => 'webservice_token_submit',
-                    'class'           => 'form-as-button pull-left',
+                    'class'           => 'btn-group-first',
                     'jsform'          => false,
                     'elements' => array(
                         'token'      => array('type' => 'hidden', 'value' => $token->tokenid),
@@ -874,7 +874,7 @@ function webservice_tokens_form() {
                     'renderer'        => 'div',
                     'elementclasses'  => false,
                     'successcallback' => 'webservice_token_submit',
-                    'class'           => 'form-as-button pull-left',
+                    'class'           => 'btn-group-last',
                     'jsform'          => false,
                     'elements' => array(
                         'token'      => array('type' => 'hidden', 'value' => $token->tokenid),
@@ -1117,7 +1117,7 @@ function webservice_users_form() {
                     'renderer'        => 'div',
                     'elementclasses'  => false,
                     'successcallback' => 'webservice_users_submit',
-                    'class'           => 'form-as-button pull-left',
+                    'class'           => 'btn-group-first',
                     'jsform'          => false,
                     'elements' => array(
                         'suid'       => array('type' => 'hidden', 'value' => $user->id),
@@ -1136,7 +1136,7 @@ function webservice_users_form() {
                     'renderer'        => 'div',
                     'elementclasses'  => false,
                     'successcallback' => 'webservice_users_submit',
-                    'class'           => 'form-as-button pull-left',
+                    'class'           => 'btn-group-last',
                     'jsform'          => false,
                     'elements' => array(
                         'suid'       => array('type' => 'hidden', 'value' => $user->id),

@@ -108,4 +108,7 @@
 .btn-group > .btn-group-first.btn-group-last {
     display: inline-block;
     margin-left: -4px;
+    &.webservices {
+        margin-left: 0;
+    }
 }
