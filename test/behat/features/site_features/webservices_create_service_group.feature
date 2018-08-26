@@ -39,12 +39,20 @@ Scenario: Turning master switch on
  # Verify service group was made
  And I press "Back"
  And I should see "mahara_group_create_groups"
+ And I collapse "Manage service groups" node
  # Create a new token
+ And I wait "1" seconds
  And I expand the section "Manage service access tokens"
  And I fill in select2 input "webservices_token_generate_userid" with "Service" and select "Service Admin (serviceadmin)"
  And I press "Generate token"
  And I select "Institution 1" from "Institution"
  And I select "Test service" from "Service"
+ # Hide the xmlrpc specific fields when not using them In the add/edit webservice users/tokens screens
+ And  I should not see "Public key expires"
+ # I should see the xmlrpc specific fields  when Enable web services security (XML-RPC Only) is toggled to yes
+ When I enable the switch "Enable web services security (XML-RPC Only)"
+ Then I should see "Public key expires"
+ And I disable the switch "Enable web services security (XML-RPC Only)"
  And I press "Save"
  # Verify the token was made
  And I press "Back"
@@ -59,6 +67,7 @@ Scenario: Turning master switch on
  And I fill in "groupa" for "shortname"
  And I select "Institution 1" from "Institution"
  And I fill in the wstoken for "Test service" owned by "Service Admin"
-# For some reason the submitting this form freezes behat
-# And I press "Execute"
-# Then I should see "editroles"
+
+ # For some reason the submitting this form freezes behat
+ # And I press "Execute"
+ # Then I should see "editroles"
