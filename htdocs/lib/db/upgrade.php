@@ -881,19 +881,20 @@ function xmldb_core_upgrade($oldversion=0) {
             foreach ($instances as $instance) {
                 $blockinstance = new BlockInstance($instance->id);
                 $configdata = $blockinstance->get('configdata');
-
+                // We don't want to do the normal commit() here as plan blocks have associated artefacts
+                // and this can clash with the 'artefact_tag' to 'tag' change
+                // As we have not changed which artefacts are attached but only how the configdata is stored
+                // we will save the new configdata back direct to database instead.
                 if (isset($configdata['artefactid'])) {
                     $configdata['artefactids'] = array($configdata['artefactid']);
                     unset($configdata['artefactid']);
-                    $blockinstance->set('configdata', $configdata);
-                    $blockinstance->commit();
                 }
                 else if (is_null($configdata['artefactid'])) {
                     $configdata['artefactids'] = array();
                     unset($configdata['artefactid']);
-                    $blockinstance->set('configdata', $configdata);
-                    $blockinstance->commit();
                 }
+                $configdata = serialize($configdata);
+                execute_sql("UPDATE {block_instance} SET configdata = ? WHERE id = ?", array($configdata, $instance->id));
             }
         }
     }
