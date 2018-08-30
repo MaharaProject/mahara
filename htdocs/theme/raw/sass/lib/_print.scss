@@ -99,4 +99,9 @@
         height: 256mm;
         outline: 2cm #FFEAEA solid;
     }
+
+    .peerinstructions,
+    .pageinstructions {
+        display: none;
+    }
 }

@@ -42,7 +42,7 @@
                 </div>
                 <div class="modal-body">
                     {if $instructions}
-                    <div class="last form-group collapsible-group small-group">
+                    <div class="last form-group collapsible-group small-group peerinstructions">
                         <fieldset class="pieform-fieldset collapsible collapsible-small">
                             <legend>
                                 <h4>

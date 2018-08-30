@@ -941,7 +941,7 @@ class ActivityTypeArtefactPeerassessmentAssessmentfeedback extends ActivityTypeP
         $title = $viewrecord->title;
         $this->urltext = $title;
         $body = $assessment->get('description');
-        $posttime = strftime(get_string('strftimedaydatetime'), strtotime($assessment->get('ctime')));
+        $posttime = strftime(get_string('strftimedaydatetime'), $assessment->get('ctime'));
 
         // Internal
         $this->message = strip_tags(str_shorten_html($body, 200, true));
