@@ -17,3 +17,9 @@
 div.admin-title a {
   color:#4DB1D6;
 }
+
+.loggedout {
+    .help .icon-info-circle {
+        color: inherit;
+    }
+}
