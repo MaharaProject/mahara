@@ -32,7 +32,7 @@
         }
 
         &.collapsed {
-            background-color: $card-bg;
+            background-color: $card-heading-bg;
             color: $theme-text-color;
             padding: 10px 15px;
             &.outer-link {
@@ -78,4 +78,30 @@
 
 h2.card-header {
     font-size: $font-size-lg;
+}
+
+.card {
+    &.collapsible:not(.card-block) {
+        .card-header {
+            border: 0;
+            a {
+                border: $card-border-width solid $card-border;
+                border-bottom-width: 0;
+            }
+        }
+        &.last {
+            .card-header {
+                a.collapsed {
+                    border-bottom-width: $card-border-width;
+                }
+            }
+        }
+        &.has-attachment {
+            .card-header {
+                a {
+                    border-width: 0;
+                }
+            }
+        }
+    }
 }

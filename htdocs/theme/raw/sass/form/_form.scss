@@ -167,9 +167,11 @@ textarea.resizable {
         padding: 0;
         border-bottom: 0 none;
         align-items: flex-start;
+        display: inline-block;
     }
     &.form-inline-align-bottom .form-group{
         vertical-align: bottom;
+        align-self: flex-end;
     }
     &.form-short {
         select, input:not(.submit) {
@@ -183,6 +185,7 @@ textarea.resizable {
 
 .form-inline-align-bottom a {
     vertical-align: bottom;
+    align-self: flex-end;
 }
 
 .form-control.file {

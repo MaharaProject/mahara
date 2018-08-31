@@ -1,4 +1,4 @@
-<div>
+<div class="flexbox">
     {if $form}
     <div class="col-md-6">
         {$form|safe}

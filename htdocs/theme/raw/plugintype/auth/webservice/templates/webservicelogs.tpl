@@ -4,7 +4,7 @@
 {$form|safe}
 </div>
 <div id="results" class="section card card-secondary">
-    <h2 class="card-heading" id="resultsheading">{str tag="Results"}</h2>
+    <h2 class="card-header" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
     <div class="table-responsive">
     <table id="searchresults" class="table table-striped fullwidth listing">

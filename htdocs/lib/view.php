@@ -4426,7 +4426,7 @@ class View {
                          'submit' => array(
                             'type' => 'button',
                             'usebuttontag' => true,
-                            'class' => 'btn-primary input-group-btn no-label',
+                            'class' => 'btn-primary input-group-append no-label',
                             'value' => get_string('search')
                         )
                     )
@@ -7537,7 +7537,7 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
                     'submit' => array(
                         'type' => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-primary input-group-btn',
+                        'class' => 'btn-primary input-group-append',
                         'value' => get_string('submit')
                     )
                 ),

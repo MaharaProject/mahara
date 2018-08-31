@@ -106,7 +106,7 @@ $suspendform = pieform(array(
                 'suspend' => array(
                     'type'        => 'button',
                     'usebuttontag' => true,
-                    'class'       => 'btn-secondary input-group-btn no-label',
+                    'class'       => 'btn-secondary input-group-append no-label',
                     'value'       => get_string('Suspend', 'admin'),
                 )
             )
@@ -136,7 +136,7 @@ if (count($options) > 1) {
                     'changeauth' => array(
                         'type'        => 'button',
                         'usebuttontag' => true,
-                        'class'       => 'btn-secondary input-group-btn',
+                        'class'       => 'btn-secondary input-group-append',
                         'value'        => get_string('changeauthmethod', 'admin')
                     )
                 )
@@ -167,7 +167,7 @@ if (is_using_probation()) {
                     'setprobation' => array(
                         'type' => 'button',
                         'usebuttontag' => true,
-                        'class'       => 'btn-secondary input-group-btn no-label',
+                        'class'       => 'btn-secondary input-group-append no-label',
                         'confirm' => get_string('probationbulkconfirm', 'admin'),
                         'value' => get_string('probationbulkset', 'admin'),
                     )

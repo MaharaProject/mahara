@@ -711,7 +711,7 @@ else {
                     'submit' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-primary input-group-btn',
+                        'class' => 'btn-primary input-group-append',
                         'value' => get_string('search'),
                     )
                 ),

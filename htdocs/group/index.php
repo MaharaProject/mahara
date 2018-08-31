@@ -94,7 +94,7 @@ if (get_config('allowgroupcategories')
 
     $searchfield = array(
         'type' => 'submit',
-        'class' => 'btn-primary input-group-btn no-label button',
+        'class' => 'btn-primary input-group-append no-label button',
         'value' => get_string('search')
     );
 
