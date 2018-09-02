@@ -20,6 +20,7 @@ Scenario: Admin user can add an image to the "Logged -out home" static page and 
     And I expand the section "Image"
     And I press "Select \"Image2.png\""
     And I press "Submit"
+    And I wait "1" seconds
     And I press "Save changes"
     And I choose "Dashboard" from main menu
     # check that the image uploaded is the image being seen on the page
@@ -36,6 +37,7 @@ Scenario: Admin user can add an image to the "Home (Dashboard)" static page and 
     And I expand the section "Image"
     And I press "Select \"Image2.png\""
     And I press "Submit"
+    And I wait "1" seconds
     And I press "Save changes"
     And I log out
     And I am on homepage
