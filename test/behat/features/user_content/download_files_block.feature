@@ -34,3 +34,20 @@ Scenario: Add Files to download block
     And I click on "Image1.jpg" in the "File download heading 2" property
     Then I should see "JPEG Image"
     And I should see "Download"
+
+    # User changes the file names through the files page and checks if correct on Portfolio page
+    Given I choose "Files" in "Create" from main menu
+    And I click on "Edit" in "mahara_about.pdf" row
+    And I set the field "Name" to "renamed.pdf"
+    And I set the field "Description" to "I hope I can see my saved changes"
+    And I fill in select2 input "files_filebrowser_edit_tags" with "&red" and select "&red"
+    When I press "Save changes"
+    Then I should see "renamed.pdf"
+    And I should see "I hope I can see my saved changes"
+    When I reload the page
+    Then I should not see "mahara_about.pdf"
+    # Check to see if changes were updated on Portfolio page
+    When I choose "Pages and collections" in "Create" from main menu
+    And I follow "Page UserA_01"
+    Then I should see "renamed.pdf"
+    Then I should not see "mahara_about.pdf"
