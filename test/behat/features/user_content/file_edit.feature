@@ -17,7 +17,9 @@ Scenario: Add file, rename and add description
     And I set the field "Name" to "renamed.pdf"
     And I set the field "Description" to "I hope I can see my saved changes"
     And I press "Save changes"
-    And I should see "renamed.pdf"
+    Then I should see "renamed.pdf"
     And I should see "I hope I can see my saved changes"
     And I reload the page
     And I should not see "mahara_about.pdf"
+    # Verify Quota is displayed on the sidebar of the Content->Files page and default maximum of 50.0MB
+    And I should see "You have used 0.1MB of your 50.0MB quota."
