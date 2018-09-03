@@ -17,13 +17,13 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 $viewid = param_integer('view');
 $artefact = param_integer('artefact', null);
 
-$data = new StdClass;
+$data = new stdClass();
 $data->view = $viewid;
 $data->usr = $USER->get('id');
 $data->ctime = db_format_timestamp(time());
 $data->unsubscribetoken = get_random_key(24);
 
-$result = new StdClass;
+$result = new stdClass();
 require_once(get_config('libroot') . 'view.php');
 $view = new View($viewid);
 // Check that we can actually access the view and not just hacking the viewid passed in

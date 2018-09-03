@@ -705,7 +705,7 @@ EOD;
 
         // Create a new collection
         require_once('collection.php');
-        $data = new StdClass;
+        $data = new stdClass();
         $data->name = $record['title'];
         $data->description = $record['description'];
         if (!empty($record['group'])) {

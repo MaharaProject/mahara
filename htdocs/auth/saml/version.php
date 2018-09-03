@@ -10,7 +10,7 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
+$config = new stdClass();
 $config->version = 2018030800;
 $config->release = '1.3.0';
 $config->name = 'saml';

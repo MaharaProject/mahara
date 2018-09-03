@@ -78,7 +78,7 @@ function xmldb_module_framework_upgrade($oldversion=0) {
         create_table($table);
 
         $frameworks = get_column('framework', 'id');
-        $status = new StdClass;
+        $status = new stdClass();
 
         foreach ($frameworks as $key => $frameworkid) {
             $framework = new Framework($frameworkid);

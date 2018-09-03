@@ -100,7 +100,7 @@ $form = pieform(array(
 
 function license_submit(Pieform $form, $values) {
     global $SESSION;
-    $data = new StdClass;
+    $data = new stdClass();
     foreach (array('name', 'displayname', 'shortname', 'icon') as $f) {
         $data->{$f} = trim($values[$f]);
     }

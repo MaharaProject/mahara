@@ -51,7 +51,7 @@ class AuthNone extends Auth {
     }
 
     public function get_user_info($username) {
-        $user = new stdClass;
+        $user = new stdClass();
         $user->firstname = ucfirst(strtolower($username));
         $user->lastname  = 'McAuthentication';
         $user->email     = 'test@example.org';

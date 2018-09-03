@@ -47,7 +47,7 @@ function groupquotasform_submit(Pieform $form, $values) {
     global $SESSION;
 
     $oldquota = get_field('group', 'quota', 'id', $values['groupid']);
-    $group = new StdClass;
+    $group = new stdClass();
     $group->id = $values['groupid'];
     $group->quota = $values['quota'];
     update_record('group', $group);

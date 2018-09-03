@@ -503,7 +503,7 @@ class View {
                 if (!isset($configdata['copytype']) || $configdata['copytype'] !== 'reference') {
                     continue;
                 }
-                $va = new StdClass;
+                $va = new stdClass();
                 $va->view = $b->view;
                 $va->artefact = $configdata['artefactid'];
                 $va->block = $b->id;
@@ -512,7 +512,7 @@ class View {
         }
 
         if ($template->get('retainview') && !$template->get('institution')) {
-            $obj = new StdClass;
+            $obj = new stdClass();
             $obj->view  = $view->get('id');
             $obj->ctime = db_format_timestamp(time());
             $obj->usr   = $template->get('owner');
@@ -644,7 +644,7 @@ class View {
                 'rules' => $newaccess)
             );
             // Notify group members
-            $accessdata = new StdClass;
+            $accessdata = new stdClass();
             $accessdata->view = $view->get('id');
             $accessdata->oldusers = $beforeusers;
             activity_occurred('viewaccess', $accessdata);
@@ -834,7 +834,7 @@ class View {
         if (empty($this->dirty)) {
             return;
         }
-        $fordb = new StdClass;
+        $fordb = new stdClass();
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
             if (in_array($k, array('mtime', 'ctime', 'atime', 'startdate', 'stopdate', 'submittedtime')) && !empty($v)) {
@@ -1555,7 +1555,7 @@ class View {
             }
         }
 
-        $data = new StdClass;
+        $data = new stdClass();
         $data->view = $this->get('id');
         $data->oldusers = $beforeusers;
         if (!empty($viewids) && sizeof($viewids) > 1) {
@@ -1722,7 +1722,7 @@ class View {
                 );
 
                 if (!$exists) {
-                    $vaccess = new stdClass;
+                    $vaccess = new stdClass();
                     $vaccess->view = $this->id;
                     $vaccess->institution = $i;
                     $vaccess->startdate = null;
@@ -3105,7 +3105,7 @@ class View {
      */
     public function get_layout() {
 
-        $layout = new StdClass;
+        $layout = new stdClass();
         $layout->rows = array();
         $layoutid = $this->get('layout');
         $numrows = $this->get('numrows');
@@ -4446,7 +4446,7 @@ class View {
     public function is_copyable() {
         global $USER;
 
-        $search = new StdClass;
+        $search = new stdClass();
         $search->copyableby = (object) array('group' => null, 'institution' => null, 'owner' => $USER->get('id'));
         $results = self::view_search('', '', null, $search->copyableby, null, null, true, null, null, false, null, null, $this->id);
         // Check that the this view is one the user is allowed to copy
@@ -4482,8 +4482,8 @@ class View {
      *
      * @param string   $query       Search string
      * @param string   $ownerquery  Search string for owner
-     * @param StdClass $ownedby     Only return views owned by this owner (owner, group, institution)
-     * @param StdClass $copyableby  Only return views copyable by this owner (owner, group, institution)
+     * @param stdClass $ownedby     Only return views owned by this owner (owner, group, institution)
+     * @param stdClass $copyableby  Only return views copyable by this owner (owner, group, institution)
      * @param integer  $limit
      * @param integer  $offset
      * @param bool     $extra       Return full set of properties on each view including an artefact list
@@ -5716,7 +5716,7 @@ class View {
                     'profileicon', 'urlid', 'suspendedctime',
                 );
                 if (count($owners) == 1 && isset($owners[$userid])) {
-                    $owners = array($userid => new StdClass);
+                    $owners = array($userid => new stdClass());
                     foreach ($fields as $f) {
                         $owners[$userid]->$f = $USER->get($f);
                     }
@@ -5830,7 +5830,7 @@ class View {
                     'profileicon', 'urlid', 'suspendedctime',
                 );
                 if (count($owners) == 1 && isset($owners[$userid])) {
-                    $owners = array($userid => new StdClass);
+                    $owners = array($userid => new stdClass());
                     foreach ($fields as $f) {
                         $owners[$userid]->$f = $USER->get($f);
                     }
@@ -6177,7 +6177,7 @@ class View {
             delete_records_select('view_access', 'view = ? AND token IS NOT NULL AND visible = 0', array($viewid));
         }
 
-        $data = new StdClass;
+        $data = new stdClass();
         $data->view    = $viewid;
         $data->visible = (int) $visible;
         $data->token   = get_random_key(20);
@@ -6385,7 +6385,7 @@ class View {
         else if (!$useid && !is_null($this->urlid) && get_config('cleanurls')) {
             if ($this->owner &&
                 ($this->get_owner_object() instanceof User && !is_null($this->get_owner_object()->get('urlid'))
-                 || $this->get_owner_object() instanceof StdClass && !is_null($this->get_owner_object()->urlid))
+                 || $this->get_owner_object() instanceof stdClass && !is_null($this->get_owner_object()->urlid))
               ) {
                 return profile_url($this->ownerobj, $full) . '/' . $this->urlid;
             }
@@ -6643,7 +6643,7 @@ class View {
                     }
                     if (!empty($r['framework'])) {
                         require_once('collection.php');
-                        $coll = new StdClass();
+                        $coll = new stdClass();
                         $coll->id = $cid;
                         $collections[$cid]['url'] = Collection::get_framework_url($coll);
                     }
@@ -7168,7 +7168,7 @@ function searchviews_submit(Pieform $form, $values) {
  * @param mixed $view The view to be submitted. Either a View object,
  *                    or (for compatibility with previous versions of
  *                    this function) an integer view id.
- * @param array $tutorgroupdata An array of StdClass objects with id
+ * @param array $tutorgroupdata An array of stdClass objects with id
  *                    and name properties representing groups.
  * @param string $returnto A URL - where to go after leaving the
  *                    submit page.

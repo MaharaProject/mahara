@@ -89,7 +89,7 @@ if ($view->get('type') == 'profile') {
 
     if (get_config('loggedinprofileviewaccess')) {
         // Force logged-in user access
-        $viewaccess = new stdClass;
+        $viewaccess = new stdClass();
         $viewaccess->accesstype = 'loggedin';
         $viewaccess->startdate = null;
         $viewaccess->stopdate = null;
@@ -499,7 +499,7 @@ function accessurl_submit(Pieform $form, $values) {
 
         if (get_config('loggedinprofileviewaccess')) {
             // Force logged-in user access
-            $viewaccess = new stdClass;
+            $viewaccess = new stdClass();
             $viewaccess->accesstype = 'loggedin';
             $view->add_access($viewaccess);
         }

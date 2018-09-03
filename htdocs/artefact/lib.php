@@ -68,7 +68,7 @@ abstract class PluginArtefact extends Plugin implements IPluginArtefact {
     /**
      * This function returns an array of menu items to be displayed
      * on a group page when viewed by group members.
-     * Each item should be a StdClass object containing -
+     * Each item should be a stdClass() object containing -
      * - title language pack key
      * - url relative to wwwroot
      * @return array
@@ -604,7 +604,7 @@ abstract class ArtefactType implements IArtefactType {
 
         db_begin();
 
-        $fordb = new StdClass();
+        $fordb = new stdClass();
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
             if (in_array($k, array('mtime', 'ctime', 'atime')) && !empty($v)) {
@@ -1056,7 +1056,7 @@ abstract class ArtefactType implements IArtefactType {
             'parentmetadata' => 1,
             'path' => 1    // the path value will be updated later
         );
-        $data = new StdClass;
+        $data = new stdClass();
         foreach (get_object_vars($this) as $k => $v) {
             if (in_array($k, array('atime', 'ctime', 'mtime'))) {
                 $data->$k = db_format_timestamp($v);
@@ -1301,7 +1301,7 @@ abstract class ArtefactType implements IArtefactType {
         if (!record_exists('artefact', 'id', $attachmentid)) {
             throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $attachmentid));
         }
-        $data = new StdClass();
+        $data = new stdClass();
         $data->artefact = $this->get('id');
         $data->attachment = $attachmentid;
         $data->item = $itemid;
@@ -2010,7 +2010,7 @@ function artefact_get_types_from_filter($filter) {
  *
  * @param array $ids list of artefact ids
  *
- * @return array list of StdClass objects, each containing a name & url property
+ * @return array list of stdClass() objects, each containing a name & url property
  */
 function artefact_get_owner_info($ids) {
     $data = get_records_sql_assoc('

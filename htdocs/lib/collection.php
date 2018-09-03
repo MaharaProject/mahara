@@ -175,7 +175,7 @@ class Collection {
     public function commit() {
         global $USER;
 
-        $fordb = new StdClass;
+        $fordb = new stdClass();
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
             if (in_array($k, array('mtime', 'ctime', 'submittedtime')) && !empty($v)) {
@@ -289,7 +289,7 @@ class Collection {
 
         $colltemplate = new Collection($templateid);
 
-        $data = new StdClass;
+        $data = new stdClass();
         // Set a default name if one wasn't set in $collectiondata
         if ($titlefromtemplate) {
             $data->name = $colltemplate->get('name');
@@ -774,7 +774,7 @@ class Collection {
      * @return object $option;
      */
     public function collection_nav_framework_option() {
-        $option = new StdClass;
+        $option = new stdClass();
         $option->framework = $this->framework;
         $option->id = $this->id;
         $option->title = get_field('framework', 'name', 'id', $this->framework);

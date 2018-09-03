@@ -86,7 +86,7 @@ function set_account_preference($userid, $field, $value) {
     }
     else {
         try {
-            $pref = new StdClass;
+            $pref = new stdClass();
             $pref->usr = $userid;
             $pref->field = $field;
             $pref->value = $value;
@@ -136,7 +136,7 @@ function set_activity_preference($userid, $activity, $method) {
     }
     else {
         try {
-            $pref = new StdClass;
+            $pref = new stdClass();
             $pref->usr = $userid;
             $pref->activity = $activity;
             $pref->method = $method;
@@ -936,7 +936,7 @@ function check_overcount($mailinfo) {
             $lang = get_user_language($mailinfo->owner);
 
             // Send a notification that e-mail has been disabled
-            $message = new StdClass;
+            $message = new stdClass();
             $message->users = array($mailinfo->owner);
 
             $message->subject = get_string_from_language($lang, 'maildisabled', 'account');
@@ -995,7 +995,7 @@ function update_bounce_count($userto, $reset=false) {
  */
 function process_email($address) {
 
-    $email = new StdClass;
+    $email = new stdClass();
 
     if (strlen($address) <= 30) {
         log_debug ('-- Email address not long enough to contain valid data.');
@@ -1190,13 +1190,13 @@ function full_name($user=null) {
     global $USER;
 
     if ($user === null) {
-       $userobj = new StdClass;
+       $userobj = new stdClass();
        $userobj->firstname = $USER->get('firstname');
        $userobj->lastname  = $USER->get('lastname');
        $userobj->deleted   = $USER->get('deleted');
     }
     else if ($user instanceof User) {
-       $userobj = new StdClass;
+       $userobj = new stdClass();
        $userobj->firstname = $user->get('firstname');
        $userobj->lastname  = $user->get('lastname');
        $userobj->deleted   = $user->get('deleted');
@@ -1230,7 +1230,7 @@ function get_user_for_display($user=null) {
         $user = (object)$user;
     }
     else if (is_null($user) || (is_numeric($user) && $user == $USER->get('id'))) {
-        $user = new StdClass;
+        $user = new stdClass();
         foreach ($fields as $f) {
             $user->$f = $USER->get($f);
         }
@@ -1239,7 +1239,7 @@ function get_user_for_display($user=null) {
     }
     else if ($user instanceof User) {
         $userObj = $user;
-        $user = new StdClass;
+        $user = new stdClass();
         foreach ($fields as $f) {
             $user->$f = $userObj->get($f);
         }
@@ -1286,7 +1286,7 @@ function display_username($user=null) {
     global $USER;
 
     if ($user === null) {
-        $user = new StdClass;
+        $user = new stdClass();
         $user->username = $USER->get('username');
     }
     // if cached (non $USER) $user object is missing username
@@ -1433,7 +1433,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
         $suspendinguserid = $admins[0]->id;
     }
 
-    $suspendrec = new StdClass;
+    $suspendrec = new stdClass();
     $suspendrec->id              = $suspendeduserid;
     $suspendrec->suspendedcusr   = $suspendinguserid;
     $suspendrec->suspendedreason = is_array($reason) ? get_string('privacyrefusal', 'admin') : $reason;
@@ -1445,7 +1445,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
     remove_user_sessions($suspendeduserid);
 
     $lang = get_user_language($suspendeduserid);
-    $message = new StdClass;
+    $message = new stdClass();
     $message->users = array($suspendeduserid);
     $message->subject = get_string_from_language($lang, 'youraccounthasbeensuspended');
     if ($reason == '') {
@@ -1487,7 +1487,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
  * @param int $userid The ID of the user to unsuspend
  */
 function unsuspend_user($userid) {
-    $suspendedrec = new StdClass;
+    $suspendedrec = new stdClass();
     $suspendedrec->id = $userid;
     $suspendedrec->suspendedcusr = null;
     $suspendedrec->suspendedreason = null;
@@ -1495,7 +1495,7 @@ function unsuspend_user($userid) {
     update_record('usr', $suspendedrec);
 
     $lang = get_user_language($userid);
-    $message = new StdClass;
+    $message = new stdClass();
     $message->users = array($userid);
     $message->subject = get_string_from_language($lang, 'youraccounthasbeenunsuspended');
     $message->message = get_string_from_language($lang, 'youraccounthasbeenunsuspendedtext2', 'mahara', get_config('sitename'));
@@ -1525,7 +1525,7 @@ function delete_user($userid) {
 
     $user = get_record('usr', 'id', $userid, null, null, null, null, implode(', ', $fieldstomunge));
 
-    $deleterec = new StdClass;
+    $deleterec = new stdClass();
     $deleterec->id = $userid;
     $deleterec->deleted = 1;
     foreach ($fieldstomunge as $field) {
@@ -1651,7 +1651,7 @@ function delete_user($userid) {
  * @param int $userid The ID of the user to undelete
  */
 function undelete_user($userid) {
-    $deleterec = new StdClass;
+    $deleterec = new stdClass();
     $deleterec->id = $userid;
     $deleterec->deleted = 0;
     update_record('usr', $deleterec);
@@ -2318,13 +2318,13 @@ function acceptfriend_submit(Pieform $form, $values) {
     }
 
     // friend db record
-    $f = new StdClass;
+    $f = new stdClass();
     $f->ctime = db_format_timestamp(time());
     $f->usr1 = $user->id;
     $f->usr2 = $USER->get('id');
 
     // notification info
-    $n = new StdClass;
+    $n = new stdClass();
     $n->url = profile_url($USER, false);
     $n->users = array($user->id);
     $n->fromuser = $USER->get('id');
@@ -2402,11 +2402,11 @@ function addfriend_submit(Pieform $form, $values) {
     }
 
     // friend db record
-    $f = new StdClass;
+    $f = new stdClass();
     $f->ctime = db_format_timestamp(time());
 
     // notification info
-    $n = new StdClass;
+    $n = new stdClass();
     $n->url = profile_url($USER, false);
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
@@ -2579,7 +2579,7 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array(), $
     remove_user_sessions($userid);
 
     $updated = array();
-    $newrecord = new StdClass;
+    $newrecord = new stdClass();
     foreach (get_object_vars($user) as $k => $v) {
         if (!empty($v) && ($k == 'password' || empty($oldrecord->$k) || $oldrecord->$k != $v)) {
             $newrecord->$k = $v;
@@ -3294,7 +3294,7 @@ function get_latest_privacy_versions($institutions = array(), $ignoreagreevalue 
  *
  */
 function save_user_reply_to_agreement($userid, $sitecontentid, $agreed) {
-    $usragreement = new StdClass;
+    $usragreement = new stdClass();
     $usragreement->usr = $userid;
     $usragreement->sitecontentid = $sitecontentid;
     $usragreement->ctime = db_format_timestamp(time());

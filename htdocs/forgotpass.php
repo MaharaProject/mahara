@@ -121,7 +121,7 @@ function forgotpass_submit(Pieform $form, $values) {
 
     if ($sendemail) {
         try {
-            $pwrequest = new StdClass;
+            $pwrequest = new stdClass();
             $pwrequest->usr = $user->id;
             $pwrequest->expiry = db_format_timestamp(time() + 86400);
             $pwrequest->key = get_random_key();

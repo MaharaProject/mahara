@@ -77,7 +77,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
      */
     public function notify_user($user) {
         $userdata = $this->to_stdclass();
-        $changes = new stdClass;
+        $changes = new stdClass();
         $userdata->usr = $user->id;
         $user->method = $this->user_notification_method($user->id);
 

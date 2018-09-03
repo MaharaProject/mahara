@@ -80,7 +80,7 @@ if ($addtype == 'add') {
     $userrecord = get_record('usr', 'id', $userid);
     $lang = get_user_language($userid);
 
-    $n = new StdClass;
+    $n = new stdClass();
     $n->users = array($userid);
     $n->subject = get_string_from_language($lang, 'changedgroupmembershipsubject', 'group');
     $n->message = '';

@@ -124,7 +124,7 @@ function contactus_validate(Pieform $form, $values) {
 
 function contactus_submit(Pieform $form, $values) {
     global $SESSION;
-    $data = new StdClass;
+    $data = new stdClass();
     $data->fromname    = $values['name'];
     $data->fromemail   = $values['email'];
     $data->subject     = $values['subject'];

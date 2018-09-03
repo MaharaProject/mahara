@@ -94,7 +94,7 @@ function editsitepage_validate(Pieform $form, $values) {
 function editsitepage_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
-    $data = new StdClass;
+    $data = new stdClass();
     $data->content = $values['pagetext'];
     $data->author = $USER->get('id');
     $data->institution = $values['pageinstitution'];

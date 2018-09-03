@@ -121,7 +121,7 @@ function group_change_role($groupid, $userid, $role) {
 
     set_field('group_member', 'role', $role, 'group', $groupid, 'member', $userid);
 
-    $data = new StdClass;
+    $data = new stdClass();
     $data->user = $userid;
     $data->group = $groupid;
     $data->role = $role;
@@ -1004,7 +1004,7 @@ function group_add_user($groupid, $userid, $role=null, $method='internal') {
     $groupid = group_param_groupid($groupid);
     $userid  = group_param_userid($userid);
 
-    $gm = new StdClass;
+    $gm = new stdClass();
     $gm->member = $userid;
     $gm->group = $groupid;
     $gm->ctime =  db_format_timestamp(time());
@@ -1092,7 +1092,7 @@ function group_remove_user($groupid, $userid=null, $force=false) {
     if (!$force && !group_user_can_leave($groupid, $userid)) {
         throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
     }
-    $data = new StdClass;
+    $data = new stdClass();
     $data->user = $userid;
     $data->group = $groupid;
     $data->role = get_field('group_member', 'role', 'group', $groupid, 'member', $userid);
@@ -1238,7 +1238,7 @@ function group_update_members($groupid, $members, $lines_done = 0, $num_lines = 
 function group_invite_user($group, $userid, $userfrom, $role='member', $delay=null) {
     $user = optional_userobj($userid);
 
-    $data = new StdClass;
+    $data = new stdClass();
     $data->group = $group->id;
     $data->member= $user->id;
     $data->ctime = db_format_timestamp(time());
@@ -2677,7 +2677,7 @@ function group_quota_add($groupid, $bytes) {
         throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
     }
     $newquota = $group->quotaused + $bytes;
-    $group = new StdClass;
+    $group = new stdClass();
     $group->id = $groupid;
     $group->quotaused = $newquota;
     update_record('group', $group);
@@ -2691,7 +2691,7 @@ function group_quota_remove($groupid, $bytes) {
         throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
     }
     $newquota = max(0, $group->quotaused - $bytes);
-    $group = new StdClass;
+    $group = new stdClass();
     $group->id = $groupid;
     $group->quotaused = $newquota;
     update_record('group', $group);

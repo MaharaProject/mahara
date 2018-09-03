@@ -127,8 +127,8 @@ if (!$evidence) {
 }
 
 $evidencematrix = array();
-$statuscounts = new StdClass();
-$enabled = new StdClass();
+$statuscounts = new stdClass();
+$enabled = new stdClass();
 
 //completed should be always enabled
 $statuscounts->completed = array();
@@ -232,7 +232,7 @@ else {
 $smarty->display('module:framework:matrix.tpl');
 
 function get_statuses_to_display($frameworkid) {
-    $statusestodisplay = new StdClass();
+    $statusestodisplay = new stdClass();
     $allstatuses = array(
         Framework::EVIDENCE_COMPLETED,
         Framework::EVIDENCE_BEGUN,

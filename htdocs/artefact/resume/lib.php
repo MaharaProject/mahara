@@ -175,7 +175,7 @@ class ArtefactTypeResume extends ArtefactType {
     }
 
     public static function format_child_data($artefact, $pluginname) {
-        $a = new StdClass;
+        $a = new stdClass();
         $a->id         = $artefact->id;
         $a->isartefact = true;
         $a->title      = '';
@@ -376,7 +376,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
 
         db_begin();
 
-        $data = new StdClass;
+        $data = new stdClass();
         $have_composites = false;
         foreach ($this->composites as $field => $value) {
             if ($field != 'artefact' && !empty($value)) {

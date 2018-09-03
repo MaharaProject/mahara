@@ -18,7 +18,7 @@ $action = param_variable('action');
 
 if ($action == 'search') {
     require_once('webservicessearchlib.php');
-    $params = new StdClass;
+    $params = new stdClass();
     $params->userquery       = trim(param_variable('userquery', ''));
     $params->functionquery   = trim(param_variable('functionquery', ''));
     $params->institution     = param_alphanum('institution', 'all');

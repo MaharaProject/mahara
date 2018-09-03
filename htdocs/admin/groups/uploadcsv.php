@@ -279,7 +279,7 @@ function uploadcsv_submit(Pieform $form, $values) {
         }
         $key++;
 
-        $group = new StdClass;
+        $group = new stdClass();
         $group->name        = $record[$formatkeylookup['displayname']];
         $group->shortname   = $record[$formatkeylookup['shortname']];
         $group->institution = $institution;

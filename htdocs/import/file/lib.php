@@ -58,7 +58,7 @@ class PluginImportFile extends PluginImport {
             }
             $sha1 = sha1_file($uzd . $f);
             if (array_key_exists($sha1, $this->manifest)) {
-                $tmp = new StdClass;
+                $tmp = new stdClass();
                 $tmp->sha1 = $sha1;
                 $tmp->wantsfilename = $this->manifest[$sha1]['filename'];
                 $tmp->actualfilename = $f;

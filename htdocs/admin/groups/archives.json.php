@@ -16,7 +16,7 @@ define('INSTITUTIONALADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('searchlib.php');
 
-$params = new StdClass;
+$params = new stdClass();
 $params->query = trim(param_variable('query', ''));
 $params->institution = param_alphanum('institution', null);
 $params->sortby = param_alpha('sortby', 'firstname');

@@ -152,7 +152,7 @@ class module_lti_launch extends external_api {
         if (!$userid) {
             if ($canautocreate) {
 
-                $user = new stdClass;
+                $user = new stdClass();
                 $user->email = $params['lis_person_contact_email_primary'];
                 $user->password = sha1(uniqid('', true));
                 $user->firstname = $params['lis_person_name_given'];
@@ -175,7 +175,7 @@ class module_lti_launch extends external_api {
                 $updateuser = false;
 
                 if ($parentauthid) {
-                    $authremoteuser = new StdClass;
+                    $authremoteuser = new stdClass();
                     $authremoteuser->authinstance = $parentauthid;
                     $authremoteuser->remoteusername = $user->username;
                     $authremoteuser->localusr = $user->id;
@@ -199,7 +199,7 @@ class module_lti_launch extends external_api {
             $user->authinstance = !empty($parentauthid) ? $parentauthid : $authinstanceid;
             unset($user->password);
 
-            $profilefields = new StdClass;
+            $profilefields = new stdClass();
             $remoteuser = null;
             // We need to update the following fields for both the usr and artefact tables
             foreach (array('firstname', 'lastname', 'email') as $field) {
@@ -213,7 +213,7 @@ class module_lti_launch extends external_api {
         log_debug('found userid: '.$user->id);
 
         if ($updateremote) {
-            $authremoteuser = new StdClass;
+            $authremoteuser = new stdClass();
             $authremoteuser->authinstance = $authinstanceid;
             $authremoteuser->remoteusername = $params['user_id'];
             $authremoteuser->localusr = $user->id;

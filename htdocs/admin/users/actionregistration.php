@@ -124,7 +124,7 @@ function approveregistration_submit(Pieform $form, $values) {
         // this column; if so, leave them in the db.
         $extra = unserialize($values['extra']);
     }
-    $extra = (!empty($extra) && $extra instanceof Stdclass) ? $extra : new StdClass;
+    $extra = (!empty($extra) && $extra instanceof stdClass) ? $extra : new stdClass();
 
     // Get additional values to pass through to user creation
     if (!empty($values['institutionstaff'])) {

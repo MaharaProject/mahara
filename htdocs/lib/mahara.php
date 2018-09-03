@@ -245,7 +245,7 @@ function upgrade_mahara($upgrades) {
             // Update local version
             $name(array('localdata' => true));
 
-            $config = new StdClass;
+            $config = new stdClass();
             require(get_config('docroot') . 'local/version.php');
             set_config('localversion', $config->version);
             set_config('localrelease', $config->release);
@@ -1015,7 +1015,7 @@ function set_config($key, $value) {
         }
     }
     else {
-        $config = new StdClass;
+        $config = new stdClass();
         $config->field = $key;
         $config->value = $value;
         $status = insert_record('config', $config);
@@ -1204,7 +1204,7 @@ function set_config_plugin_instance($plugintype, $pluginname, $instanceid, $key,
         }
     }
     else {
-        $pconfig = new StdClass;
+        $pconfig = new stdClass();
         $pconfig->instance = $instanceid;
         $pconfig->field  = $key;
         $pconfig->value  = $value;

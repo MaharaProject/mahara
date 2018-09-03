@@ -285,7 +285,7 @@ class mahara_user_external extends external_api {
             }
 
             // build up the user object to create
-            $new_user = new StdClass;
+            $new_user = new stdClass();
             $new_user->authinstance = $authinstance->id;
             $new_user->username     = $user['username'];
             $new_user->firstname    = $user['firstname'];
@@ -300,7 +300,7 @@ class mahara_user_external extends external_api {
             }
 
             // handle profile fields
-            $profilefields = new StdClass;
+            $profilefields = new stdClass();
             $remoteuser = null;
             foreach (self::$ALLOWEDKEYS as $field) {
                 if (isset($user[$field])) {
@@ -552,7 +552,7 @@ class mahara_user_external extends external_api {
                 unset($user['socialprofile']);
             }
 
-            $profilefields = new StdClass;
+            $profilefields = new stdClass();
             $remoteuser = null;
             foreach (self::$ALLOWEDKEYS as $field) {
                 if (isset($user[$field])) {

@@ -644,7 +644,7 @@ class User {
     }
 
     public function to_stdclass() {
-        $this->stdclass = new StdClass;
+        $this->stdclass = new stdClass();
         reset($this->defaults);
         foreach (array_keys($this->defaults) as $k) {
             if ($k == 'expiry' || $k == 'lastlogin' || $k == 'lastlastlogin' || $k == 'lastaccess' || $k == 'suspendedctime' || $k == 'ctime') {
@@ -1589,7 +1589,7 @@ class User {
             // Need to loop thru collections to find the list of viewids
             $results = get_records_select_array('collection_view', 'collection IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'collection, view, displayorder');
             foreach ($results as $result) {
-                $where = new StdClass;
+                $where = new stdClass();
                 $where->view = $result->view;
                 $where->collection = $result->collection;
                 $where->usr = $this->id;
@@ -1604,7 +1604,7 @@ class User {
             $this->copy_views($templateids, false, true);
             // Loop thru viewids to add them to the done table
             foreach ($templateids as $id) {
-                $where = new StdClass;
+                $where = new stdClass();
                 $where->view = $id;
                 $where->usr = $this->id;
 
@@ -1994,7 +1994,7 @@ class LiveUser extends User {
             throw new UserException(get_string('loginastwice', 'admin'));
         }
 
-        $olduser = new StdClass;
+        $olduser = new stdClass();
         $olduser->id = $this->get('id');
         $olduser->name = display_name($this, null, true);
 

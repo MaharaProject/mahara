@@ -256,7 +256,7 @@ if ($institution || $add) {
         $authtypes = auth_get_available_auth_types($institution);
     }
     else {
-        $data = new StdClass;
+        $data = new stdClass();
         $data->displayname = '';
         $data->expiry = null;
         if (!get_config('usersuniquebyusername')) {
@@ -982,7 +982,7 @@ function institution_submit(Pieform $form, $values) {
                 // Should never happen:
                 throw new SystemException('Attempt to update AND delete an auth instance');
             }
-            $record = new StdClass;
+            $record = new stdClass();
             $record->priority = $priority;
             $record->id = $instanceid;
             update_record('auth_instance', $record,  array('id' => $instanceid));
@@ -1147,7 +1147,7 @@ function institution_submit(Pieform $form, $values) {
     delete_records('institution_locked_profile_field', 'name', $institution);
     foreach (ArtefactTypeProfile::get_all_fields() as $field => $type) {
         if ($values[$field]) {
-            $profilefield = new StdClass;
+            $profilefield = new stdClass();
             $profilefield->name         = $institution;
             $profilefield->profilefield = $field;
             insert_record('institution_locked_profile_field', $profilefield);

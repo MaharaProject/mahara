@@ -230,7 +230,7 @@ function upload_validate(Pieform $form, $values) {
 function upload_submit(Pieform $form, $values) {
     safe_require('artefact', 'file');
 
-    $data = new stdClass;
+    $data = new stdClass();
     $data->title = $values['title'] ? $values['title'] : $values['file']['name'];
 
     try {

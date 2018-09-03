@@ -435,7 +435,7 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
 
         // Install a cron job to clean webservices logs
         if (!get_record('cron', 'callfunction', 'webservice_clean_webservice_logs')) {
-            $cron = new StdClass;
+            $cron = new stdClass();
             $cron->callfunction = 'webservice_clean_webservice_logs';
             $cron->minute       = '5';
             $cron->hour         = '01';

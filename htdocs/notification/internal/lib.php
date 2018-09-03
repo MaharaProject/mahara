@@ -16,7 +16,7 @@ class PluginNotificationInternal extends PluginNotification {
     static $userdata = array('urltext', 'subject', 'message');
 
     public static function notify_user($user, $data) {
-        $toinsert = new StdClass;
+        $toinsert = new stdClass();
         $toinsert->type = $data->type;
         $toinsert->usr = $user->id;
         if (!empty($user->markasread)) {

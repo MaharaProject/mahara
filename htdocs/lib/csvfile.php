@@ -58,7 +58,7 @@ class CsvFile {
     }
 
     public function get_data() {
-        $csvfile = new StdClass;
+        $csvfile = new stdClass();
         if (!empty($this->errors)) {
             $csvfile->errors = $this->errors;
             return $csvfile;

@@ -105,7 +105,7 @@ function deletepost_submit(Pieform $form, $values) {
 
     if ($objectionable !== false) {
         // Trigger activity.
-        $data = new StdClass;
+        $data = new stdClass();
         $data->postid     = $postid;
         $data->message    = '';
         $data->reporter   = $USER->get('id');

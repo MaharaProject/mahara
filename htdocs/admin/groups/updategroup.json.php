@@ -20,7 +20,7 @@ json_headers();
 $name     = param_variable('name');
 $itemid   = param_variable('itemid');
 
-$data = new StdClass;
+$data = new stdClass();
 $data->title = $name;
 
 try {

@@ -313,7 +313,7 @@ class Institution {
             }
         }
 
-        $userinst = new StdClass;
+        $userinst = new stdClass();
         $userinst->institution = $this->name;
         $studentid = get_field('usr_institution_request', 'studentid', 'usr', $user->id,
                                'institution', $this->name);
@@ -729,7 +729,7 @@ class Institution {
             return;
         }
         try {
-            $pwrequest = new StdClass;
+            $pwrequest = new stdClass();
             $pwrequest->usr = $user->id;
             $pwrequest->expiry = db_format_timestamp(time() + 86400);
             $pwrequest->key = get_random_key();
