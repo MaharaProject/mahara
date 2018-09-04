@@ -557,6 +557,10 @@ function uploadcsv_submit(Pieform $form, $values) {
                 unset($UPDATES[$user->username]);
             }
             else {
+                // Log the user out, otherwise they can overwrite all this on the next request
+                if (!empty($user->id)) {
+                    remove_user_sessions($user->id);
+                }
                 $UPDATES[$user->username] = $updated;
                 log_debug('updated user ' . $user->username . ' (' . implode(', ', array_keys($updated)) . ')');
             }

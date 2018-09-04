@@ -2575,9 +2575,6 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array(), $
 
     db_begin();
 
-    // Log the user out, otherwise they can overwrite all this on the next request
-    remove_user_sessions($userid);
-
     $updated = array();
     $newrecord = new stdClass();
     foreach (get_object_vars($user) as $k => $v) {
