@@ -30,6 +30,17 @@ if ($membership != 'admin') {
 define('TITLE', get_string('deleteinteraction', 'group', get_string('name', 'interaction.' . $instance->get('plugin')), $instance->get('title')));
 // submit handler in interaction/lib.php
 
+// Check to see if the forum is being used as a landing page url
+$landingpagenote = '';
+if (get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
+    $landing = translate_landingpage_to_tags(array(get_config('homepageredirecturl')));
+    foreach ($landing as $land) {
+        if ($land->type == 'forum' && $land->typeid == $id) {
+            $landingpagenote = get_string('islandingpage', 'admin');
+        }
+    }
+}
+
 $returnto = param_alpha('returnto', 'view');
 
 $form = pieform(array(
@@ -54,5 +65,6 @@ $smarty = smarty(array('tablerenderer'));
 $smarty->assign('form', $form);
 $smarty->assign('heading', $group->name);
 $smarty->assign('subheading', TITLE);
+$smarty->assign('landingpagenote', $landingpagenote);
 $smarty->assign('message', get_string('deleteinteractionsure', 'group'));
 $smarty->display('interaction/delete.tpl');

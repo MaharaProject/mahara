@@ -104,6 +104,27 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('homepageinfo'),
                     'disabled'     => in_array('homepageinfo', $OVERRIDDEN),
                 ),
+                'homepageredirect' => array(
+                    'type'         => 'switchbox',
+                    'title'        => get_string('homepageredirect', 'admin'),
+                    'description'  => get_string('homepageredirectdescription', 'admin'),
+                    'defaultvalue' => get_config('homepageredirect'),
+                    'disabled'     => in_array('homepageredirect', $OVERRIDDEN),
+                ),
+                'homepageredirecturl' => array(
+                    'type'         => 'autocomplete',
+                    'title'        => get_string('homepageredirecturl', 'admin'),
+                    'ajaxurl'      => get_config('wwwroot') . 'admin/site/homepageredirect.json.php',
+                    'multiple'     => true,
+                    'initfunction' => 'translate_landingpage_to_tags',
+                    'ajaxextraparams' => array(),
+                    'extraparams' => array(
+                        'maximumSelectionLength' => 1
+                    ),
+                    'description'  => get_string('homepageredirecturldescription', 'admin'),
+                    'defaultvalue' => get_config('homepageredirecturl'),
+                    'disabled'     => in_array('homepageredirect', $OVERRIDDEN),
+                ),
             ),
         ),
         'usersettings' => array(
@@ -824,7 +845,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'allowanonymouspages', 'generatesitemap',
          'mathjax', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
-        'institutionstrictprivacy',
+        'institutionstrictprivacy', 'homepageredirect', 'homepageredirecturl',
         'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'timezone', 'userscanchooseviewthemes', 'internalnotificationexpire',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'passwordpolicy',
@@ -911,7 +932,8 @@ function siteoptions_submit(Pieform $form, $values) {
         ", array($USER->get('id'))); // Ignore the root and current admin user
         db_commit();
     }
-
+    // Turn homepageredirecturl into string
+    $values['homepageredirecturl'] = !empty($values['homepageredirecturl']) ? $values['homepageredirecturl'][0] : '';
     $oldsearchplugin = get_config('searchplugin');
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
@@ -1053,8 +1075,12 @@ jQuery(function() {
     jQuery('#siteoptions_usersallowedmultipleinstitutions').on("click", function() {
         strictprivacycheckallowed();
     });
+    jQuery('#siteoptions_homepageredirect').on("click", function() {
+        homepageredirect();
+    });
     multipleinstitutionscheckallowed();
     strictprivacycheckallowed();
+    homepageredirect();
 });
 
 

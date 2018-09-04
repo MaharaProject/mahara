@@ -41,6 +41,19 @@ function strictprivacycheckallowed() {
     }
 }
 
+// we need to toggle the homepageredirecturl field depending on state of homepageredirect
+function homepageredirect() {
+    var target = jQuery('#siteoptions_homepageredirecturl');
+    if (jQuery('#siteoptions_homepageredirect').is(':checked')) {
+        target.parent().removeClass('hidden');
+        target.prop('disabled', false);
+    }
+    else {
+        target.parent().addClass('hidden');
+        target.prop('disabled', true);
+    }
+}
+
 var checkReload = (function($) {
   // Disconnects the pieform submit handler and changes the form target back to
   // the page itself (rather than pieform's hidden iframe), so a full post/reload
@@ -90,8 +103,12 @@ var checkReload = (function($) {
       jQuery('#siteoptions_usersallowedmultipleinstitutions').on("click", function() {
           strictprivacycheckallowed();
       });
+      jQuery('#siteoptions_homepageredirect').on("click", function() {
+          homepageredirect();
+      });
       multipleinstitutionscheckallowed();
       strictprivacycheckallowed();
+      homepageredirect();
 
       formSuccess(form, data);
   };

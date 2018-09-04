@@ -1836,6 +1836,13 @@ function login_submit(Pieform $form, $values) {
     $scriptname = $_SERVER['SCRIPT_NAME'];
     $scriptname = str_replace($path, '', $scriptname);
     $requesturi = $scriptname . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
+
+    if ($requesturi == '/' || $requesturi == '/index.php') {
+        // we are going to the homepage
+        if (get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
+            $requesturi = get_config('homepageredirecturl');
+        }
+    }
     redirect($requesturi);
 
 }
