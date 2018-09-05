@@ -6,7 +6,7 @@
         border-color: transparent;
     }
     .admin & {
-        border-color: $card-border-color;
+        // border-color: $card-border-color; // TODO: This might affect other things elsewhere
     }
     > .card-heading {
         font-family: $font-family-serif;
