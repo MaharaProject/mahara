@@ -5,9 +5,14 @@ Feature: Mahara users can export collections with bulk option
   So that I can have the same options of exporting as I when exporting pages.
 
 Background:
-Given the following "users" exist:
+Given the following "institutions" exist:
+       | name | displayname | registerallowed | registerconfirm |
+       | instone | Institution One | ON | OFF |
+
+And the following "users" exist:
   | username | password | email | firstname | lastname | institution | authname | role |
-  | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+  | UserA | Kupuh1pa! | UserA@example.org | Angela | User | instone | internal | Admin |
+  | UserB | Kupuh1pa! | UserB@example.org | Bob | User | instone | internal | member |
 
 And the following "pages" exist:
   | title | description | ownertype | ownername |
@@ -62,3 +67,32 @@ Scenario: Export collections in bulk as Leap2A
   And the "Collection UserA_03" checkbox should be checked
   When I click on "Generate export"
   Then I should see "Please wait while your export is being generated..."
+
+Scenario: Institution One admin locks First name, Last name fields
+    I want to lock fields
+    So that institution fields will not change when users upload Leap2a portfolios
+    # Admin sets Institution lock fields (First name, Last name)
+    Given I log in as "admin" with password "Kupuh1pa!"
+    When I choose "Settings" in "Institutions" from administration menu
+    And I click on "Edit" in "Institution One" row
+    And I expand the section "Locked fields"
+    And I enable the switch "First name"
+    And I enable the switch "Last name"
+    And I enable the switch "Email address"
+    And I press "Submit"
+    Then I log out
+    Given I log in as "UserB" with password "Kupuh1pa!"
+    When I choose "Import" in "Portfolio" from main menu
+    # Upload the file "UserA.xml"  Leap2A file
+    And I attach the file "leap2a.xml" to "import_leap2afile"
+    And I press "Import"
+    Then I should see "Choose the way to import your portfolio items"
+    When I expand "About me" node
+    # user should see ignore for all of the Locked fields for inst
+    And I should see "Ignore" in the "Import First name" property
+    And I should see "Ignore" in the "Import Last name" property
+    # Student ID field was not locked so user should see additional option of "Add new"
+    And I should see "Ignore" in the "Import Student ID" property
+    And I should see "Add new" in the "Import Student ID" property
+    When I expand "Contact information" node
+    Then I should see "Ignore" in the "Import Email address" property

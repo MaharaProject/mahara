@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:leap2="http://terms.leapspecs.org/"
+    xmlns:categories="http://wiki.leapspecs.org/2A/categories/"
+    xmlns:portfolio="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/export/leap/8/1532482738/"
+    xmlns:mahara="http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#"
+>
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/export/8/1532482738</id>
+    <title>Mahara Leap2A Export for Alice User1, 2018/07/25 13:38</title>
+    <updated>2018-07-25T13:38:58+12:00</updated>
+    <generator uri="https://mahara.org/" version="2008122400">Mahara</generator>
+    <author>
+        <name>Alice User1</name>
+        <email>Stevens+500@catalyst.net.nz</email>
+        <uri>portfolio:artefactinternal</uri>
+    </author>
+
+    <entry>
+        <title>Profile page</title>
+        <id>portfolio:view17</id>
+
+        <updated>2018-07-20T08:58:43+12:00</updated>
+        <published>2018-07-20T08:58:43+12:00</published>
+        <summary>Your profile page is what others see when they click on your name or profile picture.</summary>
+        <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><div><div id="user_row_1" class="clearfix">
+    <div class="row-content">
+    <div id="user_row_1_column_1" class="column-layout columns2 first col-width-50" style="width:48%;">
+    <div class="column-content">
+        <div class="bt-profileinfo panel panel-secondary clearfix" id="user_blockinstance_79">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                About me
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_79_target">
+        <div class="panel-body flush">
+
+
+
+    <ul class="unstyled profile-info"><li><strong>First name:</strong> Alice</li>
+            
+                                    <li><strong>Last name:</strong> User1</li>
+            
+                                    <li><strong>Student ID:</strong> 500</li>
+            
+        
+    </ul></div>
+
+
+        
+    </div>
+</div>
+<div class="bt-myviews panel panel-secondary clearfix" id="user_blockinstance_78">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                My portfolios
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_78_target">
+            <div class="list-group">
+        <div id="user_myviewlist" class="list-group">
+                <div class="list-group-item">
+        <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25" class="outer-link">
+            <span class="sr-only">Portfolio page Alice 1</span>
+        </a>
+
+        <h4 class="title list-group-item-heading text-inline">
+            <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25">Portfolio page Alice 1</a>
+        </h4>
+
+        
+        
+                <div class="list-group-item-text text-small">
+            Portfolio page Alice 1 description
+        </div>
+        
+
+        
+    </div>
+
+
+        </div>
+            <div id="user_myviews_page_container" class="hidden"><div id="user_myviews_pagination" class="pagination-wrapper center"><div class="lead text-small results pull-right">1 result</div></div></div>
+    
+        </div>
+
+
+
+        
+    </div>
+</div>
+<div class="bt-mygroups panel panel-secondary clearfix" id="user_blockinstance_77">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                My groups
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_77_target">
+            <div class="panel-body">
+        <p class="no-results-small">Not in any groups</p>
+    </div>
+
+
+
+        
+    </div>
+</div>
+
+    </div>
+</div>
+<div id="user_row_1_column_2" class="column-layout columns2 last col-width-50" style="width:48%;">
+    <div class="column-content">
+        <div class="bt-myfriends panel panel-secondary clearfix" id="user_blockinstance_76">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                My friends
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_76_target">
+        <div class="friends panel-body">
+            <div class="lead text-small text-center">
+            Try <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/user/find.php">searching for new friends</a> to grow your network.
+        </div>
+    
+
+</div>
+
+
+        
+    </div>
+</div>
+<div class="bt-wall panel panel-secondary clearfix" id="user_blockinstance_75">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                Wall
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_75_target">
+        <div id="user_wall-wrap" class="panel-form"><p class="metadata">Maximum 1500 characters per post.</p><div>Post <span class="requiredmarker">*</span></div><div class="makeprivate checkbox form-group">Make your post private <div class="form-switch">
+    <div class="switch">
+        
+            <span class="switch-inner"></span>
+            <span class="switch-indicator"></span>
+            <span class="state-label on">Yes</span>
+            <span class="state-label off">No</span>
+        
+    </div>
+    </div>
+</div><div class="form-group"></div></div><div id="user_wall" class="wall">
+            <div class="lead text-small text-center">No wall posts to display</div>
+    
+    
+</div>
+    <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/blocktype/wall/wall.php?id=75" class="detail-link link-blocktype"><span class="icon icon-arrow-circle-right"></span> View whole wall</a>
+
+
+
+        
+    </div>
+</div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+</div></div></content>
+        <rdf:type rdf:resource="leap2:selection"/>
+
+        <link rel="leap2:has_part" href="portfolio:artefact37"/>
+        <link rel="leap2:has_part" href="portfolio:artefact38"/>
+        <link rel="leap2:has_part" href="portfolio:artefact39"/>
+
+
+        <category term="Webpage" scheme="categories:selection_type#"/>
+
+
+
+
+
+        <mahara:view mahara:layout="50,50" mahara:type="profile" mahara:ownerformat="6">
+          <mahara:row>
+            <mahara:column>
+                <mahara:blockinstance mahara:blocktype="profileinfo" mahara:blocktitle="About me">
+                    <mahara:fields>[[&quot;firstname&quot;,&quot;lastname&quot;,&quot;studentid&quot;]]</mahara:fields>
+
+                </mahara:blockinstance>
+                <mahara:blockinstance mahara:blocktype="myviews" mahara:blocktitle="">
+
+                </mahara:blockinstance>
+                <mahara:blockinstance mahara:blocktype="mygroups" mahara:blocktitle="">
+
+                </mahara:blockinstance>
+
+            </mahara:column>
+            <mahara:column>
+                <mahara:blockinstance mahara:blocktype="myfriends" mahara:blocktitle="">
+
+                </mahara:blockinstance>
+                <mahara:blockinstance mahara:blocktype="wall" mahara:blocktitle="">
+
+                </mahara:blockinstance>
+
+            </mahara:column>
+
+          </mahara:row>
+
+        </mahara:view>
+    </entry>
+
+    <entry>
+        <title>Dashboard page</title>
+        <id>portfolio:view24</id>
+
+        <updated>2018-07-25T13:18:17+12:00</updated>
+        <published>2018-07-25T13:18:17+12:00</published>
+
+        <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><div><div id="user_row_1" class="clearfix">
+    <div class="row-content">
+    <div id="user_row_1_column_1" class="column-layout columns2 first col-width-50" style="width:48%;">
+    <div class="column-content">
+        <div class="bt-newviews panel panel-secondary clearfix" id="user_blockinstance_105">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                Latest changes I can view
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_105_target">
+        <div class="panel-body">
+    <p class="lead text-small">No pages or collections.</p>
+</div>
+
+
+
+        
+    </div>
+</div>
+<div class="bt-myviews panel panel-secondary clearfix" id="user_blockinstance_106">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                My portfolios
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_106_target">
+            <div class="list-group">
+        <div id="user_myviewlist" class="list-group">
+                <div class="list-group-item">
+        <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25" class="outer-link">
+            <span class="sr-only">Portfolio page Alice 1</span>
+        </a>
+
+        <h4 class="title list-group-item-heading text-inline">
+            <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25">Portfolio page Alice 1</a>
+        </h4>
+
+        
+        
+                <div class="list-group-item-text text-small">
+            Portfolio page Alice 1 description
+        </div>
+        
+
+        
+    </div>
+
+
+        </div>
+            <div id="user_myviews_page_container" class="hidden"><div id="user_myviews_pagination" class="pagination-wrapper center"><div class="lead text-small results pull-right">1 result</div></div></div>
+    
+        </div>
+
+
+
+        
+    </div>
+</div>
+
+    </div>
+</div>
+<div id="user_row_1_column_2" class="column-layout columns2 last col-width-50" style="width:48%;">
+    <div class="column-content">
+        <div class="bt-inbox panel panel-secondary clearfix" id="user_blockinstance_107">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                Inbox
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_107_target">
+            <div id="user_inboxblock" class="inboxblock list-group">
+                <div class="has-attachment panel-default collapsible list-group-item">
+                            <a class="collapsed link-block" href="#message_content_maharamessage_16">
+                                            <span class="icon icon-wrench text-default left"></span>
+                    
+                    <span class="sr-only"></span>
+                    Institution membership confirmation
+                    <span class="icon icon-chevron-down collapse-indicator pull-right text-small"></span>
+                </a>
+            
+            <div class="collapse" id="user_message_content_maharamessage_16">
+                                    <p class="content-text">You have been added as a member of Institution A.</p>
+                    
+                    
+                
+            </div>
+        </div>
+                <div class="has-attachment panel-default collapsible list-group-item">
+                            <a class="collapsed link-block" href="#message_content_institutionmessage_1">
+                                            <span class="icon icon-university text-default left"></span>
+                    
+                    <span class="sr-only"></span>
+                    You have been invited to join the institution...
+                    <span class="icon icon-chevron-down collapse-indicator pull-right text-small"></span>
+                </a>
+            
+            <div class="collapse" id="user_message_content_institutionmessage_1">
+                                    <p class="content-text">You have been invited to join the institution Institution A. You can confirm your membership of this institution on your "Institution settings" page:</p>
+                                        <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/account/institutions.php" class="text-small">
+                        Institution membership <span class="icon icon-arrow-right mls icon-sm"></span>
+                    </a>
+                    
+                    
+                
+            </div>
+        </div>
+        
+    </div>
+    
+    <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/module/multirecipientnotification/inbox.php" class="detail-link link-blocktype"><span class="icon icon-link"></span> Details</a>
+            
+        
+    </div>
+</div>
+<div class="bt-inbox panel panel-secondary clearfix" id="user_blockinstance_108">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                Topics I am following
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_108_target">
+            <div class="panel-body">
+        <p class="lead text-small">No messages</p>
+    </div>
+
+
+
+        
+                            <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/module/multirecipientnotification/inbox.php" class="detail-link link-blocktype"><span class="icon icon-link"></span> Details</a>
+            
+        
+    </div>
+</div>
+<div class="bt-watchlist panel panel-secondary clearfix" id="user_blockinstance_109">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                Watched pages
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_109_target">
+            <div class="panel-body">
+        <p class="lead text-small">There are no pages on your watchlist.</p>
+    </div>
+
+
+
+        
+    </div>
+</div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+</div></div></content>
+        <rdf:type rdf:resource="leap2:selection"/>
+
+
+
+        <category term="Webpage" scheme="categories:selection_type#"/>
+
+
+
+
+
+        <mahara:view mahara:layout="50,50" mahara:type="dashboard" mahara:ownerformat="6">
+          <mahara:row>
+            <mahara:column>
+                <mahara:blockinstance mahara:blocktype="newviews" mahara:blocktitle="">
+                    <mahara:limit>[5]</mahara:limit>
+
+                </mahara:blockinstance>
+                <mahara:blockinstance mahara:blocktype="myviews" mahara:blocktitle="">
+
+                </mahara:blockinstance>
+
+            </mahara:column>
+            <mahara:column>
+                <mahara:blockinstance mahara:blocktype="inbox" mahara:blocktitle="">
+                    <mahara:feedback>[true]</mahara:feedback>
+                    <mahara:groupmessage>[true]</mahara:groupmessage>
+                    <mahara:institutionmessage>[true]</mahara:institutionmessage>
+                    <mahara:maharamessage>[true]</mahara:maharamessage>
+                    <mahara:usermessage>[true]</mahara:usermessage>
+                    <mahara:wallpost>[true]</mahara:wallpost>
+                    <mahara:viewaccess>[true]</mahara:viewaccess>
+                    <mahara:watchlist>[true]</mahara:watchlist>
+                    <mahara:maxitems>[&quot;5&quot;]</mahara:maxitems>
+
+                </mahara:blockinstance>
+                <mahara:blockinstance mahara:blocktype="inbox" mahara:blocktitle="">
+                    <mahara:newpost>[true]</mahara:newpost>
+                    <mahara:maxitems>[&quot;5&quot;]</mahara:maxitems>
+
+                </mahara:blockinstance>
+                <mahara:blockinstance mahara:blocktype="watchlist" mahara:blocktitle="">
+                    <mahara:count>[&quot;10&quot;]</mahara:count>
+
+                </mahara:blockinstance>
+
+            </mahara:column>
+
+          </mahara:row>
+
+        </mahara:view>
+    </entry>
+
+    <entry>
+        <title>Portfolio page Alice 1</title>
+        <id>portfolio:view25</id>
+
+        <updated>2018-07-25T13:37:07+12:00</updated>
+        <published>2018-07-25T13:35:53+12:00</published>
+        <summary type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><div><p>Portfolio page Alice 1 description</p></div></div></summary>
+        <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><div><div id="user_row_1" class="clearfix">
+    <div class="row-content">
+    <div id="user_row_1_column_1" class="column-layout columns3 first col-width-33" style="width:31%;">
+    <div class="column-content">
+        <div class="bt-text panel panel-secondary clearfix" id="user_blockinstance_110">
+            <h3 class="title panel-heading js-heading">
+            
+
+            </h3><div class="collapse-inline">
+                Alice Text 1
+                
+            </div>
+
+            
+
+        
+    
+
+    <div class="block" id="user_blockinstance_110_target">
+        <div class="textblock panel-body flush">
+<p>Ut tincidunt tincidunt erat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Nunc egestas, augue at pellentesque laoreet, felis eros vehicula leo, at malesuada velit leo quis pede. Suspendisse pulvinar, augue ac venenatis condimentum, sem libero volutpat nibh, nec pellentesque velit pede quis nunc. Cras varius.</p>
+</div>
+
+
+        
+    </div>
+</div>
+
+    </div>
+</div>
+<div id="user_row_1_column_2" class="column-layout columns3 col-width-33" style="width:31%;">
+    <div class="column-content">
+        
+    </div>
+</div>
+<div id="user_row_1_column_3" class="column-layout columns3 last col-width-33" style="width:31%;">
+    <div class="column-content">
+        
+    </div>
+</div>
+
+    </div>
+</div>
+</div></div></content>
+        <rdf:type rdf:resource="leap2:selection"/>
+
+
+
+        <category term="Webpage" scheme="categories:selection_type#"/>
+        <category term="Alice"/>
+
+
+
+
+
+        <mahara:view mahara:layout="33,33,33" mahara:type="portfolio" mahara:ownerformat="6">
+          <mahara:row>
+            <mahara:column>
+                <mahara:blockinstance mahara:blocktype="text" mahara:blocktitle="Alice Text 1">
+                    <mahara:text>[&quot;&lt;p&gt;Ut tincidunt tincidunt erat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Nunc egestas, augue at pellentesque laoreet, felis eros vehicula leo, at malesuada velit leo quis pede. Suspendisse pulvinar, augue ac venenatis condimentum, sem libero volutpat nibh, nec pellentesque velit pede quis nunc. Cras varius.&lt;\/p&gt;&quot;]</mahara:text>
+
+                </mahara:blockinstance>
+
+            </mahara:column>
+            <mahara:column>
+
+            </mahara:column>
+            <mahara:column>
+
+            </mahara:column>
+
+          </mahara:row>
+
+        </mahara:view>
+    </entry>
+
+    <entry>
+        <title>Alice User1&#039;s Journal</title>
+        <id>portfolio:artefact40</id>
+
+        <updated>2018-07-20T08:25:23+12:00</updated>
+        <published>2018-07-20T08:25:23+12:00</published>
+
+        <content></content>
+        <rdf:type rdf:resource="leap2:selection"/>
+        <mahara:artefactplugin mahara:type="blog" mahara:plugin="blog"/>
+        <link rel="leap2:has_part" href="portfolio:artefact183"/>
+
+
+        <category term="Blog" scheme="categories:selection_type#"/>
+
+
+
+    </entry>
+
+
+    <entry>
+        <title>dummy document3.odt</title>
+        <id>portfolio:artefact181</id>
+
+        <updated>2018-07-25T13:33:38+12:00</updated>
+        <published>2018-07-25T13:32:55+12:00</published>
+
+        <content></content>
+        <rdf:type rdf:resource="leap2:resource"/>
+        <mahara:artefactplugin mahara:type="file" mahara:plugin="file"/>
+        <link rel="enclosure" type="application/vnd.oasis.opendocument.text" href="files/0-dummy document3.odt"/>
+
+
+        <category term="Alice"/>
+        <category term="Offline" scheme="categories:resource_type#" label="File"/>
+
+
+
+    </entry>
+
+
+    <entry>
+        <title>215x194images 15.jpg</title>
+        <id>portfolio:artefact182</id>
+
+        <updated>2018-07-25T13:33:29+12:00</updated>
+        <published>2018-07-25T13:33:12+12:00</published>
+
+        <content></content>
+        <rdf:type rdf:resource="leap2:resource"/>
+        <mahara:artefactplugin mahara:type="image" mahara:plugin="file"/>
+        <link rel="enclosure" type="image/jpeg" href="files/1-215x194images 15.jpg"/>
+
+
+        <category term="Alice"/>
+        <category term="Offline" scheme="categories:resource_type#" label="File"/>
+
+
+
+    </entry>
+
+
+    <entry>
+        <title>Journal entry Alice 1 </title>
+        <id>portfolio:artefact183</id>
+
+        <updated>2018-07-25T13:34:54+12:00</updated>
+        <published>2018-07-25T13:34:54+12:00</published>
+
+        <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><div><p>Journal entry Alice 1 - Cras non dolor. Morbi mollis tellus ac sapien. Nulla porta dolor. Curabitur suscipit suscipit tellus. Nullam nulla eros, ultricies sit amet, nonummy id, imperdiet feugiat, pede.</p></div></div></content>
+        <rdf:type rdf:resource="leap2:entry"/>
+        <mahara:artefactplugin mahara:type="blogpost" mahara:plugin="blog"/>
+        <link rel="leap2:is_part_of" href="portfolio:artefact40"/>
+
+
+        <category term="Alice"/>
+
+
+
+    </entry>
+
+
+    <entry>
+        <title>Alice Plan</title>
+        <id>portfolio:artefact184</id>
+
+        <updated>2018-07-25T13:35:29+12:00</updated>
+        <published>2018-07-25T13:35:29+12:00</published>
+
+        <content>Alice Plan Description</content>
+        <rdf:type rdf:resource="leap2:plan"/>
+        <mahara:artefactplugin mahara:type="plan" mahara:plugin="plans"/>
+
+
+        <category term="Alice"/>
+
+
+
+
+
+
+    </entry>
+
+    <entry>
+        <title>Alice User1</title>
+        <id>portfolio:artefactinternal</id>
+
+        <updated>2018-07-20T08:25:23+12:00</updated>
+
+
+        <content></content>
+        <rdf:type rdf:resource="leap2:person"/>
+        <mahara:artefactplugin mahara:type="internal" mahara:plugin="internal"/>
+
+
+        <category term="Self" scheme="categories:person_type#"/>
+
+
+
+
+
+        <leap2:persondata
+            mahara:artefactplugin="internal"
+            mahara:artefacttype="email"
+            leap2:field="email"
+
+            leap2:label="Email address"
+
+        >Stevens+500@catalyst.net.nz</leap2:persondata>
+        <leap2:persondata
+            mahara:artefactplugin="internal"
+            mahara:artefacttype="firstname"
+            leap2:field="legal_given_name"
+
+            leap2:label="First name"
+
+        >Alice</leap2:persondata>
+        <leap2:persondata
+            mahara:artefactplugin="internal"
+            mahara:artefacttype="lastname"
+            leap2:field="legal_family_name"
+
+            leap2:label="Last name"
+
+        >User1</leap2:persondata>
+        <leap2:persondata
+            mahara:artefactplugin="internal"
+            mahara:artefacttype="studentid"
+            leap2:field="other"
+
+            leap2:label="Student ID"
+
+        >500</leap2:persondata>
+
+
+    </entry>
+
+</feed>
