@@ -215,9 +215,9 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('updated',     self::format_rfc3339_date(strtotime($collection->get('mtime'))));
             $this->smarty->assign('created',     self::format_rfc3339_date(strtotime($collection->get('ctime'))));
             $this->smarty->assign('summarytype', 'text');
-            $this->smarty->assign('summary',     $collection->get('description'));
+            $this->smarty->assign('summary',     clean_html($collection->get('description')));
             $this->smarty->assign('contenttype', 'text');
-            $this->smarty->assign('content',     $collection->get('description'));
+            $this->smarty->assign('content',     clean_html($collection->get('description')));
             $this->smarty->assign('leaptype',    'selection');
 
             $tags = $collection->get('tags');
@@ -271,14 +271,14 @@ class PluginExportLeap extends PluginExport {
             $content = $config['description'];
             if ($newcontent = self::parse_xhtmlish_content($content)) {
                 $this->smarty->assign('summarytype', 'xhtml');
-                $this->smarty->assign('summary',     $newcontent);
+                $this->smarty->assign('summary',     clean_html($newcontent, true));
             } else {
                 $this->smarty->assign('summarytype', 'text');
-                $this->smarty->assign('summary',     $content);
+                $this->smarty->assign('summary',     clean_html($content));
             }
             $this->smarty->assign('contenttype', 'xhtml');
             if ($viewcontent = self::parse_xhtmlish_content($view->build_rows(false, true), $view->get('id'))) {
-                $this->smarty->assign('content', $viewcontent);
+                $this->smarty->assign('content', clean_html($viewcontent, true));
             }
             $this->smarty->assign('viewdata',    $config['rows']);
             $layout = $view->get_layout();
@@ -322,6 +322,9 @@ class PluginExportLeap extends PluginExport {
             return;
         }
 
+        if (!isset($this->links)) {
+            $this->links = new stdClass();
+        }
         $viewlist = join(',', array_keys($this->views));
 
         // Views in collections
@@ -738,10 +741,10 @@ class LeapExportElement {
         // try to coerce it to xhtml
         if ($this->get_content_type() != 'text' && $newcontent = PluginExportLeap::parse_xhtmlish_content($content)) {
             $this->smarty->assign('contenttype', 'xhtml');
-            $this->smarty->assign('content', $newcontent);
+            $this->smarty->assign('content', clean_html($newcontent, true));
         } else {
             $this->smarty->assign('contenttype', 'text');
-            $this->smarty->assign('content', $content);
+            $this->smarty->assign('content', clean_html($content));
         }
         $this->smarty->assign('leaptype', $this->get_leap_type());
         $this->smarty->assign('author', $this->get_entry_author());
