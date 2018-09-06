@@ -499,6 +499,29 @@ EOF;
     }
 
     /**
+     * Checks the list/table row does not contain the specified text.
+     *
+     * @Then I should not see :text in the :rowtext row
+     * @param string $text we look for
+     * @param string $rowtext The list/table row text
+     * @throws ExpectationException
+     */
+
+    public function not_in_row($text, $rowtext) {
+        // The table row container.
+        try {
+            $this->i_find_in_row($text, $rowtext);
+            $exists = true;
+        }
+        catch(Exception $e) {
+            $exists = false;
+        }
+        if ($exists) {
+            throw new ExpectationException('"' . $args['text'] . '" text was found in the "' . $args['element'] . '" element', $context->getSession());
+        }
+    }
+
+    /**
      * Click on the link or button inside a list/table row containing the specified text.
      *
      * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" row$/
