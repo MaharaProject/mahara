@@ -35,7 +35,7 @@ if (!is_logged_in() && !$group->public) {
 if ($usetemplate = param_integer('usetemplate', null)) {
     // If a form has been submitted, build it now and pieforms will
     // call the submit function straight away
-    pieform(create_view_form(null, null, $usetemplate));
+    pieform(create_view_form(null, null, $usetemplate, param_integer('copycollection', null)));
 }
 
 define('TITLE', $group->name);
