@@ -222,47 +222,6 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                         }
                     }
                     break;
-                case 'panoramio':
-                    // Slideshow
-                    if ($style == 1) {
-                        $height = round($width * 0.75);
-                        $images = array('user' => $var1);
-                        $template = 'panoramioshow';
-                    }
-                    // Thumbnails
-                    else {
-                        $copyright = get_string('panoramiocopyright', 'blocktype.file/gallery');
-                        $URL = 'http://www.panoramio.com/map/get_panoramas.php?set=' . $var1 . '&from=0&to=50&size=original&mapfilter=true';
-                        $config = array(
-                            CURLOPT_URL => $URL,
-                            CURLOPT_RETURNTRANSFER => true,
-                        );
-                        $result = mahara_http_request($config);
-                        $data = json_decode($result->data, true);
-                        foreach ($data['photos'] as $photo) {
-                            $link = str_replace('/original/', '/large/', $photo['photo_file_url']);
-                            // If the Thumbnails should be Square...
-                            if ($style == 2) {
-                                $thumb = str_replace('/original/', '/square/', $photo['photo_file_url']);
-                                $width = 60; // Currently only square thumbnail size, that Panoramio supports
-                            }
-                            else {
-                                $thumb = str_replace('/original/', '/thumbnail/', $photo['photo_file_url']);
-                            }
-                            $title = (!empty($photo['photo_title']) ? $photo['photo_title'] : get_string('Photo', 'blocktype.file/gallery'));
-                            $description =  '<a href="' . $photo['photo_url'] . '">' . $title . '</a>'
-                                         . '&nbsp;' . get_string('by', 'blocktype.file/gallery') . '&nbsp;'
-                                         . '<a href="' . $photo['owner_url'] . '">' . $photo['owner_name'] . '</a>';
-
-                            $images[] = array(
-                                'link' => $link,
-                                'source' => $thumb,
-                                'title' => $description,
-                                'fancybox' => $fancyboxattr
-                            );
-                        }
-                    }
-                    break;
                 case 'photobucket':
                     // Slideshow
                     if ($style == 1) {
@@ -787,14 +746,6 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                 'type'  => 'flickr',
                 'var1' => '$1',
                 'var2' => '$2',
-            ),
-            // Panoramio User Photos (direct link)
-            array(
-                'match' => '#.*www.panoramio.com/user/(\d+).*#',
-                'url'   => 'http://www.panoramio.com/user/$1/',
-                'type'  => 'panoramio',
-                'var1' => '$1',
-                'var2' => null,
             ),
             // Photobucket User Photos (direct link)
             array(

@@ -52,12 +52,6 @@ $string['pbapikeydesc'] = 'To show photo albums from Photobucket, you\'ll need a
 $string['pbapiprivatekey'] = 'Photobucket API private key';
 $string['photobucketphotosandalbums'] = 'Photobucket user photos and albums';
 
-// Panoramio
-$string['Photo'] = 'Photo';
-$string['by'] = 'by';
-$string['panoramiocopyright'] = 'Photos provided by Panoramio are under the copyright of their owners.';
-$string['panoramiouserphotos'] = 'Panoramio user photos';
-
 $string['picasaalbums'] = 'Picasa albums';
 
 $string['windowslivephotoalbums'] = 'Windows Live photo gallery albums';
