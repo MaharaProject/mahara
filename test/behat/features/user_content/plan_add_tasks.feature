@@ -8,6 +8,41 @@ Background:
      | title | description | ownertype | ownername |
      | Page admin_01 | Page 01 | user | admin |
 
+Scenario: Create a plan -> add plan block to page -> create new task from block on page
+    Given I log in as "admin" with password "Kupuh1pa!"
+    And I choose "Plans" in "Content" from main menu
+    And I follow "New plan"
+    And I fill in the following:
+    | Title *  | Plan 9 from outer space  |
+    | Description  | Woooo |
+    And I fill in select2 input "addplan_tags" with "plan" and select "plan"
+    And I fill in select2 input "addplan_tags" with "test" and select "test"
+    And I press "Save plan"
+    #  add plan block to page
+    Given I choose "Pages and collections" in "Portfolio" from main menu
+    And I click on "Page admin_01" panel menu
+    And I click on "Edit" in "Page admin_01" panel menu
+    And I expand "General" node
+    And I follow "Plans" in the "blocktype sidebar" property
+    And I press "Add"
+    # select the plan to display in block
+    And I check "Plan 9 from outer space"
+    And I press "Save"
+    Then I should see "Woooo" in the block "Plan 9 from outer space"
+    # create new task from block on page
+    When I follow "Add task"
+    Then I should see " New task"
+    When I fill in the following:
+    | Title | New Space Task |
+    | Completion date | 2019/01/01 |
+    | Description | Space Task - hold breath for a really long time |
+    And I enable the switch "Completed"
+    And I press "Save task"
+    # confirm user taken back to Plan block on page
+    Then I should see " Page admin_01"
+    And I should see "Woooo" in the block "Plan 9 from outer space"
+    And I should see "New Space Task" in the block "Plan 9 from outer space"
+
 Scenario: Creating a plan with 11 tasks (Bug #1503036)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Plans" in "Content" from main menu
