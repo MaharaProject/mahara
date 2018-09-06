@@ -2875,6 +2875,12 @@ function mahara_standard_nav() {
             'weight' => 20,
             'accesskey' => 'c',
         ),
+        'content/tags' => array(
+            'path' => 'content/tags',
+            'url' => 'tags.php',
+            'title' => get_string('tags'),
+            'weight' => 70,
+        ),
         'myportfolio' => array(
             'path' => 'myportfolio',
             'url' => 'view/index.php',
