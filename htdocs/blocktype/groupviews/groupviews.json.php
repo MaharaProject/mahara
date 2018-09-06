@@ -59,7 +59,8 @@ $groupviews = (array)View::view_search(null, null, (object) array('group' => $gr
                                       false, null, null, null, null, true);
 foreach ($groupviews['data'] as &$view) {
     if (isset($view['template']) && $view['template']) {
-        $view['form'] = pieform(create_view_form(null, null, $view['id']));
+        $collid = !empty($view['collid']) ? $view['collid'] : null;
+        $view['form'] = pieform(create_view_form(null, null, $view['id'], $collid, $collid));
     }
 }
 if (!empty($configdata['showgroupviews']) && isset($groupviews)) {
