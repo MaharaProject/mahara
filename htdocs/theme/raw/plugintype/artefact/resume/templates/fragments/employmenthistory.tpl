@@ -49,8 +49,7 @@
         {/if}
     </div>
 </div>
-{/if}
-
+{else}
 <!-- Render employment blockinstance on page view -->
 <div id="employmenthistorylist{$suffix}" class="list-group list-group-lite">
     {foreach from=$rows item=row}
@@ -126,3 +125,4 @@
     </div>
     {/foreach}
 </div>
+{/if}

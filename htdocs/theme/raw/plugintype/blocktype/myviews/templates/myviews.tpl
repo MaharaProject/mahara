@@ -7,7 +7,7 @@
         <div id="myviews_page_container" class="hidden">{$myviews.pagination|safe}</div>
     {/if}
     {if $myviews.pagination_js}
-    <script type="application/javascript">
+    <script>
         jQuery(function($) {literal}{{/literal}
             {$myviews.pagination_js|safe}
             $('#myviews_page_container').removeClass('hidden');

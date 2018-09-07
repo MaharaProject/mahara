@@ -9,7 +9,7 @@
 </div>
 {$pagination|safe}
 {if $pagination_js}
-<script type="application/javascript">
+<script>
 {$pagination_js|safe}
 </script>
 {/if}

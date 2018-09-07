@@ -436,6 +436,7 @@ $siteoptionform = array(
                     'type' => 'passwordpolicy',
                     'minlength' => 8,
                     'maxlength' => 20,
+                    'nolabel' => true,
                     'title' => get_string('passwordpolicy', 'admin'),
                     'description' => get_string('passwordpolicydesc', 'admin'),
                     'defaultvalue' => get_config('passwordpolicy'),

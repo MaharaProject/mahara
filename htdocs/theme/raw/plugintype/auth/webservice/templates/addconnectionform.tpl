@@ -1,5 +1,5 @@
 {{if $connections}}
-<script type="application/javascript">
+<script>
 
     function addinstance() {
         var selectedPlugin = document.getElementById('dummySelect').value;

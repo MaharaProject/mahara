@@ -1586,13 +1586,13 @@ function pieform_element_filebrowser_views_js(Pieform $form, $element) {
 function pieform_element_filebrowser_get_headdata($element) {
     global $THEME;
     // TODO : need a better dependancy injection, jquery ui might be also inserted by other scripts ...
-    $headdata = array('<script type="application/javascript" src="' . get_config('wwwroot') . 'js/jquery/jquery-ui/js/jquery-ui.min.js"></script>',
-        '<script type="application/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js"></script>');
+    $headdata = array('<script src="' . get_config('wwwroot') . 'js/jquery/jquery-ui/js/jquery-ui.min.js"></script>',
+        '<script src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js"></script>');
     if ($element['config']['upload']) {
         // only add dropzone if filebrowser is allowed to upload
-        $headdata[] = '<script type="application/javascript" src="' . get_config('wwwroot') . 'js/dropzone/dropzone.min.js"></script>';
+        $headdata[] = '<script src="' . get_config('wwwroot') . 'js/dropzone/dropzone.min.js"></script>';
         $headdata[] = '<link href="' . get_config('wwwroot') . 'js/dropzone/css/dropzone.css" type="text/css" rel="stylesheet">';
-        $headdata[] = '<script type="application/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filedropzone.js"></script>';
+        $headdata[] = '<script src="' . get_config('wwwroot') . 'artefact/file/js/filedropzone.js"></script>';
     }
     if ($element['config']['edit']) {
         // Add switchbox css if filebrowser is allowed to edit
@@ -1606,7 +1606,7 @@ function pieform_element_filebrowser_get_headdata($element) {
             $jsstrings .= "strings.$s=" . json_encode(get_raw_string($s, $section)) . ';';
         }
     }
-    $headdata[] = '<script type="application/javascript">' . $jsstrings . '</script>';
+    $headdata[] = '<script>' . $jsstrings . '</script>';
 
     $pluginsheets = $THEME->get_url('style/style.css', true, 'artefact/file');
     foreach (array_reverse($pluginsheets) as $sheet) {

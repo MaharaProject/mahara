@@ -1377,6 +1377,9 @@ class BlockInstance {
         if (preg_match('/<script type="(text|application)\/javascript">(new Pieform\(.*\);)<\/script>/', $html, $matches)) {
             $js = "var pf_{$form['name']} = " . $matches[2] . "pf_{$form['name']}.init();";
         }
+        else if (preg_match('/<script>(new Pieform\(.*\);)<\/script>/', $html, $matches)) {
+            $js = "var pf_{$form['name']} = " . $matches[1] . "pf_{$form['name']}.init();";
+        }
         else {
             $js = '';
         }

@@ -64,14 +64,14 @@ function get_cookieconsent_code() {
     return <<<CODE
 <!-- Begin Cookie Consent plugin by Silktide - https://cookieconsent.insites.com/ -->
 {$stylesheets}
-<script type="application/javascript">
+<script>
 jQuery(function() {
     window.cookieconsent.initialise(
         {$initialisation}
     );
 });
 </script>
-<script type="application/javascript" src="{$wwwroot}js/cookieconsent/cookieconsent.min.js"></script>
+<script src="{$wwwroot}js/cookieconsent/cookieconsent.min.js"></script>
 <!-- End Cookie Consent plugin -->
 CODE;
 }

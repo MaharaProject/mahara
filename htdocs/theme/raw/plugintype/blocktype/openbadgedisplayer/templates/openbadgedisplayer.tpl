@@ -1,6 +1,6 @@
 <div id="openbadges{{$id}}" class="openbadgedisplayer">{{$badgehtml|safe}}</div>
 
-<script type="application/javascript">
+<script>
     (function ($) {
         $(function () {
             $('#openbadges{{$id}}').on('click', 'img', function () {

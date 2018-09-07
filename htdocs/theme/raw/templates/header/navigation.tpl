@@ -1,6 +1,7 @@
 {if $MAINNAV}
 
-<nav id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main" role="tabpanel">
+<nav>
+  <div id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main" role="tabpanel">
     <ul id="nav" class="nav navbar-nav">
         {strip}
             {foreach from=$MAINNAV item=item name=menu}
@@ -55,8 +56,10 @@
             {/foreach}
         {/strip}
     </ul>
+  </div>
 </nav>
-<nav id="main-nav-admin" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main-admin" role="tabpanel">
+<nav>
+  <div id="main-nav-admin" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main-admin" role="tabpanel">
     <ul id="navadmin" class="nav navbar-nav">
     {strip}
         {foreach from=$MAINNAVADMIN item=item name=menu}
@@ -67,7 +70,7 @@
                 {/if}
 
                 {if $item.accessibletitle}
-                <span aria-hidden="true" role="presentation" aria-hidden="true">
+                <span aria-hidden="true" role="presentation">
                     {/if}
                     {$item.title}
                     {if $item.accessibletitle}
@@ -111,11 +114,13 @@
         {/foreach}
     {/strip}
     </ul>
+  </div>
 </nav>
 {/if}
 
 {if $RIGHTNAV}
-<nav id="main-nav-user" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{/if} nav collapse navbar-collapse nav-main-user" role="tabpanel">
+<nav>
+  <div id="main-nav-user" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{/if} nav collapse navbar-collapse nav-main-user" role="tabpanel">
     <ul id="navuser" class="nav navbar-nav">
       {strip}
         {foreach from=$RIGHTNAV item=item}
@@ -172,6 +177,7 @@
         {/if}
       {/strip}
     </ul>
+  </div>
 </nav>
 {/if}
 {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}

@@ -15,9 +15,9 @@
                 </span>
 
                 {if !$post->locked && $post->canedit}
-                <span id="changepoststatus{$post->id}" class="changepoststatus text-inline">
+                <div id="changepoststatus{$post->id}" class="changepoststatus text-inline">
                     {$post->changepoststatus|safe}
-                </span>
+                </div>
                 {/if}
 
                 {if $post->locked}

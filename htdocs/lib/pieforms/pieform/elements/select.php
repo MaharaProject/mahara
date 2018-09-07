@@ -334,7 +334,7 @@ EOF;
 }
 
 function pieform_element_select_get_headdata() {
-    $result  = '<script type="application/javascript">' . "\n";
+    $result  = '<script>' . "\n";
     $result .= pieform_element_select_get_inlinejs();
     $result .= '</script>' . "\n";
     return array($result);

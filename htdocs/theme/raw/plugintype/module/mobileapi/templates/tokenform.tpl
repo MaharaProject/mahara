@@ -3,7 +3,7 @@
     <meta name="generator" content="Mahara {$SERIES} (https://mahara.org)" />
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <script type="application/javascript">
+    <script>
         window.onload = function() {
             console.log("Running: {$token}");
             window.maharatoken = "{$token}";

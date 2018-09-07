@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <script type="application/javascript">
+    <script>
 
     var addurl = $j("#addview-button").attr('href');
 

@@ -1554,7 +1554,7 @@ function get_login_form_js($form) {
     $strcookiesnotenabled    = json_encode(get_string('cookiesnotenabled'));
     $cookiename = get_config('cookieprefix') . 'ctest';
     $js = <<< EOF
-<script type="application/javascript">
+<script>
 var loginbox = jQuery('#loginform_container');
 document.cookie = "$cookiename=1";
 if (document.cookie) {

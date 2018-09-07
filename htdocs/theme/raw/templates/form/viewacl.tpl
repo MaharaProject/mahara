@@ -117,7 +117,7 @@
 </tr>
 </script>
 
-<script type="application/javascript">
+<script>
 var count = 0;
 
 jQuery(function($) {

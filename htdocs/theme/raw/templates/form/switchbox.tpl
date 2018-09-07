@@ -8,7 +8,7 @@
             <span class="state-label off">{{$offlabel}}</span>
         </label>
     </div>
-    <script type="application/javascript">
+    <script>
         if (!window.Switchbox) {
             jQuery.getScript("{{$libfile}}").done(function () { Switchbox.computeWidth("{{$elementid}}"); });
         }

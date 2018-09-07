@@ -248,7 +248,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
                     $rendered = $artefact->render_self(array('viewid' => $view, 'details' => true, 'blockid' => $instance->get('id')));
                     $result->html = $rendered['html'];
                     if (!empty($rendered['javascript'])) {
-                        $result->html .= '<script type="application/javascript">' . $rendered['javascript'] . '</script>';
+                        $result->html .= '<script>' . $rendered['javascript'] . '</script>';
                     }
                     $attachments = $rendered['attachments'];
                     if (!empty($attachments)) {

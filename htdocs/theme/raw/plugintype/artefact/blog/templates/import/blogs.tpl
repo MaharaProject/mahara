@@ -111,7 +111,7 @@
     </div>
     {/foreach}
 </div>
-<script type="application/javascript">
+<script>
     jQuery(function() {
         jQuery("a.blogtitle").on("click", function(e) {
             e.preventDefault();

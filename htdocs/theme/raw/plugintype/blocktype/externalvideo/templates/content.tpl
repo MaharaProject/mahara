@@ -2,7 +2,7 @@
   <div id="vid_{$blockid}" class="mediaplayer" style="margin: 0 auto;">
     {$html|clean_html|safe}
     {if $jsurl}
-        <script type="application/javascript">
+        <script>
         var blockinstance_{$blockid}_loaded = false;
         $j('#blockinstance_{$blockid} .js-heading a[data-toggle="collapse"]').on("click", function() {
             if (blockinstance_{$blockid}_loaded === false) {

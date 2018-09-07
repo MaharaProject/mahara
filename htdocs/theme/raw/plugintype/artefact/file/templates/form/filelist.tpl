@@ -67,6 +67,9 @@
                             <span class="icon icon-{$file->artefacttype} icon-lg" role="presentation" aria-hidden="true"></span>
                         {/if}
                     {/if}
+                    {if $editable}
+                    </div>
+                    {/if}
                 {/if}
             </td>
 
@@ -174,7 +177,7 @@
             {/if}
         </tr>
         {if $edit == $file->id}
-            {include file="artefact:file:form/editfile.tpl" prefix=$prefix fileinfo=$file groupinfo=$groupinfo}
+            {include file="artefact:file:form/editfile.tpl" prefix=$prefix fileinfo=$file groupinfo=$groupinfo fromfiletpl=true}
         {/if}
 
         {/foreach}

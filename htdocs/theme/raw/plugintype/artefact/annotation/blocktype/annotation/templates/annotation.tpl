@@ -13,5 +13,5 @@
 </div>
 
 {if $addannotationscript}
-    <script type="application/javascript" src="{$addannotationscript}"></script>
+    <script src="{$addannotationscript}"></script>
 {/if}

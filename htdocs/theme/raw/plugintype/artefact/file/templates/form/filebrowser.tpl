@@ -2,7 +2,7 @@
 {include file="artefact:file:form/selectedlist.tpl" selectedlist=$selectedlist prefix=$prefix highlight=$highlight selectfolders=$config.selectfolders}
 {/if}
 
-<script type="application/javascript">
+<script>
 {$initjs|safe}
 </script>
 
@@ -177,7 +177,7 @@
         {if $edit <= 0}
         <table class="hidden">
             <tbody id="{$prefix}_edit_placeholder">
-            {include file="artefact:file:form/editfile.tpl" prefix=$prefix groupinfo=$groupinfo}
+            {include file="artefact:file:form/editfile.tpl" prefix=$prefix groupinfo=$groupinfo fromfiletpl=false}
             </tbody>
         </table>
         {/if}

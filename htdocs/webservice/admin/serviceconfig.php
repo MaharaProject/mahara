@@ -205,7 +205,7 @@ $form['name'] = 'serviceconfig';
 $form['successcallback'] = 'serviceconfig_submit';
 $form = pieform($form);
 $inlinejs = <<<EOF
-<script type="application/javascript">
+<script>
 jQuery(function($) {
     $(".dialogue").on("click", function(e) {
         e.preventDefault();

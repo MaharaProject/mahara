@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <script type="application/javascript">
+    <script>
     var acceptprivacy = false;
     $j("#agreetoprivacy").on('submit', function(event) {
         if ($j("#agreetoprivacy input:checkbox").length == $j("#agreetoprivacy input:checkbox:checked").length) {

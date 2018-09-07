@@ -50,7 +50,7 @@
 </div>
 {if $sbdata.count > 1}
 <!-- @todo move this to somewhere better - it shouldn't be rendered in the middle of a page -->
-<script language="javascript">
+<script>
     jQuery(function($) {
         function reloadSideBar() {
             window.location.href = window.location.href.split('?')[0]+'?i='+$('#progresssidebarselect_institution').val();

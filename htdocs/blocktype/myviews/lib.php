@@ -48,7 +48,7 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
 
         $items['tablerows'] = $smarty->fetch($template);
 
-        if ($items['limit'] && $pagination) {
+        if ($items['count'] && $items['limit'] && $pagination) {
             $pagination = build_pagination(array(
                 'id' => $pagination['id'],
                 'class' => 'center',

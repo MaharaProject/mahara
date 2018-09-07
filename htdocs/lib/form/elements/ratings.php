@@ -93,9 +93,9 @@ function pieform_element_ratings_get_headdata($element) {
             $jsstrings .= "strings.$s=" . json_encode(get_raw_string($s, $section)) . ';';
         }
     }
-    $headdata[] = '<script type="application/javascript">' . $jsstrings . '</script>';
+    $headdata[] = '<script>' . $jsstrings . '</script>';
 
     $libfile = get_config('wwwroot')  . 'js/bootstrap-ratings.js';
-    $headdata[] = '<script type="application/javascript" src="' . $libfile . '"></script>';
+    $headdata[] = '<script src="' . $libfile . '"></script>';
     return $headdata;
 }

@@ -22,7 +22,7 @@
     {/if}
 {/foreach}
 </div>
-<script type="application/javascript">
+<script>
 jQuery(function() {
     jQuery('.pseudofieldset').each(function(index) {
         jQuery(this).find('.pseudolegend').on("click", function(event) {

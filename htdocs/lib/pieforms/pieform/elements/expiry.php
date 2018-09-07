@@ -93,7 +93,7 @@ function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
 
     // Make sure the input is disabled if "no end date" is selected
     $script = <<<EOJS
-<script type="application/javascript" language="javascript">
+<script>
 function {$name}_change() {
     if (jQuery('#{$formname}_{$name}_units').val() == 'noenddate') {
         jQuery('#{$formname}_{$name}').prop('disabled', true);

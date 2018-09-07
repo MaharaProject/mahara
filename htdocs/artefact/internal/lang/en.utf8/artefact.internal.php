@@ -153,6 +153,7 @@ $string['Type'] = 'Type';
 
 $string['profileinformation'] = 'Profile information';
 $string['profilepage'] = 'Profile page';
+$string['profileimagefor'] = 'Profile picture for %s';
 $string['viewprofilepage'] = 'View profile page';
 $string['viewallprofileinformation'] = 'View all profile information';
 

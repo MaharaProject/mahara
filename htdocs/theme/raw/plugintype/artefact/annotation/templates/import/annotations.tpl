@@ -97,7 +97,7 @@
     </div>
     {/foreach}
 </div>
-<script type="application/javascript">
+<script>
     jQuery(function() {
         jQuery("input.annotationdecision").on("change", function(e) {
             e.preventDefault();

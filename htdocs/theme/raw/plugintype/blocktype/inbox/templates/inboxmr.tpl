@@ -61,7 +61,7 @@
         {str tag=More section=blocktype.inbox}</a>
     </div>
     {/if}
-    <script type="application/javascript">
+    <script>
     jQuery(document).trigger('pageupdated');
     </script>
 {/if}

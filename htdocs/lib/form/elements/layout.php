@@ -119,7 +119,7 @@ function pieform_element_layout(Pieform $form, $element) {
   // close 'createcustomlayout_container' container
   $output .= '</div>';
 
-  $output .= '<script type="application/javascript">
+  $output .= '<script>
       $( window ).on( "load", function() {
           init(\'' . $form->get_property('name') . '\');
       });</script>';
@@ -128,6 +128,6 @@ function pieform_element_layout(Pieform $form, $element) {
 }
 
 function pieform_element_layout_get_headdata($element) {
-    $result = '<script src="' . get_config('wwwroot') . 'js/customlayout.js?v=' . get_config('cacheversion', 0) . '" type="application/javascript"></script>';
+    $result = '<script src="' . get_config('wwwroot') . 'js/customlayout.js?v=' . get_config('cacheversion', 0) . '"></script>';
     return array($result);
 }

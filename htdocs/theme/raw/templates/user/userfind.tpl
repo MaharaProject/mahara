@@ -24,7 +24,6 @@
             {if $user->institutions}
             <div class="memberof detail text-small">
                 <span class="icon icon-lg text-default icon-university left" role="presentation" aria-hidden="true"></span>
-                <span>
                 {$user->institutions|safe}
             </div>
             {/if}

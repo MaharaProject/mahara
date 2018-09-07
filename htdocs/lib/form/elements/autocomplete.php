@@ -162,7 +162,7 @@ function pieform_element_autocomplete_get_headdata() {
     $lang = pieform_element_autocomplete_language();
     $langfile = '';
     if ($lang != 'en') {
-        $langfile = '<script type="application/javascript" src="' .
+        $langfile = '<script src="' .
             get_config('wwwroot') . "js/select2/i18n/{$lang}.js" .
             '"></script>';
     }

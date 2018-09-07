@@ -81,7 +81,7 @@ function pieform_element_wysiwyg_get_headdata() {
     global $_PIEFORM_WYSIWYGS;
 
     if (is_html_editor_enabled() && !empty($_PIEFORM_WYSIWYGS)) {
-        $result = '<script type="application/javascript">'
+        $result = '<script>'
          . "\nvar editor_to_focus;"
          . "\nPieformManager.connect('onsubmit', null, tinyMCE.triggerSave);"
          . "\nPieformManager.connect('onload', null, function() {\n";
@@ -112,7 +112,7 @@ function pieform_element_wysiwyg_get_headdata() {
                 $jsstrings .= "strings.$s=" . json_encode(get_raw_string($s, $section)) . ';';
             }
         }
-        $headdata = '<script type="application/javascript">' . $jsstrings . '</script>';
+        $headdata = '<script>' . $jsstrings . '</script>';
         return array('tinymce', $result, $headdata);
     }
     return array();

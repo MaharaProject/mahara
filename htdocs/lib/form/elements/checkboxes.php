@@ -92,6 +92,6 @@ EOF;
 }/*}}}*/
 
 function pieform_element_checkboxes_get_headdata() {/*{{{*/
-    $result = '<script type="application/javascript">' . pieform_element_checkboxes_js() . "\n</script>";
+    $result = '<script>' . pieform_element_checkboxes_js() . "\n</script>";
     return array($result);
 }/*}}}*/
