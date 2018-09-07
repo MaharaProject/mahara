@@ -1497,6 +1497,7 @@ class BlockInstance {
         }
         delete_records('view_artefact', 'block', $this->id);
         delete_records('block_instance', 'id', $this->id);
+        delete_records('tag', 'resourcetype', 'blocktype', 'resourceid', $this->id);
         db_commit();
 
         $this->dirty = false;
