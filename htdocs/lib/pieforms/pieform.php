@@ -590,8 +590,8 @@ class Pieform {/*{{{*/
             }
             else {
                 global $SESSION;
-                // The login system comes past here twice so we need to pace first error message above form
-                if (!empty($values['login_submitted'])) {
+                // The login system comes past here twice so we need to paste first error message above form
+                if (isset($values['pieform_login'])) {
                     $SESSION->add_error_msg($this->get_property('errormessage'), false, 'loginbox');
                 }
                 else {

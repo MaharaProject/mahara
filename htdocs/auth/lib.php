@@ -1373,11 +1373,6 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
 function auth_get_login_form() {
     $elements = auth_get_login_form_elements();
 
-    $elements['login']['elements']['login_submitted'] = array(
-        'type'  => 'hidden',
-        'value' => 1
-    );
-
     // Change login redirection for clean urls
     $url = get_relative_script_path();
     $getstart = strrpos($url, '?');
@@ -1670,7 +1665,7 @@ class AuthFactory {
  * @param array  $values The submitted values
  */
 function login_validate(Pieform $form, $values) {
-    if (!empty($values['login_submitted'])) {
+    if (isset($values['pieform_login'])) {  // only set by $form->build()
         if (empty($values['login_username']) || empty($values['login_password'])) {
             $form->set_error(null, get_string('loginfailed'));
         }
