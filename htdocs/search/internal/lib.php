@@ -853,12 +853,13 @@ class PluginSearchInternal extends PluginSearch {
 
         $sql = "
             FROM
-                {group}
+                {group} g
+            LEFT JOIN {lti_assessment} a ON g.id = a.group
             WHERE (
                 name " . db_ilike() . " '%' || ? || '%'
                 OR description " . db_ilike() . " '%' || ? || '%'
                 OR shortname " . db_ilike() . " '%' || ? || '%'
-            ) AND deleted = 0 ";
+            ) AND deleted = 0 AND a.id IS NULL ";
         $values = array($query_string, $query_string, $query_string);
 
         if (!$grouproles = join(',', array_keys($USER->get('grouproles')))) {
@@ -868,18 +869,18 @@ class PluginSearchInternal extends PluginSearch {
         $canseehidden = $USER->get('admin') || $USER->get('staff');
 
         if ($type == 'member') {
-            $sql .=  'AND id IN (' . $grouproles . ')';
+            $sql .=  'AND g.id IN (' . $grouproles . ')';
         }
         else if ($type == 'notmember') {
-            $sql .= 'AND id NOT IN (' . $grouproles . ')';
+            $sql .= 'AND g.id NOT IN (' . $grouproles . ')';
         }
         else if ($type == 'canjoin') {
-            $sql .= 'AND (jointype != ? AND NOT (jointype = ? AND request = 0)) AND id NOT IN (' . $grouproles . ')';
+            $sql .= 'AND (jointype != ? AND NOT (jointype = ? AND request = 0)) AND g.id NOT IN (' . $grouproles . ')';
             $values = array_merge($values, array('controlled', 'approve'));
         }
 
         if (!$canseehidden) {
-            $sql .= ' AND (hidden = 0 OR id IN (' . $grouproles . '))';
+            $sql .= ' AND (hidden = 0 OR g.id IN (' . $grouproles . '))';
         }
 
         if (!empty($category)) {
@@ -898,7 +899,7 @@ class PluginSearchInternal extends PluginSearch {
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
 
         if ($count > 0) {
-            $sql = 'SELECT * ' . $sql . ' ORDER BY name';
+            $sql = 'SELECT g.* ' . $sql . ' ORDER BY name';
             $data = get_records_sql_array($sql, $values, $offset, $limit);
         }
 

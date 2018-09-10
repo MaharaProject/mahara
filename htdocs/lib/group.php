@@ -2276,7 +2276,9 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
         }
     }
 
-    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ?'.$catsql, $values);
+    $sql .= ' LEFT JOIN {lti_assessment} a ON g.id = a.group ';
+
+    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ? AND a.id IS NULL '.$catsql, $values);
 
     // almost the same as query used in find - common parts should probably be pulled out
     // gets the groups filtered by above
@@ -2292,7 +2294,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
-            WHERE g.deleted = ?' .
+            WHERE g.deleted = ? AND a.id IS NULL ' .
             $catsql . '
             GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
                 g.hidemembers, g.hidemembersfrommembers, g.groupparticipationreports, g.urlid, t.membershiptype, t.reason, t.role, g.editwindowstart, g.editwindowend
@@ -2352,8 +2354,9 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
                 JOIN {group_member} gm ON gm.group = g.id
                 JOIN {grouptype_roles} gtr ON g.grouptype = gtr.grouptype AND gm.role = gtr.role
                 LEFT OUTER JOIN {group_member} gm1 ON gm1.group = gm.group AND gm1.member = ?
+                LEFT JOIN {lti_assessment} a ON a.group = g.id
             WHERE gm.member = ?
-                AND g.deleted = 0
+                AND g.deleted = 0 AND a.id IS NULL
             ORDER BY g.name, gm.role = 'admin' DESC, gm.role, g.id",
             array($loggedinid, $userid)
         );

@@ -4138,17 +4138,18 @@ class View {
         if ($userid) {
             $select .= ',v.submittedtime, v.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
-                h.wwwroot AS submithostwwwroot, h.name AS submithostname';
+                h.wwwroot AS submithostwwwroot, h.name AS submithostname, a.id AS ltiassessment';
             $collselect .= ', c.submittedtime, c.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
-                h.wwwroot AS submithostwwwroot, h.name AS submithostname';
+                h.wwwroot AS submithostwwwroot, h.name AS submithostname, a.id AS ltiassessment';
             $emptycollselect .= ', c.submittedtime, c.submittedstatus,
                 NULL AS submitgroupid, NULL AS submitgroupname, NULL AS submitgroupurlid,
-                NULL AS submithostwwwroot, NULL AS submithostname';
+                NULL AS submithostwwwroot, NULL AS submithostname, NULL AS ltiassessment';
 
             $fromstr = '
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
-                LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)';
+                LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
+                LEFT JOIN {lti_assessment} a ON g.id = a.group ';
 
             $from .= $fromstr;
             $collfrom .= $fromstr;
@@ -4217,7 +4218,12 @@ class View {
                 if (!empty($data['submittedstatus'])) {
                     $status = $data['submittedstatus'];
                     if (!empty($data['submitgroupid'])) {
-                        $url = group_homepage_url((object) array('id' => $data['submitgroupid'], 'urlid' => $data['submitgroupurlid']));
+                        if ($data['ltiassessment']) {
+                            $url = '#';
+                        }
+                        else {
+                            $url = group_homepage_url((object) array('id' => $data['submitgroupid'], 'urlid' => $data['submitgroupurlid']));
+                        }
                         $name = hsc($data['submitgroupname']);
                     }
                     else if (!empty($data['submithostwwwroot'])) {
