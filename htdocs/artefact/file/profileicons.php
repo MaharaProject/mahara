@@ -318,20 +318,7 @@ function settings_submit_delete(Pieform $form, $values) {
     redirect('/artefact/file/profileicons.php');
 }
 
-$smarty = smarty(
-    array('tablerenderer'),
-    array(),
-    array(),
-    array(
-        'sideblocks' => array(
-            array(
-                'name'   => 'quota',
-                'weight' => -10,
-                'data'   => array(),
-            ),
-        ),
-    )
-);
+$smarty = smarty(array('tablerenderer'));
 setpageicon($smarty, 'icon-id-badge');
 $smarty->assign('INLINEJAVASCRIPT', $IJS);
 $smarty->assign('uploadform', $uploadform);

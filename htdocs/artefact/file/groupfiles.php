@@ -41,13 +41,7 @@ $smarty = smarty(
     array(),
     array(),
     array(
-        'sideblocks' => array(
-            array(
-                'name'   => 'groupquota',
-                'weight' => -10,
-                'data'   => array(),
-            ),
-        ),
+        'sideblocks' => array(quota_sideblock(true))
     )
 );
 $smarty->assign('heading', $group->name);

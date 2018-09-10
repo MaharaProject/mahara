@@ -19,15 +19,7 @@ $fileid = param_integer('file');
 // @todo provide upload form when fileid not set.
 $file = artefact_instance_from_id($fileid);
 
-$smartyconfig = array(
-    'sideblocks' => array(
-        array(
-            'name'   => ($file->get('group') ? 'groupquota' : 'quota'),
-            'weight' => -10,
-            'data'   => array(),
-        ),
-    ),
-);
+$smartyconfig = array('sideblocks' => array(quota_sideblock($file->get('group'))));
 
 if ($group = $file->get('group')) {
     require_once(get_config('libroot') . 'group.php');

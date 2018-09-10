@@ -3870,7 +3870,17 @@ function profile_sideblock() {
             }
         }
     }
-    return $data;
+
+    $sideblock = array(
+        'name'   => 'profile',
+        'weight' => -20,
+        'id'     => 'sb-profile',
+        'data'   => $data,
+        'class' => 'user-panel',
+        'template' => 'sideblocks/profile.tpl',
+        'visible' => $USER->is_logged_in() && !in_admin_section(),
+    );
+    return $sideblock;
 }
 
 /**
@@ -3904,15 +3914,12 @@ function onlineusers_sideblock() {
             }
         }
     }
+    if (!get_config('showonlineuserssideblock') || $showusers == 0) {
+        return null;
+    }
 
     $maxonlineusers = get_config('onlineuserssideblockmaxusers');
     switch ($showusers) {
-        case 0: // show none
-            return array(
-                'users' => array(),
-                'count' => 0,
-                'lastminutes' => floor(get_config('accessidletimeout') / 60),
-            );
         case 1: // show institution only
             $sql = 'SELECT DISTINCT u.* FROM {usr} u JOIN {usr_institution} i ON u.id = i.usr
                 WHERE i.institution IN ('.join(',', array_map('db_quote', array_keys($institutions))).')
@@ -3939,11 +3946,19 @@ function onlineusers_sideblock() {
     else {
         $onlineusers = array();
     }
-    return array(
-        'users' => $onlineusers,
-        'count' => count($onlineusers),
-        'lastminutes' => floor(get_config('accessidletimeout') / 60),
+
+    $sideblock = array(
+        'name'   => 'onlineusers',
+        'id'     => 'sb-onlineusers',
+        'weight' => -10,
+        'data'   =>  array('users' => $onlineusers,
+                           'count' => count($onlineusers),
+                           'lastminutes' => floor(get_config('accessidletimeout') / 60),
+                     ),
+        'template' => 'sideblocks/onlineusers.tpl',
+        'visible' => $USER->is_logged_in() && !in_admin_section(),
     );
+    return $sideblock;
 }
 
 function tag_weight($freq) {
@@ -4006,10 +4021,28 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq', $excludeinstitution
 
 function tags_sideblock() {
     global $USER;
-    $maxtags = $USER->get_account_preference('tagssideblockmaxtags');
-    $maxtags = is_null($maxtags) ? get_config('tagssideblockmaxtags') : $maxtags;
-    if ($tagrecords = get_my_tags($maxtags)) {
-        return array('tags' => $tagrecords);
+
+    if (get_config('showtagssideblock')) {
+        $maxtags = $USER->get_account_preference('tagssideblockmaxtags');
+        $maxtags = is_null($maxtags) ? get_config('tagssideblockmaxtags') : $maxtags;
+
+        $tags = null;
+        if ($tagrecords = get_my_tags($maxtags)) {
+            $tags = array('tags' => $tagrecords);
+        }
+        $sideblock = array(
+            'name'   => 'tags',
+            'id'     => 'sb-tags',
+            'weight' => 0,
+            'data'   => $tags,
+            'template' => 'sideblocks/tags.tpl',
+            'visible' => $USER->is_logged_in() &&
+                         in_array(MENUITEM, array('profile',
+                                                  'create/files',
+                                                  'share/sharedbyme',
+                                                  'create/views')),
+        );
+        return $sideblock;
     }
     return null;
 }
@@ -4037,6 +4070,10 @@ function progressbar_artefact_link($pluginname, $artefacttype) {
 
 function progressbar_sideblock($preview=false) {
     global $USER;
+
+    if (!get_config('showprogressbar')) {
+        return null;
+    }
 
     // TODO: Remove this URL param from here, and when previewing pass institution
     // by function param instead
@@ -4124,6 +4161,7 @@ function progressbar_sideblock($preview=false) {
             }
             $onlytheseplugins[$plugin][$item] = $item;
         }
+        require_once(get_config('docroot') . 'artefact/lib.php');
         $progressbaritems = artefact_get_progressbar_items($onlytheseplugins);
 
         // Get the data link about every item
@@ -4216,7 +4254,7 @@ function progressbar_sideblock($preview=false) {
                 $percent = 100;
             }
         }
-        return array(
+        $blockdata = array(
             'data' => $data,
             'percent' => $percent,
             'preview' => $preview,
@@ -4230,7 +4268,7 @@ function progressbar_sideblock($preview=false) {
         );
     }
     else if ($multiinstitutionprogress) {
-        return array(
+        $blockdata = array(
             'data' => null,
             'percent' => 0,
             'preview' => $preview,
@@ -4243,16 +4281,71 @@ function progressbar_sideblock($preview=false) {
             'totalcounting' => 0,
         );
     }
-    return array(
-        'data' => null,
-        'percent' => 0,
-        'preview' => $preview,
-        'count' => 1,
-        'institutions' => null,
-        'institution' => 'mahara',
+    else {
+        $blockdata = array(
+            'data' => null,
+            'percent' => 0,
+            'preview' => $preview,
+            'count' => 1,
+            'institutions' => null,
+            'institution' => 'mahara',
+        );
+    }
+    $blockname = $preview ? 'progressbar_preview' : 'progressbar';
+    $sideblock = array(
+        'name'   => $blockname,
+        'id'     => 'sb-progressbar',
+        'class'  => 'progressbar',
+        'weight' => -8,
+        'data'   => $blockdata,
+        'template' => 'sideblocks/progressbar.tpl',
     );
+
+    if ($preview) {
+        // we are calling this via a page's extraconfig so will only exist on that page
+        // so we can set visibility to true
+        $sideblock['visible'] = true;
+        return $sideblock;
+    }
+    else if ($USER->get_account_preference('showprogressbar')) {
+        $sideblock['visible'] = !in_admin_section();
+        return $sideblock;
+    }
+    else {
+        return null;
+    }
 }
 
+function quota_sideblock($group = false) {
+    global $USER;
+
+    $visible = false;
+    if ($USER->is_logged_in() &&
+        (defined('MENUITEM') && in_array(MENUITEM, array('create/files',
+                                                         'profileicons'))
+         ||
+         defined('MENUITEM') && in_array(MENUITEM, array('engage/mygroups',
+                                                         'create/resume')) &&
+         defined('MENUITEM_SUBPAGE') && in_array(MENUITEM_SUBPAGE, array('files',
+                                                                         'goalsandskills'))  // for places that have arrowbar menu
+         ||
+         defined('SECTION_PAGE') && in_array(SECTION_PAGE, array('post',
+                                                                'editnote'))
+        )
+    ) {
+        $visible = true;
+    }
+    $template = $group ? 'sideblocks/groupquota.tpl' : 'sideblocks/quota.tpl';
+    $sideblock = array(
+        'name'   => 'quota',
+        'weight' => -10,
+        'data'   => array(), // worked out by the template
+        'template' => $template,
+        'visible' => $visible,
+        'override' => $group,
+    );
+    return $sideblock;
+}
 
 /**
  * Cronjob to recalculate how much quota each user is using and update it as

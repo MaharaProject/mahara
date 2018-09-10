@@ -209,13 +209,6 @@ $smarty = smarty(array(), array(), array(), array(
     'tinymceconfig' => '
         image_filebrowser: "editpost_filebrowser",
     ',
-    'sideblocks' => array(
-        array(
-            'name'   => 'quota',
-            'weight' => -10,
-            'data'   => array(),
-        ),
-    ),
 ));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('form', $form);

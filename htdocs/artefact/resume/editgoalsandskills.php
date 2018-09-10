@@ -13,6 +13,7 @@ define('INTERNAL', true);
 define('MENUITEM', 'create/resume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
+define('SECTION_PAGE', 'goalsandskills');
 define('MENUITEM_SUBPAGE', 'goalsandskills');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
@@ -130,13 +131,6 @@ $smarty = smarty(array(), array(), array(), array(
     'tinymceconfig' => '
         image_filebrowser: "editgoalsandskills_filebrowser",
     ',
-    'sideblocks' => array(
-        array(
-            'name'   => 'quota',
-            'weight' => -10,
-            'data'   => array(),
-        ),
-    ),
 ));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());

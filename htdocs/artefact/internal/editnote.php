@@ -147,14 +147,7 @@ $othernotesmsg = '<div class="alert alert-info">' . get_string('textusedinothern
 $smarty = smarty(array(), array(), array(), array(
     'tinymceconfig' => '
         image_filebrowser: "editnote_filebrowser",
-    ',
-    'sideblocks' => array(
-        array(
-            'name'   => 'quota',
-            'weight' => -10,
-            'data'   => array(),
-        ),
-    ),
+    '
 ));
 setpageicon($smarty, 'icon-pencil-square-o');
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

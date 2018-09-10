@@ -158,3 +158,4 @@ $string['updatesitetimezone'] = 'The time zone for the site now needs to be set 
 $string['pluginnotactive1'] = 'The plugin "%s" is not enabled. Please got to "Administration" →  "Extensions" →  "Plugin administration" to enable it.';
 
 $string['fileuploadtoobig'] = 'The file upload is too big as it is bigger than "%s"';
+$string['sideblockmenuclash'] = 'Sideblock name "%s" is already in use. Please rename one of them';

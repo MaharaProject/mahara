@@ -169,7 +169,7 @@ EOF;
 
 $javascript = array('paginator');
 
-$smarty = smarty($javascript, array(), array('applychanges' => 'mahara', 'nogroups' => 'group'), array('sideblocks' => array()));
+$smarty = smarty($javascript, array(), array('applychanges' => 'mahara', 'nogroups' => 'group'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('results', $data);
 $smarty->assign('form', $searchform);

@@ -1274,10 +1274,12 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     );
 
     if ($updatetags && $form->submitted_by_js()) {
-        $smarty = smarty_core();
         $tagdata = tags_sideblock();
-        $smarty->assign('sbdata', $tagdata);
-        $returndata['tagblockhtml'] = $smarty->fetch('sideblocks/tags.tpl');
+        if ($tagdata) {
+            $smarty = smarty_core();
+            $smarty->assign('sbdata', $tagdata['data']);
+            $returndata['tagblockhtml'] = $smarty->fetch($tagdata['template']);
+        }
     }
 
     return $returndata;

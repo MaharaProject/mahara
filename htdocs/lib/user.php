@@ -2253,11 +2253,14 @@ function friends_control_sideblock($returnto='myfriends') {
         )
     );
     // Make a sideblock to put the friendscontrol block in
-    return array(
-        'name' => 'friendscontrol',
+    $sideblock = array(
+        'name'   => 'friendscontrol',
         'weight' => -5,
-        'data' => array('form' => pieform($form))
+        'data'   => array('form' => pieform($form)),
+        'template' => 'sideblocks/friendscontrol.tpl',
+        'visible' => true,
     );
+    return $sideblock;
 }
 
 function friendscontrol_submit(Pieform $form, $values) {
