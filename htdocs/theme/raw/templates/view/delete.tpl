@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div class="card card bg-danger text-white view-container">
-    <h2 class="card-heading">
+    <h2 class="card-header">
         {str tag="deleteviewconfirm1" section="view"}
     </h2>
     <div class="card-body">

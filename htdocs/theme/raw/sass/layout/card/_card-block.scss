@@ -6,18 +6,18 @@
         border-color: transparent;
     }
     .admin & {
-        // border-color: $card-border-color; // TODO: This might affect other things elsewhere
+        border-color: $card-border-color; // TODO: This might affect other things elsewhere
     }
-    > .card-heading {
+    > .card-header {
         font-family: $font-family-serif;
     }
     &.blockinstance.card {
         background-color: transparent;
-        .card-heading {
+        .card-header {
             background-color: $card-heading-bg;
         }
     }
-    > .card-heading, .card-heading-nested {
+    > .card-header, .card-heading-nested {
         border-bottom: 2px solid $card-border-color;
         padding: 10px 8px;
 
@@ -35,7 +35,7 @@
         }
     }
     &.card-warning {
-         > .card-heading, .card-heading-nested {
+         > .card-header, .card-heading-nested {
             border-left: 4px solid $card-block-border;
             background-color: $card-warning-heading-bg;
             border-bottom: 1px solid $card-warning-border;

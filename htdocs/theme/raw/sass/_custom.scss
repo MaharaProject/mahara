@@ -681,3 +681,8 @@ a[type="submit"],
         margin-left: 5px;
     }
 }
+
+// Removes weird text node between buttons on admin/users/suspended.php
+.pieform-fieldset.btn-group {
+    font-size: 0;
+}

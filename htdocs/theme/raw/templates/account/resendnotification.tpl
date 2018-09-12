@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <div id="resendnotification" class="card card bg-danger text-white view-container">
-    <h2 class="card-heading">{str tag=resenddeletionnotification section=account}</h2>
+    <h2 class="card-header">{str tag=resenddeletionnotification section=account}</h2>
     <div class="card-body">
         <p>{str tag=sendnotificationdescription section=account}</p>
         {$delete_form|safe}
