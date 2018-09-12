@@ -18,6 +18,7 @@ Scenario: Admin user can add an image to the "Logged -out home" static page and 
     And I select "Home (Dashboard)" from "pagename"
     When I click the "Insert/edit image" button in the editor
     And I expand the section "Image"
+    And I scroll to the base of id "imgbrowserconf_artefactid_filelist"
     And I press "Select \"Image2.png\""
     And I press "Submit"
     And I wait "1" seconds
@@ -35,6 +36,7 @@ Scenario: Admin user can add an image to the "Home (Dashboard)" static page and 
     And I select "Logged-out home" from "pagename"
     When I click the "Insert/edit image" button in the editor
     And I expand the section "Image"
+    And I scroll to the base of id "imgbrowserconf_artefactid_filelist"
     And I press "Select \"Image2.png\""
     And I press "Submit"
     And I wait "1" seconds
