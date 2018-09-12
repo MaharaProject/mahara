@@ -92,12 +92,15 @@
         max-width: none;
         visibility: visible;
         top: 10px;
-        right: 155px;
+        right: 115px;
         margin: 0;
         padding: 0;
         box-shadow: none;
         height: auto !important;
         min-width: 45px;
+        .admin-toggle + a + .user-toggle + a > & {
+            right: 155px;
+        }
     }
     &:hover,
     &:focus {
