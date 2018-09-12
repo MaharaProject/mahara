@@ -1069,28 +1069,13 @@ Number.isInteger = Number.isInteger || function(value) {
 };
 
 /**
- * Wire up the 'help' footer link so it opens help in a new window/tab
+ * Replace target=_blank with JS opener for security reasons
  */
 jQuery(function($) {
-    if ($('#footerhelp').length > 0) {
-        var link = $('#footerhelp');
-        link.off('click');
-        link.on('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            var newWnd = window;
-            newWnd.opener = null;
-            newWnd.open(link.prop('href'), '_blank');
-        });
-    }
-});
+    $("a[target='_blank']").each(function() {
+        var link = $(this);
+        link.removeAttr('target');
 
-/**
- * Wire up the 'help' in blocks edit page so it opens help in a new window/tab
- */
-jQuery(function($) {
-    if ($('#blockshelp').length > 0) {
-        var link = $('#blockshelp');
         link.off('click');
         link.on('click', function(e) {
             e.stopPropagation();
@@ -1099,7 +1084,7 @@ jQuery(function($) {
             newWnd.opener = null;
             newWnd.open(link.prop('href'), '_blank');
         });
-    }
+    });
 });
 
 /**
