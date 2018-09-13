@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/topics');
+define('MENUITEM', 'engage/topics');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'group');
 define('SECTION_PAGE', 'topics');

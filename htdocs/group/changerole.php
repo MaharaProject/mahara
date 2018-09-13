@@ -10,11 +10,12 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/members');
+define('MENUITEM', 'engage/mygroups');
+define('MENUITEM_SUBPAGE', 'members');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
-
+define('SUBSECTIONHEADING', get_string('members'));
 define('GROUP', param_integer('group'));
 $group = group_current_group();
 

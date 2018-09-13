@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/findfriends');
+define('MENUITEM', 'engage/myfriends');
 define('SECTION_PAGE', 'removefriend');
 require(dirname(dirname(__FILE__)) . '/init.php');
 

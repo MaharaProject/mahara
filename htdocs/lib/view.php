@@ -5979,7 +5979,8 @@ class View {
 
     public static function set_nav($group, $institution, $share=false, $collection=false) {
         if ($group) {
-            define('MENUITEM', $share ? 'groups/share' : 'groups/views');
+            define('MENUITEM', 'engage/mygroups');
+            define('MENUITEM_SUBPAGE', $share ? 'share' : 'views');
             define('GROUP', $group);
         }
         else if ($institution == 'mahara') {
@@ -6001,7 +6002,8 @@ class View {
     public function set_edit_nav() {
         if ($this->group) {
             // Don't display the group nav; 5 levels of menu is too many
-            define('MENUITEM', 'groups');
+            define('MENUITEM', 'engage/mygroups');
+            define('MENUITEM_SUBPAGE', 'views');
             define('GROUP', $this->group);
             define('NOGROUPMENU', 1);
         }

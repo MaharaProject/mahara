@@ -10,7 +10,8 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/forums');
+define('MENUITEM', 'engage/mygroups');
+define('MENUITEM_SUBPAGE', 'forums');
 define('SECTION_PLUGINTYPE', 'interaction');
 define('SECTION_PLUGINNAME', 'forum');
 define('SECTION_PAGE', 'editpost');
@@ -20,6 +21,7 @@ safe_require('interaction', 'forum');
 require_once('group.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 require_once('antispam.php');
+define('SUBSECTIONHEADING', get_string('nameplural', 'interaction.forum'));
 
 $postid = param_integer('id', 0);
 

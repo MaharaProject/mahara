@@ -57,7 +57,8 @@ $groupid = $collection->get('group');
 $institutionname = $collection->get('institution');
 $urlparams = array();
 if (!empty($groupid)) {
-    define('MENUITEM', 'groups/views');
+    define('MENUITEM', 'engage/mygroups');
+    define('MENUITEM_SUBPAGE', 'views');
     define('GROUP', $groupid);
     $group = group_current_group();
     define('TITLE', $group->name . ' - ' . get_string('editviews', 'collection'));

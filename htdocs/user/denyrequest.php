@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/findfriends');
+define('MENUITEM', 'engage/findfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('denyfriendrequest', 'group'));
 require_once('searchlib.php');

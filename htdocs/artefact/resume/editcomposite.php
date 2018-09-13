@@ -34,7 +34,7 @@ $a = artefact_instance_from_id($artefact);
 $type = $a->get('artefacttype');
 
 $tabs = PluginArtefactResume::composite_tabs();
-define('RESUME_SUBPAGE', $tabs[$type]);
+define('MENUITEM_SUBPAGE', $tabs[$type]);
 define('SUBSECTIONHEADING', get_string($type, 'artefact.resume'));
 
 if ($a->get('owner') != $USER->get('id')) {
