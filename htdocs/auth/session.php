@@ -104,10 +104,18 @@ class Session {
                 $servers = preg_replace('#tcp://#', '', $memcacheservers);
                 foreach (explode(',', $servers) as $server) {
                     list($destination, $port) = explode(':', $server);
-                    $nc = 'nc -z ' . $destination . ' ' . $port;
-                    $status = exec($nc, $out, $fail);
-                    if ($fail === 1) {
-                        // if server has 'nc' command but can't reach the server:port
+                    $memcached = new Memcached;
+                    if (!empty($destination) && !empty($port)) {
+                        $memcached->addServer($destination, $port);
+                        // addServer doesn't make a connection to the server
+                        // but if the server is added, but not running pid will be -1
+                        $server_stats = $memcached->getStats();
+                        if ($server_stats[$destination . ":" . $port]['pid'] <= 0) {
+                            // can't reach the destination:port
+                            throw new ConfigSanityException(get_string('nomemcachedserver', 'error', $server));
+                        }
+                    }
+                    else {
                         throw new ConfigSanityException(get_string('nomemcachedserver', 'error', $server));
                     }
                 }
