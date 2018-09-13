@@ -14,7 +14,7 @@ define('MENUITEM', 'create/views');
 
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
-define('SECTION_PAGE', 'test');
+define('SECTION_PAGE', 'versioning');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
