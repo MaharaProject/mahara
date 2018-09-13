@@ -422,7 +422,7 @@ EOD;
                 'invitefriends'  => isset($record['invitefriends']) ? $record['invitefriends'] : 0,
                 'suggestfriends' => isset($record['suggestfriends']) ? $record['suggestfriends'] : 0,
                 'category'       => null,
-                'public'         => 0,
+                'public'         => isset($record['public']) ? $record['public'] : 0,
                 'usersautoadded' => 0,
                 'viewnotify'     => GROUP_ROLES_ALL,
                 'submittableto'  => isset($record['submittableto']) ? $record['submittableto'] : 0,

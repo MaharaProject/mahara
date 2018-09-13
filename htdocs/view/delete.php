@@ -30,6 +30,17 @@ if ($collection) {
     $collectionnote = get_string('deleteviewconfirmnote2', 'view', $collection->get_url(), $collection->get('name'));
 }
 
+// Check to see if the view is being used as a landing page url
+$landingpagenote = '';
+if (get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
+    $landing = translate_landingpage_to_tags(array(get_config('homepageredirecturl')));
+    foreach ($landing as $land) {
+        if ($land->type == 'view' && $land->typeid == $viewid) {
+            $landingpagenote = get_string('islandingpage', 'admin');
+        }
+    }
+}
+
 $institution = $view->get('institution');
 View::set_nav($groupid, $institution);
 
@@ -101,6 +112,7 @@ $smarty = smarty();
 $smarty->assign('view', $view);
 $smarty->assign('form', $form);
 $smarty->assign('collectionnote', $collectionnote);
+$smarty->assign('landingpagenote', $landingpagenote);
 $smarty->display('view/delete.tpl');
 
 function deleteview_submit(Pieform $form, $values) {

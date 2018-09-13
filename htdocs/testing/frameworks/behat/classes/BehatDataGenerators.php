@@ -75,6 +75,7 @@ class BehatDataGenerators extends BehatBase {
                 'staff'            => 'text',
                 'admins'           => 'text',
                 'institution'      => 'text',
+                'public'           => 'bool',
             ),
             'required' => array('name', 'owner'),
         ),

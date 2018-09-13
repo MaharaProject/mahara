@@ -830,6 +830,16 @@ class InteractionForumInstance extends InteractionInstance {
         }
 
         db_begin();
+        // Check to see if the group's forum is being used as a landing page url and if the changes affect it
+        if (get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
+            $landing = translate_landingpage_to_tags(array(get_config('homepageredirecturl')));
+            foreach ($landing as $land) {
+                if ($land->type == 'forum' && $land->typeid == $this->id) {
+                    set_config('homepageredirecturl', null);
+                    notify_landing_removed($land, true);
+                }
+            }
+        }
         // Delete embedded images in the forum description
         require_once('embeddedimage.php');
         EmbeddedImage::delete_embedded_images('forum', $this->id);

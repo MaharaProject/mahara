@@ -1000,6 +1000,17 @@ class View {
                 $bi->delete();
             }
         }
+        // Check if this view is being used as the custom landing page
+        if (get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
+            $landing = translate_landingpage_to_tags(array(get_config('homepageredirecturl')));
+            foreach ($landing as $land) {
+                if ($land->type == 'view' && $land->typeid == $this->id) {
+                    set_config('homepageredirecturl', null);
+                    notify_landing_removed($land, true);
+                }
+            }
+        }
+
         handle_event('deleteview', $eventdata);
         delete_records('view_rows_columns', 'view', $this->id);
         delete_records('view','id',$this->id);
@@ -1112,6 +1123,7 @@ class View {
     }
 
     public static function update_view_access($config, $viewids) {
+        global $SESSION;
 
         db_begin();
 
@@ -1122,6 +1134,26 @@ class View {
 
         // Copy the first view's access records to all the other views
         $firstview->copy_access($viewids);
+
+        // Check to see if the view is being used as a landing page url and if the access changes affect it
+        if (get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
+            $landing = translate_landingpage_to_tags(array(get_config('homepageredirecturl')));
+            foreach ($landing as $land) {
+                if ($land->type == 'view' && in_array($land->typeid, $viewids)) {
+                    $landingproblem = true;
+                    foreach ($config['accesslist'] as $access) {
+                        if (in_array($access['type'], array('loggedin', 'public'))) {
+                            $landingproblem = false;
+                        }
+                    }
+                    if ($landingproblem) {
+                        set_config('homepageredirecturl', null);
+                        notify_landing_removed($land);
+                        $SESSION->add_error_msg(get_string('landingpagegone', 'admin', $land->text));
+                    }
+                }
+            }
+        }
 
         // Sort the full access list in the same order as the list
         // returned by get_access, so that views with the same set of

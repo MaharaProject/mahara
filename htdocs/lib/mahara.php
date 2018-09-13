@@ -5478,3 +5478,145 @@ function get_password_policy_description($type = 'generic') {
     }
     return $description;
 }
+
+function get_homepage_redirect_results($request, $limit, $offset, $type = null, $id = null) {
+    $admins = get_site_admins();
+    $adminids = array();
+    foreach ($admins as $admin) {
+        $adminids[] = $admin->id;
+    }
+    $results = array('count' => 0,
+                     'data' => array());
+    if ($type) {
+        $results['count'] = 1;
+        $results['data'][] = get_record($type, 'id', $id);
+    }
+    else {
+        $countsql = "SELECT COUNT(*) FROM (";
+        $resultsql = "SELECT * FROM (";
+        $fromsql = "SELECT v.id, v.title, v.owner, v.group, v.institution, 'view' AS urltype
+             FROM {view} v
+             JOIN {view_access} va ON va.view = v.id
+             LEFT JOIN {group} g ON g.id = v.group
+             LEFT JOIN {institution} i ON i.name = v.institution
+             WHERE va.accesstype IN ('public', 'loggedin')
+             AND v.type != 'profile'
+             AND (
+                 (v.owner IS NULL AND v.template != 2)
+                  OR
+                 (v.owner IN (" . join(',', array_map('db_quote', $adminids)) . "))
+             )
+             AND (v.title ILIKE ? OR g.name ILIKE ? OR i.name ILIKE ?)
+             UNION
+             SELECT ii.id, ii.title, NULL AS owner, g.id AS group, g.institution, 'forum' AS urltype
+             FROM {interaction_instance} ii
+             JOIN {group} g ON g.id = ii.group
+             WHERE g.public = 1
+             AND ii.deleted = 0
+             AND (ii.title ILIKE ?)
+             ) AS foo OFFSET ? LIMIT ?";
+        $where = array('%' . $request . '%',
+                       '%' . $request . '%',
+                       '%' . $request . '%',
+                       '%' . $request . '%',
+                       $offset, $limit);
+        if ($count = count_records_sql($countsql . $fromsql, $where)) {
+            $results['count'] = $count;
+            $results['data'] = get_records_sql_array($resultsql . $fromsql, $where);
+            foreach ($results['data'] as $key => $value) {
+                if ($value->urltype == 'view') {
+                    $value->url = '/view/view.php?id=' . $value->id;
+                }
+                if ($value->urltype == 'forum') {
+                    $value->url = '/interaction/forum/view.php?id=' . $value->id;
+                }
+            }
+        }
+    }
+
+    return $results;
+}
+
+function translate_landingpage_to_tags(array $ids) {
+    $ids = array_diff($ids, array(''));
+    $results = array();
+    if (!empty($ids)) {
+        foreach ($ids as $id) {
+            if (preg_match('/forum\/view\.php\?id=(\d+)/', $id, $matches)) {
+                $data = get_homepage_redirect_results(null, null, null, 'interaction_instance', $matches[1]);
+                $type = 'forum';
+                $typeid = $matches[1];
+                $result = $data['data'][0];
+                $text = $result->title . ' (' . get_field('group', 'name', 'id', $result->group) . ')';
+            }
+            else if (preg_match('/view\.php\?id=(\d+)/', $id, $matches)) {
+                $data = get_homepage_redirect_results(null, null, null, 'view', $matches[1]);
+                $type = 'view';
+                $typeid = $matches[1];
+                $result = $data['data'][0];
+                $text = $result->title;
+                if ($result->institution) {
+                    if ($result->institution == 'mahara') {
+                        $text .= ' (' . get_string('Site') . ')';
+                    }
+                    else {
+                        $text .= ' (' . get_field('institution', 'displayname', 'name', $result->institution) . ')';
+                    }
+                }
+                else if ($result->group) {
+                    $text .= ' (' . get_field('group', 'name', 'id', $result->group) . ')';
+                }
+                else if ($result->owner) {
+                    $text .= ' (' . display_name($result->owner, null, true) . ')';
+                }
+            }
+            else {
+                $text = $typeid = $id;
+                $type = 'unknown';
+            }
+            $results[] = (object) array('id' => $id, 'text' => $text, 'type' => $type, 'typeid' => $typeid);
+        }
+    }
+    return $results;
+}
+
+function notify_landing_removed($landingpage, $deleted=false) {
+    require_once('activity.php');
+
+    $admins = array();
+    foreach (get_site_admins() as $site_admin) {
+        $admins[] = $site_admin->id;
+    }
+
+    if ($landingpage->type == 'forum') {
+        $forumgroup = get_field('interaction_instance', 'group', 'id', $landingpage->typeid);
+        $admins = array_merge($admins, group_get_admin_ids($forumgroup));
+    }
+    $admins = array_unique($admins);
+    $message = $deleted ? 'landingpagegonemessagedeleted' : 'landingpagegonemessage';
+    $messageargs = $deleted ? array($landingpage->text) : array();
+    if ($deleted) {
+        $url = get_config('wwwroot') . 'admin/site/options.php';
+    }
+    else {
+        $url = preg_replace('/^\//', '', $landingpage->id);
+    }
+    activity_occurred('maharamessage', array(
+        'users'   => $admins,
+        'subject' => '',
+        'message' => '',
+        'strings'       => (object) array(
+            'subject' => (object) array(
+                'key'     => 'landingpagegonesubject',
+                'section' => 'admin',
+                'args'    => array(),
+            ),
+            'message' => (object) array(
+                'key'     => $message,
+                'section' => 'admin',
+                'args'    => $messageargs,
+            ),
+        ),
+        'url'     => $url,
+    ));
+}
