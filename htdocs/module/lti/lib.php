@@ -285,7 +285,7 @@ class PluginModuleLti extends PluginModule {
                         'submit' => array(
                             'type' => 'button',
                             'usebuttontag' => true,
-                            'class' => 'btn-primary input-group-btn ',
+                            'class' => 'btn-primary input-group-btn',
                             'value' => get_string('submit')
                         ),
                     ),
@@ -417,11 +417,10 @@ class PluginModuleLti extends PluginModule {
                     'type' => 'fieldset',
                     'class' => 'input-group',
                     'elements' => array(
-
                         'submit' => array(
                             'type' => 'button',
                             'usebuttontag' => true,
-                            'class' => 'btn-primary input-group-btn ',
+                            'class' => 'btn-primary input-group-btn',
                             'value' => get_string('submit')
                         ),
                     ),
@@ -484,12 +483,6 @@ class PluginModuleLti extends PluginModule {
 
         return new ModuleLtiSubmission($SESSION->get('lti.assessment'), $USER->get('id'));
     }
-
-    public static function update_submission_group() {
-        global $SESSION, $USER;
-
-    }
-
 
     public static function get_all_submissions() {
         global $SESSION;
@@ -654,6 +647,7 @@ class PluginModuleLti extends PluginModule {
                 ),
                 'submit' => array(
                     'type'  => 'submit',
+                    'class' => 'btn btn-primary',
                     'value' => empty($data->timeconfigured) ? get_string('saveandrelease', 'module.lti') : get_string('save')
                 )
             ),

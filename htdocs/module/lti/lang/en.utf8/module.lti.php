@@ -33,7 +33,7 @@ $string['gradesubmissions'] = 'Submissions for grading';
 $string['gradesubmitted'] = 'Grade successfully submitted';
 $string['groupname'] = 'Assessment submissions for "%s" - "%s"';
 $string['institutiondenied'] = 'Access to "%s" is denied. Please contact your institution administrator.';
-$string['lock'] = 'Unlock portfolio after grading';
+$string['lock'] = 'Keep portfolio locked after grading';
 $string['lockdescription'] = 'Users make changes to their portfolio after it has been graded.';
 $string['ltiserviceexists'] = 'The LTI service group is registered.';
 $string['nocollections'] = 'You do not have any portfolios that can be submitted for assessment.';
@@ -56,7 +56,7 @@ $string['timesubmitted'] = 'Time submitted';
 $string['usernameexists1'] = 'Username "%s" already exists.';
 $string['viewsubmittedmessage1'] = '%s has submitted "%s" to %s
 
-Please grade this submission via "%s"';
+Please grade this submission by clicking on the activity "%s" in your LMS';
 $string['viewsubmittedsubject1'] = 'Assessment submission to %s';
 $string['webserviceauthdisabled'] = 'Web service authentication is not enabled for this institution';
 $string['webserviceproviderenabled'] = 'Incoming web service requests allowed';

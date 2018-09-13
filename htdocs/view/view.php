@@ -132,11 +132,13 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     $submittedgroup = get_group_by_id($submittedgroup, true);
 
     // Form for LTI grading
-    if ($collection) {
-        $ltigradeform = PluginModuleLti::get_grade_dialogue($collection->get('id'), null);
-    }
-    else {
-        $ltigradeform = PluginModuleLti::get_grade_dialogue(null, $view->get('id'));
+    if (is_plugin_active('lti', 'module')) {
+        if ($collection) {
+            $ltigradeform = PluginModuleLti::get_grade_dialogue($collection->get('id'), null);
+        }
+        else {
+            $ltigradeform = PluginModuleLti::get_grade_dialogue(null, $view->get('id'));
+        }
     }
 
     // If the view is part of a submitted collection, the whole
@@ -301,8 +303,7 @@ if ($owner && $owner == $USER->get('id')) {
             $viewgroupform = view_group_submission_form($view, $tutorgroupdata, 'view');
         }
     }
-
-    if (PluginModuleLti::can_submit_for_grading()) {
+    if (is_plugin_active('lti', 'module') && PluginModuleLti::can_submit_for_grading()) {
         $ltisubmissionform = PluginModuleLti::submit_from_view_or_collection_form($view);
     }
 }

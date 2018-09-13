@@ -242,13 +242,13 @@ class module_lti_launch extends external_api {
         $SESSION->set('lti.presentation_target', $params['launch_presentation_document_target']);
         $SESSION->set('lti.launch_presentation_return_url', $params['launch_presentation_return_url']);
 
-        $parts = parse_url($params['launch_presentation_return_url']);
-        $cspurl = $parts['scheme'] . '://' . $parts['host'];
-
-        $SESSION->set('csp-ancestor-exemption', $cspurl);
-
         // If the consumer supports grading send the user to select a portfolio
         if (!empty($params['lis_outcome_service_url'])) {
+            $parts = parse_url($params['launch_presentation_return_url']);
+            $cspurl = $parts['scheme'] . '://' . $parts['host'];
+
+            $SESSION->set('csp-ancestor-exemption', $cspurl);
+
             db_begin();
 
             if ($assessment = get_record('lti_assessment', 'oauthserver', $WEBSERVICE_OAUTH_SERVERID, 'resourcelinkid', $params['resource_link_id'])) {
@@ -304,6 +304,7 @@ class module_lti_launch extends external_api {
                 $assessment->contexttitle = $params['context_title'];
                 $assessment->resourcelinktitle = $params['resource_link_title'];
                 $assessment->group = $groupid;
+                $assessment->lock = 0; // Have the config for lock set to false by default so portfolios get unlocked after grading
 
                 $assessment->id = insert_record('lti_assessment', $assessment, 'id', true);
             }

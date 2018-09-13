@@ -850,16 +850,16 @@ class PluginSearchInternal extends PluginSearch {
     public static function search_group($query_string, $limit, $offset=0, $type='member', $category='', $institution='all') {
         global $USER;
         $data = array();
-
+        $ltijoin = is_plugin_active('lti', 'module') ? ' LEFT JOIN {lti_assessment} a ON g.id = a.group ' : '';
+        $ltiwhere = is_plugin_active('lti', 'module') ? ' AND a.id IS NULL ' : '';
         $sql = "
             FROM
-                {group} g
-            LEFT JOIN {lti_assessment} a ON g.id = a.group
+                {group} g " . $ltijoin . "
             WHERE (
                 name " . db_ilike() . " '%' || ? || '%'
                 OR description " . db_ilike() . " '%' || ? || '%'
                 OR shortname " . db_ilike() . " '%' || ? || '%'
-            ) AND deleted = 0 AND a.id IS NULL ";
+            ) AND deleted = 0" . $ltiwhere;
         $values = array($query_string, $query_string, $query_string);
 
         if (!$grouproles = join(',', array_keys($USER->get('grouproles')))) {

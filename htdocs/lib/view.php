@@ -3963,6 +3963,7 @@ class View {
     public static function get_myviews_data($limit=12, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null, $searchin=null, $alltags=false) {
         global $USER;
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
+        $haslti = is_plugin_active('lti', 'module') ? true : false;
 
         $select = '
             SELECT v.id, v.id AS vid, v.title, v.title AS vtitle, v.description, v.type,  v.ctime as vctime, v.mtime as vmtime, v.atime as vatime,
@@ -4138,18 +4139,20 @@ class View {
         if ($userid) {
             $select .= ',v.submittedtime, v.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
-                h.wwwroot AS submithostwwwroot, h.name AS submithostname, a.id AS ltiassessment';
+                h.wwwroot AS submithostwwwroot, h.name AS submithostname' . ($haslti ? ', a.id AS ltiassessment' : '');
             $collselect .= ', c.submittedtime, c.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
-                h.wwwroot AS submithostwwwroot, h.name AS submithostname, a.id AS ltiassessment';
+                h.wwwroot AS submithostwwwroot, h.name AS submithostname' . ($haslti ? ', a.id AS ltiassessment' : '');
             $emptycollselect .= ', c.submittedtime, c.submittedstatus,
                 NULL AS submitgroupid, NULL AS submitgroupname, NULL AS submitgroupurlid,
-                NULL AS submithostwwwroot, NULL AS submithostname, NULL AS ltiassessment';
+                NULL AS submithostwwwroot, NULL AS submithostname' . ($haslti ? ', NULL AS ltiassessment' : '');
 
             $fromstr = '
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
-                LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
-                LEFT JOIN {lti_assessment} a ON g.id = a.group ';
+                LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)';
+            if ($haslti) {
+                $fromstr .= ' LEFT JOIN {lti_assessment} a ON g.id = a.group ';
+            }
 
             $from .= $fromstr;
             $collfrom .= $fromstr;
@@ -4218,7 +4221,7 @@ class View {
                 if (!empty($data['submittedstatus'])) {
                     $status = $data['submittedstatus'];
                     if (!empty($data['submitgroupid'])) {
-                        if ($data['ltiassessment']) {
+                        if ($haslti && $data['ltiassessment']) {
                             $url = '#';
                         }
                         else {

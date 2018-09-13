@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'configextensions/frameworks');
+define('MENUITEM', 'create/views');
 define('SECTION_PLUGINTYPE', 'module');
 define('SECTION_PLUGINNAME', 'lti');
 define('SECTION_PAGE', 'submission');

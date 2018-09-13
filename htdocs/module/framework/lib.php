@@ -985,7 +985,7 @@ class Framework {
                 $isadminofowner = true;
             }
         }
-        else if (!empty($USER->get('id')) && group_user_can_assess_submitted_views($view->get('submittedgroup'), $USER->get('id'))) {
+        else if (!empty($USER->get('id')) && !empty($view->get('submittedgroup')) && group_user_can_assess_submitted_views($view->get('submittedgroup'), $USER->get('id'))) {
             if ($USER->get('id') != $owner->get('id')) {
                 $isadminofowner = true;
             }
