@@ -37,6 +37,6 @@ Scenario: Add blocks and create versions
     And I follow "Save to timeline"
     And I press "More..."
     And I follow "Timeline"
-    And I follow "Next version"
+    And I follow "Go to the next version"
     And I wait "1" seconds
     Then I should see "Here is the second version of the block"

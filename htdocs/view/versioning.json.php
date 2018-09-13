@@ -40,7 +40,7 @@ if ($versions->count > 0) {
             "taskSubTitle" => $view->display_author() . ', ' . format_date(strtotime($value->ctime)),
             "assignDate" => date('d/m/Y\TH:i', strtotime($value->ctime)),
             "assignID" => $value->id,
-            "taskShortDate" => date('j M', strtotime($value->ctime)),
+            "taskShortDate" => date('j F', strtotime($value->ctime)),
             "taskDetails" => $value->blockdata_formatted->html,
         );
     }

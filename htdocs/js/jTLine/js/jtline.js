@@ -51,12 +51,12 @@
                 timelineComponents['timelineNavigation'] = timeline.find('.cd-timeline-navigation');
                 timelineComponents['timelineNavigationViewport'] = timeline.find('.cd-timeline-navigation-second');
                 timelineComponents['eventsContent'] = timeline.children('.events-content');
-                //assign a left postion to the single events along the timeline
+                //assign a left position to the single events along the timeline
                 setDatePosition(timelineComponents, options.eventsMinDistance);
                 //assign a width to the timeline
                 var timelineTotWidth = setTimelineWidth(timelineComponents, options.eventsMinDistance);
                 // We don't need the timeline prev/next buttons to be active if our timeline is shorter than viewport
-                if (timelineTotWidth < timelineComponents['timelineWrapper'].width()) {
+                if (timelineTotWidth == timelineComponents['timelineWrapper'].width()) {
                     timelineComponents['timelineNavigation'].find('.next').addClass('inactive');
                 }
                 //the timeline has been initialize - show it
@@ -241,7 +241,7 @@
                 var totalWidth;
                 var objPredefinedDistance;
 
-                var nextfixDistanceValue = options.firstPointMargin;// For First Point Margin
+                var nextfixDistanceValue = options.firstPointMargin;// For First Point on the timeline
                 if (options.distanceMode == 'auto') {
                     timeSpan = daydiff(timelineComponents['timelineDates'][0], timelineComponents['timelineDates'][timelineComponents['timelineDates'].length - 1]);
                     timeSpanNorm = timeSpan / timelineComponents['eventsMinLapse'];
@@ -257,9 +257,12 @@
                     totalWidth = (totalItemsWidth * options.eventsMinDistance); // - 60;
                 }
 
+                if (totalWidth < timelineComponents['timelineWrapper'].width()) {
+                    totalWidth = timelineComponents['timelineWrapper'].width();
+                }
                 timelineComponents['eventsWrapper'].css('width', totalWidth + 'px');
-                updateOlderEvents(timelineComponents['eventsWrapper'].find('a.selected'));
                 updateFilling(timelineComponents['eventsWrapper'].find('a.selected'), timelineComponents['fillingLine'], totalWidth);
+                updateOlderEvents(timelineComponents['eventsWrapper'].find('a.selected'));
                 updateTimelinePosition('next', timelineComponents['eventsWrapper'].find('a.selected'), timelineComponents);
 
                 return totalWidth;
@@ -269,8 +272,7 @@
                 var eventDate = event.data('date'),
                     eventID = event.data('id'),
                     visibleContent = eventsContent.find('.selected'),
-                    selectedContent = eventsContent.find('[data-id="' + eventID + '"]'),
-                    selectedContentHeight = selectedContent.height();
+                    selectedContent = eventsContent.find('[data-id="' + eventID + '"]');
 
                 var classEntering = 'selected enter-left',
                     classLeaving = 'leave-right';
@@ -295,7 +297,10 @@
                         evdone = true;
                     }
                 });
-                eventsContent.css('height', selectedContentHeight + 'px');
+                // height of the version changes after it becomes visible
+                // we should remove this line here
+                // otherwise the block at the bottom of the view is not displayed
+                // eventsContent.css('height', selectedContentHeight + 'px');
             }
 
             var updateOlderEvents = function (event) {
@@ -475,8 +480,8 @@
                         "bodyCnt": dataCollection[i][options.map.bodyCnt]
                     }
 
-                    $liTimeLineCollection += '<li><a href="#0" data-id="' + point.idValue + '" data-date="' + point.dateValue + '" ';
-                    $liTimeLineCollection += 'class="tlnode ' + (isSelectedPoint ? 'selected' : '') + '"';
+                    $liTimeLineCollection += '<li><a href="#0" data-id="' + point.idValue + '" data-date="'+ point.dateValue +'" ';
+                    $liTimeLineCollection += 'class="tlnode ' + (isSelectedPoint ? 'selected' : '') + '" title="'+ get_string('versionnumber', 'view', (i+1)) +'"';
                     $liTimeLineCollection += '>';
                     $liTimeLineCollection += point.pointCnt + '</a></li>';
                     // -----------------
@@ -487,7 +492,7 @@
                     else {
                         $liEventContentCollection += 'class="lineli"';
                     }
-                    $liEventContentCollection += ' data-id="' + point.idValue + '" data-date="' + point.dateValue + '">' + formatTitle(point.title, dataCollection[i]) + formatSubTitle(point.subTitle, dataCollection[i]) + formatBodyContent(point.bodyCnt, dataCollection[i]) + '</li>';
+                    $liEventContentCollection += ' data-id="' + point.idValue + '" data-date="' + point.dateValue +  '">' + formatTitle(point.title, dataCollection[i]) + formatSubTitle(point.subTitle, dataCollection[i]) + '<div class="jtline"><div class="events-content"> <p> ' + get_string('versionnumber', 'view',(i+1)) + '</p></div></div>' + formatBodyContent(point.bodyCnt, dataCollection[i]) + '</li>';
 
                 }
                 //-----------------------------------------
@@ -496,8 +501,12 @@
                 var $container = $(mainObject);
 
                 var $sectionStart = '<section id="jtlinesection" class="jtline">';
-                var $timeline = '<div class="timeline"><div class="events-wrapper"><div class="events"><ol>' + $liTimeLineCollection + '</ol><span class="filling-line" aria-hidden="true"></span></div></div><ul class="cd-timeline-navigation"><li class="lineli"><a href="#0" class="prev inactive">' + get_string_ajax('previous', 'mahara') + '</a></li><li class="lineli"><a href="#0" class="next">' + get_string_ajax('next', 'mahara') + '</a></li></ul></div>';
-                var $eventsContent = '<div class="events-content"><ol>' + $liEventContentCollection + '</ol><ul class="cd-timeline-navigation-second"><li><a href="#0" class="prev inactive">' + get_string_ajax('previousversion', 'view') + '</a></li><li><a href="#0" class="next">' + get_string_ajax('nextversion', 'view') + '</a></li></ul></div>';
+                var $timeline = '<div class="timeline"><div class="events-wrapper"><div class="events"><ol>' + $liTimeLineCollection + '</ol><span class="filling-line" aria-hidden="true"></span></div></div><ul class="cd-timeline-navigation"> <li class="lineli"><a href="#0" class="prev inactive"' + 'title="'+ get_string('previousversion', 'view') + '">'  + get_string('previousversion', 'view') + '</a></li><li class="lineli"><a href="#0" class="next" ' + 'title="'+ get_string('nextversion', 'view')+ '">' + get_string('nextversion', 'view') + '</a></li></ul></div>';
+                var prevarrow = '<li><a href="#0" class="prev inactive"' + 'title="'+ get_string('gotopreviousversion', 'view') + '">' + get_string('previousversion', 'view') + '</a></li>';
+                var nextarrowinactive = '';
+                if (dataCollection.length==1) nextarrowinactive = ' inactive';
+                var nextarrow = '<li><a href="#0" class="next' + nextarrowinactive + '"' + 'title="'+ get_string('gotonextversion', 'view') + '">' + get_string('nextversion', 'view') + '</a></li>';
+                var $eventsContent = '<div class="events-content"><ol>' + $liEventContentCollection + '</ol><ul class="cd-timeline-navigation-second">' + prevarrow + nextarrow + '</ul></div>';
                 var $sectionEnd = '</section>';
 
                 var allHtml = $sectionStart + $timeline + $eventsContent + $sectionEnd;

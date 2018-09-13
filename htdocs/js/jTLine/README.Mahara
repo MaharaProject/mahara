@@ -12,4 +12,5 @@ Changes:
 * Removed demo examples
 * Adjusted ajax setting to accept parameters from Mahara
 * Moved the css styles to htdocs/theme/raw/sass/features/_timeline.scss
+and removed the directory jTline/js/css
 * Added prev / next arrows for the events

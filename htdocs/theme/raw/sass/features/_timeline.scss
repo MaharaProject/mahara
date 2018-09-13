@@ -57,6 +57,7 @@ Main Components
   top: 49px;
   height: 3px;
   /* width will be set using JavaScript */
+  width: 1000px;
   background: #dfdfdf;
   -webkit-transition: -webkit-transform 0.4s;
   -moz-transition: -moz-transform 0.4s;
@@ -70,7 +71,7 @@ Main Components
   top: 0;
   height: 100%;
   width: 100%;
-  background-color: #7b9d6f;
+  background-color: darken($theme-primary-color, 10%);
   -webkit-transform: scaleX(0);
   -moz-transform: scaleX(0);
   -ms-transform: scaleX(0);
@@ -99,6 +100,7 @@ Main Components
   -ms-transform: translateZ(0);
   -o-transform: translateZ(0);
   transform: translateZ(0);
+  outline: none;
 }
 .jtline .events a::after {
   /* this is used to create the event spot */
@@ -122,18 +124,18 @@ Main Components
   transition: background-color 0.3s, border-color 0.3s;
 }
 .no-touch .jtline .events a:hover::after {
-  background-color: #7b9d6f;
-  border-color: #7b9d6f;
+  background-color: $theme-primary-color;
+  border-color: $theme-primary-color;
 }
 .jtline .events a.selected {
   pointer-events: none;
 }
 .jtline .events a.selected::after {
-  background-color: #7b9d6f;
-  border-color: #7b9d6f;
+  background-color: $theme-primary-color;
+  border-color: $theme-primary-color;
 }
 .jtline .events a.older-event::after {
-  border-color: #7b9d6f;
+  border-color: $theme-primary-color;
 }
 @media only screen and (min-width: 1100px) {
   .jtline {
@@ -148,7 +150,19 @@ Main Components
 ul.cd-timeline-navigation-second {
   list-style-type: none !important;
   padding: 0;
-  margin:0;
+  top: 400px;
+}
+
+.cd-timeline-navigation-second a {
+  top: 90%;
+  bottom: 10px;
+}
+
+.cd-timeline-navigation a {
+  top: 64%;
+}
+.cd-timeline-navigation-second a {
+  top: 90px;
 }
 
 .cd-timeline-navigation a,
@@ -156,7 +170,6 @@ ul.cd-timeline-navigation-second {
   /* these are the left/right arrows to navigate the timeline */
   position: absolute;
   z-index: 8;
-  top: 50%;
   bottom: auto;
   -webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
@@ -165,40 +178,29 @@ ul.cd-timeline-navigation-second {
   transform: translateY(-50%);
   height: 34px;
   width: 34px;
-  border-radius: 50%;
-  border: 2px solid #dfdfdf;
   list-style-type: none !important;
-  /* replace text with an icon */
-  overflow: hidden;
-  color: transparent;
   text-indent: 100%;
-  white-space: nowrap;
+  font-size: 0;
   -webkit-transition: border-color 0.3s;
   -moz-transition: border-color 0.3s;
   transition: border-color 0.3s;
+  outline: 0;
+  text-decoration: none;
+  &::after {
+    content: '\f138';
+    font-family: FontAwesome;
+    color: $theme-primary-color;
+    font-size: 30px;
+    top: -7px;
+    position: relative;
+
+  }
+
+  &.inactive::after {
+    color: $gray-lighter;
+  }
 }
 
-.cd-timeline-navigation-second a {
-  top: 80px;
-}
-.cd-timeline-navigation a::after,
-.cd-timeline-navigation-second a::after {
-  /* arrow icon */
-  content: '';
-  position: absolute;
-  height: 16px;
-  width: 16px;
-  left: 50%;
-  top: 50%;
-  bottom: auto;
-  right: auto;
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -ms-transform: translateX(-50%) translateY(-50%);
-  -o-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);
-  background: url(../../raw/images/cd-arrow.svg) no-repeat 0 0;
-}
 .cd-timeline-navigation a.prev,
 .cd-timeline-navigation-second a.prev {
   left: 0;
@@ -214,7 +216,7 @@ ul.cd-timeline-navigation-second {
 }
 .no-touch .cd-timeline-navigation a:hover,
 .no-touch .cd-timeline-navigation-second a:hover {
-  border-color: #7b9d6f;
+  border-color: $theme-primary-color;
 }
 .cd-timeline-navigation a.inactive,
 .cd-timeline-navigation-second a.inactive {
@@ -233,7 +235,6 @@ ul.cd-timeline-navigation-second {
 .jtline .events-content {
   margin:0 auto;
   position: relative;
-
   overflow: hidden;
   -webkit-transition: height 0.4s;
   -moz-transition: height 0.4s;
@@ -305,14 +306,13 @@ outline-color: #000;
   list-style-type: none !important;
 }
 
-
 .jtline .timeline ol, .ListeOL {
   margin: 0 0 0 0;
   padding: 50px;
 }
 
 .jtline .events-content ol {
-  margin: 5px;
+  margin: 15px;
   padding: 0 30px;
 }
 .jtline .events-content h2 {
@@ -427,7 +427,6 @@ outline-color: #000;
   }
 }
 
-
 #timeline {
   div {
     display: inline-block;
@@ -437,5 +436,3 @@ outline-color: #000;
     }
   }
 }
-
-

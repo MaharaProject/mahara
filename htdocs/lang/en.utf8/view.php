@@ -11,6 +11,7 @@
 
 defined('INTERNAL') || die();
 
+
 $string['basics']                 = 'Basics';
 $string['createview']             = 'Create page';
 $string['edittitle']              = 'Edit title';
@@ -527,3 +528,6 @@ $string['savetimelinespecific'] = 'Save timeline for %s';
 $string['noversionsexist'] = 'There are no saved versions to display for the page "%s"';
 $string['previousversion'] = 'Previous version';
 $string['nextversion'] = 'Next version';
+$string['versionnumber'] = 'Version %s';
+$string['gotonextversion'] = 'Go to the next version ';
+$string['gotopreviousversion'] = 'Go to the previous version %s';

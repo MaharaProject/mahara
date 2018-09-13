@@ -28,7 +28,7 @@ if (!can_view_view($view)) {
 }
 
 $fromdate = param_variable('fromdate', '-3 months');
-$todate = param_variable('todate', 'now');
+$todate = param_variable('todate', 'tomorrow');
 
 $viewobject = new View($view);
 define('SUBSECTIONHEADING', $viewobject->display_title(true, false, false));
@@ -50,7 +50,15 @@ if ($versions->total == 0) {
 
 $form = View::get_timeline_form($view, $fromdate, $todate);
 
-$smarty = smarty(array('paginator', 'js/jquery/jquery-ui/js/jquery-ui.min.js', 'js/jTLine/js/jtline.js'), array(), array(), array('sidebars' => false));
+$smarty = smarty(array('paginator', 'js/jquery/jquery-ui/js/jquery-ui.min.js', 'js/jTLine/js/jtline.js'), array(), array('view' => array(
+        'versionnumber',
+        'gotonextversion',
+        'gotopreviousversion',
+        'previousversion',
+        'nextversion',
+        'versionnumber',
+    ),
+  ), array('sidebars' => false));
 $smarty->assign('versions', $versions->data);
 $smarty->assign('timelineform', $form);
 $smarty->assign('views', $versions->count);

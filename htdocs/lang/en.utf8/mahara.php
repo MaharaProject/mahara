@@ -171,6 +171,7 @@ $string['lastpage']  = 'Last page';
 $string['maxitemsperpage1']  = 'Results per page:';
 $string['showmore'] = 'Show more';
 
+
 $string['accept'] = 'Accept';
 $string['memberofinstitutions'] = 'Member of %s';
 $string['staffofinstitutions'] = 'Staff of %s';

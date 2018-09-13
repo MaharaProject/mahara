@@ -30,7 +30,7 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
-         safe_require('artefact', 'internal');
+        safe_require('artefact', 'internal');
         $smarty = smarty_core();
         $configdata = $instance->get('configdata');
 

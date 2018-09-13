@@ -17,7 +17,9 @@
             callType: 'ajax',
             url:'versioning.json.php',
             eventsMinDistance: 100,
-            distanceMode: 'fixDistance',
+            distanceMode: 'fixDistance', // predefinedDistance , fixDistance
+            fixDistanceValue: 2,
+            firstPointMargin: 1.5,
             params: {literal}{{/literal}
               'sesskey': config.sesskey,
               {if $fromdate} 'fromdate' : '{$fromdate}', {/if}
