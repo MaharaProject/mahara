@@ -963,7 +963,7 @@ class AuthLdap extends Auth {
                             $todb->$dbfield = $ldaprec[$ldapfield][0];
                         }
                         else {
-                            log_warn("Ldap record contained no {$ldapfield} field to map to DB {$dbfield}");
+                            log_warn("Ldap record for {$todb->$columnname} contained no {$ldapfield} field to map to DB {$dbfield}", true, false);
                         }
                     }
 
@@ -1094,7 +1094,7 @@ class AuthLdap extends Auth {
 
         // Create a temp table to store the users, for better performance
         $temptable = new XMLDBTable('auth_ldap_extusers_temp');
-        $temptable->addFieldInfo('extusername', XMLDB_TYPE_CHAR, 64, null, false);
+        $temptable->addFieldInfo('extusername', XMLDB_TYPE_CHAR, 64, null, XMLDB_NOTNULL);
         $temptable->addFieldInfo('firstname', XMLDB_TYPE_TEXT);
         $temptable->addFieldInfo('lastname', XMLDB_TYPE_TEXT);
         $temptable->addFieldInfo('email', XMLDB_TYPE_CHAR, 255);

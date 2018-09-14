@@ -2091,9 +2091,12 @@ function set_cookie($name, $value='', $expires=0, $access=false) {
     if (!$domain = get_config('cookiedomain')) {
         $domain = $url['host'];
     }
-    setcookie($name, $value, $expires, $url['path'], $domain, is_https(), true);
-    if ($access) {  // View access cookies may be needed on this request
-        $_COOKIE[$name] = $value;
+    // If no headers are sent - to avoid CLI scripts calling logout() problems
+    if (!headers_sent()) {
+        setcookie($name, $value, $expires, $url['path'], $domain, is_https(), true);
+        if ($access) {  // View access cookies may be needed on this request
+            $_COOKIE[$name] = $value;
+        }
     }
 }
 
