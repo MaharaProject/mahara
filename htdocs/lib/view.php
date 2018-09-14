@@ -7064,7 +7064,18 @@ class ViewSubmissionException extends UserException {
     }
 }
 
-function create_view_form($group=null, $institution=null, $template=null, $collection=null) {
+/**
+ * Create the form buttons for copying a page and/or a collection
+ *
+ * @param string $group           The ID of the group to copy to
+ * @param string $institution     The ID of the institution to copy to
+ * @param string $template        The ID of the page to copy
+ * @param string $collection      The ID of the collection to copy
+ * @param string $collectiononly  Only display the copy collection button
+ *
+ * @return form array
+ */
+function create_view_form($group=null, $institution=null, $template=null, $collection=null, $collectiononly=false) {
     global $USER;
     $form = array(
         'name'            => 'createview',
@@ -7132,6 +7143,9 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             $form['elements']['submit']['class'] .= ' last';
         }
         $form['name'] .= $template;
+    }
+    if ($collectiononly) {
+        unset($form['elements']['submit']);
     }
     return $form;
 }
