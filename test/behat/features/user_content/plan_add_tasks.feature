@@ -10,7 +10,7 @@ Background:
 
 Scenario: Create a plan -> add plan block to page -> create new task from block on page
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Plans" in "Content" from main menu
+    And I choose "Plans" in "Create" from main menu
     And I follow "New plan"
     And I fill in the following:
     | Title *  | Plan 9 from outer space  |
@@ -19,7 +19,7 @@ Scenario: Create a plan -> add plan block to page -> create new task from block 
     And I fill in select2 input "addplan_tags" with "test" and select "test"
     And I press "Save plan"
     #  add plan block to page
-    Given I choose "Pages and collections" in "Portfolio" from main menu
+    Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Page admin_01" panel menu
     And I click on "Edit" in "Page admin_01" panel menu
     And I expand "General" node

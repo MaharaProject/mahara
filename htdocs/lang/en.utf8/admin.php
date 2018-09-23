@@ -248,8 +248,8 @@ $string['Value'] = 'Value';
 $string['dataincluded'] = 'Data included';
 $string['datathathavebeensent'] = 'Data that has been sent';
 $string['newregistrationpolicyinfo'] = '<p>We have updated our registration data policy to require registered sites to provide weekly updates of their data. Please follow the link below to confirm or remove your registration.</p>';
-$string['registerwithmahara'] = 'Register with mahara.org?';
-$string['remainregistered'] = 'Remain registered?';
+$string['registerwithmahara'] = 'Register with mahara.org';
+$string['remainregistered'] = 'Remain registered';
 $string['Register'] = 'Register';
 $string['Registration'] = 'Registration';
 $string['registrationcancelled'] = 'You can choose to register at any time by going to the <a href="%sadmin/registersite.php">site registration page</a>.';
@@ -257,16 +257,16 @@ $string['registrationfailedtrylater'] = 'Registration failed with error code %s.
 $string['registrationsuccessfulthanksforregistering'] = 'Registration successful - thanks for registering.';
 $string['registermaharasite'] = 'Site registration';
 $string['registeryoursitesummary'] = '
-<p>Registering your Mahara site with <a href="https://mahara.org/">mahara.org</a> helps us to build up a picture of the Mahara installations around the world.</p>';
+<p>Registering your Mahara site with <a href="https://mahara.org/">mahara.org</a> helps us to get a picture of the Mahara installations around the world.</p>';
 $string['registeryourmaharasitedetail'] = '
-<p>You can choose to register your Mahara site with <a href="https://mahara.org/">mahara.org</a>. Registration is free and helps us build up a picture of the Mahara installations around the world.</p>
+<p>You can choose to register your Mahara site with <a href="https://mahara.org/">mahara.org</a>. Registration is free and helps us get a picture of the Mahara installations around the world.</p>
 <p>You can see the information that will be sent to mahara.org. Nothing that can personally identify any of your users will be sent. If you choose to register, Mahara will automatically send your updated information to mahara.org once a week.</p>';
 $string['registrationremoved'] = 'Your site\'s registration has been removed. You can re-register with mahara.org at any time.';
-$string['sendingweeklyupdates'] = 'You are currently sending weekly updates.';
+$string['sendingweeklyupdates'] = 'Currently, you are sending weekly updates.';
 $string['siteisregisteredsince'] = 'Your site has been registered with <a href="https://mahara.org/">mahara.org</a> since %s.';
 $string['siteisregistered'] = 'Your site is registered with <a href="https://mahara.org/">mahara.org</a>.';
-$string['registeredinfo'] = 'Updated information about your site is being sent to mahara.org weekly. You can see what is being sent in the &quot;Data included&quot; section below. Nothing that can personally identify any of your users is sent.</p><p>To remove registration of your site, change the  &quot;Remain registered&quot; switch to &quot;No&quot; and press the &quot;Save&quot; button.';
-$string['siteregistrationpolicy'] = '<p>To ensure our statistics accurately show how Mahara is being used, registration now includes sending us weekly updates. Please review and confirm your registration by clicking &quot;Save&quot; below.</p>';
+$string['registeredinfo'] = 'Updated information about your site is sent to mahara.org weekly. You can see what is sent in the &quot;Data included&quot; section below. Nothing that can personally identify any of your users is sent.</p><p>To remove the registration of your site, change the  &quot;Remain registered&quot; switch to &quot;No&quot; and click the &quot;Save&quot; button.';
+$string['siteregistrationpolicy'] = '<p>To ensure our statistics show accurately how Mahara is being used, registration now includes sending us weekly updates. Please review and confirm your registration by clicking &quot;Save&quot; below.</p>';
 
 // Close site
 $string['Close'] = 'Close';
@@ -516,7 +516,7 @@ $string['mathjaxdescription'] = 'MathJax renders LaTeX markup into properly form
 $string['mathjaxconfig'] = 'MathJax configuration';
 $string['timezone'] = 'Timezone';
 $string['sitetimezonedescription'] = 'The default timezone for the site. If not selected one will be chosen based on country, but this can be innaccurate if the counrty has multiple timezones.';
-$string['notimezoneselected'] = 'No Timezone Selected';
+$string['notimezoneselected'] = 'No timezone selected';
 // Site content
 $string['about']               = 'About';
 $string['discardpageedits']    = 'Discard your changes to this page?';
@@ -1362,17 +1362,17 @@ $string['cli_done'] = 'Indexing finished';
 
 // Clean up old users
 $string['cli_param_dryrun'] = 'Dry run to indicate what will happen. Set to "true" by default. Need to set -d=false to actually update database.';
-$string['cli_deleteinactiveusers_beforedate'] = 'Delete users where their last login date is earlier than this date. Date can be any datetime string, eg: "2018-02-25" or "-6 months"';
-$string['cli_deleteinactiveusers_limit'] = 'Limit of users to work with for each delete run';
-$string['cli_deleteinactiveusers_cleanusers'] = 'Try to delete users from the "usr" table as well';
+$string['cli_deleteinactiveusers_beforedate'] = 'Delete users where their last login date is earlier than this date. Date can be any datetime string, e.g. "2018-02-25" or "-6 months".';
+$string['cli_deleteinactiveusers_limit'] = 'Limit of users to work with for each delete run.';
+$string['cli_deleteinactiveusers_cleanusers'] = 'Try to delete users from the "usr" table as well.';
 $string['cli_deleteinactiveusers_info'] = 'This command-line PHP script allows you to delete old users. This will only work for users who either have not logged in or have never made a forum post.';
-$string['cli_deleteinactiveusers_neverloggedin'] = 'Delete users that have never logged in (were setup by an admin)';
+$string['cli_deleteinactiveusers_neverloggedin'] = 'Delete users that have never logged in (were set up by an admin).';
 $string['cli_param_baddate'] = 'The supplied date "%s" is not valid.';
-$string['cli_deleteinactiveusers_usercount'] = 'There are "%s" users to delete';
-$string['cli_deleteinactiveusers_userunabletoclean'] = 'Unable to fully delete user "%s" (ID %s)';
-$string['cli_deleteinactiveusers_userunabletodelete'] = 'Unable to delete user "%s" (ID %s)';
+$string['cli_deleteinactiveusers_usercount'] = 'There are "%s" users to delete.';
+$string['cli_deleteinactiveusers_userunabletoclean'] = 'Unable to delete user "%s" (ID %s) fully.';
+$string['cli_deleteinactiveusers_userunabletodelete'] = 'Unable to delete user "%s" (ID %s).';
 $string['cli_deleteinactiveusers_nouserstodelete'] = 'There are no users to delete.';
-$string['cli_deleteinactiveusers_onlydryrun1'] = 'This is only a dry run with the following settings
+$string['cli_deleteinactiveusers_onlydryrun1'] = 'This is only a dry run with the following settings:
 Institution: %s
 Group: %s
 Before date: %s
@@ -1380,12 +1380,12 @@ Delete users from "usr" table: %s
 Never logged in: %s';
 
 // Clean up old groups
-$string['cli_deleteinactivegroups_info'] = 'This command-line PHP script allows you to delete old groups. This will only work for groups who currently have no members. This will also include groups with only one owner/administrator if the "onlyadmins" flag is set.';
-$string['cli_deleteinactivegroups_beforedate'] = 'Delete groups where their last modification date is earlier than this date. Date can be any datetime string, eg: "2018-02-25" or "-6 months"';
-$string['cli_deleteinactivegroups_limit'] = 'Limit of groups to work with for each delete run';
-$string['cli_deleteinactivegroups_cleangroups'] = 'Try to delete groups from the "group" table as well';
-$string['cli_deleteinactivegroups_onlyadmins'] = 'Also include groups that only have owner/administrator as members';
-$string['cli_deleteinactivegroups_onlydryrun'] = 'This is only a dry run with the following settings
+$string['cli_deleteinactivegroups_info'] = 'This command-line PHP script allows you to delete old groups. This will only work for groups that do not have any members. This will also include groups with only one owner / administrator if the "onlyadmins" flag is set.';
+$string['cli_deleteinactivegroups_beforedate'] = 'Delete groups where their last modification date is earlier than this date. Date can be any datetime string, e.g. "2018-02-25" or "-6 months".';
+$string['cli_deleteinactivegroups_limit'] = 'Limit of groups to work with for each delete run.';
+$string['cli_deleteinactivegroups_cleangroups'] = 'Try to delete groups from the "group" table as well.';
+$string['cli_deleteinactivegroups_onlyadmins'] = 'Also include groups that only have owner / administrator as members.';
+$string['cli_deleteinactivegroups_onlydryrun'] = 'This is only a dry run with the following settings:
 Institution: %s
 Before date: %s
 Delete groups from "group" table: %s
@@ -1393,12 +1393,11 @@ Also delete groups that only contain owner/admin: %s
 %s';
 $string['cli_deleteinactivegroups_danger'] = '
 *** The settings chosen will delete all groups ***
-If this is what you desire then set the --beforedate to a date in the future
-';
-$string['cli_deleteinactivegroups_groupcount'] = 'There are "%s" groups to delete';
+If this is what you desire, then set the --beforedate to a date in the future.';
+$string['cli_deleteinactivegroups_groupcount'] = 'There are "%s" groups to delete.';
 $string['cli_deleteinactivegroups_nogroupstodelete'] = 'There are no groups to delete.';
-$string['cli_deleteinactivegroups_emptygroups'] = 'Only delete groups that have no members';
-$string['cli_deleteinactivegroups_groupunabletoclean'] = 'Unable to fully delete group "%s" (ID %s)';
+$string['cli_deleteinactivegroups_emptygroups'] = 'Only delete groups that do not have any members.';
+$string['cli_deleteinactivegroups_groupunabletoclean'] = 'Unable to fully delete group "%s" (ID %s).';
 
 $string['withselectedcontentexport'] = 'Re-queue items into the export queue';
 $string['withselectedcontentdelete'] = 'Delete selected items from the export queue';

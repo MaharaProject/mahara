@@ -136,7 +136,7 @@ $string['noreplyaddressmissingorinvalid'] = 'The noreply address setting is eith
 $string['openbasedirenabled'] = 'Your server has the php open_basedir restriction enabled.';
 $string['openbasedirpaths'] = 'Mahara can only open files within the following path(s): %s.';
 $string['openbasedirwarning'] = 'Some requests for external sites may fail to complete. This could stop certain feeds from updating among other things.';
-$string['resavecustomthemes'] = 'Your latest upgrade may have stopped your configurable themes displaying correctly. To update a configurable theme please go to Administration →  Institution -> Settings and configure the institution\'s settings and save the form.<br>The following institutions use configurable themes:';
+$string['resavecustomthemes'] = 'Your latest upgrade may have stopped your configurable themes from displaying correctly. To update a configurable theme, please go to Administration →  Institution -> Settings, configure the institution\'s settings, and save the form.<br>The following institutions use configurable themes:';
 
 $string['gdlibrarylacksgifsupport'] = 'The installed PHP GD library does not support both creating and reading GIF images. Full support is needed to upload GIF images.';
 $string['gdlibrarylacksjpegsupport'] = 'The installed PHP GD library does not support JPEG/JPG images. Full support is needed to upload JPEG/JPG images.';
@@ -153,5 +153,5 @@ $string['nophpextension'] = 'The PHP extension "%s" is not enabled. Please enabl
 $string['nomemcacheserversdefined'] = 'The session save handler "%s" has no related servers defined. Please set the $cfg->memcacheservers value, e.g. "localhost:11211".';
 $string['memcacheusememcached'] = 'The "memcache" session storage is obsolete. Please use "memcached".';
 $string['siteoutofsyncfor'] = 'This site has database information newer than %s files indicate it should be.';
-$string['updatesitetimezone'] = 'The timezone for the site now needs to be set via Configure site →  Site options →  Site settings. Please set it there and delete the $cfg->dbtimezone line from your config.php file.';
-$string['pluginnotactive'] = 'The plugin "%s" is not enabled. Please got to Administration →  Extensions to enable it.';
+$string['updatesitetimezone'] = 'The timezone for the site now needs to be set via "Configure site" →  "Site options" →  "Site settings". Please set it there and delete the $cfg->dbtimezone line from your config.php file.';
+$string['pluginnotactive1'] = 'The plugin "%s" is not enabled. Please got to "Administration" →  "Extensions" →  "Plugin administration" to enable it.';

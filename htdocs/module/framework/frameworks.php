@@ -21,7 +21,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('Framework', 'module.framework'));
 safe_require('module', 'framework');
 if (!PluginModuleFramework::is_active()) {
-    throw new AccessDeniedException(get_string('pluginnotactive', 'error', get_string('frameworknav', 'module.framework')));
+    throw new AccessDeniedException(get_string('pluginnotactive1', 'error', get_string('frameworknav', 'module.framework')));
 }
 
 $upload = param_boolean('upload');
