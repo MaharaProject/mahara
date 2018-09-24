@@ -117,7 +117,7 @@ $string['Open'] = 'Open';
 $string['Order'] = 'Order';
 $string['orderdescription'] = 'Choose at which position this forum shall appear in the list of forums';
 $string['Post'] = 'Post';
-$string['postaftertimeout'] = 'You have submitted your change after timeout of %s minutes. Your change has not been applied.';
+$string['postaftertimeout'] = 'You have submitted your change after the timeout of %s minutes. Your change has not been applied.';
 $string['postbyuserwasdeleted'] = 'A post by %s was deleted';
 $string['postsbyuserweredeleted'] = '%s posts by %s were deleted';
 $string['postdelay'] = 'Post delay';
@@ -203,7 +203,9 @@ $string['closetopicsdescription1'] = 'Close all new topics by default. Only mode
 
 $string['activetopicsdescription'] = 'Recently updated topics in your groups.';
 
-$string['timeleftnotice'] = 'You have %s minutes left to finish editing.';
+$string['timeleftnotice1'] = 'You have <span class="num">%s</span> minutes left to finish editing.';
+$string['timeleftnoticeexpired'] = 'The edit time is over. Your changes will not be saved.';
+$string['timeleftnoticeexpiredmoderator'] = 'Your changes will now be saved with an edit notice.';
 
 $string['objectionablecontentpost'] = 'Objectionable content on forum topic "%s" reported by %s';
 $string['objectionablecontentposthtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Objectionable content on forum topic "%s" reported by %s
