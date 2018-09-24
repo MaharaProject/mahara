@@ -1164,7 +1164,7 @@ class BlockInstance {
             $content = '';
             $smarty->assign('loadbyajax', false);
         }
-        else if (get_config('ajaxifyblocks') && call_static_method($classname, 'should_ajaxify') && $exporting === false) {
+        else if (get_config('ajaxifyblocks') && call_static_method($classname, 'should_ajaxify') && $exporting === false && $versioning === false) {
             $content = '';
             $smarty->assign('loadbyajax', true);
         }

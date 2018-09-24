@@ -74,6 +74,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
                 $language = 'en-GB';
             }
             $result = '<iframe src="' . $urlbase . 'artefact/file/blocktype/pdf/viewer.php?editing=' . $editing . '&ingroup=' . !empty($group) . '&file=' . $artefactid . '&lang=' . $language . '&view=' . $instance->get('view')
+                 . ($versioning ? '&versioning=true' : '')
                  . '" width="100%" height="500" frameborder="0"></iframe>';
 
             require_once(get_config('docroot') . 'artefact/comment/lib.php');

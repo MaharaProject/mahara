@@ -7199,14 +7199,15 @@ class View {
                 safe_require('blocktype', $v->blocktype);
                 $bi = new BlockInstance(0,
                     array(
-                        'blocktype'  => $v->blocktype,
-                        'title'      => $v->title,
-                        'view'       => $this->get('id'),
-                        'view_obj'   => $this,
-                        'row'        => $v->row,
-                        'column'     => $v->column,
-                        'order'      => $v->order,
-                        'configdata' => serialize((array)$v->configdata),
+                        'id'          => $v->originalblockid,
+                        'blocktype'   => $v->blocktype,
+                        'title'       => $v->title,
+                        'view'        => $this->get('id'),
+                        'view_obj'    => $this,
+                        'row'         => $v->row,
+                        'column'      => $v->column,
+                        'order'       => $v->order,
+                        'configdata'  => serialize((array)$v->configdata),
                     )
                 );
                 // Add a fake unique id to allow for pagination etc

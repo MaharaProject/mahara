@@ -84,12 +84,17 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
      * @param array $tagsout Optional reference variable for finding out the "extclude" tags used by this block
      * @return array of blogpost records
      */
-    public static function get_blog_posts_in_block(BlockInstance $instance, &$tagsinreturn = null, &$tagsoutreturn = null) {
+    public static function get_blog_posts_in_block(BlockInstance $instance, &$tagsinreturn = null, &$tagsoutreturn = null, $versioning=false) {
         $configdata = $instance->get('configdata');
         $results = array();
 
         $tagsin = $tagsout = array();
-        $tagrecords = get_records_array('blocktype_taggedposts_tags', 'block_instance', $instance->get('id'), 'tagtype desc, tag', 'tag, tagtype');
+        if ($versioning) {
+            $tagrecords = $configdata['tagrecords'];
+        }
+        else {
+            $tagrecords = get_records_array('blocktype_taggedposts_tags', 'block_instance', $instance->get('id'), 'tagtype desc, tag', 'tag, tagtype');
+        }
         if ($tagrecords) {
 
             $view = $instance->get('view');
@@ -181,7 +186,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
         $viewownerdisplay = null;
         // Display all posts, from all blogs, owned by this user
         $tagsin = $tagsout = array();
-        $results = self::get_blog_posts_in_block($instance, $tagsin, $tagsout);
+        $results = self::get_blog_posts_in_block($instance, $tagsin, $tagsout, $versioning);
         if ($tagsin || $tagsout) {
 
             $smarty->assign('blockid', $instance->get('id'));

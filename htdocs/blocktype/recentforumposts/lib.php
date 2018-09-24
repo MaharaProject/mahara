@@ -26,8 +26,14 @@ class PluginBlocktypeRecentForumPosts extends MaharaCoreBlocktype {
         return array('general' => 23000);
     }
 
-    private static function get_group(BlockInstance $instance) {
+    private static function get_group(BlockInstance $instance, $versioning=false) {
         static $groups = array();
+
+        if ($versioning) {
+            $configdata = $instance->get('configdata');
+            $groupid = $configdata['groupid'];
+            return get_record_select('group', 'id = ? AND deleted = 0', array($groupid), '*, ' . db_format_tsfield('ctime'));
+        }
 
         $block = $instance->get('id');
 
@@ -55,7 +61,7 @@ class PluginBlocktypeRecentForumPosts extends MaharaCoreBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
-        if ($group = self::get_group($instance)) {
+        if ($group = self::get_group($instance, $versioning)) {
 
             require_once('group.php');
             $role = group_user_access($group->id);

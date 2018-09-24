@@ -70,7 +70,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                 $tasks = ArtefactTypeTask::get_tasks($planid, 0, $limit);
                 $template = 'artefact:plans:taskrows.tpl';
                 $blockid = $instance->get('id');
-                if ($exporter || $versioning) {
+                if ($exporter) {
                     $pagination = false;
                 }
                 else {

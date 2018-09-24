@@ -40,6 +40,7 @@ if ($blocks) {
             $oldblock = new BlockInstance($b->id, $b);
 
             $bi = new stdClass();
+            $bi->originalblockid = $oldblock->get('id');
             $bi->blocktype = $oldblock->get('blocktype');
             $bi->title = $oldblock->get('title');
             $bi->configdata = $oldblock->get('configdata');
@@ -68,6 +69,10 @@ if ($blocks) {
                     $artefact = $oldblock->get_artefact_instance($artefactid);
                     $bi->configdata['text'] = $artefact->get('description');
                 }
+            }
+            if ($oldblock->get('blocktype') == 'taggedposts') {
+                $tagrecords = get_records_array('blocktype_taggedposts_tags', 'block_instance', $oldblock->get('id'), 'tagtype desc, tag', 'tag, tagtype');
+                $bi->configdata['tagrecords'] = $tagrecords;
             }
             $version->blocks[$k] = $bi;
         }

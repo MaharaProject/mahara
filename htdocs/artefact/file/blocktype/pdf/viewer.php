@@ -22,12 +22,13 @@ $fileid = param_integer('file');
 $viewid = param_integer('view');
 $editing = param_boolean('editing', false);
 $ingroup = param_boolean('ingroup', false);
-
-if (!artefact_in_view($fileid, $viewid)) {
-    throw new AccessDeniedException('');
-}
+$versioning = param_boolean('versioning', false);
 
 if (!can_view_view($viewid)) {
+  throw new AccessDeniedException('');
+}
+
+if (!$versioning && !artefact_in_view($fileid, $viewid)) {
     throw new AccessDeniedException('');
 }
 
