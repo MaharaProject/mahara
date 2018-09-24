@@ -1124,9 +1124,11 @@ class BlockInstance {
           $artefacts =  get_records_sql_array(
               'SELECT a.id, a.title FROM {artefact} a WHERE a.id in ( '. join(',', array_fill(0, count($ids), '?')) . ')', $ids
           );
-          uasort($artefacts, array("BlockInstance", "my_files_cmp"));
-          foreach ($artefacts as $artefact) {
-            $result[] = $artefact->id;
+          if ($artefacts) {
+              uasort($artefacts, array("BlockInstance", "my_files_cmp"));
+              foreach ($artefacts as $artefact) {
+                  $result[] = $artefact->id;
+              }
           }
       }
       return $result;

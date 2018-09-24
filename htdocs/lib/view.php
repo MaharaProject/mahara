@@ -7169,7 +7169,7 @@ class View {
 
     public function format_versioning_data($data) {
         if (empty($data)) {
-            return $data;
+            return false;
         }
 
         $data = json_decode($data);
@@ -7213,7 +7213,7 @@ class View {
                 $this->columns[$v->row][$v->column]['blockinstances'][] = $bi;
             }
         }
-        $html = $this->build_rows(false, false, true);
+        $html = $this->build_rows(false, false, $data);
         $data->html = $html;
         return $data;
     }

@@ -31,15 +31,18 @@ class PluginBlocktypeTextbox extends MaharaCoreBlocktype {
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata');
-
         if (!empty($configdata['artefactid'])) {
             safe_require('artefact', 'file');
             safe_require('artefact', 'comment');
 
             $artefact = $instance->get_artefact_instance($configdata['artefactid']);
             $viewid = $instance->get('view');
-            $text = ArtefactTypeFolder::append_view_url($artefact->get('description'), $viewid);
-
+            if ($versioning) {
+                $text = $configdata['text'];
+            }
+            else {
+                $text = ArtefactTypeFolder::append_view_url($artefact->get('description'), $viewid);
+            }
             $smarty = smarty_core();
             $smarty->assign('text', $text);
 

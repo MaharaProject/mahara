@@ -60,6 +60,15 @@ if ($blocks) {
                     }
                 }
             }
+            if ($oldblock->get('blocktype') == 'annotation' || $oldblock->get('blocktype') ==  'textbox') {
+                $configdata = $oldblock->get('configdata');
+                if (!empty($configdata['artefactid'])) {
+                    safe_require('artefact', 'file');
+                    $artefactid = $configdata['artefactid'];
+                    $artefact = $oldblock->get_artefact_instance($artefactid);
+                    $bi->configdata['text'] = $artefact->get('description');
+                }
+            }
             $version->blocks[$k] = $bi;
         }
     }
