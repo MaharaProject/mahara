@@ -88,7 +88,7 @@ else { // edit topic
     // no record for edits to own posts with 30 minutes
     if (user_can_edit_post($topic->poster, $topic->ctime)) {
         $topic->editrecord = false;
-        $timeleft = (int)get_config_plugin('interaction', 'forum', 'postdelay') - round((time() - $topic->ctime) / 60);
+        $timeleft = ceil(get_config_plugin('interaction', 'forum', 'postdelay') - (time() - $topic->ctime) / 60);
     }
     else if ($moderator) {
         $topic->editrecord = true;
@@ -302,6 +302,7 @@ function edittopic_submit(Pieform $form, $values) {
 $smarty = smarty();
 $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', $topictype);
+$smarty->assign('moderator', $moderator);
 $smarty->assign('editform', $editform);
 if (isset($timeleft)) {
     $smarty->assign('timeleft', $timeleft);
