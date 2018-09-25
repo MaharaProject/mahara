@@ -27,9 +27,11 @@ $groupid = $collection->get('group');
 $institutionname = $collection->get('institution');
 $urlparams = array();
 if (!empty($groupid)) {
-    define('MENUITEM', 'groups/views');
+    define('MENUITEM', 'engage/mygroups');
+    define('MENUITEM_SUBPAGE', 'views');
     define('GROUP', $groupid);
-    define('SUBSECTIONHEADING', get_string('Collections', 'collection'));
+    $group = group_current_group();
+    define('TITLE', $group->name . ' - ' . get_string('deletecollection', 'collection'));
     $baseurl = get_config('wwwroot') . 'view/groupviews.php';
     $urlparams['group'] = $groupid;
 }
@@ -44,13 +46,15 @@ else if (!empty($institutionname)) {
         define('MENUITEM', 'manageinstitutions/institutionviews');
         $baseurl = get_config('wwwroot') . 'view/institutionviews.php';
     }
+    define('TITLE', get_string('deletecollection', 'collection'));
     $urlparams['institution'] = $institutionname;
 }
 else {
     define('MENUITEM', 'create/views');
+    define('TITLE', get_string('deletecollection', 'collection'));
     $baseurl = get_config('wwwroot') . 'view/index.php';
 }
-define('TITLE', $collection->get('name'));
+define('SUBSECTIONHEADING', $collection->get('name'));
 
 if ($urlparams) {
     $baseurl .= '?' . http_build_query($urlparams);
@@ -75,6 +79,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-folder-open');
 $smarty->assign('subheading', get_string('deletespecifiedcollection', 'collection', $collection->get('name')));
 $smarty->assign('message', get_string('collectionconfirmdelete', 'collection'));
 $smarty->assign('form', $form);

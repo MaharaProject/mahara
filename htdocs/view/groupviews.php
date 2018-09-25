@@ -11,8 +11,8 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
-define('MENUITEM', 'groups/views');
-
+define('MENUITEM', 'engage/mygroups');
+define('MENUITEM_SUBPAGE', 'views');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'groupviews');
@@ -123,6 +123,7 @@ if (!empty($group->id)) {
 }
 
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-file-text-o');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('headingclass', 'page-header');

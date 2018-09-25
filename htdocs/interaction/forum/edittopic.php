@@ -10,7 +10,8 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/forums');
+define('MENUITEM', 'engage/mygroups');
+define('MENUITEM_SUBPAGE', 'forums');
 define('SECTION_PLUGINTYPE', 'interaction');
 define('SECTION_PLUGINNAME', 'forum');
 define('SECTION_PAGE', 'edittopic');
@@ -21,6 +22,7 @@ require_once('group.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 require_once('antispam.php');
 require_once('embeddedimage.php');
+define('SUBSECTIONHEADING', get_string('nameplural', 'interaction.forum'));
 
 $userid = $USER->get('id');
 $topicid = param_integer('id', 0);
@@ -76,11 +78,12 @@ if (!group_within_edit_window($forum->groupid)) {
 }
 
 if (!isset($topicid)) { // new topic
-    define('TITLE', $forum->title . ' - ' . get_string('addtopic','interaction.forum'));
+    $topictype = get_string('addtopic','interaction.forum');
+    define('TITLE', $forum->title . ' - ' . $topictype);
 }
-
 else { // edit topic
-    define('TITLE', $forum->title . ' - ' . get_string('edittopic','interaction.forum'));
+    $topictype = get_string('edittopic','interaction.forum');
+    define('TITLE', $forum->title . ' - ' . $topictype);
 
     // no record for edits to own posts with 30 minutes
     if (user_can_edit_post($topic->poster, $topic->ctime)) {
@@ -298,7 +301,7 @@ function edittopic_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('heading', $forum->groupname);
-$smarty->assign('subheading', TITLE);
+$smarty->assign('subheading', $topictype);
 $smarty->assign('editform', $editform);
 if (isset($timeleft)) {
     $smarty->assign('timeleft', $timeleft);

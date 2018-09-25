@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio');
+define('MENUITEM', 'create/tags');
 require('init.php');
 require_once('searchlib.php');
 require_once('view.php');
@@ -212,6 +212,7 @@ if ($tag) {
     }
 }
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-tags');
 $smarty->assign('tags', $tags);
 $smarty->assign('tagsortoptions', $tagsortoptions);
 $smarty->assign('tag', $tag);

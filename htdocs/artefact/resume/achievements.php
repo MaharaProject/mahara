@@ -14,7 +14,7 @@ define('MENUITEM', 'create/resume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'index');
-define('RESUME_SUBPAGE', 'achievements');
+define('MENUITEM_SUBPAGE', 'achievements');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 

@@ -10,8 +10,8 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
-
+define('MENUITEM', 'engage/mygroups');
+define('MENUITEM_SUBPAGE', 'forums');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'interaction/lib.php');

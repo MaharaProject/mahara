@@ -2098,11 +2098,8 @@ function group_get_menu_tabs() {
         );
     }
 
-    if (defined('MENUITEM')) {
-        $key = substr(MENUITEM, strlen('groups/'));
-        if ($key && isset($menu[$key])) {
-            $menu[$key]['selected'] = true;
-        }
+    if (defined('MENUITEM_SUBPAGE') && isset($menu[MENUITEM_SUBPAGE])) {
+        $menu[MENUITEM_SUBPAGE]['selected'] = true;
     }
 
     // Sort the menu items by weight

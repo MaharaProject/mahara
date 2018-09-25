@@ -11,10 +11,11 @@
 
 define('PUBLIC', 1);
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/members');
+define('MENUITEM', 'engage/mygroups');
+define('MENUITEM_SUBPAGE', 'members');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
-
+define('SUBSECTIONHEADING', get_string('members'));
 define('GROUP', param_integer('id'));
 
 $group = group_current_group();

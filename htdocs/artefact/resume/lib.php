@@ -95,8 +95,8 @@ class PluginArtefactResume extends PluginArtefact {
         if (!get_config('licensemetadata')) {
             unset($tabs['license']);
         }
-        if (defined('RESUME_SUBPAGE') && isset($tabs[RESUME_SUBPAGE])) {
-            $tabs[RESUME_SUBPAGE]['selected'] = true;
+        if (defined('MENUITEM_SUBPAGE') && isset($tabs[MENUITEM_SUBPAGE])) {
+            $tabs[MENUITEM_SUBPAGE]['selected'] = true;
         }
         return $tabs;
     }

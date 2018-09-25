@@ -10,7 +10,8 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/files');
+define('MENUITEM', 'engage/mygroups');
+define('MENUITEM_SUBPAGE', 'files');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'file');
 define('SECTION_PAGE', 'groupfiles');

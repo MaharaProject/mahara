@@ -3221,9 +3221,9 @@ function footer_menu($all=false) {
     if (param_exists('pluginname')) {
         $helpkeys[] = param_variable('pluginname');
     }
-    // If we are in resume section
-    if (defined('RESUME_SUBPAGE')) {
-        $helpkeys[] = RESUME_SUBPAGE;
+    // If we are in an arrow submenu
+    if (defined('MENUITEM_SUBPAGE')) {
+        $helpkeys[] = MENUITEM_SUBPAGE;
     }
     // If group is set
     if (param_exists('group')) {
