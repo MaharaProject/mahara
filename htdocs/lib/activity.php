@@ -1228,8 +1228,8 @@ class ActivityTypeWatchlist extends ActivityType {
 
     protected $view;
 
-    private $ownerinfo;
-    private $viewinfo;
+    protected $ownerinfo;
+    protected $viewinfo;
 
     /**
      * @param array $data Parameters:
@@ -1311,7 +1311,6 @@ class ActivityTypeWatchlist extends ActivityType {
  */
 class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist{
     protected $view;
-    protected $viewinfo;
     protected $blocktitles = array();
     protected $usr;
 
@@ -1328,7 +1327,6 @@ class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist{
         $this->usr = $data->usr;
         $this->unsubscribelink = get_config('wwwroot') . 'view/unsubscribe.php?a=watchlist&t=';
         $this->unsubscribetype = 'watchlist';
-        $this->viewinfo = new View($this->view);
     }
 
     /**
@@ -1340,7 +1338,7 @@ class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist{
      */
     public function get_message($user) {
         $message = get_string_from_language($user->lang, 'newwatchlistmessageview1', 'activity',
-                                        $this->viewinfo->get('title'), display_name($this->usr, $user));
+                                        $this->viewinfo->get('title'), $this->ownerinfo);
 
         try {
             foreach ($this->blocktitles as $blocktitle) {
