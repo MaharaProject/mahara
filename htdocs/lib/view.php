@@ -7185,9 +7185,12 @@ class View {
         }
         $this->columnsperrow = $colsperrow;
         $this->columns = array();
+        $layout = $this->get_layout();
         for ($i = 1; $i <= $this->numrows; $i++) {
+            $widths = explode(',', $layout->rows[$i]['widths']);
             for ($j = 1; $j <= $data->columnsperrow->{$i}->columns; $j++) {
                 $this->columns[$i][$j] = array('blockinstances' => array());
+                $this->columns[$i][$j]['width'] = $widths[$j-1];
             }
         }
 
