@@ -3963,6 +3963,7 @@ class View {
     public static function get_myviews_data($limit=12, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null, $searchin=null, $alltags=false) {
         global $USER;
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
+        $haslti = is_plugin_active('lti', 'module') ? true : false;
 
         $select = '
             SELECT v.id, v.id AS vid, v.title, v.title AS vtitle, v.description, v.type,  v.ctime as vctime, v.mtime as vmtime, v.atime as vatime,
@@ -4138,17 +4139,20 @@ class View {
         if ($userid) {
             $select .= ',v.submittedtime, v.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
-                h.wwwroot AS submithostwwwroot, h.name AS submithostname';
+                h.wwwroot AS submithostwwwroot, h.name AS submithostname' . ($haslti ? ', a.id AS ltiassessment' : '');
             $collselect .= ', c.submittedtime, c.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
-                h.wwwroot AS submithostwwwroot, h.name AS submithostname';
+                h.wwwroot AS submithostwwwroot, h.name AS submithostname' . ($haslti ? ', a.id AS ltiassessment' : '');
             $emptycollselect .= ', c.submittedtime, c.submittedstatus,
                 NULL AS submitgroupid, NULL AS submitgroupname, NULL AS submitgroupurlid,
-                NULL AS submithostwwwroot, NULL AS submithostname';
+                NULL AS submithostwwwroot, NULL AS submithostname' . ($haslti ? ', NULL AS ltiassessment' : '');
 
             $fromstr = '
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)';
+            if ($haslti) {
+                $fromstr .= ' LEFT JOIN {lti_assessment} a ON g.id = a.group ';
+            }
 
             $from .= $fromstr;
             $collfrom .= $fromstr;
@@ -4217,7 +4221,12 @@ class View {
                 if (!empty($data['submittedstatus'])) {
                     $status = $data['submittedstatus'];
                     if (!empty($data['submitgroupid'])) {
-                        $url = group_homepage_url((object) array('id' => $data['submitgroupid'], 'urlid' => $data['submitgroupurlid']));
+                        if ($haslti && $data['ltiassessment']) {
+                            $url = '#';
+                        }
+                        else {
+                            $url = group_homepage_url((object) array('id' => $data['submitgroupid'], 'urlid' => $data['submitgroupurlid']));
+                        }
                         $name = hsc($data['submitgroupname']);
                     }
                     else if (!empty($data['submithostwwwroot'])) {
@@ -6924,7 +6933,7 @@ class View {
         return $data;
     }
 
-    public function submit($group) {
+    public function submit($group, $sendnotification=true) {
         global $USER;
 
         if ($this->is_submitted()) {
@@ -6939,31 +6948,34 @@ class View {
                                             'name' => $this->title,
                                             'group' => $group->id,
                                             'groupname' => $group->name));
-        activity_occurred(
-            'groupmessage',
-            array(
-                'group'         => $group->id,
-                'roles'         => $group->roles,
-                'url'           => $this->get_url(false),
-                'strings'       => (object) array(
-                    'urltext' => (object) array('key' => 'view'),
-                    'subject' => (object) array(
-                        'key'     => 'viewsubmittedsubject1',
-                        'section' => 'activity',
-                        'args'    => array($group->name),
-                    ),
-                    'message' => (object) array(
-                        'key'     => 'viewsubmittedmessage1',
-                        'section' => 'activity',
-                        'args'    => array(
-                            display_name($USER, null, false, true),
-                            $this->title,
-                            $group->name,
+
+        if ($sendnotification) {
+            activity_occurred(
+                'groupmessage',
+                array(
+                    'group'         => $group->id,
+                    'roles'         => $group->roles,
+                    'url'           => $this->get_url(false),
+                    'strings'       => (object) array(
+                        'urltext' => (object) array('key' => 'view'),
+                        'subject' => (object) array(
+                            'key'     => 'viewsubmittedsubject1',
+                            'section' => 'activity',
+                            'args'    => array($group->name),
+                        ),
+                        'message' => (object) array(
+                            'key'     => 'viewsubmittedmessage1',
+                            'section' => 'activity',
+                            'args'    => array(
+                                display_name($USER, null, false, true),
+                                $this->title,
+                                $group->name,
+                            ),
                         ),
                     ),
-                ),
-            )
-        );
+                )
+            );
+        }
     }
 
     /**

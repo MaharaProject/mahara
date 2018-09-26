@@ -1258,7 +1258,7 @@ class Collection {
      * @param int $owner The owner of the collection (if not just $USER)
      * @throws SystemException
      */
-    public function submit($group = null, $submittedhost = null, $owner = null) {
+    public function submit($group = null, $submittedhost = null, $owner = null, $sendnotification=true) {
         global $USER;
 
         if ($this->is_submitted()) {
@@ -1318,7 +1318,7 @@ class Collection {
                                             'name' => $this->name,
                                             'group' => ($group) ? $group->id : null,
                                             'groupname' => ($group) ? $group->name : null));
-        if ($group) {
+        if ($group && $sendnotification) {
             activity_occurred(
                 'groupmessage',
                 array(

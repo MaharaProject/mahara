@@ -45,7 +45,7 @@ class module_lti_launch extends external_api {
                 'launch_presentation_locale' => new external_value(PARAM_TEXT, 'LTI launch_presentation_locale', VALUE_OPTIONAL),
                 'launch_presentation_width' => new external_value(PARAM_NUMBER, 'LTI launch_presentation_width', VALUE_OPTIONAL),
                 'lis_course_section_sourcedid' => new external_value(PARAM_TEXT, 'LTI lis_course_section_sourcedid', VALUE_OPTIONAL),
-                'lis_outcome_service_url' => new external_value(PARAM_TEXT, 'LTI lis_outcome_service_url', VALUE_OPTIONAL),
+                'lis_outcome_service_url' => new external_value(PARAM_URL, 'LTI lis_outcome_service_url', VALUE_OPTIONAL),
                 'lis_person_name_full' => new external_value(PARAM_TEXT, 'LTI lis_person_name_full', VALUE_OPTIONAL),
                 'lis_person_sourcedid' => new external_value(PARAM_TEXT, 'LTI lis_person_sourcedid', VALUE_OPTIONAL),
                 'lis_result_sourcedid' => new external_value(PARAM_TEXT, 'LTI lis_result_sourcedid', VALUE_OPTIONAL),
@@ -72,6 +72,15 @@ class module_lti_launch extends external_api {
                 'custom_canvas_user_id' => new external_value(PARAM_TEXT, 'LTI custom_canvas_user_id', VALUE_OPTIONAL),
                 'custom_canvas_user_login_id' => new external_value(PARAM_TEXT, 'LTI custom_canvas_user_login_id', VALUE_OPTIONAL),
                 'custom_canvas_workflow_state' => new external_value(PARAM_TEXT, 'LTI custom_canvas_workflow_state', VALUE_OPTIONAL),
+                'ext_ims_lis_basic_outcome_url' => new external_value(PARAM_TEXT, 'LTI ext_ims_lis_basic_outcome_url', VALUE_OPTIONAL),
+                'ext_lti_assignment_id' => new external_value(PARAM_TEXT, 'LTI ext_lti_assignment_id', VALUE_OPTIONAL),
+                'ext_outcome_data_values_accepted' => new external_value(PARAM_TEXT, 'LTI ext_outcome_data_values_accepted', VALUE_OPTIONAL),
+                'ext_outcome_result_total_score_accepted' => new external_value(PARAM_TEXT, 'LTI ext_outcome_result_total_score_accepted', VALUE_OPTIONAL),
+                'ext_outcome_submission_submitted_at_accepted' => new external_value(PARAM_TEXT, 'LTI ext_outcome_submission_submitted_at_accepted', VALUE_OPTIONAL),
+                'ext_outcomes_tool_placement_url' => new external_value(PARAM_TEXT, 'LTI ext_outcomes_tool_placement_url', VALUE_OPTIONAL),
+                'custom_canvas_assignment_id' => new external_value(PARAM_TEXT, 'LTI custom_canvas_assignment_id', VALUE_OPTIONAL),
+                'custom_canvas_assignment_points_possible' => new external_value(PARAM_TEXT, 'LTI custom_canvas_assignment_points_possible', VALUE_OPTIONAL),
+                'custom_canvas_assignment_title' => new external_value(PARAM_TEXT, 'LTI custom_canvas_assignment_title', VALUE_OPTIONAL),
 
                 // Blackboard specific LTI params
                 'ext_launch_id' => new external_value(PARAM_TEXT, 'Blackboard ext_launch_id', VALUE_OPTIONAL),
@@ -226,6 +235,86 @@ class module_lti_launch extends external_api {
 
         if (isset($params['launch_presentation_return_url'])) {
             $SESSION->set('logouturl', $params['launch_presentation_return_url']);
+        }
+
+        $SESSION->set('lti.lis_result_sourcedid', $params['lis_result_sourcedid']);
+        $SESSION->set('lti.roles', $params['roles']);
+        $SESSION->set('lti.presentation_target', $params['launch_presentation_document_target']);
+        $SESSION->set('lti.launch_presentation_return_url', $params['launch_presentation_return_url']);
+
+        // If the consumer supports grading send the user to select a portfolio
+        if (!empty($params['lis_outcome_service_url'])) {
+            $parts = parse_url($params['launch_presentation_return_url']);
+            $cspurl = $parts['scheme'] . '://' . $parts['host'];
+
+            $SESSION->set('csp-ancestor-exemption', $cspurl);
+
+            db_begin();
+
+            if ($assessment = get_record('lti_assessment', 'oauthserver', $WEBSERVICE_OAUTH_SERVERID, 'resourcelinkid', $params['resource_link_id'])) {
+                if ($assessment->contexttitle != $params['context_title'] || $assessment->resourcelinktitle != $params['resource_link_title']) {
+                    $assessment->contexttitle = $params['context_title'];
+                    $assessment->resourcelinktitle = $params['resource_link_title'];
+                    update_record('lti_assessment', $assessment);
+                }
+
+                $groups = $USER->get('grouproles');
+
+                if (!isset($groups[$assessment->group])) {
+                    group_add_user($assessment->group, $USER->get('id'), PluginModuleLti::can_grade() ? 'admin' : 'member');
+                }
+
+            }
+            else {
+
+                if (!$groupid = get_field('lti_assessment', 'group', 'oauthserver', $WEBSERVICE_OAUTH_SERVERID, 'contextid', $params['context_id'], 'resourcelinkid', $params['resource_link_id'])) {
+
+                    $basename = get_string('groupname', 'module.lti', $params['context_title'], $params['resource_link_title']);
+                    $name = $basename;
+
+                    // generate a unique group name
+                    $i = 0;
+                    while (get_record('group', 'name', $name)) {
+                        $name = $basename . ' - ' . $i++;
+                    }
+
+                    // Create assessment group
+                    $group = array(
+                        'name'           => $name,
+                        'institution'    => $WEBSERVICE_INSTITUTION,
+                        'grouptype'      => 'standard',
+                        'submittableto'  => true,
+                        'hidemembersfrommembers' => true,
+                        'hidemembers'    => true,
+                        'members'        => array($USER->get('id') => PluginModuleLti::can_grade() ? 'admin' : 'member'),
+                        'allowarchives'  => true,
+                        'hidden'         => true,
+                        'submittableto'  => false,
+                    );
+
+                    $groupid = group_create($group);
+                }
+
+                // Create assessment record
+                $assessment = new stdClass;
+                $assessment->oauthserver = $WEBSERVICE_OAUTH_SERVERID;
+                $assessment->resourcelinkid = $params['resource_link_id'];
+                $assessment->contextid = $params['context_id'];
+                $assessment->lisoutcomeserviceurl = $params['lis_outcome_service_url'];
+                $assessment->contexttitle = $params['context_title'];
+                $assessment->resourcelinktitle = $params['resource_link_title'];
+                $assessment->group = $groupid;
+                $assessment->lock = 0; // Have the config for lock set to false by default so portfolios get unlocked after grading
+
+                $assessment->id = insert_record('lti_assessment', $assessment, 'id', true);
+            }
+
+            db_commit();
+
+            $SESSION->set('lti.assessment', $assessment->id);
+
+            redirect(get_config('wwwroot') . 'module/lti/submission.php');
+            exit;
         }
 
         redirect(get_config('wwwroot'));

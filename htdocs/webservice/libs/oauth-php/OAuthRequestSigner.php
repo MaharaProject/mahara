@@ -137,8 +137,8 @@ class OAuthRequestSigner extends OAuthRequest
 		if (!is_null($body))
 		{
 			// We also need to sign the body, use the default signature method
-			$body_signature = $this->calculateDataSignature($body, $secrets['consumer_secret'], $token_secret, $signature_method);
-			$this->setParam('xoauth_body_signature', $body_signature, true);
+			//$body_signature = $this->calculateDataSignature($body, $secrets['consumer_secret'], $token_secret, $signature_method);
+			//$this->setParam('xoauth_body_signature', $body_signature, true);
 		}
 		
 		$signature = $this->calculateSignature($secrets['consumer_secret'], $token_secret, $token_type);

@@ -140,3 +140,13 @@ body {
     display: block;
     white-space: nowrap;
 }
+
+body.presentation-iframe {
+    header {
+        display: none;
+    }
+
+    footer {
+        display: none;
+    }
+}

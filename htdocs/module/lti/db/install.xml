@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="module/lti/db" VERSION="20180307" COMMENT="XMLDB file for lti related tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="lti_assessment">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="oauthserver" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="resourcelinkid" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="contextid" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="lisoutcomeserviceurl" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="contexttitle" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="resourcelinktitle" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="group" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="emailnotifications" TYPE="int" LENGTH="1" DEFAULT="1"  NOTNULL="true" />
+                <FIELD NAME="lock" TYPE="int" LENGTH="1" DEFAULT="1"  NOTNULL="true" />
+                <FIELD NAME="archive" TYPE="int" LENGTH="1" DEFAULT="0"  NOTNULL="true" />
+                <FIELD NAME="timeconfigured" TYPE="datetime" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="oauthserverregistryfk" TYPE="foreign" FIELDS="oauthserver" REFTABLE="oauth_server_registry" REFFIELDS="id" />
+                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="resourcelinkididx" UNIQUE="false" FIELDS="resourcelinkid" />
+                <INDEX NAME="contextididx" UNIQUE="false" FIELDS="contextid" />
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="lti_assessment_submission">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ltiassessment" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="lisresultsourceid" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="timesubmitted" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="grade" TYPE="int" LENGTH="4" NOTNULL="false" />
+                <FIELD NAME="timegraded" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="gradedbyusr" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="collectionid" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="viewid" TYPE="int" LENGTH="10" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="collectionidfk" TYPE="foreign" FIELDS="collectionid" REFTABLE="collection" REFFIELDS="id" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="viewid" REFTABLE="view" REFFIELDS="id" />
+                <KEY NAME="ltiassessmentfk" TYPE="foreign" FIELDS="ltiassessment" REFTABLE="lti_assessment" REFFIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="lisresultsourceididx" UNIQUE="false" FIELDS="lisresultsourceid" />
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>

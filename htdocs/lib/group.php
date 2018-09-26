@@ -2198,6 +2198,9 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     }
     // TODO: make it work on other databases?
 
+    $ltijoin = is_plugin_active('lti', 'module') ? ' LEFT JOIN {lti_assessment} a ON g.id = a.group ' : '';
+    $ltiwhere = is_plugin_active('lti', 'module') ? ' AND a.id IS NULL ' : '';
+
     // Different filters join on the different kinds of association
     if ($filter == 'admin') {
         $sql = "
@@ -2273,7 +2276,9 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
         }
     }
 
-    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ?'.$catsql, $values);
+    $sql .= $ltijoin;
+
+    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ? ' . $ltiwhere . $catsql, $values);
 
     // almost the same as query used in find - common parts should probably be pulled out
     // gets the groups filtered by above
@@ -2289,8 +2294,8 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
-            WHERE g.deleted = ?' .
-            $catsql . '
+            WHERE g.deleted = ? ' .
+            $ltiwhere . $catsql . '
             GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
                 g.hidemembers, g.hidemembersfrommembers, g.groupparticipationreports, g.urlid, t.membershiptype, t.reason, t.role, g.editwindowstart, g.editwindowend
         ) g1
@@ -2341,16 +2346,17 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
     }
 
     if (!$fromcache || !isset($usergroups[$userid])) {
-
+        $ltijoin = is_plugin_active('lti', 'module') ? ' LEFT JOIN {lti_assessment} a ON g.id = a.group ' : '';
+        $ltiwhere = is_plugin_active('lti', 'module') ? ' AND a.id IS NULL ' : '';
         $groups = get_records_sql_array("
             SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category,
                 g.hidemembers, g.invitefriends, g.urlid, gm.ctime, gm1.role AS loggedinrole
             FROM {group} g
                 JOIN {group_member} gm ON gm.group = g.id
                 JOIN {grouptype_roles} gtr ON g.grouptype = gtr.grouptype AND gm.role = gtr.role
-                LEFT OUTER JOIN {group_member} gm1 ON gm1.group = gm.group AND gm1.member = ?
+                LEFT OUTER JOIN {group_member} gm1 ON gm1.group = gm.group AND gm1.member = ?" . $ltijoin . "
             WHERE gm.member = ?
-                AND g.deleted = 0
+                AND g.deleted = 0" . $ltiwhere . "
             ORDER BY g.name, gm.role = 'admin' DESC, gm.role, g.id",
             array($loggedinid, $userid)
         );
