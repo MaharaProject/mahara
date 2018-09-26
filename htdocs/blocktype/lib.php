@@ -1174,14 +1174,17 @@ class BlockInstance {
                 $content = call_static_method($classname, 'render_instance', $this, false, $versioning);
             }
             catch (NotFoundException $e) {
-                // Whoops - where did the image go? There is possibly a bug
-                // somewhere else that meant that this blockinstance wasn't
-                // told that the image was previously deleted. But the block
-                // instance is not allowed to treat this as a failure
-                log_debug('Artefact not found when rendering a block instance. '
-                    . 'There might be a bug with deleting artefacts of this type? '
-                    . 'Original error follows:');
-                log_debug($e->getMessage());
+                //Ignore not found error when fetching old verions of view
+                if (!$versioning) {
+                    // Whoops - where did the image go? There is possibly a bug
+                    // somewhere else that meant that this blockinstance wasn't
+                    // told that the image was previously deleted. But the block
+                    // instance is not allowed to treat this as a failure
+                    log_debug('Artefact not found when rendering a block instance. '
+                        . 'There might be a bug with deleting artefacts of this type? '
+                        . 'Original error follows:');
+                    log_debug($e->getMessage());
+                }
                 $content = '';
             }
         }

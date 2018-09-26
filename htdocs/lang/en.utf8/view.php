@@ -11,7 +11,6 @@
 
 defined('INTERNAL') || die();
 
-
 $string['basics']                 = 'Basics';
 $string['createview']             = 'Create page';
 $string['edittitle']              = 'Edit title';
@@ -530,4 +529,4 @@ $string['previousversion'] = 'Previous version';
 $string['nextversion'] = 'Next version';
 $string['versionnumber'] = 'Version %s';
 $string['gotonextversion'] = 'Go to the next version ';
-$string['gotopreviousversion'] = 'Go to the previous version %s';
+$string['gotopreviousversion'] = 'Go to the previous version';

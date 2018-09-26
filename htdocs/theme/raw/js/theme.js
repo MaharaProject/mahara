@@ -207,6 +207,13 @@ jQuery(function($) {
         responsiveObjectVideo()
     });
 
+    $(window).on('versioningload', function() {
+        carouselHeight();
+        initThumbnailMasonry();
+        initUserThumbnailMasonry();
+        responsiveObjectVideo()
+    });
+
     if (document.readyState === "complete") {
       carouselHeight();
       initUserThumbnailMasonry();

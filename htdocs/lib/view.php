@@ -7167,12 +7167,13 @@ class View {
         return false;
     }
 
-    public function format_versioning_data($data) {
+    public function format_versioning_data($data, $versionnumber=0) {
         if (empty($data)) {
             return false;
         }
 
         $data = json_decode($data);
+        $data->version = $versionnumber;
         $this->numrows = isset($data->numrows) ? $data->numrows : $this->numrows;
         $this->layout = isset($data->layout) ? $data->layout : $this->layout;
         $this->description = isset($data->description) ? $data->description : '';

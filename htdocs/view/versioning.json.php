@@ -33,7 +33,7 @@ if ($versions->count > 0) {
     reset($versions->data);
     foreach ($versions->data as $key => $value) {
         $view = new View($viewid);
-        $value->blockdata_formatted = $view->format_versioning_data($value->blockdata);
+        $value->blockdata_formatted = $view->format_versioning_data($value->blockdata, $key);
         $data[$key] = array(
             "isSelected" => ($key == $lastkey ? true : false),
             "taskTitle" => (isset($value->blockdata_formatted->title) ? $value->blockdata_formatted->title : $value->viewname),

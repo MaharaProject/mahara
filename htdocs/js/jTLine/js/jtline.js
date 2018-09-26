@@ -410,6 +410,7 @@
             var getFetchedData = function (data) {
                 fetchedData = data;
             };
+
             var _fetchData = function (obj) {
                 // var dataResult;
                 if (options.callType == callTypes.ajax) {
@@ -418,6 +419,7 @@
                         //----------------------
                         if (data.error==false) {
                             _constructDom(data.message.data, obj);
+                            $(window).trigger('versioningload');
                         }
                         else {
                             $(obj).html("Error fetching data");
