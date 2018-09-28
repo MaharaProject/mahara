@@ -71,7 +71,7 @@ Main Components
   top: 0;
   height: 100%;
   width: 100%;
-  background-color: darken($theme-primary-color, 10%);
+  background-color: $theme-primary-color;
   -webkit-transform: scaleX(0);
   -moz-transform: scaleX(0);
   -ms-transform: scaleX(0);

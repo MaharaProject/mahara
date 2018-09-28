@@ -420,6 +420,17 @@
                         if (data.error==false) {
                             _constructDom(data.message.data, obj);
                             $(window).trigger('versioningload');
+                            $(window).on('resize', function() {
+                                var timeline = $("#jtlinesection");
+                                var eventwrapsize = timeline.find('.events-wrapper').width();
+                                var navportsize = parseInt(timeline.find('.events-wrapper .events ol li:last a').css('left'), 10);
+                                if ((navportsize + 50) >= eventwrapsize) {
+                                    timeline.find('.cd-timeline-navigation').find('.next').removeClass('inactive');
+                                }
+                                else {
+                                    timeline.find('.cd-timeline-navigation').find('.next').addClass('inactive');
+                                }
+                            });
                         }
                         else {
                             $(obj).html("Error fetching data");
