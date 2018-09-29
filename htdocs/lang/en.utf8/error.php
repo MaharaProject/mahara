@@ -127,7 +127,7 @@ $string['missingparamid'] = 'Missing id';
 
 $string['themenameinvalid'] = "The name of the theme '%s' contains invalid characters.";
 
-$string['timezoneidentifierunusable'] = 'PHP on your website host does not return a useful value for the timezone identifier (%%z) - certain date formatting, such as the Leap2A export, will be broken. %%z is a PHP date formatting code. This problem is usually due to a limitation in running PHP on Windows.';
+$string['timezoneidentifierunusable'] = 'PHP on your website host does not return a useful value for the time zone identifier (%%z) - certain date formatting, such as the Leap2A export, will be broken. %%z is a PHP date formatting code. This problem is usually due to a limitation in running PHP on Windows.';
 $string['postmaxlessthanuploadmax'] = 'Your PHP post_max_size setting (%s) is smaller than your upload_max_filesize setting (%s). Uploads larger than %s will fail without displaying an error. Usually, post_max_size should be much larger than upload_max_filesize.';
 $string['smallpostmaxsize'] = 'Your PHP post_max_size setting (%s) is very small. Uploads larger than %s will fail without displaying an error.';
 $string['notenoughsessionentropy'] = 'Your PHP session.entropy_length setting is too small. Set it to at least 16 in your php.ini to ensure that generated session IDs are random and unpredictable enough.';
@@ -153,5 +153,5 @@ $string['nophpextension'] = 'The PHP extension "%s" is not enabled. Please enabl
 $string['nomemcacheserversdefined'] = 'The session save handler "%s" has no related servers defined. Please set the $cfg->memcacheservers value, e.g. "localhost:11211".';
 $string['memcacheusememcached'] = 'The "memcache" session storage is obsolete. Please use "memcached".';
 $string['siteoutofsyncfor'] = 'This site has database information newer than %s files indicate it should be.';
-$string['updatesitetimezone'] = 'The timezone for the site now needs to be set via "Configure site" →  "Site options" →  "Site settings". Please set it there and delete the $cfg->dbtimezone line from your config.php file.';
+$string['updatesitetimezone'] = 'The time zone for the site now needs to be set via "Configure site" →  "Site options" →  "Site settings". Please set it there and delete the $cfg->dbtimezone line from your config.php file.';
 $string['pluginnotactive1'] = 'The plugin "%s" is not enabled. Please got to "Administration" →  "Extensions" →  "Plugin administration" to enable it.';
