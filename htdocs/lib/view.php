@@ -1013,6 +1013,9 @@ class View {
 
         handle_event('deleteview', $eventdata);
         delete_records('view_rows_columns', 'view', $this->id);
+        if (is_plugin_active('lti', 'module')) {
+            delete_records('lti_assessment_submission', 'viewid', $this->id);
+        }
         delete_records('view','id',$this->id);
         if (!empty($this->owner) && $this->is_submitted()) {
             // There should be no way to delete a submitted view,

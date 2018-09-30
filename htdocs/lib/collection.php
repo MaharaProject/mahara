@@ -153,6 +153,9 @@ class Collection {
 
         delete_records('collection_view','collection',$this->id);
         delete_records('tag', 'resourcetype', 'collection', 'resourceid', $this->id);
+        if (is_plugin_active('lti', 'module')) {
+            delete_records('lti_assessment_submission', 'collectionid', $this->id);
+        }
         delete_records('collection','id',$this->id);
         delete_records('existingcopy', 'collection', $this->id);
 
