@@ -50,7 +50,9 @@
                 {/if}
             {/if}
         {/foreach}
+        {if !$editing}
         <a href="{$plan.details}" class="detail-link link-blocktype"><span class="icon icon-link" role="presentation" aria-hidden="true"></span> {str tag=detailslinkalt section=view}</a>
+        {/if}
     {else}
         <div class="lead text-center content-text">{str tag='notasks' section='artefact.plans'}</div>
     {/if}
