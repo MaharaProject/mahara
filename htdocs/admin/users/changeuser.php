@@ -15,7 +15,7 @@ define('NOCHECKREQUIREDFIELDS', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('activity.php');
 
-if (param_integer('login_submitted', 0)) {
+if (isset($_POST['pieform_login'])) {
     redirect(get_config('wwwroot'));
 }
 
