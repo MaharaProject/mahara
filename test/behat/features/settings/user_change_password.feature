@@ -46,7 +46,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     # Verifying password was changed successfully
     And I should see "Your new password has been saved"
     # Changing password
-    And I choose "Settings" in "Settings" from user menu
+    And I choose "Preferences" in "Settings" from user menu
     And I fill in the following:
     | Current password   | Mahara1sGreat@ |
     | New password   | MaharaIsC00l! |
@@ -66,7 +66,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     # Verifying password was changed
     And I should see "Your new password has been saved"
     # Changing password
-    And I choose "Settings" in "Settings" from user menu
+    And I choose "Preferences" in "Settings" from user menu
     And I fill in the following:
     | Current password   | Mahara1sGreat@ |
     | New password   | MaharaIsC00l! |

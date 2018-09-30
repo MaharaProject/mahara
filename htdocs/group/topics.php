@@ -18,7 +18,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
 
-define('TITLE', get_string('Topics', 'interaction.forum'));
+define('TITLE', get_string('discussiontopics', 'interaction.forum'));
 
 if (!$USER->is_logged_in()) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));

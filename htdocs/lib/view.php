@@ -6041,7 +6041,7 @@ class View {
             define('MENUITEM', 'create/views');
         }
         else {
-            define('MENUITEM', $share ? 'engage/share' : 'create/views');
+            define('MENUITEM', $share ? 'share/sharedbyme' : 'create/views');
         }
     }
 

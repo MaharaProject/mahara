@@ -98,14 +98,14 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "GroupA"
     # Share pages and collections to the "GroupA"
     # Edit access for Page UserA_01
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"
     And I click on "Edit access" in "Page UserA_01" row
     And I set the select2 value "Page UserA_01, Page UserA_02, Page UserA_03, Page UserA_04, Page UserA_05" for "editaccess_views"
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"
     # Edit access for Collection UserA_01
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Collections"
     And I click on "Edit access" in "Collection UserA_01" row
     And I should not see "Collection UserA_02" in the "Collections text-box" property
@@ -120,7 +120,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "GroupA"
     # Share pages and collections to the "GroupA"
     # Edit access for pages
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I click on "Edit access" in "Page UserB_01" row
     And I set the select2 value "Page UserB_01, Page UserB_02, Page UserB_03, Page UserB_04, Page UserB_05, Page UserB_06, Page UserB_07" for "editaccess_views"
     And I select "GroupA" from "accesslist[0][searchtype]"
@@ -279,14 +279,14 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "GroupD"
     # Share pages and collections to the standard "GroupD"
     # Edit access for Page UserC_01, Page UserC_03, Page UserC_04
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"
     And I click on "Edit access" in "Page UserC_01" row
     And I set the select2 value "Page UserC_01, Page UserC_03, Page UserC_04" for "editaccess_views"
     And I select "GroupD" from "accesslist[0][searchtype]"
     And I press "Save"
     # Edit access for Collection UserC_01, Collection UserC_03, Collection UserC_04
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Collections"
     And I click on "Edit access" in "Collection UserC_01" row
     And I set the select2 value "Collection UserC_01, Collection UserC_03, Collection UserC_04" for "editaccess_collections"
@@ -345,14 +345,14 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "GroupC"
     # Share pages and collections to the "GroupC"
     # Edit access for Page UserC_09, Page UserC_11, Page UserC_12
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"
     And I click on "Edit access" in "Page UserC_09" row
     And I set the select2 value "Page UserC_09, Page UserC_11, Page UserC_12" for "editaccess_views"
     And I select "GroupC" from "accesslist[0][searchtype]"
     And I press "Save"
     # Edit access for Collection UserC_05, Collection UserC_07, Collection UserC_08
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Collections"
     And I click on "Edit access" in "Collection UserC_05" row
     And I set the select2 value "Collection UserC_05, Collection UserC_07, Collection UserC_08" for "editaccess_collections"

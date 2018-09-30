@@ -16,7 +16,7 @@ define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'preferences');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('account'));
+define('TITLE', get_string('preferences'));
 
 // load up user preferences
 $prefs = (object) load_account_preferences($USER->id);

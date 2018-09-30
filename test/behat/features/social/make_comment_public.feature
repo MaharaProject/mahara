@@ -26,7 +26,7 @@ Background:
   Scenario:
     Given I log in as "UserA" with password "Kupuh1pa!"
     # what about making sharing a background step... permissions exist???
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Collections"
     And I click on "Edit access" in "Collection UserA_01" row
     And I set the select2 value "Page UserA_03" for "editaccess_views"
@@ -112,7 +112,7 @@ Background:
     And I should see "This is comment 3"
     And I should not see "This is comment 2"
     And I should not see "This is comment 1"
-    And I choose "Shared with me" in "Engage" from main menu
+    And I choose "Shared with me" in "Share" from main menu
     And I follow "Page UserA_03"
     And I should not see "This comment is private" in the "This is comment 2" comment
     And I follow "Next page"
