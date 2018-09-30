@@ -48,7 +48,7 @@ Scenario: Creating a collection AND adding pages
     And I should not see "Collections to export"
 
     # Sharing the collection then adding in a new page
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Edit access"
     And I select "Registered users" from "accesslist[0][searchtype]"
     And I press "Save"

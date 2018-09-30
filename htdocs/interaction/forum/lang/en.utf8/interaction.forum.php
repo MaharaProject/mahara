@@ -51,6 +51,7 @@ $string['deletetopic'] = 'Delete topic';
 $string['deletetopicspecific'] = 'Delete topic "%s"';
 $string['deletetopicsuccess'] = 'Topic deleted successfully';
 $string['deletetopicsure'] = 'Are you sure you want to do this? It cannot be undone.';
+$string['discussiontopics'] = 'Discussion topics';
 $string['editpost'] = 'Edit post';
 
 $string['editpostsuccess'] = 'Post edited successfully';

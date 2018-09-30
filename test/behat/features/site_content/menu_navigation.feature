@@ -35,16 +35,18 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  And I should see "Résumé" in the "Create sub-menu" property
  And I should see "Plans" in the "Create sub-menu" property
  And I should see "Notes" in the "Create sub-menu" property
+ # Checking the sub navigation in Share
+ When I follow "Share"
+ And I should see "Shared by me" in the "Share sub-menu" property
+ And I should see "Shared with me" in the "Share sub-menu" property
  # Checking the sub navigation in Engage
  When I follow "Engage"
  Then I should see "My groups" in the "Engage sub-menu" property
  And I should see "Find groups" in the "Engage sub-menu" property
  And I should see "My friends" in the "Engage sub-menu" property
  And I should see "Find people" in the "Engage sub-menu" property
+ And I should see "Discussion topics" in the "Engage sub-menu" property
  And I should see "Institution membership" in the "Engage sub-menu" property
- And I should see "Topics" in the "Engage sub-menu" property
- And I should see "Shared by me" in the "Engage sub-menu" property
- And I should see "Shared with me" in the "Engage sub-menu" property
 
  # Checking the sub navigation in Manage
  When I follow "Manage"
@@ -184,7 +186,7 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Profile pictures"
  And I should see "Settings"
  When I press "Show menu for Settings"
- Then I should see "Settings"
+ Then I should see "Preferences"
  And I should see "Legal"
  And I should see "Notifications"
  And I should see "Logout"

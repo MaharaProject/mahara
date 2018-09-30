@@ -41,7 +41,7 @@ Scenario: Check share page with friends
  And I press "Save"
  And I log out
  Given I log in as "UserA" with password "Kupuh1pa!"
- And I choose "Shared with me" in "Engage" from main menu
+ And I choose "Shared with me" in "Share" from main menu
  And I check "Friends"
  And I uncheck "Me"
  And I uncheck "My groups"
@@ -58,7 +58,7 @@ Scenario: Check share page with Registered Users
  And I press "Save"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
- And I choose "Shared with me" in "Engage" from main menu
+ And I choose "Shared with me" in "Share" from main menu
  And I check "Registered users"
  And I uncheck "Me"
  And I uncheck "Friends"
@@ -82,7 +82,7 @@ Scenario: Check share page with groups and that copy options works
  And I press "Save"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
- And I choose "Shared with me" in "Engage" from main menu
+ And I choose "Shared with me" in "Share" from main menu
  And I check "My groups"
  And I uncheck "Me"
  And I uncheck "Friends"

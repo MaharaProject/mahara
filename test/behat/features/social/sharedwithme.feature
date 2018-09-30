@@ -55,7 +55,7 @@ Scenario: Testing that views & collections are collated properly
 
     When I log out
     And I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Shared with me" in "Engage" from main menu
+    And I choose "Shared with me" in "Share" from main menu
     Then I should see "Page UserA_03"
     # I should see collections & individual pages
     And I should see "Collection UserA_01 (2 pages)"

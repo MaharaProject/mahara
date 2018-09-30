@@ -55,11 +55,11 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I follow "Help"
   Then I should see "Here you can add pages to your collection and set the order in which they will be displayed in the collection navigation."
   # Shared by me
-  And I choose "Shared by me" in "Engage" from main menu
+  And I choose "Shared by me" in "Share" from main menu
   And I click on "Help"
   Then I should see "When you have created portfolio pages and collections, you may wish to share them with others, e.g. to receive feedback on your work in form of comments."
   # Shared with me
-  And I choose "Shared with me" in "Engage" from main menu
+  And I choose "Shared with me" in "Share" from main menu
   And I click on "Help"
   Then I should see "On this page you can list the most recently modified or commented on pages that have been shared with"
   # Skins

@@ -35,7 +35,7 @@ Scenario: In the participation report pages should be seen in a collection
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
- And I choose "Shared by me" in "Engage" from main menu
+ And I choose "Shared by me" in "Share" from main menu
  And I follow "Pages"
  And I click on "Edit access" in "Page 03" row
  And I select "Group one" from "accesslist[0][searchtype]"

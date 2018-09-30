@@ -39,14 +39,14 @@ The list of shared pages must take into account of access date (Bug 1374163)
     # Log in as a normal user
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Edit access for Page 01
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"
     And I click on "Edit access" in "Page UserA_01" row
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I fill in "accesslist[0][startdate]" with "2015/06/15 03:00"
     And I press "Save"
     # Edit access for Page UserA_02
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"
     And I click on "Edit access" in "Page UserA_02" row
     And I select "GroupA" from "accesslist[0][searchtype]"
@@ -55,7 +55,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I should see "The end date for 'group' access cannot be in the past."
     And I press "Cancel"
     # Edit access for Page UserA_03
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"
     And I click on "Edit access" in "Page UserA_03" row
     And I follow "Advanced options"
@@ -63,14 +63,14 @@ The list of shared pages must take into account of access date (Bug 1374163)
       | Access start date/time | 2015/06/15 00:00 |
     And I press "Save"
     # Edit access for Page UserA_05
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"
     And I click on "Edit access" in "Page UserA_05" row
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"
 
     #Checking the last modified date on a collection shared to a group.
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Edit access"
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"
@@ -81,7 +81,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I should see the date "today" in the "#sharedcollectionlist" element with the format "d F Y"
 
     # Edit access for Collection 01
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I click on "Edit access" in "Collection UserA_01" row
     And I set the select2 value "Collection UserA_01" for "editaccess_collections"
     And I select "GroupA" from "accesslist[0][searchtype]"
@@ -107,13 +107,13 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I should not see "Page UserA_03"
     And I should not see "Collection UserA_03"
     #Testing that view access for views in collections are editable properly
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     Then I should see "Collection UserA_01"
     And I follow "Edit access"
     Then I should see "Collection UserA_01"
     And I should not see "Page UserA_01"
 
-    And I choose "Shared by me" in "Engage" from main menu
+    And I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"
     Then I click on "Edit access" in "Page UserA_07" row
     Then I should see "Page UserA_07"

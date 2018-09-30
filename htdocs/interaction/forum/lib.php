@@ -381,8 +381,8 @@ EOF;
             'engage/topics' => array(
                 'path' => 'engage/topics',
                 'url' => 'group/topics.php',
-                'title' => get_string('Topics', 'interaction.forum'),
-                'weight' => 70,
+                'title' => get_string('discussiontopics', 'interaction.forum'),
+                'weight' => 50,
             ),
         );
     }

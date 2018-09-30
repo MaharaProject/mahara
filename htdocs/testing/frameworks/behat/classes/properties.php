@@ -33,6 +33,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Admin Groups sub-menu'                     => array(".managegroups ul", "css_element"),
     'Institutions sub-menu'                     => array(".manageinstitutions ul", "css_element"),
     'Options dialog'                            => array(".modal-header", "css_element"),
+    'Share sub-menu'                            => array(".share", "css_element"),
     'Engage sub-menu'                           => array(".engage", "css_element"),
     'Web services sub-menu'                     => array(".webservices", "css_element"),
     'H1 heading'                                => array("h1", "css_element"),

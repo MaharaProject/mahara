@@ -2898,11 +2898,18 @@ function mahara_standard_nav() {
             'weight' => 20,
             'iconclass' => 'plus',
         ),
+        'share' => array(
+            'path' => 'share',
+            'url' => null,
+            'title' => get_string('share'),
+            'weight' => 30,
+            'iconclass' => 'unlock-alt',
+        ),
         'engage' => array(
             'path' => 'engage',
             'url' => null,
             'title' => get_string('Engage'),
-            'weight' => 30,
+            'weight' => 40,
             'iconclass' => 'users',
         ),
         'create/views' => array(
@@ -2918,17 +2925,17 @@ function mahara_standard_nav() {
             'title' => get_string('tags'),
             'weight' => 80,
         ),
-        'engage/share' => array(
-            'path' => 'engage/share',
+        'share/sharedbyme' => array(
+            'path' => 'share/sharedbyme',
             'url' => 'view/share.php',
             'title' => get_string('sharedbyme', 'view'),
-            'weight' => 60,
+            'weight' => 10,
         ),
-        'engage/sharedviews' => array(
-            'path' => 'engage/sharedviews',
+        'share/sharedviews' => array(
+            'path' => 'share/sharedviews',
             'url' => 'view/sharedviews.php',
             'title' => get_string('sharedwithme', 'view'),
-            'weight' => 70,
+            'weight' => 20,
         ),
         'manage/export' => array(
             'path' => 'manage/export',
@@ -2948,7 +2955,7 @@ function mahara_standard_nav() {
             'path' => 'manage',
             'url' => null,
             'title' => get_string('Manage'),
-            'weight' => 30,
+            'weight' => 40,
             'iconclass' => 'wrench',
         ),
         'engage/mygroups' => array(
@@ -2980,7 +2987,7 @@ function mahara_standard_nav() {
             'path' => 'engage/institutions',
             'url' => 'account/institutions.php',
             'title' => get_string('institutionmembership'),
-            'weight' => 50,
+            'weight' => 60,
         ),
     );
 
@@ -3138,7 +3145,7 @@ function right_nav() {
         'settings/account' => array(
             'path' => 'settings/account',
             'url' => 'account/index.php',
-            'title' => get_config('dropdownmenu') ? get_string('general') : get_string('account'),
+            'title' => get_string('preferences'),
             'weight' => 10,
             'iconclass' => 'user'
         ),
