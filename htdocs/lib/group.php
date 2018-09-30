@@ -945,6 +945,14 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
         $forum->delete();
     }
 
+    // Delete lti submissions to the group if they exist
+    if (is_plugin_active('lti', 'module')) {
+        foreach (get_column('lti_assessment', 'id', 'group', $group->id) as $assessmentid) {
+            delete_records('lti_assessment_submission', 'ltiassessment', $assessmentid);
+        }
+        delete_records('lti_assessment', 'group', $group->id);
+    }
+
     if ($notifymembers) {
         require_once('activity.php');
         activity_occurred('groupmessage', array(
