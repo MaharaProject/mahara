@@ -1073,8 +1073,8 @@ class PluginSearchInternal extends PluginSearch {
             $artefactjoin = ' JOIN {view_artefact} va ON (va.artefact = a.parent OR va.artefact = a.id)
                               LEFT JOIN {artefact_blog_blogpost} abb ON abb.blogpost = a.id ';
             $artefactwhere = ' AND va.view IN (' . $viewidstr . ') AND (abb.published IS NULL OR abb.published = 1) ';
-            $blocktypejoin = ' JOIN {view_artefact} va ON va.block = b.id ';
-            $blocktypewhere = ' AND va.view IN (' . $viewidstr . ') ';
+            $blocktypejoin = ' JOIN {view} v ON v.id = b.view ';
+            $blocktypewhere = ' AND v.id IN (' . $viewidstr . ') ';
             $viewwhere = ' AND v.id IN (' . $viewidstr . ') ';
             $collectionwhere = ' AND cv.view IN (' . $viewidstr . ') ';
         }
