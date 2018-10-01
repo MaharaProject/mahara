@@ -984,7 +984,7 @@ class ActivityTypeArtefactPeerassessmentAssessmentfeedback extends ActivityTypeP
                 hsc($authorname), hsc($title), $posttime, clean_html($body), get_config('wwwroot') . $this->url
             );
             $this->users[$key]->emailmessage = get_string_from_language(
-                $lang, 'feedbacknotificationtext', 'artefact.peerassessment',
+                $lang, 'feedbacknotificationtext1', 'artefact.peerassessment',
                 $authorname, $title, $posttime, trim(html2text(htmlspecialchars($body))), get_config('wwwroot') . $this->url
             );
         }
