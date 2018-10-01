@@ -775,3 +775,9 @@ $cfg->sessionhandler = 'file';
     "class" : "s3_file_system",
  }';
 */
+
+/**
+ * @global string $cfg->dwoocachedir
+ * The location of the dwoo cache directory
+ */
+//$cfg->customdwoocachedir = '/var/cache/appcache/testing';
