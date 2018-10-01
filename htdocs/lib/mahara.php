@@ -141,9 +141,9 @@ function ensure_sanity() {
         }
         throw new ConfigSanityException($message);
     }
-
+    $dwoo_dir = get_dwoo_dir();
     if (
-        !check_dir_exists(get_config('dataroot') . 'dwoo') ||
+        !check_dir_exists($dwoo_dir) ||
         !check_dir_exists(get_config('dataroot') . 'temp') ||
         !check_dir_exists(get_config('dataroot') . 'langpacks') ||
         !check_dir_exists(get_config('dataroot') . 'htmlpurifier') ||
@@ -158,6 +158,10 @@ function ensure_sanity() {
     }
 
     raise_memory_limit('128M');
+}
+
+function get_dwoo_dir() {
+    return !empty(get_config('customdwoocachedir')) ? get_config('customdwoocachedir') . '/dwoo/' : get_config('dataroot') . 'dwoo/';
 }
 
 /**
@@ -5340,7 +5344,7 @@ function clear_all_caches($clearsessiondirs = false) {
         bump_cache_version();
         clear_resized_images_cache();
 
-        $dwoo_dir = get_config('dataroot') . 'dwoo';
+        $dwoo_dir = get_dwoo_dir();
         if (check_dir_exists($dwoo_dir) && !rmdirr($dwoo_dir)) {
             throw new SystemException('Can not remove dwoo directory ' . $dwoo_dir);
         }
