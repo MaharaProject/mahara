@@ -4662,7 +4662,6 @@ function build_portfolio_search_html(&$data) {
 
     $data->sortcols = array('name', 'date');
     $data->filtercols = array(
-        'all'        => get_string('tagfilter_all'),
         'file'       => get_string('tagfilter_file'),
         'image'      => get_string('tagfilter_image'),
         'text'       => get_string('tagfilter_text'),
@@ -4675,6 +4674,8 @@ function build_portfolio_search_html(&$data) {
         'media'      => get_string('tagfilter_external'),
         'resume'     => get_string('tagfilter_resume'),
     );
+    asort($data->filtercols, SORT_NATURAL);
+    $data->filtercols = array('all' => get_string('tagfilter_all')) + $data->filtercols;
 
     $smarty = smarty_core();
     $smarty->assign('data', $data->data);
