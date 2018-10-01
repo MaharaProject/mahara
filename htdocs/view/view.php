@@ -146,7 +146,13 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     $releasecollection = !empty($collection) && $collection->get('submittedgroup') == $submittedgroup->id && empty($ltigradeform);
 
     if ($releasecollection) {
-        if ($ctime = $collection->get('submittedtime')) {
+        if ($ltigradeform && $ctime = $collection->get('submittedtime')) {
+            preg_match("/^.*?\"(.*?)\" - \"(.*?)\"/", $submittedgroup->name, $matches);
+            $lticoursename = hsc($matches[1]);
+            $ltiassignmentname = hsc($matches[2]);
+            $text = get_string('collectionsubmittedtogroupgrade', 'view', group_homepage_url($submittedgroup), $ltiassignmentname, $lticoursename, format_date(strtotime($ctime)));
+        }
+        else if ($ctime = $collection->get('submittedtime')) {
             $text = get_string(
                 'collectionsubmittedtogroupon', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name),
                 format_date(strtotime($ctime))
@@ -155,6 +161,12 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         else {
             $text = get_string('collectionsubmittedtogroup', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
         }
+    }
+    else if ($ltigradeform && $view->get('submittedtime')) {
+        preg_match("/^.*?\"(.*?)\" - \"(.*?)\"/", $submittedgroup->name, $matches);
+        $lticoursename = hsc($matches[1]);
+        $ltiassignmentname = hsc($matches[2]);
+        $text = get_string('viewsubmittedtogroupgrade', 'view', group_homepage_url($submittedgroup), $ltiassignmentname, $lticoursename, format_date(strtotime($view->get('submittedtime'))));
     }
     else if ($view->get('submittedtime')) {
         $text = get_string('viewsubmittedtogroupon', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name), format_date(strtotime($view->get('submittedtime'))));
@@ -183,6 +195,9 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
                 ),
             ),
         ));
+    }
+    else if ($ltigradeform) {
+        $releaseform = $text;
     }
     else {
         $releaseform = $text . ' ' . get_string('submittedpendingrelease', 'view');
