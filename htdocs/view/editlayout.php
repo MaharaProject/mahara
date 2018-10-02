@@ -340,12 +340,24 @@ function get_advanced_elements() {
             'rules'        => array('maxlength' => 100, 'regex' => get_config('cleanurlvalidate')),
             'ignore'       => !$urlallowed,
         ),
-        'lockblocks' => array(
-            'type'         => 'switchbox',
-            'title'        => get_string('lockblocks', 'view'),
-            'description'  => get_string('lockblocksdescription', 'view'),
-            'defaultvalue' => $view->get('lockblocks'),
-        ),
+    );
+    if ($group) {
+        $grouproles = $USER->get('grouproles');
+        if ($grouproles[$group] == 'admin') {
+            $elements['locked'] = array(
+                'type'         => 'switchbox',
+                'title'        => get_string('Locked', 'view'),
+                'description'  => get_string('lockedgroupviewdesc', 'view'),
+                'defaultvalue' => $view->get('locked'),
+                'disabled'     => $view->get('type') == 'grouphomepage', // This page unreachable for grouphomepage anyway
+            );
+        }
+    }
+    $elements['lockblocks'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('lockblocks', 'view'),
+        'description'  => get_string('lockblocksdescription', 'view'),
+        'defaultvalue' => $view->get('lockblocks'),
     );
     if (!($group || $institution)) {
         $default = $view->get('ownerformat');
@@ -360,18 +372,6 @@ function get_advanced_elements() {
             'defaultvalue' => $default,
             'rules'        => array('required' => true),
         );
-    }
-    if ($group) {
-        $grouproles = $USER->get('grouproles');
-        if ($grouproles[$group] == 'admin') {
-            $elements['locked'] = array(
-                'type'         => 'switchbox',
-                'title'        => get_string('Locked', 'view'),
-                'description'  => get_string('lockedgroupviewdesc', 'view'),
-                'defaultvalue' => $view->get('locked'),
-                'disabled'     => $view->get('type') == 'grouphomepage', // This page unreachable for grouphomepage anyway
-            );
-        }
     }
     if (get_config('allowanonymouspages')) {
         $elements['anonymise'] = array(
