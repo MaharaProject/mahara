@@ -276,12 +276,6 @@ function get_basic_elements() {
             'defaultvalue' => $view->get('description'),
             'rules'        => array('maxlength' => 65536),
         ),
-        'lockblocks' => array(
-            'type'         => 'switchbox',
-            'title'        => get_string('lockblocks', 'view'),
-            'description'  => get_string('lockblocksdescription', 'view'),
-            'defaultvalue' => $view->get('lockblocks'),
-        ),
         'tags'        => array(
             'type'         => 'tags',
             'title'        => get_string('tags'),
@@ -303,26 +297,6 @@ function get_basic_elements() {
             'collapseifoneoption' => false,
             'width'        => '280px',
             'help'         => true,
-        );
-    }
-    if ($group) {
-        $grouproles = $USER->get('grouproles');
-        if ($grouproles[$group] == 'admin') {
-            $elements['locked'] = array(
-                'type'         => 'switchbox',
-                'title'        => get_string('Locked', 'view'),
-                'description'  => get_string('lockedgroupviewdesc', 'view'),
-                'defaultvalue' => $view->get('locked'),
-                'disabled'     => $view->get('type') == 'grouphomepage', // This page unreachable for grouphomepage anyway
-            );
-        }
-    }
-    if (get_config('allowanonymouspages')) {
-        $elements['anonymise'] = array(
-            'type'         => 'switchbox',
-            'title'        => get_string('anonymise','view'),
-            'description'  => get_string('anonymisedescription','view'),
-            'defaultvalue' => $view->get('anonymise'),
         );
     }
     return $elements;
@@ -366,6 +340,12 @@ function get_advanced_elements() {
             'rules'        => array('maxlength' => 100, 'regex' => get_config('cleanurlvalidate')),
             'ignore'       => !$urlallowed,
         ),
+        'lockblocks' => array(
+            'type'         => 'switchbox',
+            'title'        => get_string('lockblocks', 'view'),
+            'description'  => get_string('lockblocksdescription', 'view'),
+            'defaultvalue' => $view->get('lockblocks'),
+        ),
     );
     if (!($group || $institution)) {
         $default = $view->get('ownerformat');
@@ -379,6 +359,26 @@ function get_advanced_elements() {
             'options'      => $ownerformatoptions,
             'defaultvalue' => $default,
             'rules'        => array('required' => true),
+        );
+    }
+    if ($group) {
+        $grouproles = $USER->get('grouproles');
+        if ($grouproles[$group] == 'admin') {
+            $elements['locked'] = array(
+                'type'         => 'switchbox',
+                'title'        => get_string('Locked', 'view'),
+                'description'  => get_string('lockedgroupviewdesc', 'view'),
+                'defaultvalue' => $view->get('locked'),
+                'disabled'     => $view->get('type') == 'grouphomepage', // This page unreachable for grouphomepage anyway
+            );
+        }
+    }
+    if (get_config('allowanonymouspages')) {
+        $elements['anonymise'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('anonymise','view'),
+            'description'  => get_string('anonymisedescription','view'),
+            'defaultvalue' => $view->get('anonymise'),
         );
     }
     return $elements;
