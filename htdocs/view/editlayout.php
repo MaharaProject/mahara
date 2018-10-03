@@ -789,6 +789,7 @@ function set_view_title_and_description(Pieform $form, $values) {
                 JOIN {view_layout_columns} vlc ON vlc.id = vlrc.columns
                 WHERE vlrc.viewlayout = ? and vlrc.row = ?", array($values['currentlayoutselect'], 1));
             require_once('searchlib.php');
+            require_once('collection.php');
             $data = array();
             // Get all the items containing any of the tags
             foreach ($createtags as $tag) {
@@ -801,6 +802,10 @@ function set_view_title_and_description(Pieform $form, $values) {
                 $combineddata = array();
                 // Now check what we have so we know what to do with them
                 foreach ($data as $item) {
+                    // If collection but tag is in one of it's views then no $item->tags so skip
+                    if (!isset($item->tags)) {
+                        continue;
+                    }
                     // Check that the block has all of the tags we entered, and if not skip it
                     if (array_diff($createtags, $item->tags)) {
                         continue;
