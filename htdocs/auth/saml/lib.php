@@ -757,7 +757,6 @@ class PluginAuthSaml extends PluginAuth {
                 'sort' => false
             ),
             'delete' => array(
-                'name' => get_string('deleteidp', 'auth.saml'),
                 'template' => 'auth:saml:idpdelete.tpl',
                 'sort' => false
             ),
