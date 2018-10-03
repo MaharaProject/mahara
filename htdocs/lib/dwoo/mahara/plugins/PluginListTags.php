@@ -27,9 +27,14 @@ function PluginListTags(Core $core, $tags, $owner, $view = null) {
     if (!is_array($tags)) {
         return '';
     }
-
+    if ($view) {
+        $viewobj= new View($view);
+    }
     foreach ($tags as &$t) {
-        if ($owner != $USER->get('id')) {
+        if ($view && !$viewobj->get('owner')) {
+            $t = (is_array($t) ? hsc(str_shorten_text($t['tag'], 50)) : hsc(str_shorten_text($t, 50)));
+        }
+        else if ($owner != $USER->get('id')) {
             if (is_array($t)) {
                 $t = '<a class="tag" href="' . get_config('wwwroot') . 'relatedtags.php?tag=' . urlencode($t['tag']) . '&view=' . $t['view'] . '">' . hsc(str_shorten_text($t['tag'], 50)) . '</a>';
             }
