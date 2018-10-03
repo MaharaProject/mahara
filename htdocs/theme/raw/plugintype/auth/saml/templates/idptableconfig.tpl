@@ -16,14 +16,15 @@
 function deleteidp(el, idp) {
     var data = { 'idp' : idp };
     var row = $(el).closest('tr');
-
-    sendjsonrequest(config.wwwroot + 'auth/saml/idpdelete.json.php', data, 'POST', function(data) {
-        if (data.data.error) {
-            alert(data.data.error);
-        }
-        else {
-            row.hide();
-        }
-    });
+    if (confirm("{get_string('confirmdeleteidp', 'auth.saml')}")) {
+        sendjsonrequest(config.wwwroot + 'auth/saml/idpdelete.json.php', data, 'POST', function(data) {
+            if (data.data.error) {
+                alert(data.data.error);
+            }
+            else {
+                row.hide();
+            }
+        });
+    }
 }
 </script>
