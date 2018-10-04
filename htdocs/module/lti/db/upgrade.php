@@ -22,7 +22,7 @@ function xmldb_module_lti_upgrade($oldversion=0) {
 
         $table = new XMLDBTable('lti_assessment');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-        $table->addFieldInfo('oauthserver', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('oauthserver', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFieldInfo('resourcelinkid', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('contextid', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('lisoutcomeserviceurl', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
@@ -37,9 +37,6 @@ function xmldb_module_lti_upgrade($oldversion=0) {
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('oauthserverregistryfk', XMLDB_KEY_FOREIGN, array('oauthserver'), 'oauth_server_registry', array('id'));
         $table->addKeyInfo('groupfk', XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
-
-        $table->addIndexInfo('resourcelinkididx', XMLDB_INDEX_NOTUNIQUE, array('resourcelinkid'));
-        $table->addIndexInfo('contextididx', XMLDB_INDEX_NOTUNIQUE, array('contextid'));
 
         create_table($table);
 
@@ -62,8 +59,6 @@ function xmldb_module_lti_upgrade($oldversion=0) {
         $table->addKeyInfo('collectionidfk', XMLDB_KEY_FOREIGN, array('collectionid'), 'collection', array('id'));
         $table->addKeyInfo('ltiassessmentfk', XMLDB_KEY_FOREIGN, array('ltiassessment'), 'lti_assessment', array('id'));
         $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('viewid'), 'view', array('id'));
-
-        $table->addIndexInfo('lisresultsourceididx', XMLDB_INDEX_NOTUNIQUE, array('lisresultsourceid'));
 
         create_table($table);
 

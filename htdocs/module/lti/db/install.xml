@@ -7,7 +7,7 @@
         <TABLE NAME="lti_assessment">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="oauthserver" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="oauthserver" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" NOTNULL="true" />
                 <FIELD NAME="resourcelinkid" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="contextid" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="lisoutcomeserviceurl" TYPE="text" NOTNULL="true" />
@@ -24,10 +24,6 @@
                 <KEY NAME="oauthserverregistryfk" TYPE="foreign" FIELDS="oauthserver" REFTABLE="oauth_server_registry" REFFIELDS="id" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
             </KEYS>
-            <INDEXES>
-                <INDEX NAME="resourcelinkididx" UNIQUE="false" FIELDS="resourcelinkid" />
-                <INDEX NAME="contextididx" UNIQUE="false" FIELDS="contextid" />
-            </INDEXES>
         </TABLE>
         <TABLE NAME="lti_assessment_submission">
             <FIELDS>
@@ -49,9 +45,6 @@
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="viewid" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="ltiassessmentfk" TYPE="foreign" FIELDS="ltiassessment" REFTABLE="lti_assessment" REFFIELDS="id" />
             </KEYS>
-            <INDEXES>
-                <INDEX NAME="lisresultsourceididx" UNIQUE="false" FIELDS="lisresultsourceid" />
-            </INDEXES>
         </TABLE>
     </TABLES>
 </XMLDB>
