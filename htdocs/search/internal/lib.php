@@ -1111,7 +1111,7 @@ class PluginSearchInternal extends PluginSearch {
             WHERE c.owner = ? " . $collectionwhere . $collectionfilter . ")
            UNION
            (SELECT b.id, b.title, NULL AS description, 'blocktype' AS type, b.blocktype, NULL AS ctime,
-                NULL AS owner, NULL AS group, NULL AS institution, NULL AS urlid
+                NULL AS owner, NULL AS \"group\", NULL AS institution, NULL AS urlid
             FROM {block_instance} b
             JOIN {tag} bt ON (bt.resourcetype = 'blocktype' AND bt.resourceid = b.id" . $typecast . ") " . $blocktypejoin . "
             WHERE bt.ownertype = 'user' AND bt.ownerid = ?" . $blocktypewhere . $blocktypefilter . ")
