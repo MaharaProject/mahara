@@ -43,6 +43,7 @@ span.help {
     padding: 0 14px 8px;
     font-size: $font-size-base - 1;
     @include box-shadow(0 5px 10px rgba(0,0,0,.2));
+    color: $text-color;
 
     // Overrides for proper insertion
     white-space: normal;
