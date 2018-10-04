@@ -491,8 +491,10 @@ if (isset($addfeedbackform)) {
 }
 if (isset($objectionform)) {
     $smarty->assign('objectionform', $objectionform);
-    $smarty->assign('notrudeform', $notrudeform);
-    $smarty->assign('stillrudeform', $stillrudeform);
+    if ($USER->is_logged_in()) {
+        $smarty->assign('notrudeform', $notrudeform);
+        $smarty->assign('stillrudeform', $stillrudeform);
+    }
     $smarty->assign('objectedpage', $view->is_objectionable());
     $smarty->assign('objector', $view->is_objectionable($USER->get('id')));
     $smarty->assign('objectionreplied', $view->is_objectionable(null, true));
