@@ -112,11 +112,12 @@
     .navbar-messages-count {
         position: absolute;
         top: -3px;
-        right: 8px;
-        background-color: $navbar-default-bg;
-        border-radius: 5px;
+        right: 5px;
+        background-color: $navbar-notification-count-bg;
+        border-radius: 3px;
         padding: 0 3px;
-        color: $navbar-default-brand-color;
+        color: $navbar-notification-count-text;
+        font-size: $font-size-small;
     }
 }
 
