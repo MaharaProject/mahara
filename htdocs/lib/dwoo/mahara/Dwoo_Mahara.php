@@ -49,15 +49,16 @@ class Dwoo_Mahara extends Core {
     public function __construct() {
         global $THEME;
 
+        $dwoo_dir = get_dwoo_dir();
         // make sure cache/compile paths exist
-        check_dir_exists(get_config('dataroot') . 'dwoo/compile/' . $THEME->basename);
-        check_dir_exists(get_config('dataroot') . 'dwoo/cache/' . $THEME->basename);
+        check_dir_exists($dwoo_dir . 'compile/' . $THEME->basename);
+        check_dir_exists($dwoo_dir . 'cache/' . $THEME->basename);
 
         // set paths
         $this->template_dir = $THEME->templatedirs;
 
-        $compileDir = get_config('dataroot') . 'dwoo/compile/' . $THEME->basename;
-        $cacheDir = get_config('dataroot') . 'dwoo/cache/' . $THEME->basename;
+        $compileDir = $dwoo_dir . 'compile/' . $THEME->basename;
+        $cacheDir = $dwoo_dir . 'cache/' . $THEME->basename;
         parent::__construct($compileDir, $cacheDir);
 
         // add plugins dir to the loader
