@@ -100,7 +100,7 @@ else { // edit post
     // no record for edits to own posts with 30 minutes
     if (user_can_edit_post($post->poster, $post->ctime)) {
         $post->editrecord = false;
-        $timeleft = (int)get_config_plugin('interaction', 'forum', 'postdelay') - round((time() - $post->ctime) / 60);
+        $timeleft = ceil(get_config_plugin('interaction', 'forum', 'postdelay') - (time() - $post->ctime) / 60);
     }
     else if ($moderator) {
         $post->editrecord = true;
@@ -280,6 +280,7 @@ $smarty = smarty();
 $smarty->assign('deleteduser', $poster->get('deleted'));
 $smarty->assign('poster', $poster);
 $smarty->assign('editform', $editform);
+$smarty->assign('moderator', $moderator);
 $smarty->assign('parent', $parent);
 $smarty->assign('action', $action);
 $smarty->assign('groupadmins', group_get_admin_ids($parent->group));
