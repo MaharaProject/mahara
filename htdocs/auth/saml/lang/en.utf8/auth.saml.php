@@ -14,6 +14,7 @@ defined('INTERNAL') || die();
 $string['attributemapfilenotamap'] = 'The attribute map file "%s" didn\'t define an attribute map.';
 $string['attributemapfilenotfound'] = 'Could not find attribute map file or it is not writable: %s';
 $string['certificate1'] = 'SAML Service Provider signing and encryption certificate';
+$string['confirmdeleteidp'] = 'Are you sure you want to delete this identity provider?';
 $string['spmetadata'] = 'Service Provider metadata';
 $string['metadatavewlink'] = '<a href="%s">View metadata</a>';
 $string['ssphpnotconfigured'] = 'SimpleSAMLPHP is not configured.';
@@ -21,7 +22,6 @@ $string['manage_certificate2'] = 'This is the certificate generated as part of t
 $string['nullprivatecert'] = "Could not generate or save the private key";
 $string['nullpubliccert'] = "Could not generate or save the public certificate";
 $string['defaultinstitution'] = 'Default institution';
-$string['deleteidp'] = 'Delete IdP';
 $string['description'] = 'Authenticate against a SAML 2.0 Identity Provider service';
 $string['disco'] = 'Identity Provider discovery';
 $string['errorbadinstitution'] = 'Institution for connecting user not resolved';
