@@ -25,6 +25,31 @@ class PluginModuleLti extends PluginModule {
     );
 
     public static function postinst($fromversion) {
+        if ($fromversion < 2018100100) {
+            // Add indexes to the lit_assessment table on install
+            log_debug('Add indexes to lti_assessment table');
+            $mysqlsuffix = is_mysql() ? '(255)' : '';
+            $table = new XMLDBTable('lti_assessment');
+            $field = new XMLDBField('resourcelinkid');
+            if (field_exists($table, $field)) {
+                $index = new XMLDBIndex('resourcelinkididx');
+                $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('resourcelinkid' . $mysqlsuffix));
+                add_index($table, $index);
+            }
+            $field = new XMLDBField('contextid');
+            if (field_exists($table, $field)) {
+                $index = new XMLDBIndex('contextididx');
+                $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('contextid' . $mysqlsuffix));
+                add_index($table, $index);
+            }
+            $field = new XMLDBField('listresultsourceid');
+            if (field_exists($table, $field)) {
+                $index = new XMLDBIndex('lisresultsourceididx');
+                $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('lisresultsourceid' . $mysqlsuffix));
+                add_index($table, $index);
+            }
+        }
+
         require_once(get_config('docroot') . 'webservice/lib.php');
         external_reload_component('module/lti', false);
     }
