@@ -86,9 +86,6 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
         $configdata = $instance->get('configdata');
 
         $types = get_records_array('activity_type', 'admin', 0, 'plugintype,pluginname,name', 'name,plugintype,pluginname');
-        if ($USER->get('admin')) {
-            $types[] = (object)array('name' => 'adminmessages');
-        }
 
         $elements = array();
         $elements['types'] = array(
@@ -98,14 +95,24 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
         );
         foreach($types as $type) {
             if (!empty($type->plugintype)) {
-                $title = get_string('type' . $type->name, $type->plugintype . '.' . $type->pluginname);
+                $type->title = get_string('type' . $type->name, $type->plugintype . '.' . $type->pluginname);
             }
             else {
-                $title = get_string('type' . $type->name, 'activity');
+                $type->title = get_string('type' . $type->name, 'activity');
             }
+            $type->class = '';
+        }
+        usort($types, function ($a, $b) { return strnatcasecmp($a->title, $b->title); });
+        if ($USER->get('admin')) {
+            $types[] = (object)array('name' => 'adminmessages',
+                                     'title' => get_string('typeadminmessages', 'activity'),
+                                     'class' => 'field-label-bold');
+        }
+        foreach($types as $type) {
             $elements['types']['elements'][$type->name] = array(
                 'type' => 'switchbox',
-                'title' => $title,
+                'title' => $type->title,
+                'class' => $type->class,
                 'defaultvalue' => isset($configdata[$type->name]) ? $configdata[$type->name] : 0,
             );
         }
