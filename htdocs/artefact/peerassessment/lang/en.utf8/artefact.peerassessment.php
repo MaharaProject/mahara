@@ -36,7 +36,7 @@ $string['feedbacknotificationhtml'] = "<div style=\"padding: 0.5em 0; border-bot
 <div style=\"font-size: smaller; border-top: 1px solid #999;\">
 <p><a href=\"%s\">View this peer assessment online</a></p>
 </div>";
-$string['feedbacknotificationtext'] = "%s add a peer assessment on %s
+$string['feedbacknotificationtext1'] = "%s added a peer assessment on %s
 %s
 ------------------------------------------------------------------------
 
