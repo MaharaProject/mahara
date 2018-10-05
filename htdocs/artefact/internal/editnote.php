@@ -156,6 +156,7 @@ $smarty = smarty(array(), array(), array(), array(
         ),
     ),
 ));
+setpageicon($smarty, 'icon-pencil-square-o');
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $artefact->get('title'));
