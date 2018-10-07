@@ -532,3 +532,4 @@ $string['nextversion'] = 'Next version';
 $string['versionnumber'] = 'Version %s';
 $string['gotonextversion'] = 'Go to the next version ';
 $string['gotopreviousversion'] = 'Go to the previous version';
+$string['loadingtimelinecontent'] = 'Loading timeline for "%s". If the page has many versions, this may take a while.';

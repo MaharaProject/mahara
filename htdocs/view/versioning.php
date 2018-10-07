@@ -66,5 +66,6 @@ $smarty->assign('fromdate', urlencode($fromdate));
 $smarty->assign('todate', urlencode($todate));
 $smarty->assign('viewurl', $viewobject->get_url());
 $smarty->assign('view', $view);
+$smarty->assign('viewtitle', hsc($viewobject->get('title')));
 $smarty->assign('headingclass', 'page-header');
 $smarty->display('view/versioning.tpl');
