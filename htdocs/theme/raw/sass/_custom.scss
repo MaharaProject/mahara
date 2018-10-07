@@ -638,3 +638,9 @@ div.toolbarhtml {
     position: relative;
     top: 15px;
 }
+
+.field-label-bold {
+    label {
+        font-weight: bold;
+    }
+}
