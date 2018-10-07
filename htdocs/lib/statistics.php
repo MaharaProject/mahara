@@ -3211,7 +3211,7 @@ function objectionable_stats_table($limit, $offset, $extra, $institution, $urlli
         }
     }
     if ($users) {
-        $wheresql .= " AND (u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+        $wheresql .= " AND u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
     }
     if ($start) {
         $wheresql .= " AND obj.reportedtime >= DATE(?) AND obj.reportedtime <= DATE(?)";
