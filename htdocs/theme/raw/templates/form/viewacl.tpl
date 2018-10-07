@@ -83,9 +83,9 @@
                     {% if (o.presets.id) { %}<option value="{%=o.presets.id%}">{%=o.presets.name%}</option>{% } %}
                 </select>
             </div>
-            <span class="picker input-short{% if (!o.presets.role) { %} hidden{% } %}">
+            <span class="picker input-short{% if (!(o.presets.type == 'group' || o.presets.type == 'user')) { %} hidden {% } %}">
                 <select data-roles="grouproles" name="accesslist[{%=o.id%}][role]" class="form-control input-small select">
-                    {% if (o.presets.role) { %}
+                    {% if (o.presets.type == 'group' || o.presets.type == 'user') { %}
                         <option value="" >{%=o.defaultText%}</option>
                         {% for (var i=0; i<o.roles.length; i++) { %}
                              <option value="{%=o.roles[i].name%}" {% if (o.presets.role == o.roles[i].name) { %} selected {% } %}>{%=o.roles[i].display%}</option>
