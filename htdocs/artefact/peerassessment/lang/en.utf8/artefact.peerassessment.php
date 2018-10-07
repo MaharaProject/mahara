@@ -27,7 +27,7 @@ $string['assessmentremoved'] = 'Peer assessment deleted';
 
 // peer assessment notifications
 $string['deletednotificationsubject'] = 'Peer assessment on page "%s" deleted';
-$string['deletedauthornotification'] = "Your peer assessment on page \"%s\" was deleted. You had written:\n%s";
+$string['deletedauthornotification1'] = "Your peer assessor, %s, deleted their assessment on page \"%s\". They had written:\n%s";
 $string['newassessmentnotificationsubject'] = 'New peer assessment on page "%s"';
 $string['feedbacknotificationhtml'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s added a peer assessment on %s</strong><br>%s</div>
 

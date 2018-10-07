@@ -782,9 +782,9 @@ function delete_assessment_submit(Pieform $form, $values) {
                         'args'    => array($title),
                     ),
                     'message' => (object) array(
-                        'key'     => 'deletedauthornotification',
+                        'key'     => 'deletedauthornotification1',
                         'section' => 'artefact.peerassessment',
-                        'args'    => array($title, html2text($assessment->get('description'))),
+                        'args'    => array(display_name($author), $title, html2text($assessment->get('description'))),
                     ),
                     'urltext' => (object) array(
                         'key'     => 'view',
