@@ -10,7 +10,7 @@
 <div class="grouppageswrap view-container">
     {$timelineform|safe}
 {if $views}
-    <div class="jtline"></div>
+    <div class="jtline"><span class="icon icon-spinner icon-pulse"></span> {str tag=loadingtimelinecontent section=view arg1=$viewtitle}</div>
     <script type="application/javascript">
     $(function () {
         var jtLine = $('.jtline').jTLine({
