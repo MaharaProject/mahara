@@ -85,7 +85,9 @@
                 <p>{str tag=siteisregisteredsince section=admin args=$firstregistered}</p>
             {/if}
             {if $sendweeklyupdates}
-                <p>{str tag=sendingweeklyupdates section=admin}</p>
+                <p>{str tag=sendingweeklyupdates1 section=admin}</p>
+            {else}
+                <p>{str tag=notsendingweeklyupdates section=admin}</p>
             {/if}
             </div>
             <a class="panel-footer" href="{$WWWROOT}admin/registersite.php">{str tag=Registration section=admin} <span class="icon icon-arrow-circle-right pull-right" role="presentation" aria-hidden="true"></span></a>

@@ -7,18 +7,16 @@
             {str tag=siteregistrationpolicy section=admin}
         {/if}
         {if $register}
-            {str tag=registeryourmaharasitedetail section=admin args=$WWWROOT}
+            {str tag=registeryourmaharasitedetail section=admin}
             {$register|safe}
         {else}
             {if $firstregistered}
                 <p><strong>{str tag=siteisregisteredsince section=admin args=$firstregistered}</strong></p>
-                {str tag=registeredinfo section=admin}
-                {$registered|safe}
             {else}
                 <p><strong>{str tag=siteisregistered section=admin}</strong></p>
-                {str tag=registeredinfo section=admin}
-                {$registered|safe}
             {/if}
+            {str tag=registeryourmaharasitedetail section=admin}
+            {$registered|safe}
         {/if}
         </div>
     </div>

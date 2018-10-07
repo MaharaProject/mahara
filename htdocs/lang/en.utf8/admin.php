@@ -247,9 +247,11 @@ $string['Field'] = 'Field';
 $string['Value'] = 'Value';
 $string['dataincluded'] = 'Data included';
 $string['datathathavebeensent'] = 'Data that has been sent';
+$string['sendweeklyupdates'] = 'Send weekly updates';
+$string['sendweeklyupdatesdescription'] = 'Allow your site to send weekly updates to <a href="https://mahara.org/">mahara.org</a> with some statistics about your site.';
 $string['newregistrationpolicyinfo'] = '<p>We have updated our registration data policy to require registered sites to provide weekly updates of their data. Please follow the link below to confirm or remove your registration.</p>';
 $string['registerwithmahara'] = 'Register with mahara.org';
-$string['remainregistered'] = 'Remain registered';
+$string['registerwithmaharadescription'] = 'Once your site is registered with the Mahara project, you cannot unregister it.';
 $string['Register'] = 'Register';
 $string['Registration'] = 'Registration';
 $string['registrationcancelled'] = 'You can choose to register at any time by going to the <a href="%sadmin/registersite.php">site registration page</a>.';
@@ -259,14 +261,15 @@ $string['registermaharasite'] = 'Site registration';
 $string['registeryoursitesummary'] = '
 <p>Registering your Mahara site with <a href="https://mahara.org/">mahara.org</a> helps us to get a picture of the Mahara installations around the world.</p>';
 $string['registeryourmaharasitedetail'] = '
-<p>You can choose to register your Mahara site with <a href="https://mahara.org/">mahara.org</a>. Registration is free and helps us get a picture of the Mahara installations around the world.</p>
-<p>You can see the information that will be sent to mahara.org. Nothing that can personally identify any of your users will be sent. If you choose to register, Mahara will automatically send your updated information to mahara.org once a week.</p>';
-$string['registrationremoved'] = 'Your site\'s registration has been removed. You can re-register with mahara.org at any time.';
-$string['sendingweeklyupdates'] = 'Currently, you are sending weekly updates.';
+<p>You can register your Mahara site with the Mahara project. Registration is free and helps us get a picture of the Mahara installations around the world.</p>
+<p>If you decide to send weekly updates, you can see the information that will be sent to the Mahara project. Nothing that can personally identify any of your users will be sent.</p>';
+$string['sendingweeklyupdates1'] = 'You are sending weekly updates.';
+$string['notsendingweeklyupdates'] = 'You are not sending weekly updates.';
 $string['siteisregisteredsince'] = 'Your site has been registered with <a href="https://mahara.org/">mahara.org</a> since %s.';
 $string['siteisregistered'] = 'Your site is registered with <a href="https://mahara.org/">mahara.org</a>.';
-$string['registeredinfo'] = 'Updated information about your site is sent to mahara.org weekly. You can see what is sent in the &quot;Data included&quot; section below. Nothing that can personally identify any of your users is sent.</p><p>To remove the registration of your site, change the  &quot;Remain registered&quot; switch to &quot;No&quot; and click the &quot;Save&quot; button.';
 $string['siteregistrationpolicy'] = '<p>To ensure our statistics show accurately how Mahara is being used, registration now includes sending us weekly updates. Please review and confirm your registration by clicking &quot;Save&quot; below.</p>';
+$string['startsendingdata'] = 'Your site is sending weekly updates to <a href="https://mahara.org/">mahara.org</a>';
+$string['stoppedsendingdata'] = 'The weekly updates have been stopped';
 
 // Close site
 $string['Close'] = 'Close';
