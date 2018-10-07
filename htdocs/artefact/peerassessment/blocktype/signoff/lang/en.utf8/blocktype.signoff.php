@@ -14,7 +14,7 @@ defined('INTERNAL') || die();
 $string['title'] = 'Sign-off';
 $string['description'] = 'A block to display page sign-off and verification options';
 $string['placeholder'] = 'This block\'s content is displayed below the page heading rather than in a block itself on the page.';
-$string['signoff'] = 'Sign-off';
+$string['signoff'] = 'Sign off';
 $string['signoffdesc'] = 'The portfolio owner can sign off a page when all requirements have been met to indicate that it is ready for assessment.';
 
 $string['verify'] = 'Verify';
