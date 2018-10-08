@@ -937,9 +937,9 @@ class Pieform {/*{{{*/
     /**
      * Sends a message back to a form
      */
-    public function reply($returncode, $message) {
+    public function reply($returncode, $message, $replacehtml=null) {
         if ($this->submitted_by_js()) {
-            $this->json_reply($returncode, $message);
+            $this->json_reply($returncode, $message, $replacehtml);
         }
 
         $function = $this->get_property('replycallback');

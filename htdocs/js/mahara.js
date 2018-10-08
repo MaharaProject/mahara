@@ -154,18 +154,15 @@ function formStartProcessing(form, btn) {
         button.prop('disabled', true);
         button.trigger("blur");
 
-        // Start the progress meter if it is enabled.
-        if (form && form.elements && form.elements['progress_meter_token']) {
-            meter_update_timer(form.elements['progress_meter_token'].value);
-        }
     }
 }
 
+var meter_timeout;
 function meter_update_timer(instance) {
     sendjsonrequest(config.wwwroot + 'json/progress_meter.php', { 'instance' : instance }, 'GET', function(data) {
         if (typeof(data) != 'undefined') {
-            if (!data.data.finished || !jQuery('#meter_overlay').is(':visible')) {
-                setTimeout(function() { meter_update_timer(instance) }, 1000);
+            if (!data.finished || !jQuery('#meter_overlay').is(':visible')) {
+                meter_timeout = setTimeout(function() { meter_update_timer(instance) }, 300);
             }
             meter_update(data.data);
         }
@@ -760,6 +757,12 @@ function meter_update(data) {
     }
 
     if (data.finished) {
+        if (data.error) {
+            jQuery('#meter_fill').animate({width: 0}); // remove bar filled before hiding
+        }
+        else {
+            jQuery('#meter_fill').animate({width: jQuery('#meter_wrap').width()}); // show bar filled before hiding
+        }
         jQuery('#meter_overlay').hide();
 
         if (typeof(data.redirect) !== 'undefined') {
@@ -780,7 +783,7 @@ function meter_update(data) {
     else {
         new_width = 0;
     }
-    jQuery('#meter_fill').width(new_width);
+    jQuery('#meter_fill').animate({width: new_width});
 
     return true;
 }
@@ -1100,3 +1103,35 @@ jQuery(function($) {
         $(this).next().trigger('click');
     });
 });
+
+function pmeter_success(form, data) {
+    jQuery('#meter_fill').animate({width: jQuery('#meter_wrap').width()}); // show bar filled before hiding
+    formSuccess(form, data);
+    if (typeof(data.goto) !== 'undefined') {
+        window.location.href = data.goto;
+    }
+    return true;
+}
+
+function pmeter_error(form, data) {
+    formError(form, data);
+    var data = {finished:true, error:true};
+    meter_update(data);
+    clearTimeout(meter_timeout);
+}
+
+function pmeter_presubmit(form, btn) {
+    var startmeter = false;
+    if ($('#' + form.name + '_progress_meter_token').length) {
+        startmeter = true;
+    }
+
+    if (startmeter) {
+        // Start the progress meter.
+        if (form && form.elements && form.elements['progress_meter_token']) {
+            meter_update_timer(form.elements['progress_meter_token'].value);
+        }
+    }
+
+    formStartProcessing(form, btn);
+}

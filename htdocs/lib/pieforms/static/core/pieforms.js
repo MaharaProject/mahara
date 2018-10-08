@@ -218,7 +218,7 @@ var Pieform = (function($) {
                     var temp = $('<div>').append(data.replaceHTML);
                     data.javascript = '';
                     temp.find('*').each(function() {
-                        if ($(this).prop('nodeName') === 'SCRIPT' && $(this).prop('src') === '') {
+                        if ($(this).prop('nodeName') === 'SCRIPT' && $(this).prop('src') === '' && $(this).prop('type') !== 'text/x-tmpl') {
                             data.javascript += $(this).prop('innerHTML');
                         }
                     });

@@ -516,7 +516,7 @@ function editaccess_submit(Pieform $form, $values) {
             $key = 0;
             $total = count($groupmembers);
             foreach ($groupmembers as $groupmember) {
-                if (!($key % 25)) {
+                if (!($key % 5)) {
                     set_progress_info('copyviewexistingmembersprogress', $key, $total, get_string('copyforexistingmembersprogress', 'view'));
                 }
                 $key++;
@@ -530,7 +530,6 @@ function editaccess_submit(Pieform $form, $values) {
                     $userobj->copy_group_views_collections_to_existing_members($values['views']);
                 }
             }
-            set_progress_done('copyviewexistingmembersprogress');
         }
     }
 
@@ -596,7 +595,7 @@ function editaccess_submit(Pieform $form, $values) {
     }
 
     $SESSION->add_ok_msg(get_string('updatedaccessfornumviews1', 'view', count($toupdate)));
-
+    set_progress_done('copyviewexistingmembersprogress');
     if ($view->get('owner')) {
         redirect('/view/share.php');
     }
@@ -606,7 +605,6 @@ function editaccess_submit(Pieform $form, $values) {
     if ($view->get('institution')) {
         redirect(get_config('wwwroot') . '/view/institutionshare.php?institution=' . $view->get('institution'));
     }
-    $view->post_edit_redirect();
 }
 
 $form = pieform($form);
