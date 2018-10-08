@@ -332,25 +332,32 @@ $elements['submitform'] = array(
         'goto' => $goto,
 );
 
-$designskinform = pieform(array(
+$designskinelements = array(
         'name'       => 'designskinform',
         'class'      => 'jstabs form-group-nested',
         'method'     => 'post',
-        'jsform'     => true,
-        'newiframeonsubmit' => true,
-        'jssuccesscallback' => 'designskinform_callback',
-        'jserrorcallback'   => 'designskinform_callback',
         'plugintype' => 'core',
         'pluginname' => 'skin',
         'renderer'   => 'div',  // don't change unless you also modify design.js to not require tables.
         'autofocus'  => false,
         'configdirs' => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
         'elements' => $elements
-));
+);
+
+if (!$designsiteskin) {
+    $designskinelements['jssuccesscallback'] = 'designskinform_callback';
+    $designskinelements['jserrorcallback'] = 'designskinform_callback';
+    $designskinelements['newiframeonsubmit'] = true;
+    $designskinelements['jsform'] = true;
+}
+
+$designskinform = pieform($designskinelements);
 
 $javascript = <<<EOF
   function designskinform_callback(form, data) {
-      designskinform_body_background_image.callback(form, data);
+      if (typeof designskinform_body_background_image != "undefined") {
+          designskinform_body_background_image.callback(form, data);
+      }
   };
 EOF;
 
@@ -391,7 +398,7 @@ function designskinform_validate(Pieform $form, $values) {
 }
 
 function designskinform_submit(Pieform $form, $values) {
-    global $USER, $SESSION;
+    global $USER, $SESSION, $goto;
 
     $siteskin = (isset($values['viewskin_access']) && ($values['viewskin_access'] == 'site'));
     // Only an admin can create a site skin
@@ -444,5 +451,5 @@ function designskinform_submit(Pieform $form, $values) {
     }
 
     $SESSION->add_ok_msg(get_string('skinsaved', 'skin'));
-    redirect($redirect);
+    redirect($goto);
 }
