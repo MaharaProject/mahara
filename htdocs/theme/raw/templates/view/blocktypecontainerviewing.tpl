@@ -29,7 +29,11 @@
     {/if}
 
     <div class="{if !$title}no-heading {/if}block{if $retractable} collapse{if $retractedonload}{else} in{/if}{/if}"  id="blockinstance_{$id}_target{if $versioning}_{$versioning->version}{/if}" {if $loadbyajax}data-blocktype-ajax="{$id}"{else}data-blocktype-noajax="{$id}"{/if}>
-        {if !$loadbyajax}{$content|safe}{/if}
+        {if !$loadbyajax}
+            {$content|safe}
+        {else}
+            <div id="loadingicon{$id}"><span class="icon icon-spinner icon-pulse"></span> {str tag=loading}</div>
+        {/if}
 
         {if !$versioning && ($link || $viewartefacturl)}
 
