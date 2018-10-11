@@ -195,19 +195,24 @@ function site_statistics($full=false) {
         // Views graph
         $smarty = smarty_core();
         $maxblocktypes = 5;
-        $smarty->assign('blocktypecounts', get_records_sql_array("
+        $blocktypecounts = get_records_sql_array("
             SELECT
                 b.blocktype,
-                CASE WHEN bi.artefactplugin IS NULL THEN b.blocktype
-                    ELSE bi.artefactplugin || '/' || b.blocktype END AS langsection,
                 COUNT(b.id) AS blocks
             FROM {block_instance} b
             JOIN {blocktype_installed} bi ON (b.blocktype = bi.name)
             JOIN {view} v ON (b.view = v.id AND v.type = 'portfolio')
-            GROUP BY b.blocktype, langsection
+            GROUP BY b.blocktype
             ORDER BY blocks DESC",
             array(), 0, $maxblocktypes
-        ));
+        );
+        foreach ($blocktypecounts as $blocktype) {
+            safe_require('blocktype', $blocktype->blocktype);
+            $classname = generate_class_name('blocktype', $blocktype->blocktype);
+            $blocktype->title = $classname::get_title();
+        }
+        $smarty->assign('blocktypecounts', $blocktypecounts);
+
         $smarty->assign('viewtypes', true);
         $smarty->assign('viewcount', $data['views']);
         $data['viewsinfo'] = $smarty->fetch('admin/viewstatssummary.tpl');
