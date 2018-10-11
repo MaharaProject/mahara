@@ -5,7 +5,7 @@
     <h4>{str tag=blockcountsbytype section=admin}</h4>
     <ul class="list-group list-group-lite unstyled">
     {foreach from=$blocktypecounts item=item}
-        <li class="list-group-item">{str tag=title section=blocktype.$item->langsection}: {$item->blocks}</li>
+        <li class="list-group-item">{$item->title}: {$item->blocks}</li>
     {/foreach}
     </ul>
     {if $viewtypes}
