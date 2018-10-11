@@ -5569,20 +5569,20 @@ function get_homepage_redirect_results($request, $limit, $offset, $type = null, 
                   OR
                  (v.owner IN (" . join(',', array_map('db_quote', $adminids)) . "))
              )
-             AND (v.title ILIKE ? OR g.name ILIKE ? OR i.name ILIKE ?)
+             AND (v.title " . db_ilike() . " ? OR g.name " . db_ilike() . " ? OR i.name " . db_ilike() . " ?)
              UNION
-             SELECT ii.id, ii.title, NULL AS owner, g.id AS group, g.institution, 'forum' AS urltype
+             SELECT ii.id, ii.title, NULL AS owner, g.id AS \"group\", g.institution, 'forum' AS urltype
              FROM {interaction_instance} ii
              JOIN {group} g ON g.id = ii.group
              WHERE g.public = 1
              AND ii.deleted = 0
-             AND (ii.title ILIKE ?)
-             ) AS foo OFFSET ? LIMIT ?";
+             AND (ii.title " . db_ilike() . " ?)
+             ) AS foo LIMIT ? OFFSET ? ";
         $where = array('%' . $request . '%',
                        '%' . $request . '%',
                        '%' . $request . '%',
                        '%' . $request . '%',
-                       $offset, $limit);
+                       $limit, $offset);
         if ($count = count_records_sql($countsql . $fromsql, $where)) {
             $results['count'] = $count;
             $results['data'] = get_records_sql_array($resultsql . $fromsql, $where);
