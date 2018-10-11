@@ -214,6 +214,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $smarty->assign('folderparams', $params);
 
+
     // Add mobile media-capture form tags when users are on mobile or tablet
     if ($SESSION->get('mobile') || $SESSION->get('tablet')) {
         $supportedmediatypes = array('image/*');
@@ -223,7 +224,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
                 if (in_array($type, $supportedmediatypes)) {
                     switch ($type) {
                         case 'image/*':
-                            $smarty->assign('capturedevice', 'camera');
+                            $smarty->assign('capturedevice', true);
                             break;
                     }
                 }
