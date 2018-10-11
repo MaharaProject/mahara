@@ -85,18 +85,18 @@ function site_statistics($full=false) {
         // Group graph
         $smarty = smarty_core();
         $smarty->assign('grouptypecounts', get_records_sql_array("
-            SELECT grouptype, COUNT(id) AS groups
+            SELECT grouptype, COUNT(id) AS groupcount
             FROM {group}
             WHERE deleted = 0
             GROUP BY grouptype
-            ORDER BY groups DESC", array()
+            ORDER BY groupcount DESC", array()
         ));
         $smarty->assign('jointypecounts', get_records_sql_array("
-            SELECT jointype, COUNT(id) AS groups
+            SELECT jointype, COUNT(id) AS groupcount
             FROM {group}
             WHERE deleted = 0
             GROUP BY jointype
-            ORDER BY groups DESC", array()
+            ORDER BY groupcount DESC", array()
         ));
         $smarty->assign('groupgraph', true);
         $data['groupinfo'] = $smarty->fetch('admin/groupstatssummary.tpl');
@@ -152,18 +152,18 @@ function site_statistics($full=false) {
             $data['strmaxviews'] = get_string('statsnoviews', 'admin');
         }
         $maxgroups = get_records_sql_array("
-            SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(m.group) AS groups
+            SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(m.group) AS groupcount
             FROM {usr} u JOIN {group_member} m ON u.id = m.member JOIN {group} g ON m.group = g.id
             WHERE g.deleted = 0
             GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
-            ORDER BY groups DESC
+            ORDER BY groupcount DESC
             LIMIT 1", array());
         $maxgroups = $maxgroups[0];
         if ($maxgroups) {
             $data['strmaxgroups'] = get_string(
                 'statsmaxgroups1',
                 'admin',
-                $maxgroups->groups,
+                $maxgroups->groupcount,
                 $data['groupmemberaverage'],
                 profile_url($maxgroups),
                 hsc(display_name($maxgroups, null, true))
@@ -399,18 +399,18 @@ function institution_statistics($institution, $full=false) {
                 $data['strmaxviews'] = get_string('statsnoviews', 'admin');
             }
             $maxgroups = get_records_sql_array("
-                SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(m.group) AS groups
+                SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(m.group) AS groupcount
                 FROM {usr} u JOIN {group_member} m ON u.id = m.member JOIN {group} g ON m.group = g.id
                 WHERE g.deleted = 0 AND u.id IN (" . $data['memberssql'] . ")
                 GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
-                ORDER BY groups DESC
+                ORDER BY groupcount DESC
                 LIMIT 1", $data['memberssqlparams']);
             $maxgroups = $maxgroups[0];
             if ($maxgroups) {
                 $data['strmaxgroups'] = get_string(
                     'statsmaxgroups1',
                     'admin',
-                    $maxgroups->groups,
+                    $maxgroups->groupcount,
                     $data['groupmemberaverage'],
                     profile_url($maxgroups),
                     hsc(display_name($maxgroups, null, true))
@@ -2372,11 +2372,11 @@ function group_stats_table($limit, $offset, $extra) {
 
 function group_type_graph($type = false) {
     $grouptypes = get_records_sql_array("
-        SELECT grouptype, jointype, COUNT(id) AS groups
+        SELECT grouptype, jointype, COUNT(id) AS groupcount
         FROM {group}
         WHERE deleted = 0
         GROUP BY grouptype, jointype
-        ORDER BY groups DESC", array()
+        ORDER BY groupcount DESC", array()
     );
 
     if (count($grouptypes) > 1) {
@@ -2384,7 +2384,7 @@ function group_type_graph($type = false) {
         foreach ($grouptypes as &$t) {
             $strtype = get_string('name', 'grouptype.' . $t->grouptype);
             $strtype .= ' (' . get_string('membershiptype.abbrev.' . $t->jointype, 'group') . ')';
-            $dataarray[$strtype] = $t->groups;
+            $dataarray[$strtype] = $t->groupcount;
         }
         ksort($dataarray);
         arsort($dataarray);

@@ -5,7 +5,7 @@
 <h4>{str tag=groupcountsbytype section=admin}</h4>
     <ul class="list-group list-group-lite unstyled">
     {foreach from=$grouptypecounts item=item}
-      <li class="list-group-item">{str tag=name section=grouptype.$item->grouptype}: {$item->groups}</li>
+      <li class="list-group-item">{str tag=name section=grouptype.$item->grouptype}: {$item->groupcount}</li>
     {/foreach}
     </ul>
 </div>
@@ -13,7 +13,7 @@
 <h4>{str tag=groupcountsbyjointype section=admin}</h4>
     <ul class="list-group list-group-lite unstyled">
     {foreach from=$jointypecounts item=item}
-      <li class="list-group-item">{str tag=membershiptype.$item->jointype section=group}: {$item->groups}</li>
+      <li class="list-group-item">{str tag=membershiptype.$item->jointype section=group}: {$item->groupcount}</li>
     {/foreach}
     </ul>
 </div>
