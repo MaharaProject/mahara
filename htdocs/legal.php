@@ -23,7 +23,7 @@ $termscontent = get_field_sql("
     FROM {site_content_version} s
     WHERE s.institution = ?
     AND s.type = 'termsandconditions'
-    ORDER BY s.version DESC
+    ORDER BY s.id DESC
     LIMIT 1", array('mahara'));
 
 $sections[] = array(
@@ -38,7 +38,7 @@ $privacycontent = get_field_sql("
     FROM {site_content_version} s
     WHERE s.institution = ?
     AND s.type = 'privacy'
-    ORDER BY s.version DESC
+    ORDER BY s.id DESC
     LIMIT 1", array('mahara'));
 
 $sections[] = array(
