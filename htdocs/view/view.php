@@ -146,7 +146,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     $releasecollection = !empty($collection) && $collection->get('submittedgroup') == $submittedgroup->id && empty($ltigradeform);
 
     if ($releasecollection) {
-        if ($ltigradeform && $ctime = $collection->get('submittedtime')) {
+        if (isset($ltigradeform) && $ltigradeform && $ctime = $collection->get('submittedtime')) {
             preg_match("/^.*?\"(.*?)\" - \"(.*?)\"/", $submittedgroup->name, $matches);
             $lticoursename = hsc($matches[1]);
             $ltiassignmentname = hsc($matches[2]);
