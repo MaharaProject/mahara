@@ -810,7 +810,7 @@ EOF;
         if ($USER->is_logged_in() && defined('MENUITEM') &&
             (
                 substr(MENUITEM, 0, 7) == 'profile' ||
-                in_array(substr(MENUITEM, 0, 6), array('create', 'engage', 'manage'))
+                in_array(substr(MENUITEM, 0, 7), array('create/', 'engage/', 'manage/'))
             )) {
             if (get_config('showselfsearchsideblock')) {
                 $sideblocks[] = array(
