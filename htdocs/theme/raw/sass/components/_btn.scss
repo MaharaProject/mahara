@@ -131,7 +131,7 @@ h1 ~ div > .btn-group-top,
 
 .btn-group-top {
     position: relative;
-    z-index: 3;
+    z-index: 4;
     @media (min-width: $screen-xs-min) {
         float: right;
         .btn {
