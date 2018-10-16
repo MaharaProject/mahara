@@ -224,6 +224,10 @@ jQuery(function($) {
                         //focus on matrix annotation
                         $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').trigger("focus");
                     }
+                    else {
+                        se.stopPropagation();
+                        se.processingStop();
+                    }
                 });
                 // When we are saving the annotation feedback form - adding new feedback
                 $('#addfeedbackmatrix').on('submit', function(se) {
