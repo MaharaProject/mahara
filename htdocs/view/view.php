@@ -88,7 +88,13 @@ if (!isset($view)) {
 
 $is_admin = $USER->get('admin') || $USER->is_institutional_admin();
 $is_owner = $view->get('owner') == $USER->get('id');
-if (is_view_suspended($view) && !$is_admin && !$is_owner) {
+
+// check if this is a group page and the user is group admin
+if ($groupid = $view->get('group')) {
+    $is_group_admin = (group_user_access($groupid) == 'admin');
+}
+
+if (is_view_suspended($view) && !$is_admin && !$is_owner && !($groupid && $is_group_admin)) {
     $errorstr = get_string('accessdeniedsuspension', 'error');
     throw new AccessDeniedException($errorstr);
 }
