@@ -177,7 +177,7 @@
             <h4>
                 <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="collapsed">
                     {str tag='instructions' section='view'}
-                    <span class="icon icon-chevron-down collapse-indicator right pull-right"></span>
+                    <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
                 </a>
             </h4>
         </legend>
