@@ -307,8 +307,8 @@ function delete_validate(Pieform $form, $values) {
         $form->set_error(null, get_string('unabletodeleteself1', 'admin'));
     }
     // Not allowed to remove all site admins
-    $siteadmins = count_records_sql("SELECT COUNT(admin) FROM {usr}
-                           WHERE id NOT IN (" . join(',', array_map('db_quote', $users)) . ") AND admin = 1", array());
+    $siteadmins = count_records_sql("SELECT COUNT(\"admin\") FROM {usr}
+                           WHERE id NOT IN (" . join(',', array_map('db_quote', $users)) . ") AND \"admin\" = 1", array());
     if (!$siteadmins) {
         $form->set_error(null, get_string('unabletodeletealladmins1', 'admin'));
     }

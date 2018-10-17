@@ -77,11 +77,11 @@ function adminusers_submit(Pieform $form, $values) {
 
     db_begin();
     execute_sql('UPDATE {usr_institution}
-        SET admin = 0
-        WHERE admin = 1 AND institution = ' . db_quote($inst));
+        SET "admin" = 0
+        WHERE "admin" = 1 AND institution = ' . db_quote($inst));
     if ($values['users']) {
         execute_sql('UPDATE {usr_institution}
-            SET admin = 1
+            SET "admin" = 1
             WHERE usr IN (' . join(',', array_map('intval', $values['users'])) . ') AND institution = ' . db_quote($inst));
     }
     require_once('activity.php');
