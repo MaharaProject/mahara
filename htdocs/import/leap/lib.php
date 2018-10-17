@@ -1154,7 +1154,7 @@ class PluginImportLeap extends PluginImport {
                 $view['id'] = $ierview->id;
                 $view['decision'] = $ierview->decision;
                 $view['disabled'][PluginImport::DECISION_IGNORE] = false;
-                $view['disabled'][PluginImport::DECISION_ADDNEW] = false;
+                $view['disabled'][PluginImport::DECISION_ADDNEW] = in_array($view['type'], array('dashboard', 'profile'));
                 $view['disabled'][PluginImport::DECISION_APPEND] = true;
                 $view['disabled'][PluginImport::DECISION_REPLACE] = true;
                 $entryviews[] = $view;
