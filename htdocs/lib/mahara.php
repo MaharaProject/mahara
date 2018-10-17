@@ -19,7 +19,7 @@ defined('INTERNAL') || die();
 function ensure_sanity() {
 
     // PHP version
-    $phpversionrequired = '5.5.9';
+    $phpversionrequired = '7.0.0';
     if (version_compare(phpversion(), $phpversionrequired) < 0) {
         throw new ConfigSanityException(get_string('phpversion', 'error', $phpversionrequired));
     }
