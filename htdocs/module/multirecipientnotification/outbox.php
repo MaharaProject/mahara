@@ -31,7 +31,7 @@ $USER->reload_background_fields();
 $installedtypes = get_records_assoc(
     'activity_type', '', '',
     'plugintype,pluginname,name',
-    'name,admin,plugintype,pluginname'
+    'name,"admin",plugintype,pluginname'
 );
 
 $options = array();

@@ -862,7 +862,7 @@ function siteoptions_submit(Pieform $form, $values) {
       $fields = array_merge($fields, array('dropdownmenu'));
     }
     $count = 0;
-    $where_sql = " WHERE admin = 0 AND id != 0";
+    $where_sql = " WHERE \"admin\" = 0 AND id != 0";
     // if default account lifetime expiry has no end date
     if (empty($values['defaultaccountlifetime'])) {
         if ($values['defaultaccountlifetimeupdate'] == 'all') {
