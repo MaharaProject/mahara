@@ -242,7 +242,12 @@ abstract class PluginImport extends Plugin implements IPluginImport {
         $title = $entrydata['content']['title'];
         if ($plugin === 'core') {
             // For view import
-            $decision = PluginImport::DECISION_ADDNEW;
+            if (isset($entrydata['content']['type']) && in_array($entrydata['content']['type'], array('dashboard', 'profile'))) {
+                $decision = PluginImport::DECISION_IGNORE;
+            }
+            else {
+                $decision = PluginImport::DECISION_ADDNEW;
+            }
         }
         else {
             safe_require('artefact', $plugin);
