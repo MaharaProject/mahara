@@ -280,3 +280,24 @@ a.admin-site {
 .custom-dropdown > ul > li > span {
     background-color: #767676;
 }
+/* this is for the timeline */
+.jtline .filling-line {
+    background-color: {$data.background};
+}
+
+.no-touch .jtline .events a:hover::after,
+.jtline .events a.selected::after {
+    background-color: {$data.background};
+    border-color: {$data.background};
+}
+
+.jtline .events a.older-event::after,
+.no-touch .cd-timeline-navigation a:hover,
+.no-touch .cd-timeline-navigation-second a:hover {
+    border-color: {$data.background};
+}
+
+.cd-timeline-navigation a::after,
+.cd-timeline-navigation-second a::after {
+    color: {$data.background};
+}
