@@ -700,6 +700,10 @@ abstract class TestingUtil {
             log_info("Uninstalling $plugintype.$pluginname");
             $location = get_config('docroot') . $pluginpath . DIRECTORY_SEPARATOR . 'db';
             if (is_readable($location . DIRECTORY_SEPARATOR . 'install.xml')) {
+                if ($plugintype == 'auth' && $pluginname == 'webservice') {
+                    // This module has LTI module lti_assessment.oauthserver as a foreign key
+                    execute_sql('ALTER TABLE {lti_assessment} DROP CONSTRAINT {ltiasse_oau_fk}');
+                }
                 if ($plugintype == 'module' && $pluginname == 'framework') {
                     // This module has a core collection.framework as a foreign key
                     execute_sql('UPDATE {collection} SET framework = null');
