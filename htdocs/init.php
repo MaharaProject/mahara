@@ -336,6 +336,8 @@ if (get_config('installed')) {
     $upgradeavailable = $config->version > get_config('version');
     if ($config->version < get_config('version')) {
         if (get_config('productionmode')) {
+            $coreversion = get_config('version');
+            $corerelease = get_config('release');
             throw new ConfigSanityException("Database version of Mahara $corerelease ($coreversion) is newer "
                                             . "than files version $config->release ($config->version). "
                                             . "Please make sure you have the correct Mahara files in place.");
