@@ -3734,6 +3734,7 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
             FROM {view_access} va WHERE va.view = ? AND va.token IS NOT NULL LIMIT 1)",
             array($item->viewid, $item->viewid));
         $item->hasaccessrules = !empty($item->access);
+        $item->pending = is_view_suspended($item->viewid);
     }
 
     if (!empty($extra['csvdownload'])) {

@@ -111,7 +111,7 @@ th {
 // Default zebra-stripe styles (alternating gray and transparent backgrounds)
 
 .table-striped {
-  > tbody > tr:nth-child(odd) {
+  > tbody > tr:nth-child(odd):not(.bg-danger) {
     background-color: $table-bg-accent;
   }
 }

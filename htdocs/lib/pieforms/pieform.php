@@ -1534,7 +1534,7 @@ EOF;
                 $labelclass = '';
             }
             $nolabeltypes = array('radio', 'emaillist', 'date', 'files', 'checkboxes', 'bytes');
-            if ($element['type'] == 'select' && !empty($element['collapseifoneoption']) && count($element['options']) < 2) {
+            if ($element['type'] == 'select' && !empty($element['collapseifoneoption']) && !empty($element['options']) && count($element['options']) < 2) {
                 // we are using a select field as a hidden field
                 $element['nolabel'] = true;
             }
