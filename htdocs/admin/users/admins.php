@@ -58,10 +58,10 @@ function adminusers_submit(Pieform $form, $values) {
 
     db_begin();
     execute_sql('UPDATE {usr}
-        SET admin = 0
-        WHERE admin = 1');
+        SET "admin" = 0
+        WHERE "admin" = 1');
     execute_sql('UPDATE {usr}
-        SET admin = 1
+        SET "admin" = 1
         WHERE id IN (' . join(',', array_map('intval', $values['users'])) . ')');
     activity_add_admin_defaults($values['users']);
     db_commit();

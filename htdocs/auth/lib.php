@@ -446,7 +446,7 @@ function auth_setup () {
         // out of the admin section
         if (in_admin_section()) {
             // Reload site admin/staff permissions
-            $realuser = get_record('usr', 'id', $USER->id, null, null, null, null, 'admin,staff');
+            $realuser = get_record('usr', 'id', $USER->id, null, null, null, null, '"admin",staff');
             if (!$USER->get('admin') && $realuser->admin) {
                 // The user has been made into an admin
                 $USER->admin = 1;
