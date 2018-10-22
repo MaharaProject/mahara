@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-    <p class="lead">{str tag=sitelicensesdescription section=admin}</p>
+    <p class="lead">{str tag=sitelicensesdesc section=admin}</p>
     <div class="panel panel-default">
         <div class="panel-body">
         {if !$enabled}

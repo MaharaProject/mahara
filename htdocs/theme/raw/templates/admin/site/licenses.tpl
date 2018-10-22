@@ -9,7 +9,7 @@
 {/if}
 <div class="row">
     <div class="col-md-12">
-        <p class='lead'>{str tag=sitelicensesdescription section=admin}</p>
+        <p class='lead'>{str tag=sitelicensesdesc section=admin}</p>
         {if !$enabled}
         <p class="alert alert-warning">{str tag=sitelicensesdisablednote section=admin args=$WWWROOT}</p>
         {/if}
