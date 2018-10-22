@@ -4273,6 +4273,9 @@ class View {
                         foreach ($accesslist as $ak => $av) {
                             if ($av->usr) {
                                 $av->displayname = display_name($av->usr);
+                                if (!empty($av->role)) {
+                                    $av->roledisplay = get_string($av->role, 'view');
+                                }
                             }
                             else if ($av->group) {
                                 $av->displayname = $av->groupname;
