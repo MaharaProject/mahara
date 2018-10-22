@@ -1111,7 +1111,7 @@ class View {
             if ($item['role'] && isset($item['group'])) {
                 $item['roledisplay'] = get_string($item['role'], 'grouptype.'.$grouptypes[$item['group']]->grouptype);
             }
-            else {
+            else if ($item['role']) {
                 $item['roledisplay'] = get_string($item['role'], 'view');
             }
             if ($timeformat) {
@@ -1633,6 +1633,7 @@ class View {
         foreach ($access as &$a) {
             unset($a->id);
             unset($a->view);
+            unset($a->ctime);
             $k = serialize($a);
             if (!isset($unique[$k])) {
                 $unique[$k] = $a;
