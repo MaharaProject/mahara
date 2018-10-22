@@ -81,7 +81,7 @@
                                                 <span class="link-text">{$accessitem->displayname}</span>
                                             {elseif $accessitem->usr}
                                                 <span class="icon icon-user left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$accessitem->displayname}</span>
+                                                <span class="link-text">{$accessitem->displayname}{if $accessitem->role} ({$accessitem->roledisplay}){/if} </span>
                                             {elseif $accessitem->token}
                                                 <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{str tag="token" section="view"}</span>
