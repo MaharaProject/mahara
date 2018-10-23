@@ -396,7 +396,22 @@ class PluginAuthSaml extends PluginAuth {
         set_config_plugin('auth', 'saml', 'version', '1.16.1');
     }
 
-    private static function create_certificates($numberofdays = 3650) {
+    private static function delete_old_certificates() {
+        // This is actually rolling new certificate over current one
+        if (!file_exists(AuthSaml::get_certificate_path() . 'server_new.crt')) {
+            // No new cert to replace the old one with
+            return false;
+        }
+        // copy the old ones out of the way in the dataroot temp dir (in case one needs to fetch it back)
+        copy(AuthSaml::get_certificate_path() . 'server.crt', get_config('dataroot') . 'temp/server.crt.' . date('Ymdhis', time()));
+        copy(AuthSaml::get_certificate_path() . 'server.pem', get_config('dataroot') . 'temp/server.pem.' . date('Ymdhis', time()));
+        if (rename(AuthSaml::get_certificate_path() . 'server_new.crt', AuthSaml::get_certificate_path() . 'server.crt')) {
+            return rename(AuthSaml::get_certificate_path() . 'server_new.pem', AuthSaml::get_certificate_path() . 'server.pem');
+        }
+        return false;
+    }
+
+    private static function create_certificates($numberofdays = 3650, $altname = false) {
         global $CFG;
         // Get the details of the first site admin and use it for setting up the certificate
         $userid = get_record_sql('SELECT id FROM {usr} WHERE "admin" = 1 AND deleted = 0 ORDER BY id LIMIT 1', array());
@@ -435,11 +450,18 @@ class PluginAuthSaml extends PluginAuth {
         if (empty($publickey)) {
             throw new Exception(get_string('nullpubliccert', 'auth.saml'), 1);
         }
-
-        if ( !file_put_contents(AuthSaml::get_certificate_path() . 'server.pem', $privatekey) ) {
+        $pemfile = 'server.pem';
+        $crtfile = 'server.crt';
+        $altcert = false;
+        if ($altname) {
+            // Save them with '_new' suffix
+            $pemfile = 'server_new.pem';
+            $crtfile = 'server_new.crt';
+        }
+        if ( !file_put_contents(AuthSaml::get_certificate_path() . $pemfile, $privatekey) ) {
             throw new Exception(get_string('nullprivatecert', 'auth.saml'), 1);
         }
-        if ( !file_put_contents(AuthSaml::get_certificate_path() . 'server.crt', $publickey) ) {
+        if ( !file_put_contents(AuthSaml::get_certificate_path() . $crtfile, $publickey) ) {
             throw new Exception(get_string('nullpubliccert', 'auth.saml'), 1);
         }
     }
@@ -502,6 +524,7 @@ class PluginAuthSaml extends PluginAuth {
             error_log("auth/saml: Creating the certificate for the first time");
             self::create_certificates();
         }
+        $data = $newdata = null;
         $cert = file_get_contents(AuthSaml::get_certificate_path() . 'server.crt');
         $pem = file_get_contents(AuthSaml::get_certificate_path() . 'server.pem');
         if (empty($cert) || empty($pem)) {
@@ -516,7 +539,6 @@ class PluginAuthSaml extends PluginAuth {
             // Load data from the current certificate.
             $data = openssl_x509_parse($cert);
         }
-
         // Calculate date expirey interval.
         $date1 = date("Y-m-d\TH:i:s\Z", str_replace ('Z', '', $data['validFrom_time_t']));
         $date2 = date("Y-m-d\TH:i:s\Z", str_replace ('Z', '', $data['validTo_time_t']));
@@ -525,6 +547,25 @@ class PluginAuthSaml extends PluginAuth {
         $interval = $datetime1->diff($datetime2);
         $expirydays = $interval->format('%a');
 
+        // check if there are two certs in parallel - during the time of rolling SP certs
+        if (file_exists(AuthSaml::get_certificate_path() . 'server_new.crt')) {
+            $newcert = file_get_contents(AuthSaml::get_certificate_path() . 'server_new.crt');
+            $newpem = file_get_contents(AuthSaml::get_certificate_path() . 'server_new.pem');
+            $newprivatekey = openssl_pkey_get_private($newpem);
+            $newpublickey  = openssl_pkey_get_public($newcert);
+            $newdata = openssl_pkey_get_details($newpublickey);
+            // Load data from the new certificate.
+            $newdata = openssl_x509_parse($newcert);
+            // Calculate date expirey interval.
+            $newdate1 = date("Y-m-d\TH:i:s\Z", str_replace ('Z', '', $newdata['validFrom_time_t']));
+            $newdate2 = date("Y-m-d\TH:i:s\Z", str_replace ('Z', '', $newdata['validTo_time_t']));
+            $newdatetime1 = new DateTime($newdate1);
+            $newdatetime2 = new DateTime($newdate2);
+            $newinterval = $newdatetime1->diff($newdatetime2);
+            $newexpirydays = $newinterval->format('%a');
+        }
+
+        $oldcert = ($data && $newdata) ? 'oldcertificate' : 'currentcertificate';
         $elements = array(
             'authname' => array(
                 'type'  => 'hidden',
@@ -565,7 +606,7 @@ class PluginAuthSaml extends PluginAuth {
             ),
             'certificate' => array(
                                 'type' => 'fieldset',
-                                'legend' => get_string('certificate1', 'auth.saml'),
+                                'legend' => get_string($oldcert, 'auth.saml'),
                                 'elements' =>  array(
                                                 'protos_help' =>  array(
                                                 'type' => 'html',
@@ -574,7 +615,7 @@ class PluginAuthSaml extends PluginAuth {
 
                                                 'pubkey' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<h3 class="title">' . get_string('publickey','admin') . '</h3>' .
+                                                    'value'        => '<h5 class="title">' . get_string('publickey','admin') . '</h5>' .
                                                       '<pre style="font-size: 0.7em; white-space: pre;">' . $cert . '</pre>'
                                                 ),
                                                 'sha1fingerprint' => array(
@@ -595,6 +636,51 @@ class PluginAuthSaml extends PluginAuth {
                                 'collapsed'   => false,
                                 'name' => 'activate_webservices_networking',
                             ),
+        );
+        if ($data && $newdata) {
+            $certstatus = 'deleteoldkey';
+            $elements['newcertificate'] = array(
+                'type' => 'fieldset',
+                'legend' => get_string('newcertificate', 'auth.saml'),
+                'elements' =>  array(
+                    'protos_help' =>  array(
+                        'type' => 'html',
+                        'value' => '<div><p>' . get_string('manage_new_certificate', 'auth.saml') . '</p></div>',
+                    ),
+                    'pubkey' => array(
+                        'type'         => 'html',
+                        'value'        => '<h5 class="title">' . get_string('newpublickey','auth.saml') . '</h5>' .
+                        '<pre style="font-size: 0.7em; white-space: pre;">' . $newcert . '</pre>'
+                    ),
+                    'sha1fingerprint' => array(
+                        'type'         => 'html',
+                        'value'        => '<div><p>' . get_string('sha1fingerprint', 'auth.webservice', auth_saml_openssl_x509_fingerprint($newcert, "sha1")) . '</p></div>',
+                    ),
+                    'md5fingerprint' => array(
+                        'type'         => 'html',
+                        'value'        => '<div><p>' . get_string('md5fingerprint', 'auth.webservice', auth_saml_openssl_x509_fingerprint($newcert, "md5")) . '</p></div>',
+                    ),
+                    'expires' => array(
+                        'type'         => 'html',
+                        'value'        => '<div><p>' . get_string('publickeyexpireson', 'auth.webservice',
+                                            format_date($newdata['validTo_time_t']) . " (" . $newexpirydays . " days)") . '</p></div>'
+                    ),
+                ),
+                'collapsible' => false,
+                'collapsed'   => false,
+                'name' => 'activate_webservices_networking',
+            );
+        }
+        else {
+            $certstatus = 'createnewkey';
+        }
+        $elements['deletesubmit'] = array(
+            'class' => 'btn-default',
+            'name' => 'submit', // must be called submit so we can access it's value
+            'type'  => 'button',
+            'usebuttontag' => true,
+            'content' => '<span class="icon icon-refresh icon-lg left text-danger" role="presentation" aria-hidden="true"></span> '. get_string($certstatus . 'text', 'auth.saml'),
+            'value' => $certstatus,
         );
 
         // check extensions are loaded
@@ -668,6 +754,33 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function save_config_options(Pieform $form, $values) {
+
+        if ($form->get_submitvalue() === 'createnewkey') {
+            global $SESSION;
+            error_log("auth/saml: Creating new certificate");
+            self::create_certificates(3650, true);
+            $SESSION->add_ok_msg(get_string('newkeycreated', 'auth.saml'));
+            // Using cancel here as a hack to get it to redirect so it shows the new keys
+            $form->reply(PIEFORM_CANCEL, array(
+                'location'    => get_config('wwwroot') . 'admin/extensions/pluginconfig.php?plugintype=auth&pluginname=saml'
+            ));
+        }
+        else if ($form->get_submitvalue() === 'deleteoldkey') {
+            global $SESSION;
+            error_log("auth/saml: Deleting old certificates");
+            $result = self::delete_old_certificates();
+            if ($result) {
+                $SESSION->add_ok_msg(get_string('oldkeydeleted', 'auth.saml'));
+            }
+            else {
+                $SESSION->add_error_msg(get_string('keyrollfailed', 'auth.saml'));
+            }
+            // Using cancel here as a hack to get it to redirect so it shows the new keys
+            $form->reply(PIEFORM_CANCEL, array(
+                'location'    => get_config('wwwroot') . 'admin/extensions/pluginconfig.php?plugintype=auth&pluginname=saml'
+            ));
+        }
+
         delete_records_select('auth_config', 'plugin = ? AND field NOT LIKE ?', array('saml', 'version'));
         $configs = array('spentityid', 'sigalgo');
         foreach ($configs as $config) {
@@ -675,9 +788,8 @@ class PluginAuthSaml extends PluginAuth {
         }
 
         // generate new certificates
-        error_log("auth/saml: Creating new certificates");
-        self::create_certificates();
-
+        error_log("auth/saml: Creating new certificate based on form values");
+        self::create_certificates(3650);
     }
 
     public static function idptable($list, $preferred = array(), $institutions = array(), $showdelete = false) {
