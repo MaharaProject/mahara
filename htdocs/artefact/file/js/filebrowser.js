@@ -425,6 +425,7 @@ var FileBrowser = (function($) {
                 var name = $(this).prop('name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
                 if (name && name[1]) {
                     if (name[1] == 'edit') {
+                        $(this).off('click');
                         $(this).on('click', self.edit_form);
                     }
                     else if (name[1] == 'delete') {
