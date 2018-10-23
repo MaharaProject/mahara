@@ -21,13 +21,14 @@ require(get_config('libroot') . 'registration.php');
 define('TITLE', get_string('Registration', 'admin'));
 
 // This runs register_site in registration.php, which is what displays the form and the button for emails.
-if (!get_config('registration_lastsent')) {
+if (!get_config('registration_lastsent')
+    || get_config('new_registration_policy')) {
     $register = register_site();
-}
-else {
     if (get_config('new_registration_policy')) {
         $registration_update = get_string('newregistrationpolicyinfo', 'admin');
     }
+}
+else {
     $registered = register_site(true);
     $firstregistered = (get_config('registration_firstsent'));
     // The $firstregistered might be false if site registered before we kept this info. Otherwise format as date.
@@ -48,4 +49,21 @@ else if (isset($registered)) {
     $smarty->assign('firstregistered', $firstregistered);
 }
 
+$js = <<<EOF
+jQuery(function($) {
+    function update_weeklyupdates_options() {
+        var showweeklyupdates = $('#register_registeryesno').prop('checked');
+        if (showweeklyupdates) {
+            $('#register_sendweeklyupdates_container').removeClass('hidden');
+        }
+        else {
+            $('#register_sendweeklyupdates_container').addClass('hidden');
+        }
+    }
+    $('#register_registeryesno').on('click', update_weeklyupdates_options);
+    update_weeklyupdates_options();
+});
+EOF;
+
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('admin/registersite.tpl');
