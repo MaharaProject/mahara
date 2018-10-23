@@ -48,7 +48,7 @@
                                 <h4>
                                     <a href="#peerassessment-{$blockid}-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="peerassessment-{$blockid}-dropdown" class="collapsed">
                                         {str tag=instructions section=blocktype.peerassessment/peerassessment}
-                                        <span class="icon icon-chevron-down collapse-indicator right pull-right"></span>
+                                        <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
                                     </a>
                                 </h4>
                             </legend>
