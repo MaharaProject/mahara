@@ -36,13 +36,19 @@ The following is a check list of the steps you need to take. Please refer to the
 Mahara 19.04 supports direct upgrades from previous Mahara versions 15.04.0 and later.
 
 If you are upgrading from an earlier version you will need to upgrade
-in two steps:
+in either two or three steps:
+
+if site version begins with 1.X first upgrade to 15.04
 
  * Upgrade version 'X' -> 15.04.X (latest 15.04 version)
 
+then/else upgrade version to 17.04
+
+ * Upgrade version 'X' -> 17.04.X (latest 17.04 version)
+
 then
 
- * Upgrade version 15.04.X -> 'Y'
+ * Upgrade version 17.04.X -> 'Y'
 
 To upgrade an existing Mahara installation, follow the instructions here:
 
