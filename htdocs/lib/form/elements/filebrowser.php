@@ -1269,6 +1269,7 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     $returndata = array(
         'error' => false,
         'message' => get_string('changessaved', 'artefact.file'),
+        'folder' => $artefact->get('parent'),
         'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $artefact->get('parent'), null, $user, $group, $institution),
     );
 
