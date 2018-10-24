@@ -111,7 +111,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         $width = (int) $width;
         $height = (int) $height;
         $url = hsc($url);
-        return '<iframe width="' . $width . '" height="' . $height . '" src="' . $url . '" frameborder=0 allowfullscreen mozallowfullscreen webkitallowfullscreen></iframe>';
+        return '<iframe class="externalvideoiframe" width="' . $width . '" height="' . $height . '" src="' . $url . '" allowfullscreen="1"></iframe>';
     }
 
     public static function get_blocktype_type_content_types() {
