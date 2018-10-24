@@ -28,10 +28,10 @@ $groups-color: #799323;
 // 4) Lighter shade (can be specified in hex,rgba value)
 // 5) Darker shade (can be specified in hex,rgba value)
 $menu-styles: (
-  ("home", $fa-var-tachometer, $home-color, lighten($home-color, 5%), darken($home-color, 5%)),
-  ("create", $fa-var-pencil-square, $content-color, lighten($content-color, 5%), darken($content-color, 5%)),
-  ("engage", $fa-var-file, $myportfolio-color, lighten($myportfolio-color, 5%), darken($myportfolio-color, 5%)),
-  ("manage", $fa-var-users, $groups-color, lighten($groups-color, 5%), darken($groups-color, 5%))
+  ("home", $home-color, lighten($home-color, 5%), darken($home-color, 5%)),
+  ("create", $content-color, lighten($content-color, 5%), darken($content-color, 5%)),
+  ("engage", $myportfolio-color, lighten($myportfolio-color, 5%), darken($myportfolio-color, 5%)),
+  ("manage", $groups-color, lighten($groups-color, 5%), darken($groups-color, 5%))
 );
 
 .nav-main .navbar-nav {
@@ -56,9 +56,6 @@ $menu-styles: (
         &.active > a {
             background-color: #FFFFFF;
         }
-        .navbar-showchildren{
-            top: 7px;
-        }
         .child-nav > li {
             a {
                 color: #FFFFFF;
@@ -71,21 +68,18 @@ $menu-styles: (
     @each $section in $menu-styles {
         > .#{nth($section, 1)} {
             > a {
-                background-color: #{nth($section, 3)};
-                &:before {
-                    content: "#{nth($section, 2)}";
-                }
+                background-color: #{nth($section, 2)};
                 &:focus,
                 &:hover {
-                    background-color: #{nth($section, 4)};
+                    background-color: #{nth($section, 3)};
                 }
             }
             &.active > a {
                 &:before {
-                    color: #{nth($section, 3)};
+                    color: #{nth($section, 2)};
                     &:focus,
                     &:hover {
-                        background-color: #{nth($section, 4)};
+                        background-color: #{nth($section, 3)};
                         color: #FFFFFF;
                     }
                 }
@@ -96,22 +90,22 @@ $menu-styles: (
             }
             .navbar-showchildren,
             &.active .navbar-showchildren {
-                background-color: #{nth($section, 3)};
+                background-color: #{nth($section, 2)};
                 &:focus,
                 &:hover {
-                    background-color: #{nth($section, 5)};
+                    background-color: #{nth($section, 4)};
                 }
             }
             .child-nav li {
                 a {
-                    background-color: #{nth($section, 5)};
+                    background-color: #{nth($section, 4)};
                     &:focus,
                     &:hover {
-                        background-color: #{nth($section, 3)};
+                        background-color: #{nth($section, 2)};
                     }
                 }
                 &.active a {
-                    background-color: #{nth($section, 4)};
+                    background-color: #{nth($section, 3)};
                 }
             }
         }
