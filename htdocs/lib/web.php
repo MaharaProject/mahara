@@ -2888,7 +2888,7 @@ function mahara_standard_nav() {
             'title' => get_string('dashboard', 'view'),
             'weight' => 10,
             'accesskey' => 'd',
-            'iconclass' => 'home'
+            'iconclass' => 'tachometer'
         ),
         'create' => array(
             'path' => 'create',
