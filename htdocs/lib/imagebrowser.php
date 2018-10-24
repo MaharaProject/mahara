@@ -312,6 +312,7 @@ class ImageBrowser {
                 'filters' => array(
                         'artefacttype'    => array('image', 'profileicon'),
                         ),
+                'accept' => 'image/*',
         );
         return $element;
     }
