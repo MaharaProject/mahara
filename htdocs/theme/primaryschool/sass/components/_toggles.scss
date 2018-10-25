@@ -1,16 +1,16 @@
 .navbar-showchildren {
     .icon {
-        color: $navbar-inverse-toggle-icon-bar-bg;
+        color: $navbar-inverse-link-color;
     }
     &:hover,
     &:focus {
         .icon {
-            color: $navbar-inverse-toggle-icon-bar-bg;
+            color: $navbar-inverse-link-color;
         }
     }
     .active & {
         .icon {
-            color: $navbar-inverse-toggle-icon-bar-bg;
+            color: $navbar-inverse-link-color;
         }
     }
 }
