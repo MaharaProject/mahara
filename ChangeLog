@@ -1,3 +1,14 @@
+17.10.7 (2018-10-25)
+- Bug 1774554: Need to throw correct error in Webservices user delete
+- Bug 1785928: Update the minupgradeversion now that we are using a different structure for tag table
+- Bug 1786867: Upgrade Mahara PHPUnit test system to Namespaced version
+- Bug 1788300: Group collections not copyable on group homepage
+- Bug 1792638: Problems with ldap user sync database error
+- Bug 1794370: Block change watchlist notification not displaying correct owner
+- Bug 1778451: user statistics sendjasonrequest error
+- Bug 1779959: upgrade modernizr library to v3.6.0
+- Bug 1797278: Reports page is missing a link to a string
+
 17.10.6 (2018-06-11)
 - 1773864 	ExternalFeed block cron task fails when SSL cert is not valid for a feed
 - 1774309 	Getting an Undefined index: QUERY_STRING when logging in
