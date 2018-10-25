@@ -2792,7 +2792,7 @@ function auth_register_submit(Pieform $form, $values) {
         }
         if ($confirm) {
             $values['pending'] = 1;
-            $values['expiry'] = db_format_timestamp(time() + (86400 * 14)); // now + 2 weeks
+            $values['expiry'] = db_format_timestamp(time() + (int)get_config('defaultregistrationexpirylifetime'));
         }
         else {
             $values['pending'] = 0;
