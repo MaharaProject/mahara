@@ -1,3 +1,298 @@
+18.10.0 (2018-10-25)
+- Bug 1794724: Can't upload images previously taken on Mobile device
+- Bug 1799802: Menu icons are doubled up for primary school theme
+- Bug 1797813: Editing an image through the edit image when editing an image gallery on a portfolio page not working
+- Bug 1731330: Delete button style/placement inconsistent 	
+- Bug 1744789: Avoid relying on TinyMCE code stripping alone 	
+- Bug 1749402: Views and collection list (in group) throws MySQL error
+- Bug 1749834: Not showing username to users when "never display usernames" is set to no
+- Bug 1750948: Upgrade to latest nodejs for Mahara 18.10
+- Bug 1753359: Always take public anonymous comments through moderation 	
+- Bug 1755329: Working out folder size slows down opening of image block config
+- Bug 1755331: Cannot copy group pages when pagination is used
+- Bug 1755508: Unable to remove users from group when pagination is used
+- Bug 1755611: Should not call non static function statically in framework module
+- Bug 1755674: tinyMCE not defined error in comment on SE colection 	
+- Bug 1756153: Collapse configurable theme menu on Esc / mouse click 	
+- Bug 1756154: Fix link color in Primary School and Ocean themes for "Notifications"
+- Bug 1756216: Only run simplesaml cron job if there are saml auth instances 	
+- Bug 1756631: Setting up group when user is in 2 institutions and not site admin brings error
+- Bug 1756726: Password policy should be applied upon upgrade
+- Bug 1757254: The page "more" link menu sometimes looks broken 	
+- Bug 1757283: The views.js file uses the javascript 'includes' function but this is not available to IE11 	
+- Bug 1757330: Export file Session Data not saved in PHP 7.1+
+- Bug 1758139: Set password policy explicitly during install 	
+- Bug 1758613: Intro text to T&C legal page refers to privacy statement
+- Bug 1758733: Correct T&C and privacy statement displays when not in "Strict privacy" mode
+- Bug 1759367: Update html purifier to 4.10.0
+- Bug 1759698: Date picker is not actioning date change
+- Bug 1760970: Upgraded site doesn't rotate images
+- Bug 1761037: Installing a site doesn't update email correctly 	
+- Bug 1763581: Capitalisation of username / email address issue with LTI 	
+- Bug 1766041: Password policy setting for only upper and lowercase letters doesn't require uppercase
+- Bug 1767220: Error when viewing a profile page with wall post as an Institution admin
+- Bug 1767887: Select2 tag selector is not positioning correctly 	
+- Bug 1767945: php 7.2 causes problems in Mahara
+- Bug 1769512: find_by_email_address() and MySql problem
+- Bug 1770496: Group member can't paginate through group pages 	
+- Bug 1770535: Able to upload a virus file to Files section
+- Bug 1770561: Browser back and refresh button attack vulnerability 	
+- Bug 1772773: Need to call render_items in the static way
+- Bug 1772774: change error message when changing username
+- Bug 1772792: Behat: upgrade for php 7.2 	
+- Bug 1773247: sql exception when deleting a user
+- Bug 1773864: ExternalFeed block cron task fails when SSL cert is not valid for a feed
+- Bug 1773887: Upgrade 3rd party plugin ADODB for php 7.2
+- Bug 1773891: Upgrade 3rd party plugin CSSTidy for php 7.2
+- Bug 1773892: Upgrade 3rd party plugin Dwoo for php 7.2
+- Bug 1773893: Remove Zend
+- Bug 1774106: Upgrade 3rd party plugin simpleSAMLphp for php 7.2
+- Bug 1774309: Getting an Undefined index: QUERY_STRING when logging in
+- Bug 1774334: Redirecting to wrong adminurl post login 	
+- Bug 1774554: Need to throw correct error in Webservices user delete 	
+- Bug 1776364: External file system image infinite loop 	
+- Bug 1776814: can't search on mobile 	
+- Bug 1778438: Behat help_icon test - comment out failing line/s
+- Bug 1779243: mysql 8 fails to run mahara
+- Bug 1779977: upgrade masonry library to v4.2.0
+- Bug 1781278: Create page from tags issues with description and with only 1 tag existing 	
+- Bug 1782062: Gravatar connection timeout too long
+- Bug 1782729: Uploading new image as skin background gives error
+- Bug 1784762: Login error when using a different language
+- Bug 1785514: Adding user to new institution changes auth method for all users
+- Bug 1785928: Update the minupgradeversion now that we are using a different structure for tag table 	
+- Bug 1786867: Upgrade Mahara PHPUnit test system to Namespaced version 	
+- Bug 1787493: Unable to have both "" and "0" as options in a select form and have "" the selected one
+- Bug 1788062: The group files page has a broken sidebar
+- Bug 1788287: Allow blocks created via tags to keep original title
+- Bug 1788300: Group collections not copyable on group homepage
+- Bug 1788710: DB upgrade problem with plans from 17.04
+- Bug 1792252: Update help to manual links to match new navigation changes
+- Bug 1792263: Tidy up pages matching new menu items
+- Bug 1792638: Problems with ldap user sync database error 	
+- Bug 1794370: Block change watchlist notification not displaying correct owner
+- Bug 1795096: Turn delete button into button and add confirmation dialogue when deleting IdP
+- Bug 1795097: Change items in "Advanced" settings panel of a page
+- Bug 1795099: Site registration information is not updated
+- Bug 1795189: Page not created with tagged content when page with a tag is part of collection
+- Bug 1795191: External content blocks not shown under "Tagged content of [name]"
+- Bug 1795272: Navigation changes for user and main menu 	
+- Bug 1795273: Can't delete a user who submitted assignments to the LMS via LTI
+- Bug 1795275: The filters on the "My tags" page are not alphabetized
+- Bug 1795597: Issues relating to LTI when upgrading from 18.04 to 18.10RC1
+- Bug 1795749: Change position of new email icon and put background behind it
+- Bug 1795758: error when creating a site skins
+- Bug 1795977: secret URL sharing shows error when accessed as loggedout user
+- Bug 1796044: Viewing Create -> Tags page with Mysql database
+- Bug 1796523: Objectionable content report throws errors on upgraded site
+- Bug 1796583: Peer assessment deletion lang string needs to mention correct person deleting assessment
+- Bug 1796588: Add a "Loading" indicator on the timeline page
+- Bug 1797276: New reserved keywords in mysql8 cause SQL errors
+- Bug 1797294: Group admin loses access to page reported objectionable
+- Bug 1797299: Custom landing page search broken in MySQL
+- Bug 1797812: Privacy statements in logged out page should show latest version
+- Bug 1797991: RSS feed icon displays in dropdown menu *** save to time line
+- Bug 1798932: Peer assessment qualities are lost when pages are added to a collection
+- Bug 1422492: Mahara doesn't ask you for your password before changing your username 	
+- Bug 1594192: Leap2a: Importing a file artefact has failed 	
+- Bug 1675233: Youtube fullscreen not working in 'automatically retract' mode
+- Bug 1677929: behat test for profile info block 	
+- Bug 1690273: Test for footer headings display 	Niranjan
+- Bug 1698257: Ensure that the header displays correctly with or without site message 	
+- Bug 1702748: View ID appended at download URL from another Mahara site
+- Bug 1708959: Webservice create group missing some settings 	
+- Bug 1733769: Behat test for 1729423 - can't choose comment to make public
+- Bug 1733995: Issue targeting a select2 tag in behat test
+- Bug 1741987: Update jquery to version 3.3.1
+- Bug 1742349: External(Kaltura) video doesn't play when block is on auto-retract 	
+- Bug 1743286: styling changes for behat html report 	
+- Bug 1749403: Code correction in function find_key_name of lib/ddl.php 	
+- Bug 1749628: Behat test for File Quota 4.3.5 in manual test suite 	
+- Bug 1749631: Behat test for Journal Settings, 4.4.1 in manual test suite 	
+- Bug 1751688: Notifications still sent out to suspended accounts
+- Bug 1752181: "Deleted user" in group page comments / forum posts shows with link 	
+- Bug 1752477: Behat test for image gallery block 	
+- Bug 1752497: Behat test for Creative Commons license block 	
+- Bug 1752694: Behat test: New legal statements and static pages text
+- Bug 1752743: Need to tidy up code for deprecated php functions
+- Bug 1753634: Behat test for Recent forum post block 	
+- Bug 1753841: Behat test: image/text blocks can be deleted 	
+- Bug 1753911: Behat: Files to download block test 	
+- Bug 1754207: Make SmartEvidence strings for statuses configurable
+- Bug 1754239: Behat: Embedded Media test 	
+- Bug 1754446: Show better human readable tooltip for app token
+- Bug 1755431: Don't bold "Tags" in file browser description in blocks 	
+- Bug 1755578: behat test for verify user menu elements
+- Bug 1755630: Creative commons block not retractable 	
+- Bug 1755660: Behat: test for saving of Student ID 	
+- Bug 1755662: Behat: test for renaming a file and adding description 	
+- Bug 1755669: Behat: test resume elements can be deleted 	
+- Bug 1755678: Behat: test that journal entries/journals can be deleted 	
+- Bug 1755680: Behat: test that plans can be edited/deleted 	
+- Bug 1755682: Behat: test a page can be deleted 	
+- Bug 1755688: Behat: test sharing a page 	
+- Bug 1756736: Primary button colour error TinyMCE link
+- Bug 1756764: share/edit access cancel button not working 	
+- Bug 1757551: External gallery panoramio no longer exists
+- Bug 1758135: Long block titles overflow block title area when dragging 	
+- Bug 1758153: There are 'aria-label' values that are not being translated
+- Bug 1758181: Extra div field when comments are turned off on page or artefact details page 	Sarah Kirby
+- Bug 1758587: User search page table column not wide enough 	
+- Bug 1758728: Pending deletion screen should link to user profile
+- Bug 1758735: Consolidate styles of registration agreements
+- Bug 1758757: Leap2A export warnings on comment/annotation 	
+- Bug 1758769: Tutors able to create page when Group's "End date" is set to the past
+- Bug 1759048: datepicker text for screen readers 	
+- Bug 1760732: Configurable theme not displaying correctly after upgrade
+- Bug 1760742: Empty foreach() error when switching a group from standard to course 	
+- Bug 1760766: User manual link goes to previous version also when on RC
+- Bug 1761329: behat test for user registration 	
+- Bug 1761637: Update Existing Behat feature file to check for error messages 	
+- Bug 1762627: Confusing description on cli bulk user deletion (Bug 1760767) 	
+- Bug 1763553: Behat Test: for bug 1356638 image in static page
+- Bug 1765264: Error when deleting a user relating to the group quota 	
+- Bug 1765558: Accordion chevron on task is partially hidden 	Sarah Kirby
+- Bug 1767867: 'Search results for' link in My Tags page not working correctly
+- Bug 1767882: "tablerenderer call updatecallback" js error in profileicons.php
+- Bug 1768685: Upgrade chromedriver / selenium
+- Bug 1769581: Remove info on subscribe / unsubscribe from topics in group forums 	
+- Bug 1769833: Incorrect lang string when looking at the T&C of a person under "Legal consent"
+- Bug 1770258: Behat test for create cover letter 	
+- Bug 1770274: Behat test for Allow size of folder to show in file browser list 	
+- Bug 1770281: Behat Resume page test failing at various points during execution 	
+- Bug 1771473: No sorting of tags according to "date" when clicked on a tag
+- Bug 1772298: login help icon hidden on Modern theme
+- Bug 1772327: Button "Return to group pages" should be "Return to group pages and collections"
+- Bug 1772884: Replying to notification ends up in old inbox
+- Bug 1773043: Undefined property: stdClass::$logoxs due to wrong order of the upgrade tasks (upgrading from 16.10.9 to 17.10.4) 	
+- Bug 1773272: Behat: copy_taggedposts.feature failing in jenkins
+- Bug 1773707: Catching exception in delete users script
+- Bug 1773853: Third-level navigation in sub theme starter kit doesn't have background
+- Bug 1774504: Behat test: Profile page can be shared publicly
+- Bug 1774524: Adding Behat step to allow the top of an element to be scrolled to the center of the viewport 	
+- Bug 1776554: Line breaks not respected on sendmessage screen for previous message
+- Bug 1776798: Update jquery-ui to version v1.12.1
+- Bug 1776816: jquery-mobile warnings with jquery 3
+- Bug 1777741: filter artefact chooser search by tag
+- Bug 1778451: user statistics sendjasonrequest error
+- Bug 1779031: need to upgrade clipboard library to v2.0.1
+- Bug 1779033: need to upgrade cookie consent library to v3.0.3
+- Bug 1779037: upgrade javascript-templates library to v3.11.0
+- Bug 1779038: upgrade JS Color library to v2.0.5
+- Bug 1779039: upgrade Moment JS library to v2.22.2
+- Bug 1779040: upgrade Select2 library to v4.0.5
+- Bug 1779041: upgradeTinyMCE to v4.8.2 	
+- Bug 1779049: Make mysql_has_trigger_privilege() work better / more robust
+- Bug 1779221: Correct "Configure site" info on "Admin home"
+- Bug 1779586: Copying page fails to update page description embedded image correctly
+- Bug 1779600: Remove slideshow.js
+- Bug 1779959: upgrade modernizr library to v3.6.0
+- Bug 1779960: upgrade video.js library to v7.0.5
+- Bug 1781503: Behat test: Add checks for a few page elements on profile page 	
+- Bug 1781527: Remove code for old notifications system
+- Bug 1781847: upgrade marked lib to v0.4.0
+- Bug 1783036: Behat test: 'More...' button
+- Bug 1783222: Behat: Stop auth method from other institutions showing up on user admin screen 	
+- Bug 1783425: Behat: Group admins pushing group portfolios to group members 	
+- Bug 1784943: Behat: Create script for annotation via SmartEvidence map 	
+- Bug 1785149: Behat: Update a task from within a blocktype 	
+- Bug 1785522: Behat test: Verify "Display pages" button displayed to left of the "Return to Pages" button 	
+- Bug 1785725: Behat test: Require the setting of the country field 	
+- Bug 1785742: Behat test: Create SmartEvidence collection and share with staff 	
+- Bug 1785924: Error message when sharing a page 	
+- Bug 1785938: slimbox2 upgrade to fix problems with jquery 	
+- Bug 1785944: Behat script: Update existing script - check tags with special characters are found 	
+- Bug 1786133: Behat: update script: check functionality for embedded images in Page description 	
+- Bug 1786722: Behat test: Create page content using the "Create via tags" field
+- Bug 1787273: Behat: Empty blog should display "No entries yet." and "Add one" link 	
+- Bug 1787860: Text block title is dropped when creating a page content via tags functionality
+- Bug 1788509: Behat: When doing self import the locked fields will only show 'ignore' radio button option 	
+- Bug 1788532: Behat: step definition And I should not see "?" in the "?" row 	
+- Bug 1788705: Behat: Group forums should not be editable to regular members, only group owner and staff 	
+- Bug 1789142: Behat: Hide the xmlrpc specific fields when not using them In the add/edit webservice users/tokens screens 	
+- Bug 1789532: Behat: Confirm the tooltip displays 'Delete "Manually created"' when hovering over the "Delete" button
+- Bug 1792053: Messages icon too far left for regular users
+- Bug 1792246: make a more generic js workround for target _blank 	
+- Bug 1792272: Enhance Memcached & Redis session storage functionality for both Mahara & SAML authentication 	
+- Bug 1792834: View block overlaps with view top right menu links 	
+- Bug 1793227: Make min PHP version tp be 7+ to allow phpunit 6.0 to work
+- Bug 1793943: Review language strings before 18.10 release
+- Bug 1794189: edit topic and edit post pages display message needs fixing
+- Bug 1794614: add_delete_comments.feature doesn't find the page title 	
+- Bug 1794724: Can't upload images previously taken on Mobile device
+- Bug 1795102: Don't show "Details" link for plans on page edit screen
+- Bug 1795190: Tags on group, institution and site pages are clickable but lead to access denied
+- Bug 1795268: Change text for LTI assignment submission
+- Bug 1795347: Correct tense in peer assessment language string
+- Bug 1795522: Allow a custom directory for dwoo cache 	
+- Bug 1796166: Style adjustments for LTI grading screen
+- Bug 1796226: Make the Inbox block's notifications list be alphabetical
+- Bug 1796452: Peer / manager role can only be given on first save of "Edit access"
+- Bug 1796590: Add "Loading" indicator to Open Badges block
+- Bug 1797278: Reports page is missing a link to a string
+- Bug 1797821: Submitted page 'Undefined ltigradeform' error when accessed
+- Bug 1797827: view timeline shows wrong color in arrows for configurable theme
+- Bug 1797976: Clicking cancel for the (do you want to leave page) pop up modal starts processing and computer hangs
+- Bug 1798209: ignore Dashboard and Profile pages when importing Leap2A
+- Bug 1798217: Tag sideblock showing on incorrect page
+- Bug 1798223: Change the style for "Instructions"
+- Bug 1798931: Show the manager and peer role when viewing the access permissions on "Pages and Collections"
+- Bug 568804 : pdating user's Authentication Method
+- Bug 1753612: Behat test for adding a navigation block to a page 	
+- Bug 1754237: SimpleSAML_Logger is deprecated warning 	
+- Bug 1758226: Group edit homepage "Settings" button shows wrong message with skins enabled 	
+- Bug 1759424: Remove not needed .gitignore files from Mahara 	
+- Bug 1764235: Select 'title' text on creation of new page 	
+- Bug 1770261: duplicated id="login_login_submitted" in login form
+- Bug 1771056: behat test openbadge failing too often
+- Bug 1771210: need to tidy up code in: group_view_block feature
+- Bug 1771698: SITEOUTOFSYNC already defined 	
+- Bug 1774308: Behat test for "Show last updated date and time when seeing a portfolio page" (Bug 1634591) 	
+- Bug 1775101: Sorting tags in tags.php changes style of the tags list
+- Bug 1775722: obsolete code in page custom layout settings 	
+- Bug 1778905: Profile Pictures - Alignment of default' and 'delete' radio/tick boxes
+- Bug 1785114: Standardise code call to stdClass();
+- Bug 1787287: Behat: Update script - Add legend "Cell" to add block modal window 	
+- Bug 1789051: edit/delete buttons do not have correct style 	
+- Bug 1790576: Add "Tags" menu item
+- Bug 1796213: Adding icon to edit note page 	
+- Bug 1798653: Database too new message missing some values
+- Bug 1798663: PHPunit fails uninstall process due to foreign key 	
+- Bug 1691957: Allow SQL as the datastore for SimpleSAMLphp
+- Bug 1716820: Delete SAML IdP in the admin area
+- Bug 1717744: Allow LTI to be a child auth of LDAP
+- Bug 1722861: Institution tags
+- Bug 1723961: Edit plans more easily from a page
+- Bug 1724846: Add userchangegrouprole event trigger
+- Bug 1742347: Allow page versioning in Mahara
+- Bug 1743870: Moderate portfolios of regular users
+- Bug 1745014: Allow page search 'tags only' option handle multiple tags
+- Bug 1749408: Make it possible for PlugIns defining a grouptab
+- Bug 1755919: Explore tagged content of other people when coming from a page
+- Bug 1760767: Create a cli script to allow for bulk delete of users from commandline
+- Bug 1763163: Automatically copy group portfolio into group member accounts
+- Bug 1763517: Comments can't be deleted when work is submitted for marking
+- Bug 1765674: Be able to revoke sending of anonymous data to the Mahara project and display all info sent
+- Bug 1766833: maxlayoutrows is too low
+- Bug 1768167: Create a cli script to allow for bulk delete of groups from commandline
+- Bug 1771362: Times reported inaccurately when DB timezone does not match PHP timezoneMark Webster
+- Bug 1774103: Combine all the *_tag tables into one table
+- Bug 1774274: Need a way to check popups in behat
+- Bug 1775106: Create pages based on tagged content incl. blocks
+- Bug 1777354: "Sticky filter" for page activity report
+- Bug 1781844: When pages are shared - users can delete blocks by accident
+- Bug 1782954: Change main menu and move items around
+- Bug 1783042: Allow more blocks to be on site / institution pages
+- Bug 1783685: allow multiple TinyMCE fields in one pieform
+- Bug 1784778: Peer assessment block
+- Bug 1784781: 2 new roles for assessment work flow: Peer assessor and manager
+- Bug 1786427: Sign-off and verification of a portfolio page
+- Bug 1788296: Adding / adjusting the icons in the Content section
+- Bug 1789297: LTI Assignment Submission
+- Bug 1790543: Display portfolio page instructions
+- Bug 1790731: Allow post login landing url be customisable
+- Bug 1790742: stop deleting user sessions when updating user data
+
 18.10rc2 (2018-10-08)
 
 18.10rc1 (2018-10-01)
