@@ -90,7 +90,7 @@ MariaDB 10.3+ versions.
 
 ### PHP
 
-Mahara requires PHP version 5.5.9 or later. The "magic_quotes" and "register_globals"
+Mahara requires PHP version 7.0.X. The "magic_quotes" and "register_globals"
 settings should be turned *off* (which is the default on modern PHP installations).
 
 The following PHP extensions are also required:
@@ -113,7 +113,8 @@ The following PHP extensions are also required:
  * adodb (optional; improves performance)
  * enchant or pspell (optional; for TinyMCE spellcheck button)
 
-Note: This version of Mahara has not been tested on php versions 7.2+.
+Note: This version of Mahara has not been fully tested on all latest versions of PHP.
+Some aspects of Mahara may not function as expected
 
 ### Web Browser
 
