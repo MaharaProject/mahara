@@ -30,7 +30,7 @@
             <span title="{$item->active.title}" class="{$item->active.classes}"></span>
         </td>
         <td class="buttonscell framework">
-            <script type="application/javascript">
+            <script>
                 jQuery('#framework{$item->id}_enabled').on('change', function() {
                     // save switch
                     jQuery.post(config.wwwroot + 'module/framework/frameworks.json.php', jQuery('#framework{$item->id}').serialize())

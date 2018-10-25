@@ -30,7 +30,7 @@ function pieform_element_color(Pieform $form, $element) {
     // Transparency optional control
     if ($transparent) {
         $optional = <<<EOF
-        <script type="application/javascript">
+        <script>
             var {$baseid}_oldval = '';
             function {$baseid}_toggle(x) {
                 if ( x.checked ) {
@@ -119,7 +119,7 @@ function pieform_element_color_get_value(Pieform $form, $element) {
 function pieform_element_color_get_headdata($element, Pieform $form) {
     $libfile   = get_config('wwwroot')  . 'js/jscolor/jscolor.js';
     $name = $form->get_property('name') . '_' . $element['name'];
-    $result = '<script type="application/javascript">';
+    $result = '<script>';
     $result .= "var initjscolor = false; \n";
     $result .= "PieformManager.connect('onload', null, function() {\n";
     $result .= "  jQuery(function($) { \n";
@@ -132,7 +132,7 @@ function pieform_element_color_get_headdata($element, Pieform $form) {
     $result .= "  }); \n";
     $result .= "});</script>";
     $results = array(
-        '<script type="application/javascript" src="' . $libfile . '"></script>',
+        '<script src="' . $libfile . '"></script>',
         $result
     );
     return $results;

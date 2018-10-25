@@ -32,7 +32,7 @@
                 {$file.description|safe|clean_html}
             </p>
         </div>
-        <script type="application/javascript">
+        <script>
         jQuery("div.file-description a").addClass('inner-link');
         </script>
         {/if}

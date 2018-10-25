@@ -1,4 +1,4 @@
-<script type="application/javascript">
+<script>
     var {{$name}}_d;
 
     var {{$name}}_searchparams;

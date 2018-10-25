@@ -28,7 +28,7 @@
         {$reportinformation|safe}
     </div>
 </div>
-<script type="application/javascript">
+<script>
     function update_report_config() {
         var institution = $('#reportconfigform_institution').val();
         var typesubtype = $('#reportconfigform_typesubtype').val().split("_");

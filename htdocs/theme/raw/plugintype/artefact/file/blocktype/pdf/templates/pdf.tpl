@@ -30,7 +30,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 
     <link rel="stylesheet" href="js/pdfjs/web/viewer.css"/>
 
-    <script type="application/javascript">
+    <script>
         var wwwroot = '{$WWWROOT}';
         var fileurl = "{$url|safe}";
         // to handle showing download link when javascript is turned off
@@ -44,9 +44,9 @@ See https://github.com/adobe-type-tools/cmap-resources
     </script>
 
     <link rel="resource" type="application/l10n" href="js/pdfjs/web/locale/locale.properties"/>
-    <script type="application/javascript" src="js/pdfjs/build/pdf.min.js"></script>
+    <script src="js/pdfjs/build/pdf.min.js"></script>
 
-    <script type="application/javascript" src="js/pdfjs/web/viewer.js"></script>
+    <script src="js/pdfjs/web/viewer.js"></script>
 
   </head>
 

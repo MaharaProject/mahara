@@ -52,7 +52,7 @@
                 <p class="file-description text-small text-midtone">
                     {$child->description|safe|clean_html}
                 </p>
-                <script type="application/javascript">
+                <script>
                 jQuery(".file-description a").addClass('inner-link');
                 </script>
                 {/if}

@@ -552,7 +552,7 @@ $cfg->plugin_search_elasticsearch_redolimit = '500';
  * to use a PHP nowdoc: http://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.nowdoc
  */
 // $cfg->additionalhtmlhead = <<<'HTML'
-// <script type="application/javascript">
+// <script>
 //   var _gaq = _gaq || [];
 //   _gaq.push(['_setAccount', 'UA-XXXXX-X']);
 //   _gaq.push(['_trackPageview']);

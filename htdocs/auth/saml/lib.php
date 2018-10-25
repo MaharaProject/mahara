@@ -1052,7 +1052,7 @@ class PluginAuthSaml extends PluginAuth {
         $entityidps = array('new' => get_string('newidpentity', 'auth.saml')) + $entityidps;
 
         $idpselectjs = <<< EOF
-<script type="application/javascript">
+<script>
 jQuery(function($) {
 
     function update_idp_label(idp) {

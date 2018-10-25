@@ -28,7 +28,7 @@
 </table>
     {$sharedviews.pagination|safe}
     {if $sharedviews.pagination_js}
-    <script type="application/javascript">
+    <script>
     {$sharedviews.pagination_js|safe}
     </script>
     {/if}
@@ -65,7 +65,7 @@
 </table>
 {$groupviews.pagination|safe}
     {if $groupviews.pagination_js}
-    <script type="application/javascript">
+    <script>
     {$groupviews.pagination_js|safe}
     </script>
     {/if}

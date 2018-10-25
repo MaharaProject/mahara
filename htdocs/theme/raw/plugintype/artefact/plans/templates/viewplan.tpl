@@ -8,7 +8,7 @@
 <div id="plans_page_container">
     {$tasks.pagination|safe}
 </div>
-<script type="application/javascript">
+<script>
     jQuery(function($) {literal}{{/literal}
         {$tasks.pagination_js|safe}
         $('#plans_page_container_{$blockid}_plan{$tasks.planid}').removeClass('hidden');

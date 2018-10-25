@@ -229,12 +229,12 @@ details on navigation styles.
     <div class="navbar-default navbar-main pull-right">
         <div class="nav-toggle-area">
             <!-- Nav One Button -->
-            <button class="nav-one-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-one" aria-expanded="false" aria-controls="nav-one" title="Nav one">
+            <button class="nav-one-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-one" aria-expanded="false" aria-controls="nav-one" title="Nav one">
                 <span class="sr-only">Show nav one</span>
                 <span class="icon icon-bars icon-lg" role="presentation" aria-hidden="true"></span>
             </button>
             <!-- Nav Two Button -->
-            <button class="nav-two-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-two" aria-expanded="false" aria-controls="nav-two" title="Nav two">
+            <button class="nav-two-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-two" aria-expanded="false" aria-controls="nav-two" title="Nav two">
                 <span class="sr-only">Show nav two</span>
                 <span class="icon icon-wrench icon-large" role="presentation" aria-hidden="true"></span>
             </button>
@@ -242,12 +242,12 @@ details on navigation styles.
             <a href="" class="user-icon" title="Profile page">
                 <img src="{$WWWROOT}theme/raw/images/no_userphoto25.png">
             </a>
-            <button class="user-toggle nav-three-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
+            <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
                 <span class="sr-only">Show nav three</span>
                 <span class="icon icon-chevron-down collapsed"></span>
             </button>
             <!-- Hide Search When on Desktop -->
-            <button class="search-toggle navbar-toggle collapsed" role="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
+            <button class="search-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
                 <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
                 <span class="nav-title sr-only">{str tag=showsearch}</span>
             </button>
@@ -734,7 +734,7 @@ This panel is used to show a page.
         <div class="panel-footer">
             <div class="page-access"></div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" type="button" data-toggle="dropdown" aria-expanded="false" title="More...">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="More...">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">More options for "Dashboard page"</span>
@@ -805,7 +805,7 @@ This panel is used to show a submitted page.
                 </ul>
             </div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" type="button" data-toggle="dropdown" aria-expanded="false" title="More...">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="More...">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">More options for "Dashboard page"</span>
@@ -878,7 +878,7 @@ This panel is used to show a collection.
                 </ul>
             </div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" type="button" data-toggle="dropdown" aria-expanded="false" title="More...">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="More...">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">More options for "collection"</span>

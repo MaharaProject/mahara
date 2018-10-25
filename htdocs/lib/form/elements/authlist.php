@@ -89,6 +89,6 @@ EOF;
 }
 
 function pieform_element_authlist_get_headdata() {
-    $result = '<script type="application/javascript">' . pieform_element_authlist_js() . "</script>";
+    $result = '<script>' . pieform_element_authlist_js() . "</script>";
     return array($result);
 }

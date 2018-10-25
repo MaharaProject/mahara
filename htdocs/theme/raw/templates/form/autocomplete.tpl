@@ -6,7 +6,7 @@
 {{/if}}
 </select>
 
-<script type="application/javascript">
+<script>
 {{if !$inblockconfig}}
     jQuery(window).on('load', function () {
 {{/if}}

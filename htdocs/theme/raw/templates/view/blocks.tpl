@@ -122,7 +122,7 @@
                 </div>
             </div>
             {if $block.javascript}
-            <script type="application/javascript">
+            <script>
                     {$block.javascript|safe}
             </script>
             {/if}

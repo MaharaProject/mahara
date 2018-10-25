@@ -42,7 +42,7 @@
         </div>
         {$views->pagination.html|safe}
         {if $views->pagination.javascript}
-            <script type="application/javascript">
+            <script>
             {$views->pagination.javascript|safe}
             </script>
         {/if}

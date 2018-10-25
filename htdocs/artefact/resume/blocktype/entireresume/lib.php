@@ -44,7 +44,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
                 $rendered = $resumefield->render_self(array('viewid' => $instance->get('view')));
                 $result = $rendered['html'];
                 if (!empty($rendered['javascript'])) {
-                    $result .= '<script type="application/javascript">' . $rendered['javascript'] . '</script>';
+                    $result .= '<script>' . $rendered['javascript'] . '</script>';
                 }
                 $smarty->assign($artefact->artefacttype, $result);
             }

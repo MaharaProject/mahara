@@ -47,11 +47,11 @@ class BehatNavigation extends BehatBase {
         $nodetextliteral = $this->escaper->escapeLiteral($menuitemtext);
         $exception = new ExpectationException('The menu item ' . ($byid ? 'with id ' : '') . '"' . $menuitemtext . '" not found or invisible in "' . $menu . '"', $this->getSession());
         if ($byid) {
-            $xpath = "//nav[@id='" . $menu . "']" .
+            $xpath = "//nav/div[@id='" . $menu . "']" .
               "//a[@id='" . $menuitemtext . "']";
         }
         else {
-            $xpath = "//nav[@id='" . $menu . "']" .
+            $xpath = "//nav/div[@id='" . $menu . "']" .
               "//a[normalize-space(.)=" . $nodetextliteral ."]";
         }
         $node = $this->find('xpath', $xpath, $exception);
@@ -75,7 +75,7 @@ class BehatNavigation extends BehatBase {
         $menuitemtextliteral = $this->escaper->escapeLiteral($menuitemtext);
         $exception = new ExpectationException('The sub menu item "' . $menuitemtext . '" not found or invisible in "' . $menu . '"', $this->getSession());
 
-        $xpath = "//nav[@id='" . $menu . "']" .
+        $xpath = "//nav/div[@id='" . $menu . "']" .
             "/ul/li[contains(normalize-space(.), " . $menuitemtextliteral .")]" .
             "//li//a[normalize-space(.)=" . $submenuitemtextliteral ."]";
         $node = $this->find('xpath', $xpath, $exception);
@@ -90,7 +90,7 @@ class BehatNavigation extends BehatBase {
      */
     public function i_choose_inbox() {
         $exception = new ExpectationException('The menu item inbox not found or invisible', $this->getSession());
-        $xpath = "//button[@id='nav-inbox']";
+        $xpath = "//a[@id='nav-inbox']";
         $inboxnode = $this->find('xpath', $xpath, $exception);
         $inboxnode->click();
     }

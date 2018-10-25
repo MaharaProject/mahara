@@ -11,7 +11,7 @@
           {$realauthor|safe}
         {/if}
     </span>
-    <script type="application/javascript">
+    <script>
     jQuery('#showauthor_{$indexhash}').on('click', function(e) {
         e.preventDefault();
         jQuery(this).parent().parent().find('span.real_author').removeClass('hidden js-safe-hidden');

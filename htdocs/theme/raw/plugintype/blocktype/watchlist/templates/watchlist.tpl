@@ -10,7 +10,7 @@
         <div id="watchlist_page_container" class="hidden">{$watchlist.pagination|safe}</div>
     {/if}
     {if $watchlist.pagination_js}
-    <script type="application/javascript">
+    <script>
         jQuery(function($) {literal}{{/literal}
             {$watchlist.pagination_js|safe}
             $('#watchlist_page_container').removeClass('hidden');

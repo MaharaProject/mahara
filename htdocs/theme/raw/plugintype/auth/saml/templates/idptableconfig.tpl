@@ -12,7 +12,7 @@
     </tbody>
 </table>
 
-<script type="application/javascript">
+<script>
 function deleteidp(el, idp) {
     var data = { 'idp' : idp };
     var row = $(el).closest('tr');

@@ -81,7 +81,7 @@ function pieform_element_switchbox_labeltext($element){
 function pieform_element_switchbox_get_headdata($element) {
     $libfile = get_config('wwwroot') . 'js/switchbox.js';
     $scripts = array();
-    $scripts[] = '<script type="application/javascript" src="' . $libfile . '"></script>';
+    $scripts[] = '<script src="' . $libfile . '"></script>';
     return $scripts;
 }
 

@@ -98,7 +98,7 @@
         box-shadow: none;
         height: auto !important;
         min-width: 45px;
-        .admin-toggle + a + .user-toggle + a > & {
+        .admin-toggle + a + .user-toggle + & {
             right: 155px;
         }
     }

@@ -12,7 +12,7 @@
     <h4>{str tag=viewsbytype section=admin}</h4>
     <div class="panel-body">
         <canvas class="graphcanvas" id="sitestatsviewtypesgraph"></canvas>
-        <script type="application/javascript">
+        <script>
         {literal}
         jQuery(function() {
             fetch_graph_data({'id':'sitestatsviewtypesgraph','type':'doughnut','graph':'view_type_graph_render'});

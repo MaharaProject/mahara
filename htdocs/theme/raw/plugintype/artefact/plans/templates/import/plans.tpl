@@ -89,7 +89,7 @@
     </div>
     {/foreach}
 </div>
-<script type="application/javascript">
+<script>
     jQuery(function() {
         jQuery("a.tasktitle").on("click", function(e) {
             e.preventDefault();

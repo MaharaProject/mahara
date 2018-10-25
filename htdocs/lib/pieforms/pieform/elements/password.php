@@ -47,7 +47,7 @@ function pieform_element_password(Pieform $form, $element) {/*{{{*/
             . '    <div id="strengthBar" class="progress-bar" role="progressbar" style="width: 0;"></div>'
             . '</div>';
         $result .= <<<EOJS
-<script type="application/javascript">
+<script>
 jQuery('#{$id}').on("keyup", function() {
     var result = zxcvbn(jQuery('#{$id}').val());
     var score  = result.score;
@@ -86,7 +86,7 @@ EOJS;
 function pieform_element_password_get_headdata() {
     $libjs = get_config('wwwroot') . 'js/zxcvbn/zxcvbn.js';
     $result = array(
-        '<script type="application/javascript" src="' . append_version_number($libjs) . '"></script>',
+        '<script src="' . append_version_number($libjs) . '"></script>',
     );
     return $result;
 }

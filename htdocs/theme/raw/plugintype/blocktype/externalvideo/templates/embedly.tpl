@@ -18,7 +18,7 @@
 
 </div>
 
-<script type="application/javascript">
+<script>
 
 function embedLoaded() {
 

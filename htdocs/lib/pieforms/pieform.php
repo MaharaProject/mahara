@@ -857,7 +857,7 @@ class Pieform {/*{{{*/
                 'newIframeOnSubmit'     => $this->data['newiframeonsubmit'],
                 'checkDirtyChange'      => $this->data['checkdirtychange'],
             ));
-            $result .= "<script type=\"application/javascript\">new Pieform($data);</script>\n";
+            $result .= "<script>new Pieform($data);</script>\n";
         }
         return $result;
     }/*}}}*/
@@ -988,7 +988,7 @@ class Pieform {/*{{{*/
         }
         echo <<<EOF
 <html>
-    <head><script type="application/javascript">
+    <head><script>
         function sendResult() {
             parent.pieformHandlers["{$this->name}"]($result);
         }
@@ -1239,7 +1239,7 @@ EOF;
             $result .= $this->name . '_' . $element['id'] . '_error ';
         }
         if ((!$this->has_errors() || $this->get_property('showdescriptiononerror')) && !empty($element['description'])) {
-            $result .= $this->name . '_' . $element['id'] . '_description ';
+            $result .= $this->name . '_' . $element['name'] . '_description ';
         }
         return $result;
     }
@@ -1534,7 +1534,10 @@ EOF;
                 $labelclass = '';
             }
             $nolabeltypes = array('radio', 'emaillist', 'date', 'files', 'checkboxes', 'bytes');
-
+            if ($element['type'] == 'select' && !empty($element['collapseifoneoption']) && count($element['options']) < 2) {
+                // we are using a select field as a hidden field
+                $element['nolabel'] = true;
+            }
             if (!empty($element['nolabel']) || in_array($element['type'], $nolabeltypes)) {
                 // Don't bother with a label for the element.
                 // Special 'nolabeltypes' have their own label(s) added direct to the form field(s).
@@ -1820,9 +1823,9 @@ function pieform_get_headdata() {/*{{{*/
 
     // TODO: jsdirectory should be independent of ANY form
     if ($GLOBALS['_PIEFORM_REGISTRY']) {
-        array_unshift($htmlelements, '<script type="application/javascript" src="'
+        array_unshift($htmlelements, '<script src="'
             . Pieform::hsc(append_version_number($form->get_property('jsdirectory') . 'pieforms.js')) . '"></script>');
-        array_unshift($htmlelements, '<script type="application/javascript">pieformPath = "'
+        array_unshift($htmlelements, '<script>pieformPath = "'
             . Pieform::hsc($form->get_property('jsdirectory')) . '";</script>');
     }
 

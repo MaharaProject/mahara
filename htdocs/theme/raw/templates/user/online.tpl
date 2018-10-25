@@ -7,7 +7,7 @@
 </div>
 {$data.pagination|safe}
 {if $data.pagination_js}
-    <script type="application/javascript">
+    <script>
     {$data.pagination_js|safe}
     </script>
 {/if}

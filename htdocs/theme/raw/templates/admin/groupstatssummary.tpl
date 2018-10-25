@@ -21,7 +21,7 @@
     <h4>{str tag=groupsbytype section=statistics}</h4>
     <div class="panel-body">
         <canvas class="graphcanvas" id="sitestatsgroupgraph"></canvas>
-        <script type="application/javascript">
+        <script>
         {literal}
             jQuery(function() {
                 fetch_graph_data({'id':'sitestatsgroupgraph','type':'doughnut','graph':'group_type_graph_render'});

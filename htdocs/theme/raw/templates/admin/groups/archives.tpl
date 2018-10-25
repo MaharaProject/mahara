@@ -45,7 +45,7 @@
         </div>
         {/if}
     </div>
-    <script type="application/javascript">
+    <script>
     jQuery(function($) {
         var csvlink = '{$WWWROOT}admin/groups/archivescsvdownload.php';
         $('#institution').on('change', function() {

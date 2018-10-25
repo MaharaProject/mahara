@@ -84,7 +84,7 @@
     <h3>{str tag="weeklytrend" section=statistics}</h3>
     <div class="panel-body">
         <canvas class="graphcanvas" id="sitestatsgraph"></canvas>
-        <script type="application/javascript">
+        <script>
         {literal}
         jQuery(function() {
             fetch_graph_data({'id':'sitestatsgraph','type':'line','graph':'graph_institution_data_weekly',

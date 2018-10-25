@@ -34,7 +34,7 @@
     </table>
     {$pagination|safe}
     {if $pagination_js}
-        <script type="application/javascript">
+        <script>
         {$pagination_js|safe}
         </script>
     {/if}
@@ -46,7 +46,7 @@
     {/if}
 </div>
 
-<script type="application/javascript">
+<script>
 // to clear any offset when submitting form again
 jQuery(function() {
     jQuery('#logsearchform').on('submit', function(e) {

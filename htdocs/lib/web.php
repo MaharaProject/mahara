@@ -192,7 +192,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
             $wwwrootparts = parse_url($wwwroot);
             if ($wwwrootparts['host'] != $requesthost) {
                 $fakewwwroot = $wwwrootparts['scheme'] . '://' . $requesthost . '/';
-                $headers[] = '<script type="application/javascript">var fakewwwroot = ' . json_encode($fakewwwroot) . ';</script>';
+                $headers[] = '<script>var fakewwwroot = ' . json_encode($fakewwwroot) . ';</script>';
             }
         }
     }
@@ -216,13 +216,13 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
 
     $langdirection = get_string('thisdirection', 'langconfig');
 
-    // Make jQuery accessible with $j (Mochikit has $)
+    // Make jQuery accessible with $j
     $javascript_array[] = $jsroot . 'jquery/jquery.js';
-    $headers[] = '<script type="application/javascript">$j=jQuery;</script>';
+    $headers[] = '<script>$j=jQuery;</script>';
 
     // If necessary, load MathJax configuration
     if (get_config('mathjax')) {
-        $headers[] = '<script type="application/javascript">'.get_config('mathjaxconfig').'</script>';
+        $headers[] = '<script>'.get_config('mathjaxconfig').'</script>';
     }
 
     // TinyMCE must be included first for some reason we're not sure about
@@ -331,7 +331,7 @@ EOF;
                     }
 
                     $headers[] = <<<EOF
-<script type="application/javascript">
+<script>
 tinyMCE.init({
     {$tinymceconfig}
     schema: 'html4',
@@ -588,7 +588,7 @@ EOF;
         }
     }
 
-    $stringjs = '<script type="application/javascript">';
+    $stringjs = '<script>';
     $stringjs .= 'var strings = ' . json_encode($strings) . ';';
     $stringjs .= "\nfunction plural(n) { return " . get_raw_string('pluralrule', 'langconfig') . "; }\n";
     $stringjs .= '</script>';
@@ -4158,9 +4158,8 @@ function build_pagination($params) {
         $output .= '<div class="lead text-small results pull-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
     }
 
-    $output .= '<ul class="pagination pagination-xs">';
-
     if ($params['limit'] && ($params['limit'] < $params['count'])) {
+        $output .= '<ul class="pagination pagination-xs">';
         $pages = ceil($params['count'] / $params['limit']);
         $page = $params['offset'] / $params['limit'];
 
@@ -4300,9 +4299,8 @@ function build_pagination($params) {
             $params['limit'] * $next,
             $params['offsetname']
         );
-
+        $output .= '</ul>';
     }
-
     // Build limitoptions dropbox if results are more than 10 (minimum dropbox pagination) and that we are not in the block editor screen
     if ($params['setlimit'] && $params['count'] > 10 && (!isset($params['editing']) || $params['editing'] === false)) {
         $strlimitoptions = array();
@@ -4315,7 +4313,6 @@ function build_pagination($params) {
                 $strlimitoptions[] = "<option value = '$limitoptions[$i]'> $limitoptions[$i] </option>";
             }
         }
-        $output .= '</ul>';
         $output .= '<form class="form-pagination js-pagination form-inline pagination-page-limit dropdown" action="' . hsc($params['url']) . '" method="POST">
             <label for="setlimitselect" class="set-limit"> ' . $params['limittext'] . ' </label>' .
             '<span class="picker input-sm"><select id="setlimitselect" class="js-pagination input-sm select form-control" name="limit"> '.

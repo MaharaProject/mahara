@@ -63,7 +63,7 @@ function pieform_element_calendar(Pieform $form, $element) {
         aria-label="' . get_string('element.calendar.format.arialabel', 'pieforms') . '"
         ></span>';
     $result .= '
-        <script type="application/javascript">
+        <script>
         var input_' . $id . ' = jQuery("input#' . $id . '");
         ';
     if (!empty($options['showsTime'])) {
@@ -259,10 +259,10 @@ function pieform_element_calendar_get_headdata($element) {
     $next = get_string('datepicker_nextText');
     $result = array(
         '<link rel="stylesheet" type="text/css" media="all" href="' . append_version_number($libcss) . '">',
-        '<script type="application/javascript" src="' . append_version_number($libjs) . '"></script>',
-        '<script type="application/javascript" src="' . append_version_number($timeaddonjs) . '"></script>',
-        '<script type="application/javascript" src="' . append_version_number($momentjs) . '"></script>',
-        '<script type="application/javascript" src="' . append_version_number($bootstrapdatetimejs) . '"></script>'
+        '<script src="' . append_version_number($libjs) . '"></script>',
+        '<script src="' . append_version_number($timeaddonjs) . '"></script>',
+        '<script src="' . append_version_number($momentjs) . '"></script>',
+        '<script src="' . append_version_number($bootstrapdatetimejs) . '"></script>'
     );
     return $result;
 }
