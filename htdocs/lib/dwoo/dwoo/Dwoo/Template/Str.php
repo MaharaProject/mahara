@@ -519,9 +519,14 @@ class Str implements ITemplate
             }
             usleep(20);
         }
-
+        /**
+         * The following code doesn't seem to work anymore for WIN or non-WIN OS
+         * so will comment out - if you are having trouble with setting up dataroot compile paths
+         * try uncommenting this
+         */
+        /*
         // enforce the correct mode for all directories created
-        if (strpos(PHP_OS, 'WIN') !== false && $baseDir !== null) {
+        if (preg_match('/WIN/', PHP_OS) && $baseDir !== null) {
             $path    = strtr(str_replace($baseDir, '', $path), '\\', '/');
             $folders = explode('/', trim($path, '/'));
             foreach ($folders as $folder) {
@@ -531,5 +536,6 @@ class Str implements ITemplate
                 }
             }
         }
+        */
     }
 }

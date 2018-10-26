@@ -38,13 +38,3 @@ composer dump-autoload -o
 Then remove the hashes from the auto-generated /vendor files: E.g.
 ComposerAutoloaderInit26e38f1cfb40040c9ff6097c09aee6d7::getLoader();
 becomes ComposerAutoloaderInit::getLoader();
-
-I found a bug in /Dwoo/Template/Str.php
- This looks like a check for Windows OS, but 0 in strpos is a position,
-    so it runs if WIN is not in position 0. I changed it to false to stop
-    the following error on upgrade:
-    Unable to chmod /var/lib/maharadata/1704stable/dwoo/compile/raw/var/ to 511:
-    Array, referer: http://mahara/admin/upgrade.php
-line 524: if (strpos(PHP_OS, 'WIN') !== 0 && $baseDir !== null) {}
-replaced with:
-   if (strpos(PHP_OS, 'WIN') !== false && $baseDir !== null) {
