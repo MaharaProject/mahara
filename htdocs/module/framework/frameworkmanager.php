@@ -23,6 +23,7 @@ safe_require('module', 'framework');
 $frameworkid  = param_integer('id', 0);
 $framework = new Framework($frameworkid);
 
+define('SUBSECTIONHEADING', $framework->get('name'));
 $plugintype = 'module';
 $pluginname = 'framework';
 $classname = 'Framework';
@@ -64,8 +65,6 @@ $smarty = smarty();
 $smarty->assign('form', $form);
 $smarty->assign('plugintype', $plugintype);
 $smarty->assign('pluginname', $pluginname);
-$heading = get_string('pluginadmin', 'admin') . ': ' . $plugintype . ': ' . $pluginname;
-$smarty->assign('PAGEHEADING', $heading);
 $smarty->display('module:framework:frameworkmanager.tpl');
 
 
