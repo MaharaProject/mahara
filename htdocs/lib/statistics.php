@@ -40,7 +40,7 @@ function site_statistics($full=false) {
         }
         $sql = "SELECT SUM($todaysql) AS today, SUM($thisweeksql) AS thisweek, $weekago AS weekago, SUM($eversql) AS ever FROM {usr}";
         $active = get_record_sql($sql);
-        $data['usersloggedin'] = get_string('loggedinsince', 'admin', $active->today, $active->thisweek, format_date(strtotime($active->weekago), 'strftimedateshort'), $active->ever);
+        $data['usersloggedin'] = get_string('loggedinsince', 'admin', $active->today, $active->thisweek, format_date(strtotime($active->weekago), 'strftimedate'), $active->ever);
 
         $memberships = count_records_sql("
             SELECT COUNT(*)
@@ -281,7 +281,7 @@ function institution_statistics($institution, $full=false) {
                     WHERE id IN (" . $data['memberssql'] . ")";
             $active = get_record_sql($sql, $data['memberssqlparams']);
         }
-        $data['usersloggedin'] = get_string('loggedinsince', 'admin', $active->today, $active->thisweek, format_date(strtotime($active->weekago), 'strftimedateshort'), $active->ever);
+        $data['usersloggedin'] = get_string('loggedinsince', 'admin', $active->today, $active->thisweek, format_date(strtotime($active->weekago), 'strftimedate'), $active->ever);
 
         if (!$data['users']) {
             $data['groupmemberaverage'] = 0;
