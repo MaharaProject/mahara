@@ -7175,6 +7175,7 @@ class View {
     }
 
     public function format_versioning_data($data, $versionnumber=0) {
+        global $USER;
         if (empty($data)) {
             return false;
         }
@@ -7225,7 +7226,15 @@ class View {
                 $this->columns[$v->row][$v->column]['blockinstances'][] = $bi;
             }
         }
-        $html = $this->build_rows(false, false, $data);
+        if (!$USER->has_peer_role_only($this) || $this->has_peer_assessement_block()) {
+            $html = $this->build_rows(false, false, $data);
+        }
+        else {
+            $html = '<div class="alert alert-info">
+                        <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span>' .
+                        get_string('nopeerassessmentrequired', 'artefact.peerassessment') .
+                      '</div>';
+        }
         $data->html = $html;
         return $data;
     }
