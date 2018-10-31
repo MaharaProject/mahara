@@ -47,7 +47,7 @@ function get_cookieconsent_code() {
     $initialisation = json_encode(array(
         'message' => get_string('cookieconsentmessage', 'cookieconsent'),
         'learnMore' => get_string('cookieconsentlearnmore', 'cookieconsent'),
-        'link' => get_config('wwwroot') . 'privacy.php',
+        'link' => get_config('wwwroot') . 'legal.php',
         'target' => '_self',
         'theme' => $links['raw'],
         'dismiss' => get_string('cookieconsentdismiss', 'cookieconsent'),
