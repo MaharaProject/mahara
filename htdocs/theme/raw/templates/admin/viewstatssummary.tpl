@@ -8,7 +8,8 @@
         <li class="list-group-item">{$item->title}: {$item->blocks}</li>
     {/foreach}
     </ul>
-    {if $viewtypes}
+{/if}
+{if $viewtypes}
     <h4>{str tag=viewsbytype section=admin}</h4>
     <div class="panel-body">
         <canvas class="graphcanvas" id="sitestatsviewtypesgraph"></canvas>
@@ -20,5 +21,4 @@
         {/literal}
         </script>
     </div>
-    {/if}
 {/if}
