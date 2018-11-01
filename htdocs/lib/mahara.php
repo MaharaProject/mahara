@@ -63,7 +63,9 @@ function ensure_sanity() {
     if (!extension_loaded('dom')) {
         throw new ConfigSanityException(get_string('domextensionnotloaded', 'error'));
     }
-
+    if (!extension_loaded('mbstring')) {
+        throw new ConfigSanityException(get_string('mbstringextensionnotloaded', 'error'));
+    }
     // Check for freetype in the gd extension
     $gd_info = gd_info();
     if (!$gd_info['FreeType Support']) {
