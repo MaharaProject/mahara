@@ -46,9 +46,7 @@ function get_string(name) {
  * Getting the string via ajax as deferred object
  */
 function get_string_ajax(str, section) {
-    // need to pass all the arguments except 'section' in case there are %s variables
-    var getstringargs = [str].concat([].slice.call(arguments, 2));
-
+    var getstringargs = Array.prototype.concat.apply([], arguments);
     // If string already exists in strings object
     if (typeof(strings[str]) !== 'undefined') {
         return get_string.apply(this, getstringargs);

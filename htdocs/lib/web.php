@@ -660,6 +660,9 @@ EOF;
         $headers = array_merge($headers, $select2headdata);
         $smarty->assign('select2_language', $select2lang);
     }
+    $maxuploadsize = get_max_upload_size(false);
+    $smarty->assign('maxuploadsize', $maxuploadsize);
+    $smarty->assign('maxuploadsizepretty', display_size($maxuploadsize));
 
     $sitename = get_config('sitename');
     if (!$sitename) {
