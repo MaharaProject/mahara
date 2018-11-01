@@ -816,6 +816,7 @@ $string['usersuspended'] = 'User suspended';
 $string['userunsuspended'] = 'User unsuspended';
 $string['expiredusers'] = 'Expired users';
 $string['expired'] = 'Expired';
+$string['expires'] = 'Expires';
 $string['unexpireusers'] = 'Reactivate expired users';
 $string['usersreactivated'] = 'Users reactivated';
 
@@ -1110,11 +1111,12 @@ $string['denyregistrationmessage'] = 'This will deny the registration for the us
 $string['nopendingregistrations'] = 'No pending registrations were found for this institution.';
 $string['pendingregistration'] = 'Pending registration';
 $string['pendingregistrations'] = 'Pending registrations';
-$string['pendingregistrationspagedescription'] = '<p>On this page you can see users who have self-registered and requested membership of your institution and approve or deny their registration.<p>
-
-<p>On approving their registration, you are also adding them as members of the institution, and they will be notified with further instructions about activating their account. On denying their registration, they will be notified that their application was denied by an automated response email.</p>';
+$string['pendingregistrationspagedescription1'] = '<p>On this page you can see users who have self-registered and requested membership of your institution and approve or deny their registration.<p>
+<p>On approving their registration, they are notified with further instructions about activating their account. When they follow the activation link supplied they are added as a member of the institution. The activation link expires after 24 hours and their details are removed. If they still want to register they will need to begin the process again.</p>
+<p>On denying their registration, they will be notified that their application was denied by an automated response email.</p>';
 $string['pendingregistrationdesc'] = 'Approve or deny membership of your institution to self-registering users';
 $string['pendingdeletiondesc'] = 'Approve or deny the deletion of users who wish to remove their accounts';
+$string['pendingusercompletion'] = 'Approval sent, waiting on user completion';
 $string['nosuchinstitution'] = 'No such institution.';
 $string['registrationapprovedsuccessfully'] = 'Registration approved successfully.';
 $string['registrationdeniedreason'] = 'Denial reason';
