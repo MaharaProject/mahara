@@ -631,7 +631,7 @@ class ArtefactTypeTask extends ArtefactType {
                     if ($result->completiondate < $datenow && !$result->completed) {
                         $result->completed = -1;
                     }
-                    $result->completiondate = format_date($result->completiondate, 'strftimedate');
+                    $result->completiondate = format_date($result->completiondate, 'strftimedateshort');
                 }
                 if($result->description){
                     $result->description = '<p>' . preg_replace('/\n\n/','</p><p>', $result->description) . '</p>';
