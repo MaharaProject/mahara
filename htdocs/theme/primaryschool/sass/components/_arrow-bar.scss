@@ -1,7 +1,9 @@
 .arrow-bar {
-    // to theme the Résumé nav red
+    background-color: #026BB6;
+
+    // to theme the Résumé nav green
     &.resume {
-        background-color: lighten($arrow-link-color, 5%);
+        background-color: #5B6E1C;
 
         .arrow {
             background-color: $arrow-link-color;
@@ -29,7 +31,7 @@
 
     // to theme the Groups nav green
     &.group {
-        background-color: lighten($arrow-link-group-color, 5%);
+        background-color: #5B6E1C;
 
         .arrow {
             background-color: $arrow-link-group-color;
