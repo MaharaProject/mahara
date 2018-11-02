@@ -206,10 +206,12 @@ function site_statistics($full=false) {
             ORDER BY blocks DESC",
             array(), 0, $maxblocktypes
         );
-        foreach ($blocktypecounts as $blocktype) {
-            safe_require('blocktype', $blocktype->blocktype);
-            $classname = generate_class_name('blocktype', $blocktype->blocktype);
-            $blocktype->title = $classname::get_title();
+        if (is_array($blocktypecounts)) {
+            foreach ($blocktypecounts as $blocktype) {
+                safe_require('blocktype', $blocktype->blocktype);
+                $classname = generate_class_name('blocktype', $blocktype->blocktype);
+                $blocktype->title = $classname::get_title();
+            }
         }
         $smarty->assign('blocktypecounts', $blocktypecounts);
 
