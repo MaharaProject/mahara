@@ -16,3 +16,5 @@ $string['collection'] = 'Collection';
 $string['title'] = 'Navigation';
 $string['description'] = 'Navigation for a collection of pages (see Portfolio -> Collections, or the Collections tab when inside a group)';
 $string['nocollections1'] = 'No collections. <a href="%s">Create one</a>.';
+$string['copytoall'] = 'Add to all pages';
+$string['copytoalldesc'] = 'Add the navigation block to all the current pages in the collection this page belongs to that do not already have it.';

@@ -97,8 +97,7 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
                 }
                 $options[$collection->id] = $collection->name;
             }
-
-            return array(
+            $elements = array(
                 'collection' => array(
                     'type' => 'select',
                     'title' => get_string('collection','blocktype.navigation'),
@@ -107,6 +106,15 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
                     'defaultvalue' => !empty($configdata['collection']) ? $configdata['collection'] : $default,
                 ),
             );
+            if ($pageincollection = $view->get_collection()) {
+                $elements['copytoall'] = array(
+                    'type' => 'switchbox',
+                    'title' => get_string('copytoall', 'blocktype.navigation'),
+                    'description' => get_string('copytoalldesc', 'blocktype.navigation'),
+                    'defaultvalue' => false,
+                );
+            }
+            return $elements;
         }
         else {
             $baseurl = get_config('wwwroot') . 'collection/edit.php';
@@ -123,6 +131,50 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
             );
         }
 
+    }
+
+    public static function instance_config_save($values, $instance) {
+        if (!empty($values['copytoall'])) {
+            $view = $instance->get('view_obj');
+            if ($collection = $view->get_collection()) {
+                foreach ($viewids = $collection->get_viewids() as $vid) {
+                    if ($vid !== (int)$view->get('id')) {
+                        $needsblock = true;
+                        if ($blocks = get_records_sql_array("SELECT id FROM {block_instance} WHERE blocktype = ? AND view = ?", array('navigation', $vid))) {
+                            foreach ($blocks as $block) {
+                                // need to check the block to see if it's for this navigation
+                                $bi = new BlockInstance($block->id);
+                                $configdata = $bi->get('configdata');
+                                if (!empty($configdata['collection']) && $configdata['collection'] == $values['collection']) {
+                                    $needsblock = false;
+                                }
+                            }
+                        }
+                        if ($needsblock) {
+                            // need to add new navigation block
+                            $otherview = new View($vid);
+                            $bi = new BlockInstance(0,
+                                array(
+                                    'blocktype'  => 'navigation',
+                                    'title'      => '',
+                                    'row'        => $instance->get('row'),
+                                    'column'     => $instance->get('column'),
+                                    'order'      => 1,
+                                    'configdata' => array(
+                                        'collection' => $values['collection'],
+                                        'retractable' => $values['retractable'],
+                                        'retractedonload' => $values['retractedonload'],
+                                    ),
+                                )
+                            );
+                            $otherview->addblockinstance($bi);
+                        }
+                    }
+                }
+            }
+        }
+        unset($values['copytoall']);
+        return $values;
     }
 
     public static function default_copy_type() {
