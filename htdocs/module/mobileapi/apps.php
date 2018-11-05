@@ -20,11 +20,12 @@ define('MENUITEM', 'settings/webservice');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'webservice');
+define('APPS', 1);
 
 require('./../../init.php');
 require_once($CFG->docroot . 'webservice/lib.php');
 safe_require('module', 'mobileapi');
-define('TITLE', get_string('mytokenspagetitle', 'module.mobileapi'));
+define('TITLE', get_string('mytokenspagetitle1', 'module.mobileapi'));
 
 // Users shouldn't be able to access this page if webservices are not enabled.
 if (!PluginModuleMobileapi::is_service_ready()) {

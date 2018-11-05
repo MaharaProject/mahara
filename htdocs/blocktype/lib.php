@@ -96,6 +96,20 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         }
     }
 
+
+    /**
+     * This function returns an array of menu items
+     * to be displayed in the top right navigation menu
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
+     * @return array
+     */
+    public static function right_nav_menu_items() {
+        return array();
+    }
+
     /**
      * If the theme wants to display CSS icons for Mahara blocks, then it will
      * call this method to find out the name of the CSS icon to use. If this

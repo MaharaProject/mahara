@@ -8,8 +8,8 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
                 <FIELD NAME="host" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="uid" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="badgegroupid" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="uid" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="badgegroupid" TYPE="char" LENGTH="100" NOTNULL="true" />
                 <FIELD NAME="name" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="html" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="lastupdate" TYPE="datetime" NOTNULL="false" />

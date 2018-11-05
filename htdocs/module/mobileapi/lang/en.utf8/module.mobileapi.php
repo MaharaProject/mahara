@@ -28,8 +28,8 @@ $string['servicenotallowed'] = 'The credentials you have provided are not author
 $string['webserviceproviderenabled'] = 'Incoming web service requests allowed';
 
 // User management of webservice access tokens
-$string['mytokensmenutitle'] = 'Apps';
-$string['mytokenspagetitle'] = 'Applications';
+$string['mytokensmenutitle1'] = 'Mahara mobile';
+$string['mytokenspagetitle1'] = 'Mahara mobile tokens';
 $string['mytokenspagedesc'] = 'These applications can access your account.';
 $string['nopersonaltokens'] = 'You have not granted access to any applications.';
 $string['clientinfo'] = 'App';
