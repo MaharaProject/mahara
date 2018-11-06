@@ -509,7 +509,7 @@
             };
 
         if (config.blockeditormaxwidth) {
-            pd['cfheight'] = getViewportDimensions().h - 100;
+            pd['cfheight'] = $(window).height() - 100;
         }
         pd['action_addblocktype_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
 
@@ -827,7 +827,7 @@
             'change': 1
         };
         if (config.blockeditormaxwidth) {
-            pd['cfheight'] = getViewportDimensions().h - 100;
+            pd['cfheight'] = $(window).height() - 100;
         }
         pd['action_moveblockinstance_id_' + instanceId + '_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
         sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
