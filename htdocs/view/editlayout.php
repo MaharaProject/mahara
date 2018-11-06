@@ -215,7 +215,7 @@ function create_settings_pieform(){
 }
 
 function get_basic_elements() {
-    global $view, $urlallowed, $group, $institution, $USER;
+    global $view, $urlallowed, $group, $institution, $USER, $cleanurlbase;
 
     $formatstring = '%s (%s)';
     $ownerformatoptions = array(
