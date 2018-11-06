@@ -12,6 +12,7 @@ Scenario: Admin set up preconditions for test and confirm that the title text is
     And I enable the switch "Manual token generation"
     And I press "Save"
     When I choose "Apps" in "Settings" from user menu
+    And I follow "Mahara mobile" in the ".arrow-bar" "css_element"
     And I click on "Generate"
     # confirm that there is an element with title=Delete "Manually created"
     # This is done by pressing a button with that title as there is no definition for see element with that title attribute

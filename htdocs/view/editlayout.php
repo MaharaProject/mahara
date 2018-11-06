@@ -303,7 +303,7 @@ function get_basic_elements() {
 }
 
 function get_advanced_elements() {
-    global $view, $urlallowed, $group, $institution, $USER;
+    global $view, $urlallowed, $group, $institution, $USER, $cleanurlbase;
 
     $formatstring = '%s (%s)';
     $ownerformatoptions = array(
