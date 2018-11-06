@@ -3050,13 +3050,13 @@ class View {
 
     private function shuffle_helper($field, $direction, $operator, $value, $extrawhere='', $extravalues='') {
 
-        // doing this with execute_sql rather than set_field and friends because of
-        // adodb retardedly trying to make "order"+1 and friends into a string
-
-        // I couldn't find a way to shift a bunch of rows in step even with set constraints deferred.
-
-        // the two options I found were to move them all out of range (eg start at max +1) and then back again
-        // or move them into negative and back into positive (Grant's suggestion) which I like more.
+        /*
+         * We need to use execute_sql here because ADODB naturally
+         * wants to convert "order+1" into string fields.
+         *
+         * Additionally, we need to move a set of rows in step, and
+         * sign-switching is one way to do that without violating constraints.
+         */
 
         if (empty($extrawhere)) {
             $extrawhere = '';
