@@ -25,7 +25,7 @@
                                .attr('value', '{$jsflashvars}')
                                .appendTo(embedobj);
                 $j('<embed />').attr('src', '{$jsurl}')
-                               .attr('allowfullscreen', 'true')
+                               .attr('allow', 'fullscreen')
                                .attr('wmode', 'transparent')
                                .attr('allowscriptaccess', 'always')
                                .attr('width', '{$width}')
@@ -40,10 +40,7 @@
                 $j('<iframe />').attr('src', jsurl)
                                 .attr('width', '{$width}')
                                 .attr('height', '{$height}')
-                                .attr('frameborder', '0')
                                 .attr('allowfullscreen', '')
-                                .attr('mozallowfullscreen', '')
-                                .attr('webkitallowfullscreen', '')
                                 .appendTo($j('#vid_{$blockid}'))
                                 .on("load", function() {
                                     blockinstance_{$blockid}_loaded = true;

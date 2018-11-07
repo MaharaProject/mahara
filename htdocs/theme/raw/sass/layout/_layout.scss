@@ -82,6 +82,16 @@ body {
   }
 }
 
+iframe {
+    &.pdfiframe {
+        width: 100%;
+        height: 500px;
+    }
+    &.externalvideoiframe {
+        width: 100%;
+    }
+    border: 0;
+}
 // Limit the width of external media
 // to fit the width of the column
 .mediaplayer-container iframe {
