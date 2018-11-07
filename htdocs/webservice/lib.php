@@ -1526,6 +1526,7 @@ function external_delete_descriptions($component) {
     delete_records_select('external_services_users', "externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?)", $params);
     delete_records_select('external_tokens', "externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?)", $params);
     delete_records_select('oauth_server_token', "osr_id_ref IN (SELECT id FROM {oauth_server_registry} WHERE externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?))", $params);
+    delete_records_select('oauth_server_config', "oauthserverregistryid IN (SELECT id FROM {oauth_server_registry} WHERE externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?))", $params);
     delete_records_select('oauth_server_registry', "externalserviceid IN (SELECT id FROM {external_services} WHERE component = ?)", $params);
     delete_records_select(
         'external_services_functions',
