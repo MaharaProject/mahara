@@ -293,7 +293,7 @@ class mahara_group_external extends external_api {
 
         db_begin();
         foreach ($params['groups'] as $group) {
-            // Make sure that the group doesn't already exist
+            // Make sure that the group already exists
             if (!empty($group['id'])) {
                 if (!$dbgroup = get_group_by_id($group['id'])) {
                     throw new WebserviceInvalidParameterException('delete_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
@@ -411,7 +411,7 @@ class mahara_group_external extends external_api {
         db_begin();
         $groupids = array();
         foreach ($params['groups'] as $group) {
-            // Make sure that the group doesn't already exist
+            // Make sure that the group already exists
             if (!empty($group['id'])) {
                 if (!$dbgroup = get_group_by_id($group['id'])) {
                     throw new WebserviceInvalidParameterException('update_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
@@ -434,7 +434,7 @@ class mahara_group_external extends external_api {
                 throw new WebserviceInvalidParameterException('update_groups | ' . get_string('nogroup', 'auth.webservice'));
             }
 
-            // are we allowed to delete for this institution
+            // are we in correct institution to be allowed to update this group
             if ($WEBSERVICE_INSTITUTION != $dbgroup->institution) {
                 throw new WebserviceInvalidParameterException('update_groups | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['name']));
             }
@@ -553,6 +553,119 @@ class mahara_group_external extends external_api {
      * parameter definition for output of update_groups method
      */
     public static function update_groups_returns() {
+        return null;
+    }
+
+    /**
+     * parameter definition for input of update_group_details method
+     *
+     * Returns description of method parameters
+     * @return external_function_parameters
+     */
+    public static function update_groups_details_parameters() {
+
+        return new external_function_parameters (
+            array(
+                'groups' =>
+                    new external_multiple_structure (
+                        new external_single_structure (
+                            array(
+                                'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL),
+                                'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL),
+                                'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL),
+                                'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
+                                'description'     => new external_value(PARAM_NOTAGS, 'Group description'),
+                                'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
+                                'forcecategory'   => new external_value(PARAM_BOOL, 'Creates the group category if it does not already exist', VALUE_DEFAULT, '0'),
+                            )
+                        )
+                    )
+            )
+        );
+    }
+
+    /**
+     * update the basic details of one or more groups
+     *
+     * @param array $groups
+     */
+    public static function update_groups_details($groups) {
+        global $USER, $WEBSERVICE_INSTITUTION;
+
+        // Do basic automatic PARAM checks on incoming data, using params description
+        $params = self::validate_parameters(self::update_groups_details_parameters(), array('groups' => $groups));
+
+        db_begin();
+        $groupids = array();
+        foreach ($params['groups'] as $group) {
+            // Make sure that the group already exists
+            if (!empty($group['id'])) {
+                if (!$dbgroup = get_group_by_id($group['id'])) {
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
+                }
+            }
+            else if (!empty($group['shortname'])) {
+                if (empty($group['institution'])) {
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('instmustset', 'auth.webservice', $group['shortname']));
+                }
+                if (!$dbgroup = get_record('group', 'shortname', $group['shortname'], 'institution', $group['institution'], 'deleted', 0)) {
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['shortname'] . '/' . $group['institution']));
+                }
+            }
+            else if (!empty($group['name'])) {
+                if (!$dbgroup = get_record('group', 'name', $group['name'], 'deleted', 0)) {
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['name']));
+                }
+            }
+            else {
+                throw new WebserviceInvalidParameterException('update_groups | ' . get_string('nogroup', 'auth.webservice'));
+            }
+
+            // are we in correct institution to be allowed to update this group
+            if ($WEBSERVICE_INSTITUTION != $dbgroup->institution) {
+                throw new WebserviceInvalidParameterException('update_groups | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['name']));
+            }
+            if (!$USER->can_edit_institution($dbgroup->institution)) {
+                throw new WebserviceInvalidParameterException('update_groups | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['shortname']));
+            }
+
+            // convert the category
+            if (!empty($group['category'])) {
+                $groupcategory = get_record('group_category','title', $group['category']);
+                if (!empty($groupcategory)) {
+                    $groupcategoryid = $groupcategory->id;
+                }
+                else if (!empty($group['forcecategory'])) {
+                    $categorydata = new stdClass();
+                    $categorydata->title = $group['category'];
+                    $categorydata->displayorder = 0; // Place holder is updated when we call group_sort_categories.
+                    $groupcategoryid = insert_record('group_category', $categorydata, 'id', true);
+                    group_sort_categories();
+                }
+                else {
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('catinvalid', 'auth.webservice', $group['category']));
+                }
+                $group['category'] = $groupcategoryid;
+            }
+
+            // build up the changes
+            $newvalues = (object) array('id'  => $dbgroup->id);
+            foreach (array('name', 'description', 'category') as $attr) {
+                if (isset($group[$attr]) && $group[$attr] !== false && $group[$attr] !== null && strlen("" . $group[$attr])) {
+                    $newvalues->{$attr} = $group[$attr];
+                }
+            }
+            group_update($newvalues);
+        }
+        db_commit();
+
+        return null;
+    }
+
+    /**
+     * parameter definition for output of update_groups method
+     */
+    public static function update_groups_details_returns() {
         return null;
     }
 
