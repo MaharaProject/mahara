@@ -133,6 +133,7 @@ $string['sortorder'] = 'Sort order of files';
 $string['All'] = 'All';
 $string['Allinstitutions'] = 'All institutions';
 $string['none']   = 'None';
+$string['samepage'] = 'Same page';
 $string['selectall']   = 'Select all';
 $string['selectnone']   = 'Select none';
 

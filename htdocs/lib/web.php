@@ -329,7 +329,7 @@ EOF;
     toolbar: {$toolbar[0]},
 EOF;
                     }
-
+$samepage = get_string('samepage', 'mahara');
                     $headers[] = <<<EOF
 <script>
 tinyMCE.init({
@@ -342,7 +342,7 @@ tinyMCE.init({
         + ",script[src,type,language]"
         + ",ul[id|type|compact]"
         + ",iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type]"
-        + ",a[id|class|title|href|name]"
+        + ",a[id|class|title|href|name|target]"
         + ",button[id|class|title]"
     ,urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
@@ -351,7 +351,11 @@ tinyMCE.init({
     font_formats: 'Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Open Sans=Open Sans;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;',
     remove_script_host: false,
     relative_urls: false,
-    target_list: false,
+    target_list: [
+        {title: 'None', value: ''},
+        {title: "{$samepage}", value: '_self'}, // This one is not translated in tinymce lang files
+        {title: 'New window', value: '_blank'}
+    ],
     link_list: function(success) {
         // Only show the list of links in the normal user section
         if ({$inpersonalarea}) {
@@ -3826,6 +3830,7 @@ function clean_html($text, $xhtml=false) {
     }
 
     if ($def = $config->maybeGetRawHTMLDefinition()) {
+        $def->addAttribute('a', 'target', 'Enum#_blank,_self');
         # Allow iframes with custom attributes such as fullscreen
         # This overrides lib/htmlpurifier/HTMLPurifier/HTMLModule/Iframe.php
         $def->addElement(
