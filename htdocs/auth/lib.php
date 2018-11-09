@@ -523,6 +523,11 @@ function auth_setup () {
             return;
         }
 
+        // Allow auth plugins to try logging in the user.
+        if (auth_plugins_call_pre_loginpage_hook()) {
+            return;
+        }
+
         // Check if the page is public or the site is configured to be public.
         if (defined('PUBLIC') && !param_exists('login')) {
             return;
@@ -536,6 +541,39 @@ function auth_setup () {
         auth_draw_login_page(null, $form);
         exit;
     }
+}
+
+/**
+ * Allow auth plugins a chance to authenticate or redirect as needed.
+ *
+ * It will call the 'pre_loginpage_hook' for each auth plugin available,
+ * if any of them completes the login it returns immediately.
+ *
+ * Similar to: https://tracker.moodle.org/browse/MDL-48887
+ *
+ * @return bool If any plugin authenticated the user.
+ */
+function auth_plugins_call_pre_loginpage_hook() {
+    global $USER;
+
+    $methodname = 'pre_loginpage_hook';
+    $instances = auth_get_auth_instances();
+
+    foreach ($instances as $instance) {
+        $auth = AuthFactory::create($instance->id);
+        if ($auth === false) {
+            continue;
+        }
+        if (!method_exists($auth, $methodname)) {
+            continue;
+        }
+        $auth->$methodname();
+        if ($USER->is_logged_in()) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /**
