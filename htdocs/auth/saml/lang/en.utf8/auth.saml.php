@@ -13,12 +13,17 @@ defined('INTERNAL') || die();
 
 $string['attributemapfilenotamap'] = 'The attribute map file "%s" didn\'t define an attribute map.';
 $string['attributemapfilenotfound'] = 'Could not find attribute map file or it is not writable: %s';
-$string['certificate1'] = 'SAML Service Provider signing and encryption certificate';
+$string['currentcertificate'] = 'SAML Service Provider signing and encryption certificate';
+$string['oldcertificate'] = 'Old SAML Service Provider signing and encryption certificate';
+$string['newcertificate'] = 'New SAML Service Provider signing and encryption certificate';
 $string['confirmdeleteidp'] = 'Are you sure you want to delete this identity provider?';
 $string['spmetadata'] = 'Service Provider metadata';
 $string['metadatavewlink'] = '<a href="%s">View metadata</a>';
+$string['newpublickey'] = 'New public key';
 $string['ssphpnotconfigured'] = 'SimpleSAMLPHP is not configured.';
 $string['manage_certificate2'] = 'This is the certificate generated as part of the SAML Service Provider.';
+$string['manage_new_certificate'] = 'This is the new certificate generated as part of the SAML Service Provider.<br>
+Both the new and old certificates will be valid. Once you have notified all Identity Providers of your new certificate you can remove older certificate via the "Delete old certificate" button.';
 $string['nullprivatecert'] = "Could not generate or save the private key";
 $string['nullpubliccert'] = "Could not generate or save the public certificate";
 $string['defaultinstitution'] = 'Default institution';
@@ -97,3 +102,8 @@ $string['sha256'] = 'SHA256 (Default)';
 $string['sha384'] = 'SHA384';
 $string['sha512'] = 'SHA512';
 $string['sigalgo'] = 'Signature algorithm';
+$string['createnewkeytext'] = 'Create new key / certificate';
+$string['newkeycreated'] = 'New key / certificate created';
+$string['deleteoldkeytext'] = 'Delete old certificate';
+$string['oldkeydeleted'] = 'Old key / certificate deleted';
+$string['keyrollfailed'] = 'Failed to remove old key / certificate';

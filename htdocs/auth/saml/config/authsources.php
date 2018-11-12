@@ -14,6 +14,8 @@ defined('INTERNAL') || die();
 
 $cert = AuthSaml::get_certificate_path() . 'server.crt';
 $key = AuthSaml::get_certificate_path() . 'server.pem';
+$newcert = AuthSaml::get_certificate_path() . 'server_new.crt';
+$newkey = AuthSaml::get_certificate_path() . 'server_new.pem';
 
 global $idp_entityid;
 
@@ -68,3 +70,9 @@ $config = array(
     ),
 
 );
+
+if (file_exists($newcert) && file_exists($newkey)) {
+    $config['default-sp']['new_privatekey'] = $newkey;
+    $config['default-sp']['new_privatekey_pass'] = get_config('sitename');
+    $config['default-sp']['new_certificate'] = $newcert;
+}
