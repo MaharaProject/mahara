@@ -416,6 +416,7 @@ function group_create($data) {
 
     // Need to make sure group has at least one member
     if (empty($data['members'])) {
+        global $USER;
         $data['members'] = array($USER->get('id') => 'admin');
     }
 
