@@ -7,6 +7,9 @@
     padding-left: 15px;
     .forumpostleft {
         min-width: 120px;
+        .media-object {
+            margin-top: 5px;
+        }
     }
     .title {
         margin: 0;
@@ -14,6 +17,9 @@
     }
     .editstopost {
         padding-top: 10px;
+    }
+    &.alert-warning .list-group-item {
+        background-color: transparent;
     }
 }
 

@@ -160,5 +160,14 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018121900) {
+        $table = new XMLDBTable('interaction_forum_post');
+        $field = new XMLDBField('approved');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+    }
+
     return true;
 }
