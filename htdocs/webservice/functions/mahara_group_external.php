@@ -845,7 +845,7 @@ class mahara_group_external extends external_api {
                                 'id'              => new external_value(PARAM_NUMBER, 'ID of the group'),
                                 'name'            => new external_value(PARAM_RAW, 'Group name'),
                                 'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups'),
-                                'description'     => new external_value(PARAM_NOTAGS, 'Group description'),
+                                'description'     => new external_value(PARAM_RAW, 'Group description'),
                                 'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups'),
                                 'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types)),
                                 'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category'),
