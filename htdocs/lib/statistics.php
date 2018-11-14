@@ -548,6 +548,12 @@ function userdetails_statistics_headers($extra, $urllink) {
               'link' => format_goto($urllink . '&sort=remotename', $extra, array('sort'), 'remotename')
         ),
         array(
+              'id' => 'quotapercent',
+              'name' => get_string('quotapercent', 'admin'),
+              'class' => format_class($extra, 'quotapercent'),
+              'link' => format_goto($urllink . '&sort=quotapercent', $extra, array('sort'), 'quotapercent')
+        ),
+        array(
               'id' => 'lastlogin',
               'name' => get_string('lastlogin', 'admin'),
               'class' => format_class($extra, 'lastlogin'),
@@ -634,6 +640,7 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
         case "username":
         case "email":
         case "remotename":
+        case "quotapercent":
         case "studentid":
             $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT (u.firstname, ' ', u.lastname)";
             break;
@@ -647,7 +654,8 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
 
     $sql = "SELECT u.id, u.firstname, u.lastname, u.username, u.preferredname AS displayname,
             u.lastlogin, u.email, u.studentid, u.ctime,
-            (SELECT remoteusername FROM {auth_remote_user} aru WHERE aru.localusr = u.id LIMIT 1) AS remotename
+            (SELECT remoteusername FROM {auth_remote_user} aru WHERE aru.localusr = u.id LIMIT 1) AS remotename,
+            ((u.quotaused * 1.0)/ u.quota) AS quotapercent, u.quota, u.quotaused
             " . $fromsql . $wheresql . "
             ORDER BY " . $orderby;
     if (empty($extra['csvdownload'])) {
@@ -660,10 +668,13 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
     foreach ($data as $item) {
         $item->profileurl = profile_url($item->id);
         $item->lastlogin = $item->lastlogin ? format_date(strtotime($item->lastlogin)) : ' ';
+        $item->quotapercent_format = round($item->quotapercent * 100);
+        $item->quota_format = display_size($item->quota);
+        $item->quotaused_format = !empty($item->quotaused) ? display_size($item->quotaused) : 0;
     }
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('firstname', 'lastname', 'email', 'studentid',
-                           'displayname', 'username', 'remotename', 'lastlogin');
+                           'displayname', 'username', 'remotename', 'quotapercent_format', 'lastlogin');
         $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
     }
     $result['csv'] = true;

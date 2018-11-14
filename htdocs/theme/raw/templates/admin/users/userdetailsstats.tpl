@@ -8,6 +8,7 @@
     {if $columns.displayname}<td><a href="{$item->profileurl}">{$item->displayname}</a></td>{/if}
     {if $columns.username}<td><a href="{$item->profileurl}">{$item->username}</a></td>{/if}
     {if $columns.remotename}<td>{$item->remotename}</td>{/if}
+    {if $columns.quotapercent}<td>{$item->quotapercent_format}% <span class="text-small text-midtone">({$item->quotaused_format}/{$item->quota_format})</span></td>{/if}
     {if $columns.lastlogin}<td>{$item->lastlogin}</td>{/if}
   </tr>
 {/foreach}

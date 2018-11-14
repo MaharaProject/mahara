@@ -1197,6 +1197,7 @@ $string['selectednusers'] = array(
     1 => '%s users selected',
 );
 $string['remoteuser'] = 'Remote username';
+$string['quotapercent'] = 'Quota used';
 $string['userreports'] = 'User reports';
 $string['userreportsdescription'] = 'View or download information about the users you selected on the search page.';
 $string['unabletodeleteself1'] = 'You are not allowed to delete yourself.';
