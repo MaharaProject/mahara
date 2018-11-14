@@ -5,7 +5,7 @@
 
     > ul {
         // hidden list
-        z-index: 4; // to go over at least .inner-link elements
+        z-index: 5; // to go over at least .inner-link elements and .btn-group-top
         position: absolute;
         top: calc(100% - 1px);
         width: 100%;
