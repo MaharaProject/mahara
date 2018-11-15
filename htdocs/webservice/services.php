@@ -141,6 +141,14 @@ $functions = array(
         'type'        => 'write',
     ),
 
+    'mahara_group_update_groups_details' => array(
+        'classname'   => 'mahara_group_external',
+        'methodname'  => 'update_groups_details',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Update basic group details',
+        'type'        => 'write',
+    ),
+
     'mahara_group_update_group_members' => array(
         'classname'   => 'mahara_group_external',
         'methodname'  => 'update_group_members',
