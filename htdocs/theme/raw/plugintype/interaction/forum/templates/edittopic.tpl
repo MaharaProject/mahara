@@ -5,6 +5,7 @@
 {/if}
 <h2>{$subheading}</h2>
 
+{if $timeleft}
 <script type='application/javascript'>
 // Set the number we're counting down from
 var countfrom = {$timeleft};
@@ -20,6 +21,7 @@ var x = setInterval(function() {
     }
 }, 60000);
 </script>
+{/if}
 
 {$editform|safe}
 {include file="footer.tpl"}
