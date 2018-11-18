@@ -1070,18 +1070,21 @@ Number.isInteger = Number.isInteger || function(value) {
  * Replace target=_blank with JS opener for security reasons
  */
 jQuery(function($) {
-    $("a[target='_blank']").each(function() {
-        var link = $(this);
-        link.removeAttr('target');
+    $("a").each(function() {
+        var url = $(this).attr('href');
+        if ($(this).attr('target') == '_blank' || (url.match("^http") && !url.match(config.wwwroot) && $(this).attr('target') != '_self')) {
+            var link = $(this);
+            link.removeAttr('target');
 
-        link.off('click');
-        link.on('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            var newWnd = window;
-            newWnd.opener = null;
-            newWnd.open(link.prop('href'), '_blank');
-        });
+            link.off('click');
+            link.on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                var newWnd = window;
+                newWnd.opener = null;
+                newWnd.open(link.prop('href'), '_blank');
+            });
+        }
     });
 });
 
