@@ -21,7 +21,7 @@
 {/if}
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-lg-9">
 
         <h1 class="page-header">
             {if count($artefactpath) == 0}

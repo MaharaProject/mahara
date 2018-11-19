@@ -4,7 +4,7 @@
                    <a href="{if $collection->frameworkname}{$collection->fullurl}{else}{$collection->views[0]->fullurl}{/if}" class="outer-link"><span class="sr-only">{$collection->name}</span></a>
                 {/if}
                  <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-lg-9">
 
                         <h2 class="title list-group-item-heading" title="{str tag=emptycollection section=collection}">
                             {$collection->name}

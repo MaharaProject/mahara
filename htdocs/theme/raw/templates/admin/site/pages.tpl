@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-lg-9">
         {if $noinstitutionsadmin}<p class="lead">{$noinstitutionsadmin|safe}</p>{/if}
         {if $noinstitutions}
             <p class="lead">{$noinstitutions}</p>
@@ -9,7 +9,7 @@
         {/if}
     </div>
     {if $pageeditform}
-    <div class="col-md-9">
+    <div class="col-lg-9">
         <div class="card card-secondary">
             <div class="card-body">
                 {$pageeditform|safe}
@@ -19,4 +19,3 @@
     {/if}
 </div>
 {include file="footer.tpl"}
-

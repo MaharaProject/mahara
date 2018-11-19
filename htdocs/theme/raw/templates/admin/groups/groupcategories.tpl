@@ -3,7 +3,7 @@
     {$optionform|safe}
 </div>
 <div class="card card-secondary">
-    <h3 class="card-heading">{str tag=addcategories section=admin}</h3>
+    <h3 class="card-header">{str tag=addcategories section=admin}</h3>
     <div class="card-body">
         <p class="lead text-small description">{str tag=groupcategoriespagedescription section=admin}</p>
         <div id="editmenus">
@@ -12,4 +12,3 @@
     </div>
 </div>
 {include file="footer.tpl"}
-

@@ -11,8 +11,8 @@
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
 	color: inherit;
-	background-color: transparent;
-	border-color: transparent;
+	background-color: $btn-dark-bg;
+	border-color: $btn-dark-border;;
 	box-shadow: none;
 }
 
@@ -130,7 +130,7 @@ h1 ~ div > .btn-group-top,
 .nav-tabs +  div.btn-group-top {
     margin-top: -20px;
 	margin-left: -100%;
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(xs) {
         margin: 0 0 10px 0;
         width: 100%;
         .btn-group .btn,
@@ -165,6 +165,11 @@ h1 ~ div > .btn-group-top,
             margin: 0;
         }
     }
+	&.btn-top-right {
+		.pieform {
+			width: 100%;
+		}
+	}
 }
 
 .nav-tabs +  div.btn-group-top{
@@ -299,7 +304,7 @@ td.action-list-copy {
         // To override btn-primary colour
         .btn-primary {
             color: $gray-700;
-            background: scale-color(theme-color("secondary"), $lightness: -10.5%);
+            background: $gray-400;
             border-color: $btn-secondary-border;
         }
     }

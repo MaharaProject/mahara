@@ -230,6 +230,9 @@
     }
 
     &.calendar {
+        & label {
+            width: 100%;
+        }
         .calendar {
             margin-left: 0;
             width: 165px;

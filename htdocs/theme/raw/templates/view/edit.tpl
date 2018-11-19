@@ -4,7 +4,7 @@
 
 {if $ADMIN || $INSTITUTIONALADMIN}
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-lg-9">
         <div class="card card-secondary">
             <div class="card-body">
                 {$editview|safe}
@@ -14,7 +14,7 @@
 </div>
 {else}
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-lg-9">
     {$editview|safe}
     </div>
 </div>

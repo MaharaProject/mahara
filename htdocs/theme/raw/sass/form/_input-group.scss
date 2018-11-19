@@ -53,10 +53,13 @@
         margin-top: 5px;
         // For screen size smaller than xs
         @media (min-width: 321px) {
-            margin-top: 13px;
+            margin-top: 10.5px;
         }
         @include media-breakpoint-up(md) {
             margin-top: 10.5px;
+        }
+        @include media-breakpoint-down(xs) {
+            margin-top: 14.5px;
         }
     }
 
@@ -69,7 +72,6 @@
 }
 .pieform .input-group-append {
     font-size: inherit;
-    width: inherit;
     float:left;
     &.form-group {
         display: block;

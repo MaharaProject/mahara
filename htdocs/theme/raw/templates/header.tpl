@@ -116,7 +116,7 @@
 
     <div class="container main-content">
         <div class="row">
-            <main id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 order-md-2 {/if}{else}col-md-12{/if} main">
+            <main id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-lg-9 {else}col-lg-9 order-md-2 {/if}{else}col-md-12{/if} main">
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
                     <div id="main-column-container">
 

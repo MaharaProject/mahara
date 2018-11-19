@@ -74,7 +74,7 @@
         </div>
 
     </div>
-    <div class="col-md-9">
+    <div class="col-lg-9">
         <div class="collapsible-group skins">
             <div class="card card-secondary collapsible collapsible-group first">
                 <h3 class="card-header has-link">
