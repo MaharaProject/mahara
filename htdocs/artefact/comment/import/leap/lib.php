@@ -126,6 +126,9 @@ class LeapImportComment extends LeapImportArtefactPlugin {
         if ($type == 'text') {
             $description = format_whitespace($description);
         }
+        else {
+            $description = ArtefactTypeComment::remove_comments_classes($description);
+        }
         if (isset($entry->author->name) && strlen($entry->author->name)) {
             $authorname = (string)$entry->author->name;
         }
