@@ -111,6 +111,7 @@ function edit_comment_submit(Pieform $form, $values) {
     $owner = $view->get('owner');
     $group = $comment->get('group');
     $newdescription = EmbeddedImage::prepare_embedded_images($values['message'], 'comment', $comment->get('id'), $group);
+    $newdescription = ArtefactTypeComment::remove_comments_classes($newdescription);
     $comment->set('description', $newdescription);
     $approvecomments = $view->get('approvecomments');
     if (!empty($group) && ($approvecomments || (!$approvecomments && $view->user_comments_allowed($USER) == 'private')) && $values['ispublic'] && !$USER->can_edit_view($view)) {
