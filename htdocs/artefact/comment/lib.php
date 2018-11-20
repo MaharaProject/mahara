@@ -1155,6 +1155,29 @@ class ArtefactTypeComment extends ArtefactType {
         }
     }
 
+
+    /*
+     * Removes the classes from the text of the comment thst could interfere
+     * with the comment display
+     * @param string $comment the text content of the comment
+     */
+    public static function remove_comments_classes($comment) {
+
+        $dom = new DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->loadHTML($comment);
+
+        $xpath = new DOMXPath($dom);
+
+        $expression = "//div[contains(@class,'modal-docked')]|//div[contains(@class,'modal')]|//div[contains(@class,'modal-dialog')]|//div[contains(@class,'modal-lg')]";
+
+        foreach ($xpath->evaluate($expression) as $section) {
+            $section->removeAttribute('class');
+        }
+        return $dom->saveHTML();
+    }
+
     /**
      * Fetch all users that are currently watching the view the comment is being added to,
      * in case of comment on artefact it will be the view the artefact sits on,
@@ -1580,11 +1603,11 @@ function add_feedback_form_validate(Pieform $form, $values) {
 function add_feedback_form_submit(Pieform $form, $values) {
     global $view, $artefact, $USER;
     require_once('embeddedimage.php');
+
     $data = (object) array(
         'title'       => get_string('Comment', 'artefact.comment'),
-        'description' => $values['message'],
+        'description' => ArtefactTypeComment::remove_comments_classes($values['message']),
     );
-
     if ($artefact) {
         $data->onartefact  = $artefact->get('id');
         $data->owner       = $artefact->get('owner');
