@@ -103,7 +103,8 @@ if (!can_view_view($view)) {
     $errorstr = (param_integer('objection', null)) ? get_string('accessdeniedobjection', 'error') : get_string('accessdenied', 'error');
     throw new AccessDeniedException($errorstr);
 }
-
+$institution = $view->get('institution');
+View::set_nav($groupid, $institution);
 // Comment list pagination requires limit/offset params
 $limit       = param_integer('limit', 10);
 $offset      = param_integer('offset', 0);
