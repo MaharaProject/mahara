@@ -79,8 +79,8 @@ class mahara_institution_external extends external_api {
                             'users'           => new external_multiple_structure(
                                                     new external_single_structure(
                                                         array(
-                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL),
-                                                                'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
+                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                                 )
                                                             )
                                                         )
@@ -157,8 +157,8 @@ class mahara_institution_external extends external_api {
                         'users'           => new external_multiple_structure(
                                                 new external_single_structure(
                                                     array(
-                                                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL),
-                                                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
+                                                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                         )
                                                     )
                                                 )
@@ -236,8 +236,8 @@ class mahara_institution_external extends external_api {
                             'users'           => new external_multiple_structure(
                                                     new external_single_structure(
                                                         array(
-                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL),
-                                                                'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
+                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                             )
                                                         )
                                                     )
@@ -309,8 +309,8 @@ class mahara_institution_external extends external_api {
                             'users'           => new external_multiple_structure(
                                                     new external_single_structure(
                                                         array(
-                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL),
-                                                                'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
+                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                             )
                                                         )
                                                     )

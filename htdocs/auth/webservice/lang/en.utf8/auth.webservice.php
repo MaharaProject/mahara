@@ -398,3 +398,4 @@ $string['featuredisabled'] = 'This web services feature is not enabled. Please c
 $string['institutionunknown'] = '- unknown -';
 $string['unabletodeleteadmin'] = 'Unable to delete user with ID "%s" as they are an admin';
 $string['notuserblog'] = 'The journal is not owned by "%s"';
+$string['oneof'] = 'One of';

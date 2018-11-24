@@ -528,17 +528,23 @@
         display: block;
         padding-top: 10px;
     }
-    .requiredmarker {
+    .requiredmarker,
+    .oneofmarker {
         color: scale-color($brand-danger, $lightness: -8.5%);
     }
 
-    &.requiredmarkerdesc {
+    &.requiredmarkerdesc,
+    &.oneofmarkerdesc {
         color: scale-color($brand-danger, $lightness: -8.5%);
         border: 0;
         font-style: italic;
         font-size: $font-size-base - 1;
         padding-bottom: 0;
     }
+    &.has-oneof {
+        background-color: $gray-lighter;
+    }
+
     @media (min-width: $screen-sm-min) {
         &.input-small {
             max-width: 100%;

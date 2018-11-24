@@ -148,6 +148,8 @@ class Pieform {/*{{{*/
     private $has_required_fields = false;
     private $all_required_field_labels_hidden = false;
 
+    private $has_oneof_fields = false;
+
     private $submitvalue = 'submit';
 
     /*}}}*/
@@ -786,6 +788,9 @@ class Pieform {/*{{{*/
                 }
                 $result .= '">' . get_string('requiredfields', 'pieforms', $this->get_property('requiredmarker')) . '</div>';
             }
+            if ($this->has_oneof_fields) {
+                $result .= '<div class="form-group oneofmarkerdesc">' . get_string('oneoffields', 'pieforms', $this->get_property('oneofmarker')) . '</div>';
+            }
             $this->include_plugin('renderer',  $this->data['renderer']);
 
             // Form header
@@ -1147,6 +1152,9 @@ EOF;
         }
         if (!empty($element['error'])) {
             $classes[] = 'error';
+            if (!empty($element['rules']) && !empty($element['rules']['oneof'])) {
+                $classes[] = 'oneof';
+            }
         }
         if ($this->data['elementclasses']) {
             $classes[] = $element['type'];
@@ -1527,6 +1535,15 @@ EOF;
                 $requiredmarker = '';
             }
 
+            if ($this->get_property('oneofmarker') &&
+                (!empty($element['rules']['oneof']))) {
+                $oneofmarker = ' <span class="oneofmarker">' . $this->get_property('oneofmarker') . '</span>';
+                $this->has_oneof_fields = true;
+            }
+            else {
+                $oneofmarker = '';
+            }
+
             if (!empty($element['hiddenlabel'])) {
                 $labelclass = ' class="sr-only"';
             }
@@ -1543,10 +1560,10 @@ EOF;
                 // Special 'nolabeltypes' have their own label(s) added direct to the form field(s).
                 // You can style specific non labels to be like labels by accessing the
                 // pseudolabel class attribute.
-                $element['labelhtml'] = '<span class="pseudolabel">' . $title . $requiredmarker . '</span>';
+                $element['labelhtml'] = '<span class="pseudolabel">' . $title . $requiredmarker . $oneofmarker . '</span>';
             }
             else {
-                $element['labelhtml'] = '<label' . $labelclass . ' for="' . $this->name . '_' . $element['id'] . '">' . $title . $requiredmarker . '</label>';
+                $element['labelhtml'] = '<label' . $labelclass . ' for="' . $this->name . '_' . $element['id'] . '">' . $title . $requiredmarker . $oneofmarker . '</label>';
             }
         }
 
@@ -1711,6 +1728,9 @@ EOF;
 
             // Whether to add * markers after each required field
             'requiredmarker' => false,
+
+            // Whether to add # markers after each oneof field
+            'oneofmarker' => false,
 
             // Whether to show the description as well as the error message
             // when displaying errors

@@ -37,7 +37,6 @@ Scenario: Turning master switch on
  And I enable the switch in "mahara_group_update_groups" row
  And I press "Save"
  # Verify service group was made
- And I press "Back"
  And I should see "mahara_group_create_groups"
  And I collapse "Manage service groups" node
  # Create a new token
@@ -55,7 +54,6 @@ Scenario: Turning master switch on
  And I disable the switch "Enable web services security (XML-RPC Only)"
  And I press "Save"
  # Verify the token was made
- And I press "Back"
  And I should see "Edit" in the "#webservices_token_pseudofieldset" element
  # Test the token
  And I choose "Test client" in "Web services" from administration menu

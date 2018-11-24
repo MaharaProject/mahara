@@ -381,5 +381,5 @@ function serviceconfig_submit(Pieform $form, $values) {
         }
     }
     $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));
-    redirect('/webservice/admin/serviceconfig.php?service=' . $service);
+    redirect('/webservice/admin/index.php?open=webservices_function_groups');
 }

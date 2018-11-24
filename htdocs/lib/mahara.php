@@ -2762,6 +2762,7 @@ function pieform_configure() {
         'autofocus' => true,
         'renderer'  => $renderer,
         'requiredmarker' => '*',
+        'oneofmarker' => '#',
         'elementclasses' => true,
         'descriptionintwocells' => true,
         'jsdirectory'    => get_config('wwwroot') . 'lib/pieforms/static/core/',

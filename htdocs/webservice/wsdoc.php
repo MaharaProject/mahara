@@ -112,8 +112,11 @@ function wsdoc_detailed_description_html($params, $indentlevel = 0) {
 
                 case VALUE_OPTIONAL:
                     $required = '<span class="wsoptional">' .
-                        get_string('optional', 'auth.webservice')
-                        . '</span> ';
+                        get_string('optional', 'auth.webservice');
+                    if (isset($params->oneof) && !empty($params->oneof)) {
+                        $required .= ' (' . get_string('oneof', 'auth.webservice') . ')';
+                    }
+                    $required .= '</span> ';
                     break;
 
                 case VALUE_REQUIRED:

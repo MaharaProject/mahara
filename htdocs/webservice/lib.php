@@ -857,12 +857,14 @@ class external_value extends external_description {
      * @param bool $required
      * @param mixed $default
      * @param bool $allownull
+     * @param bool $oneof
      */
     public function __construct($type, $desc='', $required=VALUE_REQUIRED,
-    $default=null, $allownull=NULL_ALLOWED) {
+    $default=null, $allownull=NULL_ALLOWED, $oneof=false) {
         parent::__construct($desc, $required, $default);
         $this->type      = $type;
         $this->allownull = $allownull;
+        $this->oneof     = $oneof; // a string to identify a oneof grouping
     }
 }
 

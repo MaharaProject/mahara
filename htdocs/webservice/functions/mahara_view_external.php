@@ -68,10 +68,10 @@ class mahara_view_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the favourites owner', VALUE_OPTIONAL),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the favourites owner', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             'query'           => new external_value(PARAM_RAW, 'View query filter to apply', VALUE_OPTIONAL),
                             )
                         )
@@ -370,10 +370,10 @@ class mahara_view_external extends external_api {
                 'views' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_INTEGER, 'ID of the favourites owner', VALUE_OPTIONAL),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the favourites owner', VALUE_OPTIONAL),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the favourites owner', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_INTEGER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             'viewid'          => new external_value(PARAM_INTEGER, 'View ID', VALUE_REQUIRED),
                             'iscollection'    => new external_value(PARAM_BOOL, 'Is a Collection', VALUE_OPTIONAL),
                             'lock'            => new external_value(PARAM_BOOL, 'Lock the object', VALUE_OPTIONAL),
@@ -602,10 +602,10 @@ class mahara_view_external extends external_api {
                 'views' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_INTEGER, 'ID of the favourites owner', VALUE_OPTIONAL),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the favourites owner', VALUE_OPTIONAL),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the favourites owner', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_INTEGER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             'viewid'          => new external_value(PARAM_INTEGER, 'View ID', VALUE_REQUIRED),
                             'iscollection'    => new external_value(PARAM_BOOL, 'Is a Collection', VALUE_OPTIONAL),
                             'viewoutcomes'    => new external_value(PARAM_RAW, 'View outcomes', VALUE_OPTIONAL),

@@ -270,9 +270,9 @@ class mahara_group_external extends external_api {
                             'groups' => new external_multiple_structure(
                                             new external_single_structure(
                                                 array(
-                                                        'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL),
-                                                        'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL),
-                                                        'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL),
+                                                        'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                        'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                        'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                         'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
                                                 )
                                             )
@@ -361,9 +361,9 @@ class mahara_group_external extends external_api {
                             new external_multiple_structure(
                                 new external_single_structure(
                                     array(
-                                            'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL),
-                                            'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL),
-                                            'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL),
+                                            'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                            'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                            'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                             'description'     => new external_value(PARAM_NOTAGS, 'Group description'),
                                             'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
                                             'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types), VALUE_OPTIONAL),
@@ -385,8 +385,8 @@ class mahara_group_external extends external_api {
                                             'members'         => new external_multiple_structure(
                                                                     new external_single_structure(
                                                                         array(
-                                                                                'id'       => new external_value(PARAM_NUMBER, 'member user Id', VALUE_OPTIONAL),
-                                                                                'username' => new external_value(PARAM_RAW, 'member username', VALUE_OPTIONAL),
+                                                                                'id'       => new external_value(PARAM_NUMBER, 'member user Id', VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
+                                                                                'username' => new external_value(PARAM_RAW, 'member username', VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
                                                                                 'role'     => new external_value(PARAM_ALPHANUMEXT, 'member role: ' . implode(', ', self::$member_roles))
                                                                         ), 'Group membership')
                                                                     ),
@@ -570,9 +570,9 @@ class mahara_group_external extends external_api {
                     new external_multiple_structure (
                         new external_single_structure (
                             array(
-                                'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL),
-                                'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL),
-                                'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL),
+                                'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                 'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
                                 'description'     => new external_value(PARAM_NOTAGS, 'Group description'),
                                 'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
@@ -683,15 +683,15 @@ class mahara_group_external extends external_api {
                                 new external_multiple_structure(
                                     new external_single_structure(
                                         array(
-                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL),
-                                                'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL),
-                                                'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL),
+                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                 'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
                                                 'members'         => new external_multiple_structure(
                                                                         new external_single_structure(
                                                                             array(
-                                                                                    'id'       => new external_value(PARAM_NUMBER, 'member user Id', VALUE_OPTIONAL),
-                                                                                    'username' => new external_value(PARAM_RAW, 'member username', VALUE_OPTIONAL),
+                                                                                    'id'       => new external_value(PARAM_NUMBER, 'member user Id', VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
+                                                                                    'username' => new external_value(PARAM_RAW, 'member username', VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
                                                                                     'role'     => new external_value(PARAM_ALPHANUMEXT, 'member role: admin, tutor, member', VALUE_OPTIONAL),
                                                                                     'action'   => new external_value(PARAM_ALPHANUMEXT, 'member action: add, or remove')
                                                                                 ), 'Group membership actions')
@@ -840,8 +840,8 @@ class mahara_group_external extends external_api {
                             'groups' => new external_multiple_structure(
                                             new external_single_structure(
                                                 array(
-                                                        'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL),
-                                                        'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL),
+                                                        'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                        'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                         'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
                                                     )
                                                 )

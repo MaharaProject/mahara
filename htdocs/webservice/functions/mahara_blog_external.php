@@ -47,10 +47,10 @@ class mahara_blog_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the blog owner', VALUE_OPTIONAL),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the blog owner', VALUE_OPTIONAL),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the blog owner', VALUE_OPTIONAL),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the blog owner', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_NUMBER, 'ID of the blog owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the blog owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the blog owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the blog owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             )
                         )
                     )

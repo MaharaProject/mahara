@@ -72,6 +72,7 @@ $string['rule.minvalue.minvalue'] = 'This value cannot be smaller than %d.';
 $string['rule.regex.regex'] = 'This field is not in valid form.';
 
 $string['rule.required.required'] = 'This field is required.';
+$string['rule.oneof.oneof'] = 'One of the fields in this group are required.';
 $string['rule.safetext.invalidchars'] = 'This field has invalid characters.';
 $string['rule.validateoptions.validateoptions'] = 'The option "%s" is invalid.';
 
@@ -85,3 +86,4 @@ $string['switchbox.yes'] = 'Yes';
 $string['switchbox.no'] = 'No';
 
 $string['requiredfields'] = "Fields marked by '%s' are required.";
+$string['oneoffields'] = "Fields marked by '%s' require one of them to be filled in.";

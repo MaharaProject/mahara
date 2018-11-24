@@ -80,6 +80,11 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
             $element['class'] = $element['class'] . ' has-error';
         }
 
+        // add bootstrap has-error class to any error fields
+        if (strpos($element['class'], 'oneof') !== false) {
+            $element['class'] = $element['class'] . ' has-oneof';
+        }
+
         $prefix .= ' class="' . Pieform::hsc($element['class']) . '"';
 
         $prefix .= '>';
