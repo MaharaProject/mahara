@@ -1522,6 +1522,11 @@ class AuthLdap extends Auth {
                     $members[$id] = 'member';
                 }
             }
+            // doublecheck that we have at least 1 admin in the group in case the user = 1 is a member of the group
+            if (!in_array('admin', $members)) {
+                // in no admins then force user = 1 to be the admin
+                $members['1'] = 'admin';
+            }
             if (get_config('auth_ldap_debug_sync_cron')) {
                 log_debug('new members list : '.count($members));
                 var_dump($members);
