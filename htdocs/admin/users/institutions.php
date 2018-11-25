@@ -234,6 +234,7 @@ if ($institution || $add) {
         $data->commentthreaded = get_config_institution($institution, 'commentthreaded');
         $data->allowinstitutionsmartevidence = get_config_institution($institution, 'allowinstitutionsmartevidence');
         $data->reviewselfdeletion = get_config_institution($institution, 'reviewselfdeletion');
+        $data->showonlineusers = (is_isolated() && $data->showonlineusers == 2 ? 1 : $data->showonlineusers);
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
 
         // TODO: Find a better way to work around Smarty's minimal looping logic
@@ -265,7 +266,7 @@ if ($institution || $add) {
         }
         $data->theme = 'sitedefault';
         $data->defaultmembershipperiod = null;
-        $data->showonlineusers = 2;
+        $data->showonlineusers = is_isolated() ? 1 : 2;
         $data->allowinstitutionpublicviews = get_config('allowpublicviews') ? 1 : 0;
         $data->allowinstitutionsmartevidence = 0;
         $data->tags = 0;
@@ -285,8 +286,15 @@ if ($institution || $add) {
     if (validate_theme($data->theme, $institution, $add) === false) {
         $data->theme = 'sitedefault';
     }
-    $showonlineusersoptions = array('0' => get_string('none'), '1' => get_string('institutiononly', 'admin'), '2' => get_string('all', 'admin'));
-    $sitename = get_config('sitename');
+    $showonlineusersoptions = array('0' => get_string('none'),
+                                    '1' => get_string('institutiononly', 'admin'),
+                                    '2' => get_string('all', 'admin'));
+
+    $isolatedinstitutions = is_isolated();
+    if ($isolatedinstitutions) {
+        unset($showonlineusersoptions['2']);
+    }
+     $sitename = get_config('sitename');
 
     safe_require('artefact', 'internal');
     $elements = array(
@@ -376,7 +384,7 @@ if ($institution || $add) {
             'title'        => get_string('registrationconfirm', 'admin'),
             'description'  => get_string('registrationconfirmdescription3', 'admin'),
             'disabled'     => get_config('requireregistrationconfirm') == true,
-            'defaultvalue' => $data->registerconfirm,
+            'defaultvalue' => ($isolatedinstitutions ? true : $data->registerconfirm),
         );
     }
 

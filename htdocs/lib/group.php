@@ -1714,7 +1714,8 @@ function group_prepare_usergroups_for_display($groups) {
         else if ($group->membershiptype == 'invite') {
             $group->invite = group_get_accept_form('invite' . $i++, $group->id);
         }
-        else if ($group->jointype == 'open') {
+        // When 'isolatedinstitutions' is set, people cannot join public groups by themselves
+        else if ($group->jointype == 'open' && !(is_isolated() && $group->public == 1)) {
             $group->groupjoin = group_get_join_form('joingroup' . $i++, $group->id);
         }
 
@@ -2456,6 +2457,31 @@ function group_can_create_groups() {
         return true;
     }
     return $creators == 'staff' && ($USER->get('staff') || $USER->is_institutional_staff());
+}
+
+function group_can_create_public_groups() {
+    global $USER;
+
+    $creators = get_config('createpublicgroups');
+
+    // Only site administrators can create public groups when 'isolatedinstitutions' is set
+    if (is_isolated()) {
+        if ($USER->get('admin')) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    // Different user roles can create public groups when 'isolatedinstitutions' is not set
+    if ($creators == 'all' && !is_isolated()) {
+        return true;
+    }
+    if (($USER->get('admin') || $USER->is_institutional_admin()) && !is_isolated()) {
+        return true;
+    }
+    return $creators == 'staff' && (($USER->get('staff') || $USER->is_institutional_staff()) && !is_isolated());
 }
 
 /* Returns groups containing a given member which accept view submissions */

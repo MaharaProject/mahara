@@ -46,8 +46,10 @@ function pieform_element_viewacl(Pieform $form, $element) {
         $allowedpresets[] = 'public';
         $loggedinindex = 1;
     }
-    $allowedpresets[] = 'loggedin';
-    if ($form->get_property('userview')) {
+    if (!is_isolated()) {
+        $allowedpresets[] = 'loggedin';
+    }
+    if ($form->get_property('userview') && !get_config('friendsnotallowed')) {
         $allowedpresets[] = 'friends';
     }
 

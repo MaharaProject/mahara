@@ -32,6 +32,9 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
     }
 
     public static function get_viewtypes() {
+        if (get_config('friendsnotallowed')) {
+            return array();
+        }
         return array('profile', 'dashboard');
     }
 

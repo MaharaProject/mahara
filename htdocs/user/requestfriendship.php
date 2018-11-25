@@ -16,6 +16,8 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 $id = param_integer('id');
 
+isolatedinstitution_access($id);
+
 if (get_account_preference($id, 'friendscontrol') != 'auth'
     || $id == $USER->get('id')
     || !($user = get_record('usr', 'id', $id, 'deleted', 0))) {

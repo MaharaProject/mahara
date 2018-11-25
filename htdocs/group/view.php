@@ -59,12 +59,23 @@ if ($USER->is_logged_in()) {
         $group->membershiptype = 'invite';
         $group->invite = group_get_accept_form('invite', $group->id);
     }
-    else if ($group->jointype == 'open') {
+    // When 'isolatedinstitutions' is set, people cannot join public groups by themselves
+    else if ($group->jointype == 'open' && !is_isolated()) {
         $group->groupjoin = group_get_join_form('joingroup', $group->id);
     }
     else if ($group->request
              and $request = get_record('group_member_request', 'group', $group->id, 'member', $USER->get('id'))) {
         $group->membershiptype = 'request';
+    }
+}
+
+// Check to see if we can invite anyone
+if ($group->invitefriends) {
+    $results = get_group_user_search_results($group->id, '', 0, 1, 'notinvited', null, $USER->get('id'), 'adminfirst',
+                                             (((int) $group->hidemembers === GROUP_HIDE_TUTORS || (int) $group->hidemembersfrommembers === GROUP_HIDE_TUTORS) ? true : false)
+    );
+    if (empty($results['count'])) {
+        $group->invitefriends = 0;
     }
 }
 

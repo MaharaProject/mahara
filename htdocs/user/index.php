@@ -31,6 +31,8 @@ $offset = param_integer('offset', 0);
 $filter = param_alpha('filter', $USER->get('admin') ? 'all' : 'myinstitutions');
 $limit  = 10;
 
+$is_admin = $USER->get('admin') || $USER->get('staff');
+
 $searchmode = 'find';
 
 $options = array('exclude' => $USER->get('id'));
@@ -39,12 +41,22 @@ $data['query'] = $query;
 
 if ($filter == 'myinstitutions' && $USER->get('institutions')) {
     $options['myinstitutions'] = true;
+    $options['showadmins'] = false;
 }
-else {
-    $filter = 'all';
+// For regular members of 'No Institution'
+else if ($filter == 'myinstitutions' && is_isolated() && !$USER->get('institutions') && !$is_admin) {
+    $options['myinstitutions'] = true;
+    $options['showadmins'] = false;
+}
+else if ($filter == 'all') {
+    $options['myinstitutions'] = false;
+    $options['showadmins'] = true;
 }
 
 if ($filter == 'current' || $filter == 'pending') {
+    if (get_config('friendsnotallowed')) {
+        throw new AccessDeniedException();
+    }
     $searchmode = 'myfriends';
     $data = search_friend($filter, $limit, $offset, $query);
 }
@@ -78,12 +90,13 @@ $filterfield = array(
             'defaultvalue' => $filter
 );
 
-//Only offer myinstitutions if user is a member
-if ($USER->get('institutions')) {
+// Only offer myinstitutions if user is a member
+if ($USER->get('institutions') || (is_isolated() && !$USER->get('institutions') && !$is_admin)) {
     unset($filterfield['options']);
+    $myinstitutionslabel = !empty($USER->get('institutions')) ? get_string('myinstitutions', 'group') : get_field('institution', 'displayname', 'name', 'mahara');
     $filterfield['options'] = array(
         'all'   => get_string('Everyone', 'group'),
-        'myinstitutions' => get_string('myinstitutions', 'group'),
+        'myinstitutions' => $myinstitutionslabel,
         'current' => get_string('Friends', 'group'),
         'pending' => get_string('friendrequests', 'group')
     );
@@ -118,7 +131,12 @@ if ($admingroups) {
     array_push($javascript, 'groupbox');
 }
 
-$smarty = smarty($javascript, array(), array('applychanges' => 'mahara', 'nogroups' => 'group'), array('sideblocks' => array(friends_control_sideblock('find'))));
+$sideblocks = array('sideblocks' => array(friends_control_sideblock('find')));
+if (get_config('friendsnotallowed')) {
+    $sideblocks = array();
+}
+
+$smarty = smarty($javascript, array(), array('applychanges' => 'mahara', 'nogroups' => 'group'), $sideblocks);
 setpageicon($smarty, 'icon-user-plus');
 $smarty->assign('results', $data);
 $smarty->assign('count', $data['count']);

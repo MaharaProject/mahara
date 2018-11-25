@@ -21,6 +21,8 @@ $limit  = param_integer('limit', 10);
 $filter = param_alpha('filter', 'all');
 
 $searchtype = 'myfriends';
+$is_admin = $USER->get('admin') || $USER->get('staff');
+
 if ($extradata = param_variable('extradata', null)) {
     $extradata = json_decode($extradata);
     if ($extradata->searchtype) {
@@ -36,6 +38,15 @@ else {
     $options = array('exclude' => $USER->get('id'));
     if ($filter == 'myinstitutions') {
         $options['myinstitutions'] = true;
+    }
+    if (is_isolated() && !$is_admin) {
+        $options['myinstitutions'] = true;
+        if ($filter == 'myinstitutions') {
+            $options['showadmins'] = false;
+        }
+        else {
+            $options['showadmins'] = true;
+        }
     }
     $data = search_user($query, $limit, $offset, $options);
     $data['query'] = $query;

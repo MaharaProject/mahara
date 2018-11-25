@@ -5636,8 +5636,9 @@ function get_institutions_to_associate() {
     global $USER;
 
     $institutions = array();
-    if (is_array($USER->institutions) && count($USER->institutions) > 0) {
+    if (is_array($USER->institutions) && count($USER->institutions) > 0 && !$USER->get('admin')) {
         // Get all institutions where user is member
+        // This does not apply for site admins
         foreach ($USER->institutions as $inst) {
             if (empty($inst->suspended)) {
                 $institutions = array_merge($institutions, array($inst->institution => $inst->displayname));
@@ -5694,6 +5695,37 @@ function get_password_policy_description($type = 'generic') {
         $description = get_string('passworddescriptionbase', 'mahara', $numbervalue) . ' ' . get_string('passworddescription.' . $formatvalue, 'mahara');
     }
     return $description;
+}
+
+/**
+ *
+ * Check if this site is using isolated institutions
+ */
+function is_isolated() {
+    global $CFG;
+    // If isolated institutions are turned on in $config.php we need to make sure
+    // that the correct site settings exist in case they don't edit / save the Admin -> Config form
+    // Note: we ned to save 'isolatedinstitutionset' in db as it needs to be different to the one set in $cfg
+    if (isset($CFG->isolatedinstitutions) && $CFG->isolatedinstitutions && !get_field('config', 'value', 'field', 'isolatedinstitutionset')) {
+        // Setting $cfg->isolatedinstitutions to true
+        set_config('loggedinprofileviewaccess', false);
+        set_config('creategroups', 'staff');
+        set_config('createpublicgroups', 'siteadmins');
+        set_config('usersallowedmultipleinstitutions', false);
+        set_config('requireregistrationconfirm', true);
+        set_config('isolatedinstitutionset', true); // set this in Db so we only do this check/update once
+    }
+    else if ((isset($CFG->isolatedinstitutions) && !$CFG->isolatedinstitutions) && get_field('config', 'value', 'field', 'isolatedinstitutionset')) {
+        // Setting $cfg->isolatedinstitutions to false
+        set_config('owngroupsonly', false);
+        set_config('isolatedinstitutionset', false); // set this in Db so we only do this check/update once
+    }
+    else if (!isset($CFG->isolatedinstitutions) && get_field('config', 'value', 'field', 'isolatedinstitutionset')) {
+        // Removing $cfg->isolatedinstitutions line
+        set_config('owngroupsonly', false);
+        set_config('isolatedinstitutionset', false); // set this in Db so we only do this check/update once
+    }
+    return (bool)get_config('isolatedinstitutions');
 }
 
 function get_homepage_redirect_results($request, $limit, $offset, $type = null, $id = null) {

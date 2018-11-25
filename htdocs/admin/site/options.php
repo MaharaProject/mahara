@@ -36,6 +36,7 @@ $notificationelements = get_notification_settings_elements(null, true);
 validate_theme(get_config('theme'));
 
 $spamtraps = available_spam_traps();
+$isolatedinstitutions = is_isolated();
 $siteoptionform = array(
     'name'       => 'siteoptions',
     'jsform'     => true,
@@ -181,8 +182,8 @@ $siteoptionform = array(
                     'type'         => 'switchbox',
                     'title'        => get_string('loggedinprofileviewaccess1', 'admin'),
                     'description'  => get_string('loggedinprofileviewaccessdescription1', 'admin'),
-                    'defaultvalue' => get_config('loggedinprofileviewaccess'),
-                    'disabled'     => in_array('loggedinprofileviewaccess', $OVERRIDDEN),
+                    'defaultvalue' => ($isolatedinstitutions ? false : get_config('loggedinprofileviewaccess')),
+                    'disabled'     => in_array('loggedinprofileviewaccess', $OVERRIDDEN) || $isolatedinstitutions,
                     'help'         => true,
                 ),
                 'staffreports' => array(
@@ -285,13 +286,15 @@ $siteoptionform = array(
                     'type'         => 'select',
                     'title'        => get_string('whocancreatepublicgroups', 'admin'),
                     'description'  => get_string('whocancreatepublicgroupsdescription', 'admin'),
-                    'defaultvalue' => get_config('createpublicgroups'),
+                    'defaultvalue' => (is_isolated() ? 'siteadmins' : get_config('createpublicgroups')),
                     'options'      => array(
-                        'admins' => get_string('adminsonly', 'admin'),
-                        'all' => get_string('Everyone', 'admin'),
+                        'siteadmins' => get_string('siteadminsonly', 'admin'),
+                        'admins'     => get_string('adminsonly', 'admin'),
+                        'staff'      => get_string('adminsandstaffonly', 'admin'),
+                        'all'        => get_string('Everyone', 'admin'),
                     ),
                     'help'         => true,
-                    'disabled'     => in_array('createpublicgroups', $OVERRIDDEN),
+                    'disabled'     => in_array('createpublicgroups', $OVERRIDDEN) || is_isolated(),
                 ),
                 'allowgroupcategories' => array(
                     'type'         => 'switchbox',
@@ -299,6 +302,13 @@ $siteoptionform = array(
                     'description'  => get_string('allowgroupcategoriesdescription1', 'admin'),
                     'defaultvalue' => get_config('allowgroupcategories'),
                     'disabled'     => in_array('allowgroupcategories', $OVERRIDDEN),
+                ),
+                'owngroupsonly' => array(
+                    'type'         => 'switchbox',
+                    'title'        => get_string('owngroupsonly', 'admin'),
+                    'description'  => get_string('owngroupsonlydescription', 'admin'),
+                    'defaultvalue' => get_config('owngroupsonly'),
+                    'disabled'     => !$isolatedinstitutions || in_array('owngroupsonly', $OVERRIDDEN),
                 ),
             ),
         ),
@@ -321,15 +331,16 @@ $siteoptionform = array(
                     'type'         => 'switchbox',
                     'title'        => get_string('usersallowedmultipleinstitutions', 'admin'),
                     'description'  => get_string('usersallowedmultipleinstitutionsdescription1', 'admin'),
-                    'defaultvalue' => get_config('usersallowedmultipleinstitutions'),
+                    'defaultvalue' => ($isolatedinstitutions ? false : get_config('usersallowedmultipleinstitutions')),
                     'help'         => true,
-                    'disabled'     => in_array('usersallowedmultipleinstitutions', $OVERRIDDEN),
+                    'disabled'     => $isolatedinstitutions || in_array('usersallowedmultipleinstitutions', $OVERRIDDEN),
                 ),
                 'requireregistrationconfirm' => array(
                   'type'         => 'switchbox',
                   'title'        => get_string('requireregistrationconfirm', 'admin'),
                   'description'  => get_string('requireregistrationconfirmdescription1', 'admin'),
-                  'defaultvalue' => get_config('requireregistrationconfirm'),
+                  'defaultvalue' => ($isolatedinstitutions ? true : get_config('requireregistrationconfirm')),
+                  'disabled'     => $isolatedinstitutions,
                   'help'         => true,
                 ),
                 'institutionexpirynotification' => array(
@@ -853,7 +864,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'homepageinfo', 'showprogressbar', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
-        'registerterms', 'licensemetadata', 'licenseallowcustom', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
+        'registerterms', 'licensemetadata', 'licenseallowcustom', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'owngroupsonly', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
         'eventloglevel', 'eventlogexpiry', 'eventlogenhancedsearch', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',
@@ -897,6 +908,17 @@ function siteoptions_submit(Pieform $form, $values) {
             execute_sql("UPDATE {usr} SET expiry = ? $where_sql", array(format_date($user_expiry)));
             db_commit();
         }
+    }
+    // If we are using isolated institutions
+    if (is_isolated()) {
+        // Make sure the related fields save correctly
+        $values['loggedinprofileviewaccess'] = false;
+        $values['usersallowedmultipleinstitutions'] = false;
+        $values['requireregistrationconfirm'] = true;
+    }
+    else {
+        // Make sure 'owngroupsonly' is used with isolated institutions
+        $values['owngroupsonly'] = false;
     }
     // Make sure we have valid strict privacy and multi institutions settings
     if (users_in_multiple_institutions()) {
@@ -1031,9 +1053,11 @@ function siteoptions_submit(Pieform $form, $values) {
 }
 
 $usermultipleinstitutions = (!empty(users_in_multiple_institutions()) ? "true" : "false");
+$isolatedinstitutions = (is_isolated() ? "true" : "false");
 
 $js = <<<EOF
 var usersinmultipleinstitutions = {$usermultipleinstitutions};
+var isolated = {$isolatedinstitutions};
 jQuery(function() {
     var j = jQuery.noConflict();
     var overrideuseraccountlifetime = j('#siteoptions input[name=defaultaccountlifetimeupdate]');
@@ -1071,16 +1095,16 @@ jQuery(function() {
     overrideuseraccountlife(defaultaccountlifetime.val());
 
     jQuery('#siteoptions_institutionstrictprivacy').on("click", function() {
-        multipleinstitutionscheckallowed();
+        multipleinstitutionscheckallowed(isolated);
     });
     jQuery('#siteoptions_usersallowedmultipleinstitutions').on("click", function() {
-        strictprivacycheckallowed();
+        strictprivacycheckallowed(isolated);
     });
     jQuery('#siteoptions_homepageredirect').on("click", function() {
         homepageredirect();
     });
-    multipleinstitutionscheckallowed();
-    strictprivacycheckallowed();
+    multipleinstitutionscheckallowed(isolated);
+    strictprivacycheckallowed(isolated);
     homepageredirect();
 });
 

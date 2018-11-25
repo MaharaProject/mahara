@@ -791,3 +791,20 @@ $cfg->sessionhandler = 'file';
  * The location of the dwoo cache directory
  */
 //$cfg->customdwoocachedir = '/var/cache/appcache/testing';
+
+/**
+ * Uncomment the following line if you wish to lock down access for members of institutions
+ * so that they are separated entirely and disallow contact between members of one institution
+ * with members of another institution.
+ *
+ * Users can only be in one institution at one point in time. Being a member of multiple
+ * institutions is not allowed. Only institution staff, institution admins, site staff and
+ * site admins can create groups. No friends allowed.
+ */
+//$cfg->isolatedinstitutions = true;
+
+/**
+ * Uncomment the following line if you do not wish to allow friends and friend related
+ * activites on your install of Mahara. No friends allowed - this is a site-wide setting.
+ */
+//$cfg->friendsnotallowed = true;

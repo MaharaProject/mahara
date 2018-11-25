@@ -53,6 +53,8 @@ if ($userid == 0) {
     redirect();
 }
 
+isolatedinstitution_access($userid);
+
 // Get the user's details
 if (!isset($user)) {
     if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {

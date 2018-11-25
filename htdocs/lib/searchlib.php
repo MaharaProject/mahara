@@ -1135,6 +1135,15 @@ function search_friend($filter, $limit = null, $offset = 0, $query='') {
     global $USER;
     $userid = $USER->get('id');
 
+    if (get_config('friendsnotallowed')) {
+        return array(
+            'count'  => 0,
+            'limit'  => $limit,
+            'offset' => $offset,
+            'data'   => array(),
+        );
+    }
+
     if (!in_array($filter, array('allmy','current','pending'))) {
         throw new SystemException('Invalid search filter');
     }
@@ -1228,9 +1237,9 @@ function search_friend($filter, $limit = null, $offset = 0, $query='') {
     }
 
     return array(
-    'count'   => $count,
-    'limit'   => $limit,
-    'offset'  => $offset,
-    'data'    => $data,
+        'count'  => $count,
+        'limit'  => $limit,
+        'offset' => $offset,
+        'data'   => $data,
     );
 }

@@ -126,19 +126,75 @@ class PluginSearchInternal extends PluginSearch {
             WHERE
                 u.id != 0 AND u.active = 1 AND u.deleted = 0';
 
-        if (!empty($data['friends'])) {
+        if (!empty($data['friends']) && !get_config('friendsnotallowed')) {
             // Only include friends in search
             $where .= ' AND u.id IN (
                 SELECT usr1 FROM {usr_friend} f1 WHERE f1.usr2 = ' . $USER->get('id')
                 . ' UNION SELECT usr2 FROM {usr_friend} f2 WHERE f2.usr1 = ' . $USER->get('id') . ')';
         }
 
-        if (isset($data['institutions']) && !empty($data['institutions'])) {
+        if ((!empty($data['myinstitutions']) && !empty($data['institutions'])) || is_isolated()) {
             $where .= '
-                AND u.id IN (
+                AND (u.id IN (
                     SELECT usr FROM {usr_institution} WHERE institution IN ('
                 . join(',', array_map('db_quote', $data['institutions'])) . ')
                 )';
+
+            if (isset($data['showadmins']) && !empty($data['showadmins'])) {
+                $where .= ' OR u.admin = 1';
+            }
+
+            $where .= ')';
+        }
+
+        // For regular members of 'No Institution', if 'isolatedinstitutions' feature is set
+        $is_admin = $USER->get('admin') || $USER->get('staff');
+        if (is_isolated() && !$USER->get('institutions') && !$is_admin) {
+            $where .= '
+                AND (u.id NOT IN (
+                    SELECT usr FROM {usr_institution}
+                )';
+
+                if (isset($data['showadmins']) && !empty($data['showadmins'])) {
+                    $where .= ' OR u.admin = 1';
+                }
+
+                $where .= ')';
+        }
+
+        $is_any_admin = $USER->get('admin') || $USER->is_institutional_admin() || $USER->get('staff') || $USER->is_institutional_staff();
+        if (is_isolated() && get_config('owngroupsonly') && !$is_any_admin) {
+            // In search results only include users that are members of the same groups.
+            // This does not count for site admins/staff and institutional admins/staff.
+            $groupids = array_keys($USER->get('grouproles'));
+            // If there are no groups then create an array with id=0, because:
+            // (a) no group will have id=0 and
+            // (b) the IN part of below SQL statement will return error if it
+            // will not contain at least one number
+            if (empty($groupids)) {
+                $groupids = array('0');
+            }
+            $where .= '
+                AND (u.id IN (
+                    SELECT member FROM {group_member} WHERE "group" IN ('
+                . join(',', array_map('db_quote', array_map('intval', $groupids))) . ')
+                )';
+
+                if (isset($data['showadmins']) && !empty($data['showadmins'])) {
+                    $where .= ' OR u.admin = 1';
+                }
+
+                $where .= ')';
+
+            // Regular institution users should always see institutional admins/staff
+            if (!empty($data['institutions'])) {
+                $where .= '
+                    OR (u.id IN (
+                        SELECT usr FROM {usr_institution} WHERE institution IN ('
+                    . join(',', array_map('db_quote', $data['institutions'])) . ')
+                        AND (staff = 1 OR admin = 1))
+                    )';
+            }
         }
 
         $sql .= "
@@ -347,6 +403,9 @@ class PluginSearchInternal extends PluginSearch {
             if ($institutions = array_keys($USER->get('institutions'))) {
                 $options['institutions'] = $institutions;
             }
+        }
+        if (isset($options['showadmins'])) {
+            $options['showadmins'] = (bool)($options['showadmins']);
         }
         return $options;
     }
@@ -590,8 +649,21 @@ class PluginSearchInternal extends PluginSearch {
 
 
     public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null, $nontutor=false) {
+        global $USER;
 
         list($searchsql, $values) = self::name_search_sql($query_string);
+
+        $is_admin = $USER->get('admin') || $USER->get('staff');
+        if (is_isolated() && !$is_admin) {
+            // in search results only include users that are members of the same groups;
+            // site admin and site staff users are excluded
+            $userinst = get_field('usr_institution', 'institution', 'usr', $USER->get('id'));
+            $searchsql .= '
+                AND u.id IN (
+                    SELECT usr FROM {usr_institution} WHERE institution = \'' . $userinst . '\'
+                )';
+        }
+
 
         $orderbyoptions = array(
             'adminfirst' => 'gm.role = \'admin\' DESC, gm.role = \'tutor\' DESC,
@@ -894,7 +966,12 @@ class PluginSearchInternal extends PluginSearch {
                 $values[] = $category;
             }
         }
-        if ($institution != 'all') {
+        if (is_array($institution) && !empty($institution)) {
+            $sql .= ' AND institution IN (?)';
+            $institution = join(',', array_keys($institution));
+            $values[] = $institution;
+        }
+        if (!is_array($institution) && $institution != 'all') {
             $sql .= ' AND institution = ?';
             $values[] = $institution;
         }

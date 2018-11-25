@@ -45,26 +45,39 @@ else { // all or some other text
 
 $elements = array();
 $queryfield = array(
-            'title' => get_string('search') . ': ',
-            'hiddenlabel' => false,
-            'type' => 'text',
-            'class' => 'with-dropdown js-with-dropdown',
-            'defaultvalue' => $query);
+    'title' => get_string('search') . ': ',
+    'hiddenlabel' => false,
+    'type' => 'text',
+    'class' => 'with-dropdown js-with-dropdown',
+    'defaultvalue' => $query
+);
+$filteroptions = array(
+    'allmy'     => get_string('allmygroups', 'group'),
+    'member'    => get_string('groupsimin', 'group'),
+    'admin'     => get_string('groupsiown', 'group'),
+    'invite'    => get_string('groupsiminvitedto', 'group'),
+    'canjoin'   => get_string('groupsicanjoin', 'group'),
+    'notmember' => get_string('groupsnotin', 'group'),
+    'all'       => get_string('allgroups', 'group')
+);
+$is_admin = $USER->get('admin') || $USER->is_institutional_admin() || $USER->get('staff') || $USER->is_institutional_staff();
+if (is_isolated() && get_config('owngroupsonly') && !$is_admin) {
+    $filteroptions = array(
+        'allmy'     => get_string('allmygroups', 'group'),
+        'member'    => get_string('groupsimin', 'group'),
+        'admin'     => get_string('groupsiown', 'group'),
+        'invite'    => get_string('groupsiminvitedto', 'group'),
+        'canjoin'   => get_string('groupsicanjoin', 'group')
+    );
+}
 $filterfield = array(
-            'title' => get_string('filter') . ': ',
-            'hiddenlabel' => false,
-            'type' => 'select',
-            'class' => 'dropdown-connect js-dropdown-connect',
-            'options' => array(
-                'allmy'  => get_string('allmygroups', 'group'),
-                'member'  => get_string('groupsimin', 'group'),
-                'admin'   => get_string('groupsiown', 'group'),
-                'invite'  => get_string('groupsiminvitedto', 'group'),
-                'canjoin'   => get_string('groupsicanjoin', 'group'),
-                'notmember' => get_string('groupsnotin', 'group'),
-                'all'       => get_string('allgroups', 'group')
-            ),
-            'defaultvalue' => $filter);
+    'title' => get_string('filter') . ': ',
+    'hiddenlabel' => false,
+    'type' => 'select',
+    'class' => 'dropdown-connect js-dropdown-connect',
+    'options' => $filteroptions,
+    'defaultvalue' => $filter
+);
 
 $elements['searchwithin'] = array(
     'type' => 'fieldset',
@@ -135,7 +148,12 @@ if ($searchmode == 'mygroups') {
     $groups['count'] = isset($results['count']) ? $results['count'] : 0;
 }
 else {
-    $groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory);
+    if (is_isolated() && !($USER->get('admin') || $USER->get('staff'))) {
+        $groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory, $USER->get('institutions'));
+    }
+    else {
+        $groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory);
+    }
 }
 
 // gets more data about the groups found by search_group

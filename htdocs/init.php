@@ -498,6 +498,11 @@ if (!defined('INSTALLER')) {
     }
 }
 
+if (!defined('INSTALLER')) {
+    // Check if we need to set/unset isolated institution related things
+    is_isolated();
+}
+
 if (get_config('disableexternalresources')) {
     $CFG->wwwhost = parse_url($CFG->wwwroot, PHP_URL_HOST);
 }

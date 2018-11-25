@@ -87,7 +87,7 @@ if ($view->get('type') == 'profile') {
     // Make sure all the user's institutions have access to profile view
     $view->add_owner_institution_access();
 
-    if (get_config('loggedinprofileviewaccess')) {
+    if (get_config('loggedinprofileviewaccess') && !is_isolated()) {
         // Force logged-in user access
         $viewaccess = new stdClass();
         $viewaccess->accesstype = 'loggedin';
@@ -496,7 +496,7 @@ function accessurl_submit(Pieform $form, $values) {
         // Ensure the user's institutions are still added to the access list
         $view->add_owner_institution_access();
 
-        if (get_config('loggedinprofileviewaccess')) {
+        if (get_config('loggedinprofileviewaccess') && !is_isolated()) {
             // Force logged-in user access
             $viewaccess = new stdClass();
             $viewaccess->accesstype = 'loggedin';

@@ -343,6 +343,7 @@ $string['configurereport'] = 'Configure report';
 $string['Columns'] = 'Columns';
 
 // Site options
+$string['siteadminsonly'] = 'Site administrators only';
 $string['adminsonly'] = 'Administrators only';
 $string['adminsandstaffonly'] = 'Administrators and staff only';
 $string['advanced'] = 'Advanced';
@@ -539,6 +540,10 @@ $string['termsandconditions']  = 'Terms and conditions';
 $string['uploadcopyright']     = 'Upload copyright statement';
 $string['privacypagedescription'] = 'Edit the privacy statement for the entire site. The version you edited last becomes the current privacy statement automatically.';
 $string['termspagedescription'] = 'Edit the terms and conditions for the entire site. The version you edited last becomes the current terms and conditions automatically.';
+
+// Isolated institutions
+$string['owngroupsonly'] = 'See own groups only';
+$string['owngroupsonlydescription'] = 'Allow users to see only groups that they own or that they are members of. They can also only search for other users who are in these groups. This setting requires that isolated institutions are turned on in the config.php file.';
 
 // Links and resources menu editor
 $string['sitefile']            = 'Site file';

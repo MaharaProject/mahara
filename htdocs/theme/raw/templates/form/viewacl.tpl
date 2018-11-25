@@ -3,7 +3,7 @@
     data-viewtype="{{$viewtype}}"
     data-user-roles='{{$userroles}}'
     data-group-roles='{{$grouproles}}' >
-    {{if  $viewtype == "profile" }}
+    {{if $viewtype == "profile" }}
         <h2 class="card-header">{{str tag=profile section=view}}</h2>
     {{/if}}
 
@@ -379,7 +379,7 @@ jQuery(function($) {
                 presets: presets,
                 viewtype: viewtype,
                 roles: roles,
-                defaultText: defaultText
+                defaultText: defaultText,
             };
 
             $('#accesslistitems').append(tmpl("row-template", data));

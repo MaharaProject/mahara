@@ -253,17 +253,19 @@ function general_account_prefs_form_elements($prefs) {
     global $USER;
     require_once('license.php');
     $elements = array();
-    $elements['friendscontrol'] = array(
-        'type' => 'radio',
-        'defaultvalue' => $prefs->friendscontrol,
-        'title'  => get_string('friendsdescr', 'account'),
-        'options' => array(
-            'nobody' => get_string('friendsnobody', 'account'),
-            'auth'   => get_string('friendsauth', 'account'),
-            'auto'   => get_string('friendsauto', 'account')
-        ),
-        'help' => true
-    );
+    if (!get_config('friendsnotallowed')) {
+        $elements['friendscontrol'] = array(
+            'type' => 'radio',
+            'defaultvalue' => $prefs->friendscontrol,
+            'title'  => get_string('friendsdescr', 'account'),
+            'options' => array(
+                'nobody' => get_string('friendsnobody', 'account'),
+                'auth'   => get_string('friendsauth', 'account'),
+                'auto'   => get_string('friendsauto', 'account')
+            ),
+            'help' => true
+        );
+    }
     $elements['wysiwyg'] = array(
         'type' => 'switchbox',
         'defaultvalue' => (get_config('wysiwyg')) ? get_config('wysiwyg') == 'enable' : $prefs->wysiwyg,
@@ -288,17 +290,19 @@ function general_account_prefs_form_elements($prefs) {
         'title' => get_string('disableemail', 'account'),
         'help' => true,
     );
-    $elements['messages'] = array(
-        'type' => 'radio',
-        'defaultvalue' => $prefs->messages,
-        'title' => get_string('messagesdescr', 'account'),
-        'options' => array(
-            'nobody' => get_string('messagesnobody', 'account'),
-            'friends' => get_string('messagesfriends', 'account'),
-            'allow' => get_string('messagesallow', 'account'),
-        ),
-        'help' => true,
-    );
+    if (!get_config('friendsnotallowed')) {
+        $elements['messages'] = array(
+            'type' => 'radio',
+            'defaultvalue' => $prefs->messages,
+            'title' => get_string('messagesdescr', 'account'),
+            'options' => array(
+                'nobody' => get_string('messagesnobody', 'account'),
+                'friends' => get_string('messagesfriends', 'account'),
+                'allow' => get_string('messagesallow', 'account'),
+            ),
+            'help' => true,
+        );
+    }
     $languages = get_languages();
     // Determine default language.
     $instlang = get_user_institution_language($USER->id, $instlanginstname);
@@ -1813,7 +1817,27 @@ function can_send_message($from, $to) {
         $to = $to->id;
     }
     $messagepref = get_account_preference($to, 'messages');
-    return (is_friend($from->id, $to) && $messagepref == 'friends') || $messagepref == 'allow' || $from->admin;
+
+    $cansend = false;
+    // Can send message if users are friends and the 'friendsnotallowed' feature is not set
+    if (is_friend($from->id, $to) && $messagepref == 'friends'
+        && !get_config('friendsnotallowed')) {
+        $cansend = true;
+    }
+    // Can send message if recipient 'allows' recieving messages and the 'isolatedinstitutions' is not set
+    if ($messagepref == 'allow' && !is_isolated()) {
+        $cansend = true;
+    }
+    // Can send message if the 'isolatedinstitutions' is set and both users are from the same institution
+    try {
+        isolatedinstitution_access($to, $from->id);
+        $cansend = true;
+    }
+    catch (AccessDeniedException $e) {
+        $cansend = false;
+    }
+
+    return $cansend;
 }
 
 function load_user_institutions($userid) {
@@ -3363,4 +3387,55 @@ function get_institution_versioned_content($institution = 'mahara') {
         ORDER BY s.id DESC", array($institution, $institution));
 
     return $content;
+}
+
+/**
+ * Check isolated institution access
+ *
+ * If the 'isolatedinstitutions' feature is set, check who can access user profile/request friendship page.
+ * @param $userid string Id of the user the current user is trying to access
+ * @param $currentuser string Optional - Id of the current user if we want it to be someone other than logged in user
+ * @return bool
+ * @throws AccessDeniedException
+ */
+function isolatedinstitution_access($userid, $currentuserid = null) {
+    global $USER;
+
+    if (!empty($currentuserid)) {
+        $user = new User();
+        $user->find_by_id($currentuserid);
+    }
+    else {
+        $user = $USER;
+    }
+
+    $is_admin = $user->get('admin') || $user->get('staff');
+    if (is_isolated() && !$is_admin) {
+        // If loggedin user is not in the same institution as the user then access is denied.
+        $userobj = new User();
+        $userobj->find_by_id($userid);
+        $userinsts = array_keys($userobj->get('institutions'));
+        $loggedininsts = array_keys($user->get('institutions'));
+        if (!$userobj->get('admin') && empty(array_intersect($userinsts, $loggedininsts))) {
+            throw new AccessDeniedException(get_string('notinthesameinstitution', 'error'));
+        }
+        else {
+            // If 'owngroupsonly' is set we only allow access when
+            // - Both current user and being viewed user are members of the same institution and they have groups in common
+            // - The current user is an admin/institution admin in the same institution
+            // - The current user is a member viewing the profile of an institution admin/staff in their institution
+            // - The current user is viewing the profile of a site admin
+            $is_institutional_admin = $user->is_institutional_admin() || $user->is_institutional_staff();
+            $is_viewing_admin = $userobj->get('admin') || $userobj->is_institutional_admin() || $userobj->get('staff') || $userobj->is_institutional_staff();
+            if (get_config('owngroupsonly') && (!$is_institutional_admin && !$is_viewing_admin)) {
+                $membersofsamegroup = count_records_sql("
+                    SELECT COUNT(*) FROM {group_member} gm WHERE gm.member = ?
+                    AND gm.group IN (SELECT gm2.group FROM {group_member} gm2 WHERE gm2.member = ?)", array($user->get('id'), $userid));
+                if (!$membersofsamegroup && $user->get('id') != $userid) {
+                    throw new AccessDeniedException(get_string('notinthesamegroup', 'error'));
+                }
+            }
+        }
+    }
+    return true;
 }

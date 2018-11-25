@@ -1104,7 +1104,7 @@ class View {
                 $item['id'] = null;
             }
 
-            if ($this->type == 'profile' && $item['type'] == 'loggedin' && get_config('loggedinprofileviewaccess')) {
+            if ($this->type == 'profile' && $item['type'] == 'loggedin' && get_config('loggedinprofileviewaccess') && !is_isolated()) {
                 $item['locked'] = true;
             }
 
@@ -2315,6 +2315,9 @@ class View {
         foreach($data['blockinstances'] as $blockinstance) {
             if (!in_array($blockinstance->get('blocktype'), $installed)) {
                 continue; // this plugin has been disabled
+            }
+            if ($blockinstance->get('blocktype') == 'myfriends' && get_config('friendsnotallowed')) {
+                continue; // if 'friendsnotallowed' then skip 'myfriends' block
             }
             if ($editing) {
                 $result = $blockinstance->render_editing();
@@ -6898,6 +6901,15 @@ class View {
                     || (isset($ownerobj) && is_probationary_user($ownerobj->id))
                 )
             ) {
+                continue;
+            }
+
+            // remove 'Registered users' from the list if isolated institutions are enabled
+            if ($access->accesstype == 'loggedin' && is_isolated()) {
+                continue;
+            }
+            // remove 'Friends' from the list if friendsnotallowed is enabled
+            if ($access->accesstype == 'friends' && get_config('friendsnotallowed')) {
                 continue;
             }
 
