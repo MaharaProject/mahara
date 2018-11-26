@@ -170,7 +170,9 @@ if ($membership && param_exists('checked')) {
     redirect('/interaction/forum/view.php?id=' . $forumid . '&offset=' . $offset);
 }
 
-if ($membership) {
+$allowunsubscribe =  get_config_plugin_instance('interaction_forum', $forum->id, 'allowunsubscribe');
+
+if ($membership && ( !isset($allowunsubscribe) || $allowunsubscribe == 1)) {
     $forum->subscribe = pieform(array(
         'name' => 'subscribe_forum',
         'renderer' => 'div',

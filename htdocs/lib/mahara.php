@@ -1170,7 +1170,9 @@ function get_config_plugin_instance($plugintype, $instanceid, $key) {
         return $value;
     }
 
-    $records = get_records_array($plugintype . '_instance_config', 'instance', $instanceid, 'field', 'field, value');
+    $instancefield = $plugintype == 'interaction_forum' ? 'forum' : 'instance';
+    $records = get_records_array($plugintype . '_instance_config', $instancefield, $instanceid, 'field', 'field, value');
+
     if (!empty($records)) {
         foreach($records as $record) {
             $storeconfigname = "plugin_{$plugintype}_{$instance}_{$record->field}";

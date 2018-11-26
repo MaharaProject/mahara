@@ -20,12 +20,14 @@ define('DELETE_OBJECTIONABLE_TOPIC', 4);
 class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_form($group, $instance=null) {
+        global $USER;
         if (isset($instance)) {
             $instanceconfig = get_records_assoc('interaction_forum_instance_config', 'forum', $instance->get('id'), '', 'field,value');
             $autosubscribe = isset($instanceconfig['autosubscribe']) ? $instanceconfig['autosubscribe']->value : false;
             $weight = isset($instanceconfig['weight']) ? $instanceconfig['weight']->value : null;
             $createtopicusers = isset($instanceconfig['createtopicusers']) ? $instanceconfig['createtopicusers']->value : null;
             $closetopics = !empty($instanceconfig['closetopics']);
+            $allowunsubscribe = isset($instanceconfig['allowunsubscribe']) ? $instanceconfig['allowunsubscribe']->value : null;
             $indentmode = isset($instanceconfig['indentmode']) ? $instanceconfig['indentmode']->value : null;
             $maxindent = isset($instanceconfig['maxindent']) ? $instanceconfig['maxindent']->value : null;
 
@@ -57,7 +59,7 @@ class PluginInteractionForum extends PluginInteraction {
             $existing = array();
         }
 
-        return array(
+        $form = array(
             'indentmode' => array(
                 'type'         => 'select',
                 'title'        => get_string('indentmode', 'interaction.forum'),
@@ -138,6 +140,17 @@ class PluginInteractionForum extends PluginInteraction {
                 )
             )
         );
+
+        if ($USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin() || $USER->is_institutional_staff()) {
+            $form['fieldset']['elements']['allowunsubscribe'] = array(
+                'type'         => 'switchbox',
+                'title'        => get_string('allowunsubscribe', 'interaction.forum'),
+                'description'  => get_string('allowunsubscribedescription', 'interaction.forum'),
+                'defaultvalue' => isset($allowunsubscribe) ? $allowunsubscribe : 1,
+            );
+
+        }
+        return $form;
     }
 
     public static function instance_config_js() {
@@ -166,6 +179,7 @@ EOF;
     }
 
     public static function instance_config_save($instance, $values){
+        global $USER;
         db_begin();
 
         // Autosubscribe
@@ -275,6 +289,23 @@ EOF;
                 'field' => 'closetopics',
                 'value' => 1,
             ));
+        }
+
+        // Allow users to unsubscribe
+        if ($USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin() || $USER->is_institutional_staff()) {
+            if (isset($values['allowunsubscribe'])) {
+                ensure_record_exists('interaction_forum_instance_config',
+                    (object) array(
+                        'forum'=> $instance->get('id'),
+                        'field'=> 'allowunsubscribe'
+                    ),
+                    (object) array(
+                        'forum'=> $instance->get('id'),
+                        'field'=> 'allowunsubscribe',
+                        'value'=> $values['allowunsubscribe']
+                    )
+                );
+            }
         }
 
         //Indent mode
@@ -1315,10 +1346,16 @@ function subscribe_forum_validate(Pieform $form, $values) {
     if (!is_logged_in()) {
         throw new AccessDeniedException();
     }
+
+    $allowunsubscribe = get_config_plugin_instance('interaction_forum', $values['forum'], 'allowunsubscribe');
+    if (isset($allowunsubscribe) &&  $allowunsubscribe == 0) {
+        throw new AccessDeniedException(get_string('cantunsubscribe', 'interaction.forum'));
+    }
 }
 
 function subscribe_forum_submit(Pieform $form, $values) {
     global $USER, $SESSION;
+
     if ($values['type'] == 'subscribe') {
         db_begin();
         insert_record(
