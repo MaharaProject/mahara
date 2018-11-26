@@ -17,6 +17,25 @@ Scenario: Admin user log in and confirm Legal templates are correct for
     And I move backward one page
     # verify Site terms and conditions section contains correct text
     And I should see "Add your terms and conditions for the site in \"Administration menu\" → \"Configure site\""
-    And I click on the "Second Legal" property
-    # verify second Legal link is displayed and links to correct page
-    Then I should see "Edit the terms and conditions for the entire site. The version you edited last becomes the current terms and conditions automatically."
+    And I move forward one page
+    # Privacy statements in logged out page should show latest version (Bug 1797812)
+    And I click on the "Privacy statement Edit icon" property
+    And I fill in "Version" with "V2.0"
+    And I fill in "V 2.0 privacy statement for the site " in first editor
+    And I press "Save changes"
+    Then I should see "V2.0" in the "#privacy > tr:nth-child(1)" "css_element"
+    And I should see "1.0" in the "#privacy > tr:nth-child(2)" "css_element"
+    And I wait "1" seconds
+    And I should see "Page saved"
+    When I click on "Terms and conditions"
+    # Terms and conditions statements in logged out page should show latest version (Bug 1797812)
+    And I click on the "Terms and conditions Edit icon" property
+    And I fill in "Version" with "V2.0"
+    And I fill in "V 2.0 terms and conditions for the site" in first editor
+    And I press "Save changes"
+    Then I should see "V2.0" in the "#termsandconditions > tr:nth-child(1)" "css_element"
+    And I should see "1.0" in the "#termsandconditions > tr:nth-child(2)" "css_element"
+    And I should see "Page saved"
+    When I click on "Legal" in the ".footer" "css_element"
+    And I should see "V 2.0 terms and conditions for the site"
+    Then I should see "V 2.0 privacy statement for the site"
