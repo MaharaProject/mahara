@@ -121,6 +121,24 @@ $posts = get_records_sql_array(
     $offset,
     $limit
 );
+if ($posts) {
+    foreach ($posts as $post) {
+        $post->filecount = 0;
+        if ($post->attachments = get_records_sql_array("
+                    SELECT a.*, aff.size, aff.fileid, pa.post
+                    FROM {artefact} a
+                    JOIN {interaction_forum_post_attachment} pa ON pa.attachment = a.id
+                    LEFT JOIN {artefact_file_files} aff ON aff.artefact = a.id
+                    WHERE pa.post = ?", array($post->id))) {
+            $post->filecount = count($post->attachments);
+            safe_require('artefact', 'file');
+            foreach ($post->attachments as $file) {
+                $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->id, 'post' => $post->id));
+            }
+        }
+    }
+}
+
 // This is only needed for the 'no_indent' option
 $lastpostid = null;
 if ($indentmode == 'no_indent') {

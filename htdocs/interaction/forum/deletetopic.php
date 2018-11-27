@@ -116,12 +116,15 @@ function deletetopic_submit(Pieform $form, $values) {
     // Delete embedded images in the topic and its posts
     require_once('embeddedimage.php');
     EmbeddedImage::delete_embedded_images('topic', $topicid);
+    // Delete any post attachments for posts in this topic
+    delete_records_select('interaction_forum_post_attachment', "post IN (SELECT p.id FROM {interaction_forum_post} p WHERE p.topic = ?)", array($topicid));
     // mark relevant posts as deleted
     update_record(
         'interaction_forum_post',
         array('deleted' => 1),
         array('topic' => $topicid)
     );
+
     $SESSION->add_ok_msg(get_string('deletetopicsuccess', 'interaction.forum'));
     redirect('/interaction/forum/view.php?id=' . $values['forum']);
 }

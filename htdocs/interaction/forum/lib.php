@@ -748,7 +748,7 @@ EOF;
         global $USER;
         require_once('group.php');
 
-        if (!$file instanceof ArtefactTypeImage) {
+        if (!$file instanceof ArtefactType) {
             return false;
         }
 
@@ -777,6 +777,11 @@ EOF;
         $poster->find_by_id($post->poster);
         if (!$poster->can_publish_artefact($file)) {
             return false;
+        }
+
+        // Check if the file is attached to a post via 'interaction_forum_post_attachment' table
+        if (get_field('interaction_forum_post_attachment', 'id', 'post', $postid, 'attachment', $file->get('id'))) {
+            return true;
         }
 
         // Load the post as an html fragment & make sure it has the image in it
@@ -917,6 +922,41 @@ class InteractionForumInstance extends InteractionInstance {
         );
     }
 
+    public function attach($id, $attachmentid) {
+        if (record_exists('interaction_forum_post_attachment', 'post', $id, 'attachment', $attachmentid)) {
+            return;
+        }
+        if (!record_exists('artefact', 'id', $attachmentid)) {
+            throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $attachmentid));
+        }
+        $data = new stdClass();
+        $data->post = $id;
+        $data->attachment = $attachmentid;
+        insert_record('interaction_forum_post_attachment', $data);
+    }
+
+    public function detach($id, $attachmentid=null) {
+        if (is_null($attachmentid)) {
+            delete_records('interaction_forum_post_attachment', 'post', $id);
+            return;
+        }
+        if (!record_exists('artefact', 'id', $attachmentid)) {
+            throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $attachmentid));
+        }
+        delete_records('interaction_forum_post_attachment', 'post', $id, 'attachment', $attachmentid);
+    }
+
+    public static function attached_id_list($attachmentid) {
+        return get_column('interaction_forum_post_attachment', 'post', 'attachment', $attachmentid);
+    }
+
+    public static function attachment_id_list($post) {
+        if ($list = get_column('interaction_forum_post_attachment', 'attachment', 'post', $post)) {
+            return $list;
+        }
+         return array();
+    }
+
    /**
     * Check if forum instance contains reported content.
     *
@@ -937,6 +977,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     protected $postid;
     protected $temp;
+    protected $attachments = array();
 
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
@@ -1018,15 +1059,35 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         }
 
         $post->posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
+        // Check if the post has any attachments
+        $attachmentlist = '';
+        if ($postattachments = get_records_sql_array("
+                SELECT a.*, fpa.post FROM {artefact} a
+                JOIN {interaction_forum_post_attachment} fpa ON fpa.attachment = a.id
+                WHERE post = ?", array($this->postid))) {
+            foreach ($postattachments as $attach) {
+                $this->attachments[] = array('url' => get_config('wwwroot') . 'artefact/file/download.php?file='. $attach->id . '&amp;post=' . $attach->post, 'urltext' => hsc($attach->title));
+                $attachmentlist .= hsc($attach->title) . "\n";
+            }
+        }
+
         // Some messages are all html and when they're 'cleaned' with
         // strip_tags(str_shorten_html($post->body, 200, true)) for display,
         // they are left empty. Use html2text instead.
-        $this->message = str_shorten_text(trim(html2text($post->body)), 200, true); // For internal notifications.
 
+        // For internal notifications.
+        if ($attachmentlist) {
+            $this->message = get_string('forumpostattachmentinternal', 'interaction.forum',
+                                        str_shorten_text(trim(html2text($post->body)), 200, true),
+                                        $attachmentlist);
+        }
+        else {
+            $this->message = str_shorten_text(trim(html2text($post->body)), 200, true);
+        }
         $post->textbody = trim(html2text($post->body));
         $post->htmlbody = clean_html($post->body);
-        $this->url = 'interaction/forum/topic.php?id=' . $post->topicid . '&post=' . $this->postid;
 
+        $this->url = 'interaction/forum/topic.php?id=' . $post->topicid . '&post=' . $this->postid;
         $this->add_urltext(array(
             'key'     => 'Topic',
             'section' => 'interaction.forum'
@@ -1050,28 +1111,64 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $post = $this->temp->post;
         $unsubscribeid = $post->{$user->subscribetype . 'id'};
         $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $user->subscribetype . '=' . $unsubscribeid . '&key=' . $user->unsubscribekey;
-        return get_string_from_language($user->lang, 'forumposttemplate', 'interaction.forum',
-            $post->forumtitle,
-            $post->groupname,
-            $post->textbody,
-            get_config('wwwroot') . $this->url,
-            $user->subscribetype,
-            $unsubscribelink
-        );
+        if (!empty($this->attachments)) {
+            $attachments = '';
+            foreach ($this->attachments as $att) {
+                $attachments .= '- ' . $att['urltext'] .': ' . $att['url'] . "\n";
+            }
+            $message = get_string_from_language($user->lang, 'forumpostattachmenttemplate', 'interaction.forum',
+                $post->forumtitle,
+                $post->groupname,
+                $post->textbody,
+                $attachments,
+                get_config('wwwroot') . $this->url,
+                $user->subscribetype,
+                $unsubscribelink
+            );
+        }
+        else {
+            $message = get_string_from_language($user->lang, 'forumposttemplate', 'interaction.forum',
+                $post->forumtitle,
+                $post->groupname,
+                $post->textbody,
+                get_config('wwwroot') . $this->url,
+                $user->subscribetype,
+                $unsubscribelink
+            );
+        }
+        return $message;
     }
 
     public function get_htmlmessage($user) {
         $post = $this->temp->post;
         $unsubscribeid = $post->{$user->subscribetype . 'id'};
         $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $user->subscribetype . '=' . $unsubscribeid . '&key=' . $user->unsubscribekey;
-        return get_string_from_language($user->lang, 'forumposthtmltemplate', 'interaction.forum',
-            hsc($post->forumtitle),
-            hsc($post->groupname),
-            $post->htmlbody,
-            get_config('wwwroot') . $this->url,
-            $unsubscribelink,
-            $user->subscribetype
-        );
+        if (!empty($this->attachments)) {
+            $attachments = '';
+            foreach ($this->attachments as $att) {
+                $attachments .= '<li><a href="' . $att['url'] . '">' . $att['urltext'] . '</a></li>';
+            }
+            $message = get_string_from_language($user->lang, 'forumposthtmlattachmenttemplate', 'interaction.forum',
+                hsc($post->forumtitle),
+                hsc($post->groupname),
+                $post->htmlbody,
+                $attachments,
+                get_config('wwwroot') . $this->url,
+                $unsubscribelink,
+                $user->subscribetype
+            );
+        }
+        else {
+            $message = get_string_from_language($user->lang, 'forumposthtmltemplate', 'interaction.forum',
+                hsc($post->forumtitle),
+                hsc($post->groupname),
+                $post->htmlbody,
+                get_config('wwwroot') . $this->url,
+                $unsubscribelink,
+                $user->subscribetype
+            );
+        }
+        return $message;
     }
 
     public function get_plugintype(){

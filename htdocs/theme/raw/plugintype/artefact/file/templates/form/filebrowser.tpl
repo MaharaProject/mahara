@@ -16,10 +16,12 @@
     {if $config.selectmodal}
         <div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
     {else}
+        {if !$config.noselect}
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$prefix}_upload_browse">
             <span class="icon icon-paperclip icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=addafile section=artefact.file}
         </button>
+        {/if}
         <div id="{$prefix}_upload_browse" class="modal fade js-filebrowser" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
     {/if}
 
@@ -136,7 +138,9 @@
 
         {if $config.upload}
         <div id="{$prefix}_upload_disabled" class="uploaddisabled{if !$uploaddisabled} hidden{/if}">
-            {str tag="cannoteditfolder" section=artefact.file}
+            <div class="alert alert-warning">
+            {str tag="cannotuploadtofolder" section=artefact.file}
+            </div>
         </div>
         {/if}
 
@@ -177,7 +181,7 @@
         {if $edit <= 0}
         <table class="hidden">
             <tbody id="{$prefix}_edit_placeholder">
-            {include file="artefact:file:form/editfile.tpl" prefix=$prefix groupinfo=$groupinfo fromfiletpl=false}
+            {include file="artefact:file:form/editfile.tpl" prefix=$prefix groupinfo=$groupinfo colspan=$colspan}
             </tbody>
         </table>
         {/if}

@@ -253,6 +253,18 @@ abstract class InteractionInstance implements IInteractionInstance {
     }
 
     public abstract function interaction_remove_user($userid);
+
+    public abstract function attach($id, $attachmentid);
+
+    public abstract function detach($id, $attachmentid=null);
+
+    public static function attached_id_list($attachmentid) {
+        return array();
+    }
+
+    public static function attachment_id_list($post) {
+        return array();
+    }
 }
 
 function interaction_check_plugin_sanity($pluginname) {

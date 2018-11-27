@@ -124,6 +124,7 @@ function deletepost_submit(Pieform $form, $values) {
     // Delete embedded images in the forum post description
     require_once('embeddedimage.php');
     EmbeddedImage::delete_embedded_images('post', $postid);
+    delete_records('interaction_forum_post_attachment', 'post', $postid);
 
     $SESSION->add_ok_msg(get_string('deletepostsuccess', 'interaction.forum'));
     // Figure out which parent record to redirect us to. If the parent record is deleted,

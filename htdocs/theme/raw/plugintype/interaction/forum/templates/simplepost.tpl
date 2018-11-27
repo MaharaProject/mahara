@@ -46,7 +46,28 @@
             </p>
 
             {$post->body|clean_html|safe}
-
+            {if $post->attachments}
+            <div class="postattachments">
+                <h5 class="title">
+                    <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
+                    {str tag="attachedfiles" section="artefact.blog"}
+                </h5>
+                <ul class="list-group list-group-unbordered">
+                    {foreach from=$post->attachments item=file}
+                    <li class="list-group-item list-group-item-link small">
+                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->fileid}&post={$file->post}" {if $file->fileid} title="{$file->description}" data-toggle="tooltip"{/if}>
+                        {if $file->icon}
+                            <img src="{$file->icon}" alt="" class="file-icon">
+                        {else}
+                            <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
+                        {/if}
+                        <span>{$file->title|truncate:40} - ({$file->size|display_size})</span>
+                        </a>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+            {/if}
             {if $post->edit}
             <div class="editstopost">
                 <h5 class="title">
@@ -71,10 +92,10 @@
                     <span class="posttime text-muted">
                         {$edit.edittime}
                     </span>
-                </li>
-                {/foreach}
-            </ul>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+            {/if}
         </div>
-        {/if}
     </div>
-</div>

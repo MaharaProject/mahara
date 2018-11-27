@@ -27,7 +27,7 @@ var FileBrowser = (function($) {
             alert('Filebrowser error 1');
         }
         if (self.config.select && typeof(self.form.submit) != 'function') {
-            // logWarn('Filebrowser error 2'); // Rename your submit element to something other than "submit".
+            console.log('Filebrowser error 2: Rename your submit element to something other than "submit"');
         }
         self.foldername = $('#' + self.id + '_foldername').val();
         if (self.config.select) {
@@ -364,6 +364,8 @@ var FileBrowser = (function($) {
         edit_row.insertAfter(this_row);
         edit_row.removeClass('hidden');
 
+        $(this).trigger('resize.bs.modal');
+
         // Make the edit button close the form again
         $(this).off();
         $(this).on('click', function (e) {
@@ -374,6 +376,7 @@ var FileBrowser = (function($) {
                 $(this).off();
                 $(this).on('click', self.edit_form);
             }
+            $(this).trigger('resize.bs.modal');
             return false;
         });
 
@@ -463,6 +466,9 @@ var FileBrowser = (function($) {
                             }
                             if (self.filedata[id].viewcount > 0) {
                                 warn += get_string('fileappearsinviews') + ' ';
+                            }
+                            if (self.filedata[id].postcount > 0) {
+                                warn += get_string('fileappearsinposts') + ' ';
                             }
                             if (self.filedata[id].skincount > 0) {
                                 warn += get_string('fileappearsinskins') + ' ';
@@ -1023,14 +1029,14 @@ var FileBrowser = (function($) {
                     self.config.editmeta = data.editmeta;
                 }
                 if (self.config.upload) {
-                    if (data.disableedit && !$('#' + self.id + '_upload_container').hasClass('hidden')) {
+                    if (data.disableedit == true && !$('#' + self.id + '_upload_container').hasClass('hidden')) {
                         $('#' + self.id + '_upload_container').addClass('hidden');
                         if ($('#createfolder').length) {
                             $('#createfolder').addClass('hidden');
                         }
                         $('#' + self.id + '_upload_disabled').removeClass('hidden');
                     }
-                    else if ($('#' + self.id + '_upload_container').hasClass('hidden') && !data.disableedit) {
+                    else if (data.disableedit == false) {
                         if (!self.tabdata || self.tabdata.upload) {
                             $('#' + self.id + '_upload_container').removeClass('hidden');
                         }
@@ -1051,6 +1057,7 @@ var FileBrowser = (function($) {
             if (data.tagblockhtml && $('#sb-tags').length) {
                 $('#sb-tags').html(data.tagblockhtml);
             }
+            $('#' + self.id + '_filelist').find('.control-buttons button').first().trigger('resize.bs.modal');
             self.browse_init();
         }
         else if (data.goto) {

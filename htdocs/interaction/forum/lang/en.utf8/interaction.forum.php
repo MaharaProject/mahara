@@ -72,6 +72,20 @@ $string['forumposthtmltemplate'] = "<div style=\"padding: 0.5em 0; border-bottom
 <p><a href=\"%s\">Reply to this post online</a></p>
 <p><a href=\"%s\">Unsubscribe from this %s</a></p>
 </div>";
+$string['forumposthtmlattachmenttemplate'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>Forum: %s (%s)</strong></div>
+
+<div style=\"margin: 1em 0;\">%s</div>
+
+<div style=\"font-size: smaller; border-top: 1px solid #999;\">
+<p>Attachments:</p>
+<ul>
+%s
+</ul>
+</div>
+<div style=\"font-size: smaller; border-top: 1px solid #999;\">
+<p><a href=\"%s\">Reply to this post online</a></p>
+<p><a href=\"%s\">Unsubscribe from this %s</a></p>
+</div>";
 $string['forumposttemplate'] = "Forum: %s (%s)
 ------------------------------------------------------------------------
 
@@ -82,6 +96,25 @@ To see and reply to the post online, follow this link:
 %s
 
 To unsubscribe from this %s, visit:
+%s";
+$string['forumpostattachmenttemplate'] = "Forum: %s (%s)
+------------------------------------------------------------------------
+
+%s
+
+------------------------------------------------------------------------
+Attachments:
+%s
+------------------------------------------------------------------------
+To see and reply to the post online, follow this link:
+%s
+
+To unsubscribe from this %s, visit:
+%s";
+$string['forumpostattachmentinternal'] = "
+%s
+
+Attachments:
 %s";
 $string['forumsettings'] = 'Forum settings';
 $string['forumsuccessfulsubscribe'] = 'Forum subscribed successfully';

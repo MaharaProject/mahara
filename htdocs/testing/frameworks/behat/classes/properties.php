@@ -46,7 +46,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Blocktype sidebar'                         => array("#content-editor-foldable", "css_element"),
     'Tags section'                              => array("#edit_tags_container", "css_element"),
     'My tags list'                              => array(".mytags", "css_element"),
-    'Upload dialog'                             => array("#editgoalsandskills_filebrowser_upload_browse", "css_element"),
+    'Upload dialog'                             => array(".modal-filebrowser", "css_element"),
     'Filter by first name'                      => array("#firstnamelist", "css_element"),
     'Find people results'                       => array("#friendslist_pagination", "css_element"),
     'My groups box'                             => array("#groups", "css_element"),
