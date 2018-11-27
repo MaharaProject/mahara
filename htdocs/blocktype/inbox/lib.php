@@ -171,7 +171,7 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
      * Inbox only makes sense for personal views
      */
     public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
+        return in_array($view->get('type'), self::get_viewtypes());
     }
 
     /**
