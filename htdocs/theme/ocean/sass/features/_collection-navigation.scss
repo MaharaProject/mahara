@@ -9,7 +9,7 @@
     }
 
     .collection-nav-btns {
-      @media (min-width: $screen-md-min) {
+      @include media-breakpoint-up(lg) {
         bottom: 22px;
       }
     }

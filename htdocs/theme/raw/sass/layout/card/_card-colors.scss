@@ -18,10 +18,10 @@
         }
         .card-footer,
         .card-body,
-        .card-heading a {
+        .card-header a {
             border-color: darken($card-success-heading-bg, 15%);
         }
-        .card-heading a,
+        .card-header a,
         .card-body:not(.no-footer) {
             border-bottom-width:0;
         }
@@ -56,10 +56,10 @@
         }
         .card-footer,
         .card-body,
-        .card-heading a {
+        .card-header a {
             border-color: darken($card-info-heading-bg, 15%);
         }
-        .card-heading a,
+        .card-header a,
         .card-body:not(.no-footer) {
             border-bottom-width:0;
         }
@@ -84,10 +84,10 @@
         }
         .card-footer,
         .card-body,
-        .card-heading a {
+        .card-header a {
             border-color: darken($card-warning-heading-bg, 15%);
         }
-        .card-heading a,
+        .card-header a,
         .card-body:not(.no-footer) {
             border-bottom-width:0;
         }
@@ -112,10 +112,10 @@
         }
         .card-footer,
         .card-body,
-        .card-heading a {
+        .card-header a {
             border-color: darken($card-danger-heading-bg, 15%);
         }
-        .card-heading a,
+        .card-header a,
         .card-body:not(.no-footer) {
             border-bottom-width:0;
         }

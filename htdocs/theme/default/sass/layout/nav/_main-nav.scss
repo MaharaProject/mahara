@@ -10,7 +10,7 @@
             &:focus {
                 color: #FFFFFF;
             }
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 border-color: $link-hover-color;
             }
         }

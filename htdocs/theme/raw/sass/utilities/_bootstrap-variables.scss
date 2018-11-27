@@ -1114,7 +1114,7 @@ $alert-info-border:                 $state-info-border !default;
 
 $card-secondary-text:         $gray-900 !default;
 $card-secondary-border:       theme-color("primary") !default;
-// $card-secondary-heading-bg:   scale-color($card-secondary-heading-bg, $lightness: -2%) !default;
+$card-secondary-heading-bg:   scale-color($card-secondary-border, $lightness: -2%) !default;
 
 $alert-warning-bg:                  $state-warning-bg !default;
 $alert-warning-text:                $state-warning-text !default;

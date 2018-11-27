@@ -2,7 +2,7 @@
 
 
 // even out boxes fix
-@media (min-width: $screen-sm-min) {
+@include media-breakpoint-up(md) {
     .dashboard-widget-container .thumbnail-widget {
         width: 32%;
         padding: 0;
@@ -24,17 +24,17 @@
         padding-bottom: 0;
         background-color: transparent;
         height: auto;
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             margin-top: 20px;
         }
-        @media (min-width: $screen-lg-min) {
+        @include media-breakpoint-up(xl) {
             margin-top: 40px;
         }
         h2 {
             font-weight: 500;
             display: inline-block;
             color: $gray-dark;
-            @media (min-width: $screen-lg-min) {
+            @include media-breakpoint-up(xl) {
                 font-size: 36px;
             }
         }
@@ -43,7 +43,7 @@
             font-size: 16px;
             color: $gray;
             display: block;
-            @media (min-width: $screen-lg-min) {
+            @include media-breakpoint-up(xl) {
                 font-size: 20px
             }
         }
@@ -57,7 +57,7 @@
         height: auto;
         .icon {
             color: $brand-primary;
-            @media (min-width: $screen-lg-min) {
+            @include media-breakpoint-up(xl) {
                 font-size: 36px
             }
         }
@@ -71,11 +71,11 @@
         background-color: $brand-primary-faint;
         text-align: center;
 
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             height: 223px;
             border-radius: 50% !important;
         }
-        @media (min-width: $screen-lg-min) {
+        @include media-breakpoint-up(xl) {
             height: 271px;
         }
     }
@@ -88,7 +88,7 @@
             p {
                 font-size: 16px;
                 color: $gray;
-                @media (min-width: $screen-lg-min) {
+                @include media-breakpoint-up(xl) {
                     font-size: 20px
                 }
             }
@@ -100,7 +100,7 @@
             background-color: transparent;
             border: 0;
             height: auto;
-            @media (min-width: $screen-lg-min) {
+            @include media-breakpoint-up(xl) {
                 padding-left: 30px;
                 padding-right: 30px;
             }
