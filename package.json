@@ -10,7 +10,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "es6-promise": "^4.2.4",
-    "event-stream": "^3.3.4",
+    "event-stream": "3.3.4",
     "globule": "^1.0.0",
     "gulp": "<=3.9.1",
     "gulp-autoprefixer": "^5.0.0",
