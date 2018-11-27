@@ -148,7 +148,7 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
      * Myfriends only makes sense for personal views
      */
     public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
+        return in_array($view->get('type'), self::get_viewtypes());
     }
 
     public static function override_instance_title(BlockInstance $instance) {
