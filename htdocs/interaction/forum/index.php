@@ -56,6 +56,7 @@ if ($forums) {
     $i = 0;
     foreach ($forums as $forum) {
         $forum->feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=f&id=' . $forum->id;
+        $allowunsubscribe = get_config_plugin_instance('interaction_forum', $forum->id, 'allowunsubscribe');
 
         if ($membership) {
             $forum->subscribe = pieform(array(
@@ -71,7 +72,7 @@ if ($forums) {
                     'submit' => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-default btn-sm',
+                    'class' => 'btn-default btn-sm' . (isset($allowunsubscribe) && $allowunsubscribe == 0 ? ' disabled' : ''),
                     'renderelementsonly' => true,
                     'value' => $forum->subscribed ? '<span class="icon icon-lg icon-times left text-danger" role="presentation" aria-hidden="true"></span> ' . get_string('Unsubscribe', 'interaction.forum') : '<span class="icon icon-lg icon-star left" role="presentation" aria-hidden="true"></span> ' . get_string('Subscribe', 'interaction.forum'),
                     'help' => false
