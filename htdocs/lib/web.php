@@ -170,43 +170,45 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
         $langselectform = language_select_form();
     }
     $sideblock_menu = array();
-    // Fetch all the core side blocks now to avoid any 'set headdata' before smarty_core() problems
-    $authgenerateloginform = auth_generate_login_form();
-    $isloginblockvisible = !$USER->is_logged_in() && !get_config('siteclosedforupgrade') && get_config('showloginsideblock');
-    $loginsideblock = array(
-        'name'   => 'login',
-        'weight' => -10,
-        'id'     => 'sb-loginbox',
-        'data'   => array('loginform' => $authgenerateloginform),
-        'visible' => $isloginblockvisible,
-        'template' => 'sideblocks/login.tpl',
-        'smarty' => array('SHOWLOGINBLOCK' => $isloginblockvisible),
-    );
-    sideblock_template($loginsideblock, $sideblock_menu);
-    sideblock_template(site_menu(), $sideblock_menu);
-    sideblock_template(tags_sideblock(), $sideblock_menu);
-    sideblock_template(selfsearch_sideblock(), $sideblock_menu);
-    sideblock_template(profile_sideblock(), $sideblock_menu);
-    sideblock_template(onlineusers_sideblock(), $sideblock_menu);
-    sideblock_template(progressbar_sideblock(), $sideblock_menu);
-    sideblock_template(ssopeer_sideblock(), $sideblock_menu);
-    sideblock_template(quota_sideblock(), $sideblock_menu);
-    if (isset($extraconfig['sideblocks']) && is_array($extraconfig['sideblocks'])) {
-        foreach ($extraconfig['sideblocks'] as $sideblock) {
-            sideblock_template($sideblock, $sideblock_menu);
+    if (get_config('installed')) {
+        // Fetch all the core side blocks now to avoid any 'set headdata' before smarty_core() problems
+        $authgenerateloginform = auth_generate_login_form();
+        $isloginblockvisible = !$USER->is_logged_in() && !get_config('siteclosedforupgrade') && get_config('showloginsideblock');
+        $loginsideblock = array(
+            'name'   => 'login',
+            'weight' => -10,
+            'id'     => 'sb-loginbox',
+            'data'   => array('loginform' => $authgenerateloginform),
+            'visible' => $isloginblockvisible,
+            'template' => 'sideblocks/login.tpl',
+            'smarty' => array('SHOWLOGINBLOCK' => $isloginblockvisible),
+        );
+        sideblock_template($loginsideblock, $sideblock_menu);
+        sideblock_template(site_menu(), $sideblock_menu);
+        sideblock_template(tags_sideblock(), $sideblock_menu);
+        sideblock_template(selfsearch_sideblock(), $sideblock_menu);
+        sideblock_template(profile_sideblock(), $sideblock_menu);
+        sideblock_template(onlineusers_sideblock(), $sideblock_menu);
+        sideblock_template(progressbar_sideblock(), $sideblock_menu);
+        sideblock_template(ssopeer_sideblock(), $sideblock_menu);
+        sideblock_template(quota_sideblock(), $sideblock_menu);
+        if (isset($extraconfig['sideblocks']) && is_array($extraconfig['sideblocks'])) {
+            foreach ($extraconfig['sideblocks'] as $sideblock) {
+                sideblock_template($sideblock, $sideblock_menu);
+            }
         }
-    }
-    // local_sideblocks_update allows sites to customise the sideblocks by munging the $sideblock_menu array.
-    if (function_exists('local_sideblocks_update')) {
-        local_sideblocks_update($sideblock_menu);
-    }
-    // Remove those that are not visible before displaying
-    foreach ($sideblock_menu as $sbk => $sbv) {
-        if (empty($sbv['visible'])) {
-            unset($sideblock_menu[$sbk]);
+        // local_sideblocks_update allows sites to customise the sideblocks by munging the $sideblock_menu array.
+        if (function_exists('local_sideblocks_update')) {
+            local_sideblocks_update($sideblock_menu);
         }
+        // Remove those that are not visible before displaying
+        foreach ($sideblock_menu as $sbk => $sbv) {
+            if (empty($sbv['visible'])) {
+                unset($sideblock_menu[$sbk]);
+            }
+        }
+        usort($sideblock_menu, "sort_menu_by_weight");
     }
-    usort($sideblock_menu, "sort_menu_by_weight");
 
     $smarty = smarty_core();
 
@@ -3380,6 +3382,10 @@ function ssopeer_sideblock() {
  */
 function site_menu() {
     global $USER;
+
+    if (!get_config('installed') || in_admin_section()) {
+        return null;
+    }
     $menu = array();
     $public = $loggedin = false;
     if ($menuitems = get_records_array('site_menu','public',(int) !$USER->is_logged_in(), 'displayorder')) {

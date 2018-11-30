@@ -3771,6 +3771,11 @@ function display_size($size) {
  */
 function profile_sideblock() {
     global $USER, $SESSION;
+
+    if (!$USER->is_logged_in() || in_admin_section()) {
+        return null;
+    }
+
     safe_require('notification', 'internal');
     require_once('group.php');
     require_once('institution.php');
@@ -3900,6 +3905,9 @@ function profile_sideblock() {
 function onlineusers_sideblock() {
     global $USER;
 
+    if (!$USER->is_logged_in() || in_admin_section()) {
+        return null;
+    }
     // Determine what level of users to show
     // 0 = none, 1 = institution/s only, 2 = all users
     $showusers = 2;
@@ -4072,6 +4080,14 @@ function progressbar_artefact_link($pluginname, $artefacttype) {
 
 function progressbar_sideblock($preview=false) {
     global $USER;
+
+    if (!$USER->is_logged_in()) {
+        return null;
+    }
+
+    if (in_admin_section() && (!defined('SECTION_PAGE') || SECTION_PAGE != 'progressbar')) {
+        return null;
+    }
 
     if (!get_config('showprogressbar')) {
         return null;
