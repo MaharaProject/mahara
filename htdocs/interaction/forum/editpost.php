@@ -209,6 +209,7 @@ $editform = array(
             'type'         => 'switchbox',
             'title'        => get_string('sendnow', 'interaction.forum'),
             'description'  => get_string('sendnowdescription', 'interaction.forum', get_config_plugin('interaction', 'forum', 'postdelay')),
+            'disabled'     => isset($post) && !empty($post->sent),
             'defaultvalue' => false,
         ),
         'submitpost'   => array(
@@ -232,6 +233,10 @@ $editform = array(
 );
 
 if ((!$moderator && !$admintutor && !group_sendnow($parent->group)) || get_config_plugin('interaction', 'forum', 'postdelay') <= 0) {
+    unset($editform['elements']['sendnow']);
+}
+
+if (isset($post) && (!empty($post->sent) || !user_can_edit_post($post->poster, $post->ctime))) {
     unset($editform['elements']['sendnow']);
 }
 
