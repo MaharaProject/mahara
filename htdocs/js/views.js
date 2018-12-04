@@ -386,6 +386,8 @@
         $('.blocktype-drag').on('click keydown', function(e) {
             // Add a block when click left button or press 'Space bar' or 'Enter' key
             if (isHit(e) && !$('#addblock').hasClass('in')) {
+                e.stopPropagation();
+                e.preventDefault();
                 startAddBlock($(this));
             }
         });

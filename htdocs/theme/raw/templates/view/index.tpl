@@ -39,7 +39,7 @@
                 <div class="modal-header">
                     <button type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">
-                        <span class="icon icon-lg icon-plus prs"></span>
+                        <span class="icon icon-lg icon-plus"></span>
                         {str tag=confirmaddtitle section=view}
                     </h4>
                 </div>

@@ -21,9 +21,9 @@
 
             <div>
                 {if $currentskin}
-                    <img class="card card-body src="{$WWWROOT}skin/thumb.php?id={$currentskin}" alt="{$currenttitle}">
+                    <img class="card card-body" src="{$WWWROOT}skin/thumb.php?id={$currentskin}" alt="{$currenttitle}">
                 {else}
-                    <img class="card card-body src="{$WWWROOT}skin/no-thumb.png" alt="{$currenttitle}">
+                    <img class="card card-body" src="{$WWWROOT}skin/no-thumb.png" alt="{$currenttitle}">
                 {/if}
                 <ul class="metadata unstyled">
                     {if $currentskin}
