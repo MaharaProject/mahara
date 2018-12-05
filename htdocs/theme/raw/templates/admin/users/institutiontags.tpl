@@ -2,7 +2,7 @@
 
 {if !$canedit}<p>{str tag=cantlistinstitutiontags}</p>{/if}
 {if $tags && !$new}
-<div class="panel panel-default view-container">
+<div class="card card-default view-container">
   <div class="table-responsive">
   <table class="fullwidth table table-striped">
       <thead>

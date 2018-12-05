@@ -1,5 +1,5 @@
-<div class="panel panel-default">
-    <h3 class="panel-heading">
+<div class="card card-default">
+    <h3 class="card-heading">
         {$sbdata.title}
     </h3>
     {if $sbdata.data}
