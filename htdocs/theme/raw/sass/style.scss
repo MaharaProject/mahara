@@ -9,6 +9,7 @@
  */
 
 @import 'lib/bootstrap4/functions'; // Import the bootstrap functions here since they are required in the bootstrap variables file
+@import 'lib/bootstrap4/variables'; // Import the bootstrap variables first
 @import "utilities/theme-variables"; // Import our theme variables
 @import "utilities/bootstrap-variables";  // ...and our custom bootstrap variables file
 @import "utilities/custom-variables";  // ...and our custom variables file
