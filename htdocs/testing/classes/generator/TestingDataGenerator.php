@@ -637,6 +637,139 @@ EOD;
     }
 
     /**
+     * Create block content for existing view
+     * @param array $record
+     * @throws SystemException if creating failed
+     * @return int new block id
+     */
+    public function create_block($record) {
+        global $USER;
+
+        $sql = "SELECT id FROM {view} WHERE LOWER(TRIM(title)) = ?";
+        $page = strtolower(trim($record['page']));
+        $ids = get_records_sql_array($sql, array($page));
+        if (!$ids || count($ids) > 1) {
+            throw new SystemException("Invalid page name '" . $record['page'] . "'. The page title does not exist, or is duplicated.");
+        }
+        else {
+            require_once('view.php');
+            $view = new View($ids[0]->id);
+            if (!empty($view->get('institution'))) {
+                $ownertype = 'institution';
+                $ownerid = $view->get('institution');
+            }
+            else if (!empty($view->get('group'))) {
+                $ownertype = 'group';
+                $ownerid = $view->get('group');
+            }
+            else {
+                $ownertype = 'owner';
+                $ownerid = $view->get('owner');
+            }
+        }
+        // We have a valid page so lets see if we can add a block to it
+        $blocktype = strtolower(trim($record['type']));
+        // Check that the blocktype exists and is active
+        if (!get_record('blocktype_installed', 'active', 1, 'name', $blocktype)) {
+            throw new SystemException("Invalid block type '" . $record['type'] . "'. The block type is either not installed or not active.");
+        }
+        $title = strtolower(trim($record['title']));
+        // Make sure we have row/column/order set or use defaults
+        $row = (int)trim($record['row']);
+        $row = !empty($row) ? $row : 1;
+        $column = (int)trim($record['column']);
+        $column = !empty($column) ? $column : 1;
+        $order = (int)trim($record['order']);
+        $order = !empty($order) ? $order : 1;
+
+        // build configdata
+        $configdata = array('retractable' => 0,
+                            'retractedonload' => 0);
+        $data = trim($record['data']);
+        if ($data) {
+            $values = array();
+            $fields = explode(';', $data);
+            foreach ($fields as $field) {
+                list($key, $value) = explode('=', $field);
+                switch ($key) {
+                    case 'attachment':
+                    case 'image':
+                        if ($key == 'image') {
+                            $oldkey = 'image';
+                            $key = 'artefactid';
+                        }
+                        else {
+                            $oldkey = 'attachment';
+                            $key = 'artefactids';
+                        }
+                        // we need to find the id of the item we are trying to attach and save it as artefactid
+                        if (!$newvalue = get_field('artefact', 'id', 'title', $value, $ownertype, $ownerid)) {
+                            // we need to ty and upload the file
+                            $ext = explode('.', $value);
+                            $now = date("Y-m-d H:i:s");
+                            $artefact = new stdClass();
+                            $artefact->title = $value;
+                            $artefact->oldextension = end($ext);
+                            $artefact->$ownertype = $ownerid;
+                            $artefact->author = $ownerid;
+                            $artefact->atime = $now;
+                            $artefact->ctime = $now;
+                            $artefact->mtime = $now;
+                            if ($oldkey == 'image') {
+                                $artobj = new ArtefactTypeImage(0, $artefact);
+                            }
+                            else {
+                                $artobj = new ArtefactTypeFile(0, $artefact);
+                            }
+                            $artobj->commit();
+                            $newvalue = $artobj->get('id');
+                            // Create folder and file inside it. then write contents into it...
+                            $imagedir = get_config('dataroot') . ArtefactTypeFile::get_file_directory($newvalue);
+                            if (!check_dir_exists($imagedir, true, true)) {
+                                throw new SystemException("Unable to create folder $imagedir");
+                            }
+                            else {
+                                // Write contents to a file...
+                                $imagepath = $imagedir . '/' . $newvalue;
+                                $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $value;
+                                copy($path, $imagepath);
+                                chmod($imagepath, get_config('filepermissions'));
+                            }
+                            if (!$newvalue) {
+                                throw new SystemException("Invalid attachment '" . $value . "'. No attachment by that name owned by " . $ownertype . " with id " . $ownerid);
+                            }
+                        }
+                        if ($key == 'artefactids') {
+                            $values[] = $newvalue;
+                            $newvalue = $values;
+                        }
+                        $value = $newvalue;
+
+                        break;
+                    default:
+
+                }
+                $configdata[$key] = $value;
+            }
+        }
+        // make new block
+        safe_require('blocktype', $blocktype);
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => $blocktype,
+                'title'      => $title,
+                'view'       => $view->get('id'),
+                'row'        => $row,
+                'column'     => $column,
+                'order'      => $order,
+            )
+        );
+        $bi->set('configdata', $configdata);
+        $bi->commit();
+
+    }
+
+    /**
      * Create a collection of pages
      * @param array $record
      * @throws SystemException if creating failed

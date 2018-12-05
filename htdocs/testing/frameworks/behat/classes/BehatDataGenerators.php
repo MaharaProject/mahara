@@ -119,6 +119,19 @@ class BehatDataGenerators extends BehatBase {
             ),
             'required' => array('title', 'ownertype', 'ownername'),
         ),
+        'blocks' => array(
+            'datagenerator' => 'block',
+            'available' => array(
+                'title'            => 'text',
+                'type'             => 'text',
+                'data'             => 'text',
+                'page'             => 'text',
+                'row'              => 'text',
+                'column'           => 'text',
+                'order'            => 'text',
+            ),
+            'required' => array('title', 'type', 'page'),
+        ),
         'collections' => array(
             'datagenerator' => 'collection',
             'available' => array(
