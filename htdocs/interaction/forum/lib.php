@@ -59,6 +59,63 @@ class PluginInteractionForum extends PluginInteraction {
             $existing = array();
         }
 
+        $fieldsetelements = array();
+        $fieldsetelements['autosubscribe'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('autosubscribeusers', 'interaction.forum'),
+            'description'  => get_string('autosubscribeusersdescription', 'interaction.forum'),
+            'defaultvalue' => isset($autosubscribe) ? $autosubscribe : true,
+            'help'         => true,
+        );
+        if ($USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin() || $USER->is_institutional_staff()) {
+            $fieldsetelements['allowunsubscribe'] = array(
+                'type'         => 'switchbox',
+                'title'        => get_string('allowunsubscribe', 'interaction.forum'),
+                'description'  => get_string('allowunsubscribedescription', 'interaction.forum'),
+                'defaultvalue' => isset($allowunsubscribe) ? $allowunsubscribe : 1,
+                'help' => true,
+            );
+        }
+        $fieldsetelements['weight'] = array(
+            'type' => 'weight',
+            'title' => get_string('Order', 'interaction.forum'),
+            'description' => get_string('orderdescription', 'interaction.forum'),
+            'defaultvalue' => isset($weight) ? $weight : count($existing),
+            'rules' => array(
+                'required' => true,
+            ),
+            'existing' => $existing,
+            'ignore'   => (count($existing) == 0)
+        );
+        $fieldsetelements['moderator'] = array(
+            'type' => 'userlist',
+            'title' => get_string('Moderators', 'interaction.forum'),
+            'description' => get_string('moderatorsdescription', 'interaction.forum'),
+            'defaultvalue' => isset($moderators) ? $moderators : null,
+            'group' => $group->id,
+            'includeadmins' => false,
+            'lefttitle' => get_string('potentialmoderators', 'interaction.forum'),
+            'righttitle' => get_string('currentmoderators', 'interaction.forum')
+        );
+        $fieldsetelements['createtopicusers'] = array(
+            'type'         => 'select',
+            'title'        => get_string('whocancreatetopics', 'interaction.forum'),
+            'options'      => array('members'    => get_string('allgroupmembers', 'group'),
+                                    'moderators' => get_string('moderatorsandgroupadminsonly', 'interaction.forum')),
+            'description'  => get_string('createtopicusersdescription', 'interaction.forum'),
+            'defaultvalue' => (isset($createtopicusers) && $createtopicusers == 'moderators') ? 'moderators' : 'members',
+            'rules' => array(
+                'required' => true,
+            ),
+        );
+        $fieldsetelements['closetopics'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('closetopics', 'interaction.forum'),
+            'description'  => get_string('closetopicsdescription1', 'interaction.forum'),
+            'defaultvalue' => !empty($closetopics),
+        );
+
+
         $form = array(
             'indentmode' => array(
                 'type'         => 'select',
@@ -91,65 +148,12 @@ class PluginInteractionForum extends PluginInteraction {
                 'collapsible' => true,
                 'collapsed' => true,
                 'legend' => get_string('forumsettings', 'interaction.forum'),
-                'elements' => array(
-                    'autosubscribe' => array(
-                        'type'         => 'switchbox',
-                        'title'        => get_string('autosubscribeusers', 'interaction.forum'),
-                        'description'  => get_string('autosubscribeusersdescription', 'interaction.forum'),
-                        'defaultvalue' => isset($autosubscribe) ? $autosubscribe : true,
-                        'help'         => true,
-                    ),
-                    'weight' => array(
-                        'type' => 'weight',
-                        'title' => get_string('Order', 'interaction.forum'),
-                        'description' => get_string('orderdescription', 'interaction.forum'),
-                        'defaultvalue' => isset($weight) ? $weight : count($existing),
-                        'rules' => array(
-                            'required' => true,
-                        ),
-                        'existing' => $existing,
-                        'ignore'   => (count($existing) == 0)
-                    ),
-                    'moderator' => array(
-                        'type' => 'userlist',
-                        'title' => get_string('Moderators', 'interaction.forum'),
-                        'description' => get_string('moderatorsdescription', 'interaction.forum'),
-                        'defaultvalue' => isset($moderators) ? $moderators : null,
-                        'group' => $group->id,
-                        'includeadmins' => false,
-                        'lefttitle' => get_string('potentialmoderators', 'interaction.forum'),
-                        'righttitle' => get_string('currentmoderators', 'interaction.forum')
-                    ),
-                    'createtopicusers' => array(
-                        'type'         => 'select',
-                        'title'        => get_string('whocancreatetopics', 'interaction.forum'),
-                        'options'      => array('members'    => get_string('allgroupmembers', 'group'),
-                                                'moderators' => get_string('moderatorsandgroupadminsonly', 'interaction.forum')),
-                        'description'  => get_string('createtopicusersdescription', 'interaction.forum'),
-                        'defaultvalue' => (isset($createtopicusers) && $createtopicusers == 'moderators') ? 'moderators' : 'members',
-                        'rules' => array(
-                            'required' => true,
-                        ),
-                    ),
-                    'closetopics' => array(
-                        'type'         => 'switchbox',
-                        'title'        => get_string('closetopics', 'interaction.forum'),
-                        'description'  => get_string('closetopicsdescription1', 'interaction.forum'),
-                        'defaultvalue' => !empty($closetopics),
-                    ),
-                )
-            )
+                'elements' => $fieldsetelements,
+            ),
         );
 
-        if ($USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin() || $USER->is_institutional_staff()) {
-            $form['fieldset']['elements']['allowunsubscribe'] = array(
-                'type'         => 'switchbox',
-                'title'        => get_string('allowunsubscribe', 'interaction.forum'),
-                'description'  => get_string('allowunsubscribedescription', 'interaction.forum'),
-                'defaultvalue' => isset($allowunsubscribe) ? $allowunsubscribe : 1,
-            );
 
-        }
+
         return $form;
     }
 
@@ -173,7 +177,24 @@ jQuery(function($) {
         }
     }
 
+    function update_autosubscribe(){
+        var source = $('#edit_interaction_allowunsubscribe');
+        var target = $('#edit_interaction_autosubscribe');
+        if (source.length) {
+            if (source.prop('checked')) {
+                target.prop('disabled', false);
+            }
+            else {
+                target.prop('checked', true);
+                target.prop('disabled', true);
+            }
+        }
+    }
+
     $('#edit_interaction_indentmode').on('change', update_maxindent);
+
+    $('#edit_interaction_allowunsubscribe').on('click', update_autosubscribe);
+    update_autosubscribe();
 });
 EOF;
     }
@@ -182,6 +203,11 @@ EOF;
         global $USER;
         db_begin();
 
+        // Need to set autosubscribe to "true" if allowsubscribe is set to "false" by the user
+        // since this disables allowunsubscribe switch and $values['autosubscribe'] gets here empty
+        if (isset($values['allowunsubscribe']) && !$values['allowunsubscribe']) {
+            $values['autosubscribe'] = 1;
+        }
         // Autosubscribe
         delete_records_sql(
             "DELETE FROM {interaction_forum_instance_config}
@@ -191,21 +217,17 @@ EOF;
         insert_record('interaction_forum_instance_config', (object)array(
             'forum' => $instance->get('id'),
             'field' => 'autosubscribe',
-            'value' => (bool)$values['autosubscribe'],
+            'value' => (bool)($values['autosubscribe']),
         ));
 
-        if ($values['justcreated'] && $values['autosubscribe']) {
+        if (($values['justcreated'] && $values['autosubscribe']) ||
+            ( isset($values['allowunsubscribe']) && !$values['allowunsubscribe'])) {
             // Subscribe all existing users in the group to the forums
             if ($userids = get_column('group_member', 'member', 'group', $instance->get('group'))) {
                 foreach ($userids as $userid) {
-                    insert_record(
-                        'interaction_forum_subscription_forum',
-                        (object)array(
-                            'forum' => $instance->get('id'),
-                            'user'  => $userid,
-                            'key'   => PluginInteractionForum::generate_unsubscribe_key(),
-                        )
-                    );
+                    if (!get_record('interaction_forum_subscription_forum', 'user', $userid, 'forum', $instance->get('id'))) {
+                        subscribe_user_to_forum($userid, $instance->get('id'));
+                    }
                 }
             }
         }
@@ -459,18 +481,11 @@ EOF;
             LEFT JOIN {interaction_forum_instance_config} ific ON ific.forum = ii.id
             WHERE \"group\" = ? AND ific.field = 'autosubscribe' and ific.value = '1'",
             array($gm['group']))) {
-            db_begin();
             foreach ($forumids as $forumid) {
-                insert_record(
-                    'interaction_forum_subscription_forum',
-                    (object)array(
-                        'forum' => $forumid,
-                        'user'  => $gm['member'],
-                        'key'   => PluginInteractionForum::generate_unsubscribe_key(),
-                    )
-                );
+                // if the user was a member once and was subscribe to a topic
+                // from the forum, we also need to remove that subscription
+                subscribe_user_to_forum($gm['member'], $forumid);
             }
-            db_commit();
         }
     }
 
@@ -1353,30 +1368,41 @@ function subscribe_forum_validate(Pieform $form, $values) {
     }
 }
 
+/*
+ * Subscribes a user to a forum and unsubscribes from any topic inside the forum
+ *
+ * @param int $user the ID of the user
+ * @param int $forum the ID of the forum
+ */
+
+function subscribe_user_to_forum($user, $forum) {
+    db_begin();
+    insert_record(
+        'interaction_forum_subscription_forum',
+        (object)array(
+            'forum' => $forum,
+            'user'  => $user,
+            'key'   => PluginInteractionForum::generate_unsubscribe_key(),
+        )
+    );
+    delete_records_sql(
+        'DELETE FROM {interaction_forum_subscription_topic}
+        WHERE topic IN (
+            SELECT id
+            FROM {interaction_forum_topic}
+            WHERE forum = ?
+            AND "user" = ?
+        )',
+        array($forum, $user)
+    );
+    db_commit();
+}
+
 function subscribe_forum_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
     if ($values['type'] == 'subscribe') {
-        db_begin();
-        insert_record(
-            'interaction_forum_subscription_forum',
-            (object)array(
-                'forum' => $values['forum'],
-                'user'  => $USER->get('id'),
-                'key'   => PluginInteractionForum::generate_unsubscribe_key(),
-            )
-        );
-        delete_records_sql(
-            'DELETE FROM {interaction_forum_subscription_topic}
-            WHERE topic IN (
-                SELECT id
-                FROM {interaction_forum_topic}
-                WHERE forum = ?
-                AND "user" = ?
-            )',
-            array($values['forum'], $USER->get('id'))
-        );
-        db_commit();
+        subscribe_user_to_forum($USER->get('id'), $values['forum']);
         $SESSION->add_ok_msg(get_string('forumsuccessfulsubscribe', 'interaction.forum'));
     }
     else {
