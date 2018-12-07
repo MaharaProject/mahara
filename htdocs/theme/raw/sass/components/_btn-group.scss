@@ -2,10 +2,17 @@
 // Extenstion to Button groups so we can use forms as buttons
 // --------------------------------------------------
 
-.btn-group .form-as-button:first-child:not(.last) {
+.btn-group .form-as-button {
     .btn {
         @include border-right-radius(0);
         border-right-width: 0;
+    }
+}
+
+.btn-group .form-as-button:last-child {
+    .btn {
+        @include border-right-radius($border-radius);
+        border-right-width: $border-width;
     }
 }
 

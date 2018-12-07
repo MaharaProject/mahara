@@ -100,7 +100,7 @@
                                     {$loggedindate|safe}
                                 </div>
                             </div>
-                            <div class="duplicateemail-filter form-check">
+                            <div class="duplicateemail-filter checkbox">
                                 <label class="input-inline" for="duplicateemail">
                                     <input class="checkbox" type="checkbox" name="duplicateemail" id="duplicateemail" value="1"{if $search->duplicateemail} checked{/if}>
                                     {str tag="duplicateemailfilter1" section="admin"}
@@ -173,7 +173,7 @@
 
                 </form>
                 {/if}
-                <form class="nojs-hidden-inline form-as-button float-left{if !$USER->get('admin') && !$USER->is_institutional_admin()} last{/if}" action="{$WWWROOT}admin/users/statistics.php" id="report" method="post">
+                <form class="nojs-hidden-inline form-as-button float-left" action="{$WWWROOT}admin/users/statistics.php" id="report" method="post">
 
                     <button action="{$WWWROOT}admin/users/statistics.php" type="submit" class="btn btn-secondary disabled" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
                         <span class="icon icon-area-chart left" role="presentation" aria-hidden="true"></span>
