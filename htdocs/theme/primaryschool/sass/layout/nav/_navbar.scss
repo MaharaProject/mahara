@@ -1,0 +1,11 @@
+/*
+ * Modification to bootstraps default navbar components
+ */
+
+// Header messagebox form
+.navbar-messages {
+    &:hover,
+    &:focus {
+        color: #FFF;
+    }
+}

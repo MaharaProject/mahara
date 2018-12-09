@@ -16,10 +16,10 @@
 // color values specified in Primary theme bootstrap-variable.scss
 
 // To change section color, simply change color value.
-$home-color: #0591ce;
+$home-color: #047DB1;
 $content-color: #ca0238;
-$myportfolio-color: #f29907;
-$groups-color: #799323;
+$myportfolio-color: #A66700;
+$groups-color: #5B6E1C;
 
 // Menue section variable array
 // 1) Section name
@@ -28,10 +28,10 @@ $groups-color: #799323;
 // 4) Lighter shade (can be specified in hex,rgba value)
 // 5) Darker shade (can be specified in hex,rgba value)
 $menu-styles: (
-  ("home", $home-color, lighten($home-color, 5%), darken($home-color, 5%)),
-  ("create", $content-color, lighten($content-color, 5%), darken($content-color, 5%)),
-  ("engage", $myportfolio-color, lighten($myportfolio-color, 5%), darken($myportfolio-color, 5%)),
-  ("manage", $groups-color, lighten($groups-color, 5%), darken($groups-color, 5%))
+  ("home", $home-color, darken($home-color, 2%), darken($home-color, 5%)),
+  ("create", $content-color, darken($content-color, 2%), darken($content-color, 5%)),
+  ("engage", $myportfolio-color, darken($myportfolio-color, 2%), darken($myportfolio-color, 5%)),
+  ("manage", $groups-color, darken($groups-color, 2%), darken($groups-color, 5%))
 );
 
 .nav-main .navbar-nav {

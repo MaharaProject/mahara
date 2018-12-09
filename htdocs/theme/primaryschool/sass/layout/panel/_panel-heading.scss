@@ -16,12 +16,12 @@
 }
 
 
-// custom block heading 
+// custom block heading
 .column-layout {
     &:nth-child(3n+1) {
         .panel-secondary {
             &:nth-child(5n+1) > .panel-heading, .panel-heading-nested {
-                background-color: #0591ce;
+                background-color: #047DB1;
                 color: #FFFFFF;
             }
             &:nth-child(5n+2) > .panel-heading, .panel-heading-nested {
@@ -29,11 +29,11 @@
                 color: #FFFFFF;
             }
             &:nth-child(5n+3) > .panel-heading, .panel-heading-nested {
-                background-color: #f29907;
+                background-color: #A66700;
                 color: #FFFFFF;
             }
             &:nth-child(5n+4) > .panel-heading, .panel-heading-nested {
-                background-color: #799323;
+                background-color: #5B6E1C;
                 color: #FFFFFF;
             }
             &:nth-child(5n+5) > .panel-heading, .panel-heading-nested {
@@ -45,11 +45,11 @@
     &:nth-child(3n+2) {
         .panel-secondary {
             &:nth-child(5n+1) > .panel-heading, .panel-heading-nested {
-                background-color: #f29907;
+                background-color: #A66700;
                 color: #FFFFFF;
             }
             &:nth-child(5n+2) > .panel-heading, .panel-heading-nested {
-                background-color: #799323;
+                background-color: #5B6E1C;
                 color: #FFFFFF;
             }
             &:nth-child(5n+3) > .panel-heading, .panel-heading-nested {
@@ -57,7 +57,7 @@
                 color: #FFFFFF;
             }
             &:nth-child(5n+4) > .panel-heading, .panel-heading-nested {
-                background-color: #0591ce;
+                background-color: #047DB1;
                 color: #FFFFFF;
             }
             &:nth-child(5n+5) > .panel-heading, .panel-heading-nested {
@@ -73,7 +73,7 @@
                 color: #FFFFFF;
             }
             &:nth-child(5n+2) > .panel-heading, .panel-heading-nested {
-                background-color: #0591ce;
+                background-color: #047DB1;
                 color: #FFFFFF;
             }
             &:nth-child(5n+3) > .panel-heading, .panel-heading-nested {
@@ -81,11 +81,11 @@
                 color: #FFFFFF;
             }
             &:nth-child(5n+4) > .panel-heading, .panel-heading-nested {
-                background-color: #f29907;
+                background-color: #A66700;
                 color: #FFFFFF;
             }
             &:nth-child(5n+5) > .panel-heading, .panel-heading-nested {
-                background-color: #799323;
+                background-color: #5B6E1C;
                 color: #FFFFFF;
             }
         }
