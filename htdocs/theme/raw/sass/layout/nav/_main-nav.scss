@@ -64,10 +64,6 @@
             float: none;
             display: block;
             position: relative;
-
-            @include media-breakpoint-up(md) {
-                border-bottom: 1px solid transparent;
-            }
         }
 
         // Styles for all links inside navbar-nav

@@ -30,6 +30,9 @@
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
             max-width: 100%;
+            &.text {
+                height: $input-height;
+            }
         }
         ~ .form-group {
             .form-control {
