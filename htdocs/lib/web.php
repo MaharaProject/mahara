@@ -1450,7 +1450,7 @@ function sideblock_template($sideblock, &$sideblock_menu) {
         'visible' => false,    // Controls whether the sideblock is visible.
                                // Examples:
                                //  to display when logged in:    'visible' => $USER->is_logged_in(),
-                               //  to display for certain pages: 'visible' => in_array(MENUITEM, array('myportfolio/view')),
+                               //  to display for certain pages: 'visible' => (defined('MENUITEM') && in_array(MENUITEM, array('myportfolio/view'))),
     );
     $sideblock = array_merge($defaultsideblock, $sideblock);
     $sideblock_menu[$sideblock['name']] = $sideblock;
@@ -3347,10 +3347,13 @@ function selfsearch_sideblock() {
             'data'   => array(),
             'template' => 'sideblocks/selfsearch.tpl',
             'visible' => $USER->is_logged_in() &&
-                         in_array(MENUITEM, array('profile',
-                                                  'create/files',
-                                                  'share/sharedbyme',
-                                                  'create/views')),
+                         (defined('MENUITEM') &&
+                          in_array(MENUITEM, array('profile',
+                                                   'create/files',
+                                                   'share/sharedbyme',
+                                                   'create/views')
+                                   )
+                         ),
         );
         return $sideblock;
     }

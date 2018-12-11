@@ -11,6 +11,7 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
+define('MENUITEM', 'create/files');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'core');
 define('SECTION_PAGE', 'artefact');
