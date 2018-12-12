@@ -2138,7 +2138,7 @@ Used as icon for a system notification.
       $j.each(categories, function(i, category) {
           var readableName = category.replace("-", " ");
           if (i === 0) {
-              $j('#category-tabs').append('<li class="active"><a href="#" data-category="' + category + '">' + readableName + '</a></li>');
+              $j('#category-tabs').append('<li><a class="active" href="#" data-category="' + category + '">' + readableName + '</a></li>');
           } else {
               $j('#category-tabs').append('<li><a href="#" data-category="' + category + '">' + readableName + '</a></li>');
           }
@@ -2149,7 +2149,7 @@ Used as icon for a system notification.
           var category = $j(this).data('category');
           event.preventDefault();
           $j(this).parent().siblings().children().removeClass('active');
-          $j(this).addClass('active');
+          $j(this).first().addClass('active');
 
           $j('[data-markdown]').each(function(){
               if ($j(this).data('category') !== category) {
