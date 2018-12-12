@@ -159,7 +159,8 @@ function print_upload_form() {
                 'title' => get_string('uploadleap2afile', 'admin'),
                 'rules' => array(
                     'required' => true
-                )
+                ),
+                'maxfilesize'  => get_max_upload_size(true)
             ),
             'submit' => array(
                 'class' => 'btn-primary',

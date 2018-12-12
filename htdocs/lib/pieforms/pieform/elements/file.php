@@ -33,12 +33,20 @@
  */
 function pieform_element_file(Pieform $form, $element) {/*{{{*/
     $result = '';
+    $maxfilesize = '';
     if (isset($element['maxfilesize']) && is_int($element['maxfilesize'])){
         $result = '<input type="hidden" name="MAX_FILE_SIZE" value="' . $element['maxfilesize'] . '"/>';
+        $maxfilesize = $element['maxfilesize'];
     }
-    $result .= '<input type="file"' . $form->element_attributes($element) .
+    $result .= '<div class="' . (empty($element['description']) ? 'align-with-input file' : 'align-with-input-desc') . '"><input type="file"' . $form->element_attributes($element) .
         (isset($element['accept']) ? ' accept="' . Pieform::hsc($element['accept']) . '"' : '') .
         '>';
+    if (!$maxfilesize) {
+        // not supplied by form element
+        $maxfilesize = get_max_upload_size(false);
+    }
+    $maxuploadsize = display_size($maxfilesize);
+    $result .= '<br><span class="file-description">(' . get_string('maxuploadsize', 'artefact.file') . ' ' . $maxuploadsize . ')</span></div>';
     return $result;
 }/*}}}*/
 
