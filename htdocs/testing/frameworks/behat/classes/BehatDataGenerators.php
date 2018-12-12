@@ -129,6 +129,8 @@ class BehatDataGenerators extends BehatBase {
                 'row'              => 'text',
                 'column'           => 'text',
                 'order'            => 'text',
+                'retractable'      => 'text',
+
             ),
             'required' => array('title', 'type', 'page'),
         ),
