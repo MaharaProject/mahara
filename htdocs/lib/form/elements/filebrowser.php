@@ -231,6 +231,20 @@ function pieform_element_filebrowser(Pieform $form, $element) {
             }
         }
     }
+    $colspan = 4;
+    if (!$config['showtags'] && !$config['editmeta']) {
+        $colspan++;
+    }
+    if (!$config['select']) {
+        $colspan++;
+    }
+    if (($config['showtags'] && $config['editmeta']) || $config['select']) {
+        $colspan++;
+    }
+    if ($config['edit']) {
+        $colspan++;
+    }
+    $smarty->assign('colspan', $colspan);
 
     return $smarty->fetch('artefact:file:form/filebrowser.tpl');
 }
@@ -352,6 +366,20 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
         }
     }
 
+    $colspan = 4;
+    if (!$showtags && !$editmeta) {
+        $colspan++;
+    }
+    if (!$selectable) {
+        $colspan++;
+    }
+    if (($showtags && $editmeta) || $selectable) {
+        $colspan++;
+    }
+    if ($editable) {
+        $colspan++;
+    }
+
     $smarty->assign('downloadfolderaszip', $addzipdownloadlink);
     $smarty->assign('edit', -1);
     $smarty->assign('highlight', $highlight);
@@ -364,7 +392,7 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $smarty->assign('filelist', $filedata);
     $smarty->assign('querybase', $querybase);
     $smarty->assign('prefix', $prefix);
-
+    $smarty->assign('colspan', $colspan);
     $params = 'folder=' . ($folder === null ? 0 : $folder);
     if ($group !== null) {
         $params .= '&group=' . $group;

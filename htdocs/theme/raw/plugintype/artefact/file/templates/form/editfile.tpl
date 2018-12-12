@@ -1,5 +1,5 @@
 <tr id="{$prefix}_edit_row"{if !$fileinfo} class="text-regular hidden editrow no-hover"{/if}>
-    <td colspan="6" class="fileedittablewrap form-condensed">
+    <td colspan="{$colspan}" class="fileedittablewrap form-condensed">
         <div class="fileedittable">
             <h4 id="{$prefix}_edit_heading" class="edit-heading">
                 {if $fileinfo}{if $fileinfo->artefacttype == 'folder'}{str tag=editfolder section=artefact.file}{else}{str tag=editfile section=artefact.file}{/if}{/if}

@@ -21,6 +21,9 @@
                 {if ($showtags && $editmeta) || $selectable}
                 <th class="right nowrap"></th>
                 {/if}
+                {if $editable}
+                <th></th>
+                {/if}
             </tr>
         </thead>
 
@@ -69,7 +72,6 @@
                     {/if}
                 {/if}
             </td>
-
             <td class="filename">
                 {if $file->artefacttype == 'folder'}
                     <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="inner-link changefolder">
@@ -174,7 +176,7 @@
             {/if}
         </tr>
         {if $edit == $file->id}
-            {include file="artefact:file:form/editfile.tpl" prefix=$prefix fileinfo=$file groupinfo=$groupinfo}
+            {include file="artefact:file:form/editfile.tpl" prefix=$prefix fileinfo=$file groupinfo=$groupinfo colspan=$colspan}
         {/if}
 
         {/foreach}
