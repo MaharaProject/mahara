@@ -4052,13 +4052,13 @@ function tags_sideblock() {
             'data'   => $tags,
             'template' => 'sideblocks/tags.tpl',
             'visible' => $USER->is_logged_in() &&
-                         (defined('MENUITEM') &&
-                          in_array(MENUITEM, array('profile',
-                                                   'create/files',
-                                                   'share/sharedbyme',
-                                                   'create/views')
-                                  )
-                         ),
+                        (defined('MENUITEM') &&
+                         in_array(MENUITEM, array('profile',
+                                                  'create/files',
+                                                  'share/sharedbyme',
+                                                  'create/views')
+                                )
+                        ),
         );
         return $sideblock;
     }
