@@ -1,6 +1,8 @@
 .card {
     margin-bottom: $line-height-computed;
     border: 1px solid $card-border;
+    border-radius: $card-border-radius;
+    @include box-shadow(rgba(0, 0, 0, 0.05) 0 1px 1px);
     form {
         margin:0;
     }
@@ -16,7 +18,7 @@
 
     .list-group-item small {
         @extend .text-midtone;
-        font-size: $font-size-base - 2;
+        font-size: $font-size-base * 0.85715;
     }
 
     dl {
@@ -38,5 +40,10 @@
     }
     .nav-pills {
         margin: 0;
+    }
+    > .list-group:last-child {
+        .list-group-item:last-child {
+            border-bottom: 0;
+        }
     }
 }

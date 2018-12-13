@@ -11,6 +11,8 @@
     > .card-header {
         font-family: $font-family-serif;
         border-bottom: 2px solid $card-border-color;
+        font-size: $font-size-base * 1.285;
+        margin-top: 0;
     }
     &.blockinstance.card {
         background-color: transparent;

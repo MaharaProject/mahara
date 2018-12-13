@@ -28,6 +28,9 @@
             }
         }
     }
+    > li {
+        margin-bottom: -$nav-tabs-border-width;
+    }
 }
 
 // hide unwanted elements

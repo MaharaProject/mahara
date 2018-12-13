@@ -2,6 +2,7 @@
 .collapsible legend h4,
 .collapsible legend h3,
 .card-header {
+    background-color: $card-heading-bg;
     position: relative;
     display: block;
     font-family: $font-family-sans-serif;
@@ -76,8 +77,11 @@
     }
 }
 
-h2.card-header {
-    font-size: $font-size-base * 1.14285;
+h2,
+h3 {
+    .card-header {
+        font-size: $font-size-base * 1.14285;
+    }
 }
 
 .card {
@@ -104,7 +108,4 @@ h2.card-header {
             }
         }
     }
-}
-h3.card-header {
-  font-size: 16px;
 }

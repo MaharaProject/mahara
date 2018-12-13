@@ -530,7 +530,7 @@
     .description:not(.html) {
         color: $gray-300;
         font-style: italic;
-        font-size: $font-size-base - 1;
+        font-size: $font-size-base * 0.9285;
         max-width: 90%;
         display: block;
         padding-top: 10px;
@@ -545,7 +545,7 @@
         color: scale-color($brand-danger, $lightness: -8.5%);
         border: 0;
         font-style: italic;
-        font-size: $font-size-base - 1;
+        font-size: $font-size-base * 0.9285;
         padding-bottom: 0;
     }
     &.has-oneof {

@@ -13,3 +13,11 @@ a.label.label-default,
         background-color:$theme-primary-color;
     }
 }
+
+.badge {
+    margin-right: 5px;
+    padding: 0.2em 0.6em 0.3em;
+    &.badge-warning {
+        @extend .text-white;
+    }
+}

@@ -4,10 +4,17 @@
 	color: $btn-secondary-color;
 	background-color: $btn-secondary-bg;
 	border-color: $btn-secondary-border;
+	box-shadow: none;
 	&:hover {
 		background-color: darken($btn-secondary-bg, 10%);
 	}
 }
+
+.btn-primary {
+	border-color: $btn-primary-border;
+	box-shadow: none;
+}
+
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
 	color: inherit;
@@ -452,4 +459,8 @@ td.action-list-copy {
             }
         }
     }
+}
+
+.btn-sm {
+	padding: 0.14375rem 0.625rem;
 }
