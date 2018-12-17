@@ -33,7 +33,7 @@ Scenario:
     And I should not see "<h1>Mahara does HTML</h1>"
     And I should see images within the block "Some HTML"
     And I follow "mahara manual"
-    And I wait "2" seconds
+    And I wait "3" seconds
     And I switch to the new window
     Then I should see "This is the user manual for Mahara"
     And I switch to the main window
