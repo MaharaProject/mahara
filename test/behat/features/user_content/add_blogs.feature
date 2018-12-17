@@ -29,6 +29,7 @@ Feature: Mahara users can create their blogs
     When I go to "artefact/blog/index.php"
     And I should see "Journals"
     # check that settings can be changed by change the title of your default journal, add a description and tags
+    And I wait "1" seconds
     When I click on "Angela User's Journal"
     And I follow "Settings" in the "Top right button group" property
     When I fill in the following:
