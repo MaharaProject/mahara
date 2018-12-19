@@ -61,6 +61,8 @@
 .list-group-item-heading {
     font-family: $font-family-serif;
     font-weight: 300;
+    margin-top: 0;
+    margin-bottom: 5px;
     a {
         &:hover {
             color: $link-color;

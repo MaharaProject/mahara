@@ -1,8 +1,8 @@
 {include file="header.tpl"}
 <ul class="nav nav-tabs">
     {foreach from=$navtabs item=item}
-        <li class="{if $item.class}{$item.class} d-none{/if} {if $item.selected} active{/if}" role="presentation" aria-hidden="true">
-            <a href="{$WWWROOT}{$item.url}#profileform_{$item.page}_container">
+        <li class="{if $item.class}{$item.class} d-none{/if}" role="presentation" aria-hidden="true">
+            <a href="{$WWWROOT}{$item.url}#profileform_{$item.page}_container" {if $item.selected}class="active"{/if}>
                 {$item.title}
                 <span class="accessible-hidden sr-only">({str tag=tab}{if $item.selected} {str tag=selected}{/if})</span>
             </a>

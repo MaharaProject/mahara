@@ -1,6 +1,6 @@
 {if $sbdata}
 <div class="card card-secondary">
-    <h3 class="card-heading">
+    <h3 class="card-header">
         {str tag="linksandresources"}
     </h3>
     <ul class="list-group">

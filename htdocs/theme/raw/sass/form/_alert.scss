@@ -39,6 +39,6 @@
 
 .alert-default {
     background-color: rgba($body-bg, 0.4);
-    border: 1px solid scale-color(theme-color("secondary"), $lightness: -5.5%);
+    border: 1px solid scale-color($gray-400, $lightness: 8%);
     color: $gray-500;
 }

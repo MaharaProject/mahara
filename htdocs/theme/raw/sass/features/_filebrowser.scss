@@ -73,6 +73,9 @@
         float: left;
         margin-bottom: 20px;
     }
+    .file {
+        display: block;
+    }
 }
 
 .filelist {
@@ -88,7 +91,7 @@
 }
 
 .fileedittablewrap {
-    background-color: $card-bg;
+    background-color: $table-accent-bg;
 }
 
 // file browser inside modal screen

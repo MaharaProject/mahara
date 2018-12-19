@@ -75,12 +75,12 @@ jQuery(function($) {
           // set all tabs to inactive
           $('ul.nav-tabs li').each(function() {
               $(this).removeClass('active');
-              $(this).find('a').removeClass('current-tab');
+              $(this).find('a').removeClass('active');
               $(this).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
           });
           // set current one to active
           $(this).closest('li').addClass('active');
-          $(this).addClass('current-tab');
+          $(this).addClass('active');
           $(this).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
 
           return false;
