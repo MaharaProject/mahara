@@ -614,7 +614,7 @@ class ArtefactTypeComment extends ArtefactType {
      */
     public static function can_moderate_comments($userid, $artefact=null, $view=null) {
         static $usercache = array();
-        if (array_key_exists($userid, $usercache)) {
+        if (array_key_exists($userid, $usercache) && !defined('BEHAT_TEST')) {
             return $usercache[$userid];
         }
 
