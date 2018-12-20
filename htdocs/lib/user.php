@@ -1222,7 +1222,7 @@ function get_user_for_display($user=null) {
         'studentid',
     );
 
-    if (is_numeric($user) && isset($usercache[$user])) {
+    if (is_numeric($user) && isset($usercache[$user]) && !defined('BEHAT_TEST')) {
         return $usercache[$user];
     }
 
@@ -1256,7 +1256,7 @@ function get_user_for_display($user=null) {
         $user->id = null;
     }
 
-    if (is_numeric($user->id)) {
+    if (is_numeric($user->id) && !defined('BEHAT_TEST')) {
         if (!isset($usercache[$user->id])) {
             return $usercache[$user->id] = $user;
         }
