@@ -71,6 +71,21 @@ $parent = get_record_sql(
     array(0, $parentid)
 );
 
+if ($parent) {
+    $parent->filecount = 0;
+    if ($parent->attachments = get_records_sql_array("
+                  SELECT a.*, aff.size, aff.fileid, pa.post
+                  FROM {artefact} a
+                  JOIN {interaction_forum_post_attachment} pa ON pa.attachment = a.id
+                  LEFT JOIN {artefact_file_files} aff ON aff.artefact = a.id
+                  WHERE pa.post = ?", array($parentid))) {
+        $parent->filecount = count($parent->attachments);
+        safe_require('artefact', 'file');
+        foreach ($parent->attachments as $file) {
+            $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->id, 'post' => $parentid));
+        }
+    }
+}
 define('GROUP', $parent->group);
 
 $membership = user_can_access_forum((int)$parent->forum);
