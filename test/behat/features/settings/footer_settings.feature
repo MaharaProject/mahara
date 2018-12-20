@@ -22,6 +22,7 @@ Given the following "users" exist:
   And I am on homepage
   # test click is possible - opens a new window, which we're not checking at this stage
   And I click on "Help"
+  And I switch to the main window
 
   Scenario: Admin changes settings which are visible to user
   #log in as a admin user
