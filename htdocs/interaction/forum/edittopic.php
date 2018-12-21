@@ -287,26 +287,7 @@ function addtopic_submit(Pieform $form, $values) {
 
     // Attachments
     $instance = new InteractionForumInstance($forumid);
-    $old = $instance->attachment_id_list($postid);
-    $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
-    if (!empty($new) || !empty($old)) {
-        foreach ($old as $o) {
-            if (!in_array($o, $new)) {
-                try {
-                    $instance->detach($postid, $o);
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-        foreach ($new as $n) {
-            if (!in_array($n, $old)) {
-                try {
-                    $instance->attach($postid, $n);
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-    }
+    update_attachments($instance, $values['filebrowser'], $postid);
 
     if (!record_exists('interaction_forum_subscription_forum', 'user', $USER->get('id'), 'forum', $forumid)) {
         insert_record('interaction_forum_subscription_topic', (object)array(
@@ -398,28 +379,7 @@ function edittopic_submit(Pieform $form, $values) {
     }
     // Attachments
     $instance = new InteractionForumInstance($topic->forum);
-    $old = $instance->attachment_id_list($topic->postid);
-    $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
-    if (!empty($new) || !empty($old)) {
-        foreach ($old as $o) {
-            if (!in_array($o, $new)) {
-                try {
-                    $instance->detach($topic->postid, $o);
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-        foreach ($new as $n) {
-            if (!in_array($n, $old)) {
-                try {
-                    if (empty($mailsent)) {
-                        $instance->attach($topic->postid, $n);
-                    }
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-    }
+    update_attachments($instance, $values['filebrowser'], $topic->postid, $mailsent);
 
     db_commit();
 

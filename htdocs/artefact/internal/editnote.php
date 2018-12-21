@@ -179,26 +179,8 @@ function editnote_submit(Pieform $form, array $values) {
     $artefact->commit();
 
     // Attachments
-    $old = $artefact->attachment_id_list();
-    $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
-    if (!empty($new) || !empty($old)) {
-        foreach ($old as $o) {
-            if (!in_array($o, $new)) {
-                try {
-                    $artefact->detach($o);
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-        foreach ($new as $n) {
-            if (!in_array($n, $old)) {
-                try {
-                    $artefact->attach($n);
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-    }
+    $new = update_attachments($artefact, $values['filebrowser']);
+
     // need to update the block_instances where this artefact is used - so they have
     // the correct configuration artefactids
     if ($blocks = get_column('view_artefact', 'block', 'artefact', $artefact->get('id'))) {

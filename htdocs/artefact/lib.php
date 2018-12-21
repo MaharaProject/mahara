@@ -2207,3 +2207,73 @@ function artefact_get_progressbar_metaartefacts($plugin, $onlythese = false) {
     }
     return $results;
 }
+/**
+ * Helper function to allow for attaching / detaching files via pieform artefactchooser
+ *
+ * @param object  $instance    The class object that contains the attach() and detach() functions
+ * @param array   $values      The pieform submitted values array from filebrowser
+ * @param string  $id          Optional: The id of the thing we want to attach/detach artefact to/from
+ * @param boolean $mailsent    Optional: If we are not allowed to attach artefacts after mail is sent
+ * @param boolean $publish     Optional: Check if current user is allowed to publish the artefacts
+ */
+function update_attachments($instance, $values, $id=null, $mailsent=false, $publish=false) {
+    global $USER;
+
+    $old = $instance->attachment_id_list($id);
+    $new = is_array($values) ? $values : array();
+
+    if ($publish) {
+        // only allow the attaching of files that exist and are editable by user
+        foreach ($new as $key => $fileid) {
+            $file = artefact_instance_from_id($fileid);
+            if (!($file instanceof ArtefactTypeFile) || !$USER->can_publish_artefact($file)) {
+                unset($new[$key]);
+            }
+        }
+    }
+    if ($id) {
+        // We are attaching the artefact to a non-artefact parent as defined by the $id
+        if (!empty($new) || !empty($old)) {
+            foreach ($old as $o) {
+                if (!in_array($o, $new)) {
+                    try {
+                        $instance->detach($id, $o);
+                    }
+                    catch (ArtefactNotFoundException $e) {}
+                }
+            }
+            foreach ($new as $n) {
+                if (!in_array($n, $old)) {
+                    try {
+                        if (empty($mailsent)) {
+                            $instance->attach($id, $n);
+                        }
+                    }
+                    catch (ArtefactNotFoundException $e) {}
+                }
+            }
+        }
+    }
+    else {
+        // attaching artefact to parent artefact
+        if (!empty($new) || !empty($old)) {
+            foreach ($old as $o) {
+                if (!in_array($o, $new)) {
+                    try {
+                        $instance->detach($o);
+                    }
+                    catch (ArtefactNotFoundException $e) {}
+                }
+            }
+            foreach ($new as $n) {
+                if (!in_array($n, $old)) {
+                    try {
+                        $instance->attach($n);
+                    }
+                    catch (ArtefactNotFoundException $e) {}
+                }
+            }
+        }
+    }
+    return $new;
+}

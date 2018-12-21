@@ -270,34 +270,8 @@ function editpost_submit(Pieform $form, $values) {
     $postobj->set('description', EmbeddedImage::prepare_embedded_images($values['description'], 'blogpost', $postobj->get('id')));
 
     // Attachments
-    $old = $postobj->attachment_id_list();
-    // $new = is_array($values['filebrowser']['selected']) ? $values['filebrowser']['selected'] : array();
-    $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
-    // only allow the attaching of files that exist and are editable by user
-    foreach ($new as $key => $fileid) {
-        $file = artefact_instance_from_id($fileid);
-        if (!($file instanceof ArtefactTypeFile) || !$USER->can_publish_artefact($file)) {
-            unset($new[$key]);
-        }
-    }
-    if (!empty($new) || !empty($old)) {
-        foreach ($old as $o) {
-            if (!in_array($o, $new)) {
-                try {
-                    $postobj->detach($o);
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-        foreach ($new as $n) {
-            if (!in_array($n, $old)) {
-                try {
-                    $postobj->attach($n);
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-    }
+    update_attachments($postobj, $values['filebrowser'], null, null, true);
+
     $postobj->commit();
     db_commit();
 
