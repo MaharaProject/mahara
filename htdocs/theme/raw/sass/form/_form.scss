@@ -131,6 +131,21 @@ label,
     @media (min-width: $screen-sm-min) {
         margin-left: 265px;
     }
+    &.file {
+        margin-top: -30px;
+    }
+    .option-alt & {
+        margin: 0;
+        display: block;
+    }
+}
+
+.align-with-input-desc {
+    display: inline-block;
+    margin-left: 0;
+}
+.form-group.file label {
+    vertical-align: top;
 }
 
 textarea {

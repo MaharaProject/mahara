@@ -1345,7 +1345,7 @@ EOF;
                 'type'         => 'files',
                 'title'        => get_string('attachfile', 'artefact.resume'),
                 'defaultvalue' => array(),
-                'maxfilesize'  => get_max_upload_size(false),
+                'maxfilesize'  => get_max_upload_size(true),
             ),
         );
     }
@@ -1515,13 +1515,7 @@ EOF;
                 'type'         => 'files',
                 'title'        => get_string('attachfile', 'artefact.resume'),
                 'defaultvalue' => array(),
-                'maxfilesize'  => get_max_upload_size(false),
-            ),
-            'attachments' => array(
-                'type'         => 'files',
-                'title'        => get_string('attachfile', 'artefact.resume'),
-                'defaultvalue' => array(),
-                'maxfilesize'  => get_max_upload_size(false),
+                'maxfilesize'  => get_max_upload_size(true),
             ),
         );
     }
@@ -1661,7 +1655,7 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                 'type'         => 'files',
                 'title'        => get_string('attachfile', 'artefact.resume'),
                 'defaultvalue' => array(),
-                'maxfilesize'  => get_max_upload_size(false),
+                'maxfilesize'  => get_max_upload_size(true),
             ),
         );
     }
@@ -1797,7 +1791,7 @@ EOF;
                 'type'         => 'files',
                 'title'        => get_string('attachfile', 'artefact.resume'),
                 'defaultvalue' => array(),
-                'maxfilesize'  => get_max_upload_size(false),
+                'maxfilesize'  => get_max_upload_size(true),
             ),
             'url' => array(
                 'type' => 'text',
@@ -1927,7 +1921,7 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                 'type'         => 'files',
                 'title'        => get_string('attachfile', 'artefact.resume'),
                 'defaultvalue' => array(),
-                'maxfilesize'  => get_max_upload_size(false),
+                'maxfilesize'  => get_max_upload_size(true),
             ),
         );
     }

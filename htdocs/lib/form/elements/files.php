@@ -33,11 +33,16 @@ function pieform_element_files(Pieform $form, $element) {
     $smarty->assign('name', $form->get_name() . '_' . $element['name']);
     $smarty->assign('title', $element['title']);
     $smarty->assign('addattachment', $form->i18n('element', 'files', 'addattachment', $element));
-
-    if (isset($element['maxfilesize']) && is_int($element['maxfilesize'])){
+    $maxfilesize = '';
+    if (isset($element['maxfilesize']) && is_int($element['maxfilesize'])) {
         $smarty->assign('maxfilesize', $element['maxfilesize']);
+        $maxfilesize = $element['maxfilesize'];
     }
-
+    if (!$maxfilesize) {
+        // not supplied by form element
+        $maxfilesize = get_max_upload_size(false);
+    }
+    $smarty->assign('maxfilesizedesc', get_string('maxuploadsize', 'artefact.file') . ' ' . display_size($maxfilesize));
     return $smarty->fetch('form/files.tpl');
 }
 

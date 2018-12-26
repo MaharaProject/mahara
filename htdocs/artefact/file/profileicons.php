@@ -48,7 +48,7 @@ $uploadform = pieform(array(
             'type' => 'file',
             'title' => get_string('profileicon', 'artefact.file'),
             'rules' => array('required' => true),
-            'maxfilesize'  => get_max_upload_size(false),
+            'maxfilesize'  => get_max_upload_size(true),
         ),
         'title' => array(
             'type' => 'text',
@@ -198,7 +198,7 @@ function upload_validate(Pieform $form, $values) {
     require_once('file.php');
     require_once('uploadmanager.php');
 
-    $um = new upload_manager('file');
+    $um = new upload_manager('file', false, null, false, get_max_upload_size(true));
     if ($error = $um->preprocess_file()) {
         $form->set_error('file', $error);
         return false;
