@@ -147,5 +147,18 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2018112800) {
+        $table = new XMLDBTable('interaction_forum_post_attachment');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('post', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('attachment', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('postfk', XMLDB_KEY_FOREIGN, array('post'), 'interaction_forum_post', array('id'));
+        $table->addKeyInfo('attachmentfk', XMLDB_KEY_FOREIGN, array('attachment'), 'artefact', array('id'));
+        if (!table_exists($table)) {
+            create_table($table);
+        }
+    }
+
     return true;
 }

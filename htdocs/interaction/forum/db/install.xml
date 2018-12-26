@@ -91,7 +91,7 @@
                 <KEY NAME="forumfk" TYPE="foreign" FIELDS="forum" REFTABLE="interaction_instance" REFFIELDS="id" />
             </KEYS>
         </TABLE>
-        
+
         <TABLE NAME="interaction_forum_edit">
             <FIELDS>
                 <FIELD NAME="user" TYPE="int" NOTNULL="true" />
@@ -101,6 +101,19 @@
             <KEYS>
                 <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="postfk" TYPE="foreign" FIELDS="post" REFTABLE="interaction_forum_post" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+
+        <TABLE NAME="interaction_forum_post_attachment">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="post" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="attachment" TYPE="int" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="postfk" TYPE="foreign" FIELDS="post" REFTABLE="interaction_forum_post" REFFIELDS="id" />
+                <KEY NAME="attachmentfk" TYPE="foreign" FIELDS="attachment" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
         </TABLE>
     </TABLES>

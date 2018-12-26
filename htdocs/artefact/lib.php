@@ -845,6 +845,7 @@ abstract class ArtefactType implements IArtefactType {
 
         // Detach any files from this artefact
         delete_records_select('artefact_attachment', "artefact IN $idstr");
+        delete_records_select('interaction_forum_post_attachment', "attachment IN $idstr");
 
         // Make sure that the artefacts are removed from any view blockinstances
         require_once(get_config('docroot') . 'blocktype/lib.php');

@@ -145,8 +145,8 @@ else {
                     }
                 }
 
-                // Check for images sitting in visible forum posts
-                if (!$imagevisible && $postid && $file instanceof ArtefactTypeImage) {
+                // Check for artefacts sitting in visible forum posts
+                if (!$imagevisible && $postid && $file instanceof ArtefactType) {
                     safe_require('interaction', 'forum');
                     $imagevisible = PluginInteractionForum::can_see_attached_file($file, $postid);
                 }

@@ -75,6 +75,7 @@ else {
 $profileiconattachedtoportfolioitems = json_encode(get_string('profileiconattachedtoportfolioitems', 'artefact.file'));
 $profileiconappearsinviews = json_encode(get_string('profileiconappearsinviews', 'artefact.file'));
 $profileiconappearsinskins = json_encode(get_string('profileiconappearsinskins', 'artefact.file'));
+$profileiconappearsinposts = json_encode(get_string('profileiconappearsinposts', 'artefact.file'));
 $confirmdeletefile = json_encode(get_string('confirmdeletefile', 'artefact.file'));
 
 $IJS = <<<EOF
@@ -119,7 +120,7 @@ var table = new TableRenderer(
                 'type'    : 'checkbox',
                 'class'   : 'checkbox',
                 'name'    : 'icons[' + rowdata.id + ']',
-                'value'   : rowdata.attachcount + ',' + rowdata.viewcount + ',' + rowdata.skincount
+                'value'   : rowdata.attachcount + ',' + rowdata.viewcount + ',' + rowdata.skincount + ',' + rowdata.postcount
             };
             if (!rowdata.id) {
                 options.disabled = 'disabled';
@@ -163,7 +164,7 @@ jQuery(function($) {
         $(form).find('input.checkbox').each(function () {
             var id = $(this).prop('name').match(/\d+/)[0];
             if ($(this).prop('checked')) {
-                var counts = $(this).prop('value').split(',', 3);
+                var counts = $(this).prop('value').split(',', 4);
                 var warn = '';
                 if (counts[0] > 0) {
                     warn += {$profileiconattachedtoportfolioitems} + ' ';
@@ -173,6 +174,9 @@ jQuery(function($) {
                 }
                 if (counts[2] > 0) {
                     warn += {$profileiconappearsinskins} + ' ';
+                }
+                if (counts[3] > 0) {
+                    warn += {$profileiconappearsinposts} + ' ';
                 }
                 if (warn != '') {
                     warn += {$confirmdeletefile};

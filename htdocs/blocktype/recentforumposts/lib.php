@@ -104,6 +104,19 @@ class PluginBlocktypeRecentForumPosts extends MaharaCoreBlocktype {
                             $f->author->$uf = $f->$uf;
                             unset($f->$uf);
                         }
+                        $f->filecount = 0;
+                        if ($f->attachments = get_records_sql_array("
+                                 SELECT a.*, aff.size, aff.fileid, pa.post
+                                 FROM {artefact} a
+                                 JOIN {interaction_forum_post_attachment} pa ON pa.attachment = a.id
+                                 LEFT JOIN {artefact_file_files} aff ON aff.artefact = a.id
+                                 WHERE pa.post = ?", array($f->id))) {
+                            $f->filecount = count($f->attachments);
+                            safe_require('artefact', 'file');
+                            foreach ($f->attachments as $file) {
+                                $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->id, 'post' => $f->id));
+                            }
+                        }
                     }
                 }
 

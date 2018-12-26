@@ -39,12 +39,25 @@ Scenario: Create forum and add block to group page
     And I press "Post"
     And I log out
     And I log in as "UserB" with password "Kupuh1pa!"
+    # Add a file so we can test existing files bit later
+    And I choose "Files" in "Create" from main menu
+    And I attach the file "Image2.png" to "files_filebrowser_userfile"
+    And I am on homepage
     And I wait "1" seconds
     And I scroll to the id 'inboxblock'
     And I follow "Taking photos of cats"
     And I follow "Topic"
     And I follow "Reply"
     And I set the field "Message" to "I don't know Angela, I just use my phone to photograph my cat, and I've got some pretty good ones!"
+    And I press "Add a file"
+    And I click on "My files"
+    # Attach existing user file
+    And I press "Select \"Image2.png\""
+    # Upload a new file to user section
+    And I attach the file "mahara_about.pdf" to "File"
+    And I click on "Group files"
+    And I attach the file "Image3.png" to "File"
+    And I press "Close" in the "Upload dialog" property
     And I press "Post"
     And I log out
     And I log in as "UserC" with password "Kupuh1pa!"
@@ -58,6 +71,10 @@ Scenario: Create forum and add block to group page
     And I display the page
     Then I should see "cat photography is often underrated"
     And I should see "I just use my phone"
+    And I expand the section "Attached files"
+    And I should see "Image2.png"
+    And I should see "mahara_about.pdf"
+    And I should see "Image3.png"
 
 Scenario: Administrative forum bulk actions
     Given I log in as "UserA" with password "Kupuh1pa!"

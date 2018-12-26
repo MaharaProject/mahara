@@ -192,6 +192,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'editfile',
                     'editfolder',
                     'fileappearsinviews',
+                    'fileappearsinposts',
                     'fileattachedtoportfolioitems',
                     'fileappearsinskins',
                     'filewithnameexists',
@@ -550,7 +551,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, fi.orientation, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon,
                 COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount, COUNT(DISTINCT s.id) AS skincount,
-                COUNT(DISTINCT api.id) AS profileiconcount';
+                COUNT(DISTINCT api.id) AS profileiconcount, COUNT(DISTINCT fpa.id) AS postcount';
         $from = '
             FROM {artefact} a
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
@@ -560,6 +561,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 LEFT OUTER JOIN {view_artefact} va ON va.artefact = a.id
                 LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id
                 LEFT OUTER JOIN {skin} s ON (s.bodybgimg = a.id OR s.viewbgimg = a.id)
+                LEFT OUTER JOIN {interaction_forum_post_attachment} fpa ON fpa.attachment = a.id
                 LEFT OUTER JOIN {usr} u ON a.id = u.profileicon AND a.owner = u.id';
 
         if (!empty($filters['artefacttype'])) {
@@ -2408,6 +2410,9 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
         if (isset($options['viewid'])) {
             $url .= '&view=' . $options['viewid'];
+        }
+        if (isset($options['post'])) {
+            $url .= '&post=' . $options['post'];
         }
         if (isset($options['size'])) {
             $url .= '&size=' . $options['size'];
