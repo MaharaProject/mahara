@@ -73,8 +73,8 @@ class mahara_group_external extends external_api {
                                         'feedbacknotify'  => new external_value(PARAM_INT, 'Comment notifications allowed: ' . implode(', ', $group_notify_roles), VALUE_DEFAULT),
                                         'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users', VALUE_DEFAULT),
                                         'hidden'          => new external_value(PARAM_BOOL, 'Hide group', VALUE_DEFAULT),
-                                        'hidemembers'     => new external_value(PARAM_BOOL, 'Hide membership', VALUE_DEFAULT),
-                                        'hidemembersfrommembers' => new external_value(PARAM_BOOL, 'Hide membership', VALUE_DEFAULT),
+                                        'hidemembers'     => new external_value(PARAM_INT, 'Hide membership', VALUE_DEFAULT),
+                                        'hidemembersfrommembers' => new external_value(PARAM_INT, 'Hide membership', VALUE_DEFAULT),
                                         'groupparticipationreports' => new external_value(PARAM_BOOL, 'Participation report', VALUE_DEFAULT),
                                         'members'         => new external_multiple_structure(
                                                                 new external_single_structure(
@@ -379,8 +379,8 @@ class mahara_group_external extends external_api {
                                             'feedbacknotify'  => new external_value(PARAM_INT, 'Comment notifications allowed: ' . implode(', ', $group_notify_roles), VALUE_DEFAULT),
                                             'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users', VALUE_DEFAULT),
                                             'hidden'          => new external_value(PARAM_BOOL, 'Hide group', VALUE_DEFAULT),
-                                            'hidemembers'     => new external_value(PARAM_BOOL, 'Hide membership', VALUE_DEFAULT),
-                                            'hidemembersfrommembers' => new external_value(PARAM_BOOL, 'Hide membership', VALUE_DEFAULT),
+                                            'hidemembers'     => new external_value(PARAM_INT, 'Hide membership', VALUE_DEFAULT),
+                                            'hidemembersfrommembers' => new external_value(PARAM_INT, 'Hide membership', VALUE_DEFAULT),
                                             'groupparticipationreports' => new external_value(PARAM_BOOL, 'Participation report', VALUE_DEFAULT),
                                             'members'         => new external_multiple_structure(
                                                                     new external_single_structure(
@@ -972,8 +972,8 @@ class mahara_group_external extends external_api {
                                 'feedbacknotify'  => new external_value(PARAM_INT, 'Comment notifications'),
                                 'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users'),
                                 'hidden'          => new external_value(PARAM_BOOL, 'Hide group'),
-                                'hidemembers'     => new external_value(PARAM_BOOL, 'Hide membership'),
-                                'hidemembersfrommembers' => new external_value(PARAM_BOOL, 'Hide membership'),
+                                'hidemembers'     => new external_value(PARAM_INT, 'Hide membership'),
+                                'hidemembersfrommembers' => new external_value(PARAM_INT, 'Hide membership'),
                                 'groupparticipationreports' => new external_value(PARAM_BOOL, 'Participation report'),
                                 'members'         => new external_multiple_structure(
                                                         new external_single_structure(
