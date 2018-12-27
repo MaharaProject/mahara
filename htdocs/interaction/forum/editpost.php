@@ -52,7 +52,7 @@ if (!$parentid) {
 }
 
 $parent = get_record_sql(
-    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, p.deleted, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.id AS topic, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group AS "group", f.title AS forumtitle, g.name AS groupname, COUNT(p3.id)
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, p.approved, p.deleted, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.id AS topic, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group AS "group", f.title AS forumtitle, g.name AS groupname, COUNT(p3.id)
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
@@ -67,7 +67,7 @@ $parent = get_record_sql(
     INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p3.topic = t2.id)
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE p.id = ?
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16',
     array(0, $parentid)
 );
 
@@ -240,6 +240,24 @@ function get_groupid_from_postid($postid) {
     return $groupid;
 }
 
+function reply_needs_approval($topicid) {
+    $needsapproval = get_field_sql("SELECT c.value FROM {interaction_forum_instance_config} c
+                              INNER JOIN {interaction_forum_topic} t
+                              ON t.forum = c.forum WHERE field = 'moderateposts' AND t.id = ?", array($topicid));
+    return ($needsapproval == 'replies' || $needsapproval == 'postsandreplies');
+}
+
+function is_logged_user_moderator($topicid) {
+    global $USER;
+    return (count_records_sql(
+       'SELECT COUNT(*)
+        FROM {interaction_forum_moderator} m
+        INNER JOIN {interaction_instance} f ON (m.forum = f.id AND f.deleted != 1)
+        INNER JOIN {interaction_forum_topic} t ON (t.forum = f.id)
+        WHERE t.id = ? AND m.user = ?',
+        array($topicid, $USER->get('id'))) != 0 );
+}
+
 function editpost_submit(Pieform $form, $values) {
     global $USER, $SESSION, $parent;
     require_once('embeddedimage.php');
@@ -318,6 +336,11 @@ function addpost_submit(Pieform $form, $values) {
         'body'    => $values['body'],
         'ctime'   =>  db_format_timestamp(time())
     );
+
+    if (reply_needs_approval($values['topic']) && !is_logged_user_moderator($values['topic']) && !$USER->get('admin')) {
+        $post->approved = 0;
+    }
+
     $sendnow = isset($values['sendnow']) && $values['sendnow'] ? 1 : 0;
     // See if the same content has been submitted in the last 5 seconds. If so, don't add this post.
     $oldpost = get_record_select('interaction_forum_post', 'topic = ? AND poster = ? AND parent = ? AND subject = ? AND body = ? AND ctime > ?',
@@ -330,6 +353,20 @@ function addpost_submit(Pieform $form, $values) {
     $postid = $postrec->id = insert_record('interaction_forum_post', $post, 'id', true);
     $postrec->path = get_field('interaction_forum_post', 'path', 'id', $parentid) . '/' . sprintf('%010d', $postrec->id);
     update_record('interaction_forum_post', $postrec);
+
+    if (isset($post->approved) && $post->approved == 0) {
+        $forumid = get_field('interaction_forum_topic', 'forum', 'id', $values['topic']);
+           // Trigger activity.
+        $data = new stdClass();
+        $data->topicid      = $values['topic'];
+        $data->forumid      = $forumid;
+        $data->postbody     = $values['body'];
+        $data->poster       = $USER->get('id');
+        $data->postedtime   = time();
+        $data->reason       = '';
+        $data->event        = POST_NEEDS_APPROVAL;
+        activity_occurred('postmoderation', $data, 'interaction', 'forum');
+    }
 
     // Rewrite the post id into links in the body
     $groupid = get_groupid_from_postid($postid);

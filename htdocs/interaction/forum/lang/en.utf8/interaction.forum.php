@@ -19,10 +19,12 @@ $string['allowunsubscribe'] = 'Allow users to unsubscribe';
 $string['allowunsubscribedescription'] = 'Choose whether users are allowed to unsubscribe from forums and topics';
 $string['autosubscribeusers'] = 'Automatically subscribe users';
 $string['autosubscribeusersdescription'] = 'Choose whether group users will automatically be subscribed to this forum';
+$string['awaitingapproval'] = 'Awaiting approval';
 $string['Body'] = 'Message';
 $string['cantaddposttoforum'] = 'You are not allowed to post in this forum';
 $string['cantaddposttotopic'] = 'You are not allowed to post in this topic';
 $string['cantaddtopic'] = 'You are not allowed to add topics to this forum';
+$string['cantapproveposts'] = 'You are not allowed approve posts on this forum';
 $string['cantdeletepost'] = 'You are not allowed to delete posts in this forum';
 $string['cantdeletethispost'] = 'You are not allowed to delete this post';
 $string['cantdeletetopic'] = 'You are not allowed to delete topics in this forum';
@@ -139,6 +141,9 @@ $string['noforumpostsyet'] = 'There are no posts in this group yet';
 $string['noforums'] = 'There are no forums in this group';
 $string['notopics'] = 'There are no topics in this forum';
 $string['notifyadministrator'] = 'Notify administrator';
+$string['notifyauthor'] = 'Notify author';
+$string['rejectpost'] = 'Reject post';
+$string['reasonempty'] = ' Reason field cannot be empty';
 $string['objectionablepostdeletedsubject'] = 'Objectionable post in forum topic "%s" was deleted by %s.';
 $string['objectionablepostdeletedbody'] = '%s has looked at post by %s previously reported as objectionable and deleted it.
 
@@ -154,7 +159,9 @@ $string['Order'] = 'Order';
 $string['orderdescription'] = 'Choose at which position this forum shall appear in the list of forums';
 $string['Post'] = 'Post';
 $string['postaftertimeout'] = 'You have submitted your change after the timeout of %s minutes. Your change has not been applied.';
+$string['postapprovesuccessful'] = 'Post approved';
 $string['postbyuserwasdeleted'] = 'A post by %s was deleted';
+$string['postnotapprovederror'] = 'There was an error while trying to mark the post as approved';
 $string['postsbyuserweredeleted'] = '%s posts by %s were deleted';
 $string['postdelay'] = 'Post delay';
 $string['postdelaydescription'] = 'The minimum time (in minutes) that must pass before a new post can be mailed out to forum subscribers. The author of a post may make edits during this time.';
@@ -207,6 +214,7 @@ $string['topicunsubscribesuccess'] = 'Topics unsubscribed successfully';
 $string['topicupdatefailed'] = 'Topics update failed';
 $string['typenewpost'] = 'New forum post';
 $string['typereportpost'] = 'Objectionable content in forum';
+$string['typepostmoderation'] = 'Forum moderation';
 $string['Unsticky'] = 'Unsticky';
 $string['Unsubscribe'] = 'Unsubscribe';
 $string['unsubscribefromforum'] = 'Unsubscribe from forum';
@@ -236,6 +244,10 @@ $string['maxindentdescription'] = 'Set the maximum indentation level for a topic
 
 $string['closetopics'] = 'Close new topics';
 $string['closetopicsdescription1'] = 'Close all new topics by default. Only moderators and group administrators can reply to closed topics.';
+
+$string['approvalofposts'] = 'Approval of posts';
+$string['moderatenewposts'] = 'Moderate new posts';
+$string['moderatenewpostsdescription'] = 'New posts need to be approved by a group moderator or administrator.';
 
 $string['activetopicsdescription'] = 'Recently updated topics in your groups.';
 
@@ -277,3 +289,72 @@ To see the post, follow this link:
 %s
 To see the reporter\'s profile, follow this link:
 %s';
+
+$string['postsandreplies'] = 'Posts and replies';
+$string['postneedapprovalsubject'] = 'New post needs moderation in forum "%s"';
+$string['postneedapprovalbody'] = '%s has posted in forum "%s" and is awaiting for moderation.
+
+The post content is:
+%s';
+$string['postneedapprovalhtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">A new post by "%s" in forum "%s" needs moderation
+
+<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">The post content is:
+<br>%s</div>
+
+<div style="margin: 1em 0;">%s</div>
+
+<div style="font-size: smaller; border-top: 1px solid #999;">
+<p>Posted by: <a href="%s">%s</a></p>
+</div>';
+$string['postneedapprovaltext'] = 'A new post by "%s" in forum "%s" needs moderation
+%s
+------------------------------------------------------------------------
+
+The post content is:
+%s
+------------------------------------------------------------------------
+To go to the forum post follow this link:
+%s';
+$string['rejectedpostsubject'] = 'Forum post rejected on forum "%s"';
+$string['rejectedpostbody'] = '%s has looked at post by %s waiting for approval and deleted it.
+
+Rejection reason:
+%s
+
+The post content was:
+%s';
+$string['rejectedposthtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Forum post rejected on forum "%s"
+<br>%s</div>
+
+<div style="margin: 1em 0;">%s</div>
+
+<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">The rejected post content is:
+<br>%s</div>
+
+<div style="margin: 1em 0;">%s</div>
+
+<div style="font-size: smaller; border-top: 1px solid #999;">
+<p>Rejection relates to: <a href="%s">%s</a></p>
+<p>Rejected by: <a href="%s">%s</a></p>
+</div>';
+$string['rejectedposttext'] = 'Forum post rejected on forum "%s" by "%s"
+%s
+------------------------------------------------------------------------
+
+%s
+
+------------------------------------------------------------------------
+
+The rejected post content is:
+%s
+------------------------------------------------------------------------
+
+%s
+
+-----------------------------------------------------------------------
+The post has been deleted, to go to the forum follow this link:
+%s
+To see the reporter\'s profile, follow this link:
+%s';
+$string['rejectpostsuccess'] = 'The post has been removed';
+$string['replies'] = 'Replies';

@@ -241,8 +241,16 @@ function edittopic_validate(Pieform $form, $values) {
     }
 }
 
+function post_needs_approval($topicid) {
+    $needsapproval = get_field_sql("SELECT c.value FROM {interaction_forum_instance_config} c
+                              INNER JOIN {interaction_forum_topic} t
+                              ON t.forum = c.forum WHERE field = 'moderateposts' AND t.id = ?", array($topicid));
+    return ($needsapproval == 'posts' || $needsapproval == 'postsandreplies');
+}
+
+
 function addtopic_submit(Pieform $form, $values) {
-    global $USER, $SESSION;
+    global $USER, $SESSION, $moderator;
     $forumid = param_integer('forum');
     $groupid = get_field('interaction_instance', '"group"', 'id', $forumid);
 
@@ -263,6 +271,11 @@ function addtopic_submit(Pieform $form, $values) {
         'body'    => $values['body'],
         'ctime'   =>  db_format_timestamp(time())
     );
+
+    if (post_needs_approval($topicid) && !$moderator && ! $USER->get('admin')) {
+        $post->approved = 0;
+    }
+
     $postid = insert_record('interaction_forum_post', $post, 'id', true);
     set_field('interaction_forum_post', 'path', sprintf('%010d', $postid), 'id', $postid);
     // Rewrite the post id into links in the body
@@ -311,6 +324,20 @@ function addtopic_submit(Pieform $form, $values) {
     }
     if (!is_null($delay) && $delay == 0) {
         PluginInteractionForum::interaction_forum_new_post(array($postid));
+    }
+
+    if (isset($post->approved) && $post->approved == 0) {
+        $forumid = get_field('interaction_forum_topic', 'forum', 'id', $topicid);
+           // Trigger activity.
+        $data = new stdClass();
+        $data->topicid      = $topicid;
+        $data->forumid      = $forumid;
+        $data->postbody     = $values['body'];
+        $data->poster       = $USER->get('id');
+        $data->postedtime   = time();
+        $data->reason       = '';
+        $data->event        = POST_NEEDS_APPROVAL;
+        activity_occurred('postmoderation', $data, 'interaction', 'forum');
     }
 
     $result = array(

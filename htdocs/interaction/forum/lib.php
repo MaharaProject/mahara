@@ -16,6 +16,8 @@ define('REPORT_OBJECTIONABLE', 1);
 define('MAKE_NOT_OBJECTIONABLE', 2);
 define('DELETE_OBJECTIONABLE_POST', 3);
 define('DELETE_OBJECTIONABLE_TOPIC', 4);
+define('POST_NEEDS_APPROVAL', 5);
+define('POST_REJECTED', 6);
 
 class PluginInteractionForum extends PluginInteraction {
 
@@ -28,6 +30,7 @@ class PluginInteractionForum extends PluginInteraction {
             $createtopicusers = isset($instanceconfig['createtopicusers']) ? $instanceconfig['createtopicusers']->value : null;
             $closetopics = !empty($instanceconfig['closetopics']);
             $allowunsubscribe = isset($instanceconfig['allowunsubscribe']) ? $instanceconfig['allowunsubscribe']->value : null;
+            $moderateposts = (empty($instanceconfig['moderateposts']) ? 'none' : $instanceconfig['moderateposts']->value);
             $indentmode = isset($instanceconfig['indentmode']) ? $instanceconfig['indentmode']->value : null;
             $maxindent = isset($instanceconfig['maxindent']) ? $instanceconfig['maxindent']->value : null;
 
@@ -114,7 +117,16 @@ class PluginInteractionForum extends PluginInteraction {
             'description'  => get_string('closetopicsdescription1', 'interaction.forum'),
             'defaultvalue' => !empty($closetopics),
         );
-
+        $fieldsetelements['moderateposts'] = array(
+            'type'         => 'select',
+            'title'        => get_string('moderatenewposts', 'interaction.forum'),
+            'options'      => array('none'    => get_string('none'),
+                                    'posts'    => get_string('posts'),
+                                    'replies' => get_string('replies', 'interaction.forum'),
+                                    'postsandreplies' => get_string('postsandreplies', 'interaction.forum')),
+            'description'  => get_string('moderatenewpostsdescription', 'interaction.forum'),
+            'defaultvalue' => empty($moderateposts) ? 'none' : $moderateposts,
+        );
 
         $form = array(
             'indentmode' => array(
@@ -330,6 +342,20 @@ EOF;
             }
         }
 
+        // Moderate new posts
+        delete_records_sql(
+            "DELETE FROM {interaction_forum_instance_config}
+            WHERE field = 'moderateposts' AND forum = ?",
+            array($instance->get('id'))
+        );
+        if (!empty($values['moderateposts'])) {
+            insert_record('interaction_forum_instance_config', (object)array(
+                'forum' => $instance->get('id'),
+                'field' => 'moderateposts',
+                'value' => $values['moderateposts'],
+            ));
+        }
+
         //Indent mode
         delete_records_sql(
             "DELETE FROM {interaction_forum_instance_config}
@@ -383,6 +409,13 @@ EOF;
             (object)array(
                 'name' => 'reportpost',
                 'admin' => 1,
+                'delay' => 0,
+                'allownonemethod' => 1,
+                'defaultmethod' => 'email',
+            ),
+            (object)array(
+                'name' => 'postmoderation',
+                'admin' => 0,
                 'delay' => 0,
                 'allownonemethod' => 1,
                 'defaultmethod' => 'email',
@@ -568,9 +601,9 @@ EOF;
             $postswhere = 'ctime < ?';
             $delay = null;
         }
-        $posts = get_column_sql('SELECT id FROM {interaction_forum_post} WHERE sent = 0 AND deleted = 0 AND ' . $postswhere, $values);
+        $posts = get_column_sql('SELECT id FROM {interaction_forum_post} WHERE sent = 0 AND deleted = 0 AND approved = 1 AND ' . $postswhere, $values);
         if ($posts) {
-            set_field_select('interaction_forum_post', 'sent', 1, 'deleted = 0 AND sent = 0 AND ' . $postswhere, $values);
+            set_field_select('interaction_forum_post', 'sent', 1, 'deleted = 0 AND sent = 0 AND approved = 1 AND ' . $postswhere, $values);
             foreach ($posts as $postid) {
                 activity_occurred('newpost', array('postid' => $postid), 'interaction', 'forum', $delay);
             }
@@ -1336,6 +1369,157 @@ class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
 
     public function get_required_parameters() {
         return array('postid', 'message', 'reporter', 'ctime', 'event');
+    }
+}
+
+class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
+
+    protected $topicid;
+    protected $forumid;
+    protected $forumtitle;
+    protected $postbody;
+    protected $postedtime;
+    protected $poster;
+    protected $reason;
+    protected $event;
+
+    protected $url;
+
+    protected $temp;
+
+    public function __construct($data, $cron = false) {
+        parent::__construct($data, $cron);
+        global $USER;
+        $this->forumtitle = get_field('interaction_instance','title', 'id', $this->forumid);
+
+        $this->url = 'interaction/forum/view.php?id=' . $this->forumid;
+
+        if ($this->event === POST_REJECTED) {
+          // only notify the author of the post
+            $this->users = activity_get_users($this->get_id(), array($this->poster));
+            $this->temp = new stdClass();
+            $this->temp->rejecter = $USER->get('id');
+            $this->temp->rejectedtime = time();
+            $this->strings = (object) array(
+                'subject' => (object) array(
+                    'key' => 'rejectedpostsubject',
+                    'section' => 'interaction.forum',
+                    'args' => array($this->forumtitle),
+                ),
+                'message' => (object) array(
+                    'key' => 'rejectedpostbody',
+                    'section' => 'interaction.forum',
+                    'args' => array(display_default_name($this->temp->rejecter),
+                                    display_default_name($this->poster),
+                                    $this->reason,
+                                    trim(html2text($this->postbody))
+                              ),
+                ),
+            );
+        }
+        else if ($this->event === POST_NEEDS_APPROVAL) {
+
+            $groupid = get_field('interaction_instance', 'group', 'id', $this->forumid);
+
+            // Get forum moderators and admins.
+            $forumadminsandmoderators = activity_get_users(
+            $this->get_id(),
+            array_merge(get_forum_moderators($this->forumid),
+            group_get_admin_ids($groupid)));
+            // Populate users to notify list and get rid of duplicates.
+            foreach ($forumadminsandmoderators as $user) {
+                if (!isset($this->users[$user->id])) {
+                    $this->users[$user->id] = $user;
+                }
+            }
+            $this->strings = (object) array(
+                'subject' => (object) array(
+                    'key' => 'postneedapprovalsubject',
+                    'section' => 'interaction.forum',
+                    'args' => array($this->forumtitle),
+                ),
+                'message' => (object) array(
+                    'key' => 'postneedapprovalbody',
+                    'section' => 'interaction.forum',
+                    'args' => array(display_default_name($this->poster),
+                                    $this->forumtitle,
+                                    trim(html2text($this->postbody))
+                              ),
+                ),
+            );
+        }
+        else {
+            throw new SystemException();
+        }
+
+    }
+
+    public function get_emailmessage($user) {
+
+        if ($this->event === POST_REJECTED) {
+            $rejecterurl = profile_url($this->temp->rejecter);
+            $rejectedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->temp->rejectedtime);
+            $postedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->postedtime);
+            $return = get_string_from_language(
+                $user->lang, 'rejectedposttext', 'interaction.forum',
+                $this->forumtitle, display_default_name($this->temp->rejecter), $rejectedtime,
+                $this->reason, clean_html($this->postbody),
+                $postedtime, get_config('wwwroot') . $this->url, $rejecterurl
+            );
+        }
+        else if ($this->event === POST_NEEDS_APPROVAL) {
+            $postedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->postedtime);
+            $return = get_string_from_language(
+                $user->lang, 'postneedapprovaltext', 'interaction.forum',
+                display_default_name($this->poster), $this->forumtitle, $postedtime,
+                clean_html($this->postbody), get_config('wwwroot') . $this->url
+            );
+        }
+        else {
+            throw new SystemException();
+        }
+        return $return;
+    }
+
+    public function get_htmlmessage($user) {
+      if ($this->event === POST_REJECTED) {
+            $rejectername = hsc(display_default_name($this->temp->rejecter));
+            $rejecterurl = profile_url($this->temp->rejecter);
+            $rejectedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->temp->rejectedtime);
+            $postedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->postedtime);
+            $return = get_string_from_language(
+                $user->lang, 'rejectedposthtml', 'interaction.forum',
+                hsc($this->forumtitle), $rejectername, $rejectedtime,
+                $this->reason, clean_html($this->postbody),
+                $postedtime, get_config('wwwroot') . $this->url, $rejecterurl, $rejectername
+            );
+        }
+        else if ($this->event === POST_NEEDS_APPROVAL) {
+            $postedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->postedtime);
+            $return = get_string_from_language(
+                $user->lang, 'postneedapprovalhtml', 'interaction.forum',
+                display_default_name($this->poster), hsc($this->forumtitle),
+                clean_html($this->postbody), $postedtime,
+                get_config('wwwroot') . $this->url, display_default_name($this->poster)
+            );
+        }
+        else {
+            throw new SystemException();
+        }
+        return $return;
+    }
+
+    public function get_plugintype(){
+        return 'interaction';
+    }
+
+    public function get_pluginname(){
+        return 'forum';
+    }
+
+    public function get_required_parameters() {
+        return array('topicid', 'forumid', 'postbody',
+                      'postedtime', 'poster', 'reason', 'event');
     }
 }
 

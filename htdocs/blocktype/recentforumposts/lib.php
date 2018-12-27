@@ -75,7 +75,7 @@ class PluginBlocktypeRecentForumPosts extends MaharaCoreBlocktype {
 
                 $foruminfo = get_records_sql_array('
                     SELECT
-                        p.id, p.subject, p.body, p.poster, p.topic, t.forum, pt.subject AS topicname,
+                        p.id, p.subject, p.body, p.poster, p.topic, pt.approved, t.forum, pt.subject AS topicname,
                         u.firstname, u.lastname, u.username, u.preferredname, u.email, u.profileicon, u.admin, u.staff, u.deleted, u.urlid
                     FROM
                         {interaction_forum_post} p
@@ -88,6 +88,7 @@ class PluginBlocktypeRecentForumPosts extends MaharaCoreBlocktype {
                         AND i.deleted = 0
                         AND t.deleted = 0
                         AND p.deleted = 0
+                        AND pt.approved = 1
                     ORDER BY
                         p.ctime DESC',
                     array($group->id), 0, $limit

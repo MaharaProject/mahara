@@ -3,11 +3,14 @@
 {if $topic->containsobjectionable}
 {$objectionableclass .= ' containobjectionable'}
 {/if}
+{if !$topic->approved}
+{$objectionableclass .= ' warning'}
+{/if}
 
 {if $sticky}
 <tr class="stickytopic {$objectionableclass}">
 {else}
-<tr class="{$objectionableclass}">
+<tr class=" {$objectionableclass}">
 {/if}
     <td class="narrow">
         {if $membership && (!$forum->subscribed || $moderator)}

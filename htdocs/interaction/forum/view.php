@@ -214,7 +214,8 @@ if ($membership && ( !isset($allowunsubscribe) || $allowunsubscribe == 1)) {
 $sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moderator,
     COUNT(p2.id) AS postcount, t.closed, s.topic AS subscribed, p4.id AS lastpost, '
     . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter,
-    m2.user AS lastpostermoderator, us1.deleted AS deleteduser, us4.deleted AS lastposterdeleteduser
+    m2.user AS lastpostermoderator, us1.deleted AS deleteduser, us4.deleted AS lastposterdeleteduser,
+    p1.approved
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_forum_post} p1 ON (p1.topic = t.id AND p1.parent IS NULL)
     LEFT JOIN {usr} us1 ON us1.id = p1.poster
@@ -247,14 +248,23 @@ $sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moder
     ) m2 ON (p4.poster = m2.user AND t2.forum = m2.forum)
     WHERE t.forum = ?
     AND t.sticky = ?
-    AND t.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 8, 9, 10, p4.ctime, p4.poster, p4.id, m2.user,
-        us1.deleted, us4.deleted
-    ORDER BY p4.ctime DESC, p4.id DESC';
+    AND t.deleted != 1';
 
-$stickytopics = get_records_sql_array($sql, array($userid, $forumid, 1));
+$stickyparams = array($userid, $forumid, 1);
+$regularparams = array($userid, $forumid, 0);
+if (!$moderator) {
+      $sql .= ' AND (p1.approved = 1 OR p4.poster= ? )';
+      $stickyparams[] = $userid;
+      $regularparams[] = $userid;
+}
 
-$regulartopics = get_records_sql_array($sql, array($userid, $forumid, 0), $offset, $topicsperpage);
+$sql .= ' GROUP BY 1, 2, 3, 4, 5, 6, 8, 9, 10, p4.ctime, p4.poster, p4.id, m2.user,
+us1.deleted, us4.deleted, p1.approved
+ORDER BY p4.ctime DESC, p4.id DESC';
+
+$stickytopics = get_records_sql_array($sql, $stickyparams);
+
+$regulartopics = get_records_sql_array($sql, $regularparams, $offset, $topicsperpage);
 
 setup_topics($stickytopics);
 setup_topics($regulartopics);
