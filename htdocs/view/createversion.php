@@ -47,6 +47,7 @@ if ($blocks) {
             $bi->row = $oldblock->get('row');
             $bi->column = $oldblock->get('column');
             $bi->order = $oldblock->get('order');
+
             $classname = generate_class_name('blocktype', $oldblock->get('blocktype'));
             if (is_callable($classname . '::'. 'get_current_artefacts')) {
                 // The block is for one artefact so lets see if it displays more than one artefact
