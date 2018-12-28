@@ -32,11 +32,12 @@ Background:
     | Rss food    | externalfeed | Page UserA_00 | 1   | 3      | 2     | no         | feed_location=http://www.thekitchenmaid.com/feed |
     | G image 3   | image        | Page Grp1     | 1   | 1      | 1     | no         | image=Image3.png |
     | G files 2   | filedownload | Page Grp1     | 1   | 1      | 2     | no         | attachment=mahara_about.pdf;attachment=Image2.png |
-    | nzslang    | externalvideo| Page Grp1     | 1   | 1      | 3     | no         | video_location=https://youtu.be/yRxFm70nOrY |
-    | my social  | socialprofile| Page UserB_00 | 1   | 1      | 1     | no         | social_profile=instagram,twitter,facebook,tumblr,pinterest |
-    | gall style1| gallery      | Page UserB_00 | 1   | 2      | 1     | no         | gallery_images=Image1.jpg,Image3.png,Image3.png,Image2.png;select=1;showdescription=1;width=75;style=0;photoframe=1 |
-    | gall style2| gallery      | Page UserB_00 | 1   | 2      | 2     | no         | gallery_images=Image3.png,Image2.png,Image1.jpg;select=1;showdescription=1;width=75;style=1 |
-    | gall style3| gallery      | Page UserB_00 | 1   | 2      | 3     | no         | gallery_images=Image3.png,Image2.png,Image1.jpg;select=1;showdescription=1;style=2;photoframe=0|
+    | nzslang     | externalvideo| Page Grp1     | 1   | 1      | 3     | no         | video_location=https://youtu.be/yRxFm70nOrY |
+    | my social   | socialprofile| Page UserB_00 | 1   | 1      | 1     | no         | social_profile=instagram,twitter,facebook,tumblr,pinterest |
+    | gall style1 | gallery      | Page UserB_00 | 1   | 2      | 1     | no         | gallery_images=Image1.jpg,Image3.png,Image3.png,Image2.png;select=1;showdescription=1;width=75;style=0;photoframe=1 |
+    | gall style2 | gallery      | Page UserB_00 | 1   | 2      | 2     | no         | gallery_images=Image3.png,Image2.png,Image1.jpg;select=1;showdescription=1;width=75;style=1 |
+    | gall style3 | gallery      | Page UserB_00 | 1   | 2      | 3     | no         | gallery_images=Image3.png,Image2.png,Image1.jpg;select=1;showdescription=1;style=2;photoframe=0|
+    | myfolder    | folder       | Page UserB_00 | 1   | 2      | 4     | no         | folder_name=myfolder;folder_files=mahara_about.pdf,Image2.png |
 
 Scenario: Create Page UserA_00 with text blocks
     Given I log in as "UserA" with password "Kupuh1pa!"
