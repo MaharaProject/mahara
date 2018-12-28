@@ -611,16 +611,22 @@ class ArtefactTypeTask extends ArtefactType {
      * @param offset current page to display
      * @return array (count: integer, data: array)
      */
-    public static function get_tasks($plan, $offset=0, $limit=10) {
+    public static function get_tasks($plan, $offset=0, $limit=10, $tasks=null) {
         $datenow = time(); // time now to use for formatting tasks by completion
 
-        ($results = get_records_sql_array("
+        $sql = "
             SELECT a.id, at.artefact AS task, at.completed, ".db_format_tsfield('completiondate').",
                 a.title, a.description, a.parent, a.owner
                 FROM {artefact} a
             JOIN {artefact_plans_task} at ON at.artefact = a.id
-            WHERE a.artefacttype = 'task' AND a.parent = ?
-            ORDER BY at.completed, at.completiondate ASC, a.id", array($plan), $offset, $limit))
+            WHERE a.artefacttype = 'task' AND a.parent = ?";
+        $values = array($plan);
+        if ($tasks) {
+            $sql .= " AND a.id IN ( " . join(',', array_fill(0, count($tasks), '?')) . ")";
+            $values = array_merge($values, $tasks);
+        }
+        $sql .= " ORDER BY at.completed, at.completiondate ASC, a.id";
+        ($results = get_records_sql_array($sql, $values, $offset, $limit))
             || ($results = array());
 
         // format the date and setup completed for display if task is incomplete
@@ -689,7 +695,7 @@ class ArtefactTypeTask extends ArtefactType {
      *
      * @return  array   $tasks      The tasks array updated with rendered table html
      */
-    public function render_tasks(&$tasks, $template, $options, $pagination, $editing=false) {
+    public function render_tasks(&$tasks, $template, $options, $pagination, $editing=false, $versioning=false) {
         global $USER;
 
         $smarty = smarty_core();
@@ -698,6 +704,7 @@ class ArtefactTypeTask extends ArtefactType {
         $smarty->assign('view', (!empty($options['view']) ? $options['view'] : null));
         $smarty->assign('block', (!empty($options['block']) ? $options['block'] : null));
         $smarty->assign('editing', $editing);
+        $smarty->assign('versioning', $versioning);
         if (!empty($options['view'])) {
             require_once('view.php');
             $view = new View($options['view']);
