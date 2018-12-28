@@ -37,7 +37,7 @@
                 <div id="tasklist_{$blockid}_plan{$tasks.planid}" class="list-group list-unstyled">
                     {$tasks.tablerows|safe}
                 </div>
-                {if $tasks.pagination}
+                {if $tasks.pagination && !$versioning}
                     <div id="plans_page_container_{$blockid}_plan{$tasks.planid}" class="hidden">
                         {$tasks.pagination|safe}
                     </div>
