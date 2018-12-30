@@ -359,8 +359,8 @@ class mahara_user_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user to delete', VALUE_OPTIONAL),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the user to delete', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user to delete', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the user to delete', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             )
                         )
                     )
@@ -438,8 +438,8 @@ class mahara_user_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user', VALUE_OPTIONAL),
-                            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             'password'        => new external_value(PARAM_RAW, 'Plain text password consisting of any characters', VALUE_OPTIONAL),
                             'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user', VALUE_OPTIONAL),
                             'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user', VALUE_OPTIONAL),
@@ -596,10 +596,10 @@ class mahara_user_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user', VALUE_OPTIONAL),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the user', VALUE_OPTIONAL),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the user', VALUE_OPTIONAL),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the user', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             )
                         )
                     )
@@ -1100,9 +1100,9 @@ class mahara_user_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
-                            'shortname'       => new external_value(PARAM_SAFEDIR, 'Favourites shorname', VALUE_DEFAULT, 'favourites', NULL_NOT_ALLOWED),
+                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'shortname'       => new external_value(PARAM_SAFEDIR, 'Favourites shorname', VALUE_DEFAULT, 'favourites', NULL_NOT_ALLOWED, null, NULL_ALLOWED, 'id'),
                             'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution', VALUE_DEFAULT, 'mahara', NULL_NOT_ALLOWED),
                             'favourites'      => new external_multiple_structure(
                                                             new external_single_structure(
