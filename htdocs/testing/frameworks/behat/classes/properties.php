@@ -71,7 +71,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Progressbar block'                         => array("#sb-progressbar h3.card-header", "css_element"),
     'Progressbar'                               => array("#progress_bar_fill.progress-bar", "css_element"),
     'Inbox message icon'                        => array("#activitylist .card-header a span", "css_element"),
-
+    'Online users block'                        => array("#sb-onlineusers", "css_element"),
     // properties with xpath_elements
     'Settings sub-menu'                         => array("//span[@innertext='Settings']", "xpath_element"),
     'Settings'                                  => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Settings']", "xpath_element"),
@@ -88,6 +88,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'First Legal'                               => array("//a[contains(@href, 'fs=privacy')]/b", "xpath_element"),
     'Second Legal'                              => array("//a[contains(@href, 'fs=termsandconditions')]/b", "xpath_element"),
     'Group views report tr3 tc1'                => array("//*[@id='groupviewsreport']/tbody/tr[3]/td[1]", "xpath_element"),
+
     )));
 
 /**
