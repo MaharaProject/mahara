@@ -35,6 +35,10 @@ $EDITROLES  = group_get_editroles_options();
 
 $form = array(
     'name' => 'uploadcsv',
+    'jsform' => true,
+    'jssuccesscallback' => 'pmeter_success',
+    'jserrorcallback' => 'pmeter_error',
+    'presubmitcallback' => 'pmeter_presubmit',
     'elements' => array(
         'institution' => get_institution_selector(),
         'file' => array(
@@ -120,7 +124,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         $i = ($csvgroups->get('headerExists')) ? ($key + 2) : ($key + 1);
 
         // In adding 5000 groups, this part was approx 10% of the wall time.
-        if (!($key % 25)) {
+        if (!($key % 5)) {
             set_progress_info('uploadgroupscsv', $key, $num_lines * 10, get_string('validating', 'admin'));
         }
 
@@ -274,7 +278,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     foreach ($CSVDATA as $record) {
 
-        if (!($key % 25)) {
+        if (!($key % 5)) {
             set_progress_info('uploadgroupscsv', $num_lines + $key * 9, $num_lines * 10, get_string('committingchanges', 'admin'));
         }
         $key++;
@@ -342,7 +346,10 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     set_progress_done('uploadgroupscsv');
 
-    redirect('/admin/groups/uploadcsv.php');
+    $form->reply(PIEFORM_OK, array(
+       'message'  => get_string('csvfileprocessedsuccessfully', 'admin'),
+       'goto'     => '/admin/groups/uploadcsv.php',
+    ));
 }
 
 $grouptypes = "<ul class=fieldslist>\n";

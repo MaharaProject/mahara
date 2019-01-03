@@ -436,7 +436,7 @@ function accessurl_submit(Pieform $form, $values) {
             $key = 0;
             $total = count($groupmembers);
             foreach ($groupmembers as $groupmember) {
-                if (!($key % 25)) {
+                if (!($key % 5)) {
                     set_progress_info('copyviewexistingmembersprogress', $key, $total, get_string('copyforexistingmembersprogress', 'view'));
                 }
                 $key++;
@@ -450,7 +450,6 @@ function accessurl_submit(Pieform $form, $values) {
                     $userobj->copy_group_views_collections_to_existing_members(array($view->get('id')));
                 }
             }
-            set_progress_done('copyviewexistingmembersprogress');
         }
     }
 
@@ -504,17 +503,16 @@ function accessurl_submit(Pieform $form, $values) {
             $view->add_access($viewaccess);
         }
     }
-
+    set_progress_done('copyviewexistingmembersprogress');
     if ($view->get('owner')) {
-        redirect(get_config('wwwroot') . '/view/blocks.php?id=' . $view->get('id'));
+        redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id'));
     }
     if ($view->get('group')) {
-        redirect(get_config('wwwroot') . '/group/shareviews.php?group=' . $view->get('group'));
+        redirect(get_config('wwwroot') . 'group/shareviews.php?group=' . $view->get('group'));
     }
     if ($view->get('institution')) {
-        redirect(get_config('wwwroot') . '/view/institutionshare.php?institution=' . $view->get('institution'));
+        redirect(get_config('wwwroot') . 'view/institutionshare.php?institution=' . $view->get('institution'));
     }
-    $view->post_edit_redirect();
 }
 
 $form = pieform($form);

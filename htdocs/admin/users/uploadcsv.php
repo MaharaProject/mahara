@@ -74,6 +74,10 @@ $prefs = (object) expected_account_preferences();
 
 $form = array(
     'name' => 'uploadcsv',
+    'jsform' => true,
+    'jssuccesscallback' => 'pmeter_success',
+    'jserrorcallback' => 'pmeter_error',
+    'presubmitcallback' => 'pmeter_presubmit',
     'plugintype' => 'core',
     'pluginname' => 'admin',
     'elements' => array(
@@ -240,7 +244,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         // If headers exists, increment i = key + 2 for actual line number
         $i = ($csvusers->get('headerExists')) ? ($key + 2) : ($key + 1);
 
-        if (!($key % 25)) {
+        if (!($key % 5)) {
             set_progress_info('uploaduserscsv', $key, $num_lines * $steps_total, get_string('validating', 'admin'));
         }
 
@@ -351,7 +355,7 @@ function uploadcsv_validate(Pieform $form, $values) {
 
         foreach ($usernames as $lowerusername => $data) {
 
-            if (!($key % 25)) {
+            if (!($key % 5)) {
                 set_progress_info('uploaduserscsv', $num_lines + $key, $num_lines * $steps_total, get_string('checkingupdates', 'admin'));
             }
             $key++;
@@ -503,7 +507,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     foreach ($CSVDATA as $record) {
 
-        if (!($key % 25)) {
+        if (!($key % 5)) {
             // This part has three times the weight of the other two steps.
             set_progress_info('uploaduserscsv', $num_lines * $steps_done + $key * 3, $num_lines * $steps_total, get_string('committingchanges', 'admin'));
         }
@@ -616,7 +620,10 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     set_progress_done('uploaduserscsv');
 
-    redirect('/admin/users/uploadcsv.php');
+    $form->reply(PIEFORM_OK, array(
+        'message'  => get_string('csvfileprocessedsuccessfully', 'admin'),
+        'goto'     => '/admin/users/uploadcsv.php',
+    ));
 }
 
 // Get a list of all profile fields, to inform the user on what fields they can

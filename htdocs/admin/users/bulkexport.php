@@ -129,7 +129,7 @@ function bulkexport_submit(Pieform $form, $values) {
     $num_users = count($usernames);
 
     foreach ($usernames as $username) {
-        if (!($exportcount % 25)) {
+        if (!($exportcount % 5)) {
             set_progress_info('bulkexport', $exportcount, $num_users, get_string('validating', 'admin'));
         }
 
@@ -199,6 +199,10 @@ if (count($authinstances) > 0) {
 
 $form = array(
     'name' => 'bulkexport',
+    'jsform' => true,
+    'jssuccesscallback' => 'pmeter_success',
+    'jserrorcallback' => 'pmeter_error',
+    'presubmitcallback' => 'pmeter_presubmit',
     'elements' => array(
         'authinstance' => $authinstanceelement,
         'usernames' => array(
