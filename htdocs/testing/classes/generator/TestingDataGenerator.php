@@ -762,29 +762,21 @@ EOD;
 
         foreach ($fields as $field) {
             list($key, $value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
             if ($key == 'attachment') {
 
-                // we need to find the id of the item we are trying to attach and save it as artefactid
-                if (!$artefactid = get_field('artefact', 'id', 'title', $value, $ownertype, $ownerid)) {
-                    $artefactid = TestingDataGenerator::create_file_artefact($file=$value, $ownertype, $ownerid, 'attachment');
+                $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $value;
+                $mimetype = mime_content_type($path);
+                list($media, $ext) = explode('/', $mimetype);
+                $mediatype = $media == 'application' ? 'attachment' : $media;
 
-                    // Create folder and file inside it. then write contents into it...
-                    $filedir = get_config('dataroot') . ArtefactTypeFile::get_file_directory($artefactid);
-                    if (!check_dir_exists($filedir, true, true)) {
-                        throw new SystemException("Unable to create folder $filedir");
-                    }
-                    else {
-                        // Write contents to a file...
-                        $imagepath = $filedir . '/' . $artefactid;
-                        $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $value;
-                        copy($path, $imagepath);
-                        chmod($imagepath, get_config('filepermissions'));
-                    }
-                    if (!$artefactid) {
-                        throw new SystemException("Invalid attachment '" . $value . "'. No attachment by that name owned by " . $ownertype . " with id " . $ownerid);
-                    }
+                // we need to find the id of the item we are trying to attach and save it as artefactid
+                if (!$newvalue = get_field('artefact', 'id', 'title', $value, $ownertype, $ownerid)) {
+                    $newvalue = TestingDataGenerator::create_file_artefact($value, $ownertype, $ownerid, $mediatype);
+                    TestingDataGenerator::file_creation($newvalue, $value, $ownertype, $ownerid);
                 }
-                $configdata['artefactids'][] = $artefactid;
+                $configdata['artefactids'][] = $newvalue;
             }
         }
         return $configdata;
@@ -800,40 +792,42 @@ EOD;
     * @return array configdata of key and values for db table
     **/
     public static function generate_configdata_folder($data, $ownertype, $ownerid) {
-        if (!$data) return;
+      if (!$data) return;
 
-        $fields = explode(';', $data);
-        $configdata = array();
-        $foldername;
+      $fields = explode(';', $data);
+      $configdata = array();
+      $foldername;
 
-        foreach ($fields as $field) {
-            list($key, $value) = explode('=', $field);
+      foreach ($fields as $field) {
+          list($key, $value) = explode('=', $field);
+          $key=trim($key);
+          $value=trim($value);
 
-            if ($key == 'folder_name') {
-                $foldername = $value;
-                $folderartefactid = ArtefactTypeFolder::get_folder_id($foldername, $foldername, null, true, $ownerid);
-                $configdata['artefactid'] = $folderartefactid;
-            }
-            if ($key == 'folder_files') {
+          if ($key == 'folder_name') {
+              $foldername = $value;
+              $folderartefactid = ArtefactTypeFolder::get_folder_id($foldername, $foldername, null, true, $ownerid);
+              $configdata['artefactid'] = $folderartefactid;
+          }
+          if ($key == 'folder_files') {
+              $files = explode(',', $value);
 
-                $files = explode(',', $value);
+              // upload each image and put into a folder
+              foreach($files as $file) {
 
-                // upload each image and put into a folder
-                foreach($files as $file) {
-                    $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
-                    $mimetype = mime_content_type($path);
-                    list($media, $ext) = explode('/', $mimetype);
-                    $mediatype = $media == 'application' ? 'attachment' : $media;
+                  $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
+                  $mimetype = mime_content_type($path);
+                  list($media, $ext) = explode('/', $mimetype);
+                  $mediatype = $media == 'application' ? 'attachment' : $media;
 
                   // we need to find the id of the item we are trying to attach and save it as artefactid
-                    if (!$newvalue = get_field('artefact', 'id', 'title', $file, 'parent', $folderartefactid)) {
-                        $artefactid = TestingDataGenerator::create_file_artefact($file, $ownertype, $ownerid, $mediatype, $folderartefactid);
-                        TestingDataGenerator::file_creation($artefactid, $file, $ownertype, $ownerid);
-                    }
-                }
-            }
-        }
-        return $configdata;
+                  if (!$newvalue = get_field('artefact', 'id', 'title', $file, 'parent', $folderartefactid)) {
+                      $newvalue = TestingDataGenerator::create_file_artefact($file, $ownertype, $ownerid, $mediatype, $folderartefactid);
+                      TestingDataGenerator::file_creation($newvalue, $file, $ownertype, $ownerid);
+                  }
+              }
+          }
+      }
+      return $configdata;
     }
 
     /**
@@ -844,35 +838,62 @@ EOD;
     * @return array configdata of key and values for db table
     **/
     public static function generate_configdata_gallery($data, $ownertype, $ownerid) {
+      if (!$data) return;
+
+      $configdata = array();
+
+      //separate gallery_images, select, width, style etc.
+      $fields = explode(';', $data);
+      foreach ($fields as $field) {
+
+          list($key, $value) = explode('=', $field);
+          $key=trim($key);
+          $value=trim($value);
+
+          if ($key == 'gallery_images') {
+              $galleryimages = explode(',', $value);
+              $value = array();
+
+              foreach ($galleryimages as $image) {
+                if (!$newvalue = get_field('artefact','id', 'title', $image)) {
+                    $newvalue = TestingDataGenerator::create_file_artefact($image, $ownertype, $ownerid, 'image');
+                    TestingDataGenerator::file_creation($newvalue, $image, $ownertype, $ownerid);
+                }
+                $value[] = $newvalue;
+              }
+              $configdata['artefactids'] = $value;
+          }
+
+          if ($key == 'select' || $key == 'width' || $key == 'showdescription' || $key == 'style' || $key == 'photoframe' ) {
+              $configdata[$key] = $value;
+           }
+      }
+      return $configdata;
+    }
+
+    public static function generate_configdata_html($data, $ownertype, $ownerid) {
         if (!$data) return;
 
+        $fields = explode(';', $data);
         $configdata = array();
 
-        //separate gallery_images, select, width, style etc.
-        $fields = explode(';', $data);
         foreach ($fields as $field) {
-
             list($key, $value) = explode('=', $field);
-            if ($key == 'gallery_images') {
-                $images = explode(',', $value);
-                $value = array();
-
-                foreach ($images as $image) {
-                    if (!$newvalue = get_field('artefact', 'id', 'title', $image)) {
-                        $newvalue = TestingDataGenerator::create_file_artefact($image, $ownertype, $ownerid, 'image');
-                        TestingDataGenerator::file_creation($newvalue, $image, $ownertype, $ownerid);
-                    }
-                    $value[]=$newvalue;
+            $key = trim($key);
+            $value = trim($value);
+            if ($key == 'src') {
+                //retrieve/create and retrieve artefactid of artefact we are attaching to the block
+                if (!$artefactid = get_field('artefact', 'id', 'title', $value)) {
+                    //we must create the file artefact as it doesn't exist in the table
+                    $artefactid = TestingDataGenerator::create_file_artefact($file=$value, $ownertype, $ownerid, 'attachment');
+                    TestingDataGenerator::file_creation($artefactid, $file, $ownertype, $ownerid);
                 }
-                $configdata['artefactids'] = $value;
-            }
-            if ($key == 'select' || $key == 'width' || $key == 'showdescription' || $key == 'style' || 'photoframe' ) {
-                $configdata[$key] = $value;
+                $configdata['artefactid'] = $artefactid;
             }
         }
         return $configdata;
-
     }
+
 
     /**
     * generate config data for the blocktype: image

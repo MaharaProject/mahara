@@ -37,7 +37,8 @@ Background:
     | gall style1 | gallery      | Page UserB_00 | 1   | 2      | 1     | no         | gallery_images=Image1.jpg,Image3.png,Image3.png,Image2.png;select=1;showdescription=1;width=75;style=0;photoframe=1 |
     | gall style2 | gallery      | Page UserB_00 | 1   | 2      | 2     | no         | gallery_images=Image3.png,Image2.png,Image1.jpg;select=1;showdescription=1;width=75;style=1 |
     | gall style3 | gallery      | Page UserB_00 | 1   | 2      | 3     | no         | gallery_images=Image3.png,Image2.png,Image1.jpg;select=1;showdescription=1;style=2;photoframe=0|
-    | myfolder    | folder       | Page UserB_00 | 1   | 2      | 4     | no         | folder_name=myfolder;folder_files=mahara_about.pdf,Image2.png |
+    | myfolder    | folder       | Page UserB_00 | 1   | 2      | 4     | no         | folder_name=myfolder;folder_files=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png |
+    | my html     | html         | Page UserB_00 | 1   | 3      | 1     | yes        | src=test_html.html |
 
 Scenario: Create Page UserA_00 with text blocks
     Given I log in as "UserA" with password "Kupuh1pa!"
