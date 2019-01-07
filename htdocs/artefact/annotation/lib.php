@@ -36,6 +36,10 @@ require_once('license.php');
 
 class PluginArtefactAnnotation extends PluginArtefact {
 
+    public static function is_active() {
+        return get_field('artefact_installed', 'active', 'name', 'annotation');
+    }
+
     public static function get_artefact_types() {
         return array(
             'annotation',
@@ -169,7 +173,7 @@ class PluginArtefactAnnotation extends PluginArtefact {
                 'name' => 'annotation',
                 'title' => get_string('placeannotation', 'artefact.annotation'),
                 'plugin' => 'annotation',
-                'active' => true,
+                'active' => get_field('blocktype_installed', 'active', 'name', 'annotation', 'artefactplugin', 'annotation'),
                 'iscountable' => true,
                 'is_metaartefact' => true,
             ),
@@ -177,7 +181,7 @@ class PluginArtefactAnnotation extends PluginArtefact {
                 'name' => 'annotationfeedback',
                 'title' => get_string('placeannotationfeedback', 'artefact.annotation'),
                 'plugin' => 'annotation',
-                'active' => true,
+                'active' => get_field('blocktype_installed', 'active', 'name', 'annotation', 'artefactplugin', 'annotation'),
                 'iscountable' => true,
                 'is_metaartefact' => true,
             )
