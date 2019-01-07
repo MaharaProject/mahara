@@ -603,7 +603,7 @@ A dropdown card.
 ### Blocks drop-down card
 This type of drop-down card is used in blocks, for example the "Inbox" block.
 ```
-<div class="bt-inbox card card-secondary clearfix collapsible">
+<div class="bt-inbox card card-block clearfix collapsible">
     <h3 class="title card-header js-heading">
         <a data-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
         Blocks drop-down
@@ -1282,10 +1282,10 @@ Used as the sub subheading of a page.
 </section>
 
 <section data-markdown data-category="text">
-### card heading
+### card header
 Used as the heading of a block or card.
 ```
-<h3 class="title card-header">card heading</h3>
+<h3 class="title card-header">card header</h3>
 ```
 </section>
 

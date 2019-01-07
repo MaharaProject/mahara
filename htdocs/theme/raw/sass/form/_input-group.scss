@@ -73,6 +73,21 @@
         width: auto;
         flex: 0 1 auto;
     }
+
+    .input-group-prepend {
+        padding: 11px 14px;
+        text-align: center;
+        background-color: $gray-100;
+        border: 1px solid $input-border-color;
+        border-radius: 2px;
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+        border-right: 0;
+        + .select select {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
 }
 .pieform .input-group-append {
     font-size: inherit;

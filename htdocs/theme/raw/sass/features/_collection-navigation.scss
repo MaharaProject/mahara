@@ -1,5 +1,5 @@
 .collection-nav {
-    background-color: $card-bg;
+    background-color: $card-heading-bg;
     padding: 10px;
     margin-bottom: 20px;
     margin-left: -10px;
@@ -10,6 +10,7 @@
     h2 {
         font-weight: bold;
         font-size: 30px;
+        margin-top: 0;
 
         @include media-breakpoint-up(lg) {
           margin-right: 300px;

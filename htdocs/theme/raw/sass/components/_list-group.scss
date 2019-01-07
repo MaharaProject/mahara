@@ -83,8 +83,12 @@
     }
 }
 
-h4.list-group-item-heading {
+.list-group-item h4.list-group-item-heading {
     font-size: $font-size-base + 0.0715;
+    margin-bottom: 5px;
+    a {
+        padding: 0;
+    }
 }
 
 .list-group-item h5 {

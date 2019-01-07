@@ -1,7 +1,7 @@
 <div class="collapsible-group">
 {foreach from=$data item=item name='notification'}
     <div class="card collapsible notification collapsible-group  {if !$item->read}card bg-primary text-white js-card-unread{else}card-secondary{/if} {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if} ">
-        <div class="card-heading">
+        <div class="card-header">
             <label class="card-control">
                 <span class="control {if !$item->read}unread{/if}">
                     <input type="checkbox" class="tocheck" name="select-{$item->table}-{$item->id}" id="select-{$item->table}-{$item->id}">

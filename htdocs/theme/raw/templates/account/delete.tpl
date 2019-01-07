@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div id="deleteaccount" class="card card bg-danger text-white view-container">
+<div id="deleteaccount" class="card card bg-danger view-container">
     <h2 class="card-header">{str tag=deleteaccount1}</h2>
     <div class="card-body">
         {if $requiresapproval}

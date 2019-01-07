@@ -4,8 +4,11 @@
 .card.collapsible {
     margin-bottom: 0;
     border-radius: 0;
-    .card-heading a {
-        border-radius: 0;
+    .card-header {
+        padding: 10px 8px;
+        a {
+            border-radius: 0;
+        }
     }
     &.form-group {
         display:block;
@@ -62,7 +65,7 @@
         h4,
         h3  {
             margin: 0;
-            font-size: 16px;
+            font-size: 18px;
             padding: 0;
 
             .pieform > .collapsible-group:first-child & {
@@ -215,8 +218,8 @@
     h3 {
         a {
             text-shadow: 1px 0 0 $text-shadow;
-            background-color: darken($card-bg, 1%);
-            border: 1px solid $card-border-color;
+            // background-color: darken($card-bg, 1%);
+            // border: 1px solid $card-border-color;
             border-bottom: 0;
             padding: 10px 15px;
         }

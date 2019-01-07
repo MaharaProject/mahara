@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="card card bg-danger text-white view-description">
+<div class="card card bg-danger view-description">
     <h2 class="card-header">{$subheading}</h2>
     <div class="card-body">
         <p>{$message}</p>

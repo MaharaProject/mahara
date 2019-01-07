@@ -19,7 +19,7 @@
                 {str section='admin' tag='bulkactions'}
             </button>
             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="caret"></span>
+                <span class="icon icon-caret-down"></span>
             </button>
 
             <div class="activity-buttons dropdown-menu" role="menu">
@@ -36,7 +36,7 @@
             <div class="form-group">
                 <label for="notifications_type" class="sr-only">{str section='activity' tag='type'}:</label>
                 <div class="input-group select-group">
-                    <div class="input-group-addon" id="icon-addon-filter">
+                    <div class="input-group-prepend" id="icon-addon-filter">
                         <span class="icon icon-filter" role="presentation" aria-hidden="true"></span>
                     </div>
                     <div class="select form-group">
