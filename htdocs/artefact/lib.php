@@ -2106,6 +2106,9 @@ function artefact_get_progressbar_items($onlythese = false) {
                 }
                 $special->ismeta = true;
                 $artefactoptions[$special->name] = $special;
+                if (!$special->active) {
+                    unset($artefactoptions[$special->name]);
+                }
             }
         }
 

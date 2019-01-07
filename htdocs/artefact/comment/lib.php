@@ -33,6 +33,10 @@ function valid_rating($ratingstr) {
 
 class PluginArtefactComment extends PluginArtefact {
 
+    public static function is_active() {
+        return get_field('artefact_installed', 'active', 'name', 'comment');
+    }
+
     public static function get_artefact_types() {
         return array(
             'comment',
@@ -144,7 +148,7 @@ class PluginArtefactComment extends PluginArtefact {
                     'name' => 'feedback',
                     'title' => get_string('addcomment', 'artefact.comment'),
                     'plugin' => 'comment',
-                    'active' => true,
+                    'active' => get_field('blocktype_installed', 'active', 'name', 'comment', 'artefactplugin', 'comment'),
                     'iscountable' => true,
                     'is_metaartefact' => true,
             )
