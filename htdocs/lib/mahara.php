@@ -4707,6 +4707,40 @@ function cron_event_log_expire() {
     }
 }
 
+function cron_email_reset_rebounce() {
+    $bounces_handle = get_config('bounces_handle');
+    $bounces_resetdays = get_config('bounces_resetdays');
+    if ($bounces_handle && isset($bounces_resetdays) && ($bounces_resetdays > 0)) {
+          // if this is the first time running the cron, initialise the interaction_config value
+          $lastbouncereset = get_field('notification_config', 'value', 'plugin', 'email', 'field', 'lastbouncereset');
+          if ($lastbouncereset) {
+              $newtime = strtotime('+' . $bounces_resetdays . ' days', $lastbouncereset);
+              if ($newtime < time()) {
+                  // get all artefact_internal_profile_email records and set mailsbounced to 0
+                  $sql = "UPDATE {artefact_internal_profile_email}
+                          SET mailssent = 0, mailsbounced = 0";
+                  execute_sql($sql);
+                  $pluginrecord = new StdClass;
+                  $pluginrecord->plugin = 'email';
+                  $pluginrecord->field  = 'lastbouncereset';
+                  $pluginrecord->value  = time();
+                  $whereobj = (object)array(
+                      'plugin' => 'email',
+                      'field'  => 'lastbouncereset',
+                  );
+                  update_record('notification_config',  $pluginrecord, $whereobj);
+              }
+          }
+          else {
+              $pluginrecord = new StdClass;
+              $pluginrecord->plugin = 'email';
+              $pluginrecord->field  = 'lastbouncereset';
+              $pluginrecord->value  = time();
+              insert_record('notification_config', $pluginrecord);
+          }
+    }
+}
+
 function build_portfolio_search_html(&$data) {
     global $THEME;
     $artefacttypes = get_records_assoc('artefact_installed_type');
