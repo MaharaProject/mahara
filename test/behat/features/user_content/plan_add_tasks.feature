@@ -52,71 +52,84 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     And I fill in select2 input "addplan_tags" with "plan" and select "plan"
     And I fill in select2 input "addplan_tags" with "test" and select "test"
     And I press "Save plan"
-
-    And I follow "New task"
+    When I follow "New task"
     And I fill in "Title" with "Purchase Mars"
     And I fill in "Completion date" with "-2 months" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in "Description" with "Purchase mars description"
+    And I fill in select2 input "addtasks_tags" with "Task1" and select "Task1"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "New task"
     And I fill in "Title" with "Set up atmosphere"
     And I fill in "Completion date" with "-1 months" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in "Description" with "Purchase mars description"
+    And I fill in select2 input "addtasks_tags" with "Task2" and select "Task2"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When  I follow "New task"
     And I fill in "Title" with "Terraform"
     And I fill in "Completion date" with "-2 weeks" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in select2 input "addtasks_tags" with "Task3" and select "Task3"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "New task"
     And I fill in "Title" with "Exploit resources"
     And I fill in "Completion date" with "+2 days" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in select2 input "addtasks_tags" with "Task4" and select "Task4"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "New task"
     And I fill in "Title" with "Bring colonists"
     And I fill in "Completion date" with "+2 weeks" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in select2 input "addtasks_tags" with "Task5" and select "Task5"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "New task"
     And I fill in "Title" with "Build metropolis"
     And I fill in "Completion date" with "+6 months" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in select2 input "addtasks_tags" with "Task6" and select "Task6"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "New task"
     And I fill in "Title" with "Start society"
     And I fill in "Completion date" with "+1 year" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in select2 input "addtasks_tags" with "Task7" and select "Task7"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "New task"
     And I fill in "Title" with "Build utopia"
     And I fill in "Completion date" with "+2 years" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in select2 input "addtasks_tags" with "Task8" and select "Task8"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "New task"
     And I fill in "Title" with "Squabble about morals"
     And I fill in "Completion date" with "+3 years" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in select2 input "addtasks_tags" with "Task9" and select "Task9"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "New task"
     And I fill in "Title" with "Quell rebels"
     And I fill in "Completion date" with "+5 years" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in select2 input "addtasks_tags" with "Task10" and select "Task10"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "New task"
     And I fill in "Title" with "Social collapse"
     And I fill in "Completion date" with "+6 years" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "New task"
+    And I fill in select2 input "addtasks_tags" with "Task11" and select "Task11"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "New task"
     And I fill in "Title" with "Alien invasion"
     And I fill in "Completion date" with "+10 years" date in the format "Y/m/d"
-    And I press "Save task"
-
-    And I follow "Next page"
+    And I fill in select2 input "addtasks_tags" with "Task12" and select "Task12"
+    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
+    Then I press "Save task"
+    When I follow "Next page"
     Then I should see "Alien invasion"
     # Add the plan to a page
-    And I choose "Pages and collections" in "Create" from main menu
+    When I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page admin_01" card menu
     And I expand "General" node
     And I follow "Plans" in the "blocktype sidebar" property
@@ -126,7 +139,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     | Tasks to display | 5 |
     And I press "Save"
     # verify that the Add task icon is displayed
-    And I should see "Add task"
+    Then I should see "Add task"
     #click add Task - confirm user taken to tasks page -create a task and save - confirm user taken back to Page - Plan block
     When I follow "Add task"
     Then I should see "New task"
@@ -136,15 +149,19 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     And I press "Save task"
     Then I should see "Page admin_01 | Edit"
     #viewing the page in frontend
-    And I display the page
+    Then I display the page
+    And I should see "Plan task"
+    And I should see "Task12"
+    And I should not see "Task6"
+    When I click on the "Show more tags" property
+    Then I should see "Task6"
     And I scroll to the base of id "feedback_pagination"
-    And I follow "Next page"
+    When I follow "Next page"
     Then I should see "Build utopia"
-    And I follow "Next page"
+    When I follow "Next page"
     Then I should see "Social collapse"
-
     # Edit title of plan and then delete plan (Bug 1755680)
-    And I choose "Plans" in "Create" from main menu
+    When I choose "Plans" in "Create" from main menu
     And I click on "Edit \"Plan 9 from outer space\""
     And I set the field "Title" to "Life on Mars"
     And I press "Save plan"
