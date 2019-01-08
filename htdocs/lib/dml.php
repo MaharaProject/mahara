@@ -143,6 +143,28 @@ function execute_sql($command, array $values=null) {
     }
 
     $command = db_quote_table_placeholders($command);
+    list($sqltype, $table, $idsql, $bindoffset) = get_table_from_query($command);
+    if (!is_null($sqltype) && !is_null($table) && !is_null($idsql)) {
+        if ($type = table_need_trigger($table)) {
+            // Need to find the ids
+            if (!empty($values) && is_array($values) && count($values) > 0) {
+                $bindvals = array_slice($values, $bindoffset);
+                $ids = get_records_sql_array($idsql, $bindvals);
+            }
+            else {
+                $ids = get_records_sql_array($idsql, array());
+            }
+            if (!empty($ids)) {
+                foreach ($ids as $k => $v) {
+                    $v->table = $table;
+                }
+            }
+            if ($type == 'es') {
+                safe_require('search', 'elasticsearch');
+                ElasticsearchIndexing::bulk_add_to_queue($ids);
+            }
+        }
+    }
 
     try {
         if (!empty($values) && is_array($values) && count($values) > 0) {
@@ -939,6 +961,16 @@ function set_field_select($table, $newfield, $newvalue, $select, array $values) 
 
     $select = db_quote_table_placeholders($select);
 
+    if ($type = table_need_trigger($table)) {
+        // Need to find the ids
+        $sql = "SELECT *, '" . $table . "' AS " . db_quote_identifier('table') . " FROM " . db_table_name($table) . ' ' . $select;
+        $ids = get_records_sql_array($sql, $values);
+        if ($type == 'es') {
+            safe_require('search', 'elasticsearch');
+            ElasticsearchIndexing::bulk_add_to_queue($ids);
+        }
+    }
+
     $values = array_merge(array($newvalue), $values);
     $sql = 'UPDATE '. db_table_name($table) .' SET '. db_quote_identifier($newfield)  .' = ? ' . $select;
     try {
@@ -974,7 +1006,15 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
 
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
-
+    if ($type = table_need_trigger($table)) {
+        // Need to find the ids
+        $sql = "SELECT *, '" . $table . "' AS " . db_quote_identifier('table') . " FROM " . db_table_name($table) . ' ' . $select;
+        $ids = get_records_sql_array($sql, $values);
+        if ($type == 'es') {
+            safe_require('search', 'elasticsearch');
+            ElasticsearchIndexing::bulk_add_to_queue($ids);
+        }
+    }
     $sql = 'DELETE FROM '. db_table_name($table) . ' ' . $select;
     try {
         $stmt = $db->Prepare($sql);
@@ -997,9 +1037,53 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
  */
 function delete_records_select($table, $select='', array $values=null) {
     if ($select) {
-        $select = 'WHERE '.$select;
+        $select = 'WHERE '. $select;
     }
     return delete_records_sql('DELETE FROM '. db_table_name($table) .' '. $select, $values);
+}
+
+/**
+ * This function works out the name of the table being affected by an INSERT / UPDATE / DELETE command
+ * And what SELECT query we would need to run to get IDs of the rows that will be affected by the $sql query
+ * @param string $sql  A raw sql query
+ * @return array containing - the change $type eg insert
+                            - the $table being changed
+                            - the $idsql, which is an SQL command to fetch the ids of the rows that are about to be changed
+                            - the $bindoffset offset of '?' we need to use for the $idsql (a subset of the $values array)
+ */
+function get_table_from_query($sql) {
+    $table = $idsql = $type = null;
+    $sql = preg_replace('#\R+#', ' ', $sql); // make multiline sql into one line
+    $sql = preg_replace('#\s+#', ' ', $sql); // make multiple spaces into one space
+    $bindoffset = 0;
+    if (preg_match('/^DELETE FROM\s(.*?)\s/i', $sql, $matches)) {
+        $table = trim($matches[1], '"');
+        $idsql = preg_replace('/^DELETE FROM/', 'SELECT * FROM', $sql);
+        $type = 'delete';
+    }
+    else if (preg_match('/^INSERT INTO\s(.*?)\s/i', $sql, $matches)) {
+        $table = trim($matches[1], '"');
+        $idsql = null; // no existing rows being updated
+        $type = 'insert';
+    }
+    else if (preg_match('/^UPDATE\s(.*?)\s.*?IN\s*\(\s*(SELECT.*)\s*\)/i', $sql, $matches)) {
+        $table = trim($matches[1], '"');
+        $idsql = $matches[2];
+        $type = 'update';
+    }
+    else if (preg_match('/^UPDATE\s(.*?)\s.*?FROM\s(.*)/i', $sql, $matches)) {
+        $table = trim($matches[1], '"');
+        $idsql = 'SELECT * FROM ' . $matches[2];
+        $type = 'update';
+    }
+    else if (preg_match('/^UPDATE\s(.*?)\sSET\s(.*?)WHERE\s(.*)/i', $sql, $matches)) {
+        $table = trim($matches[1], '"');
+        $binds = $matches[2];
+        $bindoffset = preg_match_all('/(?<!\\\)\?/', $binds);
+        $idsql = 'SELECT * FROM ' . $matches[1] . ' WHERE '  . $matches[3];
+        $type = 'update';
+    }
+    return array($type, $table, $idsql, $bindoffset);
 }
 
 /**
@@ -1014,6 +1098,29 @@ function delete_records_sql($sql, array $values=null) {
 
     try {
         $result = false;
+        // Work out table name and get ids
+        list($sqltype, $table, $idsql, $bindoffset) = get_table_from_query($sql);
+        if ($sqltype == 'delete' && !is_null($table) && !is_null($idsql)) {
+            if ($type = table_need_trigger($table)) {
+                // Need to find the ids
+                if (!empty($values) && is_array($values) && count($values) > 0) {
+                    $bindvals = array_slice($values, $bindoffset);
+                    $ids = get_records_sql_array($idsql, $bindvals);
+                }
+                else {
+                    $ids = get_records_sql_array($idsql, array());
+                }
+                if (!empty($ids)) {
+                    foreach ($ids as $k => $v) {
+                        $v->table = $table;
+                    }
+                }
+                if ($type == 'es') {
+                    safe_require('search', 'elasticsearch');
+                    ElasticsearchIndexing::bulk_add_to_queue($ids);
+                }
+            }
+        }
         if (!empty($values) && is_array($values) && count($values) > 0) {
             $stmt = $db->Prepare($sql);
             $result = $db->Execute($stmt, $values);
@@ -1068,7 +1175,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
 
     $data = (array)$dataobject;
 
-  // Pull out data matching these fields
+    // Pull out data matching these fields
     $ddd = array();
     foreach ($columns as $column) {
         if (isset($data[$column->name])) {
@@ -1104,40 +1211,62 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     catch (ADODB_Exception $e) {
         throw new SQLException(create_sql_exception_message($e, $insertSQL, $ddd));
     }
-
+    if (is_mysql()) {
+        // Get the id for Mysql here before any other queries are run
+        $mysqlid = $db->Insert_ID();
+    }
     // If a return ID is not needed then just return true now
-    if (empty($returnpk)) {
+    if (empty($returnpk) && !table_need_trigger($table)) {
         return true;
+    }
+    $replykey = true;
+    // All es tables have id column so we need to fetch it if not specified
+    if (table_need_trigger($table) && empty($primarykey)) {
+        $replykey = false;
+        $primarykey = 'id';
+
     }
 
     // We already know the record PK if it's been passed explicitly,
     // or if we've retrieved it from a sequence (Postgres).
     if (!empty($dataobject->{$primarykey})) {
-        return $dataobject->{$primarykey};
+        $id = $dataobject->{$primarykey};
+    }
+    else {
+        $id = $mysqlid;
+    }
+    pseudo_trigger($table, $dataobject, (integer)$id, 'insert');
+    return $replykey ? (integer)$id : true;
+}
+
+function table_need_trigger($table) {
+    if (defined('SKIP_TRIGGER') && SKIP_TRIGGER === true) {
+        return false;
+    }
+    static $estables;
+    if (!defined('BEHAT_TEST') && isset($estables) && in_array($table, $estables)) {
+        return 'es';
     }
 
-    // This only gets triggered with non-Postgres databases
-    // however we have some postgres fallback in case we failed
-    // to find the sequence.
-    $id = $db->Insert_ID();
-
-    if (is_postgres()) {
-        // try to get the primary key based on id
-        try {
-            $oidsql = 'SELECT ' . $primarykey . ' FROM '. db_table_name($table) . ' WHERE oid = ' . $id;
-            $rs = $db->_Execute($oidsql);
-            if ($rs->RecordCount() == 1) {
-                return (integer)$rs->fields[0];
-            }
-            throw new SQLException('WTF: somehow got more than one record when searching for a primary key');
-        }
-        catch (ADODB_Exception $e) {
-            throw new SQLException("Trying to get pk from oid failed: "
-                                   . $e->getMessage() . " sql was $oidsql");
+    if (!isset($estables) && get_config('searchplugin') == 'elasticsearch') {
+        $tables = get_config_plugin('search', 'elasticsearch', 'types');
+        $estables = explode(',', $tables);
+        $estables[] = 'view_artefact'; // special
+        if (in_array($table, $estables)) {
+            return 'es';
         }
     }
+    return false;
+}
 
-    return (integer)$id;
+function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
+    if ($type = table_need_trigger($table)) {
+        if ($type == 'es') {
+            $artefacttype = ($table == 'artefact' && isset($data->artefacttype)) ? $data->artefacttype : null;
+            safe_require('search', 'elasticsearch');
+            ElasticsearchIndexing::add_to_queue($id, $table, $artefacttype);
+        }
+    }
 }
 
 /**
@@ -1315,6 +1444,29 @@ function update_record($table, $dataobject, $where=null, $primarykey=false, $ret
 
     // Run the query
     $sql = 'UPDATE '. db_table_name($table) .' SET '. $setclause . ' WHERE ' . $whereclause;
+    // Work out table name and get ids
+    list($sqltype, $table, $idsql, $bindoffset) = get_table_from_query($sql);
+    if ($sqltype == 'update' && !is_null($table) && !is_null($idsql)) {
+        if ($type = table_need_trigger($table)) {
+            // Need to find the ids
+            if (!empty($wherevalues) && is_array($wherevalues) && count($wherevalues) > 0) {
+                $ids = get_records_sql_array($idsql, $wherevalues);
+            }
+            else {
+                $ids = get_records_sql_array($idsql, array());
+            }
+            if (!empty($ids)) {
+                foreach ($ids as $k => $v) {
+                    $v->table = $table;
+                }
+            }
+            if ($type == 'es') {
+                safe_require('search', 'elasticsearch');
+                ElasticsearchIndexing::bulk_add_to_queue($ids);
+            }
+        }
+    }
+
     try {
         $stmt = $db->Prepare($sql);
         $rs = $db->Execute($stmt, array_merge($setclausevalues, $wherevalues));

@@ -1376,9 +1376,7 @@ function xmldb_core_upgrade($oldversion=0) {
              WHERE id IN (
                  SELECT u.id FROM {usr} u
                  JOIN {auth_instance} ui ON ui.id = u.authinstance
-                 WHERE ui.authname != 'internal' AND ui.active = 1
-             )
-             AND id != 0"); // Ignore the root user
+                 WHERE ui.authname != 'internal' AND ui.active = 1 AND u.id != 0)"); // Ignore the root user
         }
     }
 
@@ -1482,6 +1480,15 @@ function xmldb_core_upgrade($oldversion=0) {
                 }
                 drop_field($table, $field);
             }
+        }
+    }
+
+    if ($oldversion < 2019093000) {
+        $searches = plugins_installed('search');
+        if (isset($searches['elasticsearch'])) {
+            log_debug('Remove triggers for elasticsearch');
+            safe_require('search', 'elasticsearch');
+            ElasticSearchIndexing::drop_trigger_functions();
         }
     }
 

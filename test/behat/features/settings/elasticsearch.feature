@@ -13,20 +13,20 @@ Background:
  | search | elasticsearch | shards        | 5          |
  | search | elasticsearch | replicashards | 0          |
 
-And the following site settings are set:
+ And the following site settings are set:
  | field        | value         |
  | searchplugin | elasticsearch |
 
-And the following "users" exist:
+ And the following "users" exist:
  | username | password | email | firstname | lastname | institution | authname | role |
  | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
  | UserB | Kupuh1pa! | UserB@example.org | Bob    | User | mahara | internal | member |
 
-And the following "pages" exist:
+ And the following "pages" exist:
  | title | description | ownertype | ownername |
  | Page UserA_01 | Page 01 | user | UserA |
 
-And the following "permissions" exist:
+ And the following "permissions" exist:
  | title         | accesstype | accessname |
  | Page UserA_01 | user       | admin      |
 
@@ -42,7 +42,8 @@ Scenario: Testing functions for user search page (Bug 1431569)
  Then I should see "Angela"
  And I should see "Page UserA_01"
  # set system off elasticsearch
- Then the following site settings are set:
- | field        | value         |
- | searchplugin | internal      |
+ And I choose "Configure site" from administration menu
+ And I expand the section "Search settings"
+ And I select "internal" from "Search plugin"
+ And I press "Update site options"
  And I log out
