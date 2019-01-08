@@ -132,6 +132,9 @@
 
     &.as-link {
        @include card-as-link();
+       &.link-expand-right legend h4 {
+           border-bottom: 0;
+       }
     }
 }
 

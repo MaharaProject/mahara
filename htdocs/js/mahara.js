@@ -969,16 +969,6 @@ function fetch_graph_data(opts) {
             if (json.data.title) {
                 jQuery('#' + opts.id + 'title').text(json.data.title);
             }
-            if ($('.statinfoblock').length > 0) {
-                function delayResize() {
-                    var maxHeight = Math.max.apply(null, $(".statinfoblock").map(function () {
-                        return $(this).height();
-                    }).get());
-                    trueMaxHeight = Math.max(trueMaxHeight, maxHeight);
-                    $('.statinfoblock').css('height', trueMaxHeight + 'px');
-                }
-                var timeoutID = window.setTimeout(delayResize, 500);
-            }
         }
     });
 }

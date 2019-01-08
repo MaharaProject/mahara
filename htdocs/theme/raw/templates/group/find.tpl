@@ -2,7 +2,7 @@
 {$form|safe}
 {if $groups}
 <div class="card card-secondary view-container">
-    <h2 class="card-heading">{str tag=Results}</h2>
+    <h2 class="card-header">{str tag=Results}</h2>
     <div id="findgroups" class="list-group">
         {$groupresults|safe}
     </div>

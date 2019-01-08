@@ -134,6 +134,14 @@ td.tiny {
             }
         }
     }
+    > tbody > tr {
+        &.active td {
+            background-color: $table-active-bg;
+        }
+        > th {
+            border-top: 1px solid $table-border-color;
+        }
+    }
 }
 
 .table-hover {

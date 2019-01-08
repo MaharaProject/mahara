@@ -67,12 +67,16 @@ return function(id, list, heading, script, extradata) {
 
     this.rewritePaginatorLinks = function() {
         $('#' + self.id + ' li').each(function() {
-          var a = $(this).find('a')[0];
+            // Add links so bootstrap knows this is a pagination item
+            $(this).addClass("page-item");
+            $(this).find("> *").addClass("page-link");
 
-          // If there is a link
-          if (a) {
-              self.rewritePaginatorLink(a);
-          }
+            var a = $(this).find('a')[0];
+
+            // If there is a link
+            if (a) {
+                self.rewritePaginatorLink(a);
+            }
         });
     };
 

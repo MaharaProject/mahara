@@ -27,7 +27,9 @@
         display: block;
         color: inherit;
         padding: 10px 15px;
-
+        border: 1px solid $card-border-color;
+        border-bottom: 0;
+        font-size: $font-size-base * 1.14285;
         .card-block > & {
             padding: 10px 8px;
         }

@@ -13,7 +13,7 @@
 ### Title of element
 Description of element, this can include any markdown formatting, multiple paragraphs etc (optional).
 ```
-<code for the element goes in between the triple backticks - there should only be one triple backtick part per section>
+<code for the element goes in between the triple backticks - there should only be one triple backtick part per section - Make sure you dont include any blank lines in the code>
 ```
 </section>
 
@@ -377,7 +377,7 @@ details on navigation styles.
 ### Pagination
 The pagination has "Previous" and "Next" buttons.
 ```
-<ul class="pagination pagination-xs">
+<ul class="pagination pagination-sm">
     <li class=""><span>«<span class="sr-only">{str tag=prevpage section=collection}</span></span></li>
     <li class="active"><span>1</span></li>
     <li class=""><a title="" href="link">2</a></li>
@@ -395,7 +395,7 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
         <div class="lead text-small results float-right">
             11 {str tag=results}
         </div>
-        <ul class="pagination pagination-xs">
+        <ul class="pagination pagination-sm">
             <li class="">
                 <span>«<span class="sr-only">{str tag=prevpage section=collection}</span></span>
             </li>
@@ -783,7 +783,6 @@ This card is used to show a submitted page.
             </div>
         </div>
         <div class="card-footer">
-
             <div class="page-access">
                 <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>

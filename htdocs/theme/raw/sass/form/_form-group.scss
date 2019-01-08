@@ -208,6 +208,11 @@
         &.stacked {
             .checkboxes-option {
                 margin-left: 0;
+                label {
+                    padding-left: 20px;
+                    padding-right: 10px;
+                    margin-top: 2px;
+                }
             }
         }
         .checkboxes-option {

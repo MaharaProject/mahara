@@ -38,7 +38,7 @@
 }
 
 // Small
-.pagination-xs {
+.pagination-sm {
   @include pagination-size($pagination-padding-y-xs, $pagination-padding-x-xs, $font-size-sm, $pagination-line-height, $border-radius-sm);
 }
 

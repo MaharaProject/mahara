@@ -110,7 +110,7 @@ $card-block-border:                         theme-color("primary");
 $card-block-heading-bg:                     darken($card-heading-bg, 2%);
 
 $card-secondary-text:                       $gray-900;
-$card-secondary-border:                     theme-color("secondary");
+$card-secondary-border:                     lighten(theme-color("secondary"), 6.5%);
 $card-secondary-heading-bg:                 $card-heading-bg;
 
 $card-success-text:                         $state-success-text;
@@ -134,8 +134,8 @@ $card-danger-heading-bg:                    $state-danger-bg;
 $cursor-disabled:                           not-allowed; // Disabled cursor for form controls and buttons.
 
 // Pagination
-$pagination-padding-y-xs:                  .625rem;
-$pagination-padding-x-xs:                  .4375rem;
+$pagination-padding-y-xs:                  0.0625rem;
+$pagination-padding-x-xs:                  0.4375rem;
 
 // Popovers
 $popover-fallback-border-color:             #ccc;
