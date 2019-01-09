@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Namespaces;
 
 /**
@@ -17,7 +19,7 @@ class SnapshotNamespace extends AbstractNamespace
      * $params['master_timeout'] = (time) Explicit operation timeout for connection to master node
      *        ['wait_for_completion'] = (bool) Should this request wait until the operation has completed before returning
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -44,7 +46,7 @@ class SnapshotNamespace extends AbstractNamespace
      * $params['master_timeout'] = (time) Explicit operation timeout for connection to master node
      *        ['timeout'] = (time) Explicit operation timeout
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -68,7 +70,7 @@ class SnapshotNamespace extends AbstractNamespace
     /**
      * $params['master_timeout'] = (time) Explicit operation timeout for connection to master node
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -93,7 +95,7 @@ class SnapshotNamespace extends AbstractNamespace
      * $params['master_timeout'] = (time) Explicit operation timeout for connection to master node
      *        ['timeout'] = (time) Explicit operation timeout
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -115,7 +117,7 @@ class SnapshotNamespace extends AbstractNamespace
     /**
      * $params['master_timeout'] = (time) Explicit operation timeout for connection to master node
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -140,7 +142,7 @@ class SnapshotNamespace extends AbstractNamespace
      * $params['master_timeout'] = (time) Explicit operation timeout for connection to master node
      *        ['timeout'] = (time) Explicit operation timeout
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -163,7 +165,7 @@ class SnapshotNamespace extends AbstractNamespace
      * $params['master_timeout'] = (time) Explicit operation timeout for connection to master node
      *        ['wait_for_completion'] = (bool) Should this request wait until the operation has completed before returning
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -189,7 +191,7 @@ class SnapshotNamespace extends AbstractNamespace
     /**
      * $params['master_timeout'] = (time) Explicit operation timeout for connection to master node
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -214,7 +216,7 @@ class SnapshotNamespace extends AbstractNamespace
      * $params['master_timeout'] = (time) Explicit operation timeout for connection to master node
      *        ['timeout'] = (time) Explicit operation timeout
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */

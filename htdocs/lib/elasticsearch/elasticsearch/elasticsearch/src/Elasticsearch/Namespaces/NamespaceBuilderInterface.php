@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types = 1);
 /**
  * Class RegisteredNamespaceInterface
  *
@@ -10,7 +12,6 @@
  */
 
 namespace Elasticsearch\Namespaces;
-
 
 use Elasticsearch\Serializers\SerializerInterface;
 use Elasticsearch\Transport;

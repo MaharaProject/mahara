@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints\Snapshot;
 
 use Elasticsearch\Endpoints\AbstractEndpoint;
@@ -16,14 +18,22 @@ use Elasticsearch\Common\Exceptions;
  */
 class Get extends AbstractEndpoint
 {
-    // A comma-separated list of repository names
+    /**
+     * A comma-separated list of repository names
+     *
+     * @var string
+     */
     private $repository;
 
-    // A comma-separated list of snapshot names
+    /**
+     * A comma-separated list of snapshot names
+     *
+     * @var string
+     */
     private $snapshot;
 
     /**
-     * @param $repository
+     * @param string $repository
      *
      * @return $this
      */
@@ -39,7 +49,7 @@ class Get extends AbstractEndpoint
     }
 
     /**
-     * @param $snapshot
+     * @param string $snapshot
      *
      * @return $this
      */
@@ -88,7 +98,8 @@ class Get extends AbstractEndpoint
     {
         return array(
             'master_timeout',
-            'ignore_unavailable'
+            'ignore_unavailable',
+            'verbose'
         );
     }
 

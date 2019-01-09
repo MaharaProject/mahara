@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints;
 
 use Elasticsearch\Common\Exceptions;
@@ -15,11 +17,15 @@ use Elasticsearch\Common\Exceptions;
  */
 class ClearScroll extends AbstractEndpoint
 {
-    // A comma-separated list of scroll IDs to clear
+    /**
+     * A comma-separated list of scroll IDs to clear
+     *
+     * @var string
+     */
     private $scrollId;
 
     /**
-     * @param $scroll_id
+     * @param string $scrollId
      *
      * @return $this
      */

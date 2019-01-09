@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints\Indices\Alias;
 
 use Elasticsearch\Endpoints\AbstractEndpoint;
@@ -15,11 +17,15 @@ use Elasticsearch\Endpoints\AbstractEndpoint;
  */
 class Get extends AbstractEndpoint
 {
-    // A comma-separated list of alias names to return
+    /**
+     * A comma-separated list of alias names to return
+     *
+     * @var string
+     */
     private $name;
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return $this
      */

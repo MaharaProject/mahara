@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Connections;
 
 use Elasticsearch\Serializers\SerializerInterface;
@@ -17,17 +19,22 @@ use Psr\Log\LoggerInterface;
 interface ConnectionFactoryInterface
 {
     /**
-     * @param $handler
+     * @param callable $handler
      * @param array $connectionParams
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param LoggerInterface $tracer
      */
-    public function __construct(callable $handler, array $connectionParams,
-                                SerializerInterface $serializer, LoggerInterface $logger, LoggerInterface $tracer);
+    public function __construct(
+        callable $handler,
+        array $connectionParams,
+        SerializerInterface $serializer,
+        LoggerInterface $logger,
+        LoggerInterface $tracer
+    );
 
     /**
-     * @param $hostDetails
+     * @param array $hostDetails
      *
      * @return ConnectionInterface
      */
