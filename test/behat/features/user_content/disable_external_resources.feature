@@ -35,6 +35,7 @@ Scenario: Enable/disable external resources in mahara pages
  And I press "Save"
 
  # Add a "Text" block with an embedded external image
+ And I scroll to the top
  And I follow "Text"
  And I press "Add"
  And I set the following fields to these values:

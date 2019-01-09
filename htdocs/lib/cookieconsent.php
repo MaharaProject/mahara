@@ -43,23 +43,35 @@ function get_cookieconsent_code() {
         }
     }
     $values = unserialize(get_config('cookieconsent_settings'));
-    // To see full list of options go to https://silktide.com/tools/cookie-consent/docs/installation/
+    // To see full list of options go to https://cookieconsent.insites.com/documentation/javascript-api/
+    // * needs the messagelink template to be able to set target=_self
+    // the fix for this hasnt been released yet https://github.com/insites/cookieconsent/pull/396
     $initialisation = json_encode(array(
-        'message' => get_string('cookieconsentmessage', 'cookieconsent'),
-        'learnMore' => get_string('cookieconsentlearnmore', 'cookieconsent'),
-        'link' => get_config('wwwroot') . 'privacy.php',
-        'target' => '_self',
-        'theme' => $links['raw'],
-        'dismiss' => get_string('cookieconsentdismiss', 'cookieconsent'),
+        'theme' => 'classic',
+        'content' => array(
+          'target' => '_self',
+            'message' => get_string('cookieconsentmessage', 'cookieconsent'),
+            'href'    => get_config('wwwroot') . 'legal.php',
+            'link'    => get_string('cookieconsentlearnmore', 'cookieconsent'),
+            'dismiss' => get_string('cookieconsentdismiss', 'cookieconsent'),
+        ),
+        'palette' => null,
+        'elements' => array(
+            'messagelink' => '<span id="cookieconsent:desc" class="cc-message">{{message}} <a tabindex="0" class="cc-link" href="{{href}}" target="_self">{{link}}</a></span>',
+        ),
     ), JSON_FORCE_OBJECT);
     $wwwroot = get_config('wwwroot');
     return <<<CODE
-<!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<!-- Begin Cookie Consent plugin by Silktide - https://cookieconsent.insites.com/ -->
 {$stylesheets}
-<script type="application/javascript">
-    window.cookieconsent_options = {$initialisation};
+<script>
+jQuery(function() {
+    window.cookieconsent.initialise(
+        {$initialisation}
+    );
+});
 </script>
-<script type="application/javascript" src="{$wwwroot}js/cookieconsent/cookieconsent.min.js"></script>
+<script src="{$wwwroot}js/cookieconsent/cookieconsent.min.js"></script>
 <!-- End Cookie Consent plugin -->
 CODE;
 }
