@@ -301,28 +301,7 @@ function editpost_submit(Pieform $form, $values) {
     }
     // Attachments
     $instance = new InteractionForumInstance($parent->forum);
-    $old = $instance->attachment_id_list($postid);
-    $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
-    if (!empty($new) || !empty($old)) {
-        foreach ($old as $o) {
-            if (!in_array($o, $new)) {
-                try {
-                    $instance->detach($postid, $o);
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-        foreach ($new as $n) {
-            if (!in_array($n, $old)) {
-                try {
-                    if (empty($mailsent)) {
-                        $instance->attach($postid, $n);
-                    }
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-    }
+    update_attachments($instance, $values['filebrowser'], $postid, $mailsent);
 
     db_commit();
 
@@ -393,26 +372,7 @@ function addpost_submit(Pieform $form, $values) {
     // Attachments
     $forumid = get_field('interaction_forum_topic', 'forum', 'id', $post->topic);
     $instance = new InteractionForumInstance($forumid);
-    $old = $instance->attachment_id_list($postid);
-    $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
-    if (!empty($new) || !empty($old)) {
-        foreach ($old as $o) {
-            if (!in_array($o, $new)) {
-                try {
-                    $instance->detach($postid, $o);
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-        foreach ($new as $n) {
-            if (!in_array($n, $old)) {
-                try {
-                    $instance->attach($postid, $n);
-                }
-                catch (ArtefactNotFoundException $e) {}
-            }
-        }
-    }
+    update_attachments($instance, $values['filebrowser'], $postid);
 
     if ($sendnow == 0) {
       $delay = get_config_plugin('interaction', 'forum', 'postdelay');

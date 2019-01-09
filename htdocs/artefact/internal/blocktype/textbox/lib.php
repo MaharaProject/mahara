@@ -537,33 +537,7 @@ EOF;
         }
 
         // Add attachments, if there are any...
-        $old = $artefact->attachment_id_list();
-        $new = is_array($values['artefactids']) ? $values['artefactids'] : array();
-        // only allow the attaching of files that exist and are editable by user
-        foreach ($new as $key => $fileid) {
-            $file = artefact_instance_from_id($fileid);
-            if (!($file instanceof ArtefactTypeFile) || !$USER->can_publish_artefact($file)) {
-                unset($new[$key]);
-            }
-        }
-        if (!empty($new) || !empty($old)) {
-            foreach ($old as $o) {
-                if (!in_array($o, $new)) {
-                    try {
-                        $artefact->detach($o);
-                    }
-                    catch (ArtefactNotFoundException $e) {}
-                }
-            }
-            foreach ($new as $n) {
-                if (!in_array($n, $old)) {
-                    try {
-                        $artefact->attach($n);
-                    }
-                    catch (ArtefactNotFoundException $e) {}
-                }
-            }
-        }
+        update_attachments($artefact, $values['artefactids'], null, null, true);
 
         $values['artefactid'] = $artefact->get('id');
         $instance->save_artefact_instance($artefact);
