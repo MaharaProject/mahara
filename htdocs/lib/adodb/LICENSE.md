@@ -12,8 +12,8 @@ For more info about ADOdb, visit http://adodb.sourceforge.net/
 BSD 3-Clause License
 --------------------
 
-(c) 2000-2013 John Lim (jlim@natsoft.com)
-(c) 2014      Damien Regad, Mark Newnham and the ADOdb community
+(c) 2000-2013 John Lim (jlim@natsoft.com)  
+(c) 2014      Damien Regad, Mark Newnham and the ADOdb community  
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
