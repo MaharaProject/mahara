@@ -1648,8 +1648,8 @@ function pieform_element_filebrowser_get_headdata($element) {
         '<script src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js?v=' . $cacheversion . '"></script>');
     if ($element['config']['upload']) {
         // only add dropzone if filebrowser is allowed to upload
-        $headdata[] = '<script src="' . get_config('wwwroot') . 'js/dropzone/dropzone.min.js?v=' . $cacheversion . '"></script>';
-        $headdata[] = '<link href="' . get_config('wwwroot') . 'js/dropzone/css/dropzone.css?v=' . $cacheversion . '" type="text/css" rel="stylesheet">';
+        $headdata[] = '<script src="' . get_config('wwwroot') . 'js/dropzone/min/dropzone.min.js?v=' . $cacheversion . '"></script>';
+        $headdata[] = '<link href="' . get_config('wwwroot') . 'js/dropzone/min/dropzone.css?v=' . $cacheversion . '" type="text/css" rel="stylesheet">';
         $headdata[] = '<script src="' . get_config('wwwroot') . 'artefact/file/js/filedropzone.js?v=' . $cacheversion . '"></script>';
     }
     if ($element['config']['edit']) {
