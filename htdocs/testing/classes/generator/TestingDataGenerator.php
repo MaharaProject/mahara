@@ -26,6 +26,9 @@ class TestingDataGenerator {
     protected $institutioncount = 0;
     protected $tagcount = 0;
 
+    /** @var array list to track location to know where to create block on each view **/
+    protected $viewcolcounts = array();
+
     /** @var array list of plugin generators */
     protected $generators = array();
 
@@ -66,6 +69,7 @@ EOD;
         $this->usercounter = 0;
         $this->$groupcount = 0;
         $this->$institutioncount = 0;
+        $this->viewcolcounts = array();
 
         foreach ($this->generators as $generator) {
             $generator->reset();
@@ -638,7 +642,7 @@ EOD;
 
     /**
      * Create block content for existing view
-     * @param array $record
+     * @param array $record data for each blocktype in each row of the testing table
      * @throws SystemException if creating failed
      * @return int new block id
      */
@@ -646,6 +650,12 @@ EOD;
         global $USER;
         $sql = "SELECT id FROM {view} WHERE LOWER(TRIM(title)) = ?";
         $page = strtolower(trim($record['page']));
+
+        //first block on a page/view set column to 1
+        if (!isset($this->viewcolcounts[$page])) {
+          $this->viewcolcounts[$page] = 1;
+        }
+
         $ids = get_records_sql_array($sql, array($page));
         if (!$ids || count($ids) > 1) {
             throw new SystemException("Invalid page name '" . $record['page'] . "'. The page title does not exist, or is duplicated.");
@@ -666,6 +676,9 @@ EOD;
                 $ownerid = $view->get('owner');
             }
         }
+
+        $maxcols = 3;
+
         // We have a valid page so lets see if we can add a block to it
         $blocktype = strtolower(trim($record['type']));
         // Check that the blocktype exists and is active
@@ -673,13 +686,6 @@ EOD;
             throw new SystemException("Invalid block type '" . $record['type'] . "'. The block type is either not installed or not active.");
         }
         $title = strtolower(trim($record['title']));
-        // Make sure we have row/column/order set or use defaults
-        $row = (int)trim($record['row']);
-        $row = !empty($row) ? $row : 1;
-        $column = (int)trim($record['column']);
-        $column = !empty($column) ? $column : 1;
-        $order = (int)trim($record['order']);
-        $order = !empty($order) ? $order : 1;
 
         // build configdata
         $configdata = $this->setup_retractable($record['retractable']);
@@ -702,12 +708,13 @@ EOD;
                 'blocktype'  => $blocktype,
                 'title'      => $title,
                 'view'       => $view->get('id'),
-                'row'        => $row,
-                'column'     => $column,
-                'order'      => $order,
+                'row'        => 1,
             )
         );
+        $bi->set('order', $view->get_current_max_order(1, $this->viewcolcounts[$page]) + 1);
         $bi->set('configdata', $configdata);
+        $bi->set('column', $this->viewcolcounts[$page]);
+        $this->viewcolcounts[$page] = (($this->viewcolcounts[$page]+1) % $maxcols) ? ($this->viewcolcounts[$page]+1) % $maxcols : $maxcols;
         $bi->commit();
 
     }
@@ -935,10 +942,6 @@ EOD;
              }
        }
        return $configdata;
-    }
-
-    public static function generate_configdata_internalmedia($data, $ownertype, $ownerid) {
-      if (!$data) return;
     }
 
     /**
