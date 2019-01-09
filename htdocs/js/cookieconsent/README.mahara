@@ -4,11 +4,10 @@ CookieConsent
 Name   :    Cookie Consent
 Website:    https://silktide.com/tools/cookie-consent/
 Author :    (C) 2013 Silktide Ltd.
-Source :    https://github.com/silktide/cookieconsent2/
-Version:    2.0.9
+Source :    https://github.com/insites/cookieconsent
+Version:    3.1.0
 Licence:    MIT License (see: https://silktide.com/tools/cookie-consent/docs/license/)
 
 Modifications:
-- renamed 'dark-bottom.css' to 'cookieconsent.scss' and copied/moved it to htdocs/theme/raw/sass
-- removed the url target '_blank' for security reasons
-- wrapped a protocol-relative URL in cookieconsent.scss in single-quotes for better SASS compatibility
+- renamed 'cookieconsent.min.css' to '_cookieconsent.scss' and copied/moved it to htdocs/theme/raw/sass/lib/
+- added the styles for palette popup / button to base of '_cookieconsent.scss'
