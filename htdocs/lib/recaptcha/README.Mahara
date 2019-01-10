@@ -2,6 +2,6 @@ reCAPTCHA PHP library
 =====================
 
 Website: https://github.com/google/recaptcha
-Version: 1.1.2
+Version: 1.2.1
 
 reCAPTCHA is a free CAPTCHA service that protect websites from spam and abuse. This is Google authored code that provides plugins for third-party integration with reCAPTCHA.

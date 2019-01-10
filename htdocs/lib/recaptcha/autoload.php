@@ -1,16 +1,16 @@
 <?php
 
-/* An autoloader for ReCaptcha\Foo classes. This should be require()d
+/* An autoloader for ReCaptcha\Foo classes. This should be required()
  * by the user before attempting to instantiate any of the ReCaptcha
  * classes.
  */
 
 spl_autoload_register(function ($class) {
     if (substr($class, 0, 10) !== 'ReCaptcha\\') {
-      /* If the class does not lie under the "ReCaptcha" namespace,
-       * then we can exit immediately.
-       */
-      return;
+        /* If the class does not lie under the "ReCaptcha" namespace,
+         * then we can exit immediately.
+         */
+        return;
     }
 
     /* All of the classes have names like "ReCaptcha\Foo", so we need
@@ -26,6 +26,8 @@ spl_autoload_register(function ($class) {
     $path = dirname(__FILE__).'/'.$class.'.php';
     if (is_readable($path)) {
         require_once $path;
+
+        return;
     }
 
     /* If we didn't find what we're looking for already, maybe it's
