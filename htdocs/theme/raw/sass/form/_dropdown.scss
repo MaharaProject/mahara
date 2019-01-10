@@ -148,12 +148,12 @@
         }
     }
     > .active {
-        background-color: #556d32;
+        background-color: $theme-primary-color;
         > a {
             color: #fff;
             text-decoration: none;
             outline: 0;
-            background-color: #556d32;
+            background-color: $theme-primary-color;
             &:hover,
             &:focus {
                 text-decoration: none;
