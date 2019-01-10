@@ -10,9 +10,9 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2018030800;
-$config->release = '1.3.0';
+$config = new stdClass();
+$config->version = 2019011100;
+$config->release = '1.5.0';
 $config->name = 'saml';
 $config->requires_config = 1;
 $config->requires_parent = 0;
