@@ -194,17 +194,17 @@ class User {
                     ) AS f
                 )';
 
-        $user = get_record_sql($sql, array('email', $email, $email));
+        $users = get_records_sql_array($sql, array('email', $email, $email));
 
-        if (false == $user) {
+        if (false == $users) {
             throw new AuthUnknownUserException("User with email \"$email\" is not known");
         }
 
-        if (count($user) > 1) {
+        if (count($users) > 1) {
             throw new UserException("More than one user with email \"$email\" found");
         }
 
-        $this->populate($user);
+        $this->populate($users[0]);
         $this->reset_institutions();
         return $this;
     }
