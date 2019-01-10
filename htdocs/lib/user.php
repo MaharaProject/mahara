@@ -13,6 +13,10 @@ defined('INTERNAL') || die();
 
 define('MAX_USERNAME_DISPLAY', 30);
 
+require 'phpmailer/src/PHPMailer.php';
+require 'phpmailer/src/Exception.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception as phpmailerException;
 /**
  * loads up activity preferences for a given user
  *
@@ -732,9 +736,6 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
             'localurl_to_jumpurl',
             $messagehtml);
     }
-
-
-    require_once('phpmailer/PHPMailerAutoload.php');
 
     $mail = new PHPMailer(true);
 
