@@ -57,10 +57,14 @@ function pieform_element_calendar(Pieform $form, $element) {
     }
 
     // Build the HTML
+    $element['class'] .= " datetimepicker-input";
     $result = '<span class="hasDatepickerwrapper"><input type="text"'
         . $form->element_attributes($element)
-        . ' value="' . $value . '"
-        aria-label="' . get_string('element.calendar.format.arialabel', 'pieforms') . '"
+        . ' id="' . $id . '"'
+        . ' value="' . $value . '"'
+        . ' autocomplete="off"'
+        . ' data-toggle="datetimepicker" data-target="#' . $id . '"'
+        . 'aria-label="' . get_string('element.calendar.format.arialabel', 'pieforms') . '"
         ></span>';
     $result .= '
         <script>
@@ -78,14 +82,25 @@ function pieform_element_calendar(Pieform $form, $element) {
     $result .= '
         locale: "' . strstr(current_language(), '.', true) . '",
         useCurrent: false,
-        showClear: true,
-        showTodayButton: true,
+        buttons: {
+            showClear: true,
+            showToday: true,
+        },
         tooltips: ' . $tooltips . ',
         icons: {
+            time: "icon icon-clock-o",
+            date: "icon icon-calendar",
+            up: "icon icon-arrow-up",
+            down: "icon icon-arrow-down",
+            previous: "icon icon-chevron-left",
+            next: "icon icon-chevron-right",
+            close: "icon icon-times",
             clear: "icon icon-trash",
             today: "icon icon-crosshairs",
         },
-    }).on("dp.hide", function(selectedDate) {
+    });
+
+    input_' . $id . '.on("hide.datetimepicker", function(selectedDate) {
         if (typeof formchangemanager !== \'undefined\') {
             var form = input_' . $id . '.closest(\'form\')[0];
             formchangemanager.setFormState(form, FORM_CHANGED);
