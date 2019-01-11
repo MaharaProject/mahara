@@ -41,9 +41,10 @@ Background:
     | gall style3 | gallery      | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
     | myfolder    | folder       | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png |
     | my html     | html         | Page UserB_00 | yes        | attachment=test_html.html |
-
     | internalm v | internalmedia| Page UserB_00 | no         | attachment=testvid3.mp4 |
     | internalm a | internalmedia| Page UserB_00 | no         | attachment=mahara.mp3 |
+    | my pdf      | pdf          | Page UserB_00 | no         | attachment=mahara_about.pdf |
+
 
 
 

@@ -1,4 +1,4 @@
-<?php
+create_artefact(<?php
 /**
  * @package    mahara
  * @subpackage test/generator
@@ -983,6 +983,32 @@ EOD;
                 $value = $artefactid;
                 $configdata['artefactid'] = $value;
             }
+        }
+        return $configdata;
+    }
+
+    /**
+    * generate config data for the blocktype: pdf
+    **/
+    public static function generate_configdata_pdf($data, $ownertype, $ownerid) {
+        if (!$data) return;
+
+        list($key, $value) = explode('=', $data);
+        $key=trim($key);
+        $value=trim($value);
+
+        if ($key == 'attachment') {
+            $key = 'artefactid';
+
+            // we need to find the id of the item we are trying to attach and save it as artefactid
+            if (!$artefactid = get_field('artefact', 'id', 'title', $value, $ownertype, $ownerid)) {
+                $artefactid = TestingDataGenerator::create_artefact($file=$value, $ownertype, $ownerid, 'attachment');
+                TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
+            }
+
+            $value = $artefactid;
+            $configdata = array();
+            $configdata[$key] = $value;
         }
         return $configdata;
     }
