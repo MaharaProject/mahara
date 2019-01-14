@@ -542,19 +542,19 @@
     }
     .requiredmarker,
     .oneofmarker {
-        color: scale-color($brand-danger, $lightness: -8.5%);
+        color: scale-color(theme-color("danger"), $lightness: -8.5%);
     }
 
     &.requiredmarkerdesc,
     &.oneofmarkerdesc {
-        color: scale-color($brand-danger, $lightness: -8.5%);
+        color: scale-color(theme-color("danger"), $lightness: -8.5%);
         border: 0;
         font-style: italic;
         font-size: $font-size-base * 0.9285;
         padding-bottom: 0;
     }
     &.has-oneof {
-        background-color: $gray-lighter;
+        background-color: $gray-100;
     }
 
     @include media-breakpoint-up(md) {
