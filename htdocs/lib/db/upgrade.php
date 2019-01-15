@@ -1116,5 +1116,10 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2019011500) {
+        log_debug('run cron_site_data_daily function to update data with new chartjs structure');
+        cron_site_data_daily();
+    }
+
     return $status;
 }

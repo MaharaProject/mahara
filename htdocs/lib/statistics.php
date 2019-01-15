@@ -2000,7 +2000,9 @@ function user_institution_graph($type = null) {
     if (count($institutions) > 1) {
         $dataarray = array();
         foreach ($institutions as &$i) {
-            $dataarray[$i->displayname] = $i->members;
+            if ($i->members) {
+                $dataarray[$i->displayname] = $i->members;
+            }
         }
         arsort($dataarray);
         // Truncate to avoid trying to fit too many results onto graph
@@ -2016,7 +2018,7 @@ function user_institution_graph($type = null) {
         $data['graph'] = ($type) ? $type : 'pie';
         $data['graph_function_name'] = 'user_institution_graph';
         $data['title'] = get_string('institutionmembers','admin');
-        $data['labels'] = array_keys($dataarray);
+        $data['labels'] = array_keys($newdataarray);
         $data['data'] = $newdataarray;
 
         return $data;
@@ -2419,8 +2421,10 @@ function group_type_graph($type = false) {
 
 function group_type_graph_render($type = null) {
     $data['graph'] = ($type) ? $type : 'pie';
-    $data['jsondata'] = get_field('site_data','value','type','group-type-graph');
-    return $data;
+    if ($jsondata = json_decode(get_field('site_data','value','type','group-type-graph'))) {
+        $data['jsondata'] = json_encode($jsondata[0]);
+        return $data;
+    }
 }
 
 function pageactivity_statistics_headers($extra, $urllink) {
@@ -2695,8 +2699,10 @@ function view_type_graph($type = null) {
 
 function view_type_graph_render($type = null) {
     $data['graph'] = ($type) ? $type : 'pie';
-    $data['jsondata'] = get_field('site_data','value','type','view-type-graph');
-    return $data;
+    if ($jsondata = json_decode(get_field('site_data','value','type','view-type-graph'))) {
+        $data['jsondata'] = json_encode($jsondata[0]);
+        return $data;
+    }
 }
 
 function institution_view_statistics($limit, $offset, &$institutiondata, $extra) {
