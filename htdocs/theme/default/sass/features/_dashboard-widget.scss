@@ -8,7 +8,7 @@ $logged-in-height-mobile: 125px;
     text-align: center;
 
     .remove-widgets {
-        font-size: $font-size-small - 1;
+        font-size: $font-size-sm - 1;
     }
     .hide-info{
         clear: both;
@@ -23,7 +23,7 @@ $logged-in-height-mobile: 125px;
         width: $logged-in-height;
         border-top: 0;
 
-        @media (max-width: $screen-sm-min ) {
+        @include media-breakpoint-down(md ) {
             height: $logged-in-height-mobile;
             width: $logged-in-height-mobile;
             display: inline-block;
@@ -35,7 +35,7 @@ $logged-in-height-mobile: 125px;
             color: #FFFFFF;
             font-weight: 700;
 
-            @media (max-width: $screen-sm-min ) {
+            @include media-breakpoint-down(md ) {
                 font-size: 18px;
                 margin-top: 0;
             }
@@ -47,7 +47,7 @@ $logged-in-height-mobile: 125px;
             text-align: center;
             color: #FFFFFF;
 
-            @media (max-width: $screen-sm-min ) {
+            @include media-breakpoint-down(md ) {
                 display: none;
             }
         }
@@ -67,7 +67,7 @@ $logged-in-height-mobile: 125px;
         width: auto;
         height: auto;
 
-        @media (max-width: $screen-sm-min ) {
+        @include media-breakpoint-down(md ) {
             margin-top: 5px;
         }
 
@@ -76,7 +76,7 @@ $logged-in-height-mobile: 125px;
             padding-top:16px;
             font-size: 72px;
 
-            @media (max-width: $screen-sm-min ) {
+            @include media-breakpoint-down(md ) {
                 font-size: 60px;
             }
 
@@ -93,7 +93,7 @@ $logged-in-height-mobile: 125px;
         display: block;
         border: 0;
 
-        @media (max-width: $screen-sm-min ) {
+        @include media-breakpoint-down(md ) {
             width: 180px;
             display: inline-block;
             vertical-align: inherit;
@@ -104,7 +104,7 @@ $logged-in-height-mobile: 125px;
             margin-bottom: 0;
             color: #333333;
 
-            @media (max-width: $screen-sm-min ) {
+            @include media-breakpoint-down(md ) {
                 font-size: 12px;
                 padding: 0;
                 margin-top: 0;
@@ -124,7 +124,7 @@ $logged-in-height-mobile: 125px;
         padding: 0;
         float: none;
 
-        @media (max-width: $screen-sm-min ) {
+        @include media-breakpoint-down(md ) {
             width: auto;
             display: block;
             margin-right: 0;
@@ -144,7 +144,7 @@ $logged-in-height-mobile: 125px;
         height: $logged-in-height;
         overflow:hidden;
 
-        @media (max-width: $screen-sm-min) {
+        @include media-breakpoint-down(md) {
             height: $logged-in-height-mobile;
             width: $logged-in-height-mobile;
             display: inline-block;
@@ -158,7 +158,7 @@ $logged-in-height-mobile: 125px;
                 color: #FFFFFF;
                 font-weight: 700;
 
-                @media (max-width: $screen-sm-min ) {
+                @include media-breakpoint-down(md ) {
                     font-size: 18px;
                     margin-top: 0;
                 }
@@ -183,7 +183,7 @@ $logged-in-height-mobile: 125px;
             border-radius: 50%;
             border: 0;
 
-            @media (max-width: $screen-sm-min) {
+            @include media-breakpoint-down(md) {
                 margin-top: -$logged-in-height-mobile * 2;
                 height: $logged-in-height-mobile;
                 width: $logged-in-height-mobile;
@@ -197,7 +197,7 @@ $logged-in-height-mobile: 125px;
                 vertical-align: middle;
                 height: $logged-in-height;
 
-                @media (max-width: $screen-sm-min) {
+                @include media-breakpoint-down(md) {
                     height: $logged-in-height-mobile;
                     font-size: 11px;
                     padding-left: 10px;
@@ -210,7 +210,7 @@ $logged-in-height-mobile: 125px;
 
     .logged-in:hover {
         .widget-heading {
-            @media (max-width: $screen-sm-min) {
+            @include media-breakpoint-down(md) {
                 background: $dashboard-widget-bg;
             }
         }
@@ -220,7 +220,7 @@ $logged-in-height-mobile: 125px;
             margin-top: -$logged-in-height;
             border: 0;
 
-            @media (max-width: $screen-sm-min) {
+            @include media-breakpoint-down(md) {
                 margin-top: -$logged-in-height-mobile;
             }
             p {
@@ -230,7 +230,7 @@ $logged-in-height-mobile: 125px;
                 vertical-align: middle;
                 height: $logged-in-height;
 
-                @media (max-width: $screen-sm-min) {
+                @include media-breakpoint-down(md) {
                     height: $logged-in-height-mobile;
                     font-size: 11px;
                     padding-left: 10px;
