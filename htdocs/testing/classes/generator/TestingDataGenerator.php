@@ -803,6 +803,50 @@ EOD;
     }
 
     /**
+     * generate configdata and instance for blocktype: creativecommons
+     * @param string data inside the columm for data in behat table
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_creativecommons($data) {
+      $configdata = array();
+
+      // there is no compulsory filled field in this blocktype but there cannot
+      // be an empty array returned
+      if (!$data)  $configdata[] = ' ';
+
+      $fields = explode(';', $data);
+
+      foreach( $fields as $field) {
+        list($key, $value) = explode('=', $field);
+        $value = trim(strtolower($value));
+
+        switch ($key) {
+          case 'commercialuse':
+            //yes=0, no=1
+            $configdata['noncommercial'] = $value == 'yes' ? 0:1;
+            break;
+          case 'license':
+            //must be 3.0 or 2.0
+            if ($value == 3.0 || $value == 2.0) {
+              $configdata['version'] = (string)($value*10);
+            }
+            else $configdata['version'] = '30';
+            break;
+          case 'allowmods':
+            //yes=0, yes(with mutual sharing)=1, no=2
+            if ($value == 'yes') $configdata['noderivatives'] = '0';
+            if ($value == 'yeswithsharing') $configdata['noderivatives'] = '1';
+            if ($value == 'no') $configdata['noderivatives'] = '2';
+            break;
+          default:
+            break;
+        }
+      }
+      $configdata = PluginBlocktypeCreativecommons::instance_config_save($configdata);
+      return $configdata;
+    }
+
+    /**
      * generate configdata for the blocktype: rss feeds/external feeds
      * @param string $data inside data column in behat test
      * @return array $configdata of key and values for db table

@@ -65,6 +65,8 @@ Background:
     | Comments    | comment        | Page One      |            | no configdata |
     | PeerAssessmt| peerassessment | Page One      | auto       | no configdata |
 
+    # creative commons options for allowmods= yes, no, yeswithsharing
+    | creativecoms| creativecommons| Page One      | no        | commercialuse=yes;license=3.0;allowmods=no |
 
 
 
