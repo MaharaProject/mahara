@@ -26,7 +26,7 @@ class TestingDataGenerator {
     protected $institutioncount = 0;
     protected $tagcount = 0;
 
-    /** @var array list to track location to know where to create block on each view **/
+    /** @var array list to track location to know where to create block on each view */
     protected $viewcolcounts = array();
 
     /** @var array list of plugin generators */
@@ -719,9 +719,17 @@ EOD;
 
     }
 
-    public static function generate_configdata_blog($data, $ownertype, $ownerid) {
-        if (!$data) return;
-        $configdata = array();
+    /**
+     * generate configdata for blocktype: blog aka journal
+     * displaying the blogs that were created using the function create_blog
+     * given a matching blog title
+     *
+     * @param string $data inside data column in behat test
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_blog($data) {
+      if (!$data) return;
+      $configdata = array();
 
         $fields = explode(';',$data);
         foreach($fields as $field) {
@@ -743,6 +751,14 @@ EOD;
         return $configdata;
     }
 
+    /**
+     * generate configdata for blocktype: blogpost aka journalentry
+     * displaying the blogposts that were created using the function create_blogpost
+     * matching a given blog and entry title
+     *
+     * @param string $data inside data column in behat test
+     * @return array $configdata of key and values for db table
+     */
     public static function generate_configdata_blogpost($data) {
         if (!$data) return;
         $configdata = array();
@@ -771,10 +787,26 @@ EOD;
     }
 
     /**
-    * generate config data for the blocktype: rss feeds/external feeds
-    * @param string $data inside data column in behat test
-    * @return array configdata of key and values for db table
-    **/
+     * generate a comment blocktype.
+     * @param string data inside the columm for data in behat table
+     * @return array with redundant information as there is no specific artefact connected to it.
+     * as it part of a view rather than a block instance, there is not configdata for the block
+     * itself, but an empty array cannot be returned :(
+     */
+    public static function generate_configdata_comment($data) {
+        if (!$data) return;
+        $configdata = array();
+        $configdata[] = $data;
+        //cannot return an empty array even though the comment blocktype that refers to a view
+        //does not require any configdata
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: rss feeds/external feeds
+     * @param string $data inside data column in behat test
+     * @return array $configdata of key and values for db table
+    */
     public static function generate_configdata_externalfeed($data) {
         if (!$data) return;
 
@@ -791,10 +823,10 @@ EOD;
     }
 
     /**
-    * generate config data for the blocktype: external video
-    * @param string $data inside data column in behat test
-    * @return array configdata of key and values for db table
-    **/
+     * generate configdata for the blocktype: external video
+     * @param string $data inside data column in behat test
+     * @return array $configdata of key and values for db table
+     */
     public static function generate_configdata_externalvideo($data) {
         if (!$data) return;
 
@@ -806,12 +838,12 @@ EOD;
     }
 
     /**
-    * generate config data for the blocktype: filedownload
-    * @param string $data inside data column in behat test
-    * @param string $ownertype of user
-    * @param string $ownerid of the user
-    * @return array configdata of key and values for db table
-    **/
+     * generate configdata for the blocktype: filedownload
+     * @param string $data inside data column in behat test
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
     public static function generate_configdata_filedownload($data, $ownertype, $ownerid) {
         if (!$data) return;
 
@@ -843,13 +875,13 @@ EOD;
         return $configdata;
     }
     /**
-    * generate config data for the blocktype folder, which dealts with creating a folder artefact_type
-    * as well as file artefacts and connecting them parent ids.
-    * @param $data holds the config information from data column
-    * @param $ownertype of user
-    * @param $owenerid of the user
-    * @return array configdata of key and values for db table
-    **/
+     * generate configdata for the blocktype folder, which dealts with creating a folder artefact_type
+     * as well as file artefacts and connecting them parent ids.
+     * @param $data holds the config information from data column
+     * @param $ownertype of user
+     * @param $owenerid of the user
+     * @return array $configdata of key and values for db table
+     */
     public static function generate_configdata_folder($data, $ownertype, $ownerid) {
         if (!$data) return;
 
@@ -886,12 +918,12 @@ EOD;
     }
 
     /**
-    * generate config data for the blocktype: gallery
-    * @param string $data inside data column in behat test
-    * @param string $ownertype of user
-    * @param string $ownerid of the user
-    * @return array configdata of key and values for db table
-    **/
+     * generate configdata for blocktype: gallery
+     * @param string $data inside data column in behat test
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
     public static function generate_configdata_gallery($data, $ownertype, $ownerid) {
         if (!$data) return;
 
@@ -940,6 +972,13 @@ EOD;
         return $configdata;
     }
 
+    /**
+     * generate configdata for blocktype: html
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
     public static function generate_configdata_html($data, $ownertype, $ownerid) {
         if (!$data) return;
 
@@ -964,12 +1003,12 @@ EOD;
     }
 
     /**
-    * generate config data for the blocktype: image
-    * @param string $data inside data column in blocktype tables
-    * @param string $ownertype of user
-    * @param string $ownerid of the user
-    * @return array configdata of key and values for db table
-    **/
+     * generate configdata for the blocktype: image
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
     public static function generate_configdata_image($data, $ownertype, $ownerid) {
         if (!$data) return;
 
@@ -995,12 +1034,12 @@ EOD;
     }
 
     /**
-    * generate config data for the blocktype: internalmedia aka 'embeddedmedia
-    * @param string $data inside data column in blocktype tables
-    * @param string $ownertype of user
-    * @param string $ownerid of the user
-    * @return array configdata of key and values of db table
-    **/
+     * generate configdata for the blocktype: internalmedia aka 'embeddedmedia
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values of db table
+     */
     public static function generate_configdata_internalmedia($data, $ownertype, $ownerid) {
         if (!$data) return;
         $mediatype;
@@ -1037,8 +1076,24 @@ EOD;
     }
 
     /**
-    * generate config data for the blocktype: pdf
-    **/
+     * generate configdata for the bloctype: peerassessment
+     * @param string $data inside data column in blocktype tables
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_peerassessment($data) {
+        if (!$data) return;
+        $configdata = array();
+        $configdata[] = $data;
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: pdf
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values of db table
+     */
     public static function generate_configdata_pdf($data, $ownertype, $ownerid) {
         if (!$data) return;
 
@@ -1063,12 +1118,12 @@ EOD;
     }
 
     /**
-    * generate config data for the blocktype: social profile
-    * @param string $data inside data column in behat test
-    * @param string $ownertype of user
-    * @param string $ownerid of the user
-    * @return array configdata of key and values for db table
-    **/
+     * generate configdata for the blocktype: social profile
+     * @param string $data inside data column in behat test
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
     public static function generate_configdata_socialprofile($data, $ownertype, $ownerid) {
         if (!$data) return;
 
@@ -1095,10 +1150,10 @@ EOD;
     }
 
     /**
-    * generate config data for the blocktype: text
-    * @param string inside data column in behat test
-    * @return array configdata of key and values for db table
-    **/
+     * generate configdata for the blocktype: text
+     * @param string inside data column in behat test
+     * @return array $configdata of key and values for db table
+     */
     public static function generate_configdata_text($data) {
         if (!$data) return;
         return $configdata = array('text' => $data);
@@ -1133,6 +1188,8 @@ EOD;
 
     /**
      * set up configdata for retractable and retractable on load
+     * @param string $setting: auto, yes, no
+     * @return array $configdata of key and values for db table
      */
     public function setup_retractable($setting) {
         $configdata = array();

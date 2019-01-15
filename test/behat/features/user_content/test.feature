@@ -46,22 +46,25 @@ Background:
     | Rss news    | externalfeed | Page UserA_00 | No         | source=http://rss.nzherald.co.nz/rss/xml/nzhtsrsscid_000000698.xml |
     | Rss food    | externalfeed | Page UserA_00 | no         | source=http://www.thekitchenmaid.com/feed |
 
-    | G image 3   | image        | Page Grp1     | no         | attachment=Image3.png |
-    | G files 2   | filedownload | Page Grp1     | no         | attachments=mahara_about.pdf,Image2.png |
-    | nzslang     | externalvideo| Page Grp1     | no         | source=https://youtu.be/yRxFm70nOrY |
+    | G image 3   | image          | Page Grp1     | no         | attachment=Image3.png |
+    | G files 2   | filedownload   | Page Grp1     | no         | attachments=mahara_about.pdf,Image2.png,testvid3.mp4,mahara.mp3 |
+    | nzslang     | externalvideo  | Page Grp1     | no         | source=https://youtu.be/yRxFm70nOrY |
 
-    | my social   | socialprofile| Page UserB_00 | no         | sns=instagram,twitter,facebook,tumblr,pinterest |
-    | gall style1 | gallery      | Page UserB_00 | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png;imagesel=2;showdesc=yes;width=75;imagestyle=1;photoframe=1 |
-    | gall style2 | gallery      | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=2 |
-    | gall style3 | gallery      | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
-    | myfolder    | folder       | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png |
-    | my html     | html         | Page UserB_00 | yes        | attachment=test_html.html |
-    | internalm v | internalmedia| Page UserB_00 | no         | attachment=testvid3.mp4 |
-    | internalm a | internalmedia| Page UserB_00 | no         | attachment=mahara.mp3 |
-    | my pdf      | pdf          | Page UserB_00 | no         | attachment=mahara_about.pdf |
+    | my social   | socialprofile  | Page UserB_00 | no         | sns=instagram,twitter,facebook,tumblr,pinterest |
+    | gall style1 | gallery        | Page UserB_00 | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png;imagesel=2;showdesc=yes;width=75;imagestyle=1;photoframe=1 |
+    | gall style2 | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=2 |
+    | gall style3 | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
+    | myfolder    | folder         | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
+    | my html     | html           | Page UserB_00 | yes        | attachment=test_html.html |
+    | internalm v | internalmedia  | Page UserB_00 | no         | attachment=testvid3.mp4 |
+    | internalm a | internalmedia  | Page UserB_00 | no         | attachment=mahara.mp3 |
+    | my pdf      | pdf            | Page UserB_00 | no         | attachment=mahara_about.pdf |
 
-    | my blog     | blog         | Page One      | no         |copytype=nocopy;count=5;journaltitle=journal1 |
-    | my blogpost | blogpost     | Page One      | no         |copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
+    | my blog     | blog           | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
+    | my blogpost | blogpost       | Page One      | no         | copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
+    | Comments    | comment        | Page One      |            | no configdata |
+    | PeerAssessmt| peerassessment | Page One      | auto       | no configdata |
+
 
 
 
