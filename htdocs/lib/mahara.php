@@ -3979,6 +3979,10 @@ function tag_weight($freq) {
 
 function get_my_tags($limit=null, $cloud=true, $sort='freq', $excludeinstitutiontags=false) {
     global $USER;
+    if (get_config('version') < 2018061801) {
+        // we are in upgrade before the table exists
+        return false;
+    }
     $id = $USER->get('id');
     if ($limit || $sort != 'alpha') {
         $sort = 'COUNT(1) DESC';  // In this instance '1' is not a number but the column reference to 'tag' column
