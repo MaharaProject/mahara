@@ -1024,10 +1024,12 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2018080900) {
         log_debug('Create a new "lockblock" field in "view" table');
+        drop_elasticsearch_triggers();
         $table = new XMLDBTable('view');
         $field = new XMLDBField('lockblocks');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
+        create_elasticsearch_triggers();
     }
 
     if ($oldversion < 2018080901) {
@@ -1078,6 +1080,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2018090400) {
         log_debug('Add instuctions column in view table');
+        drop_elasticsearch_triggers();
         $table = new XMLDBTable('view');
         $field = new XMLDBField('instructions');
         $field->setAttributes(XMLDB_TYPE_TEXT);
@@ -1086,6 +1089,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('instructionscollapsed');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
+        create_elasticsearch_triggers();
     }
 
     if ($oldversion < 2018091200) {
