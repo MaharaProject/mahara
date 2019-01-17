@@ -15,7 +15,7 @@
 
 
 // sidebar card headings
-.sidebar .card-default > .card-header {
+.sidebar .card-secondary > .card-header {
     @include border-top-radius(0);
     border-bottom: 0;
     background-color: $theme-primary-color;
