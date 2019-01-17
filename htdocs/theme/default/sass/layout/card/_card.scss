@@ -1,10 +1,10 @@
-.panel {
+.card {
     border-radius: 0;
     border: 0;
     box-shadow: none;
 
-    &.panel-quarter {
-      .panel-stack {
+    &.card-quarter {
+      .card-stack {
         border: 1px solid #ddd;
       }
     }
@@ -22,12 +22,12 @@
 }
 
 .sidebar {
-  .panel {
+  .card {
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
   }
 }
 
-.panel-quarter .panel-heading a {
+.card-quarter .card-heading a {
   font-family: $font-family-sans-serif;
   font-weight: 300;
 }
