@@ -225,7 +225,7 @@ function deletenote_form($id, $notedata) {
             'submit' => array(
                 'type' => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-secondary btn-xs last',
+                'class' => 'btn-secondary btn-sm last',
                 'elementtitle' => get_string('delete'),
                 'value' => '<span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span> ',
             ),
