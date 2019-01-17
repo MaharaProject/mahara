@@ -6183,7 +6183,7 @@ class View {
                     $artefactcopies[$aid]->newid = $a->copy_for_new_owner(
                         $this->get('owner'),
                         $this->get('group'),
-                        $this->get($type)
+                        $this->get('institution')
                     );
                 }
             }
