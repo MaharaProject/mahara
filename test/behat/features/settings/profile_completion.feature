@@ -1,12 +1,12 @@
-@javascript @core @
+@javascript @core
 Feature: Profile completion functionality
     Site admin sets up profile completion and determins what fields are required
     so that the profile completion block will display on dashboard indicating what needs to be completed
 
 Background:
-Given the following "institutions" exist:
-     | name | displayname | registerallowed | registerconfirm |
-     | instone | Institution One | ON | OFF |
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | instone | Institution One | ON | OFF |
 
     Given the following "users" exist:
     | username | password | email | firstname | lastname  | institution | authname | role |
@@ -75,6 +75,7 @@ Scenario Outline: 1) site admin enables profile completion for the site admin me
     And I should see "50%" in the "Progressbar" property
     When I choose "Profile" from user menu
     Then I should see "Profile"
+    And I follow "About me"
     When I fill in "Student ID" with "123456"
     And I press "Save profile"
     Then I should see "Profile saved successfully"
