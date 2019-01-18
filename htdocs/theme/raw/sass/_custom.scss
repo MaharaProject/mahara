@@ -692,3 +692,8 @@ a[type="submit"],
     border-bottom: 1px solid $card-border;
     background-color: $card-heading-bg;
 }
+
+// Mostly used to make the table matrix popups work
+.d-none.popover {
+    visibility: hidden;
+}

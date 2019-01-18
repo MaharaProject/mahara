@@ -7,3 +7,9 @@ a.card-footer {
         color: $link-hover-color;
     }
 }
+.card,
+.card.bg-warning { // Use to change the footer color of cards that have a yellow background
+    .card-footer {
+        background-color: $card-footer-bg;
+    }
+}
