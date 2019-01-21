@@ -7,9 +7,9 @@ Feature: Creating a page with blocks
 
 Background:
     Given the following "users" exist:
-    | username | password | email | firstname | lastname | institution | authname | role |
-    | UserA | Kupuh1pa! | UserA@example.org | Angela  | User | mahara | internal | member |
-    | UserB | Kupuh1pa! | UserB@example.org | Bob     | Boi  | mahara | internal | member |
+    | username | password | email             | firstname | lastname | institution | authname | role |
+    | UserA    | Kupuh1pa!| UserA@example.org | Angela    | User     | mahara      | internal | member |
+    | UserB    | Kupuh1pa!| UserB@example.org | Bob       | Boi      | mahara      | internal | member |
 
     And the following "groups" exist:
     | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
@@ -21,6 +21,13 @@ Background:
     | Page UserB_00 | Page 01     | user      | UserA |
     | Page Grp1     | Page 01     | group     | Group1 |
     | Page One      | test 01     | user      | UserA |
+    | Page Two      | test 01     | user      | UserA |
+    | Page Three    | test 01     | user      | UserA |
+
+    And the following "collections" exist:
+    | title          | ownertype | ownername | description | pages             |
+    | collection one | user      | UserA     | desc of col |Page One,Page Two  |
+
 
     And the following "journals" exist:
     | owner | ownertype | title   | description      | tags               |
@@ -56,14 +63,17 @@ Background:
     | gall style3 | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
     | myfolder    | folder         | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
     | my html     | html           | Page UserB_00 | yes        | attachment=test_html.html |
-    | internalm v | internalmedia  | Page UserB_00 | no         | attachment=testvid3.mp4 |
-    | internalm a | internalmedia  | Page UserB_00 | no         | attachment=mahara.mp3 |
-    | my pdf      | pdf            | Page UserB_00 | no         | attachment=mahara_about.pdf |
 
-    | my blog     | blog           | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
+    #| my blog     | blog           | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
     | my blogpost | blogpost       | Page One      | no         | copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
     | Comments    | comment        | Page One      |            | no configdata |
     | PeerAssessmt| peerassessment | Page One      | auto       | no configdata |
+
+    | my nav      | navigation     | Page Three    | no         | collection=collection one;copytoall=yes |
+
+    | internalm v | internalmedia  | Page Three    | no         | attachment=testvid3.mp4 |
+    | internalm a | internalmedia  | Page Three    | no         | attachment=mahara.mp3 |
+    | my pdf      | pdf            | Page Three    | no         | attachment=mahara_about.pdf |
 
     # creative commons options for allowmods= yes, no, yeswithsharing
     | creativecoms| creativecommons| Page One      | no        | commercialuse=yes;license=3.0;allowmods=no |
@@ -95,3 +105,5 @@ Scenario: Create Page UserA_00 with text blocks
     And I go to portfolio page "Page Grp1"
     And I go to portfolio page "Page UserB_00"
     And I go to portfolio page "Page One"
+    And I go to portfolio page "Page Two"
+    And I go to portfolio page "Page Three"

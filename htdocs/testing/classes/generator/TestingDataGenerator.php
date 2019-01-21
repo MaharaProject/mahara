@@ -27,7 +27,7 @@ class TestingDataGenerator {
     protected $tagcount = 0;
 
     /** @var array list to track location to know where to create block on each view */
-    protected $viewcolcounts = array();
+    public static $viewcolcounts = array();
 
     /** @var array list of plugin generators */
     protected $generators = array();
@@ -69,7 +69,7 @@ EOD;
         $this->usercounter = 0;
         $this->$groupcount = 0;
         $this->$institutioncount = 0;
-        $this->viewcolcounts = array();
+        self::$viewcolcounts = array();
 
         foreach ($this->generators as $generator) {
             $generator->reset();
@@ -651,9 +651,11 @@ EOD;
         $sql = "SELECT id FROM {view} WHERE LOWER(TRIM(title)) = ?";
         $page = strtolower(trim($record['page']));
 
-        //first block on a page/view set column to 1
-        if (!isset($this->viewcolcounts[$page])) {
-          $this->viewcolcounts[$page] = 1;
+        $view = trim($record['page']);
+        $viewid = $this->get_view_id($view);
+
+        if (!isset(self::$viewcolcounts[$viewid])) {
+          self::$viewcolcounts[$viewid] = 1;
         }
 
         $ids = get_records_sql_array($sql, array($page));
@@ -694,7 +696,7 @@ EOD;
         $classname = 'TestingDataGenerator';
 
         if (is_callable($classname . '::'.$functionname)) {
-            $result = call_static_method($classname, $functionname, $data, $ownertype, $ownerid);
+            $result = call_static_method($classname, $functionname, $data, $ownertype, $ownerid, $title, $view);
             $configdata = array_merge($configdata, $result);
         }
         else {
@@ -702,21 +704,32 @@ EOD;
         }
 
         // make new block
-        safe_require('blocktype', $blocktype);
-        $bi = new BlockInstance(0,
-            array(
-                'blocktype'  => $blocktype,
-                'title'      => $title,
-                'view'       => $view->get('id'),
-                'row'        => 1,
-            )
-        );
-        $bi->set('order', $view->get_current_max_order(1, $this->viewcolcounts[$page]) + 1);
-        $bi->set('configdata', $configdata);
-        $bi->set('column', $this->viewcolcounts[$page]);
-        $this->viewcolcounts[$page] = (($this->viewcolcounts[$page]+1) % $maxcols) ? ($this->viewcolcounts[$page]+1) % $maxcols : $maxcols;
-        $bi->commit();
+        self::create_new_block_instance($blocktype, $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols);
+    }
 
+    public static function create_new_block_instance($blocktype, $view, $viewid, $title, $viewcolcounts, $configdata, $maxcols, $otherview = null) {
+      safe_require('blocktype', $blocktype);
+      $bi = new BlockInstance(0,
+          array(
+              'blocktype'  => $blocktype,
+              'title'      => $title,
+              'view'       => $viewid,
+              'row'        => 1,
+          )
+      );
+      if (!isset(self::$viewcolcounts[$viewid])) self::$viewcolcounts[$viewid] = 0;
+      $bi->set('order', $view->get_current_max_order(1, self::$viewcolcounts[$viewid]) + 1);
+      $bi->set('configdata', $configdata);
+      $bi->set('column', self::$viewcolcounts[$viewid]);
+      self::$viewcolcounts[$viewid] = ((self::$viewcolcounts[$viewid]+1) % $maxcols) ? (self::$viewcolcounts[$viewid]+1) % $maxcols : $maxcols;
+
+      //in cases such as navigation where we want to add a block to a different view than the current.
+      if ($otherview) {
+        $otherview->addblockinstance($bi);
+      }
+      else {
+        $bi->commit();
+      }
     }
 
     /**
@@ -1117,6 +1130,67 @@ EOD;
             }
         }
         return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: navigation and create navblocks*
+     * **when copytoall is true**
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @param string $title of block to be created* (when copytoall is true)
+     * @param object the current view to create block on
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_navigation($data, $ownertype, $ownerid, $title, $view) {
+      if (!$data) return;
+
+      $configdata = array();
+      $copytoall = true;
+      $collectionid;
+
+      $fields = explode(';', $data);
+      foreach($fields as $field) {
+        $field = trim(strtolower($field));
+        list($key, $value) = explode('=', $field);
+        if ($key == 'collection') {
+          $configdata[$key] = $collectionid =  get_field('collection', 'id', 'name', $value);
+        }
+        if ($key == 'copytoall') {
+           $copytoall = $value == 'yes'? true : false;
+        }
+        $collectionobj = new Collection($collectionid);
+        // CASE 2: the navigation block being created IS one of the view in the collection
+        if ($collectionobj) {
+           if ($copytoall) {
+             foreach ($viewids = $collectionobj->get_viewids() as $viewid) {
+               //if vid is not the exactly the same as the og nav block for this collection
+               if ($viewid !== (int)$view->get('id')) {
+                 $needsblock = true;
+
+                 //if there exists nav blocks on this view/page
+                 if ($navblocks = get_records_sql_array("SELECT id FROM {block_instance} WHERE blocktype = ? AND view = ?", array('navigation', $viewid))) {
+                    foreach ($navblocks as $navblock) {
+                       $bi = new BlockInstance($navblock->id);
+                       $navblockconfigdata = $bi->get('configdata');
+                       //if there exists is a nav block on this view that already links to the intended collection
+                       if (!empty($navblockconfigdata['collection']) && $navblockconfigdata['collection'] == $configdata['collection']) {
+                         $needsblock = false;
+                       }
+                    }
+                 }
+                 if ($needsblock) {
+                    //need to add new navigation block
+                    $otherview = new View($viewid);
+                    // make new block
+                    self::create_new_block_instance('navigation', $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols = 3, $otherview);
+                 }
+               }
+             }
+           }
+        }
+      }
+      return $configdata;
     }
 
     /**
