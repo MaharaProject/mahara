@@ -2,7 +2,7 @@
     <h2>{str tag=resume section=artefact.resume}</h2>
     <div class="form-group collapsible-group">
         {foreach from=$resumegroups item=resumegroup}
-        {if count($resumegroup.fields)}
+        {if is_array($resumegroup.fields) && count($resumegroup.fields)}
         <fieldset id="{$resumegroup.id}_fs" class="pieform-fieldset collapsible">
             <legend>
                 <h4>
@@ -14,7 +14,7 @@
             </legend>
             <div id="resumefield-{$resumegroup.id}" class="collapse list-group">
                 {foreach from=$resumegroup.fields key=fieldname item=fieldvalues}
-                {if count(fieldvalues)}
+                {if is_array($fieldvalues) && count($fieldvalues)}
                 <div id="resume-{$resumegroup.id}" class="list-group-item">
                     <h5 class="resumefield" class="list-group-item-heading">
                         {$fieldname}
