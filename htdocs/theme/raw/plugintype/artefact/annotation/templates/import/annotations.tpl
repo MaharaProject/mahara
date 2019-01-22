@@ -1,4 +1,4 @@
-{if count($entryannotations)}
+{if is_array($entryannotations) && count($entryannotations)}
 <div class="section-import">
     <h2>{str tag=Annotation section=artefact.annotation}</h2>
     {foreach from=$entryannotations item=annotation}

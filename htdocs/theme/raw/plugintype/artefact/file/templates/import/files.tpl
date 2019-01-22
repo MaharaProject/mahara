@@ -1,4 +1,4 @@
-{if count($entryfiles)}
+{if is_array($entryfiles) && count($entryfiles)}
 <div class="section-import">
     <h2>{str tag=file section=artefact.file}</h2>
     {foreach from=$entryfiles item=file}
