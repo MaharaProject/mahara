@@ -2,7 +2,7 @@
 /*
  * Set tabs to 4 for best viewing.
  *
- * Latest version is available at http://adodb.sourceforge.net
+ * Latest version is available at http://adodb.org/
  *
  * This is the main include file for ADOdb.
  * Database specific drivers are stored in the adodb/drivers/adodb-*.inc.php
@@ -14,7 +14,7 @@
 /**
 	\mainpage
 
-	@version   v5.20.12  30-Mar-2018
+	@version   v5.20.14  06-Jan-2019
 	@copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
 	@copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
 
@@ -29,9 +29,6 @@
 	Informix, PostgreSQL, FrontBase, Interbase (Firebird and Borland variants), Foxpro, Access,
 	ADO, SAP DB, SQLite and ODBC. We have had successful reports of connecting to Progress and
 	other databases via ODBC.
-
-	Latest Download at http://adodb.sourceforge.net/
-
  */
 
 if (!defined('_ADODB_LAYER')) {
@@ -117,9 +114,9 @@ if (!defined('_ADODB_LAYER')) {
 	 * NOTE: This functionality is not implemented everywhere, it currently
 	 * works only with: mssql, odbc, oci8 and ibase derived drivers
 	 */
-	define('ADODB_ASSOC_CASE_LOWER', 0);
-	define('ADODB_ASSOC_CASE_UPPER', 1);
-	define('ADODB_ASSOC_CASE_NATIVE', 2);
+		define('ADODB_ASSOC_CASE_LOWER', 0);
+		define('ADODB_ASSOC_CASE_UPPER', 1);
+		define('ADODB_ASSOC_CASE_NATIVE', 2);
 
 	if (!$ADODB_EXTENSION || ADODB_EXTENSION < 4.0) {
 
@@ -231,7 +228,7 @@ if (!defined('_ADODB_LAYER')) {
 		/**
 		 * ADODB version as a string.
 		 */
-		$ADODB_vers = 'v5.20.12  30-Mar-2018';
+		$ADODB_vers = 'v5.20.14  06-Jan-2019';
 
 		/**
 		 * Determines whether recordset->RecordCount() is used.
@@ -430,8 +427,9 @@ if (!defined('_ADODB_LAYER')) {
 	var $databaseType = '';		/// RDBMS currently in use, eg. odbc, mysql, mssql
 	var $database = '';			/// Name of database to be used.
 	var $host = '';				/// The hostname of the database server
+	var $port = '';				/// The port of the database server
 	var $user = '';				/// The username which is used to connect to the database server.
-	private $password = '';     /// Password for the username. This is required for __wakeup
+  private $password = '';			/// Password for the username. This is required for __wakeup
 	var $debug = false;			/// if set to true will output sql statements
 	var $maxblobsize = 262144;	/// maximum size of blobs or large text fields (262144 = 256K)-- some db's die otherwise like foxpro
 	var $concat_operator = '+'; /// default concat operator -- change to || for Oracle/Interbase
@@ -632,6 +630,26 @@ if (!defined('_ADODB_LAYER')) {
 	}
 
 	/**
+	 * Parses the hostname to extract the port.
+	 * Overwrites $this->host and $this->port, only if a port is specified.
+	 * The Hostname can be fully or partially qualified,
+	 * ie: "db.mydomain.com:5432" or "ldaps://ldap.mydomain.com:636"
+	 * Any specified scheme such as ldap:// or ldaps:// is maintained.
+	 */
+	protected function parseHostNameAndPort() {
+		$parsed_url = parse_url($this->host);
+		if (is_array($parsed_url) && isset($parsed_url['host']) && isset($parsed_url['port'])) {
+			if ( isset($parsed_url['scheme']) ) {
+				// If scheme is specified (ie: ldap:// or ldaps://, make sure we retain that.
+				$this->host = $parsed_url['scheme'] . "://" . $parsed_url['host'];
+			} else {
+				$this->host = $parsed_url['host'];
+			}
+			$this->port = $parsed_url['port'];
+		}
+	}
+
+	/**
 	 * Connect to database
 	 *
 	 * @param [argHostname]		Host to connect to
@@ -646,9 +664,9 @@ if (!defined('_ADODB_LAYER')) {
 		if ($argHostname != "") {
 			$this->host = $argHostname;
 		}
-		if ( strpos($this->host, ':') > 0 && isset($this->port) ) {
-			list($this->host, $this->port) = explode(":", $this->host, 2);
-        	}
+		// Overwrites $this->host and $this->port if a port is specified.
+		$this->parseHostNameAndPort();
+
 		if ($argUsername != "") {
 			$this->user = $argUsername;
 		}
@@ -729,9 +747,9 @@ if (!defined('_ADODB_LAYER')) {
 		if ($argHostname != "") {
 			$this->host = $argHostname;
 		}
-		if ( strpos($this->host, ':') > 0 && isset($this->port) ) {
-			list($this->host, $this->port) = explode(":", $this->host, 2);
-	        }
+		// Overwrites $this->host and $this->port if a port is specified.
+		$this->parseHostNameAndPort();
+
 		if ($argUsername != "") {
 			$this->user = $argUsername;
 		}
@@ -3092,13 +3110,13 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 		if ($changed === true) {
 			return $new['message'];
 		}
+
 		return '';
-
 	}
 
-	function __wakeup() {
-		$this->Connect($this->host, $this->user, $this->password, $this->database, true);
-	}
+    function __wakeup() {
+        $this->Connect($this->host, $this->user, $this->password, $this->database, true);
+    }
 } // end class ADOConnection
 
 
