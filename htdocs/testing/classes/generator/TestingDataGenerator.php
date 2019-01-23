@@ -1282,6 +1282,33 @@ EOD;
         return $configdata;
     }
 
+    public static function generate_configdata_recentforumposts($data, $ownertype, $ownerid) {
+        if (!$data) return;
+        $configdata = array();
+
+        $fields = explode(';',$data);
+        foreach ($fields as $field) {
+            $field = trim($field);
+            list($key, $value) = explode('=',$field);
+            if ($key == 'groupname') {
+                $groupid;
+                //make sure the group exists
+                if (!$groupid = get_field('group', 'id', 'name', $value)) {
+                    throw new SystemException("Invalid Group '" . $value . "'");
+                }
+                else {
+                    $configdata['groupid'] = $groupid;
+                }
+            }
+            if ($key == 'maxposts') {
+                $key = 'limit';
+                $configdata[$key] = $value > 0 ? $value: 5;
+            }
+        }
+        $configdata[] = $data;
+        return $configdata;
+    }
+
     /**
      * generate configdata for the blocktype: social profile
      * @param string $data inside data column in behat test
