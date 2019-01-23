@@ -77,7 +77,7 @@ class BehatDataGenerators extends BehatBase {
                 'institution'      => 'text',
                 'public'           => 'bool',
             ),
-            'required' => array('name', 'owner'),
+            'required' => array('name', 'owner')
         ),
         'institutions' => array(
             'datagenerator' => 'institution',
@@ -117,7 +117,7 @@ class BehatDataGenerators extends BehatBase {
                 'layout'           => 'text',
                 'tags'             => 'text',
             ),
-            'required' => array('title', 'ownertype', 'ownername'),
+            'required' => array('title', 'ownertype', 'ownername')
         ),
         'blocks' => array(
             'datagenerator' => 'block',
@@ -130,9 +130,8 @@ class BehatDataGenerators extends BehatBase {
                 'column'           => 'text',
                 'order'            => 'text',*/
                 'retractable'      => 'text',
-
             ),
-            'required' => array('title', 'type', 'page'),
+            'required' => array('title', 'type', 'page')
         ),
         'collections' => array(
             'datagenerator' => 'collection',
@@ -143,7 +142,7 @@ class BehatDataGenerators extends BehatBase {
                 'ownername'        => 'text',
                 'pages'            => 'text',
             ),
-            'required' => array('title', 'ownertype', 'ownername'),
+            'required' => array('title', 'ownertype', 'ownername')
         ),
         'permissions' => array(
             'datagenerator' => 'permission',
@@ -156,7 +155,7 @@ class BehatDataGenerators extends BehatBase {
                 'role'             => 'text',
                 'multiplepermissions'   => 'bool', // Set to true if wanting to add multiple access rules to a view
             ),
-            'required' => array('title', 'accesstype'),
+            'required' => array('title', 'accesstype')
         ),
         'group memberships' => array(
             'datagenerator' => 'group_membership',
@@ -178,7 +177,7 @@ class BehatDataGenerators extends BehatBase {
                 'url'              => 'text',
                 'urltext'          => 'text',
             ),
-           'required' => array('emailtype', 'to', 'subject'),
+           'required' => array('emailtype', 'to', 'subject')
         ),
         'journals' => array(
             'datagenerator' => 'blog',
@@ -189,7 +188,7 @@ class BehatDataGenerators extends BehatBase {
                 'description'      => 'text',
                 'tags'             => 'text',
             ),
-           'required' => array('owner', 'ownertype', 'title'),
+           'required' => array('owner', 'ownertype', 'title')
         ),
         'journalentries' => array(
             'datagenerator' => 'blogpost',
@@ -202,7 +201,32 @@ class BehatDataGenerators extends BehatBase {
                 'tags'             => 'text',
                 'draft'            => 'bool',
             ),
-           'required' => array('owner', 'ownertype', 'title', 'entry'),
+           'required' => array('owner', 'ownertype', 'title', 'entry')
+        ),
+        'plans' => array(
+            'datagenerator' => 'plan',
+            'available' => array(
+                'owner'            => 'text',
+                'ownertype'        => 'text',
+                'title'            => 'text',
+                'description'      => 'text',
+                'tags'             => 'text',
+            ),
+           'required' => array('owner', 'ownertype', 'title')
+        ),
+        'tasks' => array(
+          'datagenerator' => 'task',
+          'available' => array(
+            'owner'                => 'text',
+            'ownertype'            => 'text',
+            'plan'                 => 'text',
+            'title'                => 'text',
+            'description'          => 'text',
+            'completiondate'       => 'text',
+            'completed'            => 'bool',
+            'tags'                 => 'text'
+          ),
+          'required' => array('owner', 'ownertype', 'plan', 'title', 'completiondate')
         ),
     );
 
@@ -216,10 +240,10 @@ class BehatDataGenerators extends BehatBase {
         foreach ($record as &$value) {
             $value = trim($value);
             // Normalise boolean values
-            if (strtolower($value) == 'on' || $value == '1') {
+            if (strtolower($value) == 'on' || $value == '1' || $value == 'yes') {
                 $value = true;
             }
-            else if (strtolower($value) == 'off' || $value == '0') {
+            else if (strtolower($value) == 'off' || $value == '0' || $value == 'no') {
                 $value = false;
             }
         }

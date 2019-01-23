@@ -1235,6 +1235,53 @@ EOD;
         return $configdata;
     }
 
+    public static function generate_configdata_plans($data) {
+        if (!$data) return;
+        $configdata = array();
+
+        $fields = explode(';', $data);
+        foreach($fields as $field) {
+            $field = trim($field);
+            list($key,$value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
+
+            if ($key == 'plans') {
+                $key = 'artefactids';
+
+                $plans = explode(',',$value);
+                foreach ($plans as $plan) {
+                    $planid;
+
+                    if ($plan) {
+                        if (!$planid = get_field('artefact', 'id', 'title', $plan, 'artefacttype', 'plan')) {
+                            throw new SystemException("Invalid Plan '" . $plan . "'");
+                        }
+                    }
+                    else {
+                        //pick any plan artefact owned by the given user
+                        $planid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('plan', $owner));
+                        if (!$planid) {
+                            throw new SystemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a plan to add task to. Please create plan first");
+                        }
+                    }
+
+                    if ($key == 'artefactids') {
+                        $values[] = $planid;
+                        $newvalue = $values;
+                    }
+                }
+                $value = $newvalue;
+                $configdata[$key] = $value;
+
+            }
+            if ($key == 'tasksdisplaycount') {
+                $configdata['count'] = $value;
+            }
+        }
+        return $configdata;
+    }
+
     /**
      * generate configdata for the blocktype: social profile
      * @param string $data inside data column in behat test
@@ -1378,7 +1425,10 @@ EOD;
     }
 
     /**
-     * Create a collection of pages
+     * A fixture to set up collections of pages in bulk.
+     * Currently it only supports adding title / description,
+     * | title          | ownertype | ownername | description | pages             |
+     * | collection one | user      | UserA     | desc of col |Page One,Page Two  |
      * @param array $record
      * @throws SystemException if creating failed
      * @return int new collection id
@@ -1468,166 +1518,6 @@ EOD;
         }
     }
 
-    /**
-     * A fixture to set up page & collection permissions. Currently it only supports setting a blanket permission of
-     * "public", "loggedin", "friends", "private", "user + role", and allowcomments & approvecomments
-     *
-     * Example:
-     * Given the following "permissions" exist:
-     * | title | accesstype | accessname | allowcomments |
-     * | Page 1 | loggedin | loggedin | 1 |
-     * | Collection 1 | public | public | 1 |
-     * | Page 2 | user | userA | 0 |
-     * @param unknown $record
-     * @throws SystemException
-     */
-    public function create_permission($record) {
-        $sql = "SELECT id, 'view' AS \"type\" FROM {view} WHERE LOWER(TRIM(title))=?
-                UNION
-                SELECT id, 'collection' AS \"type\" FROM {collection} WHERE LOWER(TRIM(name))=?";
-        $title = strtolower(trim($record['title']));
-        $ids = get_records_sql_array($sql, array($title, $title));
-        if (!$ids || count($ids) > 1) {
-            throw new SystemException("Invalid page/collection name '" . $record['title'] . "'. The page/collection title does not exist, or is duplicated.");
-        }
-        $id = $ids[0];
-        $viewids = array();
-        if ($id->type == 'view') {
-            $viewids[] = $id->id;
-        }
-        else {
-            $records = get_records_array('collection_view', 'collection', $id->id, 'displayorder', 'view');
-            if (!$records) {
-                throw new SystemException("Can't set permissions on empty collection named '" . $record['title'] . "'.");
-            }
-            foreach ($records as $view) {
-                $viewids[] = $view->view;
-            }
-        }
-
-        if ($record['accesstype'] == 'private') {
-            $accesslist = array();
-        }
-        else {
-            $role = null;
-            switch ($record['accesstype']) {
-                case 'user':
-                    $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($record['accessname']))));
-                    if (!$ids || count($ids) > 1) {
-                        throw new SystemException("Invalid access user '" . $record['accessname'] . "'. The username does not exist or duplicated");
-                    }
-                    $id = $ids[0]->id;
-                    $type = 'user';
-                    if (!empty($record['role']) && $userrole = get_field('usr_roles', 'role', 'role', $record['role'])) {
-                        $role = $userrole;
-                    }
-                    break;
-                case 'public':
-                case 'friends':
-                case 'loggedin':
-                    $type = $id = $record['accesstype'];
-                    break;
-            }
-            // TODO: This only supports one access record at a time per page
-            $accesslist = array(
-                array(
-                    'startdate' => null,
-                    'stopdate' => null,
-                    'type' => $type,
-                    'role' => $role,
-                    'id' => $id,
-                )
-            );
-        }
-        if (!empty($record['multiplepermissions'])) {
-            require_once('view.php');
-            $firstview = new View($viewids[0]);
-            $currentaccess = $firstview->get_access();
-            $accesslist = array_merge($currentaccess, $accesslist);
-        }
-
-        $viewconfig = array(
-            'startdate'       => null,
-            'stopdate'        => null,
-            'template'        => 0,
-            'retainview'      => (int) (isset($record['retainview']) ? $record['retainview'] : 0),
-            'allowcomments'   => (int) (isset($record['allowcomments']) ? $record['allowcomments'] : 1),
-            'approvecomments' => (int) (isset($record['approvecomments']) ? $record['approvecomments'] : 0),
-            'accesslist'      => $accesslist,
-            'lockblocks'      => (int) (isset($record['lockblocks']) ? $record['lockblocks'] : 0),
-        );
-
-        require_once('view.php');
-        View::update_view_access($viewconfig, $viewids);
-    }
-
-    /**
-     * A fixture to set up messages in bulk.
-     * Currently it only supports setting friend request / accept internal notifications
-     * @TODO allow for other types of messages
-     *
-     * Example:
-     * Given the following "messages" exist:
-     * | emailtype | to | from | subject | messagebody | read | url | urltext |
-     * | friendrequest | userA | userB | New friend request | This is a friend request | 1 | user/view.php?id=[from] | Requests |
-     * | friendaccept  | userB | userA | Friend request accepted | This is a friend request acceptance | 1 | user/view.php?id=[to] |  |
-     * @param unknown $record
-     * @throws SystemException
-     */
-    public function create_message($record) {
-        $record['to'] = trim($record['to']);
-        $to = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['to'])));
-        if (!$to || count($to) > 1) {
-            throw new SystemException("Invalid user '" . $record['to'] . "'. The username does not exist or duplicated");
-        }
-        $to = $to[0]->id;
-        $from = null;
-        if (strtolower($record['from']) != 'system') {
-            $from = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['from'])));
-            if (!$from || count($from) > 1) {
-                throw new SystemException("Invalid user '" . $record['from'] . "'. The username does not exist or duplicated");
-            }
-            $from = $from[0]->id;
-        }
-        $emailtype = strtolower(trim($record['emailtype']));
-        if (!in_array($emailtype, array('friendrequest', 'friendaccept'))) {
-            throw new SystemException("Invalid emailtype '" . $emailtype . "'. The email type does not exist or is not yet set up");
-        }
-        $subject = !empty(trim($record['subject'])) ? trim($record['subject']) : 'Message subject';
-        $messagebody= !empty(trim($record['messagebody'])) ? trim($record['messagebody']) : 'Message body';
-        $read = !empty($record['read']) ? 1 : 0;
-        $url = null;
-        if (!empty(trim($record['url']))) {
-            $url = trim($record['url']);
-            // See if the url needs to have a correct id added to it. This works in the following way:
-            // the behat writer specifies the url and places the id var in [ ] and indicates where to
-            // get the id, eg 'view/user.php?id=[to]' means to fetch the id for the user specified in
-            // the 'to' column, which will be set above as variable $to
-            if (preg_match_all('/\[(?P<id>\w+)\]/', $url, $matches)) {
-                // replace the matched ids with their id number and set up replacement patterns
-                foreach ($matches['id'] as $k => $v) {
-                    if (in_array($v, array('from', 'to'))) {
-                        $matches['id'][$k] = $$v;
-                        $matches[1][$k] = '/\[' . $v . '\]/';
-                    }
-                }
-                $url = preg_replace($matches[1], $matches['id'], $url);
-            }
-        }
-        $urltext = !empty(trim($record['urltext'])) ? trim($record['urltext']) : null;
-
-        $users = array($to);
-        $data = new stdClass();
-        $data->url = $url;
-        $data->users = $users;
-        $data->fromuser = $from;
-        $data->strings = (object) array('urltext' => (object) array('key' => $urltext));
-        $data->subject = $subject;
-        $data->message = $messagebody;
-
-        $activity =  new ActivityTypeMaharamessage($data, false);
-        $activity->notify_users();
-    }
 
     /**
      * A fixture to set up journals in bulk.
@@ -1635,36 +1525,21 @@ EOD;
      *
      * Example:
      * Given the following "journals" exist:
-     * | owner | ownertype | title | description | tags |
-     * | userA | user | Blog One | This is my new blog | cats,dogs |
-     * | Group B | group | Group Blog | This is my group blog | |
+     * | owner   | ownertype | title      | description           | tags      |
+     * | userA   | user      | Blog One   | This is my new blog   | cats,dogs |
+     * | Group B | group     | Group Blog | This is my group blog |           |
      * @param unknown $record
      * @throws SystemException
      */
     public function create_blog($record) {
-        $record['owner'] = trim($record['owner']);
-        $record['ownertype'] = trim($record['ownertype']);
         $owner = null;
         $ownertype = null;
-        if ($record['ownertype'] == 'group') {
-            $owner = get_field('group', 'id', 'name', $record['owner']);
-            $ownertype = 'group';
-        }
-        else if ($record['ownertype'] == 'institution') {
-            $owner = get_field('institution', 'name', 'displayname', $record['owner']);
-            $ownertype = 'institution';
-        }
-        else {
-            $owner = get_field('usr', 'id', 'username', $record['owner']);
-            $ownertype = 'owner';
-        }
-        if (!$owner) {
-            throw new SystemException("Invalid owner '" . $record['to'] . "'. The owner needs to be a username or group/institution display name");
-        }
+        $this->set_owner($record, $owner, $ownertype);
+
         $record['title'] = trim($record['title']);
         if (!empty($record['title'])) {
             // Check the blog does not already exist with that name
-            $blogid = get_field('artefact', 'id', 'artefacttype', 'blog', 'title', $record['title'], $ownertype, $owner);
+            $blogid = get_field('artefact', 'id', 'artefacttype', 'blog', 'title', $record['title']);
             if ($blogid) {
                 throw new SystemException("Invalid journal with '" . $record['title'] . "'. The blog already exists for this " . $record['owner'] . " " . $record['ownertype']);
             }
@@ -1691,56 +1566,297 @@ EOD;
      *
      * Example:
      * Given the following "journalposts" exist:
-     * | owner | ownertype | title | entry | blog | tags | draft |
-     * | userA | user | Entry One | This is my entry | Blog 1 | cats,dogs | 0 |
+     * | owner   | ownertype | title | entry | blog | tags | draft |
+     * | userA   | user | Entry One | This is my entry | Blog 1 | cats,dogs | 0 |
      * | Group B | group | GE 1 | This is my group entry | G Blog 2 | | 0 |
-     * | userB | user | Entry One | This is my entry | | | 1 |  <-- No blog specified should default to default blog
+     * | userB   | user | Entry One | This is my entry | | | 1 |  <-- No blog specified should default to default blog
      * @param unknown $record
      * @throws SystemException
      */
     public function create_blogpost($record) {
-        $record['owner'] = trim($record['owner']);
-        $record['ownertype'] = trim($record['ownertype']);
-        $owner = null;
-        $ownertype = null;
-        if ($record['ownertype'] == 'group') {
-            $owner = get_field('group', 'id', 'name', $record['owner']);
-            $ownertype = 'group';
+      $owner = null;
+      $ownertype = null;
+      $this->set_owner($record, $owner, $ownertype);
+
+      $record['blog'] = trim($record['blog']);
+      if (!empty($record['blog'])) {
+        // Check the blog exists with that name
+        $blogid = get_field('artefact', 'id', 'artefacttype', 'blog', 'title', $record['blog']);
+        if (!$blogid) {
+          throw new SystemException("Invalid journal '" . $record['blog'] . "'. The " . $record['ownertype'] . " " . $record['owner'] . " does not have a blog called " . $record['blog']);
         }
-        else if ($record['ownertype'] == 'institution') {
-            $owner = get_field('institution', 'name', 'displayname', $record['owner']);
-            $ownertype = 'institution';
+      }
+      else {
+        //pick any blog as long as the given user has one
+        $blogid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('blog', $owner));
+        if (!$blogid) {
+          throw new SystemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a blog to add blog entry to. Please create blog first");
         }
-        else {
-            $owner = get_field('usr', 'id', 'username', $record['owner']);
-            $ownertype = 'owner';
-        }
-        if (!$owner) {
-            throw new SystemException("Invalid owner '" . $record['to'] . "'. The owner needs to be a username or group/institution display name");
-        }
-        $record['blog'] = trim($record['blog']);
-        if (!empty($record['blog'])) {
-            // Check the blog exists with that name
-            $blogid = get_field('artefact', 'id', 'artefacttype', 'blog', 'title', $record['blog'], $ownertype, $owner);
-            if (!$blogid) {
-                throw new SystemException("Invalid journal '" . $record['blog'] . "'. The " . $record['ownertype'] . " " . $record['owner'] . " does not have a blog called " . $record['blog']);
-            }
-        }
-        else {
-            $blogid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('blog', $owner));
-            if (!$blogid) {
-                throw new systemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a blog to add blog entry to. Please create blog first");
-            }
-        }
-        safe_require('artefact', 'blog');
-        $postobj = new ArtefactTypeBlogPost(null, null);
-        $postobj->set('title', trim($record['title']));
-        $postobj->set('description', trim($record['entry']));
-        $tags = array_map('trim', explode(',', $record['tags']));
-        $postobj->set('tags', (!empty($tags) ? $tags : null));
-        $postobj->set('published', !$record['draft']);
-        $postobj->set($ownertype, $owner);
-        $postobj->set('parent', $blogid);
-        $postobj->commit();
+      }
+      safe_require('artefact', 'blog');
+      $artefact = new ArtefactTypeBlogPost();
+      $artefact->set('title', trim($record['title']));
+      $artefact->set('description', trim($record['entry']));
+      $tags = array_map('trim', explode(',', $record['tags']));
+      $artefact->set('tags', (!empty($tags) ? $tags : null));
+      $artefact->set('published', !$record['draft']);
+      $artefact->set('owner', $owner);
+      $artefact->set('parent', $blogid);
+      $artefact->commit();
     }
-}
+
+    /**
+     * A fixture to set up messages in bulk.
+     * Currently it only supports setting friend request / accept internal notifications
+     * @TODO allow for other types of messages
+     *
+     * Example:
+     * Given the following "messages" exist:
+     * | emailtype | to | from | subject | messagebody | read | url | urltext |
+     * | friendrequest | userA | userB | New friend request | This is a friend request | 1 | user/view.php?id=[from] | Requests |
+     * | friendaccept  | userB | userA | Friend request accepted | This is a friend request acceptance | 1 | user/view.php?id=[to] |  |
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_message($record) {
+      $record['to'] = trim($record['to']);
+      $to = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['to'])));
+      if (!$to || count($to) > 1) {
+        throw new SystemException("Invalid user '" . $record['to'] . "'. The username does not exist or duplicated");
+      }
+      $to = $to[0]->id;
+      $from = null;
+      if (strtolower($record['from']) != 'system') {
+        $from = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['from'])));
+        if (!$from || count($from) > 1) {
+          throw new SystemException("Invalid user '" . $record['from'] . "'. The username does not exist or duplicated");
+        }
+        $from = $from[0]->id;
+      }
+      $emailtype = strtolower(trim($record['emailtype']));
+      if (!in_array($emailtype, array('friendrequest', 'friendaccept'))) {
+        throw new SystemException("Invalid emailtype '" . $emailtype . "'. The email type does not exist or is not yet set up");
+      }
+      $subject = !empty(trim($record['subject'])) ? trim($record['subject']) : 'Message subject';
+      $messagebody= !empty(trim($record['messagebody'])) ? trim($record['messagebody']) : 'Message body';
+      $read = !empty($record['read']) ? 1 : 0;
+      $url = null;
+      if (!empty(trim($record['url']))) {
+        $url = trim($record['url']);
+        // See if the url needs to have a correct id added to it. This works in the following way:
+        // the behat writer specifies the url and places the id var in [ ] and indicates where to
+        // get the id, eg 'view/user.php?id=[to]' means to fetch the id for the user specified in
+        // the 'to' column, which will be set above as variable $to
+        if (preg_match_all('/\[(?P<id>\w+)\]/', $url, $matches)) {
+          // replace the matched ids with their id number and set up replacement patterns
+          foreach ($matches['id'] as $k => $v) {
+            if (in_array($v, array('from', 'to'))) {
+              $matches['id'][$k] = $$v;
+              $matches[1][$k] = '/\[' . $v . '\]/';
+            }
+          }
+          $url = preg_replace($matches[1], $matches['id'], $url);
+        }
+      }
+      $urltext = !empty(trim($record['urltext'])) ? trim($record['urltext']) : null;
+
+      $users = array($to);
+      $data = new stdClass();
+      $data->url = $url;
+      $data->users = $users;
+      $data->fromuser = $from;
+      $data->strings = (object) array('urltext' => (object) array('key' => $urltext));
+      $data->subject = $subject;
+      $data->message = $messagebody;
+
+      $activity =  new ActivityTypeMaharamessage($data, false);
+      $activity->notify_users();
+    }
+
+    /**
+     * A fixture to set up page & collection permissions. Currently it only supports setting a blanket permission of
+     * "public", "loggedin", "friends", "private", "user + role", and allowcomments & approvecomments
+     *
+     * Example:
+     * Given the following "permissions" exist:
+     * | title | accesstype | accessname | allowcomments |
+     * | Page 1 | loggedin | loggedin | 1 |
+     * | Collection 1 | public | public | 1 |
+     * | Page 2 | user | userA | 0 |
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_permission($record) {
+      $sql = "SELECT id, 'view' AS \"type\" FROM {view} WHERE LOWER(TRIM(title))=?
+      UNION
+      SELECT id, 'collection' AS \"type\" FROM {collection} WHERE LOWER(TRIM(name))=?";
+      $title = strtolower(trim($record['title']));
+      $ids = get_records_sql_array($sql, array($title, $title));
+      if (!$ids || count($ids) > 1) {
+        throw new SystemException("Invalid page/collection name '" . $record['title'] . "'. The page/collection title does not exist, or is duplicated.");
+      }
+      $id = $ids[0];
+      $viewids = array();
+      if ($id->type == 'view') {
+        $viewids[] = $id->id;
+      }
+      else {
+        $records = get_records_array('collection_view', 'collection', $id->id, 'displayorder', 'view');
+        if (!$records) {
+          throw new SystemException("Can't set permissions on empty collection named '" . $record['title'] . "'.");
+        }
+        foreach ($records as $view) {
+          $viewids[] = $view->view;
+        }
+      }
+
+      if ($record['accesstype'] == 'private') {
+        $accesslist = array();
+      }
+      else {
+        $role = null;
+        switch ($record['accesstype']) {
+          case 'user':
+          $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($record['accessname']))));
+          if (!$ids || count($ids) > 1) {
+            throw new SystemException("Invalid access user '" . $record['accessname'] . "'. The username does not exist or duplicated");
+          }
+          $id = $ids[0]->id;
+          $type = 'user';
+          if (!empty($record['role']) && $userrole = get_field('usr_roles', 'role', 'role', $record['role'])) {
+            $role = $userrole;
+          }
+          break;
+          case 'public':
+          case 'friends':
+          case 'loggedin':
+          $type = $id = $record['accesstype'];
+          break;
+        }
+        // TODO: This only supports one access record at a time per page
+        $accesslist = array(
+        array(
+        'startdate' => null,
+        'stopdate' => null,
+        'type' => $type,
+        'role' => $role,
+        'id' => $id,
+        )
+        );
+      }
+      if (!empty($record['multiplepermissions'])) {
+        require_once('view.php');
+        $firstview = new View($viewids[0]);
+        $currentaccess = $firstview->get_access();
+        $accesslist = array_merge($currentaccess, $accesslist);
+      }
+
+      $viewconfig = array(
+      'startdate'       => null,
+      'stopdate'        => null,
+      'template'        => 0,
+      'retainview'      => (int) (isset($record['retainview']) ? $record['retainview'] : 0),
+      'allowcomments'   => (int) (isset($record['allowcomments']) ? $record['allowcomments'] : 1),
+      'approvecomments' => (int) (isset($record['approvecomments']) ? $record['approvecomments'] : 0),
+      'accesslist'      => $accesslist,
+      'lockblocks'      => (int) (isset($record['lockblocks']) ? $record['lockblocks'] : 0),
+      );
+
+      require_once('view.php');
+      View::update_view_access($viewconfig, $viewids);
+    }
+
+    /**
+     * A fixture to set up plans in bulk.
+     * Currently it only supports adding title / description / tags for a plan
+     *
+     * Example:
+     * Given the following "plans" exist:
+     * | owner   | ownertype | title      | description           | tags      |
+     * | userA   | user      | Plan One   | This is my new plan   | cats,dogs |
+     * | Group B | group     | Group Plan | This is my group plan | unicorn   |
+     **/
+    public function create_plan($record) {
+        $owner = null;
+        $this->set_owner($record, $owner);
+
+        $artefact = new ArtefactTypePlan();
+        $artefact->set('title', $record['title']);
+        $artefact->set('description', $record['description']);
+        $artefact->set('owner', $owner);
+
+        if (!empty($record['tags'])) {
+            $tags = array_map('trim', explode(',', $record['tags']));
+            $artefact->set('tags', (!empty($tags) ? $tags : null));
+        }
+        $artefact->commit();
+    }
+
+    public function create_task($record) {
+        $owner = null;
+        $this->set_owner($record, $owner);
+
+        $record['plan'] = trim($record['plan']);
+        if (!empty($record['plan'])) {
+            //check that there exists a plan to add a task to
+            $planid = get_field('artefact', 'id', 'artefacttype', 'plan', 'title', $record['plan'], 'owner', $owner );
+            if (!$planid) {
+                throw new SystemException("Invalid Plan '" . $record['plan'] . "'. The " . $record['ownertype'] . " " . $record['owner'] . " does not have a plan called " . $record['plan']);
+            }
+        }
+        else {
+            //pick any plan artefact owned by the given user
+            $planid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('plan', $owner));
+            if (!$planid) {
+                throw new SystemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a plan to add task to. Please create plan first");
+            }
+        }
+
+        $artefact = new ArtefactTypeTask();
+        $artefact->set('title', trim($record['title']));
+        $artefact->set('description', trim($record['description']));
+        $artefact->set('completed', $record['completed'] ? 1 : 0);
+        $artefact->set('owner', $owner);
+        $artefact->set('parent', $planid);
+        $completiondate = date_create_from_format('d/m/y', $record['completiondate']);
+        $artefact->set('completiondate', $completiondate);
+
+        if (!empty($record['tags'])) {
+            $tags = array_map('trim', explode(',', $record['tags']));
+            $artefact->set('tags', (!empty($tags) ? $tags : null));
+        }
+        $artefact->commit();
+    }
+
+    /**
+     * sets up the owner and ownertype when creating bulk artefacts
+     * in functions looking like create_[...]
+     *
+     * $ownertype is currently only used by blog and blogentry
+     *
+     * @param array $record an array representation of a row of the testing table
+     * @param string $owner null variable passed in by reference for owner
+     * @param string $owner null variable passed in by reference for ownertype
+     * @return return type
+     */
+    public function set_owner($record, &$owner, &$ownertype = null) {
+      $ownertype = null;
+      $record['owner'] = trim($record['owner']);
+      $record['ownertype'] = trim($record['ownertype']);
+      if ($record['ownertype'] == 'group') {
+          $owner = get_field('group', 'id', 'name', $record['owner']);
+          $ownertype = 'group';
+      }
+      else if ($record['ownertype'] == 'institution') {
+          $owner = get_field('institution', 'name', 'displayname', $record['owner']);
+          $ownertype = 'institution';
+      }
+      else {
+          $owner = get_field('usr', 'id', 'username', $record['owner']);
+          $ownertype = 'owner';
+      }
+      if (!$owner) {
+          throw new SystemException("Invalid owner. The owner needs to be a username or group/institution display name");
+      }
+    }
+  }

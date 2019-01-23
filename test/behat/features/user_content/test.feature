@@ -43,6 +43,21 @@ Background:
     | UserA   | user      | Entry Five  | This is my entry Five  | journal1 | cats,dogs | 0     |
     | Group1  | group     | Group e1    | This is my group entry | journal2 |           | 0     |
 
+    And the following "plans" exist:
+    | owner   | ownertype | title      | description           | tags      |
+    | UserA   | user      | Plan One   | This is my plan one   | cats,dogs |
+    | UserA   | user      | Plan Two   | This is my plan two   | cats,dogs |
+    | Group1 | group      | Group Plan | This is my group plan | unicorn   |
+
+    And the following "tasks" exist:
+    | owner | ownertype | plan     | title   | description          | completiondate | completed | tags      |
+    | UserA | user      | Plan One | Task One| Task One Description | 12/12/19       | no        | cats,dogs |
+    | UserA | user      | Plan One | Task Two| Task Two Description | 12/01/19       | yes       | cats,dogs |
+    | UserA | user      | Plan Two | Task 2a | Task 2a Description  | 12/10/19       | yes       | cats,dogs |
+    | UserA | user      | Plan Two | Task 2b | Task 2b Description  | 11/05/19       | yes       | cats,dogs |
+    | UserA | user      | Plan Two | Task 2c | Task 2c Description  | 22/02/19       | yes       | cats,dogs |
+
+
     And the following "blocks" exist:
     | title       | type         | page          |retractable | data |
     | My text 1   | text         | Page UserA_00 | yes        | This is some text |
@@ -64,19 +79,19 @@ Background:
     | myfolder    | folder         | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
     | my html     | html           | Page UserB_00 | yes        | attachment=test_html.html |
 
-    #| my blog     | blog           | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
+    | my blog     | blog           | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
     | my blogpost | blogpost       | Page One      | no         | copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
     | Comments    | comment        | Page One      |            | no configdata |
     | PeerAssessmt| peerassessment | Page One      | auto       | no configdata |
+    | creativecoms| creativecommons| Page One      | no         | commercialuse=yes;license=3.0;allowmods=no |
 
-    | my nav      | navigation     | Page Three    | no         | collection=collection one;copytoall=yes |
+    | my nav      | navigation     | Page Two      | no         | collection=collection one;copytoall=yes |
+    | my plan     | plans          | Page Two      | no         | plans=Plan One,Plan Two;tasksdisplaycount=10 |
 
     | internalm v | internalmedia  | Page Three    | no         | attachment=testvid3.mp4 |
     | internalm a | internalmedia  | Page Three    | no         | attachment=mahara.mp3 |
     | my pdf      | pdf            | Page Three    | no         | attachment=mahara_about.pdf |
 
-    # creative commons options for allowmods= yes, no, yeswithsharing
-    | creativecoms| creativecommons| Page One      | no        | commercialuse=yes;license=3.0;allowmods=no |
 
 
 
