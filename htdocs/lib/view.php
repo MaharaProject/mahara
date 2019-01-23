@@ -4242,10 +4242,10 @@ class View {
                     $time = (!empty($data['submittedtime'])) ? format_date(strtotime($data['submittedtime'])) : null;
 
                     if (!empty($status) && !empty($time)) {
-                        $data['submittedto'] = get_string('viewsubmittedtogroupon', 'view', $url, $name, $time);
+                        $data['submittedto'] = get_string('viewsubmittedtogroupon1', 'view', $url, $name, $time);
                     }
                     else if (!empty($status)) {
-                        $data['submittedto'] = get_string('viewsubmittedtogroup', 'view', $url, $name);
+                        $data['submittedto'] = get_string('viewsubmittedtogroup1', 'view', $url, $name);
                     }
                     if ($status == self::PENDING_RELEASE) {
                         $data['submittedto'] .= ' ' . get_string('submittedpendingrelease', 'view');
