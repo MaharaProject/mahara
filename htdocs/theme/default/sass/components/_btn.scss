@@ -7,3 +7,22 @@
         color: $theme-primary-color;
     }
 }
+
+.btn-secondary, .drag-default-button {
+    background: $btn-secondary-bg;
+    margin-bottom: 0;
+    &:hover,
+    &:focus {
+        background: darken($btn-secondary-bg, 9.7%);
+        color: $btn-secondary-color;
+        border-color: darken($btn-secondary-border, 12%);
+    }
+}
+
+.btn-secondary {
+    background: darken($btn-secondary-bg, 4.75%);
+    &:hover,
+    &:focus {
+        background: darken($btn-secondary-bg, 14.5%);
+    }
+}

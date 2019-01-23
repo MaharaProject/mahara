@@ -1,5 +1,6 @@
 
 @import "../typography/tables";
+@import "../typography/typography";
 
 // General customisation and component files go here...
 @import "../layout/footer";
@@ -12,6 +13,7 @@
 @import "../layout/card/card-footer";
 @import "../layout/card/card-header";
 @import "../layout/card/card-block";
+@import "../layout/card/card-secondary";
 
 // Navigation
 @import "../layout/nav/main-nav";
@@ -26,5 +28,6 @@
 
 // Feature related sass. We avoid this where we can in favour of reusable components
 @import "../features/dashboard-widget";
+@import "../features/collection-navigation";
 
 @import "../custom";

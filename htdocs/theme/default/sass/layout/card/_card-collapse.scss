@@ -6,4 +6,9 @@
             border-bottom: 2px solid #ddd;
         }
     }
+    &:not(.card-block).has-attachment {
+        .card-header a:not(.collapsed) {
+            border-bottom-width: 1px;
+        }
+    }
 }
