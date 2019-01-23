@@ -1282,6 +1282,14 @@ EOD;
         return $configdata;
     }
 
+    /**
+     * generate configdata for blocktype: recentforumposts
+     *
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values of db table
+     */
     public static function generate_configdata_recentforumposts($data, $ownertype, $ownerid) {
         if (!$data) return;
         $configdata = array();
