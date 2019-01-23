@@ -1802,7 +1802,7 @@ EOD;
      * | owner   | ownertype | title      | description           | tags      |
      * | userA   | user      | Plan One   | This is my new plan   | cats,dogs |
      * | Group B | group     | Group Plan | This is my group plan | unicorn   |
-     **/
+      */
     public function create_plan($record) {
         $owner = null;
         $this->set_owner($record, $owner);
@@ -1819,6 +1819,19 @@ EOD;
         $artefact->commit();
     }
 
+    /**
+     * A fixture to set up tasks in bulk
+     *
+     * Example:
+     * And the following "tasks" exist:
+     *| owner | ownertype | plan     | title   | description          | completiondate | completed | tags      |
+     *| UserA | user      | Plan One | Task One| Task One Description | 12/12/19       | no        | cats,dogs |
+     *| UserA | user      | Plan One | Task Two| Task Two Description | 12/01/19       | yes       | cats,dogs |
+     *| UserA | user      | Plan Two | Task 2a | Task 2a Description  | 12/10/19       | yes       | cats,dogs |
+     *| UserA | user      | Plan Two | Task 2b | Task 2b Description  | 11/05/19       | yes       | cats,dogs |
+     *
+     * @param array $record row of fields from the behat table for creating tasks in bulk
+     */
     public function create_task($record) {
         $owner = null;
         $this->set_owner($record, $owner);
