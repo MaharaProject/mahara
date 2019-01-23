@@ -138,10 +138,10 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         }
     }
     else if ($view->get('submittedtime')) {
-        $text = get_string('viewsubmittedtogroupon', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name), format_date(strtotime($view->get('submittedtime'))));
+        $text = get_string('viewsubmittedtogroupon1', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name), format_date(strtotime($view->get('submittedtime'))));
     }
     else {
-        $text = get_string('viewsubmittedtogroup', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
+        $text = get_string('viewsubmittedtogroup1', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
     }
     if (($releasecollection && $collection->get('submittedstatus') == Collection::SUBMITTED) || $view->get('submittedstatus') == View::SUBMITTED) {
         $releaseform = pieform(array(
