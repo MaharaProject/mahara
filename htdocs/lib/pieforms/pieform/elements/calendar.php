@@ -252,7 +252,6 @@ function pieform_element_calendar_get_headdata($element) {
 
     $libjs = $element['jsroot'] . 'js/jquery-ui.min.js';
     $libcss = $element['jsroot'] . 'css/smoothness/jquery-ui.min.css';
-    $timeaddonjs  = $element['jsroot'] . 'js/jquery-ui-timepicker-addon.js';
     $bootstrapdatetimejs = '/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js';
     $momentjs = '/js/momentjs/moment-with-locales.min.js';
     $prev = get_string('datepicker_prevText');
@@ -260,7 +259,6 @@ function pieform_element_calendar_get_headdata($element) {
     $result = array(
         '<link rel="stylesheet" type="text/css" media="all" href="' . append_version_number($libcss) . '">',
         '<script src="' . append_version_number($libjs) . '"></script>',
-        '<script src="' . append_version_number($timeaddonjs) . '"></script>',
         '<script src="' . append_version_number($momentjs) . '"></script>',
         '<script src="' . append_version_number($bootstrapdatetimejs) . '"></script>'
     );
