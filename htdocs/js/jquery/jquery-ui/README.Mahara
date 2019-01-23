@@ -13,23 +13,6 @@ allow the year arrows to be re-added on day change
 
 Notes:
 
-jQuery UI plugin Timepicker
-===========================
-
-This javascript library is required in conjunction with Datepicker
-(which is part of jQuery UI) to allow for choosing dates with time
-component.
-
-Website: http://trentrichardson.com/examples/timepicker/
-Version: 1.5.0
-Dependency package: jquery-ui
-
-Changes:
-
-* Added key bindings for the increasing/decreasing of the hour/minute bars
-* Added css tweaking into the theme/raw/style/datepicker.css
-
-
 jQuery UI plugin touch-punch
 ============================
 
