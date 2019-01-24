@@ -278,8 +278,12 @@ if ($CFG->sslproxy === false && isset($_SERVER['REMOTE_ADDR']) && (!isset($_SERV
 }
 if (!isset($CFG->noreplyaddress) && isset($CFG->wwwroot)) {
     $noreplyaddress = 'noreply@' . parse_url($CFG->wwwroot, PHP_URL_HOST);
+
     try {
-        set_config('noreplyaddress', $noreplyaddress);
+      if (!sanitize_email($noreplyaddress)) {
+          $noreplyaddress = 'noreply@example.org';
+      }
+      set_config('noreplyaddress', $noreplyaddress);
     }
     catch (Exception $e) {
         // Do nothing again, same reason as above

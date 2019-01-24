@@ -1569,7 +1569,7 @@ function site_warnings() {
     }
 
     // Check noreply address is valid.
-    if (!sanitize_email(get_config('noreplyaddress'))) {
+    if (!sanitize_email(get_config('noreplyaddress')) || get_config('noreplyaddress') == 'noreply@example.org') {
         $warnings[] = get_string('noreplyaddressmissingorinvalid', 'error', get_config('wwwroot') . 'admin/site/options.php?fs=emailsettings');
     }
 
