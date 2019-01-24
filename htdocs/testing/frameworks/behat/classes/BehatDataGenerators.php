@@ -228,6 +228,16 @@ class BehatDataGenerators extends BehatBase {
           ),
           'required' => array('owner', 'ownertype', 'plan', 'title', 'completiondate')
         ),
+        'forums' => array(
+          'datagenerator' => 'forum',
+          'available' => array(
+            'title'                => 'text',
+            'description'          => 'text',
+            'group'                => 'text',
+            'creator'              => 'text'
+          ),
+          'required' => array('title','description','group','creator')
+        )
     );
 
     /**

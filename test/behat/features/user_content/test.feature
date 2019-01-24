@@ -12,17 +12,21 @@ Background:
     | UserB    | Kupuh1pa!| UserB@example.org | Bob       | Boi      | mahara      | internal | member |
 
     And the following "groups" exist:
-    | name   | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-    | Group1 | UserB | Group1 owned by UserB | standard | ON | OFF | all | ON | OFF | UserA |  |
+    | name   | owner | description           | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
+    | Group1 | UserB | Group1 owned by UserB | standard  | ON   | OFF           | all       | ON            | OFF           | UserA   |       |
+
+    And the following "forums" exist:
+    | group  | title     | description          | creator |
+    | Group1 | unicorns! | magic mahara unicorns| UserB   |
 
     And the following "pages" exist:
     | title         | description | ownertype | ownername |
-    | Page UserA_00 | Page 01     | user      | UserA |
-    | Page UserB_00 | Page 01     | user      | UserA |
-    | Page Grp1     | Page 01     | group     | Group1 |
-    | Page One      | test 01     | user      | UserA |
-    | Page Two      | test 01     | user      | UserA |
-    | Page Three    | test 01     | user      | UserA |
+    | Page UserA_00 | Page 01     | user      | UserA     |
+    | Page UserB_00 | Page 01     | user      | UserA     |
+    | Page Grp1     | Page 01     | group     | Group1    |
+    | Page One      | test 01     | user      | UserA     |
+    | Page Two      | test 01     | user      | UserA     |
+    | Page Three    | test 01     | user      | UserA     |
 
     And the following "collections" exist:
     | title          | ownertype | ownername | description | pages             |
@@ -93,10 +97,7 @@ Background:
     | my pdf      | pdf             | Page Three    | no         | attachment=mahara_about.pdf |
     | g rcnt posts| recentforumposts| Page Three    | no         | groupname=Group1; maxposts=-1 |
 
-
-
-
-Scenario: Create Page UserA_00 with text blocks
+Scenario: Login as admin to change upload settings
     # To allow users to upload specific internal media types
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to "/admin/extensions/pluginconfig.php?plugintype=blocktype&pluginname=file/internalmedia"
@@ -116,7 +117,8 @@ Scenario: Create Page UserA_00 with text blocks
     And I press "Save"
     Then I log out
 
-    Then I log in as "UserA" with password "Kupuh1pa!"
+Scenario: Create Page with Blocks
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
     And I go to portfolio page "Page Grp1"
     And I go to portfolio page "Page UserB_00"

@@ -1464,7 +1464,7 @@ EOD;
      * Currently it only supports adding title / description,
      * | title          | ownertype | ownername | description | pages             |
      * | collection one | user      | UserA     | desc of col |Page One,Page Two  |
-     * @param array $record
+     * @param unknown $record
      * @throws SystemException if creating failed
      * @return int new collection id
      */
@@ -1638,6 +1638,59 @@ EOD;
       $artefact->set('owner', $owner);
       $artefact->set('parent', $blogid);
       $artefact->commit();
+    }
+
+    /**
+     * A fixture to set up forums in bulk.
+     * Currently it doesn't support indenting and other additional settings
+     *
+     * And the following "forums" exist:
+     *  | group  | title     | description          | creator |
+     *  | Group1 | unicorns! | magic mahara unicorns| UserB   |
+     *
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_forum($record) {
+      $record['title'] = trim($record['title']);
+      $record['description'] = trim($record['description']);
+      $record['creator'] = trim($record['creator']);
+      $record['group'] = trim($record['group']);
+
+      $groupid;
+      $creatorid;
+      $isadmin;
+
+      // check that the group exists
+      if (!$groupid = get_field('group', 'id', 'name',$record['group'] )) {
+        throw new SystemException("Invalid group '" . $record['group'] . "'");
+      }
+
+      //check the creator exists as a user
+      if (!$creatorid = get_field('usr','id', 'username', $record['creator'])) {
+        throw new SystemException("The user " . $record['creator'] . " doesn't exist");
+      }
+
+      //check that the creator is an admin of the group (for permission to create forum)
+      if (!$isadmin = get_field('group_member', 'member', 'group', $groupid, 'role', "admin", 'member', $creatorid)) {
+        throw new SystemException("The " . $record['creator'] . " does not have admin rights in group " . $record['group'] . "to create a forum");
+      }
+
+      $forum = new InteractionForumInstance(0, (object) array(
+        'group'       => $groupid,
+        'creator'     => $creatorid,
+        'title'       => $record['title'],
+        'description' => $record['description']
+      ));
+
+      $forum->commit();
+
+      // configure other settings
+      PluginInteractionForum::instance_config_save($forum, array(
+          'createtopicusers' => 'members',
+          'autosubscribe'    => 1,
+          'justcreated'      => 1,
+      ));
     }
 
     /**
