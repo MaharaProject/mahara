@@ -233,6 +233,7 @@ EOF;
             'postdate' => db_format_timestamp(time()),
             'text'     => clean_html($values['text']),
         );
+        $activityrecord = clone $record;
 
         $newid = insert_record('blocktype_wall_post', $record, 'id', true);
 
@@ -246,7 +247,7 @@ EOF;
               update_record('blocktype_wall_post', $updatedwallpost, 'id');
         }
 
-        activity_occurred('wallpost', $record, 'blocktype', 'wall');
+        activity_occurred('wallpost', $activityrecord, 'blocktype', 'wall');
 
         $instance = new BlockInstance($values['instance']);
         $owner = $instance->get_view()->get('owner');

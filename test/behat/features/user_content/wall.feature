@@ -20,6 +20,7 @@ The wall post must generate a notification (Bug 547333)
     And I log out
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "mail" from user menu by id
+    Then I should see "Wall post" in the "Inbox message icon" property
     When I click on "New post on your wall"
     Then I should see "Hello"
     When I follow "View whole wall"
