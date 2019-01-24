@@ -68,6 +68,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Verify page'                               => array("#verify-confirm-form", "css_element"),
     'Progressbar block'                         => array("#sb-progressbar h3.panel-heading", "css_element"),
     'Progressbar'                               => array("#progress_bar_fill.progress-bar", "css_element"),
+    'Inbox message icon'                        => array("#activitylist .panel-heading a span", "css_element"),
     // properties with xpath_elements
     'Settings sub-menu'                         => array("//span[@innertext='Settings']", "xpath_element"),
     'Settings'                                  => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Settings']", "xpath_element"),
