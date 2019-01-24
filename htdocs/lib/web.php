@@ -410,7 +410,7 @@ tinyMCE.init({
             success(''); // stop showing list with only option being 'none'
         }
     },
-
+    'branding': false,
     cache_suffix: '?v={$CFG->cacheversion}',
     {$extramceconfig}
     setup: function(ed) {

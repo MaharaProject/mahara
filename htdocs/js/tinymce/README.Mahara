@@ -27,4 +27,6 @@ Changes:
    plugins/imagebrowser (originally added in commit 36bc9f7d26076d74ebc6cd0672441eed8ed9cd2d)
    plugins/mathslate (originally added in commit 325cdfac3dfba40efbbad8cd306dcfb385674709)
    plugins/tooltoggle (originally added in commit 2c490a70bfff677c0b95c0565d39162c8c9bc10d)
-   skins/light (we use it but it's not included in new versions any more)
+   skins/light: not included in new versions of tinyMCE any more
+     download from https://github.com/instructure/tinymce-light-skin
+     v1.3.1

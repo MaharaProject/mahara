@@ -58,3 +58,11 @@ label.sr-only + div.mce-tinymce {
         margin-top: 1px;
     }
 }
+
+.mce-btn-group {
+    border: 0px !important;
+}
+
+.mce-btn:not(.mce-primary) {
+    background-color: transparent !important;
+}
