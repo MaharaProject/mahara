@@ -14,7 +14,7 @@
     "gulp-sass": "^2.3.2",
     "gulp-help": "^1.6.1",
     "path": "^0.11.14",
-    "event-stream": "^3.3.4",
+    "event-stream": "3.3.4",
     "globule": "^1.0.0",
     "gulp-autoprefixer": "^3.1.1",
     "es6-promise": "^3.2.1",
