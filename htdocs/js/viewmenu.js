@@ -71,7 +71,7 @@ function objectionSuccess(form, data) {
         jQuery('#report-form').modal('hide');
     }
     // Update the objection menu link to be message sent one
-    if (jQuery('#objection_link').length) {
+    if (jQuery('#objection_link').length && typeof data.objection_cancelled == 'undefined') {
         jQuery('#objection_link').parent().html('<span class="nolink"><span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>' + get_string_ajax('objectionablematerialreported', 'mahara') + '</span>');
     }
 }

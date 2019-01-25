@@ -107,6 +107,7 @@ function objection_form_cancel_submit(Pieform $form) {
     global $view;
     $form->reply(PIEFORM_OK, array(
             'goto' => $view->get_url(),
+            'objection_cancelled' => true,
         )
     );
 }
