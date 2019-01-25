@@ -142,15 +142,18 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
         }
         return pieform(array(
             'name'      => 'wallpost_'.$instance->get('id'),
-            'renderer'  => 'dev',
+            'renderer'  => 'div',
             'autofocus' => false,
             'jsform'    => true,
-            'template'  => 'wallpost.php',
-            'templatedir' => pieform_template_dir('wallpost.php', 'blocktype/wall'),
             'validatecallback' => array('PluginBlocktypeWall', 'wallpost_validate'),
             'successcallback' => array('PluginBlocktypeWall', 'wallpost_submit'),
             'jssuccesscallback' => 'wallpost_success',
             'elements' => array(
+                'postsizelimit' => array(
+                    'type' => 'html',
+                    'class' => 'metadata',
+                    'value' => get_string('maxcharacters', 'blocktype.wall', get_config_plugin('blocktype', 'wall', 'defaultpostsizelimit'))
+                ),
                 'text' => array(
                     'type' => 'wysiwyg',
                     'title' => get_string('Post', 'blocktype.wall'),
@@ -159,14 +162,11 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
                     'cols' => 50,
                     'defaultvalue' => '',
                     'width' => '100%',
+                    'class' => 'html',
                     'rules' => array(
                         'required' => true,
                         'maxlength' => get_config_plugin('blocktype', 'wall', 'defaultpostsizelimit'),
                     ),
-                ),
-                'postsizelimit' => array(
-                    'type' => 'html',
-                    'value' => get_string('maxcharacters', 'blocktype.wall', get_config_plugin('blocktype', 'wall', 'defaultpostsizelimit'))
                 ),
                 'private' => array(
                     'type' => 'switchbox',
