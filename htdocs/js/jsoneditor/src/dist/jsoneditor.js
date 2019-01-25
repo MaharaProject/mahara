@@ -3563,7 +3563,9 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       }
 
       // Edit JSON Button
-      this.editjson_button = this.getButton('JSON','edit','Edit JSON');
+      // Mahara specific change - make translatable - or add ability to change title on button.
+      // this.editjson_button = this.getButton('JSON','edit','Edit JSON'); //original
+      this.editjson_button = this.getButton('','edit', this.translate('button_edit'));
       this.editjson_button.addEventListener('click',function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -8684,7 +8686,7 @@ JSONEditor.defaults.themes.bootstrap4 = JSONEditor.AbstractTheme.extend({
   },
   getFormInputDescription: function(text) {
     var el = document.createElement("p");
-    el.classList.add('form-text');
+    el.classList.add('form-text', 'description');
     el.innerHTML = text;
     return el;
   },
@@ -10522,6 +10524,9 @@ JSONEditor.defaults.translate = function(key, variables) {
   if(variables) {
     for(var i=0; i<variables.length; i++) {
       string = string.replace(new RegExp('\\{\\{'+i+'}}','g'),variables[i]);
+      // Mahara specific change - change button text to lc except first char.
+      string = string.toLowerCase();
+      string = string.charAt(0).toUpperCase() + string.slice(1);
     }
   }
 
@@ -10700,6 +10705,13 @@ JSONEditor.defaults.languages.en = {
     * @variable This key takes one variable: The title of object to add
     */
   button_add_row_title: "Add {{0}}",
+  /**
+    * Title on Edit JSON buttons
+    * TODO: enable copy/paste of json into the form directly.
+    * The current functionality overwrites the form customisations and
+    * creates a new form, so we're keeping the upload page for now.
+    */
+  button_edit : "Edit raw",
   /**
     * Title on Move Down buttons
     */

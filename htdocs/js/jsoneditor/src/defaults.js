@@ -225,6 +225,10 @@ JSONEditor.defaults.languages.en = {
     */
   button_expand: "Expand",
   /**
+   * Title on Edit JSON buttons
+   */
+  button_edit : "Edit raw",
+  /**
     * Title on Flatpickr toggle buttons
     */
   flatpickr_toggle_button: "Toggle",
