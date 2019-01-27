@@ -1,4 +1,4 @@
-{if count($entrypeerassessments)}
+{if is_array($entrypeerassessments) && count($entrypeerassessments)}
 <div class="section-import">
     <h2>{str tag=peerassessment section=artefact.peerassessment}</h2>
     {foreach from=$entrypeerassessments item=peerassessment}
