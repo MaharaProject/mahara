@@ -237,6 +237,18 @@ class BehatDataGenerators extends BehatBase {
             'creator'              => 'text'
           ),
           'required' => array('title','description','group','creator')
+        ),
+        'forumposts' => array(
+          'datagenerator' => 'forumpost',
+          'available' => array(
+            'group'                => 'text',
+            'forum'                => 'text',
+            'subject'              => 'text',
+            'message'              => 'text',
+            'user'                 => 'text',
+            'topic'                => 'text',
+          ),
+          'required' => array('group', 'message', 'user')
         )
     );
 
@@ -246,18 +258,18 @@ class BehatDataGenerators extends BehatBase {
      * @param array ('field' => 'values', ...) $record
      * @return $record
      */
-    public function normalise(&$record) {
-        foreach ($record as &$value) {
-            $value = trim($value);
-            // Normalise boolean values
-            if (strtolower($value) == 'on' || $value == '1' || $value == 'yes') {
-                $value = true;
-            }
-            else if (strtolower($value) == 'off' || $value == '0' || $value == 'no') {
-                $value = false;
-            }
-        }
-    }
+     public function normalise(&$record) {
+         foreach ($record as &$value) {
+             $value = trim($value);
+             // Normalise boolean values
+             if (strtolower($value) == 'on' || $value == '1' || $value == 'yes' || $value == 'true') {
+                 $value = true;
+             }
+             else if (strtolower($value) == 'off' || $value == '0' || $value == 'no' || $value == 'false') {
+                 $value = false;
+             }
+         }
+     }
 
     /**
      * Validate field values in a given record
@@ -274,7 +286,7 @@ class BehatDataGenerators extends BehatBase {
                                 "All available fields are " . implode(',', array_keys($availablefields)));
             }
             if ($availablefields[$fieldname] == 'bool' && !is_bool($fieldvalue)) {
-                throw new MaharaBehatTestException("The value '" . $fieldvalue . "' of the field '" . $fieldname . "' must be a boolean ('ON'|'OFF', '1'|'0' are accepted boolean values).");
+                throw new MaharaBehatTestException("The value '" . $fieldvalue . "' of the field '" . $fieldname . "' must be a boolean ('ON'|'OFF', '1'|'0', 'true'|'false', 'yes'|'no' are accepted boolean values).");
             }
             if ($availablefields[$fieldname] == 'number' && !is_numeric($fieldvalue)) {
                 throw new MaharaBehatTestException("The value '" . $fieldvalue . "' of the field '" . $fieldname . "' must be a number.");

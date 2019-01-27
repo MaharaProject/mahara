@@ -19,6 +19,15 @@ Background:
     | group  | title     | description          | creator |
     | Group1 | unicorns! | magic mahara unicorns| UserB   |
 
+    And the following "forumposts" exist:
+    | group  | forum      | topic     | subject    | message                     | user  |
+    | Group1 | unicorns!  | topic one |            | mahara unicorns unite!      | UserB |
+    | Group1 | unicorns!  | topic one |            | yay! mahara unicorns unite! | UserB |
+    | Group1 | unicorns!  | topic one | cheer on   | woo! mahara unicorns unite! | UserB |
+    | Group1 |            | topic one | cheer on   | 10 papercranes, let's go!   | UserB |
+    | Group1 | unicorns!  | topic one | extra subj | 100 papercranes, let's go!  | UserB |
+    | Group1 | unicorns!  |           |origami     | 1000 papercranes, let's go! | UserB |
+
     And the following "pages" exist:
     | title         | description | ownertype | ownername |
     | Page UserA_00 | Page 01     | user      | UserA     |
@@ -63,39 +72,41 @@ Background:
 
 
     And the following "blocks" exist:
-    | title       | type            | page          |retractable | data |
-    | My text 1   | text            | Page UserA_00 | yes        | This is some text |
-    | image jpg   | image           | Page UserA_00 | no         | attachment=Image1.jpg; width=100 |
-    | image png   | image           | Page UserA_00 | no         | attachment=Image2.png |
-    | My files 1  | filedownload    | Page UserA_00 | auto       | attachments=mahara_about.pdf |
-    | My files 2  | filedownload    | Page UserA_00 | no         | attachments=mahara_about.pdf,Image2.png |
-    | Rss news    | externalfeed    | Page UserA_00 | No         | source=http://rss.nzherald.co.nz/rss/xml/nzhtsrsscid_000000698.xml |
-    | Rss food    | externalfeed    | Page UserA_00 | no         | source=http://www.thekitchenmaid.com/feed |
+    | title       | type           | page          |retractable | data |
+    | My text 1   | text           | Page UserA_00 | yes        | This is some text |
+    | image jpg   | image          | Page UserA_00 | no         | attachment=Image1.jpg; width=100 |
+    | image png   | image          | Page UserA_00 | no         | attachment=Image2.png |
+    | My files 1  | filedownload   | Page UserA_00 | auto       | attachments=mahara_about.pdf |
+    | My files 2  | filedownload   | Page UserA_00 | no         | attachments=mahara_about.pdf,Image2.png |
+    | Rss news    | externalfeed   | Page UserA_00 | No         | source=http://rss.nzherald.co.nz/rss/xml/nzhtsrsscid_000000698.xml |
+    | Rss food    | externalfeed   | Page UserA_00 | no         | source=http://www.thekitchenmaid.com/feed |
 
-    | G image 3   | image           | Page Grp1     | no         | attachment=Image3.png |
-    | G files 2   | filedownload    | Page Grp1     | no         | attachments=mahara_about.pdf,Image2.png,testvid3.mp4,mahara.mp3 |
-    | nzslang     | externalvideo   | Page Grp1     | no         | source=https://youtu.be/yRxFm70nOrY |
+    | G image 3   | image          | Page Grp1     | no         | attachment=Image3.png |
+    | G files 2   | filedownload   | Page Grp1     | no         | attachments=mahara_about.pdf,Image2.png,testvid3.mp4,mahara.mp3 |
+    | nzslang     | externalvideo  | Page Grp1     | no         | source=https://youtu.be/yRxFm70nOrY |
 
-    | my social   | socialprofile   | Page UserB_00 | no         | sns=instagram,twitter,facebook,tumblr,pinterest |
-    | gall style1 | gallery         | Page UserB_00 | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png;imagesel=2;showdesc=yes;width=75;imagestyle=1;photoframe=1 |
-    | gall style2 | gallery         | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=2 |
-    | gall style3 | gallery         | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
-    | myfolder    | folder          | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
-    | my html     | html            | Page UserB_00 | yes        | attachment=test_html.html |
+    | my social   | socialprofile  | Page UserB_00 | no         | sns=instagram,twitter,facebook,tumblr,pinterest,mysocialmedia |
+    | gall style1 | gallery        | Page UserB_00 | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png;imagesel=2;showdesc=yes;width=75;imagestyle=1;photoframe=1 |
+    | gall style2 | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=2 |
+    | gall style3 | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
+    | myfolder    | folder         | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
+    | my html     | html           | Page UserB_00 | yes        | attachment=test_html.html |
 
-    | my blog     | blog            | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
-    | my blogpost | blogpost        | Page One      | no         | copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
-    | Comments    | comment         | Page One      |            | no configdata |
-    | PeerAssessmt| peerassessment  | Page One      | auto       | no configdata |
-    | creativecoms| creativecommons | Page One      | no         | commercialuse=yes;license=3.0;allowmods=no |
+    | my blog     | blog           | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
+    | my blogpost | blogpost       | Page One      | no         | copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
+    | Comments    | comment        | Page One      |            | no configdata |
+    | PeerAssessmt| peerassessment | Page One      | auto       | no configdata |
+    | creativecoms| creativecommons| Page One      | no         | commercialuse=yes;license=3.0;allowmods=no |
 
-    | my nav      | navigation      | Page Two      | no         | collection=collection one;copytoall=yes |
-    | my plan     | plans           | Page Two      | no         | plans=Plan One,Plan Two;tasksdisplaycount=10 |
-    | internalm v | internalmedia   | Page Two      | no         | attachment=testvid3.mp4 |
-    | internalm a | internalmedia   | Page Two      | no         | attachment=mahara.mp3 |
+    | my nav      | navigation     | Page Two      | no         | collection=collection one;copytoall=yes |
+    | my plan     | plans          | Page Two      | no         | plans=Plan One,Plan Two;tasksdisplaycount=10 |
 
-    | my pdf      | pdf             | Page Three    | no         | attachment=mahara_about.pdf |
-    | g rcnt posts| recentforumposts| Page Three    | no         | groupname=Group1; maxposts=-1 |
+    | internalm v | internalmedia  | Page Three    | no         | attachment=testvid3.mp4 |
+    | internalm a | internalmedia  | Page Three    | no         | attachment=mahara.mp3 |
+    | my pdf      | pdf            | Page Three    | no         | attachment=mahara_about.pdf |
+    | recentposts |recentforumposts| Page Three   | no         | groupname=Group1;maxposts=3 |
+    | nzslang     | externalvideo  | Page Three    | no         | source=https://youtu.be/yRxFm70nOrY |
+
 
 Scenario: Login as admin to change upload settings
     # To allow users to upload specific internal media types
@@ -115,10 +126,8 @@ Scenario: Login as admin to change upload settings
     | WEBM video file       | 1 |
     | WMV video file        | 1 |
     And I press "Save"
-    Then I log out
-
-Scenario: Create Page with Blocks
-    Given I log in as "UserA" with password "Kupuh1pa!"
+    And I log out
+    Then I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
     And I go to portfolio page "Page Grp1"
     And I go to portfolio page "Page UserB_00"

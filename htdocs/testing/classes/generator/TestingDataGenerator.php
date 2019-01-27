@@ -1694,6 +1694,111 @@ EOD;
     }
 
     /**
+     * A fixture to set up forum posts in bulk
+     *
+     * - if the topic doesn't exist, create a new one
+     *   (fyi, a topic is just the first post in a thread ;)
+     * - if the forum doesn't exist, post in General Discussion and ignore the title
+     * - if no subject, it is the same name as the forum
+     *
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_forumpost($record) {
+        $record['forum'] = trim($record['forum']);
+        $record['group'] = trim($record['group']);
+        $record['message'] = trim($record['message']);
+        $record['topic'] = trim($record['topic']);
+        $record['user'] = trim($record['user']);
+
+        $groupid;
+        $forumid;
+        $topicid;
+        $postid;
+        $userid;
+        $parentpostid = null;
+        $newtopic = false;
+        $newsubject = false;
+
+        if (!isset($record['topic'])) {
+            throw new SystemException("Missing a topic");
+        }
+
+        // check that the group exists
+        if (!$groupid = get_field('group', 'id', 'name',$record['group'] )) {
+            throw new SystemException("Invalid group '" . $record['group'] . "'");
+        }
+
+        // check the user exists and is part of the group i.e. can make a post
+        if ($userid = get_field('usr','id', 'username', $record['user'])) {
+            if (!get_field('group_member', 'member', 'group', $groupid, 'member', $userid)) {
+                throw new SystemException("The " . $record['user'] . " is not a member in the group " . $record['group']);
+            }
+        }
+        else {
+            throw new SystemException("The user " . $record['user'] . " doesn't exist");
+        }
+
+        // check the given forum exists else set to default forum General Discussion
+        if (!$forumid = get_field('interaction_instance', 'id', 'group', $groupid, 'title', $record['forum'])) {
+            // if the forum name doesn't exist, set the forumid to the default General discussion forum
+            $forumid = get_field('interaction_instance', 'id', 'group', $groupid, 'title', get_string('defaultforumtitle', 'interaction.forum'));
+        }
+
+        // Heads up, it will begin to get confusing here... so here is a brief explanation of my understanding:
+            // - the name of a forum is the title it is given when created
+            // - the name of a topic is the first subject of a post and is the parent of posts in responses to that parent post.
+            //   Only the parent post holds the subject in  the interaction_forum_post
+            // - if there is no subject given or the subject given is the same as the topic,
+            //   the post responses have no subject, but they hold the postid of the the original parent post,
+            // - the name of a subject is either the parent post in a thread or a subparent in a thread with it's own subject
+            //   - a subthread post with a new subject holds the parent as well as a subject title in the db
+
+        // check the given topic exists as a topic subject in the forums
+        if ($topicid = get_field('interaction_forum_post', 'topic', 'subject', $record['topic'])) {
+            $parentpostid = get_field('interaction_forum_post', 'id', 'subject', $record['topic']);
+            if (!empty($record['subject'])) {
+                // check that the given subject exists
+                if (!$subjectpostid = get_field('interaction_forum_post', 'id', 'subject', $record['subject'])) {
+                    //new subject
+                    $newsubject = true;
+                }
+                else {
+                    //subject exists
+                    $parentpostid = $subjectpostid;
+                }
+            }
+        }
+        // thread with given topic doesn't exist, so create a new topic with given topic
+        else {
+            $parentpostid = null;
+            $newtopic = true;
+            $record['subject'] = $record['topic'];
+
+            //create a new topic
+            $topicid = insert_record(
+                'interaction_forum_topic',
+                (object)array(
+                    'forum'  => $forumid,
+                    'sticky' =>  0,
+                    'closed' =>  0,
+                    'sent'   =>  1
+                ), 'id', true
+            );
+        }
+
+        $post = (object)array(
+            'topic'   => $topicid,
+            'poster'  => $userid,
+            'body'    => $record['message'],
+            'ctime'   =>  db_format_timestamp(time()),
+            'parent'  => $parentpostid,
+            'subject' => ($newtopic || $newsubject) ? $record['subject'] : null
+        );
+        $postid = insert_record('interaction_forum_post', $post, 'id', true);
+    }
+
+    /**
      * A fixture to set up messages in bulk.
      * Currently it only supports setting friend request / accept internal notifications
      * @TODO allow for other types of messages
