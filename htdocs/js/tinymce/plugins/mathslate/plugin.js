@@ -18,13 +18,15 @@ tinymce.PluginManager.add('mathslate', function(editor,url) {
 
 		var win, mathEditor={output: null};
 
+        var slateurl = location.protocol == 'https:' ? '/mathslate-s.html' : '/mathslate.html';
+
 		win = editor.windowManager.open({
 			title: "Math Editor",
 			spacing: 10,
 			padding: 10,
 			width: 525,
 			height: 500,
-                        url: url + '/mathslate.html',
+            url: url + slateurl,
 			buttons: [
 				{text: "Insert Inline", onclick: function() {
                                         editor.execCommand('mceInsertContent', 
