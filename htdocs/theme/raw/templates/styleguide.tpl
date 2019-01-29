@@ -223,6 +223,11 @@ details on navigation styles.
         position: initial;
     }
 }
+@media (min-width: 768px) {
+    .nav-toggle-area .user-icon {
+        left: 0;
+    }
+}
 </style>
 ```
 <div class="row">

@@ -11,6 +11,8 @@
 
 // Import theme based variables (colors, fonts, padding, etc)
 @import "utilities/theme-variables"; // Import our brand variables
+@import "../../raw/sass/utilities/bootstrap-variables";
+
 @import "utilities/bootstrap-variables";  // ...and our custom bootstrap variables file
 @import "utilities/custom-variables";  // ...and our custom variables file
 

@@ -9,3 +9,14 @@
         color: #FFF;
     }
 }
+
+.navbar-main {
+    .navbar-nav {
+        >li>a {
+            &:focus,
+            &:hover {
+                background-color: $theme-primary-color-dark;
+            }
+        }
+    }
+}
