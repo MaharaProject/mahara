@@ -20,6 +20,8 @@ defined('INTERNAL') || die();
  * @param string $plugintype
  * @param string $pluginname
  * @param bool $delay
+ *
+ * NOTE: If the $data object contains an 'id' property this needs to be the id of the activitytype
  */
 function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=null, $delay=null) {
     try {
