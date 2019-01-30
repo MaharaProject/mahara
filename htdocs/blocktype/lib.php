@@ -844,6 +844,10 @@ class BlockInstance {
     private $temp = array();
     private $tags = array();
     private $inedit = false;
+    private $positionx;
+    private $positiony;
+    private $width;
+    private $height;
 
     public function __construct($id=0, $data=null) {
          if (!empty($id)) {
@@ -868,6 +872,30 @@ class BlockInstance {
             if (property_exists($this, $field)) {
                 $this->{$field} = $value;
             }
+        }
+
+        $dimensiontable_exists = true;
+        if (defined('INSTALLER')) {
+           // Check to see if the table exists yet
+           require_once('ddl.php');
+           $dimensiontable_exists = table_exists(new XMLDBTable('block_instance_dimension'));
+        }
+
+        if ($dimensiontable_exists) {
+           $dimension = get_records_array('block_instance_dimension', 'block', $id);
+
+           if (is_array($dimension) && isset($dimension[0])) {
+               $this->positionx = $dimension[0]->positionx;
+               $this->positiony = $dimension[0]->positiony;
+               $this->width     = $dimension[0]->width;
+               $this->height    = $dimension[0]->height;
+           }
+        }
+        else {
+           $this->positionx = 0;
+           $this->positiony = 0;
+           $this->width     = 4;
+           $this->height    = 3;
         }
         $this->artefactplugin = blocktype_artefactplugin($this->blocktype);
     }
@@ -1200,6 +1228,12 @@ class BlockInstance {
         $smarty->assign('row',    $this->get('row'));
         $smarty->assign('column', $this->get('column'));
         $smarty->assign('order',  $this->get('order'));
+
+        $smarty->assign('positionx', $this->get('positionx'));
+        $smarty->assign('positiony', $this->get('positiony'));
+        $smarty->assign('width', $this->get('width'));
+        $smarty->assign('height', $this->get('height'));
+
         $smarty->assign('blocktype', $this->get('blocktype'));
         $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config'));
         $smarty->assign('configure', $configure); // Used by the javascript to rewrite the block, wider.
@@ -1725,6 +1759,7 @@ class BlockInstance {
             call_static_method($classname, 'delete_instance', $this);
         }
         delete_records('view_artefact', 'block', $this->id);
+        delete_records('block_instance_dimension', 'block', $this->id);
         delete_records('block_instance', 'id', $this->id);
         delete_records('tag', 'resourcetype', 'blocktype', 'resourceid', $this->id);
         db_commit();
@@ -2083,6 +2118,23 @@ class BlockInstance {
      */
     public static function group_tabs($groupid, $role) {
         return array();
+    }
+
+    public function set_block_dimensions($positionx, $positiony, $width, $height) {
+        $obj = new StdClass();
+        $obj->block = $this->id;
+        $obj->positionx = $positionx;
+        $obj->positiony = $positiony;
+        $obj->height = $height;
+        $obj->width = $width;
+
+        //TODO: move this inside of the commit
+        ensure_record_exists('block_instance_dimension', (object) array('block' => $this->id), $obj);
+
+        $this->set('positionx',  $positionx);
+        $this->set('positiony', $positiony);
+        $this->set('height', $height);
+        $this->set('width',  $width);
     }
 }
 

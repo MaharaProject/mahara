@@ -45,7 +45,9 @@
         <div class="col">
             <div id="bottom-pane" data-role="workspace">
                 <div id="column-container" class="user-page-content">
-                    {$columns|safe}
+                    <div class="grid-stack">
+                        {$columns|safe}
+                    </div>
                 </div>
             </div>
         </div>

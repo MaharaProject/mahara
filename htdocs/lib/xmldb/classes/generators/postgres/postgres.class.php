@@ -255,7 +255,7 @@ class XMLDBpostgres extends XMLDBgenerator {
 
     /// Take a look to field metadata
         $meta = array_change_key_case($db->MetaColumns($tablename));
-        $metac = $meta[$fieldname];
+        $metac = $meta[$xmldb_field->getName()];
         $oldtype = strtolower($metac->type);
         $oldmetatype = column_type($xmldb_table->getName(), $fieldname);
         $oldlength = $metac->max_length;

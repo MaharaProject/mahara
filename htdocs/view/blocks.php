@@ -144,8 +144,13 @@ if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
 }
 
 $javascript = array('views', 'tinymce', 'paginator', 'js/jquery/jquery-ui/js/jquery-ui.min.js',
-                    'js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'tablerenderer', 'artefact/file/js/filebrowser.js',
-                    'lib/pieforms/static/core/pieforms.js', 'js/switchbox.js');
+                    'js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'tablerenderer',
+                    'artefact/file/js/filebrowser.js',
+                    'lib/pieforms/static/core/pieforms.js', 'js/switchbox.js',
+                    'js/lodash/lodash.js',
+                    'js/gridstack/gridstack.js',
+                    'js/gridstack/gridstack.jQueryUI.js',
+                    );
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 if (is_plugin_active('externalvideo', 'blocktype')) {
@@ -155,6 +160,21 @@ $inlinejs = "jQuery( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n
 require_once('pieforms/pieform/elements/select.php');
 $inlinejs .= pieform_element_select_get_inlinejs();
 $inlinejs .= "jQuery(window).on('pageupdated', {}, function() { dock.init(jQuery(document)); });";
+
+$inlinejs .="
+$(function () {
+    var options = {
+        verticalMargin: 10,
+        float: true, //to place a block in any part of the page and the position will remain fixed
+        resizable: false,
+    };
+    var grid = $('.grid-stack');
+    grid.gridstack(options);
+    grid = $('.grid-stack').data('gridstack');
+    grid.resizable('.grid-stack-item', true);
+});
+";
+
 // The form for adding blocks via the keyboard
 $addform = pieform(array(
     'name' => 'newblock',

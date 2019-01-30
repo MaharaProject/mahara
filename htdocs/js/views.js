@@ -290,6 +290,31 @@
             location.reload();
         });
 
+        var serializeWidgetMap = function(items) {
+            // conseguir el id del bloque
+            // json call to update new position and/or dimension
+            var i;
+            if (typeof(items) != 'undefined') {
+                for (i=0; i<items.length; i++) {
+                    if (typeof(items[i].id) != 'undefined') {
+
+                        var blockid = items[i].id,
+                            destination = {
+                                'newx': items[i].x,
+                                'newy': items[i].y,
+                                'newheight': items[i].height,
+                                'newwidth': items[i].width,
+                            }
+                        moveBlock(blockid, destination);
+                    }
+                }
+            }
+        };
+
+        $('.grid-stack').on('change', function(event, items) {
+            serializeWidgetMap(items);
+        })
+
     // images need time to load before height can be properly calculated
      window.setTimeout(function(){
         $(window).trigger('colresize');
@@ -352,8 +377,6 @@
                         $(category).html(data.data);
                         makeNewBlocksDraggable();
 
-                        // the column has changed size, pass on to listeners
-                        $(window).trigger('colresize');
                     });
                     return false;
                 }
@@ -422,7 +445,6 @@
 
         $('.blocktype-drag').draggable({
             start: function(event, ui) {
-                $(window).trigger('colresize');
             },
             helper: function(event) {
                 var original = $(this),
@@ -448,35 +470,12 @@
             if (isHit(e) && !$('#addblock').hasClass('in')) {
                 e.stopPropagation();
                 e.preventDefault();
-                startAddBlock($(this));
+                if (!addblockstarted) {
+                    addblockstarted = true;
+                    addNewBlock($(this).find('.blocktype-radio').val());
+                }
             }
         });
-    }
-
-    var addblockstarted = false; // To stop the double clicking of add block button causing multiple saving problem
-    function startAddBlock(element) {
-        var addblockdialog = $('#addblock');
-        addblockdialog.modal('show');
-        if (!addblockstarted) {
-            addblockstarted = true;
-            addblockdialog.one('dialog.end', function(event, options) {
-                if (options.saved) {
-                    addNewBlock(options, element.find('.blocktype-radio').val());
-                }
-            else {
-                    element.trigger("focus");
-                }
-            });
-
-            addblockdialog.find('h4.modal-title').text(get_string('addnewblock', 'view'));
-            computeColumnInputs(addblockdialog);
-            addblockdialog.find('.block-inner').removeClass('d-none');
-            addblockdialog.find('.cell-chooser input:first').prop('checked', true);
-            addblockdialog.find('.cell-chooser input:first').parent().addClass('focused active');
-
-            addblockdialog.find('.deletebutton').trigger("focus");
-            keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
-        }
     }
 
     function cellChanged() {
@@ -497,9 +496,8 @@
         selectbox.html('<option>' + options.join('</option><option>') + '</option>');
     }
 
-    function addNewBlock(whereTo, blocktype) {
-
-        addblockstarted = false;
+     var addblockstarted = false; // To stop the double clicking of add block button causing multiple saving problem
+    function addNewBlock(blocktype) {
         var pd = {
                 'id': $('#viewid').val(),
                 'change': 1,
@@ -509,23 +507,17 @@
         if (config.blockeditormaxwidth) {
             pd['cfheight'] = $(window).height() - 100;
         }
-        pd['action_addblocktype_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
-
+        pd['action_addblocktype_positionx_0_positiony_0_width_3_height_3'] = true;// The default 3x3 block at position 0,0
         sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
 
             var div = $('<div>').html(data.data.display.html),
-                blockinstance = div.find('div.blockinstance'),
+                blockinstance = div.find('div.grid-stack-item'),
                 configureButton = blockinstance.find('.configurebutton');
 
             addBlockCss(data.css);
-            // Make configure button clickable, but disabled as blocks are rendered in configure mode by default
 
-            if (configureButton) {
-                rewriteConfigureButton(configureButton);
-                $('#action-dummy').attr('name', 'action_addblocktype_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']);
-            }
-
-            insertBlockStub(blockinstance, whereTo);
+            var grid = $('.grid-stack').data('gridstack');
+            addNewWidget(blockinstance, grid);
 
             if (data.data.configure) {
                 showDock($('#configureblock'), true);
@@ -535,10 +527,12 @@
                 rewriteDeleteButton(blockinstance.find('.deletebutton'));
                 blockinstance.find('.deletebutton').trigger("focus");
             }
+            addblockstarted = false;
         },
         function() {
             // On error callback we need to reset the Dock
             hideDock();
+            addblockstarted = false;
         });
     }
 
@@ -550,26 +544,6 @@
         });
     }
 
-    function insertBlockStub(newblock, whereTo) {
-        var columnContent = $('#row_'+whereTo['row']+'_column_'+whereTo['column']).find('div.column-content');
-        if (whereTo['order'] == 1) {
-            $(columnContent).prepend(newblock);
-        }
-        else {
-            var count = 1;
-            columnContent.children().each(function() {
-                count++;
-                if (count == whereTo['order']) {
-                    $(this).after(newblock);
-                    return false;
-                }
-            });
-
-            if (whereTo['order'] > count) {
-                columnContent.append(newblock);
-            }
-        }
-    }
     /**
      * Rewrites the blockinstance configure buttons to be AJAX
      */
@@ -630,9 +604,13 @@
                 pd[self.attr('name')] = 1;
 
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+
                     if (blockinstanceId !== undefined && blockinstanceId !== null) {
                         $('#blockinstance_' + blockinstanceId).remove();
                     }
+
+                    var grid = $('.grid-stack').data('gridstack');
+                    grid.removeWidget($('#block_' + blockinstanceId));
 
                     if (!$('#configureblock').hasClass('d-none')) {
                         hideDock();
@@ -722,20 +700,15 @@
     }
 
 
-    function moveBlock(whereTo, instanceId) {
+    function moveBlock(id, whereTo) {
         var pd = {
             'id': $('#viewid').val(),
             'change': 1
         };
-        if (config.blockeditormaxwidth) {
-            pd['cfheight'] = $(window).height() - 100;
-        }
-        pd['action_moveblockinstance_id_' + instanceId + '_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
-        sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-            if (data.data.html) {
-                $('#blockinstance_' + instanceId + ' .blockinstance-content').html(data.data.html);
-            }
-        });
+
+        pd['action_moveblockinstance_id_' + id + '_newx_' + whereTo['newx'] + '_newy_' + whereTo['newy'] + '_newheight_' + whereTo['newheight'] + '_newwidth_' + whereTo['newwidth']] = true;
+
+        sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST');
     }
 
     /**
@@ -753,7 +726,9 @@
 
             sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
 
-                $('#blockinstance_' + blockinstanceId).remove();
+                var grid = $('.grid-stack').data('gridstack'),
+                item = $('#block_' + blockinstanceId);
+                grid.removeWidget(item);
 
                 if (!$('#configureblock').hasClass('d-none')) {
                     hideDock();
@@ -1075,4 +1050,16 @@ function blockConfigError(form, data) {
 
 function wire_blockoptions() {
     return ViewManager.blockOptions();
+}
+
+/* GRIDSTACK functions */
+function addNewWidget(blockContent, grid) {
+    var node = {
+                x: 0,
+                y: 0,
+                width: 3,
+                height: 3
+            };
+    grid.addWidget(blockContent, node.x, node.y, node.width, node.height);
+    return false;
 }

@@ -63,6 +63,7 @@ class View {
     private $lockblocks = 0;
     private $instructions;
     private $instructionscollapsed=0;
+    private $newlayout = 1;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -307,21 +308,47 @@ class View {
         }
 
         $this->atime = time();
-        $this->rows = array();
-        $this->columns = array();
-        $this->oldcolumnsperrow = $this->get('columnsperrow');
-        // set only for existing views - _create provides default value
-        // Ignore if the constructor is called with deleted set to true
-        if (empty($this->deleted)) {
-            if ($this->columnsperrow === false || ($this->numrows > 0 && count($this->columnsperrow) != $this->numrows)) {
-                // if we are missing the info for some reason we will give the page it's layout back
-                // this can happen in MySQL when many users are copying the same page
-                if ($this->layout) {
-                    if ($rowscols = get_records_sql_array("
-                        SELECT vlrc.row, vlc.columns
-                        FROM {view_layout_rows_columns} vlrc
-                        JOIN {view_layout_columns} vlc ON vlc.id = vlrc.columns
-                        WHERE viewlayout = ?", array($this->layout))) {
+
+        if ($this->newlayout) {
+            $this->grid = array();
+        }
+        else {
+            $this->rows = array();
+            $this->columns = array();
+            $this->oldcolumnsperrow = $this->get('columnsperrow');
+            // set only for existing views - _create provides default value
+            // Ignore if the constructor is called with deleted set to true
+            if (empty($this->deleted)) {
+                if ($this->columnsperrow === false || ($this->numrows > 0 && count($this->columnsperrow) != $this->numrows)) {
+                    // if we are missing the info for some reason we will give the page it's layout back
+                    // this can happen in MySQL when many users are copying the same page
+                    if ($this->layout) {
+                        if ($rowscols = get_records_sql_array("
+                            SELECT vlrc.row, vlc.columns
+                            FROM {view_layout_rows_columns} vlrc
+                            JOIN {view_layout_columns} vlc ON vlc.id = vlrc.columns
+                            WHERE viewlayout = ?", array($this->layout))) {
+                                $default = array();
+                                foreach ($rowscols as $row) {
+                                    if ($this->get('id')) {
+                                        $vrc = (object) array(
+                                            'view' => $this->get('id'),
+                                            'row' => $row->row,
+                                            'columns' => $row->columns
+                                        );
+                                        ensure_record_exists('view_rows_columns', $vrc, $vrc);
+                                    }
+                                    $default[$row->row] = $row;
+                                }
+                        }
+                    }
+                    else if ($rowscols = get_records_sql_array("
+                        SELECT vrc.row, vrc.columns
+                        FROM {view} v
+                        JOIN {view_rows_columns} vrc ON vrc.view = v.id
+                        WHERE v.template = ?
+                        AND v.type = ?", array(self::SITE_TEMPLATE, $this->type))) {
+                            // Layout not specified so use the view type default layout
                             $default = array();
                             foreach ($rowscols as $row) {
                                 if ($this->get('id')) {
@@ -335,37 +362,17 @@ class View {
                                 $default[$row->row] = $row;
                             }
                     }
-                }
-                else if ($rowscols = get_records_sql_array("
-                    SELECT vrc.row, vrc.columns
-                    FROM {view} v
-                    JOIN {view_rows_columns} vrc ON vrc.view = v.id
-                    WHERE v.template = ?
-                    AND v.type = ?", array(self::SITE_TEMPLATE, $this->type))) {
-                        // Layout not specified so use the view type default layout
-                        $default = array();
-                        foreach ($rowscols as $row) {
-                            if ($this->get('id')) {
-                                $vrc = (object) array(
-                                    'view' => $this->get('id'),
-                                    'row' => $row->row,
-                                    'columns' => $row->columns
-                                );
-                                ensure_record_exists('view_rows_columns', $vrc, $vrc);
-                            }
-                            $default[$row->row] = $row;
+                    else {
+                        // Layout not known so make it 1 row / 3 cols
+                        if ($this->get('id')) {
+                            insert_record('view_rows_columns', (object) array(
+                                'view' => $this->get('id'),
+                                'row' => 1, 'columns' => 3));
                         }
-                }
-                else {
-                    // Layout not known so make it 1 row / 3 cols
-                    if ($this->get('id')) {
-                        insert_record('view_rows_columns', (object) array(
-                            'view' => $this->get('id'),
-                            'row' => 1, 'columns' => 3));
+                        $default = self::default_columnsperrow();
                     }
-                    $default = self::default_columnsperrow();
+                    $this->columnsperrow = $default;
                 }
-                $this->columnsperrow = $default;
             }
         }
     }
@@ -2164,7 +2171,6 @@ class View {
         foreach (explode(',', $layout->rows[$row]['widths']) as $width) {
             $this->columns[$row][++$i]['width'] = $width;
         }
-
         foreach ($data as $block) {
             require_once(get_config('docroot') . 'blocktype/lib.php');
             $block->view_obj = $this;
@@ -2174,6 +2180,43 @@ class View {
 
     }
 
+    public function get_grid_datastructure() {
+        $sql = '
+        SELECT bi.id, bi.view,positionx, positiony, width, height, blocktype, title, configdata
+        FROM {block_instance_dimension} bd
+        INNER JOIN {block_instance} bi
+        ON bd.block = bi.id
+        WHERE bi.view = ?
+        ';
+        $blocks = get_records_sql_array($sql, array($this->get('id')));
+
+        if (is_array($blocks) || is_object($blocks)) {
+            foreach ($blocks as $block) {
+                require_once(get_config('docroot') . 'blocktype/lib.php');
+                $block->view_obj = $this;
+                $b = new BlockInstance($block->id, (array)$block);
+                $b->set('positionx', $block->positionx);
+                $b->set('positiony', $block->positiony);
+                $b->set('width', $block->width);
+                $b->set('height', $block->height);
+                $this->grid[]=$b;
+            }
+        }
+
+        $blockcontent = '';
+        foreach($this->grid as $blockinstance) {
+            $result = $blockinstance->render_editing();
+            $smarty = smarty_core();
+            $smarty->assign('blockcontent', $result['html']);
+            $smarty->assign('id', $blockinstance->get('id'));
+            $smarty->assign('width', $blockinstance->get('width'));
+            $smarty->assign('height', $blockinstance->get('height'));
+            $smarty->assign('positionx', $blockinstance->get('positionx'));
+            $smarty->assign('positiony', $blockinstance->get('positiony'));
+            $blockcontent .= $smarty->fetch('view/gridcell.tpl');
+        }
+        return $blockcontent;
+    }
     /*
     *
     * wrapper around get_column_datastructure
@@ -2221,10 +2264,16 @@ class View {
      * Returns the HTML for the rows of this view
      */
     public function build_rows($editing=false, $exporting=false, $versioning=false) {
-        $numrows = $this->get('numrows');
-        $result = '';
-        for ($i = 1; $i <= $numrows; $i++) {
-            $result .= $this->build_columns($i, $editing, $exporting, $versioning);
+
+        if (get_config('new_layout')) {
+            $result = $this->get_grid_datastructure();
+        }
+        else {
+            $numrows = $this->get('numrows');
+            $result = '';
+            for ($i = 1; $i <= $numrows; $i++) {
+                $result .= $this->build_columns($i, $editing, $exporting, $versioning);
+            }
         }
         return $result;
     }
@@ -2328,6 +2377,15 @@ class View {
         if (isset($data['width'])) {
             $smarty->assign('width', $data['width']);
         }
+        if (isset($data['positionx'])) {
+            $smarty->assign('positionx', $data['positionx']);
+        }
+        if (isset($data['height'])) {
+            $smarty->assign('height', $data['height']);
+        }
+        if (isset($data['positiony'])) {
+            $smarty->assign('positiony', $data['positiony']);
+        }
 
         if ($editing) {
             return $smarty->fetch('view/columnediting.tpl');
@@ -2347,7 +2405,7 @@ class View {
      *
      */
     public function addblocktype($values) {
-        $requires = array('blocktype', 'row', 'column', 'order');
+        $requires = array('blocktype');
         foreach ($requires as $require) {
             if (!array_key_exists($require, $values) || empty($values[$require])) {
                 throw new ParamOutOfRangeException(get_string('missingparam'. $require, 'error'));
@@ -2376,20 +2434,34 @@ class View {
                 'title'      => $newtitle,
                 'view'       => $this->get('id'),
                 'view_obj'   => $this,
-                'row'        => $values['row'],
-                'column'     => $values['column'],
-                'order'      => $values['order'],
+                'row'        => $values['positiony'],
+                'column'     => $values['positionx'],
+                'order'      => 1,
             )
         );
         $bi->commit();
+        // add the dimension of the block
+        $bi->set_block_dimensions($values['positionx'], $values['positiony'], $values['width'], $values['height']);
 
         if ($values['returndata'] === 'id') {
             return $bi->get('id');
         }
         else if ($values['returndata']) {
             // Return new block rendered in both configure mode and (editing) display mode
+
+            $display = $bi->render_editing(false, true);
+
+            $smarty = smarty_core();
+            $smarty->assign('blockcontent', $display['html']);
+            $smarty->assign('id', $bi->get('id'));
+            $smarty->assign('width', $bi->get('width'));
+            $smarty->assign('height', $bi->get('height'));
+            $smarty->assign('positionx', $bi->get('positionx'));
+            $smarty->assign('positiony', $bi->get('positiony'));
+            $display['html'] = $smarty->fetch('view/gridcell.tpl');
+
             $result = array(
-                'display' => $bi->render_editing(false, true),
+                'display' => $display,
             );
             if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config')) {
                 $result['configure'] = $bi->render_editing(true, true);
@@ -2583,9 +2655,9 @@ class View {
     *                      order  => position in new column to insert at
     */
     public function moveblockinstance($values) {
-        $requires = array('id', 'row', 'column', 'order');
+        $requires = array('id', 'newx', 'newy', 'newheight', 'newwidth');
         foreach ($requires as $require) {
-            if (!array_key_exists($require, $values) || empty($values[$require])) {
+            if (!array_key_exists($require, $values)) {
                 throw new ParamOutOfRangeException(get_string('missingparam' . $require, 'error'));
             }
         }
@@ -2596,8 +2668,10 @@ class View {
             throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
         }
 
+        $bi->set_block_dimensions($values['newx'], $values['newy'], $values['newwidth'], $values['newheight']);
         $bi->commit();
 
+        //TODO: check if code down here is still needed
         // Because embedly externalvideo blocks have their original content changed
         // by the cdn.embedly.com/widgets/platform.js file to use iframe data the info
         // is lost on block move so we need to referesh the block with its original content
@@ -2618,7 +2692,9 @@ class View {
 
         $javascriptfiles = array();
         $initjavascripts = array();
+
         $view_data = $this->get_row_datastructure();
+
         $loadajax = false;
         foreach ($view_data as $row_data) {
             foreach($row_data as $column) {

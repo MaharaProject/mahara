@@ -1392,21 +1392,38 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2019080600) {
         log_debug('create block dimension table for gridstack layout');
         $table = new XMLDBTable('block_instance_dimension');
-        $table->addFieldInfo('block', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
-        $table->addFieldInfo('positionx', XMLDB_TYPE_INTEGER, 2, false, XMLDB_NOTNULL, null, null, null, 0);
-        $table->addFieldInfo('positiony', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL, null, null, null, 0);
-        $table->addFieldInfo('width', XMLDB_TYPE_INTEGER, 2, false, XMLDB_NOTNULL, null, null, null, 4);
-        $table->addFieldInfo('height', XMLDB_TYPE_INTEGER, 2, false, XMLDB_NOTNULL, null, null, null, 4);
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('block'));
-        $table->addKeyInfo('blockfk', XMLDB_KEY_FOREIGN, array('block'), 'block_instance', array('id'));
+        if (!table_exists($table)) {
+            $table->addFieldInfo('block', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+            $table->addFieldInfo('positionx', XMLDB_TYPE_INTEGER, 2, false, XMLDB_NOTNULL, null, null, null, 0);
+            $table->addFieldInfo('positiony', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL, null, null, null, 0);
+            $table->addFieldInfo('width', XMLDB_TYPE_INTEGER, 2, false, XMLDB_NOTNULL, null, null, null, 4);
+            $table->addFieldInfo('height', XMLDB_TYPE_INTEGER, 2, false, XMLDB_NOTNULL, null, null, null, 4);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('block'));
+            $table->addKeyInfo('blockfk', XMLDB_KEY_FOREIGN, array('block'), 'block_instance', array('id'));
 
-        create_table($table);
+            create_table($table);
+        }
 
         log_debug('drop constraint from block_instance table in row, column and order');
         $table = new XMLDBTable('block_instance');
         $key = new XMLDBKey('viewrowcolumnorderuk');
         $key->setAttributes(XMLDB_KEY_UNIQUE, array('view', 'row', 'column', 'order'));
         drop_key($table, $key);
+
+        log_debug('remove NOT NULL modifier from row, column, order in block_instance table');
+        $table = new XMLDBTable('block_instance');
+
+        $field = new XMLDBField('row');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 2, null, null, null, null, null, null);
+        change_field_notnull($table, $field);
+
+        $field = new XMLDBField('column');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 2, null, null, null, null, null, null);
+        change_field_notnull($table, $field);
+
+        $field = new XMLDBField('order');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 2, null, null, null, null, null, null);
+        change_field_notnull($table, $field);
     }
 
     return $status;
