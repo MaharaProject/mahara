@@ -78,8 +78,8 @@ Background:
     | image png   | image          | Page UserA_00 | no         | attachment=Image2.png |
     | My files 1  | filedownload   | Page UserA_00 | auto       | attachments=mahara_about.pdf |
     | My files 2  | filedownload   | Page UserA_00 | no         | attachments=mahara_about.pdf,Image2.png |
-    | Rss news    | externalfeed   | Page UserA_00 | No         | source=http://rss.nzherald.co.nz/rss/xml/nzhtsrsscid_000000698.xml |
-    | Rss food    | externalfeed   | Page UserA_00 | no         | source=http://www.thekitchenmaid.com/feed |
+    | Rss news    | externalfeed   | Page UserA_00 | No         | source=http://rss.nzherald.co.nz/rss/xml/nzhtsrsscid_000000698.xml;count=5 |
+    | Rss food    | externalfeed   | Page UserA_00 | no         | source=http://www.thekitchenmaid.com/feed;count=3 |
 
     | G image 3   | image          | Page Grp1     | no         | attachment=Image3.png |
     | G files 2   | filedownload   | Page Grp1     | no         | attachments=mahara_about.pdf,Image2.png,testvid3.mp4,mahara.mp3 |
@@ -89,13 +89,13 @@ Background:
     | gall style1 | gallery        | Page UserB_00 | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png;imagesel=2;showdesc=yes;width=75;imagestyle=1;photoframe=1 |
     | gall style2 | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=2 |
     | gall style3 | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
-    | myfolder    | folder         | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
+    | myfolder    | folder         | Page UserB_00 | no         | attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3;dirname=myfolder |
     | my html     | html           | Page UserB_00 | yes        | attachment=test_html.html |
 
     | my blog     | blog           | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
     | my blogpost | blogpost       | Page One      | no         | copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
-    | Comments    | comment        | Page One      |            | no configdata |
-    | PeerAssessmt| peerassessment | Page One      | auto       | no configdata |
+    | Comments    | comment        | Page One      |            | |
+    | PeerAssessmt| peerassessment | Page One      | auto       | |
     | creativecoms| creativecommons| Page One      | no         | commercialuse=yes;license=3.0;allowmods=no |
 
     | my nav      | navigation     | Page Two      | no         | collection=collection one;copytoall=yes |
@@ -104,7 +104,7 @@ Background:
     | internalm v | internalmedia  | Page Three    | no         | attachment=testvid3.mp4 |
     | internalm a | internalmedia  | Page Three    | no         | attachment=mahara.mp3 |
     | my pdf      | pdf            | Page Three    | no         | attachment=mahara_about.pdf |
-    | recentposts |recentforumposts| Page Three   | no         | groupname=Group1;maxposts=3 |
+    | recentposts |recentforumposts| Page Three    | no         | groupname=Group1;maxposts=3 |
     | nzslang     | externalvideo  | Page Three    | no         | source=https://youtu.be/yRxFm70nOrY |
 
 

@@ -209,6 +209,15 @@ EOD;
         return false;
     }
 
+    public static function get_mimetype($attachment) {
+        $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $attachment;
+        $mimetype = mime_content_type($path);
+        list($media, $ext) = explode('/', $mimetype);
+        $mediatype = $media == 'application' ? 'attachment' : $media;
+
+        return $mediatype;
+    }
+
     /**
      * Create a test user
      * @param array $record
@@ -697,7 +706,7 @@ EOD;
 
         if (is_callable($classname . '::'.$functionname)) {
             $result = call_static_method($classname, $functionname, $data, $ownertype, $ownerid, $title, $view);
-            $configdata = array_merge($configdata, $result);
+            $configdata = array_merge($configdata, (array)$result);
         }
         else {
             throw new SystemException("The blocktype {$record['type']} is not supported yet.");
@@ -708,28 +717,28 @@ EOD;
     }
 
     public static function create_new_block_instance($blocktype, $view, $viewid, $title, $viewcolcounts, $configdata, $maxcols, $otherview = null) {
-      safe_require('blocktype', $blocktype);
-      $bi = new BlockInstance(0,
-          array(
-              'blocktype'  => $blocktype,
-              'title'      => $title,
-              'view'       => $viewid,
-              'row'        => 1,
-          )
-      );
-      if (!isset(self::$viewcolcounts[$viewid])) self::$viewcolcounts[$viewid] = 0;
-      $bi->set('order', $view->get_current_max_order(1, self::$viewcolcounts[$viewid]) + 1);
-      $bi->set('configdata', $configdata);
-      $bi->set('column', self::$viewcolcounts[$viewid]);
-      self::$viewcolcounts[$viewid] = ((self::$viewcolcounts[$viewid]+1) % $maxcols) ? (self::$viewcolcounts[$viewid]+1) % $maxcols : $maxcols;
+        safe_require('blocktype', $blocktype);
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => $blocktype,
+                'title'      => $title,
+                'view'       => $viewid,
+                'row'        => 1,
+            )
+        );
+        if (!isset(self::$viewcolcounts[$viewid])) self::$viewcolcounts[$viewid] = 0;
+        $bi->set('order', $view->get_current_max_order(1, self::$viewcolcounts[$viewid]) + 1);
+        $bi->set('configdata', $configdata);
+        $bi->set('column', self::$viewcolcounts[$viewid]);
+        self::$viewcolcounts[$viewid] = ((self::$viewcolcounts[$viewid]+1) % $maxcols) ? (self::$viewcolcounts[$viewid]+1) % $maxcols : $maxcols;
 
-      //in cases such as navigation where we want to add a block to a different view than the current.
-      if ($otherview) {
-        $otherview->addblockinstance($bi);
-      }
-      else {
-        $bi->commit();
-      }
+        //in cases such as navigation where we want to add a block to a different view than the current.
+        if ($otherview) {
+          $otherview->addblockinstance($bi);
+        }
+        else {
+          $bi->commit();
+        }
     }
 
     /**
@@ -741,24 +750,26 @@ EOD;
      * @return array $configdata of key and values for db table
      */
     public static function generate_configdata_blog($data) {
-      if (!$data) return;
-      $configdata = array();
+        if (!$data) return;
+        $configdata = array();
 
         $fields = explode(';',$data);
         foreach($fields as $field) {
             list($key, $value) = explode('=', $field);
-            $key=trim($key);
-            $value=trim($value);
+            $key = trim($key);
+            $value = trim($value);
 
             if ($key == 'journaltitle') {
-                $blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype', 'blog');
+                if (!$blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype', 'blog')) {
+                    throw new SystemException("A blog/journal with the name " . $value . " doesn't exist!");
+                }
                 $configdata['artefactid'] = $blogid;
             }
             if ($key == 'copytype') {
-                $configdata[$key]=$value;
+                $configdata[$key] = $value;
             }
             if ($key == 'count') {
-                $configdata[$key]=$value;
+                $configdata[$key ] = $value;
             }
         }
         return $configdata;
@@ -786,10 +797,14 @@ EOD;
             $value = trim($value);
 
             if ($key == 'journaltitle') {
-                $blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype','blog');
+                if (!$blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype','blog')) {
+                    throw new SystemException("A blog/journal named " . $value . " doesn't exist!");
+                }
             }
             if ($key == 'entrytitle') {
-                $blogpostid = get_field('artefact','id','title',$value, 'parent',$blogid, 'artefacttype','blogpost');
+                if (!$blogpostid = get_field('artefact','id','title', $value, 'parent', $blogid, 'artefacttype','blogpost')) {
+                    throw new SystemException(" There is no such blogpost/journalentry titled " . $value);
+                }
                 $configdata['artefactid'] = $blogpostid;
             }
             if ($key == 'copytype') {
@@ -803,16 +818,9 @@ EOD;
      * generate a comment blocktype.
      * @param string data inside the columm for data in behat table
      * @return array with redundant information as there is no specific artefact connected to it.
-     * as it part of a view rather than a block instance, there is not configdata for the block
-     * itself, but an empty array cannot be returned :(
      */
     public static function generate_configdata_comment($data) {
-        if (!$data) return;
-        $configdata = array();
-        $configdata[] = $data;
-        //cannot return an empty array even though the comment blocktype that refers to a view
-        //does not require any configdata
-        return $configdata;
+        return array();
     }
 
     /**
@@ -821,42 +829,38 @@ EOD;
      * @return array $configdata of key and values for db table
      */
     public static function generate_configdata_creativecommons($data) {
-      $configdata = array();
+        $configdata = array();
 
-      // there is no compulsory filled field in this blocktype but there cannot
-      // be an empty array returned
-      if (!$data)  $configdata[] = ' ';
+        $fields = explode(';', $data);
 
-      $fields = explode(';', $data);
+        foreach( $fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $value = trim(strtolower($value));
 
-      foreach( $fields as $field) {
-        list($key, $value) = explode('=', $field);
-        $value = trim(strtolower($value));
-
-        switch ($key) {
-          case 'commercialuse':
-            //yes=0, no=1
-            $configdata['noncommercial'] = $value == 'yes' ? 0:1;
-            break;
-          case 'license':
-            //must be 3.0 or 2.0
-            if ($value == 3.0 || $value == 2.0) {
-              $configdata['version'] = (string)($value*10);
+            switch ($key) {
+                case 'commercialuse':
+                    //yes=0, no=1
+                    $configdata['noncommercial'] = $value == 'yes' ? 0:1;
+                    break;
+                case 'license':
+                    //must be 3.0 or 2.0
+                    if ($value == 3.0 || $value == 2.0) {
+                        $configdata['version'] = (string)($value*10);
+                    }
+                    else $configdata['version'] = '30';
+                    break;
+                case 'allowmods':
+                    //yes=0, yes(with mutual sharing)=1, no=2
+                    if ($value == 'yes') $configdata['noderivatives'] = '0';
+                    if ($value == 'yeswithsharing') $configdata['noderivatives'] = '1';
+                    if ($value == 'no') $configdata['noderivatives'] = '2';
+                    break;
+                default:
+                    break;
             }
-            else $configdata['version'] = '30';
-            break;
-          case 'allowmods':
-            //yes=0, yes(with mutual sharing)=1, no=2
-            if ($value == 'yes') $configdata['noderivatives'] = '0';
-            if ($value == 'yeswithsharing') $configdata['noderivatives'] = '1';
-            if ($value == 'no') $configdata['noderivatives'] = '2';
-            break;
-          default:
-            break;
         }
-      }
-      $configdata = PluginBlocktypeCreativecommons::instance_config_save($configdata);
-      return $configdata;
+        $configdata = PluginBlocktypeCreativecommons::instance_config_save($configdata);
+        return $configdata;
     }
 
     /**
@@ -866,17 +870,26 @@ EOD;
     */
     public static function generate_configdata_externalfeed($data) {
         if (!$data) return;
+        $configdata = array();
+        $fields = explode(';', $data);
+        foreach ($fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
 
-        list($key, $value) = explode('=', $data);
-
-        if ($key == 'source') {
-            $wheredata = array('url' => $value);
-            $feeddata = PluginBlocktypeExternalfeed::parse_feed($value);
-            $feeddata->content  = serialize($feeddata->content);
-            $feeddata->image    = serialize($feeddata->image);
-            $value = ensure_record_exists('blocktype_externalfeed_data', $wheredata, $feeddata, 'id', true);
+            if ($key == 'source') {
+                $wheredata = array('url' => $value);
+                $feeddata = PluginBlocktypeExternalfeed::parse_feed($value);
+                $feeddata->content  = serialize($feeddata->content);
+                $feeddata->image    = serialize($feeddata->image);
+                $value = ensure_record_exists('blocktype_externalfeed_data', $wheredata, $feeddata, 'id', true);
+                $configdata['feedid'] = $value;
+            }
+            if ($key == 'count') {
+                $configdata[$key] = $value;
+            }
         }
-        return $configdata = array('feedid' => $value);
+        return $configdata;
     }
 
     /**
@@ -915,14 +928,10 @@ EOD;
             if ($key == 'attachments') {
                 $attachments = explode(',',$value);
                 foreach ($attachments as $attachment) {
-                    $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $attachment;
-                    $mimetype = mime_content_type($path);
-                    list($media, $ext) = explode('/', $mimetype);
-                    $mediatype = $media == 'application' ? 'attachment' : $media;
-
+                    $mediatype = self:: get_mimetype($attachment);
                     // we need to find the id of the item we are trying to attach and save it as artefactid
                     if (!$artefactid = get_field('artefact', 'id', 'title', $attachment, $ownertype, $ownerid)) {
-                        $artefactid = TestingDataGenerator::create_artefact($file=$attachment, $ownertype, $ownerid, $mediatype);
+                        $artefactid = TestingDataGenerator::create_artefact($attachment, $ownertype, $ownerid, $mediatype);
                         TestingDataGenerator::file_creation($artefactid, $attachment, $ownertype, $ownerid);
                     }
                     $configdata['artefactids'][] = $artefactid;
@@ -942,35 +951,42 @@ EOD;
     public static function generate_configdata_folder($data, $ownertype, $ownerid) {
         if (!$data) return;
 
-        $fields = explode(';', $data);
+        $folderfiles = array();
         $configdata = array();
-        $foldername;
+        $fields = explode(';', $data);
+        $foldername = -1;
 
         foreach ($fields as $field) {
             list($key, $value) = explode('=', $field);
 
             if ($key == 'dirname') {
                 $foldername = $value;
-                $folderartefactid = ArtefactTypeFolder::get_folder_id($foldername, $foldername, null, true, $ownerid);
-                $configdata['artefactid'] = $folderartefactid;
             }
             if ($key == 'attachments') {
                 $files = explode(',', $value);
-                // upload each image and put into a folder
-                foreach($files as $file) {
-                    $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
-                    $mimetype = mime_content_type($path);
-                    list($media, $ext) = explode('/', $mimetype);
-                    $mediatype = $media == 'application' ? 'attachment' : $media;
 
-                    // we need to find the id of the item we are trying to attach and save it as artefactid
-                    if (!$artefactid = get_field('artefact', 'id', 'title', $file, 'parent', $folderartefactid)) {
-                        $artefactid = TestingDataGenerator::create_artefact($file, $ownertype, $ownerid, $mediatype, $folderartefactid);
-                        TestingDataGenerator::file_creation($artefactid, $file, $ownertype, $ownerid);
-                    }
+                foreach ($files as $file) {
+                    $folderfiles[] = $file;
                 }
             }
         }
+
+        if ($foldername == -1) {
+          throw new SystemException("Cannot save files, there was no foldername given!");
+        }
+
+        $folderartefactid = ArtefactTypeFolder::get_folder_id($foldername, $foldername, null, true, $ownerid);
+        $configdata['artefactid'] = $folderartefactid;
+        // upload each image and put into a folder
+        foreach($folderfiles as $file) {
+            $mediatype = self::get_mimetype($file);
+            // we need to find the id of the item we are trying to attach and save it as artefactid
+            if (!$artefactid = get_field('artefact', 'id', 'title', $file, 'parent', $folderartefactid)) {
+                $artefactid = TestingDataGenerator::create_artefact($file, $ownertype, $ownerid, $mediatype, $folderartefactid);
+                TestingDataGenerator::file_creation($artefactid, $file, $ownertype, $ownerid);
+            }
+        }
+
         return $configdata;
     }
 
@@ -1006,7 +1022,7 @@ EOD;
                     $configdata['artefactids'][] = $artefactid;
                 }
             }
-            if ($key == 'imagesel' || $key == 'width' || $key == 'showdesc' || $key == 'imagestyle' || 'photoframe' ) {
+            if ($key == 'imagesel' || $key == 'width' || $key == 'showdesc' || $key == 'imagestyle' || $key == 'photoframe' ) {
 
                 //imageselection options are 0,1,2 in the table, changed for tester -_-
                 if ($key == 'imagesel') {
@@ -1050,8 +1066,8 @@ EOD;
                 //retrieve/create and retrieve artefactid of artefact we are attaching to the block
                 if (!$artefactid = get_field('artefact', 'id', 'title', $value)) {
                     //we must create the file artefact as it doesn't exist in the table
-                    $artefactid = TestingDataGenerator::create_artefact($file=$value, $ownertype, $ownerid, 'attachment');
-                    TestingDataGenerator::file_creation($artefactid, $file, $ownertype, $ownerid);
+                    $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'attachment');
+                    TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
                 }
                 $configdata['artefactid'] = $artefactid;
             }
@@ -1078,7 +1094,7 @@ EOD;
 
                 // we need to find the id of the item we are trying to attach and save it as artefactid
                 if (!$artefactimageid = get_field('artefact', 'id', 'title', $value, $ownertype, $ownerid)) {
-                    $artefactimageid = TestingDataGenerator::create_artefact($file=$value, $ownertype, $ownerid, 'image');
+                    $artefactimageid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'image');
                     self::file_creation($artefactimageid, $value, $ownertype, $ownerid);
                 }
                 $configdata = array('artefactid' => $artefactimageid);
@@ -1117,12 +1133,12 @@ EOD;
                 if (!$artefactid = get_field('artefact', 'id', 'title', $value)) {
 
                     if ($ext == 'wmv' || $ext == 'webm' || $ext == 'mov'|| $ext == 'ogv' || $ext == 'mpeg' || $ext == 'mp4' || $ext == 'flv' || $ext == 'avi' || $ext == '3gp') {
-                        $artefactid = TestingDataGenerator::create_artefact($file=$value, $ownertype, $ownerid, 'video');
+                        $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'video');
                         TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
                     }
                     if ($ext == 'mp3' || $ext == 'oga' || $ext == 'ogg') {
-                        $artefactid = TestingDataGenerator::create_artefact($file=$value, $ownertype, $ownerid, 'audio');
-                        TestingDataGenerator::file_creation($artefactid, $file=$value, $ownertype, $ownerid);
+                        $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'audio');
+                        TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
                     }
                 }
                 $value = $artefactid;
@@ -1143,66 +1159,61 @@ EOD;
      * @return array $configdata of key and values of db table
      */
     public static function generate_configdata_navigation($data, $ownertype, $ownerid, $title, $view) {
-      if (!$data) return;
+        if (!$data) return;
 
-      $configdata = array();
-      $copytoall = true;
-      $collectionid;
+        $configdata = array();
+        $copytoall = true;
+        $collectionid;
 
-      $fields = explode(';', $data);
-      foreach($fields as $field) {
-        $field = trim(strtolower($field));
-        list($key, $value) = explode('=', $field);
-        if ($key == 'collection') {
-          $configdata[$key] = $collectionid =  get_field('collection', 'id', 'name', $value);
-        }
-        if ($key == 'copytoall') {
-           $copytoall = $value == 'yes'? true : false;
-        }
-        $collectionobj = new Collection($collectionid);
-        // CASE 2: the navigation block being created IS one of the view in the collection
-        if ($collectionobj) {
-           if ($copytoall) {
-             foreach ($viewids = $collectionobj->get_viewids() as $viewid) {
-               //if vid is not the exactly the same as the og nav block for this collection
-               if ($viewid !== (int)$view->get('id')) {
-                 $needsblock = true;
+        $fields = explode(';', $data);
+        foreach($fields as $field) {
+            $field = trim(strtolower($field));
+            list($key, $value) = explode('=', $field);
+            if ($key == 'collection') {
+                $configdata[$key] = $collectionid =  get_field('collection', 'id', 'name', $value);
+            }
+            if ($key == 'copytoall') {
+                $copytoall = $value == 'yes'? true : false;
+            }
+            $collectionobj = new Collection($collectionid);
+            // CASE 2: the navigation block being created IS one of the view in the collection
+            if ($collectionobj && $copytoall) {
+                foreach ($viewids = $collectionobj->get_viewids() as $viewid) {
+                    //if vid is not the exactly the same as the og nav block for this collection
+                    if ($viewid !== (int)$view->get('id')) {
+                        $needsblock = true;
 
-                 //if there exists nav blocks on this view/page
-                 if ($navblocks = get_records_sql_array("SELECT id FROM {block_instance} WHERE blocktype = ? AND view = ?", array('navigation', $viewid))) {
-                    foreach ($navblocks as $navblock) {
-                       $bi = new BlockInstance($navblock->id);
-                       $navblockconfigdata = $bi->get('configdata');
-                       //if there exists is a nav block on this view that already links to the intended collection
-                       if (!empty($navblockconfigdata['collection']) && $navblockconfigdata['collection'] == $configdata['collection']) {
-                         $needsblock = false;
-                       }
+                        //if there exists nav blocks on this view/page
+                        if ($navblocks = get_records_sql_array("SELECT id FROM {block_instance} WHERE blocktype = ? AND view = ?", array('navigation', $viewid))) {
+                            foreach ($navblocks as $navblock) {
+                                $bi = new BlockInstance($navblock->id);
+                                $navblockconfigdata = $bi->get('configdata');
+                                //if there exists is a nav block on this view that already links to the intended collection
+                                if (!empty($navblockconfigdata['collection']) && $navblockconfigdata['collection'] == $configdata['collection']) {
+                                    $needsblock = false;
+                                }
+                            }
+                        }
+                        if ($needsblock) {
+                            //need to add new navigation block
+                            $otherview = new View($viewid);
+                            // make new block
+                            self::create_new_block_instance('navigation', $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols = 3, $otherview);
+                        }
                     }
-                 }
-                 if ($needsblock) {
-                    //need to add new navigation block
-                    $otherview = new View($viewid);
-                    // make new block
-                    self::create_new_block_instance('navigation', $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols = 3, $otherview);
-                 }
-               }
-             }
-           }
+                }
+            }
         }
-      }
-      return $configdata;
+        return $configdata;
     }
 
     /**
      * generate configdata for the bloctype: peerassessment
      * @param string $data inside data column in blocktype tables
-     * @return array $configdata of key and values of db table
+     * @return array redundant info as there is no data directly connected in this case
      */
     public static function generate_configdata_peerassessment($data) {
-        if (!$data) return;
-        $configdata = array();
-        $configdata[] = $data;
-        return $configdata;
+        return array();
     }
 
     /**
@@ -1224,7 +1235,7 @@ EOD;
 
             // we need to find the id of the item we are trying to attach and save it as artefactid
             if (!$artefactid = get_field('artefact', 'id', 'title', $value, $ownertype, $ownerid)) {
-                $artefactid = TestingDataGenerator::create_artefact($file=$value, $ownertype, $ownerid, 'attachment');
+                $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'attachment');
                 TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
             }
 
@@ -1235,6 +1246,11 @@ EOD;
         return $configdata;
     }
 
+    /**
+     * generate configdata for the blocktype: plans
+     * @param string $data inside data column in blocktype tables
+     * @return array $configdata of key and values of db table
+     */
     public static function generate_configdata_plans($data) {
         if (!$data) return;
         $configdata = array();
@@ -1247,33 +1263,13 @@ EOD;
             $value = trim($value);
 
             if ($key == 'plans') {
-                $key = 'artefactids';
-
                 $plans = explode(',',$value);
                 foreach ($plans as $plan) {
-                    $planid;
-
-                    if ($plan) {
-                        if (!$planid = get_field('artefact', 'id', 'title', $plan, 'artefacttype', 'plan')) {
-                            throw new SystemException("Invalid Plan '" . $plan . "'");
-                        }
+                    if (!$planid = get_field('artefact', 'id', 'title', $plan, 'artefacttype', 'plan')) {
+                        throw new SystemException("Invalid Plan '" . $plan . "'");
                     }
-                    else {
-                        //pick any plan artefact owned by the given user
-                        $planid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('plan', $owner));
-                        if (!$planid) {
-                            throw new SystemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a plan to add task to. Please create plan first");
-                        }
-                    }
-
-                    if ($key == 'artefactids') {
-                        $values[] = $planid;
-                        $newvalue = $values;
-                    }
+                    $configdata['artefactids'][] = $planid;
                 }
-                $value = $newvalue;
-                $configdata[$key] = $value;
-
             }
             if ($key == 'tasksdisplaycount') {
                 $configdata['count'] = $value;
@@ -1310,7 +1306,7 @@ EOD;
             }
             if ($key == 'maxposts') {
                 $key = 'limit';
-                $configdata[$key] = $value > 0 ? $value: 5;
+                $configdata[$key] = $value > 0 ? $value : 5;
             }
         }
         $configdata[] = $data;
@@ -1393,8 +1389,8 @@ EOD;
      */
     public function setup_retractable($setting) {
         $configdata = array();
-        $configdata['retractable'] = strtolower($setting) =='no' ? 0:1;;
-        $configdata['retractedonload'] = strtolower($setting) =='auto'? 1:0;
+        $configdata['retractable'] = strtolower($setting) =='no' ? 0 : 1;
+        $configdata['retractedonload'] = strtolower($setting) =='auto' ? 1 : 0;
 
         return $configdata;
     }
