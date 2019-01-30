@@ -61,7 +61,7 @@ Scenario: Creating a Journal entry
  And I press "Save entry"
 
  # Adding journal entry to group 'GroupA'
- When I choose "My groups" in "Engage" from main menu
+ When I choose "Groups" in "Engage" from main menu
  And I follow "GroupA"
  And I follow "Journals" in the "Arrow-bar nav" property
  # Confirm page contains text "There are no journals in this group" (Bug 1017785)

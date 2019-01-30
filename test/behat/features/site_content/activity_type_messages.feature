@@ -38,7 +38,7 @@ Scenario: Selection options to filter messages (Bug 1433342)
 
  # Then check what options a normal user has
  Given I log in as "UserA" with password "Kupuh1pa!"
- And I choose "My groups" in "Engage" from main menu
+ And I choose "Groups" in "Engage" from main menu
  And I follow "Create group"
  And I fill in "Group name" with "Jurassic Park"
  And I press "Save group"

@@ -1125,5 +1125,10 @@ function xmldb_core_upgrade($oldversion=0) {
         cron_site_data_daily();
     }
 
+    if ($oldversion < 2019020400) {
+        log_debug('Clearing cache for new group menu structure');
+        // Just need to fire off upgrade to get the cache to clear
+    }
+
     return $status;
 }

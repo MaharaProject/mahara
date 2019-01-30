@@ -1270,7 +1270,7 @@ function group_invite_user($group, $userid, $userfrom, $role='member', $delay=nu
 /**
  * Form for users to join a given group
  */
-function group_get_join_form($name, $groupid, $returnto='view') {
+function group_get_join_form($name, $groupid) {
     return pieform(array(
         'name' => $name,
         'successcallback' => 'joingroup_submit',
@@ -1292,11 +1292,7 @@ function group_get_join_form($name, $groupid, $returnto='view') {
                 'type' => 'hidden',
                 'value' => $groupid,
                 'sesskey' => true,
-            ),
-            'returnto' => array(
-                'type' => 'hidden',
-                'value' => $returnto
-            ),
+            )
         )
     ));
 }
@@ -1304,7 +1300,7 @@ function group_get_join_form($name, $groupid, $returnto='view') {
 /**
  * Form for accepting/declining a group invite
  */
-function group_get_accept_form($name, $groupid, $returnto) {
+function group_get_accept_form($name, $groupid) {
     return pieform(array(
        'name'     => $name,
        'renderer' => 'div',
@@ -1331,10 +1327,6 @@ function group_get_accept_form($name, $groupid, $returnto) {
             'group' => array(
                 'type' => 'hidden',
                 'value' => $groupid
-            ),
-            'returnto' => array(
-                'type' => 'hidden',
-                'value' => $returnto
             )
         )
     ));
@@ -1443,13 +1435,7 @@ function joingroup_submit(Pieform $form, $values) {
     global $SESSION, $USER;
     group_add_user($values['group'], $USER->get('id'));
     $SESSION->add_ok_msg(get_string('joinedgroup', 'group'));
-    if (substr($values['returnto'], 0, 1) == '/') {
-        $next = $values['returnto'];
-    }
-    else {
-        $next = group_homepage_url(get_group_by_id($values['group'], true));
-    }
-    redirect($next);
+    redirect(group_homepage_url(get_group_by_id($values['group'], true)));
 }
 
 function group_invite_submit(Pieform $form, $values) {
@@ -1460,17 +1446,11 @@ function group_invite_submit(Pieform $form, $values) {
         if (isset($values['accept'])) {
             group_add_user($values['group'], $USER->get('id'), $inviterecord->role);
             $SESSION->add_ok_msg(get_string('groupinviteaccepted', 'group'));
-            if (substr($values['returnto'], 0, 1) == '/') {
-                $next = $values['returnto'];
-            }
-            else {
-                $next = group_homepage_url(get_group_by_id($values['group'], true));
-            }
-            redirect($next);
+            redirect( group_homepage_url(get_group_by_id($values['group'], true)));
         }
         else {
             $SESSION->add_ok_msg(get_string('groupinvitedeclined', 'group'));
-            redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
+            redirect('/group/index.php');
         }
     }
 }
@@ -1705,14 +1685,13 @@ function group_get_admins($groupids) {
 }
 
 /**
- * Sets up groups for display in mygroups.php and find.php
+ * Sets up groups for display in group/index.php
  *
  * @param array $groups    Initial group data, including the current user's
- *                         membership type in each group. See mygroups.php for
+ *                         membership type in each group. See index.php for
  *                         the query to build this information.
- * @param string $returnto Where forms generated for display should be told to return to
  */
-function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
+function group_prepare_usergroups_for_display($groups) {
     if (!$groups) {
         return;
     }
@@ -1732,7 +1711,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
             $group->canleave = group_user_can_leave($group->id);
         }
         else if ($group->membershiptype == 'invite') {
-            $group->invite = group_get_accept_form('invite' . $i++, $group->id, $returnto);
+            $group->invite = group_get_accept_form('invite' . $i++, $group->id);
         }
         else if ($group->jointype == 'open') {
             $group->groupjoin = group_get_join_form('joingroup' . $i++, $group->id);
@@ -2189,7 +2168,7 @@ function group_current_group($cache=true) {
     return $group;
 }
 
-function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=0, $category='') {
+function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=0, $category='', $query_string='') {
 
     // Strangely, casting is only needed for invite, request and admin and only in
     // postgres
@@ -2287,7 +2266,18 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
 
     $sql .= $ltijoin;
 
-    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ? ' . $ltiwhere . $catsql, $values);
+    $query_where = "";
+    if ($query_string) {
+        $query_where .= "
+            AND (
+                g.name " . db_ilike() . " '%' || ? || '%'
+                OR g.description " . db_ilike() . " '%' || ? || '%'
+                OR g.shortname " . db_ilike() . " '%' || ? || '%'
+            )";
+        $values = array_merge($values, array($query_string, $query_string, $query_string));
+    }
+
+    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ? ' . $ltiwhere . $query_where . $catsql, $values);
 
     // almost the same as query used in find - common parts should probably be pulled out
     // gets the groups filtered by above
@@ -2304,7 +2294,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
             WHERE g.deleted = ? ' .
-            $ltiwhere . $catsql . '
+            $ltiwhere . $query_where . $catsql . '
             GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
                 g.hidemembers, g.hidemembersfrommembers, g.groupparticipationreports, g.urlid, t.membershiptype, t.reason, t.role, g.editwindowstart, g.editwindowend
         ) g1
@@ -3082,9 +3072,6 @@ function group_copy($groupid, $return) {
     switch ($return) {
         case 'adminlist':
             $path = get_config('wwwroot') . 'admin/groups/groups.php';
-            break;
-        case 'mylist':
-            $path = get_config('wwwroot') . 'groups/mygroups.php';
             break;
         default:
             $path = get_config('wwwroot') . 'group/view.php?id=' . $new_groupid;

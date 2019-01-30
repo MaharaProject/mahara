@@ -103,7 +103,7 @@ $urls = array(
     'blog'    => $wwwroot . 'artefact/blog/index.php',
     'views'   => $wwwroot . 'view/index.php',
     'friends' => $wwwroot . 'user/find.php',
-    'groups'  => $wwwroot . 'group/find.php',
+    'groups'  => $wwwroot . 'group/index.php',
     'topics'  => $wwwroot . 'group/topics.php',
     'share'   => $wwwroot . 'view/share.php',
 );

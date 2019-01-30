@@ -103,7 +103,7 @@ $string['commentnotifydescription1'] = 'Select which group members should receiv
 $string['allowsendnow'] = 'Send forum posts immediately';
 $string['allowsendnowdescription1'] = 'Any group member can choose to send forum posts immediately. If this option is set to "Off", only group administrators, tutors and moderators can do so.';
 $string['hiddengroup'] = 'Hide group';
-$string['hiddengroupdescription1'] = 'Hide this group on the "Find groups" page.';
+$string['hiddengroupdescription2'] = 'Hide this group on the "Groups" page.';
 $string['hidemembers'] = 'Hide membership';
 $string['hidemembersdescription'] = 'Hide the group\'s membership listing from non-members.';
 $string['hidemembersfrommembers'] = 'Hide membership from members';
@@ -221,7 +221,7 @@ $string['youowngroup'] = 'You own this group.';
 $string['groupsnotin'] = 'Groups I\'m not in';
 $string['allgroups'] = 'All groups';
 $string['allgroupmembers'] = 'All group members';
-$string['trysearchingforgroups'] = 'Try %ssearching for groups%s to join.';
+$string['trysearchingforgroups1'] = 'Try <a href="%sgroup/index.php?filter=canjoin">searching for groups</a> to join.';
 $string['nogroupsfound'] = 'No groups found.';
 $string['group'] = 'group';
 $string['Group'] = 'Group';

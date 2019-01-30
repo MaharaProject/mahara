@@ -4350,7 +4350,7 @@ function quota_sideblock($group = false) {
         (defined('MENUITEM') && in_array(MENUITEM, array('create/files',
                                                          'profileicons'))
          ||
-         defined('MENUITEM') && in_array(MENUITEM, array('engage/mygroups',
+         defined('MENUITEM') && in_array(MENUITEM, array('engage/index',
                                                          'create/resume')) &&
          defined('MENUITEM_SUBPAGE') && in_array(MENUITEM_SUBPAGE, array('files',
                                                                          'goalsandskills'))  // for places that have arrowbar menu

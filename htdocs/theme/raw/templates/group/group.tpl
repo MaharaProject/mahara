@@ -42,7 +42,7 @@
 
         <div class="col-md-4">
             <div class="inner-link text-right">
-                {include file="group/groupuserstatus.tpl" group=$group returnto='find'}
+                {include file="group/groupuserstatus.tpl" group=$group}
             </div>
         </div>
     </div>

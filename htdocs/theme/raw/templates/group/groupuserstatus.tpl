@@ -2,7 +2,7 @@
 <div class="btn-action-list">
     <div class="groupuserstatus btn-top-right btn-group btn-group-top">
         {if $group->canleave}
-            <a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn btn-default">
+            <a href ="{$WWWROOT}group/leave.php?id={$group->id}" class="btn btn-default">
                 <span class="icon icon-long-arrow-right icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="leavegroup" section="group"}</span>
             </a>
@@ -93,7 +93,7 @@
 {elseif $group->request}
     <div class="btn-action-list requestedtojoin">
         <div class="groupuserstatus btn-top-right btn-group btn-group-top">
-            <a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn btn-default">
+            <a href="{$WWWROOT}group/requestjoin.php?id={$group->id}" class="btn btn-default">
                 <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
                 {str tag="requestjoingroup" section="group"}
             </a>

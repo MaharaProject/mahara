@@ -8,7 +8,7 @@ Scenario: Moving pages within a group (Bug 1426983)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
     # Creating a group
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I follow "Create group"
     And I set the following fields to these values:
         | Group name    | Testing Group 1   |

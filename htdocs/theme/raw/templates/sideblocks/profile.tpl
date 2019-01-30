@@ -13,7 +13,7 @@
         {/if}
         {if $sbdata.invitedgroups}
             <div id="invitedgroups" class="list-group-item list-group-item-warning list-group-item-profile-notification">
-                <a href="{$WWWROOT}group/mygroups.php?filter=invite">
+                <a href="{$WWWROOT}group/index.php?filter=invite">
                     <span id="invitedgroupscount" class="label label-warning">{$sbdata.invitedgroups}</span>
                     <span id="invitedgroupsmessage">{$sbdata.invitedgroupsmessage}</span>
                 </a>
@@ -29,7 +29,7 @@
         {/if}
         {if $sbdata.groups}
             <div id="groups" class="list-group-item">
-                <div class="list-group-item-heading sidebar-item-heading"><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a></div>
+                <div class="list-group-item-heading sidebar-item-heading"><a href="{$WWWROOT}group/index.php">{str tag="mygroups"}:</a></div>
                 <ul class="list-nested list-group-item-text list-unstyled list-group-item-link">
         {foreach from=$sbdata.groups item=group}
                     <li><a href="{$group->homeurl}" class="bordered">{$group->name} {if $group->role == 'admin'}<small>({str tag=Admin section=group})</small>{/if}</a></li>

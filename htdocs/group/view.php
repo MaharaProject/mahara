@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
-define('MENUITEM', 'engage/mygroups');
+define('MENUITEM', 'engage/index');
 define('MENUITEM_SUBPAGE', 'info');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
@@ -45,7 +45,6 @@ $group->role = group_user_access($group->id);
 
 // logged in user can do stuff
 if ($USER->is_logged_in()) {
-    $afterjoin = param_variable('next', 'view');
     if ($group->role) {
         if ($group->role == 'admin') {
             $group->membershiptype = 'admin';
@@ -58,10 +57,10 @@ if ($USER->is_logged_in()) {
     }
     else if ($invite = get_record('group_member_invite', 'group', $group->id, 'member', $USER->get('id'))) {
         $group->membershiptype = 'invite';
-        $group->invite = group_get_accept_form('invite', $group->id, $afterjoin);
+        $group->invite = group_get_accept_form('invite', $group->id);
     }
     else if ($group->jointype == 'open') {
-        $group->groupjoin = group_get_join_form('joingroup', $group->id, $afterjoin);
+        $group->groupjoin = group_get_join_form('joingroup', $group->id);
     }
     else if ($group->request
              and $request = get_record('group_member_request', 'group', $group->id, 'member', $USER->get('id'))) {
@@ -114,7 +113,6 @@ $smarty->assign('viewcontent', $viewcontent);
 $smarty->assign('group', $group);
 $smarty->assign('editwindow', $editwindow);
 $smarty->assign('cancopy', group_can_create_groups());
-$smarty->assign('returnto', 'view');
 $smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('lastupdatedstr', $view->lastchanged_message());

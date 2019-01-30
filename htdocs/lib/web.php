@@ -2924,18 +2924,12 @@ function mahara_standard_nav() {
             'weight' => 40,
             'iconclass' => 'wrench',
         ),
-        'engage/mygroups' => array(
-            'path' => 'engage/mygroups',
-            'url' => 'group/mygroups.php',
-            'title' => get_string('mygroups'),
+        'engage/index' => array(
+            'path' => 'engage/index',
+            'url' => 'group/index.php',
+            'title' => get_string('groups'),
             'weight' => 10,
             'accesskey' => 'g',
-        ),
-        'engage/find' => array(
-            'path' => 'engage/find',
-            'url' => 'group/find.php',
-            'title' => get_string('findgroups'),
-            'weight' => 20,
         ),
         'engage/myfriends' => array(
             'path' => 'engage/myfriends',
@@ -3220,6 +3214,11 @@ function footer_menu($all=false) {
         if (param_exists('new')) {
             $helpkeys[] = 'new';
         }
+    }
+
+    // To handle when things have an explicit 'filter' state
+    if (param_exists('filter')) {
+        $helpkeys[] = param_alphanum('filter', null);
     }
 
     $menu['manualhelp'] = array('fullurl' => get_manual_help_link($helpkeys),

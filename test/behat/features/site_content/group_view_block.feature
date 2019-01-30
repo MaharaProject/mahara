@@ -163,8 +163,8 @@ These list must take into account the sort option chosen in the block config (Bu
     # Check that we can see submitted pages before editing/saving the configuration for group pages block
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I should see "GroupA"
-    And I choose "My groups" in "Engage" from main menu
-    And I scroll to the base of id "mygroups"
+    And I choose "Groups" in "Engage" from main menu
+    And I scroll to the base of id "findgroups"
     And I follow "GroupA"
     And I select "Page UserB_01" from "group_view_submission_form_1_options"
     And I press "Submit"
@@ -203,8 +203,8 @@ These list must take into account the sort option chosen in the block config (Bu
     And I click on "Return to group pages and collections"
     And I should see "Pages and collections | GroupA"
     # Check if it is now in the first page of the list of group pages
-    And I choose "My groups" in "Engage" from main menu
-    And I scroll to the base of id "mygroups"
+    And I choose "Groups" in "Engage" from main menu
+    And I scroll to the base of id "findgroups"
     And I follow "GroupA"
     And I should see "Page GroupA_06" in the "Group portfolios" property
     #And I follow "Next" in the "div#groupviews_pagination" "css_element"
@@ -220,8 +220,8 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Save"
     And I display the page
     # Check if it is now in the first page of the list of shared pages
-    And I choose "My groups" in "Engage" from main menu
-    And I scroll to the base of id "mygroups"
+    And I choose "Groups" in "Engage" from main menu
+    And I scroll to the base of id "findgroups"
     And I follow "GroupA"
     And I should see "Page UserA_01" in the "Pages shared with this group" property
     #And I follow "2" in the "div#sharedviews_pagination" "css_element"
@@ -235,8 +235,8 @@ These list must take into account the sort option chosen in the block config (Bu
     And I scroll to the id "edit_submit"
     And I press "Save"
     # Check if it is now in the first page of the list of shared collections
-    And I choose "My groups" in "Engage" from main menu
-    And I scroll to the base of id "mygroups"
+    And I choose "Groups" in "Engage" from main menu
+    And I scroll to the base of id "findgroups"
     And I follow "GroupA"
     And I should see "Collection UserA_06" in the "Collections shared with this group" property
     #And I follow "2" in the "div#sharedcollections_pagination" "css_element"
@@ -293,7 +293,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I select "GroupD" from "accesslist[0][searchtype]"
     And I press "Save"
     # Submit pages and collections to the "GroupD" and "GroupA"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I follow "GroupD"
     And I select "Page UserC_03" from "group_view_submission_form_4_options"
     And I press "Submit"
@@ -301,8 +301,8 @@ These list must take into account the sort option chosen in the block config (Bu
     And I select "Collection UserC_03" from "group_view_submission_form_4_options"
     And I press "Submit"
     And I press "Yes"
-    And I choose "My groups" in "Engage" from main menu
-    And I scroll to the base of id "mygroups"
+    And I choose "Groups" in "Engage" from main menu
+    And I scroll to the base of id "findgroups"
     And I follow "GroupA"
     And I select "Page UserC_04" from "group_view_submission_form_1_options"
     And I press "Submit"
@@ -359,7 +359,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I select "GroupC" from "accesslist[0][searchtype]"
     And I press "Save"
     # Submit pages and collections to the "GroupC" and "GroupA"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I follow "GroupC"
     And I select "Page UserC_10" from "group_view_submission_form_3_options"
     And I press "Submit"
@@ -373,8 +373,8 @@ These list must take into account the sort option chosen in the block config (Bu
     And I select "Collection UserC_07" from "group_view_submission_form_3_options"
     And I press "Submit"
     And I press "Yes"
-    And I choose "My groups" in "Engage" from main menu
-    And I scroll to the base of id "mygroups"
+    And I choose "Groups" in "Engage" from main menu
+    And I scroll to the base of id "findgroups"
     And I follow "GroupA"
     And I select "Page UserC_12" from "group_view_submission_form_1_options"
     And I press "Submit"

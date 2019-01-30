@@ -40,7 +40,7 @@ jQuery(function($) {
                     document.location.href = config.wwwroot + 'artefact/file/';
                     break;
                 case 'g':
-                    document.location.href = config.wwwroot + 'group/mygroups.php';
+                    document.location.href = config.wwwroot + 'group/index.php';
                     break;
                 case 'v':
                     document.location.href = config.wwwroot + 'view';

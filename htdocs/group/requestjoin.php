@@ -14,7 +14,6 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 $groupid = param_integer('id');
-$returnto = param_alpha('returnto', 'mygroups');
 
 define('GROUP', $groupid);
 $group = group_current_group();
@@ -27,7 +26,7 @@ if (!$group->request
 
 define('TITLE', $group->name);
 
-$goto = get_config('wwwroot') . 'group/' . $returnto . '.php' . ($returnto == 'view' ? ('?id=' . $groupid) : '');
+$goto = get_config('wwwroot') . 'group/index.php';
 
 $form = pieform(array(
     'name' => 'requestjoingroup',
@@ -45,10 +44,6 @@ $form = pieform(array(
             'class' => 'btn-primary',
             'value' => array(get_string('request', 'group'), get_string('cancel')),
             'goto' => $goto
-        ),
-        'returnto' => array(
-            'type' => 'hidden',
-            'value' => $returnto
         )
     ),
 ));

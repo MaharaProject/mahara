@@ -46,7 +46,7 @@ Scenario: When a collection is shared and a page is deleted from the collection 
 
     # Log in as UserB
    And I log in as "UserB" with password "Kupuh1pa!"
-   And I choose "My groups" in "Engage" from main menu
+   And I choose "Groups" in "Engage" from main menu
    And I follow "GroupA"
    And I follow "Collection UserA_01"
    And I should see "Page UserA_02"

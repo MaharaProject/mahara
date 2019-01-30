@@ -14,7 +14,7 @@ require_once('view.php');
 require_once('group.php');
 safe_require('artefact', 'comment');
 define('TITLE', get_string('report', 'group'));
-define('MENUITEM', 'engage/mygroups');
+define('MENUITEM', 'engage/index');
 define('MENUITEM_SUBPAGE', 'report');
 define('GROUP', param_integer('group'));
 define('SUBSECTIONHEADING', get_string('report', 'group'));

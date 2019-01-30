@@ -6029,7 +6029,7 @@ class View {
 
     public static function set_nav($group, $institution, $share=false, $collection=false) {
         if ($group) {
-            define('MENUITEM', 'engage/mygroups');
+            define('MENUITEM', 'engage/index');
             define('MENUITEM_SUBPAGE', $share ? 'share' : 'views');
             define('GROUP', $group);
         }
@@ -6052,7 +6052,7 @@ class View {
     public function set_edit_nav() {
         if ($this->group) {
             // Don't display the group nav; 5 levels of menu is too many
-            define('MENUITEM', 'engage/mygroups');
+            define('MENUITEM', 'engage/index');
             define('MENUITEM_SUBPAGE', 'views');
             define('GROUP', $this->group);
             define('NOGROUPMENU', 1);

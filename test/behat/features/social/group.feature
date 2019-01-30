@@ -17,7 +17,10 @@ Background:
 
 Scenario: Join a group
     Given I log in as "UserE" with password "Kupuh1pa!"
-    And I choose "Find groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
+    And I select "All groups" from "filter"
+    And I press "Search"
+    And I wait "1" seconds
     When I click on "GroupA"
     Then I should see "About"
     When I press "Join this group"

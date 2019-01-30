@@ -37,7 +37,7 @@ Feature: Mahara users submit pages / colelctions to a group
   Scenario: Group users submit content to the group and group admin checks who is still to submit content
     # UserA submits a collection to the group
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Find groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
     And I select "Collection UserA_01" from "Submit for assessment"
@@ -48,7 +48,7 @@ Feature: Mahara users submit pages / colelctions to a group
 
     # UserB submits a page to the group
     Given I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Find groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
     And I select "Page UserB_02" from "Submit for assessment"
@@ -59,7 +59,7 @@ Feature: Mahara users submit pages / colelctions to a group
 
     # UserC didn't submit anything so should appear on the need to do submissions list
     Given I log in as "groupAdmin" with password "Kupuh1pa!"
-    And I choose "Find groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
     Then I should see "Cecilia User" in the "Members without a submission to the group" property

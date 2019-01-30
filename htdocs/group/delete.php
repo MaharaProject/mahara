@@ -53,5 +53,5 @@ function deletegroup_submit(Pieform $form, $values) {
     global $SESSION, $USER, $groupid;
     group_delete($groupid);
     $SESSION->add_ok_msg(get_string('deletegroup', 'group'));
-    redirect('/group/mygroups.php');
+    redirect('/group/index.php');
 }

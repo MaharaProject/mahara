@@ -409,7 +409,7 @@ class PluginArtefactInternal extends PluginArtefact {
                 return 'artefact/internal/index.php?fs=general';
                 break;
             case 'joingroup':
-                return 'group/find.php';
+                return 'group/index.php?filter=notmember';
                 break;
             case 'makefriend':
                 return 'user/find.php';

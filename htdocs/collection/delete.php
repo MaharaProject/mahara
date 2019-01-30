@@ -27,7 +27,7 @@ $groupid = $collection->get('group');
 $institutionname = $collection->get('institution');
 $urlparams = array();
 if (!empty($groupid)) {
-    define('MENUITEM', 'engage/mygroups');
+    define('MENUITEM', 'engage/index');
     define('MENUITEM_SUBPAGE', 'views');
     define('GROUP', $groupid);
     $group = group_current_group();

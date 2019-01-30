@@ -9,29 +9,40 @@
  *
  */
 
+
 define('INTERNAL', 1);
-define('MENUITEM', 'engage/find');
+define('MENUITEM', 'engage/index');
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('findgroups'));
+define('TITLE', get_string('groups'));
 require_once('group.php');
 require_once('searchlib.php');
-$filter = param_alpha('filter', 'canjoin');
+$filter = param_alpha('filter', 'allmy');
 $offset = param_integer('offset', 0);
 $groupcategory = param_signed_integer('groupcategory', 0);
 $groupsperpage = 10;
 $query = param_variable('query', '');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'group');
-define('SECTION_PAGE', 'find');
+define('SECTION_PAGE', 'index');
+
+/* $searchmode will switch between 2 search funcs (with different queries)
+*  $searchmode = 'find' uses search_group
+*  $searchmode = 'mygroups' uses group_get_associated_groups
+*/
+$searchmode = 'find';
 
 // check that the filter is valid, if not default to 'all'
-if (in_array($filter, array('member', 'notmember', 'canjoin'))) {
+if (in_array($filter, array('allmy', 'member', 'admin', 'invite', 'notmember', 'canjoin'))) {
+    if ($filter == 'allmy' || $filter == 'admin' || $filter == 'invite') {
+        $searchmode = 'mygroups';
+    }
     $type = $filter;
 }
 else { // all or some other text
     $filter = 'all';
     $type = 'all';
 }
+
 $elements = array();
 $queryfield = array(
             'title' => get_string('search') . ': ',
@@ -45,9 +56,12 @@ $filterfield = array(
             'type' => 'select',
             'class' => 'dropdown-connect js-dropdown-connect',
             'options' => array(
+                'allmy'  => get_string('allmygroups', 'group'),
+                'member'  => get_string('groupsimin', 'group'),
+                'admin'   => get_string('groupsiown', 'group'),
+                'invite'  => get_string('groupsiminvitedto', 'group'),
                 'canjoin'   => get_string('groupsicanjoin', 'group'),
                 'notmember' => get_string('groupsnotin', 'group'),
-                'member'    => get_string('groupsimin', 'group'),
                 'all'       => get_string('allgroups', 'group')
             ),
             'defaultvalue' => $filter);
@@ -93,7 +107,8 @@ if (get_config('allowgroupcategories')
         )
     );
 
-} else {
+}
+else {
 
     $elements['searchfield'] = array(
         'type' => 'submit',
@@ -113,23 +128,32 @@ $searchform = pieform(array(
     )
 );
 
-$groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory);
+$groups = array();
+if ($searchmode == 'mygroups') {
+    $results = group_get_associated_groups($USER->get('id'), $type, $groupsperpage, $offset, $groupcategory, $query);
+    $groups['data'] = isset($results['groups']) ? $results['groups'] : array();
+    $groups['count'] = isset($results['count']) ? $results['count'] : 0;
+}
+else {
+    $groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory);
+}
 
 // gets more data about the groups found by search_group
 // including type if the user is associated with the group in some way
-if ($groups['data']) {
-    $groupids = array();
-    foreach ($groups['data'] as $group) {
-        $groupids[] = $group->id;
-    }
-    $groups['data'] =  get_records_sql_array("
+if ($searchmode == 'find') {
+    if ($groups['data']) {
+        $groupids = array();
+        foreach ($groups['data'] as $group) {
+            $groupids[] = $group->id;
+        }
+        $groups['data'] =  get_records_sql_array("
         SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
-            g1.hidemembers, g1.hidemembersfrommembers, g1.urlid, g1.role, g1.membershiptype, g1.membercount, COUNT(gmr.member) AS requests,
-            g1.editwindowstart, g1.editwindowend
+        g1.hidemembers, g1.hidemembersfrommembers, g1.urlid, g1.role, g1.membershiptype, g1.membercount, COUNT(gmr.member) AS requests,
+        g1.editwindowstart, g1.editwindowend
         FROM (
             SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
-                g.hidemembers, g.hidemembersfrommembers, g.urlid, t.role, t.membershiptype, COUNT(gm.member) AS membercount,
-                g.editwindowstart, g.editwindowend
+            g.hidemembers, g.hidemembersfrommembers, g.urlid, t.role, t.membershiptype, COUNT(gm.member) AS membercount,
+            g.editwindowstart, g.editwindowend
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)
             LEFT JOIN (
@@ -148,23 +172,25 @@ if ($groups['data']) {
                 SELECT g.id, 'request' AS membershiptype, NULL as role
                 FROM {group} g
                 INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
-            ) t ON t.id = g.id
-            WHERE g.id IN (" . implode($groupids, ',') . ')
-            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
+                ) t ON t.id = g.id
+                WHERE g.id IN (" . implode($groupids, ',') . ')
+                GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
                 g.hidemembers, g.hidemembersfrommembers, g.urlid, t.role, t.membershiptype, g.editwindowstart, g.editwindowend
-        ) g1
-        LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
-        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
-            g1.hidemembers, g1.hidemembersfrommembers, g1.urlid, g1.role, g1.membershiptype, g1.membercount, g1.editwindowstart, g1.editwindowend
-        ORDER BY g1.name',
-        array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'))
-    );
+                ) g1
+                LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
+                GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
+                g1.hidemembers, g1.hidemembersfrommembers, g1.urlid, g1.role, g1.membershiptype, g1.membercount, g1.editwindowstart, g1.editwindowend
+                ORDER BY g1.name',
+                array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'))
+            );
+        }
 }
 
-group_prepare_usergroups_for_display($groups['data'], 'find');
+group_prepare_usergroups_for_display($groups['data']);
 
 $params = array();
 $params['filter'] = $filter;
+
 if ($groupcategory != 0) {
     $params['groupcategory'] = $groupcategory;
 }
@@ -173,12 +199,12 @@ if ($query) {
 }
 
 $pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'group/find.php' . ($params ? ('?' . http_build_query($params)) : ''),
+    'url' => get_config('wwwroot') . 'group/index.php' . ($params ? ('?' . http_build_query($params)) : ''),
     'count' => $groups['count'],
     'limit' => $groupsperpage,
     'offset' => $offset,
     'datatable' => 'findgroups',
-    'jsonscript' => 'group/find.json.php',
+    'jsonscript' => 'group/index.json.php',
     'setlimit' => true,
     'jumplinks' => 6,
     'numbersincludeprevnext' => 2,
@@ -187,15 +213,16 @@ $pagination = build_pagination(array(
 ));
 
 function search_submit(Pieform $form, $values) {
-    redirect('/group/find.php?filter=' . $values['filter'] . ((isset($values['query']) && ($values['query'] != '')) ? '&query=' . urlencode($values['query']) : '') . (!empty($values['groupcategory']) ? '&groupcategory=' . intval($values['groupcategory']) : ''));
+    redirect('/group/index.php?filter=' . $values['filter'] . ((isset($values['query']) && ($values['query'] != '')) ? '&query=' . urlencode($values['query']) : '') . (!empty($values['groupcategory']) ? '&groupcategory=' . intval($values['groupcategory']) : ''));
 }
 
 $smarty = smarty(array('paginator'));
 setpageicon($smarty, 'icon-comments-o');
 $smarty->assign('groups', $groups['data']);
+$smarty->assign('cancreate', group_can_create_groups());
 $html = $smarty->fetch('group/mygroupresults.tpl');
 $smarty->assign('groupresults', $html);
 $smarty->assign('form', $searchform);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('pagination_js', $pagination['javascript']);
-$smarty->display('group/find.tpl');
+$smarty->display('group/index.tpl');
