@@ -1874,7 +1874,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         safe_require('notification', 'internal');
         foreach ($groups as $group) {
             // find the group admins and notify them - there should be at least 1 admin for a group
-            if ($admins = group_get_admin_ids(array($group->id))) {
+            if ($admins = group_get_admin_ids($group->id)) {
                 $data = array(
                     'subject'   => get_string('adm_group_notificationsubject', 'artefact.file'),
                     'message'   => get_string('adm_group_notificationmessage', 'artefact.file', $group->name, ceil((int)$group->quotausedpercent), display_size($group->quota)),
