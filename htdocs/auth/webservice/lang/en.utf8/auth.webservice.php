@@ -35,11 +35,45 @@ The link will expire in 24 hours.
 --
 Regards,
 The %s Team';
+$string['registeredemailmessagetextmessage'] = 'Hello %s,
+
+Thank you for registering an account on %s.
+
+%s
+
+Please follow this link to
+complete the signup process:
+
+%sregister.php?key=%s
+
+The link will expire in 24 hours.
+
+--
+Regards,
+The %s Team';
+$string['registeredemailmessagehtmlmessage'] = '<p>Hello %s,</p>
+
+<p>Thank you for registering an account on %s.</p>
+
+
+<p>%s</p>
+
+<p>Please follow this link
+to complete the signup process:</p>
+<p><a href="%sregister.php?key=%s">%sregister.php?key=%s</a></p>
+<p>The link will expire in 24 hours.</p>
+
+
+<pre>--
+Regards,
+The %s Team</pre>';
 $string['registeredemailmessagehtml'] = '<p>Hello %s,</p>
+
 <p>Thank you for registering an account on %s. Please follow this link
 to complete the signup process:</p>
 <p><a href="%sregister.php?key=%s">%sregister.php?key=%s</a></p>
 <p>The link will expire in 24 hours.</p>
+
 
 <pre>--
 Regards,
