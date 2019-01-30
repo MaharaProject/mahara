@@ -859,7 +859,6 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="blocktypefk" TYPE="foreign" FIELDS="blocktype" REFTABLE="blocktype_installed" REFFIELDS="name" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
-                <KEY NAME="viewrowcolumnorderuk" TYPE="unique" FIELDS="view,row,column,order" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view_artefact">
@@ -1447,6 +1446,19 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="role" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="block_instance_dimension">
+            <FIELDS>
+                <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="positionx" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="positiony" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="width" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="4" />
+                <FIELD NAME="height" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="4" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="block" />
+                <KEY NAME="blockfk" TYPE="foreign" FIELDS="block" REFTABLE="block_instance" REFFIELDS="id" />
             </KEYS>
         </TABLE>
     </TABLES>
