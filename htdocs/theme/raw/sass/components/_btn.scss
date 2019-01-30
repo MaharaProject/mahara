@@ -197,7 +197,7 @@ td.action-list-copy {
 // Often the same template is used to render buttons at the top of the page and
 // in a list group. cf. groups table/groups
 .list-group,
-.card-heading {
+.card-header {
     .btn-group-top {
         @include clearfix;
         text-align: right;
@@ -205,7 +205,7 @@ td.action-list-copy {
         margin-top: 10px;
         @include media-breakpoint-up(md) {
             @include clearfix;
-            margin-top: -10px;
+            margin-top: -13px;
             margin-bottom: 11px;
         }
         .btn {

@@ -5,7 +5,7 @@
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}
             <div class="card {if $wallpost->private}card bg-warning{else}card-secondary{/if} wallpost">
-                <h4 class="card-heading has-link">
+                <h4 class="card-header has-link">
                     <a href="{$wallpost->profileurl}" class="userinfo has-user-icon">
                         <span class="user-icon left">
                             <img src="{profile_icon_url user=$wallpost maxheight=60 maxwidth=60}" alt="{str tag=profileimagetext arg1=$wallpost|display_default_name}" />
@@ -14,7 +14,7 @@
                     </a>
                 {if $wallpost->deletable}
                     <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="card-control card-header-action">
-                        <span class="icon icon-trash left text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-trash left text-danger icon-sm" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag='delete' section='blocktype.wall'}</span>
                     </a>
                 {/if}

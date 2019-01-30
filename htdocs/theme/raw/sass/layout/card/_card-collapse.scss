@@ -159,7 +159,7 @@
     &.has-attachment {
         border-radius: $border-radius-sm;
         border-width: 1px;
-        .card-heading a {
+        .card-header a {
             border-width: 0;
             &:not(.collapsed) {
                 border-bottom-width: 1px;
@@ -170,7 +170,7 @@
     // Remove border from heading - add to link tag.
     // In this case we have a nested a tag that takes up the whole of the heading space
     // rather than applying the card-header to the link
-    .card-heading {
+    .card-header {
         border: 0;
         a {
             text-shadow: 1px 0 0 $text-shadow;
@@ -178,7 +178,7 @@
     }
 
     &.card-primary{
-        .card-heading a {
+        .card-header a {
             font-weight: bold;
         }
     }
@@ -195,18 +195,18 @@
 
     .card-body,
     .card-footer,
-    .card-heading a {
+    .card-header a {
         border: 1px solid $card-border-color;
     }
 
-    .card-heading a,
+    .card-header a,
     .card-body:not(.no-footer) {
         border-bottom-width: 0;
     }
 
     // last class will add bottom border to collapsible element(s)
     // Except has-attachment, it doesn't need one.
-    &.last .card-heading a.collapsed {
+    &.last .card-header a.collapsed {
         border-bottom-width: 1px;
     }
 }

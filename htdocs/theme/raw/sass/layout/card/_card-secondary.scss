@@ -49,7 +49,7 @@
         }
     }
     &.card-warning {
-         > .card-heading, .card-heading-nested {
+         > .card-header, .card-heading-nested {
             border-left: 4px solid $card-secondary-border;
             background-color: $card-warning-heading-bg;
             border-bottom: 1px solid $card-warning-border;
