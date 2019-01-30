@@ -397,6 +397,10 @@ $cfg->sslproxy = false;
  *
  * A point to note about the example below. Moodle doesn't strip the trailing slash from wwwroot
  * Bug MDL-30042 fixes this, if this patch isn't applied, just hard code the login url you want instead
+ *
+ * Another point to note is if you need some system to render the local login page when accessing a restricted page
+ * rather than automatically redirect to externallogin you can override this by adding a 'override=1' to the URL of the page you are
+ * trying to access.
  */
 // $cfg->externallogin = 'http://moodle.example.com/auth/mnet/jump.php?hostwwwroot={wwwroot}&wantsurl={shorturlencoded}';
 
