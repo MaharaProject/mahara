@@ -61,14 +61,15 @@ if (!function_exists('ctype_xdigit')){
  * Defines constants
  * @todo //TODO: make them class constants of csstidy
  */
-define('AT_START',    1);
-define('AT_END',      2);
-define('SEL_START',   3);
-define('SEL_END',     4);
-define('PROPERTY',    5);
-define('VALUE',       6);
-define('COMMENT',     7);
-define('DEFAULT_AT', 41);
+define('AT_START',         1);
+define('AT_END',           2);
+define('SEL_START',        3);
+define('SEL_END',          4);
+define('PROPERTY',         5);
+define('VALUE',            6);
+define('COMMENT',          7);
+define('IMPORTANT_COMMENT',8);
+define('DEFAULT_AT',      41);
 
 /**
  * Contains a class for printing CSS code
@@ -94,7 +95,7 @@ require('class.csstidy_optimise.php');
  * An online version should be available here: http://cdburnerxp.se/cssparse/css_optimiser.php
  * @package csstidy
  * @author Florian Schmitz (floele at gmail dot com) 2005-2006
- * @version 1.5.7
+ * @version 1.6.5
  */
 class csstidy {
 
@@ -105,9 +106,21 @@ class csstidy {
 	 */
 	public $css = array();
 	/**
+	 * Saves the comments.
+	 * @var array
+	 * @access public
+	 */
+	public $comments = array();
+	/**
+	 * Saves the current comments of the selectors
+	 * @var array
+	 * @access public
+	 */
+	public $cur_comments = array();
+	/**
 	 * Saves the parsed CSS (raw)
 	 * @var array
-	 * @access private
+	 * @access public
 	 */
 	public $tokens = array();
 	/**
@@ -147,7 +160,7 @@ class csstidy {
 	 * @var string
 	 * @access private
 	 */
-	public $version = '1.5.7';
+	public $version = '1.6.5';
 	/**
 	 * Stores the settings
 	 * @var array
@@ -318,6 +331,10 @@ class csstidy {
 		/* is dangeroues to be used: CSS is broken sometimes */
 		$this->settings['merge_selectors'] = 0;
 		/* preserve or not browser hacks */
+
+		/* Useful to produce a rtl css from a ltr one (or the opposite) */
+		$this->settings['reverse_left_and_right'] = 0;
+
 		$this->settings['discard_invalid_selectors'] = false;
 		$this->settings['discard_invalid_properties'] = false;
 		$this->settings['css_level'] = 'CSS3.0';
@@ -412,7 +429,7 @@ class csstidy {
 	 */
 	public function _add_token($type, $data, $do = false) {
 		if ($this->get_cfg('preserve_css') || $do) {
-			$this->tokens[] = array($type, ($type == COMMENT) ? $data : trim($data));
+			$this->tokens[] = array($type, ($type == COMMENT or $type == IMPORTANT_COMMENT) ? $data : trim($data));
 		}
 	}
 
@@ -841,7 +858,7 @@ class csstidy {
 									$this->log('Invalid property in ' . strtoupper($this->get_cfg('css_level')) . ': ' . $this->property, 'Warning');
 								}
 							}
-
+							$previous_property = $this->property;
 							$this->property = '';
 							$this->sub_value_arr = array();
 							$this->value = '';
@@ -884,7 +901,7 @@ class csstidy {
 						$this->str_char[] = $string{$i} === '(' ? ')' : $string{$i};
 						$this->from[] = 'instr';
 						$this->quoted_string[] = ($_str_char === ')' && $string{$i} !== '(' && trim($_cur_string)==='(')?$_quoted_string:!($string{$i} === '(');
-						continue;
+						continue 2;
 					}
 
 					if ($_str_char !== ")" && ($string{$i} === "\n" || $string{$i} === "\r") && !($string{$i - 1} === '\\' && !$this->escaped($string, $i - 1))) {
@@ -949,9 +966,15 @@ class csstidy {
 						$this->status = array_pop($this->from);
 						$i++;
 						if ($this->get_cfg('preserve_css_comment')) {
-                            $this->css_add_comment($this->at, $this->selector, $previous_property, $this->status, $cur_comment);
-                        }
-						$this->_add_token(COMMENT, $cur_comment);
+								$this->css_add_comment($this->at, $this->selector, $previous_property, $this->status, $cur_comment);
+						}
+						if (strlen($cur_comment) > 1 and strncmp($cur_comment, '!', 1) === 0) {
+							$this->_add_token(IMPORTANT_COMMENT, $cur_comment);
+							$this->css_add_important_comment($cur_comment);
+						}
+						else {
+							$this->_add_token(COMMENT, $cur_comment);
+						}
 						$cur_comment = '';
 					} else {
 						$cur_comment .= $string{$i};
@@ -1040,28 +1063,46 @@ class csstidy {
 		return!(@($string{$pos - 1} !== '\\') || csstidy::escaped($string, $pos - 1));
 	}
 
-    /**
-     * Adds a comment to the existing CSS code
-     * @param string $media
-     * @param string $selector
-     * @param string $property
-     * @param string $comment
-     * @access private
-     * @version 1.2
-     */
-    public function css_add_comment($media, $selector, $property, $status, $comment) {
-        switch ($status) {
-            case 'is':
-                $this->cur_comments[] = trim($comment);
-                break;
-            case 'ip':
-                if (isset($this->css[$media][$selector][$property])) {
-                    $this->comments[$media.$selector.$property][] = trim($comment);
-                }
-                break;
-            default:
-                break;
-        }
+	/**
+	 * Adds a comment to the existing CSS code
+	 * @param string $media
+	 * @param string $selector
+	 * @param string $property
+	 * @param string $comment
+	 * @access private
+	 * @version 1.2
+	 */
+	public function css_add_comment($media, $selector, $property, $status, $comment) {
+			switch ($status) {
+					case 'is':
+							$this->cur_comments[] = trim($comment);
+							break;
+					case 'ip':
+							if (isset($this->css[$media][$selector][$property])) {
+									$this->comments[$media.$selector.$property][] = trim($comment);
+							}
+							break;
+					default:
+							break;
+			}
+	}
+
+	/**
+	 * Add an important comment to the css code
+	 * (one we want to keep)
+	 * @param $comment
+	 */
+	public function css_add_important_comment($comment) {
+		if ($this->get_cfg('preserve_css') || trim($comment) == '') {
+			return;
+		}
+		if (!isset($this->css['!'])) {
+			$this->css['!'] = '';
+		}
+		else {
+			$this->css['!'] .= "\n";
+		}
+		$this->css['!'] .= $comment;
 	}
 
 	/**
@@ -1084,6 +1125,10 @@ class csstidy {
 				$this->css[$media][$selector][$property] = trim($new_val);
 			}
 		} else {
+			if (!empty($this->cur_comments)) {
+					$this->comments[$media.$selector] = $this->cur_comments;
+					$this->cur_comments = array();
+			}
 			$this->css[$media][$selector][$property] = trim($new_val);
 		}
 	}
