@@ -42,9 +42,32 @@ Background:
     | myfolder    | folder       | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png |
     | my html     | html         | Page UserB_00 | yes        | attachment=test_html.html |
 
+    | internalm v | internalmedia| Page UserB_00 | no         | attachment=testvid3.mp4 |
+    | internalm a | internalmedia| Page UserB_00 | no         | attachment=mahara.mp3 |
+
+
 
 Scenario: Create Page UserA_00 with text blocks
-    Given I log in as "UserA" with password "Kupuh1pa!"
+    # To allow users to upload specific internal media types
+    Given I log in as "admin" with password "Kupuh1pa!"
+    And I go to "/admin/extensions/pluginconfig.php?plugintype=blocktype&pluginname=file/internalmedia"
+    And I set the following fields to these values:
+    | 3GPP media file       | 1 |
+    | AVI video file        | 1 |
+    | FLV flash movie       | 1 |
+    | MP3 audio file        | 1 |
+    | MP4 media file        | 1 |
+    | MPEG movie            | 1 |
+    | OGA audio file        | 1 |
+    | OGG Vorbis audio file | 1 |
+    | OGV video file        | 1 |
+    | QuickTime movie       | 1 |
+    | WEBM video file       | 1 |
+    | WMV video file        | 1 |
+    And I press "Save"
+    Then I log out
+
+    Then I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
     And I go to portfolio page "Page Grp1"
     And I go to portfolio page "Page UserB_00"
