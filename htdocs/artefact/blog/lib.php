@@ -500,6 +500,7 @@ class ArtefactTypeBlog extends ArtefactType {
         $newdescription = EmbeddedImage::prepare_embedded_images($artefact->get('description'), 'blog', $blogid);
         $artefact->set('description', $newdescription);
         db_commit();
+        return $blogid;
     }
 
     /**

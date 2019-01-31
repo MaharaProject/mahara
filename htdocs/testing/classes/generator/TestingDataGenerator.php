@@ -1,4 +1,4 @@
-create_artefact(<?php
+<?php
 /**
  * @package    mahara
  * @subpackage test/generator
@@ -719,6 +719,57 @@ EOD;
 
     }
 
+    public static function generate_configdata_blog($data, $ownertype, $ownerid) {
+        if (!$data) return;
+        $configdata = array();
+
+        $fields = explode(';',$data);
+        foreach($fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $key=trim($key);
+            $value=trim($value);
+
+            if ($key == 'journaltitle') {
+                $blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype', 'blog');
+                $configdata['artefactid'] = $blogid;
+            }
+            if ($key == 'copytype') {
+                $configdata[$key]=$value;
+            }
+            if ($key == 'count') {
+                $configdata[$key]=$value;
+            }
+        }
+        return $configdata;
+    }
+
+    public static function generate_configdata_blogpost($data) {
+        if (!$data) return;
+        $configdata = array();
+
+        $blogpostid;
+        $blogid;
+
+        $fields = explode(';',$data);
+        foreach($fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
+
+            if ($key == 'journaltitle') {
+                $blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype','blog');
+            }
+            if ($key == 'entrytitle') {
+                $blogpostid = get_field('artefact','id','title',$value, 'parent',$blogid, 'artefacttype','blogpost');
+                $configdata['artefactid'] = $blogpostid;
+            }
+            if ($key == 'copytype') {
+                $configdata[$key]=$value;
+            }
+        }
+        return $configdata;
+    }
+
     /**
     * generate config data for the blocktype: rss feeds/external feeds
     * @param string $data inside data column in behat test
@@ -851,8 +902,8 @@ EOD;
         foreach ($fields as $field) {
 
             list($key, $value) = explode('=', $field);
-            $key=trim($key);
-            $value=trim($value);
+            $key = trim($key);
+            $value = trim($value);
 
             if ($key == 'attachments') {
                 $galleryimages = explode(',', $value);
@@ -881,7 +932,6 @@ EOD;
                     $value -= 1;
                     $configdata['style'] = $value;
                 }
-
                 else {
                     $configdata[$key] = $value;
                 }
@@ -889,7 +939,6 @@ EOD;
         }
         return $configdata;
     }
-
 
     public static function generate_configdata_html($data, $ownertype, $ownerid) {
         if (!$data) return;
@@ -1081,7 +1130,6 @@ EOD;
             throw new SystemException("Invalid attachment '" . $file . "'. No attachment by that name owned by " . $ownertype . " with id " . $ownerid);
         }
     }
-
 
     /**
      * set up configdata for retractable and retractable on load
@@ -1418,7 +1466,7 @@ EOD;
      * @param unknown $record
      * @throws SystemException
      */
-    public function create_journal($record) {
+    public function create_blog($record) {
         $record['owner'] = trim($record['owner']);
         $record['ownertype'] = trim($record['ownertype']);
         $owner = null;
@@ -1475,7 +1523,7 @@ EOD;
      * @param unknown $record
      * @throws SystemException
      */
-    public function create_journalpost($record) {
+    public function create_blogpost($record) {
         $record['owner'] = trim($record['owner']);
         $record['ownertype'] = trim($record['ownertype']);
         $owner = null;

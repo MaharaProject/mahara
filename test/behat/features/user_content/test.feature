@@ -16,10 +16,25 @@ Background:
     | Group1 | UserB | Group1 owned by UserB | standard | ON | OFF | all | ON | OFF | UserA |  |
 
     And the following "pages" exist:
-    | title | description | ownertype | ownername |
-    | Page UserA_00 | Page 01 | user  | UserA |
-    | Page UserB_00 | Page 01 | user  | UserA |
-    | Page Grp1     | Page 01 | group | Group1 |
+    | title         | description | ownertype | ownername |
+    | Page UserA_00 | Page 01     | user      | UserA |
+    | Page UserB_00 | Page 01     | user      | UserA |
+    | Page Grp1     | Page 01     | group     | Group1 |
+    | Page One      | test 01     | user      | UserA |
+
+    And the following "journals" exist:
+    | owner | ownertype | title   | description      | tags               |
+    | UserA | user      | journal1| this is journal1 | amber,brown,cobalt |
+    | Group1| group      |journal2| this is journal1 | amber,brown,cobalt |
+
+    And the following "journalentries" exist:
+    | owner   | ownertype | title       | entry                  | blog     | tags      | draft |
+    | UserA   | user      | Entry One   | This is my entry  One  | journal1 | cats,dogs | 0     |
+    | UserA   | user      | Entry Two   | This is my entry Two   | journal1 | cats,dogs | 0     |
+    | UserA   | user      | Entry Three | This is my entry Three | journal1 | cats,dogs | 0     |
+    | UserA   | user      | Entry Four  | This is my entry Four  | journal1 | cats,dogs | 0     |
+    | UserA   | user      | Entry Five  | This is my entry Five  | journal1 | cats,dogs | 0     |
+    | Group1  | group     | Group e1    | This is my group entry | journal2 |           | 0     |
 
     And the following "blocks" exist:
     | title       | type         | page          |retractable | data |
@@ -45,6 +60,8 @@ Background:
     | internalm a | internalmedia| Page UserB_00 | no         | attachment=mahara.mp3 |
     | my pdf      | pdf          | Page UserB_00 | no         | attachment=mahara_about.pdf |
 
+    | my blog     | blog         | Page One      | no         |copytype=nocopy;count=5;journaltitle=journal1 |
+    | my blogpost | blogpost     | Page One      | no         |copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
 
 
 
@@ -72,3 +89,4 @@ Scenario: Create Page UserA_00 with text blocks
     And I go to portfolio page "Page UserA_00"
     And I go to portfolio page "Page Grp1"
     And I go to portfolio page "Page UserB_00"
+    And I go to portfolio page "Page One"
