@@ -44,11 +44,11 @@ class BehatGeneral extends BehatBase {
         $this->visitPath("/");
         $this->wait_until_the_page_is_ready();
         $this->getSession()->getPage()->fillField(
-            "login_username",
+            "login_login_username",
             $username
         );
         $this->getSession()->getPage()->fillField(
-            "login_password",
+            "login_login_password",
             $password
         );
         $this->getSession()->getPage()->pressButton("Login");

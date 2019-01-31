@@ -70,7 +70,7 @@ EOF;
                 'title'        => get_string('sendweeklyupdates', 'admin'),
                 'description'  => get_string('sendweeklyupdatesdescription', 'admin'),
                 'defaultvalue' => (!$registered || get_config('registration_sendweeklyupdates')),
-                'class'        => 'hidden',
+                'class'        => 'd-none',
             ),
             'register' => array(
                 'type' => 'submitcancel',
