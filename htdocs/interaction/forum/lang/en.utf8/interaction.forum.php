@@ -134,6 +134,7 @@ $string['moderatorsdescription'] = 'Moderators can edit and delete topics and po
 $string['name'] = 'Forum';
 $string['nameplural'] = 'Forums';
 $string['newforum'] = 'New forum';
+$string['forumlower'] = 'forum';
 $string['newforumpostnotificationsubjectline'] = '%s';
 $string['newpost'] = 'New post: ';
 $string['newtopic'] = 'New topic';
