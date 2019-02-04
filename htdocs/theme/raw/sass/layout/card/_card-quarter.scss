@@ -176,6 +176,11 @@
 
 .card-collection {
     position: relative;
+    .card.bg-warning {
+        .card-body {
+            background-color: $state-warning-bg;
+        }
+    }
     .collection-stack.bg-warning {
         &:before,
         &:after {

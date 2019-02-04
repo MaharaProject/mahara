@@ -8,6 +8,9 @@
 	&:hover {
 		background-color: darken($btn-secondary-bg, 10%);
 	}
+	&.disabled {
+		background: $btn-bg-disabled-color;
+	}
 }
 
 .btn-primary {
