@@ -1208,6 +1208,97 @@ EOD;
     }
 
     /**
+     * generate configdata for the blocktype: textbox
+     *
+     * This function will create a textbox blockytpe(appears as note block on front-end)
+     * holding an html artefact
+     *
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @param string $title of block to be created* (when copytoall is true)
+     * @param object the current view to create block on
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_textbox($data, $ownertype, $ownerid, $title, $view) {
+        if (!$data) return;
+        $configdata = array();
+
+        $fields = explode(';', $data);
+        foreach ($fields as $field) {
+            list($key, $value) = explode('=', $field);
+
+            if ($key == 'notetitle') {
+                $artefactdata['title'] = trim($value);
+            }
+            if ($key == 'text') {
+                $artefactdata['description'] = trim($value);
+            }
+            if ($key == 'allowcomments') {
+                $artefactdata['allowcomments'] = strtolower($value) == 'yes' ? 1 : 0;
+            }
+            if ($key == 'tags') {
+                // noteblock expects tags in csv form (separated by commas)
+                $tags =  explode(',', $value);
+                $tagstring = array();
+                foreach($tags as $tag) {
+                    $tagstring[] = trim($tag);
+                }
+                $artefactdata['tags'] = $tagstring;
+
+            }
+            if ($key == 'attachments') {
+                $attachments = explode(',', $value);
+                foreach( $attachments as $attachment) {
+                    $mediatype = self::get_mimetype($attachment);
+
+                    // we need to find the id of the item we are trying to attach and save it as artefactid
+                    if (!$artefactid = get_field('artefact', 'id', 'title', $attachment)) {
+                        $artefactid = TestingDataGenerator::create_artefact($attachment, $ownertype, $ownerid, $mediatype);
+                        TestingDataGenerator::file_creation($artefactid, $attachment, $ownertype, $ownerid);
+                    }
+                    $configdata['artefactids'][] = $artefactid;
+
+                }
+            }
+        }
+        $artefact = new ArtefactTypeHtml(0, null);
+        $artefact->set('title', $artefactdata['title']);
+        $newdescription = EmbeddedImage::prepare_embedded_images($artefactdata['description'], 'textbox', $artefact->get('id'), $artefact->get('group'));
+        $artefact->set('description', $newdescription);
+        $artefact->set('allowcomments', $artefactdata['allowcomments']);
+        if (get_config('licensemetadata')) {
+            $artefact->set('license', $values['license']);
+            $artefact->set('licensor', $values['licensor']);
+            $artefact->set('licensorurl', $values['licensorurl']);
+        }
+        $artefact->set('owner', $ownerid);
+        $artefact->set('tags', $artefactdata['tags']);
+        $artefact->commit();
+        $configdata['artefactid'] = $artefact->get('id');
+        foreach($configdata['artefactids'] as $artefactid) {
+            $artefact->attach($artefactid);
+        }
+
+        $newdescription = EmbeddedImage::prepare_embedded_images($artefact->get('description'), 'textbox', $artefact->get('id'), $view->get('group'));
+
+        if ($newdescription !== $artefact->get('description')) {
+            $updatedartefact = new stdClass();
+            $updatedartefact->id = $artefact->get('id');
+            $updatedartefact->description = $newdescription;
+            update_record('artefact', $updatedartefact, 'id');
+        }
+        // Add attachments, if there are any...
+        $new = update_attachments($artefact, $configdata['artefactids']);
+        update_attachments($artefact, $configdata['artefactids'], null, null, true);
+
+        // TODO: Add attachments, if there are any...
+        //update_attachments($artefact, $configdata['artefactids'], null, null, true);
+
+        return $configdata;
+    }
+
+    /**
      * generate configdata for the bloctype: peerassessment
      * @param string $data inside data column in blocktype tables
      * @return array redundant info as there is no data directly connected in this case
