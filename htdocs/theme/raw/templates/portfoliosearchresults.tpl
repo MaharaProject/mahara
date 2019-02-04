@@ -44,7 +44,7 @@
                 {$result->description|str_shorten_html:140:true|safe}
                 </div>
                 <!-- TAGS -->
-                {if $result->tags|count gt 0}
+                {if is_array($result->tags) && count($result->tags) > 0}
                 <div class="tags">
                     <strong>{str tag=tags}: </strong>
                     {list_tags tags=$result->tags owner=$owner view=$result->viewid}
@@ -53,9 +53,9 @@
             </div>
             <div class="col-md-4">
             <!-- VIEWS -->
-            {if $result->views|count gt 0}
+            {if is_array($result->views) && count($result->views) > 0}
                 <div class="usedon">
-                {if $result->views|count gt 1}
+                {if count($result->views) > 1}
                     <strong>{str tag=usedonpages section=search.elasticsearch}:</strong>
                 {else}
                     <strong>{str tag=usedonpage section=search.elasticsearch}:</strong>
@@ -113,7 +113,7 @@
                 {$result->description|str_shorten_html:140:true|safe}
                 </div>
                 <!-- TAGS -->
-                {if $result->tags|count gt 0}
+                {if is_array($result->tags) && count($result->tags) > 0}
                 <div class="tags">
                     <strong>{str tag=tags}: </strong>
                     {list_tags tags=$result->tags owner=$owner view=$result->viewid}
@@ -122,7 +122,7 @@
             </div>
             <div class="col-md-4">
             <!-- VIEWS -->
-            {if $result->views|count gt 0}
+            {if is_array($result->views) && count($result->views) > 0}
                 <div class="usedon">
                     <strong>{str tag=usedonpage section=search.elasticsearch}:</strong>
                     <ul class="list-group list-unstyled">
@@ -146,16 +146,16 @@
                 <p>
                     {$result->description|str_shorten_html:100|strip_tags|safe}
                 </p>
-                {if $result->tags|count gt 0}
+                {if is_array($result->tags) && count($result->tags) > 0}
                 <div class="tags"><strong>{str tag=tags}:</strong>
                     {list_tags tags=$result->tags owner=$owner view=$result->viewid}
                 </div>
                 {/if}
             </div>
             <div class="col-md-4">
-                {if $result->views|count gt 0}
+                {if is_array($result->views) && count($result->views) > 0}
                     <div class="usedon">
-                    {if $result->views|count gt 1}
+                    {if count($result->views) > 1}
                         <strong>{str tag=views}:</strong>
                     {else}
                         <strong>{str tag=view}:</strong>
