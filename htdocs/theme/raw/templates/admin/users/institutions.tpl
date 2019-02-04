@@ -3,6 +3,8 @@
 {if $suspendform}
     <div class="btn-group btn-group-top">{$suspendform|safe}</div>
     <p class="lead">{str tag="suspendinstitutiondescription" section="admin"}</p>
+    <p class="lead">{str tag="unsuspendinstitutiondescription_warning" section="admin"}</p>
+
 {/if}
 
 
@@ -18,17 +20,14 @@
 {elseif $institution_form}
 <div class="panel panel-default view-container">
     {if $suspended}
-        <h2 class="title panel-heading">{$suspended}</h2>
+    <h2 class="title panel-heading panel-heading-warning">{$suspended}</h2>
+        {if !$USER->get('admin')}
         <div class="panel-body">
             <div class="detail">
-            {if $USER->get('admin')}
-                <p>{str tag="unsuspendinstitutiondescription_top" section="admin"}</p>
-            {else}
-                <p>{str tag="unsuspendinstitutiondescription_top_instadmin" section="admin"}</p>
-            {/if}
+                <p>{str tag="unsuspendinstitutiondescription_instadmin" section="admin"}</p>
             </div>
-            <div>{$suspendform_top|safe}</div>
         </div>
+        {/if}
     {/if}
 
     {if $add}

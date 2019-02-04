@@ -1140,8 +1140,8 @@ $string['suspendinstitutiondescription'] = 'Here you may suspend an institution.
 $string['suspendedinstitutionmessage'] = 'This institution has been suspended.';
 $string['unsuspendinstitution'] = 'Unsuspend institution';
 $string['unsuspendinstitutiondescription'] = 'Here you may unsuspend an institution. Users of suspended institutions will be unable to log in until the institution is unsuspended.<br /><strong>Beware:</strong> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
-$string['unsuspendinstitutiondescription_top'] = '<em>Beware:</em> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
-$string['unsuspendinstitutiondescription_top_instadmin'] = 'Users of suspended institutions are unable to log in. Contact the site administrator to unsuspend the institution.';
+$string['unsuspendinstitutiondescription_warning'] = '<em>Beware:</em> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
+$string['unsuspendinstitutiondescription_instadmin'] = 'Users of suspended institutions are unable to log in. Contact the site administrator to unsuspend the institution.';
 
 // Bulk Leap2A User export
 $string['bulkexport'] = 'Export users';

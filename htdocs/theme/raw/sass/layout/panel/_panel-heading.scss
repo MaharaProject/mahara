@@ -75,3 +75,9 @@
         }
     }
 }
+
+.panel-default > .panel-heading-warning {
+    background-color: $alert-warning-bg;
+    color: $alert-warning-text;
+    font-weight: 400;
+}

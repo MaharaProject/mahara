@@ -1267,18 +1267,10 @@ if ($institution && $institution != 'mahara') {
                         'usebuttontag' => true,
                         'class'       => 'btn-default',
                         'value'       => '<span class="icon icon-lg text-success icon-check left" role="presentation" aria-hidden="true"></span>' . get_string('unsuspendinstitution','admin'),
-                        'description' => get_string('unsuspendinstitutiondescription','admin'),
                     ),
                 )
             );
             $suspendform  = pieform($suspendformdef);
-
-            // Create a second forms for unsuspension to go in the suspend message.
-            // This keeps the HTML IDs unique
-            $suspendformdef['name'] = 'institution_unsuspend_top';
-            $suspendformdef['renderer'] = 'oneline';
-            $suspendformdef['successcallback'] = 'institution_unsuspend_submit';
-            $suspendform_top = pieform($suspendformdef);
         }
     }
 }
@@ -1319,9 +1311,6 @@ if (isset($suspended)) {
     }
     if (isset($suspendform)) {
         $smarty->assign('suspendform', $suspendform);
-        if (isset($suspendform_top)) {
-            $smarty->assign('suspendform_top', $suspendform_top);
-        }
     }
 }
 
