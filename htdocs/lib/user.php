@@ -15,8 +15,10 @@ define('MAX_USERNAME_DISPLAY', 30);
 
 require 'phpmailer/src/PHPMailer.php';
 require 'phpmailer/src/Exception.php';
+require 'phpmailer/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as phpmailerException;
+use PHPMailer\PHPMailer\SMTP;
 /**
  * loads up activity preferences for a given user
  *
