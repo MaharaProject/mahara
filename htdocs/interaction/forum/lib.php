@@ -1155,7 +1155,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $post->textbody,
                 $attachments,
                 get_config('wwwroot') . $this->url,
-                $user->subscribetype,
+                get_string_from_language($user->lang, $user->subscribetype . 'lower', 'interaction.forum'),
                 $unsubscribelink
             );
         }
@@ -1165,7 +1165,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $post->groupname,
                 $post->textbody,
                 get_config('wwwroot') . $this->url,
-                $user->subscribetype,
+                get_string_from_language($user->lang, $user->subscribetype . 'lower', 'interaction.forum'),
                 $unsubscribelink
             );
         }
@@ -1188,7 +1188,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $attachments,
                 get_config('wwwroot') . $this->url,
                 $unsubscribelink,
-                $user->subscribetype
+                get_string_from_language($user->lang, $user->subscribetype . 'lower', 'interaction.forum')
             );
         }
         else {
@@ -1198,7 +1198,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $post->htmlbody,
                 get_config('wwwroot') . $this->url,
                 $unsubscribelink,
-                $user->subscribetype
+                get_string_from_language($user->lang, $user->subscribetype . 'lower', 'interaction.forum')
             );
         }
         return $message;
