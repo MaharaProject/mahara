@@ -22,6 +22,8 @@
     }
     .user-card & {
         min-height: 41px;
+        max-height: 400px;
+        overflow-y: auto;
     }
 
     .list-nested {
