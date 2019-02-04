@@ -29,7 +29,7 @@
                 {/if}
             </div>
             <!-- TAGS -->
-            {if $record->tags|count gt 0}
+            {if is_array($record->tags) && count($record->tags) > 0}
                 <div class="tags">
                     <strong>{str tag=tags section=search.elasticsearch}:</strong>
                     {foreach from=$record->tags item=tag name=tags}
@@ -41,9 +41,9 @@
         </div>
         <div class="col-md-4">
             <!-- PAGES -->
-            {if $record->views|count gt 0}
+            {if is_array($record->views) && count($record->views) > 0}
                 <div class="usedon">
-                {if $record->views|count gt 1}
+                {if count($record->views) > 1}
                     <strong>{str tag=views}:</strong>
                 {else}
                     <strong>{str tag=view}:</strong>
