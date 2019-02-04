@@ -59,7 +59,7 @@ $smarty = smarty(array('adminusersearch', 'adminexportqueue','paginator'), array
 setpageicon($smarty, 'icon-users');
 $smarty->assign('search', $search);
 $smarty->assign('limit', $limit);
-$smarty->assign('institutions', $institutions);
+$smarty->assign('institutions', !empty($institutions) ? $institutions : array());
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('columns', $columns);

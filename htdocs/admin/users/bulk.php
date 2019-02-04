@@ -46,6 +46,10 @@ $users = get_records_sql_assoc('
     $ph
 );
 
+if (empty($users)) {
+    // None of the userids are valid
+    throw new InvalidArgumentException("Trying to access invalid user(s)");
+}
 // Display the number of users filtered out due to institution permissions.  This is not an
 // exception, because the logged in user might be an admin in one institution, and staff in
 // another.

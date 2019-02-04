@@ -34,6 +34,7 @@ $MANDATORYFIELDS = array(
 );
 $MEMBERS = array(); // Store the members
 $GROUPS = array(); // Map gid to group shortnames
+$UPDATES = array(); // During validation, remember which group already exist
 
 $form = array(
     'name' => 'uploadcsv',
