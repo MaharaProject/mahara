@@ -35,6 +35,13 @@ if ($action == 'approve') {
     $message = get_string('approveregistrationmessage', 'admin', $inst->displayname);
     $submitbtn = get_string('approve', 'admin');
     define('TITLE', get_string('approveregistrationfor2', 'admin', $registration->firstname, $registration->lastname, $registration->email));
+    $elements['message'] = array(
+        'type'  => 'textarea',
+        'title' => get_string('registrationapprovedmessage', 'admin'),
+        'description' => get_string('registrationapproveddesc', 'admin'),
+        'cols' => 50,
+        'rows' => 10,
+    );
     if ($registration->institution != 'mahara') {
         $elements['institutionstaff'] = array(
             'type'         => 'switchbox',
@@ -86,7 +93,7 @@ function denyregistration_submit(Pieform $form, $values) {
 
     if (isset($values['message']) && !empty($values['message'])) {
         $message = get_string('registrationdeniedmessagereason', 'auth.internal',
-            $values['firstname'], get_config('sitename'), $values['message'], display_name($USER));
+            $values['firstname'], get_config('sitename'), hsc($values['message']), display_name($USER));
     }
     else {
         $message = get_string('registrationdeniedmessage', 'auth.internal',
@@ -143,30 +150,59 @@ function approveregistration_submit(Pieform $form, $values) {
     $user->firstname = $values['firstname'];
     $user->lastname = $values['lastname'];
     $user->email = $values['email'];
+    if (isset($values['message']) && !empty($values['message'])) {
+        $message = get_string(
+            'registeredemailmessagetextmessage',
+            'auth.webservice',
+            $user->firstname,
+            get_config('sitename'),
+            hsc($values['message']),
+            get_config('wwwroot'),
+            $values['key'],
+            get_config('sitename')
+        );
+        $htmlmessage = get_string(
+            'registeredemailmessagehtmlmessage',
+            'auth.webservice',
+            $user->firstname,
+            get_config('sitename'),
+            hsc($values['message']),
+            get_config('wwwroot'),
+            $values['key'],
+            get_config('wwwroot'),
+            $values['key'],
+            get_config('sitename')
+        );
+    }
+    else {
+        $message =  get_string(
+            'registeredemailmessagetext',
+            'auth.internal',
+            $user->firstname,
+            get_config('sitename'),
+            get_config('wwwroot'),
+            $values['key'],
+            get_config('sitename')
+        );
+        $htmlmessage = get_string(
+            'registeredemailmessagehtml',
+            'auth.internal',
+            $user->firstname,
+            get_config('sitename'),
+            get_config('wwwroot'),
+            $values['key'],
+            get_config('wwwroot'),
+            $values['key'],
+            get_config('sitename')
+      );
+    }
+
     email_user(
-            $user,
-            null,
-            get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
-            get_string(
-                    'registeredemailmessagetext',
-                    'auth.internal',
-                    $user->firstname,
-                    get_config('sitename'),
-                    get_config('wwwroot'),
-                    $values['key'],
-                    get_config('sitename')
-            ),
-            get_string(
-                    'registeredemailmessagehtml',
-                    'auth.internal',
-                    $user->firstname,
-                    get_config('sitename'),
-                    get_config('wwwroot'),
-                    $values['key'],
-                    get_config('wwwroot'),
-                    $values['key'],
-                    get_config('sitename')
-            )
+        $user,
+        null,
+        get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
+        $message,
+        $htmlmessage
     );
 
     $SESSION->add_ok_msg(get_string('registrationapprovedsuccessfully', 'admin'));
