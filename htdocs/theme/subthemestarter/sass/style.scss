@@ -10,6 +10,8 @@
 
 // Import your theme based variables (colors, fonts, padding, etc)
 @import "utilities/theme-variables"; // Import our theme variables
+@import "../../raw/sass/utilities/bootstrap-variables";
+
 //@import "utilities/bootstrap-variables"; // Set up your own bootstrap variables (note you need to make a copy of this file from the parent theme first)
 //@import "utilities/custom-variables"; // Set up your own custom variables  (note you need to make a copy of this file from raw first)
 
