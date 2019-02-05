@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints\Cluster\Settings;
 
 use Elasticsearch\Endpoints\AbstractEndpoint;
@@ -35,6 +37,7 @@ class Get extends AbstractEndpoint
             'flat_settings',
             'master_timeout',
             'timeout',
+            'include_defaults'
         );
     }
 

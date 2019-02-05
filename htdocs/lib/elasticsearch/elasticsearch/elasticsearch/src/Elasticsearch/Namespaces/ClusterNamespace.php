@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Namespaces;
 
 /**
@@ -24,7 +26,7 @@ class ClusterNamespace extends AbstractNamespace
      *        ['wait_for_relocating_shards'] = (number) Wait until the specified number of relocating shards is finished
      *        ['wait_for_status']            = (enum) Wait until cluster is in a specific state
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -49,7 +51,7 @@ class ClusterNamespace extends AbstractNamespace
      *        ['body']            = (boolean) Don't return cluster state metadata (default: false)
      *        ['explain']         = (boolean) Return an explanation of why the commands can or cannot be executed
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -78,7 +80,7 @@ class ClusterNamespace extends AbstractNamespace
      *        ['local']                  = (boolean) Return local information, do not retrieve the state from master node (default: false)
      *        ['master_timeout']         = (time) Specify timeout for connection to master
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -103,7 +105,7 @@ class ClusterNamespace extends AbstractNamespace
      * $params['flat_settings']          = (boolean) Return settings in flat format (default: false)
      *        ['human'] = (boolean) Whether to return time and byte values in human-readable format.
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -125,7 +127,7 @@ class ClusterNamespace extends AbstractNamespace
     /**
      * $params['body'] = ()
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -165,7 +167,7 @@ class ClusterNamespace extends AbstractNamespace
      * $params['local']   = (bool) Return local information, do not retrieve the state from master node (default: false)
      *        ['master_timeout']  = (time) Specify timeout for connection to master
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -184,7 +186,7 @@ class ClusterNamespace extends AbstractNamespace
     /**
      * $params['include_yes_decisions'] = (bool) Return 'YES' decisions in explanation (default: false)
      *
-     * @param $params array Associative array of parameters
+     * @param array $params Associative array of parameters
      *
      * @return array
      */
@@ -199,6 +201,24 @@ class ClusterNamespace extends AbstractNamespace
         $endpoint = $endpointBuilder('Cluster\AllocationExplain');
         $endpoint->setBody($body)
                  ->setParams($params);
+
+        return $this->performRequest($endpoint);
+    }
+
+    /**
+     * $params[]
+     *
+     * @param array $params Associative array of parameters
+     *
+     * @return array
+     */
+    public function remoteInfo($params = array())
+    {
+        /** @var callback $endpointBuilder */
+        $endpointBuilder = $this->endpoints;
+
+        /** @var \Elasticsearch\Endpoints\Cluster\RemoteInfo $endpoint */
+        $endpoint = $endpointBuilder('Cluster\RemoteInfo');
 
         return $this->performRequest($endpoint);
     }

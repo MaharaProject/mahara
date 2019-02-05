@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints\Cluster\Nodes;
 
 /**
@@ -13,14 +15,23 @@ namespace Elasticsearch\Endpoints\Cluster\Nodes;
  */
 class Stats extends AbstractNodesEndpoint
 {
-    // Limit the information returned to the specified metrics
+    /**
+     * Limit the information returned to the specified metrics
+     *
+     * @var string
+     */
     private $metric;
 
-    // Limit the information returned for `indices` metric to the specific index metrics. Isn&#039;t used if `indices` (or `all`) metric isn&#039;t specified.
+    /**
+     * Limit the information returned for `indices` metric to the specific index metrics.
+     * Isn't used if `indices` (or `all`) metric isn't specified.
+     *
+     * @var string
+     */
     private $indexMetric;
 
     /**
-     * @param $metric
+     * @param string|string[] $metric
      *
      * @return $this
      */
@@ -40,7 +51,7 @@ class Stats extends AbstractNodesEndpoint
     }
 
     /**
-     * @param $indexMetric
+     * @param string $indexMetric
      *
      * @return $this
      */

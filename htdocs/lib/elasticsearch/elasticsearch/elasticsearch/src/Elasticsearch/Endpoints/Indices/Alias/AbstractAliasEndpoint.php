@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints\Indices\Alias;
 
 use Elasticsearch\Common\Exceptions\InvalidArgumentException;
@@ -20,7 +22,7 @@ abstract class AbstractAliasEndpoint extends AbstractEndpoint
     protected $name = null;
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @throws \Elasticsearch\Common\Exceptions\InvalidArgumentException
      *

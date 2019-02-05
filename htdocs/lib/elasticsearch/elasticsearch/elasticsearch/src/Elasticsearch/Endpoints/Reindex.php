@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints;
 
 /**
@@ -20,6 +22,7 @@ class Reindex extends AbstractEndpoint
     public function getParamWhitelist()
     {
         return array(
+            'slices',
             'refresh',
             'timeout',
             'consistency',

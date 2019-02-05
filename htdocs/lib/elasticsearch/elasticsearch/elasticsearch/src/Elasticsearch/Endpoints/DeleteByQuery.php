@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints;
 
 use Elasticsearch\Common\Exceptions;
@@ -73,6 +75,7 @@ class DeleteByQuery extends AbstractEndpoint
             'lenient',
             'preference',
             'query',
+            'q',
             'refresh',
             'request_cache',
             'requests_per_second',

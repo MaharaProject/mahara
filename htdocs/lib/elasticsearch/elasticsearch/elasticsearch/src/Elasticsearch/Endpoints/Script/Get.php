@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints\Script;
 
 use Elasticsearch\Endpoints\AbstractEndpoint;
@@ -16,11 +18,11 @@ use Elasticsearch\Common\Exceptions;
  */
 class Get extends AbstractEndpoint
 {
-    /** @var  String */
+    /** @var string */
     private $lang;
 
     /**
-     * @param $lang
+     * @param string $lang
      *
      * @return $this
      */

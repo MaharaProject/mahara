@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints;
 
 use Elasticsearch\Common\Exceptions;
@@ -72,7 +74,8 @@ class Count extends AbstractEndpoint
             'lowercase_expanded_terms',
             'analyze_wildcard',
             'lenient',
-            'lowercase_expanded_terms'
+            'lowercase_expanded_terms',
+            'terminate_after'
         );
     }
 

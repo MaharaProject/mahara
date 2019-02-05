@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\ConnectionPool\Selectors;
 
 use Elasticsearch\Connections\ConnectionInterface;
@@ -29,8 +31,10 @@ class RoundRobinSelector implements SelectorInterface
      */
     public function select($connections)
     {
+        $returnConnection = $connections[$this->current % count($connections)];
+
         $this->current += 1;
 
-        return $connections[$this->current % count($connections)];
+        return $returnConnection;
     }
 }

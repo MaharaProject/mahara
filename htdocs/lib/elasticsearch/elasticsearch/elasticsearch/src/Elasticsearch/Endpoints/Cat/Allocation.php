@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints\Cat;
 
 use Elasticsearch\Endpoints\AbstractEndpoint;
@@ -15,11 +17,15 @@ use Elasticsearch\Endpoints\AbstractEndpoint;
  */
 class Allocation extends AbstractEndpoint
 {
-    // A comma-separated list of node IDs or names to limit the returned information
+    /**
+     * A comma-separated list of node IDs or names to limit the returned information
+     *
+     * @var string
+     */
     private $node_id;
 
     /**
-     * @param $node_id
+     * @param string $node_id
      *
      * @return $this
      */

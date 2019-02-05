@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints;
 
 use Elasticsearch\Common\Exceptions;
@@ -105,6 +107,7 @@ class UpdateByQuery extends AbstractEndpoint
             'consistency',
             'scroll_size',
             'wait_for_completion',
+            'pipeline',
         ];
     }
 

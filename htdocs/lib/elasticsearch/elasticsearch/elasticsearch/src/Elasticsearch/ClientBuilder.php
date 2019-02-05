@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch;
 
 use Elasticsearch\Common\Exceptions\InvalidArgumentException;
@@ -37,7 +39,7 @@ class ClientBuilder
     /** @var Transport */
     private $transport;
 
-    /** @var callback */
+    /** @var callable */
     private $endpoint;
 
     /** @var NamespaceBuilderInterface[] */
@@ -89,9 +91,6 @@ class ClientBuilder
     /** @var null|bool|string */
     private $sslVerification = null;
 
-    /** @var bool  */
-    private $allowBadJSON = false;
-
     /**
      * @return ClientBuilder
      */
@@ -102,7 +101,7 @@ class ClientBuilder
 
     /**
      * Can supply first parm to Client::__construct() when invoking manually or with dependency injection
-     * @return this->ransport
+     * @return Transport
      *
      */
     public function getTransport()
@@ -112,7 +111,7 @@ class ClientBuilder
 
     /**
      * Can supply second parm to Client::__construct() when invoking manually or with dependency injection
-     * @return this->endpoint
+     * @return callable
      *
      */
     public function getEndpoint()
@@ -122,7 +121,7 @@ class ClientBuilder
 
     /**
      * Can supply third parm to Client::__construct() when invoking manually or with dependency injection
-     * @return this->registeredNamespacesBuilders
+     * @return NamespaceBuilderInterface[]
      *
      */
     public function getRegisteredNamespacesBuilders()
@@ -165,8 +164,8 @@ class ClientBuilder
     }
 
     /**
-     * @param array $singleParams
      * @param array $multiParams
+     * @param array $singleParams
      * @throws \RuntimeException
      * @return callable
      */
@@ -213,19 +212,6 @@ class ClientBuilder
         } else {
             throw new \RuntimeException('CurlSingle handler requires cURL.');
         }
-    }
-
-    /**
-     * @param $path string
-     * @return \Monolog\Logger\Logger
-     */
-    public static function defaultLogger($path, $level = Logger::WARNING)
-    {
-        $log       = new Logger('log');
-        $handler   = new StreamHandler($path, $level);
-        $log->pushHandler($handler);
-
-        return $log;
     }
 
     /**
@@ -309,6 +295,10 @@ class ClientBuilder
      */
     public function setLogger($logger)
     {
+        if (!$logger instanceof LoggerInterface) {
+            throw new InvalidArgumentException('$logger must implement \Psr\Log\LoggerInterface!');
+        }
+
         $this->logger = $logger;
 
         return $this;
@@ -320,6 +310,10 @@ class ClientBuilder
      */
     public function setTracer($tracer)
     {
+        if (!$tracer instanceof LoggerInterface) {
+            throw new InvalidArgumentException('$tracer must implement \Psr\Log\LoggerInterface!');
+        }
+
         $this->tracer = $tracer;
 
         return $this;
@@ -394,7 +388,7 @@ class ClientBuilder
     }
 
     /**
-     * @param $cert
+     * @param string $cert The name of a file containing a PEM formatted certificate.
      * @param null|string $password
      * @return $this
      */
@@ -406,7 +400,7 @@ class ClientBuilder
     }
 
     /**
-     * @param $key
+     * @param string $key The name of a file containing a private SSL key.
      * @param null|string $password
      * @return $this
      */
@@ -428,24 +422,11 @@ class ClientBuilder
         return $this;
     }
 
-    public function allowBadJSONSerialization()
-    {
-        $this->allowBadJSON = true;
-        return $this;
-    }
-
     /**
      * @return Client
      */
     public function build()
     {
-        if(!defined('JSON_PRESERVE_ZERO_FRACTION') && $this->allowBadJSON === false) {
-            throw new RuntimeException("Your version of PHP / json-ext does not support the constant 'JSON_PRESERVE_ZERO_FRACTION',".
-            " which is important for proper type mapping in Elasticsearch. Please upgrade your PHP or json-ext.\n".
-            "If you are unable to upgrade, and are willing to accept the consequences, you may use the allowBadJSONSerialization()".
-            " method on the ClientBuilder to bypass this limitation.");
-        }
-
         $this->buildLoggers();
 
         if (is_null($this->handler)) {
@@ -489,16 +470,16 @@ class ClientBuilder
                 $this->connectionParams = [];
             }
 
-            // Make sure we are setting Content-type and Accept (unless the user has explicitly
+            // Make sure we are setting Content-Type and Accept (unless the user has explicitly
             // overridden it
             if (isset($this->connectionParams['client']['headers']) === false) {
                 $this->connectionParams['client']['headers'] = [
-                    'Content-type' => ['application/json'],
+                    'Content-Type' => ['application/json'],
                     'Accept' => ['application/json']
                 ];
             } else {
-                if (isset($this->connectionParams['client']['headers']['Content-type']) === false) {
-                    $this->connectionParams['client']['headers']['Content-type'] = ['application/json'];
+                if (isset($this->connectionParams['client']['headers']['Content-Type']) === false) {
+                    $this->connectionParams['client']['headers']['Content-Type'] = ['application/json'];
                 }
                 if (isset($this->connectionParams['client']['headers']['Accept']) === false) {
                     $this->connectionParams['client']['headers']['Accept'] = ['application/json'];
@@ -525,7 +506,7 @@ class ClientBuilder
 
             $this->endpoint = function ($class) use ($serializer) {
                 $fullPath = '\\Elasticsearch\\Endpoints\\' . $class;
-                if ($class === 'Bulk' || $class === 'Msearch' || $class === 'MPercolate') {
+                if ($class === 'Bulk' || $class === 'Msearch' || $class === 'MsearchTemplate' || $class === 'MPercolate') {
                     return new $fullPath($serializer);
                 } else {
                     return new $fullPath();
@@ -535,7 +516,7 @@ class ClientBuilder
 
         $registeredNamespaces = [];
         foreach ($this->registeredNamespacesBuilders as $builder) {
-            /** @var $builder NamespaceBuilderInterface */
+            /** @var NamespaceBuilderInterface $builder */
             $registeredNamespaces[$builder->getName()] = $builder->getObject($this->transport, $this->serializer);
         }
 
@@ -573,13 +554,15 @@ class ClientBuilder
                 $connections,
                 $this->selector,
                 $this->connectionFactory,
-                $this->connectionPoolArgs);
+                $this->connectionPoolArgs
+            );
         } elseif (is_null($this->connectionPool)) {
             $this->connectionPool = new StaticNoPingConnectionPool(
                 $connections,
                 $this->selector,
                 $this->connectionFactory,
-                $this->connectionPoolArgs);
+                $this->connectionPoolArgs
+            );
         }
 
         if (is_null($this->retries)) {
@@ -628,7 +611,7 @@ class ClientBuilder
             if (is_string($host)) {
                 $host = $this->prependMissingScheme($host);
                 $host = $this->extractURIParts($host);
-            } else if (is_array($host)) {
+            } elseif (is_array($host)) {
                 $host = $this->normalizeExtendedHost($host);
             } else {
                 $this->logger->error("Could not parse host: ".print_r($host, true));
@@ -641,10 +624,11 @@ class ClientBuilder
     }
 
     /**
-     * @param $host
+     * @param array $host
      * @return array
      */
-    private function normalizeExtendedHost($host) {
+    private function normalizeExtendedHost(array $host)
+    {
         if (isset($host['host']) === false) {
             $this->logger->error("Required 'host' was not defined in extended format: ".print_r($host, true));
             throw new RuntimeException("Required 'host' was not defined in extended format: ".print_r($host, true));
@@ -687,7 +671,7 @@ class ClientBuilder
      */
     private function prependMissingScheme($host)
     {
-        if (!filter_var($host, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
+        if (!filter_var($host, FILTER_VALIDATE_URL)) {
             $host = 'http://' . $host;
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Elasticsearch\Endpoints\Snapshot\Repository;
 
 use Elasticsearch\Endpoints\AbstractEndpoint;
@@ -16,7 +18,11 @@ use Elasticsearch\Common\Exceptions;
  */
 class Create extends AbstractEndpoint
 {
-    // A repository name
+    /**
+     * A repository name
+     *
+     * @var string
+     */
     private $repository;
 
     /**
@@ -37,7 +43,7 @@ class Create extends AbstractEndpoint
     }
 
     /**
-     * @param $repository
+     * @param string $repository
      *
      * @return $this
      */
@@ -81,6 +87,7 @@ class Create extends AbstractEndpoint
         return array(
             'master_timeout',
             'timeout',
+            'verify'
         );
     }
 
