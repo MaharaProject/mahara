@@ -13,7 +13,7 @@
                         <span class="icon icon-times text-danger icon-lg left task{$task->id}{if $editing || $canedit} plan-task-icon{/if}" role="presentation" aria-hidden="true" data-task="{$task->id}"></span>
                         <span class="text-danger">{$task->title}</span> -
                         <span class="text-small text-midtone">
-                            {str tag='completiondate' section='artefact.plans'}: {$task->completiondateshort}
+                            {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
                         </span>
                     </div>
 
