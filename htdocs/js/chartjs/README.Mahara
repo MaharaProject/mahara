@@ -2,12 +2,20 @@ Chart.js in Mahara
 ==================
 
 Website: http://www.chartjs.org
-Version: 1.1.0
+Version: 2.7.3
 
-Removed the samples/ docs/ package.json gulpfile.js bower.jsonfiles
+Removed the samples/ docs/ scripts/ src/ test/
+.codeclimate.yml .editorconfig .eslintignore .eslintrc.yml
+.gitignore .htmllintrc .npmignore .travis.yml
+book.json bower.json composer.json gulpfile.js
+karma.conf.js package.json files
 that are not needed for this plugin
+
+Removed Chart.bundle.js, Chart.bundle.min.js:
+The bundled build includes Moment.js in a single file.
+You should not use this build if your application already included Moment.js.
+We are using Moment js already so it can be deleted.
 
 Changes:
 
 * None
-

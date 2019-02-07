@@ -916,17 +916,56 @@ function fetch_graph_data(opts) {
             else {
                 canvascontext = document.getElementById(opts.id).getContext("2d");
             }
-            chartobject = new Chart(canvascontext)[json.data.graph](JSON.parse(json.data.datastr),JSON.parse(json.data.configstr));
-            legendtype = (typeof chartobject.options.datasetStroke !== 'undefined' && chartobject.options.datasetStroke == true) ? 'stroke' : 'fill';
-            if (typeof chartobject.segments != 'undefined') {
-                chartobject.options.legendTemplate = "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++) {%><li><span style=\"background-color:<%=segments[i]." + legendtype + "Color%>\"></span><%if (segments[i].label)  {%><%=segments[i].label%><%}%></li><%}%></ul>";
-            }
-            else {
-                chartobject.options.legendTemplate = "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++) {%><li><span style=\"background-color:<%=datasets[i]." + legendtype + "Color%>\"></span><%if (datasets[i].label)  {%><%=datasets[i].label%><%}%></li><%}%></ul>";
-            }
-            var legendHolder = document.createElement('div');
-            legendHolder.innerHTML = chartobject.generateLegend();
-            document.getElementById(opts.id + 'legend').appendChild(legendHolder.firstChild);
+            var datastr = JSON.parse(json.data.datastr);
+            var configstr = JSON.parse(json.data.configstr);
+
+            var config = {
+                type: json.data.graph.toLowerCase(),
+                data: {
+                    datasets: datastr.datasets,
+                    labels: datastr.labels,
+                },
+                options: {
+                    responsive: true,
+                    legendCallback: function(chart) {
+                        var text = [];
+                        if (chart.config.type != 'undefined' && chart.config.type == 'line') {
+                            text.push('<ul class="' + chart.id + '-legend">');
+                            for (var i = 0; i < chart.data.datasets.length; i++) {
+                                text.push('<li><span style="background-color:' +
+                                chart.data.datasets[i].borderColor +
+                                '"></span>');
+                                if (chart.data.datasets[i].label) {
+                                  text.push(chart.data.datasets[i].label);
+                                }
+                                text.push('</li>');
+                            }
+                            text.push('</ul>');
+                            return text.join('');
+                        }
+                        else {
+                            text.push('<ul class="' + chart.id + '-legend">');
+                            for (var i = 0; i < chart.data.labels.length; i++) {
+                                text.push('<li><span style="background-color:' +
+                                chart.data.datasets[0].backgroundColor[i] +
+                                '"></span>');
+                                if (chart.data.labels[i]) {
+                                  text.push(chart.data.labels[i]);
+                                }
+                                text.push('</li>');
+                            }
+                            text.push('</ul>');
+                            return text.join('');
+                        }
+                    },
+                    legend: {
+                        display: false,
+                    }
+                }
+              };
+            chartobject = new Chart(canvascontext, config);
+            document.getElementById(opts.id + 'legend').innerHTML = chartobject.generateLegend();
+
             if (json.data.title) {
                 jQuery('#' + opts.id + 'title').text(json.data.title);
             }

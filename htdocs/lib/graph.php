@@ -49,16 +49,22 @@ function get_circular_graph_json($data, $colours = null, $cron = false) {
         json_reply(false, array('data' => $data));
     }
 
-    $data['colours'] = get_graph_colours($data, $colours);
+    $dataset = array();
+    $dataset['data'] = array_values($data['data']);
+    $colors = get_graph_colours($data, $colours);
+    $backgroundColors = array_slice($colors, 0, sizeof($data['data']));
+    $labels = array_values($data['labels']);
+
     $graphdata = array();
-    $x = 0;
-    foreach ($data['data'] as $key => $value) {
-        $dataobj['value'] = (int)$value;
-        $dataobj['color'] = "rgba(" . $data['colours'][$x] . ",1)";
-        $dataobj['highlight'] = "rgba(" . $data['colours'][$x] . ",0.6)";
-        $dataobj['label'] = !empty($data['labellang']) ? get_string($key, $data['labellang']) : $key;
-        $graphdata[] = $dataobj;
-        $x = empty($data['colours'][$x+1]) ? 0 : $x + 1;
+    $graphdata['datasets'][0] = $dataset;
+    $graphdata['labels'] = $labels;
+
+    $graphdata['datasets'][0]['backgroundColor'] = array();
+    $graphdata['datasets'][0]['hoverBackgroundColor'] = array();
+    foreach ($backgroundColors as $key => $value) {
+        $graphdata['datasets'][0]['backgroundColor'][$key] = "rgba(" . $value . ",1)";
+        $graphdata['datasets'][0]['hoverBackgroundColor'][$key] = "rgba(" . $value . ",0.6)";
+
     }
     $configs = isset($data['configs']) ? $data['configs'] : (object) array();
     return array($graphdata, $configs);
@@ -91,10 +97,9 @@ function get_bar_graph_json($data, $colours = null, $cron = false) {
     $x = 0;
     $graphdata['labels'] = $data['labels'];
     foreach ($data['data'] as $key => $value) {
-        $dataobj['fillColor'] = "rgba(" . $data['colours'][$x] . ",0.75)";
-        $dataobj['strokeColor'] = "rgba(" . $data['colours'][$x] . ",1)";
-        $dataobj['highlightFill'] = "rgba(" . $data['colours'][$x] . ",0.95)";
-        $dataobj['highlightStroke'] = "rgba(" . $data['colours'][$x] . ",1)";
+        $dataobj['backgroundColor'] = "rgba(" . $data['colours'][$x] . ",0.2)";
+        $dataobj['borderColor'] = "rgba(" . $data['colours'][$x] . ",1)";
+        $dataobj['borderWidth'] = 1.5;
         $dataobj['label'] = !empty($data['labellang']) ? get_string($key, $data['labellang']) : $key;
         $dataobj['data'] = is_array($value) ? array_values($value) : array($value);
         $graphdata['datasets'][] = $dataobj;
@@ -131,14 +136,15 @@ function get_line_graph_json($data, $colours = null, $cron = false) {
     $x = 0;
     $graphdata['labels'] = $data['labels'];
     foreach ($data['data'] as $key => $value) {
-        $dataobj['fillColor'] = "rgba(" . $data['colours'][$x] . ",0.2)";
-        $dataobj['strokeColor'] = "rgba(" . $data['colours'][$x] . ",1)";
-        $dataobj['pointColor'] = "rgba(" . $data['colours'][$x] . ",1)";
-        $dataobj['pointStrokeColor'] = "rgba(255,255,255,1)";
-        $dataobj['pointHighlightFill'] = "rgba(255,255,255,1)";
-        $dataobj['pointHighlightStroke'] = "rgba(" . $data['colours'][$x] . ",1)";
         $dataobj['label'] = !empty($data['labellang']) ? get_string($key, $data['labellang']) : $key;
         $dataobj['data'] = is_array($value) ? array_values($value) : array($value);
+
+        $dataobj['backgroundColor'] = "rgba(" . $data['colours'][$x] . ",0.2)";
+        $dataobj['borderColor'] = "rgba(" . $data['colours'][$x] . ",1)";
+        $dataobj['borderWidth'] = 1.5;
+        $dataobj['pointStyle'] = 'circle';
+        $dataobj['pointRadius'] = 1.5;
+
         $graphdata['datasets'][] = $dataobj;
         $x = empty($data['colours'][$x+1]) ? 0 : $x + 1;
     }
