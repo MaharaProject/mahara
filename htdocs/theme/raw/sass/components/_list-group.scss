@@ -166,7 +166,7 @@
         @extend .list-group-item-warning;
     }
     &.published {
-        background: scale-color($card-heading-bg, $lightness: 50%);
+        background: scale-color($card-header-bg, $lightness: 50%);
     }
     &.flush {
         padding: 10px 0;
@@ -238,7 +238,7 @@
 }
 
 .list-group-item-default{
-    background-color: rgba(lighten(theme-color("secondary"), 12.5%), 0.5);
+    background-color: rgba(scale-color(theme-color("secondary"), $lightness: 62.75), 0.5);
 }
 
 .list-group-item-text {

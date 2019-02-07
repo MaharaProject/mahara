@@ -13,12 +13,12 @@
     background: $card-bg;
     border: 0;
     .mce-panel {
-        background: $card-heading-bg;
+        background: $card-header-bg;
     }
 
     .mce-statusbar.mce-container{
         margin-top: 5px;
-        background: $card-heading-bg;
+        background: $card-header-bg;
     }
 }
 

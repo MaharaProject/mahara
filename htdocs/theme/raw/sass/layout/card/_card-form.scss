@@ -1,5 +1,5 @@
 .card-form {
-    background-color: darken($card-bg, 1%);
+    background-color: scale-color($card-bg, $lightness: -1.18);
     border-bottom: 1px solid $card-border;
     padding: 15px 15px 0 15px;
     margin-bottom: 20px;

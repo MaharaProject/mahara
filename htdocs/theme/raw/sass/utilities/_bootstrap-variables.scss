@@ -20,15 +20,15 @@
 //
 $white:    #fff !default;
 $black:    #000 !default;
-$gray-100: lighten($black, 93.5%) !default; // #eee
+$gray-100: scale-color($black, $lightness: 93.33) !default; // #eee
 $gray-200: #cccccc !default;
-$gray-300: lighten($black, 46.7%) !default; // #777
+$gray-300: scale-color($black, $lightness: 46.67) !default; // #777
 $gray-400: #dadada !default;
-$gray-500: lighten($black, 33.5%) !default; // #555
+$gray-500: scale-color($black, $lightness: 33.33) !default; // #555
 $gray-600: #6c757d !default;
-$gray-700: lighten($black, 20%) !default; // #333
+$gray-700: scale-color($black, $lightness: 20) !default; // #333
 $gray-800: #343a40 !default;
-$gray-900: lighten($black, 13.5%) !default; // #222
+$gray-900: scale-color($black, $lightness: 13.33) !default; // #222
 
 $grays: () !default;
 $grays: map-merge(
@@ -95,7 +95,7 @@ $theme-colors: () !default;
 $theme-colors: map-merge(
   (
     "primary":    	$primary,
-    "primary-dark":	darken($primary, 5%),
+    "primary-dark":	scale-color($primary, $lightness: -15.75),
     "secondary":  	$secondary,
     "success":    	$success,
     "info":       	$info,
@@ -124,7 +124,7 @@ $yiq-text-light:            $white !default;
 //
 // Quickly modify global styling by enabling or disabling optional features.
 
-$enable-caret:              true !default;
+$enable-caret:              false !default;
 $enable-rounded:            true !default;
 $enable-shadows:            true !default;
 $enable-gradients:          false !default;
@@ -378,7 +378,7 @@ $table-head-color:            $gray-700 !default;
 $table-dark-bg:               $gray-900 !default;
 $table-dark-accent-bg:        rgba($white, .05) !default;
 $table-dark-hover-bg:         rgba($white, .075) !default;
-$table-dark-border-color:     lighten($gray-900, 7.5%) !default;
+$table-dark-border-color:     scale-color($gray-900, $lightness: 8.6) !default;
 $table-dark-color:            $body-bg !default;
 
 $table-striped-order:         odd !default;
@@ -488,7 +488,7 @@ $input-border-radius-lg:                $border-radius-lg !default;
 $input-border-radius-sm:                $border-radius-sm !default;
 
 $input-focus-bg:                        $input-bg !default;
-$input-focus-border-color:              lighten($component-active-bg, 25%) !default;
+$input-focus-border-color:              scale-color($component-active-bg, $lightness: 36.46) !default;
 $input-focus-color:                     $input-color !default;
 $input-focus-width:                     $input-btn-focus-width !default;
 $input-focus-box-shadow:                $input-btn-focus-box-shadow !default;
@@ -551,7 +551,7 @@ $custom-control-indicator-focus-box-shadow:     0 0 0 1px $body-bg, $input-btn-f
 $custom-control-indicator-focus-border-color:   $input-focus-border-color !default;
 
 $custom-control-indicator-active-color:         $component-active-color !default;
-$custom-control-indicator-active-bg:            lighten($component-active-bg, 35%) !default;
+$custom-control-indicator-active-bg:            scale-color($component-active-bg, $lightness: 50.99) !default;
 $custom-control-indicator-active-box-shadow:    none !default;
 $custom-control-indicator-active-border-color:  $custom-control-indicator-active-bg !default;
 
@@ -624,7 +624,7 @@ $custom-range-thumb-border-radius:    1rem !default;
 $custom-range-thumb-box-shadow:       0 .1rem .25rem rgba($black, .1) !default;
 $custom-range-thumb-focus-box-shadow: 0 0 0 1px $body-bg, $input-btn-focus-box-shadow !default;
 $custom-range-thumb-focus-box-shadow-width:  $input-focus-width !default; // For focus box shadow issue in IE/Edge
-$custom-range-thumb-active-bg:        lighten($component-active-bg, 35%) !default;
+$custom-range-thumb-active-bg:        scale-color($component-active-bg, $lightness: 50.99) !default;
 $custom-range-thumb-disabled-bg:             $gray-500 !default;
 
 $custom-file-height:                $input-height !default;
@@ -862,7 +862,7 @@ $popover-border-color:                      rgba(0,0,0,.2) !default;
 $popover-border-radius:             $border-radius-lg !default;
 $popover-box-shadow:                0 .25rem .5rem rgba($black, .2) !default;
 
-$popover-header-bg:                 darken($popover-bg, 3%) !default;
+$popover-header-bg:                 scale-color($popover-bg, $lightness: -3.14) !default;
 $popover-header-color:              $headings-color !default;
 $popover-header-padding-y:          .5rem !default;
 $popover-header-padding-x:          .75rem !default;

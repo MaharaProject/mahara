@@ -17,7 +17,7 @@
     &.blockinstance.card {
         background-color: transparent;
         .card-header {
-            background-color: $card-heading-bg;
+            background-color: $card-header-bg;
         }
     }
     > .card-header, .card-heading-nested {
@@ -30,7 +30,7 @@
         // Use a placeholder for visual help
         // will appear with the no-heading class in view mode
         &.card-heading-placeholder {
-            border: 1px solid darken($gray-300, 5%);
+            border: 1px solid scale-color($gray-300, $lightness: -10.93);
             border-style: dashed;
             background-color: $card-bg;
             .blockinstance-header {
@@ -49,7 +49,7 @@
             background-color: $card-warning-heading-bg;
     }
     .card-heading-plain {
-        border: 1px solid darken($gray-300, 5%);
+        border: 1px solid scale-color($gray-300, $lightness: -10.93);
     }
     .list-group .list-group-item {
         border-left: 0;

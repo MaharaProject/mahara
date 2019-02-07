@@ -103,16 +103,16 @@ $btn-bg-disabled-color:                   #f9f9f9 !default;
 // Cards
 $card-text:                                 $gray-700 !default;
 $card-border:                               #ddd !default;
-$card-heading-bg:                           #f9f9f9 !default;
+$card-header-bg:                           #f9f9f9 !default;
 $card-footer-bg:                            #f5f5f5 !default;
 
 $card-block-text:                           $gray-700 !default;
 $card-block-border:                         theme-color("primary") !default;
-$card-block-heading-bg:                     darken($card-heading-bg, 2%) !default;
+$card-block-heading-bg:                     scale-color($card-header-bg, $lightness: -2.01) !default;
 
 $card-secondary-text:                       $gray-900 !default;
-$card-secondary-border:                     lighten(theme-color("secondary"), 6.5%) !default;
-$card-secondary-heading-bg:                 $card-heading-bg !default;
+$card-secondary-border:                     scale-color(theme-color("secondary"), $lightness: 33.35) !default;
+$card-secondary-heading-bg:                 $card-header-bg !default;
 
 $card-success-text:                         $state-success-text !default;
 $card-success-border:                       $state-success-border !default;
