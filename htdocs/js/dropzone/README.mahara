@@ -2,7 +2,9 @@ dropzonejs
 -----
 
 Website: https://github.com/enyo/dropzone
-Version: 4.3.0
+Version: 5.5.0
+
+Note: To override any css place the changes in ./theme/raw/sass/components/_dropzone-previews.scss
 
 Modifications:
 
