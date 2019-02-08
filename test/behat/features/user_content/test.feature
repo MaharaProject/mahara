@@ -106,7 +106,9 @@ Background:
     | my pdf            | pdf            | Page Three    | no         | attachment=mahara_about.pdf |
     | recentposts       |recentforumposts| Page Three   | no         | groupname=Group1;maxposts=3 |
     | ExternalVideo     | externalvideo  | Page Three    | no         | source=https://youtu.be/yRxFm70nOrY |
-    | note/textbox      | textbox        | Page Three    | no         | notetitle=secretnote;text=ma ha ha ha ra!;tags=mahara,araham;attachments=Image3.png,Image2.png,Image1.jpg;allowcomments=yes |
+    | note/textbox  1   | textbox        | Page Three    | no         | notetitle=testnote;text=ma ha ha ha ra!;tags=mahara,araham;attachments=Image3.png,Image2.png,Image1.jpg;allowcomments=yes |
+    | note/textbox ref:1 | textbox        | Page Three    | no         | existingnote=testnote |
+    | note/textbox copy | textbox        | Page Three    | no         | existingnote=testnote;allowcomments=yes;copynote=true;notetitle=newtestnote |
 
 
 

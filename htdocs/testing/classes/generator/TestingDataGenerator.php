@@ -209,13 +209,40 @@ EOD;
         return false;
     }
 
-    public static function get_mimetype($attachment) {
-        $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $attachment;
+    public static function get_mimetype($filename) {
+        $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $filename;
         $mimetype = mime_content_type($path);
         list($media, $ext) = explode('/', $mimetype);
-        $mediatype = $media == 'application' ? 'attachment' : $media;
+        $mediatype = ($media == 'application' || $media == 'text') ? 'attachment' : $media;
 
         return $mediatype;
+    }
+
+    /**
+     * Proesses attachment files
+     *
+     * creates the artefact and links it to the user
+     *
+     * @param string $filename name of the file attachment
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @param int $parentid of an artefact ... such as when a file is in a folder
+     * @return int $artefactid of the newly created artefact
+     */
+    public static function process_attachment($filename, $ownertype, $ownerid, $parentid=null) {
+        $mediatype = self:: get_mimetype($filename);
+        // we need to find the id of the item we are trying to attach and save it as artefactid
+        if (!isset($parentid)) {
+            $artefactid = get_field('artefact', 'id', 'title', $filename, $ownertype, $ownerid);
+        }
+        else {
+            $artefactid = get_field('artefact', 'id', 'title', $filename, 'parent', $parentid);
+        }
+        if (!$artefactid) {
+            $artefactid = TestingDataGenerator::create_artefact($filename, $ownertype, $ownerid, $mediatype, $parentid);
+            TestingDataGenerator::file_creation($artefactid, $filename, $ownertype, $ownerid);
+        }
+        return $artefactid;
     }
 
     /**
@@ -926,15 +953,9 @@ EOD;
             $value=trim($value);
 
             if ($key == 'attachments') {
-                $attachments = explode(',',$value);
-                foreach ($attachments as $attachment) {
-                    $mediatype = self:: get_mimetype($attachment);
-                    // we need to find the id of the item we are trying to attach and save it as artefactid
-                    if (!$artefactid = get_field('artefact', 'id', 'title', $attachment, $ownertype, $ownerid)) {
-                        $artefactid = TestingDataGenerator::create_artefact($attachment, $ownertype, $ownerid, $mediatype);
-                        TestingDataGenerator::file_creation($artefactid, $attachment, $ownertype, $ownerid);
-                    }
-                    $configdata['artefactids'][] = $artefactid;
+                $fileattachments = explode(',',$value);
+                foreach ($fileattachments as $file) {
+                    $configdata['artefactids'][] = self::process_attachment($file, $ownertype, $ownerid);
                 }
             }
         }
@@ -979,14 +1000,8 @@ EOD;
         $configdata['artefactid'] = $folderartefactid;
         // upload each image and put into a folder
         foreach($folderfiles as $file) {
-            $mediatype = self::get_mimetype($file);
-            // we need to find the id of the item we are trying to attach and save it as artefactid
-            if (!$artefactid = get_field('artefact', 'id', 'title', $file, 'parent', $folderartefactid)) {
-                $artefactid = TestingDataGenerator::create_artefact($file, $ownertype, $ownerid, $mediatype, $folderartefactid);
-                TestingDataGenerator::file_creation($artefactid, $file, $ownertype, $ownerid);
-            }
+            self::process_attachment($file, $ownertype, $ownerid, $folderartefactid);
         }
-
         return $configdata;
     }
 
@@ -1011,15 +1026,11 @@ EOD;
             $value = trim($value);
 
             if ($key == 'attachments') {
-                $galleryimages = explode(',', $value);
+                $galleryimagefiles = explode(',', $value);
                 $value = array();
 
-                foreach ($galleryimages as $image) {
-                    if (!$artefactid = get_field('artefact','id', 'title', $image)) {
-                        $artefactid = TestingDataGenerator::create_artefact($image, $ownertype, $ownerid, 'image');
-                        TestingDataGenerator::file_creation($artefactid, $image, $ownertype, $ownerid);
-                    }
-                    $configdata['artefactids'][] = $artefactid;
+                foreach ($galleryimagefiles as $file) {
+                    $configdata['artefactids'][] = self::process_attachment($file, $ownertype, $ownerid);
                 }
             }
             if ($key == 'imagesel' || $key == 'width' || $key == 'showdesc' || $key == 'imagestyle' || $key == 'photoframe' ) {
@@ -1063,13 +1074,7 @@ EOD;
             $key = trim($key);
             $value = trim($value);
             if ($key == 'attachment') {
-                //retrieve/create and retrieve artefactid of artefact we are attaching to the block
-                if (!$artefactid = get_field('artefact', 'id', 'title', $value)) {
-                    //we must create the file artefact as it doesn't exist in the table
-                    $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'attachment');
-                    TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
-                }
-                $configdata['artefactid'] = $artefactid;
+                $configdata['artefactid'] = self::process_attachment($value, $ownertype, $ownerid);
             }
         }
         return $configdata;
@@ -1091,13 +1096,7 @@ EOD;
         foreach ($fields as $field) {
             list($key, $value) = explode('=', $field);
             if ($key == 'attachment') {
-
-                // we need to find the id of the item we are trying to attach and save it as artefactid
-                if (!$artefactimageid = get_field('artefact', 'id', 'title', $value, $ownertype, $ownerid)) {
-                    $artefactimageid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'image');
-                    self::file_creation($artefactimageid, $value, $ownertype, $ownerid);
-                }
-                $configdata = array('artefactid' => $artefactimageid);
+                $configdata = array('artefactid' => self::process_attachment($value, $ownertype, $ownerid));
             }
             if ($key == 'width' || $key == 'showdescription' || $key == 'style' ) {
                 $configdata[$key] = $value;
@@ -1126,23 +1125,22 @@ EOD;
             $value=trim($value);
 
             if ($key == 'attachment') {
-                $filenameparts = explode('.', $value);
+                $filename = $value;
+                $filenameparts = explode('.', $filename);
                 $ext = end($filenameparts);
 
                 // we need to find the id of the item we are trying to attach and save it as artefactid
-                if (!$artefactid = get_field('artefact', 'id', 'title', $value)) {
-
+                if (!$artefactid = get_field('artefact', 'id', 'title', $filename)) {
                     if ($ext == 'wmv' || $ext == 'webm' || $ext == 'mov'|| $ext == 'ogv' || $ext == 'mpeg' || $ext == 'mp4' || $ext == 'flv' || $ext == 'avi' || $ext == '3gp') {
-                        $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'video');
-                        TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
+                        $artefactid = TestingDataGenerator::create_artefact($filename, $ownertype, $ownerid, 'video');
+                        TestingDataGenerator::file_creation($artefactid, $filename, $ownertype, $ownerid);
                     }
                     if ($ext == 'mp3' || $ext == 'oga' || $ext == 'ogg') {
-                        $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'audio');
-                        TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
+                        $artefactid = TestingDataGenerator::create_artefact($filename, $ownertype, $ownerid, 'audio');
+                        TestingDataGenerator::file_creation($artefactid, $filename, $ownertype, $ownerid);
                     }
                 }
-                $value = $artefactid;
-                $configdata['artefactid'] = $value;
+                $configdata['artefactid'] = $artefactid;
             }
         }
         return $configdata;
@@ -1208,97 +1206,6 @@ EOD;
     }
 
     /**
-     * generate configdata for the blocktype: textbox
-     *
-     * This function will create a textbox blockytpe(appears as note block on front-end)
-     * holding an html artefact
-     *
-     * @param string $data inside data column in blocktype tables
-     * @param string $ownertype of user
-     * @param string $ownerid of the user
-     * @param string $title of block to be created* (when copytoall is true)
-     * @param object the current view to create block on
-     * @return array $configdata of key and values of db table
-     */
-    public static function generate_configdata_textbox($data, $ownertype, $ownerid, $title, $view) {
-        if (!$data) return;
-        $configdata = array();
-
-        $fields = explode(';', $data);
-        foreach ($fields as $field) {
-            list($key, $value) = explode('=', $field);
-
-            if ($key == 'notetitle') {
-                $artefactdata['title'] = trim($value);
-            }
-            if ($key == 'text') {
-                $artefactdata['description'] = trim($value);
-            }
-            if ($key == 'allowcomments') {
-                $artefactdata['allowcomments'] = strtolower($value) == 'yes' ? 1 : 0;
-            }
-            if ($key == 'tags') {
-                // noteblock expects tags in csv form (separated by commas)
-                $tags =  explode(',', $value);
-                $tagstring = array();
-                foreach($tags as $tag) {
-                    $tagstring[] = trim($tag);
-                }
-                $artefactdata['tags'] = $tagstring;
-
-            }
-            if ($key == 'attachments') {
-                $attachments = explode(',', $value);
-                foreach( $attachments as $attachment) {
-                    $mediatype = self::get_mimetype($attachment);
-
-                    // we need to find the id of the item we are trying to attach and save it as artefactid
-                    if (!$artefactid = get_field('artefact', 'id', 'title', $attachment)) {
-                        $artefactid = TestingDataGenerator::create_artefact($attachment, $ownertype, $ownerid, $mediatype);
-                        TestingDataGenerator::file_creation($artefactid, $attachment, $ownertype, $ownerid);
-                    }
-                    $configdata['artefactids'][] = $artefactid;
-
-                }
-            }
-        }
-        $artefact = new ArtefactTypeHtml(0, null);
-        $artefact->set('title', $artefactdata['title']);
-        $newdescription = EmbeddedImage::prepare_embedded_images($artefactdata['description'], 'textbox', $artefact->get('id'), $artefact->get('group'));
-        $artefact->set('description', $newdescription);
-        $artefact->set('allowcomments', $artefactdata['allowcomments']);
-        if (get_config('licensemetadata')) {
-            $artefact->set('license', $values['license']);
-            $artefact->set('licensor', $values['licensor']);
-            $artefact->set('licensorurl', $values['licensorurl']);
-        }
-        $artefact->set('owner', $ownerid);
-        $artefact->set('tags', $artefactdata['tags']);
-        $artefact->commit();
-        $configdata['artefactid'] = $artefact->get('id');
-        foreach($configdata['artefactids'] as $artefactid) {
-            $artefact->attach($artefactid);
-        }
-
-        $newdescription = EmbeddedImage::prepare_embedded_images($artefact->get('description'), 'textbox', $artefact->get('id'), $view->get('group'));
-
-        if ($newdescription !== $artefact->get('description')) {
-            $updatedartefact = new stdClass();
-            $updatedartefact->id = $artefact->get('id');
-            $updatedartefact->description = $newdescription;
-            update_record('artefact', $updatedartefact, 'id');
-        }
-        // Add attachments, if there are any...
-        $new = update_attachments($artefact, $configdata['artefactids']);
-        update_attachments($artefact, $configdata['artefactids'], null, null, true);
-
-        // TODO: Add attachments, if there are any...
-        //update_attachments($artefact, $configdata['artefactids'], null, null, true);
-
-        return $configdata;
-    }
-
-    /**
      * generate configdata for the bloctype: peerassessment
      * @param string $data inside data column in blocktype tables
      * @return array redundant info as there is no data directly connected in this case
@@ -1322,17 +1229,7 @@ EOD;
         $value=trim($value);
 
         if ($key == 'attachment') {
-            $key = 'artefactid';
-
-            // we need to find the id of the item we are trying to attach and save it as artefactid
-            if (!$artefactid = get_field('artefact', 'id', 'title', $value, $ownertype, $ownerid)) {
-                $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'attachment');
-                TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
-            }
-
-            $value = $artefactid;
-            $configdata = array();
-            $configdata[$key] = $value;
+            $configdata['artefactid'] = self::process_attachment($value, $ownertype, $ownerid);
         }
         return $configdata;
     }
@@ -1447,6 +1344,137 @@ EOD;
     }
 
     /**
+    * generate configdata for the blocktype: textbox
+    *
+    * This function will create a textbox blockytpe(appears as note block on front-end)
+    * holding an html artefact
+    * NOTE:the title of a textbox block is the same as the html artefact the textbox it is associated with; not the title of a block instance
+    *
+    * @param string $data inside data column in blocktype tables
+    * @param string $ownertype of user
+    * @param string $ownerid of the user
+    * @param string $title of block to be created* (when copytoall is true)
+    * @param object the current view to create block on
+    * @return array $configdata of key and values of db table
+    */
+    public static function generate_configdata_textbox($data, $ownertype, $ownerid, $title, $view) {
+        if (!$data) return;
+        $configdata = array();
+        $artefactdata = array();
+        $bi = null;
+        $notetitle = null;
+        $copynote = false;
+        $existingtextboxfound = false;
+        $htmlartefactid = null;
+
+        $fields = explode(';', $data);
+        foreach ($fields as $field) {
+            list($key, $value) = explode('=', $field, 2);
+            if ($key == 'notetitle') {
+                $artefactdata['title'] = trim($value);
+            }
+            if ($key == 'text') {
+                $artefactdata['description'] = trim($value);
+            }
+            if ($key == 'allowcomments') {
+                $artefactdata['allowcomments'] = strtolower($value) == 'yes' ? 1 : 0;
+            }
+            if ($key == 'tags') {
+                // noteblock expects tags in csv form (separated by commas)
+                $tags =  explode(',', $value);
+                $tagstring = array();
+                foreach($tags as $tag) {
+                    $tagstring[] = trim($tag);
+                }
+                $artefactdata['tags'] = $tagstring;
+
+            }
+            if ($key == 'attachments') {
+                $attachmentfiles = explode(',', $value);
+                foreach( $attachmentfiles as $file) {
+                    $configdata['artefactids'][] = self::process_attachment($file, $ownertype, $ownerid);
+                }
+            }
+            if ($key == 'copynote') {
+                $copynote = trim($value) == 'true';
+            }
+            if ($key == 'existingnote') {
+                $notetitle = !empty(strtolower($value)) ? $value : null;
+
+                if (empty($notetitle)) {
+                    throw new SystemException('Insufficient information. No note title given to use content from another note block');
+                }
+
+                $htmlartefactid = get_field('artefact', 'id', 'artefacttype', 'html', 'title', $notetitle);
+                $htmlartefact = null;
+                if (!empty($htmlartefactid)) {
+
+                    //check artefactid reference in existing textboxes
+                    if (!empty($textboxids = get_records_array('block_instance', 'blocktype', 'textbox', null, 'id'))) {
+                        foreach ($textboxids as $blockid) {
+                            $bi = new BlockInstance($blockid->id);
+                            $configdata = $bi->get('configdata');
+
+                            if (empty($configdata['artefactid'])) {
+                                //if the textbox doesn't have a reference to an artefactid; an htmlartefact, check next textbox
+                                continue;
+                            }
+                            // if the artefactid reference in textbox configdata matches the id of the html artefact
+                            if ($htmlartefactid == $configdata['artefactid']) {
+                                $existingtextboxfound = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    // there is not textbox found that references the html or an html artefact with given title
+                    throw new SystemException("Could not find a note with the title $notetitle");
+                }
+            }
+        }
+        //not null db requirements for artefact checks
+        if (!isset($artefactdata['allowcomments'])) {
+            $artefactdata['allowcomments'] = 1;
+        }
+        if ($existingtextboxfound && !$copynote) {
+            return $configdata;
+        }
+
+        // textbox with a new title but copy data from existing note
+        //creation of a new textbox without copying data from another note
+        $artefact = new ArtefactTypeHtml(0, null);
+        //
+        if ($copynote && $existingtextboxfound) {
+            $htmlartefact = $bi->get_artefact_instance($htmlartefactid);
+            $artefactdata['description'] = $htmlartefact->get('description');
+        }
+        $artefact->set('title', $artefactdata['title']);
+        $artefact->set('description', $artefactdata['description']);
+        $artefact->set('allowcomments', $artefactdata['allowcomments']);
+        if (get_config('licensemetadata')) {
+            $artefact->set('license', $values['license']);
+            $artefact->set('licensor', $values['licensor']);
+            $artefact->set('licensorurl', $values['licensorurl']);
+        }
+        $artefact->set('owner', $ownerid);
+        $artefact->commit();
+
+        if (!empty($artefactdata['tags'])) {
+            $artefact->set('tags', $artefactdata['tags']);
+        }
+
+        //attachments
+        $htmlartefactreference = $artefact->get('id');
+        $configdata['artefactid'] = $htmlartefactreference;
+        foreach($configdata['artefactids'] as $artefactid) {
+            $artefact->attach($artefactid);
+        }
+        $configdata['artefactid'] = $artefact->get('id');
+        return $configdata;
+    }
+
+    /**
     * Copies file from /test/behat/upload_files folder and places it in the dataroot folder of the site.
     * Then write contents into it given the artefact id
     * @param int $artefactid of the file artefact created in the upload_file function
@@ -1510,7 +1538,7 @@ EOD;
             $artefact->parent = $parentfolderid;
         }
 
-        $artefactid;
+        $artefactid = null;
         $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
 
         if ($filetype == 'image') {
@@ -1542,6 +1570,9 @@ EOD;
             $artobj = ArtefactTypeFile::new_file($path, $artefact);
             $artobj->commit();
             $artefactid = $artobj->get('id');
+        }
+        if (!isset($artefactid)) {
+            throw new SystemException('Unable to create artefact for '. $file . ' for filetype ' . $filetype );
         }
         return $artefactid;
     }
