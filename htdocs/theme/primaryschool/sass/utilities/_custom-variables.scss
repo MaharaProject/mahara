@@ -1,13 +1,13 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow component variables
-$arrow-color: $brand-primary;
+$arrow-color: #0162a7;
 $arrow-text-color: #fff;
 $arrow-link-color: #677D1E;
-$arrow-link-hover-color: $text-color;
-$arrow-link-active-color: $brand-primary;
+$arrow-link-hover-color: #000000;
+$arrow-link-active-color: #333333;
 $arrow-link-background-color: #fff;
-$arrow-link-group-color: #677D1E;
+$arrow-link-group-color: lighten(#0162a7, 5%);
 
 // color for the secondary title in sections (cf. groups)
 $section-heading-color: #999;
@@ -20,3 +20,96 @@ $dashboard-widget-color:  #FFFFFF;
 
 $help-icon-color: #047DB1;
 $rss-icon-color: #FE6500;
+
+
+// Bootstrap 3 legacy variables
+
+// Colors
+$brand-default:         #ECECEC;
+
+//== Buttons
+
+$btn-font-weight:                normal;
+
+$btn-secondary-color:            #333;
+$btn-secondary-bg:               #F9F9F9;
+$btn-secondary-border:           #ccc;
+
+$btn-primary-color:              #fff;
+$btn-primary-bg:                 $theme-primary-color;
+$btn-primary-border:             darken($btn-primary-bg, 5%);
+
+$btn-success-color:              #fff;
+$btn-success-bg:                 $theme-primary-color;
+$btn-success-border:             darken($theme-primary-color, 5%);
+
+
+//== Navbar
+$navbar-collapse-max-height:       340px;
+
+$navbar-default-color:             #FFFFFF;
+$navbar-default-bg:                #0162a7;
+$navbar-default-border:            transparent;
+
+// Navbar links
+$navbar-default-link-color:                #FFFFFF;
+$navbar-default-link-hover-color:          #FFFFFF;
+$navbar-default-link-hover-bg:             #0162a7;
+$navbar-default-link-active-color:         #555;
+$navbar-default-link-active-bg:            #F1F1F1;
+$navbar-default-link-disabled-color:       #ccc;
+$navbar-default-link-disabled-bg:          transparent;
+
+// Navbar brand label
+$navbar-default-brand-color:               #9ad2ef;
+$navbar-default-brand-hover-color:         lighten($navbar-default-brand-color, 5%);
+$navbar-default-brand-hover-bg:            transparent;
+
+// Navbar toggle
+$navbar-default-toggle-hover-bg:           darken(#0162a7, 5%);
+$navbar-default-toggle-icon-bar-bg:        #FFF;
+$navbar-default-toggle-border-color:       transparent;
+
+
+// Inverted navbar
+// Reset inverted navbar basics
+$navbar-inverse-color:                      #fff;
+$navbar-inverse-bg:                         darken(#0162a7, 5%);
+$navbar-inverse-border:                     darken($navbar-inverse-bg, 5%);
+
+// Inverted navbar links
+$navbar-inverse-link-color:                 #FFF;
+$navbar-inverse-link-hover-color:           #FFFFFF;
+$navbar-inverse-link-hover-bg:              darken($navbar-inverse-bg, 5%);
+$navbar-inverse-link-active-color:          #FFFFFF;
+$navbar-inverse-link-active-bg:             darken(#0162a7, 6%);
+$navbar-inverse-link-disabled-color:        #444;
+$navbar-inverse-link-disabled-bg:           transparent;
+
+// Inverted navbar brand label
+$navbar-inverse-brand-color:                $navbar-inverse-link-color;
+$navbar-inverse-brand-hover-color:          $navbar-inverse-link-hover-color;
+$navbar-inverse-brand-hover-bg:             $navbar-inverse-link-hover-bg;
+
+// Inverted navbar toggle
+$navbar-inverse-toggle-hover-bg:            darken($navbar-inverse-bg, 2%);
+$navbar-inverse-toggle-icon-bar-bg:         #FFFFFF;
+$navbar-inverse-toggle-border-color:        #333;
+
+//== Tabs
+$nav-tabs-border-color:                     #eee;
+
+$nav-tabs-link-hover-border-color:          $theme-primary-color;
+
+$nav-tabs-active-link-hover-bg:             $body-bg;
+$nav-tabs-active-link-hover-color:          $theme-primary-color;
+$nav-tabs-active-link-hover-border-color:   $theme-primary-color;
+
+$nav-tabs-justified-link-border-color:            #f7f7f7;
+$nav-tabs-justified-active-link-border-color:     $body-bg;
+
+
+//== Cards
+
+$card-secondary-text:         $gray-900;
+$card-secondary-border:       $theme-primary-color;

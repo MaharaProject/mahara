@@ -1,0 +1,11 @@
+// card-secondary is the style used for the user-editable cards used across Mahara
+
+.card-secondary {
+    > .card-header {
+        > a {
+            &.user-icon {
+              border: 1px solid #ddd;
+            }
+        }
+    }
+}

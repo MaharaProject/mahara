@@ -2,7 +2,7 @@
 .move-indicator {
     margin-left: -4px;
 
-    .panel-secondary & {
+    .card-secondary & {
         color: #FFF;
     }
 }
@@ -18,27 +18,27 @@
 .myblogs h5 a {
     &:hover .collapse-indicator,
     &:focus .collapse-indicator {
-        color: lighten($brand-primary, 10%);
+        color: lighten($theme-primary-color, 10%);
     }
     .collapse-indicator {
-        color: $brand-primary;
+        color: $theme-primary-color;
     }
 }
 
 .collapse-indicator,
 .collapsed .collapse-indicator {
-    color: $brand-primary;
+    color: $theme-primary-color;
 }
 a:focus .collapse-indicator,
 a:hover .collapse-indicator {
-    color: lighten($brand-primary, 10%);
+    color: lighten($theme-primary-color, 10%);
 }
 
 
 // if indicators are in colour block titles then make it white
-.panel-secondary {
-    .panel-heading {
-        .collapse-indicator, 
+.card-block {
+    .card-header {
+        .collapse-indicator,
         .collapsed .collapse-indicator {
             color: #FFFFFF;
         }

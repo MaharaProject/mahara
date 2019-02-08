@@ -16,7 +16,7 @@
 // color values specified in Primary theme bootstrap-variable.scss
 
 // To change section color, simply change color value.
-$home-color: #047DB1;
+$home-color: #0591ce;
 $content-color: #ca0238;
 $myportfolio-color: #A66700;
 $groups-color: #5B6E1C;
@@ -54,6 +54,7 @@ $menu-styles: (
             }
         }
         &.active > a {
+            color: #555;
             background-color: #FFFFFF;
         }
         .child-nav > li {

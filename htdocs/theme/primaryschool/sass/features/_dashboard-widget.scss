@@ -6,7 +6,7 @@ $logged-in-height-phone: 120px;
 .dashboard-widget-container {
 
     .remove-widgets {
-        font-size: $font-size-small - 1;
+        font-size: $font-size-sm - 1;
     }
 
     .thumbnail-widget {
@@ -16,18 +16,18 @@ $logged-in-height-phone: 120px;
         margin-left: 0;
         vertical-align: top;
 
-        @media (min-width: $screen-sm-min ) {
+        @include media-breakpoint-up(sm)  {
             float:left;
             width: 10 / 4 * 10%;
             padding: 0;
         }
 
-        @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+        @include media-breakpoint-between (sm, lg) {
             width: 10 / 3.7 * 10%;
             border-left: 0;
         }
 
-        @media (max-width: $screen-sm-min ) {
+        @include media-breakpoint-down(sm) {
             width: 10 / 3.1 * 10%;
             border-left: 0;
         }
@@ -37,11 +37,11 @@ $logged-in-height-phone: 120px;
             border-left: 10px solid #FFFFFF;
             height: $logged-in-height;
 
-            @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+            @include media-breakpoint-between (sm, lg) {
                 height: $logged-in-height-tablet;
             }
 
-            @media (max-width: $screen-sm-min ) {
+            @include media-breakpoint-down(sm) {
                 height: $logged-in-height-phone;
             }
 
@@ -59,7 +59,7 @@ $logged-in-height-phone: 120px;
                 left: -10px;
                 top: 30%;
 
-                @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+                @include media-breakpoint-between (sm, lg) {
                     width: 40px;
                     height: 60px;
                     -moz-border-radius: 20px 100px 100px 20px;
@@ -67,7 +67,7 @@ $logged-in-height-phone: 120px;
                     border-radius: 20px 100px 100px 20px;
                 }
 
-                @media (max-width: $screen-sm-min ) {
+                @include media-breakpoint-down(sm) {
                     display: none;
                 }
             }
@@ -109,12 +109,12 @@ $logged-in-height-phone: 120px;
         margin-bottom: 10px;
         width: 125px;
 
-        @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+        @include media-breakpoint-between (sm, lg) {
             height: $logged-in-height-tablet;
             width: 100px;
         }
 
-        @media (max-width: $screen-sm-min ) {
+        @include media-breakpoint-down(sm) {
             display: none;
         }
 
@@ -126,7 +126,7 @@ $logged-in-height-phone: 120px;
             left: -100px;
             top: -90px;
 
-            @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+            @include media-breakpoint-between (sm, lg) {
                 height: $logged-in-height-tablet;
             }
         }
@@ -145,7 +145,7 @@ $logged-in-height-phone: 120px;
             top: 30%;
             left: -10px;
 
-            @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+            @include media-breakpoint-between (sm, lg) {
                 width: 40px;
                 height: 60px;
                 -moz-border-radius: 20px 100px 100px 20px;
@@ -165,7 +165,7 @@ $logged-in-height-phone: 120px;
                 left: 100px;
                 top: 14px;
 
-                @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+                @include media-breakpoint-between (sm, lg) {
                     left: 90px;
                     top: 12px;
                     width: 20px;
@@ -185,13 +185,13 @@ $logged-in-height-phone: 120px;
         top: -80px;
         text-align: center;
 
-        @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+        @include media-breakpoint-between (sm, lg) {
             height: $logged-in-height-tablet;
             top: -60px;
             padding: 10px 15px;
         }
 
-        @media (max-width: $screen-sm-min ) {
+        @include media-breakpoint-down(sm) {
             height: $logged-in-height-phone;
             top: 0;
             padding: 10px;
@@ -204,12 +204,12 @@ $logged-in-height-phone: 120px;
             font-size: 42px;
             color: #FFFFFF;
 
-            @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+            @include media-breakpoint-between (sm, lg) {
                 font-size: 32px;
                 margin: 0;
             }
 
-            @media (max-width: $screen-xs-min) {
+            @include media-breakpoint-down(xs) {
                 font-size: 26px;
                 margin: 0;
             }
@@ -219,14 +219,14 @@ $logged-in-height-phone: 120px;
             margin: 5px 0 5px 25px;
             text-align: center;
 
-            @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+            @include media-breakpoint-between (sm, lg) {
                 margin: 5px 0 5px 25px;
             }
 
             img {
                 max-width: 100%;
 
-                @media (max-width: $screen-sm-min ) {
+                @include media-breakpoint-down(sm) {
                     display: none;
                 }
             }
@@ -234,10 +234,10 @@ $logged-in-height-phone: 120px;
 
         p {
             margin: 0;
-            font-size: $font-size-small;
+            font-size: $font-size-sm;
             color: #FFFFFF;
 
-            @media (max-width: $screen-sm-min ) {
+            @include media-breakpoint-down(sm) {
                 margin: 0;
                 line-height: 1.1em;
             }
@@ -254,20 +254,20 @@ $logged-in-height-phone: 120px;
         top: -80px;
         border: 0;
 
-        @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+        @include media-breakpoint-between (sm, lg) {
             top: -60px;
         }
 
-        @media (max-width: $screen-sm-min ) {
+        @include media-breakpoint-down(sm) {
             display: none
         }
 
         p {
             margin-bottom: 0;
-            color: $text-color;
+            color: #333;
 
-            @media (max-width: $screen-sm-min ) {
-                font-size: $font-size-small;
+            @include media-breakpoint-down(sm) {
+                font-size: $font-size-sm;
             }
         }
     }
@@ -278,11 +278,11 @@ $logged-in-height-phone: 120px;
         height: $logged-in-height;
         overflow:hidden;
 
-        @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+        @include media-breakpoint-between (sm, lg) {
             height: $logged-in-height-tablet;
         }
 
-        @media (max-width: $screen-sm-min ) {
+        @include media-breakpoint-down(sm) {
             height: auto;
             overflow: visible;
         }
@@ -291,7 +291,7 @@ $logged-in-height-phone: 120px;
             @include clearfix;
             border-radius: 0;
 
-            @media (max-width: $screen-sm-min) {
+            @include media-breakpoint-down(sm) {
                 border-radius: 0;
             }
 
@@ -299,18 +299,18 @@ $logged-in-height-phone: 120px;
                 margin: 0 0 5px 0;
                 font-weight: normal;
 
-                @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+                @include media-breakpoint-between (sm, lg) {
                     font-size: 32px;
                     margin: 0;
                 }
 
-                @media (max-width: $screen-xs-min) {
+                @include media-breakpoint-down(xs) {
                     font-size: 26px;
                 }
             }
 
             p {
-                font-size: $font-size-small;
+                font-size: $font-size-sm;
                 color: #FFFFFF;
             }
         }
@@ -324,18 +324,18 @@ $logged-in-height-phone: 120px;
             font-weight: bold;
             display: inline-block;
             z-index: 2;
-            background-color: $brand-primary;
+            background-color: $theme-primary-color;
             height: $logged-in-height;
             margin-right: 0;
             vertical-align: top;
             width:100%;
 
-            @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+            @include media-breakpoint-between (sm, lg) {
                 margin-top: -$logged-in-height-tablet * 2;
                 height: $logged-in-height-tablet;
             }
 
-            @media (max-width: $screen-sm-min) {
+            @include media-breakpoint-down(sm) {
                 display: none;
             }
 
@@ -347,7 +347,7 @@ $logged-in-height-phone: 120px;
 
     .logged-in:hover {
         .widget-heading {
-            background-color: $brand-primary;
+            background-color: $theme-primary-color;
         }
 
         .widget-detail {
@@ -355,11 +355,11 @@ $logged-in-height-phone: 120px;
             opacity: 1;
             margin-top: -$logged-in-height;
 
-            @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+            @include media-breakpoint-between (sm, lg) {
                 margin-top: -$logged-in-height-tablet;
             }
 
-            @media (max-width: $screen-sm-min) {
+            @include media-breakpoint-down(sm) {
                 display: none;
             }
         }
@@ -372,10 +372,10 @@ $logged-in-height-phone: 120px;
 
 .loggedout .dashboard-widget-container {
     min-height: 350px;
-    @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+    @include media-breakpoint-between (sm, lg) {
         min-height: 320px;
     }
-    @media (max-width: $screen-sm-min) {
+    @include media-breakpoint-down(sm) {
         min-height: 0;
     }
 }

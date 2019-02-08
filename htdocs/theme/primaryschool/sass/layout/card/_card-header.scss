@@ -1,16 +1,18 @@
 .collapsible legend h4,
 .collapsible legend h3,
-.panel-heading {
+.card-header {
     &.has-link {
         a .icon {
-            color: $brand-primary;
+            color: $theme-primary-color;
         }
     }
     .metadata {
         margin-top: 3px;
-        @media (min-width: $screen-md-min ) and (max-width: $screen-lg-min ) {
+        @include media-breakpoint-up(md) {
+          @include media-breakpoint-down(lg) {
             float: none !important;
             font-size: 11px;
+          }
         }
     }
 }
@@ -19,72 +21,72 @@
 // custom block heading
 .column-layout {
     &:nth-child(3n+1) {
-        .panel-secondary {
-            &:nth-child(5n+1) > .panel-heading, .panel-heading-nested {
+        .card-block {
+            &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: #047DB1;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+2) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+2) > .card-header, .card-header-nested {
                 background-color: #ca0238;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+3) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+3) > .card-header, .card-header-nested {
                 background-color: #A66700;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+4) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+4) > .card-header, .card-header-nested {
                 background-color: #5B6E1C;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+5) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+5) > .card-header, .card-header-nested {
                 background-color: #773f97;
                 color: #FFFFFF;
             }
         }
     }
     &:nth-child(3n+2) {
-        .panel-secondary {
-            &:nth-child(5n+1) > .panel-heading, .panel-heading-nested {
+        .card-block {
+            &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: #A66700;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+2) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+2) > .card-header, .card-header-nested {
                 background-color: #5B6E1C;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+3) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+3) > .card-header, .card-header-nested {
                 background-color: #773f97;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+4) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+4) > .card-header, .card-header-nested {
                 background-color: #047DB1;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+5) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+5) > .card-header, .card-header-nested {
                 background-color: #ca0238;
                 color: #FFFFFF;
             }
         }
     }
     &:nth-child(3n+3) {
-        .panel-secondary {
-            &:nth-child(5n+1) > .panel-heading, .panel-heading-nested {
+        .card-block {
+            &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: #773f97;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+2) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+2) > .card-header, .card-header-nested {
                 background-color: #047DB1;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+3) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+3) > .card-header, .card-header-nested {
                 background-color: #ca0238;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+4) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+4) > .card-header, .card-header-nested {
                 background-color: #A66700;
                 color: #FFFFFF;
             }
-            &:nth-child(5n+5) > .panel-heading, .panel-heading-nested {
+            &:nth-child(5n+5) > .card-header, .card-header-nested {
                 background-color: #5B6E1C;
                 color: #FFFFFF;
             }
@@ -94,224 +96,224 @@
 
 
 // custom icons to some blocks
-.bt-newviews .panel-heading:before {
+.bt-newviews .card-header:before {
     content: $fa-var-bullhorn;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-inbox .panel-heading:before {
+.bt-inbox .card-header:before {
     content: $fa-var-inbox;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-myviews .panel-heading:before {
+.bt-myviews .card-header:before {
     content: $fa-var-file;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-filedownload .panel-heading:before {
+.bt-filedownload .card-header:before {
     content: $fa-var-download;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-folder .panel-heading:before {
+.bt-folder .card-header:before {
     content: $fa-var-folder;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-gallery .panel-heading:before {
+.bt-gallery .card-header:before {
     content: $fa-var-picture-o;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-internalmedia .panel-heading:before {
+.bt-internalmedia .card-header:before {
     content: $fa-var-video-camera;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-pdf .panel-heading:before {
+.bt-pdf .card-header:before {
     content: $fa-var-file-pdf-o;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-html .panel-heading:before {
+.bt-html .card-header:before {
     content: $fa-var-code;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-blog .panel-heading:before {
+.bt-blog .card-header:before {
     content: $fa-var-pencil;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-blogpost .panel-heading:before {
+.bt-blogpost .card-header:before {
     content: $fa-var-file-text;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-recentposts .panel-heading:before {
+.bt-recentposts .card-header:before {
     content: $fa-var-clock-o;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-taggedposts .panel-heading:before {
+.bt-taggedposts .card-header:before {
     content: $fa-var-tags;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-comment .panel-heading:before {
+.bt-comment .card-header:before {
     content: $fa-var-comment;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-annotation .panel-heading:before {
+.bt-annotation .card-header:before {
     content: $fa-var-pencil-square-o;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-creativecommons .panel-heading:before {
+.bt-creativecommons .card-header:before {
     content: $fa-var-creative-commons;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-navigation .panel-heading:before {
+.bt-navigation .card-header:before {
     content: $fa-var-location-arrow;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-plans .panel-heading:before {
+.bt-plans .card-header:before {
     content: $fa-var-check-square-o;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-recentforumposts .panel-heading:before {
+.bt-recentforumposts .card-header:before {
     content: $fa-var-comments;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-textbox .panel-heading:before {
+.bt-textbox .card-header:before {
     content: $fa-var-pencil-square-o;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-profileinfo .panel-heading:before {
+.bt-profileinfo .card-header:before {
     content: $fa-var-info;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-socialprofile .panel-heading:before {
+.bt-socialprofile .card-header:before {
     content: $fa-var-thumbs-up;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-entireresume .panel-heading:before {
+.bt-entireresume .card-header:before {
     content: $fa-var-star;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-resumefield .panel-heading:before {
+.bt-resumefield .card-header:before {
     content: $fa-var-star-o;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-externalfeed .panel-heading:before {
+.bt-externalfeed .card-header:before {
     content: $fa-var-rss;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-externalvideo .panel-heading:before {
+.bt-externalvideo .card-header:before {
     content: $fa-var-youtube-play;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-googleapps .panel-heading:before {
+.bt-googleapps .card-header:before {
     content: $fa-var-google;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-wall .panel-heading:before {
+.bt-wall .card-header:before {
   content: $fa-var-quote-left;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-myfriends .panel-heading:before {
+.bt-myfriends .card-header:before {
   content: $fa-var-user-plus;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-mygroups .panel-heading:before {
+.bt-mygroups .card-header:before {
   content: $fa-var-users;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-image .panel-heading:before {
+.bt-image .card-header:before {
     content: $fa-var-picture-o;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
-.bt-text .panel-heading:before {
+.bt-text .card-header:before {
     content: $fa-var-font;
     font-family: FontAwesome;
     font-weight: 300;
