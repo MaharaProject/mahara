@@ -723,7 +723,7 @@ EOD;
         if (!get_record('blocktype_installed', 'active', 1, 'name', $blocktype)) {
             throw new SystemException("Invalid block type '" . $record['type'] . "'. The block type is either not installed or not active.");
         }
-        $title = strtolower(trim($record['title']));
+        $title = trim($record['title']);
 
         // build configdata
         $configdata = $this->setup_retractable($record['retractable']);
