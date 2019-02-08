@@ -262,10 +262,10 @@ class BehatDataGenerators extends BehatBase {
          foreach ($record as &$value) {
              $value = trim($value);
              // Normalise boolean values
-             if (strtolower($value) == 'on' || $value == '1' || $value == 'yes' || $value == 'true') {
+             if (strtolower($value) == 'on' || $value == '1' || $value == 'true') {
                  $value = true;
              }
-             else if (strtolower($value) == 'off' || $value == '0' || $value == 'no' || $value == 'false') {
+             else if (strtolower($value) == 'off' || $value == '0' || $value == 'false') {
                  $value = false;
              }
          }

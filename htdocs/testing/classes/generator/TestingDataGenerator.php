@@ -1035,7 +1035,7 @@ EOD;
             }
             if ($key == 'imagesel' || $key == 'width' || $key == 'showdesc' || $key == 'imagestyle' || $key == 'photoframe' ) {
 
-                //imageselection options are 0,1,2 in the table, changed for tester -_-
+                //imageselection options are 0,1,2 in the table
                 if ($key == 'imagesel') {
                     $value -= 1;
                     $configdata['select'] = $value;
@@ -1130,7 +1130,8 @@ EOD;
                 $ext = end($filenameparts);
 
                 // we need to find the id of the item we are trying to attach and save it as artefactid
-                if (!$artefactid = get_field('artefact', 'id', 'title', $filename)) {
+                if (!$artefactid = get_field('artefact', 'id', 'title', $filename, 'owner', $ownerid)) {
+
                     if ($ext == 'wmv' || $ext == 'webm' || $ext == 'mov'|| $ext == 'ogv' || $ext == 'mpeg' || $ext == 'mp4' || $ext == 'flv' || $ext == 'avi' || $ext == '3gp') {
                         $artefactid = TestingDataGenerator::create_artefact($filename, $ownertype, $ownerid, 'video');
                         TestingDataGenerator::file_creation($artefactid, $filename, $ownertype, $ownerid);
@@ -1235,11 +1236,14 @@ EOD;
     }
 
     /**
-     * generate configdata for the blocktype: plans
-     * @param string $data inside data column in blocktype tables
-     * @return array $configdata of key and values of db table
+    * generate configdata for the blocktype: plans
+    *
+    * @param string $data inside data column in blocktype tables
+    * @param string $ownertype of user
+    * @param string $ownerid of the user
+    * @return array $configdata of key and values of db table
      */
-    public static function generate_configdata_plans($data) {
+    public static function generate_configdata_plans($data, $ownertype, $ownerid) {
         if (!$data) return;
         $configdata = array();
 
@@ -1253,7 +1257,7 @@ EOD;
             if ($key == 'plans') {
                 $plans = explode(',',$value);
                 foreach ($plans as $plan) {
-                    if (!$planid = get_field('artefact', 'id', 'title', $plan, 'artefacttype', 'plan')) {
+                    if (!$planid = get_field('artefact', 'id', 'title', $plan, 'artefacttype', 'plan', 'owner', $ownerid)) {
                         throw new SystemException("Invalid Plan '" . $plan . "'");
                     }
                     $configdata['artefactids'][] = $planid;
@@ -1261,6 +1265,64 @@ EOD;
             }
             if ($key == 'tasksdisplaycount') {
                 $configdata['count'] = $value;
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: profileinformation
+     *
+     * As well as going thorugh the general fields in the data column of the table,
+     * an ArtefactTypeProfileIcon is created as there are none created in bulk.
+     *
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_profileinfo($data, $ownertype, $ownerid) {
+        if (!$data) return;
+        $configdata = array();
+
+        $fields = explode(';', $data);
+        foreach ($fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
+            if ($key == 'introtext') {
+                require_once('embeddedimage.php');
+                $newtext = EmbeddedImage::prepare_embedded_images($value, 'introtext', 0);
+                $configdata['introtext'] = $newtext;
+            }
+            if ($key == 'profileicon') {
+                if (!$artefactprofileiconid = get_field('artefact', 'id', 'title', $value, 'owner', $ownerid, 'artefacttype', 'profileicon')) {
+                    $folderartefactid = ArtefactTypeFolder::get_folder_id(get_string('imagesdir', 'artefact.file'), get_string('imagesdirdesc', 'artefact.file'), null, true, $ownerid);
+                    $artefactprofileiconid = self::create_artefact($value, $ownertype, $ownerid, 'profileicon', $folderartefactid);
+                    self::file_creation($artefactprofileiconid, $value, $ownertype, $ownerid, true);
+
+                    execute_sql("UPDATE {usr}
+                        SET profileicon = $artefactprofileiconid
+                        WHERE id = $ownerid");
+                }
+                $configdata['profileicon'] = $artefactprofileiconid;
+            }
+        }
+        // gather the user's social profiles data
+        safe_require('artefact', 'internal');
+        $element_list = ArtefactTypeProfile::get_all_fields();
+
+        foreach ($element_list as $element=>$type) {
+            if ($artefactid = get_field('artefact', 'id', 'artefacttype', $element, 'owner', $ownerid)) {
+                $configdata['artefactids'][] = $artefactid;
+            }
+            else if ($element == 'socialprofile') {
+                $artefacttypes = ArtefactTypeSocialprofile::$socialnetworks;
+                foreach ($artefacttypes as $type) {
+                    if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'socialprofile', 'owner', $ownerid, 'note', $type)) {
+                        $configdata['artefactids'][] = $artefactid;
+                    }
+                }
             }
         }
         return $configdata;
@@ -1482,7 +1544,7 @@ EOD;
     * @param int $ownertype of the user
     * @param int $ownerid of the user
     **/
-    public static function file_creation($artefactid, $file, $ownertype, $ownerid, $foldername='upload_files') {
+    public static function file_creation($artefactid, $file, $ownertype, $ownerid, $profilepic=false) {
         // get the path of the file artefact from given artefactid
         $filedir = get_config('dataroot') . ArtefactTypeFile::get_file_directory($artefactid);
 
@@ -1495,6 +1557,15 @@ EOD;
             $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
             copy($path, $filepath);
             chmod($filepath, get_config('filepermissions'));
+
+            if ($profilepic) {
+              // Move the profile file into the correct place.
+              $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($artefactid % 256) . '/';
+              if (!check_dir_exists($directory, true, true)) {
+                  throw new SystemException("Unable to create folder $directory");
+              }
+              $result2 = copy($path, $directory . $artefactid);
+            }
         }
         if (!$artefactid) {
             throw new SystemException("Invalid attachment '" . $file . "'. No attachment by that name owned by " . $ownertype . " with id " . $ownerid);
@@ -1524,22 +1595,31 @@ EOD;
     * @return int artefactid
     **/
     public static function create_artefact($file, $ownertype, $ownerid, $filetype, $parentfolderid=null) {
-        $ext = explode('.', $file);
-        $now = date("Y-m-d H:i:s");
+        $artefactid = null;
         $artefact = new stdClass();
-        $artefact->title = $file;
+        $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
+
+        $ext = explode('.', $file);
         $artefact->oldextension = end($ext);
+
+        $artefact->title = $file;
         $artefact->$ownertype = $ownerid;
         $artefact->author = $ownerid;
-        $artefact->atime = $now;
-        $artefact->ctime = $now;
-        $artefact->mtime = $now;
+        // table artefact_file_files needs this information
+        $artefact->contenthash = ArtefactTypeFile::generate_content_hash($path);
+        $artefact->filetype = mime_content_type($path);
+
+        $now = date("Y-m-d H:i:s");
+        $artefact->atime = $artefact->ctime = $artefact->mtime =$now;
+
+        $imagefilesize = filesize($path);
+        $filesize = get_real_size($imagefilesize);
+        $artefact->size = $filesize;
+
+        // if file belongs inside a folder
         if ($parentfolderid) {
             $artefact->parent = $parentfolderid;
         }
-
-        $artefactid = null;
-        $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
 
         if ($filetype == 'image') {
 
@@ -1553,20 +1633,48 @@ EOD;
         }
 
         if ($filetype == 'attachment') {
+
             $artobj = new ArtefactTypeFile(0, $artefact);
             $artobj->commit();
             $artefactid = $artobj->get('id');
         }
 
         if ($filetype == 'audio') {
-            $artefact->filetype = 'audio';
             $artobj = ArtefactTypeFile::new_file($path, $artefact);
             $artobj->commit();
             $artefactid = $artobj->get('id');
         }
 
+        if ($filetype == 'profileicon') {
+            $imageinfo = getimagesize($path);
+            $artefact->width  = $imageinfo[0];
+            $artefact->height = $imageinfo[1];
+
+            $artefact->description = get_string('uploadedprofileicon', 'artefact.file');
+            $artefact->note = $file;
+
+            // validate the upload as done in Pieform (profileicons.php)
+            if (!$imageinfo || !is_image_type($imageinfo[2])) {
+                throw new SystemException(get_string('filenotimage'));
+            }
+            // maximum of five profile pics per user
+            if (get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $ownerid) >= 5) {
+                throw new SystemException(get_string('onlyfiveprofileicons', 'artefact.file'));
+            }
+
+            // by adding new pic, quota isn't exceeded
+            $user = new User();
+            $user->find_by_id($ownerid);
+            if (!$user->quota_allowed($artefact->size)) {
+                throw new SystemException(get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot')));
+            }
+
+            $profileiconartefact = new ArtefactTypeProfileIcon(0, $artefact);
+            $profileiconartefact->commit();
+            $artefactid = $profileiconartefact->get('id');
+        }
+
         if ($filetype == 'video') {
-            //this function from artefact/file/lib.php creates the specific ArtefactType[]
             $artobj = ArtefactTypeFile::new_file($path, $artefact);
             $artobj->commit();
             $artefactid = $artobj->get('id');
