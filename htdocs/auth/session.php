@@ -112,7 +112,10 @@ class Session {
                         $server_stats = $memcached->getStats();
                         if ($server_stats[$destination . ":" . $port]['pid'] <= 0) {
                             // can't reach the destination:port
-                            throw new ConfigSanityException(get_string('nomemcachedserver', 'error', $server));
+                            $server_version = $memcached->getVersion();
+                            if (empty($server_version[$destination . ":" . $port])) {
+                                throw new ConfigSanityException(get_string('nomemcachedserver', 'error', $server));
+                            }
                         }
                     }
                     else {
