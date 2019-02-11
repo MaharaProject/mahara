@@ -27,23 +27,6 @@ $rss-icon-color: #FE6500;
 // Colors
 $brand-default:         #ECECEC;
 
-//== Buttons
-
-$btn-font-weight:                normal;
-
-$btn-secondary-color:            #333;
-$btn-secondary-bg:               #F9F9F9;
-$btn-secondary-border:           #ccc;
-
-$btn-primary-color:              #fff;
-$btn-primary-bg:                 $theme-primary-color;
-$btn-primary-border:             darken($btn-primary-bg, 5%);
-
-$btn-success-color:              #fff;
-$btn-success-bg:                 $theme-primary-color;
-$btn-success-border:             darken($theme-primary-color, 5%);
-
-
 //== Navbar
 $navbar-collapse-max-height:       340px;
 
