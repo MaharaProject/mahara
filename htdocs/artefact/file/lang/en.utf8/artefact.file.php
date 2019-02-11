@@ -73,6 +73,7 @@ $string['deletingfailed'] =  'Deleting failed: the file or folder does not exist
 $string['deletefile?'] = 'Are you sure you want to delete this file?';
 $string['deletefolder?'] = 'Are you sure you want to delete this folder?';
 $string['Description'] = 'Description';
+$string['Descriptionandtags'] = 'Description / Tags';
 $string['destination'] = 'Destination';
 $string['Details'] = 'Details';
 $string['View'] = 'View';

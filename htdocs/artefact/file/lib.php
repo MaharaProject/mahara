@@ -814,6 +814,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                         'createfolder'    => $editfilesfolders,
                         'edit'            => $editfilesfolders,
                         'select'          => false,
+                        'tag'             => true,
                     ),
                 ),
             ),
