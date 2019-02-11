@@ -10,14 +10,17 @@
     > .card-header {
         font-family: $font-family-sans-serif;
         margin-top: 0;
-        > a {
+        > a.username {
             border: 0;
+        }
+        > a.user-icon {
+            border: 1px solid $thumbnail-border-color;
         }
     }
     &.blockinstance.card {
         background-color: transparent;
         .card-header {
-            background-color: $card-secondary-heading-bg;
+            background-color: $card-secondary-header-bg;
         }
         .blockinstance-content {
             .editor-description {
@@ -30,35 +33,33 @@
             }
         }
     }
-    > .card-heading, .card-heading-nested {
-        border-bottom: 2px solid $card-secondary-border;
-        padding-left: 8px;
-        padding-right: 8px;
+    > .card-header, .card-header-nested {
+        border-bottom: 1px solid $card-secondary-border;
 
-        // In page builder we can choose to not have a heading,
+        // In page builder we can choose to not have a header,
         // but we still need a dragable object.
         // Use a placeholder for visual help
         // will appear with the no-heading class in view mode
-        &.card-heading-placeholder {
+        &.card-header-placeholder {
             border: 1px solid scale-color($gray-100, $lightness: -5.75%);
             border-style: dashed;
-            background-color: $card-secondary-heading-bg;
+            background-color: $card-secondary-header-bg;
             .blockinstance-header {
                 opacity:0.6;
             }
         }
     }
     &.card-warning {
-         > .card-header, .card-heading-nested {
+         > .card-header, .card-header-nested {
             border-left: 4px solid $card-secondary-border;
-            background-color: $card-warning-heading-bg;
+            background-color: $card-warning-header-bg;
             border-bottom: 1px solid $card-warning-border;
         }
     }
     & .card-warning .card-body {
-            background-color: $card-warning-heading-bg;
+            background-color: $card-warning-header-bg;
     }
-    .card-heading-plain {
+    .card-header-plain {
         border: 1px solid scale-color($gray-100, $lightness: -5.75%);
     }
     .list-group .list-group-item {

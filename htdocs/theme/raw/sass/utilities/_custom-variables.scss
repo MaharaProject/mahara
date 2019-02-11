@@ -98,45 +98,45 @@ $btn-success-bg:                            theme-color("success") !default;
 $btn-success-border:                        scale-color(theme-color("success"), $lightness: -25%) !default;
 
 $btn-link-disabled-color:                   $gray-300 !default;
-$btn-bg-disabled-color:                   #f9f9f9 !default;
+$btn-bg-disabled-color:                     #f9f9f9 !default;
 
 // Cards
 $card-text:                                 $gray-700 !default;
 $card-border:                               #ddd !default;
-$card-header-bg:                           #f9f9f9 !default;
+$card-header-bg:                            #f9f9f9 !default;
 $card-footer-bg:                            #f5f5f5 !default;
 
 $card-block-text:                           $gray-700 !default;
 $card-block-border:                         theme-color("primary") !default;
-$card-block-heading-bg:                     scale-color($card-header-bg, $lightness: -2.01) !default;
+$card-block-header-bg:                      scale-color($card-header-bg, $lightness: -2.01) !default;
 
 $card-secondary-text:                       $gray-900 !default;
 $card-secondary-border:                     scale-color(theme-color("secondary"), $lightness: 33.35) !default;
-$card-secondary-heading-bg:                 $card-header-bg !default;
+$card-secondary-header-bg:                  $card-header-bg !default;
 
 $card-success-text:                         $state-success-text !default;
 $card-success-border:                       $state-success-border !default;
-$card-success-heading-bg:                   $state-success-bg !default;
+$card-success-header-bg:                    $state-success-bg !default;
 
 $card-info-text:                            $state-info-text !default;
 $card-info-border:                          $state-info-border !default;
-$card-info-heading-bg:                      $state-info-bg !default;
+$card-info-header-bg:                       $state-info-bg !default;
 
 $card-warning-text:                         $state-warning-text !default;
 $card-warning-border:                       $state-warning-border !default;
-$card-warning-heading-bg:                   $state-warning-bg !default;
+$card-warning-header-bg:                    $state-warning-bg !default;
 $card-warning-bg:                           $white !default;
 
 $card-danger-text:                          $state-danger-text !default;
 $card-danger-border:                        $state-danger-border !default;
-$card-danger-heading-bg:                    $state-danger-bg !default;
+$card-danger-header-bg:                     $state-danger-bg !default;
 
 // Tables
 $cursor-disabled:                           not-allowed !default; // Disabled cursor for form controls and buttons.
 
 // Pagination
-$pagination-padding-y-xs:                  0.0625rem !default;
-$pagination-padding-x-xs:                  0.4375rem !default;
+$pagination-padding-y-xs:                   0.0625rem !default;
+$pagination-padding-x-xs:                   0.4375rem !default;
 
 // Popovers
 $popover-fallback-border-color:             #ccc !default;

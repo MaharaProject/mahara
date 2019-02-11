@@ -37,6 +37,10 @@
         padding: 6px 9px;
         text-align: center;
         white-space: nowrap;
+        border: 1px solid $btn-primary-border;
+
+        color: $btn-primary-color;
+        background: $btn-primary-bg;
 
         &:focus,
         &:hover {

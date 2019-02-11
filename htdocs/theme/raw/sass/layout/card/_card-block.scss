@@ -20,7 +20,7 @@
             background-color: $card-header-bg;
         }
     }
-    > .card-header, .card-heading-nested {
+    > .card-header, .card-header-nested {
         border-bottom: 2px solid $card-border-color;
         padding: 10px 8px;
         background: transparent;
@@ -29,7 +29,7 @@
         // but we still need a dragable object.
         // Use a placeholder for visual help
         // will appear with the no-heading class in view mode
-        &.card-heading-placeholder {
+        &.card-header-placeholder {
             border: 1px solid scale-color($gray-300, $lightness: -10.93);
             border-style: dashed;
             background-color: $card-bg;
@@ -39,16 +39,16 @@
         }
     }
     &.card-warning {
-         > .card-header, .card-heading-nested {
+         > .card-header, .card-header-nested {
             border-left: 4px solid $card-block-border;
-            background-color: $card-warning-heading-bg;
+            background-color: $card-warning-header-bg;
             border-bottom: 1px solid $card-warning-border;
         }
     }
     & .card-warning .card-body {
-            background-color: $card-warning-heading-bg;
+            background-color: $card-warning-header-bg;
     }
-    .card-heading-plain {
+    .card-header-plain {
         border: 1px solid scale-color($gray-300, $lightness: -10.93);
     }
     .list-group .list-group-item {
