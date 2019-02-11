@@ -87,6 +87,7 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "Pages and collections" in the "Configure site sub-menu" property
  And I should see "Journals" in the "Configure site sub-menu" property
  And I should see "Share" in the "Configure site sub-menu" property
+ And I scroll to the base of id "navadmin"
  And I should see "Files" in the "Configure site sub-menu" property
  And I should see "Cookie Consent" in the "Configure site sub-menu" property
  # Checking the sub navigation in Users
@@ -117,6 +118,7 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "Profile completion" in the "Institutions sub-menu" property
  And I should see "Pages and collections" in the "Institutions sub-menu" property
  And I should see "Journals" in the "Institutions sub-menu" property
+ And I scroll to the base of id "navadmin"
  And I should see "Share" in the "Institutions sub-menu" property
  And I should see "Files" in the "Institutions sub-menu" property
  And I should see "Pending registrations" in the "Institutions sub-menu" property
@@ -175,6 +177,7 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Files" in the "Institutions sub-menu" property
  And I should see "Pending registrations" in the "Institutions sub-menu" property
  # Checking Reports menu
+ And I scroll to the base of id "navadmin"
  And I should see "Reports"
 
  #Checking the user menu navigation headings

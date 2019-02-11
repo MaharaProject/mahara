@@ -16,7 +16,7 @@ Given the following "users" exist:
 Scenario: Make Text Block Retractable
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" card menu
     And I follow "Text"
     And I press "Add"
     And I set the field "Block title" to "Text Block 1"

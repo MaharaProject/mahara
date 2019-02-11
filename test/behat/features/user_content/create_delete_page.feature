@@ -76,8 +76,8 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Remove"
 
     # verify page elements are displayed Display page and Return to pages and collections buttons
-    And I should see "Display page" in the "#view-wizard-controls .btn-default:nth-of-type(1)" element
-    And I should see "Return to pages and collections" in the "#view-wizard-controls .btn-default:nth-of-type(2)" element
+    And I should see "Display page" in the "Display page button" property
+    And I should see "Return to pages and collections" in the "Return to pages and collections button" property
     And I display the page
     # Show last updated date and time when seeing a portfolio page (Bug 1634591)
     And I should see "Updated on" in the ".text-right" element
@@ -98,7 +98,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I should see "Delete this page"
     # User share page with public and enable copy page functionality
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Manage access" in "This is the edited page title" panel access menu
+    And I click on "Manage access" in "This is the edited page title" card access menu
     And I follow "Advanced options"
     And I enable the switch "Allow copying"
     And I select "Public" from "General" in shared with select2 box
@@ -129,7 +129,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     Then I should see "Timeline"
     # check page can be deleted (Bug 1755682)
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Delete" in "This is the edited page" panel menu
+    And I click on "Delete" in "This is the edited page" card menu
     And I should see "Do you really want to delete this page?"
     And I press "Yes"
     Then I should see "Page deleted"

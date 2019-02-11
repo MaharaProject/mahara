@@ -56,17 +56,17 @@ Scenario: In the participation report pages should be seen in a collection
  # Making group page 01 public
  When I click on "Group one"
  And I click on "Pages and collections" in the "Arrow-bar nav" property
- And I click on "Manage access" in "Group collection 01" panel access menu
+ And I click on "Manage access" in "Group collection 01" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  # Making group page 03 public
  When I click on "Pages and collections" in the "Arrow-bar nav" property
- And I click on "Manage access" in "Group page 03" panel access menu
+ And I click on "Manage access" in "Group page 03" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  # Making group page 04 public
  When I click on "Pages and collections" in the "Arrow-bar nav" property
- And I click on "Manage access" in "Group page 04" panel access menu
+ And I click on "Manage access" in "Group page 04" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  # UserA comments on group page 01

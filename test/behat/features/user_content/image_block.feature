@@ -16,8 +16,7 @@ Background:
 Scenario: Create and delete image block
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Page UserA_01" panel menu
-    And I click on "Edit" in "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" card menu
     And I follow "Image"
     And I press "Add"
     Then I should see "Image: Configure"

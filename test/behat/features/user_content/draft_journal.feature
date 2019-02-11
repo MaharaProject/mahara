@@ -55,8 +55,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
 
  # Display tagged journals in block
  And I choose "Pages and collections" in "Create" from main menu
- And I click on "Page UserA_01" panel menu
- And I click on "Edit" in "Page UserA_01" panel menu
+ And I click on "Edit" in "Page UserA_01" card menu
  And I expand "Journals" node in the "blocktype sidebar" property
  And I follow "Tagged journal entries" in the "blocktype sidebar" property
  And I press "Add"

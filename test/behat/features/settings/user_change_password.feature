@@ -23,6 +23,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | password    | Mahara#1  |
     And I select "Institution One" from "Institution"
     And I enable the switch "Institution administrator"
+    And I scroll to the base of id "adduser_submit"
     And I press "Create user"
     # Creating user 2
     And I choose "Add user" in "Users" from administration menu
@@ -33,6 +34,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | username    | jen  |
     | password    | Mahara#1  |
     And I select "Institution One" from "Institution"
+    And I scroll to the base of id "adduser_submit"
     And I press "Create user"
     # Log out as user admin
     And I log out

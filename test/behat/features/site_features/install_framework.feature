@@ -56,15 +56,14 @@ Scenario: Installing framework module and activating for an institution
 
  # Adding framework to existing collection
  And I choose "Pages and collections" in "Create" from main menu
- And I click on "Collection admin_01" panel menu
- And I click on "Edit" in "Collection admin_01" panel menu
+ And I click on "Edit" in "Collection admin_01" card menu
  And I select "Title of your framework" from "SmartEvidence framework"
  And I press "Save"
  Then I should see "Collection saved successfully."
 
  # Testing the collection navigation and matrix carousel
  And I choose "Pages and collections" in "Create" from main menu
- And I click the panel "Collection admin_01"
+ And I click the card "Collection admin_01"
  And I should see "You are on page 1/9"
  And I should see "by Admin User (admin)"
  And I press "Next" in the "matrix table" property
@@ -90,7 +89,7 @@ Scenario: Installing framework module and activating for an institution
 
  # Re-click a matrix point to add some feedback
  And I choose "Pages and collections" in "Create" from main menu
- And I click the panel "Collection admin_01"
+ And I click the card "Collection admin_01"
  And I click on the matrix point "3,4"
  And I fill in "This is annotation feedback" in editor "Feedback"
  And I press "Place feedback"

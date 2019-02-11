@@ -36,7 +36,7 @@ Scenario: Check share page with friends
  And I follow "pending friend"
  And I click on "Approve request"
  And I choose "Pages and collections" in "Create" from main menu
- And I click on "Manage access" in "Page UserB_02" panel access menu
+ And I click on "Manage access" in "Page UserB_02" card access menu
  And I select "Friends" from "General" in shared with select2 box
  And I press "Save"
  And I log out
@@ -53,7 +53,7 @@ Scenario: Check share page with Registered Users
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
  And I choose "Pages and collections" in "Create" from main menu
- And I click on "Manage access" in "Page UserA_03" panel access menu
+ And I click on "Manage access" in "Page UserA_03" card access menu
  And I select "Registered users" from "General" in shared with select2 box
  And I press "Save"
  And I log out
@@ -72,7 +72,7 @@ Scenario: Check share page with groups and that copy options works
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
  And I choose "Pages and collections" in "Create" from main menu
- And I click on "Manage access" in "Page UserA_03" panel access menu
+ And I click on "Manage access" in "Page UserA_03" card access menu
  And I select "GroupA" from "Groups" in shared with select2 box
  And I select "GroupB" from "Groups" in shared with select2 box
  And I expand "Advanced options" node

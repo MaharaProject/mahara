@@ -116,8 +116,11 @@ label,
 .checkbox {
   position: relative;
   display: block;
-  // margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 10px;
+  input.checkboxes,
+  input.radio {
+      z-index: 3;
+  }
 
   label {
     min-height: $line-height-computed; // Ensure the input doesn't jump when there is no text

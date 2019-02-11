@@ -37,7 +37,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And the "test page name 1" checkbox should be checked
     And I press "Add pages"
     And I follow "Done"
-    And I click on "test collection name" panel menu
+    And I click on "test collection name" card menu
     And I should see "Delete"
     And I go to the homepage
     And I choose "Export" in "Manage" from main menu

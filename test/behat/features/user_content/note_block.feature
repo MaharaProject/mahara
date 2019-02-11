@@ -17,8 +17,7 @@ Scenario: Adding and deleting a Note block (Bug 1424512)
     # Logging in as a user
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Page UserA_01" panel menu
-    And I click on "Edit" in "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" card menu
     # Configuring the block
     And I expand "General" node
     And I follow "Note" in the "blocktype sidebar" property

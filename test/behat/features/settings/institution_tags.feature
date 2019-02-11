@@ -50,7 +50,7 @@ Scenario: Creating institution tags
     And I press "Save entry"
 
     Given I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" card menu
     And I follow "Settings" in the "Toolbar buttons" property
     And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
     And I fill in select2 input "settings_tags" with "Test" and select "Test"

@@ -62,7 +62,7 @@ Scenario: Create forum and add block to group page
     And I log out
     And I log in as "UserC" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page UserC_01" panel menu
+    And I click on "Edit" in "Page UserC_01" card menu
     And I expand "General" node
     And I follow "Recent forum posts"
     And I press "Add"

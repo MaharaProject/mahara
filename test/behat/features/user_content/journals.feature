@@ -23,8 +23,7 @@ Background:
 
     Given I log in as "celeste" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Celeste's Page" panel menu
-    And I click on "Edit" in "Celeste's Page" panel menu
+    And I click on "Edit" in "Celeste's Page" card menu
     And I expand "Journals" node in the "blocktype sidebar" property
 
 Scenario: Add Journal block to the page

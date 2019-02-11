@@ -37,19 +37,17 @@ Scenario: Testing that views & collections are collated properly
     # Putting some comments on the pages
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Collection UserA_01" panel collection
-    And I click on "Page UserA_01" in "Collection UserA_01" panel collection
+    And I click on "Page UserA_01" in "Collection UserA_01" card collection
     And I fill in "I am on UserA_01 page" in editor "Comment"
     And I press "Comment"
 
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Collection UserA_01" panel collection
-    And I click on "Page UserA_02" in "Collection UserA_01" panel collection
+    And I click on "Page UserA_02" in "Collection UserA_01" card collection
     And I fill in "I am on UserA_02 page" in editor "Comment"
     And I press "Comment"
 
     And I choose "Pages and collections" in "Create" from main menu
-    And I click the panel "Page UserA_03"
+    And I click the card "Page UserA_03"
     And I fill in "I am on Page UserA_03" in editor "Comment"
     And I press "Comment"
 

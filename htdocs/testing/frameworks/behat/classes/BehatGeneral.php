@@ -572,110 +572,110 @@ EOF;
     }
 
     /**
-     * Click on the bottom right menu elipsis inside a list panel containing the specified text.
+     * Click on the bottom right menu elipsis inside a list card containing the specified text.
      *
-     * @When /^I click on "(?P<row_text_string>(?:[^"]|\\")*)" panel menu$/
+     * @When /^I click on "(?P<row_text_string>(?:[^"]|\\")*)" card menu$/
      * @param string $rowtext The list/table row text
      * @throws ElementNotFoundException
      */
-    public function i_click_on_in_panel($rowtext) {
+    public function i_click_on_in_card($rowtext) {
 
-        // The panel container.
+        // The card container.
         $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
-        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel containing the text "' . $rowtext . '"');
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the card containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'card', ' '))" .
             " and contains(normalize-space(.), " . $rowtextliteral . ")]";
         $rownode = $this->find('xpath', $xpath, $exception);
 
-        // Click on the elipsis button for the panel
-        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.page-controls .moremenu')[0].click();";
+        // Click on the elipsis button for the card
+        $jscode = "jQuery(\"div.card h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-controls .moremenu')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
     /**
-     * Click on the bottom right collection menu inside a list panel containing the specified text.
+     * Click on the bottom right collection menu inside a list card containing the specified text.
      *
-     * @When /^I click on "(?P<row_text_string>(?:[^"]|\\")*)" panel collection$/
+     * @When /^I click on "(?P<row_text_string>(?:[^"]|\\")*)" card collection$/
      * @param string $rowtext The list/table row text
      * @throws ElementNotFoundException
      */
-    public function i_click_on_in_panel_collection_box($rowtext) {
+    public function i_click_on_in_card_collection_box($rowtext) {
 
-        // The panel container.
+        // The card container.
         $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
-        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel containing the text "' . $rowtext . '"');
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the card containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'card', ' '))" .
             " and contains(normalize-space(.), " . $rowtextliteral . ")]";
         $rownode = $this->find('xpath', $xpath, $exception);
 
-        // Click on the collection box for the panel
-        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.collection-list')[0].click();";
+        // Click on the collection box for the card
+        $jscode = "jQuery(\"div.card h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.collection-list')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
     /**
-     * Click on the link or button inside a panel menu containing the specified text.
+     * Click on the link or button inside a card menu containing the specified text.
      *
-     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" panel menu$/
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" card menu$/
      * @param string $link_or_button we look for
-     * @param string $rowtext The panel menu text
+     * @param string $rowtext The card menu text
      * @throws ElementNotFoundException
      */
-    public function i_click_on_in_panel_menu($link_or_button, $rowtext) {
+    public function i_click_on_in_card_menu($link_or_button, $rowtext) {
 
-        // The panel container.
+        // The card container.
         $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
-        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel containing the text "' . $rowtext . '"');
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the card containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'card', ' '))" .
             " and contains(normalize-space(.), " . $rowtextliteral . ")]";
         $rownode = $this->find('xpath', $xpath, $exception);
 
-        // Click on the elipsis button for the panel
-        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.page-controls a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
+        // Click on the elipsis button for the card
+        $jscode = "jQuery(\"div.card h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-controls a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
     /**
-     * Click on the link or button inside a panel access menu containing the specified text.
+     * Click on the link or button inside a card access menu containing the specified text.
      *
-     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" panel access menu$/
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" card access menu$/
      * @param string $link_or_button we look for
-     * @param string $rowtext The panel menu text
+     * @param string $rowtext The card menu text
      * @throws ElementNotFoundException
      */
-    public function i_click_on_in_panel_access_menu($link_or_button, $rowtext) {
+    public function i_click_on_in_card_access_menu($link_or_button, $rowtext) {
 
-        // The panel container.
+        // The card container.
         $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
-        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel access containing the text "' . $rowtext . '"');
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the card access containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'card', ' '))" .
             " and contains(normalize-space(.), " . $rowtextliteral . ")]";
         $rownode = $this->find('xpath', $xpath, $exception);
 
-        // Click on the elipsis button for the panel
-        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find('.page-access a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
+        // Click on the elipsis button for the card
+        $jscode = "jQuery(\"div.card h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-access a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
     /**
-     * Click on the link or button inside a panel collection list containing the specified text.
+     * Click on the link or button inside a card collection list containing the specified text.
      *
-     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" panel collection$/
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" card collection$/
      * @param string $link_or_button we look for
-     * @param string $rowtext The panel menu text
+     * @param string $rowtext The card menu text
      * @throws ElementNotFoundException
      */
-    public function i_click_on_in_panel_collection_menu($link_or_button, $rowtext) {
+    public function i_click_on_in_card_collection_menu($link_or_button, $rowtext) {
 
-        // The panel container.
+        // The card container.
         $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
-        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel containing the text "' . $rowtext . '"');
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the card containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'card', ' '))" .
             " and contains(normalize-space(.), " . $rowtextliteral . ")]";
         $rownode = $this->find('xpath', $xpath, $exception);
 
-        // Click on the elipsis button for the panel
-        $jscode = "jQuery(\"div.panel h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.panel-footer').find(\"a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")\")[0].click();";
+        // Click on the elipsis button for the card
+        $jscode = "jQuery(\"div.card h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find(\"a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")\")[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
@@ -706,23 +706,23 @@ EOF;
     }
 
     /**
-     * Click a panel header containing the specified text.
+     * Click a card header containing the specified text.
      *
-     * @When /^I click the panel "(?P<row_text_string>(?:[^"]|\\")*)"$/
-     * @param string $rowtext the panel heading text
+     * @When /^I click the card "(?P<row_text_string>(?:[^"]|\\")*)"$/
+     * @param string $rowtext the card heading text
      * @throws ElementNotFoundException
      */
-    public function i_click_panel($rowtext) {
+    public function i_click_card($rowtext) {
 
-        // The panel container.
+        // The card container.
         $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
-        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the panel containing the text "' . $rowtext . '"');
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'panel', ' '))" .
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the card containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'card', ' '))" .
             " and contains(normalize-space(.), " . $rowtextliteral . ")]" .
             "//a[contains(concat(' ', normalize-space(@class), ' '), ' title-link ')]";
         $rownode = $this->find('xpath', $xpath, $exception);
 
-        $jscode = "jQuery(\"div.panel h3 a.title-link:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\")[0].click();";
+        $jscode = "jQuery(\"div.card h3 a.title-link:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\")[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 

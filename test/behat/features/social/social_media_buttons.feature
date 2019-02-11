@@ -39,7 +39,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I fill in "maharayahoo" for "Your URL or username"
  And I press "Save"
  And I choose "Pages and collections" in "Create" from main menu
- And I click on "Edit" in "Page UserA_01" panel menu
+ And I click on "Edit" in "Page UserA_01" card menu
  And I expand "Personal info" node
  And I follow "Social media"
  And I press "Add"

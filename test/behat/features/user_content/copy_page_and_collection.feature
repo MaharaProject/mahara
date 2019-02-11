@@ -26,8 +26,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
 
   # Add a block to the page
   When I choose "Pages and collections" in "Create" from main menu
-  And I click on "Page admin_02" panel menu
-  And I click on "Edit" in "Page admin_02" panel menu
+  And I click on "Edit" in "Page admin_02" card menu
   And I follow "Text"
   And I press "Add"
   And I set the field "Block title" to "Text Block 1"
@@ -52,8 +51,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
 
   # Add the page to the collection which has block
   When I choose "Pages and collections" in "Create" from main menu
-  And I click on "Collection admin_01" panel menu
-  And I click on "Manage" in "Collection admin_01" panel menu
+  And I click on "Manage" in "Collection admin_01" card menu
   And I check "Page admin_02"
   And I press "Add pages"
   And I should see "1 page added to collection"

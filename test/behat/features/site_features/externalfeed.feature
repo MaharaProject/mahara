@@ -17,8 +17,7 @@ Scenario: Add some externalfeed blocks
     # RSS or Atom format
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Page UserA_01" panel menu
-    And I click on "Edit" in "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" card menu
     And I expand "External" node
     And I follow "External feed"
     And I press "Add"

@@ -178,8 +178,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I follow "GroupA (Administrator)"
     And I should see "Page UserB_01"
     And I follow "Pages and collections (tab)"
-    And I click on "Group homepage" panel menu
-    And I click on "Edit" in "Group homepage" panel menu
+    And I click on "Edit" in "Group homepage" card menu
 
     And I scroll to the id "column-container"
     And I configure the block "Group portfolios"
@@ -191,8 +190,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I display the page
     # Update the group page "Page GroupA_06"
     And I follow "Pages and collections (tab)"
-    And I click on "Page GroupA_06" panel menu
-    And I click on "Edit" in "Page GroupA_06" panel menu
+    And I click on "Edit" in "Page GroupA_06" card menu
     And I follow "Settings" in the "Toolbar buttons" property
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
     And I scroll to the id "settings_submit"
@@ -212,8 +210,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should not see "Page GroupA_06" in the "Group portfolios" property
     # Update the shared page "Page UserA_01"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Page UserA_01" panel menu
-    And I click on "Edit" in "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" card menu
     And I follow "Settings" in the "Toolbar buttons" property
     And I set the field "Page description" to "<p>Page 01 (updated)</p>"
     And I scroll to the id "settings_submit"
@@ -229,8 +226,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should not see "Page UserA_01" in the "Pages shared with this group" property
     # Update the shared collection "Collection UserA_06"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Collection UserA_06" panel menu
-    And I click on "Edit" in "Collection UserA_06" panel menu
+    And I click on "Edit" in "Collection UserA_06" card menu
     And I fill in "Collection description" with "Collection 06 (updated)"
     And I scroll to the id "edit_submit"
     And I press "Save"

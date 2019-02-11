@@ -18,8 +18,7 @@ Scenario: Open badges block
     # So all we can do is check that the block exists and saves to a page
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Page UserA_01" panel menu
-    And I click on "Edit" in "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" card menu
     And I expand "External" node
     And I scroll to the base of id "content-editor-foldable"
     And I follow "Open Badges"

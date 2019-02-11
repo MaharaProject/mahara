@@ -16,8 +16,7 @@ Background:
 Scenario: Create and delete text block
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Page UserA_01" panel menu
-    And I click on "Edit" in "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" card menu
     When I follow "Text"
     # Confirm modal window has a Legend of "Cell" just above the grey blocks  (Bug 1482471)
     Then I should see "Cell" in the "legend" element

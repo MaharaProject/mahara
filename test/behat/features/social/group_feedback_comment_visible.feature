@@ -39,7 +39,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     # Needs to navigate to see the comment and check it can be seen publicly
     When I follow "GroupA"
     When I follow "Pages and collections (tab)"
-    And I click the panel "Page GroupA_01"
+    And I click the card "Page GroupA_01"
     Then I should see "Adding a comment to this field. Student = Awesome!" in the "Comment text" property
 
 # As part of consolidating behat tests, this scenario has been added.

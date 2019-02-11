@@ -61,8 +61,7 @@ Scenario: Add comments block to page
     And I press "Comment"
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Page UserA_01" panel menu
-    And I click on "Edit" in "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" card menu
     And I wait "1" seconds
     # Add a comments block so that comments will now be at the top of the page
     And I expand "General" node

@@ -60,8 +60,7 @@ Scenario: Creating a collection AND adding pages
     | Page description | testing |
     And I press "Save"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Test Collection" panel menu
-    And I click on "Manage" in "Test Collection" panel menu
+    And I click on "Manage" in "Test Collection" card menu
     And I follow "All"
     And I press "Add pages"
     And I should see "1 page added to collection"

@@ -56,7 +56,7 @@ Feature: Mahara users can create their blogs
     And I fill in select2 input "editpost_tags" with "blogentry" and select "blogentry"
     And I press "Save entry"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page UserA_01" panel menu
+    And I click on "Edit" in "Page UserA_01" card menu
     And I expand "Journals" node in the "blocktype sidebar" property
     And I follow "Tagged journal entries"
     And I press "Add"

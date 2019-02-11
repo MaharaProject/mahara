@@ -20,8 +20,7 @@ Scenario: Create a plan -> add plan block to page -> create new task from block 
     And I press "Save plan"
     #  add plan block to page
     Given I choose "Pages and collections" in "Create" from main menu
-    And I click on "Page admin_01" panel menu
-    And I click on "Edit" in "Page admin_01" panel menu
+    And I click on "Edit" in "Page admin_01" card menu
     And I expand "General" node
     And I follow "Plans" in the "blocktype sidebar" property
     And I press "Add"
@@ -118,7 +117,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     Then I should see "Alien invasion"
     # Add the plan to a page
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page admin_01" panel menu
+    And I click on "Edit" in "Page admin_01" card menu
     And I expand "General" node
     And I follow "Plans" in the "blocktype sidebar" property
     And I press "Add"

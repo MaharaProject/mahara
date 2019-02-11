@@ -15,8 +15,7 @@ I can create a new page from the site default portfolio page
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Configure site" from administration menu
     And I should see "Page template"
-    And I click on "Page template" panel menu
-    And I click on "Edit" in "Page template" panel menu
+    And I click on "Edit" in "Page template" card menu
     And I should see "Drag blocks onto the page to add them. You can then also drag them around the page to change their position."
     # Add a text block
     And I follow "Text"

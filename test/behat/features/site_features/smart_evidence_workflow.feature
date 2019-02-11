@@ -64,7 +64,7 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     Then I should see "Pages and collections"
 
     # Mahara member makes to page visible to public
-    And I click on "Manage access" in "Smart Evidence Collection 1" panel access menu
+    And I click on "Manage access" in "Smart Evidence Collection 1" card access menu
     And I select "Public" from "accesslist[0][searchtype]"
     And I click on "Save"
     And I click on "Return to pages and collections"
