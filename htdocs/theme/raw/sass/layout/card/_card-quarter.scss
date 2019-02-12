@@ -22,7 +22,7 @@
             ) !important;
     }
 
-    .card-secondary {
+    .card {
         position: relative;
         height: 100%;
         border: 1px solid $card-border-color;
@@ -44,7 +44,7 @@
         }
     }
 
-    .card-secondary .card-body {
+    .card .card-body {
         padding: 5px;
     }
 

@@ -8,7 +8,7 @@
 <p>{$description|clean_html|safe}</p>
 
 {if isset($attachments)}
-<div class="has-attachment card card-secondary collapsible">
+<div class="has-attachment card card collapsible">
     <h5 class="card-heading">
         <a href="#atrtefact-attach" class="text-left collapsed" aria-expanded="false" data-toggle="collapse">
             <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>

@@ -1,4 +1,4 @@
-<div class="card card-secondary">
+<div class="card card">
         <h3 class="card-header profile-block">
             <a href="{$sbdata.url}" class="username">{$sbdata.myname}</a>
             <a href="{$sbdata.profileiconurl}" title="{str tag="editprofileicon" section="artefact.file"}" class="user-icon">

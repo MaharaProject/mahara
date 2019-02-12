@@ -506,7 +506,7 @@ This style of tabs is used for third-level navigation in areas where each page w
 ### card
 A basic card.
 ```
-<div class="card card-secondary">
+<div class="card card">
     <h3 class="card-header has-link">
         <a href="#">Basic card</a>
     </h3>
@@ -541,7 +541,7 @@ A delete card.
 A side card is used in the sideblock area, e.g. on the dashboard for "Online users".
 ```
 <div class="col-md-3 sidebar">
-    <div class="card card-secondary">
+    <div class="card card">
         <h3 class="card-header">
             Side card
             <br>
@@ -569,7 +569,7 @@ A side card without a footer. An examples is the "Tags" sideblock on the dashboa
 ```
 <div class="col-md-3 sidebar">
     <div id="sb-tags">
-        <div class="card card-secondary">
+        <div class="card card">
             <h3 class="card-header has-link">
                 <a href="">Side card<span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
             </h3>
@@ -608,7 +608,7 @@ A dropdown card.
 ### Blocks drop-down card
 This type of drop-down card is used in blocks, for example the "Inbox" block.
 ```
-<div class="bt-inbox card card-block clearfix collapsible">
+<div class="bt-inbox card card-secondary clearfix collapsible">
     <h3 class="title card-header js-heading">
         <a data-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
         Blocks drop-down
@@ -616,7 +616,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
     </h3>
     <div class="block collapse show" id="target" aria-expanded="true">
         <div class="inboxblock list-group">
-            <div class="has-attachment card-secondary collapsible list-group-item">
+            <div class="has-attachment card collapsible list-group-item">
                 <a class="collapsed link-block" data-toggle="collapse" href="#item1" aria-expanded="false">
                     <span class="icon icon-university text-default left" role="presentation" aria-hidden="true"></span>
                     Item 1
@@ -628,7 +628,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
                     </p>
                 </div>
             </div>
-            <div class="has-attachment card-secondary collapsible list-group-item">
+            <div class="has-attachment card collapsible list-group-item">
                 <a class="collapsed link-block" data-toggle="collapse" href="#item2" aria-expanded="false">
                     <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
                     Item 2
@@ -656,7 +656,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
 ### Block layout
 This is the general layout of blocks. An example of this being used is the 'Latest changes I can view' block on the dashboard.
 ```
-<div class="bt-newviews card card-secondary clearfix">
+<div class="bt-newviews card card clearfix">
     <h3 class="title card-header js-heading">Block</h3>
     <div class="block">
         <div class="list-group">
@@ -728,7 +728,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
 This card is used to show a page.
 ```
 <div class="card-quarter card-view">
-    <div class="card card-secondary">
+    <div class="card card">
         <h3 class="card-header has-link">
             <a class="title-link title" href="" title="Dashboard page">Dashboard page</a>
         </h3>
@@ -778,7 +778,7 @@ This card is used to show a submitted page.
 </style>
 ```
 <div class="card-quarter card-view">
-    <div class="card card-secondary card bg-warning">
+    <div class="card card card bg-warning">
         <h3 class="card-header has-link">
             <a class="title-link title" href="" title="Dashboard page">Unnamed page</a>
         </h3>
@@ -850,7 +850,7 @@ This card is used to show a collection.
 </style>
 ```
 <div class="card-quarter card-collection">
-    <div class="card card-secondary
+    <div class="card card
         ">
         <h3 class="card-header has-link">
             <a class="title-link title" href="" title="collection uno">
@@ -1223,7 +1223,7 @@ The profile picture size that is used on side cards. The example is the profile 
 ```
 <div class="col-md-3 sidebar">
     <div id="sb-profile" class="sideblock-1 user-card">
-        <div class="card card-secondary">
+        <div class="card card">
             <h3 class="card-header profile-block">
                 <a href="" class="username">Side card</a> <a href="" title="{str tag=editprofileicon section=artefact.file}" class="user-icon">
                     <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag=editprofileicon section=artefact.file}">

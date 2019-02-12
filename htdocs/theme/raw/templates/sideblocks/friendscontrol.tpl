@@ -1,4 +1,4 @@
-<div class="card card-secondary">
+<div class="card card">
     <h3 class="card-header">
     	{str tag="friendsdescr" section="account"}
     	<span class="float-right">

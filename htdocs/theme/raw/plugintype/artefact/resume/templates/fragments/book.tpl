@@ -1,5 +1,5 @@
 {if $controls}
-<div class="card card-secondary">
+<div class="card card">
     {if !$hidetitle}
     <h3 class="resumeh3 card-header">
         {str tag='book' section='artefact.resume'}

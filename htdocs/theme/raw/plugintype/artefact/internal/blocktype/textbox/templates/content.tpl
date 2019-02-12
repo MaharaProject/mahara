@@ -10,7 +10,7 @@
 
 {if $attachments}
 {* @TODO: this could probably be a reusable template *}
-<div class="has-attachment card card-secondary collapsible">
+<div class="has-attachment card card collapsible">
     <h4 class="card-heading">
         <a class="text-left collapsed" aria-expanded="false" href="#note-attach-{$blockid}" data-toggle="collapse">
             <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>

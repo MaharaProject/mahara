@@ -16,7 +16,7 @@
     {/if}
 
     {if $editurls}
-    <div class="card card-secondary">
+    <div class="card card">
         <h2 class="card-header">
             {str tag=secreturls section=view}
         </h2>

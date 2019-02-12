@@ -1,8 +1,8 @@
 {include file="header.tpl"}
-<div class="card card-secondary card-body">
+<div class="card card card-body">
     {$optionform|safe}
 </div>
-<div class="card card-secondary">
+<div class="card card">
     <h3 class="card-header">{str tag=addcategories section=admin}</h3>
     <div class="card-body">
         <p class="lead text-small description">{str tag=groupcategoriespagedescription section=admin}</p>

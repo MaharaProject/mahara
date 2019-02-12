@@ -1,5 +1,5 @@
 <input type="hidden" name="accesslist" value="">
-<div class="card card-block view-container" id="editaccesswrap"
+<div class="card card-secondary view-container" id="editaccesswrap"
     data-viewtype="{{$viewtype}}"
     data-user-roles='{{$userroles}}'
     data-group-roles='{{$grouproles}}' >

@@ -27,10 +27,10 @@
         display: block;
         color: inherit;
         padding: 10px 15px;
-        border: 1px solid $card-border-color;
+        border: 0 solid $card-border-color;
         border-bottom: 0;
         font-size: $font-size-base * 1.14285;
-        .card-block > & {
+        .card-secondary > & {
             padding: 10px 8px;
             border-width: 0;
         }
@@ -42,7 +42,7 @@
             &.outer-link {
                 background: none;
             }
-            .card-block > & {
+            .card-secondary > & {
                 padding: 10px 8px;
             }
         }
@@ -89,7 +89,7 @@ h3 {
 }
 
 .card {
-    &.collapsible:not(.card-block) {
+    &.collapsible:not(.card-secondary) {
         .card-header {
             border: 0;
             a {

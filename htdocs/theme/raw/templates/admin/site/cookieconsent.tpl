@@ -1,7 +1,7 @@
 {include file="header.tpl"}
     <div class="row">
         <div class="col-md-8">
-              <div class="card card-secondary">
+              <div class="card card">
                  <h3 class="card-header">
                     {str tag=directive2009136 section=cookieconsent}
                  </h3>
@@ -17,7 +17,7 @@
             {$form|safe}
         </div>
         <div class="col-md-4">
-              <div class="card card-secondary last">
+              <div class="card card last">
                 <h3 class="card-header">
                     <span class="icon-language icon left" role="presentation" aria-hidden="true"></span>
                     {str tag=readfulltext1 section=cookieconsent}

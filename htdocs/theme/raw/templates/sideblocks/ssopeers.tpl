@@ -1,5 +1,5 @@
 {if $sbdata}
-<div class="card card-secondary">
+<div class="card card">
     <h3 class="card-heading">
         {str tag="networkservers" section="auth.xmlrpc"}
         <span class="float-right">

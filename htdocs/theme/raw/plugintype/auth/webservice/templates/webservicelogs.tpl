@@ -1,9 +1,9 @@
 {include file="header.tpl"}
 
-<div id="logsearchformcontainer" class="card card-secondary card-body">
+<div id="logsearchformcontainer" class="card card card-body">
 {$form|safe}
 </div>
-<div id="results" class="section card card-secondary">
+<div id="results" class="section card card">
     <h2 class="card-header" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
     <div class="table-responsive">

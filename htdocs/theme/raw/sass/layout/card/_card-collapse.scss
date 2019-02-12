@@ -153,7 +153,7 @@
 }
 
 // @todo: Rethink this, it's too complex
-.card.collapsible:not(.card-block) {
+.card.collapsible:not(.card-secondary) {
     border-width: 0;
     // For attachment collapsible
     &.has-attachment {

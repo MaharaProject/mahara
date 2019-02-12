@@ -1,4 +1,4 @@
-<div class="bt-{$blocktype}-editor js-blockinstance blockinstance card card-block clearfix {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
+<div class="bt-{$blocktype}-editor js-blockinstance blockinstance card card-secondary clearfix {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
     <h3 class="card-header js-heading drag-handle {if !$title}card-heading-placeholder{/if}">
         <span class="icon icon-arrows move-indicator" role="presentation" aria-hidden="true"></span>
         <span class="blockinstance-header">
