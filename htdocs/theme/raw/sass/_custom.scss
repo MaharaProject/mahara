@@ -71,47 +71,6 @@
     z-index: 1;
 }
 
-.layoutthumb {
-    rect.layout1 {
-        fill: scale-color($card-bg, $lightness: -10%);
-        stroke: $card-border-color;
-    }
-
-    rect.layout0 {
-        fill: scale-color($card-bg, $lightness: -5.25%);
-
-        stroke: $card-border-color;
-    }
-
-    svg {
-        @include media-breakpoint-down(md) {
-           zoom: 0.8;
-       }
-    }
-}
-
-// Show that layout thumbnails can be clicked (Bug 1543358)
-.layoutoption > .thumbnail {
-    cursor: pointer;
-    // Add border around layout thumbnails
-    display: block;
-    padding: 4px;
-    margin-bottom: 21px;
-    line-height: $line-height-base;
-    background-color: transparent;
-    border: 1px solid $card-border-color;
-    border-radius: $border-radius-sm;
-    transition: border .2s ease-in-out;
-}
-#createcustomlayoutpane .layoutthumb {
-    border: 1px solid $card-border-color;
-    border-radius: $border-radius-sm;
-    padding: 4px;
-    display: table;
-    overflow: hidden;
-    position: relative;
-}
-
 .blocktype-radio {
     display: none;
 }
@@ -347,11 +306,6 @@
 }
 
 // Choose skin
-.layoutoptions-container {
-    @extend .clearfix;
-    margin-top: 15px;
-}
-.layoutoption,
 .skin {
     float: left;
     margin-bottom: 10px;

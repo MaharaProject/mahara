@@ -72,23 +72,8 @@ Scenario: Clicking ID's (Bug 1428456)
  And I close the config dialog
  And I scroll to the top
 
- # Checking if we can change page layout
- And I follow "Settings" in the "Toolbar buttons" property
- And I expand all fieldsets
- And I scroll to the base of id "addrow"
- And I press "Add a row"
- And I select "25 - 50 - 25" from "selectcollayoutrow_2"
- And I press "Add a row"
- And I select "5" from "selectnumcolsrow_3"
- And I select "20 - 20 - 20 - 20 - 20" from "selectcollayoutrow_3"
- And I press "Add a row"
- And I press "Create new layout"
- Then I should see "4 rows"
- And I press "Save"
- Then I should see "Page saved successfully"
-
 Scenario: Profile and dashboard pages basic settings and skins can't be edited - Bug 1718806
- # Check we can edit layout for dashboard and profile page views
+ # Check we can edit basics for dashboard and profile page views
  # but not be able to change title or skin
 
  Given I log in as "admin" with password "Kupuh1pa!"
@@ -99,7 +84,6 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  And I scroll to the base of id "viewh1"
  And I follow "Edit"
  And I follow "Settings" in the "Toolbar buttons" property
- And I should see "Layout"
  And I should not see "Basics"
  And I should see "Skin"
  And I press "Save"
@@ -109,7 +93,6 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  And I choose "Dashboard" from main menu
  And I follow "Edit dashboard"
  And I follow "Settings" in the "Toolbar buttons" property
- And I should see "Layout"
  And I should not see "Basics"
  And I should see "Skin"
  And I press "Save"

@@ -1236,53 +1236,6 @@ class View {
         db_commit();
     }
 
-    /* Returns preview image for creation of custom layout
-     *
-     * @param array
-     * @return string SVG preview image
-     */
-    public function updatecustomlayoutpreview($values) {
-        require_once(get_config('libroot') . 'layoutpreviewimage.php');
-
-        $require = array('numrows');
-        foreach ($require as $require) {
-            if (!array_key_exists($require, $values) || empty($values[$require])) {
-                throw new ParamOutOfRangeException(get_string('missingparam' . $require, 'error'));
-            }
-        }
-
-        $numrows = $values['numrows'];
-        $collayouts = array();
-        for ($i=0; $i<$numrows; $i++) {
-            if (array_key_exists('row'. ($i+1), $values)) {
-                $collayouts['row' . ($i+1)] = $values['row' . ($i+1)];
-            }
-        }
-
-        $alttext = '';
-        $customlayout = array();
-        for ($i=0; $i<$numrows; $i++) {
-            $id = $collayouts['row' . ($i+1)];
-            $widths = get_field('view_layout_columns', 'widths', 'id', $id);
-            $customlayout[$i+1] = $widths;
-            $hyphenatedwidths = str_replace(',', '-', $widths);
-            $alttext .= $hyphenatedwidths;
-            if ($i != $numrows - 1) {
-                $alttext .= ' / ';
-            }
-        }
-
-        // Generate thumbnail images.
-        $data = array();
-        $data['layout'] = $customlayout;
-        $data['text'] = $alttext;
-
-        $previewlayoutimage = new LayoutPreviewImage($data);
-        $previewimage = $previewlayoutimage->create_preview();
-
-        return $previewimage;
-    }
-
     /*
      * Adds custom layout records to database and returns an array
     * with layout id and image preview.
@@ -2112,8 +2065,6 @@ class View {
             case 'addcolumn': // requires action_addcolumn_\d_row_\d_before_\d
             case 'removecolumn': // requires action_removecolumn_\d_row_\d_column_\d
             case 'changetheme':
-            case 'updatecustomlayoutpreview':
-            case 'addcustomlayout':
             break;
             default:
                 throw new InvalidArgumentException(get_string('noviewcontrolaction', 'error', $action));

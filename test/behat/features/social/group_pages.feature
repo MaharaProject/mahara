@@ -46,7 +46,6 @@ Scenario: Group homepage basic settings and skins can't be edited - Bug 1718806
  And I follow "Edit"
  And I should not see "Settings"
  When I follow "Edit layout"
- And I should see "Layout"
  And I should not see "Basics"
  And I should not see "Skin"
  And I press "Save"

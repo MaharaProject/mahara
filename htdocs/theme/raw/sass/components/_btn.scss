@@ -64,9 +64,6 @@
 .btn {
     vertical-align: baseline;
 
-    .customrow & {
-        margin-top: 25px; // layout builder button alignment
-    }
     input {
         margin-top: 0;
     }
@@ -75,11 +72,6 @@
         display: inline-block;
         float: right;
     }
-}
-
-.customrow + .btn {
-    margin-top: 10px;
-    margin-bottom: 5px;
 }
 
 // Used on pending friends page

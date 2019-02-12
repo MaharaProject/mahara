@@ -108,7 +108,7 @@ list($form, $inlinejavascript) = create_settings_pieform();
 $javascript = array('jquery','js/jquery/jquery-ui/js/jquery-ui.min.js');
 $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/smoothness/jquery-ui.min.css') . '">';
 
-$smarty = smarty($javascript, $stylesheets, array('view' => array('Row', 'removethisrow', 'rownr', 'nrrows')), array('sidebars' => false));
+$smarty = smarty($javascript, $stylesheets, array('view' => array('Row', 'rownr')), array('sidebars' => false));
 
 $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 $smarty->assign('form', $form);
@@ -138,20 +138,16 @@ function create_settings_pieform() {
         $advancedelements = get_advanced_elements();
     }
 
-    list($layoutelements, $hiddenlayoutelements, $inlinejs) = get_layout_elements();
-    $inlinejavascript .= $inlinejs;
-
     if ($canuseskins) {
         list($skinelements, $hiddenskinelements, $inlinejs) = get_skin_elements();
         $inlinejavascript .= $inlinejs;
-        $layoutclasslast = '';
+        $advancedclasslast = '';
     }
     else {
-        $layoutclasslast = 'last';
+        $advancedclasslast = 'last';
     }
 
     //visible elements of the sections
-
     $formelements = array();
 
     if ($canedittitle) {
@@ -164,21 +160,13 @@ function create_settings_pieform() {
         );
         $formelements['advanced'] = array(
             'type'        => 'fieldset',
+            'class'       =>  $advancedclasslast,
             'collapsible' => true,
             'collapsed'   => true,
             'legend'      => get_string('advanced', 'view'),
             'elements'    => $advancedelements
         );
     }
-
-    $formelements['layout'] = array(
-        'type'        => 'fieldset',
-        'collapsible' => true,
-        'collapsed'   => $canedittitle || $canuseskins,
-        'class'       => 'advancedlayoutselect ' . $layoutclasslast,
-        'legend'      => get_string('layout', 'view'),
-        'elements'    => $layoutelements
-    );
 
     if ($canuseskins) {
         $formelements['skin'] = array(
@@ -206,7 +194,6 @@ function create_settings_pieform() {
         ),
     );
 
-    $hiddenelements = array_merge($hiddenelements, $hiddenlayoutelements);
     if ($canuseskins) {
         $hiddenelements = array_merge($hiddenelements, $hiddenskinelements);
     }
@@ -408,129 +395,6 @@ function get_advanced_elements() {
     return $elements;
 }
 
-function get_layout_elements() {
-    global $pieformname, $view, $USER;
-
-    // Layout
-    $numrows = $view->get('numrows');
-    $layoutcolumns = View::$layoutcolumns; // static, all possible column width combinations
-    $layoutrows = $view->get_layoutrows();
-    $maxlayoutrows = View::$maxlayoutrows; // static, max possible rows for custom layouts
-    $basicoptionids = array_keys(
-            get_records_select_assoc(
-                    'view_layout',
-                    'layoutmenuorder > 0 AND iscustom = 0',
-                    array(),
-                    'layoutmenuorder',
-                    'id, id'
-            )
-    );
-    $currentlayout = $view->get('layout');
-    // if not set, use equal width layout for that number of columns
-    if (!$currentlayout) {
-        // if columns have been dynamically added or removed from a multi-row layout,
-        // there may be no valid layout id, in which case none of the layout options will be selected
-        $currentlayout = $view->get_layout()->id;
-    }
-    if (!in_array($currentlayout, $basicoptionids)) {
-        $basicoptionids[] = $currentlayout;
-    }
-
-    $layoutoptions = array();
-    $basiclayoutoptions = array();
-    $maxrows = 3;
-    foreach ($layoutrows as $key => $layout) {
-        $maxrows = (count($layout) > $maxrows)? count($layout) : $maxrows;
-        $layoutoptions[$key]['rows'] = count($layout);
-
-        $structure = array();
-        $rowtext = array();
-        for ($r = 1; $r <= count($layout); $r++) {
-            $widths = $layoutcolumns[$layout[$r]]->widths;
-            $structure['layout']['row' . $r] = $widths;
-            $rowtext[] = str_replace(',', '-', $widths);
-        }
-        $structure['text'] = implode(' / ', $rowtext);
-        $l = new LayoutPreviewImage($structure);
-        $layoutoptions[$key]['layout'] = $l->create_preview();
-        $layoutoptions[$key]['columns'] = $structure['text'];
-    }
-
-    foreach ($basicoptionids as $id) {
-        if (array_key_exists($id, $layoutoptions)) {
-            $basiclayoutoptions[$id] = $layoutoptions[$id];
-        }
-    }
-
-    $clnumcolumnsoptions = array();
-    for ($i=1; $i<6; $i++) {
-        $clnumcolumnsoptions[$i] = $i;
-    }
-
-    $columnlayoutoptions = array();
-    $columnlayouts = get_records_assoc('view_layout_columns');
-    foreach ($columnlayouts as $layout => $percents) {
-        $percentswidths = str_replace(',', ' - ', $percents->widths);
-        $columnlayoutoptions[$layout] = $percentswidths;
-    }
-
-    // provide a simple default to build custom layouts with
-    $defaultcustomlayout = View::default_columnsperrow();
-    $defaultlayout = get_record('view_layout_columns', 'columns', $defaultcustomlayout[1]->columns, 'widths', $defaultcustomlayout[1]->widths);
-    $clnumcolumnsdefault = $defaultlayout->columns;
-    $clwidths = $defaultlayout->widths;
-
-    // Ready custom layout preview.
-    $defaultlayoutpreviewdata['layout']['row1'] = $defaultcustomlayout[1]->widths;
-    $defaultlayoutpreviewdata['text'] = get_string($defaultcustomlayout[1]->widths, 'view');
-    $defaultlayoutpreview = new LayoutPreviewImage($defaultlayoutpreviewdata);
-
-    $inlinejavascript = <<<JAVASCRIPT
-
-function get_max_custom_rows() {
-    return {$maxlayoutrows};
-}
-
-jQuery(function () {
-    formchangemanager.add("{$pieformname}");
-});
-
-JAVASCRIPT;
-
-    $elements = array();
-
-    $elements['layoutselect'] =  array(
-            'type'          => 'layout',
-            'maxrows'       => $maxrows,
-            'options' => $layoutoptions,
-            'currentlayout' => $currentlayout,
-            'clnumcolumnsoptions' => $clnumcolumnsoptions,
-            'clnumcolumnsdefault' => $clnumcolumnsdefault,
-            'columnlayoutoptions' =>$columnlayoutoptions,
-            'customlayoutid' => $defaultlayout->id,
-            'customlayout' => $defaultlayoutpreview->create_preview(),
-    );
-
-    $hiddenelements = array(
-        'customlayoutnumrows' => array(
-                'type'  => 'hidden',
-                'value' => 1,
-        ),
-        'currentlayoutselect' => array(//lo que era 'layoutselect'
-            'type'  => 'hidden',
-            'value' => $currentlayout,
-            'sesskey' =>  $USER->get('sesskey'),
-        ),
-        'layoutfallback' => array(
-            'type'  => 'hidden',
-            'value' => $defaultlayout->id,
-        ),
-    );
-
-    return array($elements, $hiddenelements, $inlinejavascript);
-
-}
-
 function get_skin_elements() {
     global $view, $USER, $pieformname;
     $issiteview = $view->get('institution') == 'mahara';
@@ -630,11 +494,6 @@ JAVASCRIPT;
 function settings_validate(Pieform $form, $values) {
     global $view, $issiteview, $issitetemplate, $canuseskins;
 
-    $layoutrows = $view->get_layoutrows();
-    if (!isset($layoutrows[$values['currentlayoutselect']]) ) {
-        $form->set_error(null, get_string('invalidlayoutselection', 'error'));
-    }
-
     if (isset($values['urlid']) && $values['urlid'] != $view->get('urlid')) {
         if (strlen($values['urlid']) < 3) {
             $form->set_error('urlid', get_string('rule.minlength.minlength', 'pieforms', 3));
@@ -663,8 +522,6 @@ function settings_submit(Pieform $form, $values) {
         set_view_advanced($form, $values);
     }
 
-    set_view_layout($form, $values);
-
     if ($canuseskins && isset($values['skinid'])) {
         $view->set('skin', $values['skinid']);
     }
@@ -673,73 +530,6 @@ function settings_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
     redirect('/view/blocks.php?id=' . $view->get('id'));
   }
-
-function set_view_layout(Pieform $form, $values){
-    global $view, $SESSION;
-
-    $oldrows = $view->get('numrows');
-    $oldlayout = $view->get_layout();
-    $newlayout = $values['currentlayoutselect'];
-    $layoutrows = $view->get_layoutrows();
-    $layoutcolumns = View::$layoutcolumns; // static, all possible column width combinations
-    if (!isset($layoutrows[$newlayout])) {
-        throw new ParamOutOfRangeException(get_string('invalidlayoutselection', 'error'));
-    }
-    else {
-        $newrows = count($layoutrows[$newlayout]);
-    }
-
-    db_begin();
-
-    // for each existing row which will still exist after the update, check whether to add or remove columns
-    for ($i = 0; $i < min(array($oldrows, $newrows)); $i++) {
-        // compare oldlayout column structure with newlayout
-        $oldcolumns = $oldlayout->rows[$i+1]['columns'];
-        $newcolumnindex = $layoutrows[$newlayout][$i+1];
-        $newcolumns = $layoutcolumns[$newcolumnindex]->columns;
-
-        // Specify row when adding or removing columns
-        if ($oldcolumns > $newcolumns) {
-            for ($j = $oldcolumns; $j > $newcolumns; $j--) {
-                $view->removecolumn(array('row' => $i+1, 'column' => $j));
-            }
-        }
-        else if ($oldcolumns < $newcolumns) {
-            for ($j = $oldcolumns; $j < $newcolumns; $j++) {
-                $view->addcolumn(array('row' => $i+1, 'before' => $j+1, 'returndata' => false));
-            }
-        }
-
-        $dbcolumns = get_field('view_rows_columns', 'columns', 'view', $view->get('id'), 'row', $i+1);
-
-        if ($dbcolumns != $newcolumns) {
-            db_rollback();
-            $SESSION->add_error_msg(get_string('changecolumnlayoutfailed', 'view'));
-            redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id'));
-        }
-    }
-    // add or remove rows and move content accordingly if required
-    if ($oldrows > $newrows) {
-        for ($i = $oldrows; $i > $newrows; $i--) {
-            $view->removerow(array('row' => $i, 'layout' => $oldlayout));
-        }
-    }
-    else if ($oldrows < $newrows) {
-        for ($i = $oldrows; $i < $newrows; $i++) {
-            $view->addrow(array('before' => $i + 1, 'newlayout' => $newlayout, 'returndata' => false));
-        }
-    }
-
-    if ($view->get('numrows') != $newrows) {
-        db_rollback();
-        $SESSION->add_error_msg(get_string('changerowlayoutfailed', 'view'));
-        redirect(get_config('wwwroot') . 'view/editlayout.php?id=' . $view->get('id'));
-    }
-
-    db_commit();
-
-    $view->set('layout', $newlayout); //layout
-}
 
 function create_block($bt, $configdata, $view, $column, $blockinfo = null) {
     if ($bt == 'taggedposts') {
@@ -813,7 +603,7 @@ function set_view_title_and_description(Pieform $form, $values) {
                 SELECT vlc.columns
                 FROM {view_layout_rows_columns} vlrc
                 JOIN {view_layout_columns} vlc ON vlc.id = vlrc.columns
-                WHERE vlrc.viewlayout = ? and vlrc.row = ?", array($values['currentlayoutselect'], 1));
+                WHERE vlrc.viewlayout = ? and vlrc.row = ?", array(5, 1));
             require_once('searchlib.php');
             require_once('collection.php');
             $data = array();
