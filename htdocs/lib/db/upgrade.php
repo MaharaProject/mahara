@@ -890,7 +890,8 @@ function xmldb_core_upgrade($oldversion=0) {
                     $configdata['artefactids'] = array($configdata['artefactid']);
                     unset($configdata['artefactid']);
                 }
-                else if (is_null($configdata['artefactid'])) {
+                else if (array_key_exists('artefactid', $configdata)) {
+                    // Key exists and value is NULL
                     $configdata['artefactids'] = array();
                     unset($configdata['artefactid']);
                 }
