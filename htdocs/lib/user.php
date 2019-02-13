@@ -1970,7 +1970,7 @@ function profile_url($user, $full=true, $useid=false) {
 }
 
 /**
- * used by user/myfriends.php and user/find.php to get the data (including pieforms etc) for display
+ * used by user/index.php to get the data (including pieforms etc) for display
  * @param array $userids
  * @return array containing the users in the order from $userids
  */
@@ -2059,14 +2059,14 @@ function get_users_data($userids, $getviews=true) {
     return $ordereddata;
 }
 
-function build_userlist_html(&$data, $page, $admingroups) {
+function build_userlist_html(&$data, $searchtype, $admingroups, $filter='', $query='') {
     if ($data['data']) {
         $userlist = array_map(function($u) { return (int)$u['id']; }, $data['data']);
-        $userdata = get_users_data($userlist, $page == 'myfriends');
+        $userdata = get_users_data($userlist, $searchtype == 'myfriends');
     }
     $smarty = smarty_core();
     $smarty->assign('data', isset($userdata) ? $userdata : null);
-    $smarty->assign('page', $page);
+    $smarty->assign('page', $searchtype);
     $smarty->assign('offset', $data['offset']);
 
     $params = array();
@@ -2078,7 +2078,7 @@ function build_userlist_html(&$data, $page, $admingroups) {
         $params['filter'] = $data['filter'];
     }
 
-    if ($page == 'myfriends') {
+    if ($searchtype == 'myfriends') {
         $resultcounttextsingular = get_string('friend', 'group');
         $resultcounttextplural = get_string('friends', 'group');
     }
@@ -2092,7 +2092,7 @@ function build_userlist_html(&$data, $page, $admingroups) {
     $data['tablerows'] = $smarty->fetch('user/userresults.tpl');
     $pagination = build_pagination(array(
         'id' => 'friendslist_pagination',
-        'url' => get_config('wwwroot') . 'user/' . $page . '.php?' . http_build_query($params),
+        'url' => get_config('wwwroot') . 'user/index.php?' . http_build_query($params),
         'jsonscript' => 'json/friendsearch.php',
         'datatable' => 'friendslist',
         'searchresultsheading' => 'searchresultsheading',
@@ -2104,7 +2104,9 @@ function build_userlist_html(&$data, $page, $admingroups) {
         'numbersincludeprevnext' => 2,
         'resultcounttextsingular' => $resultcounttextsingular,
         'resultcounttextplural' => $resultcounttextplural,
-        'extradata' => array('page' => $page),
+        'extradata' => array('searchtype' => $searchtype),
+        'filter'    => $filter,
+        'query' => $query,
     ));
     $data['pagination'] = $pagination['html'];
     $data['pagination_js'] = $pagination['javascript'];
@@ -2270,23 +2272,27 @@ function friendscontrol_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $USER->set_account_preference('friendscontrol', $values['friendscontrol']);
     $SESSION->add_ok_msg(get_string('updatedfriendcontrolsetting', 'account'));
-    redirect($values['returnto'] == 'find' ? '/user/find.php' : '/user/myfriends.php');
+    redirect('/user/index.php');
 }
 
-function acceptfriend_form($friendid) {
+function acceptfriend_form($friendid, $modalmode='') {
+    $value = ($modalmode == 'modal' ? get_string('approverequest', 'group') : '<span class="icon icon-check icon-lg text-success left" role="presentation" aria-hidden="true"></span>' . get_string('approve', 'group'));
+    $elementclass = $modalmode == 'modal' ? 'form-as-button' : 'form-as-button pull-left';
+    $class = $modalmode == 'modal' ? 'link-unstyled' : 'default btn-secondary';
+
     return pieform(array(
         'name' => 'acceptfriend' . (int) $friendid,
         'validatecallback' => 'acceptfriend_validate',
         'successcallback'  => 'acceptfriend_submit',
         'renderer' => 'div',
-        'class' => 'form-as-button',
+        'class' => $elementclass,
         'autofocus' => 'false',
         'elements' => array(
             'acceptfriend_submit' => array(
                 'type' => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-link btn-text',
-                'value' => get_string('approverequest', 'group'),
+                'class' => $class,
+                'value' =>  $value,
             ),
             'id' => array(
                 'type' => 'hidden',

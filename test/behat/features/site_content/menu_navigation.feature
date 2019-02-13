@@ -43,8 +43,7 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  # Checking the sub navigation in Engage
  When I follow "Engage"
  Then I should see "Groups" in the "Engage sub-menu" property
- And I should see "My friends" in the "Engage sub-menu" property
- And I should see "Find people" in the "Engage sub-menu" property
+ And I should see "People" in the "Engage sub-menu" property
  And I should see "Discussion topics" in the "Engage sub-menu" property
  And I should see "Institution membership" in the "Engage sub-menu" property
 

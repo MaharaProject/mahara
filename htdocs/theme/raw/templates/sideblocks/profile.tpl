@@ -21,7 +21,7 @@
         {/if}
         {if $sbdata.pendingfriends}
             <div id="pendingfriends" class="list-group-item list-group-item-warning list-group-item-profile-notification">
-                <a href="{$WWWROOT}user/myfriends.php?filter=pending">
+                <a href="{$WWWROOT}user/index.php?filter=pending">
                     <span id="pendingfriendscount" class="badge badge-warning">{$sbdata.pendingfriends}</span>
                     <span id="pendingfriendsmessage">{$sbdata.pendingfriendsmessage}</span>
                 </a>

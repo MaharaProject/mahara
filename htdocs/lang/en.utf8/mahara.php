@@ -773,6 +773,7 @@ $string['Create']       = 'Create';
 $string['Engage']       = 'Engage';
 $string['Manage']       = 'Manage';
 $string['settings']     = 'Settings';
+$string['people']       = 'People';
 $string['myfriends']          = 'My friends';
 $string['findpeople']        = 'Find people';
 $string['groups']             = 'Groups';

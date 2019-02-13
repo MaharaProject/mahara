@@ -31,15 +31,21 @@
         <div class="col-md-4">
             <ul class="list-unstyled inner-link text-small user-action-list">
                 {if $user->pending}
-                <li class="approvefriend">
-                    <span class="icon icon-check icon-lg text-success" role="presentation" aria-hidden="true"></span>
-                    {$user->accept|safe}
-                </li>
-                <li class="denyrequest">
-                    <span class="icon icon-ban icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
-                    <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-deny">
-                        {str tag='denyrequest' section='group'}
-                    </a>
+                <p>{str tag="pendingfriend" section="group"}</p>
+                <span class="whymakemeyourfriend">
+                    <strong>
+                        {str tag='whymakemeyourfriend' section='group'}
+                    </strong>
+                    <p>{$user->message|format_whitespace|safe}</p>
+                </span>
+                <li>
+                    <div class="btn-group">
+                        {$user->accept|safe}
+                        <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn btn-secondary">
+                            <span class="icon icon-ban icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
+                            {str tag='deny' section='group'}
+                        </a>
+                    </div>
                 </li>
                 {/if}
                 {if $user->friend}

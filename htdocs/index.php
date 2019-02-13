@@ -102,7 +102,7 @@ $urls = array(
     'resume'  => $wwwroot . 'artefact/resume/index.php',
     'blog'    => $wwwroot . 'artefact/blog/index.php',
     'views'   => $wwwroot . 'view/index.php',
-    'friends' => $wwwroot . 'user/find.php',
+    'friends' => $wwwroot . 'user/index.php?filter=current',
     'groups'  => $wwwroot . 'group/index.php',
     'topics'  => $wwwroot . 'group/topics.php',
     'share'   => $wwwroot . 'view/share.php',

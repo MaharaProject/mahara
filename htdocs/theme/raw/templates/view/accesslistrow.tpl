@@ -11,7 +11,7 @@
           {elseif $accessgroup.accesstype == 'public'}
             {str tag="public" section="view"}
           {elseif $accessgroup.accesstype == 'friends'}
-            <a href="{$WWWROOT}user/myfriends.php" id="link-myfriends">{str tag="friends" section="view"}</a>
+            <a href="{$WWWROOT}user/index.php?filter=current" id="link-myfriends">{str tag="friends" section="view"}</a>
           {elseif $accessgroup.accesstype == 'group'}
             <a href="{$accessgroup.groupurl}">{$accessgroup.name}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
           {elseif $accessgroup.accesstype == 'institution'}

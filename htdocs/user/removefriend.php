@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'engage/myfriends');
+define('MENUITEM', 'engage/people');
 define('SECTION_PAGE', 'removefriend');
 require(dirname(dirname(__FILE__)) . '/init.php');
 
@@ -27,14 +27,11 @@ define('TITLE', get_string('removefromfriends', 'group', display_name($id)));
 $returnto = param_alpha('returnto', 'myfriends');
 $offset = param_integer('offset', 0);
 switch ($returnto) {
-    case 'find':
-        $goto = 'user/find.php';
-        break;
     case 'view':
         $goto = profile_url($user, false);
         break;
     default:
-        $goto = 'user/myfriends.php';
+        $goto = 'user/index.php?filter=current';
 }
 $goto .= (strpos($goto,'?') ? '&' : '?') . 'offset=' . $offset;
 $goto = get_config('wwwroot') . $goto;
@@ -99,14 +96,11 @@ function removefriend_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('friendformremovesuccess', 'group', display_name($id)));
     $offset = param_integer('offset', 0);
     switch (param_alpha('returnto', 'myfriends')) {
-        case 'find':
-            $goto = 'user/find.php';
-            break;
         case 'view':
             $goto = profile_url($user, false);
             break;
         default:
-            $goto = 'user/myfriends.php';
+            $goto = 'user/index.php?filter=current';
             break;
     }
     $goto .= (strpos($goto,'?')) ? '&offset=' . $offset : '?offset=' . $offset;

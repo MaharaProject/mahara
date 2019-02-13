@@ -161,7 +161,7 @@ $returnto = param_alpha('returnto', 'myfriends');
 $offset = param_integer('offset', 0);
 switch ($returnto) {
     case 'find':
-        $goto = 'user/find.php';
+        $goto = 'user/index.php';
         break;
     case 'view':
         $goto = profile_url($user, false);

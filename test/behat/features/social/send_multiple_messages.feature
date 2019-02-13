@@ -14,14 +14,14 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    # Log in as "Admin" user
    Given I log in as "admin" with password "Kupuh1pa!"
    # Sending message 1
-   And I choose "Find people" in "Engage" from main menu
+   And I choose "People" in "Engage" from main menu
    And I follow "Angela"
    And I follow "Send message"
    And I fill in the following:
    | Subject   | Hi there |
    | Message   | This is a test message   |
    And I press "Send message"
-   And I choose "Find people" in "Engage" from main menu
+   And I choose "People" in "Engage" from main menu
    And I follow "Angela"
    And I follow "Request friendship"
    #Sending a friend request with more than 255 characters (Bug 1373670)

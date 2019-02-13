@@ -228,7 +228,7 @@ abstract class PluginSearch extends Plugin implements IPluginSearch {
     public static function header_search_form() {
         return pieform(array(
                 'name'                => 'usf',
-                'action'              => get_config('wwwroot') . 'user/find.php',
+                'action'              => get_config('wwwroot') . 'user/index.php',
                 'renderer'            => 'oneline',
                 'autofocus'           => false,
                 'validate'            => false,
