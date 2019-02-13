@@ -11,6 +11,9 @@
 }
 .notification-parent {
     .bulk-actions {
+        label {
+            font-size: 16px;
+        }
         @include media-breakpoint-up(sm) {
             float: left;
         }
