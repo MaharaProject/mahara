@@ -129,17 +129,17 @@ $card-border:                               #ccc;
 $card-inner-border:          #ddd;
 $card-footer-bg:             #f5f5f5;
 
-$card-secondary-text:          $gray-700;
-$card-secondary-border:        #ddd;
-$card-secondary-heading-bg:    #f9f9f9;
+$card-text:          $gray-700;
+$card-border:        #ddd;
+$card-heading-bg:    #f9f9f9;
 
 $card-primary-text:          $gray-700;
 $card-primary-border:        #ddd;
 $card-primary-heading-bg:    #fff;
 
-$card-block-text:         $primary;
-$card-block-border:       $primary;
-$card-block-heading-bg:   darken($card-secondary-heading-bg, 2%);
+$card-secondary-text:         $primary;
+$card-secondary-border:       $primary;
+$card-secondary-heading-bg:   darken($card-heading-bg, 2%);
 
 $card-success-text:          $state-success-text;
 $card-success-border:        $state-success-border;
