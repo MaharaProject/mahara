@@ -279,7 +279,8 @@ a.admin-site {
 }
 
 .custom-dropdown > ul > li > span {
-    background-color: #767676;
+    background-color: {$data.background};
+    color: {$data.backgroundfg};
 }
 /* this is for the timeline */
 .jtline .filling-line {
@@ -301,4 +302,9 @@ a.admin-site {
 .cd-timeline-navigation a::after,
 .cd-timeline-navigation-second a::after {
     color: {$data.background};
+}
+
+.progress-bar {
+    background-color: {$data.background};
+    color: {$data.backgroundfg};
 }
