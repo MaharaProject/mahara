@@ -9,6 +9,7 @@
 }
 .navbar-default .navbar-toggle {
     border-color: transparent;
+    background-color: transparent;
 }
 .navbar-default .navbar-collapse {
     border-color: transparent;

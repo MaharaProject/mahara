@@ -261,12 +261,12 @@ jQuery(function($) {
 
     $('.navbar-main .navbar-collapse.collapse').on('show.bs.collapse', function(event) {
         event.stopPropagation();
-        $('.navbar-collapse.collapse.in').collapse('hide');
+        $('.navbar-collapse.collapse.show').collapse('hide');
     });
 
     $('.navbar-main .child-nav.collapse').on('show.bs.collapse', function(event) {
         event.stopPropagation();
-        $('.child-nav.collapse.in').collapse('hide');
+        $('.child-nav.collapse.show').collapse('hide');
     });
 
     affixSize();
@@ -298,7 +298,7 @@ jQuery(function($) {
             (event.type=='click' && !$(event.target).closest('.navbar-toggle').length) ||
             (event.type == 'keyup' && event.keyCode == keyESCAPE)
         ) {
-            $('.navbar-collapse.collapse.in').collapse('hide');
+            $('.navbar-collapse.collapse.show').collapse('hide');
         }
     });
 
