@@ -47,8 +47,6 @@
         }
 
         @include media-breakpoint-down(sm) {
-            margin-left: 0;
-            margin-right: 0;
             border-width: 1px 0 0 0;
         }
 
