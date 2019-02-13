@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'engage/mygroups');
+define('MENUITEM', 'engage/index');
 define('MENUITEM_SUBPAGE', 'info');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
@@ -23,7 +23,7 @@ if ($id = param_integer('id', null)) {
 
     if (!group_user_can_configure($id)) {
         $SESSION->add_error_msg(get_string('canteditdontown', 'group'));
-        redirect('/group/mygroups.php');
+        redirect('/group/index.php');
     }
 
     $group_data = group_get_groups_for_editing(array($id));
@@ -128,7 +128,7 @@ $form = array(
             'type'         => 'submitcancel',
             'class'        => 'btn-primary',
             'value'        => array(get_string('savegroup', 'group'), get_string('cancel')),
-            'goto'         => get_config('wwwroot') . 'group/mygroups.php',
+            'goto'         => get_config('wwwroot') . 'group/index.php',
         ),
     ),
 );
@@ -295,7 +295,7 @@ if ($cancreatecontrolled) {
     $elements['hidden'] = array(
         'type'         => 'switchbox',
         'title'        => get_string('hiddengroup', 'group'),
-        'description'  => get_string('hiddengroupdescription1', 'group'),
+        'description'  => get_string('hiddengroupdescription2', 'group'),
         'defaultvalue' => $group_data->hidden,
     );
     $elements['hidemembers'] = array(
@@ -493,7 +493,7 @@ function editgroup_validate(Pieform $form, $values) {
 }
 
 function editgroup_cancel_submit() {
-    redirect('/group/mygroups.php');
+    redirect('/group/index.php');
 }
 
 function editgroup_submit(Pieform $form, $values) {

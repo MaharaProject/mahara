@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'engage/mygroups');
+define('MENUITEM', 'engage/index');
 define('MENUITEM_SUBPAGE', 'forums');
 define('SECTION_PLUGINTYPE', 'interaction');
 define('SECTION_PLUGINNAME', 'forum');

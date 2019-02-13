@@ -777,7 +777,6 @@ $string['myfriends']          = 'My friends';
 $string['findpeople']        = 'Find people';
 $string['groups']             = 'Groups';
 $string['mygroups']           = 'My groups';
-$string['findgroups']         = 'Find groups';
 $string['returntosite']       = 'Return to site';
 $string['administration'] = 'Administration';
 $string['siteinformation']    = 'Site information';

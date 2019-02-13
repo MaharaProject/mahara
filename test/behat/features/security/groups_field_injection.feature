@@ -11,7 +11,7 @@ Background:
 
 Scenario:Injecting sql in groups search field
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I click on "Create group"
     And I set the following fields to these values:
     | Group name | <script>alert(1);</script> |

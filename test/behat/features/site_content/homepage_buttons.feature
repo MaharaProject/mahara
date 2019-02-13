@@ -13,7 +13,7 @@ Scenario: Checking navigation of the big homepage buttons
  Then I should see "Share" in the "h1 heading" property
  And I am on homepage
  And I click on "Find people and join groups"
- Then I should see "Find groups" in the "h1 heading" property
+ Then I should see "Groups" in the "h1 heading" property
  And I am on homepage
  And I click on "Hide information box"
  Then I should see "You have hidden the information box."

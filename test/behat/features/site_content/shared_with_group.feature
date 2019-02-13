@@ -75,7 +75,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"
     Then I should see "Access rules were updated for 2 pages"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I follow "GroupA"
     # the formats "strftimedate" and "j F Y" both resolve to dd Month YYYY, which is wanted here.
     And I should see the date "today" in the "#sharedcollectionlist" element with the format "d F Y"
@@ -100,7 +100,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"
     # Check the list of shared pages to group "GroupA"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I follow "GroupA"
     And I should see "Page UserA_05"
     And I should see "Collection UserA_05"
@@ -121,7 +121,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I log out
     #Displaying shared pages in most recently updated order (Bug 1490569)
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I follow "GroupB"
     And I follow "Edit"
     And I scroll to the id "column-container"

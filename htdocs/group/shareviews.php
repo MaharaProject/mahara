@@ -15,7 +15,7 @@ require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 define('TITLE', get_string('share', 'view'));
 define('SUBSECTIONHEADING', TITLE);
-define('MENUITEM', 'engage/mygroups');
+define('MENUITEM', 'engage/index');
 define('MENUITEM_SUBPAGE', 'share');
 
 define('GROUP', param_integer('group'));

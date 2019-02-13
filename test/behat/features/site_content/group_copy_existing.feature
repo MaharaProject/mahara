@@ -34,7 +34,7 @@ Scenario: Group admin pushes a Group page and collection to existing group membe
     # Verifying log in was successful
     And I should see "Angela"
     # Browse to the Share > Advanced options
-    When I choose "My groups" in "Engage" from main menu
+    When I choose "Groups" in "Engage" from main menu
     And I click on "GroupA"
     And I follow "Share (tab)"
     And I click on "Edit access" in "Collection GroupA_01" row

@@ -66,7 +66,7 @@ class PluginArtefactBlog extends PluginArtefact {
         }
         else if ($groupid) {
             define('GROUP', $groupid);
-            define('MENUITEM', 'engage/mygroups');
+            define('MENUITEM', 'engage/index');
             define('MENUITEM_SUBPAGE', 'blogs');
         }
         else {

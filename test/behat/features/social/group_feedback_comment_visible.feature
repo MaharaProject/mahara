@@ -20,7 +20,7 @@ Given the following "pages" exist:
 
 Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     # Changing the settings of the block to change comment notification
     And I click on "Settings" in "Group A" row
     And I set the following fields to these values:
@@ -46,7 +46,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
 # Original feature title: Sending notification message when someone leaves a comment in a group page
 Scenario: Adding a comment on a group page (Bug 1426983) and verifying the notification message.
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I follow "GroupA"
     And I follow "Pages and collections (tab)"
     # And I click on "Pages"

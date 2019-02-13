@@ -21,7 +21,7 @@ Given the following "users" exist:
 
 Scenario: Create forum and add block to group page
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I follow "Edit \"GroupA\" Settings"
     And I follow "Forums (tab)"
     And I follow "New forum"
@@ -78,7 +78,7 @@ Scenario: Create forum and add block to group page
 
 Scenario: Administrative forum bulk actions
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I follow "Edit \"GroupA\" Settings"
     And I follow "Forums (tab)"
     And I follow "New forum"

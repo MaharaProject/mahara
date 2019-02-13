@@ -11,7 +11,7 @@ Given the following "users" exist:
 
 Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "My groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
     And I follow "Create group"
     And I set the following fields to these values:
     | Group name | Turtles |
@@ -50,7 +50,10 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
 
 # User joins group and unsubscribes from Freshwater turtles forum
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Find groups" in "Engage" from main menu
+    And I choose "Groups" in "Engage" from main menu
+    And I select "All groups" from "filter"
+    And I press "Search"
+    And I wait "1" seconds
     And I press "Join this group"
     And I follow "Forums (tab)"
     And I should see "Unsubscribe" in the "General discussion" row

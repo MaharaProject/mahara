@@ -14,7 +14,6 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 $groupid = param_integer('id');
-$returnto = param_alpha('returnto', 'mygroups');
 
 define('GROUP', $groupid);
 $group = group_current_group();
@@ -29,7 +28,7 @@ if (!group_user_can_leave($group)) {
     throw new AccessDeniedException(get_string('cantleavegroup', 'group'));
 }
 
-$goto = get_config('wwwroot') . 'group/' . $returnto . '.php' . ($returnto == 'view' ? ('?id=' . $groupid) : '');
+$goto = get_config('wwwroot') . 'group/index.php';
 
 $form = pieform(array(
     'name' => 'leavegroup',
@@ -42,10 +41,6 @@ $form = pieform(array(
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => $goto
-        ),
-        'returnto' => array(
-            'type' => 'hidden',
-            'value' => $returnto
         )
     ),
 ));
