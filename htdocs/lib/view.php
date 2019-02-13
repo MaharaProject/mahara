@@ -2592,6 +2592,11 @@ class View {
                             if (isset($jsfile['initjs'])) {
                                 $initjavascripts[] = $jsfile['initjs'];
                             }
+                            if (isset($jsfile['extrafilejs']) && is_array($jsfile['extrafilejs'])) {
+                                foreach ($jsfile['extrafilejs'] as $extrafilejs) {
+                                    $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $extrafilejs);
+                                }
+                            }
                         }
                         else if (is_string($jsfile)) {
                             $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);;

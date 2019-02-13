@@ -284,6 +284,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
         $jsfile = call_static_method($playerclass, 'get_js_library');
         $jsblock = call_static_method($playerclass, 'get_js_initjs', $artefact, $instance, $width, $height);
+        $extrafilejs = call_static_method($playerclass, 'get_js_library_extra');
 
         $js = array();
         if ($jsfile) {
@@ -291,6 +292,9 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         }
         if ($jsblock) {
             $js['initjs'] = $jsblock;
+        }
+        if ($extrafilejs) {
+            $js['extrafilejs'] = $extrafilejs;
         }
         if ($js) {
             return array($js);
@@ -373,6 +377,15 @@ abstract class MaharaMediaPlayer {
      * @return array
      */
     public static function get_js_library() { return false; }
+
+    /**
+     * Returns extra JS library needed display a mediaplayer of this type.
+     * in case we need to include more than one js file, eg lang files
+     *
+     * @return array
+     */
+
+    public static function get_js_library_extra() { return false; }
 
     /**
      * Returns a JS snippet needed to initialize a mediaplayer of this type (or boolean false if none)
@@ -514,7 +527,7 @@ class MaharaMediaPlayer_html5audio extends MaharaMediaPlayer {
             height="'.self::VIDEOJS_CONTROL_HEIGHT.'"
         >
             <source src="' . $url . '" type="' . $mimetype . '"/>
-            ' . get_string('browsercannotplay1', 'blocktype.internalmedia') . '
+            ' . get_string('browsercannotplay1', 'blocktype.file/internalmedia') . '
         </audio>';
     }
 
@@ -568,12 +581,21 @@ class MaharaMediaPlayer_html5video extends MaharaMediaPlayer {
             height="' . $height . '"
         >
             <source src="' . $url . '" type="' . $mimetype . '"/>
-            ' . get_string('browsercannotplay1', 'blocktype.internalmedia') . '
+            ' . get_string('browsercannotplay1', 'blocktype.file/internalmedia') . '
         </video>';
     }
 
     public static function get_js_library() {
         return 'videojs/video.js';
+    }
+
+    public static function get_js_library_extra() {
+        global $USER;
+
+        $lang = get_user_language($USER->get('id'));
+        $lang = str_replace('.utf8', '', $lang);
+
+        return array("videojs/lang/$lang.js");
     }
 
     public static function get_js_initjs(ArtefactType $artefact, BlockInstance $block, $width, $height) {
