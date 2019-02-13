@@ -5,7 +5,6 @@
 .btn-group .form-as-button {
     .btn {
         @include border-right-radius(0);
-        border-right-width: 0;
     }
 }
 

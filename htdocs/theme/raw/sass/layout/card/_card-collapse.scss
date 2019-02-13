@@ -158,7 +158,7 @@
     // For attachment collapsible
     &.has-attachment {
         border-radius: $border-radius-sm;
-        border-width: 1px;
+        border-width: 0 0 1px 0;
         .card-header a {
             border-width: 0;
             &:not(.collapsed) {

@@ -3,11 +3,11 @@
 //Arrow component variables
 $arrow-color: #0162a7;
 $arrow-text-color: #fff;
-$arrow-link-color: #677D1E;
 $arrow-link-hover-color: #000000;
 $arrow-link-active-color: #333333;
 $arrow-link-background-color: #fff;
-$arrow-link-group-color: lighten(#0162a7, 5%);
+
+$arrow-alt-color: #677D1E;
 
 // color for the secondary title in sections (cf. groups)
 $section-heading-color: #999;
@@ -24,8 +24,6 @@ $rss-icon-color: #FE6500;
 
 // Bootstrap 3 legacy variables
 
-// Colors
-$brand-default:         #ECECEC;
 
 //== Buttons
 
@@ -45,8 +43,6 @@ $btn-success-border:             darken($theme-primary-color, 5%);
 
 
 //== Navbar
-$navbar-collapse-max-height:       340px;
-
 $navbar-default-color:             #FFFFFF;
 $navbar-default-bg:                #0162a7;
 $navbar-default-border:            transparent;
@@ -107,9 +103,3 @@ $nav-tabs-active-link-hover-border-color:   $theme-primary-color;
 
 $nav-tabs-justified-link-border-color:            #f7f7f7;
 $nav-tabs-justified-active-link-border-color:     $body-bg;
-
-
-//== Cards
-
-$card-secondary-text:         $gray-900;
-$card-secondary-border:       $theme-primary-color;

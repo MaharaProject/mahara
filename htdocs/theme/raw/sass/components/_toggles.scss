@@ -8,10 +8,17 @@
         z-index: 3;
         left: 90px;
         display: block;
-        width: 25px;
-        height: 25px;
+        width: 29px;
+        height: 29px;
         @include media-breakpoint-up(md) {
             left: 45px;
+        }
+        img {
+          left: 1px;
+        }
+        &:hover,
+        &:focus {
+            background-color: $navbar-default-toggle-hover-bg;
         }
     }
 }
@@ -59,6 +66,10 @@
         background-color: transparent;
         @include media-breakpoint-up(md) {
             border-left-width: 1px;
+        }
+        &:hover,
+        &:focus {
+            background-color: $navbar-default-toggle-hover-bg;
         }
     }
 

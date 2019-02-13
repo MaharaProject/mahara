@@ -47,6 +47,8 @@
         input[type=text] {
             width: calc(100% - 43px);
             float: left;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
             @include media-breakpoint-up(md) {
                 width: auto;
             }

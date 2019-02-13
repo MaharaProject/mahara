@@ -209,7 +209,7 @@ $logged-in-height-phone: 120px;
                 margin: 0;
             }
 
-            @include media-breakpoint-down(xs) {
+            @include media-breakpoint-down(sm) {
                 font-size: 26px;
                 margin: 0;
             }
@@ -304,7 +304,7 @@ $logged-in-height-phone: 120px;
                     margin: 0;
                 }
 
-                @include media-breakpoint-down(xs) {
+                @include media-breakpoint-down(sm) {
                     font-size: 26px;
                 }
             }

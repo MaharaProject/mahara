@@ -250,7 +250,7 @@ textarea.resizable {
     content: "\f073";
     color: scale-color($theme-text-color, $lightness: 25%);
     position:relative;
-    right: 20px;
+    right: 25px;
 }
 .hasDatepickerwrapperacl:after {
     font-family: "FontAwesome";
@@ -260,7 +260,7 @@ textarea.resizable {
     right: 10px;
     position: absolute;
     font-size: 16px;
-    top: 3px;
+    top: 5px;
 }
 .date-picker {
     position: relative;

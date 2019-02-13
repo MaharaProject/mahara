@@ -30,6 +30,11 @@
             padding-left: 60px;
             padding-right: 30px;
         }
+        .order-sort-control {
+            float: left;
+            border: 0;
+            padding: 1px 7px;
+        }
         .single-arrow-up {
             padding-right: 32px;
         }
@@ -38,9 +43,6 @@
             .icon-long-arrow-down {
                 padding-left: 3px !important;
             }
-        }
-        .order-sort-control {
-            float: left;
         }
         form[name^="removeview"] {
             position: absolute;

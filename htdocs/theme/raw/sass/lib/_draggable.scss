@@ -8,6 +8,9 @@
     border-left: none; // Don't need side borders because the elements are inside card
     border-right: none;
 }
+.btn-draggable .btn-group-vertical > .ui-draggable {
+    margin-left: 0;
+}
 
 .btn-draggable .btn-group-vertical > .btn,
 .list-group.ui-sortable .ui-draggable-dragging {
@@ -16,6 +19,7 @@
     font-size: $font-size-base;
     padding: 10px 12px 10px 35px;
     text-align: left;
+    border-radius: 0;
 
     &:before {
         box-sizing: border-box;
@@ -36,6 +40,7 @@
     }
     &.checkbox {
         margin-top: -1px;
+        margin-bottom: 0;
     }
     .checkbox {
         right: 10px;

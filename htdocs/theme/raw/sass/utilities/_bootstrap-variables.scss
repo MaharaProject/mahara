@@ -224,6 +224,7 @@ $container-max-widths: () !default;
 // stylelint-disable-next-line scss/dollar-variable-default
 $container-max-widths: map-merge(
   (
+    sm: null,
     md: 750px,
     lg: 970px,
     xl: 1170px
@@ -251,11 +252,11 @@ $line-height-sm:                            1.5 !default;
 $border-width:                              1px !default;
 $border-color:                              $gray-300 !default;
 
-$border-radius:                             0.125rem !default;
-$border-radius-lg:                          .25rem !default;
+$border-radius:                             .25rem !default;
+$border-radius-lg:                          .3rem !default;
 $border-radius-sm:                          .2rem !default;
 
-$rounded-pill:                50rem !default;
+$rounded-pill:                              50rem !default;
 
 $box-shadow-sm:                             0 .125rem .25rem rgba($black, .075) !default;
 $box-shadow:                                0 .5rem 1rem rgba($black, .15) !default;

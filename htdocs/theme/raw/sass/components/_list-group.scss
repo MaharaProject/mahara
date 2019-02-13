@@ -235,6 +235,9 @@
         @extend .clearfix;
         margin: 10px 0;
     }
+    &.ui-sortable-handle {
+        border-bottom: 1px solid $list-group-border-color;
+    }
 }
 
 .list-group-item-default{

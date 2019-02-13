@@ -21,7 +21,7 @@
 // custom block heading
 .column-layout {
     &:nth-child(3n+1) {
-        .card-block {
+        .card-secondary {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: #047DB1;
                 color: #FFFFFF;
@@ -45,7 +45,7 @@
         }
     }
     &:nth-child(3n+2) {
-        .card-block {
+        .card-secondary {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: #A66700;
                 color: #FFFFFF;
@@ -69,7 +69,7 @@
         }
     }
     &:nth-child(3n+3) {
-        .card-block {
+        .car-secondary {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: #773f97;
                 color: #FFFFFF;

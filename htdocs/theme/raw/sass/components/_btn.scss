@@ -51,6 +51,15 @@
 .btn-text {
     color: inherit;
     padding:0;
+		background: none;
+		border: 0;
+		box-shadow: none;
+		&:hover,
+		&:focus {
+				background: none;
+				border: 0;
+				box-shadow: none;
+		}
 }
 
 .btn {
@@ -85,11 +94,11 @@
         line-height: 30px;
         text-align: left;
         &:first-child {
-            border-radius: 0 0 0 3px;
+            border-radius: 0 0 0 $border-radius;
             border-bottom: 1px solid $card-border-color;
         }
         &:last-child {
-            border-radius: 0 0 3px 0;
+            border-radius: 0 0 $border-radius 0;
 
         }
         .btn {
@@ -175,11 +184,6 @@ h1 ~ div > .btn-group-top,
             margin: 0;
         }
     }
-	&.btn-top-right {
-		.pieform {
-			width: 100%;
-		}
-	}
 }
 
 .nav-tabs +  div.btn-group-top{
@@ -466,4 +470,20 @@ td.action-list-copy {
 	font-size: $font-size-base / 1.1665;
 	border: 1px solid $btn-secondary-border;
 	padding: 0.14375rem 0.625rem;
+}
+
+.card.first .card-header {
+		a:not(.secondary-link),
+		a.btn-sm {
+			border-radius: $border-radius-sm;
+
+			&:last-child {
+					border-top-left-radius: 0;
+					border-bottom-left-radius: 0;
+			}
+			&:first-child {
+					border-top-right-radius: 0;
+					border-bottom-right-radius: 0;
+			}
+		}
 }

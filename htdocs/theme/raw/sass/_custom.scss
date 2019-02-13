@@ -294,7 +294,7 @@
         margin: 0;
         border: 1px solid #ccc;
         background: #fff;
-        box-shadow: 0 0 0 4px #fff, 0 0 1px 4px #333;
+        box-shadow: 0 0 3px 5px #f8f8f8;
     }
 }
 
@@ -608,6 +608,7 @@
 #searchviews_matchalltags_container {
     width: 300px;
     margin-left: 5px;
+    margin-top: 21px;
     label {
         margin-left: 28px;
     }
@@ -615,6 +616,8 @@
         margin-left: 3px;
         margin-top: -20px;
         float: left;
+        width: auto;
+        height: auto;
     }
     div {
         margin-left: 3px;
@@ -700,4 +703,67 @@ a[type="submit"],
 // Mostly used to make the table matrix popups work
 .d-none.popover {
     visibility: hidden;
+}
+
+// Notifications search and bulk action select alignment
+.form-inline {
+    input {
+        @extend .form-control;
+    }
+}
+.notification-parent {
+    .bulk-actions {
+        input {
+            margin-top: 1px;
+        }
+        button {
+            height: calc(2.0625rem + 2px);
+        }
+    }
+}
+
+// Pages and collections sort by input alignment
+#searchviews_submit_container {
+    margin-left: 0;
+}
+
+// Share with me search filter
+#search_submit {
+    margin-left: 0;
+}
+#search_share_container {
+    label {
+        margin-top: 13px;
+    }
+}
+
+// Find groups search
+#search_searchfield {
+    color: $btn-primary-color;
+    background-color: $btn-primary-bg;
+    border: $btn-primary-border;
+    border-radius: $border-radius;
+    width: auto;
+    margin-top: 12px;
+}
+
+// My Friends search filter
+#filter_submit {
+    margin-left: 0;
+}
+
+// Find people results approve request alignment
+.approvefriend .pieform {
+    display: inline-block;
+    margin-left: 3px;
+    button {
+        font-size: $font-size-sm;
+    }
+}
+
+// Manage collections
+.collection-pages {
+    button.btn-sm {
+        border: 0;
+    }
 }

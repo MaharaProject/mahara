@@ -1,16 +1,12 @@
 @import "../typography/fonts";
-@import "../typography/tables";
 
 // General customisation and component files go here...
 @import "../layout/col-collapse";
 @import "../layout/footer";
-@import "../layout/header";
-@import "../layout/profile-block";
 
 // Cards are a very commonly used layout component
 @import "../layout/card/card-footer";
 @import "../layout/card/card-header";
-@import "../layout/card/card-block";
 @import "../layout/card/card-secondary";
 
 // Navigation

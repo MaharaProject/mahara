@@ -3,7 +3,7 @@
 .list-group,
 .card-header {
     .btn-group {
-        @include media-breakpoint-down(xs) {
+        @include media-breakpoint-down(sm) {
             &.btn-group-top .btn {
                 border-top: 0;
             }

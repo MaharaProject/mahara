@@ -1,5 +1,5 @@
 .arrow-bar {
-    background-color: $arrow-link-group-color;
+    background-color: lighten(#0162a7, 5%);
 
     // to theme the Résumé nav and Groups nav green
     &.resume,
@@ -7,9 +7,9 @@
         background-color: #5B6E1C;
 
         .arrow {
-            background-color: $arrow-link-color;
+            background-color: $arrow-alt-color;
             &:after {
-                border-left-color: $arrow-link-color;
+                border-left-color: $arrow-alt-color;
             }
         }
         .nav-inpage {
@@ -29,8 +29,6 @@
             }
         }
     }
-
-
 
     .nav-inpage {
         &.nav > li {
