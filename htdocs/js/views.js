@@ -269,7 +269,6 @@
         attachAccordion();
         attachToolbarToggle();
 
-
         // Rewrite the configure buttons to be ajax
         rewriteConfigureButtons();
 
@@ -279,15 +278,6 @@
         // Show the keyboard-accessible ajax move buttons
         rewriteMoveButtons();
 
-        // Rewrite the 'add column' buttons to be ajax
-        rewriteAddColumnButtons();
-
-        // Rewrite the 'remove column' buttons to be ajax
-        rewriteRemoveColumnButtons();
-
-        // Ensure the enabled/disabled state of the add/remove buttons is correct
-        checkColumnButtonDisabledState();
-
         // Setup the 'add block' dialog
         setupPositionBlockDialog();
 
@@ -295,7 +285,6 @@
 
         makeNewBlocksDraggable();
         makeExistingBlocksSortable();
-
 
         $(workspace).show();
 
@@ -403,8 +392,6 @@
             }
         });
     }
-
-
 
     function loadCookieContentEditorCollapsed() {
         if (document.cookie) {
@@ -956,124 +943,6 @@
     }
 
     /**
-     * Rewrites the add column buttons to be AJAX
-     *
-     */
-    function rewriteAddColumnButtons() {
-        $('[data-action="addcolumn"]').each(function() {
-
-            $(this).off('click'); // prevent double binding
-
-            $(this).on('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-
-                // Work around for a konqueror bug - konqueror passes onclick
-                // events to disabled buttons
-                if (!$(this).disabled) {
-                    $(this).prop('disabled', true);
-
-                    var name = $(this).attr('name'),
-                        match = name.match(/action_addcolumn_row_(\d+)_before_(\d+)/),
-                        rowid = parseInt(match[1], 10),
-                        colid = parseInt(match[2], 10),
-                        pd   = {'id': $('#viewid').val(), 'change': 1};
-
-
-                    pd['action_addcolumn_row_' + rowid + '_before_' + colid] = 1;
-
-                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-
-                        addColumn(rowid, colid, data);
-                        checkColumnButtonDisabledState();
-
-                    }, function() {
-
-                        checkColumnButtonDisabledState();
-
-                    });
-                }
-
-            });
-        });
-    }
-
-    /**
-     * Rewrite the remove column buttons to be AJAX
-     *
-     * If the first parameter is a string/element, only the buttons below that
-     * element will be rewritten
-     */
-    function rewriteRemoveColumnButtons() {
-        workspace.find('.removecolumn').off('click'); // prevent double binding
-
-        workspace.find('.removecolumn').on('click', function(e) {
-
-            e.stopPropagation();
-            e.preventDefault();;
-
-            // Work around for a konqueror bug - konqueror passes onclick
-            // events to disabled buttons
-            if (!this.disabled) {
-                $(this).attr('disabled', 'disabled');
-
-                var name = $(this).attr('name'),
-                    match = name.match(/action_removecolumn_row_(\d+)_column_(\d+)/),
-                    rowid = parseInt(match[1], 10),
-                    colid = parseInt(match[2], 10),
-                    pd   = {'id': $('#viewid').val(), 'change': 1};
-
-                pd['action_removecolumn_row_' + rowid + '_column_' + colid] = 1;
-                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-
-                    removeColumn(rowid, colid);
-                    checkColumnButtonDisabledState();
-
-                }, function() {
-
-                    checkColumnButtonDisabledState();
-
-                });
-            }
-        });
-    }
-
-    /**
-     * Disables the 'add column' buttons
-     */
-    function checkColumnButtonDisabledState() {
-        // For each row
-        workspace.find('.js-col-row').each(function() {
-
-            // Get the existing number of columns
-            var match = $(this).find('.column'),
-                numColumns = match.length,
-                state = (numColumns === 5);
-
-
-            $('.addcolumn', $(this)).each(function() {
-                if (state) {
-                    $(this).prop('disabled', true);
-                }
-                else {
-                    $(this).prop('disabled', false);
-                }
-            });
-
-            state = (numColumns === 1);
-
-            $('.removecolumn', $(this)).each(function() {
-                if (state) {
-                    $(this).prop('disabled', true);
-                }
-                else {
-                    $(this).prop('disabled', false);
-                }
-            });
-        });
-    }
-
-    /**
      * return true if the mousedown is <LEFT BUTTON> or the keydown is <Space> or <Enter>
      */
     function isHit(e) {
@@ -1335,118 +1204,6 @@
         });
         return {'row': row, 'column': column, 'order': order};
     }
-
-    function renumberColumns(rowid) {
-        var columns = $('#row_'+rowid).find('.column'),
-            numColumns = columns.length,
-            addrightbutton,
-            i;
-
-
-        // Renumber all columns
-        for (i = 1; i <= numColumns; i = i + 1) {
-
-            $(columns[i - 1]).attr('id', 'row_' + rowid + '_column_' + i);
-
-            $('.addcolumn', $('#row_' + rowid + '_column_' + i)).attr('name', 'action_addcolumn_row_' + rowid + '_before_' + i);
-            $('.removecolumn', $('#row_' + rowid + '_column_' + i)).attr('name', 'action_removecolumn_row_' + rowid + '_column_' + i);
-
-        }
-
-        // If the column being added is the very first one, the 'left' add column button needs to be removed
-        $('#row_' + rowid + '_column_2 .js-add-column-left').remove();
-        $('#row_' + rowid + '_column_2 .btn-three').removeClass('btn-three').addClass('btn-two');
-
-        // Renumber the columns classes of the remaining columns, and remove any set widths
-        $(columns).removeClass('columns1 columns2 columns3 columns4 columns5');
-        $(columns).addClass('columns' + numColumns);
-        $(columns).attr('style', '');
-
-        //Update last
-        $('.lastcolumn').removeClass('lastcolumn');
-        $('.js-col-row .column:last-child').addClass('lastcolumn');
-
-        // Move the add button between the columns
-        columns.find('.js-add-column-right').removeClass('js-add-column-right').addClass('js-add-column-center');
-        $('.js-col-row .column:last-child').find('.addcolumn').addClass('js-add-column-right').removeClass('js-add-column-center');
-    }
-
-    /**
-     * Adds a column to the view
-     */
-    function addColumn(rowid, colid, data) {
-
-        // Get the existing number of columns
-        var tempDiv = $('<div>');
-
-        /// Now we insert the new column into the DOM. Inserting the HTML into a
-        // new element and then into the DOM means we can add the new column
-        // without changing any of the existing DOM tree (and thus destroying
-        // events)
-        tempDiv.html(data.data);
-
-        if (colid === 1) {
-            $(':first', tempDiv).insertBefore('#row_' + rowid + '_column_1');
-        }
-        else {
-            $(':first', tempDiv).insertAfter('#row_' + rowid + '_column_' + (colid - 1));
-        }
-
-        renumberColumns(rowid);
-
-        // Wire up the new column buttons to be AJAX
-        rewriteAddColumnButtons();
-        rewriteRemoveColumnButtons();
-        makeExistingBlocksSortable();
-
-    }
-
-    /**
-     * Removes a column from the view, sizes the others to take its place and
-     * moves the blockinstances in it to the other columns
-     */
-    function removeColumn(rowid, colid) {
-        var addColumnLeftButtonContainer,
-            blockInstances = $('#row_' + rowid + '_column_' + colid + ' .blockinstance'),
-            columns = $('#row_'+rowid).find('.column'),
-            numColumns = columns.length,
-            i = 1,
-            currentTallest;
-
-        if (colid === 1) {
-            // We are removing the first column, which has the button for adding a column to the left of itself. We want to keep this
-            addColumnLeftButtonContainer = $('#row_' + rowid).find('.js-add-column-left').first();
-        }
-
-        // Remove the column itself
-        $('#row_' + rowid + '_column_' + colid).remove();
-
-        renumberColumns(rowid);
-
-        if (addColumnLeftButtonContainer) {
-            $('#row_' + rowid + '_column_1 .js-remove-column').before(addColumnLeftButtonContainer);
-            $('#row_' + rowid + '_column_1 .btn-two').removeClass('btn-two').addClass('btn-three');
-        }
-
-
-        // Put the block instances that were in the removed column into the other columns
-        $(blockInstances).each(function() {
-            $('#row_' + rowid + '_column_' + i + ' .column-content').append($(this));
-            if (i < (numColumns - 1)) {
-                i++;
-            }
-            $(this).find('.column-content').each(function(i) {
-                if ($(this).height() > currentTallest) {
-                    currentTallest = $(this).height();
-                }
-            });
-            $(this).find('.column-content').css({'min-height': currentTallest});
-        });
-
-        rewriteAddColumnButtons();
-        rewriteRemoveColumnButtons();
-    }
-
 
     /**
      * Initialise

@@ -2261,7 +2261,6 @@ class View {
         $smarty->assign('row',         $row);
         $smarty->assign('numcolumns',  $currentrownumcols);
         $smarty->assign('rowcontent',  $result);
-        $smarty->assign('addremovecolumns', $USER->get_account_preference('addremovecolumns'));
 
         if ($editing) {
             // TODO look into this - necessary?
@@ -2343,8 +2342,6 @@ class View {
         if (isset($data['width'])) {
             $smarty->assign('width', $data['width']);
         }
-
-        $smarty->assign('addremovecolumns', $USER->get_account_preference('addremovecolumns'));
 
         if ($editing) {
             return $smarty->fetch('view/columnediting.tpl');

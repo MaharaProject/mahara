@@ -229,7 +229,6 @@ function expected_account_preferences() {
                  'licensedefault' => '',
                  'messages'       => 'allow',
                  'lang'           => 'default',
-                 'addremovecolumns' => 0,
                  'maildisabled'   => 0,
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  'groupsideblockmaxgroups' => '',
@@ -374,12 +373,6 @@ function general_account_prefs_form_elements($prefs) {
         'help' => true,
     );
 
-    $elements['addremovecolumns'] = array(
-        'type' => 'switchbox',
-        'defaultvalue' => $prefs->addremovecolumns,
-        'title' => get_string('showviewcolumns', 'account'),
-        'help' => 'true'
-    );
     // TODO: add a way for plugins (like blog!) to have account preferences
     $elements['multipleblogs'] = array(
         'type' => 'switchbox',
