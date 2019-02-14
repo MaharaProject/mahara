@@ -249,8 +249,127 @@ class BehatDataGenerators extends BehatBase {
             'topic'                => 'text',
           ),
           'required' => array('group', 'message', 'user')
+        ),
+        'personalinformation' => array(
+          'datagenerator' => 'personalinformation',
+          'available' => array(
+            'user'                 => 'text',
+            'dateofbirth'          => 'text',
+            'placeofbirth'         => 'text',
+            'citizenship'          => 'text',
+            'visastatus'           => 'text',
+            'gender'               => 'text',
+            'maritalstatus'        => 'text'
+          ),
+          'required' => array('user', 'dateofbirth')
+        ),
+        'goals and skills' => array(
+          'datagenerator' => 'goals_and_skills',
+          'available' => array(
+            'user'                 => 'text',
+            'goaltype/skilltype'   => 'text',
+            'title'                => 'text',
+            'description'          => 'text',
+          ),
+          'required' => array('user','goaltype/skilltype','title')
+        ),
+        'interests' => array(
+          'datagenerator' => 'interests',
+          'available' => array(
+            'user'                 => 'text',
+            'interest'             => 'text',
+            'description'          => 'text'
+          ),
+          'required' => array('user','interest','description')
+        ),
+        'coverletters' => array(
+          'datagenerator' => 'coverletter',
+          'available' => array(
+            'user'                 => 'text',
+            'content'              => 'text'
+          ),
+          'required' => array('user','content')
+        ),
+        'educationhistory' => array(
+          'datagenerator' => 'educationhistory',
+          'available' => array(
+            'user'                   => 'text',
+            'startdate'              => 'text',
+            'enddate'                => 'text',
+            'institution'            => 'text',
+            'institutionaddress'     => 'text',
+            'qualtype'               => 'text',
+            'qualname'               => 'text',
+            'qualdescription'        => 'text'
+          ),
+          'required' => array('user','startdate','institution')
+        ),
+        'employmenthistory' => array(
+          'datagenerator' => 'employmenthistory',
+          'available' => array(
+            'user'                   => 'text',
+            'startdate'              => 'text',
+            'enddate'                => 'text',
+            'employer'               => 'text',
+            'employeraddress'        => 'text',
+            'jobtitle'               => 'text',
+            'positiondescription'    => 'text'
+          ),
+          'required' => array ('user','startdate','employer','jobtitle')
+        ),
+        'contactinformation' => array(
+          'datagenerator' => 'contactinformation',
+          'available' => array(
+            'user'                     => 'text',
+            'email'                    => 'text',
+            'officialwebsite'          => 'text',
+            'personalwebsite'          => 'text',
+            'blogaddress'              => 'text',
+            'town'                     => 'text',
+            'city/region'              => 'text',
+            'country'                  => 'text',
+            'homenumber'               => 'text',
+            'businessnumber'           => 'text',
+            'mobilenumber'             => 'text',
+            'faxnumber'                => 'text',
+          ),
+          'required' => array('user','email')
+        ),
+        'certifications and accreditations' => array(
+          'datagenerator' => 'certification',
+          'available' => array(
+            'user'                    => 'text',
+            'date'                    => 'text',
+            'title'                   => 'text',
+            'description'             => 'text'
+          ),
+          'required' => array('user','title')
+        ),
+        'books and publications' => array(
+          'datagenerator' => 'book',
+          'available' => array(
+            'user'                     => 'text',
+            'date'                     => 'text',
+            'title'                    => 'text',
+            'contribution'             => 'text',
+            'description'              => 'text',
+            'url'                      => 'text'
+          ),
+          'required' => array('user','date','title','contribution')
+        ),
+        'professionalmemberships' => array(
+          'datagenerator' => 'membership',
+          'available' => array(
+            'user'                     => 'text',
+            'startdate'                => 'text',
+            'enddate'                  => 'text',
+            'title'                    => 'text',
+            'description'              => 'text'
+          ),
+          'required' => array('user','startdate','title')
         )
-    );
+      );
+
 
     /**
      * Normalise values in a given record

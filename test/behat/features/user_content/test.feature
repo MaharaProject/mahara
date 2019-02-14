@@ -8,8 +8,70 @@ Feature: Creating a page with blocks
 Background:
     Given the following "users" exist:
     | username | password | email             | firstname | lastname | institution | authname | role |
-    | UserA    | Kupuh1pa!| UserA@example.org | Angela    | User     | mahara      | internal | member |
-    | UserB    | Kupuh1pa!| UserB@example.org | Bob       | Boi      | mahara      | internal | member |
+    | UserA    | Kupuh1pa!| UserA@example.org | Painterio | Mahara   | mahara      | internal | member |
+    | UserB    | Kupuh1pa!| UserB@example.org | Mechania  | Mahara   | mahara      | internal | member |
+
+    And the following "personalinformation" exist:
+    | user  | dateofbirth | placeofbirth | citizenship | visastatus | gender | maritalstatus |
+    | UserA | 01/01/2000  | Italy        | New Zealand |            |        |               |
+    | UserB | 01/01/2018  | Germany      | New Zealand |            |        |               |
+
+    And the following "goals and skills" exist:
+    | user  | goaltype/skilltype  | title        | description           |
+    | UserA | academicgoal        | fix lateness | pack bag night before |
+    | UserA | careergoal          | meow         | cat a lyst            |
+    | UserA | personalgoal        | gym shark    | do do do              |
+    | UserA | academicskill       | alphabet     | abc                   |
+    | UserA | personalskill       | whistle      | *inset whistle noise  |
+    | UserA | workskill           | team work    | axe throwing?         |
+    | UserB | academicgoal        | academi doooo| de sc ri p t i o n nn |
+    | UserB | careergoal          | careerg doooo| de sc ri p t i o n nn |
+    | UserB | personalgoal        | persona doooo| de sc ri p t i o n nn |
+    | UserB | academicskill       | academi doooo| de sc ri p t i o n nn |
+    | UserB | personalskill       | persona doooo| de sc ri p t i o n nn |
+    | UserB | workskill           | workski doooo| de sc ri p t i o n nn |
+
+    And the following "interests" exist:
+    | user  | interest  | description                 |
+    | UserA | FOSS      | exciting open source stuff! |
+    | UserA | Mahara    | awesome e-portfolio system  |
+    | UserA | Coding and Coffee |  |
+
+    And the following "coverletters" exist:
+    | user  | content |
+    | UserA |UserA In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |
+    | UserB |UserB In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |
+
+    And the following "educationhistory" exist:
+    | user  | institution  | startdate | enddate  | qualdescription |
+    | UserA | Catalystania | 12/12/12  | 12/12/21 | 9 years         |
+    | UserB | Catalystonia | 21/10/21  | 10/12/26 | educationnn     |
+    | UserA | Catalyst High| 12/12/20  | 12/12/21 | 9 years         |
+    | UserB | Catalyst High| 21/10/20  | 10/12/26 | educationnn     |
+
+    And the following "employmenthistory" exist:
+    | user  | employer | startdate | enddate | jobtitle   | positiondescription    |
+    | UserA | Eggman   | 01/02/03  |         | crystal dr | locating magic crystals|
+    | UserB | Cat      | 02/02/00  |         | Cat sitter | pat kittens            |
+
+    And the following "contactinformation" exist:
+    | user  | email            | mobilenumber |
+    | UserA | userA@mahara.com | 01234567890  |
+
+    And the following "certifications and accreditations" exist:
+    | user  | date     | title               | description |
+    | UserA | 02/02/80 | European Witchcraft | While the streets may be education enough for real gangsters, this course aims to teach students about the history and culture of the mafia around the world. [Williams College] |
+    | UserB | 02/02/80 | European Witchcraft | While the streets may be education enough for real gangsters, this course aims to teach students about the history and culture of the mafia around the world. [Williams College] |
+
+    And the following "books and publications" exist:
+    | user  | date     | title                                     | contribution| description |
+    | UserA | 05/05/50 | The Life-Changing Magic of not Tidying Up | co-author   | seven million copies worldwide and have been translated into thirty-eight languages.|
+    | UserB | 05/05/50 | The Life-Changing Magic of not Tidying Up | co-author   | seven million copies worldwide and have been translated into thirty-eight languages.|
+
+    And the following "professionalmemberships" exist:
+    | user  | startdate   | title                       | description        |
+    | UserA | 20/02/2008  | cat art company coordinator | catch up with cats |
+    | UserB | 20/02/2008  | cat art company catcher     | catch fish for cats|
 
     And the following "groups" exist:
     | name   | owner | description           | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
@@ -35,8 +97,6 @@ Background:
     | Page Grp1     | Page 01     | group     | Group1    |
     | Page One      | test 01     | user      | UserA     |
     | Page Two      | test 01     | user      | UserA     |
-    | Page Three    | test 01     | user      | UserA     |
-    | Page Four     | test 01     | user      | UserA     |
 
     And the following "collections" exist:
     | title          | ownertype | ownername | description | pages             |
@@ -46,7 +106,7 @@ Background:
     And the following "journals" exist:
     | owner | ownertype | title   | description      | tags               |
     | UserA | user      | journal1| this is journal1 | amber,brown,cobalt |
-    | Group1| group      |journal2| this is journal1 | amber,brown,cobalt |
+    | Group1| group     | journal2| this is journal1 | amber,brown,cobalt |
 
     And the following "journalentries" exist:
     | owner   | ownertype | title       | entry                  | blog     | tags      | draft |
@@ -74,7 +134,7 @@ Background:
 
     And the following "blocks" exist:
     | title                | type           | page          |retractable | data |
-    | Text                 | text           | Page UserA    | yes        | This is some text |
+    | Text                 | text           | Page UserA    | yes        | textinput=This is some text |
     | Image JPG            | image          | Page UserA    | no         | attachment=Image1.jpg; width=100 |
     | Image PNG            | image          | Page UserA    | no         | attachment=Image2.png |
     | Files to download    | filedownload   | Page UserA    | auto       | attachments=mahara_about.pdf |
@@ -93,27 +153,31 @@ Background:
     | Folder               | folder         | Page UserB    | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
     | Some HTML            | html           | Page UserB    | yes        | attachment=test_html.html |
     | Profile Information  | profileinfo    | Page UserB    | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image3.png |
+    | Résumé               | entireresume   | Page UserB    | no         | tags=mahara |
 
     | Blog/Journal         | blog           | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
     | Blogpost/JournalEntry| blogpost       | Page One      | no         | copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
-    | Comments             | comment        | Page One      | no         | no configdata |
-    | Peer Assessment      | peerassessment | Page One      | auto       | no configdata |
+    | Comments             | comment        | Page One      | no         | |
+    | Peer Assessment      | peerassessment | Page One      | auto       | |
     | Creative Commons     | creativecommons| Page One      | no         | commercialuse=yes;license=3.0;allowmods=no |
 
-    | Navigation           | navigation     | Page Two      | no         | collection=collection one;copytoall=yes |
-    | Plans                | plans          | Page Two      | no         | plans=Plan One,Plan Two;tasksdisplaycount=10 |
-
-    | Internal Media: Video| internalmedia  | Page Three    | no         | attachment=testvid3.mp4 |
-    | Internal Media: Audio| internalmedia  | Page Three    | no         | attachment=mahara.mp3 |
-    | Pdf                  | pdf            | Page Three    | no         | attachment=mahara_about.pdf |
-    | Recent Forum Posts   |recentforumposts| Page Three    | no         | groupname=Group1;maxposts=3 |
-    | External Video       | externalvideo  | Page Three    | no         | source=https://youtu.be/yRxFm70nOrY |
-
-    | Note/Textbox 1       | textbox        | Page Three    | no         | notetitle=secretnote;text=ma ha ha ha ra!;tags=mahara,araham;attachments=Image3.png,Image2.png,Image1.jpg;allowcomments=yes |
-    | Note/textbox ref:1   | textbox        | Page Three    | no         | existingnote=secretnote |
-    | Note/Textbox copy:1  | textbox        | Page Three    | no         | existingnote=secretnote;allowcomments=yes;copynote=true;notetitle=newsecretnote |
+    | Navigation           | navigation     | Page One      | no         | collection=collection one;copytoall=yes |
+    | Plans                | plans          | Page One      | no         | plans=Plan One,Plan Two;tasksdisplaycount=10 |
+    | Internal Media: Video| internalmedia  | Page One      | no         | attachment=testvid3.mp4 |
+    | Internal Media: Audio| internalmedia  | Page One      | no         | attachment=mahara.mp3 |
+    | Pdf                  | pdf            | Page Two      | no         | attachment=mahara_about.pdf |
+    | Recent Forum Posts   |recentforumposts| Page Two      | no         | groupname=Group1;maxposts=3 |
+    | External Video       | externalvideo  | Page Two      | no         | source=https://youtu.be/yRxFm70nOrY |
+    | Note/Textbox 1       | textbox        | Page Two      | no         | notetitle=secretnote;text=ma ha ha ha ra!;tags=mahara,araham;attachments=Image3.png,Image2.png,Image1.jpg;allowcomments=yes |
+    | Note/textbox ref:1   | textbox        | Page Two      | no         | existingnote=secretnote |
+    | Note/Textbox copy:1  | textbox        | Page Two      | no         | existingnote=secretnote;allowcomments=yes;copynote=true;notetitle=newsecretnote |
     | Profile Information  | profileinfo    | Page Two      | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image1.jpg |
     | Profile Information  | profileinfo    | Page Two      | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image2.png |
+    | Résumé               | entireresume   | Page Two      | no         | tags=mahara |
+    | Résumé field: Employment History | resumefield    | Page Two      | no         | artefacttype=employmenthistory |
+    | Résumé field: Personal Goal      | resumefield    | Page Two      | no         | artefacttype=personalgoal |
+    | Résumé field: Work Skill         | resumefield    | Page Two      | no         | artefacttype=workskill |
+    | Résumé field: Interest           | resumefield    | Page Two      | no         | artefacttype=interest |
 
 
 Scenario: Login as admin to change upload settings
@@ -135,12 +199,13 @@ Scenario: Login as admin to change upload settings
     | WMV video file        | 1 |
     And I press "Save"
     And I log out
+
     Then I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA"
     And I go to portfolio page "Page Grp1"
     And I go to portfolio page "Page One"
     And I go to portfolio page "Page Two"
-    And I go to portfolio page "Page Three"
     And I log out
-    And I log in as "UserB" with password "Kupuh1pa!"
-    Then I go to portfolio page "Page UserB"
+
+    Then I log in as "UserB" with password "Kupuh1pa!"
+    And I go to portfolio page "Page UserB"
