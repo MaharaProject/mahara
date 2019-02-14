@@ -316,7 +316,6 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
 
             return $values;
         }
-
         // If it's an unrecognised url, do nothing.
         if (!$urldata = self::process_url($values['videoid'], $values['width'], $values['height'])) {
             return $values;
@@ -326,7 +325,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         return array_merge($values, $urldata);
     }
 
-    private static function process_url($url, $width=0, $height=0) {
+    public static function process_url($url, $width=0, $height=0) {
         $sources = self::load_media_sources();
 
         foreach ($sources as $name => $source) {

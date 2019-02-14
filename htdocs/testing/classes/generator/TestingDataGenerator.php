@@ -26,6 +26,9 @@ class TestingDataGenerator {
     protected $institutioncount = 0;
     protected $tagcount = 0;
 
+    /** @var array list to track location to know where to create block on each view */
+    public static $viewcolcounts = array();
+
     /** @var array list of plugin generators */
     protected $generators = array();
 
@@ -66,6 +69,7 @@ EOD;
         $this->usercounter = 0;
         $this->$groupcount = 0;
         $this->$institutioncount = 0;
+        self::$viewcolcounts = array();
 
         foreach ($this->generators as $generator) {
             $generator->reset();
@@ -203,6 +207,15 @@ EOD;
             return $admins[0]->id;
         }
         return false;
+    }
+
+    public static function get_mimetype($attachment) {
+        $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $attachment;
+        $mimetype = mime_content_type($path);
+        list($media, $ext) = explode('/', $mimetype);
+        $mediatype = $media == 'application' ? 'attachment' : $media;
+
+        return $mediatype;
     }
 
     /**
@@ -637,8 +650,817 @@ EOD;
     }
 
     /**
-     * Create a collection of pages
-     * @param array $record
+     * Create block content for existing view
+     * @param array $record data for each blocktype in each row of the testing table
+     * @throws SystemException if creating failed
+     * @return int new block id
+     */
+    public function create_block($record) {
+        global $USER;
+        $sql = "SELECT id FROM {view} WHERE LOWER(TRIM(title)) = ?";
+        $page = strtolower(trim($record['page']));
+
+        $view = trim($record['page']);
+        $viewid = $this->get_view_id($view);
+
+        if (!isset(self::$viewcolcounts[$viewid])) {
+          self::$viewcolcounts[$viewid] = 1;
+        }
+
+        $ids = get_records_sql_array($sql, array($page));
+        if (!$ids || count($ids) > 1) {
+            throw new SystemException("Invalid page name '" . $record['page'] . "'. The page title does not exist, or is duplicated.");
+        }
+        else {
+            require_once('view.php');
+            $view = new View($ids[0]->id);
+            if (!empty($view->get('institution'))) {
+                $ownertype = 'institution';
+                $ownerid = $view->get('institution');
+            }
+            else if (!empty($view->get('group'))) {
+                $ownertype = 'group';
+                $ownerid = $view->get('group');
+            }
+            else {
+                $ownertype = 'owner';
+                $ownerid = $view->get('owner');
+            }
+        }
+
+        $maxcols = 3;
+
+        // We have a valid page so lets see if we can add a block to it
+        $blocktype = strtolower(trim($record['type']));
+        // Check that the blocktype exists and is active
+        if (!get_record('blocktype_installed', 'active', 1, 'name', $blocktype)) {
+            throw new SystemException("Invalid block type '" . $record['type'] . "'. The block type is either not installed or not active.");
+        }
+        $title = strtolower(trim($record['title']));
+
+        // build configdata
+        $configdata = $this->setup_retractable($record['retractable']);
+        $data = trim($record['data']);
+        $functionname = 'generate_configdata_'.$record['type'];
+        $classname = 'TestingDataGenerator';
+
+        if (is_callable($classname . '::'.$functionname)) {
+            $result = call_static_method($classname, $functionname, $data, $ownertype, $ownerid, $title, $view);
+            $configdata = array_merge($configdata, (array)$result);
+        }
+        else {
+            throw new SystemException("The blocktype {$record['type']} is not supported yet.");
+        }
+
+        // make new block
+        self::create_new_block_instance($blocktype, $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols);
+    }
+
+    public static function create_new_block_instance($blocktype, $view, $viewid, $title, $viewcolcounts, $configdata, $maxcols, $otherview = null) {
+        safe_require('blocktype', $blocktype);
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => $blocktype,
+                'title'      => $title,
+                'view'       => $viewid,
+                'row'        => 1,
+            )
+        );
+        if (!isset(self::$viewcolcounts[$viewid])) self::$viewcolcounts[$viewid] = 0;
+        $bi->set('order', $view->get_current_max_order(1, self::$viewcolcounts[$viewid]) + 1);
+        $bi->set('configdata', $configdata);
+        $bi->set('column', self::$viewcolcounts[$viewid]);
+        self::$viewcolcounts[$viewid] = ((self::$viewcolcounts[$viewid]+1) % $maxcols) ? (self::$viewcolcounts[$viewid]+1) % $maxcols : $maxcols;
+
+        //in cases such as navigation where we want to add a block to a different view than the current.
+        if ($otherview) {
+          $otherview->addblockinstance($bi);
+        }
+        else {
+          $bi->commit();
+        }
+    }
+
+    /**
+     * generate configdata for blocktype: blog aka journal
+     * displaying the blogs that were created using the function create_blog
+     * given a matching blog title
+     *
+     * @param string $data inside data column in behat test
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_blog($data) {
+        if (!$data) return;
+        $configdata = array();
+
+        $fields = explode(';',$data);
+        foreach($fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
+
+            if ($key == 'journaltitle') {
+                if (!$blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype', 'blog')) {
+                    throw new SystemException("A blog/journal with the name " . $value . " doesn't exist!");
+                }
+                $configdata['artefactid'] = $blogid;
+            }
+            if ($key == 'copytype') {
+                $configdata[$key] = $value;
+            }
+            if ($key == 'count') {
+                $configdata[$key ] = $value;
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for blocktype: blogpost aka journalentry
+     * displaying the blogposts that were created using the function create_blogpost
+     * matching a given blog and entry title
+     *
+     * @param string $data inside data column in behat test
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_blogpost($data) {
+        if (!$data) return;
+        $configdata = array();
+
+        $blogpostid;
+        $blogid;
+
+        $fields = explode(';',$data);
+        foreach($fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
+
+            if ($key == 'journaltitle') {
+                if (!$blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype','blog')) {
+                    throw new SystemException("A blog/journal named " . $value . " doesn't exist!");
+                }
+            }
+            if ($key == 'entrytitle') {
+                if (!$blogpostid = get_field('artefact','id','title', $value, 'parent', $blogid, 'artefacttype','blogpost')) {
+                    throw new SystemException(" There is no such blogpost/journalentry titled " . $value);
+                }
+                $configdata['artefactid'] = $blogpostid;
+            }
+            if ($key == 'copytype') {
+                $configdata[$key]=$value;
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate a comment blocktype.
+     * @param string data inside the columm for data in behat table
+     * @return array with redundant information as there is no specific artefact connected to it.
+     */
+    public static function generate_configdata_comment($data) {
+        return array();
+    }
+
+    /**
+     * generate configdata and instance for blocktype: creativecommons
+     * @param string data inside the columm for data in behat table
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_creativecommons($data) {
+        $configdata = array();
+
+        $fields = explode(';', $data);
+
+        foreach( $fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $value = trim(strtolower($value));
+
+            switch ($key) {
+                case 'commercialuse':
+                    //yes=0, no=1
+                    $configdata['noncommercial'] = $value == 'yes' ? 0:1;
+                    break;
+                case 'license':
+                    //must be 3.0 or 2.0
+                    if ($value == 3.0 || $value == 2.0) {
+                        $configdata['version'] = (string)($value*10);
+                    }
+                    else $configdata['version'] = '30';
+                    break;
+                case 'allowmods':
+                    //yes=0, yes(with mutual sharing)=1, no=2
+                    if ($value == 'yes') $configdata['noderivatives'] = '0';
+                    if ($value == 'yeswithsharing') $configdata['noderivatives'] = '1';
+                    if ($value == 'no') $configdata['noderivatives'] = '2';
+                    break;
+                default:
+                    break;
+            }
+        }
+        $configdata = PluginBlocktypeCreativecommons::instance_config_save($configdata);
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: rss feeds/external feeds
+     * @param string $data inside data column in behat test
+     * @return array $configdata of key and values for db table
+    */
+    public static function generate_configdata_externalfeed($data) {
+        if (!$data) return;
+        $configdata = array();
+        $fields = explode(';', $data);
+        foreach ($fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
+
+            if ($key == 'source') {
+                $wheredata = array('url' => $value);
+                $feeddata = PluginBlocktypeExternalfeed::parse_feed($value);
+                $feeddata->content  = serialize($feeddata->content);
+                $feeddata->image    = serialize($feeddata->image);
+                $value = ensure_record_exists('blocktype_externalfeed_data', $wheredata, $feeddata, 'id', true);
+                $configdata['feedid'] = $value;
+            }
+            if ($key == 'count') {
+                $configdata[$key] = $value;
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: external video
+     * @param string $data inside data column in behat test
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_externalvideo($data) {
+        if (!$data) return;
+
+        list($key, $value) = explode('=', $data);
+        if ($key == 'source') {
+            $sourceinfo = PluginBlocktypeExternalvideo::process_url($value);
+            return $sourceinfo;
+        }
+    }
+
+    /**
+     * generate configdata for the blocktype: filedownload
+     * @param string $data inside data column in behat test
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_filedownload($data, $ownertype, $ownerid) {
+        if (!$data) return;
+
+        $fields = explode(';', $data);
+        $configdata = array();
+
+        foreach ($fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $key=trim($key);
+            $value=trim($value);
+
+            if ($key == 'attachments') {
+                $attachments = explode(',',$value);
+                foreach ($attachments as $attachment) {
+                    $mediatype = self:: get_mimetype($attachment);
+                    // we need to find the id of the item we are trying to attach and save it as artefactid
+                    if (!$artefactid = get_field('artefact', 'id', 'title', $attachment, $ownertype, $ownerid)) {
+                        $artefactid = TestingDataGenerator::create_artefact($attachment, $ownertype, $ownerid, $mediatype);
+                        TestingDataGenerator::file_creation($artefactid, $attachment, $ownertype, $ownerid);
+                    }
+                    $configdata['artefactids'][] = $artefactid;
+                }
+            }
+        }
+        return $configdata;
+    }
+    /**
+     * generate configdata for the blocktype folder, which dealts with creating a folder artefact_type
+     * as well as file artefacts and connecting them parent ids.
+     * @param $data holds the config information from data column
+     * @param $ownertype of user
+     * @param $owenerid of the user
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_folder($data, $ownertype, $ownerid) {
+        if (!$data) return;
+
+        $folderfiles = array();
+        $configdata = array();
+        $fields = explode(';', $data);
+        $foldername = -1;
+
+        foreach ($fields as $field) {
+            list($key, $value) = explode('=', $field);
+
+            if ($key == 'dirname') {
+                $foldername = $value;
+            }
+            if ($key == 'attachments') {
+                $files = explode(',', $value);
+
+                foreach ($files as $file) {
+                    $folderfiles[] = $file;
+                }
+            }
+        }
+
+        if ($foldername == -1) {
+          throw new SystemException("Cannot save files, there was no foldername given!");
+        }
+
+        $folderartefactid = ArtefactTypeFolder::get_folder_id($foldername, $foldername, null, true, $ownerid);
+        $configdata['artefactid'] = $folderartefactid;
+        // upload each image and put into a folder
+        foreach($folderfiles as $file) {
+            $mediatype = self::get_mimetype($file);
+            // we need to find the id of the item we are trying to attach and save it as artefactid
+            if (!$artefactid = get_field('artefact', 'id', 'title', $file, 'parent', $folderartefactid)) {
+                $artefactid = TestingDataGenerator::create_artefact($file, $ownertype, $ownerid, $mediatype, $folderartefactid);
+                TestingDataGenerator::file_creation($artefactid, $file, $ownertype, $ownerid);
+            }
+        }
+
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for blocktype: gallery
+     * @param string $data inside data column in behat test
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_gallery($data, $ownertype, $ownerid) {
+        if (!$data) return;
+
+        $configdata = array();
+
+        //separate gallery_images, select, width, style etc.
+        $fields = explode(';', $data);
+        foreach ($fields as $field) {
+
+            list($key, $value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
+
+            if ($key == 'attachments') {
+                $galleryimages = explode(',', $value);
+                $value = array();
+
+                foreach ($galleryimages as $image) {
+                    if (!$artefactid = get_field('artefact','id', 'title', $image)) {
+                        $artefactid = TestingDataGenerator::create_artefact($image, $ownertype, $ownerid, 'image');
+                        TestingDataGenerator::file_creation($artefactid, $image, $ownertype, $ownerid);
+                    }
+                    $configdata['artefactids'][] = $artefactid;
+                }
+            }
+            if ($key == 'imagesel' || $key == 'width' || $key == 'showdesc' || $key == 'imagestyle' || $key == 'photoframe' ) {
+
+                //imageselection options are 0,1,2 in the table, changed for tester -_-
+                if ($key == 'imagesel') {
+                    $value -= 1;
+                    $configdata['select'] = $value;
+                }
+                else if ($key == 'showdesc') {
+                    $value = strtolower($value) == 'yes' ? 1:0;
+                    $configdata['showdescription'] = $value;
+                }
+                else if ($key == 'imagestyle') {
+                    $value -= 1;
+                    $configdata['style'] = $value;
+                }
+                else {
+                    $configdata[$key] = $value;
+                }
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for blocktype: html
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_html($data, $ownertype, $ownerid) {
+        if (!$data) return;
+
+        $fields = explode(';', $data);
+        $configdata = array();
+
+        foreach ($fields as $field) {
+            list($key, $value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
+            if ($key == 'attachment') {
+                //retrieve/create and retrieve artefactid of artefact we are attaching to the block
+                if (!$artefactid = get_field('artefact', 'id', 'title', $value)) {
+                    //we must create the file artefact as it doesn't exist in the table
+                    $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'attachment');
+                    TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
+                }
+                $configdata['artefactid'] = $artefactid;
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: image
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_image($data, $ownertype, $ownerid) {
+        if (!$data) return;
+
+        $fields = explode(';', $data);
+        $configdata = array();
+
+        foreach ($fields as $field) {
+            list($key, $value) = explode('=', $field);
+            if ($key == 'attachment') {
+
+                // we need to find the id of the item we are trying to attach and save it as artefactid
+                if (!$artefactimageid = get_field('artefact', 'id', 'title', $value, $ownertype, $ownerid)) {
+                    $artefactimageid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'image');
+                    self::file_creation($artefactimageid, $value, $ownertype, $ownerid);
+                }
+                $configdata = array('artefactid' => $artefactimageid);
+            }
+            if ($key == 'width' || $key == 'showdescription' || $key == 'style' ) {
+                $configdata[$key] = $value;
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: internalmedia aka 'embeddedmedia
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_internalmedia($data, $ownertype, $ownerid) {
+        if (!$data) return;
+        $mediatype;
+        $configdata = array();
+
+        $fields = explode(';', $data);
+        foreach ($fields as $field) {
+
+            list($key,$value) = explode('=', $field);
+            $key=trim($key);
+            $value=trim($value);
+
+            if ($key == 'attachment') {
+                $filenameparts = explode('.', $value);
+                $ext = end($filenameparts);
+
+                // we need to find the id of the item we are trying to attach and save it as artefactid
+                if (!$artefactid = get_field('artefact', 'id', 'title', $value)) {
+
+                    if ($ext == 'wmv' || $ext == 'webm' || $ext == 'mov'|| $ext == 'ogv' || $ext == 'mpeg' || $ext == 'mp4' || $ext == 'flv' || $ext == 'avi' || $ext == '3gp') {
+                        $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'video');
+                        TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
+                    }
+                    if ($ext == 'mp3' || $ext == 'oga' || $ext == 'ogg') {
+                        $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'audio');
+                        TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
+                    }
+                }
+                $value = $artefactid;
+                $configdata['artefactid'] = $value;
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: navigation and create navblocks*
+     * **when copytoall is true**
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @param string $title of block to be created* (when copytoall is true)
+     * @param object the current view to create block on
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_navigation($data, $ownertype, $ownerid, $title, $view) {
+        if (!$data) return;
+
+        $configdata = array();
+        $copytoall = true;
+        $collectionid;
+
+        $fields = explode(';', $data);
+        foreach($fields as $field) {
+            $field = trim(strtolower($field));
+            list($key, $value) = explode('=', $field);
+            if ($key == 'collection') {
+                $configdata[$key] = $collectionid =  get_field('collection', 'id', 'name', $value);
+            }
+            if ($key == 'copytoall') {
+                $copytoall = $value == 'yes'? true : false;
+            }
+            $collectionobj = new Collection($collectionid);
+            // CASE 2: the navigation block being created IS one of the view in the collection
+            if ($collectionobj && $copytoall) {
+                foreach ($viewids = $collectionobj->get_viewids() as $viewid) {
+                    //if vid is not the exactly the same as the og nav block for this collection
+                    if ($viewid !== (int)$view->get('id')) {
+                        $needsblock = true;
+
+                        //if there exists nav blocks on this view/page
+                        if ($navblocks = get_records_sql_array("SELECT id FROM {block_instance} WHERE blocktype = ? AND view = ?", array('navigation', $viewid))) {
+                            foreach ($navblocks as $navblock) {
+                                $bi = new BlockInstance($navblock->id);
+                                $navblockconfigdata = $bi->get('configdata');
+                                //if there exists is a nav block on this view that already links to the intended collection
+                                if (!empty($navblockconfigdata['collection']) && $navblockconfigdata['collection'] == $configdata['collection']) {
+                                    $needsblock = false;
+                                }
+                            }
+                        }
+                        if ($needsblock) {
+                            //need to add new navigation block
+                            $otherview = new View($viewid);
+                            // make new block
+                            self::create_new_block_instance('navigation', $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols = 3, $otherview);
+                        }
+                    }
+                }
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the bloctype: peerassessment
+     * @param string $data inside data column in blocktype tables
+     * @return array redundant info as there is no data directly connected in this case
+     */
+    public static function generate_configdata_peerassessment($data) {
+        return array();
+    }
+
+    /**
+     * generate configdata for the blocktype: pdf
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_pdf($data, $ownertype, $ownerid) {
+        if (!$data) return;
+
+        list($key, $value) = explode('=', $data);
+        $key=trim($key);
+        $value=trim($value);
+
+        if ($key == 'attachment') {
+            $key = 'artefactid';
+
+            // we need to find the id of the item we are trying to attach and save it as artefactid
+            if (!$artefactid = get_field('artefact', 'id', 'title', $value, $ownertype, $ownerid)) {
+                $artefactid = TestingDataGenerator::create_artefact($value, $ownertype, $ownerid, 'attachment');
+                TestingDataGenerator::file_creation($artefactid, $value, $ownertype, $ownerid);
+            }
+
+            $value = $artefactid;
+            $configdata = array();
+            $configdata[$key] = $value;
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: plans
+     * @param string $data inside data column in blocktype tables
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_plans($data) {
+        if (!$data) return;
+        $configdata = array();
+
+        $fields = explode(';', $data);
+        foreach($fields as $field) {
+            $field = trim($field);
+            list($key,$value) = explode('=', $field);
+            $key = trim($key);
+            $value = trim($value);
+
+            if ($key == 'plans') {
+                $plans = explode(',',$value);
+                foreach ($plans as $plan) {
+                    if (!$planid = get_field('artefact', 'id', 'title', $plan, 'artefacttype', 'plan')) {
+                        throw new SystemException("Invalid Plan '" . $plan . "'");
+                    }
+                    $configdata['artefactids'][] = $planid;
+                }
+            }
+            if ($key == 'tasksdisplaycount') {
+                $configdata['count'] = $value;
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for blocktype: recentforumposts
+     *
+     * @param string $data inside data column in blocktype tables
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_recentforumposts($data, $ownertype, $ownerid) {
+        if (!$data) return;
+        $configdata = array();
+
+        $fields = explode(';',$data);
+        foreach ($fields as $field) {
+            $field = trim($field);
+            list($key, $value) = explode('=',$field);
+            if ($key == 'groupname') {
+                $groupid;
+                //make sure the group exists
+                if (!$groupid = get_field('group', 'id', 'name', $value)) {
+                    throw new SystemException("Invalid Group '" . $value . "'");
+                }
+                else {
+                    $configdata['groupid'] = $groupid;
+                }
+            }
+            if ($key == 'maxposts') {
+                $key = 'limit';
+                $configdata[$key] = $value > 0 ? $value : 5;
+            }
+        }
+        $configdata[] = $data;
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for the blocktype: social profile
+     * @param string $data inside data column in behat test
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_socialprofile($data, $ownertype, $ownerid) {
+        if (!$data) return;
+
+        list($key, $value) = explode('=', $data);
+        $key = trim($key);
+        $value = trim($value);
+
+        if ($key == 'sns') {
+            //split the values for multiple social profile creation
+            $medialist = explode(',', $value);
+            $value = array();
+            foreach($medialist as $media) {
+                $newprofile = new ArtefactTypeSocialprofile();
+                $newprofile->set('owner', $ownerid);
+                $newprofile->set('author',$ownerid);
+                $newprofile->set('title', $media);
+                $newprofile->set('description', $media);
+                $newprofile->set('note', $media);
+                $id = $newprofile->commit(); //update the contents of the artefact table only
+                $artefactid[] = $newprofile->get('id');
+            }
+            return $configdata = array('artefactids' => $artefactid);
+        }
+    }
+
+    /**
+     * generate configdata for the blocktype: text
+     * @param string inside data column in behat test
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_text($data) {
+        if (!$data) return;
+        return $configdata = array('text' => $data);
+    }
+
+    /**
+    * Copies file from /test/behat/upload_files folder and places it in the dataroot folder of the site.
+    * Then write contents into it given the artefact id
+    * @param int $artefactid of the file artefact created in the upload_file function
+    * @param string $file attachment for uploading images, pdf, etc.
+    * @param int $ownertype of the user
+    * @param int $ownerid of the user
+    **/
+    public static function file_creation($artefactid, $file, $ownertype, $ownerid, $foldername='upload_files') {
+        // get the path of the file artefact from given artefactid
+        $filedir = get_config('dataroot') . ArtefactTypeFile::get_file_directory($artefactid);
+
+        if (!check_dir_exists($filedir, true, true)) {
+            throw new SystemException("Unable to create folder $filedir");
+        }
+        else {
+            // Write contents to a file...
+            $filepath = $filedir . '/' . $artefactid;
+            $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
+            copy($path, $filepath);
+            chmod($filepath, get_config('filepermissions'));
+        }
+        if (!$artefactid) {
+            throw new SystemException("Invalid attachment '" . $file . "'. No attachment by that name owned by " . $ownertype . " with id " . $ownerid);
+        }
+    }
+
+    /**
+     * set up configdata for retractable and retractable on load
+     * @param string $setting: auto, yes, no
+     * @return array $configdata of key and values for db table
+     */
+    public function setup_retractable($setting) {
+        $configdata = array();
+        $configdata['retractable'] = strtolower($setting) =='no' ? 0 : 1;
+        $configdata['retractedonload'] = strtolower($setting) =='auto' ? 1 : 0;
+
+        return $configdata;
+    }
+
+    /**
+    * Create artefacts
+    * @param string $file name
+    * @param string $ownertype i.e. institution, group, onwer
+    * @param int $ownerid
+    * @param string $filetype of the upload file
+    * @param string $foldername to upload the file into
+    * @return int artefactid
+    **/
+    public static function create_artefact($file, $ownertype, $ownerid, $filetype, $parentfolderid=null) {
+        $ext = explode('.', $file);
+        $now = date("Y-m-d H:i:s");
+        $artefact = new stdClass();
+        $artefact->title = $file;
+        $artefact->oldextension = end($ext);
+        $artefact->$ownertype = $ownerid;
+        $artefact->author = $ownerid;
+        $artefact->atime = $now;
+        $artefact->ctime = $now;
+        $artefact->mtime = $now;
+        if ($parentfolderid) {
+            $artefact->parent = $parentfolderid;
+        }
+
+        $artefactid;
+        $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
+
+        if ($filetype == 'image') {
+
+            $imageinfo      = getimagesize($path);
+            $artefact->width    = $imageinfo[0];
+            $artefact->height   = $imageinfo[1];
+
+            $artimg = new ArtefactTypeImage(0, $artefact);
+            $artimg->commit();
+            $artefactid = $artimg->get('id');
+        }
+
+        if ($filetype == 'attachment') {
+            $artobj = new ArtefactTypeFile(0, $artefact);
+            $artobj->commit();
+            $artefactid = $artobj->get('id');
+        }
+
+        if ($filetype == 'audio') {
+            $artefact->filetype = 'audio';
+            $artobj = ArtefactTypeFile::new_file($path, $artefact);
+            $artobj->commit();
+            $artefactid = $artobj->get('id');
+        }
+
+        if ($filetype == 'video') {
+            //this function from artefact/file/lib.php creates the specific ArtefactType[]
+            $artobj = ArtefactTypeFile::new_file($path, $artefact);
+            $artobj->commit();
+            $artefactid = $artobj->get('id');
+        }
+        return $artefactid;
+    }
+
+    /**
+     * A fixture to set up collections of pages in bulk.
+     * Currently it only supports adding title / description,
+     * | title          | ownertype | ownername | description | pages             |
+     * | collection one | user      | UserA     | desc of col |Page One,Page Two  |
+     * @param unknown $record
      * @throws SystemException if creating failed
      * @return int new collection id
      */
@@ -727,166 +1549,6 @@ EOD;
         }
     }
 
-    /**
-     * A fixture to set up page & collection permissions. Currently it only supports setting a blanket permission of
-     * "public", "loggedin", "friends", "private", "user + role", and allowcomments & approvecomments
-     *
-     * Example:
-     * Given the following "permissions" exist:
-     * | title | accesstype | accessname | allowcomments |
-     * | Page 1 | loggedin | loggedin | 1 |
-     * | Collection 1 | public | public | 1 |
-     * | Page 2 | user | userA | 0 |
-     * @param unknown $record
-     * @throws SystemException
-     */
-    public function create_permission($record) {
-        $sql = "SELECT id, 'view' AS \"type\" FROM {view} WHERE LOWER(TRIM(title))=?
-                UNION
-                SELECT id, 'collection' AS \"type\" FROM {collection} WHERE LOWER(TRIM(name))=?";
-        $title = strtolower(trim($record['title']));
-        $ids = get_records_sql_array($sql, array($title, $title));
-        if (!$ids || count($ids) > 1) {
-            throw new SystemException("Invalid page/collection name '" . $record['title'] . "'. The page/collection title does not exist, or is duplicated.");
-        }
-        $id = $ids[0];
-        $viewids = array();
-        if ($id->type == 'view') {
-            $viewids[] = $id->id;
-        }
-        else {
-            $records = get_records_array('collection_view', 'collection', $id->id, 'displayorder', 'view');
-            if (!$records) {
-                throw new SystemException("Can't set permissions on empty collection named '" . $record['title'] . "'.");
-            }
-            foreach ($records as $view) {
-                $viewids[] = $view->view;
-            }
-        }
-
-        if ($record['accesstype'] == 'private') {
-            $accesslist = array();
-        }
-        else {
-            $role = null;
-            switch ($record['accesstype']) {
-                case 'user':
-                    $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($record['accessname']))));
-                    if (!$ids || count($ids) > 1) {
-                        throw new SystemException("Invalid access user '" . $record['accessname'] . "'. The username does not exist or duplicated");
-                    }
-                    $id = $ids[0]->id;
-                    $type = 'user';
-                    if (!empty($record['role']) && $userrole = get_field('usr_roles', 'role', 'role', $record['role'])) {
-                        $role = $userrole;
-                    }
-                    break;
-                case 'public':
-                case 'friends':
-                case 'loggedin':
-                    $type = $id = $record['accesstype'];
-                    break;
-            }
-            // TODO: This only supports one access record at a time per page
-            $accesslist = array(
-                array(
-                    'startdate' => null,
-                    'stopdate' => null,
-                    'type' => $type,
-                    'role' => $role,
-                    'id' => $id,
-                )
-            );
-        }
-        if (!empty($record['multiplepermissions'])) {
-            require_once('view.php');
-            $firstview = new View($viewids[0]);
-            $currentaccess = $firstview->get_access();
-            $accesslist = array_merge($currentaccess, $accesslist);
-        }
-
-        $viewconfig = array(
-            'startdate'       => null,
-            'stopdate'        => null,
-            'template'        => 0,
-            'retainview'      => (int) (isset($record['retainview']) ? $record['retainview'] : 0),
-            'allowcomments'   => (int) (isset($record['allowcomments']) ? $record['allowcomments'] : 1),
-            'approvecomments' => (int) (isset($record['approvecomments']) ? $record['approvecomments'] : 0),
-            'accesslist'      => $accesslist,
-            'lockblocks'      => (int) (isset($record['lockblocks']) ? $record['lockblocks'] : 0),
-        );
-
-        require_once('view.php');
-        View::update_view_access($viewconfig, $viewids);
-    }
-
-    /**
-     * A fixture to set up messages in bulk.
-     * Currently it only supports setting friend request / accept internal notifications
-     * @TODO allow for other types of messages
-     *
-     * Example:
-     * Given the following "messages" exist:
-     * | emailtype | to | from | subject | messagebody | read | url | urltext |
-     * | friendrequest | userA | userB | New friend request | This is a friend request | 1 | user/view.php?id=[from] | Requests |
-     * | friendaccept  | userB | userA | Friend request accepted | This is a friend request acceptance | 1 | user/view.php?id=[to] |  |
-     * @param unknown $record
-     * @throws SystemException
-     */
-    public function create_message($record) {
-        $record['to'] = trim($record['to']);
-        $to = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['to'])));
-        if (!$to || count($to) > 1) {
-            throw new SystemException("Invalid user '" . $record['to'] . "'. The username does not exist or duplicated");
-        }
-        $to = $to[0]->id;
-        $from = null;
-        if (strtolower($record['from']) != 'system') {
-            $from = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['from'])));
-            if (!$from || count($from) > 1) {
-                throw new SystemException("Invalid user '" . $record['from'] . "'. The username does not exist or duplicated");
-            }
-            $from = $from[0]->id;
-        }
-        $emailtype = strtolower(trim($record['emailtype']));
-        if (!in_array($emailtype, array('friendrequest', 'friendaccept'))) {
-            throw new SystemException("Invalid emailtype '" . $emailtype . "'. The email type does not exist or is not yet set up");
-        }
-        $subject = !empty(trim($record['subject'])) ? trim($record['subject']) : 'Message subject';
-        $messagebody= !empty(trim($record['messagebody'])) ? trim($record['messagebody']) : 'Message body';
-        $read = !empty($record['read']) ? 1 : 0;
-        $url = null;
-        if (!empty(trim($record['url']))) {
-            $url = trim($record['url']);
-            // See if the url needs to have a correct id added to it. This works in the following way:
-            // the behat writer specifies the url and places the id var in [ ] and indicates where to
-            // get the id, eg 'view/user.php?id=[to]' means to fetch the id for the user specified in
-            // the 'to' column, which will be set above as variable $to
-            if (preg_match_all('/\[(?P<id>\w+)\]/', $url, $matches)) {
-                // replace the matched ids with their id number and set up replacement patterns
-                foreach ($matches['id'] as $k => $v) {
-                    if (in_array($v, array('from', 'to'))) {
-                        $matches['id'][$k] = $$v;
-                        $matches[1][$k] = '/\[' . $v . '\]/';
-                    }
-                }
-                $url = preg_replace($matches[1], $matches['id'], $url);
-            }
-        }
-        $urltext = !empty(trim($record['urltext'])) ? trim($record['urltext']) : null;
-
-        $users = array($to);
-        $data = new stdClass();
-        $data->url = $url;
-        $data->users = $users;
-        $data->fromuser = $from;
-        $data->strings = (object) array('urltext' => (object) array('key' => $urltext));
-        $data->subject = $subject;
-        $data->message = $messagebody;
-
-        $activity =  new ActivityTypeMaharamessage($data, false);
-        $activity->notify_users();
-    }
 
     /**
      * A fixture to set up journals in bulk.
@@ -894,36 +1556,21 @@ EOD;
      *
      * Example:
      * Given the following "journals" exist:
-     * | owner | ownertype | title | description | tags |
-     * | userA | user | Blog One | This is my new blog | cats,dogs |
-     * | Group B | group | Group Blog | This is my group blog | |
+     * | owner   | ownertype | title      | description           | tags      |
+     * | userA   | user      | Blog One   | This is my new blog   | cats,dogs |
+     * | Group B | group     | Group Blog | This is my group blog |           |
      * @param unknown $record
      * @throws SystemException
      */
-    public function create_journal($record) {
-        $record['owner'] = trim($record['owner']);
-        $record['ownertype'] = trim($record['ownertype']);
+    public function create_blog($record) {
         $owner = null;
         $ownertype = null;
-        if ($record['ownertype'] == 'group') {
-            $owner = get_field('group', 'id', 'name', $record['owner']);
-            $ownertype = 'group';
-        }
-        else if ($record['ownertype'] == 'institution') {
-            $owner = get_field('institution', 'name', 'displayname', $record['owner']);
-            $ownertype = 'institution';
-        }
-        else {
-            $owner = get_field('usr', 'id', 'username', $record['owner']);
-            $ownertype = 'owner';
-        }
-        if (!$owner) {
-            throw new SystemException("Invalid owner '" . $record['to'] . "'. The owner needs to be a username or group/institution display name");
-        }
+        $this->set_owner($record, $owner, $ownertype);
+
         $record['title'] = trim($record['title']);
         if (!empty($record['title'])) {
             // Check the blog does not already exist with that name
-            $blogid = get_field('artefact', 'id', 'artefacttype', 'blog', 'title', $record['title'], $ownertype, $owner);
+            $blogid = get_field('artefact', 'id', 'artefacttype', 'blog', 'title', $record['title']);
             if ($blogid) {
                 throw new SystemException("Invalid journal with '" . $record['title'] . "'. The blog already exists for this " . $record['owner'] . " " . $record['ownertype']);
             }
@@ -950,56 +1597,468 @@ EOD;
      *
      * Example:
      * Given the following "journalposts" exist:
-     * | owner | ownertype | title | entry | blog | tags | draft |
-     * | userA | user | Entry One | This is my entry | Blog 1 | cats,dogs | 0 |
+     * | owner   | ownertype | title | entry | blog | tags | draft |
+     * | userA   | user | Entry One | This is my entry | Blog 1 | cats,dogs | 0 |
      * | Group B | group | GE 1 | This is my group entry | G Blog 2 | | 0 |
-     * | userB | user | Entry One | This is my entry | | | 1 |  <-- No blog specified should default to default blog
+     * | userB   | user | Entry One | This is my entry | | | 1 |  <-- No blog specified should default to default blog
      * @param unknown $record
      * @throws SystemException
      */
-    public function create_journalpost($record) {
-        $record['owner'] = trim($record['owner']);
-        $record['ownertype'] = trim($record['ownertype']);
-        $owner = null;
-        $ownertype = null;
-        if ($record['ownertype'] == 'group') {
-            $owner = get_field('group', 'id', 'name', $record['owner']);
-            $ownertype = 'group';
+    public function create_blogpost($record) {
+      $owner = null;
+      $ownertype = null;
+      $this->set_owner($record, $owner, $ownertype);
+
+      $record['blog'] = trim($record['blog']);
+      if (!empty($record['blog'])) {
+        // Check the blog exists with that name
+        $blogid = get_field('artefact', 'id', 'artefacttype', 'blog', 'title', $record['blog']);
+        if (!$blogid) {
+          throw new SystemException("Invalid journal '" . $record['blog'] . "'. The " . $record['ownertype'] . " " . $record['owner'] . " does not have a blog called " . $record['blog']);
         }
-        else if ($record['ownertype'] == 'institution') {
-            $owner = get_field('institution', 'name', 'displayname', $record['owner']);
-            $ownertype = 'institution';
+      }
+      else {
+        //pick any blog as long as the given user has one
+        $blogid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('blog', $owner));
+        if (!$blogid) {
+          throw new SystemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a blog to add blog entry to. Please create blog first");
         }
-        else {
-            $owner = get_field('usr', 'id', 'username', $record['owner']);
-            $ownertype = 'owner';
-        }
-        if (!$owner) {
-            throw new SystemException("Invalid owner '" . $record['to'] . "'. The owner needs to be a username or group/institution display name");
-        }
-        $record['blog'] = trim($record['blog']);
-        if (!empty($record['blog'])) {
-            // Check the blog exists with that name
-            $blogid = get_field('artefact', 'id', 'artefacttype', 'blog', 'title', $record['blog'], $ownertype, $owner);
-            if (!$blogid) {
-                throw new SystemException("Invalid journal '" . $record['blog'] . "'. The " . $record['ownertype'] . " " . $record['owner'] . " does not have a blog called " . $record['blog']);
-            }
-        }
-        else {
-            $blogid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('blog', $owner));
-            if (!$blogid) {
-                throw new systemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a blog to add blog entry to. Please create blog first");
-            }
-        }
-        safe_require('artefact', 'blog');
-        $postobj = new ArtefactTypeBlogPost(null, null);
-        $postobj->set('title', trim($record['title']));
-        $postobj->set('description', trim($record['entry']));
-        $tags = array_map('trim', explode(',', $record['tags']));
-        $postobj->set('tags', (!empty($tags) ? $tags : null));
-        $postobj->set('published', !$record['draft']);
-        $postobj->set($ownertype, $owner);
-        $postobj->set('parent', $blogid);
-        $postobj->commit();
+      }
+      safe_require('artefact', 'blog');
+      $artefact = new ArtefactTypeBlogPost();
+      $artefact->set('title', trim($record['title']));
+      $artefact->set('description', trim($record['entry']));
+      $tags = array_map('trim', explode(',', $record['tags']));
+      $artefact->set('tags', (!empty($tags) ? $tags : null));
+      $artefact->set('published', !$record['draft']);
+      $artefact->set('owner', $owner);
+      $artefact->set('parent', $blogid);
+      $artefact->commit();
     }
-}
+
+    /**
+     * A fixture to set up forums in bulk.
+     * Currently it doesn't support indenting and other additional settings
+     *
+     * And the following "forums" exist:
+     *  | group  | title     | description          | creator |
+     *  | Group1 | unicorns! | magic mahara unicorns| UserB   |
+     *
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_forum($record) {
+      $record['title'] = trim($record['title']);
+      $record['description'] = trim($record['description']);
+      $record['creator'] = trim($record['creator']);
+      $record['group'] = trim($record['group']);
+
+      $groupid;
+      $creatorid;
+      $isadmin;
+
+      // check that the group exists
+      if (!$groupid = get_field('group', 'id', 'name',$record['group'] )) {
+        throw new SystemException("Invalid group '" . $record['group'] . "'");
+      }
+
+      //check the creator exists as a user
+      if (!$creatorid = get_field('usr','id', 'username', $record['creator'])) {
+        throw new SystemException("The user " . $record['creator'] . " doesn't exist");
+      }
+
+      //check that the creator is an admin of the group (for permission to create forum)
+      if (!$isadmin = get_field('group_member', 'member', 'group', $groupid, 'role', "admin", 'member', $creatorid)) {
+        throw new SystemException("The " . $record['creator'] . " does not have admin rights in group " . $record['group'] . "to create a forum");
+      }
+
+      $forum = new InteractionForumInstance(0, (object) array(
+        'group'       => $groupid,
+        'creator'     => $creatorid,
+        'title'       => $record['title'],
+        'description' => $record['description']
+      ));
+
+      $forum->commit();
+
+      // configure other settings
+      PluginInteractionForum::instance_config_save($forum, array(
+          'createtopicusers' => 'members',
+          'autosubscribe'    => 1,
+          'justcreated'      => 1,
+      ));
+    }
+
+    /**
+     * A fixture to set up forum posts in bulk
+     *
+     * - if the topic doesn't exist, create a new one
+     *   (fyi, a topic is just the first post in a thread ;)
+     * - if the forum doesn't exist, post in General Discussion and ignore the title
+     * - if no subject, it is the same name as the forum
+     *
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_forumpost($record) {
+        $record['forum'] = trim($record['forum']);
+        $record['group'] = trim($record['group']);
+        $record['message'] = trim($record['message']);
+        $record['topic'] = trim($record['topic']);
+        $record['user'] = trim($record['user']);
+
+        $groupid;
+        $forumid;
+        $topicid;
+        $postid;
+        $userid;
+        $parentpostid = null;
+        $newtopic = false;
+        $newsubject = false;
+
+        if (!isset($record['topic'])) {
+            throw new SystemException("Missing a topic");
+        }
+
+        // check that the group exists
+        if (!$groupid = get_field('group', 'id', 'name',$record['group'] )) {
+            throw new SystemException("Invalid group '" . $record['group'] . "'");
+        }
+
+        // check the user exists and is part of the group i.e. can make a post
+        if ($userid = get_field('usr','id', 'username', $record['user'])) {
+            if (!get_field('group_member', 'member', 'group', $groupid, 'member', $userid)) {
+                throw new SystemException("The " . $record['user'] . " is not a member in the group " . $record['group']);
+            }
+        }
+        else {
+            throw new SystemException("The user " . $record['user'] . " doesn't exist");
+        }
+
+        // check the given forum exists else set to default forum General Discussion
+        if (!$forumid = get_field('interaction_instance', 'id', 'group', $groupid, 'title', $record['forum'])) {
+            // if the forum name doesn't exist, set the forumid to the default General discussion forum
+            $forumid = get_field('interaction_instance', 'id', 'group', $groupid, 'title', get_string('defaultforumtitle', 'interaction.forum'));
+        }
+
+        // Heads up, it will begin to get confusing here... so here is a brief explanation of my understanding:
+            // - the name of a forum is the title it is given when created
+            // - the name of a topic is the first subject of a post and is the parent of posts in responses to that parent post.
+            //   Only the parent post holds the subject in  the interaction_forum_post
+            // - if there is no subject given or the subject given is the same as the topic,
+            //   the post responses have no subject, but they hold the postid of the the original parent post,
+            // - the name of a subject is either the parent post in a thread or a subparent in a thread with it's own subject
+            //   - a subthread post with a new subject holds the parent as well as a subject title in the db
+
+        // check the given topic exists as a topic subject in the forums
+        if ($topicid = get_field('interaction_forum_post', 'topic', 'subject', $record['topic'])) {
+            $parentpostid = get_field('interaction_forum_post', 'id', 'subject', $record['topic']);
+            if (!empty($record['subject'])) {
+                // check that the given subject exists
+                if (!$subjectpostid = get_field('interaction_forum_post', 'id', 'subject', $record['subject'])) {
+                    //new subject
+                    $newsubject = true;
+                }
+                else {
+                    //subject exists
+                    $parentpostid = $subjectpostid;
+                }
+            }
+        }
+        // thread with given topic doesn't exist, so create a new topic with given topic
+        else {
+            $parentpostid = null;
+            $newtopic = true;
+            $record['subject'] = $record['topic'];
+
+            //create a new topic
+            $topicid = insert_record(
+                'interaction_forum_topic',
+                (object)array(
+                    'forum'  => $forumid,
+                    'sticky' =>  0,
+                    'closed' =>  0,
+                    'sent'   =>  1
+                ), 'id', true
+            );
+        }
+
+        $post = (object)array(
+            'topic'   => $topicid,
+            'poster'  => $userid,
+            'body'    => $record['message'],
+            'ctime'   =>  db_format_timestamp(time()),
+            'parent'  => $parentpostid,
+            'subject' => ($newtopic || $newsubject) ? $record['subject'] : null
+        );
+        $postid = insert_record('interaction_forum_post', $post, 'id', true);
+    }
+
+    /**
+     * A fixture to set up messages in bulk.
+     * Currently it only supports setting friend request / accept internal notifications
+     * @TODO allow for other types of messages
+     *
+     * Example:
+     * Given the following "messages" exist:
+     * | emailtype | to | from | subject | messagebody | read | url | urltext |
+     * | friendrequest | userA | userB | New friend request | This is a friend request | 1 | user/view.php?id=[from] | Requests |
+     * | friendaccept  | userB | userA | Friend request accepted | This is a friend request acceptance | 1 | user/view.php?id=[to] |  |
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_message($record) {
+      $record['to'] = trim($record['to']);
+      $to = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['to'])));
+      if (!$to || count($to) > 1) {
+        throw new SystemException("Invalid user '" . $record['to'] . "'. The username does not exist or duplicated");
+      }
+      $to = $to[0]->id;
+      $from = null;
+      if (strtolower($record['from']) != 'system') {
+        $from = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['from'])));
+        if (!$from || count($from) > 1) {
+          throw new SystemException("Invalid user '" . $record['from'] . "'. The username does not exist or duplicated");
+        }
+        $from = $from[0]->id;
+      }
+      $emailtype = strtolower(trim($record['emailtype']));
+      if (!in_array($emailtype, array('friendrequest', 'friendaccept'))) {
+        throw new SystemException("Invalid emailtype '" . $emailtype . "'. The email type does not exist or is not yet set up");
+      }
+      $subject = !empty(trim($record['subject'])) ? trim($record['subject']) : 'Message subject';
+      $messagebody= !empty(trim($record['messagebody'])) ? trim($record['messagebody']) : 'Message body';
+      $read = !empty($record['read']) ? 1 : 0;
+      $url = null;
+      if (!empty(trim($record['url']))) {
+        $url = trim($record['url']);
+        // See if the url needs to have a correct id added to it. This works in the following way:
+        // the behat writer specifies the url and places the id var in [ ] and indicates where to
+        // get the id, eg 'view/user.php?id=[to]' means to fetch the id for the user specified in
+        // the 'to' column, which will be set above as variable $to
+        if (preg_match_all('/\[(?P<id>\w+)\]/', $url, $matches)) {
+          // replace the matched ids with their id number and set up replacement patterns
+          foreach ($matches['id'] as $k => $v) {
+            if (in_array($v, array('from', 'to'))) {
+              $matches['id'][$k] = $$v;
+              $matches[1][$k] = '/\[' . $v . '\]/';
+            }
+          }
+          $url = preg_replace($matches[1], $matches['id'], $url);
+        }
+      }
+      $urltext = !empty(trim($record['urltext'])) ? trim($record['urltext']) : null;
+
+      $users = array($to);
+      $data = new stdClass();
+      $data->url = $url;
+      $data->users = $users;
+      $data->fromuser = $from;
+      $data->strings = (object) array('urltext' => (object) array('key' => $urltext));
+      $data->subject = $subject;
+      $data->message = $messagebody;
+
+      $activity =  new ActivityTypeMaharamessage($data, false);
+      $activity->notify_users();
+    }
+
+    /**
+     * A fixture to set up page & collection permissions. Currently it only supports setting a blanket permission of
+     * "public", "loggedin", "friends", "private", "user + role", and allowcomments & approvecomments
+     *
+     * Example:
+     * Given the following "permissions" exist:
+     * | title | accesstype | accessname | allowcomments |
+     * | Page 1 | loggedin | loggedin | 1 |
+     * | Collection 1 | public | public | 1 |
+     * | Page 2 | user | userA | 0 |
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_permission($record) {
+      $sql = "SELECT id, 'view' AS \"type\" FROM {view} WHERE LOWER(TRIM(title))=?
+      UNION
+      SELECT id, 'collection' AS \"type\" FROM {collection} WHERE LOWER(TRIM(name))=?";
+      $title = strtolower(trim($record['title']));
+      $ids = get_records_sql_array($sql, array($title, $title));
+      if (!$ids || count($ids) > 1) {
+        throw new SystemException("Invalid page/collection name '" . $record['title'] . "'. The page/collection title does not exist, or is duplicated.");
+      }
+      $id = $ids[0];
+      $viewids = array();
+      if ($id->type == 'view') {
+        $viewids[] = $id->id;
+      }
+      else {
+        $records = get_records_array('collection_view', 'collection', $id->id, 'displayorder', 'view');
+        if (!$records) {
+          throw new SystemException("Can't set permissions on empty collection named '" . $record['title'] . "'.");
+        }
+        foreach ($records as $view) {
+          $viewids[] = $view->view;
+        }
+      }
+
+      if ($record['accesstype'] == 'private') {
+        $accesslist = array();
+      }
+      else {
+        $role = null;
+        switch ($record['accesstype']) {
+          case 'user':
+          $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($record['accessname']))));
+          if (!$ids || count($ids) > 1) {
+            throw new SystemException("Invalid access user '" . $record['accessname'] . "'. The username does not exist or duplicated");
+          }
+          $id = $ids[0]->id;
+          $type = 'user';
+          if (!empty($record['role']) && $userrole = get_field('usr_roles', 'role', 'role', $record['role'])) {
+            $role = $userrole;
+          }
+          break;
+          case 'public':
+          case 'friends':
+          case 'loggedin':
+          $type = $id = $record['accesstype'];
+          break;
+        }
+        // TODO: This only supports one access record at a time per page
+        $accesslist = array(
+        array(
+        'startdate' => null,
+        'stopdate' => null,
+        'type' => $type,
+        'role' => $role,
+        'id' => $id,
+        )
+        );
+      }
+      if (!empty($record['multiplepermissions'])) {
+        require_once('view.php');
+        $firstview = new View($viewids[0]);
+        $currentaccess = $firstview->get_access();
+        $accesslist = array_merge($currentaccess, $accesslist);
+      }
+
+      $viewconfig = array(
+      'startdate'       => null,
+      'stopdate'        => null,
+      'template'        => 0,
+      'retainview'      => (int) (isset($record['retainview']) ? $record['retainview'] : 0),
+      'allowcomments'   => (int) (isset($record['allowcomments']) ? $record['allowcomments'] : 1),
+      'approvecomments' => (int) (isset($record['approvecomments']) ? $record['approvecomments'] : 0),
+      'accesslist'      => $accesslist,
+      'lockblocks'      => (int) (isset($record['lockblocks']) ? $record['lockblocks'] : 0),
+      );
+
+      require_once('view.php');
+      View::update_view_access($viewconfig, $viewids);
+    }
+
+    /**
+     * A fixture to set up plans in bulk.
+     * Currently it only supports adding title / description / tags for a plan
+     *
+     * Example:
+     * Given the following "plans" exist:
+     * | owner   | ownertype | title      | description           | tags      |
+     * | userA   | user      | Plan One   | This is my new plan   | cats,dogs |
+     * | Group B | group     | Group Plan | This is my group plan | unicorn   |
+      */
+    public function create_plan($record) {
+        $owner = null;
+        $this->set_owner($record, $owner);
+
+        $artefact = new ArtefactTypePlan();
+        $artefact->set('title', $record['title']);
+        $artefact->set('description', $record['description']);
+        $artefact->set('owner', $owner);
+
+        if (!empty($record['tags'])) {
+            $tags = array_map('trim', explode(',', $record['tags']));
+            $artefact->set('tags', (!empty($tags) ? $tags : null));
+        }
+        $artefact->commit();
+    }
+
+    /**
+     * A fixture to set up tasks in bulk
+     *
+     * Example:
+     * And the following "tasks" exist:
+     *| owner | ownertype | plan     | title   | description          | completiondate | completed | tags      |
+     *| UserA | user      | Plan One | Task One| Task One Description | 12/12/19       | no        | cats,dogs |
+     *| UserA | user      | Plan One | Task Two| Task Two Description | 12/01/19       | yes       | cats,dogs |
+     *| UserA | user      | Plan Two | Task 2a | Task 2a Description  | 12/10/19       | yes       | cats,dogs |
+     *| UserA | user      | Plan Two | Task 2b | Task 2b Description  | 11/05/19       | yes       | cats,dogs |
+     *
+     * @param array $record row of fields from the behat table for creating tasks in bulk
+     */
+    public function create_task($record) {
+        $owner = null;
+        $this->set_owner($record, $owner);
+
+        $record['plan'] = trim($record['plan']);
+        if (!empty($record['plan'])) {
+            //check that there exists a plan to add a task to
+            $planid = get_field('artefact', 'id', 'artefacttype', 'plan', 'title', $record['plan'], 'owner', $owner );
+            if (!$planid) {
+                throw new SystemException("Invalid Plan '" . $record['plan'] . "'. The " . $record['ownertype'] . " " . $record['owner'] . " does not have a plan called " . $record['plan']);
+            }
+        }
+        else {
+            //pick any plan artefact owned by the given user
+            $planid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('plan', $owner));
+            if (!$planid) {
+                throw new SystemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a plan to add task to. Please create plan first");
+            }
+        }
+
+        $artefact = new ArtefactTypeTask();
+        $artefact->set('title', trim($record['title']));
+        $artefact->set('description', trim($record['description']));
+        $artefact->set('completed', $record['completed'] ? 1 : 0);
+        $artefact->set('owner', $owner);
+        $artefact->set('parent', $planid);
+        $completiondate = date_create_from_format('d/m/y', $record['completiondate']);
+        $artefact->set('completiondate', $completiondate);
+
+        if (!empty($record['tags'])) {
+            $tags = array_map('trim', explode(',', $record['tags']));
+            $artefact->set('tags', (!empty($tags) ? $tags : null));
+        }
+        $artefact->commit();
+    }
+
+    /**
+     * sets up the owner and ownertype when creating bulk artefacts
+     * in functions looking like create_[...]
+     *
+     * $ownertype is currently only used by blog and blogentry
+     *
+     * @param array $record an array representation of a row of the testing table
+     * @param string $owner null variable passed in by reference for owner
+     * @param string $owner null variable passed in by reference for ownertype
+     * @return return type
+     */
+    public function set_owner($record, &$owner, &$ownertype = null) {
+      $ownertype = null;
+      $record['owner'] = trim($record['owner']);
+      $record['ownertype'] = trim($record['ownertype']);
+      if ($record['ownertype'] == 'group') {
+          $owner = get_field('group', 'id', 'name', $record['owner']);
+          $ownertype = 'group';
+      }
+      else if ($record['ownertype'] == 'institution') {
+          $owner = get_field('institution', 'name', 'displayname', $record['owner']);
+          $ownertype = 'institution';
+      }
+      else {
+          $owner = get_field('usr', 'id', 'username', $record['owner']);
+          $ownertype = 'owner';
+      }
+      if (!$owner) {
+          throw new SystemException("Invalid owner. The owner needs to be a username or group/institution display name");
+      }
+    }
+  }
