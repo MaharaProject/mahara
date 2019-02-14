@@ -423,7 +423,7 @@ function saml_auth_generate_login_form() {
                 'value' => get_string('login')
             ),
             'register' => array(
-                'value' => '<div id="login-helplinks" class="panel-footer"><small>' . $registerlink
+                'value' => '<div id="login-helplinks" class="card-footer"><small>' . $registerlink
                     . '<a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></small></div>'
             ),
             'loginsaml' => array(

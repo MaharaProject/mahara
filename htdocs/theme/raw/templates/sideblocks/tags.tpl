@@ -1,4 +1,4 @@
-<div class="card card">
+<div class="card">
     <h3 class="card-header has-link">
         <a href="{$WWWROOT}tags.php">{str tag="tags"} <span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
     </h3>

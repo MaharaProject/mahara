@@ -1,6 +1,6 @@
 <div class="collapsible-group">
 {foreach from=$data item=item name='notification'}
-    <div class="card card collapsible notification collapsible-group {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if}">
+    <div class="card collapsible notification collapsible-group {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if}">
         <h4 class="card-header">
             <label class="card-control">
                 {if $item->table === 'module_multirecipient_notification'}

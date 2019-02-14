@@ -23,6 +23,7 @@
         }
     }
     a {
+        border-width: 0;
         &:after {
             @include transition(opacity 0.5s);
             @include fa-icon();

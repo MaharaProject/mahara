@@ -22,8 +22,8 @@
                 </div>
                 <p class="content-text">{$postinfo->body|str_shorten_html:100:true:true:false|safe}</p>
                 {if $postinfo->filecount}
-                <div class="has-attachment panel panel-default collapsible collapsible-group" id="blockpostfiles-{$postinfo->id}">
-                    <h5 class="panel-heading">
+                <div class="has-attachment card collapsible collapsible-group" id="blockpostfiles-{$postinfo->id}">
+                    <h5 class="card-header">
                         <a class="text-left collapsed" data-toggle="collapse" href="#post-attach-{$postinfo->id}" aria-expanded="false">
                             <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
                             <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>

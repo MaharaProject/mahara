@@ -5,7 +5,7 @@
     background-color: transparent;
 
     &.card-warning {
-         > .card-header, .card-heading-nested {
+         > .card-header, .card-header-nested {
             border-left: 0;
         }
     }
@@ -25,7 +25,7 @@
     }
 
     // removing left/right padding in card headings
-    .card-heading-nested,
+    .card-header-nested,
     > .card-header {
         padding-left: 0;
         padding-right: 0;

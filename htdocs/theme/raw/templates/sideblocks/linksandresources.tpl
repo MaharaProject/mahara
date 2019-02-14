@@ -1,5 +1,5 @@
 {if $sbdata}
-<div class="card card">
+<div class="card">
     <h3 class="card-header">
         {str tag="linksandresources"}
     </h3>

@@ -1,5 +1,5 @@
-        <div class="has-attachment card card collapsible">
-            <h3 class="card-heading">
+        <div class="has-attachment card collapsible">
+            <h3 class="card-header">
                 <a class="text-left collapsed" aria-expanded="false" href="#blog-attach-{$postid}" data-toggle="collapse">
                     <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
 
@@ -40,4 +40,3 @@
                 </ul>
             </div>
         </div>
-

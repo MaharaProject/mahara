@@ -15,7 +15,7 @@
         {/foreach}
         </ul>
     </div>
-    <div id="results_container" class="card card tag-results">
+    <div id="results_container" class="card tag-results">
         <h2 id="results_heading" class="card-header">{str tag=searchresultsfor}
             <a class="tag secondary-link" href="{$results->baseurl}{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
         </h2>

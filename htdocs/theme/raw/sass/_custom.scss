@@ -709,6 +709,9 @@ a[type="submit"],
 .form-inline {
     input {
         @extend .form-control;
+        &.btn-primary {
+            @extend .btn-primary;
+        }
     }
 }
 .notification-parent {

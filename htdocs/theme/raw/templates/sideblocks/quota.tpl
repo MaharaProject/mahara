@@ -1,5 +1,5 @@
 {loadquota}
-<div class="card card">
+<div class="card">
     <h3 class="card-header">
         {str tag="quota"}
         <span class="float-right">

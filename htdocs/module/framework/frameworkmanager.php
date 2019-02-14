@@ -30,7 +30,7 @@ $classname = 'Framework';
 
 $form = $framework->get_framework_config_options();
 if (!array_key_exists('class', $form)) {
-    $form['class'] = 'panel panel-body';
+    $form['class'] = 'card card-body';
 }
 
 $form['name'] = 'frameworkconfig';

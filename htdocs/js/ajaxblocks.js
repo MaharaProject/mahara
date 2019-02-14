@@ -19,7 +19,7 @@ jQuery(function($) {
 
                $(blocks[i]).load(baseurl + "blocktype/blocktype.ajax.php?blockid="+ id, function(){
                     if ($(this).is(':empty')){
-                        $(this).closest('.panel').addClass('d-none');
+                        $(this).closest('.card').addClass('d-none');
                     }
                     if (config.mathjax && MathJax !== undefined) {
                         MathJax.Hub.Queue(["Typeset", MathJax.Hub, blocks.get(i)]);

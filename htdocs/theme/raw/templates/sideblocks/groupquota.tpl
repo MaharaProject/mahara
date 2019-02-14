@@ -1,6 +1,6 @@
 {loadgroupquota}
-<div class="card card">
-    <h3 class="card-heading">
+<div class="card">
+    <h3 class="card-header">
         {str tag="groupquota"}
         <span class="float-right">
             {contextualhelp plugintype='artefact' pluginname='file' section='groupquota_message'}

@@ -27,8 +27,8 @@
         </div>
 
         {if $post->files}
-        <div class="has-attachment card card collapsible" id="blockpostfiles-{$post->id}">
-            <h5 class="card-heading">
+        <div class="has-attachment card collapsible" id="blockpostfiles-{$post->id}">
+            <h5 class="card-header">
                 <a class="text-left collapsed" data-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
                     <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>

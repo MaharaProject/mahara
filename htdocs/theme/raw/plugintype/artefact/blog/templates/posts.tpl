@@ -69,7 +69,7 @@
         </p>
 
         {if $post->files}
-        <div class="has-attachment card card collapsible" id="postfiles_{$post->id}">
+        <div class="has-attachment card collapsible" id="postfiles_{$post->id}">
             <h5 class="card-header has-link">
                 <a class="text-left collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
                     <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>

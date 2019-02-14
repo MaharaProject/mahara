@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="card card">
+<div class="card">
     <table id="notificationstable" class="fullwidth table">
 	   <thead>
             <tr>

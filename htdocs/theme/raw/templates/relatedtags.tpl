@@ -2,8 +2,8 @@
 {if $noresultsmessage}
     <div class="no-results">{$noresultsmessage}</div>
 {else}
-    <div id="results_container" class="card card tag-results">
-        <h2 id="results_heading" class="card-heading">{str tag=searchresultsfor}
+    <div id="results_container" class="card tag-results">
+        <h2 id="results_heading" class="card-header">{str tag=searchresultsfor}
             <a class="tag secondary-link" href="{$results->baseurl}">{$tag|str_shorten_text:50}</a>
         </h2>
         <div class="tag-filters">

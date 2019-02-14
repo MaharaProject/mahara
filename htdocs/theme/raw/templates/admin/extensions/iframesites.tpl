@@ -2,7 +2,7 @@
 <p class="lead">{str tag=allowediframesitesdescription section=admin}</p>
 <p class="lead">{str tag=allowediframesitesdescriptiondetail section=admin}</p>
 
-<div class="card card">
+<div class="card">
   {if $editurls}
   <table class="iframesources fullwidth table">
     <thead>

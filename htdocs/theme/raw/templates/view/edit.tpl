@@ -5,7 +5,7 @@
 {if $ADMIN || $INSTITUTIONALADMIN}
 <div class="row">
     <div class="col-lg-9">
-        <div class="card card">
+        <div class="card">
             <div class="card-body">
                 {$editview|safe}
             </div>

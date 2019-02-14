@@ -7,7 +7,7 @@
     <div class="js-hidden alert alert-danger" id="jsrequiredforupgrade">
         {str tag=jsrequiredforupgrade section=admin}
     </div>
-    <div class="card card">
+    <div class="card">
         <table class="table upgrade-list">
             <thead>
                 <tr>

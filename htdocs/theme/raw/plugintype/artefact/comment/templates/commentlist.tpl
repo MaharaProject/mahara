@@ -94,8 +94,8 @@
 
         {if !$item->deletedmessage && $item->attachments}
         <div class="comment-attachment">
-            <div class="card card has-attachment collapsible">
-                <h4 class="card-heading">
+            <div class="card has-attachment collapsible">
+                <h4 class="card-header">
                     <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
                         <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
                         <span class="text-small">{str tag=Attachments section=artefact.comment} ({$item->filescount})</span>

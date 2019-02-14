@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 {$typeform|safe}
 
-<div class="card card card-body view-container table-responsive">
+<div class="card card-body view-container table-responsive">
     {$buttonformopen|safe}
     {$buttonform|safe}
         <table id="suspendedlist" class="table table-striped fullwidth listing">

@@ -108,6 +108,6 @@ $card-footer-bg:             #f0f5ea;
 $card-header-bg:    #fff;
 
 $card-border:        #d9d9d9;
-$card-heading-bg:    #FFFFFF;
+$card-header-bg:    #FFFFFF;
 
-$card-secondary-heading-bg:   darken($card-heading-bg, 2%);
+$card-secondary-heading-bg:   darken($card-header-bg, 2%);

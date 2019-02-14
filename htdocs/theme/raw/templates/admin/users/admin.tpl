@@ -2,7 +2,7 @@
 <div class="lead">
 {str tag="adminuserspagedescription1" section="admin"}
 </div>
-<div class="card card card-body">
+<div class="card card-body">
 
     <div class="userlistform">
     {$adminusersform|safe}

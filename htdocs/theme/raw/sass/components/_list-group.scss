@@ -161,6 +161,8 @@
 
 // list-group-item with btn-group
 .list-group-item {
+    border-left-width: 0;
+    border-right-width: 0;
     &.draft,
     &.list-group-item-warning {
         @extend .list-group-item-warning;

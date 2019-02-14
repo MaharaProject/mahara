@@ -2,8 +2,8 @@
 {$description|clean_html|safe}
 
 {if isset($attachments)}
-<div class="has-attachment card card collapsible">
-    <h4 class="card-heading">
+<div class="has-attachment card collapsible">
+    <h4 class="card-header">
         <a class="text-left collapsed" aria-expanded="false" href="#cv-attach-{$id}{if $artefactid}-{$artefactid}{/if}" data-toggle="collapse">
             <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
 

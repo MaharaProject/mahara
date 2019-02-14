@@ -10,11 +10,15 @@
         margin: 0;
     }
 
-    &.has-link {
+    &.has-link,
+    &.profile-block {
         padding: 0;
         h4 {
             padding: 0;
             margin: 0;
+        }
+        a:not(.secondary-link) {
+            border-width: 0;
         }
     }
 
@@ -27,7 +31,7 @@
         display: block;
         color: inherit;
         padding: 10px 15px;
-        border: 0 solid $card-border-color;
+        border: 1px solid $card-border-color;
         border-bottom: 0;
         font-size: $font-size-base * 1.14285;
         .card-secondary > & {
