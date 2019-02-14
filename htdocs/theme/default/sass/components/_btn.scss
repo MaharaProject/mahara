@@ -14,7 +14,7 @@
     &:hover,
     &:focus {
         background: darken($btn-secondary-bg, 9.7%);
-        color: $btn-secondary-color;
+        color: $theme-text-color;
         border-color: darken($btn-secondary-border, 12%);
     }
 }

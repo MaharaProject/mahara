@@ -26,11 +26,11 @@
 .navbar-toggle {
     display: block;
     margin: 0;
-    border-color: $navbar-default-toggle-border-color;
+    border-color: transparent;
     border-left-width: 0;
     border-radius: 3px;
     min-width: 45px;
-    color: $navbar-default-toggle-icon-bar-bg;
+    color: $link-color;
     padding: 6px 10px;
     background-color: $navbar-default-toggle-hover-bg;
     position: relative;
@@ -92,7 +92,7 @@
     cursor: pointer;
     &:hover,
     &:focus {
-        background-color: $navbar-inverse-toggle-hover-bg;
+        background-color: $navbar-inverse-bg;
         .icon {
             color: $navbar-inverse-link-hover-color;
         }
@@ -108,7 +108,7 @@
         }
     }
     .active & {
-        background-color: $navbar-inverse-toggle-hover-bg;
+        background-color: $navbar-inverse-bg;
         .icon {
             color: $navbar-inverse-link-hover-color;
         }

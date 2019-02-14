@@ -1,7 +1,7 @@
 // Modifications and extra use cases for bootstrap  buttons
 
 .btn-secondary {
-	color: $btn-secondary-color;
+	color: $theme-text-color;
 	background-color: $btn-secondary-bg;
 	border-color: $btn-secondary-border;
 	box-shadow: none;
@@ -21,8 +21,8 @@
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
 	color: inherit;
-	background-color: $btn-dark-bg;
-	border-color: $btn-dark-border;;
+	background-color: $gray-400;
+	border-color: $btn-secondary-border;;
 	box-shadow: none;
 }
 
@@ -243,6 +243,7 @@ td.action-list-copy {
     .btn {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+		border-color: transparent;
         border-top: 0;
         background: scale-color($btn-secondary-bg, $lightness: 40%);
         &:hover {
@@ -273,6 +274,9 @@ td.action-list-copy {
 
 //page builder collapsible
 .btn-group-vertical {
+	.btn:not(:first-child) {
+		margin-left: 0;
+	}
     .indicator {
         margin-left: -4px;
         font-size: $font-size-base - 3;

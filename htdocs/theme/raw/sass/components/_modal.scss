@@ -196,11 +196,12 @@ $width-sm: 90%;
             &:focus,
             &:active {
                 outline: none;
-
+                opacity: 1;
                 .times {
                     opacity:0.8;
                 }
             }
+
         }
     }
     .modal-content {

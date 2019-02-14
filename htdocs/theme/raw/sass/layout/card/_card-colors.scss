@@ -1,10 +1,10 @@
 .card {
     &.bg-success {
-        border-color: darken($card-success-header-bg, 15%);
+        border-color: darken($state-success-bg, 15%);
         background-color: $card-bg !important;
         .card-header {
-            background-color: $card-success-header-bg;
-            color: $card-success-text;
+            background-color: $state-success-bg;
+            color: $state-success-text;
         }
         .card-body {
             background-color: $card-bg;
@@ -20,7 +20,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($card-success-header-bg, 15%);
+            border-color: darken($state-success-bg, 15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {
@@ -29,11 +29,11 @@
     }
 
     &.bg-info {
-        border-color: darken($card-info-header-bg, 15%);
+        border-color: darken($state-info-bg, 15%);
         background-color: $card-bg !important;
         .card-header {
-            background-color: $card-info-header-bg;
-            color: $card-info-text;
+            background-color: $state-info-bg;
+            color: $state-info-text;
         }
         .card-body,
         table {
@@ -58,7 +58,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($card-info-header-bg, 15%);
+            border-color: darken($state-info-bg, 15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {
@@ -67,14 +67,14 @@
     }
 
     &.bg-warning {
-        border-color: darken($card-warning-header-bg, 15%);
+        border-color: darken($state-warning-bg, 15%);
         background-color: $card-bg !important;
         .card-header {
-            background-color: $card-warning-header-bg;
-            color: $card-warning-text;
+            background-color: $state-warning-bg;
+            color: $state-warning-text;
         }
         .card-body {
-            background-color: $card-warning-bg;
+            background-color: $white;
         }
         .card-footer {
             background-color: scale-color($card-header-bg, $lightness: -3.22);
@@ -83,7 +83,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($card-warning-header-bg, 15%);
+            border-color: darken($state-warning-bg, 15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {
@@ -92,11 +92,11 @@
     }
 
     &.bg-danger {
-        border-color: darken($card-danger-header-bg, 15%);
+        border-color: darken($state-danger-bg, 15%);
         // background-color: $card-bg;
         .card-header {
-            background-color: $card-danger-header-bg;
-            color: $card-danger-text;
+            background-color: $state-danger-bg;
+            color: $state-danger-text;
         }
         .card-body {
             background-color: $card-bg;
@@ -111,7 +111,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($card-danger-header-bg, 15%);
+            border-color: darken($state-danger-bg, 15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {

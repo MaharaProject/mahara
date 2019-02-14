@@ -78,7 +78,7 @@
         }
 
         > li > a {
-            color: $navbar-default-color;
+            color: $link-color;
             background-color: $navbar-default-bg;
             padding: 10px 15px;
             font-weight: normal;
@@ -89,7 +89,7 @@
             &:focus {
                 background-color: $navbar-inverse-bg;
                 text-decoration:none;
-                color: $navbar-default-link-hover-color;
+                color: $link-hover-color;
             }
             @include media-breakpoint-up(md) {
                 border: 1px solid $navbar-default-border;
