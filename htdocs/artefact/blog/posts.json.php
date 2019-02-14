@@ -28,6 +28,7 @@ if ($blockid = param_integer('block', null)) {
     $configdata = $bi->get('configdata');
     $limit  = isset($configdata['count']) ? $configdata['count'] : 5;
     $configdata['countcomments'] = true;
+    $configdata['versioning'] = false;
     $configdata['viewid'] = $bi->get('view');
     $posts = ArtefactTypeBlogpost::get_posts($configdata['artefactid'], $limit, $offset, $configdata);
     $template = 'artefact:blog:viewposts.tpl';
