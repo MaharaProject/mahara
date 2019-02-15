@@ -54,6 +54,16 @@ function homepageredirect() {
     }
 }
 
+function update_allowpublicprofiles() {
+    if (jQuery('#siteoptions_allowpublicviews').prop('checked')) {
+        jQuery('#siteoptions_allowpublicprofiles').prop('checked', true);
+        jQuery('#siteoptions_allowpublicprofiles').prop('disabled', 'disabled');
+    }
+    else {
+        jQuery('#siteoptions_allowpublicprofiles').prop('disabled', false);
+    }
+}
+
 var checkReload = (function($) {
   // Disconnects the pieform submit handler and changes the form target back to
   // the page itself (rather than pieform's hidden iframe), so a full post/reload
@@ -75,20 +85,7 @@ var checkReload = (function($) {
       $('#siteoptions_allowpublicviews').on('click', update_allowpublicprofiles);
   }
 
-
-
-  function update_allowpublicprofiles() {
-      if ($('#siteoptions_allowpublicviews').prop('checked')) {
-          $('#siteoptions_allowpublicprofiles').prop('checked', true);
-          $('#siteoptions_allowpublicprofiles').prop('disabled', 'disabled');
-      }
-      else {
-          $('#siteoptions_allowpublicprofiles').prop('disabled', false);
-      }
-  }
-
   connectElements();
-
 
   // Javascript success handler for the form. Re-wires up the elements
   return function(form, data) {
@@ -113,3 +110,7 @@ var checkReload = (function($) {
       formSuccess(form, data);
   };
 }(jQuery));
+
+jQuery(function($) {
+    $('#siteoptions_allowpublicviews').on('click', update_allowpublicprofiles);
+});
