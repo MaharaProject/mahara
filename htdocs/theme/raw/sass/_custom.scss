@@ -568,14 +568,21 @@
 
 .statinfoblock {
     width: 360px;
+    float: left;
+    margin-right: 15px;
 
     h3 {
         margin-top: 0;
     }
+    h4 {
+        padding: 0 1rem;
+        margon: 0;
+        font-size: $font-size-base;
+    }
 
-    float: left;
-    margin-right: 15px;
-    padding: 5px;
+    table {
+        padding: 10px;
+    }
 }
 
 .ownersubtab {
@@ -769,4 +776,18 @@ a[type="submit"],
     button.btn-sm {
         border: 0;
     }
+}
+
+// Networking delete btn
+.secondary #networkingform_submit {
+    background-color: $state-danger-bg;
+    color: $state-danger-text;
+    border-color: $state-danger-border;
+    margin-left: .5rem;
+}
+
+// Web services add service groups btn
+#webservices_function_groups_add_submit,
+#webservices_token_generate_submit {
+    width: auto;
 }

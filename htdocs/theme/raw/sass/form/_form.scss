@@ -11,6 +11,7 @@ input[type=text],
 input[type=password],
 textarea,
 select {
+    @extend .form-control;
     .modal & {
         width: auto;
         max-width: 100%;
@@ -196,6 +197,12 @@ textarea.resizable {
         border-bottom: 0 none;
         align-items: flex-start;
         display: inline-block;
+        div.checkbox {
+          input.checkbox {
+              width: auto;
+              margin-top: -6px;
+          }
+        }
     }
     @include media-breakpoint-down(md) {
         > .form-group {

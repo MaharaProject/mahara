@@ -28,31 +28,34 @@ $assessment-completed-color: theme-color("success") !default;
 
 // LEGACY BOOTSTRAP 3 VARIABLES
 
+// Header navbar
 $navbar-height:                             60px !default;
 
+// Navbar toggle
+$navbar-default-color:                      $link-color !default;
 $navbar-default-bg:                         #fff !default;
 $navbar-default-border:                     scale-color($navbar-default-bg, $lightness: -6.5%) !default;
-
-// Navbar links
 $navbar-default-link-color:                 $link-color !default;
+$navbar-default-link-hover-color:           $link-hover-color !default;
+$navbar-default-link-bg:                    #FFFFFF !default;
 $navbar-default-link-hover-bg:              #F1F1F1 !default;
 
-// Navbar toggle
-$navbar-default-toggle-hover-bg:            $navbar-default-link-hover-bg !default;
-
-// Inverted navbar
-// Reset inverted navbar basics
+// Navbar menus children
 $navbar-inverse-bg:                         #F1F1F1 !default;
-
-// Inverted navbar links
 $navbar-inverse-link-color:                 $link-color !default;
 $navbar-inverse-link-hover-color:           $link-hover-color !default;
 $navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%) !default;
 $navbar-inverse-link-active-color:          theme-color("text") !default;
 $navbar-inverse-link-active-bg:             #F1F1F1 !default;
 
-// Inverted navbar toggle
-$navbar-inverse-toggle-icon-bar-bg:         scale-color($gray-500, $lightness: 37.5%) !default;
+// Navbar menu children toggles
+$navbar-inverse-toggle-color:               scale-color($gray-500, $lightness: 37.5%) !default;
+$navbar-inverse-toggle-bg:                  transparent !default;
+$navbar-inverse-toggle-hover-color:         $link-hover-color !default;
+$navbar-inverse-toggle-hover-bg:            $navbar-inverse-bg !default;
+$navbar-inverse-toggle-active-color:        $navbar-inverse-link-active-color !default;
+$navbar-inverse-toggle-active-bg:           $navbar-inverse-bg !default;
+
 
 //Fonts
 $line-height-computed:                      $font-size-base * $line-height-base !default; // ~20px

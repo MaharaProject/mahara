@@ -73,7 +73,7 @@ $width-sm: 90%;
 }
 
 .modal-content {
-    border-radius: 0;
+    border-radius: $border-radius;
     h5 {
         margin: 0;
     }
@@ -100,6 +100,8 @@ $width-sm: 90%;
     .mce-close {
         order: 1;
         opacity: 1;
+        padding: 0;
+        margin: 0;
         &:hover,
         &:focus {
             .times {

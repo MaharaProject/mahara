@@ -1,9 +1,9 @@
 a.card-footer {
     text-align:center;
-    color: $gray-500;
+    color: $link-color;
     display: block;
     &:hover {
-        color: $gray-900;
+        color: $link-hover-color;
         background: $gray-100;
         text-decoration: none;
         .icon {

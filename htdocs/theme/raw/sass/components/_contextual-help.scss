@@ -59,7 +59,7 @@ span.help {
     h3 {
         margin: 0 -14px 20px;
         font-size: $font-size-base;
-        padding:8px 14px;
+        padding: 8px 14px;
         background-color: $popover-header-bg;
         border-bottom: 1px solid scale-color($popover-header-bg, $lightness: -5%);
         border-radius: ($border-radius-lg - 1) ($border-radius-lg - 1) 0 0;
@@ -67,8 +67,14 @@ span.help {
     }
 }
 // Needed to be more specific
-table.table td .contextualHelp h3{
+table.table td .contextualHelp h3 {
     margin: 0 -14px 20px;
+    font-size: $font-size-base;
+}
+.pieform-fieldset.collapsible .contextualHelp h3 {
+    margin: 0 -14px 20px;
+    padding: 8px 14px;
+    font-family: $font-family-serif;
     font-size: $font-size-base;
 }
 

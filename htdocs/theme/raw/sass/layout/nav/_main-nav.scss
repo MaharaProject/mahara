@@ -78,8 +78,8 @@
         }
 
         > li > a {
-            color: $link-color;
-            background-color: $navbar-default-bg;
+            color: $navbar-default-link-color;
+            background-color: $navbar-default-link-bg;
             padding: 10px 15px;
             font-weight: normal;
             border-top: 1px solid $navbar-default-border;
@@ -87,9 +87,9 @@
             margin-top: -1px;
             &:hover,
             &:focus {
-                background-color: $navbar-inverse-bg;
+                background-color: $navbar-default-link-hover-bg;
                 text-decoration:none;
-                color: $link-hover-color;
+                color: $navbar-default-link-hover-color;
             }
             @include media-breakpoint-up(md) {
                 border: 1px solid $navbar-default-border;
@@ -106,7 +106,7 @@
         }
     }
 
-    // Child navigation items use colour variables from "navbar-inverse"
+    // Child navigation items
     .child-nav {
         border-top:0;
         max-width: 100%;

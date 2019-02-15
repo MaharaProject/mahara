@@ -19,6 +19,9 @@
         }
         a:not(.secondary-link) {
             border-width: 0;
+            &.user-icon {
+                border: 1px solid $thumbnail-border-color;
+            }
         }
     }
 
