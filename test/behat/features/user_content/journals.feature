@@ -16,7 +16,7 @@ Background:
      | owner | ownertype | title | description | tags |
      | celeste | user | Mars journal | Recording my Mars Mission | Mars |
 
-    And the following "journalposts" exist:
+    And the following "journalentries" exist:
      | owner | ownertype | title | entry | blog | tags | draft |
      | celeste | user | I'm going to Mars! | I just passed my exam and am approved for a Mars Mission | Mars journal | Mars | 0 |
      | celeste | user | Spacefood | Spacefood is kind of gross if you don't cook it right | Mars journal | Mars,food | 0 |

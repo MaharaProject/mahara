@@ -21,7 +21,7 @@ Background:
     | owner | ownertype | title | description | tags |
     | UserA | user | Mars journal | My Mars Mission | Mars |
 
-    And the following "journalposts" exist:
+    And the following "journalentries" exist:
     | owner | ownertype | title | entry | blog | tags | draft |
     | UserA | user | Mars party | I just landed on Mars, mission success | Mars journal | Mars | 0 |
 

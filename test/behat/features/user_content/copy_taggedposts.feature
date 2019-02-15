@@ -13,7 +13,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
     | title | description | ownertype | ownername |
     | Page UserA_01 | Page 01 | user | UserA |
 
-  And the following "journalposts" exist:
+  And the following "journalentries" exist:
     | owner | ownertype | title | entry | blog | tags | draft |
     | UserA | user | Entry one | This is journal entry one | | blog,one | 0 |
     | UserA | user | Entry two | This is journal entry two | | blog,two | 0 |
