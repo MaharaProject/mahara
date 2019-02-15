@@ -24,8 +24,6 @@ $theme-primary-color-light: #799152;
 
 // Colors
 $brand-success:         #449D44;
-$brand-info:            #5bc0de;
-$brand-warning:         #f0ad4e;
 $brand-danger:          #F04F50;
 
 // Form states and alerts
@@ -46,7 +44,6 @@ $state-danger-bg:                lighten($brand-danger, 30%);
 $state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%);
 
 // Buttons
-$btn-secondary-color:              #333333;
 $btn-secondary-bg:                 $white;
 $btn-secondary-border:             #CCCCCC;
 
@@ -54,39 +51,19 @@ $btn-primary-color:              #FFFFFF;
 $btn-primary-bg:                 #556d32;
 $btn-primary-border:             #556d32;
 
-$btn-success-bg:                 $theme-primary-color;
-$btn-success-border:             darken($theme-primary-color, 5%);
-
-$btn-info-bg:                    $state-info-bg;
-$btn-info-border:                darken($btn-info-bg, 5%);
-
-$btn-warning-bg:                 $state-warning-bg;
-$btn-warning-border:             darken($btn-warning-bg, 15%);
-
-$btn-danger-bg:                  $brand-danger;
-$btn-danger-border:              darken($btn-danger-bg, 5%);
-
 // Navbar
-$navbar-collapse-max-height:       340px;
-
-$navbar-default-color:             #777;
 $navbar-default-bg:                #FFFFFF;
 $navbar-default-border:            transparent;
 
 // Navbar links
-$navbar-default-link-hover-color:          #FFFFFF;
 $navbar-default-link-hover-bg:             $link-hover-color;
-$navbar-default-link-active-color:         #FFFFFF;
-$navbar-default-link-active-bg:            darken($link-color, 10%);
 
 // Navbar toggle
 $navbar-default-toggle-hover-bg:           #f1f6eb;
 
 // Inverted navbar
 // Reset inverted navbar basics
-$navbar-inverse-color:                      #FFFFFF;
 $navbar-inverse-bg:                         $link-hover-color;
-$navbar-inverse-border:                     $link-hover-color;
 
 // Inverted navbar links
 $navbar-inverse-link-color:                 #FFFFFF;
@@ -96,18 +73,12 @@ $navbar-inverse-link-active-color:          #FFFFFF;
 $navbar-inverse-link-active-bg:             $link-hover-color;
 
 // Inverted navbar toggle
-$navbar-inverse-toggle-hover-bg:            #fff;
 $navbar-inverse-toggle-icon-bar-bg:         $link-hover-color;
-$navbar-inverse-toggle-border-color:        #fff;
 
 // cards
 //** Border color for elements within cards
-$card-inner-border:          transparent;
 $card-footer-bg:             #f0f5ea;
-
 $card-header-bg:    #fff;
 
 $card-border:        #d9d9d9;
 $card-header-bg:    #FFFFFF;
-
-$card-secondary-heading-bg:   darken($card-header-bg, 2%);

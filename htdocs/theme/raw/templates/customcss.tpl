@@ -4,6 +4,9 @@
     border-color: {$data.background};
 }
 
+.navbar-default .navbar-toggle:not(.collapsed) {
+    background-color: transparent;
+}
 .navbar-toggle .icon {
     color: {$data.backgroundfg};
 }

@@ -161,15 +161,15 @@ function notrude_form() {
                 'class' => 'btn-group last',
                 'elements' => array (
                     'review' => array(
-                        'class' => 'btn-default text-inline',
+                        'class' => 'btn-secondary text-inline',
                         'type' => 'html',
-                        'value' => '<button type="button" class="btn btn-default" data-toggle="modal-docked" data-target="#objection-review">
+                        'value' => '<button type="button" class="btn btn-secondary" data-toggle="modal-docked" data-target="#objection-review">
                                         <span class="icon icon-lg icon-check text-danger left" role="presentation" aria-hidden="true"></span>' .
                                         get_string('stillobjectionable') .
                                     '</button>'
                     ),
                     'submit' => array(
-                        'class' => 'btn-default text-inline',
+                        'class' => 'btn-secondary text-inline',
                         'name' => 'submit', // must be called submit so we can access it's value
                         'type'  => 'button',
                         'usebuttontag' => true,
@@ -430,7 +430,7 @@ function review_form($viewid = null) {
 
     $form['elements']['submit'] = array(
         'type'    => 'submitcancel',
-        'class'   => 'btn-default',
+        'class'   => 'btn-secondary',
         'value'   => array(get_string('notifyadministrator'), get_string('cancel')),
         'confirm' => array(get_string('notifyadministratorreview')),
     );

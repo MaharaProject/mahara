@@ -385,7 +385,7 @@ function saml_auth_generate_login_form() {
         return;
     }
     if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
-        $registerlink = '<a class="btn btn-primary btn-xs" href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a>';
+        $registerlink = '<a class="btn btn-primary btn-sm" href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a>';
     }
     else {
         $registerlink = '';

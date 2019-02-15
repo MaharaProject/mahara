@@ -707,9 +707,9 @@ class ArtefactTypePeerassessment extends ArtefactType {
                                'submit' => 'publish',
                                'cancel' => 'cancel'),
             'primarychoice' => 'publish',
-            'classes' => array('draftsubmit' => 'btn-default',
-                               'submit' => 'btn-default',
-                               'cancel' => 'btn-default submitcancel'),
+            'classes' => array('draftsubmit' => 'btn-secondary',
+                               'submit' => 'btn-secondary',
+                               'cancel' => 'btn-secondary submitcancel'),
             'value' => array('draftsubmit' => get_string('draft', 'blocktype.peerassessment/peerassessment'),
                              'submit' => get_string('publish', 'blocktype.peerassessment/peerassessment'),
                              'cancel' => get_string('cancel'))
@@ -741,7 +741,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
                 'submit'  => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-default btn-sm',
+                    'class' => 'btn-secondary btn-sm',
                     'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span> <span class="sr-only">' . get_string('delete') . '</span>',
                     'confirm' => get_string('reallydeletethisassessment', 'artefact.peerassessment'),
                     'name'  => 'delete_assessment_submit',

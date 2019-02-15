@@ -49,7 +49,7 @@ if ($token) {
     $elements['submit'] = array(
         'type'  => 'button',
         'usebuttontag' => true,
-        'class' => 'btn-default btn-sm',
+        'class' => 'btn-secondary btn-sm',
         'value' => '<span class="icon icon-trash icon-lg text-danger left" role="presentation" aria-hidden="true"></span>' . get_string('delete'),
         'elementtitle' => get_string('deletespecific', 'mahara', $token),
     );

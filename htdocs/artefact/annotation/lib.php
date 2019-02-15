@@ -1368,7 +1368,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 'submit'   => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-link btn-xs quiet',
+                    'class' => 'btn-link btn-sm quiet',
                     'name'  => 'make_annotation_feedback_public_submit',
                     'value' => '<span class="icon icon-lock text-default left" role="presentation" aria-hidden="true"></span>' . get_string('makepublic', 'artefact.annotation'),
                 ),
