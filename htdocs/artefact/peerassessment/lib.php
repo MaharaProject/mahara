@@ -16,6 +16,10 @@ require_once('license.php');
 
 class PluginArtefactPeerassessment extends PluginArtefact {
 
+    public static function is_active() {
+        return get_field('artefact_installed', 'active', 'name', 'peerassessment');
+    }
+
     public static function get_artefact_types() {
         return array(
             'peerassessment',
@@ -118,6 +122,9 @@ class PluginArtefactPeerassessment extends PluginArtefact {
             case 'peerassessment':
                 return 'view/index.php';
                 break;
+            case 'verify':
+                return 'view/index.php';
+                break;
         }
     }
 
@@ -127,7 +134,15 @@ class PluginArtefactPeerassessment extends PluginArtefact {
                 'name' => 'peerassessment',
                 'title' => get_string('placeassessment', 'artefact.peerassessment'),
                 'plugin' => 'peerassessment',
-                'active' => true,
+                'active' => get_field('blocktype_installed', 'active', 'name', 'peerassessment', 'artefactplugin', 'peerassessment'),
+                'iscountable' => true,
+                'is_metaartefact' => true,
+            ),
+            (object)array(
+                'name' => 'verify',
+                'title' => get_string('verifyassessment', 'artefact.peerassessment'),
+                'plugin' => 'peerassessment',
+                'active' => get_field('blocktype_installed', 'active', 'name', 'signoff', 'artefactplugin', 'peerassessment'),
                 'iscountable' => true,
                 'is_metaartefact' => true,
             )
@@ -143,10 +158,18 @@ class PluginArtefactPeerassessment extends PluginArtefact {
             case 'peerassessment':
                 $sql = "SELECT COUNT(*) AS completed
                         FROM {artefact} a
-                        JOIN {artefact_peer_assessment} ap ON ap.artefact = a.id
+                        JOIN {artefact_peer_assessment} ap ON ap.assessment = a.id
                         WHERE a.artefacttype = 'peerassessment'
                         AND a.owner <> ?
                         AND ap.usr = ?";
+                $meta->completed = count_records_sql($sql, array($USER->get('id'), $USER->get('id')));
+                break;
+            case 'verify':
+                $sql = "SELECT COUNT(*) AS completed
+                        FROM {view} v
+                        JOIN {view_signoff_verify} vsv ON vsv.view = v.id
+                        WHERE v.owner <> ?
+                        AND vsv.verifier = ?";
                 $meta->completed = count_records_sql($sql, array($USER->get('id'), $USER->get('id')));
                 break;
             default:

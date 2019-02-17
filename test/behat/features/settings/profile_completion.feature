@@ -13,12 +13,15 @@ Background:
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | instone | internal  | member |
 
+    Given the following plugins are set:
+    | plugintype | plugin | value |
+    | blocktype  | annotation | 1 |
+
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Site options" in "Configure site" from administration menu
     And I expand the section "User settings"
     And I enable the switch "Show profile completion"
     And I press "Update site options"
-    Then I should see "Site options have been updated."
 
 Scenario Outline: 1) site admin enables profile completion for the site admin menu > configure site > site options  . user settings
     2) site admin verify sections on the profile completion page

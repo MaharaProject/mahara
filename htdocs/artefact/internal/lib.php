@@ -335,7 +335,7 @@ class PluginArtefactInternal extends PluginArtefact {
                     'name' => 'joingroup',
                     'title' => get_string('progressbaritem_joingroup', 'artefact.internal'),
                     'plugin' => 'internal',
-                    'active' => true,
+                    'active' => get_field('artefact_installed', 'active', 'name', 'internal'),
                     'iscountable' => true,
                     'is_metaartefact' => true,
                 ),
@@ -343,7 +343,7 @@ class PluginArtefactInternal extends PluginArtefact {
                     'name' => 'makefriend',
                     'title' => get_string('progressbaritem_makefriend', 'artefact.internal'),
                     'plugin' => 'internal',
-                    'active' => true,
+                    'active' => get_field('artefact_installed', 'active', 'name', 'internal'),
                     'iscountable' => true,
                     'is_metaartefact' => true,
                 )

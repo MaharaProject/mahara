@@ -15,6 +15,10 @@ require_once('file.php');
 
 class PluginArtefactFile extends PluginArtefact {
 
+    public static function is_active() {
+        return get_field('artefact_installed', 'active', 'name', 'file');
+    }
+
     public static function get_artefact_types() {
         return array(
             'file',
