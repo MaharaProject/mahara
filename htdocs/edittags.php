@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio');
+define('MENUITEM', 'create/tags');
 require('init.php');
 
 define('TITLE', get_string('edittags'));
