@@ -912,7 +912,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
             $smarty->assign('postid', $this->get('id'));
         }
-        $smarty->assign('postedbyon', ArtefactTypeBlog::display_postedby($this->ctime, display_name($this->owner)));
+        $by = $this->author ? display_default_name($this->author) : $this->authorname;
+        $smarty->assign('postedbyon', ArtefactTypeBlog::display_postedby($this->ctime, $by));
         if ($this->ctime != $this->mtime) {
             $smarty->assign('updatedon', get_string('updatedon', 'artefact.blog') . ' ' . format_date($this->mtime));
         }
