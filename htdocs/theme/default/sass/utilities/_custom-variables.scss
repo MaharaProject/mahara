@@ -56,10 +56,10 @@ $navbar-default-bg:                #FFFFFF;
 $navbar-default-border:            transparent;
 
 // Navbar links
-$navbar-default-link-hover-bg:             $link-hover-color;
+$navbar-default-link-hover-bg:             #f1f6eb;
 
 // Navbar toggle
-$navbar-default-toggle-hover-bg:           #f1f6eb;
+$navbar-default-toggle-hover-bg:           $navbar-default-link-hover-bg;
 
 // Inverted navbar
 // Reset inverted navbar basics
@@ -71,6 +71,7 @@ $navbar-inverse-link-hover-color:           #FFFFFF;
 $navbar-inverse-link-hover-bg:              lighten($link-hover-color, 5%);
 $navbar-inverse-link-active-color:          #FFFFFF;
 $navbar-inverse-link-active-bg:             $link-hover-color;
+$navbar-inverse-toggle-hover-color:         $navbar-inverse-link-color;
 
 // Inverted navbar toggle
 $navbar-inverse-toggle-icon-bar-bg:         $link-hover-color;
