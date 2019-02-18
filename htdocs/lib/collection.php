@@ -565,6 +565,7 @@ class Collection {
                 'description'  => get_string('tagsdescprofile'),
                 'defaultvalue' => null,
                 'help'         => true,
+                'institution'  =>  $this->institution,
             ),
             'navigation' => array(
                 'type'  => 'switchbox',
