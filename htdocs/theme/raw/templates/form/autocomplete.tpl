@@ -23,6 +23,9 @@
                     'sesskey': "{{$sesskey}}",
                     'offset': 0,
                     'limit': 10,
+                    {{if $institution}}
+                        'institution': "{{$institution}}",
+                    {{/if}}
                 }
             },
             processResults: function(data, page) {

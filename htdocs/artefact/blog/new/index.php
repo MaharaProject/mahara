@@ -89,6 +89,7 @@ $form = array(
             'title'       => get_string('tags'),
             'description' => get_string('tagsdescprofile'),
             'help'        => true,
+            'institution' => $institutionname,
         ),
         'license' => license_form_el_basic(null),
         'licensing_advanced' => license_form_el_advanced(null),

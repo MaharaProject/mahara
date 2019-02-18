@@ -716,8 +716,11 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 LEFT JOIN {institution} i ON i.name = t2.ownerid
                 WHERE t.resourcetype = 'artefact' AND t.resourceid IN (" . $tagwhere . ")");
             if ($tags) {
+                require_once(get_config('docroot') . 'lib/form/elements/tags.php');
+                $alltags = get_all_tags_for_user();
                 foreach ($tags as $t) {
-                    $filedata[$t->resourceid]->tags[] = $t->tag;
+                    $tagname = remove_prefix($t->tag);
+                    $filedata[$t->resourceid]->tags[$tagname] = display_tag($tagname, $alltags['tags']);
                 }
             }
             $where = 'artefact IN (' . join(',', array_keys($filedata)) . ')';

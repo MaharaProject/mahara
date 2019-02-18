@@ -4803,6 +4803,14 @@ function generate_csv($data, $csvfields, $csvheaders = array()) {
 function check_if_institution_tag($tag) {
     global $USER;
     $institutions = $USER->get('institutions');
+    if ($USER->get('admin') && $institutiontags = get_records_sql_array("
+        SELECT id FROM {tag}
+        WHERE tag = ?
+        AND resourcetype = ?
+        AND ownertype = ?",
+        array($tag, 'institution', 'institution'))) {
+        $tag = 'tagid_' . $institutiontags[0]->id;
+    }
     if ($institutions && $institutiontags = get_records_sql_array("
         SELECT id FROM {tag}
         WHERE tag = ?

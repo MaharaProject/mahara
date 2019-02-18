@@ -282,6 +282,7 @@ function get_basic_elements() {
             'description'  => get_string('tagsdescprofile'),
             'defaultvalue' => $view->get('tags'),
             'help'         => true,
+            'institution'  =>  $institution,
         )
     );
     if (!($group || $institution) && $createtagsoptions) {
