@@ -340,7 +340,8 @@ var FileBrowser = (function($) {
         if (self.filedata[id].tags) {
             for (var x in self.filedata[id].tags) {
                 var option = document.createElement("option");
-                option.text = option.value = self.filedata[id].tags[x];
+                option.text = self.filedata[id].tags[x];
+                option.value = x;
                 option.selected = "selected";
                 $('#' + self.id + '_edit_tags').append(option);
             }
@@ -408,6 +409,7 @@ var FileBrowser = (function($) {
                         'sesskey': self.config.sesskey,
                         'offset': 0,
                         'limit': 10,
+                        'institution': $('#institutionselect_institution').val(),
                     };
                 },
                 processResults: function(data, page) {
