@@ -243,7 +243,7 @@ var UserSearch = (function($) {
               if (count) {
                   $('#nousersselected').addClass('d-none');
                   $('#' + formid).append($('<input>', {
-                      'type': 'd-none',
+                      'type': 'hidden',
                       'name': 'action',
                       'value': $(this).attr('name')
                   }));
