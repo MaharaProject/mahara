@@ -206,25 +206,25 @@ details on navigation styles.
 
 <!-- Styles to fix searchbar positioning - used in this styleguide only -->
 <style>
-.navbar-main .navbar-collapse.nav-one,
-.navbar-main .navbar-collapse.nav-two,
-.navbar-main .navbar-collapse.nav-three {
+section .navbar-main .navbar-collapse.nav-one,
+section .navbar-main .navbar-collapse.nav-two,
+section .navbar-main .navbar-collapse.nav-three {
     position: relative;
     top: 0;
     right: 0;
 }
-.navbar-form.navbar-collapse.search-form {
+section .navbar-form.navbar-collapse.search-form {
     position: static;
     top: auto;
     right: auto;
 }
 @media only screen and (max-width: 768px) {
-    .navbar-form.navbar-collapse.search-form {
+    section .navbar-form.navbar-collapse.search-form {
         position: initial;
     }
 }
 @media (min-width: 768px) {
-    .nav-toggle-area .user-icon {
+    section .nav-toggle-area .user-icon {
         left: 0;
     }
 }
@@ -772,7 +772,7 @@ This card is used to show a page.
 This card is used to show a submitted page.
 <style>
 /* Styles for submitted and collection cards */
-.card-quarter:nth-child(4n) .page-access .dropdown-menu {
+section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
     left: 0;
 }
 </style>
@@ -844,7 +844,7 @@ This card is used to show a submitted page.
 This card is used to show a collection.
 <style>
 /* Styles for submitted and collection cards */
-.card-quarter:nth-child(4n) .page-access .dropdown-menu {
+section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
     left: 0;
 }
 </style>
