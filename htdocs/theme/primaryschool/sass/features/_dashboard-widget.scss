@@ -198,10 +198,9 @@ $logged-in-height-phone: 120px;
         }
 
         h2 {
-            font-family: 'GoodDog', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
-            margin: 0 0 5px 0;
-            font-weight: normal;
-            font-size: 42px;
+            font-family: 'Shadows Into Light Two', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: 400;
+            font-size: 30px;
             color: #FFFFFF;
 
             @include media-breakpoint-between (sm, lg) {
@@ -296,16 +295,12 @@ $logged-in-height-phone: 120px;
             }
 
             h2 {
-                margin: 0 0 5px 0;
+                margin: 10px 0 15px 0;
                 font-weight: normal;
 
-                @include media-breakpoint-between (sm, lg) {
-                    font-size: 32px;
+                @include media-breakpoint-down (lg) {
+                    font-size: 24px;
                     margin: 0;
-                }
-
-                @include media-breakpoint-down(sm) {
-                    font-size: 26px;
                 }
             }
 

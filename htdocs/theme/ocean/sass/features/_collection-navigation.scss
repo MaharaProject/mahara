@@ -1,13 +1,7 @@
 .collection-nav {
-    padding: 15px;
-    margin-left: -15px;
-    margin-right: -15px;
-    border-radius: 0;
-
     h2 {
         font-size: 38px;
     }
-
     .collection-nav-btns {
       @include media-breakpoint-up(lg) {
         bottom: 22px;

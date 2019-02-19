@@ -44,7 +44,7 @@
 
         &:focus,
         &:hover {
-            background: darken($btn-primary-bg, 10%);
+            background: scale-color($btn-primary-bg, $lightness: -10%);
             text-decoration: none;
         }
         span {
@@ -58,37 +58,37 @@
 .col-collapse-offset.col-with-collapse .btn {
     color: #fff;
     background-color: $theme-primary-color;
-    border-color: darken($btn-primary-bg, 5%);
+    border-color: scale-color($btn-primary-bg, $lightness: -5%);
     .icon {
         color: #fff;
     }
     &:focus,
     &:hover {
-        background-color: lighten($theme-primary-color, 5%);
+        background-color: scale-color($theme-primary-color, $lightness: 5%);
     }
 }
 .submitcancel .btn {
     color: #fff;
     background-color: $theme-primary-color;
-    border-color: darken($btn-primary-bg, 5%);
+    border-color: scale-color($btn-primary-bg, $lightness: -5%);
     .icon {
         color: #fff;
     }
     &:focus,
     &:hover {
-        background-color: lighten($theme-primary-color, 5%);
+        background-color: scale-color($theme-primary-color, $lightness: 5%);
     }
 }
 .btn-with-heading {
     color: #fff;
     background-color: $theme-primary-color;
-    border-color: darken($btn-primary-bg, 5%);
+    border-color: scale-color($btn-primary-bg, $lightness: -5%);
     .icon {
         color: #fff;
     }
     &:focus,
     &:hover {
-        background-color: lighten($theme-primary-color, 5%);
+        background-color: scale-color($theme-primary-color, $lightness: 5%);
         color: #fff;
     }
 }
@@ -113,7 +113,7 @@
         font-family: $font-family-sans-serif;
 
         &:hover {
-            background-color: lighten($btn-primary-bg, 5%);
+            background-color: scale-color($btn-primary-bg, $lightness: 5%);
         }
 
         .mce-txt {
@@ -131,7 +131,7 @@
             color: $btn-primary-color;
 
             &:hover {
-                background-color: lighten($btn-primary-bg, 5%);
+                background-color: scale-color($btn-primary-bg, $lightness: 5%);
             }
         }
     }

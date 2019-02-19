@@ -9,7 +9,7 @@
 
         &:focus,
         &:hover {
-            background-color: lighten($btn-primary-bg, 5%);
+            background-color: scale-color($btn-primary-bg, $lightness: 5%);
         }
     }
     .nextpage {
@@ -19,7 +19,7 @@
 
         &:focus,
         &:hover {
-            background-color: lighten($btn-primary-bg, 5%);
+            background-color: scale-color($btn-primary-bg, $lightness: 5%);
         }
     }
 }

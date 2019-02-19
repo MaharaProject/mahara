@@ -21,16 +21,11 @@ $font-family-serif:       'Osvaldo', Georgia, "Times New Roman", Times, serif; /
 
 
 // readjusted using 14px as $font-size-base ^ (larger due to custom font)
+$font-size-base:          0.875rem; // ~14px
 $font-size-h1:            $font-size-base * 2.71;     // ~38px
 $font-size-h2:            $font-size-base * 2.14;     // ~30px
 $font-size-h3:            $font-size-base * 1.71;       // ~24px
 $font-size-h4:            $font-size-base * 1.57;      // ~22px
 $font-size-h5:            $font-size-base * 1.28;      // ~18px
 $font-size-h6:            $font-size-base * 1.14;       // ~16px
-
-
-//== Pagination
-
-$pagination-active-color:              #fff;
-$pagination-active-bg:                 $theme-primary-color;
-$pagination-active-border-color:       $theme-primary-color;
+$headings-font-family:    $font-family-serif;
