@@ -38,9 +38,9 @@
                             {str section='module.multirecipientnotification' tag='touser'}:
                         </span>
                         <span class="username">
-                            {if count($item->tousr) > 0}
+                            {if is_array($item->tousr) && count($item->tousr) > 0}
                                 {assign var="tousr" value=$item->tousr[0]}
-                                {if count($tousr['username']) > 0}
+                                {if is_array($tousr['username']) && count($tousr['username']) > 0}
                                     {$tousr['username']|truncate:$maxnamestrlength}
                                 {else}
                                     {$tousr['display']|truncate:$maxnamestrlength}
@@ -67,7 +67,7 @@
                         <strong>
                             {str section='module.multirecipientnotification' tag='touser'}:
                         </strong>
-                        {if count($item->tousr) > 1}
+                        {if is_array($item->tousr) && count($item->tousr) > 1}
                         <span>
                             {foreach from=$item->tousr item=tousr key=break}
                             {if ($tousr['link'])}<a href="{$tousr['link']}">{/if}
