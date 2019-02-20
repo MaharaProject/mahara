@@ -464,7 +464,7 @@ These are tabs to switch between pages within one section, for example in the "P
 This style of tabs is used for third-level navigation in areas where each page within this section is saved separately, for example in a group, in the résumé or in the web services configuration. When the primary school theme is selected, each arrow bar can be a different colour. This is determined by the class in the very first div. The 2 choices are 'group' (green) and 'resume' (red). There is a default option (blue) when no extra class is given.
 ```
 <div class="arrow-bar group">
-    <span class="arrow d-sm-none d-md-block">
+    <span class="arrow d-none d-md-block">
         <span class="text">
             Tabs
         </span>

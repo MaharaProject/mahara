@@ -5,7 +5,7 @@
             <tr>
                 <th class="icon-cell"></th>
                 <th>{str tag=Name section=artefact.file}</th>
-                <th class="d-none">{str tag=Description section=artefact.file}</th>
+                <th class="d-none d-md-block">{str tag=Description section=artefact.file}</th>
                 <th class="filesize">
                     {str tag=Size section=artefact.file}
                 </th>
@@ -89,7 +89,7 @@
                     </a>
                 {/if}
             </td>
-            <td class="filedescription d-none">
+            <td class="filedescription d-none d-md-block">
                 {$file->description|safe|clean_html}
                 {if $showtags}
                     {if $file->tags}
