@@ -105,7 +105,7 @@
 
     {/if}
 
-    <div class="card close-site {if $closed}card bg-success {else}card bg-danger {/if}">
+    <div class="card close-site {if $closed}bg-success {else}bg-danger {/if}">
         {if $closed}
             <h3 class="card-header">{str tag=reopensite section=admin} <span class="icon icon-lock float-right" role="presentation" aria-hidden="true"></span></h3>
             <div class="card-body">
