@@ -38,3 +38,9 @@ composer dump-autoload -o
 Then remove the hashes from the auto-generated /vendor files: E.g.
 ComposerAutoloaderInit26e38f1cfb40040c9ff6097c09aee6d7::getLoader();
 becomes ComposerAutoloaderInit::getLoader();
+
+Additional changes:
+
+The Dwoo plugin is being unmaintained again so we need also make any
+changes committed to their master branch
+https://github.com/dwoo-project/dwoo/compare/1.3.7...master
