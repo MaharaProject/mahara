@@ -47,3 +47,13 @@ To see this peer assessment online, follow this link:
 %s";
 $string['typeassessmentfeedback'] = 'Peer assessment';
 $string['nopeerassessmentrequired'] = 'You cannot see the content on this page because it does not require a peer assessment.';
+$string['placeassessment'] = 'Place assessments';
+$string['verifyassessment'] = 'Verify assessments';
+$string['progress_peerassessment'] = array(
+    'Add 1 peer assessment to a page',
+    'Add %s peer assessments to pages',
+);
+$string['progress_verify'] = array(
+    "Give 1 verification to another user's peer assessment page",
+    "Give %s verifications to other users' peer assessment pages",
+);
