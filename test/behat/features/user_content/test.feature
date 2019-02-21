@@ -174,11 +174,12 @@ Background:
     | Profile Information  | profileinfo    | Page Two      | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image1.jpg |
     | Profile Information  | profileinfo    | Page Two      | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image2.png |
     | Résumé               | entireresume   | Page Two      | no         | tags=mahara |
-    | Résumé field: Employment History | resumefield    | Page Two      | no         | artefacttype=employmenthistory |
-    | Résumé field: Personal Goal      | resumefield    | Page Two      | no         | artefacttype=personalgoal |
-    | Résumé field: Work Skill         | resumefield    | Page Two      | no         | artefacttype=workskill |
-    | Résumé field: Interest           | resumefield    | Page Two      | no         | artefacttype=interest |
-
+    | Résumé: Employment Hist.| resumefield | Page Two      | no         | artefacttype=employmenthistory |
+    | Résumé: Personal Goal   | resumefield | Page Two      | no         | artefacttype=personalgoal |
+    | Résumé: Work Skill      | resumefield | Page Two      | no         | artefacttype=workskill |
+    | Résumé: Interest        | resumefield | Page Two      | no         | artefacttype=interest |
+    | GoogleApps: Google Maps | googleapps  | Page Two      | no         | googleapp=<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2997.861064367898!2d174.77176941597108!3d-41.29012814856559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d38afd6326bfda5%3A0x5c0d858838e52d7a!2sCatalyst!5e0!3m2!1sen!2snz!4v1550707486290" width="800" height="600" frameborder="0" style="border:0" allowfullscreen></iframe>;height=100;tags=cat,dog,monkeys |
+    | GoogleApps: Google Calen| googleapps  | Page Two      | no         | googleapp=https://calendar.google.com/calendar/embed?src=en.new_zealand%23holiday%40group.v.calendar.google.com&ctz=Pacific%2FAuckland |
 
 Scenario: Login as admin to change upload settings
     # To allow users to upload specific internal media types

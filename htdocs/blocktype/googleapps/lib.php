@@ -103,7 +103,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         );
     }
 
-    private static function make_apps_url($url) {
+    public static function make_apps_url($url) {
         $httpstr = is_https() ? 'https' : 'http';
 
         if (preg_match('#//goo\.gl/#', $url)) {

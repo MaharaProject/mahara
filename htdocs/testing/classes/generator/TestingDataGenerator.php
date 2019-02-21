@@ -1038,6 +1038,30 @@ EOD;
     }
 
     /**
+     * generate configdata for blocktype: googleapps
+     * embedded links include '=' symbol which can get cut up setup_configdata()
+     * so I've used == to separate the key and value in the table.
+     *
+     * @param array $fields holding the 'googleapps' => embeddedsource
+     * @return array $configdata of the processed keys and values for the db table
+     */
+    public static function generate_configdata_googleapps($fields) {
+        $configdata = array();
+        foreach ($fields as $key => $value) {
+            if ($key == 'googleapp') {
+              $app = PluginBlocktypeGoogleApps::make_apps_url($value);
+              $configdata['appsid'] = $app['url'];
+            }
+            if ($key == 'height') {
+                if ($value > 0) {
+                    $configdata['height'] = $value;
+                }
+            }
+        }
+        return $configdata;
+    }
+
+    /**
      * generate configdata for blocktype: html
      * @param array $fields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
@@ -1542,10 +1566,10 @@ EOD;
                     $value = trim($value);
                     $sortedfields[$key]=$value;
                 }
+                else {
+                  throw new SystemException("Empty fields!");
+                }
             }
-        }
-        else {
-            throw new SystemException("Empty fields!");
         }
         return $sortedfields;
     }
