@@ -251,8 +251,8 @@ EOD;
             $artefactid = get_field('artefact', 'id', 'title', $filename, 'parent', $parentid);
         }
         if (!$artefactid) {
-            $artefactid = TestingDataGenerator::create_artefact($filename, $ownertype, $ownerid, $mediatype, $parentid);
-            TestingDataGenerator::file_creation($artefactid, $filename, $ownertype, $ownerid);
+            $artefactid = self::create_artefact($filename, $ownertype, $ownerid, $mediatype, $parentid);
+            self::file_creation($artefactid, $filename, $ownertype, $ownerid);
         }
         return $artefactid;
     }
@@ -760,11 +760,20 @@ EOD;
         else {
             throw new SystemException("The blocktype {$record['type']} is not supported yet.");
         }
-
-        // make new block
-        self::create_new_block_instance($blocktype, $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols);
     }
 
+    /**
+     * creates a new block instance
+     *
+     * @param string $blocktype
+     * @param View $view object of the current view
+     * @param int $viewid of the View
+     * @param string $title of the block instance to be created
+     * @param int $viewcolcounts the current count of 1,2,3 column to create next block instance
+     * @param array $configdata holding data for new block instance
+     * @param int $maxcols ~ 3
+     * @param View $otherview for situations such as navigation where a block is related to another view
+     */
     public static function create_new_block_instance($blocktype, $view, $viewid, $title, $viewcolcounts, $configdata, $maxcols, $otherview = null) {
         safe_require('blocktype', $blocktype);
         $bi = new BlockInstance(0,
@@ -786,12 +795,12 @@ EOD;
           $otherview->addblockinstance($bi);
         }
         else {
-          $bi->commit();
-          return $bi;
+            $bi->commit();
+            return $bi;
         }
     }
 
-        /**
+    /**
      * Set tags for blocks from information in configdata
      *
      * the configdata array is different from normal mahara db so that the tags
@@ -970,7 +979,7 @@ EOD;
      * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
     */
-    public static function generate_configdata_externalfeed($sortedfields) {
+    public static function generate_configdata_externalfeed($sortedfields, $ownertype, $ownerid) {
 
         $configdata = array();
         $configdata['full'] = 1;
@@ -986,6 +995,13 @@ EOD;
             if ($key == 'count') {
                 $configdata[$key] = $value;
             }
+            if ($key == 'tags') {
+                $tags = explode(',', $value);
+                foreach ($tags as $tag) {
+                   $tag = trim(strtolower($tag));
+                   $configdata['tags'][] = $tag;
+                }
+            }
         }
         return $configdata;
     }
@@ -996,12 +1012,20 @@ EOD;
      * @return array $configdata of key and values for db table
      */
     public static function generate_configdata_externalvideo($sortedfields) {
+        $configdata = array();
         foreach ($sortedfields as $key => $value) {
+            if ($key == 'tags') {
+                $tags = explode(',', $value);
+                foreach ($tags as $tag) {
+                   $tag = trim(strtolower($tag));
+                   $configdata['tags'][] = $tag;
+                }
+            }
             if ($key == 'source') {
-              $sourceinfo = PluginBlocktypeExternalvideo::process_url($value);
-              return $sourceinfo;
+                $configdata = PluginBlocktypeExternalvideo::process_url($value);
             }
         }
+        return $configdata;
     }
 
     /**
@@ -1125,6 +1149,13 @@ EOD;
                     $configdata['height'] = $value;
                 }
             }
+            if ($key == 'tags') {
+                $tags = explode(',', $value);
+                foreach ($tags as $tag) {
+                   $tag = trim(strtolower($tag));
+                   $configdata['tags'][] = $tag;
+                }
+            }
         }
         return $configdata;
     }
@@ -1187,12 +1218,12 @@ EOD;
                 if (!$artefactid = get_field('artefact', 'id', 'title', $filename, 'owner', $ownerid)) {
 
                     if ($ext == 'wmv' || $ext == 'webm' || $ext == 'mov'|| $ext == 'ogv' || $ext == 'mpeg' || $ext == 'mp4' || $ext == 'flv' || $ext == 'avi' || $ext == '3gp') {
-                        $artefactid = TestingDataGenerator::create_artefact($filename, $ownertype, $ownerid, 'video');
-                        TestingDataGenerator::file_creation($artefactid, $filename, $ownertype, $ownerid);
+                        $artefactid = self::create_artefact($filename, $ownertype, $ownerid, 'video');
+                        self::file_creation($artefactid, $filename, $ownertype, $ownerid);
                     }
                     if ($ext == 'mp3' || $ext == 'oga' || $ext == 'ogg') {
-                        $artefactid = TestingDataGenerator::create_artefact($filename, $ownertype, $ownerid, 'audio');
-                        TestingDataGenerator::file_creation($artefactid, $filename, $ownertype, $ownerid);
+                        $artefactid = self::create_artefact($filename, $ownertype, $ownerid, 'audio');
+                        self::file_creation($artefactid, $filename, $ownertype, $ownerid);
                     }
                 }
                 $configdata['artefactid'] = $artefactid;
@@ -1253,6 +1284,15 @@ EOD;
             }
         }
         return $configdata;
+    }
+
+    /**
+     * generate configdata for the bloctype: open badges
+     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @return array
+     */
+    public static function generate_configdata_openbadgedisplayer($fields) {
+        return array('badgegroup' => 'null' );
     }
 
     /**
@@ -1507,6 +1547,13 @@ EOD;
             if ($key == 'textinput') {
                 $configdata['text'] = $value;
             }
+            if ($key == 'tags') {
+                $tags = explode(',', $value);
+                foreach ($tags as $tag) {
+                   $tag = trim(strtolower($tag));
+                   $configdata['tags'][] = $tag;
+                }
+            }
         }
         return $configdata;
     }
@@ -1666,7 +1713,7 @@ EOD;
               if (!check_dir_exists($directory, true, true)) {
                   throw new SystemException("Unable to create folder $directory");
               }
-              $result2 = copy($path, $directory . $artefactid);
+              copy($path, $directory . $artefactid);
             }
         }
         if (!$artefactid) {
