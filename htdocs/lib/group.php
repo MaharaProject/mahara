@@ -12,6 +12,7 @@
 defined('INTERNAL') || die();
 
 // Constants for the different group roles
+define ('GROUP_ROLES_NONE', 0);
 define('GROUP_ROLES_ALL', 1);
 define('GROUP_ROLES_NONMEMBER', 2);
 define('GROUP_ROLES_ADMIN', 3);
@@ -450,7 +451,7 @@ function group_create($data) {
             'description'    => isset($data['description']) ? $data['description'] : null,
             'urlid'          => isset($data['urlid']) ? $data['urlid'] : null,
             'grouptype'      => $data['grouptype'],
-            'category'       => isset($data['category']) ? intval($data['category']) : null,
+            'category'       => isset($data['category']) && !empty($data['category']) ? intval($data['category']) : null,
             'jointype'       => $jointype,
             'ctime'          => $data['ctime'],
             'mtime'          => $data['ctime'],
@@ -472,7 +473,7 @@ function group_create($data) {
             'editwindowstart' => $data['editwindowstart'],
             'editwindowend'  => $data['editwindowend'],
             'sendnow'        => isset($data['sendnow']) ? $data['sendnow'] : null,
-            'viewnotify'     => isset($data['viewnotify']) ? $data['viewnotify'] : null,
+            'viewnotify'     => !empty($data['viewnotify']) ? $data['viewnotify'] : null,
             'feedbacknotify' => isset($data['feedbacknotify']) ? $data['feedbacknotify'] : null,
         ),
         'id',
@@ -2850,6 +2851,8 @@ function group_get_allowed_group_csv_keys() {
         'hidemembersfrommembers',
         'invitefriends',
         'suggestfriends',
+        'viewnotify',
+        'category',
     );
 
     if ($USER->get('admin')) {
