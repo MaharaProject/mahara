@@ -116,6 +116,7 @@ $string['blockinstancenotfound'] = 'Block instance with id %s not found.';
 $string['interactioninstancenotfound'] = 'Activity instance with id %s not found.';
 
 $string['invalidviewaction'] = 'Invalid page control action: %s';
+$string['invaliduser'] = 'Invalid user selected';
 
 $string['missingparamblocktype'] = 'Try selecting a block type to add first.';
 $string['missingparamcolumn'] = 'Missing column specification';

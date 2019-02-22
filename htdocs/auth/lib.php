@@ -751,6 +751,10 @@ function auth_get_available_auth_types($institution=null) {
 function auth_check_required_fields() {
     global $USER, $SESSION;
 
+    if ($USER->get('id') == 0) {
+      // We shouldn't be checking either logged out user or User = 0
+      throw new ConfigSanityException(get_string('invaliduser', 'error'));
+    }
     if (defined('NOCHECKREQUIREDFIELDS') || $SESSION->get('nocheckrequiredfields') === true) {
         return;
     }
