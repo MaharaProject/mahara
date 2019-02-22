@@ -845,6 +845,11 @@ function privacy_form($ignoreagreevalue = false, $ignoreformswitch = false) {
 function auth_check_required_fields() {
     global $USER, $SESSION;
 
+    if ($USER->get('id') == 0) {
+        // We shouldn't be checking either logged out user or User = 0
+        throw new ConfigSanityException(get_string('invaliduser', 'error'));
+    }
+
     // for the case we are mascarading as the user and we want to return to be admin user
     $restoreadmin = param_integer('restore', 0);
     $loginanyway = false;

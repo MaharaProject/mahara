@@ -1421,6 +1421,11 @@ function get_user($userid) {
  * @param int $suspendinguserid The ID of the user who is performing the suspension
  */
 function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
+    if ($suspendeduserid == 0) {
+        // We shouldn't be suspending 'root' user
+        throw new UserException(get_string('invaliduser', 'error'));
+    }
+
     if ($suspendinguserid === null) {
         global $USER;
         $suspendinguserid = $USER->get('id');
