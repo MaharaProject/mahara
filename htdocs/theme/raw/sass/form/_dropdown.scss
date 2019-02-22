@@ -179,3 +179,23 @@
         }
     }
 }
+
+// Pages pageaction btn dropdown-menu
+.pageactions .dropdown-menu {
+    margin: 0;
+    padding: 0;
+
+    > li {
+      padding: 0;
+      
+        > a {
+            padding: 5px 10px;
+            display: block;
+
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
+        }
+    }
+}

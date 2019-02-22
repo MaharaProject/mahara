@@ -1,5 +1,5 @@
 <div class="pageactions">
-    <div class="btn-group btn-group-top">
+    <div class="btn-group-vertical">
         {if $editurl}{strip}
             <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-secondary">
                 <span class="icon icon-pencil icon-lg left" role="presentation" aria-hidden="true"></span>
@@ -35,7 +35,8 @@
 
             <li class="dropdown-item">
                 <a title="{str tag=print section=view}" id="print_link" href="#" onclick="window.print(); return false;">
-                    <span class="icon icon-print left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-lg icon-print left" role="presentation" aria-hidden="true"></span>
+                    <span class="link-text">{str tag=print section=view}</span>
                     <span class="sr-only">{str tag=print section=view}</span>
                 </a>
             </li>
@@ -44,11 +45,11 @@
                 <li class="dropdown-item">
                     <a id="toggle_watchlist_link" class="watchlist" href="">
                         {if $viewbeingwatched}
-                       <span class="icon icon-eye-slash left" role="presentation" aria-hidden="true"></span>
-                        {str tag=removefromwatchlist section=view}
+                        <span class="icon icon-lg icon-eye-slash left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">{str tag=removefromwatchlist section=view}</span>
                         {else}
-                        <span class="icon icon-eye left" role="presentation" aria-hidden="true"></span>
-                        {str tag=addtowatchlist section=view}
+                        <span class="icon icon-lg icon-eye left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">{str tag=addtowatchlist section=view}</span>
                        {/if}
                     </a>
                 </li>
@@ -56,49 +57,49 @@
                     {if $objector}
                         <span class="nolink">
                             <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
-                            {str tag=objectionablematerialreported}
+                            <span class="link-text">{str tag=objectionablematerialreported}</span>
                         </span>
                     {else}
                         <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
                             <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
-                            {str tag=reportobjectionablematerial}
+                            <span class="link-text">{str tag=reportobjectionablematerial}</span>
                         </a>
                     {/if}
                 </li>
                 {/if}
                 {if $userisowner && $objectedpage}
-                <li>
+                <li class="dropdown-item">
                     <a id="review_link" href="#" data-toggle="modal" data-target="#review-form">
                         <span class="icon icon-lg icon-flag text-success left" role="presentation" aria-hidden="true"></span>
-                        {str tag=objectionreview}
+                        <span class="link-text">{str tag=objectionreview}</span>
                     </a>
                 </li>
                 {/if}
                 {if $userisowner || $canremove}
                 <li class="dropdown-item">
                     <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
-                        <span class="icon icon-lg icon-trash text-danger" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-lg icon-trash text-danger left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">{str tag=deletethisview section=view}</span>
                         <span class="sr-only">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
-                        {str tag=deletethisview section=view}
                     </a>
                 </li>
                 {/if}
             {/if}
             {if $versionurl}
-                <li>
+                <li class="dropdown-item">
                   <a href="{$versionurl}">
                       <span class="icon icon-code-fork icon-lg left" role="presentation" aria-hidden="true"></span>
+                      <span class="link-text">{str tag=timeline section=view}</span>
                       <span class="sr-only">{str(tag=timelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
-                      {str tag=timeline section=view}
                   </a>
                 </li>
             {/if}
             {if $userisowner}
-                <li>
+                <li class="dropdown-item">
                   <a href="{$createversionurl}">
                       <span class="icon icon-save icon-lg left" role="presentation" aria-hidden="true"></span>
+                      <span class="link-text">{str tag=savetimeline section=view}</span>
                       <span class="sr-only">{str(tag=savetimelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
-                      {str tag=savetimeline section=view}
                   </a>
                 </li>
             {/if}

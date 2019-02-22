@@ -28,6 +28,18 @@ h1 {
     padding-top: 10px;
 }
 
+// Page or collections page header title
+.pageheader h1 {
+    margin: 40px 0 10px 0;
+    padding: 0;
+    border-bottom: 0;
+    font-size: 36px;
+    @include media-breakpoint-down(md) {
+        font-size: 30px;
+        margin-top: 20px;
+    }
+}
+
 .page-header {
     padding-bottom: $line-height-computed * 0.4525;
     margin-bottom: 20px;

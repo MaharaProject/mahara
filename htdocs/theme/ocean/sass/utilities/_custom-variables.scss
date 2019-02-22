@@ -14,6 +14,9 @@ $arrow-link-background-color:   #fff;
 $dashboard-widget-bg:           transparent;
 $dashboard-widget-color:        transparent;
 
+// Pages and collections page header
+$pageheader-bg:                 scale-color($theme-primary-color, $lightness: 95%);
+
 
 // Legacy from Bootstrap 3
 

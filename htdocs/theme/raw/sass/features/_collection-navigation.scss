@@ -1,20 +1,26 @@
 .collection-nav {
-    background-color: $card-header-bg;
-    padding: 10px;
-    margin-bottom: 20px;
-    margin-left: -10px;
-    margin-right: -10px;
-    border-radius: 3px;
+    padding: 0;
+    margin-top: 20px;
+    margin-bottom: 70px;
     position: relative;
+
+    @include media-breakpoint-down(md) {
+      margin-bottom: 50px;
+    }
 
     h2 {
         font-weight: bold;
-        font-size: 30px;
+        font-size: 14px;
         margin-top: 0;
+        padding-bottom: 10px;
 
         @include media-breakpoint-up(lg) {
           margin-right: 300px;
           margin-bottom: 0;
+          border-bottom: 1px solid $list-group-border-color;
+        }
+        @include media-breakpoint-down(md) {
+          padding-bottom: 0;
         }
     }
     .collection-nav-btns {
@@ -22,8 +28,8 @@
 
       @include media-breakpoint-up(lg) {
         position: absolute;
-        right: 10px;
-        bottom: 12px;
+        right: 0px;
+        bottom: -1px;
       }
     }
     .prevpage {

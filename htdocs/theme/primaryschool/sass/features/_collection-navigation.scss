@@ -1,17 +1,5 @@
 .collection-nav {
-    background-color: #f3f8fa;
-    border-top: 0;
-    border-radius: 0;
-    .prevpage {
-        color: $btn-primary-color;
-        background-color: $btn-primary-bg;
-        border-color: $btn-primary-border;
-
-        &:focus,
-        &:hover {
-            background-color: scale-color($btn-primary-bg, $lightness: 5%);
-        }
-    }
+    .prevpage,
     .nextpage {
         color: $btn-primary-color;
         background-color: $btn-primary-bg;

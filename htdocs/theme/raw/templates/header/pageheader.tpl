@@ -1,9 +1,9 @@
 <div class="pageheader">
-    <div class="container main-content">
+    <div class="container pageheader-content">
         <div class="row">
-            <div id="main" class="col-md-12 main">
-                <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
-                    <div id="main-column-container">
+            <div class="col-md-12 main">
+                <div class="main-column{if $selected == 'content'} editcontent{/if}">
+                    <div id="pageheader-column-container">
                         {if $collection}
                             {include file=collectionnav.tpl}
                         {/if}
@@ -48,7 +48,7 @@
                             {/if}
                         </div>
 
-                        <div class="with-heading text-small">
+                        <div class="text-small">
                             {include file=author.tpl}
 
                             {if $alltags}
