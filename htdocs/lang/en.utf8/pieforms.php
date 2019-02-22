@@ -40,11 +40,29 @@ $string['element.date.monthnames'] = 'January,February,March,April,May,June,July
 $string['element.date.specify'] = 'Set date';
 $string['element.date.at'] = 'at';
 
+$string['element.expiry.days.lowercase'] = array(
+    0 => '%s day',
+    1 => '%s days'
+);
+$string['element.expiry.weeks.lowercase'] = array(
+    0 => '%s week',
+    1 => '%s weeks'
+);
+$string['element.expiry.months.lowercase'] = array(
+    0 => '%s month',
+    1 => '%s months'
+);
+$string['element.expiry.years.lowercase'] = array(
+    0 => '%s year',
+    1 => '%s years'
+);
+
 $string['element.expiry.days'] = 'Days';
 $string['element.expiry.weeks'] = 'Weeks';
 $string['element.expiry.months'] = 'Months';
 $string['element.expiry.years'] = 'Years';
 $string['element.expiry.noenddate'] = 'No end date';
+$string['element.expiry.noenddate.lowercase'] = 'no end date';
 
 $string['element.files.addattachment'] = 'Add attachment';
 
