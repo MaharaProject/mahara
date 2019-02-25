@@ -1196,5 +1196,36 @@ function xmldb_core_upgrade($oldversion=0) {
         log_debug('Clearing cache for new people menu structure');
     }
 
+    if ($oldversion < 2019031903) {
+        log_debug('Adding timestamps to youtube videos');
+
+        $sql = "SELECT id FROM {block_instance} WHERE blocktype = 'externalvideo' AND configdata LIKE '%youtube%'";
+        $records = get_records_sql_array($sql, array());
+        if ($records) {
+            $key = 'youtube';
+            $count = 0;
+            $limit = 1000;
+            $total = count($records);
+            require_once(get_config('docroot').'blocktype/lib.php');
+            foreach ($records as $record) {
+                $bi = new BlockInstance($record->id);
+                $configdata = $bi->get('configdata');
+                if (isset($configdata['videoid']) && strpos($configdata['videoid'], $key) !== false ) {
+                    $configdata['videoid'] = preg_replace('/(\?|\&)(t=)/', '$1start=', $configdata['videoid']);
+                }
+                if (isset($configdata['html']) && strpos($configdata['html'], $key) !== false ) {
+                    $configdata['html'] = preg_replace('/(\?|\&)(t=)/', '$1start=', $configdata['html']);
+                }
+                $bi->set('configdata', $configdata);
+                $bi->commit();
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
