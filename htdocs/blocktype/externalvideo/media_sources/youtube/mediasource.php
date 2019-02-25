@@ -19,20 +19,20 @@ class Media_youtube implements MediaBase {
 
         self::$iframe_sources = array(
             array(
-                'match' => '#^https?://(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9_=-]+).*#',
-                'url'   => $this->httpstr . '://www.youtube.com/embed/$2'
+                'match' => '#^https?://(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9_=-]+).*?\&?(t|start)?=?([0-9]+)?#',
+                'url'   => $this->httpstr . '://www.youtube.com/embed/$2?start=$4'
             ),
             array(
-                'match' => '#^https?://(www\.)?youtube\.com/embed/([a-zA-Z0-9\-_+]*).*#',
-                'url'   => $this->httpstr . '://www.youtube.com/embed/$2',
+                'match' => '#^https?://(www\.)?youtube\.com/embed/([a-zA-Z0-9\-_+]*)\??(t|start)?=?([0-9]+)?#',
+                'url'   => $this->httpstr . '://www.youtube.com/embed/$2?start=$4',
             ),
             array(
-                'match' => '#^https?://(www\.)?youtu\.be/([a-zA-Z0-9\-_+]*)#',
-                'url'   => $this->httpstr . '://www.youtube.com/embed/$2',
+                'match' => '#^https?://(www\.)?youtu\.be/([a-zA-Z0-9\-_+]*)\??(t|start)=?([0-9]+)?#',
+                'url'   => $this->httpstr . '://www.youtube.com/embed/$2?start=$4',
             ),
             array(
-                'match' => '#^https?://(www\.)?youtube\-nocookie\.com/embed/([a-zA-Z0-9\-_+]*)#',
-                'url'   => $this->httpstr . '://www.youtube-nocookie.com/embed/$2',
+                'match' => '#^https?://(www\.)?youtube\-nocookie\.com/embed/([a-zA-Z0-9\-_+]*)\??(t|start)?=?([0-9]+)?#',
+                'url'   => $this->httpstr . '://www.youtube-nocookie.com/embed/$2?start=$4',
             ),
         );
     }
