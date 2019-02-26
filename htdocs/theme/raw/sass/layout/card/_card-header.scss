@@ -2,7 +2,7 @@
 .collapsible legend h4,
 .collapsible legend h3,
 .card-header {
-    background-color: $card-heading-bg;
+    background-color: $card-header-bg;
     position: relative;
     display: block;
     font-family: $font-family-sans-serif;
@@ -36,7 +36,7 @@
         }
 
         &.collapsed {
-            background-color: $card-heading-bg;
+            background-color: $card-header-bg;
             color: $theme-text-color;
             padding: 10px 15px;
             &.outer-link {

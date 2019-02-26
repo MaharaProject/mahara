@@ -10,10 +10,11 @@
             background-color: $card-bg;
         }
         .card-footer {
-            background-color: $card-heading-bg;
+            background-color: $card-header-bg;
             &:hover,
             &:focus {
-                background-color: darken($card-heading-bg, 3%);
+                background-color: scale-color($card-header-bg, $lightness: -3.22);
+
             }
         }
         .card-footer,
@@ -48,10 +49,10 @@
             }
         }
         .card-footer {
-            background-color: $card-heading-bg;
+            background-color: $card-header-bg;
             &:hover,
             &:focus {
-                background-color: darken($card-heading-bg, 3%);
+                background-color: scale-color($card-header-bg, $lightness: -3.22);
             }
         }
         .card-footer,
@@ -76,7 +77,7 @@
             background-color: $card-warning-bg;
         }
         .card-footer {
-            background-color: darken($card-heading-bg, 1.5%);
+            background-color: scale-color($card-header-bg, $lightness: -3.22);
 
         }
         .card-footer,
@@ -101,10 +102,10 @@
             background-color: $card-bg;
         }
         .card-footer {
-            background-color: $card-heading-bg;
+            background-color: $card-header-bg;
             &:hover,
             &:focus {
-                background-color: darken($card-heading-bg, 3%);
+                background-color: scale-color($card-header-bg, $lightness: -3.22);
             }
         }
         .card-footer,

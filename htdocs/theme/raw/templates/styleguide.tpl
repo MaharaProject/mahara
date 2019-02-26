@@ -265,7 +265,7 @@ details on navigation styles.
               </li>
               <li>
                  <a href="">Link 2</a>
-                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navone" data-target="#subnavone">
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navone" data-target="#subnavone">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                      <span class="nav-title sr-only">Link 2</span>
                  </button>
@@ -276,7 +276,7 @@ details on navigation styles.
               </li>
               <li>
                  <a href="">Link 2</a>
-                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navone" data-target="#subnavtwo">
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navone" data-target="#subnavtwo">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                      <span class="nav-title sr-only">Link 2</span>
                  </button>
@@ -287,7 +287,7 @@ details on navigation styles.
               </li>
               <li>
                  <a href="">Link 4</a>
-                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navone" data-target="#subnavthree">
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navone" data-target="#subnavthree">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                      <span class="nav-title sr-only">Link 4</span>
                  </button>
@@ -303,7 +303,7 @@ details on navigation styles.
             <ul id="navtwo" class="nav navbar-nav">
                 <li>
                     <a href="">Link 1</a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navtwo" data-target="#subnavfour">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navtwo" data-target="#subnavfour">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title sr-only">Link 1</span>
                     </button>
@@ -314,7 +314,7 @@ details on navigation styles.
                 </li>
                 <li>
                     <a href="">Link 2</a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navtwo" data-target="#subnavfive">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navtwo" data-target="#subnavfive">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title sr-only">Link 2</span>
                     </button>
@@ -325,7 +325,7 @@ details on navigation styles.
                 </li>
                 <li>
                     <a href="">Link 3</a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navtwo" data-target="#subnavsix">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navtwo" data-target="#subnavsix">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title sr-only">Link 3</span>
                     </button>
@@ -350,7 +350,7 @@ details on navigation styles.
                         <span class="icon icon-cogs" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title">Link 2</span>
                     </a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="navuser" data-target="#subnavseven">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navuser" data-target="#subnavseven">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title sr-only">Link 2</span>
                     </button>

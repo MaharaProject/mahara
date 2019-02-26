@@ -6,7 +6,7 @@
 	border-color: $btn-secondary-border;
 	box-shadow: none;
 	&:hover {
-		background-color: darken($btn-secondary-bg, 10%);
+		background-color: scale-color($btn-secondary-bg, $lightness: -10.05);
 	}
 	&.disabled {
 		background: $btn-bg-disabled-color;
@@ -28,7 +28,7 @@
 
 .btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
 	color: $gray-900;
-	background-color: darken($btn-secondary-bg, 15%);
+	background-color: scale-color($btn-secondary-bg, $lightness: -15.26);
 	box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
 }
 

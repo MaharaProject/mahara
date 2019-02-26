@@ -79,8 +79,8 @@
             font-size: 0.875rem;
             margin: 0;
             padding: 8px 14px;
-            background-color: darken($card-heading-bg, 2.7%);
-            border-bottom: 1px solid darken($gray-100, 3.5%);
+            background-color: scale-color($card-header-bg, $lightness: -15.26);
+            border-bottom: 1px solid scale-color($gray-100, $lightness: -3.78);
             border-radius: 3px 3px 0 0;
         }
         .popover-content {
