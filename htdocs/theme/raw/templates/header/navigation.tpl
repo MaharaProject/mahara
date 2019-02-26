@@ -29,7 +29,7 @@
                 </button>
                 {/if}
                 {if $item.submenu}
-                <ul id="childmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} in{/if} collapse child-nav" role="menu">
+                <ul id="childmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} show{/if} collapse child-nav" role="menu">
                 {strip}
                     {foreach from=$item.submenu item=subitem}
                     <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
@@ -87,7 +87,7 @@
             </button>
             {/if}
             {if $item.submenu}
-            <ul id="adminchildmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} in{/if} collapse child-nav" role="menu">
+            <ul id="adminchildmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} show{/if} collapse child-nav" role="menu">
             {strip}
                 {foreach from=$item.submenu item=subitem}
                 <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
@@ -138,7 +138,7 @@
             </button>
             {/if}
             {if $item.submenu}
-            <ul id="userchildmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} in{/if} collapse child-nav" role="menu">
+            <ul id="userchildmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} show{/if} collapse child-nav" role="menu">
                {foreach from=$item.submenu item=subitem}
                <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
                    <a href="{$WWWROOT}{$subitem.url}"{if $subitem.accesskey} accesskey="{$subitem.accesskey}"{/if}>

@@ -1,5 +1,5 @@
 <input type="hidden" name="accesslist" value="">
-<div class="card card-secondary view-container" id="editaccesswrap"
+<div class="card card-block view-container" id="editaccesswrap"
     data-viewtype="{{$viewtype}}"
     data-user-roles='{{$userroles}}'
     data-group-roles='{{$grouproles}}' >
@@ -7,7 +7,7 @@
         <h2 class="card-heading">{{str tag=profile section=view}}</h2>
     {{/if}}
 
-    <table id="accesslisttable" class="fullwidth accesslists table form-inline">
+    <table id="accesslisttable" class="fullwidth accesslists table">
         <thead>
             <tr class="accesslist-head th-has-shared">
                 <th></th>

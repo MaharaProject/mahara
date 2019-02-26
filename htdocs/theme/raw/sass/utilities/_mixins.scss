@@ -30,7 +30,7 @@
             a.collapsed {
                 padding-left:0;
                 border: 0;
-                font-size: $font-size-base - 2;
+                font-size: $font-size-base * .875;
                 background: none;
                 color: $link-color;
             }
