@@ -4,7 +4,7 @@
         <div class="col-md-12">
             <p class="lead">{str tag=collectiondragupdate1 section=collection}</p>
             <fieldset class="card card-secondary card-half first pagelist draggable " id="pagestoadd">
-                <h3 class="card-heading">
+                <h3 class="card-header">
                     {str tag=addviewstocollection section=collection}
                     {if $viewsform}
                         <span class="btn-group select-pages" role="group">
@@ -23,7 +23,7 @@
                 </div>
             </fieldset>
             <fieldset class="card card-secondary card-half collection-pages droppable" id="pagesadded">
-                <h3 class="card-heading">{str tag=viewsincollection section=collection}</h3>
+                <h3 class="card-header">{str tag=viewsincollection section=collection}</h3>
                 {if !$views}
                     <div class="message dropzone-previews full-width">
                         <div class="dz-message">

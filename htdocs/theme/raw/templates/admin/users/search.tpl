@@ -47,7 +47,7 @@
                     </a>
                 </h4>
             </legend>
-            <div id="initials" class="initials collapse{if $search->f || $search->l} in{/if}" aria-expanded="{if $search->f || $search->l}true{else}false{/if}">
+            <div id="initials" class="initials collapse{if $search->f || $search->l} show{/if}" aria-expanded="{if $search->f || $search->l}true{else}false{/if}">
                 <h3 class="filter-result-heading" tabindex="0">{str tag="filterresultsby"}</h3>
                 <div class="row">
                     <div id="firstnamelist" class="col-md-4 userserach-filter">

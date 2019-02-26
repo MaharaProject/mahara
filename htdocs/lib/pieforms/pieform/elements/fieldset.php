@@ -100,7 +100,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
     }
 
     // Render the body of the fieldset
-    $stateClass = $iscollapsed ? '':'in';
+    $stateClass = $iscollapsed ? '':'show';
 
     $fieldset.= $iscollapsible ? '<div class="fieldset-body collapse '.$stateClass.'" id="'.$openparam.'">' : '';
 
