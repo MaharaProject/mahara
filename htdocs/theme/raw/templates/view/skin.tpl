@@ -77,13 +77,13 @@
     <div class="col-md-9">
         <div class="collapsible-group skins">
             <div class="card card-secondary collapsible collapsible-group first">
-                <h3 class="card-heading">
+                <h3 class="card-header has-link">
                     <a href="#userskins" data-toggle="collapse" aria-expanded="false" aria-controls="#userskins">
                         {str tag=userskins section=skin}
                         <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h3>
-                <div id="userskins" class="card-body collapse in">
+                <div id="userskins" class="card-body collapse show">
                     {foreach from=$userskins item=skin}
                         <div class="skin">
                             <a onClick = "change_skin({$viewid}, {$skin->id})">
@@ -98,7 +98,7 @@
             </div>
             {if $favorskins}
             <div class="card card-secondary collapsible collapsible-group">
-                <h3 class="card-heading">
+                <h3 class="card-header has-link">
                     <a href="#favorskins" data-toggle="collapse" aria-expanded="false" aria-controls="#favorskins" class="collapsed">
                         {str tag=favoriteskins section=skin}
                         <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
@@ -119,7 +119,7 @@
             </div>
             {/if}
             <div class="card card-secondary collapsible collapsible-group last">
-                <h3 class="card-heading">
+                <h3 class="card-header has-link">
                     <a href="#siteskins" data-toggle="collapse" aria-expanded="false" aria-controls="#siteskins" class="collapsed">
                         {str tag=siteskins section=skin}
                         <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>

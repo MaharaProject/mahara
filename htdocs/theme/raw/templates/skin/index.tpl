@@ -24,7 +24,7 @@
     {foreach from=$skins item=skin}
     <div class="skin">
         <div class="card card-secondary">
-            <h2 class="card-heading {if $skin.metadata} has-link {/if}">
+            <h2 class="card-header {if $skin.metadata} has-link {/if}">
                 <a href="" type="button" title="{str tag='viewmetadata' section='skin'}" class="title-link" data-toggle="modal" data-target="#skindata-modal-{$skin.id}" aria-labelledby="skin-info">
                     {$skin.title|escape|safe}
                     <span class="icon icon-info-circle float-right link-indicator" role="presentation" aria-hidden="true"></span>

@@ -11,7 +11,7 @@
                         </a>
                     </h4>
                 </legend>
-                <div class="fieldset-body collapse in" id="dropdown{$k}">
+                <div class="fieldset-body collapse show" id="dropdown{$k}">
                     {$section.content|safe}
                 </div>
             </fieldset>
