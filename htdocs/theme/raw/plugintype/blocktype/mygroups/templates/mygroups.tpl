@@ -15,7 +15,7 @@
     </script>
     {/if}
 {else}
-    <div class="panel-body">
+    <div class="card-body">
         <p class="no-results-small">{str tag='notinanygroups' section='group'}</p>
     </div>
 {/if}

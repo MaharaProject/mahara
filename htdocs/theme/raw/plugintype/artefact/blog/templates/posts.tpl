@@ -27,10 +27,10 @@
                 </span>
                 {elseif $post->canedit}
                 <div class="btn-group postcontrols">
-                    <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button pull-left">
+                    <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button float-left">
                         <input type="hidden" name="id" value="{$post->id}">
                         <div class="first">
-                            <button type="submit" class="submit btn btn-default btn-sm" title="{str(tag=edit)|escape:html|safe}">
+                            <button type="submit" class="submit btn btn-secondary btn-sm" title="{str(tag=edit)|escape:html|safe}">
                                 <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">{str tag=editspecific arg1=$post->title |escape:html|safe}</span>
                             </button>
@@ -69,15 +69,15 @@
         </p>
 
         {if $post->files}
-        <div class="has-attachment panel panel-default collapsible" id="postfiles_{$post->id}">
-            <h5 class="panel-heading">
+        <div class="has-attachment card card-default collapsible" id="postfiles_{$post->id}">
+            <h5 class="card-heading">
                 <a class="text-left collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
                     <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                      <span class="metadata">
                         ({$post->files|count})
                     </span>
-                    <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 </a>
             </h5>
             <div class="collapse" id="attach_{$post->id}">

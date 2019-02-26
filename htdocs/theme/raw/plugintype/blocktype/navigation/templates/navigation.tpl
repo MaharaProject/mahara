@@ -14,7 +14,7 @@
         {/foreach}
     </div>
 {else}
-<div class="panel-body">
+<div class="card-body">
     <p class="lead text-small">{str tag='noviewstosee' section='group'}</p>
 </div>
 {/if}

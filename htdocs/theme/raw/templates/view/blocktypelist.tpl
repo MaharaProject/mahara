@@ -4,7 +4,7 @@
     {/if}
         {foreach from=$blocktypes item=blocktype}
         {* TODO at this point we have now $blocktype.singleonly *}
-            <a class="blocktype-drag blocktypelink btn btn-default hide-title-collapsed text-left" href="#" title="{$blocktype.description}">
+            <a class="blocktype-drag blocktypelink btn btn-secondary hide-title-collapsed text-left" href="#" title="{$blocktype.description}">
                 <span class="icon icon-arrows icon-sm left move-indicator" role="presentation" aria-hidden="true"></span>
                 <input type="radio" id="blocktype-list-radio-{$blocktype.name}" class="blocktype-radio" name="blocktype" value="{$blocktype.name}">
                 {if $blocktype.cssicon}{*

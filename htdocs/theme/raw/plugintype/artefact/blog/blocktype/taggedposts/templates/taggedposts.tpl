@@ -1,6 +1,6 @@
 {if ($editing)}
 <div class="shortcut nojs-hidden-block">
-    <div class="panel-footer {if (count($blogs) == 1)}hidden{/if}">
+    <div class="card-footer {if (count($blogs) == 1)}hidden{/if}">
         <label class="text">{str tag='shortcutaddpost' section='artefact.blog'} </label>
         <div class="input-group">
             <span class="picker">
@@ -8,21 +8,21 @@
             </span>
             <input class="select" type="hidden" value="{$tagselect}">
             <span class="input-group-btn">
-                <a class="btn btnshortcut btn-default">
+                <a class="btn btnshortcut btn-secondary">
                     <span class="icon icon-plus text-success left" role="presentation" aria-hidden="true"></span>
                     {str tag='shortcutadd' section='artefact.blog'}
                 </a>
             </span>
         </div>
     </div>
-    <a class="btn btnshortcut feedback panel-footer mtl {if (count($blogs) != 1)} hidden{/if}">
+    <a class="btn btnshortcut feedback card-footer mtl {if (count($blogs) != 1)} hidden{/if}">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag='shortcutnewentry' section='artefact.blog'}
     </a>
 </div>
 {/if}
 
-<div class="taggedpost-title text-midtone panel-body flush">
+<div class="taggedpost-title text-midtone card-body flush">
     {$blockheading|clean_html|safe}
 </div>
 
@@ -90,13 +90,13 @@
                             <span class="times">&times;</span>
                             <span class="sr-only">{str tag=Close}</span>
                         </button>
-                        <h4 class="modal-title pull-left">
+                        <h4 class="modal-title float-left">
                             <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
                             {str tag=Comments section=artefact.comment} |
                             {$post->title}
                         </h4>
                         {if $post->allowcomments}
-                        <a class="addcomment pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
+                        <a class="addcomment float-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
                             {str tag=addcomment section=artefact.comment}
                             <span class="icon icon-arrow-right right" role="presentation" aria-hidden="true"></span>
                         </a>

@@ -1,8 +1,8 @@
 {if $sbdata}
-<div class="panel panel-default">
-    <h3 class="panel-heading">
+<div class="card card-default">
+    <h3 class="card-heading">
         {str tag="networkservers" section="auth.xmlrpc"}
-        <span class="pull-right">
+        <span class="float-right">
             {contextualhelp plugintype='auth' pluginname='xmlrpc' section='networkservers'}
         </span>
     </h3>

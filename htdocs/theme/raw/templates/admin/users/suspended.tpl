@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 {$typeform|safe}
 
-<div class="panel panel-default panel-body view-container table-responsive">
+<div class="card card-default card-body view-container table-responsive">
     {$buttonformopen|safe}
     {$buttonform|safe}
         <table id="suspendedlist" class="table table-striped fullwidth listing">
@@ -15,7 +15,7 @@
                     <th>{str tag=expired section=admin}</th>
                     <th><div class="headhtml allnone-toggles">
                             <div class="btn-group" role="group">
-                                <a class="btn btn-xs btn-default" href="" id="selectall">{str tag='All'}</a>&nbsp;<a class="btn active btn-xs btn-default" href="" id="selectnone">{str tag='none'}</a>
+                                <a class="btn btn-sm btn-secondary" href="" id="selectall">{str tag='All'}</a>&nbsp;<a class="btn active btn-sm btn-secondary" href="" id="selectnone">{str tag='none'}</a>
                             </div>
                         </div>
                     </th>

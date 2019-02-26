@@ -70,7 +70,7 @@
             }
 
             jQuery(displayArray[i]).find('span.authIcons').first()
-                .append('<a class="btn btn-default btn-sm" href="" onclick="removeAuth('+outputArray[i]+'); ' +
+                .append('<a class="btn btn-secondary btn-sm" href="" onclick="removeAuth('+outputArray[i]+'); ' +
                     'return false;"><span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true">' +
                     '</span><span class="sr-only">'+get_string('deleteitem')+'</span></a>'+"\n");
 
@@ -209,7 +209,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
                 <span class="sr-only">{{str tag=moveitemup}}</span>
             </a>
             {{/if}}
-            <a href="" class="btn btn-default btn-sm" onclick="removeAuth({{$instance->id}}); return false;">
+            <a href="" class="btn btn-secondary btn-sm" onclick="removeAuth({{$instance->id}}); return false;">
                 <span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=deleteitem}}</span>
             </a>

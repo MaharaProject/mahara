@@ -12,7 +12,7 @@
                     <h4>
                         <a id="link_{$dwoo.foreach.data.index}" class="collapsed" href="#behatfield-{$dwoo.foreach.data.index}" data-toggle="collapse" aria-expanded="false" aria-controls="#behatfield-{$dwoo.foreach.data.index}">
                             {$k}
-                            <span class="icon icon-chevron-down collapse-indicator right pull-right"></span>
+                            <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
                         </a>
                     </h4>
                 </legend>

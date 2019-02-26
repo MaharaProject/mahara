@@ -27,7 +27,7 @@
         <span id="{{$name}}_files_maxsize" class="file-description">({{$maxfilesizedesc}})</span>
     </div>
 </div>
-<a class="btn btn-default btn-xs" href="" onclick="{{$name}}_new(); return false;">
+<a class="btn btn-secondary btn-sm" href="" onclick="{{$name}}_new(); return false;">
     <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
     <span class="">{{str tag=element.files.addattachment section=pieforms}}</span>
 </a>

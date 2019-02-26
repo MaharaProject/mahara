@@ -8,11 +8,11 @@
 </div>
 <div class="expose">
     <div class="row">
-        <div class="col-md-4  col-md-offset-4">
-            <div class="attentionmessage panel panel-warning">
-                <h3 class="panel-heading">{str tag='whymakemeyourfriend' section='group'}</h3>
-                <p class="panel-body">{$message}</p>
-                <div class="has-form text-small panel-footer btn-toggle">
+        <div class="col-md-4  offset-md-4">
+            <div class="attentionmessage card card bg-warning">
+                <h3 class="card-heading">{str tag='whymakemeyourfriend' section='group'}</h3>
+                <p class="card-body">{$message}</p>
+                <div class="has-form text-small card-footer btn-toggle">
                     <div class="btn">
                         <span class="icon icon-check icon-lg text-success left" role="presentation" aria-hidden="true"></span>
                         {$acceptform|safe}
@@ -28,13 +28,13 @@
 </div>
 <div class="container">
     <div class="row">
-        <div class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
+        <div class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 order-md-2 {/if}{else}col-md-12{/if} main">
             <div class="main-column{if $selected == 'content'} editcontent{/if}">
                 <div>
 {/if}
 
 <h1 id="viewh1" class="user-icon-name page-header">
-    <span class="user-icon pull-left">
+    <span class="user-icon float-left">
         <img src="{profile_icon_url user=$user maxwidth=50 maxheight=50}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" />
     </span>
     {if $pageheadinghtml}
@@ -45,19 +45,19 @@
 
 <div class="btn-group btn-group-top">
     {if $ownprofile}
-        <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn btn-default">
+        <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn btn-secondary">
             <span class="icon-pencil icon icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=editthisview section=view}
         </a>
     {/if}
     {if $loginas}
-        <a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}" class="btn-login btn btn-default">
+        <a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}" class="btn-login btn btn-secondary">
             <span class="icon-user-secret icon icon-lg left" role="presentation" aria-hidden="true"></span>
             {$loginas}
         </a>
 
         {if $USER->get('admin')}
-        <a href="{$WWWROOT}admin/users/edit.php?id={$USERID}" class="btn-edit btn btn-default">
+        <a href="{$WWWROOT}admin/users/edit.php?id={$USERID}" class="btn-edit btn btn-secondary">
             <span class="icon-cogs icon icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=accountsettings section=admin}
         </a>
@@ -65,14 +65,14 @@
     {/if}
 
     {if $canmessage}
-    <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-message btn btn-default">
+    <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-message btn btn-secondary">
         <span class="icon-envelope icon icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag='sendmessage' section='group'}
     </a>
     {/if}
 
     {if $relationship == 'existingfriend'}
-        <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view" class="btn-del btn btn-default">
+        <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view" class="btn-del btn btn-secondary">
              <span class="icon-user-times icon icon-lg left text-danger" role="presentation" aria-hidden="true"></span>
             {str tag='removefromfriendslist' section='group'}
         </a>
@@ -82,7 +82,7 @@
     {$newfriendform|safe}
 
     {elseif $relationship == 'none' && $friendscontrol == 'auth'}
-    <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-friend btn btn-default">
+    <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-friend btn btn-secondary">
         <span class="icon-user-plus icon icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag='requestfriendship' section='group'}
     </a>

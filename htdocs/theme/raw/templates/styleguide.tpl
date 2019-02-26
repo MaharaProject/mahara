@@ -26,7 +26,7 @@ display the rendered example, and unrendered example code, for each one.)
 ### Add button
 This button has padding on the right of the icon due to the plus class.
 ```
-<button class="btn-default button btn">
+<button class="btn-secondary button btn">
     <span class="icon icon-plus icon-lg left" role="presentation"></span>
     {str tag=add section=mahara}
 </button>
@@ -37,7 +37,7 @@ This button has padding on the right of the icon due to the plus class.
 ### Add button (small)
 This button is used for adding items to a list or table, e.g. URLs and users.
 ```
-<button class="btn-default btn-sm btn">
+<button class="btn-secondary btn-sm btn">
     <span class="icon icon-plus icon-lg" role="presentation"></span>
 </button>
 ```
@@ -47,7 +47,7 @@ This button is used for adding items to a list or table, e.g. URLs and users.
 ### Default button
 This button is generally the one you use for most things.
 ```
-<button class="btn-default button btn">
+<button class="btn-secondary button btn">
     Default button
 </button>
 ```
@@ -68,10 +68,10 @@ This button is used for accepting something. It is used for the primary action o
 This pair of buttons is used for deleting or editing an item.
 ```
 <div id="delete_submit_container" class=" default submitcancel form-group">
-    <button type="submit" class="btn-default submitcancel submit btn" name="submit" tabindex="0">
+    <button type="submit" class="btn-secondary submitcancel submit btn" name="submit" tabindex="0">
         {str tag='yes'}
     </button>
-    <input type="submit" class="btn-default submitcancel cancel" name="cancel_submit" tabindex="0" value="{str tag='no'}">
+    <input type="submit" class="btn-secondary submitcancel cancel" name="cancel_submit" tabindex="0" value="{str tag='no'}">
 </div>
 ```
 </section>
@@ -80,12 +80,12 @@ This pair of buttons is used for deleting or editing an item.
 ### Block edit buttons
 This pair of buttons is used for editing or deleting a block item on a page.
 ```
-<div class="panel-heading">
-<span class="pull-left btn-group btn-group-top">
-    <button class="configurebutton btn btn-inverse btn-xs">
+<div class="card-heading">
+<span class="float-left btn-group btn-group-top">
+    <button class="configurebutton btn btn-inverse btn-sm">
         <span class="icon icon-cog icon-lg"></span>
     </button>
-    <button class="deletebutton btn btn-inverse btn-xs">
+    <button class="deletebutton btn btn-inverse btn-sm">
         <span class="icon icon-trash text-danger icon-lg"></span>
     </button>
 </span>
@@ -98,10 +98,10 @@ This pair of buttons is used for editing or deleting a block item on a page.
 A group of buttons.
 ```
 <div class=" btn-group">
-    <a href="#" class="btn btn-default">
+    <a href="#" class="btn btn-secondary">
         Button group
     </a>
-    <a href="#" class="btn btn-default">
+    <a href="#" class="btn btn-secondary">
         Button group
     </a>
 </div>
@@ -114,10 +114,10 @@ A group of buttons aligned at the top. Note: The box around the buttons is only 
 ```
 <div style="border: 1px solid #cfcfcf; min-height: 50px; padding-right: 10px; width: 500px;">
     <div class="btn-top-right btn-group btn-group-top">
-        <a class="btn btn-default addpost" href="">
+        <a class="btn btn-secondary addpost" href="">
             Button group top
         </a>
-        <a class="btn btn-default settings" href="">
+        <a class="btn btn-secondary settings" href="">
             Button group top
         </a>
     </div>
@@ -132,7 +132,7 @@ A group of buttons aligned at the top. Note: The box around the buttons is only 
 ### Display page
 This button is used to display a page you have just edited.
 ```
-<button class="btn-default button btn">
+<button class="btn-secondary button btn">
     {str tag=displayview section=view}
     <span class="icon icon-arrow-circle-right right" role="presentation"></span>
 </button>
@@ -173,18 +173,18 @@ Switchboxes are used for Yes/No, On/Off or other true/false type fields. They ar
 This button is used to show there are more options available. An example can be found on a regular portfolio page where the items of the "Watchlist" and "Objectionable content" are available via the "More options" button. Note: Styles are only added for layout here in the style guide.
 ```
 <div class="btn-group" style="margin-left: 200px;">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag=more...}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-        <li>
+        <li class="dropdown-item">
             <a id="toggle_watchlist_link" class="watchlist" href="">
                 <span class="icon icon-eye left" role="presentation" aria-hidden="true"></span>
                 {str tag=addtowatchlist section=view}
             </a>
         </li>
-        <li>
+        <li class="dropdown-item">
             <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
                 <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                 {str tag=reportobjectionablematerial}
@@ -226,7 +226,7 @@ details on navigation styles.
 </style>
 ```
 <div class="row">
-    <div class="navbar-default navbar-main pull-right">
+    <div class="navbar-default navbar-main float-right">
         <div class="nav-toggle-area">
             <!-- Nav One Button -->
             <button class="nav-one-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-one" aria-expanded="false" aria-controls="nav-one" title="Nav one">
@@ -253,7 +253,7 @@ details on navigation styles.
             </button>
         </div>
         <!-- Nav One -->
-        <nav id="nav-one" class="nav collapse navbar-collapse nav-one" role="tabpanel">
+        <nav id="nav-one" class="nav collapse navbar-collapse nav-one" role="tabcard">
            <ul id="navone" class="nav navbar-nav">
               <li>
                   <a href="">Link 1</a>
@@ -294,7 +294,7 @@ details on navigation styles.
            </ul>
         </nav>
         <!-- Nav Two -->
-        <nav id="nav-two" class="nav navbar-collapse nav-two collapse" role="tabpanel" aria-expanded="false">
+        <nav id="nav-two" class="nav navbar-collapse nav-two collapse" role="tabcard" aria-expanded="false">
             <ul id="navtwo" class="nav navbar-nav">
                 <li>
                     <a href="">Link 1</a>
@@ -332,7 +332,7 @@ details on navigation styles.
             </ul>
         </nav>
         <!-- Nav Three -->
-        <nav id="nav-three" class=" nav collapse navbar-collapse nav-three" role="tabpanel">
+        <nav id="nav-three" class=" nav collapse navbar-collapse nav-three" role="tabcard">
             <ul id="navthree" class="nav navbar-nav">
                 <li class="has-icon">
                     <a href="">
@@ -392,7 +392,7 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
 ```
 <div>
     <div class="pagination-wrapper">
-        <div class="lead text-small results pull-right">
+        <div class="lead text-small results float-right">
             11 {str tag=results}
         </div>
         <ul class="pagination pagination-xs">
@@ -416,8 +416,8 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
             <label for="setlimitselect" class="set-limit">
                 {str tag=maxitemsperpage1}
             </label>
-            <span class="picker input-sm">
-                <select id="setlimitselect" class="js-pagination input-sm select form-control" name="limit">
+            <span class="picker form-control-sm">
+                <select id="setlimitselect" class="js-pagination form-control-sm select form-control" name="limit">
                     <option value="1"> 1 </option>
                     <option value="10" selected="selected"> 10 </option>
                     <option value="20"> 20 </option>
@@ -458,8 +458,8 @@ These are tabs to switch between pages within one section, for example in the "P
 ### Arrow bar
 This style of tabs is used for third-level navigation in areas where each page within this section is saved separately, for example in a group, in the résumé or in the web services configuration. When the primary school theme is selected, each arrow bar can be a different colour. This is determined by the class in the very first div. The 2 choices are 'group' (green) and 'resume' (red). There is a default option (blue) when no extra class is given.
 ```
-<div class="arrow-bar">
-    <span class="arrow hidden-xs">
+<div class="arrow-bar group">
+    <span class="arrow d-none">
         <span class="text">
             Tabs
         </span>
@@ -496,15 +496,16 @@ This style of tabs is used for third-level navigation in areas where each page w
 ```
 </section>
 
-<section data-markdown data-category="panels">
-### Panel
-A basic panel.
+
+<section data-markdown data-category="cards">
+### card
+A basic card.
 ```
-<div class="panel panel-default">
-    <h3 class="panel-heading has-link">
-        <a href="#">Basic panel</a>
+<div class="card card-default">
+    <h3 class="card-heading has-link">
+        <a href="#">Basic card</a>
     </h3>
-    <div class="tagblock panel-body">
+    <div class="tagblock card-body">
         <a title="1 item" href="#" class="tag">Mahara</a>
         <a title="1 item" href="#" class="tag">{str tag=myportfolio}</a>
     </div>
@@ -512,62 +513,62 @@ A basic panel.
 ```
 </section>
 
-<section data-markdown data-category="panels">
-### Delete panel
-A delete panel.
+<section data-markdown data-category="cards">
+### Delete card
+A delete card.
 ```
-<div class="panel panel-danger view-container">
-    <h2 class="panel-heading">{str tag=delete}</h2>
-    <div class="panel-body">
+<div class="card card bg-danger text-white view-container">
+    <h2 class="card-heading">{str tag=delete}</h2>
+    <div class="card-body">
         <p><strong>{str tag=Title}</strong></p>
         <p>{str tag=deleteinstitutionconfirm section=admin}</p>
         <div class=" default submitcancel form-group">
-            <button type="submit" class="btn-default submitcancel submit btn" tabindex="0">{str tag='yes'}</button>
-            <input type="submit" class="btn-default submitcancel cancel" tabindex="0" value="{str tag='no'}">
+            <button type="submit" class="btn-secondary submitcancel submit btn" tabindex="0">{str tag='yes'}</button>
+            <input type="submit" class="btn-secondary submitcancel cancel" tabindex="0" value="{str tag='no'}">
         </div>
     </div>
 </div>
 ```
 </section>
 
-<section data-markdown data-category="panels">
-### Side panel
-A side panel is used in the sideblock area, e.g. on the dashboard for "Online users".
+<section data-markdown data-category="cards">
+### Side card
+A side card is used in the sideblock area, e.g. on the dashboard for "Online users".
 ```
 <div class="col-md-3 sidebar">
-    <div class="panel panel-default">
-        <h3 class="panel-heading">
-            Side panel
+    <div class="card card-default">
+        <h3 class="card-heading">
+            Side card
             <br>
             <span  class="text-small text-midtone">({str tag=description})</span>
         </h3>
         <ul class="list-group">
             <li class="list-group-item list-unstyled list-group-item-link">
                 <a>
-                    Side panel link
+                    Side card link
                 </a>
             </li>
         </ul>
-        <a href="" class="panel-footer text-small">
-            Side panel footer
-            <span class="icon icon-arrow-circle-right pull-right"></span>
+        <a href="" class="card-footer text-small">
+            Side card footer
+            <span class="icon icon-arrow-circle-right float-right"></span>
         </a>
     </div>
 </div>
 ```
 </section>
 
-<section data-markdown data-category="panels">
-### Side panel (no footer)
-A side panel without a footer. An examples is the "Tags" sideblock on the dashboard.
+<section data-markdown data-category="cards">
+### Side card (no footer)
+A side card without a footer. An examples is the "Tags" sideblock on the dashboard.
 ```
 <div class="col-md-3 sidebar">
     <div id="sb-tags">
-        <div class="panel panel-default">
-            <h3 class="panel-heading has-link">
-                <a href="">Side panel<span class="icon icon-arrow-right pull-right" role="presentation" aria-hidden="true"></span></a>
+        <div class="card card-default">
+            <h3 class="card-heading has-link">
+                <a href="">Side card<span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
             </h3>
-            <div class="tagblock panel-body">
+            <div class="tagblock card-body">
                 <div class="no-results-small text-small">Lorem ipsum</div>
             </div>
         </div>
@@ -576,9 +577,9 @@ A side panel without a footer. An examples is the "Tags" sideblock on the dashbo
 ```
 </section>
 
-<section data-markdown data-category="panels">
-### Dropdown panel
-A dropdown panel.
+<section data-markdown data-category="cards">
+### Dropdown card
+A dropdown card.
 ```
 <div class="last form-group collapsible-group">
     <fieldset class="pieform-fieldset last collapsible">
@@ -586,7 +587,7 @@ A dropdown panel.
             <h4>
                 <a href="#dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                     Drop-down
-                    <span class="icon icon-chevron-down collapse-indicator right pull-right"> </span>
+                    <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
                 </a>
             </h4>
         </legend>
@@ -598,23 +599,23 @@ A dropdown panel.
 ```
 </section>
 
-<section data-markdown data-category="panels">
-### Blocks drop-down panel
-This type of drop-down panel is used in blocks, for example the "Inbox" block.
+<section data-markdown data-category="cards">
+### Blocks drop-down card
+This type of drop-down card is used in blocks, for example the "Inbox" block.
 ```
-<div class="bt-inbox panel panel-secondary clearfix collapsible">
-    <h3 class="title panel-heading js-heading">
+<div class="bt-inbox card card-secondary clearfix collapsible">
+    <h3 class="title card-heading js-heading">
         <a data-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
         Blocks drop-down
-        <span class="icon icon-chevron-up collapse-indicator pull-right inner-link" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-chevron-up collapse-indicator float-right inner-link" role="presentation" aria-hidden="true"></span>
     </h3>
     <div class="block collapse in" id="target" aria-expanded="true">
         <div class="inboxblock list-group">
-            <div class="has-attachment panel-default collapsible list-group-item">
+            <div class="has-attachment card-default collapsible list-group-item">
                 <a class="collapsed link-block" data-toggle="collapse" href="#item1" aria-expanded="false">
                     <span class="icon icon-university text-default left" role="presentation" aria-hidden="true"></span>
                     Item 1
-                    <span class="icon icon-chevron-down collapse-indicator pull-right text-small" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-right text-small" role="presentation" aria-hidden="true"></span>
                 </a>
                 <div class="collapse" id="item1">
                     <p class="content-text">
@@ -622,11 +623,12 @@ This type of drop-down panel is used in blocks, for example the "Inbox" block.
                     </p>
                 </div>
             </div>
-            <div class="has-attachment panel-default collapsible list-group-item">
+
+            <div class="has-attachment card-default collapsible list-group-item">
                 <a class="collapsed link-block" data-toggle="collapse" href="#item2" aria-expanded="false">
                     <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
                     Item 2
-                    <span class="icon icon-chevron-down collapse-indicator pull-right text-small" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-right text-small" role="presentation" aria-hidden="true"></span>
                 </a>
                 <div class="collapse" id="item2">
                     <p class="content-text">
@@ -646,12 +648,12 @@ This type of drop-down panel is used in blocks, for example the "Inbox" block.
 ```
 </section>
 
-<section data-markdown data-category="panels">
+<section data-markdown data-category="cards">
 ### Block layout
 This is the general layout of blocks. An example of this being used is the 'Latest changes I can view' block on the dashboard.
 ```
-<div class="bt-newviews panel panel-secondary clearfix">
-    <h3 class="title panel-heading js-heading">Block</h3>
+<div class="bt-newviews card card-secondary clearfix">
+    <h3 class="title card-heading js-heading">Block</h3>
     <div class="block">
         <div class="list-group">
             <div class="list-group-item">
@@ -682,15 +684,15 @@ This is the general layout of blocks. An example of this being used is the 'Late
 ```
 </section>
 
-<section data-markdown data-category="panels">
+<section data-markdown data-category="cards">
 ### Collection navigation
 ```
 <div class="collection-nav">
-    <button type="button" class="btn btn-default prevpage">
+    <button type="button" class="btn btn-secondary prevpage">
         <span class="icon left icon-chevron-left" role="presentation" aria-hidden="true"></span>
         {str tag=prevpage section=collection}
     </button>
-    <button type="button" class="btn btn-default nextpage">
+    <button type="button" class="btn btn-secondary nextpage">
         {str tag=nextpage section=collection}
         <span class="icon right icon-chevron-right" role="presentation" aria-hidden="true"></span>
     </button>
@@ -717,21 +719,21 @@ This is the general layout of blocks. An example of this being used is the 'Late
 ```
 </section>
 
-<section data-markdown data-category="panels">
-## Page Panel
-This panel is used to show a page.
+<section data-markdown data-category="cards">
+## Page card
+This card is used to show a page.
 ```
-<div class="panel-quarter panel-view">
-    <div class="panel panel-default">
-        <h3 class="panel-heading has-link">
+<div class="card-quarter card-view">
+    <div class="card card-default">
+        <h3 class="card-heading has-link">
             <a class="title-link title" href="" title="Dashboard page">Dashboard page</a>
         </h3>
-        <div class="panel-body">
+        <div class="card-body">
             <div class="detail">
                 <div class="detail">Your dashboard page is what you see on the homepage when you first log in. Only you have access to it.</div>
             </div>
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
             <div class="page-access"></div>
             <div class="page-controls">
                 <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="More...">
@@ -740,14 +742,14 @@ This panel is used to show a page.
                     <span class="sr-only">More options for "Dashboard page"</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <li>
+                    <li class="dropdown-item">
                         <a href="" title="Edit content and layout">
                         <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
                         <span class="sr-only">Edit "Dashboard page"</span>
                         </a>
                     </li>
-                    <li class="view-details">
+                    <li class="view-details dropdown-item">
                         Created 18 Jan 2017,  9:02
                         <br>
                         Modified 15 Jan 2018, 11:29
@@ -760,28 +762,29 @@ This panel is used to show a page.
 </div>
 ```
 </section>
-<section data-markdown data-category="panels">
-## Submitted Page Panel
-This panel is used to show a submitted page.
 
+<section data-markdown data-category="cards">
+## Submitted Page card
+This card is used to show a submitted page.
 <style>
-/* Styles for submitted and collection panels */
-.panel-quarter:nth-child(4n) .page-access .dropdown-menu {
+/* Styles for submitted and collection cards */
+.card-quarter:nth-child(4n) .page-access .dropdown-menu {
     left: 0;
 }
 </style>
 ```
-<div class="panel-quarter panel-view">
-    <div class="panel panel-default panel-warning">
-        <h3 class="panel-heading has-link">
+<div class="card-quarter card-view">
+    <div class="card card-default card bg-warning">
+        <h3 class="card-heading has-link">
             <a class="title-link title" href="" title="Dashboard page">Unnamed page</a>
         </h3>
-        <div class="panel-body">
+        <div class="card-body">
             <div class="detail">
                 <div class="detail">Lorem ipsum</div>
             </div>
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
+
             <div class="page-access">
                 <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
@@ -789,14 +792,14 @@ This panel is used to show a submitted page.
                     <span class="sr-only">Access rules for "Unnamed page"</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <li>
+                    <li class="dropdown-item">
                         <a class="seperator" href="">
                             <span class="icon icon-unlock-alt left" role="presentation" aria-hidden="true"></span>
                             <span class="link-text">Manage access</span>
                             <span class="sr-only">Manage access for "Unnamed page"</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="dropdown-item">
                         <a href="">
                             <span class="icon icon-users left" role="presentation" aria-hidden="true"></span>
                             <span class="link-text">group (Submitted)</span>
@@ -811,14 +814,14 @@ This panel is used to show a submitted page.
                     <span class="sr-only">More options for "Dashboard page"</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <li>
+                    <li class="dropdown-item">
                         <a href="" title="Edit content and layout">
                         <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
                         <span class="sr-only">Edit "Unnamed page"</span>
                         </a>
                     </li>
-                    <li class="view-details">
+                    <li class="view-details dropdown-item">
                         Created 18 Jan 2017,  9:02
                         <br>
                         Modified 15 Jan 2018, 11:29
@@ -832,29 +835,29 @@ This panel is used to show a submitted page.
 ```
 </section>
 
-<section data-markdown data-category="panels">
-## Collections Panel
-This panel is used to show a collection.
 
+<section data-markdown data-category="cards">
+## Collections card
+This card is used to show a collection.
 <style>
-/* Styles for submitted and collection panels */
-.panel-quarter:nth-child(4n) .page-access .dropdown-menu {
+/* Styles for submitted and collection cards */
+.card-quarter:nth-child(4n) .page-access .dropdown-menu {
     left: 0;
 }
 </style>
 ```
-<div class="panel-quarter panel-collection">
-    <div class="panel panel-default
+<div class="card-quarter card-collection">
+    <div class="card card-default
         ">
-        <h3 class="panel-heading has-link">
+        <h3 class="card-heading has-link">
             <a class="title-link title" href="" title="collection uno">
             collection
             </a>
         </h3>
-        <div class="panel-body">
+        <div class="card-body">
             <div class="detail"></div>
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
             <div class="page-access">
                 <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
@@ -862,14 +865,14 @@ This panel is used to show a collection.
                 <span class="sr-only">Access rules for "collection"</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <li>
+                    <li class="dropdown-item">
                         <a class="seperator" href="">
                         <span class="icon icon-unlock-alt left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Manage access</span>
                         <span class="sr-only">Manage access for "collection"</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="dropdown-item">
                         <a href="">
                         <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Public</span>
@@ -884,28 +887,28 @@ This panel is used to show a collection.
                 <span class="sr-only">More options for "collection"</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <li>
+                    <li class="dropdown-item">
                         <a href="" title="Manage pages">
                         <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Manage</span>
                         <span class="sr-only">Manage pages in "collection"</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="dropdown-item">
                         <a href="" title="Edit title and description">
                         <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
                         <span class="sr-only">Edit "collection"</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="dropdown-item">
                         <a href="" title="Delete collection">
                         <span class="icon icon-trash text-danger left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Delete</span>
                         <span class="sr-only">Delete "collection"</span>
                         </a>
                     </li>
-                    <li class="view-details">
+                    <li class="view-details dropdown-item">
                         Created 30 Jan 2017,  8:09
                         <br>
                         Modified 17 Jan 2018, 15:26
@@ -921,7 +924,7 @@ This panel is used to show a collection.
                 </span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <li>
+                    <li class="dropdown-item">
                         <a href="">
                         <span class="icon icon-file-o left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Untitled page</span>
@@ -1038,10 +1041,10 @@ A fold down modal. This is typially used to report objectionable content.
                         <textarea rows="5" cols="80" class="form-control under-label required textarea resizable" id="objection_form_message" name="message" tabindex="0" aria-required="true"></textarea>
                     </div>
                     <div id="objection_form_submit_container" class=" default submitcancel form-group">
-                        <button type="submit" class="btn-default submitcancel submit btn" data-confirm="Are you sure you wish to report this page as containing objectionable material?" id="objection_form_submit" name="submit" tabindex="0">
+                        <button type="submit" class="btn-secondary submitcancel submit btn" data-confirm="Are you sure you wish to report this page as containing objectionable material?" id="objection_form_submit" name="submit" tabindex="0">
                             Notify administrator
                         </button>
-                        <input type="submit" class="btn-default submitcancel cancel" id="cancel_objection_form_submit" name="cancel_submit" tabindex="0" value="Cancel">
+                        <input type="submit" class="btn-secondary submitcancel cancel" id="cancel_objection_form_submit" name="cancel_submit" tabindex="0" value="Cancel">
                     </div>
                 </form>
             </div>
@@ -1110,10 +1113,10 @@ A striped table is most frequently found in the administration area where tables
             <td>Item 1 stuff</td>
             <td class="right">
                 <div class="btn-group">
-                    <a class="btn btn-default btn-sm" title="{str tag=groupmanage section=admin}" href="">
+                    <a class="btn btn-secondary btn-sm" title="{str tag=groupmanage section=admin}" href="">
                         <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 1'}</span>
                     </a>
-                    <a class="btn btn-default btn-sm" title="{str tag=delete}" href="">
+                    <a class="btn btn-secondary btn-sm" title="{str tag=delete}" href="">
                         <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 1'}</span>
                     </a>
                 </div>
@@ -1127,10 +1130,10 @@ A striped table is most frequently found in the administration area where tables
             <td>Item 2 stuff</td>
             <td class="right">
                 <div class="btn-group">
-                    <a class="btn btn-default btn-sm" title="{str tag=groupmanage section=admin}" href="">
+                    <a class="btn btn-secondary btn-sm" title="{str tag=groupmanage section=admin}" href="">
                         <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 2'}</span>
                     </a>
-                    <a class="btn btn-default btn-sm" title="{str tag=delete}" href="">
+                    <a class="btn btn-secondary btn-sm" title="{str tag=delete}" href="">
                         <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 2'}</span>
                     </a>
                 </div>
@@ -1212,14 +1215,14 @@ jQuery(function() {
 </section>
 
 <section data-markdown data-category="profile-pictures">
-### Profile side panel
-The profile picture size that is used on side panels. The example is the profile side panel on the dashboard.
+### Profile side card
+The profile picture size that is used on side cards. The example is the profile side card on the dashboard.
 ```
 <div class="col-md-3 sidebar">
-    <div id="sb-profile" class="sideblock-1 user-panel">
-        <div class="panel panel-default">
-            <h3 class="panel-heading profile-block">
-                <a href="" class="username">Side panel</a> <a href="" title="{str tag=editprofileicon section=artefact.file}" class="user-icon">
+    <div id="sb-profile" class="sideblock-1 user-card">
+        <div class="card card-default">
+            <h3 class="card-heading profile-block">
+                <a href="" class="username">Side card</a> <a href="" title="{str tag=editprofileicon section=artefact.file}" class="user-icon">
                     <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag=editprofileicon section=artefact.file}">
                 </a>
             </h3>
@@ -1280,10 +1283,10 @@ Used as the sub subheading of a page.
 </section>
 
 <section data-markdown data-category="text">
-### Panel heading
-Used as the heading of a block or panel.
+### card heading
+Used as the heading of a block or card.
 ```
-<h3 class="title panel-heading">Panel heading</h3>
+<h3 class="title card-heading">card heading</h3>
 ```
 </section>
 
@@ -1339,7 +1342,7 @@ As used for the Annotations" block.
 
 <section data-markdown data-category="icons">
 ### Angle double left
-Shows that a panel can be expanded or collapsed to the left.
+Shows that a card can be expanded or collapsed to the left.
 ```
 <i class="icon icon-angle-double-left" role="presentation"></i>
 ```
@@ -1347,7 +1350,7 @@ Shows that a panel can be expanded or collapsed to the left.
 
 <section data-markdown data-category="icons">
 ### Angle double right
-Shows that a panel can be expanded or collapsed to the right.
+Shows that a card can be expanded or collapsed to the right.
 ```
 <i class="icon icon-angle-double-right" role="presentation"></i>
 ```

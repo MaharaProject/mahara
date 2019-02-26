@@ -1,13 +1,13 @@
 {loadgroupquota}
-<div class="panel panel-default">
-    <h3 class="panel-heading">
+<div class="card card-default">
+    <h3 class="card-heading">
         {str tag="groupquota"}
-        <span class="pull-right">
+        <span class="float-right">
             {contextualhelp plugintype='artefact' pluginname='file' section='groupquota_message'}
         </span>
     </h3>
 
-    <div class="panel-body">
+    <div class="card-body">
         <p id="quota_message">
             {$GROUPQUOTA_MESSAGE|safe}
         </p>

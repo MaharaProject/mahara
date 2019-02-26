@@ -9,8 +9,8 @@
         </div>
             {if $pageeditform}
             <div class="col-md-9">
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card card-default">
+                    <div class="card-body">
                         {$pageeditform|safe}
                     </div>
                 </div>
@@ -35,7 +35,7 @@
     <div id="termsandconditions-text" class="lead tab js-hidden">{str tag="termspagedescription" section="admin"}</div>
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-default view-container">
+                <div class="card card-default view-container">
                     <div class="table-responsive">
                         <table id="adminstitutionslist" class="fullwidth table table-striped">
                             <thead>

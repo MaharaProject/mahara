@@ -1,6 +1,6 @@
-<div class="bt-{$blocktype} panel panel-secondary clearfix {if $retractable}collapsible{/if}" id="blockinstance_{$id}">
+<div class="bt-{$blocktype} card card-secondary clearfix {if $retractable}collapsible{/if}" id="blockinstance_{$id}">
     {if $title}
-        <h3 class="title panel-heading js-heading">
+        <h3 class="title card-heading js-heading">
             {if $retractable}
             <a data-toggle="collapse" href="#blockinstance_{$id}_target{if $versioning}_{$versioning->version}{/if}" aria-expanded="{if $retractedonload}false{else}true{/if}" aria-controls="blockinstance_{$id}_target{if $versioning}_{$versioning->version}{/if}" class="outer-link{if $retractedonload} collapsed{/if}"></a>
             {/if}
@@ -16,13 +16,13 @@
             </span>
 
             {if $retractable}
-            <span class="icon icon-chevron-up collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chevron-up collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
             {/if}
 
         </h3>
     {else}
         {if $link}
-            <a href="{$link}" class="text-default btn-default btn-sm pull-right">
+            <a href="{$link}" class="text-default btn-secondary btn-sm float-right">
                 {str tag=detailslinkalt section=view}
             </a>
         {/if}

@@ -1,7 +1,7 @@
 {if $controls}
-<div class="panel panel-default">
+<div class="card card-default">
     {if !$hidetitle}
-    <h3 class="resumeh3 panel-heading">
+    <h3 class="resumeh3 card-heading">
         {str tag='certification' section='artefact.resume'}
         {contextualhelp plugintype='artefact' pluginname='resume' section='addcertification'}
     </h3>
@@ -28,12 +28,12 @@
     <!-- Table body is rendered by javascript on content-> resume -->
     </table>
 
-    <div class="panel-footer has-form">
+    <div class="card-footer has-form">
         <div id="certificationform" class="collapse" data-action='focus-on-open reset-on-collapse'>
             {$compositeforms.certification|safe}
         </div>
 
-        <button id="addcertificationbutton" data-toggle="collapse" data-target="#certificationform" aria-expanded="false" aria-controls="certificationform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">
+        <button id="addcertificationbutton" data-toggle="collapse" data-target="#certificationform" aria-expanded="false" aria-controls="certificationform" class="float-right btn btn-secondary btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
                 <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
@@ -62,7 +62,7 @@
         {if $row->description || $row->attachments}
             <a href="#certification-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
                 {$row->title}
-                <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
                 <br />
                 <span class="text-small text-muted">
                     {$row->date}
@@ -112,7 +112,7 @@
                         </span>
                     </span>
 
-                    <span class="icon icon-download icon-lg pull-right text-watermark icon-action inner-link" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-download icon-lg float-right text-watermark icon-action inner-link" role="presentation" aria-hidden="true"></span>
                 </li>
                 {/foreach}
             </ul>

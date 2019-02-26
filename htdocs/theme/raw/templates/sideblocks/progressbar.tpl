@@ -1,9 +1,9 @@
 {if $sbdata.data || $sbdata.preview || $sbdata.count > 1}
-<div class="panel panel-default">
-    <h3 class="panel-heading">
+<div class="card card-default">
+    <h3 class="card-heading">
         {if $sbdata.preview}{str tag="profilecompletenesspreview"}{else}{str tag="profilecompleteness"}{/if}
     </h3>
-    <div class="panel-body">
+    <div class="card-body">
         {if $sbdata.count > 1}
         <form class="pieform" name="progresssidebarselect" method="post" action="" id="progresssidebarselect">
             <div id="progresssidebarselect_institution_container" class="select dropdown with-label-widthauto">

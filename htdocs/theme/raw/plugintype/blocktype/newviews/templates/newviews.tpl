@@ -48,7 +48,7 @@
     {/foreach}
 </div>
 {else}
-<div class="panel-body">
+<div class="card-body">
     <p class="lead text-small">{str tag=noviews1 section=view}</p>
 </div>
 {/if}

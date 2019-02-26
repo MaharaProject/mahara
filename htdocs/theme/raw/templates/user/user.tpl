@@ -1,5 +1,5 @@
-<div class="{if $user->pending || $user->requestedfriendship}pending panel-warning{else}panel-default{/if} panel panel-half myfriend">
-    <h3 class="panel-heading profile-block">
+<div class="{if $user->pending || $user->requestedfriendship}pending card bg-warning{else}card-default{/if} card card-half myfriend">
+    <h3 class="card-heading profile-block">
         <a href="{profile_url($user)}" class="username">
             {$user->display_name}
             {if $user->pending}
@@ -20,7 +20,7 @@
             <img class="user-icon" src="{profile_icon_url user=$user maxwidth=60 maxheight=60}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
         </span>
     </h3>
-    <div class="panel-body">
+    <div class="card-body">
         {if $user->institutions}
         <div class="memberof detail with-user-icon-lg">
             <span class="icon icon-university left" role="presentation" aria-hidden="true"></span>
@@ -83,7 +83,7 @@
     </div>
 
     {if $user->pending}
-    <div class="has-form text-small panel-footer btn-toggle">
+    <div class="has-form text-small card-footer btn-toggle">
         <div class="btn">
             <span class="icon icon-check icon-lg text-success left" role="presentation" aria-hidden="true"></span>
             {$user->accept|safe}
@@ -96,7 +96,7 @@
     </div>
     {/if}
     {if $user->friend}
-        <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="panel-footer">
+        <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="card-footer">
             <span class="icon icon-remove left icon-lg text-danger" role="presentation" aria-hidden="true"></span>
             {str tag='removefromfriendslist' section='group'}
         </a>

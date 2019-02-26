@@ -5,7 +5,7 @@
 {include file="header/head.tpl"}
 <body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}admin{/if} {if $loggedout}loggedout{/if} {if $pagename}{$pagename}{/if} {$presentation|default:'window'}">
     <div class="skiplink btn-group btn-group-top">
-        <a class="sr-only sr-only-focusable btn btn-default" href="#main">{str tag=skipmenu}</a>
+        <a class="sr-only sr-only-focusable btn btn-secondary" href="#main">{str tag=skipmenu}</a>
     </div>
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
@@ -45,7 +45,7 @@
         </div>
     {/if}
 
-    <header class="header navbar-fixed-top no-site-messages">
+    <header class="header fixed-top no-site-messages">
         <div class="navbar navbar-default navbar-main">
             <div class="container">
                 <div id="logo-area" class="logo-area">
@@ -116,14 +116,14 @@
 
     <div class="container main-content">
         <div class="row">
-            <main id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
+            <main id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 order-md-2 {/if}{else}col-md-12{/if} main">
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
                     <div id="main-column-container">
 
                         {if $SUBPAGENAV || $sectiontabs}
                         {assign $SUBPAGENAV item}
                         <div class="arrow-bar {$item.subnav.class}">
-                            <span class="arrow hidden-xs">
+                            <span class="arrow d-none">
                                 <span class="text">
                                 {if isset($PAGEHEADINGARROW)}
                                     {$PAGEHEADINGARROW}
@@ -160,7 +160,7 @@
                                 </span>
                                 {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
                                 {if $publicgroup && $rsswithtitle}
-                                <a href="{$feedlink}" class="mahara-rss-icon text-small pull-right " role="presentation" aria-hidden="true">
+                                <a href="{$feedlink}" class="mahara-rss-icon text-small float-right " role="presentation" aria-hidden="true">
                                     <span class="icon-rss icon icon-lg" role="presentation" aria-hidden="true"></span>
                                 </a>
                                 {/if}

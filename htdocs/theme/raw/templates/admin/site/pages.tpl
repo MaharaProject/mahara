@@ -10,8 +10,8 @@
     </div>
     {if $pageeditform}
     <div class="col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 {$pageeditform|safe}
             </div>
         </div>

@@ -1,10 +1,10 @@
 <input type="hidden" name="accesslist" value="">
-<div class="panel panel-secondary view-container" id="editaccesswrap"
+<div class="card card-secondary view-container" id="editaccesswrap"
     data-viewtype="{{$viewtype}}"
     data-user-roles='{{$userroles}}'
     data-group-roles='{{$grouproles}}' >
     {{if  $viewtype == "profile" }}
-        <h2 class="panel-heading">{{str tag=profile section=view}}</h2>
+        <h2 class="card-heading">{{str tag=profile section=view}}</h2>
     {{/if}}
 
     <table id="accesslisttable" class="fullwidth accesslists table form-inline">
@@ -97,20 +97,20 @@
     </td>
     <td class="text-center js-date short" data-name='from'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}">
-            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][startdate]" class="form-control pull-left" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" aria-label="{{str tag=element.calendar.datefrom section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" {% if (o.presets.locked) { %}disabled{% } %}></div>
+            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][startdate]" class="form-control float-left" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" aria-label="{{str tag=element.calendar.datefrom section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" {% if (o.presets.locked) { %}disabled{% } %}></div>
         </div>
     </td>
     <td class="text-center js-date short" data-name='to'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}">
-            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][stopdate]" class="form-control pull-left" data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %}></div>
+            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][stopdate]" class="form-control float-left" data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %}></div>
         </div>
     </td>
     {% if (o.viewtype !== "profile") { %}
         <td class="text-center tiny commentcolumn">
-            <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="allow-comments-checkbox checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.allowcomments == "1") { %}checked{% } else { %}{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
+            <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="allow-comments-checkbox form-check js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.allowcomments == "1") { %}checked{% } else { %}{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
         </td>
         <td class="text-center tiny commentcolumn">
-            <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="moderate-comments-checkbox checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.approvecomments == "1" && o.presets.allowcomments == "1") { %}checked{% } else { %}{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
+            <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="moderate-comments-checkbox form-check js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.approvecomments == "1" && o.presets.allowcomments == "1") { %}checked{% } else { %}{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
         </td>
     {% } %}
 

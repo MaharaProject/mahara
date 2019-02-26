@@ -26,7 +26,7 @@
     </table>
     </div>
     {else}
-        <div class="panel-body">
+        <div class="card-body">
             <p class="no-idps">{str tag="noidpsfound" section=auth.saml}</p>
         </div>
     {/if}

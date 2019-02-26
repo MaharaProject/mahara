@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="panel panel-body">
+<div class="card card-body">
     <div class="rbuttons">
         <form method="post" action="{$WWWROOT}admin/site/font/install.php" class="btn-group">
             <input class="submit btn btn-primary" type="submit" value="{str tag=installfont section=skin}">
@@ -14,7 +14,7 @@
         {if $query}
             <h2 id="searchresultsheading" class="accessible-hidden sr-only">{str tag=Results}</h2>
         {/if}
-        <div id="fontlist" class="panel-default fullwidth listing">
+        <div id="fontlist" class="card-default fullwidth listing">
             {$sitefontshtml|safe}
         </div>
     {else}

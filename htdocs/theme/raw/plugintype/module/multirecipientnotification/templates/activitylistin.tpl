@@ -1,8 +1,8 @@
 <div class="collapsible-group">
 {foreach from=$data item=item name='notification'}
-    <div class="panel collapsible notification collapsible-group  {if !$item->read}panel-primary js-panel-unread{else}panel-default{/if} {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if} ">
-        <div class="panel-heading">
-            <label class="panel-control">
+    <div class="card collapsible notification collapsible-group  {if !$item->read}card bg-primary text-white js-card-unread{else}card-default{/if} {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if} ">
+        <div class="card-heading">
+            <label class="card-control">
                 <span class="control {if !$item->read}unread{/if}">
                     <input type="checkbox" class="tocheck" name="select-{$item->table}-{$item->id}" id="select-{$item->table}-{$item->id}">
                     <span class="sr-only">{str tag='select' section='mahara'}</span>
@@ -65,13 +65,13 @@
                             , {$item->date}
                         </span>
                     </span>
-                    <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 </span>
             </a>
         </div>
         <div id="notification-{$item->table}-{$item->id}" class="collapse">
             {if $item->message}
-            <div class="panel-body {if !($item->canreply || $item->canreplyall)} no-footer{/if}">
+            <div class="card-body {if !($item->canreply || $item->canreplyall)} no-footer{/if}">
                 {if ($item->fromusr != 0)}
                 <p class="fromusers">
                     <strong>
@@ -145,7 +145,7 @@
             {/if}
 
             {if ($item->canreply || $item->canreplyall)}
-            <div class="actions panel-footer">
+            <div class="actions card-footer">
                 <div class="url">
                     {if $item->canreply}
                     <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">

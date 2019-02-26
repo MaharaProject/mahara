@@ -1,9 +1,9 @@
 {if $profileinfo}
     {if !$profileinfo.nodata}
-    <div class="panel-body flush">
+    <div class="card-body flush">
     {/if}
     {if $profileiconpath}
-        <div class="user-icon pull-right">
+        <div class="user-icon float-right">
             <img src="{$profileiconpath}" alt="{$profileiconalt}" />
         </div>
     {/if}

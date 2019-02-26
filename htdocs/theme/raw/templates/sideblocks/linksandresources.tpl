@@ -1,6 +1,6 @@
 {if $sbdata}
-<div class="panel panel-default">
-    <h3 class="panel-heading">
+<div class="card card-default">
+    <h3 class="card-heading">
         {str tag="linksandresources"}
     </h3>
     <ul class="list-group">

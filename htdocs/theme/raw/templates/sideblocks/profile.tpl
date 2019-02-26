@@ -1,5 +1,5 @@
-<div class="panel panel-default">
-        <h3 class="panel-heading profile-block">
+<div class="card card-default">
+        <h3 class="card-heading profile-block">
             <a href="{$sbdata.url}" class="username">{$sbdata.myname}</a>
             <a href="{$sbdata.profileiconurl}" title="{str tag="editprofileicon" section="artefact.file"}" class="user-icon">
                 <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag="editprofileicon" section="artefact.file"}">
@@ -14,7 +14,7 @@
         {if $sbdata.invitedgroups}
             <div id="invitedgroups" class="list-group-item list-group-item-warning list-group-item-profile-notification">
                 <a href="{$WWWROOT}group/index.php?filter=invite">
-                    <span id="invitedgroupscount" class="label label-warning">{$sbdata.invitedgroups}</span>
+                    <span id="invitedgroupscount" class="badge badge-warning">{$sbdata.invitedgroups}</span>
                     <span id="invitedgroupsmessage">{$sbdata.invitedgroupsmessage}</span>
                 </a>
             </div>
@@ -22,7 +22,7 @@
         {if $sbdata.pendingfriends}
             <div id="pendingfriends" class="list-group-item list-group-item-warning list-group-item-profile-notification">
                 <a href="{$WWWROOT}user/myfriends.php?filter=pending">
-                    <span id="pendingfriendscount" class="label label-warning">{$sbdata.pendingfriends}</span>
+                    <span id="pendingfriendscount" class="badge badge-warning">{$sbdata.pendingfriends}</span>
                     <span id="pendingfriendsmessage">{$sbdata.pendingfriendsmessage}</span>
                 </a>
             </div>
@@ -68,10 +68,10 @@
         {/if}
     </div>
     {if $sbdata.peer}
-        <div id="sbdatapeer"><a href="{$sbdata.peer.wwwroot}" class="panel-body">{$sbdata.peer.name}</a></div>
+        <div id="sbdatapeer"><a href="{$sbdata.peer.wwwroot}" class="card-body">{$sbdata.peer.name}</a></div>
     {/if}
     {if $USERMASQUERADING}
-        <div id="changeuser" class="panel-footer">
+        <div id="changeuser" class="card-footer">
             <a href="{$becomeyoulink}">
                 <span class="icon icon-lg left icon-undo" role="presentation" aria-hidden="true"></span>
                 <span>{$becomeyouagain}</span>

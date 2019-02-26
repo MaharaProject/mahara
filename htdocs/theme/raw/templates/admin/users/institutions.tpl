@@ -9,20 +9,20 @@
 
 
 {if $delete_form}
-<div class="panel panel-danger view-container">
-    <h2 class="panel-heading">{str tag="deleteinstitution" section="admin"}</h2>
-    <div class="panel-body">
+<div class="card card bg-danger text-white view-container">
+    <h2 class="card-heading">{str tag="deleteinstitution" section="admin"}</h2>
+    <div class="card-body">
         <p><strong>{$institutionname}</strong></p>
         <p>{str tag="deleteinstitutionconfirm" section="admin"}</p>
         {$delete_form|safe}
     </div>
 </div>
 {elseif $institution_form}
-<div class="panel panel-default view-container">
+<div class="card card-default view-container">
     {if $suspended}
-    <h2 class="title panel-heading panel-heading-warning">{$suspended}</h2>
+    <h2 class="title card-heading bg-warning">{$suspended}</h2>
         {if !$USER->get('admin')}
-        <div class="panel-body">
+        <div class="card-body">
             <div class="detail">
                 <p>{str tag="unsuspendinstitutiondescription_instadmin" section="admin"}</p>
             </div>
@@ -31,9 +31,9 @@
     {/if}
 
     {if $add}
-    <h2 class="title panel-heading">{str tag="addinstitution" section="admin"}</h2>
+    <h2 class="title card-heading">{str tag="addinstitution" section="admin"}</h2>
     {/if}
-    <div class="panel-body">
+    <div class="card-body">
         {$institution_form|safe}
     </div>
 </div>
@@ -41,8 +41,8 @@
 
     <div class="btn-group btn-group-top{if $siteadmin && $countinstitutions == 1} only-button{/if}">
         {if $siteadmin}
-        <form class="form-as-button pull-left btn-first" action="" method="post">
-            <button class="submit btn btn-default" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
+        <form class="form-as-button float-left btn-first" action="" method="post">
+            <button class="submit btn btn-secondary" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
                 <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="addinstitution" section="admin"}</span>
             </button>
@@ -51,7 +51,7 @@
 
         {if $countinstitutions > 1}
 
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <span class="icon icon-pencil icon-lg left" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-ellipsis-h icon-xs" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title sr-only">{str tag="edit"}</span>
@@ -59,22 +59,22 @@
 
 
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <li>
-                    <form class="form-as-button pull-left" action="{$WWWROOT}admin/users/institutionusers.php" method="post">
+                <li class="dropdown-item">
+                    <form class="form-as-button float-left" action="{$WWWROOT}admin/users/institutionusers.php" method="post">
                         <button class="submit btn btn-link" type="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
                             {str tag="editmembers" section="admin"}
                         </button>
                     </form>
                 </li>
-                <li>
-                    <form class="form-as-button pull-left" action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
+                <li class="dropdown-item">
+                    <form class="form-as-button float-left" action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
                         <button class="submit btn btn-link" type="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
                             {str tag="editstaff" section="admin"}
                         </button>
                     </form>
                 </li>
-                <li>
-                    <form class="form-as-button pull-left" action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
+                <li class="dropdown-item">
+                    <form class="form-as-button float-left" action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
                           <button class="submit btn btn-link" type="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
                             {str tag="editadmins" section="admin"}
                         </button>
@@ -85,7 +85,7 @@
     </div>
  {$searchform|safe}
 
-<div class="panel panel-default view-container">
+<div class="card card-default view-container">
     <div class="table-responsive">
         <table id="adminstitutionslist" class="fullwidth table table-striped">
             <thead>

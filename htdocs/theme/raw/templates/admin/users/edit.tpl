@@ -22,7 +22,7 @@
 {/if}
     <div class="row">
         <div class="col-md-9 main">
-            <div class="panel panel-body">
+            <div class="card card-body">
                 <h2>{str tag="siteaccountsettings" section="admin"}</h2>
                 <p class="errmsg">{str tag="usereditwarning" section="admin"}</p>
                 {$siteform|safe}
@@ -33,9 +33,9 @@
         </div>
 
         <div class="col-md-3">
-            <div class="user-panel">
-                <div class="panel panel-default">
-                    <h3 class="panel-heading profile-block">
+            <div class="user-card">
+                <div class="card card-default">
+                    <h3 class="card-heading profile-block">
                         <a href="{profile_url($user)}" class="username">
                             {$user|display_name}
                         </a>
@@ -43,7 +43,7 @@
                             <img src="{profile_icon_url user=$user maxheight=100 maxwidth=100}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
                         </a>
                     </h3>
-                    <div class="panel-body">
+                    <div class="card-body">
                     {if $loginas}
                        <p id="loginas" class="loginas">
                            <a href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">

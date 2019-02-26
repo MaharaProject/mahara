@@ -26,30 +26,30 @@
     </p>
     {/if}
     <ul class="list-unstyled list-inline ">
-        <li>
+        <li class="list-inline-item">
             <span class="icon icon-area-chart" role="presentation" aria-hidden="true"></span>
         </li>
         {if $group->membercount}
-        <li>
+        <li class="list-inline-item">
             {$group->membercount}&nbsp;{str tag=Members section=group}
         </li>
         {/if}
-        <li>
+        <li class="list-inline-item">
             {$group->viewcount}&nbsp;{str tag=Views section=view}
         </li>
-        <li>
+        <li class="list-inline-item">
             {$group->filecounts->files}&nbsp;{str tag=Files section=artefact.file}
         </li>
-        <li>
+        <li class="list-inline-item">
             {$group->filecounts->folders}&nbsp;{str tag=Folders section=artefact.file}
         </li>
-        <li>
+        <li class="list-inline-item">
             {$group->forumcounts}&nbsp;{str tag=nameplural section=interaction.forum}
         </li>
-        <li>
+        <li class="list-inline-item">
             {$group->topiccounts}&nbsp;{str tag=Topics section=interaction.forum}
         </li>
-        <li>
+        <li class="list-inline-item">
             {$group->postcounts}&nbsp;{str tag=Posts section=interaction.forum}
         </li>
     </ul>

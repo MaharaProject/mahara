@@ -15,8 +15,8 @@
                     </p>
                     <p>{str tag=confirmprivacyrefusal section=admin}</p>
                     <div class="btn-group">
-                        <button id="confirm-no-button" type="button" class="btn btn-default">{str tag="yes"}</button>
-                        <button id="back-button" type="button" class="btn btn-default">{str tag="no"}</button>
+                        <button id="confirm-no-button" type="button" class="btn btn-secondary">{str tag="yes"}</button>
+                        <button id="back-button" type="button" class="btn btn-secondary">{str tag="no"}</button>
                     </div>
                 </div>
             </div>

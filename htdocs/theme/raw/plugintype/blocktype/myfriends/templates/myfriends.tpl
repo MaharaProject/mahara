@@ -1,4 +1,4 @@
-<div class="friends panel-body">
+<div class="friends card-body">
 {if $friends}
     <div id="userfriendstable">
        {$friends.tablerows|safe}

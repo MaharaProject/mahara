@@ -1,7 +1,7 @@
 {include file="header.tpl"}
-<div class="panel panel-default">
-    <h3 class="panel-heading">{str tag="clientconnections" section="auth.webservice"}</h3>
-    <div class="panel-body">
+<div class="card card-default">
+    <h3 class="card-heading">{str tag="clientconnections" section="auth.webservice"}</h3>
+    <div class="card-body">
     {$form|safe}
     </div>
 </div>

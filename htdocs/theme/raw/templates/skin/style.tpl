@@ -36,8 +36,8 @@ body > .main-content > .row {
 /* page settings (also page description) */
 
 .user-page-content,
-.user-page-content .panel .panel-body table,
-.user-page-content .panel-body ul,
+.user-page-content .card .card-body table,
+.user-page-content .card-body ul,
 #view-description {
     font-family: {$view_text_font_family|safe};
     color: {$view_text_font_color};
@@ -70,7 +70,7 @@ body > .main-content > .row {
 .user-page-content h1,
 .user-page-content h2,
 .user-page-content h3,
-.user-page-content .panel-body h3,
+.user-page-content .card-body h3,
 .user-page-content h4,
 .user-page-content h5,
 .user-page-content h6,
@@ -84,28 +84,28 @@ body > .main-content > .row {
 
 /* blocks */
 
-.user-page-content .panel .title:not(.feedtitle) {
+.user-page-content .card .title:not(.feedtitle) {
     font-weight: bold;
     color: {$view_text_emphasized_color};
     font-family: {$view_heading_font_family|safe};
     border-color: {$view_text_emphasized_color};
 }
-.user-page-content .panel .title a,
-.user-page-content .panel .title a:link,
-.user-page-content .panel .title a:visited,
-.user-page-content .panel .title a:active {
+.user-page-content .card .title a,
+.user-page-content .card .title a:link,
+.user-page-content .card .title a:visited,
+.user-page-content .card .title a:active {
     color: {$view_text_emphasized_color};
     text-decoration: none;
 }
-.user-page-content .panel .title a:hover {
+.user-page-content .card .title a:hover {
     color: {$view_link_hover_color};
     text-decoration: none;
 }
 .user-page-content .link-blocktype:hover {
     background-color: transparent;
 }
-.user-page-content .panel {
-    background-color: transparent; /* take away default white panel bg */
+.user-page-content .card {
+    background-color: transparent; /* take away default white card bg */
 }
 
 
@@ -114,7 +114,7 @@ body > .main-content > .row {
 .user-page-content .list-group-item {
     background-color: transparent;
 }
-.user-page-content .panel > .block .list-group .list-group-item {
+.user-page-content .card > .block .list-group .list-group-item {
     border-color: {$view_text_emphasized_color};
 }
 

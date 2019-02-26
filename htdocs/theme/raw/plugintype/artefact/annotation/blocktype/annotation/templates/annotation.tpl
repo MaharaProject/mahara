@@ -1,4 +1,4 @@
-<div class="panel-body flush">
+<div class="card-body flush">
     {$text|clean_html|safe}
 
     {if $artefact->get('tags')}

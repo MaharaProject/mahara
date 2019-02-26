@@ -61,8 +61,8 @@
 </form>
 
 
-<div id="results" class="panel panel-default view-container">
-    <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
+<div id="results" class="card card-default view-container">
+    <h2 class="card-heading" id="resultsheading">{str tag="Results"}</h2>
         {if $results}
         <table id="searchresults" class="tablerenderer fullwidth table">
             <thead>
@@ -92,17 +92,17 @@
                 {$results|safe}
             </tbody>
         </table>
-        <div class="panel-body">
+        <div class="card-body">
             {$pagination|safe}
         </div>
 
-        <a class="panel-footer text-small" id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}">
+        <a class="card-footer text-small" id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}">
         <span class="icon icon-table left" role="presentation" aria-hidden="true"></span>
         {str tag=exportdataascsv section=admin}
         </a>
 
         {else}
-            <div class="panel-body">
+            <div class="card-body">
                 <p class="no-results"> {str tag="noresultsfound"}</p>
             </div>
         {/if}

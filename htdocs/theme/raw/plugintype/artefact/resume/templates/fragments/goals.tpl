@@ -6,25 +6,25 @@
         {contextualhelp plugintype='artefact' pluginname='resume' section='mygoals'}
         {/if}
     </h3>{/if}
-    <div id="goalslist{$suffix}" class="panel-items panel-items-no-margin js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
+    <div id="goalslist{$suffix}" class="card-items card-items-no-margin js-masonry" data-masonry-options='{ "itemSelector": ".card" }'>
         {foreach from=$goals item=n, name='default'}
-        <div class="panel panel-default">
-            <h4 class="panel-heading has-link">
+        <div class="card card-default">
+            <h4 class="card-heading has-link">
                 {if $n->exists}
                     <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                     {str tag=$n->artefacttype section='artefact.resume'}
-                    <span class="icon icon-pencil pull-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-pencil float-right" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=edit}</span>
                     </a>
                 {else}
                     <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                           {str tag=$n->artefacttype section='artefact.resume'}
-                    <span class="icon icon-pencil pull-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-pencil float-right" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=edit}</span>
                     </a>
                 {/if}
             </h4>
-            <div class="panel-body">
+            <div class="card-body">
                 {if $n->description != ''}
                 {$n->description|clean_html|safe}
                 {else}
@@ -35,13 +35,13 @@
             </div>
             {if $n->files}
             <div id="resume_{$n->id}" class="has-attachment">
-                <a class="collapsible collapsed panel-footer" aria-expanded="false" href="#attach_goal_{$.foreach.default.index}" data-toggle="collapse">
+                <a class="collapsible collapsed card-footer" aria-expanded="false" href="#attach_goal_{$.foreach.default.index}" data-toggle="collapse">
                     <p class="text-left">
                         <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
 
                         <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                          <span class="metadata">({$n->count})</span>
-                        <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
                     </p>
                 </a>
 

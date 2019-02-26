@@ -8,7 +8,7 @@
     </a>
 </div>
 {/if}
-<table class="filedata table-condensed">
+<table class="filedata table-sm">
     <tr>
         <th>{str tag=Type section=artefact.file}:</th>
         <td>{$filetype}</td>
@@ -52,7 +52,7 @@
     <tr>
         <th class="sr-only">{str tag=Download section=artefact.file}:</th>
         <td>
-            <a class="btn btn-default btn-sm" href="{$downloadpath}">{str tag=Download section=artefact.file}</a>
+            <a class="btn btn-secondary btn-sm" href="{$downloadpath}">{str tag=Download section=artefact.file}</a>
         </td>
     </tr>
 </table>

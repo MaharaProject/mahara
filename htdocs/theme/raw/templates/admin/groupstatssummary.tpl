@@ -19,7 +19,7 @@
 </div>
     {if $groupgraph}
     <h4>{str tag=groupsbytype section=statistics}</h4>
-    <div class="panel-body">
+    <div class="card-body">
         <canvas class="graphcanvas" id="sitestatsgroupgraph"></canvas>
         <script>
         {literal}

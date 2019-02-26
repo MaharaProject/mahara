@@ -36,7 +36,7 @@
                     jQuery('<input>', {'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
                     ' ',
                     jQuery('<span>', {'class': 'pseudolabel no-radio'}).append(email),' ',
-                    jQuery('<button>', {'class': 'btn btn-default btn-sm', 'onclick': '{{$name}}_remove(this); return false'}).append(
+                    jQuery('<button>', {'class': 'btn btn-secondary btn-sm', 'onclick': '{{$name}}_remove(this); return false'}).append(
                       jQuery('<span>', {'class': 'icon icon-times left icon-lg text-danger', 'role': 'presentation'}),
                       jQuery('<span>', {'text': '{{str tag=delete}}'})
                     ),
@@ -61,7 +61,7 @@
         }
 
         {{$name}}_newrefinput = jQuery('<input>', {'type': 'text', 'id': 'addnew{{$name}}', 'class': 'form-control'});
-        {{$name}}_newrefsubmit = jQuery('<input>', {'type': 'submit', 'class': 'btn btn-default', 'value': '{{$addbuttonstr}}'});
+        {{$name}}_newrefsubmit = jQuery('<input>', {'type': 'submit', 'class': 'btn btn-secondary', 'value': '{{$addbuttonstr}}'});
         {{$name}}_newref = jQuery('<div>', {'class': 'input-group'}).append({{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
 
         jQuery('#{{$name}}_list').append({{$name}}_newref);
@@ -107,7 +107,7 @@
         <label for="{{$name}}_radio_{{$i}}" class="stacked-label">
             <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
-        <button class="btn btn-default btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
+        <button class="btn btn-secondary btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
             <span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{{str tag=delete}}</span>
         </button>
@@ -119,7 +119,7 @@
         <span class="stacked-label no-radio">
             {{$email}}
         </span>
-        <button class="btn btn-default btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
+        <button class="btn btn-secondary btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
             <span class="icon icon-trash left icon-lg text-danger" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{{str tag=delete}}</span>
         </button>
@@ -127,7 +127,7 @@
     </div>
 {{/foreach}}
 </div>
-<button class="btn btn-default btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
+<button class="btn btn-secondary btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
     <span class="icon icon-plus left text-success icon-lg" role="presentation" aria-hidden="true"> </span>
     {{str tag="addemail"}}
 </button>

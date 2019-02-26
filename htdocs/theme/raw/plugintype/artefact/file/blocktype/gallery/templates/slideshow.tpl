@@ -1,11 +1,11 @@
-<div class="panel-body">
+<div class="card-body">
     {if $images}
     <div id="slideshow{$instanceid}" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner" role="listbox">
             {foreach from=$images item=image key=k name=images}
 
             <div class="{if $dwoo.foreach.images.first}item active{else}item{/if}">
-                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" class="center-block">
+                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" class="mx-auto d-block">
 
                 {if $showdescription && $image.title}
                 <div class="carousel-caption" id="description_{$instanceid}_{$k}">

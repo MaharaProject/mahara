@@ -22,14 +22,14 @@
     </p>
     {/if}
 
-    <div class="panel panel-default">
+    <div class="card card-default">
         {if $membershiptype}
-        <h2 id="searchresultsheading" class="panel-heading">
+        <h2 id="searchresultsheading" class="card-heading">
             <span class="sr-only">{str tag=Results}: </span>
             {str tag=pendingmembers section=group}
         </h2>
         {else}
-        <h2 id="searchresultsheading" class="panel-heading">
+        <h2 id="searchresultsheading" class="card-heading">
             {str tag=Results}
         </h2>
         {/if}

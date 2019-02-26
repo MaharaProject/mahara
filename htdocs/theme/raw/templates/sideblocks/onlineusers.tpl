@@ -1,5 +1,5 @@
-<div class="panel panel-default">
-    <h3 class="panel-heading">
+<div class="card card-default">
+    <h3 class="card-heading">
         {str tag="onlineusers" args=$sbdata.count}
         <br>
         <span id="lastminutes" class="text-small text-midtone">({str tag="lastminutes" args=$sbdata.lastminutes})</span>
@@ -19,8 +19,8 @@
             </li>
         {/foreach}
     </ul>
-    <a href="{$WWWROOT}user/online.php" class="online-users panel-footer text-small" id="allonline">
+    <a href="{$WWWROOT}user/online.php" class="online-users card-footer text-small" id="allonline">
         {str tag="allonline"}
-        <span class="icon icon-arrow-circle-right pull-right" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-arrow-circle-right float-right" role="presentation" aria-hidden="true"></span>
     </a>
 </div>

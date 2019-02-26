@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-md-8">
             <h3 class="list-group-item-heading title text-inline">
-                <span class="icon pull-left icon-folder-open left" role="presentation" aria-hidden="true"></span>
+                <span class="icon float-left icon-folder-open left" role="presentation" aria-hidden="true"></span>
                 {if $record->viewid}
                 <a href="{$WWWROOT}view/view.php?id={$record->viewid}">
                     {$record->name}

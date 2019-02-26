@@ -16,8 +16,7 @@
     {if $config.selectmodal}
         <div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
     {else}
-        {if !$config.noselect}
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$prefix}_upload_browse">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#{$prefix}_upload_browse">
             <span class="icon icon-paperclip icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=addafile section=artefact.file}
         </button>
@@ -54,7 +53,7 @@
         {/if}
 
         {if $config.upload}
-        <div id="{$prefix}_upload_container" class="clearfix {if $config.selectone || $config.selectmodal} panel-fake{else} panel panel-default fileupload {/if} {if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
+        <div id="{$prefix}_upload_container" class="clearfix {if $config.selectone || $config.selectmodal} card-fake{else} card card-default fileupload {/if} {if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
             {* config.uploadagreement: disable the file chooser unless the agreement is checked *}
             {* config.simpleupload: the form only contains a file chooser *}
             {* config.submitbutton: add submit button even if js is enabled & don't start uploading as soon as a file is chosen *}
@@ -167,8 +166,8 @@
             </div>
         {/if}
 
-        <div class="filelist-wrapper panel panel-secondary">
-            <h3 id="{$prefix}_foldernav" class="panel-heading">
+        <div class="filelist-wrapper card card-secondary">
+            <h3 id="{$prefix}_foldernav" class="card-heading">
             {include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
             </h3>
 

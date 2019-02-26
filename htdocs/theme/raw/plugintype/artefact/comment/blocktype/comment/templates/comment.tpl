@@ -1,5 +1,5 @@
 {if $editing}
-<div class="panel-body">
+<div class="card-body">
     <p class="alert alert-info">{$editing}</p>
 </div>
 {elseif $feedback}

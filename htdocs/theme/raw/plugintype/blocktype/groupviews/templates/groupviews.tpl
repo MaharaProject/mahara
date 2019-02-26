@@ -20,7 +20,7 @@
         </script>
         {/if}
     {else}
-        <div class="panel-body">
+        <div class="card-body">
             <span class="lead text-small">{str tag=nogroupviewsyet section=view}</span>
         </div>
     {/if}
@@ -51,7 +51,7 @@
         </script>
         {/if}
     {else}
-        <div class="panel-body">
+        <div class="card-body">
             <span class="lead text-small">{str tag=nosharedviewsyet section=view}</span>
         </div>
     {/if}
@@ -83,7 +83,7 @@
         </script>
         {/if}
     {else}
-        <div class="panel-body">
+        <div class="card-body">
             <span class="lead text-small">{str tag=nosharedcollectionsyet section=collection}</span>
         </div>
     {/if}
@@ -112,7 +112,7 @@
         </script>
         {/if}
     {else}
-        <div class="panel-body">
+        <div class="card-body">
             <span class="lead text-small">{str tag=nosubmittedviewscollectionsyet section=view}</span>
         </div>
     {/if}

@@ -43,7 +43,7 @@
                 <h4>
                     <a href="#initials" data-toggle="collapse" aria-expanded="{if $search->f || $search->l}true{else}false{/if}" aria-controls="initials" class="{if !$search->f && !$search->l}collapsed{/if}">
                         {str tag='moreoptions' section='view'}
-                        <span class="icon icon-chevron-down collapse-indicator right pull-right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
             </legend>
@@ -53,20 +53,20 @@
                     <div id="firstnamelist" class="col-md-4 userserach-filter">
                         <span class="pseudolabel" id="firstname">{str tag="firstname"}:</span>
                         <br/>
-                        <a class="label first-initial{if !$search->f} label-primary active{else} label-default{/if} all" aria-describedby="firstname" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
+                        <a class="badge first-initial{if !$search->f} badge-primary active{else} badge-default{/if} all" aria-describedby="firstname" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
 
                        {foreach from=$alphabet item=a}
-                        <a class="label first-initial{if $a == $search->f} label-primary active{else} label-default{/if}" aria-describedby="firstname" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;f={$a}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
+                        <a class="badge first-initial{if $a == $search->f} badge-primary active{else} badge-default{/if}" aria-describedby="firstname" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;f={$a}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
                        {/foreach}
                     </div>
 
                     <div id="lastnamelist" class="col-md-4 userserach-filter">
                         <span class="pseudolabel" id="lastname">{str tag="lastname"}:</span>
                         <br/>
-                        <a class="label last-initial{if !$search->l} label-primary active{else} label-default{/if} all" aria-describedby="lastname" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
+                        <a class="badge last-initial{if !$search->l} badge-primary active{else} badge-default{/if} all" aria-describedby="lastname" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
 
                        {foreach from=$alphabet item=a}
-                        <a class="label last-initial{if $a == $search->l} label-primary active{else} label-default{/if}" aria-describedby="lastname" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;l={$a}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
+                        <a class="badge last-initial{if $a == $search->l} badge-primary active{else} badge-default{/if}" aria-describedby="lastname" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;l={$a}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
                        {/foreach}
                     </div>
 
@@ -100,7 +100,7 @@
                                     {$loggedindate|safe}
                                 </div>
                             </div>
-                            <div class="duplicateemail-filter checkbox">
+                            <div class="duplicateemail-filter form-check">
                                 <label class="input-inline" for="duplicateemail">
                                     <input class="checkbox" type="checkbox" name="duplicateemail" id="duplicateemail" value="1"{if $search->duplicateemail} checked{/if}>
                                     {str tag="duplicateemailfilter1" section="admin"}
@@ -120,8 +120,8 @@
     </div>
 </div>
 <p class="lead view-description">{str tag="usersearchinstructions" section="admin"}</p>
-<div id="results" class="section panel panel-default view-container">
-    <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
+<div id="results" class="section card card-default view-container">
+    <h2 class="card-heading" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
         <div class="table-responsive">
             <table id="searchresults" class="table table-striped fullwidth listing">
@@ -162,20 +162,20 @@
         <p class="no-results">{str tag="noresultsfound"}</p>
     {/if}
     {if $USER->get('admin') || $USER->is_institutional_admin() || get_config('staffreports')}
-        <div class="withselectedusers panel-body">
+        <div class="withselectedusers card-body">
             <div class="btn-group">
                 {if $USER->get('admin') || $USER->is_institutional_admin()}
-                <form class="nojs-hidden-inline form-as-button pull-left" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
-                    <button action="{$WWWROOT}admin/users/bulk.php" type="submit" class="btn btn-default disabled" name="edit" id="editbtn" value="{str tag=edit}">
+                <form class="nojs-hidden-inline form-as-button float-left" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
+                    <button action="{$WWWROOT}admin/users/bulk.php" type="submit" class="btn btn-secondary disabled" name="edit" id="editbtn" value="{str tag=edit}">
                         <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
                         {str tag=withselectedusersedit section=admin}
                     </button>
 
                 </form>
                 {/if}
-                <form class="nojs-hidden-inline form-as-button pull-left{if !$USER->get('admin') && !$USER->is_institutional_admin()} last{/if}" action="{$WWWROOT}admin/users/statistics.php" id="report" method="post">
+                <form class="nojs-hidden-inline form-as-button float-left{if !$USER->get('admin') && !$USER->is_institutional_admin()} last{/if}" action="{$WWWROOT}admin/users/statistics.php" id="report" method="post">
 
-                    <button action="{$WWWROOT}admin/users/statistics.php" type="submit" class="btn btn-default disabled" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
+                    <button action="{$WWWROOT}admin/users/statistics.php" type="submit" class="btn btn-secondary disabled" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
                         <span class="icon icon-area-chart left" role="presentation" aria-hidden="true"></span>
                         {str tag=withselectedusersreports section=admin}
                     </button>

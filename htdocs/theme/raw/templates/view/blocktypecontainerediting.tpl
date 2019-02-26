@@ -1,5 +1,5 @@
-<div class="bt-{$blocktype}-editor js-blockinstance blockinstance panel panel-secondary clearfix {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
-    <h3 class="panel-heading js-heading drag-handle {if !$title}panel-heading-placeholder{/if}">
+<div class="bt-{$blocktype}-editor js-blockinstance blockinstance card card-secondary clearfix {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
+    <h3 class="card-heading js-heading drag-handle {if !$title}card-heading-placeholder{/if}">
         <span class="icon icon-arrows move-indicator" role="presentation" aria-hidden="true"></span>
         <span class="blockinstance-header">
             {if $configure}{$configtitle}: {str tag=Configure section=view}{else}{$title|default:"[$strnotitle]"}{/if}
@@ -9,7 +9,7 @@
             {/if}
         </span>
         <span class="blockinstance-controls">
-            <button class="keyboardmovebutton btn btn-default hidden sr-only" name="action_moveblockinstance_id_{$id}" alt="{$strmovetitletext}"  data-id="{$id}">
+            <button class="keyboardmovebutton btn btn-secondary hidden sr-only" name="action_moveblockinstance_id_{$id}" alt="{$strmovetitletext}"  data-id="{$id}">
                 {$strmovetitletext}
             </button>
             {foreach from=$movecontrols item=item}
@@ -17,14 +17,13 @@
                     {$item.title}
                 </button>
             {/foreach}
-            <span class="pull-right btn-group btn-group-top">
+            <span class="float-right btn-group btn-group-top">
                 {if $configurable && !$configure}
-                <button class="configurebutton btn btn-inverse btn-xs" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">
+                <button class="configurebutton btn btn-inverse btn-sm" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">
                     <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
                 </button>
                 {/if}
-                {if !$lockblocks}
-                <button class="deletebutton btn btn-inverse btn-xs" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
+                <button class="deletebutton btn btn-inverse btn-sm" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
                     <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                 </button>
                 {/if}

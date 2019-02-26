@@ -1,9 +1,9 @@
 {include file="header.tpl"}
 <div class="row">
     <div class="col-md-9" id="editmenus">
-        <div class="panel panel-default">
-            <h3 class="panel-heading">{str tag=linksandresourcesmenu section=admin }</h3>
-            <div class="panel-body">
+        <div class="card card-default">
+            <h3 class="card-heading">{str tag=linksandresourcesmenu section=admin }</h3>
+            <div class="card-body">
                 <p class="lead">{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
                 <div class="dropdown form-group">
                     <label for="menuselect">{str tag=edit}:</label>
@@ -19,9 +19,9 @@
                 <div id="menuitemlist"></div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <h3 class="panel-heading">{str tag=footermenu section=admin}</h3>
-            <div class="panel-body">
+        <div class="card card-default">
+            <h3 class="card-heading">{str tag=footermenu section=admin}</h3>
+            <div class="card-body">
                 <p class="lead">
                     {str tag=footermenudescription section=admin}
                 </p>

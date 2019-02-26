@@ -1,11 +1,11 @@
 {include file="header.tpl"}
     {if !$noedit}
     <div class="btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
-        <a id="addview-button" class="btn btn-default" href="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}">
+        <a id="addview-button" class="btn btn-secondary" href="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}">
             <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
             {str section=mahara tag=add}
         </a>
-        <a id="copyview-button" class="btn btn-default" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">
+        <a id="copyview-button" class="btn btn-secondary" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">
             <span class="icon icon-files-o icon-lg left" role="presentation" aria-hidden="true"></span>
             {str section=mahara tag=copy}
         </a>
@@ -46,8 +46,8 @@
                 <div class="modal-body">
                     <p>{str tag=confirmadddesc section=view}</p>
                     <div class="btn-group">
-                        <button id="add-collection-button" type="button" class="btn btn-default"><span class="icon icon-folder-open"></span> {str tag=Collection section=collection}</button>
-                        <button id="add-view-button" type="button" class="btn btn-default"><span class="icon icon-file-text"></span> {str tag=view}</button>
+                        <button id="add-collection-button" type="button" class="btn btn-secondary"><span class="icon icon-folder-open"></span> {str tag=Collection section=collection}</button>
+                        <button id="add-view-button" type="button" class="btn btn-secondary"><span class="icon icon-file-text"></span> {str tag=view}</button>
                     </div>
                 </div>
             </div>

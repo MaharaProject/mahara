@@ -1,7 +1,7 @@
 {if $controls}
-<div class="panel panel-default">
+<div class="card card-default">
     {if !$hidetitle}
-    <h3 class="resumeh3 panel-heading">
+    <h3 class="resumeh3 card-heading">
         {str tag='employmenthistory' section='artefact.resume'}
         {contextualhelp plugintype='artefact' pluginname='resume' section='addemploymenthistory'}
     </h3>
@@ -25,12 +25,12 @@
         <!-- Table body is rendered by javascript on content-> resume -->
     </table>
 
-    <div class="panel-footer has-form">
+    <div class="card-footer has-form">
         <div id="employmenthistoryform" class="collapse" data-action='focus-on-open reset-on-collapse'>
             {$compositeforms.employmenthistory|safe}
         </div>
 
-        <button id="addemploymenthistorybutton" data-toggle="collapse" data-target="#employmenthistoryform" aria-expanded="false" aria-controls="employmenthistoryform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">
+        <button id="addemploymenthistorybutton" data-toggle="collapse" data-target="#employmenthistoryform" aria-expanded="false" aria-controls="employmenthistoryform" class="float-right btn btn-secondary btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
                 <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
@@ -58,7 +58,7 @@
         {if $row->positiondescription || $row->attachments || $row->employeraddress}
             <a href="#employment-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
                 {$row->jobtitle} {str tag="at"} {$row->employer}
-                <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
                 <br />
                 <span class="text-small text-muted">
                     {$row->startdate}
@@ -116,7 +116,7 @@
                         </span>
                     </span>
 
-                    <span class="icon icon-download icon-lg pull-right text-watermark icon-action inner-link" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-download icon-lg float-right text-watermark icon-action inner-link" role="presentation" aria-hidden="true"></span>
                 </li>
                 {/foreach}
             </ul>

@@ -49,8 +49,8 @@
     </div>
 </form>
 
-<div class="panel panel-default view-container" id="results">
-    <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
+<div class="card card-default view-container" id="results">
+    <h2 class="card-heading" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
         <table id="searchresults" class="tablerenderer table fullwidth">
             <thead>
@@ -80,11 +80,11 @@
                 {$results|safe}
             </tbody>
         </table>
-        <div class="panel-body">
+        <div class="card-body">
             {$pagination|safe}
         </div>
     {else}
-    <div class="panel-body">
+    <div class="card-body">
         <div class="no-results">{str tag="noresultsfound"}</div>
     </div>
     {/if}

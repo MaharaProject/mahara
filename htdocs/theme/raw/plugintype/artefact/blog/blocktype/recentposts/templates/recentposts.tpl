@@ -1,11 +1,11 @@
 {if ($editing)}
     {if (count($blogs) == 1)}
-        <a class="panel-footer {if (count($blogs) != 1)} hidden{/if}">
+        <a class="card-footer {if (count($blogs) != 1)} hidden{/if}">
             <span id="blog_{$blogs[0]->id}" class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             {str tag='shortcutnewentry' section='artefact.blog'}
         </a>
     {elseif (count($blogs) > 1)}
-    <div class="panel-footer">
+    <div class="card-footer">
         <label class="text" for="blogselect_{$blockid}">{str tag='shortcutaddpost' section='artefact.blog'}</label>
         <div class="input-group">
 
@@ -15,7 +15,7 @@
             {/foreach}
             </select>
             <span class="input-group-btn">
-                <a class="btn btn-default btnshortcut">
+                <a class="btn btn-secondary btnshortcut">
                     <span class="icon icon-plus text-success left" role="presentation" aria-hidden="true"></span> {str tag='shortcutadd' section='artefact.blog'}
                 </a>
             </span>

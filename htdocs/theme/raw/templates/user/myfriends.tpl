@@ -6,10 +6,10 @@
 </p>
 {/if}
 {if $results}
-<div id="friendslist" class="panel-items js-masonry" data-masonry-options='{literal}{ "itemSelector": ".panel" }{/literal}'>
+<div id="friendslist" class="card-items js-masonry" data-masonry-options='{literal}{ "itemSelector": ".card" }{/literal}'>
     {$results.tablerows|safe}
 </div>
-<div class="panel-pagination">
+<div class="card-pagination">
 {$results.pagination|safe}
 </div>
 {/if}

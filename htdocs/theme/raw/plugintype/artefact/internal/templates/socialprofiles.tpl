@@ -1,6 +1,6 @@
 {if $rows}
 <div class="text-right">
-    <a class="btn btn-default" href="{$WWWROOT}artefact/internal/socialprofile.php">
+    <a class="btn btn-secondary" href="{$WWWROOT}artefact/internal/socialprofile.php">
         <span class="icon icon-lg icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=newsocialprofile section=artefact.internal}
     </a>
@@ -37,12 +37,12 @@
             {if $controls}
             <td class="control-buttons">
                 <div class="btn-group">
-                    <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}" class="btn btn-default btn-xs">
+                    <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}" class="btn btn-secondary btn-sm">
                         <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag='edit'}</span>
                     </a>
                     {if $candelete}
-                    <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}" class="btn btn-default btn-xs">
+                    <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}" class="btn btn-secondary btn-sm">
                         <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag='delete'}</span>
                     </a>
