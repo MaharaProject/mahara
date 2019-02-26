@@ -21,7 +21,7 @@
 {/if}
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-lg-9">
 
         <h1 class="page-header">
             {if count($artefactpath) == 0}
@@ -48,7 +48,7 @@
         </h1>
 
         <div class="btn-top-right btn-group btn-group-top float-right">
-            {if $LOGGEDIN} && (!$userisowner || ($userisowner && $objectedpage))}
+            {if $LOGGEDIN && (!$userisowner || ($userisowner && $objectedpage))}
             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag="more..."}</span>
@@ -91,7 +91,6 @@
                     </a>
                     {/if}
                 </li>
-                {/if}
                 {if $userisowner && $objectedpage}
                     <li>
                     <span class="nolink">

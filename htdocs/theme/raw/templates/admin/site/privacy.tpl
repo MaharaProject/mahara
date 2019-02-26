@@ -8,7 +8,7 @@
         {/if}
         </div>
             {if $pageeditform}
-            <div class="col-md-9">
+            <div class="col-lg-9">
                 <div class="card card-secondary">
                     <div class="card-body">
                         {$pageeditform|safe}

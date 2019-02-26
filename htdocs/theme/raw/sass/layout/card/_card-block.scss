@@ -20,6 +20,7 @@
     > .card-header, .card-heading-nested {
         border-bottom: 2px solid $card-border-color;
         padding: 10px 8px;
+        background: transparent;
 
         // In page builder we can choose to not have a heading,
         // but we still need a dragable object.

@@ -167,7 +167,7 @@
         {/if}
 
         <div class="filelist-wrapper card card-block">
-            <h3 id="{$prefix}_foldernav" class="card-heading">
+            <h3 id="{$prefix}_foldernav" class="card-header">
             {include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
             </h3>
 

@@ -1137,12 +1137,12 @@ EOF;
         function (row, data) {
             var editlink =
                 jQuery('<a>', {'href': 'editcomposite.php?id=' + row.id + '&artefact=' + row.artefact,
-                               'title': {$editstr}, 'class': 'btn btn-secondary btn-xs'}).append(
+                               'title': {$editstr}, 'class': 'btn btn-secondary btn-sm'}).append(
                                     jQuery('<span>',{'class': 'icon icon-pencil icon-lg', 'role':'presentation'}),
                                     jQuery('<span>',{'class': 'sr-only'}).append({$editjsstr})
                                );
             var dellink =
-                jQuery('<a>', {'href': '', 'title': {$delstr}, 'class': 'btn btn-secondary btn-xs'}).append(
+                jQuery('<a>', {'href': '', 'title': {$delstr}, 'class': 'btn btn-secondary btn-sm'}).append(
                     jQuery('<span>',{'class': 'icon icon-trash text-danger icon-lg','role':'presentation'}),
                     jQuery('<span>',{'class': 'sr-only'}).append({$deljsstr})
                 );

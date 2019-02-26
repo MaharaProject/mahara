@@ -1,6 +1,6 @@
 <div class="bt-{$blocktype} card card-block clearfix {if $retractable}collapsible{/if}" id="blockinstance_{$id}">
     {if $title}
-        <h3 class="title card-heading js-heading">
+        <h3 class="title card-header js-heading">
             {if $retractable}
             <a data-toggle="collapse" href="#blockinstance_{$id}_target{if $versioning}_{$versioning->version}{/if}" aria-expanded="{if $retractedonload}false{else}true{/if}" aria-controls="blockinstance_{$id}_target{if $versioning}_{$versioning->version}{/if}" class="outer-link{if $retractedonload} collapsed{/if}"></a>
             {/if}

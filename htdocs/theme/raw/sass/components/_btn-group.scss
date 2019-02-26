@@ -113,6 +113,10 @@
     }
 }
 
+.btn-group {
+    z-index: 3;
+}
+
 // Chrome bug - flex container doesn't work on fieldset tag
 fieldset.btn-group {
   display: block;

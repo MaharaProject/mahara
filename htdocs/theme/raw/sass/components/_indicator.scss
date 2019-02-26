@@ -101,7 +101,7 @@ a[data-toggle="collapse"] {
     width: 80%;
 }
 
-@media (min-width: $screen-sm-min) {
+@include media-breakpoint-up(md) {
     .columns3.col-width-15 .collapse-inline {
         width: 70%;
     }
@@ -121,7 +121,7 @@ a[data-toggle="collapse"] {
             width: 65%;
         }
     }
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         .columns1 .collapse-inline {
             width: 85%;
         }
@@ -132,7 +132,7 @@ a[data-toggle="collapse"] {
             }
         }
     }
-    @media (min-width: $screen-md-min) {
+    @include media-breakpoint-up(lg) {
         .columns4.col-width-25,
         .columns3.col-width-25 {
             .collapse-inline {
@@ -140,7 +140,7 @@ a[data-toggle="collapse"] {
             }
         }
     }
-    @media (min-width: $screen-lg-min) {
+    @include media-breakpoint-up(xl) {
         .columns3.col-width-25 {
             width: 60%;
         }

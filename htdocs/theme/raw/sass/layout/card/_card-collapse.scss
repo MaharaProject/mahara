@@ -106,6 +106,29 @@
                 @include clearfix;
             }
         }
+        &.collapsible-small {
+            legend {
+                width: auto;
+                border: none;
+                h4 {
+                    a {
+                        padding: 5px 5px 5px 0 !important;
+                        border: 0;
+                        background-color: $card-bg !important;
+                        color: $link-color !important;
+                        font-size: $font-size-base !important;
+                        font-weight: 400 !important;
+                        &:hover,
+                        &:focus {
+                            text-decoration: underline !important;
+                        }
+                        span {
+                            margin: 5px 0 0 5px;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     &.as-link {

@@ -2,7 +2,7 @@
 
 {if $missingextensions}
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-lg-9">
         <div class="alert alert-warning">{str section=admin tag=networkingextensionsmissing}
             <ul>
             {foreach from=$missingextensions item=extension}
@@ -14,10 +14,10 @@
 </div>
 {else}
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-lg-9">
         <p class="lead">{str tag=networkingpagedescription section=admin}</p>
     </div>
-    <div class="col-md-9">
+    <div class="col-lg-9">
         <div class="card card-secondary">
             <div class="card-body">
                 {$networkingform|safe}

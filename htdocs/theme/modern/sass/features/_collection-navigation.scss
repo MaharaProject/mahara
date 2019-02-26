@@ -3,7 +3,7 @@
         font-size: 32px;
     }
     .collection-nav-btns {
-      @media (min-width: $screen-md-min) {
+      @include media-breakpoint-up(lg) {
         bottom: 14px;
       }
     }

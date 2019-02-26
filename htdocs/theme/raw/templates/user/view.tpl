@@ -28,7 +28,7 @@
 </div>
 <div class="container">
     <div class="row">
-        <div class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 order-md-2 {/if}{else}col-md-12{/if} main">
+        <div class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-lg-9 {else}col-lg-9 order-md-2 {/if}{else}col-lg-12{/if} main">
             <div class="main-column{if $selected == 'content'} editcontent{/if}">
                 <div>
 {/if}
