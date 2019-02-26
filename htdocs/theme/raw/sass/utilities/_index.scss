@@ -13,7 +13,6 @@
 @import "../typography/tables";
 @import "../typography/text";
 
-
 // General customisation and component files go here...
 @import "../layout/layout";
 @import "../layout/col-collapse";
@@ -22,25 +21,24 @@
 @import "../layout/header";
 @import "../layout/profile-block";
 
-// Panels are a very commonly used layout component
-@import "../layout/panel/panel";
-@import "../layout/panel/panel-body";
-@import "../layout/panel/panel-collapse"; // for collapsible panels and collapsible fieldsets
-@import "../layout/panel/panel-control";
-@import "../layout/panel/panel-footer";
-@import "../layout/panel/panel-form";
-@import "../layout/panel/panel-half";
-@import "../layout/panel/panel-quarter";
-@import "../layout/panel/panel-heading";
-@import "../layout/panel/panel-items"; // groups of panels
-@import "../layout/panel/panel-secondary";
+// cards are a very commonly used layout component
+@import "../layout/card/card";
+@import "../layout/card/card-body";
+@import "../layout/card/card-collapse"; // for collapsible cards and collapsible fieldsets
+@import "../layout/card/card-control";
+@import "../layout/card/card-footer";
+@import "../layout/card/card-form";
+@import "../layout/card/card-half";
+@import "../layout/card/card-quarter";
+@import "../layout/card/card-heading";
+@import "../layout/card/card-items"; // groups of cards
+@import "../layout/card/card-secondary";
 
 // Navigation
 @import "../layout/nav/main-nav";
 @import "../layout/nav/nav-tabs";
 @import "../layout/nav/navbar";
 @import "../layout/nav/tabs";
-
 
 // Forms
 @import "../form/alert";
@@ -50,7 +48,6 @@
 @import "../form/site-messages";
 @import "../form/dropdown-group";
 @import "../form/dropdown";
-
 
 // Components - small reusable design elements
 @import "../components/arrow-bar";
@@ -76,7 +73,6 @@
 @import "../components/framework"; // For the framework matrix
 @import "../components/datepicker";
 
-
 // Feature related sass. We avoid this where we can in favour of reusable components
 @import "../features/collection-navigation";
 @import "../features/comment";
@@ -85,7 +81,7 @@
 @import "../features/forum-post";
 @import "../features/manage-collection";
 @import "../features/message-thread";
-@import "../features/notification"; // email style notification panels
+@import "../features/notification"; // email style notification cards
 @import "../features/option-alt";
 @import "../features/skiplink";
 @import "../features/user-pages";

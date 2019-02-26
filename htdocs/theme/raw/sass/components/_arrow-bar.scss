@@ -52,6 +52,7 @@
             width: 40px;
         }
         .text {
+            @include ellipsis(true);
             display: block;
             color: $arrow-text-color;
             font-weight: 700;

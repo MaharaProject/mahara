@@ -1,0 +1,66 @@
+// *
+// * This file is for hotfixes, hacks, and anything that you don't have time to test
+// * or implement properly. If you are unsure where to put something, it is ok to put it
+// * here.
+// *
+// * Please comment your code to make it easier for someone to fix or hunt down later.
+// *
+// *
+
+
+// IE9 specific styles
+.ie9 {
+    // dropdown group
+    .dropdown,
+    .pieform {
+        .picker {
+            width: 218px;
+        }
+        .picker:before {
+            content: "";
+        }
+        select.form-control {
+            padding: 0;
+        }
+    }
+    .admin-user-search .dropdown-group{
+        .picker {
+            @media (min-width: $screen-sm-min) {
+                width: 300px;
+            }
+        }
+        .dropdown-group .with-dropdown {
+            @media (min-width: $screen-sm-min) {
+                width: 282px;
+            }
+        }
+    }
+}
+
+
+// Overrides the main bootstrap table file and adds padding into tables so that text
+// isnt squashed against the border.
+.alert {
+    .table-bordered {
+        > thead,
+        > tbody,
+        > tfoot {
+          > tr {
+            > th:first-child,
+            > td:first-child {
+              padding-left: 8px;
+            }
+            > th:last-child,
+            > td:last-child {
+              padding-right: 8px;
+            }
+          }
+        }
+    }
+}
+
+// Overrides the default link underline state so that the note block's
+// 'Make a copy' link can have an underline
+.alert a.copytextboxnote {
+    text-decoration: underline;
+}

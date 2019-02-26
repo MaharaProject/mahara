@@ -8,9 +8,9 @@
 }
 
 .elasticsearch-filters {
-    background-color: scale-color($panel-default-heading-bg, $lightness: -1.40%);
+    background-color: scale-color($card-default-heading-bg, $lightness: -1.40%);
     + .no-results {
-        border-top: 1px solid $panel-default-border;
+        border-top: 1px solid $card-default-border;
     }
     .filter {
         padding: 0 15px;
@@ -53,7 +53,7 @@
 }
 
 .universalsearch {
-    &.panel {
+    &.card {
         margin-top: 20px;
     }
     .list-group-item ul:not(.list-group) {

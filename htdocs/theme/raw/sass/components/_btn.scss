@@ -43,7 +43,7 @@
 }
 
 // Used on pending friends page
-.btn-toggle.panel-footer {
+.btn-toggle.card-footer {
     padding:0;
     > .btn {
         border-radius: 0;
@@ -54,7 +54,7 @@
         text-align: left;
         &:first-child {
             border-radius: 0 0 0 3px;
-            border-bottom: 1px solid $panel-default-border;
+            border-bottom: 1px solid $card-default-border;
         }
         &:last-child {
             border-radius: 0 0 3px 0;
@@ -162,7 +162,7 @@ td.action-list-copy {
 // Often the same template is used to render buttons at the top of the page and
 // in a list group. cf. groups table/groups
 .list-group,
-.panel-heading {
+.card-heading {
     .btn-group-top {
         @include clearfix;
         text-align: right;
@@ -176,7 +176,7 @@ td.action-list-copy {
         .btn {
             @extend .btn-sm;
             padding-top: 3px;
-            border-top: 1px solid $panel-default-border;
+            border-top: 1px solid $card-default-border;
             @media (min-width: $screen-md-min) {
                 border-top-left-radius: 0;
                 border-top-right-radius: 0;
@@ -193,7 +193,7 @@ td.action-list-copy {
     }
 }
 // Edit page configure buttons
-.panel-secondary .blockinstance-controls .btn-group-top {
+.card-secondary .blockinstance-controls .btn-group-top {
     position: absolute;
     top: 11px;
     right: 10px;
