@@ -109,10 +109,6 @@ label,
 .textarea label {
     vertical-align: top;
 }
-.radio label,
-.checkbox label {
-    margin: 2px 10px 0 15px;
-}
 
 // BS3 code - begin
 .radio,
@@ -120,7 +116,7 @@ label,
   position: relative;
   display: block;
   margin-top: 10px;
-  // margin-bottom: 10px;
+  margin-bottom: 10px;
 
   label {
     min-height: $line-height-computed; // Ensure the input doesn't jump when there is no text

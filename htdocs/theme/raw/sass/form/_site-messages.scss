@@ -8,7 +8,7 @@
         border-radius: 0;
         padding: 5px 15px;
     }
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(sm) {
         display: none;
     }
 
@@ -26,7 +26,7 @@
     .header.message-count-#{$i} {
         top: 33px * $i;
 
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(sm) {
             top: 0;
         }
 

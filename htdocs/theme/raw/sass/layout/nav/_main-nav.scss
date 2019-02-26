@@ -46,6 +46,12 @@
             box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
         }
 
+        @include media-breakpoint-down(sm) {
+            margin-left: 0;
+            margin-right: 0;
+            border-width: 1px 0 0 0;
+        }
+
         &.collapsing {
             overflow-y: hidden;
         }
@@ -94,6 +100,11 @@
                 margin-right: 5px;
                 width: 1em;
             }
+        }
+
+        > .active > a {
+            background-color: $dropdown-link-active-bg;
+            color: $dropdown-link-active-color;
         }
     }
 

@@ -39,3 +39,7 @@
 .text-block.text-block { // specificity
     display: block;
 }
+
+.text-danger {
+    color: $state-danger-text !important; // Needs to be important to override default
+}

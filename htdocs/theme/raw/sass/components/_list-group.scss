@@ -238,6 +238,7 @@ h4.list-group-item-heading {
 .list-group-item-text {
     margin-top: 5px;
     background-color: $white;
+    line-height: $list-group-line-height;
 }
 
 // Modifiy for list-groups in cards
@@ -271,7 +272,8 @@ h4.list-group-item-heading {
     }
 }
 
-.card-heading + .block > .list-group .list-group-item:first-child {
+.card-header + .block > .list-group .list-group-item:first-child,
+.list-group + .card-footer {
     border-top-width: 0;
 }
 

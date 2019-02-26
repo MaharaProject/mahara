@@ -61,7 +61,7 @@ $columns: 8; //up to 8
     @include media-breakpoint-up(md) {
         margin-left: 2%;
     }
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(sm) {
         max-width: 100%;
         width: 100% !important; // override inline style
     }

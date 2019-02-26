@@ -367,8 +367,8 @@
     }
 }
 
-.card-block > .card-heading {
-    font-size: 1.125rem;
+.card-secondary > .card-header {
+    font-size: $font-size-base * 1.14285;
 }
 
 .table thead {

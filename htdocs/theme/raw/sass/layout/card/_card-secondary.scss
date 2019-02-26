@@ -2,13 +2,14 @@
 
 .card-secondary {
     &.card {
-        @include box-shadow(none);
+        // @include box-shadow(none);
     }
     .admin & {
         border-color: $card-secondary-border;
     }
-    > .card-heading {
-        font-family: $font-family-serif;
+    > .card-header {
+        font-family: $font-family-sans-serif;
+        margin-top: 0;
     }
     &.blockinstance.card {
         background-color: transparent;

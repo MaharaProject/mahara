@@ -26,9 +26,10 @@
 
 // Header search form
 .navbar-form.navbar-collapse {
-    padding: 15px;
+    padding: 15px 0;
     margin-bottom: 0;
     border: 0;
+    height: 65px;
     @include media-breakpoint-up(md) {
         position: absolute;
         display: block;
