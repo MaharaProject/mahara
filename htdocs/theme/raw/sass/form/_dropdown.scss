@@ -135,3 +135,17 @@
         }
     }
 }
+
+.card-footer {
+    .dropdown-menu {
+        .dropdown-item {
+            padding: 0;
+            a {
+                display: block;
+                &.seperator {
+                    border: 0;
+                }
+            }
+        }
+    }
+}

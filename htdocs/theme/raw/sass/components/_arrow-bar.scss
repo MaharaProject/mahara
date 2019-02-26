@@ -75,11 +75,13 @@
             line-height: 2em;
             margin-top: 9px;
             margin-bottom: 9px;
+            display: block;
             &:hover,
             &:focus {
                 @include transition-duration(0.3s);
                 background: $navbar-default-bg;
                 color: $link-color;
+                text-decoration: none;
             }
         }
         &.active > a,
@@ -90,6 +92,9 @@
             &:focus {
                 color: $link-color;
             }
+        }
+        + li {
+            margin-left: 2px;
         }
     }
 }

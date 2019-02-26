@@ -123,7 +123,7 @@
                         {if $SUBPAGENAV || $sectiontabs}
                         {assign $SUBPAGENAV item}
                         <div class="arrow-bar {$item.subnav.class}">
-                            <span class="arrow d-none">
+                            <span class="arrow d-none d-md-block">
                                 <span class="text">
                                 {if isset($PAGEHEADINGARROW)}
                                     {$PAGEHEADINGARROW}

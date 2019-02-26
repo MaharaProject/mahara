@@ -1139,22 +1139,7 @@ $list-group-border-color:           rgba($black, .125) !default;
 $list-group-border-width:           $border-width !default;
 $list-group-border-radius:          $border-radius !default;
 
-$card-background: (
-    danger: scale-color($card-danger-heading-bg, $lightness: -3.25%),
-    info: scale-color($card-info-heading-bg, $lightness: -3.5%),
-    success: scale-color($card-success-heading-bg, $lightness: -3.75%),
-    primary: scale-color($card-primary-heading-bg, $lightness: -3.25%),
-    warning: scale-color($card-warning-heading-bg, $lightness: -3.15%)
-);
-
-$card-border: (
-  danger: scale-color($card-danger-heading-bg, $lightness: -16.5%),
-  info: scale-color($card-info-heading-bg, $lightness: -16.5%),
-  success: scale-color($card-success-heading-bg, $lightness: -17.85%),
-  primary: scale-color($card-primary-heading-bg, $lightness: -15%),
-  warning: scale-color($card-warning-heading-bg, $lightness: -16%)
-);
-$list-group-item-padding-y:         .75rem !default;
+$list-group-item-padding-y:         0.625rem !default;
 $list-group-item-padding-x:         0.9375rem !default;
 
 $list-group-hover-bg:               $gray-100 !default;

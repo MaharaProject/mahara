@@ -4,13 +4,22 @@
 	color: $btn-secondary-color;
 	background-color: $btn-secondary-bg;
 	border-color: $btn-secondary-border;
+	&:hover {
+		background-color: darken($btn-secondary-bg, 10%);
+	}
 }
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
 	color: inherit;
 	background-color: transparent;
-	border-color: transparent
+	border-color: transparent;
 	box-shadow: none;
+}
+
+.btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
+	color: $gray-900;
+	background-color: darken($btn-secondary-bg, 15%);
+	box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
 }
 
 .btn.text-left {
@@ -183,7 +192,7 @@ td.action-list-copy {
         margin-top: 10px;
         @include media-breakpoint-up(md) {
             @include clearfix;
-            margin-top: -12px;
+            margin-top: -10px;
             margin-bottom: 11px;
         }
         .btn {
