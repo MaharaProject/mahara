@@ -7,7 +7,7 @@
                 <select id="blogselect_{$blockid}" class="select form-control">{foreach from=$blogs item=blog}<option value="{$blog->id}"> {$blog->title} </option>{/foreach}</select>
             </span>
             <input class="select" type="hidden" value="{$tagselect}">
-            <span class="input-group-btn">
+            <span class="input-group-append">
                 <a class="btn btnshortcut btn-secondary">
                     <span class="icon icon-plus text-success left" role="presentation" aria-hidden="true"></span>
                     {str tag='shortcutadd' section='artefact.blog'}

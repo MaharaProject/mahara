@@ -1,5 +1,5 @@
             {foreach from=$sitefonts item=font}
-                <div class="{cycle values='r0,r1'} listrow list-group-item">
+                <div class="{cycle values='r0,r1'} listrow list-group-item flexbox">
                     <div class="col-md-10" style="font-family:'{$font.title|escape_css_string}';font-size:{$size}pt;line-height:{$size}pt;padding:3px 0;">
                         <h2 class="title">{$font.title}</h2>
                         {if $preview == 10}

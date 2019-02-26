@@ -59,21 +59,21 @@
 
 
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <li class="dropdown-item">
+                <li class="">
                     <form class="form-as-button float-left" action="{$WWWROOT}admin/users/institutionusers.php" method="post">
                         <button class="submit btn btn-link" type="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
                             {str tag="editmembers" section="admin"}
                         </button>
                     </form>
                 </li>
-                <li class="dropdown-item">
+                <li class="">
                     <form class="form-as-button float-left" action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
                         <button class="submit btn btn-link" type="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
                             {str tag="editstaff" section="admin"}
                         </button>
                     </form>
                 </li>
-                <li class="dropdown-item">
+                <li class="">
                     <form class="form-as-button float-left" action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
                           <button class="submit btn btn-link" type="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
                             {str tag="editadmins" section="admin"}

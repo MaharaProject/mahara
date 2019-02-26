@@ -37,7 +37,7 @@
         <div class="searchform text input-group">
             <label class="sr-only" for="query">{str tag='usersearch' section='admin'}</label>
             <input placeholder="{str tag='usersearch' section='admin'}" class="text form-control" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
-            <div class="input-group-btn button">
+            <div class="input-group-append button">
                 <button id="query-button" class="btn-search btn btn-primary " type="submit">
                 {str tag="search"}
                 </button>
@@ -62,7 +62,7 @@
 
 
 <div id="results" class="card card-secondary view-container">
-    <h2 class="card-heading" id="resultsheading">{str tag="Results"}</h2>
+    <h2 class="card-header" id="resultsheading">{str tag="Results"}</h2>
         {if $results}
         <table id="searchresults" class="tablerenderer fullwidth table">
             <thead>

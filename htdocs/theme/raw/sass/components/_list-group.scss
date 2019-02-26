@@ -159,7 +159,7 @@ h4.list-group-item-heading {
         @extend .list-group-item-warning;
     }
     &.published {
-        background: scale-color($card-bg, $lightness: 50%);
+        background: scale-color($card-heading-bg, $lightness: 50%);
     }
     &.flush {
         padding: 10px 0;

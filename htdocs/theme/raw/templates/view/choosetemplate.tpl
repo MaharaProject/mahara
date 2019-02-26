@@ -8,7 +8,7 @@
                 <input type="text" name="viewquery" id="viewquery" class="query form-control text" value="{$views->query}">
             </div>
 
-            <div class="form-group input-group-btn">
+            <div class="form-group input-group-append">
                 <button class="query-button btn btn-primary" type="submit">{str tag="Search" section="view"}</button>
             </div>
         </fieldset>

@@ -14,7 +14,7 @@
                 <option value="{$blog->id}"> {$blog->title} </option>
             {/foreach}
             </select>
-            <span class="input-group-btn">
+            <span class="input-group-append">
                 <a class="btn btn-secondary btnshortcut">
                     <span class="icon icon-plus text-success left" role="presentation" aria-hidden="true"></span> {str tag='shortcutadd' section='artefact.blog'}
                 </a>

@@ -4667,7 +4667,7 @@ function language_select_form() {
                         'changelang' => array(
                             'type' => 'button',
                             'usebuttontag' => true,
-                            'class' => 'btn-secondary input-group-btn',
+                            'class' => 'btn-secondary input-group-append',
                             'value' => get_string('change'),
                         )
                     )

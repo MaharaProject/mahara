@@ -30,7 +30,7 @@
     <div class="usersearchform text input-group">
         <label class="sr-only" for="query">{str tag='Search' section='admin'}: </label>
         <input placeholder="{str tag='Search' section='admin'}" class="text form-control" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
-        <div class="input-group-btn button">
+        <div class="input-group-append button">
             <button id="query-button" class="btn-search btn btn-primary " type="submit">
             {str tag='Search' section='admin'}
             </button>

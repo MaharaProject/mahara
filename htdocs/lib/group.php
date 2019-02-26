@@ -1576,7 +1576,7 @@ function group_view_submission_form($groupid) {
                     'submit' => array(
                         'type' => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-primary input-group-btn ',
+                        'class' => 'btn-primary input-group-append ',
                         'value' => get_string('submit')
                     ),
                 ),
