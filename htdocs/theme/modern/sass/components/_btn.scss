@@ -1,12 +1,12 @@
 #close_site_submit {
     &.btn {
-        border-color: $brand-danger;
-        color: $brand-danger;
-        background-color: lighten($brand-danger, 35%);
+        border-color: $danger;
+        color: $danger;
+        background-color: lighten($danger, 35%);
         &:hover,
         &:focus {
           color:#FFFFFF;
-          background-color: $brand-danger;
+          background-color: $danger;
         }
     }
 }
@@ -15,7 +15,7 @@
   &.btn-toolbar {
     &.btn-group-top{
       .active {
-        background-color: $brand-primary;
+        background-color: $primary;
         color: #FFF;
       }
     }

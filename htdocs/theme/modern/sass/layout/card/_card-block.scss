@@ -1,7 +1,5 @@
-// panel-secondary is the style used for the user-editable panels used across Mahara
-
-.panel-secondary {
-    > .panel-heading {
+.card-block {
+    > .card-header {
         font-family: $font-family-sans-serif;
         //background-color: #FFFFFF;
         border-left: 0 solid transparent;
