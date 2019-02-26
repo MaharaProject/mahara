@@ -299,7 +299,7 @@ td.action-list-copy {
     }
 }
 .btn-accordion.ui-accordion .ui-accordion-content {
-    @include box-sizing(border-box);
+    // @include box-sizing(border-box); //replace
     border-radius: 0;
     margin-top: 10px;
     margin-bottom:15px;
@@ -307,7 +307,7 @@ td.action-list-copy {
     max-width:100%;
     border:0;
     .btn-group-vertical {
-        @include box-sizing(border-box);
+        // @include box-sizing(border-box); //replace
         max-width: 100%;
         width: 100%;
         // take away the edges on inner accordion buttons
@@ -387,7 +387,6 @@ td.action-list-copy {
     line-height: 1;
     padding: 1px 4px;
 }
-
 
 // Tinymce primary button
 .mce-container,

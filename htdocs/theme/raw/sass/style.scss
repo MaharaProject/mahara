@@ -5,5 +5,16 @@
 // Import font awesome files
 @import "lib/font-awesome/font-awesome";
 
+@import 'variables';
+
 // Import custom bootstrap files
 @import 'buttons';
+@import 'switch';
+@import 'typography';
+@import 'main-nav';
+@import '_navbar';
+@import 'header';
+
+// Import all the features
+@import 'components/components';
+@import 'features/features';

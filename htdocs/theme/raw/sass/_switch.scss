@@ -29,11 +29,11 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
 
             &:focus {
                 + .switch-label {
-                   // @include tab-focus; //replace
-                   outline-color: $brand-info;
+                   // @include tab-focus;
+                   // outline-color: $brand-info;
                    .switch-inner:before,
                    .switch-inner:after {
-                       background-color: scale-color($brand-default, $lightness: -5.5%);
+                        background-color: darken($secondary, 5%);
                    }
                 }
             }
@@ -52,7 +52,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         &:hover {
             .switch-inner:before,
             .switch-inner:after {
-                background-color: scale-color($brand-default, $lightness: -5.5%);
+                background-color: darken($secondary, 5%);
            }
         }
     }
@@ -64,7 +64,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         &:hover {
             .switch-inner:before,
             .switch-inner:after {
-                background-color: $brand-default;
+                background-color: $secondary;
            }
         }
     }
@@ -77,10 +77,11 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
 
         &:before,
         &:after {
+            // @include box-sizing(border-box);
             @include box-shadow(none);
             content: '';
-            background-color: $brand-default;
-            border: 1px solid $btn-default-border;
+            background-color: $secondary;
+            border: 1px solid $gray-400;
             display: block;
             float: left;
             width: 50%;
@@ -102,8 +103,8 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         height: $indicator-size;
         margin: -($indicator-size / 2) $indicator-horizontal-margin 0;
         margin-right: $indicator-horizontal-margin + $indicator-total-width;
-        background: rgba($brand-danger, 0.8);
-        border: 1px solid rgba(scale-color($brand-danger, $lightness: -8.5%), 0.8);
+        background: rgba($red, 0.8);
+        border: 1px solid rgba(darken($red, 5%), 0.8);
         position: absolute;
         top: 50%;
         left: 0;
@@ -115,8 +116,8 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         left: 100%;
         right: 0;
         transform: translateX(#{-$indicator-total-width});
-        background-color: rgba($brand-success, 0.8);
-        border: 1px solid rgba(scale-color($brand-success, $lightness: -25%), 0.8);
+        background-color: rgba($success, 0.8);
+        border: 1px solid rgba(darken($success, 5%), 0.8);
 
         ~ .off {
             transform: translateX(#{-$indicator-total-width}) translateX(100%);
