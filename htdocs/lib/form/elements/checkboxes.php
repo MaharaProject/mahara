@@ -21,9 +21,8 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
 
     if (empty($element['hideselectorbuttons']) && count($element['elements']) > 1) {
         $id = hsc($form->get_name() . '_' . $element['name']) . '_container';
-        $result .= '<div class="btn-group"><a href="" class="btn btn-secondary btn-xs" onclick="pieform_element_checkboxes_update(\'' . $id . '\', true); return false;">' . get_string('selectall') . '</a>'
-            . '&nbsp;'
-            . ' <a href="" class="btn btn-secondary btn-xs" onclick="pieform_element_checkboxes_update(\'' . $id . '\', false); return false;">' . get_string('selectnone') . '</a></div>';
+        $result .= '<div class="btn-group"><a href="" class="btn btn-secondary btn-sm" onclick="pieform_element_checkboxes_update(\'' . $id . '\', true); return false;">' . get_string('selectall') . '</a>' .
+        '<a href="" class="btn btn-secondary btn-sm" onclick="pieform_element_checkboxes_update(\'' . $id . '\', false); return false;">' . get_string('selectnone') . '</a></div>';
     }
 
     $element['name'] .= '[]';

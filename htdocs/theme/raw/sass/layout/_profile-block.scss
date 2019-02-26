@@ -26,7 +26,7 @@
             @include transition(opacity 0.5s);
             @include fa-icon();
             border-radius: 3px;
-            bottom: 0px;
+            bottom: 0;
             background: $gray-100;
             color: $gray-700;
             padding:3px;
@@ -34,7 +34,7 @@
             display: block;
             opacity:0;
             position: absolute;
-            right: 0px;
+            right: 0;
             visibility: hidden;
         }
     }

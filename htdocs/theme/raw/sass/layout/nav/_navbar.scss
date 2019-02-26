@@ -67,7 +67,7 @@
 // when lang selector exists or not
 .loggedout .navbar-form.navbar-collapse {
     @include media-breakpoint-up(md) {
-        right: 0px;
+        right: 0;
         margin-right: 15px;
 
         &.with-langform {
