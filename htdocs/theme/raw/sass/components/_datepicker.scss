@@ -12,17 +12,17 @@
   padding: 4px;
   width: 19em;
 }
-@media (min-width: $screen-sm) {
+@include media-breakpoint-up(md) {
   .bootstrap-datetimepicker-widget.dropdown-menu.timepicker-sbs {
     width: 38em;
   }
 }
-@media (min-width: $screen-md) {
+@include media-breakpoint-up(lg) {
   .bootstrap-datetimepicker-widget.dropdown-menu.timepicker-sbs {
     width: 38em;
   }
 }
-@media (min-width: $screen-lg) {
+@include media-breakpoint-up(xl) {
   .bootstrap-datetimepicker-widget.dropdown-menu.timepicker-sbs {
     width: 38em;
   }
@@ -420,7 +420,7 @@
         font-size: $font-size-base - 2;
         thead {
             text-transform: uppercase;
-            color: $gray;
+            color: $gray-500;
             font-size: $font-size-base;
             th, td {
                 font-weight: 300;

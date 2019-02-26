@@ -1,5 +1,5 @@
 .arrow-bar {
-    border-radius: $border-radius-base;
+    border-radius: $border-radius;
     overflow: hidden;
     margin-top: 10px;
     margin-bottom: $grid-gutter-width;
@@ -37,7 +37,7 @@
         display: block;
         background-color: $arrow-color;
         width: auto;
-        @media (max-width: $screen-md-min) {
+        @include media-breakpoint-down(lg) {
             width: auto;
         }
         &:after {
@@ -69,20 +69,22 @@
 .nav-inpage {
     &.nav > li {
         > a, button {
-            border-radius: $border-radius-base;
+            @include transition-duration(0.3s);
+            border-radius: $border-radius;
             padding: 0 8px;
             line-height: 2em;
             margin-top: 9px;
             margin-bottom: 9px;
             &:hover,
             &:focus {
+                @include transition-duration(0.3s);
                 background: $navbar-default-bg;
                 color: $link-color;
             }
         }
         &.active > a,
         &.active > button  {
-            color: $text-color;
+            color: $theme-text-color;
             background: $navbar-default-bg;
             &:hover,
             &:focus {

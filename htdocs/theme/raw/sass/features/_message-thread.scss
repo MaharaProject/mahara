@@ -1,7 +1,7 @@
 .message-preview {
     .metadata {
         display: none;
-        @media (min-width: $screen-xs-min) {
+        @include media-breakpoint-up(sm) {
             display: inline-block;
         }
     }
@@ -11,8 +11,8 @@
         opacity:0;
         height:0;
         line-height:0;
-        color: $gray-light;
-        font-size: $font-size-small;
+        color: $gray-300;
+        font-size: $font-size-sm;
         .content {
             margin-bottom: 0;
             line-height: 0;
@@ -20,7 +20,7 @@
             width: auto;
             white-space: nowrap;
             overflow: hidden;
-            @media (min-width: $screen-xs-min) {
+            @include media-breakpoint-up(sm) {
                 width: 70%;
             }
         }
@@ -48,12 +48,12 @@
         padding-bottom:10px;
         margin-bottom: 21px;
         margin-bottom: 21px;
-        border-bottom: 1px solid $card-default-border;
+        border-bottom: 1px solid $card-border-color;
     }
     .date,
     .recipients,
     .subject {
-        color: $gray;
+        color: $gray-500;
         font-size: 0.9em;
     }
 }

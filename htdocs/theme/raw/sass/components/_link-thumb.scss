@@ -6,16 +6,16 @@
     padding: 7px 15px 15px;
     font-size: 20px;
     margin-bottom: 4px;
-    background-color: scale-color($thumbnail-border, $lightness: 52%);
+    background-color: scale-color($thumbnail-border-color, $lightness: 52%);
 
     &.thumbnail {
         &:hover,
         &.focus,
         &.active {
-            background-color: scale-color($thumbnail-border, $lightness: 38%);
-            color: $text-color;
+            background-color: scale-color($thumbnail-border-color, $lightness: 38%);
+            color: $theme-text-color;
             text-decoration: none;
-            border-color: $thumbnail-border;
+            border-color: $thumbnail-border-color;
         }
     }
     .metadata {

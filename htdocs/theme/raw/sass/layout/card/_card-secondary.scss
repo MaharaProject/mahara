@@ -1,23 +1,23 @@
-// card-secondary is the style used for the user-editable cards used across Mahara
+// panel-secondary is the style used for the user-editable panels used across Mahara
 
-.card-secondary {
-    &.card {
+.panel-secondary {
+    &.panel {
         @include box-shadow(none);
     }
     .admin & {
-        border-color: $card-default-border;
+        border-color: $card-border-color;
     }
-    > .card-heading {
-        font-family: $font-family-serif;
+    > .panel-heading {
+        font-family: $font-family-sans-serif;
     }
-    &.blockinstance.card {
+    &.blockinstance.panel {
         background-color: transparent;
-        .card-heading {
-            background-color: $card-default-heading-bg;
+        .panel-heading {
+            background-color: $card-bg;
         }
     }
-    > .card-heading, .card-heading-nested {
-        border-bottom: 2px solid $card-default-border;
+    > .panel-heading, .panel-heading-nested {
+        border-bottom: 2px solid $card-border-color;
         padding-left: 8px;
         padding-right: 8px;
 
@@ -25,27 +25,27 @@
         // but we still need a dragable object.
         // Use a placeholder for visual help
         // will appear with the no-heading class in view mode
-        &.card-heading-placeholder {
-            border: 1px solid darken($gray-lighter, 5%);
+        &.panel-heading-placeholder {
+            border: 1px solid darken($gray-300, 5%);
             border-style: dashed;
-            background-color: $card-default-heading-bg;
+            background-color: $card-bg;
             .blockinstance-header {
                 opacity:0.6;
             }
         }
     }
-    &.card-warning {
-         > .card-heading, .card-heading-nested {
+    &.panel-warning {
+         > .panel-heading, .panel-heading-nested {
             border-left: 4px solid $card-secondary-border;
             background-color: $card-warning-heading-bg;
             border-bottom: 1px solid $card-warning-border;
         }
     }
-    & .card-warning .card-body {
+    & .panel-warning .panel-body {
             background-color: $card-warning-heading-bg;
     }
-    .card-heading-plain {
-        border: 1px solid darken($gray-lighter, 5%);
+    .panel-heading-plain {
+        border: 1px solid darken($gray-300, 5%);
     }
     .list-group .list-group-item {
         border-left: 0;
@@ -54,16 +54,16 @@
             border-top:0;
         }
     }
-    > .card-body,
-    > .block > .card-body {
+    > .panel-body,
+    > .block > .panel-body {
         padding: 15px 8px;
         &.flush {
             padding: 15px 0 0 0;
         }
     }
-    // If there is no heading we don't want padding on the card-body
+    // If there is no heading we don't want padding on the panel-body
     > .no-heading {
-        > .card-body {
+        > .panel-body {
             padding: 0;
         }
         .has-attachment {

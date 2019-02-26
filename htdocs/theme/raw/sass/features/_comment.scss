@@ -11,7 +11,7 @@
     .col-width-100 .bt-comment &,
     .viewfooter &,
     .modal-docked.active & {
-        @include media-breakpoint-up(md) {
+        @include media-breakpoint-up(lg) {
             .comment-text {
                 float: left;
                 width: 65%;
@@ -24,13 +24,13 @@
             .comment-attachment {
                 padding-left: 15px;
                 margin-left: 15px;
-                border-left: 1px solid $brand-secondary;
+                border-left: 1px solid theme-color("secondary");
                 margin-top: -50px;
                 float: left;
                 width: 32%;
 
-                .card {
-                    // @include card-as-link(); // replace
+                .panel {
+                    @include card-as-link();
                     width: 100%;
                 }
                 .collapsed {
@@ -59,7 +59,7 @@
     }
     // Set opacity and visibility comment attachment inside modal docked
     .modal-docked & {
-        @include media-breakpoint-up(md) {
+        @include media-breakpoint-up(lg) {
             .comment-attachment {
                 .collapse {
                     transition: opacity 0s 0.2s;
@@ -72,8 +72,8 @@
     }
     .collapse & {
         &:first-child {
-            // To override card listgroup no top border on first-child
-            border-top: 1px solid $list-group-border !important;
+            // To override panel listgroup no top border on first-child
+            border-top: 1px solid $list-group-border-color !important;
             border-bottom: 0;
         }
     }

@@ -21,7 +21,7 @@
         >thead>tr>th {
             color: inherit;
             vertical-align: bottom;
-            border-bottom: 1px solid rgba($gray-light, 0.05);
+            border-bottom: 1px solid rgba($gray-300, 0.05);
         }
         >thead>tr>th,
         >thead>tr>td,
@@ -39,6 +39,6 @@
 
 .alert-default {
     background-color: rgba($body-bg, 0.4);
-    border: 1px solid scale-color($brand-default, $lightness: -5.5%);
-    color: $gray;
+    border: 1px solid scale-color(theme-color("secondary"), $lightness: -5.5%);
+    color: $gray-500;
 }

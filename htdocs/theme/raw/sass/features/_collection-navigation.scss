@@ -1,5 +1,5 @@
 .collection-nav {
-    background-color: $card-default-heading-bg;
+    background-color: $card-bg;
     padding: 10px;
     margin-bottom: 20px;
     margin-left: -10px;
@@ -11,7 +11,7 @@
         font-weight: bold;
         font-size: 30px;
 
-        @include media-breakpoint-up(md) {
+        @include media-breakpoint-up(lg) {
           margin-right: 300px;
           margin-bottom: 0;
         }
@@ -19,7 +19,7 @@
     .collection-nav-btns {
       display: inline-block;
 
-      @include media-breakpoint-up(md) {
+      @include media-breakpoint-up(lg) {
         position: absolute;
         right: 10px;
         bottom: 12px;

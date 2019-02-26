@@ -5,7 +5,7 @@
 }
 
 #progress-iframe { // old style progress bars, e.g. portfolio export
-    border: 1px solid $gray;
+    border: 1px solid $gray-500;
     height: 40px;
     width: 100%;
     max-width: 650px;
@@ -64,18 +64,18 @@
 
 .layoutthumb {
     rect.layout1 {
-        fill: scale-color($panel-default-heading-bg, $lightness: -10%);
-        stroke: $panel-default-border;
+        fill: scale-color($card-bg, $lightness: -10%);
+        stroke: $card-border-color;
     }
 
     rect.layout0 {
-        fill: scale-color($panel-default-heading-bg, $lightness: -5.25%);
+        fill: scale-color($card-bg, $lightness: -5.25%);
 
-        stroke: $panel-default-border;
+        stroke: $card-border-color;
     }
 
     svg {
-        @media (max-width: $screen-sm-min) {
+        @include media-breakpoint-down(md) {
            zoom: 0.8;
        }
     }
@@ -97,11 +97,11 @@
     .validation-message {
         padding: 8px 0 15px 15px
     }
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         display: inline-block;
         width: 420px;
     }
-    @media (min-width: $screen-lg-min) {
+    @include media-breakpoint-up(xl) {
         width: 500px;
     }
 }
@@ -111,10 +111,10 @@
 .select2-container-multi {
     max-width: 85% !important;
     display: inline-block;
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         width: 420px !important;
     }
-    @media (min-width: $screen-lg-min) {
+    @include media-breakpoint-up(xl) {
         width: 500px !important;
     }
     &.select2-dropdown-open {
@@ -126,7 +126,7 @@
         @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075) inset);
         border-radius: 4px;
         background-color: $body-bg;
-        border: 1px solid $input-border;
+        border: 1px solid $input-border-color;
         background-image: none;
         width: 100%;
         .select2-search-choice {
@@ -135,8 +135,8 @@
     }
 }
 
-// Specific card-secondary styling for the edit page layout
-.card-secondary.blockinstance > .card-heading > .blockinstance-header {
+// Specific panel-secondary styling for the edit page layout
+.panel-secondary.blockinstance > .panel-heading > .blockinstance-header {
     display: block;
     padding-left: 10px;
     padding-right: 80px;
@@ -151,7 +151,7 @@
     label {
         font-weight: bold;
     }
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         float: right;
         width: 50%;
         .form-group {
@@ -186,7 +186,7 @@
         :first-child {
             clear: both;
         }
-        border-bottom: 1px solid $list-group-border;
+        border-bottom: 1px solid $list-group-border-color;
     }
     .checkbox input[type=checkbox] {
         margin-left: 0;
@@ -197,7 +197,7 @@
 }
 .exportable-artefact-container {
     padding: 15px 15px 0;
-    background-color: rgba($brand-default, 0.2);
+    background-color: rgba(theme-color("secondary"), 0.2);
 }
 
 // reset the padding when the individual font file is collapsed in font install
@@ -206,7 +206,7 @@
     border-bottom: 0 none;
 }
 
-// Login card
+// Login panel
 .login-externallink {
     display: inline-block;
 }
@@ -269,7 +269,7 @@
 }
 .thumbnail {
     margin: 0 15px 0 0;
-    .card-body & {
+    .panel-body & {
         margin-bottom: 10px;
     }
 }
@@ -321,10 +321,10 @@
     @extend .form-control;
     width: 250px !important;
     margin-top: 10px;
-    @media (min-width: $screen-xs-min) {
+    @include media-breakpoint-up(sm) {
         margin-left: 10px;
     }
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         margin-top: 0;
     }
 }
@@ -345,7 +345,7 @@
 }
 
 // Used to make the forum settings look like it should
-@media (min-width: 768px) {
+@include media-breakpoint-up(md) {
     #edit_interaction_weight_container {
         padding-left: 265px;
         label, span.description {
@@ -354,7 +354,7 @@
     }
 }
 
-.card-secondary > .card-heading {
+.panel-secondary > .panel-heading {
     font-size: 18px;
 }
 
@@ -364,7 +364,7 @@
         position: relative;
         top: -3px;
         margin-left: 3px;
-        color: $gray-light;
+        color: $gray-300;
     }
     .asc > a::after {
         content: '\f0dd';
@@ -427,9 +427,9 @@
 }
 
 // Remove the link colour from a comment that has an attachement
-@media (min-width: 992px) {
-    .viewfooter .comment-item .comment-attachment .card.collapsible h4 a.collapsed {
-        color: $text-color;
+@include media-breakpoint-up(lg) {
+    .viewfooter .comment-item .comment-attachment .panel.collapsible h4 a.collapsed {
+        color: $theme-text-color;
     }
 }
 
@@ -454,11 +454,11 @@
         padding-right: 15px;
         width: 100%;
         float: none;
-        @media screen and (min-width: $screen-xs-min) {
+        @include media-breakpoint-up(sm) {
             float: left;
             width: 50%;
         }
-        @media screen and (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             width: 33.333333%;
         }
     }
@@ -503,7 +503,7 @@
 // Make the other license text box align correctly on files page
 .fileuploadlicense input[type=text].secondary-textbox,
 .fileedittable input[type=text].secondary-textbox {
-    @media (min-width: $screen-lg-min) {
+    @include media-breakpoint-up(xl) {
         margin-left: 100px;
     }
 }
@@ -573,7 +573,7 @@
 }
 
 // Used to remove the second border around the legal information
-#agreetoprivacy .card {
+#agreetoprivacy .panel {
     border: 0;
 }
 

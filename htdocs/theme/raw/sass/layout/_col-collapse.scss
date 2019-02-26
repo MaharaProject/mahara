@@ -2,10 +2,10 @@
 // Used for the page builder
 
 .col-collapse {
-    @extend .col-md-2;
-    //@extend .col-xs-3;
+    @extend .col-lg-2;
+    @extend .col-sm-3;
 
-    @media (max-width: $screen-sm-min) {
+    @include media-breakpoint-down(md) {
         .title,
         .indicator {
             font-size: 0.7em;
@@ -13,25 +13,25 @@
     }
 
     .col-collapsed & {
-        @extend .col-md-1;
-        //@extend .col-xs-2;
+        @extend .col-lg-1;
+        @extend .col-sm-2;
     }
 }
 
 .col-with-collapse {
-    @extend .col-md-10;
-    // @extend .col-xs-9;
+    @extend .col-lg-10;
+    @extend .col-sm-9;
 
     .col-collapsed & {
-        @extend .col-md-11;
-        // @extend .col-xs-10;
+        @extend .col-lg-11;
+        @extend .col-sm-10;
     }
 }
 
 .col-collapse-offset {
-    // @extend .col-md-offset-2;
+    @extend .offset-lg-2;
     .col-collapsed & {
-        // @extend .col-md-offset-1;
+        @extend .offset-lg-1;
     }
 }
 

@@ -1,7 +1,7 @@
 .table>thead>tr>th {
     border-color: $table-border-color;
     &.active {
-        background: scale-color($table-bg-active, $lightness: 75%);
+        background: scale-color($table-active-bg, $lightness: 75%);
     }
 }
 td.short {
@@ -30,7 +30,7 @@ td.tiny {
 
     thead {
         text-transform: uppercase;
-        color: $gray;
+        color: $gray-500;
         font-size: $font-size-base;
         th, td {
             font-weight: 300;
@@ -99,7 +99,7 @@ td.tiny {
         }
         h3 {
             font-weight: 300;
-            font-family: $font-family-serif;
+            font-family: $font-family-sans-serif;
             font-size: $font-size-base + 3;
             margin: 0;
         }
@@ -124,7 +124,7 @@ td.tiny {
     &.nohead {
         th:not(:last-child) {
             min-width: 150px;
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 min-width: auto;
             }
         }
@@ -140,7 +140,7 @@ td.tiny {
             }
         }
         &:hover {
-            background: scale-color($table-bg-hover, $lightness: 60%);
+            background: scale-color($table-hover-bg, $lightness: 60%);
 
             cursor: pointer;
             .filename {
@@ -148,7 +148,7 @@ td.tiny {
             }
         }
         .file-download-link {
-            color: $text-color;
+            color: $theme-text-color;
             &:hover {
                 color: $link-hover-color;
             }
@@ -195,13 +195,13 @@ td.tiny {
 
 .table-short {
     width: 100%;
-    @media screen and (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         width: 40%;
     }
 }
 
 .table-selectedlist {
-    font-size: $font-size-small;
+    font-size: $font-size-sm;
 }
 
 table.table tr {

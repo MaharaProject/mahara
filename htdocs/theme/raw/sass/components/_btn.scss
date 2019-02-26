@@ -13,7 +13,7 @@
 }
 
 .btn-link-danger {
-    color: $brand-danger;
+    color: theme-color("danger");
 }
 
 .btn-text {
@@ -43,7 +43,7 @@
 }
 
 // Used on pending friends page
-.btn-toggle.card-footer {
+.btn-toggle.panel-footer {
     padding:0;
     > .btn {
         border-radius: 0;
@@ -54,7 +54,7 @@
         text-align: left;
         &:first-child {
             border-radius: 0 0 0 3px;
-            border-bottom: 1px solid $card-default-border;
+            border-bottom: 1px solid $card-border-color;
         }
         &:last-child {
             border-radius: 0 0 3px 0;
@@ -72,12 +72,12 @@
             display: inline-block;
         }
         &:hover {
-            color: $gray-darker;
-            background: $gray-lighter;
+            color: $gray-900;
+            background: $gray-100;
             text-decoration: none;
 
             .icon {
-                color: $gray-light;
+                color: $gray-300;
             }
         }
     }
@@ -87,7 +87,7 @@ h1 + div > .btn-top-left,
 .page-header + div.btn-top-left {
     float: none;
     margin-bottom: 0;
-    @media (min-width: $screen-xs-min) {
+    @include media-breakpoint-up(sm) {
         margin-top: -53px;
         .page-header + & {
             margin-top: -43px;
@@ -107,7 +107,7 @@ h1 ~ div > .btn-group-top,
 .page-header + .btn-action-list .btn-group-top,
 .nav-tabs +  div.btn-group-top {
     margin-top: -20px;
-    @media (max-width: $screen-xs-min) {
+    @include media-breakpoint-down(sm) {
         margin: 0 0 10px 0;
         width: 100%;
         .btn-group .btn,
@@ -116,7 +116,7 @@ h1 ~ div > .btn-group-top,
             margin-bottom: 3px;
             width: 100%;
             border-right-width: 1px;
-            border-radius: $border-radius-base !important;
+            border-radius: $border-radius !important;
             .btn {
                 margin-bottom: 0;
             }
@@ -132,7 +132,7 @@ h1 ~ div > .btn-group-top,
 .btn-group-top {
     position: relative;
     z-index: 4;
-    @media (min-width: $screen-xs-min) {
+    @include media-breakpoint-up(sm) {
         float: right;
         .btn {
             @include border-top-radius(0);
@@ -162,13 +162,13 @@ td.action-list-copy {
 // Often the same template is used to render buttons at the top of the page and
 // in a list group. cf. groups table/groups
 .list-group,
-.card-heading {
+.panel-heading {
     .btn-group-top {
         @include clearfix;
         text-align: right;
         float: right;
         margin-top: 10px;
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             @include clearfix;
             margin-top: -10px;
             margin-bottom: 11px;
@@ -176,8 +176,8 @@ td.action-list-copy {
         .btn {
             @extend .btn-sm;
             padding-top: 3px;
-            border-top: 1px solid $card-default-border;
-            @media (min-width: $screen-md-min) {
+            border-top: 1px solid $card-border-color;
+            @include media-breakpoint-up(lg) {
                 border-top-left-radius: 0;
                 border-top-right-radius: 0;
                 border-top: 0;
@@ -193,7 +193,7 @@ td.action-list-copy {
     }
 }
 // Edit page configure buttons
-.card-secondary .blockinstance-controls .btn-group-top {
+.panel-secondary .blockinstance-controls .btn-group-top {
     position: absolute;
     top: 11px;
     right: 10px;
@@ -202,9 +202,9 @@ td.action-list-copy {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         border-top: 0;
-        background: scale-color($btn-default-bg, $lightness: 40%);
+        background: scale-color($btn-secondary-bg, $lightness: 40%);
         &:hover {
-            background: rgba($btn-default-bg, 1);
+            background: rgba($btn-secondary-bg, 1);
         }
     }
 }
@@ -270,14 +270,14 @@ td.action-list-copy {
             }
             &.last {
                 border-bottom-radius: 3px;
-                background-color: $btn-default-bg;
+                background-color: $btn-secondary-bg;
             }
         }
         // To override btn-primary colour
         .btn-primary {
-            color: $gray-dark;
-            background: scale-color($brand-default, $lightness: -10.5%);
-            border-color: $btn-default-border;
+            color: $gray-700;
+            background: scale-color(theme-color("secondary"), $lightness: -10.5%);
+            border-color: $btn-secondary-border;
         }
     }
     label {
@@ -299,7 +299,7 @@ td.action-list-copy {
     }
 }
 .btn-accordion.ui-accordion .ui-accordion-content {
-    // @include box-sizing(border-box); //replace
+    @include box-sizing(border-box);
     border-radius: 0;
     margin-top: 10px;
     margin-bottom:15px;
@@ -307,7 +307,7 @@ td.action-list-copy {
     max-width:100%;
     border:0;
     .btn-group-vertical {
-        // @include box-sizing(border-box); //replace
+        @include box-sizing(border-box);
         max-width: 100%;
         width: 100%;
         // take away the edges on inner accordion buttons
@@ -320,7 +320,7 @@ td.action-list-copy {
 
                 &:hover {
                     +.btn {
-                        border-top-color: scale-color($btn-default-border, $lightness: -15%);
+                        border-top-color: scale-color($btn-secondary-border, $lightness: -15%);
                     ;
                     }
                 }
@@ -373,8 +373,10 @@ td.action-list-copy {
 // edit page btn-group
 .btn-toolbar .btn-title {
     padding-left: 5px;
-    @media (min-width: $screen-xs-min) and (max-width: $screen-md-min) {
-        @include sr-only;
+    @include media-breakpoint-up(sm) {
+        @include media-breakpoint-down(lg) {
+            @include sr-only;
+        }
     }
 }
 

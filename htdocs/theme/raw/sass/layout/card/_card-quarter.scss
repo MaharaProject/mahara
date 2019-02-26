@@ -1,14 +1,14 @@
 // Styles for the new page/collection layout
 
-.card-collection,
-.card-view {
+.panel-collection,
+.panel-view {
     width: 50%;
     float: left;
     padding-left: 15px;
     padding-right: 15px;
     margin-bottom: 30px;
     height: 200px;
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         width: 25%;
     }
 
@@ -22,14 +22,14 @@
             ) !important;
     }
 
-    .card-default {
+    .panel-default {
         position: relative;
         height: 100%;
-        border: 1px solid $card-default-border;
+        border: 1px solid $card-border-color;
         box-shadow: 0 1px 1px rgba(0,0,0,.05);
     }
 
-    .card-heading {
+    .panel-heading {
         background-color: transparent;
         border-bottom-color: transparent;
         .title-link {
@@ -37,15 +37,15 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            font-family: $font-family-serif;
+            font-family: $font-family-sans-serif;
         }
     }
 
-    .card-body {
+    .panel-body {
         padding: 5px;
     }
 
-    .card-footer {
+    .panel-footer {
         width: 100%;
         padding: 0;
         border-top: 0;
@@ -56,7 +56,7 @@
             min-width: 35px;
             min-width: 40px;
             text-decoration: none;
-            color: $text-color;
+            color: $theme-text-color;
             .open-indicator {
                 display: none;
             }
@@ -77,7 +77,7 @@
 
         .dropdown-menu {
             top: 100%;
-            width: 200%; // to allow it to expand to almost 2 card blocks wide
+            width: 200%; // to allow it to expand to almost 2 panel blocks wide
             max-height: 200px;
             overflow: auto;
             padding: 0;
@@ -102,7 +102,7 @@
                 position: relative;
             }
             .seperator {
-                border-bottom: 1px solid $dropdown-border;
+                border-bottom: 1px solid $dropdown-border-color;
             }
         }
     }
@@ -117,8 +117,8 @@
             }
             .view-details {
                 padding: 5px 10px;
-                font-size: $font-size-small;
-                border-top: 1px solid $dropdown-border;
+                font-size: $font-size-sm;
+                border-top: 1px solid $dropdown-border-color;
             }
         }
     }
@@ -136,8 +136,8 @@
         }
         .collection-indicator {
             position: absolute;
-            border-right: 1px solid $text-color;
-            border-bottom: 1px solid $text-color;
+            border-right: 1px solid $theme-text-color;
+            border-bottom: 1px solid $theme-text-color;
             width: 12px;
             height: 12px;
 
@@ -153,16 +153,16 @@
         }
     }
 
-    .card-warning {
+    .panel-warning {
         background-color: $state-warning-bg;
         color: $state-warning-text;
         border-color: $state-warning-border;
     }
 }
 
-.card-collection {
+.panel-collection {
     position: relative;
-    .collection-stack.card-warning {
+    .collection-stack.panel-warning {
         &:before,
         &:after {
             background-color: $state-warning-bg;
@@ -178,7 +178,7 @@
             margin: 15px;
             position: absolute;
             border-radius: $card-border-radius;
-            border: 1px solid $card-default-border;
+            border: 1px solid $card-border-color;
         }
         &:before {
             top: -13px;
@@ -194,20 +194,20 @@
     }
 }
 
-// Make collection list dropdown align right on the right most card
-.card-quarter {
+// Make collection list dropdown align right on the right most panel
+.panel-quarter {
     &:nth-child(even) .collection-list .dropdown-menu,
     &:nth-child(even) .page-access .dropdown-menu {
         right: 0;
         left: auto;
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             left: 0;
             right: auto;
         }
     }
     &:nth-child(4n) .collection-list .dropdown-menu,
     &:nth-child(4n) .page-access .dropdown-menu {
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             right: 0;
             left: auto;
         }

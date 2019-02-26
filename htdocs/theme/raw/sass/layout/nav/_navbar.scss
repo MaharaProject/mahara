@@ -55,7 +55,7 @@
             float: left;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
-            border-left: 1px solid $btn-default-border;
+            border-left: 1px solid $btn-secondary-border;
             margin-left: -1px;
             @media (min-width: $screen-sm-min) {
                 float: right;
@@ -66,7 +66,7 @@
 // Allowing the public search to sit in right place
 // when lang selector exists or not
 .loggedout .navbar-form.navbar-collapse {
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         right: 0px;
         margin-right: 15px;
 
@@ -79,55 +79,8 @@
     }
 }
 
-// Header messagebox form
-.navbar-messages {
-    padding: 15px;
-    margin-bottom: 0;
-    border: 1px solid transparent;
-    border-radius: 3px;
-
-    @media (min-width: $screen-sm-min) {
-        position: absolute;
-        display: block;
-        max-width: none;
-        visibility: visible;
-        top: 10px;
-        right: 115px;
-        margin: 0;
-        padding: 0;
-        box-shadow: none;
-        height: auto !important;
-        min-width: 45px;
-        .admin-toggle + a + .user-toggle + & {
-            right: 155px;
-        }
-    }
-    &:hover,
-    &:focus {
-        background-color: $navbar-default-toggle-hover-bg;
-    }
-    .navbar-messages-icon {
-        padding: 6px 10px;
-    }
-    .navbar-messages-count {
-        position: absolute;
-        top: -3px;
-        right: 5px;
-        background-color: $navbar-notification-count-bg;
-        border-radius: 3px;
-        padding: 0 3px;
-        color: $navbar-notification-count-text;
-        font-size: $font-size-small;
-    }
-}
-
 .navbar-default {
     border-left: 0;
     border-right: 0;
     border-top: 0;
-    height: 60px;
-}
-
-.navbar {
-    border-bottom: 1px solid $gray-lighter;
 }

@@ -1,7 +1,7 @@
 /*
- * Input boxes, links, or buttons positioned over the card header
+ * Input boxes, links, or buttons positioned over the panel header
  */
-.card-control {
+.panel-control {
     display: block;
     font-size: $font-size-base - 2;
     margin: 0;
@@ -10,14 +10,14 @@
     position: absolute;
     width: auto;
     z-index: 5;
-    &.card-header-action {
+    &.panel-header-action {
         right:0;
         top:0;
         .btn {
             padding-top:0;
         }
     }
-     &.card-header-form-actions {
+     &.panel-header-form-actions {
         right:0;
         top:0;
         padding:0;
@@ -36,11 +36,11 @@
         }
     }
     .content-expanded {
-        font-size: $font-size-small;
+        font-size: $font-size-sm;
         color: $link-color;
     }
 }
-a.card-control {
+a.panel-control {
     &:hover, &:hover span {
         color: $link-color;
     }

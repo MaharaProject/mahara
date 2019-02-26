@@ -29,7 +29,7 @@ select {
 
 label,
 .pseudolabel {
-    // @extend .control-label;
+    @extend .col-form-label;
     max-width: 100%;
     padding-right: 10px;
     font-weight: normal;
@@ -62,7 +62,7 @@ label,
         min-width: 0;
     }
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         min-width: 265px;
     }
 
@@ -83,7 +83,7 @@ label,
 
 .stacked-label {
     display: inline-block;
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         width:200px;
     }
 }
@@ -128,7 +128,7 @@ label,
 .align-with-input {
     display: inline-block;
     margin-left: 0;
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         margin-left: 265px;
     }
     &.file {
@@ -209,7 +209,7 @@ textarea.resizable {
     font-family: "FontAwesome";
     font-size: 16px;
     content: "\f073";
-    color: scale-color($text-color, $lightness: 25%);
+    color: scale-color($theme-text-color, $lightness: 25%);
     position:relative;
     right: 20px;
 }
@@ -217,7 +217,7 @@ textarea.resizable {
     font-family: "FontAwesome";
     font-size: 16px;
     content: "\f073";
-    color: scale-color($text-color, $lightness: 25%);
+    color: scale-color($theme-text-color, $lightness: 25%);
     right: 10px;
     position: absolute;
     font-size: 16px;
