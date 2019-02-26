@@ -1,6 +1,6 @@
 .card {
     &.bg-success {
-        border-color: darken($state-success-bg, 15%);
+        border-color: scale-color($state-success-bg, $lightness: -15%);
         background-color: $card-bg !important;
         .card-header {
             background-color: $state-success-bg;
@@ -20,7 +20,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($state-success-bg, 15%);
+            border-color: scale-color($state-success-bg, $lightness: -15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {
@@ -29,7 +29,7 @@
     }
 
     &.bg-info {
-        border-color: darken($state-info-bg, 15%);
+        border-color: scale-color($state-info-bg, $lightness: -15%);
         background-color: $card-bg !important;
         .card-header {
             background-color: $state-info-bg;
@@ -58,7 +58,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($state-info-bg, 15%);
+            border-color: scale-color($state-info-bg, $lightness: -15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {
@@ -67,7 +67,7 @@
     }
 
     &.bg-warning {
-        border-color: darken($state-warning-bg, 15%);
+        border-color: scale-color($state-warning-bg, $lightness: -15%);
         background-color: $card-bg !important;
         .card-header {
             background-color: $state-warning-bg;
@@ -83,7 +83,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($state-warning-bg, 15%);
+            border-color: scale-color($state-warning-bg, $lightness: -15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {
@@ -92,7 +92,7 @@
     }
 
     &.bg-danger {
-        border-color: darken($state-danger-bg, 15%);
+        border-color: scale-color($state-danger-bg, $lightness: -15%);
         // background-color: $card-bg;
         .card-header {
             background-color: $state-danger-bg;
@@ -111,7 +111,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($state-danger-bg, 15%);
+            border-color: scale-color($state-danger-bg, $lightness: -15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {

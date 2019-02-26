@@ -18,7 +18,7 @@
 .myblogs h5 a {
     &:hover .collapse-indicator,
     &:focus .collapse-indicator {
-        color: lighten($theme-primary-color, 10%);
+        color: scale-color($theme-primary-color, $lightness: 10%);
     }
     .collapse-indicator {
         color: $theme-primary-color;
@@ -31,7 +31,7 @@
 }
 a:focus .collapse-indicator,
 a:hover .collapse-indicator {
-    color: lighten($theme-primary-color, 10%);
+    color: scale-color($theme-primary-color, $lightness: 10%);
 }
 
 

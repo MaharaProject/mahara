@@ -4,34 +4,35 @@
 // consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
 
 //Arrow component variables
-$arrow-color: scale-color(theme-color("primary"), $lightness: 80%) !default;
-
-$arrow-text-color: $theme-text-color !default;
-$arrow-link-color: $link-color !default;
-$arrow-link-hover-color: $theme-text-color !default;
-$arrow-link-active-color: $theme-text-color !default;
+$arrow-color:                               scale-color(theme-color("primary"), $lightness: 80%) !default;
+$arrow-bar-bg:                              scale-color($arrow-color, $lightness: 35%) !default;
+$arrow-text-color:                          $theme-text-color !default;
+$arrow-link-color:                          $link-color !default;
+$arrow-link-hover-color:                    $theme-text-color !default;
+$arrow-link-active-color:                   $theme-text-color !default;
+$arrow-link-background-color:               #fff !default;
 
 // color for the secondary title in sections (cf. groups)
-$section-heading-color: #999 !default;
+$section-heading-color:                     #999 !default;
 
-$dashboard-widget-bg: #f4f4f4 !default;
-$dashboard-widget-color: theme-color("primary") !default;
+$dashboard-widget-bg:                       #f4f4f4 !default;
+$dashboard-widget-color:                    theme-color("primary") !default;
 
-$help-icon-color: theme-color("statetext") !default;
-$rss-icon-color: #FE6500 !default;
+$help-icon-color:                           theme-color("statetext") !default;
+$rss-icon-color:                            #FE6500 !default;
 
 // Smart Evidence status colors
-$assessment-begun-color: #5b9aa9 !default;
-$assessment-incomplete-color: theme-color("danger") !default;
-$assessment-partial-color: theme-color("warning") !default;
-$assessment-completed-color: theme-color("success") !default;
+$assessment-begun-color:                    #5b9aa9 !default;
+$assessment-incomplete-color:               theme-color("danger") !default;
+$assessment-partial-color:                  theme-color("warning") !default;
+$assessment-completed-color:                theme-color("success") !default;
 
 // LEGACY BOOTSTRAP 3 VARIABLES
 
 // Header navbar
 $navbar-height:                             60px !default;
 
-// Navbar toggle
+// Navbar toggle and menu
 $navbar-default-color:                      $link-color !default;
 $navbar-default-bg:                         #fff !default;
 $navbar-default-border:                     scale-color($navbar-default-bg, $lightness: -6.5%) !default;
@@ -67,19 +68,19 @@ $text-shadow:                               $white !default;
 // Form states
 $state-success-text:                        theme-color("success") !default;
 $state-success-bg:                          mix(theme-color("success"), #fff, 20%) !default;
-$state-success-border:                      darken(adjust-hue($state-success-bg, -10), 10%) !default;
+$state-success-border:                      scale-color(adjust-hue($state-success-bg, -10), $lightness: -10%) !default;
 
 $state-info-text:                           #31708f !default;
 $state-info-bg:                             #d9edf7 !default;
-$state-info-border:                         darken(adjust-hue($state-info-bg, -10), 7%) !default;
+$state-info-border:                         scale-color(adjust-hue($state-info-bg, -10), $lightness: -7%) !default;
 
 $state-warning-text:                        #8a6d3b !default;
 $state-warning-bg:                          #fcf8e3 !default;
-$state-warning-border:                      darken(adjust-hue($state-warning-bg, -10), 5%) !default;
+$state-warning-border:                      scale-color(adjust-hue($state-warning-bg, -10), $lightness: -5%) !default;
 
 $state-danger-text:                         #a94442 !default;
 $state-danger-bg:                           #f2dede !default;
-$state-danger-border:                       darken(adjust-hue($state-danger-bg, -10), 5%) !default;
+$state-danger-border:                       scale-color(adjust-hue($state-danger-bg, -10), $lightness: -5%) !default;
 
 // Buttons + Forms
 $btn-secondary-bg:                          #F9F9F9 !default;
@@ -96,10 +97,10 @@ $card-border:                               #ddd !default;
 $card-header-bg:                            #f9f9f9 !default;
 $card-footer-bg:                            #f5f5f5 !default;
 
-$card-secondary-border:                         theme-color("primary") !default;
+$card-secondary-border:                     theme-color("primary") !default;
 
-$card-border:                     scale-color(theme-color("secondary"), $lightness: 33.35) !default;
-$card-header-bg:                  $card-header-bg !default;
+$card-border:                               scale-color(theme-color("secondary"), $lightness: 33.35) !default;
+$card-header-bg:                            $card-header-bg !default;
 
 // Tables
 $cursor-disabled:                           not-allowed !default; // Disabled cursor for form controls and buttons.
@@ -121,3 +122,7 @@ $list-group-line-height:                    1.3 !default;
 
 // Code
 $pre-bg:                                    #f5f5f5 !default;
+
+// Header inbox message count background color
+$navbar-messages-count-color:               #000 !default;
+$navbar-messages-count-bg:                  #fc9f1a !default;

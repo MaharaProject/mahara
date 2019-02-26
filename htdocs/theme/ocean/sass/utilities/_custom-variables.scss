@@ -1,117 +1,54 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow compoanent variables
-$arrow-color: $theme-primary-color;
-$arrow-text-color: #fff;
-$arrow-link-color: #fff;
-$arrow-link-hover-color: #FFF;
-$arrow-link-active-color: #20738f;
-$arrow-link-background-color: #fff;
+$arrow-color:                   $theme-primary-color;
+$arrow-bar-bg:                  #0a4f66;
+$arrow-text-color:              #fff;
+$arrow-link-color:              #fff;
+$arrow-link-hover-color:        #FFF;
+$arrow-link-active-color:       #FFF;
+$arrow-link-background-color:   #fff;
 
 // color for the secondary title in sections (cf. groups)
-$section-heading-color: #999;
 
-$dashboard-widget-bg: darken(#f9f9f9, 2%);
-$dashboard-widget-color:  $theme-primary-color;
-
-// Ocean theme specific colours
-$brand-primary-dark:        #629db0;        // $brand-primary 70%
-$brand-primary-mid:         #93becc;        // $brand-primary 50%
-$brand-primary-light:       #bed8e1;        // $brand-primary 30%
-$brand-primary-faint:       #e9f2f5;        // $brand-primary 10%
+$dashboard-widget-bg:           transparent;
+$dashboard-widget-color:        transparent;
 
 
 // Legacy from Bootstrap 3
 
-$brand-default:         #ECECEC;
-$brand-primary:         #20738F;            // blue_ rgba(40, 125, 154)
-$brand-success:         #449D44;
-$brand-info:            #5bc0de;
-$brand-warning:         #f0ad4e;
-$brand-danger:          #F04F50;
-
-//== Form states and alerts
-
-$state-success-text:             $brand-success;
-$state-success-bg:               lighten($brand-success, 50%);
-$state-success-border:           darken(adjust-hue($state-success-bg, -10), 10%);
-
-$state-info-text:                #31708f;
-$state-info-bg:                  #d9edf7;
-$state-info-border:              darken(adjust-hue($state-info-bg, -10), 7%);
-
-$state-warning-text:             #8a6d3b;
-$state-warning-bg:               #fcf8e3;
-$state-warning-border:           darken(adjust-hue($state-warning-bg, -10), 5%);
-
-$state-danger-text:              darken($brand-danger, 10%);
-$state-danger-bg:                lighten($brand-danger, 30%);
-$state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%);
-
-
-//== Buttons
-$btn-font-weight:                normal;
-
-$btn-secondary-color:              #333;
-$btn-secondary-bg:                 #F9F9F9;
-$btn-secondary-border:             #ccc;
-
-$btn-primary-color:              #fff;
-$btn-primary-bg:                 $brand-primary;
-$btn-primary-border:             darken($btn-primary-bg, 5%);
-
-$btn-success-color:              #fff;
-$btn-success-bg:                 $brand-success;
-$btn-success-border:             darken($btn-success-bg, 5%);
-
-$btn-info-color:                 $state-info-text;
-$btn-info-bg:                    $state-info-bg;
-$btn-info-border:                darken($btn-info-bg, 5%);
-
-$btn-warning-color:              $state-warning-text;
-$btn-warning-bg:                 $state-warning-bg;
-$btn-warning-border:             darken($btn-warning-bg, 15%);
-
-$btn-danger-color:               #fff;
-$btn-danger-bg:                  $brand-danger;
-$btn-danger-border:              darken($btn-danger-bg, 5%);
-
-$btn-link-disabled-color:        $gray-300;
-
-
-
 //== Navbar
-
 // Basics of a navbar
 $navbar-collapse-max-height:       340px;
 
-// Navbar toggle
+// Navbar toggle and menu
 $navbar-default-color:                      #FFF;
 $navbar-default-bg:                         $theme-primary-color;
-$navbar-default-border:                     lighten($navbar-default-bg, 5%);
+$navbar-default-border:                     scale-color($navbar-default-bg, $lightness: 5%);
 $navbar-default-link-color:                 #FFF;
 $navbar-default-link-hover-color:           #FFF;
-$navbar-default-link-bg:                    transparent;
-$navbar-default-link-hover-bg:              darken($navbar-default-bg, 2%);
+$navbar-default-link-bg:                    $theme-primary-color;
+$navbar-default-link-hover-bg:              scale-color($navbar-default-bg, $lightness: -5.5%);
+$navbar-default-active-color:               #FFF;
+$navbar-default-active-bg:                  scale-color($navbar-default-bg, $lightness: 2%);
+$navbar-default-toggle-icon-bar-bg:         #FFF;
 
 // Navbar menus children
-$navbar-inverse-bg:                         lighten($theme-primary-color, 60%);
-$navbar-inverse-link-color:                 #fff;
-$navbar-inverse-link-hover-color:           $link-hover-color !default;
-$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%) !default;
-$navbar-inverse-link-active-color:          #FFF;
-$navbar-inverse-link-active-bg:             darken($navbar-default-bg, 5%);
+$navbar-inverse-bg:                         scale-color($theme-primary-color, $lightness: 90%);
+$navbar-inverse-link-color:                 #333;
+$navbar-inverse-link-hover-color:           #333;
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
+$navbar-inverse-link-active-color:          #000;
+$navbar-inverse-link-active-bg:             scale-color($navbar-inverse-bg, $lightness: -2%);
 
 
 // Navbar menu children toggles
 $navbar-inverse-toggle-color:               #FFF;
 $navbar-inverse-toggle-bg:                  transparent;
-$navbar-inverse-toggle-hover-color:         #FFF;
-$navbar-inverse-toggle-hover-bg:            lighten($theme-primary-color, 60%);
-$navbar-inverse-toggle-active-color:        $navbar-inverse-link-active-color !default;
-$navbar-inverse-toggle-active-bg:           $navbar-inverse-bg !default;
-
-
+$navbar-inverse-toggle-hover-color:         #333;
+$navbar-inverse-toggle-hover-bg:            scale-color($theme-primary-color, $lightness: 90%);
+$navbar-inverse-toggle-active-color:        #000;
+$navbar-inverse-toggle-active-bg:           scale-color($theme-primary-color, $lightness: 90%);
 
 
 //== Tabs
@@ -125,12 +62,3 @@ $nav-tabs-active-link-hover-border-color:   $theme-primary-color;
 
 $nav-tabs-justified-link-border-color:            #f7f7f7;
 $nav-tabs-justified-active-link-border-color:     $body-bg;
-
-
-// Custom component variables
-
-$arrow-color: darken($brand-info, 10%);
-$arrow-text-color: #fff;
-$arrow-link-color: #fff;
-$arrow-link-hover-color: $arrow-color;
-$arrow-link-active-color: $arrow-color;

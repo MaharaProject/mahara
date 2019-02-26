@@ -28,10 +28,10 @@ $groups-color: #5B6E1C;
 // 4) Lighter shade (can be specified in hex,rgba value)
 // 5) Darker shade (can be specified in hex,rgba value)
 $menu-styles: (
-  ("home", $home-color, darken($home-color, 2%), darken($home-color, 5%)),
-  ("create", $content-color, darken($content-color, 2%), darken($content-color, 5%)),
-  ("engage", $myportfolio-color, darken($myportfolio-color, 2%), darken($myportfolio-color, 5%)),
-  ("manage", $groups-color, darken($groups-color, 2%), darken($groups-color, 5%))
+  ("home", $home-color, scale-color($home-color, $lightness: -2%), scale-color($home-color, $lightness: -5%)),
+  ("create", $content-color, scale-color($content-color, $lightness: -2%), scale-color($content-color, $lightness: -5%)),
+  ("engage", $myportfolio-color, scale-color($myportfolio-color, $lightness: -2%), scale-color($myportfolio-color, $lightness: -5%)),
+  ("manage", $groups-color, scale-color($groups-color, $lightness: -2%), scale-color($groups-color, $lightness: -5%))
 );
 
 .nav-main .navbar-nav {

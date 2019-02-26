@@ -1,6 +1,5 @@
 // overriding/additional styles for theme
 
-
 // even out boxes fix
 @include media-breakpoint-up(md) {
     .dashboard-widget-container .thumbnail-widget {
@@ -22,7 +21,6 @@
         border: 0;
         padding-top: 0;
         padding-bottom: 0;
-        background-color: transparent;
         height: auto;
         @include media-breakpoint-up(md) {
             margin-top: 20px;
@@ -51,12 +49,11 @@
 
     .circle-bg {
         float: none;
-        background-color: transparent;
         display: inline-block;
         width: auto;
         height: auto;
         .icon {
-            color: $brand-primary;
+            color: $theme-primary-color;
             @include media-breakpoint-up(xl) {
                 font-size: 36px
             }
@@ -68,7 +65,7 @@
     }
 
     .thumbnail-widget {
-        background-color: $brand-primary-faint;
+        background-color: scale-color($theme-primary-color, $lightness: 90%);
         text-align: center;
 
         @include media-breakpoint-up(md) {
@@ -112,7 +109,7 @@
             }
         }
         &.thumbnail-widget:hover {
-            background-color: $brand-primary-light;
+            background-color: scale-color($theme-primary-color, $lightness: 70%);
             transition: all 0.2s ease 0s;
         }
 
