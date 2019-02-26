@@ -15,7 +15,7 @@
                     <th>{str tag=expired section=admin}</th>
                     <th><div class="headhtml allnone-toggles">
                             <div class="btn-group" role="group">
-                                <a class="btn btn-sm btn-secondary" href="" id="selectall">{str tag='All'}</a>&nbsp;<a class="btn active btn-sm btn-secondary" href="" id="selectnone">{str tag='none'}</a>
+                                <a class="btn btn-sm btn-secondary" href="" id="selectall">{str tag='All'}</a><a class="btn active btn-sm btn-secondary" href="" id="selectnone">{str tag='none'}</a>
                             </div>
                         </div>
                     </th>

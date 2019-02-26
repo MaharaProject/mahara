@@ -70,7 +70,7 @@
 
         {if $post->files}
         <div class="has-attachment card card-secondary collapsible" id="postfiles_{$post->id}">
-            <h5 class="card-heading">
+            <h5 class="card-header">
                 <a class="text-left collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
                     <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>

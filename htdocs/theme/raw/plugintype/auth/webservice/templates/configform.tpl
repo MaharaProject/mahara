@@ -11,7 +11,7 @@
          <span class="icon icon-chevron-down right collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
         </a>
         </h2>
-        <div class="card-body table-responsive collapse {if $.foreach.elements.first} in{/if}{if $.foreach.elements.last} no-footer{/if}" id="{$element.name}_pseudofieldset">
+        <div class="card-body table-responsive collapse {if $.foreach.elements.first} show{/if}{if $.foreach.elements.last} no-footer{/if}" id="{$element.name}_pseudofieldset">
         {foreach from=$element.elements item=item}
             {$item.value|safe}
         {/foreach}
