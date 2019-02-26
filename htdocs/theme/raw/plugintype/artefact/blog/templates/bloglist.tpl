@@ -1,6 +1,6 @@
 {foreach from=$blogs->data item=blog}
 <div class="card {if $blog->locked}card bg-warning{else} card-secondary{/if} blog card-half">
-    <h3 class="card-heading has-link">
+    <h3 class="card-header has-link">
         <a class="title-link title" href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">
         {$blog->title}
         {if $blog->postcount == 0}

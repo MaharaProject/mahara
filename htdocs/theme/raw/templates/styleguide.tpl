@@ -1221,7 +1221,7 @@ The profile picture size that is used on side cards. The example is the profile 
 <div class="col-md-3 sidebar">
     <div id="sb-profile" class="sideblock-1 user-card">
         <div class="card card-secondary">
-            <h3 class="card-heading profile-block">
+            <h3 class="card-header profile-block">
                 <a href="" class="username">Side card</a> <a href="" title="{str tag=editprofileicon section=artefact.file}" class="user-icon">
                     <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag=editprofileicon section=artefact.file}">
                 </a>

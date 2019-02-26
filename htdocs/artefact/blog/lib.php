@@ -593,7 +593,7 @@ class ArtefactTypeBlog extends ArtefactType {
             'name' => 'delete_' . $id,
             'successcallback' => 'delete_blog_submit',
             'renderer' => 'div',
-            'class' => 'form-as-button pull-left btn-group-item',
+            'class' => 'form-as-button float-left btn-group-item',
             'elements' => array(
                 'submit' => array(
                     'type' => 'button',
@@ -1241,7 +1241,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             'jsform' => true,
             'jssuccesscallback' => 'delete_success',
             'renderer' => 'div',
-            'class' => 'form-as-button pull-left',
+            'class' => 'form-as-button float-left',
             'elements' => array(
                 'delete' => array(
                     'type' => 'hidden',

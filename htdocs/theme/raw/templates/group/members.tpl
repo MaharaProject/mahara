@@ -24,12 +24,12 @@
 
     <div class="card card-secondary">
         {if $membershiptype}
-        <h2 id="searchresultsheading" class="card-heading">
+        <h2 id="searchresultsheading" class="card-header">
             <span class="sr-only">{str tag=Results}: </span>
             {str tag=pendingmembers section=group}
         </h2>
         {else}
-        <h2 id="searchresultsheading" class="card-heading">
+        <h2 id="searchresultsheading" class="card-header">
             {str tag=Results}
         </h2>
         {/if}

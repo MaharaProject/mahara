@@ -4215,7 +4215,7 @@ function build_pagination($params) {
     // Output the count of results
     $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
     if($params['count'] > 0){
-        $output .= '<div class="lead text-small results pull-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
+        $output .= '<div class="lead text-small results float-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
     }
 
     if ($params['limit'] && ($params['limit'] < $params['count'])) {

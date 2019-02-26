@@ -402,7 +402,7 @@ EOF;
             'managenotes' => array(
                 'type'  => 'html',
                 'class' => 'd-none text-right',
-                'value' => '<a href="' . $manageurl . '" class="pull-right">'
+                'value' => '<a href="' . $manageurl . '" class="float-right">'
                     . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' <span class="icon icon-arrow-right right" role="presentation"></span></a>',
             ),
             'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
