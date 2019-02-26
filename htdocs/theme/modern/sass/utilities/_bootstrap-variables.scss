@@ -7,18 +7,7 @@ $bootstrap-sass-asset-helper: (twbs-font-path("") != unquote('twbs-font-path("")
 // Variables
 // --------------------------------------------------
 
-// @import 'brand';
-//== Colors
-//
-//## Gray and brand colors for use across Bootstrap.
-
-$black:                                     #000;
-$gray-900:                                  lighten($black, 13.5%); // #222
-$gray-700:                                  lighten($black, 20%);   // #333
-$gray-500:                                  lighten($black, 33.5%); // #555
-$gray-300:                                  lighten($black, 46.7%); // #777
-$gray-100:                                  lighten($black, 93.5%); // #eee
-
+// Colors
 
 $brand-default:                             #ECECEC;
 $primary:                                   $theme-primary-color;
@@ -27,114 +16,33 @@ $info:                                      #5bc0de;
 $warning:                                   #f0ad4e;
 $danger:                                    #d9534f;
 
-
-// Body
-//
-// Settings for the `<body>` element.
-
-$body-bg:                                   #fff;
-
-
 // Links
-//
-// Style anchor elements.
-
 $link-color:                                #1f6c88;
 $link-hover-color:                          darken($link-color, 5%);
-$link-hover-decoration:                     underline;
-
 
 // Typography
-//
-// Font, line-height, and color for body text, headings, and more.
-
 $font-family-sans-serif:                    'Raleway', "Helvetica Neue", Helvetica, Arial, sans-serif;
 $font-family-serif:                         'Raleway', "Helvetica Neue", Helvetica, Arial, sans-serif;
 $font-family-monospace:                     Menlo, Monaco, Consolas, "Courier New", monospace;
 $font-family-base:                          $font-family-sans-serif;
 
-$font-size-base:                            0.875rem;
-$font-size-lg:                              $font-size-base * 1.285; // ~18px
-$font-size-sm:                              $font-size-base * 0.85715; // ~12px
-
-$line-height-base:                          1.5; // 20/14
-
-$h1-font-size:                              $font-size-base * 2.5715; // ~36px
-$h2-font-size:                              $font-size-base * 2.15; // ~30px
-$h3-font-size:                              $font-size-base * 1.7145; // ~24px
-$h4-font-size:                              $font-size-base * 1.285; // ~18px
-$h5-font-size:                              $font-size-base;
-$h6-font-size:                              $font-size-base * 0.85715; // ~12px
-
 $headings-font-family:                      $font-family-sans-serif;
 $headings-font-weight:                      600;
-$headings-line-height:                      1.3;
-$headings-color:                            rgb(51, 51, 51);
-
-
-// Components
-//
-// Define common padding and border radius sizes and more.
-
-$border-radius:                             2px;
-$border-radius-lg:                          4px;
-$border-radius-sm:                          3px;
-
-$component-active-color:                    #fff;
-$component-active-bg:                       $primary;
-
-
-// Tables
-//
-// Customizes the `.table` component with basic values, each used across all table variations.
-
-$table-cell-padding:                        8px;
-
-$table-bg:                                  transparent;
-$table-accent-bg:                           #f9f9f9;
-$table-hover-bg:                            #f5f5f5;
-$table-active-bg:                           $table-hover-bg;
-
-$table-border-color:                        #ddd;
-
-
-// Buttons + Forms
-//
-// Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
-
-$btn-font-weight:                           normal;
-
 
 // Forms
-
-$input-bg:                                  #fff;
 $input-disabled-bg:                         $gray-100;
 
 $input-color:                               $gray-500;
 $input-border-color:                        #ccc;
-
-$input-border-radius:                       $border-radius;
-$input-border-radius-lg:                    $border-radius-lg;
 
 $input-focus-border-color:                  $theme-accent-color;
 $input-focus-bg:                            lighten($theme-accent-color, 60%);
 
 $input-placeholder-color:                   #999;
 
-$legend-color:                              $gray-700;
-$legend-border-color:                       #e5e5e5;
-
 $input-group-addon-bg:                      $gray-100;
-$input-group-addon-border-color:            $input-border-color;
-
-
 
 // Dropdowns
-//
-// Dropdown menu container and contents.
-
-$dropdown-bg:                               #fff;
-$dropdown-border-color:                     rgba(0,0,0,.15);
 $dropdown-divider-bg:                       #e5e5e5;
 
 $dropdown-link-color:                       $gray-700;
@@ -142,56 +50,25 @@ $dropdown-link-hover-color:                 darken($gray-700, 5%);
 $dropdown-link-hover-bg:                    #f5f5f5;
 
 $dropdown-link-active-color:                $component-active-color;
-$dropdown-link-active-bg:                   $component-active-bg;
+$dropdown-link-active-bg:                   $theme-primary-color-dark;
 
 $dropdown-link-disabled-color:              $gray-300;
 
 $dropdown-header-color:                     $gray-300;
 
-
-// Z-index master list
-//
-// Warning: Avoid customizing these values. They're used for a bird's eye view
-// of components dependent on the z-axis and are designed to all work together.
-
-$zindex-dropdown:                           1000;
-$zindex-popover:                            1060;
-$zindex-tooltip:                            1070;
-$zindex-modal:                              1040;
-
-
-// Grid columns
-//
-// Set the number of columns and specify the width of the gutters.
-
-$grid-columns:                              12;
-$grid-gutter-width:                         1.875rem;
-
-
 // Navbar
-
 $nav-link-padding-y:                        0.9375rem;
 $nav-link-padding-x:                        0.625rem;
 
 $nav-tabs-border-color:                     #eee;
 $nav-tabs-link-hover-border-color:          $primary;
 
-$nav-pills-border-radius:                   $border-radius;
-
-
 // Navs
-
 $navbar-padding-x:                          floor(($grid-gutter-width / 2));
-// $navbar-padding-y:          (($navbar-height - $line-height-computed) / 2);
-
 
 // Pagination
-
-$pagination-color:                          $link-color;
-$pagination-bg:                             #fff;
 $pagination-border-color:                   #ddd;
 
-$pagination-hover-color:                    $link-hover-color;
 $pagination-hover-bg:                       $gray-100;
 $pagination-hover-border-color:             #ddd;
 
@@ -200,160 +77,57 @@ $pagination-active-bg:                      $primary;
 $pagination-active-border-color:            $primary;
 
 $pagination-disabled-color:                 $gray-300;
-$pagination-disabled-bg:                    #fff;
 $pagination-disabled-border-color:          #ddd;
 
-
 // Jumbotron
-
 $jumbotron-padding:                         30px;
 $jumbotron-color:                           inherit;
 $jumbotron-bg:                              $gray-100;
 
-
 // Tooltips
-
-$tooltip-max-width:                         200px;
-$tooltip-color:                             #fff;
-$tooltip-bg:                                #000;
-$tooltip-opacity:                           .9;
-
 $tooltip-arrow-width:                       5px;
-$tooltip-arrow-color:                       $tooltip-bg;
-
 
 // Popovers
-
-$popover-bg:                                #fff;
-$popover-max-width:                         280px;
-$popover-border-color:                      rgba(0,0,0,.2);
-
 $popover-header-bg:                         darken($popover-bg, 5%);
-
 $popover-arrow-width:                       10px;
-$popover-arrow-color:                       $popover-bg;
-
-$popover-arrow-outer-color:                 fade_in($popover-border-color, 0.05);
-
 
 // Modals
-
 $modal-inner-padding:                       15px;
 
-$modal-title-line-height:                   $line-height-base;
-
-$modal-content-bg:                          #fff;
-$modal-content-border-color:                rgba(0,0,0,.2);
-
-$modal-backdrop-bg:                         #000;
-$modal-backdrop-opacity:                    .5;
 $modal-header-border-color:                 #e5e5e5;
 $modal-footer-border-color:                 $modal-header-border-color;
 $modal-header-padding:                      15px;
 
 $modal-lg:                                  900px;
-$modal-md:                                  600px;
-$modal-sm:                                  300px;
-
 
 // Alerts
-//
-// Define alert colors, border radius, and padding.
-
 $alert-padding-y:                           0.9375rem;
 $alert-padding-x:                           0.9375rem;
-$alert-border-radius:                       $border-radius;
-$alert-link-font-weight:                    bold;
-
-
-// Progress bars
-
-$progress-bg:                               #f5f5f5;
-$progress-bar-color:                        #fff;
-$progress-border-radius:                    $border-radius;
-$progress-bar-bg:                           $primary;
-
 
 // List group
-
-$list-group-bg:                             #fff;
 $list-group-border-color:                   #ddd;
 $list-group-border-radius:                  $border-radius;
 
-$list-group-hover-bg:                       #f5f5f5;
-$list-group-active-color:                   $component-active-color;
-$list-group-active-bg:                      $component-active-bg;
-$list-group-active-border:                  $list-group-active-bg;
-
-
-$list-group-disabled-color:                 $gray-300;
-$list-group-disabled-bg:                    $gray-100;
-
-
-// Cards
-
-$card-bg:                                   #fff;
-$card-border-radius:                        $border-radius;
-
-
 // Image thumbnails
-
-$thumbnail-padding:                         4px;
 $thumbnail-bg:                              $body-bg;
-$thumbnail-border-color:                    #ddd;
-$thumbnail-border-radius:                   $border-radius;
-
 
 // Badges
-
-$badge-font-weight:                         bold;
 $badge-border-radius:                       10px;
 
-
 // Breadcrumbs
-
 $breadcrumb-padding-y:                      8px;
 $breadcrumb-padding-x:                      15px;
 
 $breadcrumb-bg:                             #f5f5f5;
 $breadcrumb-active-color:                   $gray-300;
-$breadcrumb-divider:                        quote("/");
-
-
-// Carousel
-
-$carousel-control-color:                    #fff;
-$carousel-control-width:                    15%;
-$carousel-control-opacity:                  .5;
-
-$carousel-indicator-active-bg:              #fff;
-
-$carousel-caption-color:                    #fff;
-
-
-// Close
-
-$close-font-weight:                         bold;
-$close-color:                               #000;
-$close-text-shadow:                         0 1px 0 #fff;
-
 
 // Code
-
 $code-color:                                #c7254e;
-
-$kbd-color:                                 #fff;
 $kbd-bg:                                    #333;
-
 $pre-color:                                 $gray-700;
-$pre-scrollable-max-height:                 340px;
-
+$code-font-size:                            13px;
 
 // Typography
-
 $text-muted:                                $gray-300;
-
 $blockquote-small-color:                    $gray-300;
-$blockquote-font-size:                      ($font-size-base * 1.25);
-
 $hr-border-color:                           $gray-100;

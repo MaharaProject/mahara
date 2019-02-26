@@ -223,6 +223,11 @@ details on navigation styles.
         position: initial;
     }
 }
+@media (min-width: 768px) {
+    .nav-toggle-area .user-icon {
+        left: 0;
+    }
+}
 </style>
 ```
 <div class="row">
@@ -378,10 +383,10 @@ details on navigation styles.
 The pagination has "Previous" and "Next" buttons.
 ```
 <ul class="pagination pagination-sm">
-    <li class=""><span>«<span class="sr-only">{str tag=prevpage section=collection}</span></span></li>
-    <li class="active"><span>1</span></li>
-    <li class=""><a title="" href="link">2</a></li>
-    <li class=""><a title="Next page" href="link"> »<span class="sr-only">{str tag=nextpage section=collection}</span></a></li>
+    <li class="page-item"><span class="page-link">«<span class="sr-only">{str tag=prevpage section=collection}</span></span></li>
+    <li class="active page-item"><span class="page-link">1</span></li>
+    <li class="page-item"><a class="page-link" title="" href="link">2</a></li>
+    <li class="page-item"><a class="page-link" title="Next page" href="link"> »<span class="sr-only">{str tag=nextpage section=collection}</span></a></li>
 </ul>
 ```
 </section>
@@ -396,17 +401,17 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
             11 {str tag=results}
         </div>
         <ul class="pagination pagination-sm">
-            <li class="">
-                <span>«<span class="sr-only">{str tag=prevpage section=collection}</span></span>
+            <li class="page-item">
+                <span class="page-link">«<span class="sr-only">{str tag=prevpage section=collection}</span></span>
             </li>
-            <li class="active">
-                <span>1</span>
+            <li class="active page-item">
+                <span class="page-link">1</span>
             </li>
-            <li class="">
-                <a href="" title="">2</a>
+            <li class="page-item">
+                <a class="page-link" href="" title="">2</a>
             </li>
-            <li class="">
-                <a href="" title="Next page">
+            <li class="page-item">
+                <a class="page-link" href="" title="Next page">
                     »
                     <span class="sr-only">{str tag=nextpage section=collection}</span>
                 </a>

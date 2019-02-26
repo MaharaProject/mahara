@@ -145,7 +145,7 @@
 }
 
 // Specific card-block styling for the edit page layout
-.card-block.blockinstance > .card-heading > .blockinstance-header {
+.card-block.blockinstance > .card-header > .blockinstance-header {
     display: block;
     padding-left: 10px;
     padding-right: 80px;
@@ -355,6 +355,9 @@
     }
     .heading {
         margin: 0;
+    }
+    .checkbox {
+        display: inline-block;
     }
 }
 

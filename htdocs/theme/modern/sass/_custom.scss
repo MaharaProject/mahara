@@ -23,3 +23,16 @@ div.admin-title a {
         color: inherit;
     }
 }
+
+// Remove the weird smaller button in the approve friend request box
+.btn-text,
+button.btn-text:not(:disabled):not(.disabled) {
+    border: 0;
+    box-shadow: none;
+    &:active {
+        box-shadow: none;
+        background-color: transparent;
+        border-width: 0;
+        color: inherit;
+    }
+}

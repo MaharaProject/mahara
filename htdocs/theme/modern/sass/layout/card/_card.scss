@@ -7,3 +7,20 @@
         }
     }
 }
+.card.bg-warning {
+    .card-header a {
+        border-width: 0;
+    }
+    .card-body {
+        background-color: inherit;
+    }
+}
+
+.card-collection,
+.card-view {
+    .bg-warning {
+        .card-body {
+            background: $card-warning-bg;
+        }
+    }
+}

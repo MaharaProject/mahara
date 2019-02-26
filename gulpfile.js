@@ -15,7 +15,7 @@ var argv = require('yargs').default('production', 'true').argv;
 var gulpif = require('gulp-if');
 
 // Locate all the themes (they're the directories with a "themeconfig.php" in them)
-var themes = globule.find('htdocs/theme/raw/themeconfig.php');
+var themes = globule.find('htdocs/theme/*/themeconfig.php');
 themes = themes.map(function(themepath){
     themepath = path.join(themepath, '..');
     return themepath;
@@ -44,7 +44,7 @@ gulp.task('css', 'Compile SASS into CSS', function () {
 
 // Watch Files For Changes
 gulp.task('watch', 'Watch style directories and auto-compile CSS', function() {
-    gulp.watch('htdocs/theme/raw/sass/**/*.scss', ['css']);
+    gulp.watch('htdocs/theme/*/sass/**/*.scss', ['css']);
 });
 
 // Default Task (recompile on init before watching)
