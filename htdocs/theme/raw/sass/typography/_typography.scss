@@ -40,7 +40,7 @@ h1 {
     ~ form .with-heading,
     ~ .form.with-heading {
         @include border-bottom-radius(3px);
-        background-color: scale-color($gray-300, $lightness: 35%);
+        background-color: scale-color($gray-100, $lightness: 35%);
         padding: 20px 10px 10px 10px;
         margin-top: -20px;
         border-bottom: 1px solid $gray-100;

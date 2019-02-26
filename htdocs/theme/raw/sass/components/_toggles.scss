@@ -28,6 +28,7 @@
     float: right;
     background-image: none;
     border: 1px solid transparent;
+    cursor: pointer;
 
     &:hover,
     &:focus {
@@ -75,6 +76,7 @@
     width:42px;
     margin: 0;
     transition-duration: 0.3s;
+    cursor: pointer;
     &:hover,
     &:focus {
         background-color: $navbar-inverse-toggle-hover-bg;

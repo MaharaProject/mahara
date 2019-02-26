@@ -160,11 +160,13 @@ textarea.resizable {
 .form-inline {
     position: relative;
     label {
+        padding: 0;
         display: block;
     }
     .form-group {
         padding: 0;
         border-bottom: 0px none;
+    align-items: flex-start;
     }
     &.form-inline-align-bottom .form-group{
         vertical-align: bottom;
