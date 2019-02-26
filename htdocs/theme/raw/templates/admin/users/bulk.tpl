@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="card card-secondary">
+<div class="card card">
     <div id="edit-users" class="card-body admin-edit-users bulk jstabs">
         <p class="lead">{str tag=editselectedusersdescription1 section=admin}</p>
         <ul class="nav nav-tabs" role="tablist">

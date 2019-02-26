@@ -144,8 +144,8 @@
     }
 }
 
-// Specific card-block styling for the edit page layout
-.card-block.blockinstance > .card-header > .blockinstance-header {
+// Specific card-secondary styling for the edit page layout
+.card-secondary.blockinstance > .card-header > .blockinstance-header {
     display: block;
     padding-left: 10px;
     padding-right: 80px;
@@ -371,7 +371,7 @@
     }
 }
 
-.card-secondary > .card-header {
+.card > .card-header {
     font-size: $font-size-base * 1.14285;
 }
 

@@ -1,9 +1,9 @@
 // Often the same template is used to render buttons at the top of the page and
 // in a list group. cf. groups table/groups
 .list-group,
-.panel-heading {
+.card-header {
     .btn-group {
-        @media (max-width: $screen-xs-max ) {
+        @include media-breakpoint-down(xs) {
             &.btn-group-top .btn {
                 border-top: 0;
             }
@@ -57,43 +57,43 @@
 // makes certain buttons primary colour
 .col-collapse-offset.col-with-collapse .btn {
     color: #fff;
-    background-color: $brand-primary;
+    background-color: $theme-primary-color;
     border-color: darken($btn-primary-bg, 5%);
     .icon {
         color: #fff;
     }
     &:focus,
     &:hover {
-        background-color: lighten($brand-primary, 5%);
+        background-color: lighten($theme-primary-color, 5%);
     }
 }
 .submitcancel .btn {
     color: #fff;
-    background-color: $brand-primary;
+    background-color: $theme-primary-color;
     border-color: darken($btn-primary-bg, 5%);
     .icon {
         color: #fff;
     }
     &:focus,
     &:hover {
-        background-color: lighten($brand-primary, 5%);
+        background-color: lighten($theme-primary-color, 5%);
     }
 }
 .btn-with-heading {
     color: #fff;
-    background-color: $brand-primary;
+    background-color: $theme-primary-color;
     border-color: darken($btn-primary-bg, 5%);
     .icon {
         color: #fff;
     }
     &:focus,
     &:hover {
-        background-color: lighten($brand-primary, 5%);
+        background-color: lighten($theme-primary-color, 5%);
         color: #fff;
     }
 }
 
-.panel-secondary .blockinstance-controls .btn-group-top .btn {
+.card-secondary .blockinstance-controls .btn-group-top .btn {
     color: #333;
     .text-danger {
         color: $state-danger-text;

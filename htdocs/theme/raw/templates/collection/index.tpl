@@ -3,7 +3,7 @@
 <p class="lead view-description">{str tag=collectiondescription section=collection}</p>
 {if !$canedit}<p>{str tag=canteditgroupcollections section=collection}</p>{/if}
 {if $collections}
-<div class="card card-secondary">
+<div class="card card">
     <div id="mycollections" class="list-group">
         {$collectionhtml|safe}
     </div>

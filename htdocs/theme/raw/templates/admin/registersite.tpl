@@ -1,7 +1,7 @@
 {include file='header.tpl'}
 
 <div id="register-site-full">
-    <div class="card card-secondary col-lg-9">
+    <div class="card card col-lg-9">
         <div class="card-body">
         {if get_config('new_registration_policy')}
             {str tag=siteregistrationpolicy section=admin}

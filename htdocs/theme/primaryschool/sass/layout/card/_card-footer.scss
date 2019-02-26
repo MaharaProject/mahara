@@ -1,0 +1,16 @@
+a.card-footer {
+    color: $theme-primary-color;
+
+    &:hover {
+        color: lighten($theme-primary-color, 5%);
+        .icon {
+            color: lighten($theme-primary-color, 5%);
+        }
+        .icon.pull-right { //only apply link colorto right aligned icons
+            color: lighten($theme-primary-color, 5%);
+        }
+    }
+    .icon.pull-right {
+        color: $theme-primary-color;
+    }
+}

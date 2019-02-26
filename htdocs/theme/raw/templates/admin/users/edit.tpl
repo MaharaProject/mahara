@@ -34,7 +34,7 @@
 
         <div class="col-md-3">
             <div class="user-card">
-                <div class="card card-secondary">
+                <div class="card card">
                     <h3 class="card-header profile-block">
                         <a href="{profile_url($user)}" class="username">
                             {$user|display_name}

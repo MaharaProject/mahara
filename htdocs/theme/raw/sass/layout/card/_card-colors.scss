@@ -1,9 +1,9 @@
 .card {
     &.bg-success {
-        border-color: darken($card-success-heading-bg, 15%);
+        border-color: darken($card-success-header-bg, 15%);
         background-color: $card-bg !important;
         .card-header {
-            background-color: $card-success-heading-bg;
+            background-color: $card-success-header-bg;
             color: $card-success-text;
         }
         .card-body {
@@ -20,7 +20,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($card-success-heading-bg, 15%);
+            border-color: darken($card-success-header-bg, 15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {
@@ -29,10 +29,10 @@
     }
 
     &.bg-info {
-        border-color: darken($card-info-heading-bg, 15%);
+        border-color: darken($card-info-header-bg, 15%);
         background-color: $card-bg !important;
         .card-header {
-            background-color: $card-info-heading-bg;
+            background-color: $card-info-header-bg;
             color: $card-info-text;
         }
         .card-body,
@@ -58,7 +58,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($card-info-heading-bg, 15%);
+            border-color: darken($card-info-header-bg, 15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {
@@ -67,10 +67,10 @@
     }
 
     &.bg-warning {
-        border-color: darken($card-warning-heading-bg, 15%);
+        border-color: darken($card-warning-header-bg, 15%);
         background-color: $card-bg !important;
         .card-header {
-            background-color: $card-warning-heading-bg;
+            background-color: $card-warning-header-bg;
             color: $card-warning-text;
         }
         .card-body {
@@ -83,7 +83,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($card-warning-heading-bg, 15%);
+            border-color: darken($card-warning-header-bg, 15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {
@@ -92,10 +92,10 @@
     }
 
     &.bg-danger {
-        border-color: darken($card-danger-heading-bg, 15%);
+        border-color: darken($card-danger-header-bg, 15%);
         // background-color: $card-bg;
         .card-header {
-            background-color: $card-danger-heading-bg;
+            background-color: $card-danger-header-bg;
             color: $card-danger-text;
         }
         .card-body {
@@ -111,7 +111,7 @@
         .card-footer,
         .card-body,
         .card-header a {
-            border-color: darken($card-danger-heading-bg, 15%);
+            border-color: darken($card-danger-header-bg, 15%);
         }
         .card-header a,
         .card-body:not(.no-footer) {

@@ -121,7 +121,7 @@
         {/if}
     </div>
 
-    <div class="card card-secondary">
+    <div class="card card">
         <h3 class="card-header">{str tag=clearcachesheading section=admin} <span class="icon icon-refresh float-right" role="presentation" aria-hidden="true"></span></h3>
         <div class="card-body">
             <p>{str tag=cliclearcachesdescription section=admin}</p>
@@ -129,7 +129,7 @@
         </div>
     </div>
 
-    <div class="card card-secondary">
+    <div class="card card">
         <h3 class="card-header">{str tag=configsite section=admin} <span class="icon icon-cogs float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -188,7 +188,7 @@
             </li>
         </ul>
     </div>
-    <div class="card card-secondary">
+    <div class="card card">
         <h3 class="card-header">{str tag=configusers section=admin} <span class="icon icon-user float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -224,7 +224,7 @@
 
 
 
-    <div class="card card-secondary">
+    <div class="card card">
         <h3 class="card-header">{str tag=managegroups section=admin} <span class="icon icon-users float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -251,7 +251,7 @@
     </div>
 
 
-    <div class="card card-secondary">
+    <div class="card card">
         <h3 class="card-header">{str tag=manageinstitutions section=admin} <span class="icon icon-university float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -319,7 +319,7 @@
         </ul>
     </div>
 
-    <div class="card card-secondary">
+    <div class="card card">
         <h3 class="card-header">{str tag=configextensions section=admin} <span class="icon icon-puzzle-piece float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -347,7 +347,7 @@
         </ul>
     </div>
 
-    <div class="card card-secondary">
+    <div class="card card">
         <h3 class="card-header">{str tag=webservice section=auth.webservice} <span class="icon icon-puzzle-piece float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -377,7 +377,7 @@
         </ul>
     </div>
 
-    <div class="card card-secondary">
+    <div class="card card">
         <h3 class="card-header">{str tag=reports section=statistics} <span class="icon icon-area-chart float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">

@@ -8,6 +8,8 @@
         z-index: 3;
         left: 90px;
         display: block;
+        width: 25px;
+        height: 25px;
         @include media-breakpoint-up(md) {
             left: 45px;
         }

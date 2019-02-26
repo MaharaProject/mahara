@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 <div class="row">
     <div class="col-lg-9" id="editmenus">
-        <div class="card card-secondary">
+        <div class="card card">
             <h3 class="card-header">{str tag=linksandresourcesmenu section=admin }</h3>
             <div class="card-body">
                 <p class="lead">{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
@@ -19,7 +19,7 @@
                 <div id="menuitemlist"></div>
             </div>
         </div>
-        <div class="card card-secondary">
+        <div class="card card">
             <h3 class="card-header">{str tag=footermenu section=admin}</h3>
             <div class="card-body">
                 <p class="lead">

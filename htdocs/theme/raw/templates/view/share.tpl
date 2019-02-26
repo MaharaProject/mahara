@@ -20,7 +20,7 @@
         <div class="tab-content">
     {/if}
     {if $accesslists.collections}
-        <div id="collection-tab" class="card card-block card-secondary{if $accesslists.views} tab-pane active{/if}">
+        <div id="collection-tab" class="card card-secondary card{if $accesslists.views} tab-pane active{/if}">
             {if !$accesslists.views}<h2 class="card-header">{str tag=Collections section=collection}</h2>{/if}
             <table class="fullwidth accesslists table">
                 <thead>
@@ -42,7 +42,7 @@
     {/if}
 
     {if $accesslists.views}
-    <div id="pages-tab" class="card card-block{if $accesslists.collections} tab-pane{/if}">
+    <div id="pages-tab" class="card card-secondary{if $accesslists.collections} tab-pane{/if}">
         {if !$accesslists.collections}<h2 class="card-header">{str tag=Views section=view}</h2>{/if}
         <table class="fullwidth accesslists table">
             <thead>

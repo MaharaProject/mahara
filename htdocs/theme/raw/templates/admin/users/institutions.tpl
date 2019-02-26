@@ -18,7 +18,7 @@
     </div>
 </div>
 {elseif $institution_form}
-<div class="card card-secondary view-container">
+<div class="card card view-container">
     {if $suspended}
     <h2 class="title card-heading bg-warning">{$suspended}</h2>
         {if !$USER->get('admin')}
@@ -85,7 +85,7 @@
     </div>
  {$searchform|safe}
 
-<div class="card card-secondary view-container">
+<div class="card card view-container">
     <div class="table-responsive">
         <table id="adminstitutionslist" class="fullwidth table table-striped">
             <thead>

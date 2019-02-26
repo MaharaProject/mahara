@@ -104,7 +104,7 @@
         </div>
 
         <div id="view" class="view-pane">
-            <div id="bottom-pane" class="card card-secondary">
+            <div id="bottom-pane" class="card card">
                 <div id="column-container" class="no-heading view-container">
                 {$artefact|safe}
                 </div>

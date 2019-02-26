@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {foreach from=$sections key=k item=section}
-    <div class="card card-secondary">
+    <div class="card card">
         <div class="last form-group collapsible-group">
             <fieldset class="pieform-fieldset collapsible">
                 <legend>

@@ -7,10 +7,11 @@
 @import "../layout/header";
 @import "../layout/profile-block";
 
-// Panels are a very commonly used layout component
-@import "../layout/panel/panel-footer";
-@import "../layout/panel/panel-heading";
-@import "../layout/panel/panel-secondary";
+// Cards are a very commonly used layout component
+@import "../layout/card/card-footer";
+@import "../layout/card/card-header";
+@import "../layout/card/card-block";
+@import "../layout/card/card-secondary";
 
 // Navigation
 @import "../layout/nav/main-nav";

@@ -4,7 +4,7 @@
 <p class="lead">{str tag='labelsubject' section='module.multirecipientnotification'} {$messages.[0]->subject}</p>
 <div id="messagethread" class="collapsible-group">
 {foreach from=$messages item=message name='message'}
-    <div class="message-item card card-secondary collapsible collapsible-group {if $dwoo.foreach.message.first}first{/if}">
+    <div class="message-item card card collapsible collapsible-group {if $dwoo.foreach.message.first}first{/if}">
         <h2 class="message-preview card-heading">
             <span class="user-icon left" role="presentation" aria-hidden="true">
                 <img src="{profile_icon_url user=$message->fromid maxwidth=60 maxheight=60}" alt="{$message->fromusrname}">
@@ -78,7 +78,7 @@
     </div>
 {/foreach}
 </div>
-<div class="form-sendmessage card card-secondary collapsible">
+<div class="form-sendmessage card card collapsible">
     <div class="card-footer">
         {$form|safe}
     </div>
