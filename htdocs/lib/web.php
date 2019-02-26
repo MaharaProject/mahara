@@ -2687,6 +2687,12 @@ function institutional_admin_nav() {
             'title'  => get_string('adminnotifications', 'admin'),
             'weight' => 50,
         ),
+        'manageinstitutions/progressbar' => array(
+            'path'   => 'manageinstitutions/progressbar',
+            'url'    => 'admin/users/progressbar.php',
+            'title'  => get_string('progressbar', 'admin'),
+            'weight' => 55,
+        ),
         'manageinstitutions/institutionviews' => array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
