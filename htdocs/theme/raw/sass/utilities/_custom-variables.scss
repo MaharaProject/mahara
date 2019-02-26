@@ -1,4 +1,7 @@
 // Custom component variables (non-bootstrap components)
+//
+// Variables should follow the `$component-state-property-size` formula for
+// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
 
 //Arrow component variables
 $arrow-color: scale-color(theme-color("primary"), $lightness: 80%) !default;
@@ -27,3 +30,214 @@ $assessment-completed-color: theme-color("success") !default;
 
 $navbar-notification-count-bg: #FC9F1A !default;
 $navbar-notification-count-text: #000000 !default;
+
+// LEGACY BOOTSTRAP 3 VARIABLES
+
+$navbar-height:                             60px;
+
+$navbar-default-color:                      $link-color;
+$navbar-default-bg:                         #fff;
+$navbar-default-border:                     scale-color($navbar-default-bg, $lightness: -6.5%);
+
+// Navbar links
+$navbar-default-link-color:                 $link-color;
+$navbar-default-link-hover-color:           $link-hover-color;
+$navbar-default-link-hover-bg:              #F1F1F1;
+$navbar-default-link-active-color:          #333;
+$navbar-default-link-active-bg:             scale-color($navbar-default-link-hover-bg, $lightness: -2%);
+
+$navbar-default-link-disabled-color:        #ccc;
+$navbar-default-link-disabled-bg:           transparent;
+
+// Navbar brand label
+$navbar-default-brand-color:                $navbar-default-link-color;
+$navbar-default-brand-hover-color:          scale-color($navbar-default-brand-color, $lightness: -10%);
+
+$navbar-default-brand-hover-bg:             transparent;
+
+// Navbar toggle
+$navbar-default-toggle-hover-bg:            $navbar-default-link-hover-bg;
+$navbar-default-toggle-icon-bar-bg:         $link-color;
+$navbar-default-toggle-border-color:        transparent;
+
+// Inverted navbar
+// Reset inverted navbar basics
+$navbar-inverse-color:                      #fff;
+$navbar-inverse-bg:                         #F1F1F1;
+$navbar-inverse-border:                     scale-color($navbar-inverse-bg, $lightness: -5.5%);
+
+// Inverted navbar links
+$navbar-inverse-link-color:                 $link-color;
+$navbar-inverse-link-hover-color:           $link-hover-color;
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
+$navbar-inverse-link-active-color:          theme-color("text");
+$navbar-inverse-link-active-bg:             #F1F1F1;
+$navbar-inverse-link-disabled-color:        #444;
+$navbar-inverse-link-disabled-bg:           transparent;
+
+// Inverted navbar brand label
+$navbar-inverse-brand-color:                $navbar-inverse-link-color;
+$navbar-inverse-brand-hover-color:          $navbar-inverse-link-hover-color;
+$navbar-inverse-brand-hover-bg:             transparent;
+
+// Inverted navbar toggle
+$navbar-inverse-toggle-hover-bg:            $navbar-inverse-bg;
+$navbar-inverse-toggle-icon-bar-bg:         scale-color($gray-500, $lightness: 37.5%);
+$navbar-inverse-toggle-border-color:        #333;
+
+//Fonts
+$line-height-computed:                      $font-size-base * $line-height-base; // ~20px
+$text-shadow:                               $white;
+
+// Form states
+$state-success-text:                        theme-color("success");
+$state-success-bg:                          mix(theme-color("success"), #fff, 20%);
+$state-success-border:                      darken(adjust-hue($state-success-bg, -10), 10%);
+
+$state-info-text:                           #31708f;
+$state-info-bg:                             #d9edf7;
+$state-info-border:                         darken(adjust-hue($state-info-bg, -10), 7%);
+
+$state-warning-text:                        #8a6d3b;
+$state-warning-bg:                          #fcf8e3;
+$state-warning-border:                      darken(adjust-hue($state-warning-bg, -10), 5%);
+
+$state-danger-text:                         #a94442;
+$state-danger-bg:                           #f2dede;
+$state-danger-border:                       darken(adjust-hue($state-danger-bg, -10), 5%);
+
+// Buttons + Forms
+$btn-secondary-color:                       #333;
+$btn-secondary-bg:                          #F9F9F9;
+$btn-secondary-border:                      $secondary;
+
+$btn-primary-color:                         #fff;
+$btn-primary-bg:                            theme-color("primary");
+$btn-primary-border:                        scale-color(theme-color("primary"), $lightness: -16%);
+
+$btn-dark-color:                            $btn-secondary-color;
+$btn-dark-bg:                               $gray-400;
+$btn-dark-border:                           $btn-secondary-border;
+
+$btn-success-color:                         #fff;
+$btn-success-bg:                            theme-color("success");
+$btn-success-border:                        scale-color(theme-color("success"), $lightness: -25%);
+
+$btn-info-color:                            $state-info-text;
+$btn-info-bg:                               $state-info-bg;
+$btn-info-border:                           scale-color($btn-info-bg, $lightness: -5.5%);
+
+$btn-warning-color:                         $state-warning-text;
+$btn-warning-bg:                            $state-warning-bg;
+$btn-warning-border:                        scale-color($btn-warning-bg, $lightness: -16%);
+
+$btn-danger-color:                          #fff;
+$btn-danger-bg:                             theme-color("danger");
+$btn-danger-border:                         scale-color($btn-danger-bg, $lightness: -10%);
+
+$btn-link-disabled-color:                   $gray-300;
+
+// Cards
+$card-text:                                 $gray-700;
+$card-border:                               #ddd;
+$card-heading-bg:                           #f9f9f9;
+
+$card-primary-text:                         $gray-700;
+$card-primary-border:                       #ddd;
+$card-primary-heading-bg:                   #fff;
+
+$card-block-text:                           $gray-700;
+$card-block-border:                         theme-color("primary");
+$card-block-heading-bg:                     darken($card-heading-bg, 2%);
+
+$card-secondary-text:                       $gray-900;
+$card-secondary-border:                     theme-color("secondary");
+$card-secondary-heading-bg:                 $card-heading-bg;
+
+$card-success-text:                         $state-success-text;
+$card-success-border:                       $state-success-border;
+$card-success-heading-bg:                   $state-success-bg;
+
+$card-info-text:                            $state-info-text;
+$card-info-border:                          $state-info-border;
+$card-info-heading-bg:                      $state-info-bg;
+
+$card-warning-text:                         $state-warning-text;
+$card-warning-border:                       $state-warning-border;
+$card-warning-heading-bg:                   $state-warning-bg;
+
+$card-danger-text:                          $state-danger-text;
+$card-danger-border:                        $state-danger-border;
+$card-danger-heading-bg:                    $state-danger-bg;
+
+// Alerts
+$alert-success-bg:                          $state-success-bg;
+$alert-success-text:                        $state-success-text;
+$alert-success-border:                      $state-success-border;
+
+$alert-info-bg:                             $state-info-bg;
+$alert-info-text:                           $state-info-text;
+$alert-info-border:                         $state-info-border;
+
+$alert-warning-bg:                          $state-warning-bg;
+$alert-warning-text:                        $state-warning-text;
+$alert-warning-border:                      $state-warning-border;
+
+$alert-danger-bg:                           $state-danger-bg;
+$alert-danger-text:                         $state-danger-text;
+$alert-danger-border:                       $state-danger-border;
+
+// Tables
+$cursor-disabled:                           not-allowed; // Disabled cursor for form controls and buttons.
+
+// Pagination
+$pagination-padding-y-xs:                  .625rem;
+$pagination-padding-x-xs:                  .4375rem;
+
+// Popovers
+$popover-fallback-border-color:             #ccc;
+$popover-title-bg:                          scale-color($popover-bg, $lightness: -5%);
+$popover-arrow-outer-width:                 ($popover-arrow-width + 1);
+
+// Labels
+$label-default-bg:                          theme-color("$secondary");
+$label-primary-bg:                          theme-color("primary");
+$label-success-bg:                          theme-color("success");
+$label-info-bg:                             theme-color("info");
+$label-warning-bg:                          theme-color("warning");
+$label-danger-bg:                           theme-color("danger");
+
+$label-color:                               #fff;
+$label-link-hover-color:                    #fff;
+
+// Modals
+$modal-header-color:                        $white;
+$modal-header-padding:                      0.125rem;
+
+// Progress bars
+$progress-bar-success-bg:                   theme-color("success");
+$progress-bar-warning-bg:                   theme-color("warning");
+$progress-bar-danger-bg:                    theme-color("danger");
+$progress-bar-info-bg:                      theme-color("info");
+
+// List groups
+$list-group-border:                         #ddd;
+$list-group-active-text-color:              scale-color($list-group-active-bg, $lightness: 50%);
+$list-group-disabled-text-color:            $list-group-disabled-color;
+
+$list-group-link-color:                     #555;
+$list-group-link-hover-color:               $list-group-link-color;
+$list-group-link-heading-color:             #333;
+
+$list-group-item-padding-y:                 0.625rem;
+$list-group-item-padding-x:                 0.9375rem;
+
+// Wells
+$well-bg:                                   #f5f5f5;
+$well-border:                               scale-color($well-bg, $lightness: -7.5%);
+
+// Artefacts
+$artefact-bg:                               $gray-100;
+
+// Code
+$pre-bg:                                    #f5f5f5;
