@@ -26,6 +26,10 @@ $columns: 8; //up to 8
     }
 }
 
+.row {
+  clear: both;
+}
+
 .column {
     word-wrap: break-word;
     vertical-align: top;

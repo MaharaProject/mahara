@@ -26,7 +26,7 @@ function display_artefacts($array, $itemsinrow) {
         echo '<div class="row">';
         $i = 0;
         foreach ($row as $col) {
-            echo '<div class="col-md-'.$colwidth.'">' . $col .'</div>'. "\n";
+            echo '<div class="col-lg-'.$colwidth.'">' . $col .'</div>'. "\n";
             $i++;
         }
         echo '</div>';

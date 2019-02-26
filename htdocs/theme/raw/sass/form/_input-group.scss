@@ -7,9 +7,17 @@
         margin-top: 17px;
     }
 }
+
 .pieform .input-group {
     max-width:100%;
 
+    // Chrome bug - flex container doesn't work on fieldset tag
+    fieldset.input-group {
+      display: block;
+      .input-group-btn {
+        display: inline-block;
+      }
+    }
     .pieform-fieldset > .form-group {
         border: none;
         padding: 0;
