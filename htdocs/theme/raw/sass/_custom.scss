@@ -175,6 +175,9 @@
             display: table-cell;
         }
     }
+    > form {
+        justify-content: flex-end;
+    }
 }
 
 // Reset checkout boxes inside col in portfolio export page
