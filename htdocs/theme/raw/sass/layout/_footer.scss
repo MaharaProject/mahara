@@ -5,6 +5,10 @@
         .icon-stack {
             font-size: 0.75em;
         }
+        .nav-link:hover {
+            background-color: $navbar-default-link-hover-bg;
+            color: $link-color;
+        }
     }
 
     .footer-performance-info {

@@ -1,6 +1,6 @@
 .move-indicator {
     @extend .text-muted;
-    font-size: $font-size-base - 3;
+    font-size: $font-size-base * .786;
     vertical-align: middle;
     margin-left: -4px;
     opacity: 0.7;

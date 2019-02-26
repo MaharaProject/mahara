@@ -14,7 +14,7 @@
     &.blockinstance.card {
         background-color: transparent;
         .card-heading {
-            background-color: $card-bg;
+            background-color: $card-heading-bg;
         }
     }
     > .card-heading, .card-heading-nested {

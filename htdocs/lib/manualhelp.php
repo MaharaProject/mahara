@@ -22,7 +22,7 @@ defined('INTERNAL') || die();
 function get_manual_help_link($keys) {
     $data = get_manual_help_link_array($keys);
 
-    $manuallink = sprintf('<a id="footerhelp" target="_blank" href="%s/%s/%s/%s">' . get_string('Help') . '</a>',
+    $manuallink = sprintf('<a id="footerhelp" class="nav-link" href="%s/%s/%s/%s">' . get_string('Help') . '</a>',
         $data['prefix'],
         $data['language'],
         $data['version'],

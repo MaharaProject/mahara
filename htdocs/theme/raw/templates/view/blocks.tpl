@@ -23,10 +23,10 @@
     </div>
 {/if}
 
-<div class="row view-container" selected='content' data-target="col-collapse">
+<div class="view-container" selected='content' data-target="col-collapse">
 
     {if $columns}
-        <form action="{$formurl}" method="post">
+        <form action="{$formurl}" method="post" class="row">
             <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
             <input type="hidden" id="viewid" name="id" value="{$view}">
             <input type="hidden" name="change" value="1">
