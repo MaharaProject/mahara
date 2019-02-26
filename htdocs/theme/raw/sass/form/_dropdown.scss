@@ -136,6 +136,30 @@
     }
 }
 
+.dropdown-menu {
+    z-index: 10;
+    > li {
+        padding: 3px 0;
+        > a {
+            padding: 3px 20px;
+            color: $theme-text-color;
+        }
+    }
+    > .active {
+        background-color: #556d32;
+        > a {
+            color: #fff;
+            text-decoration: none;
+            outline: 0;
+            background-color: #556d32;
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
+        }
+    }
+}
+
 .dropdown-item {
     padding: 0;
 }

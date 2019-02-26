@@ -9,7 +9,7 @@
 
 
 {if $delete_form}
-<div class="card card bg-danger text-white view-container">
+<div class="card card bg-danger view-container">
     <h2 class="card-header">{str tag="deleteinstitution" section="admin"}</h2>
     <div class="card-body">
         <p><strong>{$institutionname}</strong></p>

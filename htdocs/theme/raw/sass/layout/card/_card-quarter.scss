@@ -37,11 +37,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            font-family: $font-family-sans-serif;
+            font-family: $font-family-serif;
         }
     }
 
-    .card-body {
+    .card-secondary .card-body {
         padding: 5px;
     }
 
@@ -173,7 +173,7 @@
 
 .card-collection {
     position: relative;
-    .collection-stack.card-warning {
+    .collection-stack.bg-warning {
         &:before,
         &:after {
             background-color: $state-warning-bg;

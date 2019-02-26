@@ -19,17 +19,17 @@
                 {str section='admin' tag='bulkactions'}
             </button>
             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="caret"></span>
+                <span class="icon icon-caret-down"></span>
             </button>
 
             <div class="activity-buttons dropdown-menu" role="menu">
-                <button class="dropdown-item btn btn-link" data-action="markasread">
+                <button class="btn btn-link" data-action="markasread">
                     {str tag='markasread' section='activity'}
                 </button>
-                <button class="dropdown-item btn btn-link btn-link-danger" data-action="deleteselected">
+                <button class="btn btn-link btn-link-danger" data-action="deleteselected">
                     {str tag='delete'}
                 </button>
-                <a class="dropdown-item btn btn-link btn-link-danger" href="#delete_all_notifications_submit" data-triggersubmit="delete_all_notifications_submit">
+                <a class="btn btn-link btn-link-danger" href="#delete_all_notifications_submit" data-triggersubmit="delete_all_notifications_submit">
                     {str section='activity' tag='deleteallnotifications'}
                 </a>
             </div>
@@ -38,7 +38,7 @@
             <div class="form-group">
                 <label class="sr-only" for="notifications_type">{str section='activity' tag='type'}:</label>
                 <div class="input-group select-group">
-                    <div class="input-group-addon" id="icon-addon-filter">
+                    <div class="input-group-prepend" id="icon-addon-filter">
                         <span class="icon icon-filter" role="presentation" aria-hidden="true"></span>
                     </div>
                     <div class="select form-group">

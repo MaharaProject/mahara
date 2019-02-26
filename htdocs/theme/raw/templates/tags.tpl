@@ -5,7 +5,7 @@
     </div>
     <ul class="nav nav-tabs">
     {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
-        <li{if $selectedsort} class="active"{/if}><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden sr-only">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
+        <li><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab {if $selectedsort} active{/if}"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden sr-only">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
     {/foreach}
     </ul>
     <div class="mytags">
@@ -16,12 +16,12 @@
         </ul>
     </div>
     <div id="results_container" class="card card-secondary tag-results">
-        <h2 id="results_heading" class="card-heading">{str tag=searchresultsfor}
+        <h2 id="results_heading" class="card-header">{str tag=searchresultsfor}
             <a class="tag secondary-link" href="{$results->baseurl}{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
         </h2>
         {if $not_institution_tag}
-        <div class="btn-top-right btn-group btn-group-top">
-            <a class="btn btn-secondary edit-tag{if !$tag} d-none{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
+        <div class="btn-top-right btn-group btn-group-top d-block">
+            <a class="btn btn-secondary edit-tag float-right{if !$tag} d-none{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
         </div>
         {/if}
         <div class="tag-filters">

@@ -9,7 +9,7 @@
     }
 }
 
-.btn-group .form-as-button:last-child {
+.btn-group .form-as-button:last-of-type {
     .btn {
         @include border-right-radius($border-radius);
         border-right-width: $border-width;

@@ -9,6 +9,7 @@
 @import "../lib/bootstrap4/functions"; // Import the bootstrap functions here since they are required
 @import "../lib/bootstrap4/variables"; // Import the bootstrap variables first
 @import "theme-variables"; // TODO: Figure out why importing this in style.scss isnt enough
+
 //
 // Color system
 //
@@ -134,7 +135,7 @@ $font-size-sm:                              $font-size-base * 0.85715; // ~12px
 $h1-font-size:                              $font-size-base * 2.15; // ~30px
 $h2-font-size:                              $font-size-base * 1.64285; // ~23px
 $h3-font-size:                              $font-size-base * 1.5; // ~21px
-$h4-font-size:                              $font-size-base * 1.14285; // ~16px
+$h4-font-size:                              $font-size-base * 1.285; // ~18px
 $h5-font-size:                              $font-size-base; // ~14px
 $h6-font-size:                              $font-size-base * 0.85; // ~12px
 
@@ -193,7 +194,11 @@ $popover-arrow-width:                       1rem;
 $popover-arrow-color:                       $popover-bg;
 $popover-arrow-outer-color:                 fade_in($popover-border-color, 0.05);
 
+// Modals
 $modal-md:                                  600px;
+
+// Alerts
+$alert-border-radius:                       $border-radius;
 
 // Progress bars
 $progress-height:                           1.3125rem;

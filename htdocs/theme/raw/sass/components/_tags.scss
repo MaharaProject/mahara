@@ -38,11 +38,13 @@
 .tag-results .btn-top-right {
     margin-right: -1px;
     margin-top: -41px;
+    height: 40px;
 }
 .tag-filters {
     @extend .clearfix;
-    background: scale-color($card-bg, $lightness: -1.40%);
+    background: scale-color($card-bg, $lightness: -1.5%);
     padding: 10px 15px;
+    // margin-top: 40px;
 }
 
 //Edit tag page

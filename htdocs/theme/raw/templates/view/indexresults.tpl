@@ -202,7 +202,7 @@
                         </div>
                     </div>
                     {if $view.collid}
-                        <div class="collection-stack {if $view.submittedto} card bg-warning{/if}"></div>
+                        <div class="collection-stack {if $view.submittedto} bg-warning{/if}"></div>
                     {/if}
                 </div>
                 {/foreach}

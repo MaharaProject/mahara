@@ -686,3 +686,8 @@ a[type="submit"],
 .pieform-fieldset.btn-group {
     font-size: 0;
 }
+
+.elasticsearch-filters {
+    border-bottom: 1px solid $card-border;
+    background-color: $card-heading-bg;
+}
