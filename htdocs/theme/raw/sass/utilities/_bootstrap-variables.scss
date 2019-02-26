@@ -150,6 +150,7 @@ $table-cell-padding:                        .5rem;
 $table-bg:                                  transparent;
 $table-accent-bg:                           #f9f9f9;
 $table-hover-bg:                            #f5f5f5;
+$table-active-bg:                           #f5f5f5;
 $table-border-color:                        #ddd;
 
 $dropdown-link-color:                       $gray-900;
@@ -179,6 +180,9 @@ $nav-tabs-link-hover-border-color:          theme-color('primary');
 // Navbar
 $navbar-padding-y:                          0;
 $navbar-padding-x:                          0;
+
+// Pagination
+$pagination-line-height:                    1.5;
 
 // Cards
 $card-spacer-y:                             0.625rem;

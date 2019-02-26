@@ -4219,7 +4219,7 @@ function build_pagination($params) {
     }
 
     if ($params['limit'] && ($params['limit'] < $params['count'])) {
-        $output .= '<ul class="pagination pagination-xs">';
+        $output .= '<ul class="pagination pagination-sm">';
         $pages = ceil($params['count'] / $params['limit']);
         $page = $params['offset'] / $params['limit'];
 
@@ -4320,7 +4320,7 @@ function build_pagination($params) {
              // add ellipsis if pages skipped
             $text = $i + 1;
             if ($k != 0 && $prevpagenum < $i - 1) {
-                $text = '<span class="metadata d-none d-sm-block">...</span>' . ($i + 1);
+                $text = '<span class="metadata d-none d-md-inline-block">...</span>' . ($i + 1);
             }
 
             if ($i == $page) {

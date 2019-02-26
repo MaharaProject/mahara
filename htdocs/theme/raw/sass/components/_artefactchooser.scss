@@ -14,10 +14,14 @@
 
 .artefactchooser-tabs {
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .artefactchooser-search {
     padding: 10px 0;
+    > input {
+        float: left;
+    }
 }
 
 .artefactchooser-subtabs-selected {

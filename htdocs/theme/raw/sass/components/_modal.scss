@@ -165,6 +165,7 @@ $width-sm: 90%;
         background:  theme-color("primary");
         padding: 10px 15px;
         color: $modal-header-color;
+        border-radius: 0;
          h4, a {
             color: $modal-header-color;
         }
@@ -215,4 +216,8 @@ $width-sm: 90%;
     input {
         max-width:250px;
     }
+}
+
+.modal-title {
+    margin-top: 0;
 }

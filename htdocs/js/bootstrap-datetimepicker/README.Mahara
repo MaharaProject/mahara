@@ -9,3 +9,7 @@ The bootstrap datetimepicker makes it easy to select dates and times on input fi
 Changes:
 - Added aria-labels
 - Added function, press h, to switch between the date and time picker pages
+
+Changes for the tempusdominus version:
+-Added styles to datepicker.scss, converted to scss, and added variables
+-Added lines to fix error when using the clear button, this code should be merged with the release soon. See: https://github.com/tempusdominus/bootstrap-4/issues/34#issuecomment-448905186

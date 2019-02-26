@@ -97,12 +97,16 @@
     </td>
     <td class="text-center js-date short" data-name='from'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}">
-            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][startdate]" class="form-control float-left" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" aria-label="{{str tag=element.calendar.datefrom section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" {% if (o.presets.locked) { %}disabled{% } %}></div>
+            <div class="hasDatepickerwrapperacl">
+                <input type="text" id="accesslist{%=o.id%}_startdate" name="accesslist[{%=o.id%}][startdate]" class="form-control float-left datetimepicker-input" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" aria-label="{{str tag=element.calendar.datefrom section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" {% if (o.presets.locked) { %}disabled{% } %} data-toggle="datetimepicker" data-target="#accesslist{%=o.id%}_startdate" autocomplete="off">
+            </div>
         </div>
     </td>
     <td class="text-center js-date short" data-name='to'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}">
-            <div class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][stopdate]" class="form-control float-left" data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %}></div>
+            <div class="hasDatepickerwrapperacl">
+                <input type="text" id="accesslist{%=o.id%}_stopdate" name="accesslist[{%=o.id%}][stopdate]" class="form-control float-left datetimepicker-input" data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %} data-toggle="datetimepicker" data-target="#accesslist{%=o.id%}_stopdate" autocomplete="off">
+            </div>
         </div>
     </td>
     {% if (o.viewtype !== "profile") { %}
@@ -159,14 +163,25 @@ jQuery(function($) {
                 useCurrent: false,
                 format: "{{str(tag='pieform_calendar_dateformat' section='langconfig')|pieform_element_calendar_convert_dateformat}} {{str(tag='pieform_calendar_timeformat' section='langconfig')|pieform_element_calendar_convert_timeformat}}",
                 locale: loc,
-                showClear: true,
-                showTodayButton: true,
+                buttons: {
+                    showClear: true,
+                    showToday: true,
+                },
                 tooltips: {{$datepickertooltips|safe}},
                 icons: {
+                    time: "icon icon-clock-o",
+                    date: "icon icon-calendar",
+                    up: "icon icon-arrow-up",
+                    down: "icon icon-arrow-down",
+                    previous: "icon icon-chevron-left",
+                    next: "icon icon-chevron-right",
+                    close: "icon icon-times",
                     clear: "icon icon-trash",
                     today: "icon icon-crosshairs",
                 },
-            }).on('dp.hide', function(selectedDate) {
+            });
+
+            target.on('hide.datetimepicker', function(selectedDate) {
                 if (selectedDate !== "") {
                     formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
                 }

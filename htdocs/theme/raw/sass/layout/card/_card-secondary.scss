@@ -10,6 +10,9 @@
     > .card-header {
         font-family: $font-family-sans-serif;
         margin-top: 0;
+        > a {
+            border: 0;
+        }
     }
     &.blockinstance.card {
         background-color: transparent;

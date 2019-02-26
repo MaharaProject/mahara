@@ -238,7 +238,7 @@
 }
 
 .list-group-item-default{
-    background-color: rgba(theme-color("secondary"), 0.5);
+    background-color: rgba(lighten(theme-color("secondary"), 12.5%), 0.5);
 }
 
 .list-group-item-text {

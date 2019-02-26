@@ -29,11 +29,13 @@ $inlinecss = <<<EOT
         padding: 20px;
         margin-bottom: 20px;
         border-radius: 5px;
+        overflow: hidden; /* create block formatting context */
     }
 
     [data-markdown] pre {
         margin-top: 20px;
         position: relative;
+        clear: left;
     }
 
     section[data-markdown] h3:first-child {

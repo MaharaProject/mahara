@@ -182,7 +182,7 @@ jQuery(function($) {
                   $(browseA).removeClass('active');
                   $(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
                   $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
-                  $(searchA.).addClass('active');
+                  $(searchA).addClass('active');
 
                   $('#artefactchooser-searchfield').on('keypress', function(e) {
                       if (e.keycode == 13) { // enter pressed - submitting form
