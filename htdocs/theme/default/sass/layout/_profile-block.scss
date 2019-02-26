@@ -1,5 +1,5 @@
 .sidebar {
-    .profile-block.panel-heading {
+    .profile-block.card-header {
         min-height: 80px;
 
         .username {
@@ -9,15 +9,15 @@
         }
     }
 
-    .user-panel {
-        > .panel-default {
+    .user-card {
+        > .card-secondary {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
-            .panel-heading {
+            .card-header {
               background-color: #2e3a1c;
             }
         }
-        .panel .list-group {
+        .card .list-group {
             border: 0;
         }
     }

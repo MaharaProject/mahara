@@ -1,6 +1,6 @@
 .collapsible legend h4,
 .collapsible legend h3,
-.panel-heading {
+.card-header {
     a:not(.secondary-link) {
         color: $link-color;
         &.collapsed {
@@ -14,8 +14,8 @@
 }
 
 
-// sidebar panel headings
-.sidebar .panel-default > .panel-heading {
+// sidebar card headings
+.sidebar .card-secondary > .card-header {
     @include border-top-radius(0);
     border-bottom: 0;
     background-color: $theme-primary-color;
@@ -35,9 +35,9 @@
 }
 
 
-.panel.collapsible {
-    .panel-heading-nested,
-    .panel-heading {
+.card.collapsible {
+    .card-heading-nested,
+    .card-header {
         > a.outer-link {
             border-color: #ddd;
         }

@@ -1,0 +1,8 @@
+.navbar-showchildren {
+    &:hover,
+    &:focus {
+        .icon {
+            color: $navbar-inverse-link-hover-color;
+        }
+    }
+}

@@ -3884,7 +3884,7 @@ function profile_sideblock() {
         'weight' => -20,
         'id'     => 'sb-profile',
         'data'   => $data,
-        'class' => 'user-panel',
+        'class' => 'user-card',
         'template' => 'sideblocks/profile.tpl',
         'visible' => $USER->is_logged_in() && !in_admin_section(),
     );

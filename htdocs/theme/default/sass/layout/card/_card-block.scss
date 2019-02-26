@@ -1,11 +1,11 @@
-// panel-secondary is the style used for the user-editable panels used across Mahara
+// card-block is the style used for the user-editable cards used across Mahara
 
-.panel-secondary {
+.card-block {
     @include box-shadow(none);
     background-color: transparent;
 
-    &.panel-warning {
-         > .panel-heading, .panel-heading-nested {
+    &.card-warning {
+         > .card-header, .card-heading-nested {
             border-left: 0;
         }
     }
@@ -16,24 +16,24 @@
         }
     }
 
-    // removing left/right padding in panel headings
-    .panel-heading-nested,
-    > .panel-heading {
+    // removing left/right padding in card headings
+    .card-heading-nested,
+    > .card-header {
         padding-left: 0;
         padding-right: 0;
         border-bottom-color: #9db577;
     }
 
-    > .panel-heading {
+    > .card-header {
       font-family: $font-family-sans-serif;
     }
 
-    // removing left/right padding in panel body
-    > .panel-body {
+    // removing left/right padding in card body
+    > .card-body {
          padding: 15px 0;
     }
     .block {
-         > .panel-body {
+         > .card-body {
              padding: 15px 0;
          }
     }

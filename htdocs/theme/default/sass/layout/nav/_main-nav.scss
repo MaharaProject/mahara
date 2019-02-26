@@ -1,6 +1,10 @@
 .navbar-main {
     border: 0;
 
+    .navbar-collapse {
+        border: 0;
+    }
+
     .navbar-nav {
         > li > a {
             color: #FFFFFF;
@@ -9,6 +13,7 @@
             &:hover,
             &:focus {
                 color: #FFFFFF;
+                background-color: #637e3a;
             }
             @include media-breakpoint-up(md) {
                 border-color: $link-hover-color;
@@ -25,17 +30,38 @@
             }
 
             &.collapsed {
-              background-color: transparent;
-              &:hover,
-              &:focus {
-                background-color: $link-hover-color;
-                color: #FFFFFF;
-              }
+                background-color: transparent;
+                &:hover,
+                &:focus {
+                    background-color: $link-hover-color;
+                    color: #FFFFFF;
+                }
+            }
+
+        }
+
+        .active {
+            > a {
+              font-weight: bold;
+              background-color: #3a4a22;
+              color: #ffffff;
+            }
+            .navbar-toggle {
+                .icon {
+                    color: #ffffff;
+                }
             }
         }
 
-        .active > a {
-          font-weight: bold;
+        .child-nav {
+            li > a {
+                color: #ffffff;
+                background-color: #637e3a;
+                &:hover,
+                &:focus {
+                    background-color: #709042;
+                }
+            }
         }
     }
 }

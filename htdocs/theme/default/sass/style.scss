@@ -8,13 +8,13 @@
  * This file is licensed under the same terms as Mahara itself
  */
 
-// Import our theme based variables (colors, fonts, padding, etc)
-@import "utilities/theme-variables"; // Import our theme variables
-@import "utilities/bootstrap-variables";  // ...and our custom bootstrap variables file
-@import "utilities/custom-variables";  // ...and our custom variables file
-
 // Import raw default variables (colors, fonts, padding, etc)
 @import "../../raw/sass/style";
+// Import our theme based variables (colors, fonts, padding, etc)
+@import "utilities/theme-variables"; // Import our theme variables
+@import "utilities/custom-variables";  // ...and our custom variables file
+@import "utilities/bootstrap-variables";  // ...and our custom bootstrap variables file
+
 
 @import "utilities/index"; // custom components / layout / forms / features
 
