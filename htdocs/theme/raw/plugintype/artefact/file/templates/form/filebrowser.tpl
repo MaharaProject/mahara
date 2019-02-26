@@ -156,7 +156,7 @@
                 </label>
                 <span class="input-group">
                     <input type="text" class="text form-control" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
-                    <span class="input-group-btn">
+                    <span class="input-group-append">
                         <button type="submit" class="btn btn-primary" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}">
                             <span class="icon icon-folder-open" role="presentation" aria-hidden="true"></span>
                             {str tag=createfolder section=artefact.file}
@@ -166,7 +166,7 @@
             </div>
         {/if}
 
-        <div class="filelist-wrapper card card-secondary">
+        <div class="filelist-wrapper card card-block">
             <h3 id="{$prefix}_foldernav" class="card-heading">
             {include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
             </h3>
