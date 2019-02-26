@@ -20,6 +20,7 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  Given I log in as "UserA" with password "Kupuhipa1"
  # Checking the main menu navigation headings
  When I click on "Show main menu"
+ And I wait "1" seconds
  And I follow "Dashboard"
  Then I should not see "Administration" in the "#main-nav-admin" "css_element"
  And I should not see "Site information" in the "#main-nav-admin" "css_element"
@@ -61,6 +62,7 @@ Scenario: Checking menu items are available as site staff (Bug 1467368)
  Then I should not see "Administration" in the "#main-nav" "css_element"
 # The one major difference a site staff has is site info link that leads to other links
  And I click on "Show administration menu"
+ And I wait "1" seconds
  And I follow "User search"
  And I click on "Show administration menu"
  Then I follow "Reports"
@@ -154,7 +156,7 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Update group members by CSV" in the ".managegroups" "css_element"
 # Checking the sub navigation in Institutions
  And I press "Show menu for Institutions"
- Then I should not see "Profile completion" in the ".manageinstitutions" "css_element"
+ Then I should see "Profile completion" in the ".manageinstitutions" "css_element"
  And I should see "Settings" in the ".manageinstitutions" "css_element"
  And I should see "Static pages" in the ".manageinstitutions" "css_element"
  And I should see "Members" in the ".manageinstitutions" "css_element"
