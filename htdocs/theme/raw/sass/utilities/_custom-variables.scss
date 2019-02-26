@@ -98,6 +98,7 @@ $btn-success-bg:                            theme-color("success") !default;
 $btn-success-border:                        scale-color(theme-color("success"), $lightness: -25%) !default;
 
 $btn-link-disabled-color:                   $gray-300 !default;
+$btn-bg-disabled-color:                   #f9f9f9 !default;
 
 // Cards
 $card-text:                                 $gray-700 !default;
@@ -124,7 +125,7 @@ $card-info-heading-bg:                      $state-info-bg !default;
 $card-warning-text:                         $state-warning-text !default;
 $card-warning-border:                       $state-warning-border !default;
 $card-warning-heading-bg:                   $state-warning-bg !default;
-$card-warning-bg:                           $state-warning-bg !default;
+$card-warning-bg:                           $white !default;
 
 $card-danger-text:                          $state-danger-text !default;
 $card-danger-border:                        $state-danger-border !default;
@@ -146,10 +147,6 @@ $modal-header-padding:                      0.125rem !default;
 
 // List groups
 $list-group-border:                         #ddd !default;
-
-$list-group-item-padding-y:                 0.625rem !default;
-$list-group-item-padding-x:                 0.9375rem !default;
-
 $list-group-line-height:                    1.3 !default;
 
 // Artefacts

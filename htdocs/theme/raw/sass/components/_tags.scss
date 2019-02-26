@@ -44,7 +44,7 @@
     @extend .clearfix;
     background: scale-color($card-bg, $lightness: -1.5%);
     padding: 10px 15px;
-    // margin-top: 40px;
+    border-bottom: 1px solid $list-group-border-color;
 }
 
 //Edit tag page
