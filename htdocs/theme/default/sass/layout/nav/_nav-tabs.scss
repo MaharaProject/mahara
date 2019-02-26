@@ -14,19 +14,19 @@
                 background-color: lighten(#bc9f54, 35%);
                 color: #423017;
             }
-        }
-        .active > a {
-            background-color: lighten(#bc9f54, 25%);
-            color: #423017;
-            border: 0;
-            border-bottom: 1px solid #bc9f54;
-
-            &:focus,
-            &:hover {
-                background-color: lighten(#bc9f54, 10%);
+            &.active {
+                background-color: lighten(#bc9f54, 25%);
                 color: #423017;
                 border: 0;
                 border-bottom: 1px solid #bc9f54;
+
+                &:focus,
+                &:hover {
+                    background-color: lighten(#bc9f54, 10%);
+                    color: #423017;
+                    border: 0;
+                    border-bottom: 1px solid #bc9f54;
+                }
             }
         }
     }

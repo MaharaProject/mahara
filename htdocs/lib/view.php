@@ -7554,14 +7554,14 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
             'type' => 'hidden',
             'value' => $view->get_collection()->get('id'),
         );
-        $form['elements']['text1']['value'] = get_string('submitthiscollectionto1', 'view') . ' ';
+        $form['elements']['text1']['value'] = get_string('submitthiscollectionto1', 'view') . '&nbsp;';
     }
     else {
         $form['elements']['view'] = array(
             'type' => 'hidden',
             'value' => $viewid
         );
-        $form['elements']['text1']['value'] = get_string('submitthisviewto1', 'view') . ' ';
+        $form['elements']['text1']['value'] = get_string('submitthisviewto1', 'view') . '&nbsp;';
     }
 
     return pieform($form);

@@ -1,7 +1,236 @@
-// When true, asset path helpers are used, otherwise the regular CSS `url()` is used.
-// When there no function is defined, `fn('')` is parsed as string that equals the right hand side
-// NB: in Sass 3.3 there is a native function: function-exists(twbs-font-path)
-$bootstrap-sass-asset-helper: (twbs-font-path("") != unquote('twbs-font-path("")'));
+/// Bootstrap variables
+//
+// These are bootstrap variables that you can customize. There are more variables
+// that you can add to this file to customize. To see what variables you can add,
+// look at file: 'htdocs/theme/raw/sass/lib/bootstrap4/_variables.scss'
+
+// Do not add non bootstrap variables here, put them in custom-variables.scss instead
+
+@import "../../raw/sass/lib/bootstrap4/functions"; // Import the bootstrap functions here since they are required
+@import "../../raw/sass/lib/bootstrap4/variables"; // Import the bootstrap variables first
+@import "theme-variables"; // TODO: Figure out why importing this in style.scss isnt enough
+
+//
+// Color system
+//
+$white:    #fff;
+$black:    #000;
+$gray-100: lighten($black, 93.5%); // #eee
+$gray-200: #cccccc;
+$gray-300: lighten($black, 46.7%); // #777
+$gray-400: #dadada;
+$gray-500: lighten($black, 33.5%); // #555
+$gray-600: #6c757d;
+$gray-700: lighten($black, 20%); // #333
+$gray-800: #343a40;
+$gray-900: lighten($black, 13.5%); // #222
+
+$grays: ();
+$grays: map-merge((
+  "100": $gray-100,
+  "200": $gray-200,
+  "300": $gray-300,
+  "400": $gray-400,
+  "500": $gray-500,
+  "600": $gray-600,
+  "700": $gray-700,
+  "800": $gray-800,
+  "900": $gray-900
+), $grays);
+
+$blue:    #007bff;
+$midblue: #31708f;
+$indigo:  #6610f2;
+$purple:  #6f42c1;
+$pink:    #e83e8c;
+$red:     #d9534f;
+$orange:  #fd7e14;
+$yellow:  #f0ad4e;
+$green:   $theme-primary-color;
+$teal:    #20c997;
+$cyan:    #5bc0de;
+
+$colors: ();
+$colors: map-merge((
+  "blue":       $blue,
+  "midblue":    $midblue,
+  "indigo":     $indigo,
+  "purple":     $purple,
+  "pink":       $pink,
+  "red":        $red,
+  "orange":     $orange,
+  "yellow":     $yellow,
+  "green":      $green,
+  "teal":       $teal,
+  "cyan":       $cyan,
+  "white":      $white,
+  "gray":       $gray-600,
+  "gray-dark":  $gray-800
+), $colors);
+
+$primary:       $theme-primary-color;
+$secondary:     $gray-200;
+$success:       $green;
+$info:          $cyan;
+$warning:       $yellow;
+$danger:        $red;
+$light:         $gray-100;
+$dark:          $gray-800;
+$statetext:     $midblue;
+$text:          $gray-700;
+
+$theme-colors: ();
+$theme-colors: map-merge((
+  "primary":    	$primary,
+  "primary-dark":	darken($primary, 5%),
+  "secondary":  	$secondary,
+  "success":    	$success,
+  "info":       	$info,
+  "warning":    	$warning,
+  "danger":     	$danger,
+  "light":      	$light,
+  "dark":       	$dark,
+  "statetext":  	$midblue,
+  "text":           $text
+), $theme-colors);
+
+// Links
+//
+// Style anchor elements.
+$link-color:                                theme-color("primary"); // Global textual link color.
+$link-hover-color:                          scale-color(theme-color("primary"), $lightness: -16%); // Link hover color set via `scale-color()' function.
+
+//** Link hover decoration.
+$link-hover-decoration: underline;
+
+$paragraph-margin-bottom:   0.65625rem;
+
+// Grid containers
+//
+// Define the maximum width of `.container` for different screen sizes.
+$container-max-widths: (
+  md: 750px,
+  lg: 970px,
+  xl: 1170px
+);
+
+// Options
+$enable-shadows:                            true;
+
+// Components
+$border-radius:                             0.125rem;
+$border-radius-lg:                          .25rem;
+
+// Fonts
+// stylelint-disable value-keyword-case
+$font-family-sans-serif:                    'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-serif:                         'Roboto Slab', Georgia, "Times New Roman", Times, serif;
+$font-family-monospace:                     Menlo, Monaco, Consolas, "Courier New", monospace;
+$font-family-base:                          $font-family-sans-serif;
+
+// stylelint-enable value-keyword-case
+$font-size-base:                            0.875rem; // ~14px
+$font-size-sm:                              $font-size-base * 0.85715; // ~12px
+
+$h1-font-size:                              $font-size-base * 2.15; // ~30px
+$h2-font-size:                              $font-size-base * 1.64285; // ~23px
+$h3-font-size:                              $font-size-base * 1.5; // ~21px
+$h4-font-size:                              $font-size-base * 1.285; // ~18px
+$h5-font-size:                              $font-size-base; // ~14px
+$h6-font-size:                              $font-size-base * 0.85; // ~12px
+
+$headings-margin-bottom:                    0.65625rem;
+$headings-font-family:                      $font-family-serif;
+$headings-font-weight:                      300;
+$headings-line-height:                      1.3;
+$headings-color:                            rgb(51, 51, 51);
+
+// Tables
+$table-cell-padding:                        .5rem;
+$table-bg:                                  transparent;
+$table-accent-bg:                           #f9f9f9;
+$table-hover-bg:                            #f5f5f5;
+$table-active-bg:                           #f5f5f5;
+$table-border-color:                        #ddd;
+
+$dropdown-link-color:                       $gray-900;
+$dropdown-link-hover-color:                 scale-color($gray-900, $lightness: -25%);
+$dropdown-link-hover-bg:                    #f5f5f5;
+$dropdown-link-active-color:                   $gray-700;
+$dropdown-link-active-bg:                   $gray-100;
+
+// Buttons and Forms
+$input-disabled-bg:                         $gray-100;
+$input-color:                               $gray-500;
+$input-border-color:                        $gray-200;
+$input-focus-border-color:                  #666;
+$input-btn-focus-color:                     rgba(#666, .6);
+$input-btn-focus-box-shadow:                0 0 8px $input-btn-focus-color;
+
+$input-focus-box-shadow:                    $input-btn-focus-box-shadow;
+
+$input-border-radius:                       $border-radius;
+
+$btn-border-radius:                         $border-radius;
+
+// Navs
+$nav-tabs-border-color:                     $gray-100;
+$nav-tabs-link-hover-border-color:          theme-color('primary');
+
+// Navbar
+$navbar-padding-y:                          0;
+$navbar-padding-x:                          0;
+
+// Pagination
+$pagination-line-height:                    1.5;
+
+// Cards
+$card-spacer-y:                             0.625rem;
+$card-spacer-x:                             0.9375rem;
+$card-border-radius:                        $border-radius;
+
+// Popovers
+$popover-bg:                                #fff;
+$popover-max-width:                         280px;
+$popover-border-color:                      rgba(0,0,0,.2);
+
+$popover-arrow-width:                       1rem;
+$popover-arrow-color:                       $popover-bg;
+$popover-arrow-outer-color:                 fade_in($popover-border-color, 0.05);
+
+// Modals
+$modal-md:                                  600px;
+
+// Alerts
+$alert-border-radius:                       $border-radius;
+
+// Progress bars
+$progress-height:                           1.3125rem;
+
+$progress-bg:                               #f5f5f5;
+$progress-bar-color:                        #fff;
+$progress-border-radius:                    $border-radius;
+
+$progress-bar-bg:                           theme-color("primary");
+
+// List groups
+$list-group-bg:                             #fff;
+$list-group-border-radius:                  $border-radius;
+
+$list-group-hover-bg:                       #f5f5f5;
+$list-group-active-color:                   $component-active-color;
+$list-group-active-bg:                      $component-active-bg;
+$list-group-active-border:                  $list-group-active-bg;
+$list-group-disabled-color:                 $gray-300;
+$list-group-disabled-bg:                    $gray-100;
+
+$list-group-border-color:                   #ddd;
+
+
+// Image thumbnails
+$thumbnail-bg:                              #efefef;
+$thumbnail-border-color:                    #ddd;
+
 
 //
 // Variables

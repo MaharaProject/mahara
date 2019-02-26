@@ -16,6 +16,7 @@
     {if $config.selectmodal}
         <div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
     {else}
+        {if !$config.noselect}
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#{$prefix}_upload_browse">
             <span class="icon icon-paperclip icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=addafile section=artefact.file}

@@ -10,6 +10,14 @@
         }
     }
 
+    &.card {
+        &.blockinstance.card {
+            .card-header {
+                background-color: $card-heading-bg;
+            }
+        }
+    }
+
     .blockinstance-controls .btn-group-top {
         @include media-breakpoint-down(lg) {
             margin: 0;

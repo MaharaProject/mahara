@@ -458,6 +458,9 @@ td.action-list-copy {
     }
 }
 
-.btn-sm {
+.btn-sm,
+.btn-group .btn.btn-sm {
+	font-size: $font-size-base / 1.1665;
+	border: 1px solid $btn-secondary-border;
 	padding: 0.14375rem 0.625rem;
 }

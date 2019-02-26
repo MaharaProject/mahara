@@ -45,6 +45,10 @@
               font-weight: bold;
               background-color: #3a4a22;
               color: #ffffff;
+              &:hover,
+              &:focus {
+                  color: #FFFFFF;
+              }
             }
             .navbar-toggle {
                 .icon {

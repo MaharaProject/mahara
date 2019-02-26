@@ -28,132 +28,132 @@ $assessment-completed-color: theme-color("success") !default;
 
 // LEGACY BOOTSTRAP 3 VARIABLES
 
-$navbar-height:                             60px;
+$navbar-height:                             60px !default;
 
-$navbar-default-color:                      $link-color;
-$navbar-default-bg:                         #fff;
-$navbar-default-border:                     scale-color($navbar-default-bg, $lightness: -6.5%);
+$navbar-default-color:                      $link-color !default;
+$navbar-default-bg:                         #fff !default;
+$navbar-default-border:                     scale-color($navbar-default-bg, $lightness: -6.5%) !default;
 
 // Navbar links
-$navbar-default-link-color:                 $link-color;
-$navbar-default-link-hover-color:           $link-hover-color;
-$navbar-default-link-hover-bg:              #F1F1F1;
+$navbar-default-link-color:                 $link-color !default;
+$navbar-default-link-hover-color:           $link-hover-color !default;
+$navbar-default-link-hover-bg:              #F1F1F1 !default;
 
 // Navbar toggle
-$navbar-default-toggle-hover-bg:            $navbar-default-link-hover-bg;
-$navbar-default-toggle-icon-bar-bg:         $link-color;
-$navbar-default-toggle-border-color:        transparent;
+$navbar-default-toggle-hover-bg:            $navbar-default-link-hover-bg !default;
+$navbar-default-toggle-icon-bar-bg:         $link-color !default;
+$navbar-default-toggle-border-color:        transparent !default;
 
 // Inverted navbar
 // Reset inverted navbar basics
-$navbar-inverse-bg:                         #F1F1F1;
+$navbar-inverse-bg:                         #F1F1F1 !default;
 
 // Inverted navbar links
-$navbar-inverse-link-color:                 $link-color;
-$navbar-inverse-link-hover-color:           $link-hover-color;
-$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
-$navbar-inverse-link-active-color:          theme-color("text");
-$navbar-inverse-link-active-bg:             #F1F1F1;
+$navbar-inverse-link-color:                 $link-color !default;
+$navbar-inverse-link-hover-color:           $link-hover-color !default;
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%) !default;
+$navbar-inverse-link-active-color:          theme-color("text") !default;
+$navbar-inverse-link-active-bg:             #F1F1F1 !default;
 
 // Inverted navbar toggle
-$navbar-inverse-toggle-hover-bg:            $navbar-inverse-bg;
-$navbar-inverse-toggle-icon-bar-bg:         scale-color($gray-500, $lightness: 37.5%);
+$navbar-inverse-toggle-hover-bg:            $navbar-inverse-bg !default;
+$navbar-inverse-toggle-icon-bar-bg:         scale-color($gray-500, $lightness: 37.5%) !default;
 
 //Fonts
-$line-height-computed:                      $font-size-base * $line-height-base; // ~20px
-$text-shadow:                               $white;
+$line-height-computed:                      $font-size-base * $line-height-base !default; // ~20px
+$text-shadow:                               $white !default;
 
 // Form states
-$state-success-text:                        theme-color("success");
-$state-success-bg:                          mix(theme-color("success"), #fff, 20%);
-$state-success-border:                      darken(adjust-hue($state-success-bg, -10), 10%);
+$state-success-text:                        theme-color("success") !default;
+$state-success-bg:                          mix(theme-color("success"), #fff, 20%) !default;
+$state-success-border:                      darken(adjust-hue($state-success-bg, -10), 10%) !default;
 
-$state-info-text:                           #31708f;
-$state-info-bg:                             #d9edf7;
-$state-info-border:                         darken(adjust-hue($state-info-bg, -10), 7%);
+$state-info-text:                           #31708f !default;
+$state-info-bg:                             #d9edf7 !default;
+$state-info-border:                         darken(adjust-hue($state-info-bg, -10), 7%) !default;
 
-$state-warning-text:                        #8a6d3b;
-$state-warning-bg:                          #fcf8e3;
-$state-warning-border:                      darken(adjust-hue($state-warning-bg, -10), 5%);
+$state-warning-text:                        #8a6d3b !default;
+$state-warning-bg:                          #fcf8e3 !default;
+$state-warning-border:                      darken(adjust-hue($state-warning-bg, -10), 5%) !default;
 
-$state-danger-text:                         #a94442;
-$state-danger-bg:                           #f2dede;
-$state-danger-border:                       darken(adjust-hue($state-danger-bg, -10), 5%);
+$state-danger-text:                         #a94442 !default;
+$state-danger-bg:                           #f2dede !default;
+$state-danger-border:                       darken(adjust-hue($state-danger-bg, -10), 5%) !default;
 
 // Buttons + Forms
-$btn-secondary-color:                       $theme-text-color;
-$btn-secondary-bg:                          #F9F9F9;
-$btn-secondary-border:                      $secondary;
+$btn-secondary-color:                       $theme-text-color !default;
+$btn-secondary-bg:                          #F9F9F9 !default;
+$btn-secondary-border:                      $secondary !default;
 
-$btn-primary-color:                         #fff;
-$btn-primary-bg:                            theme-color("primary");
-$btn-primary-border:                        scale-color(theme-color("primary"), $lightness: -16%);
+$btn-primary-color:                         #fff !default;
+$btn-primary-bg:                            theme-color("primary") !default;
+$btn-primary-border:                        scale-color(theme-color("primary"), $lightness: -16%) !default;
 
-$btn-dark-color:                            $btn-secondary-color;
-$btn-dark-bg:                               $gray-400;
-$btn-dark-border:                           $btn-secondary-border;
+$btn-dark-color:                            $btn-secondary-color !default;
+$btn-dark-bg:                               $gray-400 !default;
+$btn-dark-border:                           $btn-secondary-border !default;
 
-$btn-success-color:                         #fff;
-$btn-success-bg:                            theme-color("success");
-$btn-success-border:                        scale-color(theme-color("success"), $lightness: -25%);
+$btn-success-color:                         #fff !default;
+$btn-success-bg:                            theme-color("success") !default;
+$btn-success-border:                        scale-color(theme-color("success"), $lightness: -25%) !default;
 
-$btn-link-disabled-color:                   $gray-300;
+$btn-link-disabled-color:                   $gray-300 !default;
 
 // Cards
-$card-text:                                 $gray-700;
-$card-border:                               #ddd;
-$card-heading-bg:                           #f9f9f9;
-$card-footer-bg:                            #f5f5f5;
+$card-text:                                 $gray-700 !default;
+$card-border:                               #ddd !default;
+$card-heading-bg:                           #f9f9f9 !default;
+$card-footer-bg:                            #f5f5f5 !default;
 
-$card-block-text:                           $gray-700;
-$card-block-border:                         theme-color("primary");
-$card-block-heading-bg:                     darken($card-heading-bg, 2%);
+$card-block-text:                           $gray-700 !default;
+$card-block-border:                         theme-color("primary") !default;
+$card-block-heading-bg:                     darken($card-heading-bg, 2%) !default;
 
-$card-secondary-text:                       $gray-900;
-$card-secondary-border:                     lighten(theme-color("secondary"), 6.5%);
-$card-secondary-heading-bg:                 $card-heading-bg;
+$card-secondary-text:                       $gray-900 !default;
+$card-secondary-border:                     lighten(theme-color("secondary"), 6.5%) !default;
+$card-secondary-heading-bg:                 $card-heading-bg !default;
 
-$card-success-text:                         $state-success-text;
-$card-success-border:                       $state-success-border;
-$card-success-heading-bg:                   $state-success-bg;
+$card-success-text:                         $state-success-text !default;
+$card-success-border:                       $state-success-border !default;
+$card-success-heading-bg:                   $state-success-bg !default;
 
-$card-info-text:                            $state-info-text;
-$card-info-border:                          $state-info-border;
-$card-info-heading-bg:                      $state-info-bg;
+$card-info-text:                            $state-info-text !default;
+$card-info-border:                          $state-info-border !default;
+$card-info-heading-bg:                      $state-info-bg !default;
 
-$card-warning-text:                         $state-warning-text;
-$card-warning-border:                       $state-warning-border;
-$card-warning-heading-bg:                   $state-warning-bg;
-$card-warning-bg:                           $state-warning-bg;
+$card-warning-text:                         $state-warning-text !default;
+$card-warning-border:                       $state-warning-border !default;
+$card-warning-heading-bg:                   $state-warning-bg !default;
+$card-warning-bg:                           $state-warning-bg !default;
 
-$card-danger-text:                          $state-danger-text;
-$card-danger-border:                        $state-danger-border;
-$card-danger-heading-bg:                    $state-danger-bg;
+$card-danger-text:                          $state-danger-text !default;
+$card-danger-border:                        $state-danger-border !default;
+$card-danger-heading-bg:                    $state-danger-bg !default;
 
 // Tables
-$cursor-disabled:                           not-allowed; // Disabled cursor for form controls and buttons.
+$cursor-disabled:                           not-allowed !default; // Disabled cursor for form controls and buttons.
 
 // Pagination
-$pagination-padding-y-xs:                  0.0625rem;
-$pagination-padding-x-xs:                  0.4375rem;
+$pagination-padding-y-xs:                  0.0625rem !default;
+$pagination-padding-x-xs:                  0.4375rem !default;
 
 // Popovers
-$popover-fallback-border-color:             #ccc;
+$popover-fallback-border-color:             #ccc !default;
 
 // Modals
-$modal-header-color:                        $white;
-$modal-header-padding:                      0.125rem;
+$modal-header-color:                        $white !default;
+$modal-header-padding:                      0.125rem !default;
 
 // List groups
-$list-group-border:                         #ddd;
+$list-group-border:                         #ddd !default;
 
-$list-group-item-padding-y:                 0.625rem;
-$list-group-item-padding-x:                 0.9375rem;
+$list-group-item-padding-y:                 0.625rem !default;
+$list-group-item-padding-x:                 0.9375rem !default;
 
-$list-group-line-height:                    1.3;
+$list-group-line-height:                    1.3 !default;
 
 // Artefacts
-$artefact-bg:                               $gray-100;
+$artefact-bg:                               $gray-100 !default;
 
 // Code
-$pre-bg:                                    #f5f5f5;
+$pre-bg:                                    #f5f5f5 !default;
