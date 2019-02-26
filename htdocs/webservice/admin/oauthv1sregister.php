@@ -444,7 +444,7 @@ function webservice_server_list_form($sopts, $iopts) {
                             'submit' => array(
                                 'type' => 'button',
                                 'usebuttontag' => true,
-                                'class' => 'btn-secondary btn-xs',
+                                'class' => 'btn-secondary btn-sm',
                                 'value' => '<span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('editspecific', 'mahara', $consumer->application_title) . '</span>',
                                 'elementtitle' => get_string('editspecific', 'mahara', $consumer->application_title),
                             ),
@@ -464,7 +464,7 @@ function webservice_server_list_form($sopts, $iopts) {
                             'submit' => array(
                                 'type' => 'button',
                                 'usebuttontag' => true,
-                                'class' => 'btn-secondary btn-xs',
+                                'class' => 'btn-secondary btn-sm',
                                 'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'.get_string('deletespecific', 'mahara', $consumer->application_title).'</span>',
                                 'elementtitle' => get_string('deletespecific', 'mahara', $consumer->application_title),
                             ),
@@ -503,7 +503,7 @@ function webservice_server_list_form($sopts, $iopts) {
                                 'submit' => array(
                                     'type' => 'button',
                                     'usebuttontag' => true,
-                                    'class' => 'btn-secondary btn-xs',
+                                    'class' => 'btn-secondary btn-sm',
                                     'value' => '<span class="icon icon-cog icon-lg " role="presentation" aria-hidden="true"></span><span class="sr-only">'.get_string('managespecific', 'mahara', $consumer->application_title).'</span>',
                                     'elementtitle' => get_string('managespecific', 'mahara', $consumer->application_title),
                                 ),
