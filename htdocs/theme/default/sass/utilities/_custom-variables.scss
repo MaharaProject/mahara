@@ -107,7 +107,7 @@ $card-footer-bg:             #f0f5ea;
 
 $card-header-bg:    #fff;
 
-$card-secondary-border:        #d9d9d9;
-$card-secondary-heading-bg:    #FFFFFF;
+$card-border:        #d9d9d9;
+$card-header-bg:    #FFFFFF;
 
-$card-block-heading-bg:   darken($card-secondary-heading-bg, 2%);
+$card-secondary-heading-bg:   darken($card-header-bg, 2%);

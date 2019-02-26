@@ -9,7 +9,7 @@
 
 
 {if $delete_form}
-<div class="card card bg-danger view-container">
+<div class="card bg-danger view-container">
     <h2 class="card-header">{str tag="deleteinstitution" section="admin"}</h2>
     <div class="card-body">
         <p><strong>{$institutionname}</strong></p>
@@ -18,9 +18,9 @@
     </div>
 </div>
 {elseif $institution_form}
-<div class="card card view-container">
+<div class="card view-container">
     {if $suspended}
-    <h2 class="title card-heading bg-warning">{$suspended}</h2>
+    <h2 class="title card-header bg-warning">{$suspended}</h2>
         {if !$USER->get('admin')}
         <div class="card-body">
             <div class="detail">
@@ -85,7 +85,7 @@
     </div>
  {$searchform|safe}
 
-<div class="card card view-container">
+<div class="card view-container">
     <div class="table-responsive">
         <table id="adminstitutionslist" class="fullwidth table table-striped">
             <thead>

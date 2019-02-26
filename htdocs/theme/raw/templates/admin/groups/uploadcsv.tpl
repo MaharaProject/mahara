@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="card card card-body">
+<div class="card card-body">
     {$uploadcsvpagedescription|safe}
     {$uploadcsvform|safe}
     {include file="progress_meter.tpl"}

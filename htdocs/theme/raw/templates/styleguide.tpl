@@ -506,7 +506,7 @@ This style of tabs is used for third-level navigation in areas where each page w
 ### card
 A basic card.
 ```
-<div class="card card">
+<div class="card">
     <h3 class="card-header has-link">
         <a href="#">Basic card</a>
     </h3>
@@ -522,7 +522,7 @@ A basic card.
 ### Delete card
 A delete card.
 ```
-<div class="card card bg-danger view-container">
+<div class="card bg-danger view-container">
     <h2 class="card-header">{str tag=delete}</h2>
     <div class="card-body">
         <p><strong>{str tag=Title}</strong></p>
@@ -541,7 +541,7 @@ A delete card.
 A side card is used in the sideblock area, e.g. on the dashboard for "Online users".
 ```
 <div class="col-md-3 sidebar">
-    <div class="card card">
+    <div class="card">
         <h3 class="card-header">
             Side card
             <br>
@@ -569,7 +569,7 @@ A side card without a footer. An examples is the "Tags" sideblock on the dashboa
 ```
 <div class="col-md-3 sidebar">
     <div id="sb-tags">
-        <div class="card card">
+        <div class="card">
             <h3 class="card-header has-link">
                 <a href="">Side card<span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
             </h3>
@@ -656,7 +656,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
 ### Block layout
 This is the general layout of blocks. An example of this being used is the 'Latest changes I can view' block on the dashboard.
 ```
-<div class="bt-newviews card card clearfix">
+<div class="bt-newviews card clearfix">
     <h3 class="title card-header js-heading">Block</h3>
     <div class="block">
         <div class="list-group">
@@ -728,7 +728,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
 This card is used to show a page.
 ```
 <div class="card-quarter card-view">
-    <div class="card card">
+    <div class="card">
         <h3 class="card-header has-link">
             <a class="title-link title" href="" title="Dashboard page">Dashboard page</a>
         </h3>
@@ -778,7 +778,7 @@ This card is used to show a submitted page.
 </style>
 ```
 <div class="card-quarter card-view">
-    <div class="card card card bg-warning">
+    <div class="card card bg-warning">
         <h3 class="card-header has-link">
             <a class="title-link title" href="" title="Dashboard page">Unnamed page</a>
         </h3>
@@ -850,8 +850,7 @@ This card is used to show a collection.
 </style>
 ```
 <div class="card-quarter card-collection">
-    <div class="card card
-        ">
+    <div class="card">
         <h3 class="card-header has-link">
             <a class="title-link title" href="" title="collection uno">
             collection
@@ -1223,7 +1222,7 @@ The profile picture size that is used on side cards. The example is the profile 
 ```
 <div class="col-md-3 sidebar">
     <div id="sb-profile" class="sideblock-1 user-card">
-        <div class="card card">
+        <div class="card">
             <h3 class="card-header profile-block">
                 <a href="" class="username">Side card</a> <a href="" title="{str tag=editprofileicon section=artefact.file}" class="user-icon">
                     <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag=editprofileicon section=artefact.file}">

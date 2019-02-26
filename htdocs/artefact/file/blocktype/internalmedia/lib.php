@@ -55,7 +55,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
             return get_string('typeremoved', 'blocktype.file/internalmedia');
         }
 
-        $result = '<div class="mediaplayer-container panel-body flush"><div class="mediaplayer">';
+        $result = '<div class="mediaplayer-container card-body flush"><div class="mediaplayer">';
         $result .= call_static_method($playerclass, 'get_html', $artefact, $instance, $width, $height);
 
         // File download link

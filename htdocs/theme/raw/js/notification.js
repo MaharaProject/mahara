@@ -171,7 +171,7 @@ jQuery(function($) {
             notificationList.html(data.data.html);
         }
         else if (self) {
-            $(self).removeClass('panel-primary js-panel-unread').addClass('panel-default');
+            $(self).removeClass('panel-primary js-panel-unread').addClass('card');
             $(self).find('.control').removeClass('control');
         }
         $('#selectall').attr('checked', false); // Need to uncheck bulk checkbox
@@ -194,12 +194,12 @@ jQuery(function($) {
     function attachNotificationEvents() {
 
         // Add warning class to all selected notifications
-        $('.panel .control input').on('change', function() {
+        $('.card .control input').on('change', function() {
             if ($(this).prop('checked')) {
-                $(this).closest('.panel').addClass('panel-warning');
+                $(this).closest('.card').addClass('card-warning');
             }
             else {
-                $(this).closest('.panel').removeClass('panel-warning');
+                $(this).closest('.card').removeClass('card-warning');
             }
         });
 

@@ -1,6 +1,6 @@
-<div class="card card">
-    <h3 class="card-heading">{str tag="groupinteractions" section="group"}</h3>
-    
+<div class="card">
+    <h3 class="card-header">{str tag="groupinteractions" section="group"}</h3>
+
     {if $sbdata}
         <ul class="list-group">
         {foreach from=$sbdata.interactiontypes item=interactions key=plugin}
@@ -24,7 +24,7 @@
                 </ul>
             {/if}
             </li>
-        {/foreach} 
+        {/foreach}
         </ul>
     {else}
         <div class="card-body">

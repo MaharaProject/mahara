@@ -12,7 +12,7 @@
 {/if}
 
 {if $upgrades['settings']['toupgradecount']}
-<div class="card card bg-warning" id="">
+<div class="card bg-warning" id="">
     <h3 class="card-header">{str tag="upgrades" section=admin}</h3>
     <div class="card-body">
         <p>{str tag=thefollowingupgradesareready section=admin}</p>
@@ -42,7 +42,7 @@
 {/if}
 
 {if $upgrades['settings']['newinstallcount']}
-<div class="card card bg-warning" id="runinstall">
+<div class="card bg-warning" id="runinstall">
     <h3 class="card-header">{str tag="newplugins" section=admin}</h3>
     <div class="card-body">
         <p>{str tag=thefollowingpluginsareready section=admin}</p>
@@ -74,7 +74,7 @@
 <div class="card-items js-masonry" data-masonry-options='{ "itemSelector": ".card" }'>
     {if $register}
 
-        <div class="card card bg-success register-site">
+        <div class="card bg-success register-site">
             <h3 class="card-header">{str tag=registermaharasite section=admin} <span class="icon icon-star float-right" role="presentation" aria-hidden="true"></span></h3>
             <div class="card-body">
                 {if $newregisterpolicy}
@@ -97,7 +97,7 @@
 
     {if $sitedata}
 
-        <div class="card card bg-info site-stats">
+        <div class="card bg-info site-stats">
             <h3 class="card-header">{$sitedata.displayname}: {str tag=siteinformation section=admin} <span class="icon icon-area-chart float-right" role="presentation" aria-hidden="true"></span></h3>
             {include file='admin/users/stats.tpl' institutiondata=$sitedata showall='_all' fromindex='1'}
             <a class="card-footer text-small" href="{$WWWROOT}admin/users/statistics.php?type=information&subtype=information">{str tag=viewfullsitestatistics section=admin} <span class="icon icon-arrow-circle-right float-right" role="presentation" aria-hidden="true"></span></a>
@@ -121,7 +121,7 @@
         {/if}
     </div>
 
-    <div class="card card">
+    <div class="card">
         <h3 class="card-header">{str tag=clearcachesheading section=admin} <span class="icon icon-refresh float-right" role="presentation" aria-hidden="true"></span></h3>
         <div class="card-body">
             <p>{str tag=cliclearcachesdescription section=admin}</p>
@@ -129,7 +129,7 @@
         </div>
     </div>
 
-    <div class="card card">
+    <div class="card">
         <h3 class="card-header">{str tag=configsite section=admin} <span class="icon icon-cogs float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -188,7 +188,7 @@
             </li>
         </ul>
     </div>
-    <div class="card card">
+    <div class="card">
         <h3 class="card-header">{str tag=configusers section=admin} <span class="icon icon-user float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -224,7 +224,7 @@
 
 
 
-    <div class="card card">
+    <div class="card">
         <h3 class="card-header">{str tag=managegroups section=admin} <span class="icon icon-users float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -251,7 +251,7 @@
     </div>
 
 
-    <div class="card card">
+    <div class="card">
         <h3 class="card-header">{str tag=manageinstitutions section=admin} <span class="icon icon-university float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -319,7 +319,7 @@
         </ul>
     </div>
 
-    <div class="card card">
+    <div class="card">
         <h3 class="card-header">{str tag=configextensions section=admin} <span class="icon icon-puzzle-piece float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -347,7 +347,7 @@
         </ul>
     </div>
 
-    <div class="card card">
+    <div class="card">
         <h3 class="card-header">{str tag=webservice section=auth.webservice} <span class="icon icon-puzzle-piece float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
@@ -377,7 +377,7 @@
         </ul>
     </div>
 
-    <div class="card card">
+    <div class="card">
         <h3 class="card-header">{str tag=reports section=statistics} <span class="icon icon-area-chart float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">

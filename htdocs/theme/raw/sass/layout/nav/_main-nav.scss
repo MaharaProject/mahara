@@ -47,8 +47,6 @@
         }
 
         @include media-breakpoint-down(sm) {
-            margin-left: 0;
-            margin-right: 0;
             border-width: 1px 0 0 0;
         }
 
@@ -80,8 +78,8 @@
         }
 
         > li > a {
-            color: $navbar-default-color;
-            background-color: $navbar-default-bg;
+            color: $navbar-default-link-color;
+            background-color: $navbar-default-link-bg;
             padding: 10px 15px;
             font-weight: normal;
             border-top: 1px solid $navbar-default-border;
@@ -89,7 +87,7 @@
             margin-top: -1px;
             &:hover,
             &:focus {
-                background-color: $navbar-inverse-bg;
+                background-color: $navbar-default-link-hover-bg;
                 text-decoration:none;
                 color: $navbar-default-link-hover-color;
             }
@@ -108,7 +106,7 @@
         }
     }
 
-    // Child navigation items use colour variables from "navbar-inverse"
+    // Child navigation items
     .child-nav {
         border-top:0;
         max-width: 100%;

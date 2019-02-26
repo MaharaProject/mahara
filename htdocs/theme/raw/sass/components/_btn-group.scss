@@ -5,7 +5,6 @@
 .btn-group .form-as-button {
     .btn {
         @include border-right-radius(0);
-        border-right-width: 0;
     }
 }
 
@@ -69,7 +68,7 @@
         padding-top: 3px !important; // Override standard btn padding
     }
     &:only-of-type .btn {
-        border-radius: 3px !important;
+        border-radius: $border-radius;
     }
 }
 
@@ -127,4 +126,9 @@
 // Chrome bug - flex container doesn't work on fieldset tag
 fieldset.btn-group {
   display: block;
+}
+
+.btn-group-top .form-as-button:only-of-type .btn {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }

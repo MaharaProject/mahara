@@ -1,5 +1,5 @@
 <div class="card card-default">
-    <h3 class="card-heading">
+    <h3 class="card-header">
         {$sbdata.title}
     </h3>
     {if $sbdata.data}

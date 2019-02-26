@@ -19,7 +19,7 @@
 
 
 // sidebar card headings
-.sidebar .card-secondary > .card-header {
+.sidebar .card > .card-header {
     @include border-top-radius(0);
     border-bottom: 0;
     background-color: $theme-primary-color;
@@ -40,7 +40,7 @@
 
 
 .card.collapsible {
-    .card-heading-nested,
+    .card-header-nested,
     .card-header {
         > a.outer-link {
             border-color: #ddd;

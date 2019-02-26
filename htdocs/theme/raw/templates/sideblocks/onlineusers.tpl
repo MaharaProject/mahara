@@ -1,4 +1,4 @@
-<div class="card card">
+<div class="card">
     <h3 class="card-header">
         {str tag="onlineusers" args=$sbdata.count}
         <br>

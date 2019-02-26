@@ -11,6 +11,7 @@ input[type=text],
 input[type=password],
 textarea,
 select {
+    @extend .form-control;
     .modal & {
         width: auto;
         max-width: 100%;
@@ -196,6 +197,12 @@ textarea.resizable {
         border-bottom: 0 none;
         align-items: flex-start;
         display: inline-block;
+        div.checkbox {
+          input.checkbox {
+              width: auto;
+              margin-top: -6px;
+          }
+        }
     }
     @include media-breakpoint-down(md) {
         > .form-group {
@@ -250,7 +257,7 @@ textarea.resizable {
     content: "\f073";
     color: scale-color($theme-text-color, $lightness: 25%);
     position:relative;
-    right: 20px;
+    right: 25px;
 }
 .hasDatepickerwrapperacl:after {
     font-family: "FontAwesome";
@@ -260,7 +267,7 @@ textarea.resizable {
     right: 10px;
     position: absolute;
     font-size: 16px;
-    top: 3px;
+    top: 5px;
 }
 .date-picker {
     position: relative;

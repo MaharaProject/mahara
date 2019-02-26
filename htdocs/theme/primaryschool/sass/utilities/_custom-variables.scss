@@ -3,11 +3,11 @@
 //Arrow component variables
 $arrow-color: #0162a7;
 $arrow-text-color: #fff;
-$arrow-link-color: #677D1E;
 $arrow-link-hover-color: #000000;
 $arrow-link-active-color: #333333;
 $arrow-link-background-color: #fff;
-$arrow-link-group-color: lighten(#0162a7, 5%);
+
+$arrow-alt-color: #677D1E;
 
 // color for the secondary title in sections (cf. groups)
 $section-heading-color: #999;
@@ -24,8 +24,6 @@ $rss-icon-color: #FE6500;
 
 // Bootstrap 3 legacy variables
 
-// Colors
-$brand-default:         #ECECEC;
 
 //== Buttons
 
@@ -44,57 +42,31 @@ $btn-success-bg:                 $theme-primary-color;
 $btn-success-border:             darken($theme-primary-color, 5%);
 
 
-//== Navbar
-$navbar-collapse-max-height:       340px;
-
-$navbar-default-color:             #FFFFFF;
-$navbar-default-bg:                #0162a7;
-$navbar-default-border:            transparent;
-
-// Navbar links
-$navbar-default-link-color:                #FFFFFF;
-$navbar-default-link-hover-color:          #FFFFFF;
-$navbar-default-link-hover-bg:             #0162a7;
-$navbar-default-link-active-color:         #555;
-$navbar-default-link-active-bg:            #F1F1F1;
-$navbar-default-link-disabled-color:       #ccc;
-$navbar-default-link-disabled-bg:          transparent;
-
-// Navbar brand label
-$navbar-default-brand-color:               #9ad2ef;
-$navbar-default-brand-hover-color:         lighten($navbar-default-brand-color, 5%);
-$navbar-default-brand-hover-bg:            transparent;
-
+// Header navbar
 // Navbar toggle
-$navbar-default-toggle-hover-bg:           darken(#0162a7, 5%);
-$navbar-default-toggle-icon-bar-bg:        #FFF;
-$navbar-default-toggle-border-color:       transparent;
+$navbar-default-color:                      #FFFFFF;
+$navbar-default-bg:                         #0162a7;
+$navbar-default-border:                     transparent;
+$navbar-default-link-color:                 #FFFFFF;
+$navbar-default-link-hover-color:           #FFFFFF;
+$navbar-default-link-bg:                    #0162a7;
+$navbar-default-link-hover-bg:              darken($navbar-default-link-bg, 5%);
 
-
-// Inverted navbar
-// Reset inverted navbar basics
-$navbar-inverse-color:                      #fff;
-$navbar-inverse-bg:                         darken(#0162a7, 5%);
-$navbar-inverse-border:                     darken($navbar-inverse-bg, 5%);
-
-// Inverted navbar links
-$navbar-inverse-link-color:                 #FFF;
-$navbar-inverse-link-hover-color:           #FFFFFF;
-$navbar-inverse-link-hover-bg:              darken($navbar-inverse-bg, 5%);
+// Navbar menus children
+$navbar-inverse-bg:                         darken($navbar-default-link-bg, 5%);
+$navbar-inverse-link-color:                 #FFFFFF;
+$navbar-inverse-link-hover-color:           #FFFFFF;;
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
 $navbar-inverse-link-active-color:          #FFFFFF;
-$navbar-inverse-link-active-bg:             darken(#0162a7, 6%);
-$navbar-inverse-link-disabled-color:        #444;
-$navbar-inverse-link-disabled-bg:           transparent;
+$navbar-inverse-link-active-bg:             darken($navbar-default-link-bg, 10%);
 
-// Inverted navbar brand label
-$navbar-inverse-brand-color:                $navbar-inverse-link-color;
-$navbar-inverse-brand-hover-color:          $navbar-inverse-link-hover-color;
-$navbar-inverse-brand-hover-bg:             $navbar-inverse-link-hover-bg;
-
-// Inverted navbar toggle
+// Navbar menu children toggles
+$navbar-inverse-toggle-color:               #FFFFFF;
+$navbar-inverse-toggle-bg:                  transparent;
+$navbar-inverse-toggle-hover-color:         #FFFFFF;
 $navbar-inverse-toggle-hover-bg:            darken($navbar-inverse-bg, 2%);
-$navbar-inverse-toggle-icon-bar-bg:         #FFFFFF;
-$navbar-inverse-toggle-border-color:        #333;
+$navbar-inverse-toggle-active-color:        #FFFFFF;
+$navbar-inverse-toggle-active-bg:           darken($navbar-default-link-bg, 5%);
 
 //== Tabs
 $nav-tabs-border-color:                     #eee;
@@ -107,9 +79,3 @@ $nav-tabs-active-link-hover-border-color:   $theme-primary-color;
 
 $nav-tabs-justified-link-border-color:            #f7f7f7;
 $nav-tabs-justified-active-link-border-color:     $body-bg;
-
-
-//== Cards
-
-$card-secondary-text:         $gray-900;
-$card-secondary-border:       $theme-primary-color;

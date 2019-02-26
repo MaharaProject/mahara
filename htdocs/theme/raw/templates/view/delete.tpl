@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<div class="card card bg-danger view-container">
+<div class="card bg-danger view-container">
     <h2 class="card-header">
         {str tag="deleteviewconfirm1" section="view"}
     </h2>

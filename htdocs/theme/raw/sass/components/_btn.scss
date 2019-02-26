@@ -1,7 +1,7 @@
 // Modifications and extra use cases for bootstrap  buttons
 
 .btn-secondary {
-	color: $btn-secondary-color;
+	color: $theme-text-color;
 	background-color: $btn-secondary-bg;
 	border-color: $btn-secondary-border;
 	box-shadow: none;
@@ -21,8 +21,8 @@
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
 	color: inherit;
-	background-color: $btn-dark-bg;
-	border-color: $btn-dark-border;;
+	background-color: $gray-400;
+	border-color: $btn-secondary-border;;
 	box-shadow: none;
 }
 
@@ -51,6 +51,15 @@
 .btn-text {
     color: inherit;
     padding:0;
+		background: none;
+		border: 0;
+		box-shadow: none;
+		&:hover,
+		&:focus {
+				background: none;
+				border: 0;
+				box-shadow: none;
+		}
 }
 
 .btn {
@@ -85,11 +94,11 @@
         line-height: 30px;
         text-align: left;
         &:first-child {
-            border-radius: 0 0 0 3px;
+            border-radius: 0 0 0 $border-radius;
             border-bottom: 1px solid $card-border-color;
         }
         &:last-child {
-            border-radius: 0 0 3px 0;
+            border-radius: 0 0 $border-radius 0;
 
         }
         .btn {
@@ -175,11 +184,6 @@ h1 ~ div > .btn-group-top,
             margin: 0;
         }
     }
-	&.btn-top-right {
-		.pieform {
-			width: 100%;
-		}
-	}
 }
 
 .nav-tabs +  div.btn-group-top{
@@ -239,6 +243,7 @@ td.action-list-copy {
     .btn {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+		border-color: transparent;
         border-top: 0;
         background: scale-color($btn-secondary-bg, $lightness: 40%);
         &:hover {
@@ -269,6 +274,9 @@ td.action-list-copy {
 
 //page builder collapsible
 .btn-group-vertical {
+	.btn:not(:first-child) {
+		margin-left: 0;
+	}
     .indicator {
         margin-left: -4px;
         font-size: $font-size-base - 3;
@@ -448,7 +456,7 @@ td.action-list-copy {
 
 .modal-tinymce {
     .pieform {
-            button.btn-secondary {
+            button.submit {
             background-color: $btn-primary-bg;
             border-color: $btn-primary-border;
             font-family: $font-family-sans-serif;
@@ -466,4 +474,20 @@ td.action-list-copy {
 	font-size: $font-size-base / 1.1665;
 	border: 1px solid $btn-secondary-border;
 	padding: 0.14375rem 0.625rem;
+}
+
+.card.first .card-header {
+		a:not(.secondary-link),
+		a.btn-sm {
+			border-radius: $border-radius-sm;
+
+			&:last-child {
+					border-top-left-radius: 0;
+					border-bottom-left-radius: 0;
+			}
+			&:first-child {
+					border-top-right-radius: 0;
+					border-bottom-right-radius: 0;
+			}
+		}
 }

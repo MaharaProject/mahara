@@ -13,7 +13,7 @@
         {if !$enabled}
         <p class="alert alert-warning">{str tag=sitelicensesdisablednote section=admin args=$WWWROOT}</p>
         {/if}
-        <div class="card card">
+        <div class="card">
             <div class="card-body">
                 <form id="sitelicenses" action="" method="post" name="sitelicenses">
                 {if $errors}

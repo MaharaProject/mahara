@@ -23,7 +23,7 @@
 <div class="row skins">
     {foreach from=$skins item=skin}
     <div class="skin">
-        <div class="card card">
+        <div class="card">
             <h2 class="card-header {if $skin.metadata} has-link {/if}">
                 <a href="" type="button" title="{str tag='viewmetadata' section='skin'}" class="title-link" data-toggle="modal" data-target="#skindata-modal-{$skin.id}" aria-labelledby="skin-info">
                     {$skin.title|escape|safe}

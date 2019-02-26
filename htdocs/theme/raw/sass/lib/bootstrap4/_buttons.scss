@@ -95,7 +95,7 @@ fieldset:disabled a.btn {
 
   &:disabled,
   &.disabled {
-    color: $btn-link-disabled-color;
+    color: $gray-300;
     pointer-events: none;
   }
 

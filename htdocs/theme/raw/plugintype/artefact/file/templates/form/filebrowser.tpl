@@ -54,7 +54,7 @@
         {/if}
 
         {if $config.upload}
-        <div id="{$prefix}_upload_container" class="clearfix {if $config.selectone || $config.selectmodal} card-fake{else} card card fileupload {/if} {if ($tabs && !$tabs.upload) || $uploaddisabled} d-none{/if}">
+        <div id="{$prefix}_upload_container" class="clearfix {if $config.selectone || $config.selectmodal} card-fake{else} card fileupload {/if} {if ($tabs && !$tabs.upload) || $uploaddisabled} d-none{/if}">
             {* config.uploadagreement: disable the file chooser unless the agreement is checked *}
             {* config.simpleupload: the form only contains a file chooser *}
             {* config.submitbutton: add submit button even if js is enabled & don't start uploading as soon as a file is chosen *}
