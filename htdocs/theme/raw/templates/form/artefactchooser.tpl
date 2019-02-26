@@ -1,7 +1,7 @@
 {if $searchable}
 <ul class="artefactchooser-tabs nav nav-tabs">
-    <li{if !$.request.s} class="current active"{/if}><a href="{$browseurl}">{str tag=Browse section=view}</a></li>
-    <li{if $.request.s} class="current active"{/if}><a href="{$searchurl}">{str tag=Search section=view}</a></li>
+    <li><a {if !$.request.s} class="current active"{/if} href="{$browseurl}">{str tag=Browse section=view}</a></li>
+    <li><a {if $.request.s} class="current active"{/if} href="{$searchurl}">{str tag=Search section=view}</a></li>
 </ul>
 {/if}
 <div id="artefactchooser-body">

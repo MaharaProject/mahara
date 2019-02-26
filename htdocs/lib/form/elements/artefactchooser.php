@@ -159,10 +159,10 @@ jQuery(function($) {
               // Hide the search form
               $(a).on('click', function(e) {
                   $('#artefactchooser-searchform').addClass('d-none');
-                  $(searchA.parentNode).removeClass('active');
+                  $(searchA).removeClass('active');
                   $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
                   $(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
-                  $(browseA.parentNode).addClass('active');
+                  $(browseA).addClass('active');
                   $(browseA).trigger("blur");
                   $('#artefactchooser-searchfield').val(''); // forget the search for now, easier than making the tabs remember it
                   if (!browseTabCurrent) {
@@ -179,10 +179,10 @@ jQuery(function($) {
               $(a).on('click', function(e) {
                   $('#artefactchooser-searchform').show();
                   $('#artefactchooser-searchform').removeClass('d-none');
-                  $(browseA.parentNode).removeClass('active');
+                  $(browseA).removeClass('active');
                   $(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
                   $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
-                  $(searchA.parentNode).addClass('active');
+                  $(searchA.).addClass('active');
 
                   $('#artefactchooser-searchfield').on('keypress', function(e) {
                       if (e.keycode == 13) { // enter pressed - submitting form

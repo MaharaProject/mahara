@@ -24,6 +24,7 @@
                 border: 1px solid transparent;
                 border-bottom: 3px solid $nav-tabs-link-hover-border-color;
                 background: scale-color($gray-100, $lightness: 45%);
+                text-decoration: none;
             }
         }
     }

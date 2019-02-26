@@ -90,6 +90,7 @@ h4.list-group-item-heading {
 }
 
 .list-group-item-warning {
+    background-color: $state-warning-bg;
     .list-group-item-heading {
         color: $state-warning-text;
 

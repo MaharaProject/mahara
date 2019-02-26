@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-md-4  offset-md-4">
             <div class="attentionmessage card card bg-warning">
-                <h3 class="card-heading">{str tag='whymakemeyourfriend' section='group'}</h3>
+                <h3 class="card-header">{str tag='whymakemeyourfriend' section='group'}</h3>
                 <p class="card-body">{$message}</p>
                 <div class="has-form text-small card-footer btn-toggle">
                     <div class="btn">

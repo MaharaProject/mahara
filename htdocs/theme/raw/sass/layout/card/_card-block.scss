@@ -10,6 +10,7 @@
     }
     > .card-header {
         font-family: $font-family-serif;
+        border-bottom: 2px solid $card-border-color;
     }
     &.blockinstance.card {
         background-color: transparent;
