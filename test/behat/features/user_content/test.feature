@@ -29,19 +29,19 @@ Background:
     | UserB | 01/01/2018  | Germany      | New Zealand |            |        |               |
 
     And the following "goals and skills" exist:
-    | user  | goaltype/skilltype  | title        | description           |
-    | UserA | academicgoal        | fix lateness | pack bag night before |
-    | UserA | careergoal          | meow         | cat a lyst            |
-    | UserA | personalgoal        | gym shark    | do do do              |
-    | UserA | academicskill       | alphabet     | abc                   |
-    | UserA | personalskill       | whistle      | *inset whistle noise  |
-    | UserA | workskill           | team work    | axe throwing?         |
-    | UserB | academicgoal        | academi doooo| de sc ri p t i o n nn |
-    | UserB | careergoal          | careerg doooo| de sc ri p t i o n nn |
-    | UserB | personalgoal        | persona doooo| de sc ri p t i o n nn |
-    | UserB | academicskill       | academi doooo| de sc ri p t i o n nn |
-    | UserB | personalskill       | persona doooo| de sc ri p t i o n nn |
-    | UserB | workskill           | workski doooo| de sc ri p t i o n nn |
+    | user  | goaltype/skilltype  | title        | description           | attachment |
+    | UserA | academicgoal        | fix lateness | pack bag night before | Image1.jpg |
+    | UserA | careergoal          | meow         | cat a lyst            | users.csv  |
+    | UserA | personalgoal        | gym shark    | do do do              | Image2.png |
+    | UserA | academicskill       | alphabet     | abc                   | groups.csv |
+    | UserA | personalskill       | whistle      | *inset whistle noise  | Image1.jpg |
+    | UserA | workskill           | team work    | axe throwing?         | users.csv  |
+    | UserB | academicgoal        | academi doooo| description goal/skill| Image2.png |
+    | UserB | careergoal          | careerg doooo| description goal/skill| groups.csv |
+    | UserB | personalgoal        | persona doooo| description goal/skill| Image1.jpg |
+    | UserB | academicskill       | academi doooo| description goal/skill| users.csv  |
+    | UserB | personalskill       | persona doooo| description goal/skill| Image2.png |
+    | UserB | workskill           | workski doooo| description goal/skill| groups.csv |
 
     And the following "interests" exist:
     # Available fields: user*, interest*, description
@@ -57,16 +57,18 @@ Background:
     | UserB |UserB In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |
 
     And the following "educationhistory" exist:
-    | user  | institution  | startdate | enddate  | qualdescription |
-    | UserA | Catalystania | 12/12/12  | 12/12/21 | 9 years         |
-    | UserB | Catalystonia | 21/10/21  | 10/12/26 | educationnn     |
-    | UserA | Catalyst High| 12/12/20  | 12/12/21 | 9 years         |
-    | UserB | Catalyst High| 21/10/20  | 10/12/26 | educationnn     |
+    # Available fields: user, startdate, enddate, institution, institutionaddress, qualtype, qualname,qualdescription,attachment
+    | user  | institution  | startdate | enddate  | qualdescription | attachment |
+    | UserA | Catalystania | 12/12/12  | 12/12/21 | 9 years         | Image2.png |
+    | UserB | Catalystonia | 21/10/21  | 10/12/26 | educationnn     | Image2.png |
+    | UserA | Catalyst High| 12/12/20  | 12/12/21 | 9 years         | Image2.png |
+    | UserB | Catalyst High| 21/10/20  | 10/12/26 | educationnn     | Image2.png |
 
     And the following "employmenthistory" exist:
-    | user  | employer | startdate | enddate | jobtitle   | positiondescription    |
-    | UserA | Eggman   | 01/02/03  |         | crystal dr | locating magic crystals|
-    | UserB | Cat      | 02/02/00  |         | Cat sitter | pat kittens            |
+    # Available fields: user, startdate, enddate, employer, employeraddress, jobtitle, positiondescription
+    | user  | employer | startdate | enddate | jobtitle   | positiondescription    | attachment |
+    | UserA | Eggman   | 01/02/03  |         | crystal dr | locating magic crystals| Image1.jpg |
+    | UserB | Cat      | 02/02/00  |         | Cat sitter | pat kittens            | Image1.jpg |
 
     And the following "contactinformation" exist:
     # Available fields: user*, email*, officialwebsite, personalwebsite, blogaddress, town, city/region, country, homenumber,
@@ -74,20 +76,23 @@ Background:
     | user  | email            | mobilenumber |
     | UserA | userA@mahara.com | 01234567890  |
 
-    And the following "certifications and accreditations" exist:
-    | user  | date     | title               | description |
-    | UserA | 02/02/80 | European Witchcraft | While the streets may be education enough for real gangsters, this course aims to teach students about the history and culture of the mafia around the world. [Williams College] |
-    | UserB | 02/02/80 | European Witchcraft | While the streets may be education enough for real gangsters, this course aims to teach students about the history and culture of the mafia around the world. [Williams College] |
+    And the following "achievements" exist:
+    # Available fields: user, date, title, description, attachment
+    | user  | date     | title               | attachment       | description |
+    | UserA | 02/02/80 | European Witchcraft | Image3.png       | While the streets may be education enough for real gangsters, this course aims to teach students about the history and culture of the mafia around the world. [Williams College] |
+    | UserB | 02/02/80 | Western Witchcraft  | mahara_about.pdf | While the streets may be education enough for real gangsters, this course aims to teach students about the history and culture of the mafia around the world. [Williams College] |
 
     And the following "books and publications" exist:
-    | user  | date     | title                                     | contribution| description |
-    | UserA | 05/05/50 | The Life-Changing Magic of not Tidying Up | co-author   | seven million copies worldwide and have been translated into thirty-eight languages.|
-    | UserB | 05/05/50 | The Life-Changing Magic of not Tidying Up | co-author   | seven million copies worldwide and have been translated into thirty-eight languages.|
+    # Available fields: user, date, title, contribution, description, url, attachment
+    | user  | date     | title                                     | contribution| description                                                                         | attachment |
+    | UserA | 05/05/50 | The Life-Changing Magic of not Tidying Up | co-author   | seven million copies worldwide and have been translated into thirty-eight languages.| Image3.png |
+    | UserB | 05/05/50 | The Life-Changing Magic of not Tidying Up | co-author   | seven million copies worldwide and have been translated into thirty-eight languages.| Image3.png |
 
     And the following "professionalmemberships" exist:
-    | user  | startdate   | title                       | description        |
-    | UserA | 20/02/2008  | cat art company coordinator | catch up with cats |
-    | UserB | 20/02/2008  | cat art company catcher     | catch fish for cats|
+    # Available fields: user, startdate, enddate, title, description, attachment
+    | user  | startdate   | title                       | description        | attachment |
+    | UserA | 20/02/2008  | cat art company coordinator | catch up with cats | Image3.png |
+    | UserB | 20/02/2008  | cat art company catcher     | catch fish for cats| Image3.png |
 
 
     And the following "forums" exist:
@@ -126,7 +131,7 @@ Background:
     # Available fields: owner*, ownertype*, title*, description, tags
     | owner | ownertype | title   | description      | tags               |
     | UserA | user      | journal1| this is journal1 | amber,brown,cobalt |
-    | Group1| group     | journal2| this is journal1 | amber,brown,cobalt |
+    | Group1| group     | journal2| this is journal2 | amber,brown,cobalt |
 
     And the following "journalentries" exist:
     # Available fields: owner*, ownertype*, title*, entry*, blog, tags, draft
@@ -220,9 +225,6 @@ Background:
     | Recent journal entries| recentposts    | Page Four A    | no         | journaltitle=journal1;maxposts=10 |
     | Tagged journal entries| taggedposts    | Page Four A    | no         | tags=cats; maxposts=5;showfullentries=yes;copytype=nocopy |
     | Open Badges         |openbadgedisplayer| Page Four A    | no         | |
-
-
-
 
     And the following "blocks" exist:
     # Page One B
