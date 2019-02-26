@@ -80,7 +80,7 @@ This pair of buttons is used for deleting or editing an item.
 ### Block edit buttons
 This pair of buttons is used for editing or deleting a block item on a page.
 ```
-<div class="card-heading">
+<div class="card-header">
 <span class="float-left btn-group btn-group-top">
     <button class="configurebutton btn btn-inverse btn-sm">
         <span class="icon icon-cog icon-lg"></span>
@@ -502,7 +502,7 @@ This style of tabs is used for third-level navigation in areas where each page w
 A basic card.
 ```
 <div class="card card-secondary">
-    <h3 class="card-heading has-link">
+    <h3 class="card-header has-link">
         <a href="#">Basic card</a>
     </h3>
     <div class="tagblock card-body">
@@ -518,7 +518,7 @@ A basic card.
 A delete card.
 ```
 <div class="card card bg-danger text-white view-container">
-    <h2 class="card-heading">{str tag=delete}</h2>
+    <h2 class="card-header">{str tag=delete}</h2>
     <div class="card-body">
         <p><strong>{str tag=Title}</strong></p>
         <p>{str tag=deleteinstitutionconfirm section=admin}</p>
@@ -537,7 +537,7 @@ A side card is used in the sideblock area, e.g. on the dashboard for "Online use
 ```
 <div class="col-md-3 sidebar">
     <div class="card card-secondary">
-        <h3 class="card-heading">
+        <h3 class="card-header">
             Side card
             <br>
             <span  class="text-small text-midtone">({str tag=description})</span>
@@ -565,7 +565,7 @@ A side card without a footer. An examples is the "Tags" sideblock on the dashboa
 <div class="col-md-3 sidebar">
     <div id="sb-tags">
         <div class="card card-secondary">
-            <h3 class="card-heading has-link">
+            <h3 class="card-header has-link">
                 <a href="">Side card<span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
             </h3>
             <div class="tagblock card-body">
@@ -604,7 +604,7 @@ A dropdown card.
 This type of drop-down card is used in blocks, for example the "Inbox" block.
 ```
 <div class="bt-inbox card card-secondary clearfix collapsible">
-    <h3 class="title card-heading js-heading">
+    <h3 class="title card-header js-heading">
         <a data-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
         Blocks drop-down
         <span class="icon icon-chevron-up collapse-indicator float-right inner-link" role="presentation" aria-hidden="true"></span>
@@ -653,7 +653,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
 This is the general layout of blocks. An example of this being used is the 'Latest changes I can view' block on the dashboard.
 ```
 <div class="bt-newviews card card-secondary clearfix">
-    <h3 class="title card-heading js-heading">Block</h3>
+    <h3 class="title card-header js-heading">Block</h3>
     <div class="block">
         <div class="list-group">
             <div class="list-group-item">
@@ -725,7 +725,7 @@ This card is used to show a page.
 ```
 <div class="card-quarter card-view">
     <div class="card card-secondary">
-        <h3 class="card-heading has-link">
+        <h3 class="card-header has-link">
             <a class="title-link title" href="" title="Dashboard page">Dashboard page</a>
         </h3>
         <div class="card-body">
@@ -775,7 +775,7 @@ This card is used to show a submitted page.
 ```
 <div class="card-quarter card-view">
     <div class="card card-secondary card bg-warning">
-        <h3 class="card-heading has-link">
+        <h3 class="card-header has-link">
             <a class="title-link title" href="" title="Dashboard page">Unnamed page</a>
         </h3>
         <div class="card-body">
@@ -849,7 +849,7 @@ This card is used to show a collection.
 <div class="card-quarter card-collection">
     <div class="card card-secondary
         ">
-        <h3 class="card-heading has-link">
+        <h3 class="card-header has-link">
             <a class="title-link title" href="" title="collection uno">
             collection
             </a>
@@ -1286,7 +1286,7 @@ Used as the sub subheading of a page.
 ### card heading
 Used as the heading of a block or card.
 ```
-<h3 class="title card-heading">card heading</h3>
+<h3 class="title card-header">card heading</h3>
 ```
 </section>
 

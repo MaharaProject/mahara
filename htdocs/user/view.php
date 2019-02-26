@@ -198,7 +198,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                         'class' => 'input-group',
                         'elements'          => array(
                             'group' => array(
-                                'class'               => 'last hide-label input-sm',
+                                'class'               => 'last hide-label',
                                 'type'                => 'select',
                                 'title'               => get_string('inviteusertojoingroup', 'group'),
                                 'collapseifoneoption' => false,
@@ -209,7 +209,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                             'submit' => array(
                                 'type'  => 'button',
                                 'usebuttontag' => true,
-                                'class' => 'btn-sm btn-primary input-group-append',
+                                'class' => 'btn-primary input-group-append',
                                 'value' => '<span class="icon icon-paper-plane left" role="presentation" aria-hidden="true"></span>' . get_string('sendinvitation', 'group'),
                             )
                         )
@@ -239,7 +239,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                         'class' => 'input-group',
                         'elements'  => array(
                             'group' => array(
-                                'class'   => 'last hide-label input-sm',
+                                'class'   => 'last hide-label',
                                 'type'    => 'select',
                                 'title'   => get_string('addusertogroup', 'group'),
                                 'collapseifoneoption' => false,
@@ -250,7 +250,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                             'submit' => array(
                                 'type'  => 'button',
                                 'usebuttontag' => true,
-                                'class' => 'btn-sm btn-primary input-group-append',
+                                'class' => 'btn-primary input-group-append',
                                 'value' => '<span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>' . get_string('add'),
                             )
                         )

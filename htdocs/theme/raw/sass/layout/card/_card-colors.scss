@@ -35,8 +35,17 @@
             color: $card-info-text;
         }
         .card-body,
-        .table {
+        table {
             background-color: $card-bg;
+            &.table {
+                table-layout: fixed;
+                tr:not(:first-of-type) {
+                    td,
+                    th {
+                        border-top: $table-border-width solid $table-border-color;
+                    }
+                }
+            }
         }
         .card-footer {
             background-color: $card-heading-bg;
