@@ -438,8 +438,8 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
 These are tabs to switch between pages within one section, for example in the "Profile" under "Content". The tabs navigation style is used when the entire section has only one "Save" button.
 ```
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active">
-        <a href="#" role="tab" data-toggle="tab" aria-expanded="true">Tab 1</a>
+    <li role="presentation">
+        <a href="#" role="tab" data-toggle="tab" aria-expanded="true" class="active">Tab 1</a>
     </li>
     <li role="presentation">
         <a href="#" role="tab" data-toggle="tab" aria-expanded="false">Tab 2</a>
@@ -517,7 +517,7 @@ A basic card.
 ### Delete card
 A delete card.
 ```
-<div class="card card bg-danger text-white view-container">
+<div class="card card bg-danger view-container">
     <h2 class="card-header">{str tag=delete}</h2>
     <div class="card-body">
         <p><strong>{str tag=Title}</strong></p>
@@ -609,7 +609,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
         Blocks drop-down
         <span class="icon icon-chevron-up collapse-indicator float-right inner-link" role="presentation" aria-hidden="true"></span>
     </h3>
-    <div class="block collapse in" id="target" aria-expanded="true">
+    <div class="block collapse show" id="target" aria-expanded="true">
         <div class="inboxblock list-group">
             <div class="has-attachment card-secondary collapsible list-group-item">
                 <a class="collapsed link-block" data-toggle="collapse" href="#item1" aria-expanded="false">
@@ -623,7 +623,6 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
                     </p>
                 </div>
             </div>
-
             <div class="has-attachment card-secondary collapsible list-group-item">
                 <a class="collapsed link-block" data-toggle="collapse" href="#item2" aria-expanded="false">
                     <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
@@ -2149,8 +2148,8 @@ Used as icon for a system notification.
       $j('#category-tabs a').on("click", function(event) {
           var category = $j(this).data('category');
           event.preventDefault();
-          $j(this).parent().siblings().removeClass('active');
-          $j(this).parent().addClass('active');
+          $j(this).parent().siblings().children().removeClass('active');
+          $j(this).addClass('active');
 
           $j('[data-markdown]').each(function(){
               if ($j(this).data('category') !== category) {

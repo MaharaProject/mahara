@@ -21,7 +21,6 @@
     &.collapsible {
         @include box-shadow(none);
         &.last {
-            legend,
             .card-heading {
                 @include border-bottom-radius($border-radius-sm);
                 a {
@@ -30,10 +29,8 @@
                     }
                 }
             }
-            legend {
-                a {
-                    border-bottom: 1px solid $card-border-color;
-                }
+            a {
+                border-bottom: 1px solid $card-border-color;
             }
 
             .fieldset-body {
@@ -51,7 +48,7 @@
             }
         }
 
-        legend {
+        h3 {
             margin-bottom: 0;
             border:0;
         }
@@ -63,8 +60,8 @@
 
         &.has-attachment .card-heading,
         .collapsible-group & .card-heading,
-        legend h4,
-        legend h3  {
+        h4,
+        h3  {
             margin: 0;
             font-size: 16px;
             padding: 0;
@@ -138,7 +135,7 @@
 
 .link-expand-right.form-group {
     position: static;
-    legend {
+    h3 {
         position:absolute;
         top: 5px;
         right: 20px;
@@ -215,8 +212,8 @@
 }
 
 .collapsible {
-    legend h4,
-    legend h3 {
+    h4,
+    h3 {
         a {
             text-shadow: 1px 0 0 $text-shadow;
             background-color: darken($card-bg, 1%);
