@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <div id="deleteaccount" class="card card bg-danger text-white view-container">
-    <h2 class="card-heading">{str tag=deleteaccount1}</h2>
+    <h2 class="card-header">{str tag=deleteaccount1}</h2>
     <div class="card-body">
         {if $requiresapproval}
             <p>{str tag=sendnotificationdescription section=account}</p>
