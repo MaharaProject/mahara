@@ -11,7 +11,7 @@
     }
 
     .blockinstance-controls .btn-group-top {
-        @media (max-width: $screen-md-min) {
+        @include media-breakpoint-down(lg) {
             margin: 0;
         }
     }

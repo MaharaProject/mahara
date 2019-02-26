@@ -76,11 +76,8 @@
             background-color: $card-warning-bg;
         }
         .card-footer {
-            background-color: $card-heading-bg;
-            &:hover,
-            &:focus {
-                background-color: darken($card-heading-bg, 3%);
-            }
+            background-color: darken($card-heading-bg, 1.5%);
+
         }
         .card-footer,
         .card-body,

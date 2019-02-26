@@ -81,7 +81,7 @@ $state-danger-bg:                           #f2dede;
 $state-danger-border:                       darken(adjust-hue($state-danger-bg, -10), 5%);
 
 // Buttons + Forms
-$btn-secondary-color:                       #333;
+$btn-secondary-color:                       $theme-text-color;
 $btn-secondary-bg:                          #F9F9F9;
 $btn-secondary-border:                      $secondary;
 
