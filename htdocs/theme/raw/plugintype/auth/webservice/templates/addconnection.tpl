@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="card card-default">
+<div class="card card-secondary">
     <h3 class="card-heading">{str tag="clientconnections" section="auth.webservice"}</h3>
     <div class="card-body">
     {$form|safe}

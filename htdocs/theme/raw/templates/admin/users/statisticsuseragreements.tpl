@@ -15,7 +15,7 @@
     <br>
 <div id="privacy-text" class="lead tab">{str tag="userprivacyagreements" section="admin"}</div>
 <div id="termsandconditions-text" class="lead tab js-hidden">{str tag="usertermsagreements" section="admin"}</div>
-<div class="card card-default view-container">
+<div class="card card-secondary view-container">
     <div class="table-responsive">
         <table id="adminstitutionslist" class="fullwidth table table-striped">
             <thead>

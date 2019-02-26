@@ -21,10 +21,10 @@
     background-color: $brand-default;
     padding: 5px;
     a {
-        color: $btn-default-color;
+        color: $btn-secondary-color;
 
-        background-color: $btn-default-bg;
-        border: 1px solid $btn-default-border;
+        background-color: $btn-secondary-bg;
+        border: 1px solid $btn-secondary-border;
         border-radius: 3px;
         cursor: pointer;
         display: inline-block;

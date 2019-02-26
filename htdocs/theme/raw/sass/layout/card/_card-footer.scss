@@ -1,4 +1,4 @@
-a.panel-footer {
+a.card-footer {
     text-align:center;
     color: $gray-500;
     display: block;
@@ -24,7 +24,7 @@ a.panel-footer {
     background-color: $card-bg;
 }
 
-.panel-footer {
+.card-footer {
     p {
         margin:0;
     }
@@ -61,6 +61,6 @@ a.panel-footer {
     }
 }
 
-.fieldset-body .panel-footer {
+.fieldset-body .card-footer {
     margin: 20px -15px -10px;
 }

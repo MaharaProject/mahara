@@ -83,13 +83,13 @@ function toggleMessageDisplay(table, id) {
     }
     var rows = messages.parents("tr");
     if (rows.length > 0) {
-        if (jQuery(rows[0]).find(".messagedisplaylong.hidden").length > 0) {
-            jQuery(rows[0]).find(".messagedisplaylong").removeClass("hidden");
-            jQuery(rows[0]).find(".messagedisplayshort").addClass("hidden");
+        if (jQuery(rows[0]).find(".messagedisplaylong.d-none").length > 0) {
+            jQuery(rows[0]).find(".messagedisplaylong").removeClass("d-none");
+            jQuery(rows[0]).find(".messagedisplayshort").addClass("d-none");
         }
         else {
-            jQuery(rows[0]).find(".messagedisplaylong").addClass("hidden");
-            jQuery(rows[0]).find(".messagedisplayshort").removeClass("hidden");
+            jQuery(rows[0]).find(".messagedisplaylong").addClass("d-none");
+            jQuery(rows[0]).find(".messagedisplayshort").removeClass("d-none");
         }
     }
 }

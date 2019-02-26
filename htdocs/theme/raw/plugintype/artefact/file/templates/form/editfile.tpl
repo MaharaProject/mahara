@@ -1,4 +1,4 @@
-<tr id="{$prefix}_edit_row"{if !$fileinfo} class="text-regular hidden editrow no-hover"{/if}>
+<tr id="{$prefix}_edit_row"{if !$fileinfo} class="text-regular d-none editrow no-hover"{/if}>
     <td colspan="{$colspan}" class="fileedittablewrap form-condensed">
         <div class="fileedittable">
             <h4 id="{$prefix}_edit_heading" class="edit-heading">

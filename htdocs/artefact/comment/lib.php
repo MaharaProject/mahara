@@ -987,7 +987,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
-            'class' => 'btn-default',
+            'class' => 'btn-secondary',
             'value' => array(get_string('Comment', 'artefact.comment'), get_string('cancel')),
         );
         // This is a placeholder where we can display the parent comment's text
@@ -1036,7 +1036,7 @@ class ArtefactTypeComment extends ArtefactType {
                 'submit'  => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-default btn-sm',
+                    'class' => 'btn-secondary btn-sm',
                     'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span> <span class="sr-only">' . get_string('delete') . '</span>',
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),
                     'name'  => 'delete_comment_submit',

@@ -38,13 +38,13 @@
                     {$tasks.tablerows|safe}
                 </div>
                 {if $tasks.pagination}
-                    <div id="plans_page_container_{$blockid}_plan{$tasks.planid}" class="hidden">
+                    <div id="plans_page_container_{$blockid}_plan{$tasks.planid}" class="d-none">
                         {$tasks.pagination|safe}
                     </div>
                     <script>
                     jQuery(function($) {literal}{{/literal}
                         {$tasks.pagination_js|safe}
-                        $('#plans_page_container_{$blockid}_plan{$tasks.planid}').removeClass('hidden');
+                        $('#plans_page_container_{$blockid}_plan{$tasks.planid}').removeClass('d-none');
                     {literal}}{/literal});
                     </script>
                 {/if}

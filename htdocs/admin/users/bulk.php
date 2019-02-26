@@ -63,7 +63,7 @@ $userids = array_keys($users);
 // Used in all three forms
 $userelement = array(
     'type'     => 'select',
-    'class'    => 'hidden',
+    'class'    => 'd-none',
     'multiple' => 'true',
     'options'  => array_combine($userids, $userids),
     'value'    => $userids,
@@ -106,7 +106,7 @@ $suspendform = pieform(array(
                 'suspend' => array(
                     'type'        => 'button',
                     'usebuttontag' => true,
-                    'class'       => 'btn-default input-group-btn no-label',
+                    'class'       => 'btn-secondary input-group-btn no-label',
                     'value'       => get_string('Suspend', 'admin'),
                 )
             )
@@ -136,7 +136,7 @@ if (count($options) > 1) {
                     'changeauth' => array(
                         'type'        => 'button',
                         'usebuttontag' => true,
-                        'class'       => 'btn-default input-group-btn',
+                        'class'       => 'btn-secondary input-group-btn',
                         'value'        => get_string('changeauthmethod', 'admin')
                     )
                 )
@@ -167,7 +167,7 @@ if (is_using_probation()) {
                     'setprobation' => array(
                         'type' => 'button',
                         'usebuttontag' => true,
-                        'class'       => 'btn-default input-group-btn no-label',
+                        'class'       => 'btn-secondary input-group-btn no-label',
                         'confirm' => get_string('probationbulkconfirm', 'admin'),
                         'value' => get_string('probationbulkset', 'admin'),
                     )
@@ -187,7 +187,7 @@ $deleteform = pieform(array(
         'delete' => array(
             'type'        => 'button',
             'usebuttontag' => true,
-            'class'       => 'btn-default',
+            'class'       => 'btn-secondary',
             'confirm'     => get_string('confirmdeleteusers', 'admin'),
             'value'       => '<span class="icon icon-lg icon-user-times left text-danger" role="presentation" aria-hidden="true"></span>' . get_string('deleteusers', 'admin'),
         ),

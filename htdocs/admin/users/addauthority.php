@@ -117,10 +117,10 @@ jQuery(function($) {
   function authloginmsgVisibility() {
       // If Parent authority is 'None'
       if ($('#auth_config_parent').val() != 0) {
-        $('#auth_config_authloginmsg_container').addClass('hidden');
+        $('#auth_config_authloginmsg_container').addClass('d-none');
       }
       else {
-        $('#auth_config_authloginmsg_container').removeClass('hidden');
+        $('#auth_config_authloginmsg_container').removeClass('d-none');
       }
   }
   var ssoAllOptions = {
@@ -134,10 +134,10 @@ jQuery(function($) {
       var current = $('#auth_config_ssodirection').val();
       for (var opt in ssoAllOptions) {
           if (ssoAllOptions[opt] == current) {
-              $('#auth_config_' + opt + '_container').removeClass('hidden');
+              $('#auth_config_' + opt + '_container').removeClass('d-none');
           }
           else {
-            $('#auth_config_' + opt + '_container').addClass('hidden');
+            $('#auth_config_' + opt + '_container').addClass('d-none');
           }
       }
   }

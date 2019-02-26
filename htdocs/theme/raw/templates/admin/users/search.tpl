@@ -120,7 +120,7 @@
     </div>
 </div>
 <p class="lead view-description">{str tag="usersearchinstructions" section="admin"}</p>
-<div id="results" class="section card card-default view-container">
+<div id="results" class="section card card-secondary view-container">
     <h2 class="card-heading" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
         <div class="table-responsive">
@@ -183,7 +183,7 @@
                     <input type="hidden" name="subtype" value="userdetails">
                 </form>
             </div>
-            <div id="nousersselected" class="hidden error alert alert-danger">
+            <div id="nousersselected" class="d-none error alert alert-danger">
                 {str tag=nousersselected section=admin}
             </div>
         </div>

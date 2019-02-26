@@ -3,7 +3,7 @@
 
 {if $sectiontabs}
 <form id="report" method="post">
-    <select id="users" class="hidden" multiple="multiple" name="users[]">
+    <select id="users" class="d-none" multiple="multiple" name="users[]">
     {foreach from=$users key=id item=item}
     <option selected="selected" value="{$id}">{$id}</option>
     {/foreach}

@@ -4684,7 +4684,7 @@ function get_report_settings($settings) {
     if (!empty($settings['users'])) {
         $str .= "<div>";
         $str .= get_string('selectednusers', 'admin', $settings['users']);
-        $str .= ' <button class="btn btn-default filter" id="removeuserfilter" title="' . get_string('removefilter', 'statistics') . '">
+        $str .= ' <button class="btn btn-secondary filter" id="removeuserfilter" title="' . get_string('removefilter', 'statistics') . '">
                      <span class="times">×</span>
                      <span class="sr-only">' . get_string('removefilter', 'statistics') . '</span>
                  </button>';

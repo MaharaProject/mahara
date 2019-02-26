@@ -60,7 +60,7 @@ foreach ($elements as $key => $element) {
 }
 
 if ($body) {
-    echo '<div id="whatviewsselection" class="hidden btn-group"><a href="" id="selection_all" class="btn btn-secondary btn-sm">'
+    echo '<div id="whatviewsselection" class="d-none btn-group"><a href="" id="selection_all" class="btn btn-secondary btn-sm">'
         . get_string('selectall') . '</a><a href="" id="selection_reverse" class="btn btn-secondary btn-sm">'
         . get_string('reverseselection', 'export') . '</a></div>';
     echo display_artefacts($body, $itemsinrow);
@@ -84,7 +84,7 @@ foreach ($elements as $key => $element) {
 
 if ($body) {
     echo '<div id="whatcollections" class="js-hidden exportable-artefacts"><div class="exportable-artefact-container"><h3 class="heading-exportable-pages">' . get_string('collectionstoexport', 'export') . "</h3>";
-    echo '<div id="whatcollectionsselection" class="hidden btn-group"><a href="" id="selection_all_collections" class="btn btn-secondary btn-sm">'
+    echo '<div id="whatcollectionsselection" class="d-none btn-group"><a href="" id="selection_all_collections" class="btn btn-secondary btn-sm">'
         . get_string('selectall') . '</a><a href="" id="selection_reverse_collections" class="btn btn-secondary btn-sm">'
         . get_string('reverseselection', 'export') . '</a></div>';
     echo display_artefacts($body, $itemsinrow);

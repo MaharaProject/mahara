@@ -613,7 +613,7 @@ function webservice_function_groups_form() {
                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
                         'submit'     => array(
                             'type'  => 'button',
-                            'class' => 'btn-default btn-sm' . ($iscustomservice ? ' first' : ''),
+                            'class' => 'btn-secondary btn-sm' . ($iscustomservice ? ' first' : ''),
                             'usebuttontag' => true,
                             'value'   => '<span class="'.$editicon.'"></span>' . get_string('edit', 'mahara'),
                             'elementtitle' => get_string('edit'),
@@ -635,7 +635,7 @@ function webservice_function_groups_form() {
                                 'submit'     => array(
                                     'type'  => 'button',
                                     'usebuttontag' => true,
-                                    'class' => 'btn-default btn-sm last',
+                                    'class' => 'btn-secondary btn-sm last',
                                     'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('delete', 'mahara'),
                                     'elementtitle' => get_string('delete'),
                                 ),
@@ -861,7 +861,7 @@ function webservice_tokens_form() {
                         'submit'     => array(
                             'type'  => 'button',
                             'usebuttontag' => true,
-                            'class' => 'btn-default btn-sm first',
+                            'class' => 'btn-secondary btn-sm first',
                             'value'   => '<span class="'.$editicon.'"></span>' . get_string('edit'),
                             'elementtitle' => get_string('editspecific', 'mahara', $token->tokenid),
                         ),
@@ -880,7 +880,7 @@ function webservice_tokens_form() {
                         'submit'     => array(
                             'type'  => 'button',
                             'usebuttontag' => true,
-                            'class' => 'btn-default btn-sm last',
+                            'class' => 'btn-secondary btn-sm last',
                             'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('delete'),
                             'elementtitle' => get_string('deletespecific', 'mahara', $token->tokenid),
                         ),
@@ -1123,7 +1123,7 @@ function webservice_users_form() {
                         'submit'     => array(
                             'type'  => 'button',
                             'usebuttontag' => true,
-                            'class' => 'btn-default btn-sm first',
+                            'class' => 'btn-secondary btn-sm first',
                             'value'   => '<span class="'. $editicon.'" role="presentation" aria-hidden="true"></span>' . get_string('edit'),
                             'elementtitle' => get_string('editspecific', 'mahara', $user->username),
                         ),
@@ -1142,7 +1142,7 @@ function webservice_users_form() {
                         'submit'     => array(
                             'type'  => 'button',
                             'usebuttontag' => true,
-                            'class' => 'btn-default btn-sm last',
+                            'class' => 'btn-secondary btn-sm last',
                             'value'   => '<span class="'.$deleteicon.'" role="presentation" aria-hidden="true"></span>' . get_string('delete'),
                             'elementtitle' => get_string('deletespecific', 'mahara', $user->username),
                         ),

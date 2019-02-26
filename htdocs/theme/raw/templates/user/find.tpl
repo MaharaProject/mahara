@@ -1,7 +1,7 @@
 {include file="header.tpl"}
     {$form|safe}
 {if $results}
-<div class="card card-default view-container">
+<div class="card card-secondary view-container">
     <h2 id="searchresultsheading" class="card-heading">{str tag=Results}</h2>
     <div id="friendslist" class="list-group">
         {$results.tablerows|safe}

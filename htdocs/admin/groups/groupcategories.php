@@ -96,7 +96,7 @@ jQuery(function($) {
       // item has class, id, type, name, link, linkedto
 
       var edit = $('<button>', {
-        'class':'btn btn-default btn-sm',
+        'class':'btn btn-secondary btn-sm',
         'id':'item' + item.id,
         'type':'button',
         'title':{$getstring['edit']},
@@ -109,7 +109,7 @@ jQuery(function($) {
 
 
       var del = $('<button>', {
-        'class':'btn btn-default btn-sm',
+        'class':'btn btn-secondary btn-sm',
         'id':'item' + item.id,
         'type':'button',
         'title':{$getstring['delete']},
@@ -142,7 +142,7 @@ jQuery(function($) {
 
       // Either a save, a cancel button, or both.
       var savecancel = [];
-      var save = $('<input>', {'type':'button','class':'button btn btn-default btn-add-group'});
+      var save = $('<input>', {'type':'button','class':'button btn btn-secondary btn-add-group'});
       save.on('click', function () { saveitem(item.id); });
 
       var rowtype = 'add';
@@ -157,7 +157,7 @@ jQuery(function($) {
           // The save button says 'update' and there's a cancel button.
           var rowtype = 'edit';
           save.prop('value',{$getstring['update']});
-          var cancel = $('<input>', {'type':'button','class':'button btn btn-sm btn-default','value':{$getstring['cancel']}});
+          var cancel = $('<input>', {'type':'button','class':'button btn btn-sm btn-secondary','value':{$getstring['cancel']}});
           cancel.on('click', closeopenedits);
           savecancel = [save,cancel];
           item.label = {$getstring['edit']};
@@ -186,8 +186,8 @@ jQuery(function($) {
         if (row.hasClass('edit')) {
             row.remove();
         }
-        else if (row.hasClass('hidden')) {
-            row.removeClass('hidden');
+        else if (row.hasClass('d-none')) {
+            row.removeClass('d-none');
         }
     }
   }
@@ -196,7 +196,7 @@ jQuery(function($) {
   function edititem(item) {
       closeopenedits();
       var menuitem = $('#menuitem_'+item.id);
-      menuitem.addClass('hidden');
+      menuitem.addClass('d-none');
       var newrow = editform(item);
       newrow.insertBefore(menuitem)
       $('#name' + item.id).trigger("focus");

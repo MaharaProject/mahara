@@ -32,8 +32,8 @@ jQuery(function($) {
                             $('#addviews').remove();
                             // Disply no page to add message
                             // And hide bulk select pages buttons
-                            $('.select-pages').addClass('hidden');
-                            $('#nopagetoadd').removeClass('hidden');
+                            $('.select-pages').addClass('d-none');
+                            $('#nopagetoadd').removeClass('d-none');
                         }
                     }
                     if (data.message.message) {

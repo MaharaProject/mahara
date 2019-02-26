@@ -152,12 +152,12 @@ return function (target, source, columns, options) {
                 }
 
                 if (self.count > 0) {
-                    self.emptycontent.addClass('hidden');
+                    self.emptycontent.addClass('d-none');
                     self.table.css('display', '');
                 }
                 else {
                     self.table.css('display', 'none');
-                    self.emptycontent.removeClass('hidden');
+                    self.emptycontent.removeClass('d-none');
                 }
             }
 
@@ -168,7 +168,7 @@ return function (target, source, columns, options) {
 
             self.renderdata(response, options);
 
-            self.table.removeClass('hidden');
+            self.table.removeClass('d-none');
 
             try {
                 self.postupdatecallback(response);

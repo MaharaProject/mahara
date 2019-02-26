@@ -9,7 +9,7 @@
 {/if}
 {$form|safe}
 {if $groups}
-<div class="card card-default view-container">
+<div class="card card-secondary view-container">
     <h2 class="card-heading">{str tag=Results}</h2>
     <div id="mygroups" class="list-group">
         {foreach from=$groups item=group}

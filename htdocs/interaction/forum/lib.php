@@ -147,7 +147,7 @@ class PluginInteractionForum extends PluginInteraction {
                 'title'        => get_string('maxindent', 'interaction.forum'),
                 'size'         => 2,
                 'defaultvalue' => isset($maxindent) ? $maxindent : 10,
-                'class'        => (isset($indentmode) && $indentmode == 'max_indent') ? '' : 'hidden',
+                'class'        => (isset($indentmode) && $indentmode == 'max_indent') ? '' : 'd-none',
                 'rules' => array(
                     'integer' => true,
                     'minvalue' => 1,
@@ -180,12 +180,12 @@ jQuery(function($) {
             return;
         }
         if (s.options[s.selectedIndex].val() == 'max_indent') {
-            m.removeClass('hidden');
-            t.removeClass('hidden');
+            m.removeClass('d-none');
+            t.removeClass('d-none');
         }
         else {
-          m.addClass('hidden');
-          t.addClass('hidden');
+          m.addClass('d-none');
+          t.addClass('d-none');
         }
     }
 

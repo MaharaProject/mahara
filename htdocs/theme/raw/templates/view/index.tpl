@@ -76,7 +76,7 @@
     $('.modal').on('shown.bs.modal', function() {
         $('#add-collection-button').trigger("focus");
     });
-    $('.modal').on('hidden.bs.modal', function() {
+    $('.modal').on('d-none.bs.modal', function() {
         $('#addview-button').trigger("focus");
     });
     </script>

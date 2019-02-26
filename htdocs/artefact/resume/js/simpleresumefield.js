@@ -20,15 +20,15 @@ jQuery(function($) {
             submit.removeClass("js-hidden");
             cancel.removeClass("js-hidden");
 
-            displaycontainer.addClass("hidden").removeClass("nojs-hidden-block");
-            editcontainer.addClass("hidden").removeClass("nojs-hidden-block");
+            displaycontainer.addClass("d-none").removeClass("nojs-hidden-block");
+            editcontainer.addClass("d-none").removeClass("nojs-hidden-block");
 
 
 
             if (typeof tinyMCE != 'undefined') {
                 var editor = tinyMCE.get(t),
                 formTop =  container.closest('#main-column-container').attr('id');;
-                $('.mce-toolbar.mce-first').siblings().toggleClass('hidden');
+                $('.mce-toolbar.mce-first').siblings().toggleClass('d-none');
                 editor.show();
                 editor.focus();
                 document.location.href = "#" + formTop;
@@ -56,8 +56,8 @@ jQuery(function($) {
             submitcontainer.addClass("js-hidden");
             submit.addClass("js-hidden");
             cancel.addClass("js-hidden");
-            displaycontainer.removeClass("hidden");
-            editcontainer.removeClass("hidden");
+            displaycontainer.removeClass("d-none");
+            editcontainer.removeClass("d-none");
             if (typeof tinyMCE != 'undefined') {
                 tinyMCE.get(t).hide();
             }

@@ -209,7 +209,7 @@ class PluginSearchElasticsearch extends PluginSearch {
                         ),
                         'submit' => array(
                             'type' => 'button',
-                            'class' => 'btn-default input-group-btn',
+                            'class' => 'btn-secondary input-group-btn',
                             'usebuttontag' => true,
                             'value' => '<span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('go') . '</span>',
                         )
@@ -475,7 +475,7 @@ class PluginSearchElasticsearch extends PluginSearch {
             $resetelements['allreset'] = array(
                 'title' => get_string('resetallindexes', 'search.elasticsearch'),
                 'type' => 'submit',
-                'class' => 'btn-default',
+                'class' => 'btn-secondary',
                 'defaultvalue' => get_string('reset', 'search.elasticsearch'),
             );
 

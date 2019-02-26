@@ -208,7 +208,7 @@ return function(id, list, heading, script, extradata) {
         }
 
         if (self.heading) {
-            $(self.heading).removeClass('hidden');
+            $(self.heading).removeClass('d-none');
         }
 
         // Focus management based on whether the user searched for something or just changed the page

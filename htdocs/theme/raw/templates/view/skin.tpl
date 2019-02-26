@@ -76,7 +76,7 @@
     </div>
     <div class="col-md-9">
         <div class="collapsible-group skins">
-            <div class="card card-default collapsible collapsible-group first">
+            <div class="card card-secondary collapsible collapsible-group first">
                 <h3 class="card-heading">
                     <a href="#userskins" data-toggle="collapse" aria-expanded="false" aria-controls="#userskins">
                         {str tag=userskins section=skin}
@@ -97,7 +97,7 @@
                 </div>
             </div>
             {if $favorskins}
-            <div class="card card-default collapsible collapsible-group">
+            <div class="card card-secondary collapsible collapsible-group">
                 <h3 class="card-heading">
                     <a href="#favorskins" data-toggle="collapse" aria-expanded="false" aria-controls="#favorskins" class="collapsed">
                         {str tag=favoriteskins section=skin}
@@ -118,7 +118,7 @@
                 </div>
             </div>
             {/if}
-            <div class="card card-default collapsible collapsible-group last">
+            <div class="card card-secondary collapsible collapsible-group last">
                 <h3 class="card-heading">
                     <a href="#siteskins" data-toggle="collapse" aria-expanded="false" aria-controls="#siteskins" class="collapsed">
                         {str tag=siteskins section=skin}

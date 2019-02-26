@@ -18,7 +18,7 @@
         <p class="lead">{str tag=networkingpagedescription section=admin}</p>
     </div>
     <div class="col-md-9">
-        <div class="card card-default">
+        <div class="card card-secondary">
             <div class="card-body">
                 {$networkingform|safe}
             </div>

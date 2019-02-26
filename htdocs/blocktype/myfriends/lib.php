@@ -113,7 +113,7 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
                             'add' => array(
                                 'type' => 'button',
                                 'usebuttontag' => true,
-                                'class' => 'btn-default',
+                                'class' => 'btn-secondary',
                                 'value' => '<span class="icon icon-user-plus icon-lg left" role="presentation" aria-hidden="true"></span>' .get_string('addtomyfriends', 'group')
                             ),
                             'id' => array(

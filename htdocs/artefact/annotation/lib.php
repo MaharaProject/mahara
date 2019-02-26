@@ -982,7 +982,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             $submit = array(
                 'type'  => 'submit',
                 'value' => get_string('placeannotationfeedback', 'artefact.annotation'),
-                'class' => 'btn-default'
+                'class' => 'btn-secondary'
             );
             $form['elements']['submit'] = $submit;
             // Dont use the 'Processing...' bit on the submit button
@@ -1339,7 +1339,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
-            'class' => 'btn-default',
+            'class' => 'btn-secondary',
             'value' => array(get_string('placeannotationfeedback', 'artefact.annotation'), get_string('cancel')),
             'goto' => '/' . $view->get_url(false),
         );
@@ -1398,7 +1398,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 'submit'  => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-default btn-sm',
+                    'class' => 'btn-secondary btn-sm',
                     'value' => '<span class="icon icon-trash text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('reallydeletethisannotationfeedback', 'artefact.annotation'),

@@ -11,8 +11,8 @@
 // TODO: i18n
 
 jQuery(function($) {
-    $('#whatviewsselection').removeClass('hidden');
-    $('#whatcollectionsselection').removeClass('hidden');
+    $('#whatviewsselection').removeClass('d-none');
+    $('#whatcollectionsselection').removeClass('d-none');
 
     var containers = {
         'views': {'container': $('#whatviews'), 'visible': false},

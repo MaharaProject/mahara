@@ -6,7 +6,7 @@
 
     <span id="collectionbtns" class="collection-nav-btns">
       <nav class="custom-dropdown dropdown">
-          <ul class="hidden">
+          <ul class="d-none">
               {foreach from=$collection item=view name=page}
               <li>
                   {if $view->view == $viewid}

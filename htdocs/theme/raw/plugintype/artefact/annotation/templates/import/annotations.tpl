@@ -53,7 +53,7 @@
                         <h4 class="title list-group-item-heading">
                             {$feedback.title|str_shorten_text:80:true}
                         </h4>
-                        <div id="{$feedback.id}_desc" class="detail hidden">
+                        <div id="{$feedback.id}_desc" class="detail d-none">
                             {$feedback.description|clean_html|safe}
                         </div>
                         <span id="annotationfeedbackstatus{$feedback.id}" class="annotationfeedbackstatus text-small text-midtone">

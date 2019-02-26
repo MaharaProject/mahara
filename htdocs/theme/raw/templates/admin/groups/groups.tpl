@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {$searchform|safe}
-<div class="card card-default view-container">
+<div class="card card-secondary view-container">
 
     <table id="admgroupslist" class="fullwidth table table-striped table-group-list">
         <thead>

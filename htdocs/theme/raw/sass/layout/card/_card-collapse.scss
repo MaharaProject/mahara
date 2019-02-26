@@ -1,28 +1,28 @@
-// This file handles/modifies both real collapsible panels,
-// and collapsible pieform fieldsets (which are styled to look like panels)
+// This file handles/modifies both real collapsible cards,
+// and collapsible pieform fieldsets (which are styled to look like cards)
 
-.panel.collapsible {
+.card.collapsible {
     margin-bottom: 0;
     border-radius: 0;
-    .panel-heading a {
+    .card-heading a {
         border-radius: 0;
     }
     &.form-group {
         display:block;
     }
-    .panel {
+    .card {
         border-radius: 0;
     }
 }
 
 
 .pieform-fieldset,
-.panel {
+.card {
     &.collapsible {
         @include box-shadow(none);
         &.last {
             legend,
-            .panel-heading {
+            .card-heading {
                 @include border-bottom-radius($border-radius-sm);
                 a {
                     &.collapsed {
@@ -41,7 +41,7 @@
                 @include border-bottom-radius($border-radius-sm);
             }
         }
-        &.first .panel-heading a {
+        &.first .card-heading a {
             @include border-top-radius(3px);
         }
 
@@ -61,8 +61,8 @@
             padding: 0 30px;
         }
 
-        &.has-attachment .panel-heading,
-        .collapsible-group & .panel-heading,
+        &.has-attachment .card-heading,
+        .collapsible-group & .card-heading,
         legend h4,
         legend h3  {
             margin: 0;
@@ -128,13 +128,13 @@
 }
 
 // @todo: Rethink this, it's too complex
-.panel.collapsible:not(.panel-secondary) {
+.card.collapsible:not(.card-block) {
     border-width: 0;
     // For attachment collapsible
     &.has-attachment {
         border-radius: $border-radius-sm;
         border-width: 1px;
-        .panel-heading a {
+        .card-heading a {
             border-width: 0;
             &:not(.collapsed) {
                 border-bottom-width: 1px;
@@ -144,22 +144,22 @@
 
     // Remove border from heading - add to link tag.
     // In this case we have a nested a tag that takes up the whole of the heading space
-    // rather than applying the panel-header to the link
-    .panel-heading {
+    // rather than applying the card-header to the link
+    .card-heading {
         border: 0;
         a {
             text-shadow: 1px 0 0 $text-shadow;
         }
     }
 
-    &.panel-primary{
-        .panel-heading a {
+    &.card-primary{
+        .card-heading a {
             font-weight: bold;
         }
     }
 
     &.notification {
-        .panel-footer {
+        .card-footer {
             margin-bottom: 20px;
         }
         .no-footer {
@@ -168,26 +168,26 @@
         }
     }
 
-    .panel-body,
-    .panel-footer,
-    .panel-heading a {
+    .card-body,
+    .card-footer,
+    .card-heading a {
         border: 1px solid $card-border-color;
     }
 
-    .panel-heading a,
-    .panel-body:not(.no-footer) {
+    .card-heading a,
+    .card-body:not(.no-footer) {
         border-bottom-width: 0;
     }
 
     // last class will add bottom border to collapsible element(s)
     // Except has-attachment, it doesn't need one.
-    &.last .panel-heading a.collapsed {
+    &.last .card-heading a.collapsed {
         border-bottom-width: 1px;
     }
     // Style variations
-    // @each $status, $bgcolor in $panel-background {
-    //      &.panel-#{$status} {
-    //         .panel-heading a {
+    // @each $status, $bgcolor in $card-background {
+    //      &.card-#{$status} {
+    //         .card-heading a {
     //             background-color: darken($bgcolor, 3%);
     //             &.collapsed {
     //                 background-color: $bgcolor;
@@ -197,13 +197,13 @@
     //                background-color: darken($bgcolor, 3%);
     //             }
     //         }
-    //         .panel-footer,
-    //         .panel-body,
-    //         .panel-heading a {
+    //         .card-footer,
+    //         .card-body,
+    //         .card-heading a {
     //             border: 1px solid darken($bgcolor, 15%);
     //         }
-    //         .panel-heading a,
-    //         .panel-body:not(.no-footer) {
+    //         .card-heading a,
+    //         .card-body:not(.no-footer) {
     //             border-bottom-width:0;
     //         }
     //     }

@@ -25,7 +25,7 @@
           {$posts.tablerows|safe}
         </div>
         {if $posts.pagination}
-        <div id="blogpost_page_container{if $blockid}_{$blockid}{/if}" class="hidden">{$posts.pagination|safe}</div>
+        <div id="blogpost_page_container{if $blockid}_{$blockid}{/if}" class="d-none">{$posts.pagination|safe}</div>
         {/if}
         {if $license}
           <div class="license">
@@ -37,7 +37,7 @@
     <script>
     jQuery(function($) {literal}{{/literal}
         {$posts.pagination_js|safe}
-        $('#blogpost_page_container{if $blockid}_{$blockid}{/if}').removeClass('hidden');
+        $('#blogpost_page_container{if $blockid}_{$blockid}{/if}').removeClass('d-none');
     {literal}}{/literal});
     </script>
     {/if}

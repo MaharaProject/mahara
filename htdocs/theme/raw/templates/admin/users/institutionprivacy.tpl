@@ -18,7 +18,7 @@
     <br>
 {/if}
 <div id="privacy-text" class="tab">
-    <div class="card card-default" id="privacyst">
+    <div class="card card-secondary" id="privacyst">
         <div class="last form-group collapsible-group">
             <fieldset class="pieform-fieldset last collapsible">
                 <legend>
@@ -43,7 +43,7 @@
     <div class="lead">{str tag="institutionprivacypagedescription" section="admin"}</div>
 </div>
 <div id="termsandconditions-text" class="tab">
-    <div class="card card-default" id="terms">
+    <div class="card card-secondary" id="terms">
         <div class="last form-group collapsible-group">
             <fieldset class="pieform-fieldset last collapsible">
                 <legend>
@@ -68,13 +68,13 @@
     <div class="lead">{str tag="institutiontermspagedescription" section="admin"}</div>
 </div>
 {if $versionid !== null && in_array($versionid, $latestVersions)}
-    <div class="card card-default">
+    <div class="card card-secondary">
          <div class="card-body">
             {$pageeditform|safe}
         </div>
     </div>
 {else}
-    <div id="results" class="card card-default">
+    <div id="results" class="card card-secondary">
         <div class="table-responsive">
             <table id="adminstitutionslist" class="fullwidth table table-striped">
                 <thead>
@@ -103,7 +103,7 @@
             </table>
         </div>
     </div>
-    <div id="no-results" class="card card-default js-hidden">
+    <div id="no-results" class="card card-secondary js-hidden">
         <div id="institutionprivacylistcontainer">
             <div class="no-results ">
                 <span id="no-privacy" class="nocontent">{str tag="noinstitutionprivacy" section="admin"}</span>

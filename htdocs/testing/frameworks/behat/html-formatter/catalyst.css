@@ -335,7 +335,7 @@ pre {
 
 .switchers a,
 .btn,
-.btn-default {
+.btn-secondary {
     background-image: none;
     display: inline-block;
     margin-bottom: 0;
@@ -361,15 +361,15 @@ pre {
 
 .switchers a:hover,
 .switchers a:focus,
-.btn-default:hover,
-.btn-default:focus {
+.btn-secondary:hover,
+.btn-secondary:focus {
     color: #333;
     background-color: #e0e0e0;
     border-color: #adadad;
 }
 
 .switchers a:active,
-.btn-default:active {
+.btn-secondary:active {
     color: #333;
     background-color: #e0e0e0;
     border-color: #adadad;

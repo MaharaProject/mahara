@@ -103,7 +103,7 @@ $allowcomments = $view->get('allowcomments');
 
 $form['elements']['more'] = array(
     'type' => 'fieldset',
-    'class' => $view->get('type') == 'profile' ? ' hidden' : 'last with-heading',
+    'class' => $view->get('type') == 'profile' ? ' d-none' : 'last with-heading',
     'collapsible' => true,
     'collapsed' => true,
     'legend' => get_string('moreoptions', 'view'),
@@ -197,10 +197,10 @@ else {
 jQuery(function($) {
     function update_retainview() {
         if ($('#accessurl_template').prop('checked')) {
-            $('#accessurl_retainview_container').removeClass('hidden');
+            $('#accessurl_retainview_container').removeClass('d-none');
         }
         else {
-            $('#accessurl_retainview_container').addClass('hidden');
+            $('#accessurl_retainview_container').addClass('d-none');
             $('#accessurl_retainview').prop('checked',false);
             update_loggedin_access();
         }
@@ -214,7 +214,7 @@ EOF;
 }
 
 if (!$allowcomments) {
-    $form['elements']['more']['elements']['approvecomments']['class'] = 'hidden';
+    $form['elements']['more']['elements']['approvecomments']['class'] = 'd-none';
 }
 $allowcomments = json_encode((int) $allowcomments);
 
@@ -224,17 +224,17 @@ jQuery(function($) {
     function update_comment_options() {
         allowcomments = $('#accessurl_allowcomments').prop('checked');
         if (allowcomments) {
-            $('#accessurl_approvecomments').removeClass('hidden');
-            $('#accessurl_approvecomments_container').removeClass('hidden');
+            $('#accessurl_approvecomments').removeClass('d-none');
+            $('#accessurl_approvecomments_container').removeClass('d-none');
             $('#accesslisttable .commentcolumn').each(function () {
-                $(this).addClass('hidden');
+                $(this).addClass('d-none');
             });
         }
         else {
 
-            $('#accessurl_approvecomments_container').addClass('hidden');
+            $('#accessurl_approvecomments_container').addClass('d-none');
             $('#accesslisttable .commentcolumn').each(function () {
-                $(this).removeClass('hidden');
+                $(this).removeClass('d-none');
             });
         }
     }
@@ -529,7 +529,7 @@ $newform = array(
         'submit' => array(
             'type'        => 'button',
             'usebuttontag' => true,
-            'class'       => 'btn-default',
+            'class'       => 'btn-secondary',
             'elementtitle' => get_string('generatesecreturl', 'view', hsc(isset($title) ? $title : '')),
             'value'       =>  '<span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span> ' .get_string('newsecreturl', 'view'),
         ),
@@ -621,7 +621,7 @@ for ($i = 0; $i < count($records); $i++) {
                 'submit' => array(
                     'type'         => 'button',
                     'usebuttontag' => true,
-                    'class'        => 'btn-default btn-xs',
+                    'class'        => 'btn-secondary btn-xs',
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
                     'value'        => '<span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',

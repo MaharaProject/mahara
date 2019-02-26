@@ -1,5 +1,5 @@
 {include file="search:elasticsearch:facets.tpl" facets=$facets}
-<div class="subpage universalsearch card card-default">
+<div class="subpage universalsearch card card-secondary">
     <div id="resultswrap" class="{if $selected eq 'Text' || $selected eq 'Media' || $selected eq 'Portfolio'}filter{else}nofilter{/if}">
         {if $totalresults > 0}
             <div class="elasticsearch-filters clearfix">

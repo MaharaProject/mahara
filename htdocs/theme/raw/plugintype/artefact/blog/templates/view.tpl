@@ -27,11 +27,11 @@
     <div id="postlist" class="postlist list-group list-group-lite">
         {$posts.tablerows|safe}
     </div>
-    <div id="blogpost_page_container" class="hidden">{$posts.pagination|safe}</div>
+    <div id="blogpost_page_container" class="d-none">{$posts.pagination|safe}</div>
     <script>
     jQuery(function($) {literal}{{/literal}
         {$posts.pagination_js|safe}
-        $('#blogpost_page_container').removeClass('hidden');
+        $('#blogpost_page_container').removeClass('d-none');
         {literal}}{/literal});
     </script>
     {else}

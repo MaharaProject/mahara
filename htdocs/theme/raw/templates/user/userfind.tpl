@@ -70,7 +70,7 @@
                     <a href="#addfriend{$user->id}_addfriend_submit" data-triggersubmit="addfriend{$user->id}_addfriend_submit">
                         {str tag='addtofriendslist' section='group'}
                     </a>
-                    <div class="hidden">
+                    <div class="d-none">
                     {$user->makefriend|safe}
                     </div>
                 </li>

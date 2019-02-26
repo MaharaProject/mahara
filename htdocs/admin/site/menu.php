@@ -86,10 +86,10 @@ jQuery(function($) {
       // item has id, type, name, link, linkedto
       var type = eval(item.type);
       var linkedto = $('<a>', {'href':item.linkedto, 'text': item.linktext});
-      var edit = $('<button>', {'type':'button','class':'button btn btn-default btn-sm','title':{$getstring['edit']}})
+      var edit = $('<button>', {'type':'button','class':'button btn btn-secondary btn-sm','title':{$getstring['edit']}})
         .append($('<span>', {'class':'icon icon-lg icon-pencil', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['edit']}}));
       edit.on('click', function () { edititem(item); });
-      var del = $('<button>', {'type':'button','class':'button btn btn-default btn-sm','title': {$getstring['delete']}})
+      var del = $('<button>', {'type':'button','class':'button btn btn-secondary btn-sm','title': {$getstring['delete']}})
       .append($('<span>', {'class':'icon icon-lg icon-trash text-danger', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['delete']}}));
       del.on('click', function() { delitem(item.id); });
       var buttonGroup = $('<span>', {'class':'btn-group'}).append(edit, del);
@@ -117,7 +117,7 @@ jQuery(function($) {
 
       // Either a save, a cancel button, or both.
       var savecancel = [];
-      var save = $('<button>', {'type':'button','class':'button btn btn-default btn-sm','title': {$getstring['update']}})
+      var save = $('<button>', {'type':'button','class':'button btn btn-secondary btn-sm','title': {$getstring['update']}})
         .append($('<span>', {'class':'icon icon-plus icon-lg', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['update']}}));
       save.on('click', function () { saveitem(item.id); });
 
@@ -207,8 +207,8 @@ jQuery(function($) {
           if (row.hasClass('edit')) {
               row.remove();
           }
-          else if (row.hasClass('hidden')) {
-            row.removeClass('hidden');
+          else if (row.hasClass('d-none')) {
+            row.removeClass('d-none');
           }
       }
   }
@@ -229,7 +229,7 @@ jQuery(function($) {
   function edititem(item) {
       closeopenedits();
       var menuitem = $('#menuitem_'+item.id);
-      menuitem.addClass('hidden');
+      menuitem.addClass('d-none');
       var newrow = editform(item);
       newrow.insertBefore(menuitem);
   }

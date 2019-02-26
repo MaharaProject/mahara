@@ -426,7 +426,7 @@ tinyMCE.init({
         });
         ed.on('LoadContent', function(e) {
             // Hide all the 2nd/3rd row menu buttons
-            jQuery('.mce-toolbar.mce-first').siblings().addClass('hidden');
+            jQuery('.mce-toolbar.mce-first').siblings().addClass('d-none');
             // The tinymce fullscreen mode does not work properly in a transformed container div
             // such as div.vertcentre
             // and IE doesn't like a preset z-index
@@ -4320,7 +4320,7 @@ function build_pagination($params) {
              // add ellipsis if pages skipped
             $text = $i + 1;
             if ($k != 0 && $prevpagenum < $i - 1) {
-                $text = '<span class="metadata hidden-xs">...</span>' . ($i + 1);
+                $text = '<span class="metadata d-none d-sm-block">...</span>' . ($i + 1);
             }
 
             if ($i == $page) {
@@ -4379,7 +4379,7 @@ function build_pagination($params) {
                 join(' ', $strlimitoptions) .
             '</select></span>
             <input class="currentoffset" type="hidden" name="' . $params['offsetname'] . '" value="' . $params['offset'] . '"/>
-            <input class="pagination js-hidden hidden" type="submit" name="submit" value="' . get_string('change') . '"/>
+            <input class="pagination js-hidden d-none" type="submit" name="submit" value="' . get_string('change') . '"/>
         </form>';
     }
     // if $params['count'] is less than 10 add the setlimitselect as a hidden field so that elasticsearch js can access it
@@ -4448,7 +4448,7 @@ function build_showmore_pagination($params) {
     if ((int) $params['count'] > ((int) $params['offset'] + (int) $params['limit'])) {
         // Need to add 'showmore' button
         $output  = '<div class="showmore">' . "\n";
-        $output .= '    <div id="' . $params['databutton'] . '" class="btn btn-default"';
+        $output .= '    <div id="' . $params['databutton'] . '" class="btn btn-secondary"';
         $output .= ' data-orderby="' . $params['orderby'] . '"';
         $output .= ' data-offset="' . ((int) $params['offset'] + (int) $params['limit']) . '"';
         $output .= ' data-group="' . (isset($params['group']) ? $params['group'] : '') . '"';
@@ -4667,7 +4667,7 @@ function language_select_form() {
                         'changelang' => array(
                             'type' => 'button',
                             'usebuttontag' => true,
-                            'class' => 'btn-default input-group-btn',
+                            'class' => 'btn-secondary input-group-btn',
                             'value' => get_string('change'),
                         )
                     )

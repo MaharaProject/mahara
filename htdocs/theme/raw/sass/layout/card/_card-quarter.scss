@@ -1,7 +1,7 @@
 // Styles for the new page/collection layout
 
-.panel-collection,
-.panel-view {
+.card-collection,
+.card-view {
     width: 50%;
     float: left;
     padding-left: 15px;
@@ -22,14 +22,14 @@
             ) !important;
     }
 
-    .panel-default {
+    .card-secondary {
         position: relative;
         height: 100%;
         border: 1px solid $card-border-color;
         box-shadow: 0 1px 1px rgba(0,0,0,.05);
     }
 
-    .panel-heading {
+    .card-heading {
         background-color: transparent;
         border-bottom-color: transparent;
         .title-link {
@@ -41,11 +41,11 @@
         }
     }
 
-    .panel-body {
+    .card-body {
         padding: 5px;
     }
 
-    .panel-footer {
+    .card-footer {
         width: 100%;
         padding: 0;
         border-top: 0;
@@ -77,7 +77,7 @@
 
         .dropdown-menu {
             top: 100%;
-            width: 200%; // to allow it to expand to almost 2 panel blocks wide
+            width: 200%; // to allow it to expand to almost 2 card blocks wide
             max-height: 200px;
             overflow: auto;
             padding: 0;
@@ -153,16 +153,16 @@
         }
     }
 
-    .panel-warning {
+    .card-warning {
         background-color: $state-warning-bg;
         color: $state-warning-text;
         border-color: $state-warning-border;
     }
 }
 
-.panel-collection {
+.card-collection {
     position: relative;
-    .collection-stack.panel-warning {
+    .collection-stack.card-warning {
         &:before,
         &:after {
             background-color: $state-warning-bg;
@@ -194,8 +194,8 @@
     }
 }
 
-// Make collection list dropdown align right on the right most panel
-.panel-quarter {
+// Make collection list dropdown align right on the right most card
+.card-quarter {
     &:nth-child(even) .collection-list .dropdown-menu,
     &:nth-child(even) .page-access .dropdown-menu {
         right: 0;

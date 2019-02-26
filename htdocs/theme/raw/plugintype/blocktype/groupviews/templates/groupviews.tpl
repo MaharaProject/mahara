@@ -6,7 +6,7 @@
         </ul>
 
         {if $groupviews.pagination}
-        <div id="groupviews_page_container" class="hidden pagination-container">
+        <div id="groupviews_page_container" class="d-none pagination-container">
             {$groupviews.pagination|safe}
         </div>
         {/if}
@@ -15,7 +15,7 @@
         <script>
             jQuery(function($) {literal}{{/literal}
                 {$groupviews.pagination_js|safe}
-                $('#groupviews_page_container').removeClass('hidden');
+                $('#groupviews_page_container').removeClass('d-none');
             {literal}}{/literal});
         </script>
         {/if}
@@ -37,7 +37,7 @@
         </ul>
 
         {if $sharedviews.pagination}
-            <div id="sharedviews_page_container" class="hidden pagination-container">
+            <div id="sharedviews_page_container" class="d-none pagination-container">
                 {$sharedviews.pagination|safe}
             </div>
         {/if}
@@ -46,7 +46,7 @@
         <script>
             jQuery(function($) {literal}{{/literal}
                 {$sharedviews.pagination_js|safe}
-                $('#sharedviews_page_container').removeClass('hidden');
+                $('#sharedviews_page_container').removeClass('d-none');
             {literal}}{/literal});
         </script>
         {/if}
@@ -69,7 +69,7 @@
         </ul>
 
         {if $sharedcollections.pagination}
-            <div id="sharedcollections_page_container" class="hidden pagination-container">
+            <div id="sharedcollections_page_container" class="d-none pagination-container">
             {$sharedcollections.pagination|safe}
             </div>
         {/if}
@@ -78,7 +78,7 @@
         <script>
             jQuery(function($) {literal}{{/literal}
                 {$sharedcollections.pagination_js|safe}
-                $('#sharedcollections_page_container').removeClass('hidden');
+                $('#sharedcollections_page_container').removeClass('d-none');
             {literal}}{/literal});
         </script>
         {/if}
@@ -99,7 +99,7 @@
             {$allsubmitted.tablerows|safe}
         </ul>
         {if $allsubmitted.pagination}
-            <div id="allsubmitted_page_container" class="hidden pagination-container">
+            <div id="allsubmitted_page_container" class="d-none pagination-container">
                 {$allsubmitted.pagination|safe}
             </div>
         {/if}
@@ -107,7 +107,7 @@
         <script>
             jQuery(function($) {literal}{{/literal}
                 {$allsubmitted.pagination_js|safe}
-                $('#allsubmitted_page_container').removeClass('hidden');
+                $('#allsubmitted_page_container').removeClass('d-none');
             {literal}}{/literal});
         </script>
         {/if}
@@ -126,7 +126,7 @@
         {$nosubmissions.tablerows|safe}
     </ul>
     {if $nosubmissions.pagination}
-        <div id="nosubmissions_page_container" class="hidden pagination-container">
+        <div id="nosubmissions_page_container" class="d-none pagination-container">
             {$nosubmissions.pagination|safe}
         </div>
     {/if}
@@ -134,7 +134,7 @@
     <script>
         jQuery(function($) {literal}{{/literal}
             {$nosubmissions.pagination_js|safe}
-            $('#nosubmissions_page_container').removeClass('hidden');
+            $('#nosubmissions_page_container').removeClass('d-none');
         {literal}}{/literal});
     </script>
     {/if}

@@ -207,7 +207,7 @@ if (!empty($dbservices)) {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn-default btn-sm',
+                                                'class' => 'btn-secondary btn-sm',
                                                 'value'   => '<span class="icon icon-refresh"></span> ' . get_string('gen', 'auth.webservice'),
                                                 'elementtitle' => get_string('gen', 'auth.webservice')
                                             ),
@@ -228,7 +228,7 @@ if (!empty($dbservices)) {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn-default btn-sm',
+                                                'class' => 'btn-secondary btn-sm',
                                                 'value' => '<span class="icon icon-trash icon-lg text-danger left" role="presentation" aria-hidden="true"></span>' . get_string('delete'),
                                                 'elementtitle' => get_string('deletespecific', 'mahara', $service->id),
                                             ),

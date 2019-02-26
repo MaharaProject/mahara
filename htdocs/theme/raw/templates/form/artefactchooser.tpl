@@ -6,7 +6,7 @@
 {/if}
 <div id="artefactchooser-body">
     <div class="artefactchooser-splitter">
-        <div id="artefactchooser-searchform" class="artefactchooser-search input-group clearfix {if !$.request.s} hidden{/if}"> {* Use a smarty var, not smarty.request *}
+        <div id="artefactchooser-searchform" class="artefactchooser-search input-group clearfix {if !$.request.s} d-none{/if}"> {* Use a smarty var, not smarty.request *}
             <label class="sr-only" for="artefactchooser-searchfield">
                 {str tag=search section=mahara}
             </label>

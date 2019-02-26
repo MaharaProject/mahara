@@ -108,7 +108,7 @@
     &.fake-form {
         border: 0;
         padding: 0;
-        .collapsible-group .panel.collapsible & {
+        .collapsible-group .card.collapsible & {
             border: 0;
             padding: 0;
         }
@@ -117,7 +117,7 @@
     // this is a weird and somewhat broken case where form renderers are being use to render regular html
     &.html form {
         display: block;
-        .collapsible-group .panel.collapsible & .form-group {
+        .collapsible-group .card.collapsible & .form-group {
             border: 0;
             padding: 0;
         }
@@ -567,7 +567,7 @@
     }
 }
 
-.panel .form-group-nested {
+.card .form-group-nested {
     padding-bottom: 20px;
 }
 

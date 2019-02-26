@@ -9,7 +9,7 @@
 {elseif $disabledprotocols}
     <div class="error alert alert-warning">{str tag=nowsprotocolsenabled section='auth.webservice' arg1=$disabledprotocols}</div>
 {else}
-    <div class="card card-default card-body">
+    <div class="card card-secondary card-body">
     {$form|safe}
     </div>
 {/if}

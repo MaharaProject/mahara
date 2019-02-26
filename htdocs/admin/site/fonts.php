@@ -96,7 +96,7 @@ $previewform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'class' => 'btn-default',
+            'class' => 'btn-secondary',
             'value' => get_string('preview', 'skin')
         )
     )

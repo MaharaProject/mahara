@@ -1,5 +1,5 @@
-// Display objects in panels differently
-.panel-body {
+// Display objects in cards differently
+.card-body {
     ul:not(.profile-info) {
         font-size: 0.9em;
         &:not(.list-unstyled):not(.unstyled):not(.select2-selection__rendered) {
@@ -11,7 +11,7 @@
         }
     }
     .sidebar & .form-group,
-    .login-panel & .form-group {
+    .login-card & .form-group {
         padding: 8px 0 8px 0;
     }
     .form-group.login{
@@ -20,10 +20,10 @@
             padding: 0;
         }
     }
-    > .panel-footer,
-    form .panel-footer {
+    > .card-footer,
+    form .card-footer {
         clear:both;
-        margin: 15px -15px -15px; //alter padding for panel footers inside panel-body (needed for some forms) c.f. login form
+        margin: 15px -15px -15px; //alter padding for card footers inside card-body (needed for some forms) c.f. login form
     }
     .collapse & {
         padding-bottom: 0;

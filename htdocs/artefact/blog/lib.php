@@ -598,7 +598,7 @@ class ArtefactTypeBlog extends ArtefactType {
                 'submit' => array(
                     'type' => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-default btn-sm last',
+                    'class' => 'btn-secondary btn-sm last',
                     'alt' => get_string('deletespecific', 'mahara', $title),
                     'elementtitle' => get_string('delete'),
                     'confirm' => $confirm,
@@ -1225,7 +1225,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 ),'submit' => array(
                     'type' => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-default btn-sm publish',
+                    'class' => 'btn-secondary btn-sm publish',
                     'value' => $strchangepoststatus,
                 ),
             ),
@@ -1251,7 +1251,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 'submit' => array(
                     'type' => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-default btn-sm last',
+                    'class' => 'btn-secondary btn-sm last',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
                     'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('deletespecific', 'mahara', $title) . '</span>',

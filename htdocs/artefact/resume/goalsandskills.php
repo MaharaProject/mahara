@@ -31,11 +31,11 @@ $js = '
 jQuery(function($) {
     $("a.goaltitle").on("click", function(e) {
         e.preventDefault();
-        $j("#" + this.id + "_desc").toggleClass("hidden");
+        $j("#" + this.id + "_desc").toggleClass("d-none");
     });
     $("a.skilltitle").on("click", function(e) {
         e.preventDefault();
-        $("#" + this.id + "_desc").toggleClass("hidden");
+        $("#" + this.id + "_desc").toggleClass("d-none");
     });
 });';
 

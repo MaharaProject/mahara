@@ -680,7 +680,7 @@ if (empty($suspended)) {
             ),
             'submit' => array(
                 'type'  => 'submit',
-                'class' => 'btn-default',
+                'class' => 'btn-secondary',
                 'value' => get_string('suspenduser','admin'),
             ),
         )
@@ -699,7 +699,7 @@ else {
             ),
             'submit' => array(
                 'type'  => 'submit',
-                'class' => 'btn-default',
+                'class' => 'btn-secondary',
                 'value' => get_string('unsuspenduser','admin'),
             ),
         )
@@ -749,7 +749,7 @@ $deleteform = pieform(array(
         'submit' => array(
             'type' => 'button',
             'usebuttontag' => true,
-            'class' => 'btn-default',
+            'class' => 'btn-secondary',
             'value'          => '<span class="icon icon-trash icon-lg text-danger left" role="presentation" aria-hidden="true"></span><span>'. get_string('deleteuser', 'admin') . '</span>',
             'confirm' => get_string('confirmdeleteuser', 'admin'),
         ),
@@ -845,7 +845,7 @@ foreach ($institutions as $i) {
             ),
             $i->institution.'_remove' => array(
                 'type'  => 'submit',
-                'class' => 'btn-default',
+                'class' => 'btn-secondary',
                 'value' => get_string('removeuserfrominstitution', 'admin'),
                 'confirm' => get_string('confirmremoveuserfrominstitution', 'admin'),
             )

@@ -132,7 +132,7 @@ jQuery(function($) {
         var element = todo.shift();
 
         if (!element) {
-            $('#installdone').removeClass('hidden');
+            $('#installdone').removeClass('d-none');
             $('html, body').animate({ scrollTop: $('#installdone').offset().top }, 'slow');
             return; // done
         }

@@ -110,7 +110,7 @@ h2 {
 }
 
 h2, h3, h4, h5, legend {
-    &.panel-heading {
+    &.card-heading {
         margin: 0;
         font-size: 16px;
     }
@@ -288,7 +288,7 @@ pre {
 /* headings in html entered by user neutralised */
 .myblogs,
 .content-text,
-.panel-body,
+.card-body,
 #resumefieldform_coverletterdisplay_container,
 #resumefieldform_interestdisplay_container,
 .note-name div,

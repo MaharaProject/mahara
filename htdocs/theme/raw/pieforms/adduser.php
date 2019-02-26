@@ -3,7 +3,7 @@ echo $form_tag;
 ?>
 
     <div class="card-items card-items-no-margin">
-        <div class="step step1 card card-default first" id="step1">
+        <div class="step step1 card card-secondary first" id="step1">
             <h3 class="card-heading"><?php echo get_string('usercreationmethod', 'admin'); ?></h3>
             <div class="card-body">
                 <div class="choice">
@@ -37,7 +37,7 @@ echo $form_tag;
         </div>
 
 
-        <div class="step step2 card card-default">
+        <div class="step step2 card card-secondary">
             <h3 class="card-heading"><?php echo get_string('basicdetails', 'admin'); ?></h3>
             <div class="card-body">
                 <?php foreach (array('username', 'password', 'staff', 'admin', 'authinstance', 'quota', 'institutionadmin') as $field) { ?>
@@ -60,7 +60,7 @@ echo $form_tag;
             </div>
         </div>
 
-        <div class="step step3 card card-default">
+        <div class="step step3 card card-secondary">
             <h3 class="card-heading"><?php echo get_string('create', 'admin'); ?></h3>
             <div class="card-body">
                 <!-- Button trigger modal -->

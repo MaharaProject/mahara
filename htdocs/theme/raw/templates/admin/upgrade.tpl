@@ -7,7 +7,7 @@
     <div class="js-hidden alert alert-danger" id="jsrequiredforupgrade">
         {str tag=jsrequiredforupgrade section=admin}
     </div>
-    <div class="card card-default">
+    <div class="card card-secondary">
         <table class="table upgrade-list">
             <thead>
                 <tr>
@@ -33,7 +33,7 @@
             {/foreach}
             </tbody>
         </table>
-        <div id="installdone" class="hidden nojs-hidden-block card-body">
+        <div id="installdone" class="d-none nojs-hidden-block card-body">
             {str section=admin tag=successfullyinstalled}
             <a href="{$WWWROOT}admin/upgrade.php?finished=1">
                 {str section=admin tag=continue}

@@ -41,7 +41,7 @@ jQuery(function($) {
             heading = $(tabcontent[i]).find('legend h4').first().text();
 
             // if the tab-pane isn't hidden
-            if (!$(tabcontent[i]).hasClass('hidden')) {
+            if (!$(tabcontent[i]).hasClass('d-none')) {
                 listitem = '<li role="presentation" aria-hidden="true">' +
                     '<a href="#'+id+'" role="tab" data-toggle="tab" aria-controls="'+id+'" aria-expanded="false">'+heading+'</a>' +
                 '</li>';
@@ -53,21 +53,21 @@ jQuery(function($) {
         mahara.tabnav.find('li:first-child a').tab('show');
         if ($(mahara.tabnav.find('li:first-child a').attr('href')).find('.requiredmarker').length) {
             // show 'required' header message
-            mahara.tabnav.closest('form').find('.requiredmarkerdesc').removeClass('hidden');
+            mahara.tabnav.closest('form').find('.requiredmarkerdesc').removeClass('d-none');
         }
         else {
             // hide 'required' header message
-            mahara.tabnav.closest('form').find('.requiredmarkerdesc').addClass('hidden');
+            mahara.tabnav.closest('form').find('.requiredmarkerdesc').addClass('d-none');
         }
         // Store current tab on change
         $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
             if ($($(e.target).attr('href')).find('.requiredmarker').length) {
                 // show 'required' header message
-                $(e.target).closest('form').find('.requiredmarkerdesc').removeClass('hidden');
+                $(e.target).closest('form').find('.requiredmarkerdesc').removeClass('d-none');
             }
             else {
                 // hide 'required' header message
-                $(e.target).closest('form').find('.requiredmarkerdesc').addClass('hidden');
+                $(e.target).closest('form').find('.requiredmarkerdesc').addClass('d-none');
             }
             saveTab(e);
         });

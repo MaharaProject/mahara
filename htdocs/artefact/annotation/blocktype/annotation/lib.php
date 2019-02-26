@@ -211,7 +211,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             ),
             'annotationreadonlymsg' => array(
                 'type' => 'html',
-                'class' => 'message info' . ($textreadonly ? '' : ' hidden'),
+                'class' => 'message info' . ($textreadonly ? '' : ' d-none'),
                 'value' => get_string('annotationreadonlymessage', 'blocktype.annotation/annotation'),
                 'help' => true,
             ),
@@ -222,7 +222,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             ),
             'tags' => array(
                 'type' => 'tags',
-                'class' => $readonly ? 'hidden' : '',
+                'class' => $readonly ? 'd-none' : '',
                 'width' => '100%',
                 'title' => get_string('tags'),
                 'description' => get_string('tagsdescprofile'),
@@ -230,7 +230,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             ),
             'tagsreadonly' => array(
                 'type' => 'html',
-                'class' => $readonly ? '' : 'hidden',
+                'class' => $readonly ? '' : 'd-none',
                 'width' => '100%',
                 'title' => get_string('tags'),
                 'value' => '<div id="instconf_tagsreadonly_display">' . (is_array($tags) ? hsc(join(', ', $tags)) : '') . '</div>',
@@ -279,7 +279,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
                 'defaultvalue' => (($evidence) ? $evidence->element : null),
             );
             array_walk($selectdescriptions, function (&$a, $b) {
-                $a = '<div class="hidden" id="option_' . $b . '">' . $a . '</div>';
+                $a = '<div class="d-none" id="option_' . $b . '">' . $a . '</div>';
             });
             $elements['smartevidencedesc'] = array(
                 'type' => 'html',
@@ -445,8 +445,8 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return <<<EOF
         jQuery(function($) {
             function show_se_desc(id) {
-                $("#instconf_smartevidencedesc_container div:not(.description)").addClass('hidden');
-                $("#option_" + id).removeClass('hidden');
+                $("#instconf_smartevidencedesc_container div:not(.description)").addClass('d-none');
+                $("#option_" + id).removeClass('d-none');
             }
             if ($("#instconf_smartevidence").length) {
                 // block title will be overwritten with framework choice so make it disabled

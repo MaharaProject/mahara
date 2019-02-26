@@ -1,4 +1,4 @@
-<div class="card card-default">
+<div class="card card-secondary">
     <div class="card-body">
         <form id="selfsearch" class="selfsearch input-group" method="post" action="{$WWWROOT}selfsearch.php">
             <label for="sidebar-search" class="sr-only">{str tag="selfsearch"}</label>

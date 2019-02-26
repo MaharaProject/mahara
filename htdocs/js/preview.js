@@ -40,7 +40,7 @@ jQuery(function($) {
         $('.js-page-modal .modal-content').height(height);
     });
 
-    $('.js-page-modal').on('hidden.bs.modal', function() {
+    $('.js-page-modal').on('d-none.bs.modal', function() {
         $('.js-page-modal .modal-content').height('auto');
     });
 

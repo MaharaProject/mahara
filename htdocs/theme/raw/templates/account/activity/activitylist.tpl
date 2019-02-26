@@ -10,7 +10,7 @@
     <td>
   {if $item->message}
       <a href="" onclick="showHideMessage({$item->id}); return false;" class="inbox-showmessage{if !$item->read} unread{/if}">{if !$item->read}<span class="accessible-hidden sr-only">{str tag=unread section=activity}: </span>{/if}{$item->subject} <span class="accessible-hidden sr-only">{str tag=clickformore}</span></a>
-      <div id="message-{$item->id}" class="hidden inbox-message">{$item->message|safe}
+      <div id="message-{$item->id}" class="d-none inbox-message">{$item->message|safe}
       {if $item->url}<br>
           <a href="{$WWWROOT}{$item->url}">{if $item->urltext}{str tag=goto arg1=$item->urltext}{else}{str tag=gotomore}{/if}</a>
       {/if}
@@ -24,7 +24,7 @@
     <td>{$item->date}</td>
     <td class="center">
   {if $item->read}
-  
+
   {else}
       <label class="accessible-hidden sr-only" for="unread-{$item->id}">{str tag=markasread section=activity}</label>
       <input id="unread-{$item->id}" type="checkbox" class="tocheckread" name="unread-{$item->id}">

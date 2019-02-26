@@ -1283,7 +1283,7 @@ function group_get_join_form($name, $groupid) {
                     'join' => array(
                         'type' => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-default',
+                        'class' => 'btn-secondary',
                         'value' => '<span class="icon icon-lg icon-plus left" role="presentation" aria-hidden="true"></span> ' . get_string('joingroup', 'group')
                     )
                 )
@@ -1313,13 +1313,13 @@ function group_get_accept_form($name, $groupid) {
                     'accept' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-default form-as-button pull-left',
+                        'class' => 'btn-secondary form-as-button pull-left',
                         'value' => '<span class="icon icon-lg icon-check text-success left" role="presentation" aria-hidden="true"></span> ' . get_string('acceptinvitegroup', 'group')
                     ),
                     'decline' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-default form-as-button pull-left',
+                        'class' => 'btn-secondary form-as-button pull-left',
                         'value' => '<span class="icon icon-lg icon-ban text-danger left" role="presentation" aria-hidden="true"></span> ' . get_string('declineinvitegroup', 'group')
                     )
                 ),
@@ -1357,7 +1357,7 @@ function group_get_adduser_form($userid, $groupid) {
             'submit' => array(
                 'type'  => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-default',
+                'class' => 'btn-secondary',
                 'value' => '<span class="icon icon-lg icon-check left text-success" role="presentation" aria-hidden="true"></span> ' .get_string('add'),
             ),
         ),
@@ -1390,7 +1390,7 @@ function group_get_removeuser_form($userid, $groupid) {
             'submit' => array(
                 'type'  => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-default',
+                'class' => 'btn-secondary',
                 'value' => '<span class="icon icon-times icon-lg text-danger left" role="presentation" aria-hidden="true"></span>' . get_string('removefromgroup', 'group'),
             ),
         ),
@@ -1422,7 +1422,7 @@ function group_get_denyuser_form($userid, $groupid) {
             'submit' => array(
                 'type'  => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-default',
+                'class' => 'btn-secondary',
                 'value' => '<span class="icon icon-ban icon-lg text-danger left" role="presentation" aria-hidden="true"></span>' . get_string('declinerequest', 'group'),
             ),
         ),

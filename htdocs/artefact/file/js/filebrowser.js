@@ -253,11 +253,11 @@ var FileBrowser = (function($) {
     this.hide_edit_form = function () {
 
         var editrow = $('#' + self.id + '_edit_row');
-        if (!editrow.hasClass('hidden')) {
+        if (!editrow.hasClass('d-none')) {
             if ((typeof formchangemanager !== 'undefined') && !formchangemanager.confirmLeavingForm()) {
                 return false;
             }
-            editrow.addClass('hidden');
+            editrow.addClass('d-none');
             // Reconnect the old edit button to open the form
             if (editrow[0].previousSibling) {
                 $(editrow[0].previousSibling).find('button').each(function () {
@@ -284,14 +284,14 @@ var FileBrowser = (function($) {
         $('#' + self.id + '_edit_heading').html(self.filedata[id].artefacttype == 'folder' ? get_string('editfolder') : get_string('editfile'));
         var descriptionrow = $('#' + self.id + '_edit_description').closest('tr');
         if (self.filedata[id].artefacttype == 'profileicon') {
-            descriptionrow.addClass('hidden');
+            descriptionrow.addClass('d-none');
         }
         else {
-            descriptionrow.removeClass('hidden');
+            descriptionrow.removeClass('d-none');
         }
         if (self.filedata[id].artefacttype == 'image' || self.filedata[id].artefacttype == 'profileicon') {
             var rotator = $('#' + self.id + '_rotator');
-            rotator.removeClass('hidden');
+            rotator.removeClass('d-none');
             var rotatorimg = rotator.find('img');
             // set up initial info
             var origangle = parseInt(self.filedata[id].orientation, 10);
@@ -310,7 +310,7 @@ var FileBrowser = (function($) {
             });
         }
         else {
-            $('#' + self.id + '_rotator').addClass('hidden');
+            $('#' + self.id + '_rotator').addClass('d-none');
         }
         $('#' + self.id + '_edit_title').val(self.filedata[id].title);
         $('#' + self.id + '_edit_description').val(self.filedata[id].description == null ? '' : self.filedata[id].description);
@@ -362,7 +362,7 @@ var FileBrowser = (function($) {
         var edit_row = $('#' + self.id + '_edit_row').detach();
         var this_row = $(this).closest('tr');
         edit_row.insertAfter(this_row);
-        edit_row.removeClass('hidden');
+        edit_row.removeClass('d-none');
 
         $(this).trigger('resize.bs.modal');
 
@@ -372,7 +372,7 @@ var FileBrowser = (function($) {
             e.preventDefault();
             // Check if there are some dirty changes before close the edit form
             if ((typeof formchangemanager !== 'undefined') && formchangemanager.confirmLeavingForm()) {
-                $('#' + self.id + '_edit_row').addClass('hidden');
+                $('#' + self.id + '_edit_row').addClass('d-none');
                 $(this).off();
                 $(this).on('click', self.edit_form);
             }
@@ -663,16 +663,16 @@ var FileBrowser = (function($) {
         if ($('#' + self.id + '_open_upload_browse').length) {
             $('#' + self.id + '_open_upload_browse').on('click', function (e) {
                 e.preventDefault();
-                $('#' + self.id + '_upload_browse').removeClass('hidden');
-                $('#' + self.id + '_open_upload_browse_container').addClass('hidden');
+                $('#' + self.id + '_upload_browse').removeClass('d-none');
+                $('#' + self.id + '_open_upload_browse_container').addClass('d-none');
                 return false;
             });
         }
         if ($('#' + self.id + '_close_upload_browse')) {
             $('#' + self.id + '_close_upload_browse').on('click', function (e) {
                 e.preventDefault();
-                $('#' + self.id + '_upload_browse').addClass('hidden');
-                $('#' + self.id + '_open_upload_browse_container').removeClass('hidden');
+                $('#' + self.id + '_upload_browse').addClass('d-none');
+                $('#' + self.id + '_open_upload_browse_container').removeClass('d-none');
                 return false;
             });
         }
@@ -795,7 +795,7 @@ var FileBrowser = (function($) {
 
         if (self.config.selectone) {
             rows.each(function () {
-                var hiddeninput = $(this).find('input.hidden');
+                var hiddeninput = $(this).find('input.d-none');
 
                 if (hiddeninput.length) {
                     hiddeninput.remove();
@@ -835,9 +835,9 @@ var FileBrowser = (function($) {
             var rowid = rowbutton.prop('name').replace(/.*_unselect\[(\d+)\]$/, '$1');
             if (rowid == id) {
                 existed = true;
-                var hiddeninput = r.find('input.hidden').first();
+                var hiddeninput = r.find('input.d-none').first();
                 if (!hiddeninput.length) {
-                    hiddeninput = $('<input>', {'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id});
+                    hiddeninput = $('<input>', {'type':'hidden', 'class':'d-none', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id});
                     rowbutton.closest('td').append(hiddeninput);
                 }
                 continue;
@@ -871,7 +871,7 @@ var FileBrowser = (function($) {
             tbody.append($('<tr>', {'class': (highlight ? ' highlight-file' : '')}).append(
                 $('<td>').append(fileIconImg),
                 $('<td>').append(filelink),
-                $('<td>', {'class':'text-right s'}).append(remove, $('<input>', {'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']',
+                $('<td>', {'class':'text-right s'}).append(remove, $('<input>', {'type':'hidden', 'class':'d-none', 'id':self.id+'_selected[' + id + ']',
                                                                                             'name':self.id+'_selected[' + id + ']', 'value':id}))
             ));
         }
@@ -883,19 +883,19 @@ var FileBrowser = (function($) {
             var rowbutton = r.find('button.button').first();
             var rowid = rowbutton.prop('name').replace(/.*_unselect\[(\d+)\]$/, '$1');
             if (typeof(self.selecteddata[rowid]) != 'undefined') {
-                r.addClass('active').removeClass('hidden');
+                r.addClass('active').removeClass('d-none');
                 rcount ++;
             }
             else {
-                r.addClass('hidden');
+                r.addClass('d-none');
             }
         }
 
        self.createevent('fileselect', document, self.selecteddata[id]);
 
         if (rcount == 1) {
-            $('#' + self.id + '_selectlist').removeClass('hidden');
-            $('#' + self.id + '_empty_selectlist').addClass('hidden');
+            $('#' + self.id + '_selectlist').removeClass('d-none');
+            $('#' + self.id + '_empty_selectlist').addClass('d-none');
         }
         this.update_metadata_to_selected_list();
         // are we running inside tinymce imagebrowser plugin?
@@ -945,20 +945,20 @@ var FileBrowser = (function($) {
           var rowbutton = r.find('button.button').first();
           var rowid = rowbutton.prop('name').replace(/.*_unselect\[(\d+)\]$/, '$1');
           if (typeof(self.selecteddata[rowid]) != 'undefined') {
-              r.addClass('active').removeClass('hidden');
+              r.addClass('active').removeClass('d-none');
               rcount ++;
           }
           else {
-              var hiddeninput = r.find('input.hidden').first();
+              var hiddeninput = r.find('input.d-none').first();
               if (hiddeninput.length) {
                   hiddeninput.remove();
               }
-              r.addClass('hidden');
+              r.addClass('d-none');
           }
       }
       if (rcount == 0) {
-          $('#' + self.id + '_selectlist').addClass('hidden');
-          $('#' + self.id + '_empty_selectlist').removeClass('hidden');
+          $('#' + self.id + '_selectlist').addClass('d-none');
+          $('#' + self.id + '_empty_selectlist').removeClass('d-none');
       }
       if ($('#' + self.id + '_select_' + id).length) {
           $('[id="file:' + id + '"]').addClass('active');
@@ -1013,37 +1013,37 @@ var FileBrowser = (function($) {
                     $('#' + self.id+'_ownertabs').html(data.newtabs);
                     if (data.newsubtabs) {
                         $('#' + self.id + '_ownersubtabs').html(data.newsubtabs);
-                        $('#' + self.id + '_ownersubtabs').removeClass('hidden');
+                        $('#' + self.id + '_ownersubtabs').removeClass('d-none');
                     }
                     else {
-                        $('#' + self.id + '_ownersubtabs').addClass('hidden');
+                        $('#' + self.id + '_ownersubtabs').addClass('d-none');
                     }
                     if ($('#' + self.id + '_upload_container').length) {
                         if (data.newtabdata.upload) {
-                            $('#' + self.id + '_upload_container').removeClass('hidden');
+                            $('#' + self.id + '_upload_container').removeClass('d-none');
                         }
                         else {
-                            $('#' + self.id + '_upload_container').addClass('hidden');
+                            $('#' + self.id + '_upload_container').addClass('d-none');
                         }
                     }
                     self.config.editmeta = data.editmeta;
                 }
                 if (self.config.upload) {
-                    if (data.disableedit == true && !$('#' + self.id + '_upload_container').hasClass('hidden')) {
-                        $('#' + self.id + '_upload_container').addClass('hidden');
+                    if (data.disableedit && !$('#' + self.id + '_upload_container').hasClass('d-none')) {
+                        $('#' + self.id + '_upload_container').addClass('d-none');
                         if ($('#createfolder').length) {
-                            $('#createfolder').addClass('hidden');
+                            $('#createfolder').addClass('d-none');
                         }
-                        $('#' + self.id + '_upload_disabled').removeClass('hidden');
+                        $('#' + self.id + '_upload_disabled').removeClass('d-none');
                     }
                     else if (data.disableedit == false) {
                         if (!self.tabdata || self.tabdata.upload) {
-                            $('#' + self.id + '_upload_container').removeClass('hidden');
+                            $('#' + self.id + '_upload_container').removeClass('d-none');
                         }
                         if ($('#createfolder').length) {
-                            $('#createfolder').removeClass('hidden');
+                            $('#createfolder').removeClass('d-none');
                         }
-                        $('#' + self.id + '_upload_disabled').addClass('hidden');
+                        $('#' + self.id + '_upload_disabled').addClass('d-none');
                     }
                 }
             }

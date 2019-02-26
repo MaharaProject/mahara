@@ -17,7 +17,7 @@ tinymce.PluginManager.add('tooltoggle', function(editor) {
         icon: 'icon tooltoggle-icon',
         tooltip: get_string('toggletoolbarson'),
         onclick: function(e) {
-            jQuery(e.target).closest('.mce-toolbar').siblings().toggleClass('hidden');
+            jQuery(e.target).closest('.mce-toolbar').siblings().toggleClass('d-none');
             tooltoggleState = !tooltoggleState;
             editor.fire('ToolToggleStateChanged', {state: tooltoggleState});
         },

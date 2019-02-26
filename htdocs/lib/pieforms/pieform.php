@@ -274,7 +274,7 @@ class Pieform {/*{{{*/
                     'type'         => 'text',
                     'title'        => get_string('spamtrap'),
                     'defaultvalue' => '',
-                    'class'        => 'dontshow hidden',
+                    'class'        => 'dontshow d-none',
                 ),
             );
             $spamelements2 = array(

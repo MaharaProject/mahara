@@ -163,7 +163,7 @@ function pieform_element_select(Pieform $form, $element) {
             $other_attrib['class'] = 'text form-control secondary-textbox';
         }
         else {
-            $other_attrib['class'] = 'text form-control secondary-textbox hidden';
+            $other_attrib['class'] = 'text form-control secondary-textbox d-none';
             $other_value = '';
         }
         $result .= '<label for="' . $form->make_id($other_attrib, true) . '" class="accessible-hidden sr-only">' . get_string('licenseotherurl') . '</label>'
@@ -324,10 +324,10 @@ function pieform_element_select_get_inlinejs() {
         var element = jQuery(el);
         var other = jQuery('#' + element.prop('id') + '_other');
         if (element.val() == 'other') {
-            other.removeClass('hidden');
+            other.removeClass('d-none');
         }
         else {
-            other.addClass('hidden');
+            other.addClass('d-none');
         }
     }
 EOF;

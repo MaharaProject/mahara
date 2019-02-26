@@ -2,7 +2,7 @@
 
 <div class="row">
 <div class="col-md-3 login-card">
-	<div class="card card-default">
+	<div class="card card-secondary">
 	    <h3 class="card-heading">
 	        {str tag="login"}
 	        <span class="float-right">{contextualhelp plugintype='core' pluginname='core' section='loginbox'}</span>

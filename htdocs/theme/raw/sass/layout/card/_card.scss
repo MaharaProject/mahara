@@ -1,4 +1,6 @@
-.panel {
+.card {
+    margin-bottom: $line-height-computed;
+    border: 1px solid $card-border;
     form {
         margin:0;
     }
