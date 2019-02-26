@@ -6,9 +6,9 @@
 
 // Do not add non bootstrap variables here, put them in custom-variables.scss instead
 
-@import "../lib/bootstrap4/functions";
-@import "../lib/bootstrap4/variables";
-
+@import "../lib/bootstrap4/functions"; // Import the bootstrap functions here since they are required
+@import "../lib/bootstrap4/variables"; // Import the bootstrap variables first
+@import "theme-variables"; // TODO: Figure out why importing this in style.scss isnt enough
 //
 // Color system
 //
@@ -67,7 +67,7 @@ $colors: map-merge((
   "gray-dark":  $gray-800
 ), $colors);
 
-$primary:       $green;
+$primary:       $theme-primary-color;
 $secondary:     $gray-200;
 $success:       $green;
 $info:          $cyan;
