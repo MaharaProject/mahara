@@ -675,7 +675,7 @@ class PluginAuthSaml extends PluginAuth {
             $certstatus = 'createnewkey';
         }
         $elements['deletesubmit'] = array(
-            'class' => 'btn-default',
+            'class' => 'btn-secondary',
             'name' => 'submit', // must be called submit so we can access it's value
             'type'  => 'button',
             'usebuttontag' => true,
@@ -1554,7 +1554,7 @@ EOF;
         }
         $elements = array(
             'loginsaml' => array(
-                'value' => '<div class="login-externallink"><a class="btn btn-primary btn-xs" href="' . $url . '">' . get_string('login', 'auth.saml') . '</a></div>'
+                'value' => '<div class="login-externallink"><a class="btn btn-primary btn-sm" href="' . $url . '">' . get_string('login', 'auth.saml') . '</a></div>'
             )
         );
         return $elements;

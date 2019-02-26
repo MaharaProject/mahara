@@ -25,9 +25,6 @@ $rss-icon-color: #FE6500;
 
 // LEGACY BOOTSTRAP 3 VARIABLES
 
-// Fonts
-$line-height-computed:    $font-size-base * $line-height-base; // ~20px
-
 // Form states
 $state-success-text:             #426600 !default;
 $state-success-bg:               mix(#426600, #fff, 20%) !default;
@@ -45,9 +42,7 @@ $state-danger-text:              #545B5D !default;
 $state-danger-bg:                #f2dede !default;
 $state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%) !default;
 
-
 // Buttons + Forms
-$btn-secondary-color:              #374757;
 $btn-secondary-bg:                 #e8eaec;
 $btn-secondary-border:             #caced3;
 
@@ -55,52 +50,22 @@ $btn-primary-color:              #fff;
 $btn-primary-bg:                 $primary;
 $btn-primary-border:             darken($btn-primary-bg, 8%);
 
-$btn-info-bg:                    $state-info-bg;
-$btn-info-border:                darken($btn-info-bg, 5%);
-
-$btn-success-color:              #fff;
-$btn-success-bg:                 $primary;
-$btn-success-border:             darken($btn-success-bg, 5%);
-
-$btn-warning-color:              $state-warning-text;
-$btn-warning-bg:                 $state-warning-bg;
-$btn-warning-border:             darken($btn-warning-bg, 15%);
-
-$btn-danger-color:               #fff;
-$btn-danger-bg:                  $danger;
-$btn-danger-border:              darken($btn-danger-bg, 5%);
-
-$btn-link-disabled-color:        $gray-300;
-
-
-$cursor-disabled:                not-allowed;
-
-// Forms
-$legend-color:                              $gray-700;
-$legend-border-color:                       #e5e5e5;
-
-
 // Navs
-$navbar-height:                    60px;
-
 $navbar-collapse-max-height:       none;
 
-$navbar-default-color:             #FFF;
 $navbar-default-bg:                $primary;
 $navbar-default-border:            transparent;
 
-// $navbar-padding-y:                 (($navbar-height - $line-height-computed) / 2);
-
 // Navbar links
 $navbar-default-link-color:                #FFF;
-$navbar-default-link-hover-color:          #FFF;
-$navbar-default-link-hover-bg:             darken($primary, 3%);
+$navbar-default-link-hover-color:          $navbar-default-link-color;
+$navbar-default-link-hover-bg:             $theme-accent-color;
+$navbar-default-active-color:              $navbar-default-link-color;
+$navbar-default-active-bg:                 darken($primary, 3%);
 
 // Navbar toggle
 $navbar-default-toggle-hover-bg:           $theme-accent-color;
-$navbar-default-toggle-icon-bar-bg:        $navbar-default-link-color;
-$navbar-default-toggle-border-color:       transparent;
-
+$navbar-default-toggle-icon-bar-bg:        #fff;
 
 // Inverted navbar
 // Reset inverted navbar basics
@@ -114,7 +79,6 @@ $navbar-inverse-link-active-color:          #FFFFFF;
 $navbar-inverse-link-active-bg:             $navbar-inverse-link-hover-bg;
 
 // Inverted navbar toggle
-$navbar-inverse-toggle-hover-bg:            $theme-accent-color;
 $navbar-inverse-toggle-icon-bar-bg:         #959595;
 
 // Popovers
@@ -126,33 +90,9 @@ $pre-bg:                      #f5f5f5;
 // Cards
 $card-border:                               #ccc;
 
-$card-inner-border:          #ddd;
 $card-footer-bg:             #f5f5f5;
 
-$card-text:          $gray-700;
 $card-border:        #ddd;
 $card-header-bg:    #f9f9f9;
 
-$card-primary-text:          $gray-700;
-$card-primary-border:        #ddd;
-$card-primary-heading-bg:    #fff;
-
-$card-secondary-text:         $primary;
 $card-secondary-border:       $primary;
-$card-secondary-heading-bg:   darken($card-header-bg, 2%);
-
-$card-success-text:          $state-success-text;
-$card-success-border:        $state-success-border;
-$card-success-heading-bg:    $state-success-bg;
-
-$card-info-text:             $state-info-text;
-$card-info-border:           $state-info-border;
-$card-info-heading-bg:       $state-info-bg;
-
-$card-warning-text:          $state-warning-text;
-$card-warning-border:        $state-warning-border;
-$card-warning-heading-bg:    $state-warning-bg;
-
-$card-danger-text:           $state-danger-text;
-$card-danger-border:         $state-danger-border;
-$card-danger-heading-bg:     $state-danger-bg;

@@ -3,7 +3,7 @@
 .navbar-toggle {
     &.navbar-showchildren {
         background-color: $navbar-inverse-bg;
-        color: $gray-dark;
+        color: $gray-700;
         &:focus,
         &:hover {
             .icon {
@@ -26,40 +26,40 @@
 
 body.admin {
     .navbar-default {
-        background-color: lighten($gray, 7%);
-        border-color: lighten($gray, 7%);
+        background-color: lighten($gray-500, 7%);
+        border-color: lighten($gray-500, 7%);
         .navbar-toggle {
             &:focus,
             &:hover {
-                background-color: darken($gray, 2%);
+                background-color: darken($gray-500, 2%);
             }
         }
         .navbar-collapse {
-            border-color: lighten($gray, 7%);
+            border-color: lighten($gray-500, 7%);
         }
     }
     .navbar-main {
         .navbar-nav > li > a {
-            border-color: lighten($gray, 10%);
-            background-color: lighten($gray, 7%);
+            border-color: lighten($gray-500, 10%);
+            background-color: lighten($gray-500, 7%);
             &:focus,
             &:hover {
-                background-color: darken($gray, 9%);
+                background-color: darken($gray-500, 9%);
             }
         }
         .navbar-showchildren {
-            background-color: lighten($gray, 60%);
-            color: $gray-dark;
+            background-color: lighten($gray-500, 60%);
+            color: $gray-700;
             &.collapsed {
               background-color: transparent;
               color: #FFFFFF;
             }
         }
         .child-nav li > a {
-            background-color: lighten($gray, 60%);
+            background-color: lighten($gray-500, 60%);
             &:focus,
             &:hover {
-                background-color: lighten($gray, 58%);
+                background-color: lighten($gray-500, 58%);
             }
         }
     }

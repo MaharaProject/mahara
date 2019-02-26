@@ -45,8 +45,8 @@
                     <p id="signoff-on" class="hidden">{str tag=signoffpageundodesc section=blocktype.peerassessment/signoff}</p>
                     <p id="signoff-off" class="hidden">{str tag=signoffpagedesc section=blocktype.peerassessment/signoff}</p>
                     <div class="btn-group">
-                        <button id="signoff-yes-button" type="button" class="btn btn-default">{str tag="yes"}</button>
-                        <button id="signoff-back-button" type="button" class="btn btn-default">{str tag="no"}</button>
+                        <button id="signoff-yes-button" type="button" class="btn btn-secondary">{str tag="yes"}</button>
+                        <button id="signoff-back-button" type="button" class="btn btn-secondary">{str tag="no"}</button>
                     </div>
                 </div>
             </div>
@@ -65,8 +65,8 @@
                 <div class="modal-body">
                     <p>{str tag=verifypagedesc section=blocktype.peerassessment/signoff}</p>
                     <div class="btn-group">
-                        <button id="verify-yes-button" type="button" class="btn btn-default">{str tag="yes"}</button>
-                        <button id="verify-back-button" type="button" class="btn btn-default">{str tag="no"}</button>
+                        <button id="verify-yes-button" type="button" class="btn btn-secondary">{str tag="yes"}</button>
+                        <button id="verify-back-button" type="button" class="btn btn-secondary">{str tag="no"}</button>
                     </div>
                 </div>
             </div>

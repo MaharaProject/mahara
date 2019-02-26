@@ -101,8 +101,13 @@
         }
 
         > .active > a {
-            background-color: $dropdown-link-active-bg;
-            color: $dropdown-link-active-color;
+            background-color: $navbar-default-active-bg;
+            color: $navbar-default-active-color;
+            &:hover,
+            &:focus {
+                background-color: $navbar-default-active-bg;
+                color: $navbar-default-active-color;
+            }
         }
     }
 

@@ -51,6 +51,9 @@ $navbar-default-link-color:                 #FFFFFF;
 $navbar-default-link-hover-color:           #FFFFFF;
 $navbar-default-link-bg:                    #0162a7;
 $navbar-default-link-hover-bg:              darken($navbar-default-link-bg, 5%);
+$navbar-default-active-bg:                  #f1f1f1;
+
+$navbar-default-toggle-icon-bar-bg:         #fff;
 
 // Navbar menus children
 $navbar-inverse-bg:                         darken($navbar-default-link-bg, 5%);

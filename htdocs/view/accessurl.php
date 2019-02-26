@@ -621,7 +621,7 @@ for ($i = 0; $i < count($records); $i++) {
                 'submit' => array(
                     'type'         => 'button',
                     'usebuttontag' => true,
-                    'class'        => 'btn-secondary btn-xs',
+                    'class'        => 'btn-secondary btn-sm',
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
                     'value'        => '<span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
