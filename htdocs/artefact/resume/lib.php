@@ -1414,7 +1414,7 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_address_js_string()
                 ) . ",
                 function (row, data) {
-                    return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
+                    return jQuery('<span>', {'style':'text-align:center'}).append(row.clipcount);
                 },
         ";
     }
