@@ -4,7 +4,7 @@
 <div class="card-items js-masonry" data-masonry-options='{ "itemSelector": ".card" }'>
 {foreach from=$plugins key='plugintype' item='plugins'}
     <div class="card card-secondary">
-        <h2 class="card-heading">{str tag='plugintype'}: {$plugintype}</h2>
+        <h2 class="card-header">{str tag='plugintype'}: {$plugintype}</h2>
         {assign var="installed" value=$plugins.installed}
         {assign var="notinstalled" value=$plugins.notinstalled}
 

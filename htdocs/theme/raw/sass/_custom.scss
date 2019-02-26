@@ -658,6 +658,7 @@ div.toolbarhtml {
 }
 // Stop btn links displaying as buttons
 [type="button"].btn-link,
+a[type="submit"],
 .card-header a[type="button"] {
     -webkit-appearance: none;
 }

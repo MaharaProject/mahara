@@ -338,7 +338,7 @@ $text-shadow:                 $white !default;
 //
 // Customizes the `.table` component with basic values, each used across all table variations.
 
-$table-cell-padding:          .57rem !default;
+$table-cell-padding:          .5rem !default;
 $table-cell-padding-sm:       .3rem !default;
 
 $table-bg:                    transparent !default;
@@ -1021,7 +1021,7 @@ $modal-header-border-color:         $gray-200 !default;
 $modal-footer-border-color:         $modal-header-border-color !default;
 $modal-header-border-width:         $modal-content-border-width !default;
 $modal-footer-border-width:         $modal-header-border-width !default;
-$modal-header-padding:              1rem !default;
+$modal-header-padding:              0.125rem !default;
 
 $modal-lg:                          800px !default;
 $modal-md:                          500px !default;
@@ -1162,9 +1162,9 @@ $well-border:                scale-color($well-bg, $lightness: -7.5%);
 // Image thumbnails
 
 $thumbnail-padding:                 .25rem !default;
-$thumbnail-bg:                      $body-bg !default;
+$thumbnail-bg:                      #efefef !default;
 $thumbnail-border-width:            $border-width !default;
-$thumbnail-border-color:            $gray-300 !default;
+$thumbnail-border-color:            #ddd !default;
 $thumbnail-border-radius:           $border-radius !default;
 $thumbnail-box-shadow:              0 1px 2px rgba($black, .075) !default;
 
@@ -1235,6 +1235,7 @@ $kbd-color:                         $white !default;
 $kbd-bg:                            $gray-900 !default;
 
 $pre-color:                         $gray-900 !default;
+$pre-bg:                            #f5f5f5 !default;
 $pre-scrollable-max-height:         340px !default;
 
 
