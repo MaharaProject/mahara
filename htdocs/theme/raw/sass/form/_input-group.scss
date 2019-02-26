@@ -14,8 +14,9 @@
     // Chrome bug - flex container doesn't work on fieldset tag
     fieldset.input-group {
       display: block;
-      .input-group-btn {
+      .input-group-append {
         display: inline-block;
+        height: $input-height;
       }
     }
     .pieform-fieldset > .form-group {
