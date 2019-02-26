@@ -8,4 +8,4 @@ The most popular HTML, CSS, and JavaScript framework for developing responsive, 
 
 Changes:
 - Only kept the 'javaScripts/' directory
-- Moved '/sass' directory to 'theme/raw/sass/lib/'
+- Moved '/scss' directory to 'theme/raw/sass/lib/'
