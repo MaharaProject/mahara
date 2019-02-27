@@ -800,19 +800,21 @@ a[type="submit"],
 // Backup for libraries that still need hidden class instead of bootstrap 4s new .d-none
 .hidden {
     display: none;
-
+}
 //used for Smart Evidence json-editor
-#editor_holder .well {
-    background: #FFF !important;
+#editor_holder .bg-light {
+    background-color: #FFF !important;
 }
 
-div.form-group .control-label {
+div.form-group .form-control-label {
     vertical-align: top;
 }
 
-//@TODO - doesn't work -why?
-//[class^="json-editor-btn-"] {
-.json-editor-btntype-properties span {
+.btn-group {
     font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
+
+.json_editor_btn_add .btn-group > .btn-group:not(:last-child) > .btn, .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
 }

@@ -18,6 +18,7 @@
         {$copy_desc}</div>
 </div>
 <span id='valid_indicator'></span>
+{* the json editor form is all in 'editor_holder' *}
 <div id='editor_holder'></div>
 <div id="delete_submit_container_end" class=" default submitcancel form-group">
     <button type="submit" class="btn-primary submitcancel submit btn" name="submit" tabindex="0">

@@ -63,7 +63,7 @@ function refresh_editor() {
                 "title" : get_string('description'),
                 "format" : "textarea",
                 "default" : get_string('defaultdescription'),
-                "description" : get_string('descriptioninfo')
+                "description" : get_string('descriptioninfo'),
             },
             "selfassess" : {
                 "type" : "boolean",
@@ -235,12 +235,18 @@ function refresh_editor() {
     $(".json-editor-btn-add").eq(2).attr("id", "add_standard");
     $(".json-editor-btn-add").eq(4).attr("id", "add_standardelement");
     //creating ids for adding wysiwyg - not currently active: @TODO
-    $("div.form-group textarea.form-control").eq(0).attr("id", "title_textarea");
-    $("div.form-group textarea.form-control").eq(1).attr("id", "std_textarea");
-    $("div.form-group textarea.form-control").eq(2).attr("id", "std_element_textarea");
+    $("div.form-group textarea.form-control").eq(0).attr("id", "title_desc_textarea");
+    $("div.form-group textarea.form-control").eq(2).attr("id", "std_desc_textarea");
+    $("div.form-group textarea.form-control").eq(4).attr("id", "std_element_desc_textarea");
+    //make text same as rest of site
+    $("div.form-group p.form-text").addClass("description");
+    $("div.form-group form-control-label").addClass("label");
     //add class for correct styling of help block text
     $("[data-schemaid=\"standards\"] >p").addClass("help-block");
     $("[data-schemaid=\"evidencestatuses\"] >p").addClass("help-block");
+    //set min row height for desc fields to 6
+    $("textarea[id$='_desc_textarea']").attr('rows', '6');
+    textarea_init();
 
     $("#add_standard").click(function() {
         standard_count += 1;
@@ -260,10 +266,8 @@ function refresh_editor() {
         se_count = 1;
         var se_eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
         se_eid_field.setValue(se_count);
-        $('div.form-group textarea.form-control').on('click', function () {
-            textarea_autoexpand(this);
-        });
-        });
+        textarea_init();
+    });
 
     $("#add_standardelement").click(function() {
         se_count ++;
@@ -275,9 +279,7 @@ function refresh_editor() {
         var eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
         //@TODO: change this display to reflect the data
         eid_field.setValue(se_count);
-        $('div.form-group textarea.form-control').on('click', function () {
-            textarea_autoexpand(this);
-        });
+        textarea_init();
     });
 }
 
@@ -292,14 +294,20 @@ function refresh_editor() {
     var evidence_type = ['begun' ,'incomplete', 'partialcomplete', 'completed'];
 
     //make textarea expand with text
-    $("div.form-group textarea.form-control").on('click input', function () {
-        textarea_autoexpand(this);
-    });
-
+    function textarea_init() {
+        $('div.form-group textarea[name$="description\]"]').each(function() {
+            $(this).off('click input');
+            $(this).on('click input', function() {
+                textarea_autoexpand(this);
+            })
+            textarea_autoexpand(this);
+        });
+    }
     function textarea_autoexpand(element) {
         element.setAttribute('style', 'height:' + (element.scrollHeight) + 'px;overflow-y:hidden;');
         element.style.height = 'auto';
-        element.style.minHeight = '64px';
+        element.style.minHeight = '148px';
+        element.style.maxHeight = '800px';
         element.style.height = (element.scrollHeight) + 'px';
     }
 
@@ -317,6 +325,7 @@ function refresh_editor() {
         index = Object.keys(fwe[select_index]);
         index = index[0];
         populate_editor(index, edit);
+        textarea_init();
     });
 
     //choose from copy dropdown.
@@ -332,6 +341,7 @@ function refresh_editor() {
         index = Object.keys(fwc[select_index]);
         index = index[0];
         populate_editor(index);
+        textarea_init();
         });
 
     // Manage button - goes to fw screen
@@ -383,9 +393,7 @@ function refresh_editor() {
                 var ed = editor.getEditor("root." + k);
                 if (ed) {
                     if (k === 'description') {
-                        $('div.form-group textarea.form-control').on('click', function () {
-                            textarea_autoexpand(this);
-                        });
+                        textarea_init();
                         ed.setValue(value)
                         //@TODO wysiwyg editing:
                         //tinyMCE will display this field correctly, but then I can't save.
@@ -412,9 +420,7 @@ function refresh_editor() {
                     var std_ed = editor.getEditor("root.standards");
                     std_ed.addRow();
                     standard_count += 1;
-                    $('div.form-group textarea.form-control').on('click', function () {
-                        textarea_autoexpand(this);
-                    });
+                    textarea_init();
                 }
                 //this makes an array with the 0 index empty and the db std ids matched with the index
                 //of their standard number.
@@ -473,9 +479,7 @@ function refresh_editor() {
                         var se = editor.getEditor("root.standardelements");
                         if (count > 0) {
                             se.addRow();
-                            $('div.form-group textarea.form-control').on('click', function () {
-                                textarea_autoexpand(this);
-                            });
+                            textarea_init();
                         }
                         //each value from a standard element
                         $.each(value, function (k,value ) {
