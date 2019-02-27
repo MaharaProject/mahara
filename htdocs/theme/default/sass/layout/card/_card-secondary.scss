@@ -11,10 +11,17 @@
     }
 
     &.card {
-        &.blockinstance.card {
-            .card-header {
-                background-color: $card-header-bg;
-            }
+        .card-header {
+            border-color: #9db577;
+            font-family: $font-family-sans-serif;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        // removing left/right padding in card body
+        .block {
+             > .card-body {
+                 padding: 15px 0;
+             }
         }
     }
 
@@ -22,27 +29,5 @@
         @include media-breakpoint-down(lg) {
             margin: 0;
         }
-    }
-
-    // removing left/right padding in card headings
-    .card-header-nested,
-    > .card-header {
-        padding-left: 0;
-        padding-right: 0;
-        border-bottom-color: #9db577;
-    }
-
-    > .card-header {
-      font-family: $font-family-sans-serif;
-    }
-
-    // removing left/right padding in card body
-    > .card-body {
-         padding: 15px 0;
-    }
-    .block {
-         > .card-body {
-             padding: 15px 0;
-         }
     }
 }

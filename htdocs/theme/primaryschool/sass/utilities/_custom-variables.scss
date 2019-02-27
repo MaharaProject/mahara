@@ -24,7 +24,57 @@ $help-icon-color: #047DB1;
 $rss-icon-color: #FE6500;
 
 
-// Bootstrap 3 legacy variables
+// LEGACY BOOTSTRAP 3 VARIABLES
+
+// Header navbar
+$navbar-default-bg:                         #0162a7;
+$navbar-default-border:                     transparent;
+
+// Navbar toggle
+$navbar-toggle-color:                       #FFFFFF;
+$navbar-toggle-bg:                          transparent;
+$navbar-toggle-hover-color:                 #FFFFFF;
+$navbar-toggle-hover-bg:                    scale-color(#0162a7, $lightness: -5%);
+$navbar-toggle-active-color:                #FFFFFF;
+$navbar-toggle-active-bg:                   scale-color(#0162a7, $lightness: -5%);
+
+// Navbar menu
+$navbar-default-link-border:                transparent;
+$navbar-default-link-color:                 #FFFFFF;
+$navbar-default-link-hover-color:           #FFFFFF;
+$navbar-default-link-bg:                    #0162a7;
+$navbar-default-link-hover-bg:              scale-color($navbar-default-link-bg, $lightness: -5%);
+$navbar-default-active-color:               $gray-700;
+$navbar-default-active-bg:                  #f1f1f1;
+
+// Navbar menus children
+$navbar-inverse-bg:                         scale-color($navbar-default-link-bg, $lightness: -10%);
+$navbar-inverse-link-color:                 #FFFFFF;
+$navbar-inverse-link-hover-color:           #FFFFFF;;
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
+$navbar-inverse-link-active-color:          #FFFFFF;
+$navbar-inverse-link-active-bg:             scale-color($navbar-default-link-bg, $lightness: -15%);
+
+// Navbar menu children toggles
+$navbar-inverse-toggle-color:               #FFFFFF;
+$navbar-inverse-toggle-bg:                  $navbar-default-link-bg;
+$navbar-inverse-toggle-hover-color:         #FFFFFF;
+$navbar-inverse-toggle-hover-bg:            scale-color($navbar-inverse-bg, $lightness: -5%);
+$navbar-inverse-toggle-active-color:        #FFFFFF;
+$navbar-inverse-toggle-active-bg:           scale-color($navbar-default-link-bg, $lightness: -10%);
+
+
+//== Tabs
+$nav-tabs-border-color:                     #eee;
+
+$nav-tabs-link-hover-border-color:          $theme-primary-color;
+
+$nav-tabs-active-link-hover-bg:             $body-bg;
+$nav-tabs-active-link-hover-color:          $theme-primary-color;
+$nav-tabs-active-link-hover-border-color:   $theme-primary-color;
+
+$nav-tabs-justified-link-border-color:            #f7f7f7;
+$nav-tabs-justified-active-link-border-color:     $body-bg;
 
 
 //== Buttons
@@ -44,43 +94,18 @@ $btn-success-bg:                 $theme-primary-color;
 $btn-success-border:             scale-color($theme-primary-color, $lightness: -5%);
 
 
-// Header navbar
-// Navbar toggle
-$navbar-default-color:                      #FFFFFF;
-$navbar-default-bg:                         #0162a7;
-$navbar-default-border:                     transparent;
-$navbar-default-link-color:                 #FFFFFF;
-$navbar-default-link-hover-color:           #FFFFFF;
-$navbar-default-link-bg:                    #0162a7;
-$navbar-default-link-hover-bg:              scale-color($navbar-default-link-bg, $lightness: -5%);
-$navbar-default-active-color:               $gray-700;
-$navbar-default-active-bg:                  #f1f1f1;
-$navbar-default-toggle-icon-bar-bg:         #fff;
+//== Buttons
 
-// Navbar menus children
-$navbar-inverse-bg:                         scale-color($navbar-default-link-bg, $lightness: -10%);
-$navbar-inverse-link-color:                 #FFFFFF;
-$navbar-inverse-link-hover-color:           #FFFFFF;;
-$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
-$navbar-inverse-link-active-color:          #FFFFFF;
-$navbar-inverse-link-active-bg:             scale-color($navbar-default-link-bg, $lightness: -15%);
+$btn-font-weight:                normal;
 
-// Navbar menu children toggles
-$navbar-inverse-toggle-color:               #FFFFFF;
-$navbar-inverse-toggle-bg:                  $navbar-default-link-bg;
-$navbar-inverse-toggle-hover-color:         #FFFFFF;
-$navbar-inverse-toggle-hover-bg:            scale-color($navbar-inverse-bg, $lightness: -5%);
-$navbar-inverse-toggle-active-color:        #FFFFFF;
-$navbar-inverse-toggle-active-bg:           scale-color($navbar-default-link-bg, $lightness: -10%);
+$btn-secondary-color:            #333;
+$btn-secondary-bg:               #F9F9F9;
+$btn-secondary-border:           #ccc;
 
-//== Tabs
-$nav-tabs-border-color:                     #eee;
+$btn-primary-color:              #fff;
+$btn-primary-bg:                 $theme-primary-color;
+$btn-primary-border:             scale-color($btn-primary-bg, $lightness: -5%);
 
-$nav-tabs-link-hover-border-color:          $theme-primary-color;
-
-$nav-tabs-active-link-hover-bg:             $body-bg;
-$nav-tabs-active-link-hover-color:          $theme-primary-color;
-$nav-tabs-active-link-hover-border-color:   $theme-primary-color;
-
-$nav-tabs-justified-link-border-color:            #f7f7f7;
-$nav-tabs-justified-active-link-border-color:     $body-bg;
+$btn-success-color:              #fff;
+$btn-success-bg:                 $theme-primary-color;
+$btn-success-border:             scale-color($theme-primary-color, $lightness: -5%);

@@ -177,10 +177,14 @@ body.presentation-iframe {
 // Pages and collections page header
 
 .pageactions {
-    z-index: $zindex-fixed;
-    position: fixed;
-    right: 0;
-    top: $navbar-height + 30px;
+    position: relative;
+
+    .btn-group-vertical {
+        position: fixed;
+        right: -1px;
+        margin-top: 30px;
+        z-index: $zindex-fixed;
+    }
 }
 
 .pageheader {
@@ -199,14 +203,6 @@ body.presentation-iframe {
 
 @for $i from 1 through 5 {
     .header.message-count-#{$i} {
-
-        ~ .pageactions {
-            top: $navbar-height + ($i * 33px) + 30px;
-
-            @include media-breakpoint-down(sm) {
-                top: $navbar-height + 30px;
-            }
-        }
 
         ~ .pageheader {
             margin-top: $navbar-height + ($i * 33px);

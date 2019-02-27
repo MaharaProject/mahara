@@ -29,14 +29,16 @@ h1 {
 }
 
 // Page or collections page header title
-.pageheader h1 {
-    margin: 40px 0 10px 0;
-    padding: 0;
-    border-bottom: 0;
-    font-size: 36px;
-    @include media-breakpoint-down(md) {
-        font-size: 30px;
-        margin-top: 20px;
+.pageheader {
+    h1 {
+        margin: 40px 0 10px 0;
+        padding: 0;
+        border-bottom: 0;
+        font-size: 36px;
+        @include media-breakpoint-down(md) {
+            font-size: 30px;
+            margin-top: 20px;
+        }
     }
 }
 
@@ -58,13 +60,16 @@ h1 {
         padding: 20px 10px 10px 10px;
         margin-top: -20px;
         border-bottom: 1px solid $gray-100;
-        &.invite-friend {
-            padding-bottom: 5px;
-            .input-group {
-                margin-top: 0;
-                @include media-breakpoint-up(md) {
-                    margin-top:10px;
-                }
+        &.invite-friend,
+        &#addmember {
+            @include border-radius(0);
+            padding: 0;
+            margin-top: 10px;
+            border-bottom: 0;
+            background: none;
+
+            .input-group-append {
+                margin-left: 0;
             }
         }
         @include media-breakpoint-down(sm) {
@@ -347,4 +352,11 @@ pre {
     padding: 0 !important;
     margin-bottom: 10px;
   }
+}
+
+// Matrix header, move small text under H1 back to original
+.matrixheader {
+    h1.page-header ~ div.with-heading {
+        margin-top: 0;
+    }
 }

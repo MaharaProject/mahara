@@ -25,22 +25,54 @@ $rss-icon-color: #FE6500;
 
 // LEGACY BOOTSTRAP 3 VARIABLES
 
+// Header navbar
+$navbar-default-bg:                         $primary;
+$navbar-default-border:                     transparent;
+
+// Navbar toggle
+$navbar-toggle-color:                       #FFF;
+$navbar-toggle-bg:                          transparent;
+$navbar-toggle-hover-color:                 #FFF;
+$navbar-toggle-hover-bg:                    $theme-accent-color;
+$navbar-toggle-active-color:                #FFF;
+$navbar-toggle-active-bg:                   $theme-accent-color;
+
+// Navbar menu
+$navbar-default-link-border:                scale-color($navbar-default-bg, $lightness: -6.5%);
+$navbar-default-link-color:                 #FFF;
+$navbar-default-link-hover-color:           $navbar-default-link-color;
+$navbar-default-link-bg:                    $navbar-default-bg;
+$navbar-default-link-hover-bg:              $theme-primary-color-dark;
+$navbar-default-active-color:               $navbar-default-link-color;
+$navbar-default-active-bg:                  darken($primary, 3%);
+
+// Navbar menus children
+$navbar-inverse-bg:                         $theme-accent-color;
+$navbar-inverse-link-color:                 #FFFFFF;
+$navbar-inverse-link-hover-color:           #FFFFFF;
+$navbar-inverse-link-hover-bg:              darken($navbar-inverse-bg, 2%);
+$navbar-inverse-link-active-color:          #FFFFFF;
+$navbar-inverse-link-active-bg:             $navbar-inverse-link-hover-bg;
+
+// Navbar menu children toggles
+$navbar-inverse-toggle-color:               #959595;
+$navbar-inverse-toggle-bg:                  transparent;
+$navbar-inverse-toggle-hover-color:         #FFF;
+$navbar-inverse-toggle-hover-bg:            $theme-accent-color;
+$navbar-inverse-toggle-active-color:        #FFF;
+$navbar-inverse-toggle-active-bg:           $theme-accent-color;
+
+
 // Form states
-$state-success-text:             #426600 !default;
-$state-success-bg:               mix(#426600, #fff, 20%) !default;
-$state-success-border:           darken(adjust-hue($state-success-bg, -10), 10%) !default;
+$state-success-text:             #426600;
+$state-success-bg:               mix(#426600, #fff, 20%);
+$state-success-border:           darken(adjust-hue($state-success-bg, -10), 10%);
 
-$state-info-text:                #31708f !default;
-$state-info-bg:                  #d9edf7 !default;
-$state-info-border:              darken(adjust-hue($state-info-bg, -10), 7%) !default;
 
-$state-warning-text:             #8a6d3b !default;
-$state-warning-bg:               #fcf8e3 !default;
-$state-warning-border:           darken(adjust-hue($state-warning-bg, -10), 5%) !default;
+$state-danger-text:              #545B5D;
+$state-danger-bg:                #f2dede;
+$state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%);
 
-$state-danger-text:              #545B5D !default;
-$state-danger-bg:                #f2dede !default;
-$state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%) !default;
 
 // Buttons + Forms
 $btn-secondary-bg:                 #e8eaec;
@@ -50,36 +82,6 @@ $btn-primary-color:              #fff;
 $btn-primary-bg:                 $primary;
 $btn-primary-border:             darken($btn-primary-bg, 8%);
 
-// Navs
-$navbar-collapse-max-height:       none;
-
-$navbar-default-bg:                $primary;
-$navbar-default-border:            transparent;
-
-// Navbar links
-$navbar-default-link-color:                #FFF;
-$navbar-default-link-hover-color:          $navbar-default-link-color;
-$navbar-default-link-hover-bg:             $theme-accent-color;
-$navbar-default-active-color:              $navbar-default-link-color;
-$navbar-default-active-bg:                 darken($primary, 3%);
-
-// Navbar toggle
-$navbar-default-toggle-hover-bg:           $theme-accent-color;
-$navbar-default-toggle-icon-bar-bg:        #fff;
-
-// Inverted navbar
-// Reset inverted navbar basics
-$navbar-inverse-bg:                         $theme-accent-color;
-
-// Inverted navbar links
-$navbar-inverse-link-color:                 #FFFFFF;
-$navbar-inverse-link-hover-color:           #FFFFFF;
-$navbar-inverse-link-hover-bg:              darken($navbar-inverse-bg, 2%);
-$navbar-inverse-link-active-color:          #FFFFFF;
-$navbar-inverse-link-active-bg:             $navbar-inverse-link-hover-bg;
-
-// Inverted navbar toggle
-$navbar-inverse-toggle-icon-bar-bg:         #959595;
 
 // Popovers
 $popover-fallback-border-color:       #ccc;

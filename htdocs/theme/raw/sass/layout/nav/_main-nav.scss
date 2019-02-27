@@ -30,7 +30,7 @@
         position: static;
         clear: both;
         max-height: none;
-        border: 1px solid $navbar-default-border;
+        border: 1px solid $navbar-default-link-border;
 
         @include media-breakpoint-up(md) {
             position: absolute;
@@ -89,8 +89,8 @@
             background-color: $navbar-default-link-bg;
             padding: 10px 15px;
             font-weight: normal;
-            border-top: 1px solid $navbar-default-border;
-            border-bottom: 1px solid $navbar-default-border;
+            border-top: 1px solid $navbar-default-link-border;
+            border-bottom: 1px solid $navbar-default-link-border;
             margin-top: -1px;
             &:hover,
             &:focus {
@@ -99,7 +99,7 @@
                 color: $navbar-default-link-hover-color;
             }
             @include media-breakpoint-up(md) {
-                border: 1px solid $navbar-default-border;
+                border: 1px solid $navbar-default-link-border;
             }
             .icon {
                 margin-right: 5px;

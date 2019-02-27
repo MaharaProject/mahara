@@ -21,9 +21,9 @@
                 {if ($showtags && $editmeta) || $selectable}
                 <th class="right nowrap"></th>
                 {/if}
-                {if $editable}
+                <!--{if $editable}
                 <th></th>
-                {/if}
+                {/if}-->
             </tr>
         </thead>
 

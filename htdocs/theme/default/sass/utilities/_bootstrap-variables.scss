@@ -15,7 +15,7 @@
 //
 //## Settings for some of the most global styles.
 
-$link-hover-color:      lighten($link-color, 5%);
+$link-hover-color:      scale-color($link-color, $lightness: 5%);
 
 //== Typography
 //
@@ -36,7 +36,7 @@ $border-radius-base:        0.1875rem;
 //## Dropdown menu container and contents.
 
 //** Hover color for dropdown links.
-$dropdown-link-hover-color:      darken($gray-700, 5%);
+$dropdown-link-hover-color:      scale-color($gray-700, $lightness: -5%);
 
 //== Navs
 //
@@ -65,4 +65,4 @@ $progress-bar-bg:             #bc9f54;
 //##
 
 //** Text color for content within active list items
-$list-group-active-color:  lighten($list-group-active-bg, 40%);
+$list-group-active-color:  scale-color($list-group-active-bg, $lightness: 40%);

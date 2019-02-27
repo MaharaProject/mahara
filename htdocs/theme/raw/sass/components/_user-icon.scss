@@ -111,3 +111,11 @@ a.user-icon, a .user-icon {
 .item.user-icon img {
     margin-bottom: 5px;
 }
+
+.profileheader {
+    h1 {
+        .user-icon {
+            margin: -10px 10px 0 0;
+        }
+    }
+}

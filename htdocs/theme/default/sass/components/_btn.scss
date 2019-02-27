@@ -13,16 +13,16 @@
     margin-bottom: 0;
     &:hover,
     &:focus {
-        background: darken($btn-secondary-bg, 9.7%);
+        background: scale-color($btn-secondary-bg, $lightness: -9.7%);
         color: $theme-text-color;
-        border-color: darken($btn-secondary-border, 12%);
+        border-color: scale-color($btn-secondary-border, $lightness: -12%);
     }
 }
 
 .btn-secondary {
-    background: darken($btn-secondary-bg, 4.75%);
+    background: scale-color($btn-secondary-bg, $lightness: -4.75%);
     &:hover,
     &:focus {
-        background: darken($btn-secondary-bg, 14.5%);
+        background: scale-color($btn-secondary-bg, $lightness: -14.5%);
     }
 }

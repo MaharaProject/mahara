@@ -117,9 +117,10 @@
     {if $headertype == "page"}
         {include file="header/pageactions.tpl"}
         {include file="header/pageheader.tpl"}
-    {else if $headertype == "profile"}
+    {elseif $headertype == "profile"}
+        {include file="header/profileactions.tpl"}
         {include file="header/profileheader.tpl"}
-    {else if $headertype == "matrix"}
+    {elseif $headertype == "matrix"}
         {include file="header/matrixheader.tpl"}
     {/if}
 

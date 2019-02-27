@@ -97,3 +97,9 @@
         display: block;
     }
 }
+
+
+// Fixes the buttons overlapping the input
+button.input-group-append {
+    margin-left: 0;
+}
