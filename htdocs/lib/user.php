@@ -2479,7 +2479,11 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
             }
             $user->quota = $quota;
         }
-        if (get_config('defaultaccountlifetime')) {
+        if (isset($profile->expiry)) {
+            //set the expiry date from the csv upload
+            $user->expiry = $profile->expiry;
+        }
+        else if (get_config('defaultaccountlifetime')) {
             // we need to set the user expiry to the site default one
             $user->expiry = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d'), date('Y')) + (int)get_config('defaultaccountlifetime'));
         }
@@ -2496,7 +2500,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         set_profile_field($user->id, 'lastname', $user->lastname, TRUE);
     }
     foreach ($profile as $k => $v) {
-        if (in_array($k, array('firstname', 'lastname', 'email'))) {
+        if (in_array($k, array('firstname', 'lastname', 'email', 'expiry'))) {
             continue;
         }
         set_profile_field($user->id, $k, $v, TRUE);
@@ -2595,19 +2599,39 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array(), $
         }
     }
 
+    foreach (get_object_vars($profile) as $k => $v) {
+        if ($k == 'expiry') {
+            if (!$oldrecord->expiry) {
+                //adding an expiry for first time
+                $newrecord->expiry = $v;
+                $updated[$k] = $v;
+            }
+            else {
+                $unexpire = $oldrecord->expiry && strtotime($oldrecord->expiry) < time() && (empty($v) || strtotime($v) > time());
+                $newexpiry = db_format_timestamp($v);
+                if ($oldrecord->expiry != $newexpiry) {
+                    $newrecord->expiry = $newexpiry;
+                    $updated[$k] = $v;
+                    if ($unexpire) {
+                        $newrecord->expirymailsent = 0;
+                        $newrecord->lastaccess = db_format_timestamp(time());
+                    }
+                }
+            }
+            continue;
+        }
+        if (get_profile_field($userid, $k) != $v) {
+            set_profile_field($userid, $k, $v);
+            $updated[$k] = $v;
+        }
+    }
+
     if (count(get_object_vars($newrecord))) {
         $newrecord->id = $userid;
         update_record('usr', $newrecord);
         if (!empty($newrecord->password)) {
             $newrecord->authinstance = $user->authinstance;
             reset_password($newrecord, false, $quickhash);
-        }
-    }
-
-    foreach (get_object_vars($profile) as $k => $v) {
-        if (get_profile_field($userid, $k) != $v) {
-            set_profile_field($userid, $k, $v);
-            $updated[$k] = $v;
         }
     }
 

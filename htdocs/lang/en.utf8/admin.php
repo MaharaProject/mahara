@@ -668,6 +668,8 @@ $string['uploadcsverrorduplicateremoteuser'] = 'Line %s of the file specifies a 
 $string['uploadcsverrorremoteusertaken'] = 'Line %s of the file specifies a remote username "%s" that is already taken by the user "%s".';
 $string['uploadcsverrorusernotininstitution'] = 'Error on line %s: The user "%s" is not a member of the institution %s.';
 $string['uploadcsverroruserinaninstitution'] = 'Error on line %s: The user "%s" is a member of the following institutions: %s. You cannot update this user\'s authentication method to "No Institution".';
+$string['uploadcsverrorinvalidexpirydate'] = 'Error on line %s: The expiry "%s" is invalid. Please use a valid date format.';
+$string['uploadcsverrorexpirydateinpast'] = 'Error on line %s: The expiry "%s" cannot be in the past.';
 $string['uploadcsvpagedescription6'] = '<p>Here you can upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
 
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>

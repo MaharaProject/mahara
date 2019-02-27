@@ -25,6 +25,8 @@ $specialcases = array('username', 'password', 'remoteuser');
 // Don't upload social profiles for now. A user can have multiple profiles. Not sure how to put that in a csv.
 $notallowed = array('socialprofile');
 $ALLOWEDKEYS = array_keys(ArtefactTypeProfile::get_all_fields());
+// Allow 'expiry' option
+array_push($ALLOWEDKEYS, 'expiry');
 $ALLOWEDKEYS = array_diff($ALLOWEDKEYS, $notallowed);
 $maildisabled = array_search('maildisabled', $ALLOWEDKEYS);
 unset($ALLOWEDKEYS[$maildisabled]);
@@ -344,6 +346,20 @@ function uploadcsv_validate(Pieform $form, $values) {
                 $usernames[strtolower($username)]['remoteuser'] = $remoteuser;
             }
         }
+        if (array_key_exists('expiry', $formatkeylookup) && !empty($line[$formatkeylookup['expiry']])) {
+            $expirydate = $line[$formatkeylookup['expiry']];
+            try {
+                $date = new DateTime($expirydate);
+            }
+            catch (Exception $e) {
+                $csverrors->add($i, get_string('uploadcsverrorinvalidexpirydate', 'admin', $i, $expirydate));
+                $date = false;
+            }
+            $now = new DateTime("now");
+            if (!empty($date) && $date < $now) {
+                $csverrors->add($i, get_string('uploadcsverrorexpirydateinpast', 'admin', $i, $expirydate));
+            }
+        }
     }
 
     // If the admin is trying to overwrite existing users, identified by username,
@@ -542,6 +558,19 @@ function uploadcsv_submit(Pieform $form, $values) {
                 }
                 continue;
             }
+            if ($field == 'expiry' && !empty($record[$formatkeylookup[$field]])) {
+                $expirydate = $record[$formatkeylookup[$field]];
+                try {
+                    $date = new DateTime($expirydate);
+                }
+                catch (Exception $e) {
+                    $date = false;
+                }
+                if ($date) {
+                    $profilefields->{$field} = $date->format('Y-m-d');
+                }
+                continue;
+            }
             $profilefields->{$field} = $record[$formatkeylookup[$field]];
         }
 
@@ -632,6 +661,10 @@ natsort($ALLOWEDKEYS);
 $fields = "<ul class='fieldslist column-list'>\n";
 foreach ($ALLOWEDKEYS as $type) {
     if ($type == 'firstname' || $type == 'lastname' || $type == 'email' || $type == 'username' || $type == 'password') {
+        continue;
+    }
+    if ($type == 'expiry') {
+        $fields .= '<li>expiry' . get_help_icon('core', 'user', 'edituser_upload', $type) . '</li>';
         continue;
     }
     $fields .= '<li>' . hsc($type) . "</li>\n";
