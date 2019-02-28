@@ -186,6 +186,17 @@ jQuery(function($) {
                     formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
                 }
             });
+
+            // ugly fix for open issue in tempusdominus bootstrap lib not getting the value from html tag
+            // https://github.com/tempusdominus/bootstrap-4/issues/126
+            target.each(function() {
+                var value = $(this).attr('value');
+                $(this).datetimepicker({
+                    format: "{{str(tag='pieform_calendar_dateformat' section='langconfig')|pieform_element_calendar_convert_dateformat}} {{str(tag='pieform_calendar_timeformat' section='langconfig')|pieform_element_calendar_convert_timeformat}}",
+                    date: value
+                });
+                $(this).val(value);
+            });
         }
 
         function formatSelect2Results (data) {
