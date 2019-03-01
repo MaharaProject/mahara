@@ -735,6 +735,15 @@ EOD;
         if (is_callable($classname . '::' . $functionname)) {
             $result = call_static_method($classname, $functionname, $sortedfields, $ownertype, $ownerid, $title, $view);
             $configdata = array_merge($configdata, (array)$result);
+
+            // make new block
+            $blockinstance = self::create_new_block_instance($blocktype, $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols);
+            //taggedposts blocktype - block instance needs to pre-exist
+            if ($functionname == 'generate_configdata_taggedposts') {
+                PluginBlocktypeTaggedposts::instance_config_save($configdata, $blockinstance);
+            }
+            // setting tags to blocks
+            self::set_block_tags($view, $blockinstance, $ownertype, $ownerid, $configdata);
         }
         else {
             throw new SystemException("The blocktype {$record['type']} is not supported yet.");
@@ -766,6 +775,53 @@ EOD;
         }
         else {
           $bi->commit();
+          return $bi;
+        }
+    }
+
+        /**
+     * Set tags for blocks from information in configdata
+     *
+     * the configdata array is different from normal mahara db so that the tags
+     * can be stored somewhere until after the block instance has been created to be added.
+     *
+     * @param BlockInstance $bi
+     * @param string $ownertype
+     * @param int $ownerid
+     * @param array $configdata
+     */
+    public static function set_block_tags($view, $bi, $ownertype, $ownerid, $configdata) {
+        if (!array_key_exists('tags',$configdata))
+            return;
+        if ($view->get('group')) {
+            $ownertype = 'group';
+        }
+        else if ($view->get('institution')) {
+            $ownertype = 'institution';
+        }
+        else {
+            $ownertype = 'user';
+        }
+
+        if ($tags = $configdata['tags']) {
+            $tags = check_case_sensitive($tags, 'tag');
+            delete_records('tag', 'resourcetype', 'blocktype', 'resourceid', $bi->get('id'));
+            foreach ($tags as $tag) {
+                // truncate the tag before insert it into the database
+                $tag = substr($tag, 0, 128);
+                $tag = check_if_institution_tag($tag);
+                insert_record('tag',
+                    (object)array(
+                        'resourcetype' => 'blocktype',
+                        'resourceid' => $bi->get('id'),
+                        'ownertype' => $ownertype,
+                        'ownerid' => $ownerid,
+                        'tag' => $tag,
+                        'ctime' => db_format_timestamp(time()),
+                        'editedby' => $ownerid,
+                    )
+                );
+            }
         }
     }
 
@@ -774,7 +830,7 @@ EOD;
      * displaying the blogs that were created using the function create_blog
      * given a matching blog title
      *
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
      */
     public static function generate_configdata_blog($sortedfields) {
@@ -802,7 +858,7 @@ EOD;
      * displaying the blogposts that were created using the function create_blogpost
      * matching a given blog and entry title
      *
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
      */
     public static function generate_configdata_blogpost($sortedfields) {
@@ -832,16 +888,16 @@ EOD;
 
     /**
      * generate a comment blocktype.
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @return array with redundant information as there is no specific artefact connected to it.
      */
-    public static function generate_configdata_comment($data) {
+    public static function generate_configdata_comment($sortedfields) {
         return array();
     }
 
     /**
      * generate configdata and instance for blocktype: creativecommons
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
      */
     public static function generate_configdata_creativecommons($sortedfields) {
@@ -879,7 +935,7 @@ EOD;
      *
      * doesn't work in group pages
      *
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
@@ -899,7 +955,7 @@ EOD;
 
     /**
      * generate configdata for the blocktype: rss feeds/external feeds
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
     */
     public static function generate_configdata_externalfeed($sortedfields) {
@@ -924,7 +980,7 @@ EOD;
 
     /**
      * generate configdata for the blocktype: external video
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
      */
     public static function generate_configdata_externalvideo($sortedfields) {
@@ -938,7 +994,7 @@ EOD;
 
     /**
      * generate configdata for the blocktype: filedownload
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
@@ -996,7 +1052,7 @@ EOD;
 
     /**
      * generate configdata for blocktype: gallery
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
@@ -1063,7 +1119,7 @@ EOD;
 
     /**
      * generate configdata for blocktype: html
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
@@ -1081,7 +1137,7 @@ EOD;
 
     /**
      * generate configdata for the blocktype: image
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
@@ -1101,7 +1157,7 @@ EOD;
 
     /**
      * generate configdata for the blocktype: internalmedia aka 'embeddedmedia
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values of db table
@@ -1136,7 +1192,7 @@ EOD;
     /**
      * generate configdata for the blocktype: navigation and create navblocks*
      * **when copytoall is true**
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @param string $title of block to be created* (when copytoall is true)
@@ -1198,7 +1254,7 @@ EOD;
 
     /**
      * generate configdata for the blocktype: pdf
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values of db table
@@ -1216,7 +1272,7 @@ EOD;
     /**
     * generate configdata for the blocktype: plans
     *
-    * @param array $fields holding each chunk of data between the ; in the behat data column
+    * @param array $sortedfields holding each chunk of data between the ; in the behat data column
     * @param string $ownertype of user
     * @param string $ownerid of the user
     * @return array $configdata of key and values of db table
@@ -1246,7 +1302,7 @@ EOD;
      * As well as going thorugh the general fields in the data column of the table,
      * an ArtefactTypeProfileIcon is created as there are none created in bulk.
      *
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values of db table
@@ -1296,7 +1352,9 @@ EOD;
     /**
      * generate configdata for blocktype: recentforumposts
      *
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * The recentforumposts blocktype displays forumposts for a given group.
+     *
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values of db table
@@ -1324,8 +1382,35 @@ EOD;
     }
 
     /**
+     * generate configdata for the blocktype: recentposts
+     *
+     * The recentposts blocktypes displays a list of recent posts for the given
+     * journal/blog name.
+     *
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_recentposts($sortedfields, $ownertype, $ownerid) {
+        $configdata = array();
+        foreach ($sortedfields as $key => $value) {
+            if ($key == 'maxposts') {
+                $configdata['count'] = $value > 0 ? $value : 10;
+            }
+            if ($key == 'journaltitle') {
+                if (!$blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype','blog')) {
+                    throw new SystemException("A blog/journal named " . $value . " doesn't exist!");
+                }
+                $configdata['artefactids'][] = $blogid;
+            }
+        }
+        return $configdata;
+    }
+
+    /**
      * generate configdata for the blocktype: resumefield
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
@@ -1345,7 +1430,7 @@ EOD;
 
     /**
      * generate configdata for the blocktype: social profile
-     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
@@ -1355,7 +1440,6 @@ EOD;
             if ($key == 'sns') {
                 //split the values for multiple social profile creation
                 $medialist = explode(',', $value);
-                $value = array();
                 foreach($medialist as $media) {
                     $newprofile = new ArtefactTypeSocialprofile();
                     $newprofile->set('owner', $ownerid);
@@ -1369,6 +1453,35 @@ EOD;
                 return $configdata = array('artefactids' => $artefactid);
             }
         }
+    }
+
+    /**
+     * generate configdata for the blocktype: taggedposts
+     *
+     * The blocktype taggedposts displays a list of Journal Entries with the
+     * given tag
+     *
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_taggedposts($sortedfields) {
+        $configdata = array();
+        foreach ($sortedfields as $key => $value) {
+            if ($key == 'maxposts') {
+                $configdata['count'] = $value > 0 ? $value : 10;
+            }
+            if ($key == 'tags') {
+                $tags = explode(',',$value);
+                $configdata['tagselect'] = $tags;
+            }
+            if ($key == 'showfullentries') {
+                $configdata['full'] = strtolower($value) == 'no' ? 1 : 0;
+            }
+            if ($key == 'copytype') {
+                $configdata[$key] = strtolower($value) == 'nocopy' ? $value : 'tagsonly';
+            }
+        }
+        return $configdata;
     }
 
     /**
@@ -1393,7 +1506,7 @@ EOD;
     * holding an html artefact
     * NOTE:the title of a textbox block is the same as the html artefact the textbox it is associated with; not the title of a block instance
     *
-    * @param array $fields holding each chunk of data between the ; in the behat data column
+    * @param array $sortedfields holding each chunk of data between the ; in the behat data column
     * @param string $ownertype of user
     * @param string $ownerid of the user
     * @param string $title of block to be created* (when copytoall is true)
@@ -2472,12 +2585,18 @@ EOD;
     public function create_educationhistory($record) {
         $itemdata = array();
         $userid = $this->get_user_id($record['user']);
+        $artefact = null;
 
-        // create artefact
-        $artefact = new ArtefactTypeEducationhistory();
-        $artefact->set('owner', $this->get_user_id($record['user']));
-        $artefact->commit();
-        $itemdata['artefact'] = $artefact->get('id');
+        if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'educationhistory')) {
+            $artefact = new ArtefactTypeEducationhistory($artefactid, null);
+            $itemdata['artefact'] =  $artefact->get('id');
+        }
+        else {
+          $artefact = new ArtefactTypeEducationhistory();
+          $artefact->set('owner', $this->get_user_id($record['user']));
+          $artefact->commit();
+          $itemdata['artefact'] = $artefact->get('id');
+        }
 
         $formelements = ArtefactTypeEducationhistory::get_addform_elements();
         foreach ($formelements as $element => $value) {

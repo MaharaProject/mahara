@@ -160,48 +160,37 @@ Background:
     | Comments             | comment        | Page One      | no         | |
     | Peer Assessment      | peerassessment | Page One      | auto       | |
     | Creative Commons     | creativecommons| Page One      | no         | commercialuse=yes;license=3.0;allowmods=no |
-
     | Navigation           | navigation     | Page One      | no         | collection=collection one;copytoall=yes |
     | Plans                | plans          | Page One      | no         | plans=Plan One,Plan Two;tasksdisplaycount=10 |
     | Internal Media: Video| internalmedia  | Page One      | no         | attachment=testvid3.mp4 |
     | Internal Media: Audio| internalmedia  | Page One      | no         | attachment=mahara.mp3 |
-    | Pdf                  | pdf            | Page Two      | no         | attachment=mahara_about.pdf |
-    | Recent Forum Posts   |recentforumposts| Page Two      | no         | groupname=Group1;maxposts=3 |
-    | External Video       | externalvideo  | Page Two      | no         | source=https://youtu.be/yRxFm70nOrY |
-    | Note/Textbox 1       | textbox        | Page Two      | no         | notetitle=secretnote;text=ma ha ha ha ra!;tags=mahara,araham;attachments=Image3.png,Image2.png,Image1.jpg;allowcomments=yes |
-    | Note/textbox ref:1   | textbox        | Page Two      | no         | existingnote=secretnote |
-    | Note/Textbox copy:1  | textbox        | Page Two      | no         | existingnote=secretnote;allowcomments=yes;copynote=true;notetitle=newsecretnote |
-    | Profile Information  | profileinfo    | Page Two      | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image1.jpg |
-    | Profile Information  | profileinfo    | Page Two      | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image2.png |
-    | Résumé               | entireresume   | Page Two      | no         | tags=mahara |
-    | Résumé: Employment Hist.| resumefield | Page Two      | no         | artefacttype=employmenthistory |
-    | Résumé: Personal Goal   | resumefield | Page Two      | no         | artefacttype=personalgoal |
-    | Résumé: Work Skill      | resumefield | Page Two      | no         | artefacttype=workskill |
-    | Résumé: Interest        | resumefield | Page Two      | no         | artefacttype=interest |
-    | GoogleApps: Google Maps | googleapps  | Page Two      | no         | googleapp=<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2997.861064367898!2d174.77176941597108!3d-41.29012814856559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d38afd6326bfda5%3A0x5c0d858838e52d7a!2sCatalyst!5e0!3m2!1sen!2snz!4v1550707486290" width="800" height="600" frameborder="0" style="border:0" allowfullscreen></iframe>;height=100;tags=cat,dog,monkeys |
-    | GoogleApps: Google Calen| googleapps  | Page Two      | no         | googleapp=https://calendar.google.com/calendar/embed?src=en.new_zealand%23holiday%40group.v.calendar.google.com&ctz=Pacific%2FAuckland |
+    | Recent journal entries| recentposts    | Page One     | no         | journaltitle=journal1;maxposts=10 |
+    | Tagged journal entries| taggedposts    | Page One     | no         | tags=cats; maxposts=5;showfullentries=yes;copytype=nocopy |
+
+    And the following "blocks" exist:
+    | title                   | type           | page          |retractable | data |
+    | Pdf                     | pdf            | Page Two      | no         | attachment=mahara_about.pdf |
+    | Recent Forum Posts      |recentforumposts| Page Two      | no         | groupname=Group1;maxposts=3 |
+    | External Video          | externalvideo  | Page Two      | no         | source=https://youtu.be/k5t5PD5F8Wo |
+    | Note/Textbox 1          | textbox        | Page Two      | no         | notetitle=secretnote;text=ma ha ha ha ra!;tags=mahara,araham;attachments=Image3.png,Image2.png,Image1.jpg;allowcomments=yes |
+    | Note/textbox ref:1      | textbox        | Page Two      | no         | existingnote=secretnote |
+    | Note/Textbox copy:1     | textbox        | Page Two      | no         | existingnote=secretnote;allowcomments=yes;copynote=true;notetitle=newsecretnote |
+    | Profile Information     | profileinfo    | Page Two      | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image1.jpg |
+    | Profile Information     | profileinfo    | Page Two      | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image2.png |
+    | Résumé                  | entireresume   | Page Two      | no         | tags=mahara |
+    | Résumé: Personal Goal   | resumefield    | Page Two      | no         | artefacttype=personalgoal |
+    | Résumé: Work Skill      | resumefield    | Page Two      | no         | artefacttype=workskill |
+    | Résumé: Interest        | resumefield    | Page Two      | no         | artefacttype=interest |
+    | Résumé: Achievements    | resumefield    | Page Two      | no         | artefacttype=certification |
+    | Résumé: Employment Hist.| resumefield    | Page Two      | no         | artefacttype=employmenthistory |
+    | Résumé: Books           | resumefield    | Page Two      | no         | artefacttype=book |
+    | Résumé: Memberships     | resumefield    | Page Two      | no         | artefacttype=membership |
+    | Résumé: Education Hist. | resumefield    | Page Two      | no         | artefacttype=educationhistory |
+    | GoogleApps: Google Maps | googleapps     | Page Two      | no         | googleapp=<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2997.861064367898!2d174.77176941597108!3d-41.29012814856559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d38afd6326bfda5%3A0x5c0d858838e52d7a!2sCatalyst!5e0!3m2!1sen!2snz!4v1550707486290" width="800" height="600" frameborder="0" style="border:0" allowfullscreen></iframe>;height=200;tags=cat,dog,monkeys |
+    | GoogleApps: Google Cal. | googleapps     | Page Two      | no         | googleapp=https://calendar.google.com/calendar/embed?src=en.new_zealand%23holiday%40group.v.calendar.google.com&ctz=Pacific%2FAuckland |
 
 Scenario: Login as admin to change upload settings
-    # To allow users to upload specific internal media types
-    Given I log in as "admin" with password "Kupuh1pa!"
-    And I go to "/admin/extensions/pluginconfig.php?plugintype=blocktype&pluginname=file/internalmedia"
-    And I set the following fields to these values:
-    | 3GPP media file       | 1 |
-    | AVI video file        | 1 |
-    | FLV flash movie       | 1 |
-    | MP3 audio file        | 1 |
-    | MP4 media file        | 1 |
-    | MPEG movie            | 1 |
-    | OGA audio file        | 1 |
-    | OGG Vorbis audio file | 1 |
-    | OGV video file        | 1 |
-    | QuickTime movie       | 1 |
-    | WEBM video file       | 1 |
-    | WMV video file        | 1 |
-    And I press "Save"
-    And I log out
-
-    Then I log in as "UserA" with password "Kupuh1pa!"
+    Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA"
     And I go to portfolio page "Page Grp1"
     And I go to portfolio page "Page One"
