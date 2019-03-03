@@ -160,3 +160,17 @@ body.presentation-iframe {
         display: none;
     }
 }
+// Online users
+.peoplelistinfo {
+    height: 40px;
+    .leftdiv {
+        float: left;
+    }
+    .rightdiv {
+        margin-left: 60px;
+        h3 {
+            margin-top: 7px;
+            padding-top: 5px;
+        }
+    }
+}
