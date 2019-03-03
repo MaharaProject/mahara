@@ -19,7 +19,7 @@ Background:
     And the following "journalentries" exist:
      | owner | ownertype | title | entry | blog | tags | draft |
      | celeste | user | I'm going to Mars! | I just passed my exam and am approved for a Mars Mission | Mars journal | Mars | 0 |
-     | celeste | user | Spacefood | Spacefood is kind of gross if you don't cook it right | Mars journal | Mars,food | 0 |
+     | celeste | user | Spacefood | Spacefood is kind of gross if you don't cook it right | Mars journal | Mars,food |  0 |
 
     Given I log in as "celeste" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
@@ -27,13 +27,28 @@ Background:
     And I expand "Journals" node in the "blocktype sidebar" property
 
 Scenario: Add Journal block to the page
-
     Given I follow "Journal" in the "blocktype sidebar" property
     And I press "Add"
     And I select the radio "Mars journal"
     And I press "Save"
     And I display the page
     Then I should see "Spacefood is kind of gross"
+
+# Adding a journal entry from a journal block on a portfolio page
+    Given I click on "Edit"
+    Then I should see "New entry"
+    When I follow "New entry"
+    Then I should see "New journal entry in journal \"Mars journal\""
+    When I fill in "Title *" with "Journal entry Added from Block"
+    And I set the following fields to these values:
+    | Entry * | The contents of this entry ABCD123 |
+    And I click on "Save entry"
+    Then I should see "Journal entry saved"
+    When I choose "Pages and collections" in "Create" from main menu
+    And I click on "Celeste's Page" panel menu
+    And I click on "Edit" in "Celeste's Page" panel menu
+    Then I should see "Journal entry Added from Block"
+    And I should see "The contents of this entry ABCD123"
 
 Scenario: Add specific Journal entry to the page
     Given I follow "Journal entry" in the "blocktype sidebar" property
