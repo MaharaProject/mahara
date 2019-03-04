@@ -81,6 +81,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Multirecipientnotification'                => array("//li[@id='module.multirecipientnotification']", "xpath_element"),
     'Country mandatory field'                   => array("//div[@id='pluginconfig_mandatory_container']/div[@class='checkboxes-option checkbox']/label[contains(text(),'Country')]", "xpath_element"),
     'Timeline Bar'                              => array(".timeline-bar", "css_element"),
+    'Show more tags'                            => array(".with-heading.text-small .icon-ellipsis-h", "css_element"),
     // xpath related to participation report
     'Group views report tr1 tc1'                => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[1]", "xpath_element"),
     'Group views report tr1 tc2'                => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[2]", "xpath_element"),
