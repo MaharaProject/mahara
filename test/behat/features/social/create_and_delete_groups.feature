@@ -20,7 +20,17 @@ Scenario: Creating groups and deleting them (Selenium)
     And I fill in "Group name" with "Admin VIP Group"
     And I disable the switch "Open"
     And I enable the switch "Request"
+    And I fill in "Start date" with "2015/06/15 03:00"
+    And I fill in "End date" with "2015/06/15 03:30"
     And I press "Save group"
+    # Verify "Group info" block exists
+    And ".bt-groupinfo" "css_element" should be visible
+    And I should see "Created" in the ".bt-groupinfo" "css_element"
+    And I should see "Request membership" in the ".bt-groupinfo" "css_element"
+    And I should see "Members" in the ".bt-groupinfo" "css_element"
+    And I should see "Group administrators:" in the ".bt-groupinfo" "css_element"
+    And I should see "Editable" in the ".bt-groupinfo" "css_element"
+    And I should see "Between 15 June 2015, 3:00 AM and 15 June 2015, 3:30 AM"
     # Create Open group
     And I choose "Groups" in "Engage" from main menu
     And I follow "Create group"
