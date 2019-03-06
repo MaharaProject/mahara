@@ -355,7 +355,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
      *                            - defaults can be retrieved from get_assessment_options()
      * @return  object $result    Assessment data object
      */
-    public static function get_assessments($options) {
+    public static function get_assessments($options, $versioning=null) {
         global $USER;
         $allowedoptions = self::get_assessment_options();
         // set the object's key/val pairs as variables
@@ -383,107 +383,151 @@ class ArtefactTypePeerassessment extends ArtefactType {
             'data'     => array(),
         );
 
-        $where = 'pa.view = ? ';
 
-        // If the signoff block is also present on the page then we restrict things differently
-        $withsignoff = record_exists('block_instance', 'view', $viewid, 'blocktype', 'signoff');
-        if ($withsignoff) {
-            // If the view is signed off, select public assessments
-            // or if viewing as page owner, select public assessments
-            // or if viewing as assessment author, select assessments owned by author
-            $where.= 'AND ((vsv.signoff = 1 AND pa.private = 0) ';
-            $where.= '    OR (a.author = ?)';
-            $where.= '    OR (pa.private = 0 AND a.owner = ?))';
-
-            $values = array($viewid, $userid, $userid, $block);
-            $joinsignoff = ' JOIN {view_signoff_verify} vsv ON vsv.view = pa.view ';
+        if ($versioning) {
+            $result->data = self::get_assessment_data_for_versioning($versioning, $viewid);
+            $result->count = sizeof($result->data);
         }
         else {
-            // select assessments that are published
-            // or select assessments where the user is the author, published or not
-            $where.= 'AND ( (pa.private = 0) ';
-            $where.= '    OR (a.author = ?))';
+            $where = 'pa.view = ? ';
 
-            $values = array($viewid, $userid, $block);
-            $joinsignoff = '';
-        }
+            // If the signoff block is also present on the page then we restrict things differently
+            $withsignoff = record_exists('block_instance', 'view', $viewid, 'blocktype', 'signoff');
+            if ($withsignoff) {
+                // If the view is signed off, select public assessments
+                // or if viewing as page owner, select public assessments
+                // or if viewing as assessment author, select assessments owned by author
+                $where.= 'AND ((vsv.signoff = 1 AND pa.private = 0) ';
+                $where.= '    OR (a.author = ?)';
+                $where.= '    OR (pa.private = 0 AND a.owner = ?))';
 
-        $result->count = count_records_sql('
-            SELECT COUNT(*)
-            FROM
-                {artefact} a
-                JOIN {artefact_peer_assessment} pa
-                    ON a.id = pa.assessment' . $joinsignoff . '
-                LEFT JOIN {artefact} p
-                    ON a.parent = p.id
-            WHERE ' . $where . '
-            AND pa.block = ?', $values);
+                $values = array($viewid, $userid, $userid, $block);
+                $joinsignoff = ' JOIN {view_signoff_verify} vsv ON vsv.view = pa.view ';
+            }
+            else {
+                // select assessments that are published
+                // or select assessments where the user is the author, published or not
+                $where.= 'AND ( (pa.private = 0) ';
+                $where.= '    OR (a.author = ?))';
 
-        if ($result->count > 0) {
-
-            // Figure out sortorder
-            $orderby = 'a.ctime ' . ($sort == 'latest' ? 'DESC' : 'ASC');
-
-            // If pagination is in use, see if we want to get a page with particular assessment
-            if ($limit) {
-                if ($showcomment == 'last') {
-                    // If we have limit (pagination is used) ignore $offset and just get the last page of comments.
-                    $result->forceoffset = $offset = (ceil($result->count / $limit) - 1) * $limit;
-                }
-                else if (is_numeric($showcomment)) {
-                    // Ignore $offset and get the page that has the assessment
-                    // with id $showcomment on it.
-                    // Fetch everything and figure out which page $showcomment is in.
-                    // This will get ugly if there are 1000s of assessments
-                    $ids = get_column_sql('
-                            SELECT a.id
-                            FROM {artefact} a JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
-                            ' . $joinsignoff . '
-                            LEFT JOIN {artefact} p ON a.parent = p.id
-                            WHERE ' . $where . '
-                            AND pa.block = ?
-                            ORDER BY ' . $orderby,
-                            $values
-                    );
-                    $found = false;
-                    foreach ($ids as $k => $v) {
-                        if ($v == $showcomment) {
-                            $found = $k;
-                            break;
-                        }
-                    }
-                    if ($found !== false) {
-                        // Add 1 because array index starts from 0 and therefore key value is offset by 1.
-                        $rank = $found + 1;
-                        $result->forceoffset = $offset = ((ceil($rank / $limit) - 1) * $limit);
-                        $result->showcomment = $showcomment;
-                    }
-                }
+                $values = array($viewid, $userid, $block);
+                $joinsignoff = '';
             }
 
-            $assessments = get_records_sql_assoc('
-                SELECT
-                    a.id, a.title, a.author, a.authorname, a.ctime, a.mtime, a.description, a.group, a.path,
-                    pa.private, pa.view, pa.block,
-                    u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
-                    u.deleted, u.profileicon, u.urlid, p.id AS parent, p.author AS parentauthor
-                FROM {artefact} a
-                    INNER JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
-                    ' . $joinsignoff . '
+            $result->count = count_records_sql('
+                SELECT COUNT(*)
+                FROM
+                    {artefact} a
+                    JOIN {artefact_peer_assessment} pa
+                        ON a.id = pa.assessment' . $joinsignoff . '
                     LEFT JOIN {artefact} p
                         ON a.parent = p.id
-                    LEFT JOIN {usr} u ON a.author = u.id
                 WHERE ' . $where . '
-                AND pa.block = ?
-                ORDER BY ' . $orderby, $values, $offset, $limit);
+                AND pa.block = ?', $values);
 
-            $result->data = array_values($assessments);
+            if ($result->count > 0) {
+
+                // Figure out sortorder
+                $orderby = 'a.ctime ' . ($sort == 'latest' ? 'DESC' : 'ASC');
+
+                // If pagination is in use, see if we want to get a page with particular assessment
+                if ($limit) {
+                    if ($showcomment == 'last') {
+                        // If we have limit (pagination is used) ignore $offset and just get the last page of comments.
+                        $result->forceoffset = $offset = (ceil($result->count / $limit) - 1) * $limit;
+                    }
+                    else if (is_numeric($showcomment)) {
+                        // Ignore $offset and get the page that has the assessment
+                        // with id $showcomment on it.
+                        // Fetch everything and figure out which page $showcomment is in.
+                        // This will get ugly if there are 1000s of assessments
+                        $ids = get_column_sql('
+                                SELECT a.id
+                                FROM {artefact} a JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
+                                ' . $joinsignoff . '
+                                LEFT JOIN {artefact} p ON a.parent = p.id
+                                WHERE ' . $where . '
+                                AND pa.block = ?
+                                ORDER BY ' . $orderby,
+                                $values
+                        );
+                        $found = false;
+                        foreach ($ids as $k => $v) {
+                            if ($v == $showcomment) {
+                                $found = $k;
+                                break;
+                            }
+                        }
+                        if ($found !== false) {
+                            // Add 1 because array index starts from 0 and therefore key value is offset by 1.
+                            $rank = $found + 1;
+                            $result->forceoffset = $offset = ((ceil($rank / $limit) - 1) * $limit);
+                            $result->showcomment = $showcomment;
+                        }
+                    }
+                }
+
+                $assessments = get_records_sql_assoc('
+                    SELECT
+                        a.id, a.title, a.author, a.authorname, a.ctime, a.mtime, a.description, a.group, a.path,
+                        pa.private, pa.view, pa.block,
+                        u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
+                        u.deleted, u.profileicon, u.urlid, p.id AS parent, p.author AS parentauthor
+                    FROM {artefact} a
+                        INNER JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
+                        ' . $joinsignoff . '
+                        LEFT JOIN {artefact} p
+                            ON a.parent = p.id
+                        LEFT JOIN {usr} u ON a.author = u.id
+                    WHERE ' . $where . '
+                    AND pa.block = ?
+                    ORDER BY ' . $orderby, $values, $offset, $limit);
+                $result->data = array_values($assessments);
+            }
         }
 
         $result->position = 'blockinstance';
-
-        self::build_html($result);
+        self::build_html($result, $versioning);
         return $result;
+    }
+
+    private static function get_assessment_data_for_versioning($versioning, $viewid) {
+          global $USER;
+          foreach ($versioning->blocks as $blockversion) {
+              //find the assessment block
+              if ($blockversion->blocktype == 'peerassessment') {
+                  $existing_artefacts= array();
+                  if (isset($blockversion->configdata->existing_artefacts)) {
+                      $existing_artefacts = $blockversion->configdata->existing_artefacts;
+                  }
+                  // populate the version with data to display
+                  $assessmentsversion = array();
+                  foreach ($existing_artefacts as &$assessment) {
+                      // select assessments that are published
+                      // or select assessments where the user is the author, published or not
+                      if ($assessment->author == $USER->get('id') || !$assessment->private ) {
+                          $assessment->view = $viewid;
+                          $assessment->block = $blockversion->originalblockid;
+
+                          $user = new User();
+                          $user->find_by_id($assessment->author);
+                          $assessment->username = $user->get('username');
+                          $assessment->firstname = $user->get('firstname');
+                          $assessment->lastname = $user->get('lastname');
+                          $assessment->preferredname = $user->get('preferredname');
+                          $assessment->email = $user->get('email');
+                          $assessment->admin = $user->get('admin');
+                          $assessment->staff = $user->get('staff');
+                          $assessment->deleted = $user->get('deleted');
+                          $assessment->profileicon = $user->get('profileicon');
+
+                          $assessmentsversion[] = $assessment;
+                      }
+                  }
+                  return $assessmentsversion;
+              }
+          }
+          return 0;
     }
 
     public static function is_signable(View $view) {
@@ -547,7 +591,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
         return $newest[0];
     }
 
-    public static function build_html(&$data) {
+    public static function build_html(&$data, $versioning=null) {
         global $USER, $THEME;
 
         $candelete = $data->canedit || $USER->get('admin');
@@ -591,16 +635,18 @@ class ArtefactTypePeerassessment extends ArtefactType {
                 $item->canedit = 0;
             }
 
-            $submittedcheck = get_record_sql('SELECT v.* FROM {view} v WHERE v.id = ?', array($data->view), ERROR_MULTIPLE);
-            if (($candelete || ($item->isauthor && !$signedoff && !$is_export_preview)) && $submittedcheck->submittedstatus == View::UNSUBMITTED) {
-                $item->deleteform = pieform(self::delete_assessment_form($item->id, $item->view, $item->block));
-            }
-            if ($item->canedit && $submittedcheck->submittedstatus == View::UNSUBMITTED) {
-                $smarty = smarty_core();
-                $smarty->assign('id', $item->id);
-                $smarty->assign('block', $item->block);
-                $smarty->assign('title', $item->title);
-                $item->editlink = $smarty->fetch('artefact:peerassessment:editlink.tpl');
+            if (!$versioning) {
+                $submittedcheck = get_record_sql('SELECT v.* FROM {view} v WHERE v.id = ?', array($data->view), ERROR_MULTIPLE);
+                if (($candelete || ($item->isauthor && !$signedoff && !$is_export_preview)) && $submittedcheck->submittedstatus == View::UNSUBMITTED) {
+                    $item->deleteform = pieform(self::delete_assessment_form($item->id, $item->view, $item->block));
+                }
+                if ($item->canedit && $submittedcheck->submittedstatus == View::UNSUBMITTED) {
+                    $smarty = smarty_core();
+                    $smarty->assign('id', $item->id);
+                    $smarty->assign('block', $item->block);
+                    $smarty->assign('title', $item->title);
+                    $item->editlink = $smarty->fetch('artefact:peerassessment:editlink.tpl');
+                }
             }
 
             if ($item->author) {
