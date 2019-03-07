@@ -432,7 +432,7 @@ if ($institution || $add) {
     // logo-xs
     $elements['logoxs'] = array(
         'type'        => 'file',
-        'title'       => get_string('Logosmall', 'admin'),
+        'title'       => get_string('Logomobile', 'admin'),
         'description' => get_string('logoxsdescription', 'admin'),
         'maxfilesize' => get_max_upload_size(false),
     );
@@ -440,12 +440,12 @@ if ($institution || $add) {
         $logoxsurl = get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $data->logoxs;
         $elements['logoxshtml'] = array(
             'type'        => 'html',
-            'value'       => '<img src="' . $logoxsurl . '" alt="' . get_string('Logosmall', 'admin') . '">',
+            'value'       => '<img src="' . $logoxsurl . '" alt="' . get_string('Logomobile', 'admin') . '">',
         );
         $elements['deletelogoxs'] = array(
             'type'        => 'switchbox',
-            'title'       => get_string('deletelogoxs', 'admin'),
-            'description' => get_string('deletelogoxsdescription2', 'admin'),
+            'title'       => get_string('deletelogoxsmobile', 'admin'),
+            'description' => get_string('deletelogoxsdescription3', 'admin'),
         );
     }
 

@@ -49,11 +49,16 @@
         <div class="navbar navbar-default navbar-main">
             <div class="container">
                 <div id="logo-area" class="logo-area">
-                    <a href="{$WWWROOT}" class="logo {if $sitelogosmall}change-to-small{/if} ">
-                        <img src="{$sitelogo}" alt="{$sitename}" data-customlogo="{$sitelogocustom}">
+                    <a href="{$WWWROOT}" class="logo {if $sitelogocustomsmall || (!$sitelogocustomsmall && !$sitelogocustom)}change-to-small{/if}">
+                        <img src="{$sitelogo}" alt="{$sitename}" data-customlogo="{$sitelogocustom}" >
                     </a>
-                    {if $sitelogosmall}
+                    {if $sitelogocustomsmall}
                         <a href="{$WWWROOT}" class="logoxs">
+                            <img src="{$sitelogocustomsmall}" alt="{$sitename}">
+                        </a>
+                    {/if}
+                    {if !$sitelogocustom && !$sitelogocustomsmall}
+                        <a href="{$WWWROOT}" class="logoxs change-to-small-default">
                             <img src="{$sitelogosmall}" alt="{$sitename}">
                         </a>
                     {/if}

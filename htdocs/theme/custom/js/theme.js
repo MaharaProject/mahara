@@ -216,7 +216,7 @@ jQuery(function($) {
     /*
      * Display appropriate Mahara logo depending on the header background.
      *
-     * Return if user uploaded custom logo as we assume that the colour
+     * Return if user uploaded custom logo as we assume that's the colour
      */
     function displayCorrectLogo() {
         var headerBgColour = $('.navbar-default.navbar-main').css("background-color");
@@ -231,6 +231,24 @@ jQuery(function($) {
         }
         else {
             headerLogo.attr('src', config.wwwroot + 'theme/raw/images/site-logo-dark.svg');
+        }
+    }
+
+    /*
+     * Display appropriate Mahara mobile logo depending on the header background.
+     * Displays the default only if a custom logo hasn't been uploaded.
+     */
+    function displayCorrectSmallLogo() {
+        var headerBgColour = $('.navbar-default.navbar-main').css("background-color");
+        var headerLogo = $('.header .logoxs > img');
+
+        if ($('.change-to-small-default').length > 0) {
+            if (isDark(headerBgColour)) {
+                headerLogo.attr('src', config.wwwroot + 'theme/raw/images/site-logo-small-light.svg');
+            }
+            else {
+                headerLogo.attr('src', config.wwwroot + 'theme/raw/images/site-logo-small-dark.svg');
+            }
         }
     }
 
@@ -277,6 +295,7 @@ jQuery(function($) {
     calculateObjectVideoAspectRatio();
     responsiveObjectVideo();
     displayCorrectLogo();
+    displayCorrectSmallLogo();
 
     if ($('.js-dropdown-group').length > 0) {
         attachInputDropdown();
