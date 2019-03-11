@@ -37,7 +37,6 @@ if (!$collection->has_framework()) {
         // The collection does have a framework associated but we are not allowed
         // to see the matrix page so show an error page with link to first page of collection.
         $smarty = smarty();
-        $smarty->assign('maintitle', $collection->get('name'));
         $smarty->assign('owner', $collection->get('owner'));
         $smarty->assign('PAGEHEADING', null);
         $smarty->assign('name', get_string('frameworkmissing', 'module.framework'));
@@ -199,7 +198,7 @@ $inlinejs = <<<EOF
 EOF;
 
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
-$smarty->assign('maintitle', $collection->get('name'));
+$smarty->assign('maintitle', hsc($collection->get('name')));
 $smarty->assign('collectionid', $collection->get('id'));
 $smarty->assign('owner', $owner);
 $smarty->assign('PAGEHEADING', null);
