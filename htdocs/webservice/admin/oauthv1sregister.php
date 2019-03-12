@@ -117,6 +117,10 @@ function webservices_server_submit(Pieform $form, $values) {
                                 DELETE FROM {oauth_server_token}
                                 WHERE osr_id_ref = ?
                                 ', array($dbserver->id));
+            delete_records_sql('
+                                DELETE FROM {lti_assessment}
+                                WHERE oauthserver = ?
+                                ', array($dbserver->id));
             $store->deleteServer($dbserver->consumer_key, $dbserver->userid, $is_admin);
             $SESSION->add_ok_msg(get_string('oauthserverdeleted', 'auth.webservice'));
         }
