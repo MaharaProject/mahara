@@ -6032,11 +6032,13 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution, $share=false, $collection=false) {
+    public static function set_nav($group, $institution, $share=false, $collection=false, $submenu=true) {
         if ($group) {
             define('MENUITEM', 'engage/index');
-            define('MENUITEM_SUBPAGE', $share ? 'share' : 'views');
-            define('GROUP', $group);
+            if ($submenu) {
+                define('MENUITEM_SUBPAGE', $share ? 'share' : 'views');
+                define('GROUP', $group);
+            }
         }
         else if ($institution == 'mahara') {
             define('ADMIN', 1);
