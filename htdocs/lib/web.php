@@ -3846,6 +3846,10 @@ function clean_html($text, $xhtml=false) {
         $config->set('Filter.Custom', $customfilters);
     }
 
+    require_once('htmlpurifiercustom/MixedContent.php');
+    $uri = $config->getDefinition('URI');
+    $uri->addFilter(new HTMLPurifier_URIFilter_MixedContent(), $config);
+
     if ($def = $config->maybeGetRawHTMLDefinition()) {
         $def->addAttribute('a', 'target', 'Enum#_blank,_self');
         # Allow iframes with custom attributes such as fullscreen
