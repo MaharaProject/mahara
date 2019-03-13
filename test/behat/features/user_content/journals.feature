@@ -45,8 +45,8 @@ Scenario: Add Journal block to the page
     And I click on "Save entry"
     Then I should see "Journal entry saved"
     When I choose "Pages and collections" in "Create" from main menu
-    And I click on "Celeste's Page" panel menu
-    And I click on "Edit" in "Celeste's Page" panel menu
+    And I click on "Celeste's Page" card menu
+    And I click on "Edit" in "Celeste's Page" card menu
     Then I should see "Journal entry Added from Block"
     And I should see "The contents of this entry ABCD123"
 
