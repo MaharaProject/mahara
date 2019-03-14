@@ -953,7 +953,7 @@ class ArtefactTypeComment extends ArtefactType {
             'class' => ($USER->is_logged_in() ? 'hide-label' : ''),
             'rows'  => 5,
             'cols'  => 80,
-            'rules' => array('maxlength' => 8192),
+            'rules' => array('maxlength' => 1000000),
         );
         if (get_config_plugin('artefact', 'comment', 'commentratings')) {
             $form['elements']['rating'] = array(

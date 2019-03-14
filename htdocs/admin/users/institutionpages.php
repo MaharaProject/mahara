@@ -91,7 +91,7 @@ $form = pieform(array(
             'title'       => get_string('pagetext', 'admin'),
             'defaultvalue' => $pagecontents[DEFAULTPAGE],
             'rules'       => array(
-                'maxlength' => 65536,
+                'maxlength' => 1000000,
                 'required' => true
             )
         ),

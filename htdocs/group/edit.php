@@ -102,7 +102,7 @@ $form = array(
         'description' => array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription', 'group'),
-            'rules'        => array('maxlength' => 65536),
+            'rules'        => array('maxlength' => 1000000),
             'rows'         => 10,
             'cols'         => 55,
             'defaultvalue' => $group_data->description,

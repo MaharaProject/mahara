@@ -689,7 +689,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
             'class' => 'hide-label',
             'rows'  => 5,
             'cols'  => 80,
-            'rules' => array('maxlength' => 8192),
+            'rules' => array('maxlength' => 1000000),
         );
         $form['elements']['block'] = array(
             'type' => 'hidden',

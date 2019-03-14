@@ -71,6 +71,9 @@ $form = array(
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => $artefact->get('description'),
+            'rules'       => array(
+                'maxlength' => 1000000
+            )
         ),
         'tags' => array(
             'type'         => 'tags',

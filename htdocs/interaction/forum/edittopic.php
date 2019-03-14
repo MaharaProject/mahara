@@ -144,7 +144,7 @@ $editform = array(
             'defaultvalue' => isset($topic) ? $topic->body : null,
             'rules'        => array(
                 'required'  => true,
-                'maxlength' => 65536,
+                'maxlength' => 1000000,
             ),
         ),
         'filebrowser' => array(

@@ -274,7 +274,7 @@ function get_basic_elements() {
             'cols'         => 70,
             'class'        => 'view-description',
             'defaultvalue' => $view->get('description'),
-            'rules'        => array('maxlength' => 65536),
+            'rules'        => array('maxlength' => 1000000),
         ),
         'tags'        => array(
             'type'         => 'tags',
@@ -329,7 +329,7 @@ function get_advanced_elements() {
             'cols'         => 70,
             'class'        => 'view-description',
             'defaultvalue' => $view->get('instructions'),
-            'rules'        => array('maxlength' => 65536),
+            'rules'        => array('maxlength' => 1000000),
         ),
         'urlid'       => array(
             'type'         => 'text',

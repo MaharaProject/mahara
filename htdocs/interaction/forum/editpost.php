@@ -176,7 +176,7 @@ $editform = array(
             'defaultvalue' => isset($post) ? $post->body : null,
             'rules'        => array(
                 'required'  => true,
-                'maxlength' => 65536,
+                'maxlength' => 1000000,
             ),
         ),
         'filebrowser' => array(

@@ -109,7 +109,7 @@ if ($versionid !== null) {
                     'title'       => get_string('pagetext', 'admin'),
                     'defaultvalue' => $pageoptions ? $pageoptions->content : '',
                     'rules'       => array(
-                        'maxlength' => 65536,
+                        'maxlength' => 1000000,
                         'required' => true
                     )
                 ),

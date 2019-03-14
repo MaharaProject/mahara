@@ -56,7 +56,7 @@ $elements['message'] = array(
     'rows'         => 5,
     'cols'         => 80,
     'defaultvalue' => $annotationfeedback->get('description'),
-    'rules'        => array('maxlength' => 8192),
+    'rules'        => array('maxlength' => 1000000),
 );
 $elements['ispublic'] = array(
     'type'  => 'switchbox',

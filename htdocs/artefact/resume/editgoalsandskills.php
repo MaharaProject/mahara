@@ -78,7 +78,7 @@ $form = pieform(array(
             'rows' => 20,
             'cols' => 65,
             'defaultvalue' => $artefact->get('description'),
-            'rules' => array('maxlength' => 65536),
+            'rules' => array('maxlength' => 1000000),
         ),
         'filebrowser' => array(
             'type'         => 'filebrowser',
