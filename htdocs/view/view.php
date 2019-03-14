@@ -104,7 +104,7 @@ if (!can_view_view($view)) {
     throw new AccessDeniedException($errorstr);
 }
 $institution = $view->get('institution');
-View::set_nav($groupid, $institution);
+View::set_nav($groupid, $institution, false, false, false);
 // Comment list pagination requires limit/offset params
 $limit       = param_integer('limit', 10);
 $offset      = param_integer('offset', 0);
