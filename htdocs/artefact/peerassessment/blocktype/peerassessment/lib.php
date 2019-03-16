@@ -71,13 +71,13 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         $options->showcomment = $showcomment;
         $options->view = $instance->get_view();
         $options->block = $instance->get('id');
-        $feedback = ArtefactTypePeerassessment::get_assessments($options);
+        $feedback = ArtefactTypePeerassessment::get_assessments($options, $versioning);
         $feedbackform = ArtefactTypePeerassessment::add_assessment_form(true, $instance->get('id'), 0);
 
         $smarty = smarty_core();
         $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('instructions', $instructions);
-        $smarty->assign('allowfeedback', $feedback->canedit);
+        $smarty->assign('allowfeedback', $feedback->canedit && !$versioning);
         $smarty->assign('addassessmentfeedbackform', pieform($feedbackform));
         if ($feedback && !$editing) {
             $smarty->assign('feedback', $feedback);
@@ -155,5 +155,17 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
                 $a->delete();
             }
         }
+    }
+
+    public static function get_current_artefacts(BlockInstance $instance) {
+        $values = array($instance->get('id'));
+
+        $sql = "SELECT a.description, a.ctime, a.mtime, apa.assessment as id, apa.usr as author, apa.private
+                FROM {artefact} a
+                JOIN {artefact_peer_assessment} apa
+                ON a.id = apa.assessment
+                WHERE block = ?";
+        $artefacts = get_records_sql_array($sql, $values);
+        return $artefacts;
     }
 }
