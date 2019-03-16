@@ -1141,42 +1141,52 @@ function xmldb_core_upgrade($oldversion=0) {
         // to keep the currect artefacts of a peerassessment block
         $existing_artefacts = array();
 
-        foreach ($versions as $version) {
-            if (isset($version->blockdata)) {
-                $needsupdate = false;
-                $blockdata = json_decode($version->blockdata);
-                foreach ($blockdata->blocks as &$block) {
-                    if ($block->blocktype == 'peerassessment') {
-                        $blockid = $block->originalblockid;
-                        if (!isset($existing_artefacts[$blockid])) {
-                            //in case there are no artefacts in the block
-                            // or the blockinstance was deleted, we won't check again
-                            $existing_artefacts[$blockid] = null;
+        if ($versions) {
+            $count = 0;
+            $limit = 1000;
+            $total = count($versions);
+            foreach ($versions as $version) {
+                if (!empty($version->blockdata)) {
+                    $needsupdate = false;
+                    $blockdata = json_decode($version->blockdata);
+                    foreach ($blockdata->blocks as &$block) {
+                        if ($block->blocktype == 'peerassessment') {
+                            $blockid = $block->originalblockid;
+                            if (!isset($existing_artefacts[$blockid])) {
+                                //in case there are no artefacts in the block
+                                // or the blockinstance was deleted, we won't check again
+                                $existing_artefacts[$blockid] = null;
 
-                            try {
-                              // get the artefacts use in the block
-                                $bi = new BlockInstance($blockid);
-                                if ($bi && $artefacts = PluginBlocktypePeerassessment::get_current_artefacts($bi)) {
-                                    foreach ($artefacts as $key => $artefact) {
-                                        if (isset($bi->configdata['artefactid']) && $bi->configdata['artefactid'] == $artefact) {
-                                            unset($artefacts[$key]);
+                                try {
+                                    // get the artefacts use in the block
+                                    $bi = new BlockInstance($blockid);
+                                    if ($bi && $artefacts = PluginBlocktypePeerassessment::get_current_artefacts($bi)) {
+                                        foreach ($artefacts as $key => $artefact) {
+                                            if (isset($bi->configdata['artefactid']) && $bi->configdata['artefactid'] == $artefact) {
+                                                unset($artefacts[$key]);
+                                            }
                                         }
+                                        $existing_artefacts[$blockid] = $artefacts;
                                     }
-                                    $existing_artefacts[$blockid] = $artefacts;
                                 }
+                                catch (BlockInstanceNotFoundException $e) {}
                             }
-                            catch (BlockInstanceNotFoundException $e) {}
-                        }
-                        // if we actually have artefact ids, save them in the version
-                        if ($existing_artefacts[$blockid]) {
-                            $block->configdata->existing_artefacts = $existing_artefacts[$blockid];
-                            $needsupdate = true;
+                            // if we actually have artefact ids, save them in the version
+                            if ($existing_artefacts[$blockid]) {
+                                $block->configdata->existing_artefacts = $existing_artefacts[$blockid];
+                                $needsupdate = true;
+                            }
                         }
                     }
+                    $version->blockdata = json_encode($blockdata);
+                    if ($needsupdate) {
+                        update_record('view_versioning', $version);
+                    }
                 }
-                $version->blockdata = json_encode($blockdata);
-                if ($needsupdate) {
-                    update_record('view_versioning', $version);
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
                 }
             }
         }
