@@ -981,7 +981,7 @@ function compositeSaveCallback(form, data) {
     });
     // Also need to clear the innerHTML for textareas
     \$j('#' + form.id + ' textarea').each(function() {
-        document.getElementById(\$j(this).attr('id')).innerHTML = '';
+        tinyMCE.get(\$(this).attr('id')).setContent('');
     });
 
     \$j('#' + key + 'form').collapse('hide');
