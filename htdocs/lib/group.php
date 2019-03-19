@@ -2551,7 +2551,7 @@ function install_system_grouphomepage_view() {
         'template'    =>  View::SITE_TEMPLATE,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 1)),
-        'title'       => get_string('grouphomepage', 'view'),
+        'title'       => get_string('Grouphomepage', 'view'),
     ));
     $view->set_access(array(array(
         'type' => 'loggedin'

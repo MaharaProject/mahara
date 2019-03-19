@@ -458,9 +458,9 @@ $string['mostcomments1'] = 'Most comments';
 
 // View types
 $string['dashboard'] = 'Dashboard';
-$string['profile'] = 'Profile';
-$string['portfolio'] = 'Portfolio';
-$string['grouphomepage'] = 'Group homepage';
+$string['Profile'] = 'Profile';
+$string['Portfolio'] = 'Portfolio';
+$string['Grouphomepage'] = 'Group homepage';
 
 $string['grouphomepagedescription'] = 'The group homepage contains the content that appears on the "About" tab for this group';
 $string['pageaccessrules'] = 'Page access rules';
