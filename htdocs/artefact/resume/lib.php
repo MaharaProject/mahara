@@ -63,7 +63,7 @@ class PluginArtefactResume extends PluginArtefact {
             ),
             'index' => array(
                 'page'  => 'index',
-                'url'   => 'artefact/resume',
+                'url'   => 'artefact/resume/index.php',
                 'title' => get_string('introduction', 'artefact.resume'),
             ),
             'employment' => array(
