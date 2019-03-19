@@ -2039,29 +2039,57 @@ function get_users_data($userids, $getviews=true) {
     }
 
     if (!$data || !$getviews || !$views = get_views(array_keys($data), null, null)) {
-        $views = array();
+      $views = array();
     }
 
     if ($getviews) {
         $viewcount = array_map('count', $views);
         // since php is so special and inconsistent, we can't use array_map for this because it breaks the top level indexes.
         $cleanviews = array();
-        foreach ($views as $userindex => $viewarray) {
-            $cleanviews[$userindex] = array_slice($viewarray, 0, 5);
 
-            // Don't reveal any more about the view than necessary
-            foreach ($cleanviews as $userviews) {
-                foreach ($userviews as &$view) {
-                    foreach (array_keys(get_object_vars($view)) as $key) {
-                        if ($key != 'id' && $key != 'title' && $key != 'url' && $key != 'fullurl') {
-                            unset($view->$key);
+        foreach ($views as $userindex => $view) {
+            $collectionobject = null;
+            foreach ($view as $viewid => $vdata) {
+                //pages in a collection
+                if (!empty($vdata->collection)) {
+                    if (!$collectionobject) {
+                        $collectionobject = $vdata->collection;
+                        $cleanviews[$userindex][] = $vdata;
+                    }
+                    else {
+                        if ($collectionobject != $vdata->collection && isset($collectionobject)) {
+                          $collectionobject = $vdata->collection;
+                          $cleanviews[$userindex][] = $vdata;
                         }
+                    }
+                }
+            }
+            // pages not in a collection, separating the loop to display collections first, then single pages
+            foreach ($view as $viewid => $vdata) {
+                if (empty($vdata->collection)) {
+                    $cleanviews[$userindex][] = $vdata;
+                }
+            }
+            // $cleanviews[$userindex] = array_slice($cleanviews[$userindex], 0, 10); // if we want to limit output
+        }
+
+        // Don't reveal any more about the view than necessary
+        foreach ($cleanviews as $userviews) {
+            foreach ($userviews as &$view) {
+                foreach (array_keys(get_object_vars($view)) as $key) {
+                    if (!empty($view->collection)) {
+                        if ($key == 'title') {
+                            $view->$key = $view->collection->get('name');
+                        }
+                    }
+                    if ($key != 'id' && $key != 'title' && $key != 'url' && $key != 'fullurl') {
+                        // pages in a collection should appear with collection name as title
+                        unset($view->$key);
                     }
                 }
             }
         }
     }
-
     foreach ($data as $friend) {
         if ($getviews && isset($cleanviews[$friend->id])) {
             $friend->views = $cleanviews[$friend->id];
@@ -2086,7 +2114,7 @@ function get_users_data($userids, $getviews=true) {
 function build_userlist_html(&$data, $searchtype, $admingroups, $filter='', $query='') {
     if ($data['data']) {
         $userlist = array_map(function($u) { return (int)$u['id']; }, $data['data']);
-        $userdata = get_users_data($userlist, $searchtype == 'myfriends');
+        $userdata = get_users_data($userlist, $filter != 'pending');
     }
     $smarty = smarty_core();
     $smarty->assign('data', isset($userdata) ? $userdata : null);
@@ -2101,7 +2129,6 @@ function build_userlist_html(&$data, $searchtype, $admingroups, $filter='', $que
     if (isset($data['filter'])) {
         $params['filter'] = $data['filter'];
     }
-
     if ($searchtype == 'myfriends') {
         $resultcounttextsingular = get_string('friend', 'group');
         $resultcounttextplural = get_string('friends', 'group');
