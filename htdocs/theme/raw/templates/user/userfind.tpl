@@ -1,7 +1,4 @@
 <div class="list-group-item {if $user->pending} list-group-item-warning{/if}">
-    <a href="{profile_url($user)}" class="outer-link">
-        <span class="sr-only">{$user->display_name}</span>
-     </a>
     <div class="row" id="friendinfo_{$user->id}">
         <div class="col-md-8">
             <div class="usericon-heading">
@@ -9,7 +6,10 @@
                     <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
                 </div>
                 <h4 class="list-group-item-heading middle">
-                    {$user->display_name}
+                    <a href="{profile_url($user)}" >
+                        <span class="sr-only">{$user->display_name}</span>
+                        {$user->display_name}
+                    </a>
                     {if $user->pending}
                     <span class="pendingfriend text-small text-midtone">
                         - {str tag='pendingsince' section='group' arg1=$user->pending_time}
@@ -19,6 +19,18 @@
                         - {str tag='existingfriend' section='group'}
                     </span>
                     {/if}
+
+                    {if $user->friend && $user->views}
+                    <p class="viewlist">
+                        <strong>
+                            {str tag='Portfolios' section='view'}:
+                        </strong>
+                        {foreach from=$user->views item=view name=addr}
+                        <a href="{$view->fullurl}">{$view->title}</a>{if !$dwoo.foreach.addr.last}, {/if}
+                        {/foreach}
+                    </p>
+                    {/if}
+
                 </h4>
                 {if $user->institutions}
                 <div class="memberof detail text-small">
