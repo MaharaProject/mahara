@@ -1238,7 +1238,7 @@ class BlockInstance {
         }
 
         $smarty->assign('content', $content);
-        if (isset($configdata['retractable']) && $title) {
+        if (isset($configdata['retractable']) && $title && !$exporting) {
             $smarty->assign('retractable', $configdata['retractable']);
             if (isset($configdata['retractedonload'])) {
                 $smarty->assign('retractedonload', $configdata['retractedonload']);
