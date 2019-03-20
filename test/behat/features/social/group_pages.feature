@@ -34,6 +34,7 @@ Scenario: Copying a group page retains title (Bug 1519374)
  Given I log in as "UserB" with password "Kupuh1pa!"
  And I am on homepage
  When I follow "Page GroupA_01"
+ And I press "More options"
  And I follow "Copy"
  And the following fields match these values:
  | Page title | Page GroupA_01 |

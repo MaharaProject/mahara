@@ -36,6 +36,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
 
   # Copy a page directly from its location
   And I display the page
+  And I press "More options"
   And I follow "Copy"
   And I press "Save"
   And I display the page
@@ -60,6 +61,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   # Copy a collection directly from its location
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Collection admin_01"
+  And I press "More options"
   And I follow "Copy"
   And I press "Collection"
   And I press "Next: Edit collection pages"
