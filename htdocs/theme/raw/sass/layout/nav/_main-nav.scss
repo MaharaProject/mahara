@@ -91,6 +91,10 @@
                 text-decoration:none;
                 color: $navbar-default-link-hover-color;
             }
+            &.disabled {
+                color: $btn-link-disabled-color;
+                cursor: not-allowed;
+            }
             @include media-breakpoint-up(md) {
                 border: 1px solid $navbar-default-border;
             }
