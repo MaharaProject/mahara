@@ -360,3 +360,8 @@ pre {
         margin-top: 0;
     }
 }
+
+// Add margin to TinyMCE blocks
+body#tinymce {
+    margin: 8px;
+}
