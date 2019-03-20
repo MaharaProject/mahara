@@ -111,14 +111,14 @@
                 </option>
                 {/if}
 
-            {if $moderator && $otherforums && (count($otherforums) > 0)}
+            {if $moderator && !empty($otherforums) && (count($otherforums) > 0)}
                 <option value="moveto">
                     {str tag="Moveto" section="interaction.forum"}
                 </option>
             {/if}
             </select>
 
-            {if $moderator && $otherforums && (count($otherforums) > 0)}
+            {if $moderator && !empty($otherforums) && (count($otherforums) > 0)}
             <select name="newforum" id="otherforums" class="hidden form-control select">
                 {foreach from=$otherforums item=otherforum}
                 <option value="{$otherforum->id}">

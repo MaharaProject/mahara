@@ -63,7 +63,7 @@
             {/if}
         </div>
         <!-- TAGS -->
-        {if $record->tags|count gt 0}
+        {if is_array($record->tags) && count($record->tags) > 0}
         <div class="tags"><strong>{str tag=tags section=search.elasticsearch}:</strong>
             {foreach from=$record->tags item=tag name=tags}
                 <a href="{$WWWROOT}search/elasticsearch/index.php?query={$tag}&tagsonly=true">{$tag}</a>{if !$.foreach.tags.last}, {/if}
@@ -73,7 +73,7 @@
     </div>
     <!-- RESUMEITEMS -->
     <div class="col-md-4">
-        {if $record->resumeitems|count gt 0}
+        {if is_array($record->resumeitems) && count($record->resumeitems) > 0}
         <strong>{str tag=contains section=search.elasticsearch}:</strong>
         <ul>
         {foreach from=$record->resumeitems key=rid item=resume}
@@ -85,9 +85,9 @@
         {/if}
 
         <!-- VIEWS -->
-        {if $record->views|count gt 0}
+        {if is_array($record->views) && count($record->views) > 0}
         <div class="usedon">
-            {if $record->views|count gt 1}
+            {if count($record->views) > 1}
                 <strong>{str tag=usedonpages section=search.elasticsearch}:</strong>
                 <ul class="list-group list-unstyled">
                 {foreach from=$record->views key=id item=view}
