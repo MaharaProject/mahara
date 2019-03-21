@@ -39,11 +39,18 @@
             max-width: 300px;
 
             z-index: 5;
-            max-height: 88vh;
+            @for $i from 1 through 5 {
+                .header.message-count-#{$i} & {
+                    max-height: calc(100vh - (#{$navbar-height} + (#{$i} * 33px) + 20px));
+                }
+            }
             overflow-y: hidden;
             overflow-x: hidden;
             margin-right: 0;
             box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            &.show {
+                overflow-y: auto;
+            }
         }
 
         @include media-breakpoint-down(sm) {
