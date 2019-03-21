@@ -32,6 +32,10 @@
     </tr>
     {/if}
     <tr>
+        <th>{str tag=uploadedby section=artefact.file}:</th>
+        <td>{$uploadedby}</td>
+    </tr>
+    <tr>
         <th>{str tag=Created section=artefact.file}:</th>
         <td>{$created}</td>
     </tr>

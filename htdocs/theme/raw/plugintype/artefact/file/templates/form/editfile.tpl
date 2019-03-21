@@ -33,6 +33,10 @@
                 <span>{contextualhelp plugintype='artefact' pluginname='file' section='tags'}</span>
                 <div class="description">{str tag=tagsdescprofile}</div>
             </div>
+            <div>
+                <label for="{$prefix}_edit_uploadedby">{str tag=uploadedby section=artefact.file}</label>
+                <span id="{$prefix}_edit_uploadedby"></span>
+            </div>
             {if $groupinfo}
             <div>
                 <label>{str tag=Permissions}</label>
