@@ -59,12 +59,12 @@ function pieform_element_calendar(Pieform $form, $element) {
     // Build the HTML
     $element['class'] .= " datetimepicker-input";
     $result = '<span class="hasDatepickerwrapper"><input type="text"'
-        . $form->element_attributes($element)
+        . $form->element_attributes($element, array('id'))
         . ' id="' . $id . '"'
         . ' value="' . $value . '"'
         . ' autocomplete="off"'
         . ' data-toggle="datetimepicker" data-target="#' . $id . '"'
-        . 'aria-label="' . get_string('element.calendar.format.arialabel', 'pieforms') . '"
+        . ' aria-label="' . get_string('element.calendar.format.arialabel', 'pieforms') . '"
         ></span>';
     $result .= '
         <script>
@@ -79,6 +79,10 @@ function pieform_element_calendar(Pieform $form, $element) {
             format: "' . $options['dateFormat'] . '",';
     }
     $tooltips = json_encode(pieform_element_calendar_tooltip_lang_strings());
+    if ($value) {
+        $result .= '
+            date: moment("' . $value . '", "' . $options['dateFormat'] . '"),';
+    }
     $result .= '
         locale: "' . strstr(current_language(), '.', true) . '",
         useCurrent: false,
