@@ -2948,8 +2948,10 @@ function institution_view_type_graph($type = null, $institutiondata) {
 function institution_view_type_graph_render($type = null, $extradata) {
 
     $data['graph'] = ($type) ? $type : 'pie';
-    $data['jsondata'] = get_field('institution_data','value','type','view-type-graph','institution', $extradata->institution);
-    return $data;
+    if ($jsondata = json_decode(get_field('institution_data','value','type','view-type-graph','institution', $extradata->institution))) {
+        $data['jsondata'] = json_encode($jsondata[0]);
+        return $data;
+    }
 }
 
 function institution_user_type_graph($type = null, $institutiondata) {
