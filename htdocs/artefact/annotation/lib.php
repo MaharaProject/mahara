@@ -1268,7 +1268,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             'title' => get_string('Annotationfeedback', 'artefact.annotation'),
             'rows'  => 5,
             'cols'  => 80,
-            'rules' => array('maxlength' => 8192),
+            'rules' => array('maxlength' => 1000000),
         );
 
         $collection = $view->get('collection');

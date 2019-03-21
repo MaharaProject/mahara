@@ -80,7 +80,7 @@ abstract class PluginInteraction extends Plugin implements IPluginInteraction {
                 'defaultvalue' => (isset($instance) ? $instance->get('description') : ''),
                 'rules'        => array(
                     'required' => true,
-                    'maxlength' => 65536,
+                    'maxlength' => 1000000,
                 )
             ),
         );

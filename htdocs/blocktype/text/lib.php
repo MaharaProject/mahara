@@ -81,7 +81,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
                 'width' => '100%',
                 'height' => $height . 'px',
                 'defaultvalue' => $text,
-                'rules' => array('maxlength' => 65536),
+                'rules' => array('maxlength' => 1000000),
             ),
             'tags'  => array(
                 'type'         => 'tags',

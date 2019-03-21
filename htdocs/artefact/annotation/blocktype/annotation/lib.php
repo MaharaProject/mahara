@@ -205,7 +205,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
                 'height' => $height . 'px',
                 'defaultvalue' => $text,
                 'rules' => array(
-                    'maxlength' => 65536,
+                    'maxlength' => 1000000,
                     'required' => true
                 ),
             ),

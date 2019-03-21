@@ -81,7 +81,7 @@ $string['rule.email.email'] = 'Email address is invalid';
 
 $string['rule.integer.integer'] = 'The field must be an integer';
 
-$string['rule.maxlength.maxlength'] = 'This field must be at most %d characters long.';
+$string['rule.maxlength.maxlength'] = 'This field must be at most %d characters long. Please revise it or try splitting this over multiple instances.';
 
 $string['rule.minlength.minlength'] = 'This field must be at least %d characters long.';
 

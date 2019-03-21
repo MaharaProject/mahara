@@ -267,7 +267,7 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
             'defaultvalue' => (isset($configdata['introtext'])) ? $configdata['introtext'] : '',
             'width' => '100%',
             'height' => '150px',
-            'rules' => array('maxlength' => 65536),
+            'rules' => array('maxlength' => 1000000),
         );
 
         return $form;

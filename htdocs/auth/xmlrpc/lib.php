@@ -808,6 +808,9 @@ class PluginAuthXmlrpc extends PluginAuth {
             'defaultvalue' => self::$default_config['authloginmsg'],
             'help'         => true,
             'class'        => 'under-label-help',
+            'rules'       => array(
+                'maxlength' => 1000000
+            )
         );
 
         $elements['ssodirection'] = array(

@@ -53,7 +53,7 @@ $elements['message'] = array(
     'rows'         => 5,
     'cols'         => 80,
     'defaultvalue' => $comment->get('description'),
-    'rules'        => array('maxlength' => 8192),
+    'rules'        => array('maxlength' => 1000000),
 );
 if (get_config_plugin('artefact', 'comment', 'commentratings')) {
     $elements['rating'] = array(
