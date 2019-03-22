@@ -158,6 +158,8 @@ class Collection {
         }
         delete_records('collection','id',$this->id);
         delete_records('existingcopy', 'collection', $this->id);
+        // Delete any submission history
+        delete_records('module_assessmentreport_history', 'event', 'collection', 'itemid', $this->id);
 
         // Secret url records belong to the collection, so remove them from the view.
         // @todo: add user message to whatever calls this.
@@ -1187,7 +1189,7 @@ class Collection {
 
         handle_event('releasesubmission', array('releaseuser' => $releaseuser,
                                                 'id' => $this->get('id'),
-                                                'groupname' => $this->submittedgroup,
+                                                'groupname' => get_field('group', 'name', 'id', $this->submittedgroup),
                                                 'eventfor' => 'collection'));
 
         // We don't send out notifications about the release of remote-submitted Views & Collections

@@ -433,6 +433,7 @@ $string['contentreports'] = 'Content overview';
 $string['peoplereports'] = 'People overview';
 $string['informationloginsreports'] = 'Logins';
 $string['informationcomparisonsreports'] = 'Institution comparison';
+$string['groupsassessmentsreports'] = 'Submissions';
 
 $string['applyingfilters'] = 'Applying filters';
 $string['nogroupdataperinstitution'] = 'Group reports can only be generated for the entire site. Please select "All institutions" from the institution selector if you have permission to view sitewide reports.';
@@ -468,3 +469,17 @@ $string['usersbyinstitution'] = 'Users by institution';
 $string['groupsbytype'] = 'Groups by type';
 $string['earliestdate'] = 'Data for this report is only available from %s onwards.';
 $string['noearliestdate'] = 'There is no data recorded for this report.';
+$string['submissions'] = 'Submissions';
+$string['reportdescassessments'] = '<ul>
+<li>Submission type</li>
+<li>Portfolio name</li>
+<li>Portfolio owner</li>
+<li>Group submitted to</li>
+<li>Submission date</li>
+<li>Released date</li>
+<li>Released by</li>
+</ul>';
+$string['assessmenttype'] = 'Submission type';
+$string['assessmensubmitted'] = 'Submission date';
+$string['assessmentmarker'] = 'Released by';
+$string['assessmentreleaseddate'] = 'Released date';

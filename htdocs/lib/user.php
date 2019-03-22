@@ -1600,6 +1600,9 @@ function delete_user($userid) {
     delete_records('usr_agreement', 'usr', $userid);
     delete_records('existingcopy', 'usr', $userid);
     delete_records('artefact_internal_profile_email', 'owner', $userid);
+    // Delete any submission history
+    delete_records('module_assessmentreport_history', 'userid', $userid);
+    delete_records('module_assessmentreport_history', 'markerid', $userid);
 
     if (is_plugin_active('framework', 'module')) {
         delete_records('framework_assessment_feedback', 'usr', $userid);
