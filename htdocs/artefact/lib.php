@@ -89,6 +89,15 @@ abstract class PluginArtefact extends Plugin implements IPluginArtefact {
     }
 
     /**
+     * Returns any artefacts that should not be included in an export
+     * @param array $userid
+     * @return array of artefact ids
+     */
+    public static function exclude_artefacts_in_export($userid) {
+        return array();
+    }
+
+    /**
      * When filtering searches, some artefact types are classified the same way
      * even when they come from different artefact plugins.  This function allows
      * artefact plugins to declare which search filter content type each of their

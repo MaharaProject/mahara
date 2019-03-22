@@ -58,3 +58,4 @@ $string['progress_verify'] = array(
     "Give 1 verification to another person's peer assessment page",
     "Give %s verifications to other people's peer assessment pages",
 );
+$string['importedassessment'] = "Imported peer assessment";

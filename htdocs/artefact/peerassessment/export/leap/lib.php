@@ -18,9 +18,10 @@ class LeapExportElementPeerassessment extends LeapExportElement {
         $artefactlist = join(',', array_map('intval', $artefactids));
 
         // Get the peer assessments that are on these views.
+        // and are not in draft status
         $records = get_records_select_array(
             'artefact_peer_assessment',
-            "view IN ($viewlist)",
+            "view IN ($viewlist) AND private = 0",
             array(),
             '',
             'assessment,view'
@@ -69,4 +70,9 @@ class LeapExportElementPeerassessment extends LeapExportElement {
             ),
         );
     }
+
+    public function get_entry_author() {
+        return get_string('importedassessment', 'artefact.peerassessment');
+    }
+
 }

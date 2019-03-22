@@ -321,7 +321,19 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             }
         }
 
-
+        // check if there are any artefacts that shouldn't be exported for each artefact type
+        $artefactsnotincluded = array();
+        $plugins = plugins_installed('artefact');
+        foreach ($plugins as &$plugin) {
+            safe_require('artefact', $plugin->name);
+            $classname = generate_class_name('artefact', $plugin->name);
+            if (is_callable($classname . '::exclude_artefacts_in_export')) {
+                if ($artefacts = call_static_method($classname, 'exclude_artefacts_in_export', $userid)) {
+                    $artefactsnotincluded = array_unique(array_merge($artefactsnotincluded, $artefacts));
+                }
+            }
+        }
+        $tmpartefacts = array_diff($tmpartefacts, $artefactsnotincluded);
 
         $this->collections = array();
         if (empty($this->views)) {
