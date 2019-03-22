@@ -1,6 +1,8 @@
+
+
 .navbar-main {
     .navbar-collapse {
-        border: 0;
+        border: 1px solid $navbar-default-link-border;
 
         @include media-breakpoint-down(sm) {
             border-width: 1px 0 0 0;
@@ -59,49 +61,6 @@
             &:focus {
                 background-color: $navbar-inverse-link-hover-bg;
                 color: $navbar-inverse-link-hover-color;
-            }
-        }
-    }
-}
-
-
-// Differently admin header and nav color
-body.admin {
-    .navbar-default {
-        background-color: scale-color($gray-500, $lightness: 7%);
-        border-color: scale-color($gray-500, $lightness: 7%);
-        .navbar-toggle {
-            &:focus,
-            &:hover {
-                background-color: scale-color($gray-500, $lightness: -2%);
-            }
-        }
-        .navbar-collapse {
-            border-color: scale-color($gray-500, $lightness: 7%);
-        }
-    }
-    .navbar-main {
-        .navbar-nav > li > a {
-            border-color: scale-color($gray-500, $lightness: 10%);
-            background-color: scale-color($gray-500, $lightness: 7%);
-            &:focus,
-            &:hover {
-                background-color: scale-color($gray-500, $lightness: -9%);
-            }
-        }
-        .navbar-showchildren {
-            background-color: scale-color($gray-500, $lightness: 90%);
-            color: $gray-700;
-            &.collapsed {
-              background-color: transparent;
-              color: #FFFFFF;
-            }
-        }
-        .child-nav li > a {
-            background-color: scale-color($gray-500, $lightness: 90%);
-            &:focus,
-            &:hover {
-                background-color: scale-color($gray-500, $lightness: 80%);
             }
         }
     }

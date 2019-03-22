@@ -10,7 +10,7 @@
     }
     > .card-header {
         font-family: $font-family-serif;
-        border-bottom: 2px solid $card-border-color;
+        border-bottom: 2px solid $card-secondary-border;
         font-size: $h4-font-size;
         margin-top: 0;
     }
@@ -21,7 +21,7 @@
         }
     }
     > .card-header, .card-header-nested {
-        border-bottom: 2px solid $card-border-color;
+        border-bottom: 2px solid $card-secondary-border;
         padding: 10px 8px;
         background: transparent;
 

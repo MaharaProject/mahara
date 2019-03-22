@@ -1,7 +1,7 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow component variables
-$arrow-color:                   #0162a7;
+$arrow-color:                   $theme-primary-color;
 $arrow-bar-bg:                  scale-color($arrow-color, $lightness: 5%);
 $arrow-text-color:              #fff;
 $arrow-link-color:              #FFF;
@@ -9,15 +9,15 @@ $arrow-link-hover-color:        #000000;
 $arrow-link-active-color:       #333333;
 $arrow-link-background-color:   #fff;
 
-$arrow-alt-color:               #677D1E; //to theme the Résumé nav and Groups nav green
+$arrow-alt-color:               $theme-secondary-color; //to theme the Résumé nav and Groups nav green
 
 // color for the secondary title in sections (cf. groups)
 $section-heading-color: #999;
 
-$admin-title-color: #9ad2ef;
+$admin-title-color: #FFF;
 $admin-title-bg: transparent;
 
-$dashboard-widget-bg: scale-color(#f9f9f9, $lightness: -2%);
+$dashboard-widget-bg: #FFFFFF;
 $dashboard-widget-color:  #FFFFFF;
 
 $help-icon-color: #047DB1;
@@ -27,22 +27,22 @@ $rss-icon-color: #FE6500;
 // LEGACY BOOTSTRAP 3 VARIABLES
 
 // Header navbar
-$navbar-default-bg:                         #0162a7;
+$navbar-default-bg:                         $theme-primary-color;
 $navbar-default-border:                     transparent;
 
 // Navbar toggle
 $navbar-toggle-color:                       #FFFFFF;
 $navbar-toggle-bg:                          transparent;
 $navbar-toggle-hover-color:                 #FFFFFF;
-$navbar-toggle-hover-bg:                    scale-color(#0162a7, $lightness: -5%);
+$navbar-toggle-hover-bg:                    scale-color($theme-primary-color, $lightness: -5%);
 $navbar-toggle-active-color:                #FFFFFF;
-$navbar-toggle-active-bg:                   scale-color(#0162a7, $lightness: -5%);
+$navbar-toggle-active-bg:                   scale-color($theme-primary-color, $lightness: -5%);
 
 // Navbar menu
 $navbar-default-link-border:                transparent;
 $navbar-default-link-color:                 #FFFFFF;
 $navbar-default-link-hover-color:           #FFFFFF;
-$navbar-default-link-bg:                    #0162a7;
+$navbar-default-link-bg:                    $theme-primary-color;
 $navbar-default-link-hover-bg:              scale-color($navbar-default-link-bg, $lightness: -5%);
 $navbar-default-active-color:               $gray-700;
 $navbar-default-active-bg:                  #f1f1f1;

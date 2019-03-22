@@ -15,7 +15,7 @@
 //
 //## Settings for some of the most global styles.
 
-$link-color:            #0162a7;
+$link-color:            $theme-primary-color;
 
 //== Typography
 //
@@ -34,7 +34,7 @@ $headings-color:          rgb(51, 51, 51);
 $border-radius:           0.1875rem;
 
 //** Global background color for active items (e.g., navs or dropdowns).
-$component-active-bg:     #0162a7;
+$component-active-bg:     $theme-primary-color;
 
 
 //== Forms

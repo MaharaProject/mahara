@@ -2,10 +2,10 @@
  * Theme colours should be defined here, and (ideally) used only in the global variables files (bootstrap-variables, custom-variables)
  */
 
-$theme-primary-color: #374757;
-$theme-primary-color-dark: darken($theme-primary-color, 3%);
-$theme-text-color:  #545B5D;
-$theme-text-lighttone-color: #888;
-$theme-text-midtone-color: #888;
+$theme-primary-color: #374757; // mid navy blue
+$theme-secondary-color: #178569; // teal
+$theme-text-color: #545B5D; // grey
+$theme-text-midtone-color: #888; // light grey
+$theme-text-lighttone-color: #888; // light grey
 
-$theme-accent-color: #178569;
+$theme-accent-color: #178569; // teal

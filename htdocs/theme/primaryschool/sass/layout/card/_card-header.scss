@@ -23,23 +23,23 @@
     &:nth-child(3n+1) {
         .card-secondary {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
-                background-color: #047DB1;
+                background-color: scale-color($theme-primary-color, $lightness: 10%);
                 color: #FFFFFF;
             }
             &:nth-child(5n+2) > .card-header, .card-header-nested {
-                background-color: #ca0238;
+                background-color: $theme-accent-color;
                 color: #FFFFFF;
             }
             &:nth-child(5n+3) > .card-header, .card-header-nested {
-                background-color: #A66700;
+                background-color: $theme-accent-color-two;
                 color: #FFFFFF;
             }
             &:nth-child(5n+4) > .card-header, .card-header-nested {
-                background-color: #5B6E1C;
+                background-color: $theme-secondary-color;
                 color: #FFFFFF;
             }
             &:nth-child(5n+5) > .card-header, .card-header-nested {
-                background-color: #773f97;
+                background-color: $theme-accent-color-three;
                 color: #FFFFFF;
             }
         }
@@ -47,23 +47,23 @@
     &:nth-child(3n+2) {
         .card-secondary {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
-                background-color: #A66700;
+                background-color: $theme-accent-color-two;
                 color: #FFFFFF;
             }
             &:nth-child(5n+2) > .card-header, .card-header-nested {
-                background-color: #5B6E1C;
+                background-color: $theme-secondary-color;
                 color: #FFFFFF;
             }
             &:nth-child(5n+3) > .card-header, .card-header-nested {
-                background-color: #773f97;
+                background-color: $theme-accent-color-three;
                 color: #FFFFFF;
             }
             &:nth-child(5n+4) > .card-header, .card-header-nested {
-                background-color: #047DB1;
+                background-color: scale-color($theme-primary-color, $lightness: 10%);
                 color: #FFFFFF;
             }
             &:nth-child(5n+5) > .card-header, .card-header-nested {
-                background-color: #ca0238;
+                background-color: $theme-accent-color;
                 color: #FFFFFF;
             }
         }
@@ -71,23 +71,23 @@
     &:nth-child(3n+3) {
         .car-secondary {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
-                background-color: #773f97;
+                background-color: $theme-accent-color-three;
                 color: #FFFFFF;
             }
             &:nth-child(5n+2) > .card-header, .card-header-nested {
-                background-color: #047DB1;
+                background-color: scale-color($theme-primary-color, $lightness: 10%);
                 color: #FFFFFF;
             }
             &:nth-child(5n+3) > .card-header, .card-header-nested {
-                background-color: #ca0238;
+                background-color: $theme-accent-color;
                 color: #FFFFFF;
             }
             &:nth-child(5n+4) > .card-header, .card-header-nested {
-                background-color: #A66700;
+                background-color: $theme-accent-color-two;
                 color: #FFFFFF;
             }
             &:nth-child(5n+5) > .card-header, .card-header-nested {
-                background-color: #5B6E1C;
+                background-color: $theme-secondary-color;
                 color: #FFFFFF;
             }
         }

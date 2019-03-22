@@ -2,10 +2,10 @@
 
 //Arrow compoanent variables
 $arrow-color:                   $theme-primary-color;
-$arrow-bar-bg:                  #0a4f66;
+$arrow-bar-bg:                  scale-color($theme-primary-color, $lightness: -25%);
 $arrow-text-color:              #fff;
 $arrow-link-color:              #fff;
-$arrow-link-hover-color:        #FFF;
+$arrow-link-hover-color:        $theme-text-color;
 $arrow-link-active-color:       #FFF;
 $arrow-link-background-color:   #fff;
 
@@ -39,7 +39,7 @@ $navbar-default-link-hover-color:           #FFF;
 $navbar-default-link-bg:                    $theme-primary-color;
 $navbar-default-link-hover-bg:              scale-color($navbar-default-bg, $lightness: -5.5%);
 $navbar-default-active-color:               #FFF;
-$navbar-default-active-bg:                  scale-color($navbar-default-bg, $lightness: 2%);
+$navbar-default-active-bg:                  scale-color($navbar-default-bg, $lightness: -15%);
 
 // Navbar menus children
 $navbar-inverse-bg:                         scale-color($theme-primary-color, $lightness: 90%);

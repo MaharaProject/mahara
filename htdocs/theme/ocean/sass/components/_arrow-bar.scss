@@ -19,7 +19,7 @@
             color: $arrow-link-color;
             &:hover,
             &:focus {
-                background: scale-color($arrow-bar-bg, $lightness: 5%);
+                background: $arrow-link-background-color;
                 color: $arrow-link-hover-color;
             }
         }

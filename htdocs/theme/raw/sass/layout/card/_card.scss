@@ -1,6 +1,6 @@
 .card {
     margin-bottom: $line-height-computed;
-    border: 1px solid $card-border;
+    border: 1px solid $card-border-color;
     border-radius: $card-border-radius;
     @include box-shadow(rgba(0, 0, 0, 0.05) 0 1px 1px);
     form {

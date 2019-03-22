@@ -11,49 +11,54 @@ $arrow-link-background-color:               #fff;
 
 
 // color for the secondary title in sections (cf. groups)
-$section-heading-color: #999;
-$admin-title-color: theme-color("primary");
-$admin-title-bg: theme-color("primary");
+$section-heading-color:                     #999;
+$admin-title-color:                         theme-color("primary");
+$admin-title-bg:                            theme-color("primary");
 
-$dashboard-widget-bg: theme-color("primary");
-$dashboard-widget-color: #FFFFFF;
+$dashboard-widget-bg:                       theme-color("primary");
+$dashboard-widget-color:                    #FFFFFF;
 
-$help-icon-color: #5b8fc8;
+$help-icon-color:                           #5b8fc8;
 
 // Pages and collections page header
-$pageheader-bg: #f0f5ea;
+$pageheader-bg:                             #f0f5ea;
 
+// Site footer background colors
+$site-footer-bg:                            scale-color($theme-secondary-color, $lightness: 70%);
+$site-footer-color:                         $theme-secondary-color;
+$site-footer-hover-color:                   $theme-secondary-color;
+$site-footer-hover-bg:                      transparent;
 
 // LEGACY BOOTSTRAP 3 VARIABLES
 
-// Header navbar
+// Site header
 $navbar-default-bg:                         #fff;
 $navbar-default-border:                     transparent;
 
 // Navbar toggle
-$navbar-toggle-color:                       $link-color;
+$navbar-toggle-color:                       $theme-primary-color;
 $navbar-toggle-bg:                          #fff;
-$navbar-toggle-hover-color:                 $link-color;
-$navbar-toggle-hover-bg:                    #f1f6eb;
-$navbar-toggle-active-color:                $link-color;
-$navbar-toggle-active-bg:                   #f1f6eb;
+$navbar-toggle-hover-color:                 $theme-primary-color;
+$navbar-toggle-hover-bg:                    scale-color($theme-primary-color, $lightness: 90%);
+$navbar-toggle-active-color:                $theme-primary-color;
+$navbar-toggle-active-bg:                   scale-color($theme-primary-color, $lightness: 90%);
 
 // Navbar menu
-$navbar-default-link-border:                $link-hover-color;
+$navbar-default-link-border:                scale-color($theme-primary-color, $lightness: 5%);
 $navbar-default-link-color:                 #FFF;
 $navbar-default-link-hover-color:           #FFF;
 $navbar-default-link-bg:                    $theme-primary-color;
-$navbar-default-link-hover-bg:              #637e3a;
+$navbar-default-link-hover-bg:              scale-color($theme-primary-color, $lightness: 6%);
 $navbar-default-active-color:               #FFF;
-$navbar-default-active-bg:                  #3a4a22;
+$navbar-default-active-bg:                  scale-color($theme-primary-color, $lightness: -30%);
 
 // Navbar menus children
-$navbar-inverse-bg:                         $link-hover-color;
+$navbar-inverse-bg:                         scale-color($theme-primary-color, $lightness: 10%);
 $navbar-inverse-link-color:                 #FFFFFF;
 $navbar-inverse-link-hover-color:           #FFFFFF;
-$navbar-inverse-link-hover-bg:              scale-color($link-hover-color, $lightness: 5%);
+$navbar-inverse-link-hover-bg:              scale-color($theme-primary-color, $lightness: 15%);
 $navbar-inverse-link-active-color:          #FFFFFF;
-$navbar-inverse-link-active-bg:             $link-hover-color;
+$navbar-inverse-link-active-bg:             scale-color($theme-primary-color, $lightness: 10%);
 
 // Navbar menu children toggles
 $navbar-inverse-toggle-color:               #FFF;
@@ -88,8 +93,8 @@ $btn-primary-border:             #556d32;
 
 // cards
 //** Border color for elements within cards
-$card-footer-bg:             #f0f5ea;
-$card-header-bg:    #fff;
+$card-border-color:       #d9d9d9;
+$card-header-bg:          #fff;
+$card-footer-bg:          scale-color($theme-primary-color, $lightness: 90%);
 
-$card-border:        #d9d9d9;
-$card-header-bg:    #FFFFFF;
+$card-secondary-border:   scale-color($theme-primary-color, $lightness: 70%);

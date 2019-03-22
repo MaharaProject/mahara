@@ -16,6 +16,7 @@
 @import "../layout/card/card";
 
 // Navigation
+@import "../layout/nav/main-nav";
 @import "../layout/nav/nav-tabs";
 
 // Components - small reusable design elements
@@ -23,6 +24,7 @@
 @import "../components/btn";
 @import "../components/indicator";
 @import "../components/list-group";
+@import "../components/toggles";
 
 // Feature related sass. We avoid this where we can in favour of reusable components
 @import "../features/dashboard-widget";

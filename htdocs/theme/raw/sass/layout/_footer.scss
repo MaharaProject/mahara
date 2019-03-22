@@ -1,18 +1,25 @@
 .footer {
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: $site-footer-bg;
     .footer-nav {
         font-size: $font-size-sm;
         .icon-stack {
             font-size: 0.75em;
         }
-        .nav-link:hover {
-            background-color: $navbar-default-link-hover-bg;
-            color: $link-color;
+        .nav-link {
+            color: $site-footer-color;
+            &:hover,
+            &:focus {
+                background-color: $site-footer-hover-bg;
+                color: $site-footer-hover-color;
+            }
         }
     }
 
     .footer-performance-info {
         font-size: $font-size-sm;
+    }
+    .metadata {
+        color: $site-footer-color;
     }
     .footer-inner {
         @extend .clearfix;

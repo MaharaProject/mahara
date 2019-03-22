@@ -22,6 +22,8 @@
         padding-top: 0;
         padding-bottom: 0;
         height: auto;
+        background: transparent;
+
         @include media-breakpoint-up(md) {
             margin-top: 20px;
         }
@@ -52,8 +54,11 @@
         display: inline-block;
         width: auto;
         height: auto;
+        background: transparent;
+
         .icon {
-            color: $theme-primary-color;
+            color: $theme-secondary-color;
+
             @include media-breakpoint-up(xl) {
                 font-size: 36px
             }
@@ -65,7 +70,7 @@
     }
 
     .thumbnail-widget {
-        background-color: scale-color($theme-primary-color, $lightness: 90%);
+        background-color: scale-color($theme-secondary-color, $lightness: 90%);
         text-align: center;
 
         @include media-breakpoint-up(md) {
@@ -109,7 +114,7 @@
             }
         }
         &.thumbnail-widget:hover {
-            background-color: scale-color($theme-primary-color, $lightness: 70%);
+            background-color: scale-color($theme-secondary-color, $lightness: 70%);
             transition: all 0.2s ease 0s;
         }
 

@@ -1,11 +1,9 @@
 /*
- * Theme colours should be defined here, and (ideally) used only in the global variables files (bootstrap-variables, custom-variables)
+ * Some themes may have more variables than is listed here. Copy and paste the variables from your parent theme into here and replace the values with your own.
  */
 
-$theme-primary-color: #556d32;
-$theme-primary-color-dark: #2e3a1c;
-$theme-text-color:  #333;
-$theme-text-midtone-color: #666;
-$theme-text-lighttone-color: #767676;
-
-$theme-accent-color:  #423017; // note this currently isn't used anywhere in raw
+$theme-primary-color: #556d32; // mid green
+$theme-secondary-color: #2e3a1c; // dark green
+$theme-text-color: #333; // black
+$theme-text-midtone-color: #666; // dark grey
+$theme-text-lighttone-color: #767676; // mid grey
