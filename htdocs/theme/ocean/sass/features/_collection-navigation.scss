@@ -1,10 +1,4 @@
-.collection-nav {
-    h2 {
-        font-size: 38px;
-    }
-    .collection-nav-btns {
-      @include media-breakpoint-up(lg) {
-        bottom: 22px;
-      }
-    }
+.collection-nav h2 {
+    font-size: 18px;
+    font-weight: 400;
 }

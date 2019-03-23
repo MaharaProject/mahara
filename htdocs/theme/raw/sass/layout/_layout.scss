@@ -173,3 +173,60 @@ body.presentation-iframe {
         }
     }
 }
+
+// Pages and collections page header
+
+.pageactions {
+    position: relative;
+
+    .btn-group-vertical {
+        position: fixed;
+        right: -1px;
+        margin-top: 30px;
+        z-index: $zindex-fixed;
+    }
+}
+
+.pageheader {
+    background: $pageheader-bg;
+
+    .main {
+        padding-top: 30px;
+        padding-bottom: 50px;
+
+        @include media-breakpoint-down(md) {
+            padding-top: 20px;
+            padding-bottom: 30px;
+        }
+    }
+}
+
+@for $i from 1 through 5 {
+    .header.message-count-#{$i} {
+
+        ~ .pageheader {
+            margin-top: $navbar-height + ($i * 33px);
+
+            @include media-breakpoint-down(sm) {
+                margin-top: 0;
+            }
+        }
+
+    }
+}
+
+.no-site-messages {
+    ~ .pageheader {
+        margin-top: $navbar-height;
+
+        @include media-breakpoint-down(sm) {
+            margin-top: 0;
+        }
+    }
+}
+
+// push in the right page margin to allow room for floating menu
+.pageactions ~ .pageheader .pageheader-content,
+.pageactions ~ .main-content {
+    padding-right: 50px;
+}

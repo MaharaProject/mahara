@@ -29,7 +29,7 @@ $groups-color: #5B6E1C;
 // 5) Darker shade (can be specified in hex,rgba value)
 $menu-styles: (
   ("home", $home-color, scale-color($home-color, $lightness: -2%), scale-color($home-color, $lightness: -5%)),
-  ("create", $content-color, scale-color($content-color, $lightness: -2%), scale-color($content-color, $lightness: -5%)),
+  ("create", $content-color, scale-color($content-color, $lightness: -10%), scale-color($content-color, $lightness: -10%)),
   ("engage", $myportfolio-color, scale-color($myportfolio-color, $lightness: -2%), scale-color($myportfolio-color, $lightness: -5%)),
   ("manage", $groups-color, scale-color($groups-color, $lightness: -2%), scale-color($groups-color, $lightness: -5%))
 );

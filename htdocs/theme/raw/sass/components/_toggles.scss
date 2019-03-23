@@ -18,7 +18,8 @@
         }
         &:hover,
         &:focus {
-            background-color: $navbar-default-link-hover-bg;
+            color: $navbar-toggle-hover-color;
+            background-color: $navbar-toggle-hover-bg;
         }
     }
 }
@@ -30,9 +31,9 @@
     border-left-width: 0;
     border-radius: 3px;
     min-width: 45px;
-    color: $navbar-default-toggle-icon-bar-bg;
+    color: $navbar-toggle-color;
     padding: 6px 10px;
-    background-color: $navbar-default-link-bg;
+    background-color: $navbar-toggle-bg;
     position: relative;
     float: right;
     background-image: none;
@@ -41,14 +42,16 @@
 
     &:hover,
     &:focus {
-        background-color: $navbar-default-link-hover-bg;
+        color: $navbar-toggle-hover-color;
+        background-color: $navbar-toggle-hover-bg;
     }
 
     &.collapsed {
         background-color: transparent;
         &:hover,
         &:focus {
-            background-color: $navbar-default-link-hover-bg;
+            color: $navbar-toggle-hover-color;
+            background-color: $navbar-toggle-hover-bg;
         }
     }
 
@@ -57,19 +60,22 @@
             display: none;
         }
         .icon {
-            color: $navbar-default-link-color;
+            color: $navbar-toggle-color;
+            background-color: $navbar-toggle-bg;
         }
     }
 
     &.user-toggle {
         padding-left: 40px;
-        background-color: transparent;
+        color: $navbar-toggle-color;
+        background-color: $navbar-toggle-bg;
         @include media-breakpoint-up(md) {
             border-left-width: 1px;
         }
         &:hover,
         &:focus {
-            background-color: $navbar-default-link-hover-bg;
+            color: $navbar-toggle-hover-color;
+            background-color: $navbar-toggle-hover-bg;
         }
     }
 
@@ -96,7 +102,7 @@
 
         &:hover,
         &:focus {
-            background-color: $navbar-inverse-toggle-hover-bg;
+            background: $navbar-inverse-toggle-hover-bg;
             .icon {
                 color: $navbar-inverse-toggle-hover-color;
             }

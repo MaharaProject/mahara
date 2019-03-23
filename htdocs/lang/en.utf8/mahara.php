@@ -874,6 +874,7 @@ $string['filter'] = 'Filter';
 $string['expand'] = 'Expand';
 $string['collapse'] = 'Collapse';
 $string['more...'] = 'More...';
+$string['moreoptions'] = 'More options';
 $string['moreoptionsfor'] = 'More options for "%s"';
 $string['details'] = 'details';
 $string['nohelpfound'] = 'There was no help found for this item.';

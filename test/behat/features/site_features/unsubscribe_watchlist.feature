@@ -27,8 +27,9 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  And I am on homepage
  And I scroll to the id 'bottom-pane'
  And I follow "Page UserA_01"
- And I press "More..."
+ And I press "More options"
  And I follow "Add page to watchlist"
+
  And I should see "This page has been added to your watchlist."
  And I trigger cron
  # Testing the unsubscribe link in the email sent
@@ -37,5 +38,5 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  And I am on homepage
  And I scroll to the id 'bottom-pane'
  And I follow "Page UserA_01"
- And I press "More..."
+ And I press "More options"
  And I should see "Add page to watchlist"

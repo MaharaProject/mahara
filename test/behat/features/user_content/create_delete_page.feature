@@ -109,6 +109,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I wait "1" seconds
     Then I should see "This is the edited page title"
     When I follow "This is the edited page title"
+    And I press "More options"
     And I follow "Copy"
     And I fill in the following:
     | Page title | This is my page now |

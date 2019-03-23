@@ -89,4 +89,5 @@ Scenario: Check share page with groups and that copy options works
  And I press "Search"
  And I follow "Page UserA_03"
  # check copy option is available
+ And I press "More options"
  Then I should see "Copy"

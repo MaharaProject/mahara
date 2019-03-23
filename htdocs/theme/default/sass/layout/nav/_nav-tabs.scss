@@ -11,18 +11,18 @@
             &:hover {
                 border: 0;
                 border-bottom: 1px solid #bc9f54;
-                background-color: lighten(#bc9f54, 35%);
+                background-color: scale-color(#bc9f54, $lightness: 35%);
                 color: #423017;
             }
             &.active {
-                background-color: lighten(#bc9f54, 25%);
+                background-color: scale-color(#bc9f54, $lightness: 25%);
                 color: #423017;
                 border: 0;
                 border-bottom: 1px solid #bc9f54;
 
                 &:focus,
                 &:hover {
-                    background-color: lighten(#bc9f54, 10%);
+                    background-color: scale-color(#bc9f54, $lightness: 10%);
                     color: #423017;
                     border: 0;
                     border-bottom: 1px solid #bc9f54;

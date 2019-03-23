@@ -114,6 +114,16 @@
         </div>
     </header>
 
+    {if $headertype == "page"}
+        {include file="header/pageactions.tpl"}
+        {include file="header/pageheader.tpl"}
+    {elseif $headertype == "profile"}
+        {include file="header/profileactions.tpl"}
+        {include file="header/profileheader.tpl"}
+    {elseif $headertype == "matrix"}
+        {include file="header/matrixheader.tpl"}
+    {/if}
+
     <div class="container main-content">
         <div class="row">
             <main id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-lg-9 {else}col-lg-9 order-md-2 {/if}{else}col-md-12{/if} main">

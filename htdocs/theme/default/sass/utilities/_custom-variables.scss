@@ -1,11 +1,14 @@
 // Custom component variables (non-bootstrap components)
 
-//Arrow compoanent variables
-$arrow-color: lighten(#bc9f54, 25%);
-$arrow-text-color: #333333;
-$arrow-link-color: #423017;
-$arrow-link-hover-color: #423017;
-$arrow-link-active-color: #333333;
+//Arrow component variables
+$arrow-color:                               scale-color(#bc9f54, $lightness: 25%);
+$arrow-bar-bg:                              scale-color($arrow-color, $lightness: 35%);
+$arrow-text-color:                          #333333;
+$arrow-link-color:                          #423017;
+$arrow-link-hover-color:                    #423017;
+$arrow-link-active-color:                   #333333;
+$arrow-link-background-color:               #fff;
+
 
 // color for the secondary title in sections (cf. groups)
 $section-heading-color: #999;
@@ -16,32 +19,64 @@ $dashboard-widget-bg: theme-color("primary");
 $dashboard-widget-color: #FFFFFF;
 
 $help-icon-color: #5b8fc8;
-$rss-icon-color: #FE6500;
 
-$theme-primary-color-light: #799152;
+// Pages and collections page header
+$pageheader-bg: #f0f5ea;
+
 
 // LEGACY BOOTSTRAP 3 VARIABLES
+
+// Header navbar
+$navbar-default-bg:                         #fff;
+$navbar-default-border:                     transparent;
+
+// Navbar toggle
+$navbar-toggle-color:                       $link-color;
+$navbar-toggle-bg:                          #fff;
+$navbar-toggle-hover-color:                 $link-color;
+$navbar-toggle-hover-bg:                    #f1f6eb;
+$navbar-toggle-active-color:                $link-color;
+$navbar-toggle-active-bg:                   #f1f6eb;
+
+// Navbar menu
+$navbar-default-link-border:                $link-hover-color;
+$navbar-default-link-color:                 #FFF;
+$navbar-default-link-hover-color:           #FFF;
+$navbar-default-link-bg:                    $theme-primary-color;
+$navbar-default-link-hover-bg:              #637e3a;
+$navbar-default-active-color:               #FFF;
+$navbar-default-active-bg:                  #3a4a22;
+
+// Navbar menus children
+$navbar-inverse-bg:                         $link-hover-color;
+$navbar-inverse-link-color:                 #FFFFFF;
+$navbar-inverse-link-hover-color:           #FFFFFF;
+$navbar-inverse-link-hover-bg:              scale-color($link-hover-color, $lightness: 5%);
+$navbar-inverse-link-active-color:          #FFFFFF;
+$navbar-inverse-link-active-bg:             $link-hover-color;
+
+// Navbar menu children toggles
+$navbar-inverse-toggle-color:               #FFF;
+$navbar-inverse-toggle-bg:                  transparent;
+$navbar-inverse-toggle-hover-color:         #FFFFFF;
+$navbar-inverse-toggle-hover-bg:            $navbar-inverse-bg;
+$navbar-inverse-toggle-active-color:        $navbar-inverse-link-active-color;
+$navbar-inverse-toggle-active-bg:           $navbar-inverse-bg;
+
+
 
 // Colors
 $brand-success:         #449D44;
 $brand-danger:          #F04F50;
 
 // Form states and alerts
-$state-success-text:             $brand-success;
-$state-success-bg:               lighten($brand-success, 50%);
-$state-success-border:           darken(adjust-hue($state-success-bg, -10), 10%);
+$state-success-text:             scale-color($brand-success, $lightness: -40%);
+$state-success-bg:               scale-color($brand-success, $lightness: 70%);
+$state-success-border:           scale-color(adjust-hue($state-success-bg, -10), $lightness: -10%);
 
-$state-info-text:                #31708f;
-$state-info-bg:                  #d9edf7;
-$state-info-border:              darken(adjust-hue($state-info-bg, -10), 7%);
-
-$state-warning-text:             #8a6d3b;
-$state-warning-bg:               #fcf8e3;
-$state-warning-border:           darken(adjust-hue($state-warning-bg, -10), 5%);
-
-$state-danger-text:              darken($brand-danger, 10%);
-$state-danger-bg:                lighten($brand-danger, 30%);
-$state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%);
+$state-danger-text:              scale-color($brand-danger, $lightness: -30%);
+$state-danger-bg:                scale-color($brand-danger, $lightness: 70%);
+$state-danger-border:            scale-color(adjust-hue($state-danger-bg, -10), $lightness: -5%);
 
 // Buttons
 $btn-secondary-bg:                 $white;
@@ -50,31 +85,6 @@ $btn-secondary-border:             #CCCCCC;
 $btn-primary-color:              #FFFFFF;
 $btn-primary-bg:                 #556d32;
 $btn-primary-border:             #556d32;
-
-// Navbar
-$navbar-default-bg:                #FFFFFF;
-$navbar-default-border:            transparent;
-
-// Navbar links
-$navbar-default-link-hover-bg:             #f1f6eb;
-
-// Navbar toggle
-$navbar-default-toggle-hover-bg:           $navbar-default-link-hover-bg;
-
-// Inverted navbar
-// Reset inverted navbar basics
-$navbar-inverse-bg:                         $link-hover-color;
-
-// Inverted navbar links
-$navbar-inverse-link-color:                 #FFFFFF;
-$navbar-inverse-link-hover-color:           #FFFFFF;
-$navbar-inverse-link-hover-bg:              lighten($link-hover-color, 5%);
-$navbar-inverse-link-active-color:          #FFFFFF;
-$navbar-inverse-link-active-bg:             $link-hover-color;
-$navbar-inverse-toggle-hover-color:         $navbar-inverse-link-color;
-
-// Inverted navbar toggle
-$navbar-inverse-toggle-icon-bar-bg:         $link-hover-color;
 
 // cards
 //** Border color for elements within cards

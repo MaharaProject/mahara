@@ -72,6 +72,8 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Progressbar'                               => array("#progress_bar_fill.progress-bar", "css_element"),
     'Inbox message icon'                        => array("#activitylist .card-header a span", "css_element"),
     'Online users block'                        => array("#sb-onlineusers", "css_element"),
+    'Timeline Bar'                              => array(".timeline-bar", "css_element"),
+    'Show more tags'                            => array(".text-small .icon-ellipsis-h", "css_element"),
     // properties with xpath_elements
     'Settings sub-menu'                         => array("//span[@innertext='Settings']", "xpath_element"),
     'Settings'                                  => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Settings']", "xpath_element"),
@@ -80,8 +82,6 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'File Size'                                 => array("//table[@id='files_filebrowser_filelist']/tbody/tr[1]/td[4]", "xpath_element"),
     'Multirecipientnotification'                => array("//li[@id='module.multirecipientnotification']", "xpath_element"),
     'Country mandatory field'                   => array("//div[@id='pluginconfig_mandatory_container']/div[@class='checkboxes-option checkbox']/label[contains(text(),'Country')]", "xpath_element"),
-    'Timeline Bar'                              => array(".timeline-bar", "css_element"),
-    'Show more tags'                            => array(".with-heading.text-small .icon-ellipsis-h", "css_element"),
     // xpath related to participation report
     'Group views report tr1 tc1'                => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[1]", "xpath_element"),
     'Group views report tr1 tc2'                => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[2]", "xpath_element"),

@@ -36,7 +36,7 @@
         max-width: none;
         visibility: visible;
         top: 10px;
-        right: 195px;
+        right: 230px;
         margin: 0 30px 0 0;
         padding: 0;
         box-shadow: none;
@@ -95,7 +95,7 @@
     border-right: 0;
     border-top: 0;
     background-color: $navbar-default-bg;
-    border-color: #eee;
+    border-color: $navbar-default-border;
 }
 
 // Header messagebox form

@@ -732,15 +732,7 @@ a[type="submit"],
     }
 }
 
-// Pages and collections sort by input alignment
-#searchviews_submit_container {
-    margin-left: 0;
-}
-
 // Share with me search filter
-#search_submit {
-    margin-left: 0;
-}
 #search_share_container {
     label {
         margin-top: 13px;
@@ -755,11 +747,6 @@ a[type="submit"],
     border-radius: $border-radius;
     width: auto;
     margin-top: 12px;
-}
-
-// My Friends search filter
-#filter_submit {
-    margin-left: 0;
 }
 
 // Find people results approve request alignment
