@@ -8,7 +8,7 @@
         {/strip}{/if}
 
         {if $mnethost}
-        <a href="{$mnethost.url}" class="btn btn-secondary">
+        <a href="{$mnethost.url}" class="btn btn-secondary" title="{str tag=backto arg1=$mnethost.name}">
             <span class="icon icon-long-arrow-right icon-lg left" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag=backto arg1=$mnethost.name}</span>
         </a>
