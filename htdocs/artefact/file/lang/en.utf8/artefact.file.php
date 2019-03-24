@@ -152,6 +152,7 @@ $string['nofilesfound'] = 'No files found';
 $string['notpublishable'] = 'You do not have the permission to publish this file.';
 $string['overwrite'] = 'Overwrite';
 $string['Owner'] = 'Owner';
+$string['uploadedby'] = 'Uploaded by';
 $string['parentfolder'] = 'Parent folder';
 $string['phpzipneeded'] = 'The PHP zip extension is needed to be able to use this functionality';
 $string['Preview'] = 'Preview';
