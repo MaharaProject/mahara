@@ -4,7 +4,7 @@
         <div class="carousel-inner" role="listbox">
             {foreach from=$images item=image key=k name=images}
 
-            <div class="{if $dwoo.foreach.images.first}item active{else}item{/if}">
+            <div class="{if $dwoo.foreach.images.first}carousel-item active{else}carousel-item{/if}">
                 <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" class="mx-auto d-block">
 
                 {if $showdescription && $image.title}

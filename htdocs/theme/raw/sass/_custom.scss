@@ -296,6 +296,10 @@
         background: #fff;
         box-shadow: 0 0 3px 5px #f8f8f8;
     }
+    &.card.card-secondary > .block > .card-body {
+        overflow: hidden;
+        padding: 15px 20px;
+    }
 }
 
 .user-thumbnails {
