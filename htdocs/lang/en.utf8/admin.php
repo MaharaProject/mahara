@@ -691,6 +691,7 @@ $string['uploadcsvpagedescription6'] = '<p>Here you can upload new users via a <
 
 %s';
 $string['uploadcsverrortoomanyusers'] = 'You have too many lines in your CSV file. Your file should not contain more than %s.';
+$string['uploadcsverrordatamustbenumeric'] = 'Line %s: The value for category must be numeric';
 $string['uploadgroupcsverrordisplaynamealreadyexists'] = 'Error on line %s of your file: The displayname "%s" already exists.';
 $string['uploadgroupcsverrorinvalidshortname'] = 'Error on line %s of your file: The shortname "%s" is invalid.';
 $string['uploadgroupcsverrorshortnamemissing'] = 'Error on line %s of your file: The group with the shortname "%s" does not exist.';
@@ -700,6 +701,9 @@ $string['uploadgroupcsverrorshortnamealreadytaken1'] = 'Error on line %s of your
 $string['uploadgroupcsverrorusernamesnotlastfield'] = 'The "usernames" field must be the last field in the header.';
 $string['uploadgroupcsverroropencontrolled'] = 'Line %s: Groups cannot have both open and controlled membership.';
 $string['uploadgroupcsverroropenrequest'] = 'Line %s: Groups with open membership cannot allow membership requests.';
+$string['uploadgroupcsverrorviewnotifyrequest'] = 'Line %s: The value for viewnotify must be numerical in range %s-%s.';
+$string['uploadgroupcsverrordoesnotallowgroupcategory'] = 'Line %s: This site does not allow for group categories. Please review the Group settings in Configure site -> Site options.';
+$string['uploadgroupcsverrorcategorydoesnotexist'] = 'Line %s: The category "%s" does not exist.';
 $string['uploadgroupcsvpagedescription2'] = '<p>You may use this facility to upload new groups via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
 
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>

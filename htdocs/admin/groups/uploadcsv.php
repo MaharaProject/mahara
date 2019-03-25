@@ -148,6 +148,8 @@ function uploadcsv_validate(Pieform $form, $values) {
         if (isset($formatkeylookup['editroles'])) {
             $editroles = $line[$formatkeylookup['editroles']];
         }
+        $viewnotify = isset($formatkeylookup['viewnotify']) && !empty($line[$formatkeylookup['viewnotify']]);
+        $category = isset($formatkeylookup['category']) && !empty($line[$formatkeylookup['category']]);
 
         // Make sure these three mandatory fields are populated.
         if (empty($shortname)) {
@@ -229,6 +231,26 @@ function uploadcsv_validate(Pieform $form, $values) {
         if ($open && $request) {
             $csverrors->add($i, get_string('uploadgroupcsverroropenrequest', 'admin', $i));
         }
+        if ($viewnotify) {
+            $vn = $line[$formatkeylookup['viewnotify']];
+            if (!is_numeric($vn) || !($vn >= GROUP_ROLES_NONE && $vn <= GROUP_ROLES_ADMIN)) {
+                $csverrors->add($i, get_string('uploadgroupcsverrorviewnotifyrequest', 'admin', $i, GROUP_ROLES_NONE, GROUP_ROLES_ADMIN));
+            }
+        }
+        if ($category) {
+            if (!get_config('allowgroupcategories')) {
+                $csverrors->add($i, get_string('uploadgroupcsverrordoesnotallowgroupcategory', 'admin', $i));
+            }
+            $categorytitle = $line[$formatkeylookup['category']];
+            // Check if this is a valid category name
+            if ($categoryid = get_field('group_category', 'id', 'title', $categorytitle)) {
+                // Make sure we store the id of the category and not the category name in the DB.
+                $csvdata->data[$key][$formatkeylookup['category']] = $categoryid;
+            }
+            else {
+                $csverrors->add($i, get_string('uploadgroupcsverrorcategorydoesnotexist', 'admin', $i, $categorytitle));
+            }
+        }
 
         if ($values['updategroups']) {
 
@@ -301,6 +323,12 @@ function uploadcsv_submit(Pieform $form, $values) {
                 $group->quota = get_real_size($record[$formatkeylookup[$field]]);
                 continue;
             }
+            if ($field == 'category') {
+                if (!empty($record[$formatkeylookup[$field]])) {
+                    $group->category = $record[$formatkeylookup[$field]];
+                }
+                continue;
+            }
             $group->{$field} = $record[$formatkeylookup[$field]];
         }
 
@@ -369,7 +397,7 @@ $grouptypes .= get_string('uploadgroupcsveditrolesdescription', 'admin', get_hel
 $fields = "<ul class='fieldslist column-list'>\n";
 foreach ($ALLOWEDKEYS as $type) {
     $helplink = '';
-    if ($type == 'public' || $type == 'usersautoadded' || $type == 'hidemembers') {
+    if ($type == 'public' || $type == 'usersautoadded' || $type == 'hidemembers' || $type == 'viewnotify' || $type == 'category') {
         $helplink = get_help_icon('core', 'groups', 'editgroup', $type);
     }
     $fields .= '<li>' . hsc($type) . $helplink . "</li>\n";

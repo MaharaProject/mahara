@@ -305,7 +305,6 @@ if ($cancreatecontrolled) {
         'description'  => get_string('hidemembersdescription', 'group'),
         'defaultvalue' => ($group_data->hidemembersfrommembers ? $group_data->hidemembersfrommembers : ($group_data->hidemembers ? $group_data->hidemembers : 0)),
         'disabled'     => $group_data->hidemembersfrommembers,
-        'help'         => true,
     );
     $elements['hidemembersfrommembers'] = array(
         'type'         => 'select',
