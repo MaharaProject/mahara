@@ -671,10 +671,13 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
         $item->quotapercent_format = round($item->quotapercent * 100);
         $item->quota_format = display_size($item->quota);
         $item->quotaused_format = !empty($item->quotaused) ? display_size($item->quotaused) : 0;
+        // Map statistics page column headers to CSV column headers to allow for easier user update CSV import
+        $item->preferredname = $item->displayname;
+        $item->remoteuser = $item->remotename;
     }
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('firstname', 'lastname', 'email', 'studentid',
-                           'displayname', 'username', 'remotename', 'quotapercent_format', 'lastlogin');
+                           'preferredname', 'username', 'remoteuser', 'quotapercent_format', 'lastlogin');
         $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
     }
     $result['csv'] = true;
