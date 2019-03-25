@@ -2030,24 +2030,26 @@ function artefact_get_owner_info($ids) {
         $ids
     );
     $wwwroot = get_config('wwwroot');
-    foreach ($data as &$d) {
-        if ($d->institution == 'mahara') {
-            $name = get_config('sitename');
-            $url  = $wwwroot;
+    if ($data) {
+        foreach ($data as &$d) {
+            if ($d->institution == 'mahara') {
+                $name = get_config('sitename');
+                $url = $wwwroot;
+            }
+            else if ($d->institution) {
+                $name = $d->displayname;;
+                $url = $wwwroot . 'institution/index.php?institution=' . $d->institution;
+            }
+            else if ($d->group) {
+                $name = $d->groupname;;
+                $url = group_homepage_url((object)array('id' => $d->group, 'urlid' => $d->groupurlid));
+            }
+            else {
+                $name = display_name($d);
+                $url = profile_url($d);
+            }
+            $d = (object)array('name' => $name, 'url' => $url);
         }
-        else if ($d->institution) {
-            $name = $d->displayname;;
-            $url  = $wwwroot . 'institution/index.php?institution=' . $d->institution;
-        }
-        else if ($d->group) {
-            $name = $d->groupname;;
-            $url  = group_homepage_url((object) array('id' => $d->group, 'urlid' => $d->groupurlid));
-        }
-        else {
-            $name = display_name($d);
-            $url  = profile_url($d);
-        }
-        $d = (object) array('name' => $name, 'url' => $url);
     }
     return $data;
 }

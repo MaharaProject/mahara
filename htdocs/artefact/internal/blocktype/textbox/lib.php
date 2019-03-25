@@ -219,8 +219,13 @@ function updateTextContent(a) {
         jQuery('#instconf_tagsreadonly_container').removeClass('d-none');
     }
     jQuery('#instconf_edit_container').removeClass('d-none');
-    jQuery('#instconf_otherblocksmsg_container').removeClass('d-none');
     jQuery('#instconf_edit').trigger('change');
+    jQuery('#instconf_otherblocksmsg_container').removeClass('d-none');
+    jQuery('#artefactid_data input.radio').each(function() {
+        if (jQuery(this).prop('checked')) {
+            jQuery('#textbox_blockcount').html(jQuery(this).attr('data-count'));
+        }
+    });
 }
 jQuery('#chooseartefactlink').on('click', function(e) {
     e.preventDefault();
@@ -233,7 +238,7 @@ jQuery('#chooseartefactlink').on('click', function(e) {
     jQuery('#instconf_artefactid_container').toggleClass('d-none');
     jQuery('#instconf_managenotes_container').toggleClass('d-none');
 });
-jQuery('#instconf #instconf_edit').on('change',function() {
+jQuery('#instconf #instconf_edit').on('change',function(){
     if (jQuery(this).prop('checked')) {
         jQuery('#instconf_textreadonly_container').addClass('d-none');
         jQuery('#instconf_text_container').removeClass('d-none');
@@ -241,7 +246,7 @@ jQuery('#instconf #instconf_edit').on('change',function() {
     else {
         jQuery('#instconf_textreadonly_container').removeClass('d-none');
         jQuery('#instconf_text_container').addClass('d-none');
-        tinyMCE.get('instconf_text').setContent(jQuery('#instconf_textreadonly_display').html());
+        tinyMCE.activeEditor.getBody().innerHTML = jQuery('#instconf_textreadonly_display').html();
     }
 });
 jQuery('#instconf a.copytextboxnote').each(function() {

@@ -3506,12 +3506,14 @@ class View {
             if (!empty($data['ownerinfo'])) {
                 require_once(get_config('docroot') . 'artefact/lib.php');
                 $userid = ($group || $institution) ? null : $USER->get('id');
-                foreach (artefact_get_owner_info(array_keys($artefacts)) as $k => $v) {
-                    if ($artefacts[$k]->owner !== $userid
-                        || $artefacts[$k]->group !== $group
-                        || $artefacts[$k]->institution !== $institution) {
-                        $artefacts[$k]->ownername = $v->name;
-                        $artefacts[$k]->ownerurl  = $v->url;
+                if (artefact_get_owner_info(array_keys($artefacts))) {
+                    foreach (artefact_get_owner_info(array_keys($artefacts)) as $k => $v) {
+                        if ($artefacts[$k]->owner !== $userid
+                            || $artefacts[$k]->group !== $group
+                            || $artefacts[$k]->institution !== $institution) {
+                            $artefacts[$k]->ownername = $v->name;
+                            $artefacts[$k]->ownerurl = $v->url;
+                        }
                     }
                 }
             }
@@ -3523,10 +3525,16 @@ class View {
                     $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
                 }
 
+                $artefact->blockcount = 0;
+                if ($blocks = get_column('view_artefact', 'block', 'artefact', $artefact->id)) {
+                    $blocks = array_unique($blocks);
+                    $artefact->blockcount = count($blocks);
+                }
+
                 // Build the radio button or checkbox for the artefact
                 $formcontrols = '';
                 if ($selectone) {
-                    $formcontrols .= '<input type="radio" class="radio" id="' . hsc($elementname . '_' . $artefact->id)
+                    $formcontrols .= '<input type="radio" class="radio" data-count="' . $artefact->blockcount . '" id="' . hsc($elementname . '_' . $artefact->id)
                         . '" name="' . hsc($elementname) . '" value="' . hsc($artefact->id) . '"';
                     if ($value == $artefact->id) {
                         $formcontrols .= ' checked="checked"';
