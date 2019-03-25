@@ -716,10 +716,11 @@ EOF;
     $smarty->assign('sitelogocustom', $sitelogocustom);
     $sitelogo = $THEME->header_logo();
     $sitelogo = append_version_number($sitelogo);
-    $sitelogosmall = $THEME->header_logo_small();
-    $sitelogosmall = ($sitelogosmall ? append_version_number($sitelogosmall) : null);
+    $sitelogocustomsmall = $THEME->header_logo_small_custom();
+    $sitelogocustomsmall = ($sitelogocustomsmall ? append_version_number($sitelogocustomsmall) : null);
     $smarty->assign('sitelogo', $sitelogo);
-    $smarty->assign('sitelogosmall', $sitelogosmall);
+    $smarty->assign('sitelogosmall', $THEME->header_logo_small());
+    $smarty->assign('sitelogocustomsmall', $sitelogocustomsmall);
     $smarty->assign('sitelogo4facebook', $THEME->facebook_logo());
     $smarty->assign('sitedescription4facebook', get_string('facebookdescription', 'mahara'));
 
@@ -1290,11 +1291,16 @@ class Theme {
         return $this->get_image_url('site-logo');
     }
 
+    /* Set the default theme's small logo */
+    public function header_logo_small() {
+        return $this->get_image_url('site-logo-small');
+    }
+
     /**
      * Displaying of the small header logo of an institution
      * false will be returned if no small logo for the institution or site small logo is found
      */
-    public function header_logo_small() {
+    public function header_logo_small_custom() {
         if (!empty($this->headerlogosmall)) {
             return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $this->headerlogosmall;
         }
@@ -1302,8 +1308,8 @@ class Theme {
             require_once('ddl.php');
             $table = new XMLDBTable('institution');
             $field = new XMLDBField('logoxs');
-            if (field_exists($table, $field) && $sitelogosmallid = get_field('institution', 'logoxs', 'name', 'mahara')) {
-                return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $sitelogosmallid;
+            if (field_exists($table, $field) && $sitelogocustomsmallid = get_field('institution', 'logoxs', 'name', 'mahara')) {
+                return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $sitelogocustomsmallid;
             }
         }
         return false;

@@ -981,13 +981,13 @@ $string['licensedefaultdescription'] = 'The default license for content created 
 $string['licensedefaultmandatory'] = 'If users are required to choose a license, you need to choose a default license here. If you do not want to choose a default license, do not make it required for users.';
 
 $string['Logo'] = 'Logo';
-$string['Logosmall'] = 'Small logo';
+$string['Logomobile'] = 'Mobile logo';
 $string['logodescription1'] = 'You can upload an image here that will be displayed to your institution\'s members as logo for your theme. The logo will be resized to fit the space available.';
 $string['logoxsdescription'] = 'You can upload a second logo that is to be used on small devices when there is not much space. The logo should be square for best results.';
 $string['deletelogo'] = 'Delete logo';
-$string['deletelogoxs'] = 'Delete small logo';
+$string['deletelogoxsmobile'] = 'Delete mobile logo';
 $string['deletelogodescription2'] = 'Revert to the standard header logo for your institution\'s theme.';
-$string['deletelogoxsdescription2'] = 'Revert to the standard header small logo for your institution\'s theme.';
+$string['deletelogoxsdescription3'] = 'Revert to the standard header mobile logo for your institution\'s theme.';
 $string['customtheme'] = 'Custom theme configuration';
 $string['customtheme.background'] = 'Header background';
 $string['customtheme.backgroundfg'] = 'Text on header background';
