@@ -332,7 +332,8 @@ if ($owner && $owner == $USER->get('id')) {
 
 // Don't show page content to a user with peer role
 // if the view doesn't have a peer assessment block
-if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()) {
+if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
+    || ($USER->is_admin_for_user($view->get('owner')) && $view->is_objectionable())) {
     $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
 }
 
