@@ -25,3 +25,4 @@ $string['textusedinothernotes'] = array(
     1 => 'If you edit the text of this note, it will also be changed in %s blocks where it appears.'
 );
 
+$string['editcontent'] = 'Edit all copies of this note';

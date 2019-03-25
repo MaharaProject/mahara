@@ -218,6 +218,9 @@ function updateTextContent(a) {
         jQuery('#instconf_licensereadonly_container').removeClass('d-none');
         jQuery('#instconf_tagsreadonly_container').removeClass('d-none');
     }
+    jQuery('#instconf_edit_container').removeClass('d-none');
+    jQuery('#instconf_otherblocksmsg_container').removeClass('d-none');
+    jQuery('#instconf_edit').trigger('change');
 }
 jQuery('#chooseartefactlink').on('click', function(e) {
     e.preventDefault();
@@ -230,6 +233,17 @@ jQuery('#chooseartefactlink').on('click', function(e) {
     jQuery('#instconf_artefactid_container').toggleClass('d-none');
     jQuery('#instconf_managenotes_container').toggleClass('d-none');
 });
+jQuery('#instconf #instconf_edit').on('change',function() {
+    if (jQuery(this).prop('checked')) {
+        jQuery('#instconf_textreadonly_container').addClass('d-none');
+        jQuery('#instconf_text_container').removeClass('d-none');
+    }
+    else {
+        jQuery('#instconf_textreadonly_container').removeClass('d-none');
+        jQuery('#instconf_text_container').addClass('d-none');
+        tinyMCE.get('instconf_text').setContent(jQuery('#instconf_textreadonly_display').html());
+    }
+});
 jQuery('#instconf a.copytextboxnote').each(function() {
     jQuery(this).on('click', function(e) {
         e.preventDefault();
@@ -238,6 +252,7 @@ jQuery('#instconf a.copytextboxnote').each(function() {
                 jQuery(this).prop('checked', false);
             }
         });
+        jQuery('#instconf_edit_container').addClass('d-none');
         jQuery('#instconf_makecopy').prop('checked', true);
         jQuery('#instconf_textreadonly_container').addClass('d-none');
         jQuery('#instconf_readonlymsg_container').addClass('d-none');
@@ -374,9 +389,15 @@ EOF;
                     . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a></p>',
                 'help' => true,
             ),
+            'edit' => array(
+                'type' => 'switchbox',
+                'class' => $otherblockcount > 0 ? '' : 'd-none',
+                'title' => get_string('editcontent', 'blocktype.internal/textbox'),
+                'defaultvalue' => 0,
+            ),
             'text' => array(
                 'type' => 'wysiwyg',
-                'class' => $readonly ? 'd-none' : '',
+                'class' => $readonly || $otherblockcount > 0 ? 'd-none' : '',
                 'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
                 'width' => '100%',
                 'height' => $height . 'px',
@@ -385,7 +406,7 @@ EOF;
             ),
             'textreadonly' => array(
                 'type' => 'html',
-                'class' => $readonly ? '' : 'd-none',
+                'class' => $readonly || $otherblockcount > 0 ? '' : 'd-none',
                 'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
                 'value' => '<div id="instconf_textreadonly_display" class="well text-midtone">' . $text . '</div>',
             ),
