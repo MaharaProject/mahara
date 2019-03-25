@@ -29,7 +29,7 @@
                     <span class="icon icon-times icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
                     <span>{str tag=remove}</span>
                 </button>
-                 <input type="hidden" class="hidden" id="{$prefix}_selected[{$file->id}]" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">
+                 <input type="hidden" class="d-none" id="{$prefix}_selected[{$file->id}]" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">
             </td>
         </tr>
         {/foreach}
