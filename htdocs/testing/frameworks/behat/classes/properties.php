@@ -74,6 +74,8 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Online users block'                        => array("#sb-onlineusers", "css_element"),
     'Timeline Bar'                              => array(".timeline-bar", "css_element"),
     'Show more tags'                            => array(".text-small .icon-ellipsis-h", "css_element"),
+    'Terms and conditions Edit icon'            => array("#termsandconditions .btn-secondary","css_element"),
+    'Privacy statement Edit icon'               => array("#privacy .btn-group","css_element"),
     // properties with xpath_elements
     'Settings sub-menu'                         => array("//span[@innertext='Settings']", "xpath_element"),
     'Settings'                                  => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Settings']", "xpath_element"),
