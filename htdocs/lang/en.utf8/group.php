@@ -413,3 +413,4 @@ $string['groupparticipationreports'] = "Participation report";
 $string['groupparticipationreportsdesc1'] = "Group administrators can access a report displaying all group and shared pages and who has commented on them.";
 
 $string['returntogroupportfolios'] = "Return to group pages and collections";
+$string['showintroduction'] = "Introduction";

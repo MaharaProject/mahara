@@ -57,6 +57,14 @@
     }
 }
 
+.list-group-item,
+.usericon-heading {
+    .inner-link.with-introduction {
+        span {
+            margin-right: 5px;
+        }
+    }
+}
 
 .list-group-item-heading {
     font-family: $font-family-serif;

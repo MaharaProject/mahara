@@ -23,11 +23,25 @@
                     {/if}
                 </h4>
             </div>
+
+            {if $r.role}
+                {if $r.introduction}
+                    <div class="text-midtone">
+                        <a class="inner-link text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$r.id}"
+                           href="#userintro{$r.id}" role="button" aria-expanded="false"
+                           aria-controls="userintro{$r.id}">
+                           <span class="icon icon-chevron-down collapse-indicator float-left" role="presentation" aria-hidden="true"></span>
+                           {str tag=showintroduction section=group}
+                        </a>
+                    </div>
+                {/if}
+            {/if}
+
             {if $r.role}
             <div class="introduction detail text-small">
-                <span>{$r.introduction|str_shorten_html:80:true:true:false|safe}
-                </span>
 
+                <div class="collapse" id="userintro{$r.id}">{$r.introduction|safe}
+                </div>
                 <div class="jointime">
                     <strong>
                         {str tag="Joined" section="group"}:
