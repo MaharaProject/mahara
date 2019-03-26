@@ -66,6 +66,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
             }
 
             $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
+            $limit = ($exporter || $versioning) ? 0 : $limit;
             $posts = ArtefactTypeBlogpost::get_posts($blog->get('id'), $limit, 0, $configdata);
             $template = 'artefact:blog:viewposts.tpl';
             if ($exporter || $versioning) {
