@@ -162,10 +162,20 @@
         </li>
         {/foreach}
         <li class="btn-logout has-icon">
-            <a href="{$WWWROOT}?logout" accesskey="l">
+            <a id="logoutbutton" href="{$WWWROOT}?logout" accesskey="l">
                 <span class="icon icon-sign-out" role="presentation" aria-hidden="true"></span>
                 <span class="nav-title">{str tag="logout"}</span>
             </a>
+            <script>
+            $('#logoutbutton').click(function(e) {
+                if ($(this).hasClass('disabled')) {
+                    e.preventDefault();
+                    return false;
+                }
+                $(this).addClass('disabled');
+                return true;
+            });
+            </script>
         </li>
         {if $USERMASQUERADING && $LOGGEDIN}
         <li class="backto-be-admin has-icon">
