@@ -699,10 +699,10 @@
             e.stopPropagation();
             e.preventDefault();
 
-            computeColumnInputs($('#addblock'));
+            computeColumnInputs($('#newblock'));
 
             var self = $(this),
-                addblockdialog = $('#addblock').removeClass('d-none');
+                addblockdialog = $('#newblock').removeClass('d-none');
                 prevcell = self.closest('.column-content'),
                 order = prevcell.children().index(self.closest('.blockinstance')),
                 row = workspace.find('.js-col-row').index(self.closest('.js-col-row')),
@@ -710,7 +710,7 @@
                 radio = addblockdialog.find('.cell-chooser').children().eq(row).find('input').eq(column),
                 changefunction = function() {
                     if (radio.prop('checked')) {
-                        $('#addblock_position option').eq(order + 1).remove();
+                        $('#newblock_position option').eq(order + 1).remove();
                     }
                 };
 
@@ -718,7 +718,7 @@
             radio.on('change', changefunction);
             radio.prop('checked', true).trigger('change');
 
-            $('#addblock_position').prop('selectedIndex', order);
+            $('#newblock_position').prop('selectedIndex', order);
 
             addblockdialog.one('dialog.end', function(event, options) {
                 if (options.saved) {
@@ -759,7 +759,7 @@
     }
 
     function computeColumnInputs(dialog) {
-        var inputcontainer = dialog.find('.blockinstance-content #addblock_cellchooser_container'),
+        var inputcontainer = dialog.find('.blockinstance-content #newblock_cellchooser_container'),
             result = $('<div>').addClass('cell-chooser js-cell-chooser'),
             firstcell,
             rows = workspace.find('.js-col-row'),
@@ -996,16 +996,16 @@
      */
     function setupPositionBlockDialog() {
 
-        $('#addblock .cancel, #addblock .deletebutton').on('mousedown keydown', function(e) {
+        $('#newblock .cancel, #newblock .deletebutton').on('mousedown keydown', function(e) {
             if (isHit(e) || e.keyCode === $j.ui.keyCode.ESCAPE) {
                 closePositionBlockDialog(e, {'saved': false});
             }
         });
 
-        $('#addblock .submit').on('click keydown', function(e) {
+        $('#newblock .submit').on('click keydown', function(e) {
             if (isHit(e)) {
-                var position = $('#addblock .cell-chooser input:checked').val().split('-'),
-                    order = $('#addblock_position').prop('selectedIndex') + 1;
+                var position = $('#newblock .cell-chooser input:checked').val().split('-'),
+                    order = $('#newblock_position').prop('selectedIndex') + 1;
 
                 closePositionBlockDialog(e, {
                     'saved': true,
@@ -1015,11 +1015,11 @@
         });
 
         // To allow for pushing enter button when on selecting the 'cell' column line
-        $('#addblock').on('keydown', function(e) {
+        $('#newblock').on('keydown', function(e) {
             if (e.keyCode == 13) {
 
-                var position = $('#addblock .cell-chooser input:checked').val().split('-'),
-                    order = $('#addblock_position').prop('selectedIndex') + 1;
+                var position = $('#newblock .cell-chooser input:checked').val().split('-'),
+                    order = $('#newblock_position').prop('selectedIndex') + 1;
 
                 closePositionBlockDialog(e, {
                     'saved': true,
