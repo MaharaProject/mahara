@@ -33,14 +33,14 @@
             else {
                 var email = newEmail;
                 jQuery('#{{$name}}_list').append(jQuery('<div>', {'class': 'unsent'}).append(
+                    jQuery('<input>', {'type': 'radio', 'class': 'text-inline', 'disabled':'true'}),
                     jQuery('<input>', {'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
                     ' ',
-                    jQuery('<span>', {'class': 'pseudolabel no-radio'}).append(email),' ',
-                    jQuery('<button>', {'class': 'btn btn-secondary btn-sm', 'onclick': '{{$name}}_remove(this); return false'}).append(
-                      jQuery('<span>', {'class': 'icon icon-times left icon-lg text-danger', 'role': 'presentation'}),
-                      jQuery('<span>', {'text': '{{str tag=delete}}'})
+                    jQuery('<span>', {'class': 'pseudolabel'}).append(email),' ',
+                    jQuery('<button>', {'class': 'btn btn-secondary btn-sm float-right', 'onclick': '{{$name}}_remove(this); return false'}).append(
+                      jQuery('<span>', {'class': 'icon icon-trash icon-lg text-danger', 'role': 'presentation'})
                     ),
-                    jQuery('<div>', {'class': 'clearfix metadata validation-message'}).append({{$validationemailstr|safe}})
+                    jQuery('<div>', {'class': 'clearfix description'}).append({{$validationemailstr|safe}})
                 ));
                 if (typeof formchangemanager !== 'undefined') {
                     var form = jQuery(this).closest('form')[0];
@@ -107,23 +107,24 @@
         <label for="{{$name}}_radio_{{$i}}" class="stacked-label">
             <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
-        <button class="btn btn-secondary btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
+        {{if $email != $default}}
+        <button class="btn btn-secondary btn-sm float-right" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
             <span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span>
-            <span class="sr-only">{{str tag=delete}}</span>
         </button>
+        {{/if}}
     </div>
 {{/foreach}}
 {{foreach from=$unvalidated item=email}}
     <div class="unvalidated">
+        <input type="radio"  class="text-inline" disabled>
         <input type="hidden" name="{{$name}}_invalid[]" value="{{$email}}">
-        <span class="stacked-label no-radio">
+        <span class="stacked-label">
             {{$email}}
         </span>
-        <button class="btn btn-secondary btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
-            <span class="icon icon-trash left icon-lg text-danger" role="presentation" aria-hidden="true"></span>
-            <span class="sr-only">{{str tag=delete}}</span>
+        <button class="btn btn-secondary btn-sm float-right" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
+            <span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span>
         </button>
-        <span class="message">{{str tag=validationemailsent section=artefact.internal}}</span>
+        <div class="description">{{str tag=validationemailsent section=artefact.internal}}</div>
     </div>
 {{/foreach}}
 </div>
