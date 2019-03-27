@@ -89,7 +89,7 @@
                     </a>
                 {/if}
             </td>
-            <td class="filedescription d-none d-md-block">
+            <td class="filedescription d-none d-md-table-cell">
                 {$file->description|safe|clean_html}
                 {if $showtags}
                     {if $file->tags}
