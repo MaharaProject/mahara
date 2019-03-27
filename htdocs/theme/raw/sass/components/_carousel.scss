@@ -1,12 +1,15 @@
 .carousel {
     width: 82%;
     margin: 0 auto;
-    .item {
+    .carousel-inner {
+        overflow: visible;
+    }
+    .carousel-item {
         display: block;
     }
 
     &.carousel-ready {
-        .item {
+        .carousel-item {
             display: none;
             &.active,
             &.next {
@@ -30,36 +33,55 @@
         padding: 10px 0 0 0;
     }
     .carousel-control {
-        width: 8%;
+        width: auto;
         opacity: 1;
         top: 0;
         bottom: 100%;
+        position: absolute;
         ~ .icon {
             vertical-align: middle;
         }
         &.left {
-            left: -10%;
+            left: -25px;
         }
         &.right {
-            right: -10%;
+            right: -25px;
         }
         &:hover,
         &:focus {
             opacity: 1;
         }
         .icon-lg {
-            font-size: 1.5em;
+            font-size: 1.875rem;
+        }
+        .carousel-control-first,
+        .carousel-control-last {
+            margin-top: 35px;
+        }
+        .carousel-control-last {
+            text-align: right;
+        }
+        .carousel-control-prev,
+        .carousel-control-next {
+            .icon {
+                margin-right: 0;
+                margin-left: 0;
+            }
         }
         a {
             display: block;
-            padding: 3px;
             color: $theme-text-color;
             opacity: .5;
+            width: 20px;
             &:hover,
             &:focus {
                 outline: 0;
                 text-decoration: none;
                 opacity: .9;
+            }
+            .icon {
+                width: 100%;
+                text-align: center;
             }
         }
     }
