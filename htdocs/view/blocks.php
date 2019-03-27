@@ -157,7 +157,7 @@ $inlinejs .= pieform_element_select_get_inlinejs();
 $inlinejs .= "jQuery(window).on('pageupdated', {}, function() { dock.init(jQuery(document)); });";
 // The form for adding blocks via the keyboard
 $addform = pieform(array(
-    'name' => 'addblock',
+    'name' => 'newblock',
     'method' => 'post',
     'jsform' => true,
     'renderer' => 'div',
