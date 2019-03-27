@@ -228,7 +228,7 @@ class PluginExportHtml extends PluginExport {
         foreach ($copydata as $from => $to) {
             $to = $this->get('exportdir') . '/' . $this->get('rootdir') . $to;
             if (!check_dir_exists(dirname($to))) {
-                $SESSION->add_error_msg(get_string('couldnotcreatedirectory', 'export', $todir));
+                $SESSION->add_error_msg(get_string('couldnotcreatedirectory', 'export', $to));
             }
             if (!copy($from, $to)) {
                 $SESSION->add_error_msg(get_string('couldnotcopystaticfile', 'export', $from));
