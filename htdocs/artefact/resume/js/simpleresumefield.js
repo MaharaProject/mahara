@@ -27,7 +27,7 @@ jQuery(function($) {
 
             if (typeof tinyMCE != 'undefined') {
                 var editor = tinyMCE.get(t),
-                formTop =  container.closest('#main-column-container').attr('id');;
+                formTop =  container.closest('#main-column-container').attr('id');
                 $('.mce-toolbar.mce-first').siblings().toggleClass('d-none');
                 editor.show();
                 editor.focus();
@@ -59,7 +59,10 @@ jQuery(function($) {
             displaycontainer.removeClass("d-none");
             editcontainer.removeClass("d-none");
             if (typeof tinyMCE != 'undefined') {
-                tinyMCE.get(t).hide();
+                // Clear any cancelled content back to original
+                var ed = tinyMCE.get(t);
+                ed.setContent($('#' + t).text());
+                ed.hide();
             }
             else {
                 $("#" + t).addClass("js-hidden");
