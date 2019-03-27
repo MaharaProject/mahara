@@ -1,11 +1,5 @@
-.card-secondary {
-    &.card {
-        @include box-shadow(none);
-        > .card-header {
-            border-bottom: 0;
-            font-family: $font-family-sans-serif;
-        }
-    }
+.card.card-secondary {
+    @include box-shadow(none);
     > .card-header {
         font-family: $font-family-sans-serif;
         border-radius: 0;
@@ -13,7 +7,7 @@
     }
     > .card-header, .card-header-nested {
         border-bottom: 0;
-
+        padding-left: 10px;
         background-color: #047DB1;
         color: #FFFFFF;
 

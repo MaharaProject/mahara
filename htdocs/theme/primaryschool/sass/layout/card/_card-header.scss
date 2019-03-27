@@ -69,7 +69,7 @@
         }
     }
     &:nth-child(3n+3) {
-        .car-secondary {
+        .card-secondary {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color-three;
                 color: #FFFFFF;

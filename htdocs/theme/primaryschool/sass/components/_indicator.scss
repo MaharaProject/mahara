@@ -39,7 +39,23 @@ a:hover .collapse-indicator {
 .card-secondary {
     .card-header {
         .move-indicator {
+            color: #FFFFFF !important;
+        }
+        .collapse-inline {
+            width: auto;
+        }
+        .collapse-indicator {
             color: #FFFFFF;
+
+            &:hover,
+            &:focus {
+                color: #FFFFFF;
+            }
         }
     }
+}
+
+[data-toggle="collapse"].outer-link:focus ~ .collapse-indicator,
+[data-toggle="collapse"].outer-link:hover ~ .collapse-indicator {
+    color: #FFFFFF;
 }

@@ -54,7 +54,7 @@
             }
         }
         &:hover, &:focus {
-            background: rgba($theme-text-color, 0.03);
+            background: none;
             text-decoration: none;
         }
         .pieform > .collapsible-group:first-child &,
