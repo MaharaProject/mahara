@@ -6437,7 +6437,7 @@ class View {
             return get_string('dashboardviewtitle', 'view');
         }
         if ($this->type == 'grouphomepage') {
-            return get_string('grouphomepage', 'view');
+            return get_string('Grouphomepage', 'view');
         }
         return $this->title;
     }

@@ -2680,7 +2680,7 @@ function view_type_graph($type = null) {
     if (count($viewtypes) > 1) {
         $dataarray = array();
         foreach ($viewtypes as &$t) {
-            $dataarray[get_string($t->type, 'view')] = $t->views;
+            $dataarray[get_string(ucfirst($t->type), 'view')] = $t->views;
         }
         arsort($dataarray);
 
