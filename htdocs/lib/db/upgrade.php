@@ -1192,5 +1192,9 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019031900) {
+        log_debug('Clearing cache for new people menu structure');
+    }
+
     return $status;
 }

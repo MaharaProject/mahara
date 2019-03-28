@@ -10,7 +10,8 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'engage/findfriends');
+define('MENUITEM', 'engage/people');
+define('SECTION_PAGE', 'requestfriendship');
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $id = param_integer('id');
@@ -28,10 +29,10 @@ define('TITLE', get_string('sendfriendshiprequest', 'group', display_name($id)))
 $returnto = param_alpha('returnto', 'myfriends');
 $offset = param_integer('offset', 0);
 switch ($returnto) {
-case 'find': $goto = 'user/find.php'; break;
+case 'find': $goto = 'user/index.php'; break;
 case 'view': $goto = profile_url($user, false); break;
 default:
-    $goto = 'user/myfriends.php';
+    $goto = 'user/index.php';
 }
 $goto .= (strpos($goto,'?')) ? '&offset=' . $offset : '?offset=' . $offset;
 $goto = get_config('wwwroot') . $goto;
@@ -42,7 +43,7 @@ if (is_friend($id, $USER->get('id'))) {
 }
 else if (get_friend_request($id, $USER->get('id'))) {
     $SESSION->add_info_msg(get_string('friendshipalreadyrequestedowner', 'group', display_name($id)));
-    redirect(get_config('wwwroot') . 'user/myfriends.php?filter=pending');
+    redirect(get_config('wwwroot') . 'user/index.php?filter=pending');
 }
 
 $form = pieform(array(

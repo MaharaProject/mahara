@@ -2936,24 +2936,18 @@ function mahara_standard_nav() {
             'weight' => 40,
             'iconclass' => 'wrench',
         ),
+        'engage/people' => array(
+            'path' => 'engage/people',
+            'url' => 'user/index.php',
+            'title' => get_string('people'),
+            'weight' => 10,
+        ),
         'engage/index' => array(
             'path' => 'engage/index',
             'url' => 'group/index.php',
             'title' => get_string('groups'),
-            'weight' => 10,
-            'accesskey' => 'g',
-        ),
-        'engage/myfriends' => array(
-            'path' => 'engage/myfriends',
-            'url' => 'user/myfriends.php',
-            'title' => get_string('myfriends'),
             'weight' => 30,
-        ),
-        'engage/findfriends' => array(
-            'path' => 'engage/findfriends',
-            'url' => 'user/find.php',
-            'title' => get_string('findpeople'),
-            'weight' => 40,
+            'accesskey' => 'g',
         ),
         'engage/institutionmembership' => array(
             'path' => 'engage/institutions',
@@ -3227,7 +3221,6 @@ function footer_menu($all=false) {
             $helpkeys[] = 'new';
         }
     }
-
     // To handle when things have an explicit 'filter' state
     if (param_exists('filter')) {
         $helpkeys[] = param_alphanum('filter', null);
@@ -3257,7 +3250,6 @@ function footer_menu($all=false) {
             }
         }
     }
-
     return $menu;
 }
 

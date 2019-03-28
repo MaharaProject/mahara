@@ -27,14 +27,14 @@ Scenario: Check share page with friends
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
- And I choose "Find people" in "Engage" from main menu
+ And I choose "People" in "Engage" from main menu
  And I click on "Send friend request" in "Bob User" row
  And I set the field "Message" to "Love me, love me, say you do!"
  And I press "Request friendship"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
  And I follow "pending friend"
- And I click on "Approve request"
+ And I click on "Approve"
  And I choose "Pages and collections" in "Create" from main menu
  And I click on "Manage access" in "Page UserB_02" card access menu
  And I select "Friends" from "General" in shared with select2 box

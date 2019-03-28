@@ -294,6 +294,7 @@ $string['addtofriendsfailed'] = 'Failed to add %s to your friends list.';
 $string['allfriends']     = 'All friends';
 $string['currentfriends'] = 'Current friends';
 $string['pendingfriends'] = 'Pending friends';
+$string['pendingfriend'] =  'Pending friend';
 $string['backtofriendslist'] = 'Back to friends list';
 $string['findnewfriends'] = 'Find new friends';
 $string['Collections']    = 'Collections';
@@ -319,6 +320,7 @@ $string['friends'] = 'friends';
 $string['user'] = 'user';
 $string['users'] = 'users';
 $string['Friends'] = 'Friends';
+$string['friendrequests'] = 'Friend requests';
 $string['Everyone'] = 'Everyone';
 $string['myinstitutions'] = 'My institutions';
 
@@ -341,6 +343,7 @@ $string['viewmessage'] = 'View message';
 $string['Reply'] = 'Reply';
 
 $string['denyfriendrequest'] = 'Deny friend request';
+$string['deny'] = 'Deny';
 $string['sendfriendshiprequest'] = 'Send %s a friendship request';
 $string['cantdenyrequest'] = 'That is not a valid friendship request.';
 $string['cantmessageuser'] = 'You cannot send this user a message.';

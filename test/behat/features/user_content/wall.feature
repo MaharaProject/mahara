@@ -12,7 +12,7 @@ Background:
 Scenario: Wall post notifications
 The wall post must generate a notification (Bug 547333)
     Given I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Find people" in "Engage" from main menu
+    And I choose "People" in "Engage" from main menu
     And I follow "Angela User"
     And I scroll to the base of id "wall"
     And I set the field "Post" to "Hello"

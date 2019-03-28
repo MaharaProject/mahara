@@ -1,7 +1,7 @@
 @javascript @core @core_messages
 Feature: Edit group membership
    In order to edit group membership
-   As an admin I can edit membership via the 'Find people' page
+   As an admin I can edit membership via the 'People' page
 
 Background:
 Given the following "users" exist:
@@ -46,7 +46,7 @@ Scenario: User view members page, verify user list displayed and sorted by selec
 Scenario: Check modal is working for the "Edit group memebership" on find people page (Bug 1513265)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Find people" in "Engage" from main menu
+    And I choose "People" in "Engage" from main menu
     And I follow "2" in the "Find people results" property
     And I click on "Edit group membership" in "Liam User" row
     # allow the modal to open

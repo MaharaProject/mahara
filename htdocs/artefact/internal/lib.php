@@ -412,7 +412,7 @@ class PluginArtefactInternal extends PluginArtefact {
                 return 'group/index.php?filter=notmember';
                 break;
             case 'makefriend':
-                return 'user/find.php';
+                return 'user/index.php';
                 break;
             default:
                 return 'view/index.php';

@@ -86,7 +86,7 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
 
         $smarty = smarty_core();
         $smarty->assign('friends', $friends);
-        $smarty->assign('searchingforfriends', array('<a href="' . get_config('wwwroot') . 'user/find.php">', '</a>'));
+        $smarty->assign('searchingforfriends', array('<a href="' . get_config('wwwroot') . 'user/index.php">', '</a>'));
 
         // If the user has no friends, try and display something useful, such
         // as a 'request friendship' button

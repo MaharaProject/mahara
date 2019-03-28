@@ -1,6 +1,6 @@
 @javascript @core @core_user @core_portfolio @friends
-Feature: Searching for users in the "Find people" page
-    In order to search by name on the "Find people" page
+Feature: Searching for users in the "People" page
+    In order to search by name on the "People" page
     So I can befriend them or send them messages
 
 Background:
@@ -8,7 +8,7 @@ Background:
     | name | displayname |
     | instone | Institution One |
     | insttwo | Institution Two |
-    
+
     Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname |role |
     | UserA | Kupuh1pa! | UserA@example.org  | Angela | User | instone | internal | member |
@@ -18,7 +18,7 @@ Background:
 Scenario: Find users in your institution and outside your institution
     # Log in as a user
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Find people" in "Engage" from main menu
+    And I choose "People" in "Engage" from main menu
 
     # Searching within my own institution, I should only find users in my institution
     And I select "My institutions" from "Filter"
@@ -32,7 +32,7 @@ Scenario: Find users in your institution and outside your institution
     When I select "Everyone" from "Filter"
     And I fill in "Search" with "smith"
     And I scroll to the id "main-nav"
-    And I press "search_submit"
+    And I press "Search"
     # I should find everyone
     Then I should see "Cecilia User"
     And I should see "Bob User"

@@ -1131,24 +1131,50 @@ function get_search_plugins() {
  *               ),
  *           );
  */
-function search_friend($filter, $limit = null, $offset = 0) {
+function search_friend($filter, $limit = null, $offset = 0, $query='') {
     global $USER;
     $userid = $USER->get('id');
 
-    if (!in_array($filter, array('all','current','pending'))) {
+    if (!in_array($filter, array('allmy','current','pending'))) {
         throw new SystemException('Invalid search filter');
     }
 
     $sql = array();
     $count = 0;
 
-    if (in_array($filter, array('all', 'current'))) {
-        $count += count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
-            JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
-            JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
-            WHERE usr1 = ? OR usr2 = ?',
-            array($userid, $userid)
-        );
+    $extravalues = array();
+    $querystr = "";
+    if ($query) {
+        $querystr.=' AND (u.username ' . db_ilike() . " '%' || ? || '%' " .
+        'OR u.firstname ' . db_ilike() . " '%' || ? || '%' " .
+        'OR u.lastname ' . db_ilike() . " '%' || ? || '%' )";
+        $extravalues = array($query, $query, $query);
+    }
+
+    if (in_array($filter, array('allmy', 'current'))) {
+        $where = array($userid, $userid);
+        if ($query) {
+            $where = array($userid, $query, $query, $query, $userid, $query, $query, $query);
+            $count += count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
+                JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
+                JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
+                WHERE (usr1 = ? AND u1.username ' . db_ilike() . " '%' || ? || '%' " .
+                'OR u1.firstname ' . db_ilike() . " '%' || ? || '%' " .
+                'OR u1.lastname ' . db_ilike() . " '%' || ? || '%' )
+                 OR (usr2 = ? AND u2.username " . db_ilike() . " '%' || ? || '%' " .
+                'OR u2.firstname ' . db_ilike() . " '%' || ? || '%' " .
+                'OR u2.lastname ' . db_ilike() . " '%' || ? || '%' )",
+                $where
+            );
+        }
+        else {
+            $count += count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
+                JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
+                JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
+                WHERE usr1 = ? OR usr2 = ?',
+                $where
+            );
+        }
 
         array_push($sql, 'SELECT usr2 AS id, 2 AS status FROM {usr_friend} WHERE usr1 = ?
         ');
@@ -1156,32 +1182,41 @@ function search_friend($filter, $limit = null, $offset = 0) {
         ');
     }
 
-    if (in_array($filter, array('all', 'pending'))) {
+    if (in_array($filter, array('allmy', 'pending'))) {
         // For the friends being requested
-        $count += count_records_sql('SELECT COUNT("owner") FROM {usr_friend_request}
-            JOIN {usr} u ON (u.id = requester AND u.deleted = 0)
-            WHERE "owner" = ?',
-            array($userid)
+        $where = array($userid);
+        if ($query) {
+            $where = array_merge($where, $extravalues);
+        }
+        $count += count_records_sql('SELECT COUNT(ufr.owner) FROM {usr_friend_request} ufr
+            JOIN {usr} u ON (u.id = ufr.requester AND u.deleted = 0)
+            WHERE ufr.owner = ?' . $querystr,
+            $where
         );
 
         array_push($sql, 'SELECT requester AS id, 1 AS status FROM {usr_friend_request} WHERE "owner" = ?
         ');
         // For the one doing the request
-        $count += count_records_sql('SELECT COUNT("requester") FROM {usr_friend_request}
-            JOIN {usr} u ON (u.id = "owner" AND u.deleted = 0)
-            WHERE requester = ?',
-            array($userid)
+        $where = array($userid);
+        if ($query) {
+            $where = array_merge($where, $extravalues);
+        }
+        $count += count_records_sql('SELECT COUNT(ufr.requester) FROM {usr_friend_request} ufr
+            JOIN {usr} u ON (u.id = ufr.owner AND u.deleted = 0)
+            WHERE ufr.requester = ?' . $querystr,
+            $where
         );
-
         array_push($sql, 'SELECT "owner" AS id, 1 AS status FROM {usr_friend_request} WHERE requester = ?
         ');
     }
-    $sqlstr = 'SELECT f.id FROM (' . join('UNION ', $sql) . ') f
-            JOIN {usr} u ON (f.id = u.id AND u.deleted = 0)
-            ORDER BY status, firstname, lastname, u.id';
+
+    $sqlstr = 'SELECT f.id FROM (' . join('UNION ', $sql) . ') AS f
+            JOIN {usr} u ON (f.id = u.id AND u.deleted = 0)';
+            $sqlstr .= 'WHERE u.deleted = 0 ' . $querystr . ' ORDER BY status, firstname, lastname, u.id';
     if ($limit) {
+        $extravalues = array_merge($extravalues, array($limit, $offset));
         $data = get_column_sql($sqlstr . ' LIMIT ? OFFSET ?',
-            array_merge(array_pad($values=array(), count($sql), $userid), array($limit, $offset)));
+            array_merge(array_pad($values=array(), count($sql), $userid), $extravalues));
     }
     else {
         $data = get_column_sql($sqlstr,

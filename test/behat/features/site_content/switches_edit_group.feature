@@ -19,7 +19,7 @@ Background:
     | UserE | Kupuh1pa! | UserE@example.org | Earl | UserE | insttwo | internal | member |
 
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Find people" in "Engage" from main menu
+    And I choose "People" in "Engage" from main menu
     When I click on "Send friend request" in "Bob UserB" row
     Then I should see "Send Bob UserB a friendship request"
     When I fill in "Would you like to be my friend?" for "Message"
@@ -43,19 +43,19 @@ Background:
     Given I log in as "UserB" with password "Kupuh1pa!"
     When  I follow "pending friend"
     Then I should see "Angela UserA (UserA)"
-    When I press "Approve request"
+    When I press "Approve"
     Then I should see "Accepted friend request"
     And I log out
     Given I log in as "UserC" with password "Kupuh1pa!"
     When  I follow "pending friend"
     Then I should see "Angela UserA (UserA)"
-    When I press "Approve request"
+    When I press "Approve"
     Then I should see "Accepted friend request"
     And I log out
     Given I log in as "UserD" with password "Kupuh1pa!"
     When  I follow "pending friend"
     Then I should see "Angela UserA (UserA)"
-    When I press "Approve request"
+    When I press "Approve"
     Then I should see "Accepted friend request"
     And I log out
 
