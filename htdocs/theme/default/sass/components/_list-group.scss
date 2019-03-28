@@ -3,7 +3,7 @@
         color: $link-color;
         &:hover {
             color: $link-hover-color;
-            background-color: rgba(#9db577, 0.1);
+            background-color: scale-color($theme-primary-color, $lightness: 90%);
         }
     }
 }

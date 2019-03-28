@@ -1,5 +1,5 @@
 a.user-icon {
-  border: none;
+  border: 0;
   padding: 0;
   background: none;
 
@@ -19,4 +19,7 @@ a.user-icon {
     overflow: hidden;
     position: relative;
   }
+}
+.card-header.profile-block a:not(.secondary-link).user-icon {
+    border: 0;
 }

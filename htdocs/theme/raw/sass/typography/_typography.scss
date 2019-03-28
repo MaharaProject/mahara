@@ -292,7 +292,7 @@ pre {
     word-break: break-all;
     word-wrap: break-word;
     background-color: $pre-bg;
-    border: $border-width solid $card-border;
+    border: $border-width solid $card-border-color;
     border-radius: 2px;
     span.wsname {
         font-weight: bold;

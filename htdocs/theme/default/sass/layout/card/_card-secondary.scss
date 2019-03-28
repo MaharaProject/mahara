@@ -12,7 +12,7 @@
 
     &.card {
         .card-header {
-            border-color: #9db577;
+            border-color: $card-secondary-border;
             font-family: $font-family-sans-serif;
             padding-left: 0;
             padding-right: 0;

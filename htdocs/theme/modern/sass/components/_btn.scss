@@ -2,7 +2,7 @@
     &.btn {
         border-color: $danger;
         color: $danger;
-        background-color: lighten($danger, 35%);
+        background-color: scale-color($danger, $lightness: 70%);
         &:hover,
         &:focus {
           color:#FFFFFF;
@@ -15,7 +15,7 @@
   &.btn-toolbar {
     &.btn-group-top{
       .active {
-        background-color: $primary;
+        background-color: $theme-primary-color;
         color: #FFF;
       }
     }
@@ -32,7 +32,7 @@
         font-family: $font-family-sans-serif;
 
         &:hover {
-            background-color: darken($btn-primary-bg, 5%);
+            background-color: scale-color($btn-primary-bg, $lightness: -5%);
         }
 
         .mce-txt {
@@ -54,7 +54,7 @@
             color: $btn-primary-color;
 
             &:hover {
-                background-color: darken($btn-primary-bg, 5%);
+                background-color: scale-color($btn-primary-bg, $lightness: -5%);
             }
         }
     }

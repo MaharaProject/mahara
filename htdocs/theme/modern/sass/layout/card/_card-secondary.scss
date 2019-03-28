@@ -1,13 +1,16 @@
 .card-secondary {
     > .card-header {
         font-family: $font-family-sans-serif;
-        //background-color: #FFFFFF;
-        border-left: 0 solid transparent;
-        //padding-left: 0;
-        border-bottom: 2px solid ;
+        border-bottom-width: 2px;
     }
 
     .list-group-item-heading {
       font-family: $font-family-sans-serif;
+    }
+
+    &.card {
+        .card-header {
+            border-color: $card-secondary-border;
+        }
     }
 }

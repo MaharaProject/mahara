@@ -1,31 +1,23 @@
 .footer {
-    background: #799152;
-    color: #2e3a1c;
-
+    background-color: $site-footer-bg;
     .footer-inner {
         padding: 20px 10px;
 
-        .footer-nav {
-            > li {
-                > a {
-                    color: #2e3a1c;
-                    font-weight: 700;
-
-                    &:hover {
-                        background-color: transparent;
-                        color: #FFFFFF;
-                    }
-                }
+        .nav-link {
+            color: $site-footer-color;
+                font-weight: 700;
+            &:hover,
+            &:focus {
+                background-color: $site-footer-hover-bg;
+                color: $site-footer-hover-color;
             }
         }
-
         .metadata {
-            color: #2e3a1c;
+            color: $site-footer-color;
         }
     }
     &.upgrade-footer a {
         font-weight: 700;
-        color: #2e3a1c;
     }
 }
 

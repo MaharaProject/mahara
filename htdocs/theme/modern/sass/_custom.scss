@@ -2,7 +2,7 @@
   &.text-danger,
   &.text-success,
   &.text-warning {
-    color: $text-color;
+    color: $theme-text-color;
   }
 }
 
@@ -15,7 +15,7 @@
 
 // Lighten the Administration link in the menu bar in the admin area
 div.admin-title a {
-  color:#4DB1D6;
+  color:#FFFFFF;
 }
 
 .loggedout {

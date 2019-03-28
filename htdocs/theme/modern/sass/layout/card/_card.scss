@@ -1,10 +1,6 @@
 .sidebar {
     .card {
-        border-color: $accent-color;
-
-        .list-group-item-link a:hover {
-            //background-colour: $accent-color;
-        }
+        border-color: $theme-secondary-color;
     }
 }
 .card.bg-warning {

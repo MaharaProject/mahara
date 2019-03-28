@@ -90,7 +90,7 @@
     margin-bottom: 21px;
     line-height: $line-height-base;
     background-color: transparent;
-    border: 1px solid $card-border;
+    border: 1px solid $card-border-color;
     border-radius: 2px;
     transition: border .2s ease-in-out;
 }
@@ -707,7 +707,7 @@ a[type="submit"],
 }
 
 .elasticsearch-filters {
-    border-bottom: 1px solid $card-border;
+    border-bottom: 1px solid $card-border-color;
     background-color: $card-header-bg;
 }
 

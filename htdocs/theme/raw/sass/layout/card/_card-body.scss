@@ -25,9 +25,6 @@
         clear:both;
         margin: 15px -15px -15px; //alter padding for card footers inside card-body (needed for some forms) c.f. login form
     }
-    .collapse & {
-        padding-bottom: 0;
-    }
     &.flush {
         padding: 15px 0 0 0;
     }

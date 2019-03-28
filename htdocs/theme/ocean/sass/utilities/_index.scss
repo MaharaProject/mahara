@@ -1,4 +1,8 @@
-@import "../typography/fonts";             // Import custom fonts
-@import "../layout/nav/main-nav";          // Custom navigation
-@import "../features/dashboard-widget";    // Custom dashboard
-@import "../features/collection-navigation";    // Custom collection navigation
+@import "../typography/fonts";
+@import "../layout/layout";
+@import "../layout/nav/main-nav";
+@import "../layout/nav/navbar";
+@import "../components/arrow-bar";
+@import "../components/toggles";
+@import "../features/dashboard-widget";
+@import "../features/collection-navigation";

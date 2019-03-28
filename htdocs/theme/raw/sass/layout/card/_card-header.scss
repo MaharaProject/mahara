@@ -100,14 +100,14 @@ h3 {
         .card-header {
             border: 0;
             a {
-                border: $card-border-width solid $card-border;
+                border: $card-border-width solid $card-border-color;
                 border-bottom-width: 0;
             }
         }
         &.last {
             .card-header {
                 a.collapsed {
-                    border-bottom-width: $card-border-width;
+                    border-bottom-width: $border-width;
                 }
             }
         }
@@ -116,6 +116,23 @@ h3 {
                 a {
                     border-width: 0;
                 }
+            }
+        }
+        &.text-white.bg-primary {
+            background: transparent !important;
+            .card-header {
+                a {
+                    background-color: $theme-primary-color;
+                }
+                .icon,
+                .subject,
+                .metadata,
+                .sentdate {
+                    color: #FFF;
+                }
+            }
+            .card-body {
+                color: $theme-text-color;
             }
         }
     }

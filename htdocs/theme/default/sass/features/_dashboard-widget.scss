@@ -72,7 +72,7 @@ $logged-in-height-mobile: 125px;
         }
 
         .icon {
-            color: #9db577;
+            color: scale-color($theme-primary-color, $lightness: 60%);
             padding-top:16px;
             font-size: 72px;
 
@@ -177,7 +177,7 @@ $logged-in-height-mobile: 125px;
             vertical-align: middle;
             display: block;
             z-index: 2;
-            background-color: #423017;
+            background-color: #333333;
             height: $logged-in-height;
             width: $logged-in-height;
             border-radius: 50%;

@@ -33,7 +33,7 @@ $logged-in-height-phone: 120px;
         }
 
         .widget {
-            background-color: #A66700;
+            background-color: $theme-accent-color-two;
             border-left: 10px solid #FFFFFF;
             height: $logged-in-height;
 
@@ -46,7 +46,7 @@ $logged-in-height-phone: 120px;
             }
 
             .puzzle {
-                background-color: #ca0238;
+                background-color: $theme-accent-color;
                 border: 10px solid #FFFFFF;
                 border-left: 0;
                 width: 50px;
@@ -75,7 +75,7 @@ $logged-in-height-phone: 120px;
 
         &.first {
             .widget {
-                background-color: #ca0238;
+                background-color: $theme-accent-color;
 
                 .puzzle {
                     background-color: #FFFFFF;
@@ -87,10 +87,10 @@ $logged-in-height-phone: 120px;
 
         &.last {
             .widget {
-                background-color: #5B6E1C;
+                background-color: $theme-secondary-color;
 
                 .puzzle {
-                    background-color: #A66700;
+                    background-color: $theme-accent-color-two;
                     border: 10px solid #FFFFFF;
                     border-left: 0;
                 }
@@ -132,7 +132,7 @@ $logged-in-height-phone: 120px;
         }
 
         .puzzle {
-            background-color: #5B6E1C;
+            background-color: $theme-secondary-color;
             border: 10px solid #FFFFFF;
             border-left: 0;
             width: 50px;
