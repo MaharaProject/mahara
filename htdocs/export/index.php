@@ -74,23 +74,27 @@ if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = 
         'js/lodash/lodash.js',
         'js/gridstack/gridstack.js',
         'js/gridlayout.js',
+        'js/collection-navigation.js',
     );
 
     $collections = get_records_sql_array('
-        SELECT c.id, c.name, c.description
-        FROM {collection} c JOIN {collection_view} cv ON c.id = cv.collection
+        SELECT c.id, c.name, c.description, cv.view
+        FROM {collection} c
+        JOIN {collection_view} cv ON c.id = cv.collection
         WHERE c.owner = ?
-        GROUP BY c.id, c.name, c.description
-        HAVING COUNT(cv.view) > 0',
+        AND cv.view IS NOT NULL
+        AND cv.displayorder = 0',
         array($USER->get('id'))
     );
     if ($collections) {
         $elements['what']['options']['collections'] = get_string('justsomecollections', 'export');
         foreach ($collections as $collection) {
+            $view = new View($collection->view);
             $elements['collection_' . $collection->id] = array(
                 'type' => 'checkbox',
                 'class' => 'checkbox',
                 'title' => $collection->name,
+                'viewlink' => $view ? $view->get_url(true, true) : '',
                 'description' => $collection->description,
             );
         }

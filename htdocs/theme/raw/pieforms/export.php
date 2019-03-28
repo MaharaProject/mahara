@@ -5,13 +5,14 @@ function export_form_cell_html($element) {
     $strclicktopreview = get_string('clicktopreview', 'export');
     $strpreview = get_string('Preview');
     $element['description'] = clean_html($element['description']);
+    $showlink = trim($element['viewlink']) != '' ? '' : 'd-none';
 return <<<EOF
 <div class="checkbox">
     {$element['html']}
     {$element['labelhtml']}
     <div class="text-small text-midtone with-label">
         {$element['description']}
-        <a href="{$element['viewlink']}" class="viewlink text-small nojs-hidden-inline">{$strclicktopreview}</a>
+        <a href="{$element['viewlink']}" class="{$showlink} viewlink text-small nojs-hidden-inline">{$strclicktopreview}</a>
     </div>
 </div>
 EOF;
@@ -71,7 +72,8 @@ $row = $col = 0;
 $itemsinrow = 3;
 foreach ($elements as $key => $element) {
     if (substr($key, 0, 11) == 'collection_') {
-        $body[$row][$col] = '<div class="checkbox">' . $element['html'] . $element['labelhtml'] . '<p class="with-label text-small text-midtone labeldescriptpreview">' . hsc($element['description']) . '</p></div>';
+        $element['description'] = '<p class="text-small text-midtone labeldescriptpreview">' . hsc($element['description']) . '</p>';
+        $body[$row][$col] = export_form_cell_html($element);
         $col++;
         if ($col % $itemsinrow == 0) {
             $row++;
