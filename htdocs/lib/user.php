@@ -2361,7 +2361,8 @@ function acceptfriend_submit(Pieform $form, $values) {
 }
 
 // Form to add someone who has friendscontrol set to 'auto'
-function addfriend_form($friendid) {
+function addfriend_form($friendid, $displaymode='') {
+    $value = $displaymode == 'pageactions' ? '<span class="icon icon-user-plus icon-lg left" role="presentation"></span>' : '<span class="icon icon-user-plus icon-lg left" role="presentation"></span>' . get_string('addtofriendslist', 'group');
     return pieform(array(
         'name' => 'addfriend' . (int) $friendid,
         'validatecallback' => 'addfriend_validate',
@@ -2371,10 +2372,11 @@ function addfriend_form($friendid) {
         'class' => 'form-as-button float-right',
         'elements' => array(
             'addfriend_submit' => array(
+                'elementtitle' => get_string('addtofriendslist', 'group'),
                 'type' => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-secondary last',
-                'value' => '<span class="icon icon-user-plus icon-lg left" role="presentation"></span>' . get_string('addtofriendslist', 'group'),
+                'class' => 'btn-secondary last' . ($displaymode == 'pageactions' ? ' addaction' : ''),
+                'value' => $value,
             ),
             'id' => array(
                 'type' => 'hidden',

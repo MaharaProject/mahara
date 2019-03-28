@@ -508,6 +508,10 @@ td.action-list-copy {
         &.dropdown-toggle {
             border-bottom-right-radius: 0;
         }
+        &.addaction {
+            border-top-left-radius: 0;
+            margin-top: -1px;
+        }
     }
 }
 

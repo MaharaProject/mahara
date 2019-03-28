@@ -276,7 +276,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
         $relationship = 'none';
         $friendscontrol = get_account_preference($userid, 'friendscontrol');
         if ($friendscontrol == 'auto') {
-            $remoteusernewfriendform = addfriend_form($userid);
+            $remoteusernewfriendform = true;
         }
         $remoteuserfriendscontrol = $friendscontrol;
     }
@@ -328,7 +328,7 @@ if ($remoteuseracceptform) {
     $smarty->assign('acceptform', acceptfriend_form($userid, 'modal'));
 }
 if ($remoteusernewfriendform) {
-    $smarty->assign('newfriendform', addfriend_form($userid));
+    $smarty->assign('newfriendform', addfriend_form($userid, 'pageactions'));
 }
 if ($remoteuserfriendscontrol) {
     $smarty->assign('friendscontrol', $friendscontrol);
