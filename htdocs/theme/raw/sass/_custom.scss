@@ -101,17 +101,31 @@
 
 // see emaillist.tpl
 .email-list {
-    padding-bottom: 20px;
+    margin-top: 20px;
     display: block;
-    .validation-message {
-        padding: 8px 0 15px 15px
+    .description:not(.html) {
+        padding: 4px 0 0 18px
+    }
+    .stacked-label {
+        width: auto;
+        margin-right: 10px;
+        vertical-align: super;
+    }
+    .unvalidated, .unsent, .validated {
+        margin-top: 20px;
+        &:last-of-type {
+            margin-bottom: 20px;
+        }
+        + .input-group {
+            margin: 20px 0;
+        }
     }
     @include media-breakpoint-up(md) {
         display: inline-block;
-        width: 420px;
+        min-width: 400px;
     }
     @include media-breakpoint-up(xl) {
-        width: 500px;
+        min-width: 500px;
     }
 }
 
