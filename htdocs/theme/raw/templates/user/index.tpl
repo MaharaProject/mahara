@@ -8,8 +8,8 @@
 {/if}
 
 {if $count > 0}
-    <div class="panel panel-default view-container">
-        <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>
+    <div class="card view-container">
+        <h2 id="searchresultsheading" class="card-header">{str tag=Results}</h2>
         <div id="friendslist" class="list-group">
             {$results.tablerows|safe}
         </div>

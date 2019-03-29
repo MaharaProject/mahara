@@ -23,7 +23,7 @@ Background:
 
 Scenario: UserA sends friend requests to UserB, UserC, User E
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Find people" in "Engage" from main menu
+    And I choose "People" in "Engage" from main menu
     Then I should see "Bob UserB"
     And I should see "Cecilia UserC"
     And I should not see "Dave UserD"
@@ -55,17 +55,17 @@ Scenario: UserA sends friend requests to UserB, UserC, User E
     Given I log in as "UserB" with password "Kupuh1pa!"
     When  I follow "pending friend"
     Then I should see "Angela UserA (UserA)"
-    And I should see the date "today" in the "h3.card-header" element with the format "l, d F Y"
+    And I should see the date "today" in the ".pendingfriend" element with the format "l, d F Y"
     And I should see "Member of Institution One"
-    When I press "Approve request"
+    When I press "Approve"
     Then I should see "Accepted friend request"
     And I log out
     Given I log in as "UserC" with password "Kupuh1pa!"
     When  I follow "pending friend"
     Then I should see "Angela UserA (UserA)"
-    And I should see the date "today" in the "h3.card-header" element with the format "l, d F Y"
+    And I should see the date "today" in the ".pendingfriend" element with the format "l, d F Y"
     And I should see "Member of Institution One"
-    When I click on "Deny request"
+    When I click on "Deny"
     Then I should see "Reason for rejecting request"
     When I fill in "I don't know who you are" for "Reason for rejecting request"
     And I press "Deny friend request"
@@ -74,7 +74,7 @@ Scenario: UserA sends friend requests to UserB, UserC, User E
 
 # UserC logs in and tries to add UserA who has set their friends control to Nobody may add me as a friend
     Given I log in as "UserE" with password "Kupuh1pa!"
-    And I choose "Find people" in "Engage" from main menu
+    And I choose "People" in "Engage" from main menu
     When I select "Everyone" from "Filter"
     And I press "Search"
     Then I should see "This user does not want any new friends." in the "Angela UserA" row

@@ -12,7 +12,7 @@
                     {$user->display_name}
                     {if $user->pending}
                     <span class="pendingfriend text-small text-midtone">
-                        - {str tag='pending' section='group'}
+                        - {str tag='pendingsince' section='group' arg1=$user->pending_time}
                     </span>
                     {elseif $user->friend && $page == 'find'}
                     <span class="existingfriend text-small text-midtone">
