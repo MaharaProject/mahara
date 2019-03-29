@@ -10,7 +10,9 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'create/files');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'file');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 safe_require('artefact', 'file');
@@ -19,13 +21,31 @@ $fileid = param_integer('file');
 // @todo provide upload form when fileid not set.
 $file = artefact_instance_from_id($fileid);
 
-if ($group = $file->get('group')) {
+$extra = array();
+if ($institution = $file->get('institution')) {
+    if ($institution == 'mahara') {
+        define('MENUITEM', 'configsite/sitefiles');
+        define('SECTION_PAGE', 'sitefiles');
+        define('TITLE', get_string('Decompress', 'artefact.file'));
+    }
+    else {
+        define('MENUITEM', 'manageinstitutions/institutionfiles');
+        define('SECTION_PAGE', 'institutionfiles');
+        define('TITLE', get_string('Decompress', 'artefact.file'));
+    }
+}
+else if ($group = $file->get('group')) {
     require_once(get_config('libroot') . 'group.php');
+    define('MENUITEM', 'engage/index');
+    define('MENUITEM_SUBPAGE', 'files');
+    define('SECTION_PAGE', 'groupfiles');
     define('GROUP', $group);
     $group = group_current_group();
+    $extra = array('sideblocks' => array(quota_sideblock(true)));
     define('TITLE', $group->name);
 }
 else {
+    define('MENUITEM', 'create/files');
     define('TITLE', get_string('Decompress', 'artefact.file'));
 }
 
@@ -114,7 +134,7 @@ if ($zipinfo) {
     }
 }
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array(), $extra);
 $smarty->assign('file', $file);
 $smarty->assign('zipinfo', $zipinfo);
 $smarty->assign('message', $message);
