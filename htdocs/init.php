@@ -498,7 +498,7 @@ if (!defined('INSTALLER')) {
     }
 }
 
-if (!defined('INSTALLER')) {
+if (get_config('installed')) {
     // Check if we need to set/unset isolated institution related things
     is_isolated();
 }
