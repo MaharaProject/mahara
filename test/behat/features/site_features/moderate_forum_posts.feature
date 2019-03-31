@@ -70,7 +70,7 @@ Scenario: Group moderator approved a forum post
     And I scroll to the top
     When I follow "Forums"
     And I click on "Unsubscribe" in "Group A's forum" row
-    Then I should see "You are not allowed to unsubscribe from the forum"
+    Then I should see "You are not allowed to unsubscribe from this forum"
     And I log out
     # Group Forum moderator should see buttons to moderate new topics and new forums
     When I log in as "UserC" with password "Kupuh1pa!"

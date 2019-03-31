@@ -23,7 +23,7 @@ $string['newpublickey'] = 'New public key';
 $string['ssphpnotconfigured'] = 'SimpleSAMLPHP is not configured.';
 $string['manage_certificate2'] = 'This is the certificate generated as part of the SAML Service Provider.';
 $string['manage_new_certificate'] = 'This is the new certificate generated as part of the SAML Service Provider.<br>
-Both the new and old certificates will be valid. Once you have notified all Identity Providers of your new certificate you can remove older certificate via the "Delete old certificate" button.';
+Both the new and old certificates will be valid. Once you have notified all Identity Providers of your new certificate, you can remove older certificates via the "Delete old certificate" button.';
 $string['nullprivatecert'] = "Could not generate or save the private key";
 $string['nullpubliccert'] = "Could not generate or save the public certificate";
 $string['defaultinstitution'] = 'Default institution';
