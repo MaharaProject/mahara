@@ -39,38 +39,30 @@ foreach ($metadata_files as $file) {
 $memcache_config = array();
 $redis_config = array('host' => '', 'port' => 6379, 'prefix' => '');
 $sql_config = array('dsn' => '', 'username' => null, 'password' => null, 'prefix' => '');
-
-if (empty(get_config('ssphpsessionhandler'))) {
-    if (PluginAuthSaml::is_memcache_configured()) {
-        $sessionhandler = 'memcache';
-        $memcache_config = PluginAuthSaml::get_memcache_servers();
-    }
-    else if (PluginAuthSaml::is_redis_configured()) {
-        $sessionhandler = 'redis';
-        $redis_config = PluginAuthSaml::get_redis_config();
-    }
-    else if (PluginAuthSaml::is_sql_configured()) {
-        $sessionhandler = 'sql';
-        $sql_config = PluginAuthSaml::get_sql_config();
-    }
-    else {
-        throw new AuthInstanceException(get_string('errornovalidsessionhandler', 'auth.saml'));
-    }
-}
-else {
-    $sessionhandler = get_config('ssphpsessionhandler');
-    if ($sessionhandler == 'memcached') {
-        $sessionhandler = 'memcache'; // set it to 'memcache' for correct store.type later
-        $memcache_config = PluginAuthSaml::get_memcache_servers();
-    }
-    else {
-        $method = 'get_' . $sessionhandler . '_config';
-        if (method_exists('PluginAuthSaml', $method)) {
-            ${$sessionhandler . "_config"} = call_static_method('PluginAuthSaml', $method);
+$sessionhandler = '';
+$session_config = auth_configure_session_handlers('saml');
+if ($session_config) {
+    if ($session_config['name']) {
+        if ($session_config['name'] == 'memcached') {
+            $sessionhandler = 'memcache'; // set it to 'memcache' for correct store.type later
+            // For mahara session the host is defined as 'host' but for ssphp it is defined as 'hostname'
+            // so we need to alter it
+            foreach ($session_config['config'] as $k => $v) {
+                $session_config['config'][$k]['hostname'] = $session_config['config'][$k]['host'];
+                unset($session_config['config'][$k]['host']);
+            }
+            $memcache_config = $session_config['config'];
+        }
+        else if ($session_config['name'] == 'redis') {
+            $sessionhandler = 'redis';
+            $redis_config = $session_config['config'];
+        }
+        else if ($session_config['name'] == 'sql') {
+            $sessionhandler = 'sql';
+            $sql_config = $session_config['config'];
         }
     }
 }
-
 /*
  * Get the configured signature algorithm, falling back to SHA256 if no valid
  * value is found

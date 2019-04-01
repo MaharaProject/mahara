@@ -251,6 +251,7 @@ if (isset($CFG->wwwroot)) {
     }
 }
 
+require_once('auth/lib.php');
 // Start up a session object, in case we need to use it to print messages
 require_once('auth/session.php');
 $SESSION = Session::singleton();
@@ -390,9 +391,6 @@ if (!defined('CLI')) {
     }
 }
 
-// Only do authentication once we know the page theme, so that the login form
-// can have the correct theming.
-require_once('auth/lib.php');
 $USER    = new LiveUser();
 
 if (function_exists('local_init_user')) {

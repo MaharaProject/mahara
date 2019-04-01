@@ -908,27 +908,27 @@ class PluginAuthSaml extends PluginAuth {
                 throw new ConfigSanityException(get_string('memcacheusememcached', 'error'));
                 break;
             case 'memcached':
-                if (self::is_memcache_configured()) {
+                if (is_memcache_configured()) {
                     $ishandler = true;
                     break;
                 }
             case 'redis':
-                if (self::is_redis_configured()) {
+                if (is_redis_configured()) {
                     $ishandler = true;
                     break;
                 }
             case 'sql':
-                if (self::is_sql_configured()) {
+                if (is_sql_configured()) {
                     $ishandler = true;
                     break;
                 }
             default:
                 // Check Redis
-                $ishandler = self::is_redis_configured();
+                $ishandler = is_redis_configured();
                 // And check Memcache if no Redis
-                $ishandler = $ishandler ? $ishandler : self::is_memcache_configured();
+                $ishandler = $ishandler ? $ishandler : is_memcache_configured();
                 // And check Sql if no Memcache
-                $ishandler = $ishandler ? $ishandler : self::is_sql_configured();
+                $ishandler = $ishandler ? $ishandler : is_sql_configured();
         }
 
         return $ishandler;
@@ -952,105 +952,6 @@ class PluginAuthSaml extends PluginAuth {
         require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
 
         SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
-    }
-    public static function is_memcache_configured() {
-        $is_configured = false;
-
-        if (extension_loaded('memcached')) {
-            foreach (self::get_memcache_servers() as $server) {
-                $memcached = new Memcached;
-
-                if (!empty($server['hostname']) && !empty($server['port'])) {
-                    $memcached->addServer($server['hostname'], $server['port']);
-                    // addServer doesn't make a connection to the server
-                    // but if the server is added, but not running pid will be -1
-                    $server_stats = $memcached->getStats();
-                    if ($server_stats[$server['hostname'] . ":" . $server['port']]['pid'] > 0) {
-                        $is_configured = true;
-                        break;
-                    }
-                }
-            }
-        }
-        return $is_configured;
-    }
-
-    public static function get_memcache_servers() {
-        $memcache_servers = array();
-
-        $servers = get_config('memcacheservers');
-
-        if (empty($servers)) {
-            $servers = 'localhost';
-        }
-
-        $servers = explode(',', $servers);
-
-        foreach ($servers as $server) {
-            $url = parse_url($server);
-            $host = !empty($url['host']) ? $url['host'] : $url['path'];
-            $port = !empty($url['port']) ? $url['port'] : 11211;
-
-            $memcache_servers[] = array('hostname' => $host, 'port' => $port);
-        }
-
-        return $memcache_servers;
-    }
-
-    public static function is_redis_configured() {
-        return (bool) PluginAuthSaml::get_redis_master();
-    }
-
-    public static function get_redis_master() {
-        $master = null;
-        if (extension_loaded('redis')) {
-            foreach (self::get_redis_servers() as $server) {
-                if (!empty($server['server']) && !empty($server['mastergroup']) && !empty($server['prefix'])) {
-                    require_once(get_config('libroot') . 'redis/sentinel.php');
-                    $sentinel = new sentinel($server['server']);
-                    $master = $sentinel->get_master_addr($server['mastergroup']);
-                }
-            }
-        }
-        return $master;
-    }
-
-    public static function get_redis_config() {
-        $servers = PluginAuthSaml::get_redis_servers();
-        $master = PluginAuthSaml::get_redis_master();
-        return array('host' => $master->ip,
-                     'port' => (int)$master->port,
-                     'prefix' => $servers[0]['prefix']
-                    );
-    }
-
-    public static function get_redis_servers() {
-        $redissentinelservers = get_config('redissentinelservers');
-        $redismastergroup = get_config('redismastergroup');
-        $redisprefix = get_config('redisprefix');
-        $redis_servers[] = array('server' => $redissentinelservers,
-                                 'mastergroup' => $redismastergroup,
-                                 'prefix' => $redisprefix);
-        return $redis_servers;
-    }
-
-    public static function is_sql_configured() {
-        $config = PluginAuthSaml::get_sql_config();
-        try {
-            $connection = new PDO($config['dsn'], $config['username'], $config['password']);
-            return true;
-        }
-        catch (PDOException $e) {
-            return false;
-        }
-    }
-
-    public static function get_sql_config() {
-        return array('dsn' => get_config('ssphpsqldsn'),
-                     'username' => get_config('ssphpsqlusername'),
-                     'password' => get_config('ssphpsqlpassword'),
-                     'prefix' => get_config('ssphpsqlprefix'),
-                    );
     }
 
     public static function get_idps($xml) {
