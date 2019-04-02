@@ -26,7 +26,7 @@ $string['registeredemailsubject'] = 'You have registered at %s';
 $string['registeredemailmessagetext'] = 'Hello %s,
 
 Thank you for registering an account on %s. Please follow this link to
-complete the signup process:
+complete the sign-up process:
 
 %sregister.php?key=%s
 
@@ -42,7 +42,7 @@ Thank you for registering an account on %s.
 %s
 
 Please follow this link to
-complete the signup process:
+complete the sign-up process:
 
 %sregister.php?key=%s
 
@@ -59,7 +59,7 @@ $string['registeredemailmessagehtmlmessage'] = '<p>Hello %s,</p>
 <p>%s</p>
 
 <p>Please follow this link
-to complete the signup process:</p>
+to complete the sign-up process:</p>
 <p><a href="%sregister.php?key=%s">%sregister.php?key=%s</a></p>
 <p>The link will expire in 24 hours.</p>
 
@@ -70,7 +70,7 @@ The %s Team</pre>';
 $string['registeredemailmessagehtml'] = '<p>Hello %s,</p>
 
 <p>Thank you for registering an account on %s. Please follow this link
-to complete the signup process:</p>
+to complete the sign-up process:</p>
 <p><a href="%sregister.php?key=%s">%sregister.php?key=%s</a></p>
 <p>The link will expire in 24 hours.</p>
 

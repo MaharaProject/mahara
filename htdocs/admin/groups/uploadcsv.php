@@ -239,7 +239,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         }
         if ($category) {
             if (!get_config('allowgroupcategories')) {
-                $csverrors->add($i, get_string('uploadgroupcsverrordoesnotallowgroupcategory', 'admin', $i));
+                $csverrors->add($i, get_string('uploadgroupcsverrordoesnotallowgroupcategory1', 'admin', $i));
             }
             $categorytitle = $line[$formatkeylookup['category']];
             // Check if this is a valid category name

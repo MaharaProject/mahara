@@ -72,19 +72,19 @@ $string['title_badgr'] = 'Badgr Backpack';
 
 $string['fetchingbadges'] = 'Fetching entries. This may take a while.';
 
-$string['missingbadgesources'] = 'Missing sources setting. Please add to your config.php file, e.g.<br><br>$cfg->openbadgedisplayer_source = \'{"backpack":"https://backpack.openbadges.org/"}\'';
+$string['missingbadgesources'] = 'Missing sources setting. Please add it to your config.php file, e.g.<br><br>$cfg->openbadgedisplayer_source = \'{"backpack":"https://backpack.openbadges.org/"}\'';
 
 $string['selectall'] = 'Select all';
 $string['selectnone'] = 'Select none';
 
 // Badgr token page
 $string['featuredisabled'] = 'The openbadgedisplayer blocktype is not active';
-$string['badgrsourcemissing'] = 'Badgr is not in the sources configuration';
-$string['badgrusername'] = "Badgr Username";
-$string['badgrpassword'] = "Badgr Password";
+$string['badgrsourcemissing1'] = 'Badgr is not in the sources configuration in your config.php file.';
+$string['badgrusername'] = "Badgr username";
+$string['badgrpassword'] = "Badgr password";
 $string['badgrtokentitle'] = "Badgr";
 $string['badgrtoken'] = "Badgr token: %s";
 $string['badgrtokenadded'] = "Badgr token added to account";
 $string['badgrtokendeleted'] = "Badgr token deleted";
 $string['badgrtokennotfound'] = "Badgr token not found with supplied credentials";
-$string['nobadgruid'] = 'Badgr requires a token for use. Please go to "Settings →  Badgr token access" to fetch your token';
+$string['nobadgruid1'] = 'Before you can use Badgr, you need to set a token. Please go to "User menu → Settings → Apps → Badgr" to set it.';

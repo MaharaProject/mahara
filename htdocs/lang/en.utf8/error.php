@@ -19,7 +19,7 @@ $string['mysqldbextensionnotloaded'] = 'Your server configuration does not inclu
 $string['mysqlmodulenolongersupported1'] = 'Your server configuration does not include the mysqli extension. Please make sure that it is loaded in php.ini or install it if it is not installed. Mahara stopped supporting the mysql extension in version 16.10';
 $string['unknowndbtype'] = 'Your server configuration references an unknown database type. Valid values are "postgres" and "mysql". Please change the database type setting in config.php.';
 $string['domextensionnotloaded'] = 'Your server configuration does not include the dom extension. Mahara requires this in order to parse XML data from a variety of sources.';
-$string['mbstringextensionnotloaded'] = 'Your server configuration does not include the mbstring extension. Mahara requires this in order to parse multi-byte strings for varying languages.';
+$string['mbstringextensionnotloaded'] = 'Your server configuration does not include the mbstring extension. Mahara requires this to parse multi-byte strings for varying languages.';
 $string['xmlextensionnotloaded'] = 'Your server configuration does not include the %s extension. Mahara requires this in order to parse XML data from a variety of sources. Please make sure that it is loaded in php.ini or install it if it is not installed.';
 $string['gdextensionnotloaded'] = 'Your server configuration does not include the gd extension. Mahara requires this in order to perform resizes and other operations on uploaded images. Please make sure that it is loaded in php.ini or install it if it is not installed.';
 $string['gdfreetypenotloaded'] = 'Your server configuration of the gd extension does not include Freetype support. Please make sure that gd is configured with it.';
@@ -105,7 +105,7 @@ $string['viewnotfoundbyname'] = 'Page %s by %s not found.';
 $string['youcannotviewthisusersprofile'] = 'You cannot view this user\'s profile.';
 $string['notinthesamegroup'] = 'You cannot view this user\'s profile because you are not members of the same group.';
 $string['notinthesameinstitution'] = 'You cannot view this user\'s profile because you are not members of the same institution.';
-$string['notinstitutionmember'] = 'You cannot view this page because you are not a member of the institution to which the page belongs.';
+$string['notinstitutionmember'] = 'You cannot view this page because you are not a member of the institution to which this page belongs.';
 $string['invalidlayoutselection'] = 'You tried to select a layout that doesn\'t exist.';
 $string['invalidnumrows'] = 'You have tried to create a layout with more than the allowed maximum number of rows. (This should not be possible; please notify your site\'s administrator.)';
 $string['previewimagegenerationfailed'] = 'Sorry, there was a problem generating the preview image.';
@@ -131,7 +131,7 @@ $string['missingparamid'] = 'Missing id';
 
 $string['themenameinvalid'] = "The name of the theme '%s' contains invalid characters.";
 
-$string['timezoneidentifierunusable'] = 'PHP on your website host does not return a useful value for the time zone identifier (%%z) - certain date formatting, such as the Leap2A export, will be broken. %%z is a PHP date formatting code. This problem is usually due to a limitation in running PHP on Windows.';
+$string['timezoneidentifierunusable'] = 'PHP on your website host does not return a useful value for the time zone identifier (%%z). Certain date formatting, such as the Leap2A export, will be broken. %%z is a PHP date formatting code. This problem is usually due to a limitation in running PHP on Windows.';
 $string['postmaxlessthanuploadmax'] = 'Your PHP post_max_size setting (%s) is smaller than your upload_max_filesize setting (%s). Uploads larger than %s will fail without displaying an error. Usually, post_max_size should be much larger than upload_max_filesize.';
 $string['smallpostmaxsize'] = 'Your PHP post_max_size setting (%s) is very small. Uploads larger than %s will fail without displaying an error.';
 $string['notenoughsessionentropy'] = 'Your PHP session.entropy_length setting is too small. Set it to at least 16 in your php.ini to ensure that generated session IDs are random and unpredictable enough.';
@@ -161,4 +161,4 @@ $string['updatesitetimezone'] = 'The time zone for the site now needs to be set 
 $string['pluginnotactive1'] = 'The plugin "%s" is not enabled. Please got to "Administration" →  "Extensions" →  "Plugin administration" to enable it.';
 
 $string['fileuploadtoobig'] = 'The file upload is too big as it is bigger than "%s"';
-$string['sideblockmenuclash'] = 'Sideblock name "%s" is already in use. Please rename one of them';
+$string['sideblockmenuclash'] = 'The sideblock name "%s" is already in use. Please choose a different one.';

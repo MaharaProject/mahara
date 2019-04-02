@@ -31,7 +31,7 @@ if (!is_plugin_active('openbadgedisplayer','blocktype')) {
 
 $sources = PluginBlocktypeOpenbadgedisplayer::get_backpack_source();
 if (empty($sources['badgr'])) {
-    throw new AccessDeniedException(get_string('badgrsourcemissing', 'blocktype.openbadgedisplayer'));
+    throw new AccessDeniedException(get_string('badgrsourcemissing1', 'blocktype.openbadgedisplayer'));
 }
 $token = get_field('usr_account_preference', 'value', 'field', 'badgr_token', 'usr', $USER->get('id'));
 

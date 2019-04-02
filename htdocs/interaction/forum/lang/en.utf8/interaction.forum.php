@@ -24,7 +24,7 @@ $string['Body'] = 'Message';
 $string['cantaddposttoforum'] = 'You are not allowed to post in this forum';
 $string['cantaddposttotopic'] = 'You are not allowed to post in this topic';
 $string['cantaddtopic'] = 'You are not allowed to add topics to this forum';
-$string['cantapproveposts'] = 'You are not allowed approve posts on this forum';
+$string['cantapproveposts'] = 'You are not allowed to approve posts on this forum';
 $string['cantdeletepost'] = 'You are not allowed to delete posts in this forum';
 $string['cantdeletethispost'] = 'You are not allowed to delete this post';
 $string['cantdeletetopic'] = 'You are not allowed to delete topics in this forum';
@@ -36,7 +36,7 @@ $string['cantfindtopic'] = 'Could not find topic with id %s';
 $string['cantmakenonobjectionable'] = 'You are not allowed to mark this post as not objectionable.';
 $string['cantviewforums'] = 'You are not allowed to view forums in this group';
 $string['cantviewtopic'] = 'You are not allowed to view topics in this forum';
-$string['cantunsubscribe'] = 'You are not allowed to unsubscribe from the forum';
+$string['cantunsubscribe'] = 'You are not allowed to unsubscribe from this forum';
 $string['chooseanaction'] = 'Choose an action';
 $string['clicksetsubject'] = 'Click to set a subject';
 $string['Closed'] = 'Closed';
@@ -293,11 +293,11 @@ To see the reporter\'s profile, follow this link:
 
 $string['postsandreplies'] = 'Posts and replies';
 $string['postneedapprovalsubject'] = 'New post needs moderation in forum "%s"';
-$string['postneedapprovalbody'] = '%s has posted in forum "%s" and is awaiting for moderation.
+$string['postneedapprovalbody'] = '%s has posted in forum "%s" and is awaiting moderation.
 
 The post content is:
 %s';
-$string['postneedapprovalhtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">A new post by "%s" in forum "%s" needs moderation
+$string['postneedapprovalhtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">A new post by "%s" in forum "%s" needs moderation.
 
 <div style="padding: 0.5em 0; border-bottom: 1px solid #999;">The post content is:
 <br>%s</div>
@@ -307,7 +307,7 @@ $string['postneedapprovalhtml'] = '<div style="padding: 0.5em 0; border-bottom: 
 <div style="font-size: smaller; border-top: 1px solid #999;">
 <p>Posted by: <a href="%s">%s</a></p>
 </div>';
-$string['postneedapprovaltext'] = 'A new post by "%s" in forum "%s" needs moderation
+$string['postneedapprovaltext'] = 'A new post by "%s" in forum "%s" needs moderation.
 %s
 ------------------------------------------------------------------------
 
