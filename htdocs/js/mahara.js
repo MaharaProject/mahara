@@ -1164,3 +1164,17 @@ function pmeter_presubmit(form, btn) {
 
     formStartProcessing(form, btn);
 }
+
+function showmatchall() {
+    if ($('#searchviews_type').val() == 'tagsonly') {
+        $('#searchviews_matchalltags_container').parent().find('.d-none').removeClass('d-none'); // because the d-none from form is on container and input
+    }
+    else {
+        $('#searchviews_matchalltags_container').addClass('d-none');
+    }
+}
+$(function() {
+    $('#searchviews_type').on('change', function() {
+        showmatchall();
+    });
+});

@@ -47,6 +47,7 @@ list($searchform, $data, $pagination) = View::views_by_owner(null, $institution)
 $js = <<< EOF
 jQuery(function () {
     {$pagination['javascript']}
+    showmatchall();
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF
