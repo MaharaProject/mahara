@@ -31,6 +31,7 @@ else {
 
 $framework_id = param_variable('framework_id', null);
 $table = 'framework';
+//@TODO - check error invalid arg for foreach "framework", "6") -> ln 54
 $fw_data = get_framework($table, $framework_id);
 
 function get_framework($table, $select, $se_depth=0) {
@@ -49,7 +50,6 @@ function get_framework($table, $select, $se_depth=0) {
         $standard_data = get_records_array('framework_standard', 'framework', $fw_data->id, 'priority');
         $data['standards'] = $standard_data;
         $se_data = array();
-
 
         foreach ($standard_data as $sk => $se) {
             if (record_exists_select('framework_standard_element', "standard='$se->id'")) {
