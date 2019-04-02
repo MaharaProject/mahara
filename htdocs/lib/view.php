@@ -4436,7 +4436,7 @@ class View {
                 ),
                 'matchalltags' => array (
                     'type' => 'checkbox',
-                    'class' => 'matchalltags',
+                    'class' => 'matchalltags d-none',
                     'title' => get_string('matchalltags', 'view'),
                     'defaultvalue' => $matchalltags,
                     'description' => get_string('matchalltagsdesc', 'view'),
