@@ -1411,7 +1411,7 @@ function jsstrings() {
                 'element.calendar.opendatepicker',
                 'rule.maxlength.maxlength',
                 'rule.required.required',
-            )
+            ),
         ),
         'tablerenderer' => array(
             'mahara' => array(

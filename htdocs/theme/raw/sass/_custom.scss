@@ -801,3 +801,20 @@ a[type="submit"],
 .hidden {
     display: none;
 }
+//used for Smart Evidence json-editor
+#editor_holder .bg-light {
+    background-color: #FFF !important;
+}
+
+div.form-group .form-control-label {
+    vertical-align: top;
+}
+
+.btn-group {
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.json_editor_btn_add .btn-group > .btn-group:not(:last-child) > .btn, .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}

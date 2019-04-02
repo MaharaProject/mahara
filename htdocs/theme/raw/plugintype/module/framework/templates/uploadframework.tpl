@@ -2,6 +2,6 @@
 
 <p>{str tag="uploadframeworkdesc1" section="module.framework"}</p>
 
-{$form|safe}
+     {$form|safe}
 
 {include file="footer.tpl"}
