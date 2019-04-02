@@ -18,6 +18,6 @@ $config = new stdClass();
 
 $config->version = 2019031900;
 $config->series = '19.04';
-$config->release = '19.04dev';
+$config->release = '19.04rc1';
 $config->minupgradefrom = 2017031605;
 $config->minupgraderelease = '17.04.0 (release tag 17.04.0_RELEASE)';
