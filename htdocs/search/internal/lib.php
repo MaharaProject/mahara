@@ -133,7 +133,7 @@ class PluginSearchInternal extends PluginSearch {
                 . ' UNION SELECT usr2 FROM {usr_friend} f2 WHERE f2.usr1 = ' . $USER->get('id') . ')';
         }
 
-        if ((!empty($data['myinstitutions']) && !empty($data['institutions'])) || is_isolated()) {
+        if ((!empty($data['myinstitutions']) && !empty($data['institutions'])) || (is_isolated() && !empty($data['institutions']))) {
             $where .= '
                 AND (u.id IN (
                     SELECT usr FROM {usr_institution} WHERE institution IN ('
