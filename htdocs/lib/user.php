@@ -3416,7 +3416,8 @@ function isolatedinstitution_access($userid, $currentuserid = null) {
         $userobj->find_by_id($userid);
         $userinsts = array_keys($userobj->get('institutions'));
         $loggedininsts = array_keys($user->get('institutions'));
-        if (!$userobj->get('admin') && empty(array_intersect($userinsts, $loggedininsts))) {
+        $ok = (empty($userinsts) && empty($loggedininsts)) ? true : false; // both users in 'mahara'
+        if (!$userobj->get('admin') && !$ok && empty(array_intersect($userinsts, $loggedininsts))) {
             throw new AccessDeniedException(get_string('notinthesameinstitution', 'error'));
         }
         else {
