@@ -1,7 +1,7 @@
 <div class="pageheader profileheader">
     <div class="container pageheader-content">
         <div class="row">
-            <div class="col-md-12 main">
+            <div class="{if $relationship == 'pending'}col-lg-6 {else}col-md-12{/if} main">
 
                 <h1 id="viewh1" class="user-icon-name page-header">
                     <span class="user-icon float-left">
@@ -36,26 +36,6 @@
                     {/if}
                 </div>
 
-                {if $relationship == 'pending'}
-
-                    <div class="pendingfriendscard col-md-8 offset-md-2">
-                        <div class="attentionmessage card bg-warning">
-                            <h3 class="card-header">{str tag='whymakemeyourfriend' section='group'}</h3>
-                            <p class="card-body">{$message}</p>
-                            <div class="has-form text-small card-footer">
-                                <div class="btn btn-secondary">
-                                  <span class="icon icon-check icon-lg text-success left" role="presentation" aria-hidden="true"></span>
-                                  {$acceptform|safe}
-                              </div>
-                              <a class="btn btn-secondary" id="approve_deny_friendrequest_deny" href="{$WWWROOT}user/denyrequest.php?id={$USERID}&returnto=view">
-                                  <span class="icon icon-ban left icon-lg text-danger" role="presentation" aria-hidden="true"></span>
-                                  <span class="link-unstyled">{str tag='denyrequest' section='group'}</span>
-                              </a>
-                          </div>
-                        </div>
-                    </div>
-                {/if}
-
                 {if $inviteform || $addform}
                     {if $inviteform}
                         {$inviteform|safe}
@@ -66,6 +46,26 @@
                 {/if}
 
             </div>
+
+            {if $relationship == 'pending'}
+                <div class="pendingfriendscard col-lg-6">
+                    <div class="attentionmessage card bg-warning">
+                        <h3 class="card-header">{str tag='whymakemeyourfriend' section='group'}</h3>
+                        <p class="card-body">{$message}</p>
+                        <div class="has-form text-small card-footer">
+                            <div class="btn btn-secondary">
+                              <span class="icon icon-check icon-lg text-success left" role="presentation" aria-hidden="true"></span>
+                              {$acceptform|safe}
+                          </div>
+                          <a class="btn btn-secondary" id="approve_deny_friendrequest_deny" href="{$WWWROOT}user/denyrequest.php?id={$USERID}&returnto=view">
+                              <span class="icon icon-ban left icon-lg text-danger" role="presentation" aria-hidden="true"></span>
+                              <span class="link-unstyled">{str tag='denyrequest' section='group'}</span>
+                          </a>
+                      </div>
+                    </div>
+                </div>
+            {/if}
+
         </div>
     </div>
 </div>

@@ -47,3 +47,7 @@
         }
     }
 }
+
+.card-header:first-child {
+    @include border-top-radius(0);
+}
