@@ -515,15 +515,15 @@ td.action-list-copy {
     }
 }
 
-// Profile page accept friends form button alignment
+// Profile page accept friends form
 .pendingfriendscard {
-    margin-top: 20px;
-    margin-bottom: -50px;
-
     .btn form {
         display: inline-block;
 
         button {
+            padding: 0;
+            border: 0;
+
             &:hover,
             &:focus {
                 text-decoration: none;
