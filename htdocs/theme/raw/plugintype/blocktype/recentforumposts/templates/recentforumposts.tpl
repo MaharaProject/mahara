@@ -30,7 +30,7 @@
                             <span class="metadata">
                                 ({$postinfo->filecount})
                             </span>
-                            <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                         </a>
                     </h5>
                     <div class="collapse" id="post-attach-{$postinfo->id}">
@@ -53,7 +53,7 @@
                                         <span class="metadata"> - [{$file->size|display_size}]</span>
                                     </a>
                                 </span>
-                                <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                             </li>
                         {/foreach}
                         </ul>
