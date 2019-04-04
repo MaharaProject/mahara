@@ -148,7 +148,7 @@ class PluginSearchInternal extends PluginSearch {
         }
 
         // For regular members of 'No Institution', if 'isolatedinstitutions' feature is set
-        $is_admin = $USER->get('admin') || $USER->get('staff');
+        $is_admin = $USER->get('admin');
         if (is_isolated() && !$USER->get('institutions') && !$is_admin) {
             $where .= '
                 AND (u.id NOT IN (
