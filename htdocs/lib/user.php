@@ -3103,8 +3103,14 @@ function get_onlineusers($limit=10, $offset=0, $orderby='firstname,lastname') {
             }
         }
     }
+    else if (!$USER->get('admin')) {
+        $showusers = get_field('institution', 'showonlineusers', 'name', 'mahara');
+        if ((int)$showusers === 1) {
+            $showusers = 3;
+        }
+    }
 
-    $result = array('count' => 0, 'limit' => $limit, 'offset' => $offset, 'data' => false);
+    $result = array('count' => 0, 'limit' => $limit, 'offset' => $offset, 'data' => false, 'showusers' => $showusers);
     switch ($showusers) {
         case 0: // show none
             return $result;
@@ -3112,12 +3118,17 @@ function get_onlineusers($limit=10, $offset=0, $orderby='firstname,lastname') {
             $sql = "SELECT DISTINCT u.* FROM {usr} u JOIN {usr_institution} i ON id = i.usr
                 WHERE deleted = 0 AND lastaccess > ? AND i.institution IN (" . join(',',array_map('db_quote', array_keys($institutions))) . ")
                 ORDER BY $orderby";
-            $countsql = 'SELECT count(DISTINCT id) FROM {usr} JOIN {usr_institution} i ON id = i.usr
+            $countsql = 'SELECT COUNT(DISTINCT id) FROM {usr} JOIN {usr_institution} i ON id = i.usr
                 WHERE deleted = 0 AND lastaccess > ? AND i.institution IN (' . join(',',array_map('db_quote', array_keys($institutions))) . ')';
             break;
         case 2: // show all
             $sql = "SELECT * FROM {usr} WHERE deleted = 0 AND lastaccess > ? ORDER BY $orderby";
-            $countsql = 'SELECT count(id) FROM {usr} WHERE deleted = 0 AND lastaccess > ?';
+            $countsql = 'SELECT COUNT(id) FROM {usr} WHERE deleted = 0 AND lastaccess > ?';
+            break;
+        case 3: // Show all only from no institution
+            $sql = "SELECT DISTINCT u.* FROM {usr} u WHERE deleted = 0 AND lastaccess > ? AND u.id NOT IN (SELECT DISTINCT usr FROM {usr_institution})
+                ORDER BY $orderby";
+            $countsql = 'SELECT COUNT(DISTINCT id) FROM {usr} u WHERE deleted = 0 AND lastaccess > ? AND u.id NOT IN (SELECT DISTINCT usr FROM {usr_institution})';
             break;
     }
 
@@ -3142,7 +3153,8 @@ function get_onlineusers($limit=10, $offset=0, $orderby='firstname,lastname') {
     else {
         $onlineusers = array();
     }
-    $result['data'] = array_map(function($a) { return $a->id; }, $onlineusers);
+    $result['onlineusers'] = $onlineusers; // return a list of user objects
+    $result['data'] = array_map(function($a) { return $a->id; }, $onlineusers); // return a list of user id numbers
 
     return $result;
 }
