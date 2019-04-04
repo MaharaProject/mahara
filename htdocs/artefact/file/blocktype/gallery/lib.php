@@ -544,20 +544,20 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         if (isset($configdata['select']) && $configdata['select'] == 1) {
             $imageids = isset($configdata['artefactids']) ? $configdata['artefactids'] : array();
             $imageselector = self::imageselector($instance, $imageids);
-            $folderselector = self::folderselector($instance, null, 'hidden');
-            $externalurl = self::externalurl($instance, null, 'hidden');
+            $folderselector = self::folderselector($instance, null, 'd-none');
+            $externalurl = self::externalurl($instance, null, 'd-none');
         }
         else if (isset($configdata['select']) && $configdata['select'] == 2) {
-            $imageselector = self::imageselector($instance, null, 'hidden');
-            $folderselector = self::folderselector($instance, null, 'hidden');
+            $imageselector = self::imageselector($instance, null, 'd-none');
+            $folderselector = self::folderselector($instance, null, 'd-none');
             $url = isset($configdata['external']) ? urldecode($configdata['external']) : null;
             $externalurl = self::externalurl($instance, $url);
         }
         else {
-            $imageselector = self::imageselector($instance, null, 'hidden');
+            $imageselector = self::imageselector($instance, null, 'd-none');
             $folderid = !empty($configdata['artefactid']) ? array(intval($configdata['artefactid'])) : null;
             $folderselector = self::folderselector($instance, $folderid);
-            $externalurl = self::externalurl($instance, null, 'hidden');
+            $externalurl = self::externalurl($instance, null, 'd-none');
         }
         return array(
             'user' => array(
