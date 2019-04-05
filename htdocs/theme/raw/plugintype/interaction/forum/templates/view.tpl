@@ -150,7 +150,7 @@
         </p>
         {foreach from=$groupadmins item=groupadmin}
             <a href="{profile_url($groupadmin)}" class="badge badge-default">
-                <img src="{profile_icon_url user=$groupadmin maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}" class="user-icon-alt">
+                <span class="user-icon user-icon-20 user-icon-inline"><img src="{profile_icon_url user=$groupadmin maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}"></span>
                 {$groupadmin|display_name}
             </a>
         {/foreach}
@@ -160,10 +160,9 @@
         <p class="text-small text-inline">
             {str tag="moderatorslist" section="interaction.forum"}
         </p>
-
         {foreach from=$moderators item=mod}
             <a href="{profile_url($mod)}" class="badge badge-default">
-                <img src="{profile_icon_url user=$mod maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$mod|display_default_name}" class="user-icon-alt">
+                <span class="user-icon user-icon-20 user-icon-inline"><img src="{profile_icon_url user=$mod maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$mod|display_default_name}"></span>
                 {$mod|display_name}
             </a>
         {/foreach}

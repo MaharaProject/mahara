@@ -1,25 +1,25 @@
-a.user-icon {
-  border: 0;
-  padding: 0;
-  background: none;
+.user-icon {
+  border-radius: 50%;
 
   img {
       border-radius: 50%;
-      border: 0px solid #FFF;
-  }
-  &:hover {
-    background-color: transparent;
-  }
-  &.user-icon-larger img {
-    border-radius: 3px;
-    background-color: #fff;
-    padding: 5px;
-    display: table;
-    border: 1px solid #ddd;
-    overflow: hidden;
-    position: relative;
   }
 }
-.card-header.profile-block a:not(.secondary-link).user-icon {
-    border: 0;
+
+// turns thumbnail user-icons in grid back to rectangular
+.user-thumbnails .user-icon {
+    border-radius: 3px;
+    img {
+        border-radius: 3px;
+    }
+}
+
+// Profile images page
+.profileiconcell img {
+    border-radius: 50%;
+}
+
+// Select-2 user list user icons
+.select2-user-icon {
+    border-radius: 50%;
 }

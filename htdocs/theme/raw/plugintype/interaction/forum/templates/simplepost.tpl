@@ -6,13 +6,13 @@
     <div class="media forum-post {if !$post->approved} alert-warning {/if}">
         <div class="forumpostleft media-left text-small">
             {if $deleteduser}
-                <img src="{profile_icon_url user=null maxwidth=40 maxheight=40}" valign="middle" alt="{str tag=profileimagetextanonymous}" class="media-object">
+                <span class="user-icon user-icon-40"><img src="{profile_icon_url user=null maxwidth=40 maxheight=40}" valign="middle" alt="{str tag=profileimagetextanonymous}" class="media-object"></span>
 
                 <div class="poster">
                     <span>{$poster|full_name}</span>
                 </div>
             {else}
-                <img src="{profile_icon_url user=$post->poster maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$post->poster|display_default_name}" class="media-object">
+                <span class="user-icon user-icon-40"><img src="{profile_icon_url user=$post->poster maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$post->poster|display_default_name}" class="media-object"></span>
 
                 <div class="poster">
                     <a href="{profile_url($post->poster)}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name}
