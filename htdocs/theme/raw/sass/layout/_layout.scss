@@ -230,3 +230,15 @@ body.presentation-iframe {
 .pageactions ~ .main-content {
     padding-right: 50px;
 }
+
+// Profile page accept friends form
+.pendingfriendscard {
+    margin-top: 40px;
+    padding-top: 30px;
+    margin-bottom: 20px;
+
+    @include media-breakpoint-down(md) {
+        margin-top: -30px;
+        padding-top: 0;
+    }
+}

@@ -10,15 +10,18 @@
             background-color: $card-bg;
         }
         .card-footer {
-            background-color: $card-header-bg;
+            background-color: scale-color($state-success-bg, $lightness: 70%);
             &:hover,
             &:focus {
-                background-color: scale-color($card-header-bg, $lightness: -3.22);
-
+                background-color: scale-color($state-success-bg, $lightness: 50%);
+            }
+            a {
+                color: $state-success-text;
             }
         }
         .card-footer,
         .card-body,
+        .card-header,
         .card-header a {
             border-color: scale-color($state-success-bg, $lightness: -15%);
         }
@@ -49,14 +52,18 @@
             }
         }
         .card-footer {
-            background-color: $card-header-bg;
+            background-color: scale-color($state-info-bg, $lightness: 70%);
             &:hover,
             &:focus {
-                background-color: scale-color($card-header-bg, $lightness: -3.22);
+                background-color: scale-color($state-info-bg, $lightness: 50%);
+            }
+            a {
+                color: $state-info-text;
             }
         }
         .card-footer,
         .card-body,
+        .card-header,
         .card-header a {
             border-color: scale-color($state-info-bg, $lightness: -15%);
         }
@@ -77,11 +84,15 @@
             background-color: $white;
         }
         .card-footer {
-            background-color: scale-color($card-header-bg, $lightness: -3.22);
-
+            background-color: scale-color($state-warning-bg, $lightness: 70%);
+            &:hover,
+            &:focus {
+                background-color: scale-color($state-warning-bg, $lightness: 50%);
+            }
         }
         .card-footer,
         .card-body,
+        .card-header,
         .card-header a {
             border-color: scale-color($state-warning-bg, $lightness: -15%);
         }
@@ -102,14 +113,15 @@
             background-color: $card-bg;
         }
         .card-footer {
-            background-color: $card-header-bg;
+            background-color: scale-color($state-danger-bg, $lightness: 70%);
             &:hover,
             &:focus {
-                background-color: scale-color($card-header-bg, $lightness: -3.22);
+                background-color: scale-color($state-danger-bg, $lightness: 50%);
             }
         }
         .card-footer,
         .card-body,
+        .card-header,
         .card-header a {
             border-color: scale-color($state-danger-bg, $lightness: -15%);
         }
