@@ -1,6 +1,6 @@
-<div class="friends">
+<div class="friends card-body">
     <div class="listing blocktype">
-        <div class="listrow card-body">
+        <div class="listrow">
         {if $groupmembers}
             {$groupmembers.tablerows|safe}
         {/if}

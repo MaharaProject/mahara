@@ -77,4 +77,11 @@
             margin: 0;
         }
     }
+
+    // wallpost blocks don't need secdonary card border color
+    .wallpost {
+        .card-header {
+            border-color: $card-border-color;
+        }
+    }
 }

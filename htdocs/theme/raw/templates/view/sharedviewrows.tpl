@@ -34,9 +34,9 @@
             </div>
             <span class="postedon text-midtone text-block">{$view.lastcommenttime|strtotime|format_date:'strftimerecentyear'}</span>
           {if $view.commentauthor}
-            <span class="poster">
+            <span class="poster text-small">
                 <a href="{profile_url($view.commentauthor)}">
-                    <span class="text-inline">
+                    <span class="text-inline user-icon user-icon-20 user-icon-inline">
                         <img src="{profile_icon_url user=$view.commentauthor maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$view.commentauthor|display_default_name}" class="profile-icon-container">
                     </span>
                     {$view.commentauthor|display_name}

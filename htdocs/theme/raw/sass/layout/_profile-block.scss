@@ -7,19 +7,13 @@
     }
     .user-icon {
         z-index: 5;
-        width: 60px;
-        height: 60px;
         position: absolute;
         right: 10px;
         top: 10px;
-        padding: 5px; // override more specific padding
-        border: 1px solid $thumbnail-border-color;
-
-        img {
-
-            display: table-cell;
-            vertical-align: middle;
-
+        padding: 5px;
+        &:hover,
+        &:focus {
+            background-color: $card-bg;
         }
     }
     a {
@@ -47,4 +41,9 @@
 
 .loginas {
     padding-right: 60px;
+}
+
+// account settings user block has overlap of text
+body.admin .user-card .profile-block.card-header {
+    min-height: 90px;
 }

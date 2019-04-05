@@ -150,11 +150,18 @@
         position: relative;
         padding-left: 50px;
         min-height: 50px;
+        line-height: 28px;
 
         .user-icon {
             position: absolute;
             left: 20px;
             top: 15px;
+        }
+
+        .user-name {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1.5;
         }
     }
 }
@@ -216,20 +223,10 @@
         padding-bottom: 8px;
         .user-icon {
             display: block;
-            margin: 0 10px 0 0;
-            &.small-icon {
-                padding: 0;
-                width: 20px;
-                height: 20px;
-                img {
-                    width: 22px;
-                    height: 22px;
-                }
-            }
+            margin: 0 5px 0 0;
         }
         .list-group-item-heading {
             margin: 0;
-            width: 50%;
             &.middle {
                 margin: 10px 0;
             }

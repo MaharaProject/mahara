@@ -6,17 +6,20 @@
     }
 }
 
-.user-icon-alt {
+// turns thumbnail user-icons in grid back to rectangular
+.user-thumbnails .user-icon {
+    border-radius: 3px;
+    img {
+        border-radius: 3px;
+    }
+}
+
+// Profile images page
+.profileiconcell img {
     border-radius: 50%;
 }
 
-
-.friends .user-icon {
-    border-radius: 3px;
-}
-
-
-// display layout create custom layout thumbnail
-.layoutthumb {
-    border-radius: 3px;
+// Select-2 user list user icons
+.select2-user-icon {
+    border-radius: 50%;
 }

@@ -161,9 +161,12 @@ body.presentation-iframe {
     }
 }
 // Online users
+
 .peoplelistinfo {
+    clear: both;
     .leftdiv {
         float: left;
+        margin-bottom: 5px;
     }
     .rightdiv {
         margin-left: 60px;

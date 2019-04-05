@@ -1224,7 +1224,7 @@ The profile picture size that is used on side cards. The example is the profile 
     <div id="sb-profile" class="sideblock-1 user-card">
         <div class="card">
             <h3 class="card-header profile-block">
-                <a href="" class="username">Side card</a> <a href="" title="{str tag=editprofileicon section=artefact.file}" class="user-icon">
+                <a href="" class="username">Side card</a> <a href="" title="{str tag=editprofileicon section=artefact.file}" class="user-icon user-icon-60">
                     <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag=editprofileicon section=artefact.file}">
                 </a>
             </h3>
@@ -1252,7 +1252,7 @@ This size of profile picture is used mainly on comment blocks.
 This size and style of profile picture is used in the friends list.
 ```
 <div class="user-thumbnails">
-    <a href="" class="item user-icon metadata user-icon-larger {cycle values='d0,d1'}">
+    <a href="" class="item user-icon metadata user-icon-100 {cycle values='d0,d1'}">
         <img src="{profile_icon_url user=$sbdata.id maxheight=100 maxwidth=100}" alt="{str tag=profileimagetext section=mahara arg1='John Smith'}">
         <p class="member-name">John Smith</p>
     </a>

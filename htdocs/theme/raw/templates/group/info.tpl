@@ -58,7 +58,7 @@
         <span>{str tag=groupadmins section=group}:</span>
           {foreach name=admins from=$group->admins item=user}
         <a href="{profile_url($user)}">
-            <img src="{profile_icon_url user=$user maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="user-icon-alt">
+            <span class="user-icon user-icon-20 user-icon-inline"><img src="{profile_icon_url user=$user maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$user|display_default_name}"></span>
             {$user|display_name}
         </a>
     {/foreach}

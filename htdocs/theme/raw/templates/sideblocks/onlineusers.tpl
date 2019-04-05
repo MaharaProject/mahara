@@ -8,7 +8,7 @@
         {foreach from=$sbdata.users item=user}
             <li class="list-group-item list-unstyled list-group-item-link">
                 <a href="{profile_url($user)}" class="online-user">
-                    <span class="user-icon">
+                    <span class="user-icon user-icon-20">
                         <img src="{$user->profileiconurl}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="profile-icon-container">
                     </span>
                     <span class="user-name">

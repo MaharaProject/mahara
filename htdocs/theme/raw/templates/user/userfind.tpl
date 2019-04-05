@@ -5,7 +5,7 @@
     <div class="row" id="friendinfo_{$user->id}">
         <div class="col-md-8">
             <div class="usericon-heading">
-                <div class="user-icon float-left">
+                <div class="user-icon user-icon-40 float-left">
                     <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
                 </div>
                 <h4 class="list-group-item-heading middle">
@@ -20,19 +20,19 @@
                     </span>
                     {/if}
                 </h4>
+                {if $user->institutions}
+                <div class="memberof detail text-small">
+                    <span class="icon icon-lg text-default icon-university left" role="presentation" aria-hidden="true"></span>
+                    {$user->institutions|safe}
+                </div>
+                {/if}
             </div>
-            {if $user->institutions}
-            <div class="memberof detail text-small">
-                <span class="icon icon-lg text-default icon-university left" role="presentation" aria-hidden="true"></span>
-                {$user->institutions|safe}
-            </div>
-            {/if}
         </div>
         <div class="col-md-4">
-            <ul class="list-unstyled inner-link text-small user-action-list">
+            <ul class="list-unstyled inner-link user-action-list">
                 {if $user->pending}
-                <p>{str tag="pendingfriend" section="group"}</p>
-                <span class="whymakemeyourfriend">
+                <p class="list-group-item-heading">{str tag="pendingfriend" section="group"}</p>
+                <span class="whymakemeyourfriend text-small">
                     <strong>
                         {str tag='whymakemeyourfriend' section='group'}
                     </strong>

@@ -1,12 +1,11 @@
 .user-icon {
     border-radius: 3px;
     background-color: $card-bg;
-    padding: 5px;
+    padding: 3px;
     display: table;
     border: 1px solid $thumbnail-border-color;
     overflow: hidden;
     position: relative;
-
 
     &.left {
         position:absolute;
@@ -14,22 +13,11 @@
         top: 5px;
         display: block;
         z-index: 5;
-        width: 45px;
-        height: 45px;
+
         &.small-icon {
             width: 35px;
             height: 35px;
         }
-    }
-
-    &.position-bottom {
-        position:absolute;
-        bottom:17%;
-    }
-
-    &.user-icon-larger{
-        width: 85px;
-        height: 85px;
     }
 
     .list-group-item &, &.small-icon {
@@ -43,10 +31,12 @@
         max-width: 20%;
     }
     img {
-        border-radius: 3px;
         margin: 0;
         opacity: 0.9;
         position: relative;
+        width: 20px;
+        height: 20px;
+        object-fit: cover;
     }
     p {
         margin-top: 3px;
@@ -60,13 +50,6 @@
 
     .page-header & {
         margin: -20px 10px;
-    }
-}
-
-.user-icon-alt {
-    border-radius: 3px;
-    .label &{
-        margin: 1px 4px 0 -3px;
     }
 }
 
@@ -118,4 +101,83 @@ a.user-icon, a .user-icon {
             margin: -10px 10px 0 0;
         }
     }
+}
+
+// User icon sizes
+.user-icon-20 {
+    line-height: 1;
+    img {
+        width: 20px;
+        height: 20px;
+    }
+}
+.user-icon-25 {
+    img {
+        width: 25px;
+        height: 25px;
+    }
+}
+.user-icon-40 {
+    img {
+        width: 40px;
+        height: 40px;
+    }
+}
+.user-icon-50 {
+    line-height: 1;
+    img {
+        width: 50px;
+        height: 50px;
+    }
+}
+.user-icon-60 {
+    img {
+        width: 60px;
+        height: 60px;
+    }
+}
+.user-icon-100 {
+    img {
+        width: 100px;
+        height: 100px;
+    }
+}
+.user-icon-inline {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 3px;
+}
+
+// Profile pictures page user icons cell
+.profileiconcell {
+    img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+}
+
+// Thumbnail grid user icons spacing
+.user-thumbnails {
+    .user-icon {
+        margin: 0 10px 10px 0;
+    }
+}
+
+// Profile info block user icon
+.bt-profileinfo,
+.bt-profileinfo-editor {
+    .user-icon {
+        img {
+            width: 80px;
+            height: 80px;
+        }
+    }
+}
+
+// Select-2 user list user icons
+.select2-user-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
 }

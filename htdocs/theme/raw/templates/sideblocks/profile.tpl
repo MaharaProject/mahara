@@ -1,7 +1,7 @@
 <div class="card">
         <h3 class="card-header profile-block">
             <a href="{$sbdata.url}" class="username">{$sbdata.myname}</a>
-            <a href="{$sbdata.profileiconurl}" title="{str tag="editprofileicon" section="artefact.file"}" class="user-icon">
+            <a href="{$sbdata.profileiconurl}" title="{str tag="editprofileicon" section="artefact.file"}" class="user-icon user-icon-60">
                 <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag="editprofileicon" section="artefact.file"}">
             </a>
         </h3>
