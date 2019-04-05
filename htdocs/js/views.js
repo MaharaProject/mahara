@@ -275,16 +275,10 @@
         // Rewrite the delete buttons to be ajax
         rewriteDeleteButtons();
 
-        // Show the keyboard-accessible ajax move buttons
-        rewriteMoveButtons();
-
         // Setup the 'add block' dialog
         setupPositionBlockDialog();
 
-        showColumnBackgroundsOnSort();
-
         makeNewBlocksDraggable();
-        makeExistingBlocksSortable();
 
         $(workspace).show();
 
@@ -357,7 +351,6 @@
                     sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                         $(category).html(data.data);
                         makeNewBlocksDraggable();
-                        showColumnBackgroundsOnSort();
 
                         // the column has changed size, pass on to listeners
                         $(window).trigger('colresize');
@@ -429,7 +422,6 @@
 
         $('.blocktype-drag').draggable({
             start: function(event, ui) {
-                showColumnBackgrounds();
                 $(window).trigger('colresize');
             },
             helper: function(event) {
@@ -445,8 +437,6 @@
             },
             connectToSortable: '.js-col-row .column .column-content',
             stop: function(event, ui) {
-                // see also showColumnBackgroundsOnSort for clicking in place without dragging
-                hideColumnBackgrounds();
             },
             appendTo: 'body'
         });
@@ -488,75 +478,6 @@
             keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
         }
     }
-
-    function makeExistingBlocksSortable() {
-
-        // Make existing and new blocks sortable
-        $('.column .column-content').sortable({
-            handle: '.js-heading',
-            items: '.js-blockinstance',
-            cursorAt: {left: 100, top: 10},
-            connectWith: '.js-col-row .column .column-content',
-            placeholder: 'block-placeholder',
-            tolerance: "pointer",
-            activate: function(event, ui) {
-                // Fix for dragging blocks to narrow divs:
-                // Wide elements must be centred on narrow divs to make droppable.
-                // This is not always evident to the user.
-                // Instead set a standard small width when starting to sort.
-                // Dynamically setting width on over event doesn't work, as
-                // Sortable seems to cache helper proportions.
-                // Also if height of dragging block is greater than height
-                // row(s) above it then it can't be dropped in that row.
-                // Could use a custom version of Sortable in future?
-                ui.helper.width(200);
-                ui.helper.height('auto');
-            },
-            beforeStop: function(event, ui) {
-
-                var whereTo = getBlockinstanceCoordinates(ui.helper);
-
-                if (ui.helper.find('.blocktype-radio').length) {
-
-                    addNewBlock(whereTo, ui.helper.find('input.blocktype-radio').val());
-                    $('.ui-draggable-dragging').remove();
-
-                } else {
-                    //move existing block
-                    var uihId = ui.helper.attr('id'),
-                        blockinstanceId = uihId.substr(uihId.lastIndexOf('_') + 1);
-
-                    moveBlock(whereTo, blockinstanceId);
-                }
-
-                window.setTimeout(function(){
-                    $(window).trigger('colresize');
-                }, 300);
-
-            },
-
-            update: function(event, ui) {
-                $('.js-col-row .column-content').each(function() {
-                    $(this).css('min-height', '');
-                });
-            },
-
-            start: function(event, ui) {
-                // Fix for dragging blocks to narrow divs:
-                // Wide elements must be centred on narrow divs to make droppable.
-                // This is not always evident to the user.
-                // Instead set a standard small width when starting to sort.
-                // Dynamically setting width on over event doesn't work, as
-                // Sortable seems to cache helper proportions.
-                // Also if height of dragging block is greater than height
-                // row(s) above it then it can't be dropped in that row.
-                // Could use a custom version of Sortable in future?
-                ui.helper.width($(this).outerWidth());
-                ui.helper.height($(this).find('.drag-handle').outerHeight());
-            }
-        });
-
-    } // end of makeNewBlocksSortable()
 
     function cellChanged() {
 
@@ -628,25 +549,6 @@
             }
         });
     }
-
-    function showColumnBackgrounds() {
-        $('.js-col-row .column-content').addClass('block-drop-on', 100);
-    }
-
-    function hideColumnBackgrounds() {
-        $('.js-col-row .column-content').removeClass('block-drop-on', 500);
-    }
-
-    function showColumnBackgroundsOnSort() {
-        $('.blockinstance .blockinstance-header, .blocktype-list .blocktype').on("mousedown", function() {
-            showColumnBackgrounds();
-        });
-
-        $('.blockinstance .blockinstance-header, .blocktype-list .blocktype').on("mouseup", function() {
-            hideColumnBackgrounds();
-        });
-    }
-
 
     function insertBlockStub(newblock, whereTo) {
         var columnContent = $('#row_'+whereTo['row']+'_column_'+whereTo['column']).find('div.column-content');
@@ -755,84 +657,6 @@
         });
     }
 
-    /*
-     * Shows all keyboard-accessible ajax move buttons
-     */
-    function rewriteMoveButtons() {
-        rewriteMoveButton(workspace.find('.keyboardmovebutton'));
-    }
-
-    /*
-     * Shows and sets up one keyboard-accessible ajax move button
-     *
-     */
-    function rewriteMoveButton(button) {
-
-        button.removeClass('d-none');
-
-        button.on('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-
-            computeColumnInputs($('#newblock'));
-
-            var self = $(this),
-                addblockdialog = $('#newblock').removeClass('d-none');
-                prevcell = self.closest('.column-content'),
-                order = prevcell.children().index(self.closest('.blockinstance')),
-                row = workspace.find('.js-col-row').index(self.closest('.js-col-row')),
-                column = self.closest('.js-col-row').children().index(self.closest('.column')),
-                radio = addblockdialog.find('.cell-chooser').children().eq(row).find('input').eq(column),
-                changefunction = function() {
-                    if (radio.prop('checked')) {
-                        $('#newblock_position option').eq(order + 1).remove();
-                    }
-                };
-
-
-            radio.on('change', changefunction);
-            radio.prop('checked', true).trigger('change');
-
-            $('#newblock_position').prop('selectedIndex', order);
-
-            addblockdialog.one('dialog.end', function(event, options) {
-                if (options.saved) {
-                    var blockinstanceId = self.attr('data-id'),
-                        newcell,
-                        currentblock,
-                        lastindex;
-
-                    moveBlock(options, blockinstanceId);
-
-                    newcell = workspace.find('.js-col-row').eq(options['row'] - 1)
-                        .find('.column-content').eq(options['column'] - 1);
-
-                    currentblock = self.closest('.blockinstance');
-                    lastindex = newcell.children().length;
-
-                    if (newcell[0] == prevcell[0]) {
-                        lastindex -= 1;
-                    }
-
-                    newcell.append(currentblock);
-                    options['order'] -= 1;
-                    if (options['order'] < lastindex) {
-                        newcell.children().eq(options['order']).before(newcell.children().last());
-                    }
-                }
-
-                radio.off('change', changefunction);
-                self.trigger("focus");
-            });
-
-            addblockdialog.find('h4.modal-title').text(self.attr('alt'));
-
-            addblockdialog.find('.deletebutton').trigger("focus");
-
-            keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
-        });
-    }
-
     function computeColumnInputs(dialog) {
         var inputcontainer = dialog.find('.blockinstance-content #newblock_cellchooser_container'),
             result = $('<div>').addClass('cell-chooser js-cell-chooser'),
@@ -911,7 +735,6 @@
             if (data.data.html) {
                 $('#blockinstance_' + instanceId + ' .blockinstance-content').html(data.data.html);
             }
-            hideColumnBackgrounds();
         });
     }
 

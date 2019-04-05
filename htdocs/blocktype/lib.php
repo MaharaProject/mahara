@@ -839,10 +839,6 @@ class BlockInstance {
     private $row;
     private $column;
     private $order;
-    private $canmoveleft;
-    private $canmoveright;
-    private $canmoveup;
-    private $canmovedown;
     private $maxorderincolumn;
     private $artefacts = array();
     private $temp = array();
@@ -1150,7 +1146,6 @@ class BlockInstance {
         global $USER;
 
         safe_require('blocktype', $this->get('blocktype'));
-        $movecontrols = array();
         $this->inedit = true;
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
         try {
@@ -1193,45 +1188,6 @@ class BlockInstance {
                 $js = '';
                 $css = '';
             }
-
-            if (!defined('JSON') && !$jsreply) {
-                if ($this->get('canmoveleft')) {
-                    $movecontrols[] = array(
-                        'column' => $this->get('column') - 1,
-                        'order'  => $this->get('order'),
-                        'title'  => $title == '' ? get_string('movethisblockleft', 'view') : get_string('moveblockleft', 'view', "'$title'"),
-                        'arrow'  => "icon icon-long-arrow-alt-left",
-                        'dir'    => 'left',
-                    );
-                }
-                if ($this->get('canmovedown')) {
-                    $movecontrols[] = array(
-                        'column' => $this->get('column'),
-                        'order'  => $this->get('order') + 1,
-                        'title'  => $title == '' ? get_string('movethisblockdown', 'view') : get_string('moveblockdown', 'view', "'$title'"),
-                        'arrow'  => 'icon icon-long-arrow-alt-down',
-                        'dir'    => 'down',
-                    );
-                }
-                if ($this->get('canmoveup')) {
-                    $movecontrols[] = array(
-                        'column' => $this->get('column'),
-                        'order'  => $this->get('order') - 1,
-                        'title'  => $title == '' ? get_string('movethisblockup', 'view') : get_string('moveblockup', 'view', "'$title'"),
-                        'arrow'  => 'icon icon-long-arrow-alt-up',
-                        'dir'    => 'up',
-                    );
-                }
-                if ($this->get('canmoveright')) {
-                    $movecontrols[] = array(
-                        'column' => $this->get('column') + 1,
-                        'order'  => $this->get('order'),
-                        'title'  => $title == '' ? get_string('movethisblockright', 'view') : get_string('moveblockright', 'view', "'$title'"),
-                        'arrow'  => 'icon icon-long-arrow-alt-right',
-                        'dir'    => 'right',
-                    );
-                }
-            }
         }
 
         $configtitle = $title == '' ? call_static_method($blocktypeclass, 'get_title') : $title;
@@ -1245,7 +1201,6 @@ class BlockInstance {
         $smarty->assign('column', $this->get('column'));
         $smarty->assign('order',  $this->get('order'));
         $smarty->assign('blocktype', $this->get('blocktype'));
-        $smarty->assign('movecontrols', $movecontrols);
         $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config'));
         $smarty->assign('configure', $configure); // Used by the javascript to rewrite the block, wider.
         $smarty->assign('configtitle',  $configtitle);

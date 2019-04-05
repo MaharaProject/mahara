@@ -12,11 +12,6 @@
             <button class="keyboardmovebutton btn btn-secondary d-none sr-only" name="action_moveblockinstance_id_{$id}" alt="{$strmovetitletext}"  data-id="{$id}">
                 {$strmovetitletext}
             </button>
-            {foreach from=$movecontrols item=item}
-                <button class="movebutton d-none" name="action_moveblockinstance_id_{$id}_row_{$row}_column_{$item.column}_order_{$item.order}" data-id="{$id}">
-                    {$item.title}
-                </button>
-            {/foreach}
             <span class="float-right btn-group btn-group-top">
                 {if $configurable && !$configure}
                 <button class="configurebutton btn btn-inverse btn-sm" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">

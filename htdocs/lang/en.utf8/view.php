@@ -326,14 +326,6 @@ $string['add'] = 'Add';
 $string['addcolumn'] = 'Add column';
 $string['remove'] = 'Remove';
 $string['removecolumn'] = 'Remove this column';
-$string['moveblockleft'] = "Move %s block left";
-$string['movethisblockleft'] = "Move this block left";
-$string['moveblockdown'] = "Move %s block down";
-$string['movethisblockdown'] = "Move this block down";
-$string['moveblockup'] = "Move %s block up";
-$string['movethisblockup'] = "Move this block up";
-$string['moveblockright'] = "Move %s block right";
-$string['movethisblockright'] = "Move this block right";
 $string['moveblock2'] = 'Move block';
 $string['moveblock'] = 'Move %s block';
 $string['movethisblock'] = 'Move this block';
@@ -350,7 +342,6 @@ $string['celltitle'] = 'Cell';
 
 $string['basicoptions'] = 'Basic options';
 $string['advancedoptions'] = 'Advanced options';
-$string['changecolumnlayoutfailed'] = 'Could not change the column layout. Someone else may have been editing the layout at the same time. Please try again later.';
 $string['Row'] = 'Row';
 
 $string['layoutpreviewimage'] = 'Layout preview image';
@@ -368,8 +359,6 @@ $string['column'] = 'column';
 $string['row'] = 'row';
 $string['columns'] = 'columns';
 $string['rows'] = 'rows';
-$string['cantaddcolumn'] = 'You cannot add any more columns to this page.';
-$string['cantremovecolumn'] = 'You cannot remove the last column from this page.';
 
 $string['blocktypecategory.external'] = 'External';
 $string['blocktypecategory.fileimagevideo'] = 'Media';

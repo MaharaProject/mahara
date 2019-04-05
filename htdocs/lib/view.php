@@ -45,8 +45,6 @@ class View {
     private $theme;
     private $rows;
     private $columns;
-    private $dirtyrows; // for when we change stuff
-    private $dirtycolumns; // now includes reference to row [row][column]
     private $tags;
     private $categorydata;
     private $template;
@@ -311,8 +309,6 @@ class View {
         $this->atime = time();
         $this->rows = array();
         $this->columns = array();
-        $this->dirtyrows = array();
-        $this->dirtycolumns = array();
         $this->oldcolumnsperrow = $this->get('columnsperrow');
         // set only for existing views - _create provides default value
         // Ignore if the constructor is called with deleted set to true
@@ -2062,8 +2058,6 @@ class View {
             case 'configureblockinstance': // requires action_configureblockinstance_id_\d_column_\d_order_\d
             case 'acsearch': // requires action_acsearch_id_\d
             case 'moveblockinstance': // requires action_moveblockinstance_id_\d_row_\d_column_\d_order_\d
-            case 'addcolumn': // requires action_addcolumn_\d_row_\d_before_\d
-            case 'removecolumn': // requires action_removecolumn_\d_row_\d_column_\d
             case 'changetheme':
             break;
             default:
@@ -2190,11 +2184,7 @@ class View {
         $rowdata = array();
         // make sure we've already built up the structure
         for ($i = 1; $i <= $this->numrows; $i++) {
-            $force = false;
-            if (array_key_exists($i, $this->dirtycolumns) || array_key_exists($i, $this->dirtyrows)) {
-                $force = true;
-            }
-            $this->build_column_datastructure($i, $force);
+            $this->build_column_datastructure($i);
             $rowdata[$i] = $this->columns[$i];
         }
         return $rowdata;
@@ -2206,12 +2196,8 @@ class View {
     * @return mixed array
     */
     public function get_column_datastructure($row=1, $column=0) {
-        // make sure we've already built up the structure
-        $force = false;
-        if (isset($this->dirtycolumns[$row]) && array_key_exists($column, $this->dirtycolumns[$row])) {
-            $force = true;
-        }
-        $this->build_column_datastructure($row, $force);
+
+        $this->build_column_datastructure($row);
 
         if (empty($column)) {
             return $this->columns[$row];
@@ -2395,9 +2381,7 @@ class View {
                 'order'      => $values['order'],
             )
         );
-        $this->shuffle_cell($values['row'], $values['column'], $values['order']);
         $bi->commit();
-        $this->dirtycolumns[$values['row']][$values['column']] = 1;
 
         if ($values['returndata'] === 'id') {
             return $bi->get('id');
@@ -2432,7 +2416,7 @@ class View {
         if (!$bi->get('view')) {
             $bi->set('view', $this->get('id'));
         }
-        $this->shuffle_cell($bi->get('row'), $bi->get('column'), $bi->get('order'));
+
         $bi->commit();
     }
 
@@ -2454,9 +2438,7 @@ class View {
         }
         db_begin();
         $bi->delete();
-        $this->shuffle_cell($bi->get('row'), $bi->get('column'), null, $bi->get('order'));
         db_commit();
-        $this->dirtycolumns[$bi->get('row')][$bi->get('column')] = 1;
     }
 
     /**
@@ -2613,52 +2595,9 @@ class View {
         if ($bi->get('view') != $this->get('id')) {
             throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
         }
-        db_begin();
-        // moving within the same column and row
-        if ($bi->get('row') == $values['row'] && $bi->get('column') == $values['column']) {
-            if ($values['order'] == $bi->get('order') + 1 || $values['order'] == $bi->get('order') -1) {
-                // we're switching two, it's a bit different
-                // set the one we're moving to out of range (to 0)
-                // double quotes required for field names to avoid exception
-                set_field_select('block_instance', 'order', 0,                 '"view" = ? AND "row" = ? AND "column" = ? AND "order" = ?', array($this->get('id'), $values['row'], $values['column'], $values['order']) );
-                // set the new order
-                set_field_select('block_instance', 'order', $values['order'],  '"view" = ? AND "row" = ? AND "column" = ? AND "order" = ?', array($this->get('id'), $values['row'], $values['column'], $bi->get('order')) );
-                // move the old one back to where the moving one was.
-                set_field_select('block_instance', 'order', $bi->get('order'), '"view" = ? AND "row" = ? AND "column" = ? AND "order" = ?', array($this->get('id'), $values['row'], $values['column'], 0) );
-                // and set it in the object for good measure.
-                $bi->set('order', $values['order']);
-            }
-            else if ($values['order'] == $this->get_current_max_order($values['row'], $values['column'])) {
-                // moving to the very bottom
-                set_field_select('block_instance', 'order', 0, '"view" = ? AND "row" = ? AND "column" = ? AND "order" = ?', array($this->get('id'), $values['row'], $values['column'], $bi->get('order')) );
-                $this->shuffle_helper('order', 'down', '>=', $bi->get('order'), '"column" = ? AND "row" = ?', array($bi->get('column'), $values['row']));
-                set_field_select('block_instance', 'order', $values['order'], '"order" = ? AND "view" = ? AND "row" = ? AND "column" = ?', array(0, $this->get('id'), $values['row'], $values['column']));
-                $bi->set('order', $values['order']);
-            }
-            else {
-                $this->shuffle_cell($values['row'], $bi->get('column'), $values['order'], $bi->get('order'));
-            }
-        }
-        // moving to another column
-        else {
-            // first figure out if we've asked to add it somewhere sensible
-            // eg if we're moving a low down block into an empty column
-            $newmax = $this->get_current_max_order($values['row'], $values['column']);
-            if ($values['order'] > $newmax+1) {
-                $values['order'] = $newmax+1;
-            }
-            // remove it from the old column
-            $this->shuffle_cell($bi->get('row'), $bi->get('column'), null, $bi->get('order'));
-            // and make a hole in the new column
-            $this->shuffle_cell($values['row'], $values['column'], $values['order']);
-        }
-        $bi->set('column', $values['column']);
-        $bi->set('row', $values['row']);
-        $bi->set('order', $values['order']);
+
         $bi->commit();
-        $this->dirtycolumns[$values['row']][$bi->get('column')] = 1;
-        $this->dirtycolumns[$values['row']][$values['column']] = 1;
-        db_commit();
+
         // Because embedly externalvideo blocks have their original content changed
         // by the cdn.embedly.com/widgets/platform.js file to use iframe data the info
         // is lost on block move so we need to referesh the block with its original content
@@ -2878,323 +2817,6 @@ class View {
             throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
         }
         return $bi->render_editing(true);
-    }
-
-    /**
-     * adds a column to a view
-     *
-     * @param array $values parameters for this function
-     *                      before => int column to insert the new column before
-     *                      returndata => boolean whether to return the html
-     *                                    for the new column or not (ajax requests need this)
-     *
-     */
-    public function addcolumn($values) {
-
-        if (!array_key_exists('before', $values) || empty($values['before']) || !array_key_exists('row', $values) || empty($values['row'])) {
-            throw new ParamOutOfRangeException(get_string('missingparamcolumn', 'error'));
-        }
-
-        $columnsperrow = $this->get('columnsperrow');
-        $columnsthisrow = clone $columnsperrow[$values['row']];
-        $thisrownumcolumns = $columnsperrow[$values['row']]->columns;
-
-        // simple check for valid number of columns
-        $newlayouts = get_records_sql_array('SELECT vlc.id
-            FROM {view_layout_columns} vlc
-            WHERE vlc.columns = ?', array($thisrownumcolumns + 1) );
-
-        if (!$newlayouts) {
-            throw new ParamOutOfRangeException(get_string('cantaddcolumn', 'view'));
-        }
-        db_begin();
-
-        $columnsthisrow->columns = $thisrownumcolumns + 1;
-        $columnsperrow[$values['row']] = $columnsthisrow;
-        $this->set('columnsperrow', $columnsperrow); //set makes dirty=1, which enables commit; numcolumnsperrrow used as check by layout submit function
-
-        if ($values['before'] != ($thisrownumcolumns + 1)) {
-            $this->shuffle_helper('column', 'up', '>=', $values['before'], 'row = ?', array($values['row']));
-        }
-        $this->set('layout', null);
-        $this->commit();
-        $currentrowcolumns = $columnsperrow[$values['row']]->columns;
-        for ($i = $values['before']; $i <= $currentrowcolumns; $i++) {
-            $this->dirtycolumns[$values['row']][$i] = 1;
-        }
-
-        $this->columns[$values['row']][$currentrowcolumns] = null; // set the key
-        db_commit();
-        if ($values['returndata']) {
-            return $this->build_column($values['row'], $values['before'], true);
-        }
-    }
-
-
-    /**
-     * removes an entire column and redistributes its blocks
-     *
-     * @param array $values parameters for this function
-     *                      column => int column to remove
-     *
-     */
-    public function removecolumn($values) {
-        if (!array_key_exists('column', $values) || empty($values['column']) || !array_key_exists('row', $values) || empty($values['row'])) {
-            throw new ParamOutOfRangeException(get_string('missingparamcolumn', 'error'));
-        }
-        if (!array_key_exists('removerow', $values)) {
-            $values['removerow'] = false;
-        }
-        $columnsperrow = $this->get('columnsperrow');
-        $numcolumnsthisrow = clone $columnsperrow[$values['row']];
-        $thisrownumcolumns = $columnsperrow[$values['row']]->columns;
-
-        if (!$values['removerow']) {
-            // simple check for valid number of columns
-            $newlayouts = get_records_sql_array('SELECT vlc.id
-                                                FROM {view_layout_columns} vlc
-                                                WHERE vlc.columns = ?', array($thisrownumcolumns - 1) );
-            if (!$newlayouts) {
-                throw new ParamOutOfRangeException(get_string('cantremovecolumn', 'view'));
-            }
-        }
-        else if ($thisrownumcolumns == 0) {
-             throw new ParamOutOfRangeException(get_string('cantremovecolumn', 'view'));
-        }
-
-        db_begin();
-        $numcolumns = $thisrownumcolumns - 1;
-
-        // if removing row, move blocks to previous row
-        if ($values['removerow']) {
-            $prevrownumcolumns = $columnsperrow[$values['row']-1]->columns;
-            $prevrowcolumnmax = array(); // keep track of where we're at in each column
-            $currentcol = 1;
-            if ($blocks = $this->get_column_datastructure($values['row'], $values['column'])) {
-                // we have to rearrange them first
-                foreach ($blocks['blockinstances'] as $block) {
-                    if ($currentcol > $prevrownumcolumns) {
-                        $currentcol = 1;
-                    }
-                    if (!array_key_exists($currentcol, $prevrowcolumnmax)) {
-                        $prevrowcolumnmax[$currentcol] = $this->get_current_max_order($values['row']-1, $currentcol);
-                    }
-                    $this->shuffle_cell($values['row']-1, $currentcol, $prevrowcolumnmax[$currentcol]+1);
-                    $block->set('row', $values['row']-1);
-                    $block->set('column', $currentcol);
-                    $block->set('order', $prevrowcolumnmax[$currentcol]+1);
-                    $block->commit();
-                    $prevrowcolumnmax[$currentcol]++;
-                    $currentcol++;
-                }
-            }
-        }
-        else {
-            $columnmax = array(); // keep track of where we're at in each column
-            $currentcol = 1;
-            if ($blocks = $this->get_column_datastructure($values['row'], $values['column'])) {
-                // we have to rearrange them first
-                foreach ($blocks['blockinstances'] as $block) {
-                    if ($currentcol > $numcolumns) {
-                        $currentcol = 1;
-                    }
-                    if ($currentcol == $values['column']) {
-                        $currentcol++; // don't redistrubute blocks here!
-                    }
-                    if (!array_key_exists($currentcol, $columnmax)) {
-                        $columnmax[$currentcol] = $this->get_current_max_order($values['row'], $currentcol);
-                    }
-                    $this->shuffle_cell($values['row'], $currentcol, $columnmax[$currentcol]+1);
-                    $block->set('row', $values['row']);
-                    $block->set('column', $currentcol);
-                    $block->set('order', $columnmax[$currentcol]+1);
-                    $block->commit();
-                    $columnmax[$currentcol]++;
-                    $currentcol++;
-                }
-            }
-        }
-
-        $this->set('layout', null);
-        $numcolumnsthisrow->columns = $thisrownumcolumns - 1;
-        $columnsperrow[$values['row']] = $numcolumnsthisrow;
-        $this->set('columnsperrow', $columnsperrow); //set makes dirty=1, which enables commit; columnsperrrow used as check by layout submit function
-        // now shift all blocks one left and we're done
-        $this->shuffle_helper('column', 'down', '>', $values['column'], 'row = ?', array($values['row']));
-        $this->commit();
-        db_commit();
-        unset($this->columns[$values['row']]); // everything has changed
-    }
-    /**
-     * adds a row to a view
-     *
-     * @param array $values parameters for this function
-     *                      before => int row to insert the new row before
-     *                      returndata => boolean whether to return the html
-     *                                    for the new row or not (ajax requests need this)
-     *
-     */
-    public function addrow($values) {
-
-        if (!array_key_exists('before', $values) || empty($values['before']) || !array_key_exists('newlayout', $values) || empty($values['newlayout'])) {
-            throw new ParamOutOfRangeException(get_string('exceededmaxrows', 'error'));
-        }
-
-        if ($values['before'] > self::$maxlayoutrows) {
-            throw new ParamOutOfRangeException(get_string('invalidnumrows', 'error'));
-        }
-
-        $columnsperrow = $this->get('columnsperrow');
-
-        db_begin();
-        $this->set('numrows', $this->get('numrows') + 1);
-        if ($values['before'] != ($this->get('numrows'))) {
-            $this->shuffle_helper('row', 'up', '>=', $values['before']);
-        }
-        $this->set('layout', null);
-
-        $layoutrows = $this->get_layoutrows();
-        $newrowcolumnsindex = $layoutrows[$values['newlayout']][$values['before']];
-        $newrownumcolumns = self::$layoutcolumns[$newrowcolumnsindex]->columns;
-
-        $columnsperrow[$values['before']] = (object)array('row' => $values['before'], 'columns' => $newrownumcolumns);
-        $this->set('columnsperrow', $columnsperrow); //set makes dirty=1, which enables commit; columnsperrrow used as check by layout submit function
-
-        $this->commit();
-        // @TODO this could be optimised by actually moving the keys around,
-        // but I don't think there's much point as the objects aren't persistent
-        // unless we're in ajax land, in which case it would be an optimisation
-        for ($i = $values['before']; $i <= $this->get('numrows'); $i++) {
-            $this->dirtyrows[$i] = 1;
-        }
-        $this->rows[$this->get('numrows')] = null; // set the key
-        db_commit();
-        if ($values['returndata']) {
-            return $this->build_row($values['before'], true); // MK follow up - AJAX
-        }
-    }
-
-    /**
-     * removes an entire row and redistributes its blocks
-     *
-     * @param array $values parameters for this function
-     *                      row => int row to remove
-     *
-     */
-    public function removerow($values) {
-        // $layoutrows declared in layout.php
-        global $SESSION;
-
-        if (!array_key_exists('row', $values) || empty($values['row'])) {
-            throw new ParamOutOfRangeException(get_string('missingparamrow', 'error'));
-        }
-
-        db_begin();
-        // for each column, call removecolumn
-        // first retrieve number of columns in row
-        $layoutrows = $this->get_layoutrows();
-        $layout = $values['layout'];
-        $thisrownumcolumns = $layout->rows[$values['row']]['columns'];
-
-        for ($i = $thisrownumcolumns; $i > 0 ; $i--) {
-            $this->removecolumn(array('row' => $values['row'], 'column' => $i, 'removerow' => true));
-        }
-
-        // check for sucessful removal of columns
-        $dbcolumns = get_field('view_rows_columns', 'columns', 'view', $this->get('id'), 'row', $values['row']);
-
-        if ($dbcolumns != 0) {
-            db_rollback();
-            $SESSION->add_error_msg(get_string('changecolumnlayoutfailed', 'view'));
-            redirect(get_config('wwwroot') . 'view/editlayout.php?id=' . $this->get('id') . ($new ? '&new=1' : ''));
-        }
-
-        $this->set('numrows', $this->get('numrows') - 1);
-        $this->set('layout', null);
-
-        $columnsperrow = $this->get('columnsperrow');
-        unset($columnsperrow[$values['row']]);
-        $this->set('columnsperrow', $columnsperrow); //set makes dirty=1, which enables commit; columnsperrrow used as check by layout submit function
-
-        $this->commit();
-        db_commit();
-        unset($this->rows[$values['row']]);
-    }
-    /**
-     * helper function for re-ordering block instances within a cell row x column
-     * @param int $row     the row
-     * @param int $column  the column of the cell to re-order
-     * @param int $insert the order we need to insert
-     * @param int $remove the order we need to move out of the way
-     */
-    private function shuffle_cell($row, $column, $insert=0, $remove=0) {
-        /*
-        inserting something in the middle from somewhere else (insert and remove)
-        we're either reshuffling after a delete, (no insert),
-        inserting something in the middle out of nowhere (no remove)
-        */
-        // inserting and removing
-        if (!empty($remove)) {
-            // move it out of range (set to 0)
-            set_field_select('block_instance', 'order', 0, '"order" = ? AND "view" = ? AND "row" = ? AND "column" = ?', array($remove, $this->get('id'), $row, $column));
-            if (!empty($insert)) {
-                // shuffle everything
-                if ($insert > $remove) {
-                    $this->shuffle_helper('order', 'down', '>=', $remove, '"order" <= ? AND "row" = ? AND "column" = ?', array($insert, $row, $column));
-                }
-                else {
-                    $this->shuffle_helper('order', 'up', '>=', $insert, '"row" = ? AND "column" = ?', array($row, $column));
-                    // shuffle everything down
-                    $this->shuffle_helper('order', 'down', '>', $remove, '"row" = ? AND "column" = ?', array($row, $column));
-                }
-                // now move it back
-                set_field_select('block_instance', 'order', $insert, '"order" = ? AND "view" = ? AND "row" = ? AND "column" = ?', array(0, $this->get('id'), $row, $column));
-            }
-            else {
-                // shuffle everything down
-                $this->shuffle_helper('order', 'down', '>', $remove, '"row" = ? AND "column" = ?', array($row, $column));
-            }
-        }
-        else if (!empty($insert)) {
-            // shuffle everything up
-            $this->shuffle_helper('order', 'up', '>=', $insert, '"row" = ? AND "column" = ?', array($row, $column));
-        }
-    }
-
-    private function shuffle_helper($field, $direction, $operator, $value, $extrawhere='', $extravalues='') {
-
-        /*
-         * We need to use execute_sql here because ADODB naturally
-         * wants to convert "order+1" into string fields.
-         *
-         * Additionally, we need to move a set of rows in step, and
-         * sign-switching is one way to do that without violating constraints.
-         */
-
-        if (empty($extrawhere)) {
-            $extrawhere = '';
-        }
-        else {
-            $extrawhere = ' AND ' . $extrawhere;
-        }
-        if (empty($extravalues) || !is_array($extravalues) || count($extravalues) == 0) {
-            $extravalues = array();
-        }
-
-        // first move them one but switch to negative
-        $sql = 'UPDATE {block_instance}
-                    SET "' . $field .'" = (-1 * ("' . $field . '") ' . (($direction == 'up') ? '-' : '+') . ' 1)
-                    WHERE "view" = ? AND "' . $field . '"' . $operator . ' ? ' . $extrawhere;
-
-        execute_sql($sql, array_merge(array($this->get('id'), $value), $extravalues));
-
-        // and now flip to positive again
-        $sql = 'UPDATE {block_instance}
-                    SET "' . $field . '" = ("' . $field . '" * -1)
-                WHERE "view" = ? AND "' . $field . '" < 0 ' . $extrawhere;
-
-        execute_sql($sql, array_merge(array($this->get('id')), $extravalues));
-
     }
 
     /**
