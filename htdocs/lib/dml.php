@@ -132,10 +132,11 @@ function column_collation_is_default($table, $column) {
  * @uses $db
  * @param string $command The sql string you wish to be executed.
  * @param array $values When using prepared statements, this is the value array (optional).
+ * @param string $use_trigger Allow the sql query to do fall through to pseudo_trigger
  * @return boolean
  * @throws SQLException
  */
-function execute_sql($command, array $values=null) {
+function execute_sql($command, array $values=null, $use_trigger=true) {
     global $db;
 
     if (!is_a($db, 'ADOConnection')) {
@@ -145,7 +146,7 @@ function execute_sql($command, array $values=null) {
     $command = db_quote_table_placeholders($command);
     list($sqltype, $table, $idsql, $bindoffset) = get_table_from_query($command);
     if (!is_null($sqltype) && !is_null($table) && !is_null($idsql)) {
-        if ($type = table_need_trigger($table)) {
+        if ($use_trigger && $type = table_need_trigger($table)) {
             // Need to find the ids
             if (!empty($values) && is_array($values) && count($values) > 0) {
                 $bindvals = array_slice($values, $bindoffset);
@@ -961,6 +962,7 @@ function set_field_select($table, $newfield, $newvalue, $select, array $values) 
 
     $select = db_quote_table_placeholders($select);
 
+    $calllocal = false;
     if ($type = table_need_trigger($table)) {
         // Need to find the ids
         $sql = "SELECT *, '" . $table . "' AS " . db_quote_identifier('table') . " FROM " . db_table_name($table) . ' ' . $select;
@@ -969,17 +971,35 @@ function set_field_select($table, $newfield, $newvalue, $select, array $values) 
             safe_require('search', 'elasticsearch');
             ElasticsearchIndexing::bulk_add_to_queue($ids);
         }
+        else if ($type == 'local') {
+            $calllocal = true;
+        }
     }
 
     $values = array_merge(array($newvalue), $values);
     $sql = 'UPDATE '. db_table_name($table) .' SET '. db_quote_identifier($newfield)  .' = ? ' . $select;
     try {
         $stmt = $db->Prepare($sql);
-        return $db->Execute($stmt, $values);
+        $dbex = $db->Execute($stmt, $values);
     }
     catch (ADODB_Exception $e) {
         throw new SQLException(create_sql_exception_message($e, $sql, $values));
     }
+
+    if ($calllocal) {
+        // Call the correct function / savetype
+        $classname = generate_class_name_from_table($table);
+        list($plugintype, $pluginname) = generate_plugin_type_from_table($table);
+        if ($plugintype && $pluginname) {
+            safe_require($plugintype, $pluginname);
+            if (method_exists($classname, 'pseudo_trigger')) {
+                foreach ($ids as $id) {
+                    call_static_method($classname, 'pseudo_trigger', $id->id, 'update');
+                }
+            }
+        }
+    }
+    return $dbex;
 }
 
 
@@ -1240,6 +1260,9 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
 }
 
 function table_need_trigger($table) {
+    if ($dbprefix = get_config('dbprefix')) {
+        $table = preg_replace('/' . $dbprefix . '/', '', $table);
+    }
     if (defined('SKIP_TRIGGER') && SKIP_TRIGGER === true) {
         return false;
     }
@@ -1256,6 +1279,10 @@ function table_need_trigger($table) {
             return 'es';
         }
     }
+    $localtables = array('notification_internal_activity', 'module_multirecipient_userrelation'); // @TODO have the working out of local tables be a function call
+    if (isset($localtables) && in_array($table, $localtables)) {
+        return 'local';
+    }
     return false;
 }
 
@@ -1265,6 +1292,17 @@ function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
             $artefacttype = ($table == 'artefact' && isset($data->artefacttype)) ? $data->artefacttype : null;
             safe_require('search', 'elasticsearch');
             ElasticsearchIndexing::add_to_queue($id, $table, $artefacttype);
+        }
+        else if ($type == 'local') {
+            // Call the correct function / savetype
+            $classname = generate_class_name_from_table($table);
+            list($plugintype, $pluginname) = generate_plugin_type_from_table($table);
+            if ($plugintype && $pluginname) {
+                safe_require($plugintype, $pluginname);
+                if (method_exists($classname, 'pseudo_trigger')) {
+                    call_static_method($classname, 'pseudo_trigger', $id, $savetype);
+                }
+            }
         }
     }
 }
@@ -1444,6 +1482,7 @@ function update_record($table, $dataobject, $where=null, $primarykey=false, $ret
 
     // Run the query
     $sql = 'UPDATE '. db_table_name($table) .' SET '. $setclause . ' WHERE ' . $whereclause;
+    $calllocal = false;
     // Work out table name and get ids
     list($sqltype, $table, $idsql, $bindoffset) = get_table_from_query($sql);
     if ($sqltype == 'update' && !is_null($table) && !is_null($idsql)) {
@@ -1464,22 +1503,41 @@ function update_record($table, $dataobject, $where=null, $primarykey=false, $ret
                 safe_require('search', 'elasticsearch');
                 ElasticsearchIndexing::bulk_add_to_queue($ids);
             }
+            else if ($type == 'local') {
+                $calllocal = true;
+            }
         }
     }
 
+    $dbex = false;
     try {
         $stmt = $db->Prepare($sql);
         $rs = $db->Execute($stmt, array_merge($setclausevalues, $wherevalues));
         if ($returnpk) {
             $primarykey = $primarykey ? $primarykey : 'id';
             $returnsql = 'SELECT ' . $primarykey . ' FROM ' . db_table_name($table) . ' WHERE ' . $whereclause;
-            return get_field_sql($returnsql, $wherevalues);
+            $dbex = get_field_sql($returnsql, $wherevalues);
         }
-        return true;
+        $dbex = true;
     }
     catch (ADODB_Exception $e) {
         throw new SQLException(create_sql_exception_message($e, $sql, array_merge($setclausevalues, $wherevalues)));
     }
+
+    if ($calllocal && !empty($ids)) {
+        // Call the correct function / savetype
+        $classname = generate_class_name_from_table($table);
+        list($plugintype, $pluginname) = generate_plugin_type_from_table($table);
+        if ($plugintype && $pluginname) {
+            safe_require($plugintype, $pluginname);
+            if (method_exists($classname, 'pseudo_trigger')) {
+                foreach ($ids as $id) {
+                    call_static_method($classname, 'pseudo_trigger', $id->id, 'update');
+                }
+            }
+        }
+    }
+    return $dbex;
 }
 
 

@@ -1825,6 +1825,31 @@ function generate_class_name() {
     return 'Plugin' . implode('', array_map('ucfirst', $args));
 }
 
+function generate_class_name_from_table() {
+    $tableargs = func_get_args();
+    $args = generate_plugin_type_from_table($tableargs[0]);
+
+    return 'Plugin' . implode('', array_map('ucfirst', $args));
+}
+
+function generate_plugin_type_from_table() {
+    $tableargs = func_get_args();
+    $table = $tableargs[0];
+    if ($prefix = get_config('dbprefix')) {
+        $table = preg_replace('/' . $prefix . '/', '', $table);
+    }
+    $tableargs = explode('_', $table);
+
+    if (count($tableargs) > 2) {
+        $args = array_slice($tableargs, 0, 2);
+        // Fix for multirecipientnotifications where table name doesn't follow convention
+        if (isset($args[1]) && $args[1] == 'multirecipient') {
+            $args[1] = 'multirecipientnotification';
+        }
+    }
+    return array((isset($args[0]) ? $args[0] : null), (isset($args[1]) ? $args[1] : null));
+}
+
 function generate_artefact_class_name($type) {
     return 'ArtefactType' . ucfirst($type);
 }
