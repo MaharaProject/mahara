@@ -30,7 +30,7 @@
                 </span>
             </h5>
             <!-- The "assessment-item-buttons" class is used as an identifier by Javascript -->
-            <div class="btn-group pull-right assessment-item-buttons">
+            <div class="btn-group float-right assessment-item-buttons">
                 {if $item->editlink}
                     {$item->editlink|safe}
                 {/if}

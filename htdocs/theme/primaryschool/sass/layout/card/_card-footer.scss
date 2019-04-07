@@ -6,11 +6,11 @@ a.card-footer {
         .icon {
             color: scale-color($theme-primary-color, $lightness: 5%);
         }
-        .icon.pull-right { //only apply link colorto right aligned icons
+        .icon.float-right { //only apply link colorto right aligned icons
             color: scale-color($theme-primary-color, $lightness: 5%);
         }
     }
-    .icon.pull-right {
+    .icon.float-right {
         color: $theme-primary-color;
     }
 }
