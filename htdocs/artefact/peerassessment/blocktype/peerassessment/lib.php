@@ -43,7 +43,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
-        global $USER;
+        global $USER, $exporter;
 
         $configdata = $instance->get('configdata');
         $instructions = false;
@@ -76,6 +76,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
 
         $smarty = smarty_core();
         $smarty->assign('blockid', $instance->get('id'));
+        $smarty->assign('exporter', ($exporter ? true : false));
         $smarty->assign('instructions', $instructions);
         $smarty->assign('allowfeedback', $feedback->canedit && !$versioning);
         $smarty->assign('addassessmentfeedbackform', pieform($feedbackform));

@@ -99,6 +99,22 @@ class PluginArtefactPeerassessment extends PluginArtefact {
             WHERE artefact IN (' . join(',', $artefacts). ')')) {
             $artefacts = array_merge($artefacts, $attachments);
         }
+        if ($embeds = get_column_sql("
+            SELECT afe.fileid
+            FROM {artefact_file_embedded} afe
+            JOIN {artefact_peer_assessment} apa ON apa.assessment = afe.resourceid
+            WHERE afe.resourcetype IN (?)
+            AND apa.view IN (" . join(',', array_map('intval', $viewids)) . ")
+            UNION
+            SELECT afe.fileid
+            FROM {artefact_file_embedded} afe
+            JOIN {artefact_peer_assessment} apa ON apa.block = afe.resourceid
+            WHERE afe.resourcetype in(?)
+            AND apa.view IN (" . join(',', array_map('intval', $viewids)) . ")"
+            , array('assessment', 'peerinstruction'))) {
+            $artefacts = array_merge($artefacts, $embeds);
+        }
+
         return $artefacts;
     }
 
