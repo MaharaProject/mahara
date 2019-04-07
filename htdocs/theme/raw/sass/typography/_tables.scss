@@ -142,6 +142,9 @@ td.tiny {
         > th {
             border-top: 1px solid $table-border-color;
         }
+        &.warning td {
+            background-color: $state-warning-bg;
+        }
     }
 }
 
