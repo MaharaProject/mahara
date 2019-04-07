@@ -633,7 +633,12 @@ div.toolbarhtml {
         background-color: $gray-lighter !important;
     }
 }
-
+.viewinstruction-export {
+    border: 1px solid $card-border-color;
+    padding: 10px 15px;
+    margin-bottom: -1px; //remove double border
+    background-color: $gray-100 !important;
+}
 .releaseviewform {
     position: relative;
     top: 15px;
