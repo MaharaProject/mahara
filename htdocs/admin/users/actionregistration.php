@@ -156,9 +156,9 @@ function approveregistration_submit(Pieform $form, $values) {
             'auth.webservice',
             $user->firstname,
             get_config('sitename'),
-            hsc($values['message']),
             get_config('wwwroot'),
             $values['key'],
+            hsc($values['message']),
             get_config('sitename')
         );
         $htmlmessage = get_string(
@@ -166,11 +166,11 @@ function approveregistration_submit(Pieform $form, $values) {
             'auth.webservice',
             $user->firstname,
             get_config('sitename'),
-            hsc($values['message']),
             get_config('wwwroot'),
             $values['key'],
             get_config('wwwroot'),
             $values['key'],
+            nl2br(hsc($values['message'])),
             get_config('sitename')
         );
     }
