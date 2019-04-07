@@ -13,7 +13,12 @@
 {/if}
 
 <p id="view-description">{$viewdescription|clean_html|safe}</p>
-<p id="view-instructions">{$viewinstructions|clean_html|safe}</p>
+{if $viewinstructions}
+    <div>{str tag='instructions' section='view'}</div>
+    <div class="viewinstruction-export">
+        {$viewinstructions|clean_html|safe}
+    </div>
+{/if}
 
 {$view|safe}
 
