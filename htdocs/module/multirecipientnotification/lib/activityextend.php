@@ -210,6 +210,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             $section = empty($record->plugintype) ? 'activity' : "{$record->plugintype}.{$record->pluginname}";
             $record->strtype = get_string('type' . $record->type, $section);
             $record->message = format_notification_whitespace($record->message);
+            $record->message = clean_html($record->message);
             // used to identify notification as internal for json-calls
             $record->table = 'notification_internal_activity';
             $record->url = preg_replace('|^' . get_config('wwwroot') . '|', '', $record->url); // Remove the wwwroot form url as it will ba added again in template
@@ -278,6 +279,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
               $record->fromusr = 0;
             }
             $record->message = format_notification_whitespace($record->message);
+            $record->message = clean_html($record->message);
             // used to identify notification as from this plugin for json-calls
             $record->table = 'module_multirecipient_notification';
             $records[] = $record;
