@@ -7,8 +7,8 @@
             <div class="card {if $wallpost->private} bg-warning{/if} wallpost">
                 <h4 class="card-header has-link">
                     <a href="{$wallpost->profileurl}" class="userinfo has-user-icon">
-                        <span class="user-icon left">
-                            <img src="{profile_icon_url user=$wallpost maxheight=60 maxwidth=60}" alt="{str tag=profileimagetext arg1=$wallpost|display_default_name}" />
+                        <span class="user-icon user-icon-40 left">
+                            <img src="{profile_icon_url user=$wallpost maxheight=40 maxwidth=40}" alt="{str tag=profileimagetext arg1=$wallpost|display_default_name}" />
                         </span>
                             {$wallpost->displayname}<span class="postedon text-small text-midtone"> - {$wallpost->postdate|format_date}</span>
                     </a>

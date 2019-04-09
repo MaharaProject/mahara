@@ -6,7 +6,7 @@
      <div class="row">
         <div class="col-md-8">
             <div class="usericon-heading">
-                <div class="user-icon float-left">
+                <div class="user-icon user-icon-40 float-left">
                     <img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$r|display_default_name}">
                 </div>
                 <h4 class="list-group-item-heading">

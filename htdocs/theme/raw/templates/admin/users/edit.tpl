@@ -39,8 +39,8 @@
                         <a href="{profile_url($user)}" class="username">
                             {$user|display_name}
                         </a>
-                        <a href="{profile_url($user)}" class="user-icon">
-                            <img src="{profile_icon_url user=$user maxheight=100 maxwidth=100}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
+                        <a href="{profile_url($user)}" class="user-icon user-icon-60">
+                            <img src="{profile_icon_url user=$user maxheight=60 maxwidth=60}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
                         </a>
                     </h3>
                     <div class="card-body">

@@ -4,17 +4,14 @@
     .user-icon {
         padding: 0;
         position: absolute;
-        margin: 4px 0 5px 9px;
+        margin: 6px 0 5px 7px;
         z-index: 3;
         left: 90px;
         display: block;
-        width: 29px;
-        height: 29px;
+        width: 26px;
+        height: 26px;
         @include media-breakpoint-up(md) {
             left: 45px;
-        }
-        img {
-          left: 1px;
         }
         &:hover,
         &:focus {

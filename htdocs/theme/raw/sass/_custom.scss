@@ -316,12 +316,6 @@
     }
 }
 
-.user-thumbnails {
-    .user-icon {
-        margin: 5px;
-    }
-}
-
 //Google apps
 .google-app {
     font-style: normal;
@@ -817,4 +811,14 @@ div.form-group .form-control-label {
 .json_editor_btn_add .btn-group > .btn-group:not(:last-child) > .btn, .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
+}
+
+// table cells that need to be fixed 70px width
+.width-70 {
+    width: 70px;
+}
+
+// Forum select wrap too close to text
+.forumselectwrap {
+    margin-left: 10px;
 }

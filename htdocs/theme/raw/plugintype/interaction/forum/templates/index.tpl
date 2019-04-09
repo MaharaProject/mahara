@@ -60,7 +60,7 @@
                         </strong>
 
                         {foreach from=$forum->moderators item=mod}
-                        <a href="{profile_url($mod)}">
+                        <a href="{profile_url($mod)}" class="user-icon user-icon-20 user-icon-inline">
                             <img src="{profile_icon_url user=$mod maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$mod|display_default_name}">
                         </a>
 
@@ -110,7 +110,7 @@
         </p>
         {foreach from=$groupadmins item=groupadmin}
             <a href="{profile_url($groupadmin)}" class="badge badge-default">
-                <img src="{profile_icon_url user=$groupadmin maxheight=20 maxwidth=20}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}" class="user-icon-alt"> {$groupadmin|display_name}
+                <span class="user-icon user-icon-20 user-icon-inline"><img src="{profile_icon_url user=$groupadmin maxheight=20 maxwidth=20}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}"></span> {$groupadmin|display_name}
             </a>
         {/foreach}
     </div>
