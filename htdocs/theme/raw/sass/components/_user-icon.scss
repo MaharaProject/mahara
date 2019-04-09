@@ -181,3 +181,10 @@ a.user-icon, a .user-icon {
     height: 40px;
     object-fit: cover;
 }
+
+// Gap between user icon and user name
+.user-icon-name {
+    .user-icon {
+        margin-right: 10px;
+    }
+}
