@@ -58,17 +58,6 @@ $navbar-inverse-toggle-hover-bg:            $theme-secondary-color;
 $navbar-inverse-toggle-active-color:        #FFF;
 $navbar-inverse-toggle-active-bg:           $theme-secondary-color;
 
-
-// Form states
-$state-success-text:             #426600;
-$state-success-bg:               mix(#426600, #fff, 20%);
-$state-success-border:           scale-color(adjust-hue($state-success-bg, -10), $lightness: -10%);
-
-$state-danger-text:              #545B5D;
-$state-danger-bg:                #f2dede;
-$state-danger-border:            scale-color(adjust-hue($state-danger-bg, -10), $lightness: -5%);
-
-
 // Buttons + Forms
 $btn-secondary-bg:                 #e8eaec;
 $btn-secondary-border:             #caced3;

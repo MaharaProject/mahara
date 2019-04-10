@@ -6,14 +6,6 @@
 // Variables
 // --------------------------------------------------
 
-// Colors
-
-$brand-default:                             #ECECEC;
-$success:                                   #8DC129;
-$info:                                      #5bc0de;
-$warning:                                   #f0ad4e;
-$danger:                                    #d9534f;
-
 // Links
 $link-color:                                #1f6c88;
 $link-hover-color:                          scale-color($link-color, $lightness: -5%);
@@ -97,10 +89,6 @@ $modal-footer-border-color:                 $modal-header-border-color;
 $modal-header-padding:                      15px;
 
 $modal-lg:                                  900px;
-
-// Alerts
-$alert-padding-y:                           0.9375rem;
-$alert-padding-x:                           0.9375rem;
 
 // List group
 $list-group-border-color:                   #ddd;
