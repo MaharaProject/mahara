@@ -1226,6 +1226,67 @@ function xmldb_core_upgrade($oldversion=0) {
             }
         }
     }
+    if ($oldversion < 2019040900) {
+        log_debug('Updating plan blocktype in view version');
+        $versions = get_records_sql_array("SELECT * FROM {view_versioning} WHERE blockdata LIKE '%\"blocktype\":\"plans\"%'");
+
+        // to keep the currect artefacts of a plans block
+        $existing_artefacts = array();
+
+        if ($versions) {
+            require_once(get_config('docroot') . '/blocktype/lib.php');
+            safe_require('blocktype', 'plans');
+            $count = 0;
+            $limit = 1000;
+            $total = count($versions);
+            foreach ($versions as $version) {
+                if (!empty($version->blockdata)) {
+                    $needsupdate = false;
+                    $blockdata = json_decode($version->blockdata);
+                    foreach ($blockdata->blocks as &$block) {
+                        if ($block->blocktype == 'plans') {
+                            $blockid = $block->originalblockid;
+                            if (!isset($existing_artefacts[$blockid])) {
+                                //in case there are no artefacts in the block
+                                // or the blockinstance was deleted, we won't check again
+                                $existing_artefacts[$blockid] = null;
+
+                                try {
+                                    // get the artefacts use in the block
+                                    $bi = new BlockInstance($blockid);
+                                    if ($bi && $artefacts = PluginBlocktypePlans::get_current_artefacts($bi)) {
+                                        foreach ($artefacts as $key => $artefact) {
+                                            if (isset($bi->configdata['artefactid']) && $bi->configdata['artefactid'] == $artefact) {
+                                                unset($artefacts[$key]);
+                                            }
+                                        }
+                                        $existing_artefacts[$blockid] = $artefacts;
+                                    }
+                                }
+                                catch (BlockInstanceNotFoundException $e) {}
+                            }
+                            // if we actually have artefact ids, save them in the version
+                            if ($existing_artefacts[$blockid]) {
+                                $block->configdata->existing_artefacts = $existing_artefacts[$blockid];
+                                $needsupdate = true;
+                            }
+                        }
+                    }
+                    $version->blockdata = json_encode($blockdata);
+                    if ($needsupdate) {
+                        update_record('view_versioning', $version);
+                    }
+                }
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+
+
+    }
 
     return $status;
 }
