@@ -147,7 +147,7 @@ else if ($upload) {
         'standardiddesc1' => 'module.framework',
         'elementid' => 'module.framework',
         'elementiddesc' => 'module.framework',
-        'invalidjson' => 'module.framework',
+        'invalidjsonineditor' => 'module.framework',
         'validjson' => 'module.framework',
         'moveright' => 'module.framework',
         'moveleft' => 'module.framework',

@@ -553,7 +553,7 @@ function refresh_editor() {
         var errors = editor.validate();
         // Not valid
         if (errors.length) {
-            $('#messages').empty().append($('<div>', {'class':'alert alert-danger', 'text':get_string('invalidjson', 'module.framework')}));
+            $('#messages').empty().append($('<div>', {'class':'alert alert-danger', 'text':get_string('invalidjsonineditor', 'module.framework')}));
         }
         // Valid
         else {
