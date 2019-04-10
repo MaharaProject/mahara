@@ -26,10 +26,9 @@ Scenario: Creating a page with content in it (Bug 1426983)
     | Page title | Test view |
     And I fill in "First description" in first editor
     And I press "Save"
-    # verify display page button is displayed
-    And I should see "Display page" in the "div#view-wizard-controls.col-collapse-offset.col-with-collapse" element
-    # verify Return to pages and collections is displayed
-    And I should see "Return to pages and collections" in the "div#view-wizard-controls.col-collapse-offset.col-with-collapse" element
+    # verify page elements are displayed Display page and Return to pages and collections buttons
+    And I should see "Display page" in the "Display page button" property
+    And I should see "Return to pages and collections" in the "Return to pages and collections button" property
     # Editing the pages
     And I follow "Settings" in the "Toolbar buttons" property
     #Change the Page title

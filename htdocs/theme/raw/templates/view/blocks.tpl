@@ -59,7 +59,7 @@
             </div>
         </form>
 
-        <div id="view-wizard-controls" class="col-collapse-offset col-with-collapse">
+        <div id="view-return-controls" class="col-collapse-offset col-with-collapse">
             {if !$issitetemplate}
             <a class="btn btn-secondary" href="{$displaylink}">
                 {str tag=displayview section=view}
