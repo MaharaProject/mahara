@@ -204,6 +204,11 @@ foreach ($authinstances as $authinstance) {
     foreach ($user_insts as $inst) {
         if ($authinstance->name == $inst->institution || $authinstance->name == 'mahara') {
             $options[$authinstance->id] = $authinstance->displayname . ': ' . $authinstance->instancename;
+            $authobj = AuthFactory::create($authinstance->id);
+            if ($authobj->needs_remote_username()) {
+                $externalauthjs[] = $authinstance->id;
+                $external = true;
+            }
         }
     }
 }
