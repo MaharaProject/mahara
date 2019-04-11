@@ -30,6 +30,13 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
         return get_string('title', 'blocktype.peerassessment/signoff');
     }
 
+    public static function override_instance_title(BlockInstance $instance) {
+        if (!$instance->get('inedit')) {
+            return '';
+        }
+        return get_string('title', 'blocktype.peerassessment/signoff');
+    }
+
     public static function hide_title_on_empty_content() {
         return true;
     }
@@ -62,7 +69,19 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
             $html = $smarty->fetch('blocktype:signoff:signoff.tpl');
         }
         else {
-            $html = '';
+            $view = $instance->get_view();
+            safe_require('artefact', 'peerassessment');
+            $smarty->assign('WWWROOT', get_config('wwwroot'));
+            $smarty->assign('view', $view->get('id'));
+            // Verify option
+            $smarty->assign('showverify', !empty($configdata['verify']));
+            $smarty->assign('verifiable', ArtefactTypePeerassessment::is_verifiable($view, false));
+            $smarty->assign('verified', ArtefactTypePeerassessment::is_verified($view, false));
+            // Signoff option
+            $smarty->assign('showsignoff', !empty($configdata['signoff']));
+            $smarty->assign('signable', ArtefactTypePeerassessment::is_signable($view, false));
+            $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($view, false));
+            $html = $smarty->fetch('blocktype:signoff:verifyform.tpl');
         }
         return $html;
     }
@@ -99,31 +118,6 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
 
     public static function get_artefacts(BlockInstance $instance) {
         return array();
-    }
-
-    public static function get_instance_toolbars(BlockInstance $bi) {
-        global $USER;
-
-        $configdata = $bi->get('configdata');
-        $view = $bi->get_view();
-        safe_require('artefact', 'peerassessment');
-        $smarty = smarty_core();
-        $smarty->assign('WWWROOT', get_config('wwwroot'));
-        $smarty->assign('view', $view->get('id'));
-        // Verify option
-        $smarty->assign('showverify', !empty($configdata['verify']));
-        $smarty->assign('verifiable', ArtefactTypePeerassessment::is_verifiable($view, false));
-        $smarty->assign('verified', ArtefactTypePeerassessment::is_verified($view, false));
-        // Signoff option
-        $smarty->assign('showsignoff', !empty($configdata['signoff']));
-        $smarty->assign('signable', ArtefactTypePeerassessment::is_signable($view, false));
-        $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($view, false));
-
-        return array(
-            array(
-                'toolbarhtml' => $smarty->fetch('blocktype:signoff:verifyform.tpl')
-            )
-        );
     }
 
     public static function delete_instance(BlockInstance $instance) {
