@@ -82,21 +82,21 @@ $line-height-computed:                      $font-size-base * $line-height-base 
 $text-shadow:                               $white !default;
 
 // Form states
-$state-success-text:                        scale-color(theme-color("success"), $lightness: -30%) !default;
-$state-success-bg:                          mix(theme-color("success"), #fff, 20%) !default;
-$state-success-border:                      scale-color(adjust-hue($state-success-bg, -10), $lightness: -10%) !default;
+$state-success-text:                        scale-color($success, $lightness: -30%) !default;
+$state-success-bg:                          scale-color($success, $lightness: 70%) !default;
+$state-success-border:                      scale-color($success, $lightness: 50%) !default;
 
-$state-info-text:                           scale-color(#31708f, $lightness: -50%) !default;
-$state-info-bg:                             #d9edf7 !default;
-$state-info-border:                         scale-color(adjust-hue($state-info-bg, -10), $lightness: -7%) !default;
+$state-info-text:                           scale-color($info, $lightness: -30%) !default;
+$state-info-bg:                             scale-color($info, $lightness: 70%) !default;
+$state-info-border:                         scale-color($info, $lightness: 50%) !default;
 
-$state-warning-text:                        scale-color(#8a6d3b, $lightness: -30%) !default;
-$state-warning-bg:                          #fcf8e3 !default;
-$state-warning-border:                      scale-color(adjust-hue($state-warning-bg, -10), $lightness: -5%) !default;
+$state-warning-text:                        scale-color($warning, $lightness: -30%) !default;
+$state-warning-bg:                          scale-color($warning, $lightness: 70%) !default;
+$state-warning-border:                      scale-color($warning, $lightness: 50%) !default;
 
-$state-danger-text:                         scale-color(#a94442, $lightness: -30%) !default;
-$state-danger-bg:                           #f2dede !default;
-$state-danger-border:                       scale-color(adjust-hue($state-danger-bg, -10), $lightness: -5%) !default;
+$state-danger-text:                         scale-color($danger, $lightness: -30%) !default;
+$state-danger-bg:                           scale-color($danger, $lightness: 70%) !default;
+$state-danger-border:                       scale-color($danger, $lightness: 50%) !default;
 
 // Buttons + Forms
 $btn-secondary-bg:                          #F9F9F9 !default;

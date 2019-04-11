@@ -68,21 +68,6 @@ $navbar-inverse-toggle-hover-bg:            $navbar-inverse-bg;
 $navbar-inverse-toggle-active-color:        $navbar-inverse-link-active-color;
 $navbar-inverse-toggle-active-bg:           $navbar-inverse-bg;
 
-
-
-// Colors
-$brand-success:         #449D44;
-$brand-danger:          #F04F50;
-
-// Form states and alerts
-$state-success-text:             scale-color($brand-success, $lightness: -40%);
-$state-success-bg:               scale-color($brand-success, $lightness: 70%);
-$state-success-border:           scale-color(adjust-hue($state-success-bg, -10), $lightness: -10%);
-
-$state-danger-text:              scale-color($brand-danger, $lightness: -30%);
-$state-danger-bg:                scale-color($brand-danger, $lightness: 70%);
-$state-danger-border:            scale-color(adjust-hue($state-danger-bg, -10), $lightness: -5%);
-
 // Buttons
 $btn-secondary-bg:                 $white;
 $btn-secondary-border:             #CCCCCC;

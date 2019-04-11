@@ -62,7 +62,7 @@ td.tiny {
     }
 
     tr.inactive {
-        background: $state-warning-bg !important;
+        background: scale-color($warning, $lightness: 70%) !important;
     }
 
     td input[type=radio],
