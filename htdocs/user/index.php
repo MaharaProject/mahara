@@ -28,7 +28,7 @@ else if (param_variable('addfriend_submit', null)) {
 
 $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
-$filter = param_alpha('filter', $USER->get('admin') ? 'all' : 'myinstitutions');
+$filter = param_alpha('filter', (!$USER->get('admin') && !$USER->get('staff') && $USER->get('institutions')) ? 'myinstitutions' : 'all');
 $limit  = 10;
 
 $is_admin = $USER->get('admin') || $USER->get('staff');

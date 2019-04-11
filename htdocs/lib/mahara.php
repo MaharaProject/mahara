@@ -3906,57 +3906,16 @@ function profile_sideblock() {
 function onlineusers_sideblock() {
     global $USER;
 
-    if (!$USER->is_logged_in() || in_admin_section()) {
+    if (!$USER->is_logged_in() || in_admin_section() || !get_config('showonlineuserssideblock')) {
         return null;
     }
-    // Determine what level of users to show
-    // 0 = none, 1 = institution/s only, 2 = all users
-    $showusers = 2;
-    $institutions = $USER->institutions;
-    if (!empty($institutions)) {
-        $showusers = 0;
-        foreach ($institutions as $i) {
-            if ($i->showonlineusers == 2) {
-                $showusers = 2;
-                break;
-            }
-            if ($i->showonlineusers == 1) {
-                $showusers = 1;
-            }
-        }
-    }
-    if (!get_config('showonlineuserssideblock') || $showusers == 0) {
-        return null;
-    }
-
     $maxonlineusers = get_config('onlineuserssideblockmaxusers');
-    switch ($showusers) {
-        case 1: // show institution only
-            $sql = 'SELECT DISTINCT u.* FROM {usr} u JOIN {usr_institution} i ON u.id = i.usr
-                WHERE i.institution IN ('.join(',', array_map('db_quote', array_keys($institutions))).')
-                AND lastaccess > ? AND deleted = 0 ORDER BY lastaccess DESC';
-            break;
-        case 2: // show all
-            $sql = 'SELECT * FROM {usr} WHERE lastaccess > ? AND deleted = 0 ORDER BY lastaccess DESC';
-            break;
-    }
+    $results = get_onlineusers($maxonlineusers, 0, 'lastaccess DESC');
 
-    $onlineusers = get_records_sql_array($sql, array(db_format_timestamp(time() - get_config('accessidletimeout'))), 0, $maxonlineusers);
-    if ($onlineusers) {
-        foreach ($onlineusers as &$user) {
-            $user->profileiconurl = profile_icon_url($user, 20, 20);
-
-            // If the user is an MNET user, show where they've come from
-            $authobj = AuthFactory::create($user->authinstance);
-            if ($authobj->authname == 'xmlrpc') {
-                $peer = get_peer($authobj->wwwroot);
-                $user->loggedinfrom = $peer->name;
-            }
-        }
+    if ($results['showusers'] == 0 || empty($results['count'])) {
+        return null;
     }
-    else {
-        $onlineusers = array();
-    }
+    $onlineusers = $results['onlineusers'];
 
     $sideblock = array(
         'name'   => 'onlineusers',
@@ -5714,6 +5673,8 @@ function is_isolated() {
         set_config('usersallowedmultipleinstitutions', false);
         set_config('requireregistrationconfirm', true);
         set_config('isolatedinstitutionset', true); // set this in Db so we only do this check/update once
+        // Set the institution 'showonlineusers' to institution only if currently all
+        execute_sql('UPDATE {institution} SET showonlineusers = ? WHERE showonlineusers = ?', array(1, 2));
     }
     else if ((isset($CFG->isolatedinstitutions) && !$CFG->isolatedinstitutions) && get_field('config', 'value', 'field', 'isolatedinstitutionset')) {
         // Setting $cfg->isolatedinstitutions to false
