@@ -47,7 +47,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I choose "Shared by me" in "Share" from main menu
     And I click on "Edit access" in "Page UserB_01" row
     And I set the select2 value "Page UserB_03" for "editaccess_views"
-    And I select "Users" from "accesslist[0][searchtype]"
+    And I select "User" from "accesslist[0][searchtype]"
     And I select "Admin User" from select2 search box in row number "1"
     And I press "Save"
     # Verifying that the page has been shared

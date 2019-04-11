@@ -136,6 +136,9 @@ $string['registeredusers'] = 'Registered users';
 $string['friends'] = 'Friends';
 $string['groups'] = 'Groups';
 $string['users'] = 'Users';
+$string['friend'] = 'Friend';
+$string['group'] = 'Group';
+$string['user'] = 'User';
 $string['everyoneingroup'] = 'Everyone in group';
 $string['nospecialrole'] = 'No special role';
 $string['peer'] = 'Peer';
@@ -182,7 +185,6 @@ $string['viewvisitcount'] = array(
 );
 $string['profilenotshared'] = 'Full access to this user profile is restricted.';
 
-$string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile picture';
 $string['Updatedon'] = 'Updated on';
 $string['Createdon'] = 'Created on';
