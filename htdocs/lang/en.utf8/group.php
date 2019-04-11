@@ -299,6 +299,7 @@ $string['backtofriendslist'] = 'Back to friends list';
 $string['findnewfriends'] = 'Find new friends';
 $string['Collections']    = 'Collections';
 $string['Views']          = 'Pages';
+$string['Portfolios'] = 'Portfilios';
 $string['Viewscollections'] = 'Pages and collections';
 $string['Files']          = 'Files';
 $string['noviewstosee']   = 'None that you can see';
