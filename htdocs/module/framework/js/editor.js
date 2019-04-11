@@ -29,6 +29,8 @@ jQuery(function($) {
 
 
     var editor;
+
+    formchangemanager.add('editor_holder');
     refresh_editor();
 
     // Initialize the editor
@@ -267,6 +269,7 @@ function refresh_editor() {
         var se_eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
         se_eid_field.setValue(se_count);
         textarea_init();
+        set_editor_dirty();
     });
 
     $("#add_standardelement").click(function() {
@@ -280,8 +283,31 @@ function refresh_editor() {
         //@TODO: change this display to reflect the data
         eid_field.setValue(se_count);
         textarea_init();
+        set_editor_dirty();
     });
-}
+
+    // add checks to monitor if fields are changed
+    editor.on('ready', function () {
+        set_editor_clean();
+        $('#editor_holder textarea').each(function(el){
+          $(this).on('change', function() {
+              set_editor_dirty();
+          });
+        });
+        $('#editor_holder input').each(function(el){
+          $(this).on('change', function() {
+              set_editor_dirty()
+          });
+        });
+        $('#editor_holder select').each(function(el){
+          $(this).on('change', function() {
+              set_editor_dirty()
+          });
+        });
+    });
+
+   }
+
 
     //counts to increment standard and standardelement ids
     var std_index = 0;
@@ -313,8 +339,13 @@ function refresh_editor() {
 
     //choose from edit dropdown
     $('#edit').on('change',function() {
+        var confirm = null;
+        if (typeof formchangemanager !== 'undefined') {
+            confirm = formchangemanager.confirmLeavingForm();
+        }
+        if (confirm === null || confirm === true) {
+
         //rebuild the form so that data doesn't get added to existing
-        //@TODO reset copy select box
         editor.destroy();
         refresh_editor();
         edit = true;
@@ -326,10 +357,21 @@ function refresh_editor() {
         index = index[0];
         populate_editor(index, edit);
         textarea_init();
+
+        set_editor_clean();
+
+        }
+
     });
 
     //choose from copy dropdown.
     $("#copy").on('change', function() {
+        var confirm = null;
+        if (typeof formchangemanager !== 'undefined') {
+            confirm = formchangemanager.confirmLeavingForm();
+        }
+        if (confirm === null || confirm === true) {
+
         //rebuild the form so that data doesn't get added to existing
         //@TODO reset edit select box
         editor.destroy();
@@ -342,11 +384,13 @@ function refresh_editor() {
         index = index[0];
         populate_editor(index);
         textarea_init();
-        });
+        set_editor_clean();
+        }
+    });
 
     // Manage button - goes to fw screen
     $(".cancel").click(function() {
-        //@TODO - warn about not saving form?
+        formchangemanager.setFormStateById('editor_holder', FORM_CANCELLED);
         window.location.href = config['wwwroot'] + 'module/framework/frameworks.php';
     });
 
@@ -359,6 +403,7 @@ function refresh_editor() {
 
     // Hook up the submit button to log to the console
     $(".submit").click(function() {
+        formchangemanager.setFormStateById('editor_holder', FORM_SUBMITTED);
         // Get all the form's values from the editor
         var json_form = editor.getValue();
         url = config['wwwroot'] + 'module/framework/framework.json.php';
@@ -368,7 +413,7 @@ function refresh_editor() {
         }
         //save completed form data
         sendjsonrequest(url, json_form, 'POST');
-        //@TODO, redirect to success message at the top of page
+        window.scrollTo(0,0);
     });
 
     function populate_editor(framework_id, edit) {
@@ -562,3 +607,18 @@ function refresh_editor() {
     });
 
 });
+
+
+// form change checker functions
+
+function set_editor_dirty() {
+    if (typeof formchangemanager !== 'undefined') {
+        formchangemanager.setFormStateById("editor_holder", FORM_CHANGED);
+    }
+}
+
+function set_editor_clean() {
+    if (typeof formchangemanager !== 'undefined') {
+        formchangemanager.setFormStateById('editor_holder', FORM_INIT);
+    }
+}
