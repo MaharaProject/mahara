@@ -704,6 +704,7 @@ class BlockInstance {
     private $artefacts = array();
     private $temp = array();
     private $tags = array();
+    private $inedit = false;
 
     public function __construct($id=0, $data=null) {
          if (!empty($id)) {
@@ -1007,7 +1008,7 @@ class BlockInstance {
 
         safe_require('blocktype', $this->get('blocktype'));
         $movecontrols = array();
-
+        $this->inedit = true;
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
         try {
             $title = $this->get_title();
