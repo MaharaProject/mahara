@@ -473,7 +473,7 @@ $string['mostcomments1'] = 'Most comments';
 $string['dashboard'] = 'Dashboard';
 $string['Profile'] = 'Profile';
 $string['Portfolio'] = 'Portfolio';
-$string['Portfolios'] = 'Portfilios';
+$string['Portfolios'] = 'Portfolios';
 $string['Grouphomepage'] = 'Group homepage';
 
 $string['grouphomepagedescription'] = 'The group homepage contains the content that appears on the "About" tab for this group';
