@@ -39,8 +39,6 @@ $string['registeredemailmessagetextmessage'] = 'Hello %s,
 
 Thank you for registering an account on %s.
 
-%s
-
 Please follow this link to
 complete the sign-up process:
 
@@ -48,21 +46,20 @@ complete the sign-up process:
 
 The link will expire in 24 hours.
 
+%s
+
 --
 Regards,
 The %s Team';
 $string['registeredemailmessagehtmlmessage'] = '<p>Hello %s,</p>
 
 <p>Thank you for registering an account on %s.</p>
-
-
-<p>%s</p>
-
 <p>Please follow this link
 to complete the sign-up process:</p>
 <p><a href="%sregister.php?key=%s">%sregister.php?key=%s</a></p>
 <p>The link will expire in 24 hours.</p>
 
+<p>%s</p>
 
 <pre>--
 Regards,
