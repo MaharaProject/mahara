@@ -142,6 +142,31 @@ class PluginModuleFramework extends PluginModule {
 
         return $map;
     }
+
+    // Set up 3rd level nav for upload json file vs. edit
+    static function submenu_items($active_tab = null) {
+        $tabs = array(
+            'overview' => array(
+                'page' => 'overview',
+                'url'  => 'module/framework/frameworks.php',
+                'title'=>  get_string('Management', 'module.framework'),
+            ),
+            'editor' => array(
+                'page'  => 'editor',
+                'url'   => 'module/framework/frameworks.php?upload=1',
+                'title' => get_string('editor', 'module.framework'),
+            ),
+            'import' => array(
+                'page'  => 'import',
+                'url'   => 'module/framework/frameworks.php?uploadmatrix=1',
+                'title' => get_string('Import', 'admin'),
+            ),
+        );
+        if ($active_tab && isset($tabs[$active_tab])) {
+            $tabs[$active_tab]['selected'] = true;
+        }
+        return $tabs;
+    }
 }
 
 /**
