@@ -66,7 +66,7 @@ function pieform_element_layout(Pieform $form, $element) {
   $output .= '<div id="createcustomlayoutpane" class="row col-static">'
 
           . '<div class="col-xs-12 col-sm-2">'
-          . '<div class="user-icon layoutthumb preview"><div id="custompreview">' . $element['customlayout'] . '</div><p class="metadata text-center">' . get_string('layoutpreview', 'view') .'</p></div>'
+          . '<div class="layoutthumb preview"><div id="custompreview">' . $element['customlayout'] . '</div><p class="metadata text-center">' . get_string('layoutpreview', 'view') .'</p></div>'
           . '</div>'
           . '<div id="customrows" class="col-xs-12 col-sm-10">'
               . '<div id="customrow_1" class="customrow form-group five-across multi-label clearfix" style="border-bottom: 0px !important;">'

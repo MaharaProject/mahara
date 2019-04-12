@@ -94,6 +94,14 @@
     border-radius: 2px;
     transition: border .2s ease-in-out;
 }
+#createcustomlayoutpane .layoutthumb {
+    border: 1px solid $card-border-color;
+    border-radius: 2px;
+    padding: 4px;
+    display: table;
+    overflow: hidden;
+    position: relative;
+}
 
 .blocktype-radio {
     display: none;
