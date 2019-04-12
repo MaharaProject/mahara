@@ -24,7 +24,6 @@ jQuery(function($) {
     JSONEditor.plugins.select2.enable = true;
 
     var editor;
-    var standards_array = [];// @TODO, remove with dropdown
     var parent_array = [''];
     //counts to increment standard and standardelement ids
     var std_index = 0;
@@ -239,16 +238,6 @@ function refresh_editor() {
                                 "hidden" : true,
                             },
                         },
-                        //@TODO, to be removed?
-                        // "standardid" : {
-                        //     "title" : get_string('standardid'),
-                        //    // "type" : "array",
-                        //    "type" : "string",
-                        //     "format" : "select",
-                        //     "default" : 1,
-                        //     "description" : get_string('standardiddesc1'),
-                        //     "enum" : []
-                        // },
                         "uid" : {
                             "type" : "number",
                             "default" : null,
@@ -278,7 +267,9 @@ function refresh_editor() {
     //set min row height for desc fields to 6
     $("textarea[id$='_desc_textarea']").attr('rows', '6');
     textarea_init();
-
+    update_parent_array();
+    set_parent_array();
+    add_parent_event();
 
     $("#add_standard").click(function() {
         standard_count += 1;
@@ -302,43 +293,21 @@ function refresh_editor() {
     $("#add_standardelement").click(function() {
         se_count++;
         se_index = se_count -1;
-        console.log(se_index);//correct
-        console.log(eid);
-        console.log(se_count);
-        console.log(standard_count);
-        // var sid_field = editor.getEditor("root.standards." + std_index + ".standardid");
-        // var sid = sid_field.getValue();
-        // var se_sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
-        // se_sid_field.setValue(sid);
         var eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
         var eid_val;
-        //var pid_field = editor.getEditor("root.standardelements." + se_index + ".parentelementid");
-       // var eid;
-    //    if (!eid) {
-    //        eid = 1;
-    //    }
        if (!standard_count) {
-        console.log("else running");
         eid_val = "1." + eid;
         }
         else {
-            // if (standard_count == 1 && eid == 1) {
-            //     eid ++;
-            // }
-            // else {
                 eid ++;
                 eid_val = standard_count + "." + eid;
-            }
-
-        console.log(eid_field);
+        }
         eid_field.setValue(eid_val);
-
-        //set_standards_array();
         update_parent_array();
         set_parent_array();
-        //@TODO: change this display to reflect the data
-        //eid_field.setValue(se_count);
+        add_parent_event();
         textarea_init();
+        //$("[data-schemaid=\"parentid\"] .form-control > option").trigger('change');
         set_editor_dirty();
     });
 
@@ -361,15 +330,6 @@ function refresh_editor() {
           });
         });
     });
-
-    $("[data-schemaid=\"parentid\"]").on('change', function () {
-        console.log("new pid");
-    });
-    // function parent_set() {
-    //     console.log(eid);
-    //     console.log(editor.getValue(eid.parentelementid));
-    // }
-
 
         // validation indicator
         editor.off('change');
@@ -410,24 +370,7 @@ function refresh_editor() {
         });
 
    }
-
-    //make textarea expand with text
-    function textarea_init() {
-        $('div.form-group textarea[name$="description\]"]').each(function() {
-            $(this).off('click input');
-            $(this).on('click input', function() {
-                textarea_autoexpand(this);
-            })
-            textarea_autoexpand(this);
-        });
-    }
-    function textarea_autoexpand(element) {
-        element.setAttribute('style', 'height:' + (element.scrollHeight) + 'px;overflow-y:hidden;');
-        element.style.height = 'auto';
-        element.style.minHeight = '148px';
-        element.style.maxHeight = '800px';
-        element.style.height = (element.scrollHeight) + 'px';
-    }
+//end of refresh function
 
     //choose from edit dropdown
     $('#edit').on('change',function() {
@@ -483,7 +426,6 @@ function refresh_editor() {
         window.location.href = config['wwwroot'] + 'module/framework/frameworks.php';
     });
 
-
     //@TODO, make preview button work - should show what current framework looks like as the left
     //column of the SmartEvidence map - i.e. what you see when you look at the first page of a SE collection
     // $('#preview').click(function() {
@@ -521,61 +463,20 @@ function refresh_editor() {
             textarea_autoexpand(this);
         });
     }
+
     function textarea_autoexpand(element) {
         element.setAttribute('style', 'height:' + (element.scrollHeight) + 'px;overflow-y:hidden;');
         element.style.height = 'auto';
-        element.style.minHeight = '148px';
-        element.style.maxHeight = '800px';
+        element.style.minHeight = '64px';
         element.style.height = (element.scrollHeight) + 'px';
     }
-
-        //-------------------------
-    //TODO - this section is WIP related to drop-downs
-
-    // function get_standards_array() {
-    //     return standards_array;
-    // }
 
     function get_parent_array() {
         return parent_array;
     }
 
-    // function update_standards_array() {
-    //     //console.log(standards_array);
-    //     $("[data-schemaid=\"standard\"]").each(function() {
-    //        // console.log($(this));
-    //         var num = parseInt($(this).data("schemapath").replace(/root\.standards\./, ''));
-    //         num+=1;
-    //       //  console.log(num);
-    //         if ($.inArray(num, standards_array)== -1) {
-    //        //     console.log(num);
-    //             standards_array.push(num);
-    //         }
-    //     });
-    // }
-
-    // function set_standards_array() {
-    //     var field;
-    //     $("[data-schemaid=\"standardelement\"]").each(function() {
-    //         field = ($(this).data("schemapath") + ".standardid");
-    //         //console.log(field);
-    //         field = field.replace(/\./g, '\]\[');
-    //         field = field.replace(/^root\](.*)$/, 'root$1\]');
-    //         //console.log(field);
-    //         //[name="root[standardelements][0][standardid]"]
-    //         $("[name=\"" + field + "\"]").empty();
-    //         $.each(standards_array, function (k, value) {
-    //             console.log(field);
-    //             $("[name=\"" + field + "\"]").append($('<option>', {
-    //             value: value,
-    //             text: value
-    //             }));
-    //         });
-    //    });
-    // }
-
     function update_parent_array() {
-    //    console.log(parent_array);
+        console.log( "update parentarray");
         $("[data-schemaid=\"standardelement\"]").each(function() {
             //number of std elements
             var num = parseInt($(this).data("schemapath").replace(/root\.standardelements\./, ''));
@@ -603,14 +504,28 @@ function refresh_editor() {
             });
         });
     }
-    //---------------------------------------------END of WIP
 
-    function textarea_autoexpand(element) {
-        element.setAttribute('style', 'height:' + (element.scrollHeight) + 'px;overflow-y:hidden;');
-        element.style.height = 'auto';
-        element.style.minHeight = '64px';
-        element.style.height = (element.scrollHeight) + 'px';
+    function add_parent_event() {
+        console.log("add event running");
+        $("[data-schemaid=\"parentid\"] .form-control").each(function () {
+            $(this).off('change');
+            $(this).on('change', function () {
+            update_eid(this);
+            });
+            update_eid(this);
+        });
     }
+
+    function update_eid(element) {
+        if (element.value && element.value != '1.1') {
+            var index = element.name.replace(/.*\[(\d*)\].*/, '$1');
+            var eid_field = editor.getEditor("root.standardelements." + index + ".elementid");
+            if (eid_field) {
+                eid_field.setValue(element.value + "." + eid);//wrong variable.
+            }
+        }
+    }
+
 
     function populate_editor(framework_id, edit) {
         url = config['wwwroot'] + 'module/framework/getframework.json.php';
@@ -657,7 +572,7 @@ function refresh_editor() {
                 if (k != 'element') {
                     std_index = parseInt(k);
                 }
-                console.log(std_index);
+               // console.log(std_index);
                 //if the standard doesn't already exist, we need to add it to the editor.
                 if (std_index > 0 && !editor.getEditor("root.standards." + std_index)) {
                     var std_ed = editor.getEditor("root.standards");
@@ -671,7 +586,6 @@ function refresh_editor() {
                 if (value.id) {
                     std_nums[standard_count] = value.id;
                 }
-                 console.log(std_nums);
 
                 $.each(value, function(k, val) {
                     //this works where the data field name is the same as the DOM's id
@@ -702,21 +616,13 @@ function refresh_editor() {
                 var se_array = value;
                 //convert the absolute standard id from the db to the local standard id
                 //for this framework
-                //@TODO reconcile vars
                 var std_id = value[0].standard;
-                console.log(std_id);
-                console.log(std_nums);
                 var se_val = 0;
                 var subel_val = 0
                 standard_count = std_nums.indexOf(std_id); //the sid in the editor
-                console.log(standard_count);
-                //end of broken code -------
-                //var priority;//eid
                 var pid_val = 0;
-                //var sid;
                 var eid_field;
                 var pid_field;
-                //var sid_field;
                 var eid_val;
                 //each standard element
                 $.each(se_array, function (k, value){
@@ -726,6 +632,7 @@ function refresh_editor() {
                         se.addRow();
                         se_count ++;
                         textarea_init();
+                        add_parent_event();
                     }
                     //each value from a standard element
                     $.each(value, function (k,value ) {
@@ -734,61 +641,37 @@ function refresh_editor() {
                         if (se) {
                             se.setValue(value);
                         }
-                            //standard is standardid in the editor
-                            if (k === "standard") {
-                              //  sid_field = editor.getEditor("root.standardelements." + count + "." + "standardid");
-                               //std_valstd_val if (std_val > 0) {
-                                 //  sid_field.setValue(std_val);
-                                 //   sid = std_val;
-                             //   }
+                        //priority is elementid in the editor
+                        //if there is no parentid, we just set the element id with the priority
+                        if (k === "priority") {
+                            if (eid_field) {
+                            eid_val = value;
+                            eid++;
                             }
-                            //priority is elementid in the editor
-                            //if there is no parentid, we just set the element id with the priority
-                            if (k === "priority") {
-                                if (eid_field) {
-                                eid_val = value;
-                                eid++;
-                                }
-                            }
-                            if (k === "parent" ) {
-                                if (value == null) {
-                                    //anything after this will have a new parent, so increment parent value
-                                    se_val++;
-                                    //this is also the element id if there is no parent
-                                    eid_val = se_val;
-                                    //reset the count of element ids for sub elements of this standard element
-                                    subel_val = 0;
-                                }
-                                //there is a parent element, we need to handle it
-                                else {
-                                    subel_val++;
-                                    eid_val = subel_val;
-                                    pid_val = se_val;
-                                }
-                            }
-                             //this is the db id, which we need to track if this is an edit or if parentids are used
-                            if (k === "id") {
-                                field = editor.getEditor("root.standardelements." + se_index + "." + "uid");
-                                if (field) {
-                                    field.setValue(value);
-                                }
-                            }
-                        });
-                        //since pid_val and eid_val depend on each other, we need to set them outside the loop.
-                        pid_field = editor.getEditor("root.standardelements." + se_index + ".parentelementid");
-                        eid_field = editor.getEditor("root.standardelements." + se_index + "." + "elementid");
-                        if (pid_val) {
-                            eid_field.setValue(standard_count + "." + pid_val + "." + eid_val);
-                            pid_field.setValue(standard_count + "." + pid_val);
                         }
-                        else {
-                            eid_field.setValue(standard_count + "." + eid_val);
+                        if (k === "parent" ) {
+                            if (value == null) {
+                                //anything after this will have a new parent, so increment parent value
+                                se_val++;
+                                //this is also the element id if there is no parent
+                                eid_val = se_val;
+                                //reset the count of element ids for sub elements of this standard element
+                                subel_val = 0;
+                            }
+                            //there is a parent element, we need to handle it
+                            else {
+                                subel_val++;
+                                eid_val = subel_val;
+                                pid_val = se_val;
+                            }
                         }
-                        pid_val = null;
-                        se_index ++;
-                        console.log(eid_val);
-                        console.log(eid);
-                        eid = eid_val;// ??
+                            //this is the db id, which we need to track if this is an edit or if parentids are used
+                        if (k === "id") {
+                            field = editor.getEditor("root.standardelements." + se_index + "." + "uid");
+                            if (field) {
+                                field.setValue(value);
+                            }
+                        }
                     });
                     //since pid_val and eid_val depend on each other, we need to set them outside the loop.
                     pid_field = editor.getEditor("root.standardelements." + se_index + ".parentelementid");
@@ -805,7 +688,10 @@ function refresh_editor() {
                     eid = eid_val;
                 });
             });
+            update_parent_array();
+            set_parent_array();
         });
+
     }
 
 });
