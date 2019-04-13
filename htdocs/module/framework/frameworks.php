@@ -35,33 +35,7 @@ function get_institutions() {
     }
     return $inst_names;
 }
-//set up 3rd level nav for upload json file vs. edit
-function submenu_items($active_tab = null) {
-    $tabs = array(
-        'subnav' => array(
-            'class' => 'smartevidenceframework'
-        ),
-        'overview' => array(
-            'page' => 'overview',
-            'url'  => 'module/framework/frameworks.php',
-            'title'=>  get_string('overview'),
-        ),
-        'editor' => array(
-            'page'  => 'editor',
-            'url'   => 'module/framework/frameworks.php?upload=1',
-            'title' => get_string('editor', 'module.framework'),
-        ),
-        'import' => array(
-            'page'  => 'import',
-            'url'   => 'module/framework/frameworks.php?uploadmatrix=1',
-            'title' => get_string('Import', 'admin'),
-        ),
-    );
-    if ($active_tab && isset($tabs[$active_tab])) {
-        $tabs[$active_tab]['selected'] = true;
-    }
-    return $tabs;
-}
+
 
 if ($uploadmatrix) {
     //show Browse for matrix file form.
@@ -71,7 +45,7 @@ if ($uploadmatrix) {
     $smarty = smarty();
     setpageicon($smarty, 'icon-th');
     $smarty->assign('wwwroot', get_config('wwwroot'));
-    $smarty->assign('SUBPAGENAV', submenu_items($active_tab));
+    $smarty->assign('SUBPAGENAV', PluginModuleFramework::submenu_items($active_tab));
     $smarty->assign('form', $form);
     $smarty->display('module:framework:uploadframework.tpl');
     exit;
@@ -190,7 +164,7 @@ else if ($upload) {
     $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
     setpageicon($smarty, 'icon-th');
     $smarty->assign('wwwroot', get_config('wwwroot'));
-    $smarty->assign('SUBPAGENAV', submenu_items($active_tab));
+    $smarty->assign('SUBPAGENAV', PluginModuleFramework::submenu_items($active_tab));
     $smarty->assign('fw_edit', $fw_edit);
     $smarty->assign('edit_desc', $edit_desc);
     $smarty->assign('copy_desc', $copy_desc);
@@ -290,6 +264,6 @@ else {
     $smarty = smarty();
     setpageicon($smarty, 'icon-th');
     $smarty->assign('frameworks', $frameworks);
-    $smarty->assign('SUBPAGENAV', submenu_items($active_tab));
+    $smarty->assign('SUBPAGENAV', PluginModuleFramework::submenu_items($active_tab));
     $smarty->assign('wwwroot', get_config('wwwroot'));
     $smarty->display('module:framework:frameworks.tpl');

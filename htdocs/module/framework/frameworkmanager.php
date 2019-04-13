@@ -62,6 +62,7 @@ $form['elements']['save'] = array(
 $form = pieform($form);
 
 $smarty = smarty();
+$smarty->assign('SUBPAGENAV', PluginModuleFramework::submenu_items('overview'));
 $smarty->assign('form', $form);
 $smarty->assign('plugintype', $plugintype);
 $smarty->assign('pluginname', $pluginname);

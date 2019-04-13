@@ -123,4 +123,5 @@ $string['parentelementid'] = 'Parent element ID';
 $string['parentelementdesc'] = 'This is the ID of the standard element that serves as parent to this one here, i.e. the one that sits one level higher in the hierarchy.';
 $string['jsondatanotsubmitted'] = 'Your form data was not submitted to the database, please make sure you save the information you have entered in a separate file, refresh the form and try again or upload the json directly using the "Upload" tab';
 $string['editor'] = 'Editor';
+$string['Management'] = 'Management';
 $string['all'] = 'all';
