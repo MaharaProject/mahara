@@ -138,7 +138,7 @@ $content = json_decode($matrix);
 
 if (is_null($content)) {
     $ok['error'] = true;
-    $ok['message'] = get_string('invalidjson', 'module.framework');
+    $ok['message'] = get_string('invalidjsonineditor', 'module.framework');
 }
 else {
     $content->evidencestatuses = array();
