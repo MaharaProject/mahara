@@ -1,5 +1,5 @@
 {if !$fromindex}
-<div class="statinfoblock card bg-info">
+<div class="statinfoblock">
   <h3 class="card-header">{str tag="Overview" section=statistics}</h3>
 {/if}
   <table class="table">
@@ -11,7 +11,7 @@
     <tr>
         <th>{str tag=users}</th>
         <td>{$institutiondata.users}
-            <small>{str tag=activeusers section=admin}: {$institutiondata.usersloggedin}</small>
+            <div><small>{str tag=activeusers section=admin}: {$institutiondata.usersloggedin}</small></div>
         </td>
     </tr>
     {/if}
@@ -19,14 +19,14 @@
     <tr>
         <th>{str tag=groups}</th>
         <td>{$institutiondata.groups}
-            <small>{$institutiondata.strgroupmemberaverage}</small>
+            <div><small>{$institutiondata.strgroupmemberaverage}</small></div>
         </td>
     {/if}
     {if $institutiondata.views}
     <tr>
         <th>{str tag=Views section=view}</th>
         <td>{$institutiondata.views}
-            <small>{$institutiondata.strviewsperuser}</small>
+            <div><small>{$institutiondata.strviewsperuser}</small></div>
         </td>
     {/if}
     {if $institutiondata.dbsize}
@@ -62,25 +62,25 @@
 </div>
 {/if}
 {if $institutiondata.usersinfo}
-<div class="statinfoblock card bg-info">
+<div class="statinfoblock">
     <h3 class="card-header">{str tag="usersinfo" section=statistics}</h3>
     {$institutiondata.usersinfo|safe}
 </div>
 {/if}
 {if $institutiondata.viewsinfo}
-<div class="statinfoblock card bg-info">
+<div class="statinfoblock">
     <h3 class="card-header">{str tag="viewsinfo" section=statistics}</h3>
     {$institutiondata.viewsinfo|safe}
 </div>
 {/if}
 {if $institutiondata.groupinfo}
-<div class="statinfoblock card bg-info">
+<div class="statinfoblock">
     <h3 class="card-header">{str tag="groupinfo" section=statistics}</h3>
     {$institutiondata.groupinfo|safe}
 </div>
 {/if}
 {if $institutiondata.weekly}
-<div class="statinfoblock card bg-info">
+<div class="statinfoblock">
     <h3 class="card-header">{str tag="weeklytrend" section=statistics}</h3>
     <div class="card-body">
         <canvas class="graphcanvas" id="sitestatsgraph"></canvas>
