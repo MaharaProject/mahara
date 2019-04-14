@@ -559,6 +559,13 @@ function userdetails_statistics_headers($extra, $urllink) {
               'class' => format_class($extra, 'lastlogin'),
               'link' => format_goto($urllink . '&sort=lastlogin', $extra, array('sort'), 'lastlogin')
         ),
+        array(
+              'id' => 'probation',
+              'name' => get_string('probationreportcolumn', 'admin'),
+              'class' => format_class($extra, 'probation'),
+              'link' => format_goto($urllink . '&sort=probation', $extra, array('sort'), 'probation'),
+              'disabled' => empty(get_config('probationenabled'))
+        ),
     );
 }
 
@@ -642,6 +649,7 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
         case "remotename":
         case "quotapercent":
         case "studentid":
+        case "probation":
             $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT (u.firstname, ' ', u.lastname)";
             break;
         case "lastname":
@@ -655,7 +663,7 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
     $sql = "SELECT u.id, u.firstname, u.lastname, u.username, u.preferredname AS displayname,
             u.lastlogin, u.email, u.studentid, u.ctime,
             (SELECT remoteusername FROM {auth_remote_user} aru WHERE aru.localusr = u.id LIMIT 1) AS remotename,
-            ((u.quotaused * 1.0)/ u.quota) AS quotapercent, u.quota, u.quotaused
+            ((u.quotaused * 1.0)/ u.quota) AS quotapercent, u.quota, u.quotaused, u.probation
             " . $fromsql . $wheresql . "
             ORDER BY " . $orderby;
     if (empty($extra['csvdownload'])) {
@@ -677,7 +685,7 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
     }
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('firstname', 'lastname', 'email', 'studentid',
-                           'preferredname', 'username', 'remoteuser', 'quotapercent_format', 'lastlogin');
+                           'preferredname', 'username', 'remoteuser', 'quotapercent_format', 'lastlogin', 'probation');
         $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
     }
     $result['csv'] = true;
@@ -4444,10 +4452,12 @@ function report_config_form($extra, $institutionelement) {
         $activeheadings = get_active_columns($data, $extra->extra);
         $headerelements = array();
         foreach ($data['tableheadings'] as $heading) {
+            $disabled = isset($heading['disabled']) && !empty($heading['disabled']) ? true : false;
+            $disabled = $disabled ? true : (!empty($heading['required']) ? true : false);
             $headerelements['report_column_' . $heading['id']] = array(
                 'type' => 'checkbox',
                 'title' => $heading['name'],
-                'readonly' => (!empty($heading['required']) ? true : false),
+                'readonly' => $disabled,
                 'defaultvalue' => (!empty($heading['required']) || !empty($heading['selected']) ? $heading['id'] : null),
             );
         }
