@@ -349,12 +349,7 @@ function refresh_editor() {
         editor.destroy();
         refresh_editor();
         edit = true;
-        var fw = $('#edit_framework')[0];
-        var select_index = fw.children.edit.options.selectedIndex;
-        var fwe = JSON.parse(fw_edit);
-        //get the db index
-        index = Object.keys(fwe[select_index]);
-        index = index[0];
+        var index = $('#edit').val();
         populate_editor(index, edit);
         textarea_init();
 
@@ -377,11 +372,7 @@ function refresh_editor() {
         editor.destroy();
         refresh_editor();
         edit = false;
-        var fw = $('#copy_framework')[0];
-        var select_index = fw.children.copy.options.selectedIndex;
-        var fwc = JSON.parse(fws);
-        index = Object.keys(fwc[select_index]);
-        index = index[0];
+        var index = $('#copy').val();
         populate_editor(index);
         textarea_init();
         set_editor_clean();

@@ -141,13 +141,6 @@ else if ($upload) {
     );
 
     //set up variables for correct selection of framework from dropdowns
-    $fw_list = json_encode($fw);
-    $fwe = json_encode($fw_edit);
-    $fwe = preg_replace('/^\{(.*)\}$/', '[{$1}]', $fwe);
-    $fwe = preg_replace('/,/', '},{', $fwe );
-    $fw_list = preg_replace('/^\{(.*)\}$/', '[{$1}]', $fw_list);
-    $fw_list = preg_replace('/,/', '},{', $fw_list );
-
     $inst_names = get_institutions();
     $inst_stg = get_string('all', 'module.framework') . ',';
     foreach ($inst_names as $inst) {
@@ -155,9 +148,6 @@ else if ($upload) {
     }
     $inst_stg = preg_replace('/(.*)\,$/', '$1', $inst_stg);
     $inlinejs = "var inst_names='{$inst_stg}';";
-    //want to have the id for the fw available to use because using name to save with causes problems
-    $inlinejs .= "var fws='{$fw_list}';";
-    $inlinejs .= "var fw_edit='{$fwe}';";
 
     //2nd nav should be this.
     $smarty = smarty(array('js/jsoneditor/src/dist/jsoneditor.js', 'module/framework/js/editor.js'), array(), $jsoneditor_strings);

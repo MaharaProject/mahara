@@ -8,12 +8,12 @@
     <input type="submit" id='cancel' class="btn-default submitcancel cancel" name="cancel_submit" tabindex="0" value="{str tag='cancel'}">
 </div>
 <div id='edit_framework' class="select form-group"><label for=edit>Edit saved framework</label>
-    <select id='edit' class="select form-control">{foreach from=$fw_edit item=fw_ed}<option value={$fw_ed}>{$fw_ed}</option>{/foreach}</select>
+    <select id='edit' class="select form-control">{foreach from=$fw_edit key=fw_edk item=fw_ed}<option value={$fw_edk}>{$fw_ed}</option>{/foreach}</select>
         <div class="description">
         {$edit_desc}</div>
 </div>
 <div id='copy_framework' class="select form-group"><label for="copy">Copy existing framework</label>
-    <select id='copy' class="select form-control">{foreach from=$fw item=fw}<option value={$fw}>{$fw}</option>{/foreach}</select>
+    <select id='copy' class="select form-control">{foreach from=$fw key=fw_k item=fw}<option value={$fw_k}>{$fw}</option>{/foreach}</select>
         <div class="description">
         {$copy_desc}</div>
 </div>
