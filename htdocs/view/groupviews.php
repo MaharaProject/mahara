@@ -94,6 +94,7 @@ else {
 $js = <<< EOF
 jQuery(function ($) {
     {$pagination['javascript']}
+    showmatchall();
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF
