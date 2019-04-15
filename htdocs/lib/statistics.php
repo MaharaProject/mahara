@@ -627,7 +627,7 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
 
     $result['settings']['start'] = ($start) ? $start : null;
     $result['settings']['end'] = $end;
-    $result['settings']['users'] = count($users);
+    $result['settings']['users'] = !empty($users) ? count($users) : 0;
 
     if ($count < 1) {
         return $result;
