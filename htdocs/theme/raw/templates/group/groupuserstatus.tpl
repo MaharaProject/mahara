@@ -100,11 +100,11 @@
         </div>
     </div>
 {elseif $group->jointype == 'controlled'}
-    <div class="controlled">
+    <div class="controlled text-small">
         {str tag="membershipcontrolled" section="group"}
     </div>
 {else}
-    <div class="controlled">
+    <div class="controlled text-small">
         {str tag="membershipbyinvitationonly" section="group"}
     </div>
 {/if}
