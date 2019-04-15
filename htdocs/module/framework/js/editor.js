@@ -24,12 +24,13 @@ jQuery(function($) {
     JSONEditor.plugins.select2.enable = true;
 
     var editor;
-    var parent_array = [''];
+    var parent_array = [];
+
     //counts to increment standard and standardelement ids
     var std_index = 0;
     var standard_count = 1;
+
     var eid = 1;//count of standard elements per standard
-    var se_count = 1; //count of total standard elements
     var se_index = 0; //index of total standard elements
 
     var fw_id = null; //framework id if editing an existing framework
@@ -271,6 +272,9 @@ function refresh_editor() {
     set_parent_array();
     add_parent_event();
 
+    update_delete_button_handler();
+    update_delete_element_button_handlers();
+
     $("#add_standard").click(function() {
         standard_count += 1;
         std_index = standard_count -1;
@@ -291,8 +295,11 @@ function refresh_editor() {
     });
 
     $("#add_standardelement").click(function() {
-        se_count++;
-        se_index = se_count -1;
+        // update delete button handlers
+        update_delete_element_button_handlers();
+
+        se_index = parent_array.length;
+
         var eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
         var eid_val;
        if (!standard_count) {
@@ -309,26 +316,6 @@ function refresh_editor() {
         textarea_init();
         //$("[data-schemaid=\"parentid\"] .form-control > option").trigger('change');
         set_editor_dirty();
-    });
-
-    // add checks to monitor if fields are changed
-    editor.on('ready', function () {
-        set_editor_clean();
-        $('#editor_holder textarea').each(function(el){
-          $(this).on('change', function() {
-              set_editor_dirty();
-          });
-        });
-        $('#editor_holder input').each(function(el){
-          $(this).on('change', function() {
-              set_editor_dirty()
-          });
-        });
-        $('#editor_holder select').each(function(el){
-          $(this).on('change', function() {
-              set_editor_dirty()
-          });
-        });
     });
 
         // validation indicator
@@ -476,15 +463,14 @@ function refresh_editor() {
     }
 
     function update_parent_array() {
-        console.log( "update parentarray");
+        parent_array = [];
         $("[data-schemaid=\"standardelement\"]").each(function() {
             //number of std elements
             var num = parseInt($(this).data("schemapath").replace(/root\.standardelements\./, ''));
             var field = editor.getEditor("root.standardelements." + num + ".elementid");
             var el = field.getValue();
-            if ($.inArray(el, parent_array)== -1) {
-                parent_array.push(el);
-            }
+
+            parent_array.push(el);
         });
     }
 
@@ -630,7 +616,7 @@ function refresh_editor() {
                     var se = editor.getEditor("root.standardelements");
                     if (se_index > 0) {
                         se.addRow();
-                        se_count ++;
+                        update_parent_array();
                         textarea_init();
                         add_parent_event();
                     }
@@ -690,11 +676,54 @@ function refresh_editor() {
             });
             update_parent_array();
             set_parent_array();
-        });
 
+            update_delete_element_button_handlers();
+        });
+    }
+    /*
+    * Manually add the handlers for the standard elements delete buttons
+    * needs to add it also after deleting one standard element because
+    * the container is refreshed and the buttons recreated
+    */
+    function update_delete_element_button_handlers() {
+      $('[data-schemaid="standardelement"]>h3>div>button.json-editor-btn-delete').off('click');
+      $('[data-schemaid="standardelement"]>h3>div>button.json-editor-btn-delete').on('click', function() {
+        update_parent_array();
+        se_index--;
+        //if it's the last element
+        if (parseInt(this.attributes['data-i'].value) == parent_array.length) {
+          eid--;
+        }
+        update_delete_element_button_handlers();
+        set_editor_dirty();
+      });
     }
 
+    /*
+    * Manually add the handlers for the standard elements top delete buttons
+    * 'Delete last standard element' and 'Delete all'
+    */
+    function update_delete_button_handler() {
+      // 'Delete last standard element' button
+      $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function (){
+        update_parent_array();
+        eid--;
+        se_index--;
+        update_delete_element_button_handlers();
+        set_editor_dirty();
+      });
+      // 'Delete all' button
+      $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function (){
+        update_parent_array();
+        eid = 1;
+        se_index = 0;
+        update_delete_element_button_handlers();
+        set_editor_dirty();
+      });
+    }
 });
+
+
 
 // form change checker functions
 
