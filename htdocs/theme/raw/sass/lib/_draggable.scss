@@ -75,8 +75,13 @@
     min-width: 200px;
 }
 
-#addviews .ui-draggable-dragging {
-    width: 100% !important;
+#addviews {
+    .btn-group {
+        margin-left: 0;
+    }
+    .ui-draggable-dragging {
+        width: 100% !important;
+    }
 }
 
 // Edit page sortable - hide everything but title
