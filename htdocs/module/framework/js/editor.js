@@ -1,17 +1,52 @@
+/**
+ * Javascript for the SmartEvidence editor
+ * Mahara implementation of third party plugin - https://github.com/json-editor/json-editor
+ *
+ * @package    mahara
+ * @subpackage core
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
+/*
+ * Some wishlist functionality to be implemented later than 19.04:
+ * 1 @TODO - Make preview button work
+ *   It should show what current framework looks like as the left column of the SmartEvidence map -
+ *   i.e. what you see when you look at the first page of a SE collection
+ * 2 @TODO - Turn edit overall form option into an export json button and have it create a file.matrix
+ *   for sharing.  (Note that in the custom code patch 5accb2c9d1259005249248d5cb4f2fa8acba97b5,
+ *   there is code that re-names the button, which is there for this function.)
+ *
+ */
+/*
+ * Functionality still to be implemented by 19.04:
+ * @TODO - review:
+ *  - descriptions for the parent and element ids
+ *  - make sub-sub elements work
+ * - fix 3rd level nav - should have 4 tabs
+ * - eid increments correctly  - make update_eid function work
+ * - check textarea auto-expand functioning correctly (not regressed)
+ * - check name textarea not producing errors
+ * - Standard "Stay or Leave" functionality needs to be implemented - should this include the back button?
+ * - do we want this:
+ *   Clicking the "Save" button keeps you on the form and you have to click "Cancel" to return to the overview -> Implement the Moodle "Save" -
+ * "Save and return to overview" - "Cancel"?
+ * - Maybe: Add third-level nav to management screen of a framework? But then what to call the nav item? Overview wouldn't work,
+ *  would be better to then call it "Management".
+ - Check error message code makes sense.
+ *
+ */
+
 jQuery(function($) {
     //use bootstrap
     JSONEditor.defaults.options.theme = 'bootstrap4';
-    //Hide edit json buttons. The functionality creates a form based on the submitted json, without
-    //calling the custom code on this page.
+    //Hide edit json buttons. @TODO - main one will be needed for #2 wishlist item above
     JSONEditor.defaults.options.disable_edit_json = 'true';
-    //@TODO turn edit overall form option into an export json button and have it create a file.matrix with
-    //it for sharing.
-    //re-name the button and override the functionality, then put it back in some form, may need the text override,
-    //(custom patch, not currently used), so keeping for now.
 
-    //override default editor strings to allow translation by us
-    //original editor defaults in htdocs/js/jsoneditor/src/defaults.js
-    //Not all editor strings are included here, just the ones we are using.
+    //Override default editor strings to allow translation by us
+    // - fyi, not all editor strings are overridden, just the ones currently used.
+    // - The original editor defaults in htdocs/js/jsoneditor/src/defaults.js
     JSONEditor.defaults.languages.en.button_collapse = get_string('collapse');
     JSONEditor.defaults.languages.en.button_expand = get_string('expand');
     JSONEditor.defaults.languages.en.button_add_row_title = get_string('add');
@@ -20,7 +55,7 @@ jQuery(function($) {
     JSONEditor.defaults.languages.en.button_move_up_title = get_string('moveleft');
     JSONEditor.defaults.languages.en.button_delete_all_title = get_string('deleteall');
 
-    //allow select dropdown
+    //enable select2
     JSONEditor.plugins.select2.enable = true;
 
     var editor;
@@ -35,331 +70,18 @@ jQuery(function($) {
 
     var fw_id = null; //framework id if editing an existing framework
     var edit = false; //flag for edit vs. copy
-    //@TODO - needs to be translatable?? or is this a varname? check!
+    //constant identifiers for json schema
     var evidence_type = ['begun' ,'incomplete', 'partialcomplete', 'completed'];
 
     formchangemanager.add('editor_holder');
 
-    refresh_editor();
+    /*
+    * Jquery functionality outside the json-editor form:
+    * includes dropdowns for edit, copy and the cancel, save and preview buttons
+    * templated by theme/raw/plugintype/module/framework/templates/jsoneditor.tpl
+    */
 
-    // Initialize the editor
-function refresh_editor() {
-
-    editor = new JSONEditor(document.getElementById('editor_holder'),
-    {
-    //json-editor properties
-    ajax: true,
-    disable_properties : true,
-    show_errors: "always",
-    // The schema for the editor, info on https://github.com/json-editor/json-editor
-    schema: {
-        "title": get_string('Framework'),
-        "type": "object",
-        "properties": {
-            "institution": {
-                "type" : "string",
-                "title" : get_string('institution'),
-                "description" : get_string('instdescription'),
-                "id" : "inst_desc",
-                "enum" : inst_names.split(','),
-                "default" : get_string('all')
-            },
-            "name": {
-                "type" : "string",
-                "title" : get_string('name'),
-                "description": get_string('titledesc'),
-                "default" : get_string('frameworktitle'),
-            },
-            "description" : {
-                "type" : "string",
-                "title" : get_string('description'),
-                "format" : "textarea",
-                "default" : get_string('defaultdescription'),
-                "description" : get_string('descriptioninfo')
-            },
-            "selfassess" : {
-                "type" : "boolean",
-                "title" : get_string('selfassessed'),
-                "description" : get_string('selfassesseddescription'),
-                "default" : false,
-                "options" : {
-                    "enum_titles" : [get_string('yes'), get_string('no')]
-                }
-            },
-            "evidencestatuses":{
-            "title": get_string('evidencestatuses'),
-            "id" : "evidencestatuses",
-            "type" : "object",
-            "options" : {
-                "disable_array_reorder" : true,
-                "disable_edit_json" : true,
-                "disable_collapse" : true
-            },
-            "description": get_string('evidencedesc'),
-            "properties": {
-                "begun": {
-                    "title" : get_string('Begun'),
-                    "type" : "string",
-                    "default" : get_string('begun'),
-                    "propertyOrder" : 1
-                },
-                "incomplete": {
-                    "title" : get_string('Incomplete'),
-                    "type" : "string",
-                    "default" : get_string('incomplete'),
-                    "propertyOrder" : 2
-                },
-                "partialcomplete": {
-                    "title" : get_string('Partialcomplete'),
-                    "type" : "string",
-                    "default" : get_string('partialcomplete'),
-                    "propertyOrder" : 3
-                },
-                "completed": {
-                    "title" : get_string('Completed'),
-                    "type" : "string",
-                    "default" : get_string('completed'),
-                    "propertyOrder" : 4
-                }
-            }
-            },
-            "standards" : {
-                "title" : get_string('standards'),
-                "type" : "array",
-                "id" : "standards",
-                "format" : "tabs-top",
-                "minItems":1,
-                "description" : get_string('standardsdescription'),
-                "items" : {
-                    "title" : get_string('standard'),
-                    "headerTemplate" : "{{i1}} - {{self.shortname}}",
-                    "type" : "object",
-                    "id" : "standard",
-                    "options" : {
-                        "disable_collapse" : true
-                    },
-                    "properties" : {
-                        "shortname" : {
-                            "type" : "string",
-                            "title" : get_string('Shortname'),
-                            "description" : get_string('shortnamestandard'),
-                            "default" : get_string('Shortname'),
-                            "maxLength" : 100
-                        },
-                        "name" : {
-                            "type" : "string",
-                            "title" : get_string('name'),
-                            "description" : get_string('titlestandard'),
-                            "format" : "textarea",
-                            "maxLength" : 255
-                        },
-                        "description" : {
-                            "type" : "string",
-                            "title" : get_string('description'),
-                            "format" : "textarea",
-                            "default" : get_string('descstandarddefault'),
-                            "description" : get_string('descstandard')
-                        },
-                        "standardid" : {
-                            "type" : "number",
-                            "title" : get_string('standardid'),
-                            "default" : "1",
-                            "description" : get_string('standardiddesc')
-                        },
-                        "uid" : {
-                            "type" : "number",
-                            "default" : null,
-                            "options" : {
-                                "hidden" : true
-                            }
-                        }
-                    }
-                }
-            },
-            "standardelements" : {
-                "title" : get_string('standardelements'),
-                "id" : "standardelements",
-                "type" : "array",
-                "uniqueItems" : true,
-                "minItems":1,
-                "format" : "tabs-top",
-                "description" : get_string('standardelementsdescription', 'module.framework'),
-                "items" : {
-                    "title" : get_string('standardelement'),
-                    "headerTemplate" : "{{self.elementid}}",
-                    "type" : "object",
-                    "id" : "standardelement",
-                    "options" : {
-                        "disable_collapse" : true
-                    },
-                    "properties" : {
-                        "shortname" : {
-                            "type" : "string",
-                            "title" : get_string('Shortname'),
-                            "description" : get_string('shortnamestandard'),
-                            "maxLength" : 100
-                        },
-                        "name" : {
-                            "type" : "string",
-                            "title" : get_string('name'),
-                            "description" : get_string('titlestandard'),
-                            "format" : "textarea",
-                            "maxLength" : 255
-                        },
-                        "description" : {
-                            "type" : "string",
-                            "title" : get_string('description'),
-                            "format" : "textarea",
-                            "default" : get_string('standardelementdefault'),
-                            "description" : get_string('standardelementdesc')
-                        },
-                        "elementid" : {
-                            "type" : "string",
-                            "title" : get_string('elementid'),
-                            "default" : '1.1',
-                            "description" : get_string('elementiddesc')
-                        },
-                        "parentelementid" : {
-                            "title" : get_string('parentelementid'),
-                            "id" : "parentid",
-                            "type" : "string",
-                            "description" : get_string('parentelementdesc'),
-                            "enumSource" : "source",
-                            "watch" : {
-                                "source" : "pid_array"
-                            },
-                        },
-                        "pid_array" : {
-                            "id" : "hidden_pid_array",
-                            "type" : "array",
-                            "items" : {
-                                "enum" : parent_array,
-                            },
-                            "options" : {
-                                "hidden" : true,
-                            },
-                        },
-                        "uid" : {
-                            "type" : "number",
-                            "default" : null,
-                            "options" : {
-                                "hidden" : true
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    });
-    //add ids to things so we can call them more easily later.
-    $(".json-editor-btn-add").eq(2).attr("id", "add_standard");
-    $(".json-editor-btn-add").eq(4).attr("id", "add_standardelement");
-    //creating ids for adding wysiwyg - not currently active: @TODO
-    $("div.form-group textarea.form-control").eq(0).attr("id", "title_desc_textarea");
-    $("div.form-group textarea.form-control").eq(2).attr("id", "std_desc_textarea");
-    $("div.form-group textarea.form-control").eq(4).attr("id", "std_element_desc_textarea");
-    //make text same as rest of site
-    $("div.form-group p.form-text").addClass("description");
-    $("div.form-group form-control-label").addClass("label");
-    //add class for correct styling of help block text
-    $("[data-schemaid=\"standards\"] >p").addClass("help-block");
-    $("[data-schemaid=\"evidencestatuses\"] >p").addClass("help-block");
-    //set min row height for desc fields to 6
-    $("textarea[id$='_desc_textarea']").attr('rows', '6');
-    textarea_init();
-    update_parent_array();
-    set_parent_array();
-    add_parent_event();
-
-    update_delete_button_handler();
-    update_delete_element_button_handlers();
-
-    $("#add_standard").click(function() {
-        standard_count += 1;
-        std_index = standard_count -1;
-        var sid_field = editor.getEditor("root.standards." + std_index + ".standardid");
-        sid_field.setValue(standard_count);
-
-        var se_sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
-        if (se_sid_field) {
-            se_sid_field.setValue(standard_count);
-        }
-        //reset standard element count
-        eid = 0;
-        update_parent_array();
-        set_parent_array();
-
-        textarea_init();
-        set_editor_dirty();
-    });
-
-    $("#add_standardelement").click(function() {
-        // update delete button handlers
-        update_delete_element_button_handlers();
-
-        se_index = parent_array.length;
-
-        var eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
-        var eid_val;
-       if (!standard_count) {
-        eid_val = "1." + eid;
-        }
-        else {
-                eid ++;
-                eid_val = standard_count + "." + eid;
-        }
-        eid_field.setValue(eid_val);
-        update_parent_array();
-        set_parent_array();
-        add_parent_event();
-        textarea_init();
-        //$("[data-schemaid=\"parentid\"] .form-control > option").trigger('change');
-        set_editor_dirty();
-    });
-
-        // validation indicator
-        editor.off('change');
-        editor.on('change',function() {
-
-            // Get an array of errors from the validator
-            var errors = editor.validate();
-            // Not valid
-            //@TODO, look at original json-editor code to get the stuff that makes something red to work,
-            //otherwise error message to look down the page for the error doesn't make sense.
-            if (errors.length) {
-                $('#messages').empty().append($('<div>', {'class':'alert alert-danger', 'text':get_string('invalidjson', 'module.framework')}));
-            }
-            // Valid
-            else {
-                    $('#messages').empty().append($('<div>', {'class':'alert alert-success', 'text':get_string('validjson')}));
-            }
-
-        });
-
-        // add checks to monitor if fields are changed
-        editor.on('ready', function () {
-            set_editor_clean();
-            $('#editor_holder textarea').each(function(el){
-              $(this).on('change', function() {
-                  set_editor_dirty();
-              });
-            });
-            $('#editor_holder input').each(function(el){
-              $(this).on('change', function() {
-                  set_editor_dirty()
-              });
-            });
-            var editorElement = jQuery('#editor_holder');
-            editorElement.on('change', function() {
-                set_editor_dirty();
-            });
-        });
-
-   }
-//end of refresh function
-
-    //choose from edit dropdown
+    //edit dropdown
     $('#edit').on('change',function() {
         var confirm = null;
         if (typeof formchangemanager !== 'undefined') {
@@ -367,24 +89,21 @@ function refresh_editor() {
         }
         if (confirm === null || confirm === true) {
 
-        //rebuild the form so that data doesn't get added to existing
-        editor.destroy();
-        refresh_editor(); //calls editorchecker.init
-        $("#copy option:eq(0)").prop('selected', true);//reset copy
-        edit = true;
-        var index = $('#edit').val();
-        populate_editor(index, edit);
+            //rebuild the form so that data doesn't get added to existing
+            editor.destroy();
+            refresh_editor();
+            $("#copy option:eq(0)").prop('selected', true);//reset copy
+            edit = true;
+            var index = $('#edit').val();
+            populate_editor(index, edit);
 
-        upload = false;
-        textarea_init();
-
-        set_editor_clean();
-
+            upload = false;
+            textarea_init();
+            set_editor_clean();
         }
-
     });
 
-    //choose from copy dropdown.
+    //copy dropdown.
     $("#copy").on('change', function() {
         var confirm = null;
         if (typeof formchangemanager !== 'undefined') {
@@ -392,32 +111,28 @@ function refresh_editor() {
         }
         if (confirm === null || confirm === true) {
 
-        //rebuild the form so that data doesn't get added to existing
-        if (formchangemanager.checkDirtyChanges()) {
-            formchangemanager.confirmLeavingForm();
-        }
-        editor.destroy();
-        refresh_editor();
-        $("#edit option:eq(0)").prop('selected', true); //reset edit
-        edit = false;
-        var index = $('#copy').val();
-        populate_editor(index);
-        textarea_init();
-        set_editor_clean();
+            //rebuild the form so that data doesn't get added to existing
+            if (formchangemanager.checkDirtyChanges()) {
+                formchangemanager.confirmLeavingForm();
+            }
+            editor.destroy();
+            refresh_editor();
+            $("#edit option:eq(0)").prop('selected', true); //reset edit
+            edit = false;
+            var index = $('#copy').val();
+            populate_editor(index);
+            textarea_init();
+            set_editor_clean();
         }
     });
 
-    // Manage button - goes to fw screen
+    // Cancel button - goes to overview screen
     $(".cancel").click(function() {
         formchangemanager.setFormStateById('editor_holder', FORM_CANCELLED);
         window.location.href = config['wwwroot'] + 'module/framework/frameworks.php';
     });
 
-    //@TODO, make preview button work - should show what current framework looks like as the left
-    //column of the SmartEvidence map - i.e. what you see when you look at the first page of a SE collection
-    // $('#preview').click(function() {
-    //I have some code saved locally that produces a lot of errors
-    //so, currently I just want to hide the button:
+    // hide currently inactive preview button - @TODO - needed for #1 wishlist item above
     $('#preview').hide();
 
     // Hook up the submit button to log to the console
@@ -433,85 +148,328 @@ function refresh_editor() {
         //save completed form data
         sendjsonrequest(url, json_form, 'POST');
         window.scrollTo(0,0);
-    });
+    });//end of functionality implemented outside the editor
 
-    // Manage button - goes to fw screen
-    $(".cancel").click(function() {
-        window.location.href = config['wwwroot'] + 'module/framework/frameworks.php';
-    });
+    refresh_editor();
 
-    //make textarea expand with text
-    function textarea_init() {
-        $('div.form-group textarea[name$="description\]"]').each(function() {
-            $(this).off('click input');
-            $(this).on('click input', function() {
-                textarea_autoexpand(this);
-            })
-            textarea_autoexpand(this);
-        });
-    }
+    /**
+     * Initialise the editor
+     *  - set the json-schema for the form
+     *  - add events to form elements
+     *  - call initialising functions
+     */
+    function refresh_editor() {
 
-    function textarea_autoexpand(element) {
-        element.setAttribute('style', 'height:' + (element.scrollHeight) + 'px;overflow-y:hidden;');
-        element.style.height = 'auto';
-        element.style.minHeight = '64px';
-        element.style.height = (element.scrollHeight) + 'px';
-    }
-
-    function get_parent_array() {
-        return parent_array;
-    }
-
-    function update_parent_array() {
-        parent_array = [];
-        $("[data-schemaid=\"standardelement\"]").each(function() {
-            //number of std elements
-            var num = parseInt($(this).data("schemapath").replace(/root\.standardelements\./, ''));
-            var field = editor.getEditor("root.standardelements." + num + ".elementid");
-            var el = field.getValue();
-
-            parent_array.push(el);
-        });
-    }
-
-    function set_parent_array() {
-        var field;
-
-        $("[data-schemaid=\"standardelement\"]").each(function() {
-            field = ($(this).data("schemapath") + ".parentelementid");
-            field = field.replace(/\./g, '\]\[');
-            field = field.replace(/^root\](.*)$/, 'root$1\]');
-            $("[name=\"" + field + "\"]").empty();
-            $.each(parent_array, function (k, value) {
-                $("[name=\"" + field + "\"]").append($('<option>', {
-                    value: value,
-                    text: value
-                }));
-            });
-        });
-    }
-
-    function add_parent_event() {
-        console.log("add event running");
-        $("[data-schemaid=\"parentid\"] .form-control").each(function () {
-            $(this).off('change');
-            $(this).on('change', function () {
-            update_eid(this);
-            });
-            update_eid(this);
-        });
-    }
-
-    function update_eid(element) {
-        if (element.value && element.value != '1.1') {
-            var index = element.name.replace(/.*\[(\d*)\].*/, '$1');
-            var eid_field = editor.getEditor("root.standardelements." + index + ".elementid");
-            if (eid_field) {
-                eid_field.setValue(element.value + "." + eid);//wrong variable.
+        editor = new JSONEditor(document.getElementById('editor_holder'), {
+        //json-editor properties
+        ajax: true,
+        disable_properties : true,
+        show_errors: "always",
+        // The schema for the editor, info on https://github.com/json-editor/json-editor
+        schema: {
+            "title": get_string('Framework'),
+            "type": "object",
+            "properties": {
+                "institution": {
+                    "type" : "string",
+                    "title" : get_string('institution'),
+                    "description" : get_string('instdescription'),
+                    "id" : "inst_desc",
+                    "enum" : inst_names.split(','),
+                    "default" : get_string('all')
+                },
+                "name": {
+                    "type" : "string",
+                    "title" : get_string('name'),
+                    "description": get_string('titledesc'),
+                    "default" : get_string('frameworktitle'),
+                },
+                "description" : {
+                    "type" : "string",
+                    "title" : get_string('description'),
+                    "format" : "textarea",
+                    "default" : get_string('defaultdescription'),
+                    "description" : get_string('descriptioninfo')
+                },
+                "selfassess" : {
+                    "type" : "boolean",
+                    "title" : get_string('selfassessed'),
+                    "description" : get_string('selfassesseddescription'),
+                    "default" : false,
+                    "options" : {
+                        "enum_titles" : [get_string('yes'), get_string('no')]
+                    }
+                },
+                "evidencestatuses":{
+                "title": get_string('evidencestatuses'),
+                "id" : "evidencestatuses",
+                "type" : "object",
+                "options" : {
+                    "disable_array_reorder" : true,
+                    "disable_edit_json" : true,
+                    "disable_collapse" : true
+                },
+                "description": get_string('evidencedesc'),
+                "properties": {
+                    "begun": {
+                        "title" : get_string('Begun'),
+                        "type" : "string",
+                        "default" : get_string('begun'),
+                        "propertyOrder" : 1
+                    },
+                    "incomplete": {
+                        "title" : get_string('Incomplete'),
+                        "type" : "string",
+                        "default" : get_string('incomplete'),
+                        "propertyOrder" : 2
+                    },
+                    "partialcomplete": {
+                        "title" : get_string('Partialcomplete'),
+                        "type" : "string",
+                        "default" : get_string('partialcomplete'),
+                        "propertyOrder" : 3
+                    },
+                    "completed": {
+                        "title" : get_string('Completed'),
+                        "type" : "string",
+                        "default" : get_string('completed'),
+                        "propertyOrder" : 4
+                    }
+                }
+                },
+                "standards" : {
+                    "title" : get_string('standards'),
+                    "type" : "array",
+                    "id" : "standards",
+                    "format" : "tabs-top",
+                    "minItems":1,
+                    "description" : get_string('standardsdescription'),
+                    "items" : {
+                        "title" : get_string('standard'),
+                        "headerTemplate" : "{{i1}} - {{self.shortname}}",
+                        "type" : "object",
+                        "id" : "standard",
+                        "options" : {
+                            "disable_collapse" : true
+                        },
+                        "properties" : {
+                            "shortname" : {
+                                "type" : "string",
+                                "title" : get_string('Shortname'),
+                                "description" : get_string('shortnamestandard'),
+                                "default" : get_string('Shortname'),
+                                "maxLength" : 100
+                            },
+                            "name" : {
+                                "type" : "string",
+                                "title" : get_string('name'),
+                                "description" : get_string('titlestandard'),
+                                "format" : "textarea",
+                                "maxLength" : 255
+                            },
+                            "description" : {
+                                "type" : "string",
+                                "title" : get_string('description'),
+                                "format" : "textarea",
+                                "default" : get_string('descstandarddefault'),
+                                "description" : get_string('descstandard')
+                            },
+                            "standardid" : {
+                                "type" : "number",
+                                "title" : get_string('standardid'),
+                                "default" : "1",
+                                "description" : get_string('standardiddesc')
+                            },
+                            "uid" : {
+                                "type" : "number",
+                                "default" : null,
+                                "options" : {
+                                    "hidden" : true
+                                }
+                            }
+                        }
+                    }
+                },
+                "standardelements" : {
+                    "title" : get_string('standardelements'),
+                    "id" : "standardelements",
+                    "type" : "array",
+                    "uniqueItems" : true,
+                    "minItems":1,
+                    "format" : "tabs-top",
+                    "description" : get_string('standardelementsdescription', 'module.framework'),
+                    "items" : {
+                        "title" : get_string('standardelement'),
+                        "headerTemplate" : "{{self.elementid}}",
+                        "type" : "object",
+                        "id" : "standardelement",
+                        "options" : {
+                            "disable_collapse" : true
+                        },
+                        "properties" : {
+                            "shortname" : {
+                                "type" : "string",
+                                "title" : get_string('Shortname'),
+                                "description" : get_string('shortnamestandard'),
+                                "maxLength" : 100
+                            },
+                            "name" : {
+                                "type" : "string",
+                                "title" : get_string('name'),
+                                "description" : get_string('titlestandard'),
+                                "format" : "textarea",
+                                "maxLength" : 255
+                            },
+                            "description" : {
+                                "type" : "string",
+                                "title" : get_string('description'),
+                                "format" : "textarea",
+                                "default" : get_string('standardelementdefault'),
+                                "description" : get_string('standardelementdesc')
+                            },
+                            "elementid" : {
+                                "type" : "string",
+                                "title" : get_string('elementid'),
+                                "default" : '1.1',
+                                "description" : get_string('elementiddesc')
+                            },
+                            "parentelementid" : {
+                                "title" : get_string('parentelementid'),
+                                "id" : "parentid",
+                                "type" : "string",
+                                "description" : get_string('parentelementdesc'),
+                                "enumSource" : "source",
+                                "watch" : {
+                                    "source" : "pid_array"
+                                },
+                            },
+                            "pid_array" : {
+                                "id" : "hidden_pid_array",
+                                "type" : "array",
+                                "items" : {
+                                    "enum" : parent_array,
+                                },
+                                "options" : {
+                                    "hidden" : true,
+                                },
+                            },
+                            "uid" : {
+                                "type" : "number",
+                                "default" : null,
+                                "options" : {
+                                    "hidden" : true
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        }
-    }
+        },
+        });
+        //add ids to things so we can call them more easily later.
+        $(".json-editor-btn-add").eq(2).attr("id", "add_standard");
+        $(".json-editor-btn-add").eq(4).attr("id", "add_standardelement");
+        //creating ids for adding wysiwyg - not currently active: @TODO
+        $("div.form-group textarea.form-control").eq(0).attr("id", "title_desc_textarea");
+        $("div.form-group textarea.form-control").eq(2).attr("id", "std_desc_textarea");
+        $("div.form-group textarea.form-control").eq(4).attr("id", "std_element_desc_textarea");
+        //make text same as rest of site
+        $("div.form-group p.form-text").addClass("description");
+        $("div.form-group form-control-label").addClass("label");
+        //add class for correct styling of help block text
+        $("[data-schemaid=\"standards\"] >p").addClass("help-block");
+        $("[data-schemaid=\"evidencestatuses\"] >p").addClass("help-block");
+        //set min row height for desc fields to 6
+        $("textarea[id$='_desc_textarea']").attr('rows', '6');
+        textarea_init();
+        update_parent_array();
+        set_parent_array();
+        add_parent_event();
 
+        update_delete_button_handler();
+        update_delete_element_button_handlers();
+
+        $("#add_standard").click(function() {
+            standard_count += 1;
+            std_index = standard_count -1;
+            var sid_field = editor.getEditor("root.standards." + std_index + ".standardid");
+            sid_field.setValue(standard_count);
+            var se_sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
+            if (se_sid_field) {
+                se_sid_field.setValue(standard_count);
+            }
+            //reset standard element count
+            eid = 0;
+            update_parent_array();
+            set_parent_array();
+            textarea_init();
+            set_editor_dirty();
+        });
+        $("#add_standardelement").click(function() {
+          // update delete button handlers
+          update_delete_element_button_handlers();
+          se_index = parent_array.length;
+
+            var eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
+            var eid_val;
+            if (!standard_count) {
+                eid_val = "1." + eid;
+                }
+            else {
+                eid ++;
+                eid_val = standard_count + "." + eid;
+            }
+            eid_field.setValue(eid_val);
+            update_parent_array();
+            set_parent_array();
+            add_parent_event();
+            textarea_init();
+            set_editor_dirty();
+        });
+
+        // add checks to monitor if fields are changed
+        editor.on('ready', function () {
+            set_editor_clean();
+            $('#editor_holder textarea').each(function(el){
+              $(this).on('change', function() {
+                  set_editor_dirty();
+              });
+            });
+            $('#editor_holder input').each(function(el){
+              $(this).on('change', function() {
+                  set_editor_dirty()
+              });
+            });
+            $('#editor_holder select').each(function(el){
+              $(this).on('change', function() {
+                  set_editor_dirty()
+              });
+            });
+        });
+
+        // validation indicator
+        editor.off('change');
+        editor.on('change',function() {
+            //@TODO, check functionality
+            // Get an array of errors from the validator
+            var errors = editor.validate();
+            // Not valid
+            if (errors.length) {
+                $('#messages').empty().append($('<div>', {'class':'alert alert-danger', 'text':get_string('invalidjson', 'module.framework')}));
+            }
+            // Valid
+            else {
+                $('#messages').empty().append($('<div>', {'class':'alert alert-success', 'text':get_string('validjson')}));
+            }
+        });
+
+    }//end of refresh function
+
+    /**
+     * Populate the editor from database
+     *  @param framework_id The db id for the framework
+     *  @param edit boolean, true if editing an existing framework
+     */
 
     function populate_editor(framework_id, edit) {
         url = config['wwwroot'] + 'module/framework/getframework.json.php';
@@ -558,7 +516,6 @@ function refresh_editor() {
                 if (k != 'element') {
                     std_index = parseInt(k);
                 }
-               // console.log(std_index);
                 //if the standard doesn't already exist, we need to add it to the editor.
                 if (std_index > 0 && !editor.getEditor("root.standards." + std_index)) {
                     var std_ed = editor.getEditor("root.standards");
@@ -678,8 +635,84 @@ function refresh_editor() {
             set_parent_array();
 
             update_delete_element_button_handlers();
+          });
+    }//end of populate_editor()
+
+    //add textarea expand event to description fields
+    function textarea_init() {
+        $('div.form-group textarea[name$="description\]"]').each(function() {
+            $(this).off('click input');
+            $(this).on('click input', function() {
+                textarea_autoexpand(this);
+            })
+            textarea_autoexpand(this);
         });
     }
+
+    //expand textareas
+    function textarea_autoexpand(element) {
+        element.setAttribute('style', 'height:' + (element.scrollHeight) + 'px;overflow-y:hidden;');
+        element.style.height = 'auto';
+        element.style.minHeight = '64px';
+        element.style.height = (element.scrollHeight) + 'px';
+    }
+
+    function get_parent_array() {
+        return parent_array;
+    }
+
+    //get a list of existing standard elements
+    function update_parent_array() {
+        parent_array = [];
+        $("[data-schemaid=\"standardelement\"]").each(function() {
+            //number of std elements
+            var num = parseInt($(this).data("schemapath").replace(/root\.standardelements\./, ''));
+            var field = editor.getEditor("root.standardelements." + num + ".elementid");
+            var el = field.getValue();
+
+            parent_array.push(el);
+        });
+    }
+    //add the list of possible parent ids to the dropdown
+    function set_parent_array() {
+        var field;
+
+        $("[data-schemaid=\"standardelement\"]").each(function() {
+            field = ($(this).data("schemapath") + ".parentelementid");
+            field = field.replace(/\./g, '\]\[');
+            field = field.replace(/^root\](.*)$/, 'root$1\]');
+            $("[name=\"" + field + "\"]").empty();
+            $.each(parent_array, function (k, value) {
+                $("[name=\"" + field + "\"]").append($('<option>', {
+                    value: value,
+                    text: value
+                }));
+            });
+        });
+    }
+
+    //add an event to update the element id when the parent id is changed
+    function add_parent_event() {
+        $("[data-schemaid=\"parentid\"] .form-control").each(function () {
+            $(this).off('change');
+            $(this).on('change', function () {
+            update_eid(this);
+            });
+            update_eid(this);
+        });
+    }
+
+    //update the element id for the passed in standard element
+    function update_eid(element) {
+        if (element.value && element.value != '1.1') {
+            var index = element.name.replace(/.*\[(\d*)\].*/, '$1');
+            var eid_field = editor.getEditor("root.standardelements." + index + ".elementid");
+            if (eid_field) {
+                eid_field.setValue(element.value + "." + eid);//wrong variable.
+            }
+        }
+    }
+
     /*
     * Manually add the handlers for the standard elements delete buttons
     * needs to add it also after deleting one standard element because
@@ -721,12 +754,9 @@ function refresh_editor() {
         set_editor_dirty();
       });
     }
-});
-
-
+});//end of jQuery wrapper
 
 // form change checker functions
-
 function set_editor_dirty() {
     if (typeof formchangemanager !== 'undefined') {
         formchangemanager.setFormStateById("editor_holder", FORM_CHANGED);
