@@ -22,7 +22,7 @@
  */
 use Dwoo\Core;
 
-function PluginListTags(Core $core, $tags, $owner, $view = null) {
+function PluginListTags(Core $core, $tags, $owner, $view = null, $showtags = null) {
     global $USER;
     if (!is_array($tags)) {
         return '';

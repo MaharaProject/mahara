@@ -607,7 +607,6 @@ if ($institution || $add) {
         'title'        => get_string('allowinstitutiontags'),
         'description'  => get_string('allowinstitutiontagsdescription'),
         'defaultvalue' => $data->tags,
-        'help'         => true,
     );
     $elements['reviewselfdeletion'] = array(
         'type'         => 'switchbox',
