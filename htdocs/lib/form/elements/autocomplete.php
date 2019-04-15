@@ -121,7 +121,9 @@ function pieform_element_autocomplete(Pieform $form, $element) {
     if (isset($element['description'])) {
         $smarty->assign('describedby', $form->element_descriptors($element));
     }
-    $smarty->assign('institution', $element['institution']);
+    if (isset($element['institution'])) {
+        $smarty->assign('institution', $element['institution']);
+    }
 
     return $smarty->fetch('form/autocomplete.tpl');
 }
