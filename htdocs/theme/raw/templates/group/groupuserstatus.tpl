@@ -61,8 +61,7 @@
     {/if}
 
 {elseif $group->membershiptype == 'invite'}
-
-    <div class="invite btn-action-list btn-top-right btn-group btn-group-top">
+    <div class="invite btn-action-list btn-top-right btn-group-top-invite">
         {$group->invite|safe}
     </div>
 
