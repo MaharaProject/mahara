@@ -17,25 +17,19 @@
  * 2 @TODO - Turn edit overall form option into an export json button and have it create a file.matrix
  *   for sharing.  (Note that in the custom code patch 5accb2c9d1259005249248d5cb4f2fa8acba97b5,
  *   there is code that re-names the button, which is there for this function.)
- *
- */
-/*
- * Functionality still to be implemented by 19.04:
- * @TODO - review:
- *  - descriptions for the parent and element ids
- *  - make sub-sub elements work
- * - fix 3rd level nav - should have 4 tabs
- * - eid increments correctly  - make update_eid function work
- * - check textarea auto-expand functioning correctly (not regressed)
- * - check name textarea not producing errors
- * - Standard "Stay or Leave" functionality needs to be implemented - should this include the back button?
- * - do we want this:
+ *  * - do we want this:
  *   Clicking the "Save" button keeps you on the form and you have to click "Cancel" to return to the overview -> Implement the Moodle "Save" -
  * "Save and return to overview" - "Cancel"?
  * - Maybe: Add third-level nav to management screen of a framework? But then what to call the nav item? Overview wouldn't work,
  *  would be better to then call it "Management".
- - Check error message code makes sense.
- *
+ */
+/*
+ * Functionality still to be implemented by 19.04:
+ * @TODO - review:
+ *  - make sub-sub elements work
+ * - eid increments correctly  - make update_eid function work
+ * check copy save
+ * add inst default in the php.
  */
 
 jQuery(function($) {
@@ -59,7 +53,7 @@ jQuery(function($) {
     JSONEditor.plugins.select2.enable = true;
 
     var editor;
-    var parent_array = [];
+    var parent_array = [''];
 
     //counts to increment standard and standardelement ids
     var std_index = 0;
@@ -465,7 +459,7 @@ jQuery(function($) {
             var errors = editor.validate();
             // Not valid
             if (errors.length) {
-                $('#messages').empty().append($('<div>', {'class':'alert alert-danger', 'text':get_string('invalidjson', 'module.framework')}));
+                $('#messages').empty().append($('<div>', {'class':'alert alert-danger', 'text':get_string('invalidjsonineditor', 'module.framework')}));
             }
             // Valid
             else {
@@ -673,7 +667,7 @@ jQuery(function($) {
 
     //get a list of existing standard elements
     function update_parent_array() {
-        parent_array = [];
+        parent_array = [''];
         $("[data-schemaid=\"standardelement\"]").each(function() {
             //number of std elements
             var num = parseInt($(this).data("schemapath").replace(/root\.standardelements\./, ''));
@@ -714,13 +708,34 @@ jQuery(function($) {
 
     //update the element id for the passed in standard element
     function update_eid(element) {
-        if (element.value && element.value != '1.1') {
+        if (element.value) {
             var index = element.name.replace(/.*\[(\d*)\].*/, '$1');
             var eid_field = editor.getEditor("root.standardelements." + index + ".elementid");
             if (eid_field) {
-                eid_field.setValue(element.value + "." + eid);//wrong variable.
+                eid_field.setValue(element.value + "." + get_eid(element.value));
             }
         }
+    }
+
+        /**
+     * Update the element id after the parent id has been changed
+     *  @param parent_id The parent id selected from the dropdown
+     */
+    function get_eid(parent_id) {
+        var pel_array = [];
+        $("[data-schemaid=\"standardelement\"] .form-control[name$=\"parentelementid\]\"").each(function () {
+            if (this.value) {
+                pel_array.push(this.value);
+            }
+        });
+        count_subel = 0;
+        $(pel_array).each(function(k, val) {
+
+            if (val == parent_id) {
+                count_subel++
+            }
+        });
+        return count_subel;
     }
 
     /*
@@ -764,6 +779,7 @@ jQuery(function($) {
         set_editor_dirty();
       });
     }
+
 });//end of jQuery wrapper
 
 // form change checker functions
