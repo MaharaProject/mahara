@@ -29,7 +29,7 @@
  *  - make sub-sub elements work
  * - eid increments correctly  - make update_eid function work
  * check copy save
- * add inst default in the php.
+ * add inst default in the php. It's already there?
  */
 
 jQuery(function($) {
@@ -60,7 +60,7 @@ jQuery(function($) {
     var standard_count = 1;
 
     var eid = 1;//count of standard elements per standard
-    var se_index = 0; //index of total standard elements
+    var se_index = parent_array.length -1; //index of total standard elements
 
     var fw_id = null; //framework id if editing an existing framework
     var edit = false; //flag for edit vs. copy
@@ -84,9 +84,9 @@ jQuery(function($) {
         if (confirm === null || confirm === true) {
 
             //rebuild the form so that data doesn't get added to existing
+            $("#copy option:eq(0)").prop('selected', true);//reset copy
             editor.destroy();
             refresh_editor();
-            $("#copy option:eq(0)").prop('selected', true);//reset copy
             edit = true;
             var index = $('#edit').val();
             populate_editor(index, edit);
@@ -109,9 +109,9 @@ jQuery(function($) {
             if (formchangemanager.checkDirtyChanges()) {
                 formchangemanager.confirmLeavingForm();
             }
+            $("#edit option:eq(0)").prop('selected', true); //reset edit
             editor.destroy();
             refresh_editor();
-            $("#edit option:eq(0)").prop('selected', true); //reset edit
             edit = false;
             var index = $('#copy').val();
             populate_editor(index);
@@ -327,7 +327,7 @@ jQuery(function($) {
                                 "default" : '1.1',
                                 "description" : get_string('elementiddesc')
                             },
-                            "parentelementid" : {
+                            "parentid" : {
                                 "title" : get_string('parentelementid'),
                                 "id" : "parentid",
                                 "type" : "string",
@@ -336,6 +336,21 @@ jQuery(function($) {
                                 "watch" : {
                                     "source" : "pid_array"
                                 },
+                            },
+                            "parentelementid" : {
+                                "id" : "parentelementid",
+                                "type" : "number",
+                                "options" : {
+                                    "hidden" : true,
+                                },
+                            },
+                            "standardid" : {
+                                "title" : get_string('standardid'),
+                                "type" : "number",
+                                "default" : 1,
+                                "options" : {
+                                    "hidden" : true
+                                }
                             },
                             "pid_array" : {
                                 "id" : "hidden_pid_array",
@@ -412,9 +427,10 @@ jQuery(function($) {
         $("#add_standardelement").click(function() {
           // update delete button handlers
           update_delete_element_button_handlers();
-          se_index = parent_array.length;
+          se_index = parent_array.length - 1;
 
             var eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
+            var sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
             var eid_val;
             if (!standard_count) {
                 eid_val = "1." + eid;
@@ -424,6 +440,7 @@ jQuery(function($) {
                 eid_val = standard_count + "." + eid;
             }
             eid_field.setValue(eid_val);
+            set_sid(eid_val, sid_field);
             update_parent_array();
             set_parent_array();
             add_parent_event();
@@ -571,6 +588,7 @@ jQuery(function($) {
                 var eid_field;
                 var pid_field;
                 var eid_val;
+                se_index = parent_array.length -2;//parent array has ('', '1.1')
                 //each standard element
                 $.each(se_array, function (k, value){
                     //add a row for each new standard element
@@ -587,6 +605,13 @@ jQuery(function($) {
                         var se = editor.getEditor("root.standardelements." + se_index + "." + k);
                         if (se) {
                             se.setValue(value);
+                        }
+                        //standard is standardid in the editor
+                        if (k === "standard") {
+                            var sid_field = editor.getEditor("root.standardelements." + se_index + "." + "standardid");
+                            if (sid_field && standard_count > 0) {
+                                sid_field.setValue(standard_count);
+                            }
                         }
                         //priority is elementid in the editor
                         //if there is no parentid, we just set the element id with the priority
@@ -621,11 +646,12 @@ jQuery(function($) {
                         }
                     });
                     //since pid_val and eid_val depend on each other, we need to set them outside the loop.
-                    pid_field = editor.getEditor("root.standardelements." + se_index + ".parentelementid");
-                    eid_field = editor.getEditor("root.standardelements." + se_index + "." + "elementid");
+                    pid_field = editor.getEditor("root.standardelements." + se_index + ".parentid");
+                    eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
                     if (pid_val && eid_field) {
                         eid_field.setValue(standard_count + "." + pid_val + "." + eid_val);
-                        pid_field.setValue(standard_count + "." + pid_val);
+                        //pid_field.input.options.selectedIndex; //gives you the selected index
+                        //but the dropdown isn't populated at this point because we haven't called update_parent_array()
                     }
                     else if (eid_field) {
                         eid_field.setValue(standard_count + "." + eid_val);
@@ -661,6 +687,15 @@ jQuery(function($) {
         element.style.height = (element.scrollHeight) + 'px';
     }
 
+    function set_sid(eid_val, sid_field) {
+        var sid = parseInt(eid_val.replace(/(\d.?)\..*/, "$1"));
+        console.log(sid);
+        if (sid_field) {
+            sid_field.setValue(sid);
+        }
+
+    }
+
     function get_parent_array() {
         return parent_array;
     }
@@ -680,12 +715,18 @@ jQuery(function($) {
     //add the list of possible parent ids to the dropdown
     function set_parent_array() {
         var field;
-
+        var num = 0;
         $("[data-schemaid=\"standardelement\"]").each(function() {
-            field = ($(this).data("schemapath") + ".parentelementid");
+            field = ($(this).data("schemapath") + ".parentid");
             field = field.replace(/\./g, '\]\[');
             field = field.replace(/^root\](.*)$/, 'root$1\]');
+
+            // clear old element ids from the dropdown
             $("[name=\"" + field + "\"]").empty();
+
+            $("[name=\"" + field + "\"]").addClass("select");
+            $("[name=\"" + field + "\"]").attr("id", "parent_select_" + num);
+            num++;
             $.each(parent_array, function (k, value) {
                 $("[name=\"" + field + "\"]").append($('<option>', {
                     value: value,
@@ -714,6 +755,11 @@ jQuery(function($) {
             if (eid_field) {
                 eid_field.setValue(element.value + "." + get_eid(element.value));
             }
+            //and set parentelementid in the editor
+            var peid_field = editor.getEditor("root.standardelements." + index + ".parentelementid");
+            if (peid_field) {
+                peid_field.setValue(element.value);
+            }
         }
     }
 
@@ -723,7 +769,7 @@ jQuery(function($) {
      */
     function get_eid(parent_id) {
         var pel_array = [];
-        $("[data-schemaid=\"standardelement\"] .form-control[name$=\"parentelementid\]\"").each(function () {
+        $("[data-schemaid=\"standardelement\"] .form-control[name$=\"parentid\]\"").each(function () {
             if (this.value) {
                 pel_array.push(this.value);
             }

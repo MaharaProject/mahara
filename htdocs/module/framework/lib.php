@@ -390,6 +390,9 @@ class Framework {
                             if (isset($option->parentelementid) && ($index = array_search($option->parentelementid, $uniqueids)) !== false) {
                                 $option->parentelementid = $index;//db id for the parent
                             }
+                            else if (isset($option->parentelementid) && $option->parentelementid == 'undefined') {
+                                $option->parentelementid = null;
+                            }
                             $sofordb->parent = !empty($option->parentelementid) ? $option->parentelementid : null;
                             //where se record goes in
                             $inserted = insert_record('framework_standard_element', $sofordb, 'id', true);
