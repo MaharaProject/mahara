@@ -821,6 +821,10 @@ div.form-group .form-control-label {
     border-bottom-right-radius: 0.25rem;
 }
 
+.errormsg {
+    color: $state-danger-text;
+}
+
 // table cells that need to be fixed 70px width
 .width-70 {
     width: 70px;
