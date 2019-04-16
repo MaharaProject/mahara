@@ -13,7 +13,7 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-define('TITLE', get_string('bulkexporttitle', 'admin'));
+define('TITLE', get_string('bulkexporttitle1', 'admin'));
 
 /**
  * Convert a 2D array to a CSV file. This follows the basic rules from http://en.wikipedia.org/wiki/Comma-separated_values
@@ -111,15 +111,13 @@ function bulkexport_submit(Pieform $form, $values) {
         }
     }
 
-    if (empty($usernames) and !empty($values['authinstance'])) {
+    if (empty($usernames) && !empty($values['authinstance'])) {
         // Export all users from the selected institution
-        $rs = get_recordset_select('usr', 'authinstance = ? AND deleted = 0', array($values['authinstance']), '', 'username');
-        while ($record = $rs->FetchRow()) {
-            $usernames[] = $record['username'];
-        }
+        $usernames = get_column_sql("SELECT username FROM {usr} WHERE authinstance = ? AND deleted = 0 AND id != 0", array($values['authinstance']));
     }
 
-    safe_require('export', 'leap');
+    $exporttype = !empty($values['exporttype']) ? $values['exporttype'] : 'leap';
+    safe_require('export', $exporttype);
 
     $listing = array();
     $files = array();
@@ -141,7 +139,12 @@ function bulkexport_submit(Pieform $form, $values) {
             continue; // Skip non-existent users
         }
 
-        $exporter = new PluginExportLeap($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
+        if ($exporttype == 'html') {
+            $exporter = new PluginExportHtml($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
+        }
+        else {
+            $exporter = new PluginExportLeap($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
+        }
         try {
             $exporter->export();
             $zipfile = $exporter->export_compress();
@@ -205,6 +208,13 @@ $form = array(
     'jserrorcallback' => 'pmeter_error',
     'presubmitcallback' => 'pmeter_presubmit',
     'elements' => array(
+        'exporttype' => array(
+            'type' => 'select',
+            'title' => get_string('chooseanexportformat', 'export'),
+            'options' => array('leap' => 'Leap2A',
+                               'html' => 'HTML'),
+            'defaultvalue' => 'leap'
+        ),
         'authinstance' => $authinstanceelement,
         'usernames' => array(
             'type' => 'textarea',
@@ -232,5 +242,5 @@ $form = pieform($form);
 
 $smarty = smarty();
 $smarty->assign('bulkexportform', $form);
-$smarty->assign('bulkexportdescription', get_string('bulkexportdescription', 'admin'));
+$smarty->assign('bulkexportdescription', get_string('bulkexportdescription1', 'admin'));
 $smarty->display('admin/users/bulkexport.tpl');

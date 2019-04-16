@@ -464,9 +464,7 @@ class PluginExportHtml extends PluginExport {
                 }
             }
         }
-        function sort_by_title($a, $b) {
-            return strnatcasecmp($a['title'], $b['title']);
-        }
+
         foreach (array_keys($this->collections) as $id) {
             usort($list['collections'][$id]['views'], 'sort_by_title');
         }

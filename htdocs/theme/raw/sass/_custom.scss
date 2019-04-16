@@ -459,6 +459,26 @@ div.toolbarhtml {
     display: flex;
 }
 
+// Add space when there are 2 selects next to each other
+.select {
+    + .select {
+        margin-left: 5px;
+    }
+    + .submit:not(.input-group-append) {
+        margin-left: 5px;
+    }
+    #bulkexport & {
+        + .select {
+            margin-left: 0;
+        }
+    }
+}
+
+// Removes weird text node between buttons on admin/users/suspended.php
+.pieform-fieldset.btn-group {
+    font-size: 0;
+}
+
 .elasticsearch-filters {
     border-bottom: 1px solid $card-border-color;
     background-color: $card-header-bg;

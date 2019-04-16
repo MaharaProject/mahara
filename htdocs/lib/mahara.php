@@ -5621,6 +5621,10 @@ function sort_menu_by_weight($a, $b) {
     return ($aweight < $bweight) ? -1 : 1;
 }
 
+function sort_by_title($a, $b) {
+    return strnatcasecmp($a['title'], $b['title']);
+}
+
 /**
  * Disable elasticsearch triggers for site - useful for upgrades if we don't need to reindex the changes
  * This should be paired with create_elasticsearch_triggers(); - an example:
