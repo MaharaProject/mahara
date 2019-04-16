@@ -1,17 +1,13 @@
 jQuery(function($) {
     //use bootstrap
-    //@TODO - change to bootstrap4
     JSONEditor.defaults.options.theme = 'bootstrap4';
-    //@TODO this is supposed to enable fontawesome icons, but currently it breaks everything
-    //JSONEditor.defaults.options.iconlib = "fontawesome4";
-
-    //Remove edit json buttons. The functionality creates a form based on the submitted json, without
+    //Hide edit json buttons. The functionality creates a form based on the submitted json, without
     //calling the custom code on this page.
-    //@TODO remove override code for Edit json button text, since we're not using it.
+    JSONEditor.defaults.options.disable_edit_json = 'true';
     //@TODO turn edit overall form option into an export json button and have it create a file.matrix with
     //it for sharing.
-    //re-name the button and override the functionality, then put it back in some form
-    JSONEditor.defaults.options.disable_edit_json = 'true';
+    //re-name the button and override the functionality, then put it back in some form, may need the text override,
+    //(custom patch, not currently used), so keeping for now.
 
     //override default editor strings to allow translation by us
     //original editor defaults in htdocs/js/jsoneditor/src/defaults.js
@@ -27,12 +23,28 @@ jQuery(function($) {
     //allow select dropdown
     JSONEditor.plugins.select2.enable = true;
 
-
     var editor;
+    var parent_array = [];
+
+    //counts to increment standard and standardelement ids
+    var std_index = 0;
+    var standard_count = 1;
+
+    var eid = 1;//count of standard elements per standard
+    var se_index = 0; //index of total standard elements
+
+    var fw_id = null; //framework id if editing an existing framework
+    var edit = false; //flag for edit vs. copy
+    //@TODO - needs to be translatable?? or is this a varname? check!
+    var evidence_type = ['begun' ,'incomplete', 'partialcomplete', 'completed'];
+
+    formchangemanager.add('editor_holder');
+
     refresh_editor();
 
     // Initialize the editor
 function refresh_editor() {
+
     editor = new JSONEditor(document.getElementById('editor_holder'),
     {
     //json-editor properties
@@ -63,7 +75,7 @@ function refresh_editor() {
                 "title" : get_string('description'),
                 "format" : "textarea",
                 "default" : get_string('defaultdescription'),
-                "description" : get_string('descriptioninfo'),
+                "description" : get_string('descriptioninfo')
             },
             "selfassess" : {
                 "type" : "boolean",
@@ -176,6 +188,7 @@ function refresh_editor() {
                     "title" : get_string('standardelement'),
                     "headerTemplate" : "{{self.elementid}}",
                     "type" : "object",
+                    "id" : "standardelement",
                     "options" : {
                         "disable_collapse" : true
                     },
@@ -208,15 +221,23 @@ function refresh_editor() {
                         },
                         "parentelementid" : {
                             "title" : get_string('parentelementid'),
+                            "id" : "parentid",
                             "type" : "string",
-                            "default" : null,
-                            "description" : get_string('parentelementdesc')
+                            "description" : get_string('parentelementdesc'),
+                            "enumSource" : "source",
+                            "watch" : {
+                                "source" : "pid_array"
+                            },
                         },
-                        "standardid" : {
-                            "title" : get_string('standardid'),
-                            "type" : "number",
-                            "default" : 1,
-                            "description" : get_string('standardiddesc1')
+                        "pid_array" : {
+                            "id" : "hidden_pid_array",
+                            "type" : "array",
+                            "items" : {
+                                "enum" : parent_array,
+                            },
+                            "options" : {
+                                "hidden" : true,
+                            },
                         },
                         "uid" : {
                             "type" : "number",
@@ -247,106 +268,148 @@ function refresh_editor() {
     //set min row height for desc fields to 6
     $("textarea[id$='_desc_textarea']").attr('rows', '6');
     textarea_init();
+    update_parent_array();
+    set_parent_array();
+    add_parent_event();
+
+    update_delete_button_handler();
+    update_delete_element_button_handlers();
 
     $("#add_standard").click(function() {
         standard_count += 1;
         std_index = standard_count -1;
         var sid_field = editor.getEditor("root.standards." + std_index + ".standardid");
         sid_field.setValue(standard_count);
-        //set standard element fields to increment too
-        //add new standard element if current one modified
-        if (se_index > 0 && editor.getEditor("root.standardelements." + se_index + ".shortname")) {
-            var se_field = editor.getEditor("root.standardelements");
-            se_field.addRow();
-            se_index ++;
-        }
+
         var se_sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
-        se_sid_field.setValue(standard_count);
+        if (se_sid_field) {
+            se_sid_field.setValue(standard_count);
+        }
         //reset standard element count
-        se_count = 1;
-        var se_eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
-        se_eid_field.setValue(se_count);
+        eid = 0;
+        update_parent_array();
+        set_parent_array();
+
         textarea_init();
+        set_editor_dirty();
     });
 
     $("#add_standardelement").click(function() {
-        se_count ++;
-        se_index ++;
-        var sid_field = editor.getEditor("root.standards." + std_index + ".standardid");
-        var sid = sid_field.getValue();
-        var se_sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
-        se_sid_field.setValue(sid);
+        // update delete button handlers
+        update_delete_element_button_handlers();
+
+        se_index = parent_array.length;
+
         var eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
-        //@TODO: change this display to reflect the data
-        eid_field.setValue(se_count);
+        var eid_val;
+       if (!standard_count) {
+        eid_val = "1." + eid;
+        }
+        else {
+                eid ++;
+                eid_val = standard_count + "." + eid;
+        }
+        eid_field.setValue(eid_val);
+        update_parent_array();
+        set_parent_array();
+        add_parent_event();
         textarea_init();
+        //$("[data-schemaid=\"parentid\"] .form-control > option").trigger('change');
+        set_editor_dirty();
     });
-}
 
-    //counts to increment standard and standardelement ids
-    var std_index = 0;
-    var standard_count = 1;
-    var se_count = 1;
-    var se_index = 0;
-    var fw_id = null; //framework id if editing an existing framework
-    var edit = false; //flag for edit vs. copy
+        // validation indicator
+        editor.off('change');
+        editor.on('change',function() {
 
-    var evidence_type = ['begun' ,'incomplete', 'partialcomplete', 'completed'];
+            // Get an array of errors from the validator
+            var errors = editor.validate();
+            // Not valid
+            //@TODO, look at original json-editor code to get the stuff that makes something red to work,
+            //otherwise error message to look down the page for the error doesn't make sense.
+            if (errors.length) {
+                $('#messages').empty().append($('<div>', {'class':'alert alert-danger', 'text':get_string('invalidjson', 'module.framework')}));
+            }
+            // Valid
+            else {
+                    $('#messages').empty().append($('<div>', {'class':'alert alert-success', 'text':get_string('validjson')}));
+            }
 
-    //make textarea expand with text
-    function textarea_init() {
-        $('div.form-group textarea[name$="description\]"]').each(function() {
-            $(this).off('click input');
-            $(this).on('click input', function() {
-                textarea_autoexpand(this);
-            })
-            textarea_autoexpand(this);
         });
-    }
-    function textarea_autoexpand(element) {
-        element.setAttribute('style', 'height:' + (element.scrollHeight) + 'px;overflow-y:hidden;');
-        element.style.height = 'auto';
-        element.style.minHeight = '148px';
-        element.style.maxHeight = '800px';
-        element.style.height = (element.scrollHeight) + 'px';
-    }
+
+        // add checks to monitor if fields are changed
+        editor.on('ready', function () {
+            set_editor_clean();
+            $('#editor_holder textarea').each(function(el){
+              $(this).on('change', function() {
+                  set_editor_dirty();
+              });
+            });
+            $('#editor_holder input').each(function(el){
+              $(this).on('change', function() {
+                  set_editor_dirty()
+              });
+            });
+            var editorElement = jQuery('#editor_holder');
+            editorElement.on('change', function() {
+                set_editor_dirty();
+            });
+        });
+
+   }
+//end of refresh function
 
     //choose from edit dropdown
     $('#edit').on('change',function() {
+        var confirm = null;
+        if (typeof formchangemanager !== 'undefined') {
+            confirm = formchangemanager.confirmLeavingForm();
+        }
+        if (confirm === null || confirm === true) {
+
         //rebuild the form so that data doesn't get added to existing
-        //@TODO reset copy select box
         editor.destroy();
-        refresh_editor();
+        refresh_editor(); //calls editorchecker.init
+        $("#copy option:eq(0)").prop('selected', true);//reset copy
         edit = true;
-        var fw = $('#edit_framework')[0];
-        var select_index = fw.children.edit.options.selectedIndex;
-        var fwe = JSON.parse(fw_edit);
-        //get the db index
-        index = Object.keys(fwe[select_index]);
-        index = index[0];
+        var index = $('#edit').val();
         populate_editor(index, edit);
+
+        upload = false;
         textarea_init();
+
+        set_editor_clean();
+
+        }
+
     });
 
     //choose from copy dropdown.
     $("#copy").on('change', function() {
+        var confirm = null;
+        if (typeof formchangemanager !== 'undefined') {
+            confirm = formchangemanager.confirmLeavingForm();
+        }
+        if (confirm === null || confirm === true) {
+
         //rebuild the form so that data doesn't get added to existing
-        //@TODO reset edit select box
+        if (formchangemanager.checkDirtyChanges()) {
+            formchangemanager.confirmLeavingForm();
+        }
         editor.destroy();
         refresh_editor();
+        $("#edit option:eq(0)").prop('selected', true); //reset edit
         edit = false;
-        var fw = $('#copy_framework')[0];
-        var select_index = fw.children.copy.options.selectedIndex;
-        var fwc = JSON.parse(fws);
-        index = Object.keys(fwc[select_index]);
-        index = index[0];
+        var index = $('#copy').val();
         populate_editor(index);
         textarea_init();
-        });
+        set_editor_clean();
+        }
+    });
 
     // Manage button - goes to fw screen
     $(".cancel").click(function() {
-        //@TODO - warn about not saving form?
+        formchangemanager.setFormStateById('editor_holder', FORM_CANCELLED);
         window.location.href = config['wwwroot'] + 'module/framework/frameworks.php';
     });
 
@@ -359,6 +422,7 @@ function refresh_editor() {
 
     // Hook up the submit button to log to the console
     $(".submit").click(function() {
+        formchangemanager.setFormStateById('editor_holder', FORM_SUBMITTED);
         // Get all the form's values from the editor
         var json_form = editor.getValue();
         url = config['wwwroot'] + 'module/framework/framework.json.php';
@@ -368,11 +432,90 @@ function refresh_editor() {
         }
         //save completed form data
         sendjsonrequest(url, json_form, 'POST');
-        //@TODO, redirect to success message at the top of page
+        window.scrollTo(0,0);
     });
+
+    // Manage button - goes to fw screen
+    $(".cancel").click(function() {
+        window.location.href = config['wwwroot'] + 'module/framework/frameworks.php';
+    });
+
+    //make textarea expand with text
+    function textarea_init() {
+        $('div.form-group textarea[name$="description\]"]').each(function() {
+            $(this).off('click input');
+            $(this).on('click input', function() {
+                textarea_autoexpand(this);
+            })
+            textarea_autoexpand(this);
+        });
+    }
+
+    function textarea_autoexpand(element) {
+        element.setAttribute('style', 'height:' + (element.scrollHeight) + 'px;overflow-y:hidden;');
+        element.style.height = 'auto';
+        element.style.minHeight = '64px';
+        element.style.height = (element.scrollHeight) + 'px';
+    }
+
+    function get_parent_array() {
+        return parent_array;
+    }
+
+    function update_parent_array() {
+        parent_array = [];
+        $("[data-schemaid=\"standardelement\"]").each(function() {
+            //number of std elements
+            var num = parseInt($(this).data("schemapath").replace(/root\.standardelements\./, ''));
+            var field = editor.getEditor("root.standardelements." + num + ".elementid");
+            var el = field.getValue();
+
+            parent_array.push(el);
+        });
+    }
+
+    function set_parent_array() {
+        var field;
+
+        $("[data-schemaid=\"standardelement\"]").each(function() {
+            field = ($(this).data("schemapath") + ".parentelementid");
+            field = field.replace(/\./g, '\]\[');
+            field = field.replace(/^root\](.*)$/, 'root$1\]');
+            $("[name=\"" + field + "\"]").empty();
+            $.each(parent_array, function (k, value) {
+                $("[name=\"" + field + "\"]").append($('<option>', {
+                    value: value,
+                    text: value
+                }));
+            });
+        });
+    }
+
+    function add_parent_event() {
+        console.log("add event running");
+        $("[data-schemaid=\"parentid\"] .form-control").each(function () {
+            $(this).off('change');
+            $(this).on('change', function () {
+            update_eid(this);
+            });
+            update_eid(this);
+        });
+    }
+
+    function update_eid(element) {
+        if (element.value && element.value != '1.1') {
+            var index = element.name.replace(/.*\[(\d*)\].*/, '$1');
+            var eid_field = editor.getEditor("root.standardelements." + index + ".elementid");
+            if (eid_field) {
+                eid_field.setValue(element.value + "." + eid);//wrong variable.
+            }
+        }
+    }
+
 
     function populate_editor(framework_id, edit) {
         url = config['wwwroot'] + 'module/framework/getframework.json.php';
+        upload = true;
         //get data from existing framework
         sendjsonrequest(url, {'framework_id': framework_id} , 'POST', function(data) {
             if (edit) {
@@ -395,9 +538,7 @@ function refresh_editor() {
                     if (k === 'description') {
                         textarea_init();
                         ed.setValue(value)
-                        //@TODO wysiwyg editing:
-                        //tinyMCE will display this field correctly, but then I can't save.
-                        //tinyMCE.execCommand('mceAddEditor', false, title_textarea);
+                        //@TODO wysiwyg editing of description fields
                     }
                     else {
                         ed.setValue(value);
@@ -413,10 +554,13 @@ function refresh_editor() {
             var std_nums = new Array();
             //set the values for the standards
             $.each(data.data.standards, function (k, value) {
-                //k is standard index.
-                var stg_index = k;
+                //k is standard index or 'element'
+                if (k != 'element') {
+                    std_index = parseInt(k);
+                }
+               // console.log(std_index);
                 //if the standard doesn't already exist, we need to add it to the editor.
-                if (stg_index > 0 && !editor.getEditor("root.standards." + stg_index)) {
+                if (std_index > 0 && !editor.getEditor("root.standards." + std_index)) {
                     var std_ed = editor.getEditor("root.standards");
                     std_ed.addRow();
                     standard_count += 1;
@@ -424,12 +568,14 @@ function refresh_editor() {
                 }
                 //this makes an array with the 0 index empty and the db std ids matched with the index
                 //of their standard number.
-                var s_count = parseInt(stg_index) + 1;
-                 std_nums[s_count] = value.id;
+                standard_count = std_index + 1;
+                if (value.id) {
+                    std_nums[standard_count] = value.id;
+                }
 
                 $.each(value, function(k, val) {
                     //this works where the data field name is the same as the DOM's id
-                    var field = editor.getEditor("root.standards." + stg_index + "." + k );
+                    var field = editor.getEditor("root.standards." + std_index + "." + k );
                     if (field) {
                         field.setValue(val);
                     }
@@ -437,128 +583,158 @@ function refresh_editor() {
                     if (k === "priority") {
                         //priority count for standards starts from 0
                         val = parseInt(val) + 1;
-                        field = editor.getEditor("root.standards." + stg_index + "." + "standardid");
+                        field = editor.getEditor("root.standards." + std_index + "." + "standardid");
                         if (field) {
                             field.setValue(val);
                         }
                     }
                     //this is the db id, which we need to track if this is an edit
                     if (k === "id") {
-                        field = editor.getEditor("root.standards." + stg_index + "." + "uid");
+                        field = editor.getEditor("root.standards." + std_index + "." + "uid");
                         if (field) {
                             field.setValue(val);
                         }
                     }
                 });
             });
-            //keep count of standard elements
-            var count = 0;
-            var eid = 0;
-            //get standard elements for each standard.
             //first 'each' is all the standard elements associated with a standard
             $.each(data.data.standards.element, function (k, value) {
-                if (typeof value != 'undefined' && value.length > 0 ) {
-                    var se_array = value;
-                    //convert the absolute standard id from the db to the local standard id
-                    //for this framework
-                    //@TODO reconcile vars
-                    var std_id = value[0].standard;
-                    var se_val = 0;
-                    var subel_val = 0
-                    var std_val = std_nums.indexOf(std_id); //the sid in the editor
-                    var priority;//eid
-                    var pid_val = 0;
-                    var sid;
-                    var eid_field;
-                    var pid_field;
-                    var sid_field;
-                    var eid_val;
-                    //each standard element
-                    $.each(se_array, function (k, value){
-                        //add a row for each new standard element
-                        var se = editor.getEditor("root.standardelements");
-                        if (count > 0) {
-                            se.addRow();
-                            textarea_init();
+                var se_array = value;
+                //convert the absolute standard id from the db to the local standard id
+                //for this framework
+                var std_id = value[0].standard;
+                var se_val = 0;
+                var subel_val = 0
+                standard_count = std_nums.indexOf(std_id); //the sid in the editor
+                var pid_val = 0;
+                var eid_field;
+                var pid_field;
+                var eid_val;
+                //each standard element
+                $.each(se_array, function (k, value){
+                    //add a row for each new standard element
+                    var se = editor.getEditor("root.standardelements");
+                    if (se_index > 0) {
+                        se.addRow();
+                        update_parent_array();
+                        textarea_init();
+                        add_parent_event();
+                    }
+                    //each value from a standard element
+                    $.each(value, function (k,value ) {
+                        //set if exists - works for shortname, name and description
+                        var se = editor.getEditor("root.standardelements." + se_index + "." + k);
+                        if (se) {
+                            se.setValue(value);
                         }
-                        //each value from a standard element
-                        $.each(value, function (k,value ) {
-                            //set if exists - works for shortname, name and description
-                            var se = editor.getEditor("root.standardelements." + count + "." + k);
-                            if (se) {
-                                se.setValue(value);
+                        //priority is elementid in the editor
+                        //if there is no parentid, we just set the element id with the priority
+                        if (k === "priority") {
+                            if (eid_field) {
+                            eid_val = value;
+                            eid++;
                             }
-                            //standard is standardid in the editor
-                            if (k === "standard") {
-                                sid_field = editor.getEditor("root.standardelements." + count + "." + "standardid");
-                                if (sid_field && std_val > 0) {
-                                   sid_field.setValue(std_val);
-                                    sid = std_val;
-                                }
-                            }
-                            //priority is elementid in the editor
-                            //if there is no parentid, we just set the element id with the priority
-                            if (k === "priority") {
-                                if (eid_field) {
-                                eid_val = value;
-                                eid++;
-                                }
-                            }
-                            if (k === "parent" ) {
-                                if (value == null) {
-                                    //anything after this will have a new parent, so increment parent value
-                                    se_val++;
-                                    //this is also the element id if there is no parent
-                                    eid_val = se_val;
-                                    //reset the count of element ids for sub elements of this standard element
-                                    subel_val = 0;
-                                }
-                                //there is a parent element, we need to handle it
-                                else {
-                                    subel_val++;
-                                    eid_val = subel_val;
-                                    pid_val = se_val;
-                                }
-                            }
-                             //this is the db id, which we need to track if this is an edit or if parentids are used
-                            if (k === "id") {
-                                field = editor.getEditor("root.standardelements." + count + "." + "uid");
-                                if (field) {
-                                    field.setValue(value);
-                                }
-                            }
-                        });
-                        //since pid_val and eid_val depend on each other, we need to set them outside the loop.
-                        pid_field = editor.getEditor("root.standardelements." + count + ".parentelementid");
-                        eid_field = editor.getEditor("root.standardelements." + count + "." + "elementid");
-                        if (pid_val) {
-                            eid_field.setValue(sid + "." + pid_val + "." + eid_val);
-                            pid_field.setValue(sid + "." + pid_val);
                         }
-                        else {
-                            eid_field.setValue(sid + "." + eid_val);
+                        if (k === "parent" ) {
+                            if (value == null) {
+                                //anything after this will have a new parent, so increment parent value
+                                se_val++;
+                                //this is also the element id if there is no parent
+                                eid_val = se_val;
+                                //reset the count of element ids for sub elements of this standard element
+                                subel_val = 0;
+                            }
+                            //there is a parent element, we need to handle it
+                            else {
+                                subel_val++;
+                                eid_val = subel_val;
+                                pid_val = se_val;
+                            }
                         }
-                        pid_val = null;
-                        count ++;//increment se count
+                            //this is the db id, which we need to track if this is an edit or if parentids are used
+                        if (k === "id") {
+                            field = editor.getEditor("root.standardelements." + se_index + "." + "uid");
+                            if (field) {
+                                field.setValue(value);
+                            }
+                        }
                     });
-                    eid = 1;
-                }
+                    //since pid_val and eid_val depend on each other, we need to set them outside the loop.
+                    pid_field = editor.getEditor("root.standardelements." + se_index + ".parentelementid");
+                    eid_field = editor.getEditor("root.standardelements." + se_index + "." + "elementid");
+                    if (pid_val && eid_field) {
+                        eid_field.setValue(standard_count + "." + pid_val + "." + eid_val);
+                        pid_field.setValue(standard_count + "." + pid_val);
+                    }
+                    else if (eid_field) {
+                        eid_field.setValue(standard_count + "." + eid_val);
+                    }
+                    pid_val = null;
+                    se_index ++;
+                    eid = eid_val;
+                });
             });
+            update_parent_array();
+            set_parent_array();
 
+            update_delete_element_button_handlers();
         });
     }
-    // validation indicator
-    editor.on('change',function() {
-        // Get an array of errors from the validator
-        var errors = editor.validate();
-        // Not valid
-        if (errors.length) {
-            $('#messages').empty().append($('<div>', {'class':'alert alert-danger', 'text':get_string('invalidjsonineditor', 'module.framework')}));
+    /*
+    * Manually add the handlers for the standard elements delete buttons
+    * needs to add it also after deleting one standard element because
+    * the container is refreshed and the buttons recreated
+    */
+    function update_delete_element_button_handlers() {
+      $('[data-schemaid="standardelement"]>h3>div>button.json-editor-btn-delete').off('click');
+      $('[data-schemaid="standardelement"]>h3>div>button.json-editor-btn-delete').on('click', function() {
+        update_parent_array();
+        se_index--;
+        //if it's the last element
+        if (parseInt(this.attributes['data-i'].value) == parent_array.length) {
+          eid--;
         }
-        // Valid
-        else {
-             $('#messages').empty().append($('<div>', {'class':'alert alert-success', 'text':get_string('validjson')}));
-        }
-    });
+        update_delete_element_button_handlers();
+        set_editor_dirty();
+      });
+    }
 
+    /*
+    * Manually add the handlers for the standard elements top delete buttons
+    * 'Delete last standard element' and 'Delete all'
+    */
+    function update_delete_button_handler() {
+      // 'Delete last standard element' button
+      $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function (){
+        update_parent_array();
+        eid--;
+        se_index--;
+        update_delete_element_button_handlers();
+        set_editor_dirty();
+      });
+      // 'Delete all' button
+      $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function (){
+        update_parent_array();
+        eid = 1;
+        se_index = 0;
+        update_delete_element_button_handlers();
+        set_editor_dirty();
+      });
+    }
 });
+
+
+
+// form change checker functions
+
+function set_editor_dirty() {
+    if (typeof formchangemanager !== 'undefined') {
+        formchangemanager.setFormStateById("editor_holder", FORM_CHANGED);
+    }
+}
+
+function set_editor_clean() {
+    if (typeof formchangemanager !== 'undefined') {
+        formchangemanager.setFormStateById('editor_holder', FORM_INIT);
+    }
+}
