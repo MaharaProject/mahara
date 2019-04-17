@@ -378,27 +378,15 @@ jQuery(function($) {
         //add ids to things so we can call them more easily later.
         $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standard");
         $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standardelement");
-        //creating ids for adding wysiwyg - not currently active: @TODO
-        $('div[data-schemapath="root.description"] > div > textarea').attr("id", "title_desc_textarea");
-        $('div[data-schemaid="standards"] textarea[data-schemaformat="textarea"]').each(function(){
-            var schemapath = $(this).closest('div[data-schemapath]').attr('data-schemapath').split('.');
-            var standardid = schemapath[2];
-            $(this).attr("id", "std_" +standardid + "_" + schemapath[3] + "_textarea");
-
-        })
-        $('div[data-schemaid="standardelements"] textarea[data-schemaformat="textarea"]').each(function(){
-            var schemapath = $(this).closest('div[data-schemapath]').attr('data-schemapath').split('.');
-            var standardelementid = schemapath[2];
-            $(this).attr("id", "std_element_" + standardelementid + "_" + schemapath[3] + "_textarea");
-        })
         //make text same as rest of site
         $("div.form-group p.form-text").addClass("description");
         $("div.form-group form-control-label").addClass("label");
         //add class for correct styling of help block text
         $('[data-schemaid="standards"] > p').addClass("help-block");
         $('[data-schemaid="evidencestatuses"] > p').addClass("help-block");
-        //set min row height for desc fields to 6
-        $("textarea[id$='_description_textarea']").attr('rows', '6');
+
+        // Add id to the framework description textarea
+        $('div[data-schemapath="root.description"] > div > textarea').attr("id", "title_description_textarea");
         textarea_init();
 
         update_parent_array();
@@ -683,10 +671,30 @@ jQuery(function($) {
 
     //add textarea expand event to description fields
     function textarea_init() {
-        $('div.form-group textarea[name$="description\]"]').each(function() {
+        //creating ids for adding wysiwyg - not currently active: @TODO
+        $('div[data-schemaid="standards"] textarea[data-schemaformat="textarea"]').each(function(){
+            if (!$(this).attr('id')) {
+                var schemapath = $(this).closest('div[data-schemapath]').attr('data-schemapath').split('.');
+                var standardid = schemapath[2];
+                $(this).attr("id", "std_" +standardid + "_" + schemapath[3] + "_textarea");
+            }
+        })
+        $('div[data-schemaid="standardelements"] textarea[data-schemaformat="textarea"]').each(function(){
+            if (!$(this).attr('id')) {
+                var schemapath = $(this).closest('div[data-schemapath]').attr('data-schemapath').split('.');
+                var standardelementid = schemapath[2];
+                $(this).attr("id", "std_element_" + standardelementid + "_" + schemapath[3] + "_textarea");
+            }
+        })
+        //set min row height for desc fields to 6
+        $("textarea[id$='_description_textarea']").attr('rows', '6');
+
+        $('div.form-group textarea[id$="_description_textarea"]').each(function() {
             $(this).off('click input');
             $(this).on('click input', function() {
                 textarea_autoexpand(this);
+                // scrollHeight is 0 for elements that are not visible
+                this.style.height = (this.scrollHeight) + 'px';
             })
             textarea_autoexpand(this);
         });
@@ -694,10 +702,9 @@ jQuery(function($) {
 
     //expand textareas
     function textarea_autoexpand(element) {
-        element.setAttribute('style', 'height:' + (element.scrollHeight) + 'px;overflow-y:hidden;');
+        element.setAttribute('style', 'overflow-y:hidden;');
         element.style.height = 'auto';
         element.style.minHeight = '64px';
-        element.style.height = (element.scrollHeight) + 'px';
     }
 
     function set_sid(eid_val, sid_field) {
@@ -816,6 +823,7 @@ jQuery(function($) {
         $('[data-schemaid="standard"]>h3>div>button.json-editor-btn-delete').on('click', function() {
             update_standard_array();
             update_delete_standard_button_handlers();
+            textarea_init();
             set_editor_dirty();
         });
     }
@@ -835,6 +843,8 @@ jQuery(function($) {
           eid--;
         }
         update_delete_element_button_handlers();
+        set_parent_array();
+        textarea_init();
         set_editor_dirty();
       });
     }
@@ -848,11 +858,13 @@ jQuery(function($) {
         // 'Delete last standard' button
         $('div[data-schemaid="standards"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function (){
           update_standard_array();
+          textarea_init();
           set_editor_dirty();
         });
         // 'Delete all' button
         $('div[data-schemaid="standards"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function (){
           update_standard_array();
+          textarea_init();
           set_editor_dirty();
         });
 
@@ -862,6 +874,7 @@ jQuery(function($) {
           update_parent_array();
           eid--;
           se_index--;
+          set_parent_array();
           update_delete_element_button_handlers();
           set_editor_dirty();
         });
