@@ -54,13 +54,13 @@ jQuery(function($) {
 
     var editor;
     var parent_array = [''];
+    var standard_array = [];
 
     //counts to increment standard and standardelement ids
     var std_index = 0;
-    var standard_count = 1;
 
     var eid = 1;//count of standard elements per standard
-    var se_index = parent_array.length -1; //index of total standard elements
+    var se_index = 0; //index of total standard elements
 
     var fw_id = null; //framework id if editing an existing framework
     var edit = false; //flag for edit vs. copy
@@ -386,7 +386,6 @@ jQuery(function($) {
             $(this).attr("id", "std_" +standardid + "_" + schemapath[3] + "_textarea");
 
         })
-
         $('div[data-schemaid="standardelements"] textarea[data-schemaformat="textarea"]').each(function(){
             var schemapath = $(this).closest('div[data-schemapath]').attr('data-schemapath').split('.');
             var standardelementid = schemapath[2];
@@ -401,47 +400,56 @@ jQuery(function($) {
         //set min row height for desc fields to 6
         $("textarea[id$='_description_textarea']").attr('rows', '6');
         textarea_init();
+
         update_parent_array();
+        update_standard_array();
+
         set_parent_array();
         add_parent_event();
 
         update_delete_button_handler();
+        update_delete_standard_button_handlers();
         update_delete_element_button_handlers();
 
         $("#add_standard").click(function() {
-            standard_count += 1;
-            std_index = standard_count -1;
+            update_delete_standard_button_handlers();
+            std_index = standard_array.length;
             var sid_field = editor.getEditor("root.standards." + std_index + ".standardid");
-            sid_field.setValue(standard_count);
+            sid_field.setValue(standard_array.length + 1);
             var se_sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
             if (se_sid_field) {
-                se_sid_field.setValue(standard_count);
+                se_sid_field.setValue(standard_array.length + 1);
             }
             //reset standard element count
             eid = 0;
             update_parent_array();
+            update_standard_array();
+
             set_parent_array();
             textarea_init();
             set_editor_dirty();
         });
         $("#add_standardelement").click(function() {
-          // update delete button handlers
-          update_delete_element_button_handlers();
-          se_index = parent_array.length - 1;
+            // update delete button handlers
+            update_delete_element_button_handlers();
+            se_index = parent_array.length - 1;
 
             var eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
             var sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
             var eid_val;
-            if (!standard_count) {
+            if (standard_array.length == 0) {
                 eid_val = "1." + eid;
-                }
+            }
             else {
                 eid ++;
-                eid_val = standard_count + "." + eid;
+                eid_val = standard_array.length + "." + eid;
             }
             eid_field.setValue(eid_val);
             set_sid(eid_val, sid_field);
+
             update_parent_array();
+            update_standard_array();
+
             set_parent_array();
             add_parent_event();
             textarea_init();
@@ -534,47 +542,50 @@ jQuery(function($) {
             //set the values for the standards
             $.each(data.data.standards, function (k, value) {
                 //k is standard index or 'element'
+                // 'element' contains the standard elements, managed by next $.each
                 if (k != 'element') {
                     std_index = parseInt(k);
-                }
-                //if the standard doesn't already exist, we need to add it to the editor.
-                if (std_index > 0 && !editor.getEditor("root.standards." + std_index)) {
-                    var std_ed = editor.getEditor("root.standards");
-                    std_ed.addRow();
-                    standard_count += 1;
-                    textarea_init();
-                }
-                //this makes an array with the 0 index empty and the db std ids matched with the index
-                //of their standard number.
-                standard_count = std_index + 1;
-                if (value.id) {
-                    std_nums[standard_count] = value.id;
-                }
 
-                $.each(value, function(k, val) {
-                    //this works where the data field name is the same as the DOM's id
-                    var field = editor.getEditor("root.standards." + std_index + "." + k );
-                    if (field) {
-                        field.setValue(val);
+                    //if the standard doesn't already exist, we need to add it to the editor.
+                    if (std_index > 0 && !editor.getEditor("root.standards." + std_index)) {
+                        var std_ed = editor.getEditor("root.standards");
+                        std_ed.addRow();
+                        update_standard_array();
+                        textarea_init();
                     }
-                    //the standardid is called priority in the db
-                    if (k === "priority") {
-                        //priority count for standards starts from 0
-                        val = parseInt(val) + 1;
-                        field = editor.getEditor("root.standards." + std_index + "." + "standardid");
+                    //this makes an array with the 0 index empty and the db std ids matched with the index
+                    //of their standard number.
+                    update_standard_array();
+                    if (value.id) {
+                        std_nums[standard_array.length] = value.id;
+                    }
+
+                    $.each(value, function(k, val) {
+                        //this works where the data field name is the same as the DOM's id
+                        var field = editor.getEditor("root.standards." + std_index + "." + k );
                         if (field) {
                             field.setValue(val);
                         }
-                    }
-                    //this is the db id, which we need to track if this is an edit
-                    if (k === "id") {
-                        field = editor.getEditor("root.standards." + std_index + "." + "uid");
-                        if (field) {
-                            field.setValue(val);
+                        //the standardid is called priority in the db
+                        if (k === "priority") {
+                            //priority count for standards starts from 0
+                            val = parseInt(val) + 1;
+                            field = editor.getEditor("root.standards." + std_index + "." + "standardid");
+                            if (field) {
+                                field.setValue(val);
+                            }
                         }
-                    }
-                });
+                        //this is the db id, which we need to track if this is an edit
+                        if (k === "id") {
+                            field = editor.getEditor("root.standards." + std_index + "." + "uid");
+                            if (field) {
+                                field.setValue(val);
+                            }
+                        }
+                    });
+                }
             });
+            update_standard_array();
             //first 'each' is all the standard elements associated with a standard
             $.each(data.data.standards.element, function (k, value) {
                 var se_array = value;
@@ -583,19 +594,19 @@ jQuery(function($) {
                 var std_id = value[0].standard;
                 var se_val = 0;
                 var subel_val = 0
-                standard_count = std_nums.indexOf(std_id); //the sid in the editor
                 var pid_val = 0;
                 var eid_field;
                 var pid_field;
                 var eid_val;
-                se_index = parent_array.length -2;//parent array has ('', '1.1')
+                update_parent_array();
+                //at first, parent array has ('', '1.1')
+                se_index = parent_array.length == 2 ? 0 : parent_array.length - 1 ;
                 //each standard element
                 $.each(se_array, function (k, value){
                     //add a row for each new standard element
                     var se = editor.getEditor("root.standardelements");
                     if (se_index > 0) {
                         se.addRow();
-                        update_parent_array();
                         textarea_init();
                         add_parent_event();
                     }
@@ -609,8 +620,8 @@ jQuery(function($) {
                         //standard is standardid in the editor
                         if (k === "standard") {
                             var sid_field = editor.getEditor("root.standardelements." + se_index + "." + "standardid");
-                            if (sid_field && standard_count > 0) {
-                                sid_field.setValue(standard_count);
+                            if (sid_field && standard_array.length > 0) {
+                                sid_field.setValue(std_nums.indexOf(value));
                             }
                         }
                         //priority is elementid in the editor
@@ -649,22 +660,24 @@ jQuery(function($) {
                     pid_field = editor.getEditor("root.standardelements." + se_index + ".parentid");
                     eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
                     if (pid_val && eid_field) {
-                        eid_field.setValue(standard_count + "." + pid_val + "." + eid_val);
-                        //pid_field.input.options.selectedIndex; //gives you the selected index
-                        //but the dropdown isn't populated at this point because we haven't called update_parent_array()
+                        eid_field.setValue(std_nums.indexOf(value.standard) + "." + pid_val + "." + eid_val);
+                        pid_field.setValue(std_nums.indexOf(value.standard) + "." + pid_val);
                     }
                     else if (eid_field) {
-                        eid_field.setValue(standard_count + "." + eid_val);
+                        eid_field.setValue(std_nums.indexOf(value.standard) + "." + eid_val);
                     }
+                    update_parent_array();
                     pid_val = null;
                     se_index ++;
                     eid = eid_val;
                 });
             });
             update_parent_array();
+            update_standard_array();
             set_parent_array();
 
             update_delete_element_button_handlers();
+            update_delete_standard_button_handlers();
           });
     }//end of populate_editor()
 
@@ -696,10 +709,6 @@ jQuery(function($) {
 
     }
 
-    function get_parent_array() {
-        return parent_array;
-    }
-
     //get a list of existing standard elements
     function update_parent_array() {
         parent_array = [''];
@@ -712,6 +721,19 @@ jQuery(function($) {
             parent_array.push(el);
         });
     }
+
+    function update_standard_array() {
+        standard_array = [];
+        $('[data-schemaid="standard"]').each(function() {
+            //number of std elements
+            var num = parseInt($(this).data("schemapath").replace(/root\.standards\./, ''));
+            var field = editor.getEditor("root.standards." + num + ".standardid");
+            var el = field.getValue();
+
+            standard_array.push(el);
+        });
+    }
+
     //add the list of possible parent ids to the dropdown
     function set_parent_array() {
         var field;
@@ -785,6 +807,20 @@ jQuery(function($) {
     }
 
     /*
+    * Manually add the handlers for the standard delete buttons
+    * needs to add it also after deleting one standards because
+    * the container is refreshed and the buttons recreated
+    */
+    function update_delete_standard_button_handlers() {
+        $('[data-schemaid="standard"]>h3>div>button.json-editor-btn-delete').off('click');
+        $('[data-schemaid="standard"]>h3>div>button.json-editor-btn-delete').on('click', function() {
+            update_standard_array();
+            update_delete_standard_button_handlers();
+            set_editor_dirty();
+        });
+    }
+
+    /*
     * Manually add the handlers for the standard elements delete buttons
     * needs to add it also after deleting one standard element because
     * the container is refreshed and the buttons recreated
@@ -804,27 +840,41 @@ jQuery(function($) {
     }
 
     /*
-    * Manually add the handlers for the standard elements top delete buttons
-    * 'Delete last standard element' and 'Delete all'
+    * Manually add the handlers for the standards/standard elements top delete buttons
+    * 'Delete last' and 'Delete all'
     */
     function update_delete_button_handler() {
-      // 'Delete last standard element' button
-      $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function (){
-        update_parent_array();
-        eid--;
-        se_index--;
-        update_delete_element_button_handlers();
-        set_editor_dirty();
-      });
-      // 'Delete all' button
-      $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function (){
-        update_parent_array();
-        eid = 1;
-        se_index = 0;
-        update_delete_element_button_handlers();
-        set_editor_dirty();
-      });
+        // Standards section
+        // 'Delete last standard' button
+        $('div[data-schemaid="standards"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function (){
+          update_standard_array();
+          set_editor_dirty();
+        });
+        // 'Delete all' button
+        $('div[data-schemaid="standards"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function (){
+          update_standard_array();
+          set_editor_dirty();
+        });
+
+        // Standard element section
+        // 'Delete last standard element' button
+        $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function (){
+          update_parent_array();
+          eid--;
+          se_index--;
+          update_delete_element_button_handlers();
+          set_editor_dirty();
+        });
+        // 'Delete all' button
+        $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function (){
+          update_parent_array();
+          eid = 1;
+          se_index = 0;
+          update_delete_element_button_handlers();
+          set_editor_dirty();
+        });
     }
+
 
 });//end of jQuery wrapper
 
