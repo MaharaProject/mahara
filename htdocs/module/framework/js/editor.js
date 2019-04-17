@@ -367,20 +367,30 @@ jQuery(function($) {
         },
         });
         //add ids to things so we can call them more easily later.
-        $(".json-editor-btn-add").eq(2).attr("id", "add_standard");
-        $(".json-editor-btn-add").eq(4).attr("id", "add_standardelement");
+        $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standard");
+        $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standardelement");
         //creating ids for adding wysiwyg - not currently active: @TODO
-        $("div.form-group textarea.form-control").eq(0).attr("id", "title_desc_textarea");
-        $("div.form-group textarea.form-control").eq(2).attr("id", "std_desc_textarea");
-        $("div.form-group textarea.form-control").eq(4).attr("id", "std_element_desc_textarea");
+        $('div[data-schemapath="root.description"] > div > textarea').attr("id", "title_desc_textarea");
+        $('div[data-schemaid="standards"] textarea[data-schemaformat="textarea"]').each(function(){
+            var schemapath = $(this).closest('div[data-schemapath]').attr('data-schemapath').split('.');
+            var standardid = schemapath[2];
+            $(this).attr("id", "std_" +standardid + "_" + schemapath[3] + "_textarea");
+
+        })
+
+        $('div[data-schemaid="standardelements"] textarea[data-schemaformat="textarea"]').each(function(){
+            var schemapath = $(this).closest('div[data-schemapath]').attr('data-schemapath').split('.');
+            var standardelementid = schemapath[2];
+            $(this).attr("id", "std_element_" + standardelementid + "_" + schemapath[3] + "_textarea");
+        })
         //make text same as rest of site
         $("div.form-group p.form-text").addClass("description");
         $("div.form-group form-control-label").addClass("label");
         //add class for correct styling of help block text
-        $("[data-schemaid=\"standards\"] >p").addClass("help-block");
-        $("[data-schemaid=\"evidencestatuses\"] >p").addClass("help-block");
+        $('[data-schemaid="standards"] > p').addClass("help-block");
+        $('[data-schemaid="evidencestatuses"] > p').addClass("help-block");
         //set min row height for desc fields to 6
-        $("textarea[id$='_desc_textarea']").attr('rows', '6');
+        $("textarea[id$='_description_textarea']").attr('rows', '6');
         textarea_init();
         update_parent_array();
         set_parent_array();
