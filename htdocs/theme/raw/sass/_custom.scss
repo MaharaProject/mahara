@@ -3,6 +3,15 @@
 #exportgeneration {
     text-align: center;
 }
+#export .radio {
+    padding-bottom: 5px;
+    label {
+        padding-top: 3px;
+    }
+    .description {
+        padding-top: 0;
+    }
+}
 
 #progress-iframe { // old style progress bars, e.g. portfolio export
     border: 1px solid $gray-500;
