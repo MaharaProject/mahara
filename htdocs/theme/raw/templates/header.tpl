@@ -64,7 +64,7 @@
                     {/if}
                     {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
                         <div class="admin-title">
-                            <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
+                            <a href="{$WWWROOT}admin/" class="admin-site">{str tag="administration"}</a>
                         </div>
                     {/if}
                     <div id="loading-box" class="loading-box d-none"></div>

@@ -2237,7 +2237,6 @@ function admin_nav() {
             'url'    => 'admin/index.php',
             'title'  => get_string('adminhome', 'admin'),
             'weight' => 10,
-            'accesskey' => 'a',
             'iconclass' => 'home',
         ),
         'adminhome/home' => array(
@@ -2257,7 +2256,6 @@ function admin_nav() {
             'url'    => 'admin/site/options.php',
             'title'  => get_string('configsite', 'admin'),
             'weight' => 20,
-            'accesskey' => 's',
             'iconclass' => 'cogs',
         ),
         'configsite/siteoptions' => array(
@@ -2325,7 +2323,6 @@ function admin_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('users'),
             'weight' => 30,
-            'accesskey' => 'u',
             'iconclass' => 'user',
         ),
         'configusers/usersearch' => array(
@@ -2376,7 +2373,6 @@ function admin_nav() {
             'title'  => get_string('groups', 'admin'),
             'accessibletitle' => get_string('administergroups', 'admin'),
             'weight' => 40,
-            'accesskey' => 'r',
             'iconclass' => 'users',
         ),
         'managegroups/groups' => array(
@@ -2414,7 +2410,6 @@ function admin_nav() {
             'url'    => 'admin/users/institutions.php',
             'title'  => get_string('Institutions', 'admin'),
             'weight' => 50,
-            'accesskey' => 'i',
             'iconclass' => 'university',
         ),
         'manageinstitutions/institutions' => array(
@@ -2507,7 +2502,6 @@ function admin_nav() {
             'url'    => 'admin/extensions/plugins.php',
             'title'  => get_string('Extensions', 'admin'),
             'weight' => 70,
-            'accesskey' => 'e',
             'iconclass' => 'puzzle-piece',
         ),
         'configextensions/pluginadmin' => array(
@@ -2594,7 +2588,6 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('users'),
             'weight' => 10,
-            'accesskey' => 'u',
             'iconclass' => 'user',
         ),
         'configusers/usersearch' => array(
@@ -2633,7 +2626,6 @@ function institutional_admin_nav() {
             'title'  => get_string('groups', 'admin'),
             'accessibletitle' => get_string('administergroups', 'admin'),
             'weight' => 20,
-            'accesskey' => 'g',
             'iconclass' => 'users',
         ),
         'managegroups/archives' => array(
@@ -2659,7 +2651,6 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/institutions.php',
             'title'  => get_string('Institutions', 'admin'),
             'weight' => 30,
-            'accesskey' => 'i',
             'iconclass' => 'university',
         ),
         'manageinstitutions/institutions' => array(
@@ -2789,7 +2780,6 @@ function staff_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
-            'accesskey' => 'u',
             'iconclass' => 'user',
         ),
         'reports' => array(
@@ -2797,7 +2787,6 @@ function staff_nav() {
             'url'    => 'admin/users/statistics.php',
             'title'  => get_string('reports', 'statistics'),
             'weight' => 30,
-            'accesskey' => 'i',
             'iconclass' => 'pie-chart',
         ),
     );
@@ -2832,7 +2821,6 @@ function institutional_staff_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
-            'accesskey' => 'u',
             'iconclass' => 'user',
         ),
         'reports' => array(
@@ -2840,7 +2828,6 @@ function institutional_staff_nav() {
             'url'    => 'admin/users/statistics.php',
             'title'  => get_string('reports', 'statistics'),
             'weight' => 20,
-            'accesskey' => 'i',
             'iconclass' => 'pie-chart',
         ),
     );
@@ -2866,7 +2853,6 @@ function mahara_standard_nav() {
             'url' => '',
             'title' => get_string('dashboard', 'view'),
             'weight' => 10,
-            'accesskey' => 'd',
             'iconclass' => 'tachometer'
         ),
         'create' => array(
@@ -2895,7 +2881,6 @@ function mahara_standard_nav() {
             'url' => 'view/index.php',
             'title' => get_string('Viewscollections', 'view'),
             'weight' => 10,
-            'accesskey' => 'p',
         ),
         'create/tags' => array(
             'path' => 'create/tags',
@@ -2947,7 +2932,6 @@ function mahara_standard_nav() {
             'url' => 'group/index.php',
             'title' => get_string('groups'),
             'weight' => 30,
-            'accesskey' => 'g',
         ),
         'engage/institutionmembership' => array(
             'path' => 'engage/institutions',
