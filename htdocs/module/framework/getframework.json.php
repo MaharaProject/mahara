@@ -50,19 +50,16 @@ function get_framework($table, $select, $se_depth=0) {
         $standard_data = get_records_array('framework_standard', 'framework', $fw_data->id, 'priority');
         $data['standards'] = $standard_data;
         $se_data = array();
-
         foreach ($standard_data as $sk => $se) {
-            if (record_exists_select('framework_standard_element', "standard='$se->id'")) {
-            $se_data = get_records_array('framework_standard_element', 'standard', $se->id, 'priority');
-            }
-
-            $se_depth = 0;
-            foreach($se_data as $se) {
-                $se->depth = add_depth_to_ses($se, $se_data, $se_depth);
-            }
-            $data['standards']['element'][$sk] = $se_data;
+            if ($se_data = get_records_array('framework_standard_element', 'standard', $se->id, 'priority')) {
+                $se_depth = 0;
+                foreach($se_data as $se) {
+                    $se->depth = add_depth_to_ses($se, $se_data, $se_depth);
+                }
+                $data['standards']['element'][$sk] = $se_data;
             }
         }
+    }
     return $data;
 }
 
