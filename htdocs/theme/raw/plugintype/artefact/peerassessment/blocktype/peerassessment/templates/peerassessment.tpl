@@ -7,6 +7,13 @@
             <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
             {str tag=addpeerassessment section=blocktype.peerassessment/peerassessment}
         </a>
+    {elseif $exporter}
+        {if $instructions}
+            <div>{str tag='instructions' section='view'}</div>
+            <div class="viewinstruction-export">
+                {$instructions|safe}
+            </div>
+        {/if}
     {/if}
 </div>
 {/if}
