@@ -23,6 +23,7 @@ $string['clickheretodownload'] = 'Click here to download it';
 $string['continue'] = 'Continue';
 $string['startinghtmlexport'] = 'Starting HTML export';
 $string['startingleapexport'] = 'Starting Leap2A export';
+$string['startingpdfexport'] = 'Starting PDF export';
 $string['exportgeneratedsuccessfully'] = 'Export generated successfully. %sClick here to download it%s';
 $string['exportgeneratedsuccessfully1'] = 'Export generated successfully.';
 $string['exportgeneratedwitherrors'] = 'Export generated with some errors.';
@@ -34,6 +35,7 @@ $string['exportingviews'] = 'Exporting pages';
 $string['exportingcollections'] = 'Exporting collections';
 $string['exportingviewsprogresshtml'] = 'Exporting pages for HTML: %s/%s';
 $string['exportingviewsprogressleap'] = 'Exporting pages for Leap2A: %s/%s';
+$string['exportingviewsprogresspdf'] = 'Creating PDFs: %s/%s';
 $string['exportportfoliodescription1'] = '<p class="lead">This tool exports all of your portfolio information and pages. It does not export your site settings or any of the content you uploaded or created in groups.
 </p><p p class="lead">You can export your personal portfolio content. Your account settings or content uploaded or created in groups are not exported.</p>';
 $string['exportyourportfolio'] = 'Export your portfolio';

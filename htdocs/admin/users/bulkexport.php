@@ -15,6 +15,18 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 define('TITLE', get_string('bulkexporttitle1', 'admin'));
 
+$exportplugins = plugins_installed('export');
+
+if (!$exportplugins) {
+    die_info(get_string('noexportpluginsenabled', 'export'));
+}
+
+foreach ($exportplugins as $plugin) {
+    safe_require('export', $plugin->name);
+    $exportoptions[$plugin->name] = call_static_method(generate_class_name('export', $plugin->name), 'get_title');
+}
+$pdfrun = 'multi';
+
 /**
  * Convert a 2D array to a CSV file. This follows the basic rules from http://en.wikipedia.org/wiki/Comma-separated_values
  *
@@ -99,7 +111,7 @@ function create_zipfile($listing, $files) {
 }
 
 function bulkexport_submit(Pieform $form, $values) {
-    global $SESSION;
+    global $SESSION, $pdfrun;
 
     $usernames = array();
 
@@ -142,9 +154,25 @@ function bulkexport_submit(Pieform $form, $values) {
         if ($exporttype == 'html') {
             $exporter = new PluginExportHtml($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
         }
+        else if ($exporttype == 'pdf') {
+            if ($exportcount === 0 && $num_users === 1) {
+                $pdfrun = 'all';
+            }
+            else if ($exportcount === 0) {
+                $pdfrun = 'first';
+            }
+            else if ($num_users == ($exportcount + 1)) {
+                $pdfrun = 'last';
+            }
+            else {
+                $pdfrun = 'multi';
+            }
+            $exporter = new PluginExportPdf($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
+        }
         else {
             $exporter = new PluginExportLeap($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
         }
+
         try {
             $exporter->export(true);
             $zipfile = $exporter->export_compress();
@@ -160,6 +188,7 @@ function bulkexport_submit(Pieform $form, $values) {
     }
 
     if (!$zipfile = create_zipfile($listing, $files)) {
+        include_once(get_config('wwwroot') . 'export/download.php');
         export_iframe_die(get_string('bulkexportempty', 'admin'));
     }
 
@@ -211,8 +240,7 @@ $form = array(
         'exporttype' => array(
             'type' => 'select',
             'title' => get_string('chooseanexportformat', 'export'),
-            'options' => array('leap' => 'Leap2A',
-                               'html' => 'HTML'),
+            'options' => $exportoptions,
             'defaultvalue' => 'leap'
         ),
         'authinstance' => $authinstanceelement,

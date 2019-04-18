@@ -416,7 +416,7 @@ class PluginExportHtml extends PluginExport {
     /**
      * Dumps all views into the HTML export
      */
-    private function dump_view_export_data() {
+    protected function dump_view_export_data() {
         safe_require('artefact', 'comment');
         $progressstart = 55;
         $progressend   = 75;
@@ -517,7 +517,7 @@ class PluginExportHtml extends PluginExport {
      *          'description' => ...
      *      )
      */
-    private function get_view_collection_summary() {
+    protected function get_view_collection_summary() {
 
         $list = array();
         foreach ($this->collections as $id => $collection) {
@@ -840,7 +840,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
     /**
      * Copies the static files (stylesheets etc.) into the export
      */
-    private function copy_static_files() {
+    protected function copy_static_files() {
         global $THEME, $SESSION;
         require_once('file.php');
         $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';

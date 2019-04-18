@@ -49,6 +49,7 @@ foreach (array_keys($plugins) as $plugin) {
                     'disableable' => call_static_method($classname, 'can_be_disabled'),
                     'deprecated' => call_static_method($classname, 'is_deprecated'),
                     'name' => call_static_method($classname, 'get_plugin_display_name'),
+                    'dependencies' => call_static_method($classname, 'has_plugin_dependencies'),
                     'enableable' => call_static_method($classname, 'is_usable')
                 );
                 if (
@@ -106,11 +107,20 @@ foreach (array_keys($plugins) as $plugin) {
                     validate_plugin($plugin, $dir);
                     $classname = generate_class_name($plugin, $dir);
                     $classname::sanity_check();
-                    $name = call_static_method($classname, 'get_plugin_display_name');
-                    $plugins[$plugin]['notinstalled'][$dir]['name'] = $name;
+                    $plugins[$plugin]['notinstalled'][$dir]['name'] = call_static_method($classname, 'get_plugin_display_name');
+                    $plugins[$plugin]['notinstalled'][$dir]['dependencies'] = call_static_method($classname, 'has_plugin_dependencies');
                 }
                 catch (InstallationException $e) {
                     $plugins[$plugin]['notinstalled'][$dir]['notinstallable'] = $e->GetMessage();
+                }
+                // If there are 'required' dependencies then we mark the plugin notinstallable
+                if (isset($plugins[$plugin]['notinstalled'][$dir]['dependencies']['requires'])) {
+                    if (isset($plugins[$plugin]['notinstalled'][$dir]['notinstallable'])) {
+                        $plugins[$plugin]['notinstalled'][$dir]['notinstallable'] .= $plugins[$plugin]['notinstalled'][$dir]['dependencies']['requires'];
+                    }
+                    else {
+                        $plugins[$plugin]['notinstalled'][$dir]['notinstallable'] = $plugins[$plugin]['notinstalled'][$dir]['dependencies']['requires'];
+                    }
                 }
             }
             if ($plugin == 'artefact' && table_exists(new XMLDBTable('blocktype_installed'))) { // go check it for blocks as well

@@ -6,8 +6,8 @@ Feature: Mahara users can export collections with bulk option
 
 Background:
 Given the following "institutions" exist:
-       | name | displayname | registerallowed | registerconfirm |
-       | instone | Institution One | ON | OFF |
+  | name | displayname | registerallowed | registerconfirm |
+  | instone | Institution One | ON | OFF |
 
 And the following "users" exist:
   | username | password | email | firstname | lastname | institution | authname | role |
@@ -31,7 +31,7 @@ Scenario: Export collections in bulk
   And I choose "Export" in "Manage" from main menu
   When I select the radio "Just some of my collections"
   Then I should see "Select all"
-  Then I should see "Reverse selection"
+  And I should see "Reverse selection"
   When I follow "selection_all_collections"
   Then the "Collection UserA_01" checkbox should be checked
   And the "Collection UserA_02" checkbox should be checked
@@ -49,6 +49,13 @@ Scenario: Export collections in bulk
   And the "Collection UserA_03" checkbox should be checked
   When I click on "Generate export"
   Then I should see "Please wait while your export is being generated..."
+
+Scenario: Export collections in bulk as PDF
+  Given I log in as "admin" with password "Kupuh1pa!"
+  And I choose "Plugin administration" in "Extensions" from administration menu
+  Then I should see "Experimental export option that utilises Headless Chrome to Print PDFs"
+  And I should see "Requires \"chrome-php\""
+  And I should see "Requires config.php setting \"usepdfexport\" to be true"
 
 Scenario: Institution One admin locks First name, Last name fields
     I want to lock fields

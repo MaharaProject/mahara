@@ -2704,6 +2704,15 @@ abstract class Plugin implements IPlugin {
     public static function get_plugin_display_name() {
         return null;
     }
+
+    /**
+     * Check if plugin's contains dependencies before installing it.
+     * For example, it relies on an operating system package to be installed
+     * @return $tring or null
+     */
+    public static function has_plugin_dependencies() {
+        return null;
+    }
 }
 
 /**

@@ -943,6 +943,8 @@ class PluginExportAll extends PluginExport {
 
     protected $htmlexporter;
     protected $leapexporter;
+    protected $pdfexporter;
+    protected $pdfactive;
     protected $exportdir;
     protected $zipfile;
 
@@ -951,15 +953,24 @@ class PluginExportAll extends PluginExport {
         safe_require('export', 'leap');
         $this->htmlexporter = new PluginExportHtml($user, $views, $artefacts, $progresscallback);
         $this->leapexporter = new PluginExportLeap($user, $views, $artefacts, $progresscallback);
-
+        $this->pdfactive = get_field('export_installed', 'active', 'name', 'pdf');
+        if ($this->pdfactive) {
+            $this->pdfexporter = new PluginExportPdf($user, $views, $artefacts, $progresscallback);
+        }
         $this->exportdir = $this->htmlexporter->get('exportdir');
         $this->zipfile = 'mahara-export-user'
         . $user->get('id') . '-' . date('Y-m-d_H-i', time()) . '.zip';
     }
 
     public function is_diskspace_available() {
-        return ($this->htmlexporter->is_diskspace_available() && $this->leapexporter->is_diskspace_available());
+        $spaceok = true;
+        if ($this->pdfactive) {
+            $spaceok = ($spaceok && $this->pdfexporter->is_diskspace_available());
+        }
+        $spaceok = ($spaceok && $this->htmlexporter->is_diskspace_available() && $this->leapexporter->is_diskspace_available());
+        return $spaceok;
     }
+
     public static function get_title() {}
     public static function get_description() {}
 
@@ -973,6 +984,15 @@ class PluginExportAll extends PluginExport {
         }
         catch (SystemException $e) {
             throw new SystemException('Failed create html export: ' . $e->getMessage());
+        }
+        if ($this->pdfactive) {
+            $this->notify_progress_callback(0, get_string('startingpdfexport', 'export'));
+            try {
+                $pdf = $this->pdfexporter->export();
+            }
+            catch (SystemException $e) {
+                throw new SystemException('Failed create pdf export: ' . $e->getMessage());
+            }
         }
         $this->notify_progress_callback(0, get_string('startingleapexport', 'export'));
         try {

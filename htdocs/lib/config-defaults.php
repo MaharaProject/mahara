@@ -843,3 +843,12 @@ $cfg->saml_log_attributes = false;
  */
 //$cfg->saml_create_institution=true;
 //$cfg->saml_create_institution_default = 'mahara';
+
+/**
+ * Allow the export option called PDF export
+ * This option exports pages and collections as pdf files
+ *
+ * Note: This is an experimental feature requiring the install of a Chrome / Chromium browser on
+ * your server to ustilise the print to PDF commandline option - Use with caution.
+ */
+//$cfg->usepdfexport = true;
