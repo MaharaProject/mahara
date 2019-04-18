@@ -789,6 +789,12 @@ jQuery(function($) {
             if (peid_field) {
                 peid_field.setValue(element.value);
             }
+            // Also update the standard id to match the standard id of the parent
+            var pid_field = editor.getEditor("root.standardelements." + index + ".standardid");
+            if (pid_field) {
+                var parentid = element.value.split('.');
+                pid_field.setValue(parentid[0]);
+            }
         }
     }
 
