@@ -337,7 +337,9 @@ class Framework {
             }
         }
         $standardsvars = array('shortname','name','description');
+
         if (isset($this->standards) && is_array($this->standards)) {
+            $uniqueids = array();
             foreach ($this->standards['standards'] as $key => $standard) {
                 $sfordb = new stdClass();
                 $sfordb->framework = $this->id;
@@ -363,7 +365,7 @@ class Framework {
                     $standard->options = $standard->standardelement;
                 }
                 if ($sid && isset($standard->options) && is_array($standard->options)) {
-                    $uniqueids = array();
+
                     $priority = 0;
                     foreach ($standard->options as $option) {
                         $priority++;
