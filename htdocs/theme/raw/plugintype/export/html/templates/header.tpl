@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!doctype html>
 <html>
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
@@ -8,17 +8,50 @@
 {/foreach}
     </head>
     <body>
-        <div id="mahara-logo">
-            <a href="https://mahara.org/"><img src="{$maharalogo}" alt="Mahara export"></a>
-        </div>
-        <h1><a href="{$rootpath}index.html">{$page_heading}</a></h1>
-        <div id="content">
-            {if !$nobreadcrumbs}<div id="breadcrumbs" class="breadcrumbs">
-                <ul>
-                    <li>{str tag=youarehere section=export}: <a href="{$rootpath}index.html">{str tag=home}</a></li>
-{foreach from=$breadcrumbs item=crumb}
-                    <li>&raquo; {if $crumb.path}<a href="{$crumb.path}">{$crumb.text}</a>{else}{$crumb.text}{/if}</li>
-{/foreach}
-                </ul>
+        <header class="header fixed-top no-site-messages">
+            <div class="navbar navbar-default navbar-main">
+                <div class="container">
+                    <div id="logo-area" class="logo-area">
+                        <a class="logo change-to-small" href="https://mahara.org/">
+                            <img src="{$maharalogo}" alt="Mahara">
+                        </a>
+                        <a href="https://mahara.org/" class="logoxs change-to-small-default">
+                            <img src="{$maharalogosmall}" alt="Mahara">
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div id="breadcrumbs-footer"></div>{/if}
+        </header>
+        <div class="pageheader">
+            <div class="container pageheader-content">
+                <div class="row">
+                    <div class="col-md-12 main">
+                        <div class="main-column">
+                            <div id="pageheader-column-container">
+                                <h1 id="viewh1" class="page-header">
+                                    <span class="section-heading">{$page_heading}</span>
+                                </h1>
+                                <div class="text-small">
+                                {if !$nobreadcrumbs}
+                                    <div id="breadcrumbs" class="breadcrumbs">
+                                    <ul>
+                                        <li>{str tag=youarehere section=export}: <a href="{$rootpath}index.html">{str tag=home}</a></li>
+                                        {foreach from=$breadcrumbs item=crumb}
+                                            <li>&raquo; {if $crumb.path}<a href="{$crumb.path}">{$crumb.text}</a>{else}{$crumb.text}{/if}</li>
+                                        {/foreach}
+                                    </ul>
+                                    </div>
+                                {/if}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container main-content">
+            <div class="row">
+                <main id="main" class="col-md-12 main">
+                    <div id="content" class="main-column">
+                        <div id="main-column-container">
