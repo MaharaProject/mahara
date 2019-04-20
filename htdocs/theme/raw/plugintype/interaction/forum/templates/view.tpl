@@ -71,7 +71,7 @@
         </table>
 
         {if $regulartopics}
-        <div>
+        <div class="fullwidth forumselectwrap">
             {$pagination|safe}
         </div>
         {/if}

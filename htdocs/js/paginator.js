@@ -67,10 +67,6 @@ return function(id, list, heading, script, extradata) {
 
     this.rewritePaginatorLinks = function() {
         $('#' + self.id + ' li').each(function() {
-            // Add links so bootstrap knows this is a pagination item
-            $(this).addClass("page-item");
-            $(this).find("> *").addClass("page-link");
-
             var a = $(this).find('a')[0];
 
             // If there is a link
