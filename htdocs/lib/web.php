@@ -3124,7 +3124,7 @@ function right_nav() {
         'settings/apps' => array(
             'path' => 'settings/apps',
             'url' => 'account/apps.php',
-            'title' => get_string('myapps'),
+            'title' => get_string('connectedapps'),
             'weight' => 50
         ),
         'settings/notifications' => array(
