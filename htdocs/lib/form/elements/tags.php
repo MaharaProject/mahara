@@ -78,7 +78,7 @@ function translate_tags_to_names(array $ids) {
         $tagname = remove_prefix($id);
 
         if (isset($alltags['tags'][$tagname])) {
-            $results[] = (object) array('id' => $tagname, 'text' => display_tag($tagname, $alltags['tags']));
+            $results[] = (object) array('id' => $tagname, 'text' => display_tag($tagname, $alltags['tags'], true));
         }
         else {
             $results[] = (object) array('id' => $tagname, 'text' => $tagname);
@@ -91,16 +91,23 @@ function translate_tags_to_names(array $ids) {
  * Display formatted tag
  * Currently is tag name plus the usage count
  *
- * @param string $name    Tag name
- * @param string $alltags  Array of tags to get the information from
+ * @param string  $name       Tag name
+ * @param string  $alltags    Array of tags to get the information from
+ * @param boolean $showcount  Whether or not to add the tag count to output
  * @return $tag Formatted tag
  */
-function display_tag($name, $alltags) {
+function display_tag($name, $alltags, $showcount = false) {
     if ($alltags[$name]->prefix && !empty($alltags[$name]->prefix)) {
         $prefix = $alltags[$name]->prefix;
-        return $prefix . ': '. $alltags[$name]->tag . ' (' . $alltags[$name]->count . ')';
+        $tag = $prefix . ': '. $alltags[$name]->tag;
     }
-    return $alltags[$name]->tag . ' (' . $alltags[$name]->count . ')';
+    else {
+        $tag = $alltags[$name]->tag;
+    }
+    if ($showcount) {
+        $tag .= ' (' . $alltags[$name]->count . ')';
+    }
+    return $tag;
 }
 
 /**

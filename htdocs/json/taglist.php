@@ -42,7 +42,7 @@ while ($more && count($tmptag) < $tagsperpage) {
         }
 
         $tmptag[] = (object) array('id' => $tag->tag,
-            'text' => display_tag($tag->tag, $tags['tags'])
+            'text' => display_tag($tag->tag, $tags['tags'], true)
         );
     }
     $page++;
