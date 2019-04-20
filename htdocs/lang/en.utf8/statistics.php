@@ -227,15 +227,16 @@ $string['reportdescusers'] = '<ul>
 
 $string['reportuserdetails'] = 'User details';
 $string['reportdescuserdetails'] = '<ul>
-<li>Username</li>
-<li>Email address</li>
 <li>First name</li>
 <li>Last name</li>
+<li>Email address</li>
 <li>ID number</li>
 <li>Display name</li>
+<li>Username</li>
 <li>Remote username</li>
+<li>Quota used</li>
 <li>Last login</li>
-<li>Number of probation points</li>
+<li>Number of probation points (if enabled)</li>
 </ul><p>People whose user accounts were created during the selected time period are displayed.</p>';
 
 $string['reportuseractivity'] = 'User activity';
