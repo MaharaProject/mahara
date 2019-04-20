@@ -11,7 +11,7 @@ Scenario: Admin set up preconditions for test and confirm that the title text is
     And I follow "Configuration for module mobileapi"
     And I enable the switch "Manual token generation"
     And I press "Save"
-    When I choose "Apps" in "Settings" from user menu
+    When I choose "Connected apps" in "Settings" from user menu
     And I follow "Mahara Mobile" in the ".arrow-bar" "css_element"
     And I click on "Generate"
     # confirm that there is an element with title=Delete "Manually created"

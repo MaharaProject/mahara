@@ -193,5 +193,5 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  Then I should see "Preferences"
  And I should see "Legal"
  And I should see "Notifications"
- And I should see "Apps"
+ And I should see "Connected apps"
  And I should see "Logout"

@@ -886,11 +886,10 @@ $string['profileimagetexttemplate'] = "User's profile picture will go here";
 $string['profileimagetextanonymous'] = "anonymous profile picture";
 $string['primaryemailinvalid'] = 'Your primary email address is invalid.';
 $string['addemail'] = 'Add email address';
-$string['myapps'] = 'Apps';
-$string['myapplications'] = 'My applications';
+$string['connectedapps'] = 'Connected apps';
 $string['acccountappsdescription'] = 'Here you can administer any applications that require token access.';
 $string['acccountaddappsdescription'] = 'Currently, there are no plugins active that allow token administration.';
-$string['acccountchooseappsdescription'] = 'To administer your application tokens, please select the application from the "My applications" bar.';
+$string['acccountchooseappsdescription'] = 'To administer your application tokens, please select the application from the "Connected apps" bar.';
 
 // Search
 $string['search'] = 'Search';
