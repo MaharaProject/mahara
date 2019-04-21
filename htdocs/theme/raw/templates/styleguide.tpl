@@ -173,9 +173,9 @@ Switchboxes are used for Yes/No, On/Off or other true/false type fields. They ar
 This button is used to show there are more options available. An example can be found on a regular portfolio page where the items of the "Watchlist" and "Objectionable content" are available via the "More options" button. Note: Styles are only added for layout here in the style guide.
 ```
 <div class="btn-group" style="margin-left: 200px;">
-    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" title="{str tag='moreoptions'}" aria-expanded="false">
         <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
-        <span class="sr-only">{str tag=more...}</span>
+        <span class="sr-only">{str tag=moreoptions}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
         <li class="dropdown-item">
@@ -740,7 +740,7 @@ This card is used to show a page.
         <div class="card-footer">
             <div class="page-access"></div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="More...">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">More options for "Dashboard page"</span>
@@ -811,7 +811,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 </ul>
             </div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="More...">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">More options for "Dashboard page"</span>
@@ -883,7 +883,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 </ul>
             </div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="More...">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">More options for "collection"</span>

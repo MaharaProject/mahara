@@ -71,7 +71,7 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
     And I fill in "Private comment by AdminB" in editor "Comment"
     And I disable the switch "Make comment public"
     And I press "Comment"
-    And I press "More..."
+    And I press "More options"
     And I follow "Remove page from watchlist"
     And I log out
     And I log in as "AdminA" with password "Kupuh1pa!"
