@@ -16,7 +16,7 @@
 
         <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-toggle="dropdown" aria-expanded="false">
             <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
-            <span class="sr-only">{str tag="more..."}</span>
+            <span class="sr-only">{str tag="moreoptions"}</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
 

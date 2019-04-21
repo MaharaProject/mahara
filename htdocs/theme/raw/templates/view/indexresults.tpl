@@ -95,7 +95,7 @@
                             </div>
 
                             <div class="page-controls">
-                                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='more...' section='mahara'}">
+                                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions' section='mahara'}">
                                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="sr-only">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>

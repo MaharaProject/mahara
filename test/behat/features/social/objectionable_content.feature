@@ -21,7 +21,7 @@ Scenario: User reports objectionable content on a page and admin responds
     Given I log in as "UserB" with password "Kupuhipa1!"
     And I wait "1" seconds
     And I follow "Page UserA_01"
-    And I press "More..."
+    And I press "More options"
     And I follow "Report objectionable material"
     And I fill in "Complaint" with "Some complain text"
     And I press "Notify administrator"

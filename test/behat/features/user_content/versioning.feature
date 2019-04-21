@@ -23,7 +23,7 @@ Scenario: Add blocks and create versions
     And I set the field "Block content" to "Here is the first version of the block."
     And I press "Save"
     And I display the page
-    And I press "More..."
+    And I press "More options"
     And I follow "Save to timeline"
     And I should see "Saved to timeline"
     And I follow "Edit"
@@ -32,9 +32,9 @@ Scenario: Add blocks and create versions
     And I set the field "Block content" to "Here is the second version of the block."
     And I press "Save"
     And I display the page
-    And I press "More..."
+    And I press "More options"
     And I follow "Save to timeline"
-    And I press "More..."
+    And I press "More options"
     And I follow "Timeline"
     And I follow "Go to the next version"
     And I wait "1" seconds
