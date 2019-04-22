@@ -195,12 +195,17 @@ if ($fw_to_edit) {
     }
 }
 else {
+    $content->active = false;
     $framework = new Framework(null, $content);
 }
 
 $framework->commit();
 $framework->set_config_fields();
-$data = $form_data['institution'];
+
+$data['id'] = $framework->get('id');
+$data['institution'] = $form_data['institution'];
+$data['name'] = $framework->get('name');
+
 $message = get_string('successmessage', 'module.framework');
 
 json_reply(false, (object) array('message' => $message, 'data' => $data));
