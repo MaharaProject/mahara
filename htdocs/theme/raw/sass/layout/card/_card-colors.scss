@@ -89,7 +89,7 @@
             color: $state-warning-text;
         }
         .card-body {
-            background-color: $card-bg;
+            background-color: $state-warning-bg;
         }
         .card-footer {
             background-color: scale-color($state-warning-bg, $lightness: 70%);
