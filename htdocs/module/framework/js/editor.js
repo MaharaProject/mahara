@@ -140,7 +140,18 @@ jQuery(function($) {
             json_form.fw_id = fw_id;
         }
         //save completed form data
-        sendjsonrequest(url, json_form, 'POST');
+        sendjsonrequest(url, json_form, 'POST', function(data) {
+            // get framework id for next save
+            fw_id = data.data.id;
+
+            // place the name of the framework in the "Edit" dropdown
+            $('select#edit').append($('<option>', {value:data.data.id, text:data.data.name}));
+            $('select#edit option').last().prop('selected', true);
+            edit = true;
+
+            // reset the "Copy" dropdown
+            $("#copy option:eq(0)").prop('selected', true);
+        });
         window.scrollTo(0,0);
     });//end of functionality implemented outside the editor
 
