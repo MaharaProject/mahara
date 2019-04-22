@@ -623,8 +623,10 @@ class external_api {
                 if (!empty($customkeys) && !get_config('productionmode')) {
                     log_info(get_string('errorunexpectedcustomkey', 'auth.webservice', $customkeys));
                 }
-                if (!empty($keys)) {
-                    throw new WebserviceInvalidParameterException(get_string('errorunexpectedkey', 'auth.webservice', $keys));
+                if (!empty($keys) && !get_config('productionmode')) {
+                    // We will stop throwing error on unexpected param keys and instead just show them in error log
+                    // when the site is not in production mode
+                    log_info(get_string('errorunexpectedkey', 'auth.webservice', $keys));
                 }
             }
             return $result;
