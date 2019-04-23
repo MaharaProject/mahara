@@ -163,19 +163,15 @@ jQuery(function($) {
          * Custom dropdown creates a fake select box that can have items of an
          * arbitrary length (unlike attachInputDropdown which uses a select).
          * For screenreaders, it works like a UL of links.
-         * Keyboard nav doesn't work for sighted users though.
          */
 
-        // open the dropdown when it is clicked
-        $('.custom-dropdown > .picker').on("click", function() {
-            $(this).parent().children('ul').toggleClass('d-none');
-        });
-
-        // close the dropdown when there is a click anywhere outside it
-        $(document).on('click', function(event) {
-            if (!$(event.target).closest('.custom-dropdown').length) {
-                $('.custom-dropdown').children('ul').addClass('d-none');
-              }
+         /* Utilize bootstrap functions for showing/ hiding the list when
+         *  user presses the 'Enter' key (keyCode 13)
+         */
+        $('.custom-dropdown > .picker').keydown(function(e){
+            if (e.keyCode == 13) {
+                $(this).parent().children('ul').collapse('toggle');
+            }
         });
     }
 

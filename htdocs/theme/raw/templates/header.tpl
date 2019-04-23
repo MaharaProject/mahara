@@ -5,7 +5,7 @@
 {include file="header/head.tpl"}
 <body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}admin{/if} {if $loggedout}loggedout{/if} {if $pagename}{$pagename}{/if} {$presentation|default:'window'}">
     <div class="skiplink btn-group btn-group-top">
-        <a class="sr-only sr-only-focusable btn btn-secondary" href="#main">{str tag=skipmenu}</a>
+        <a class="sr-only sr-only-focusable btn btn-secondary" {if $headertype=='page'}href="#header-content"{else}href="#main"{/if}>{str tag=skipmenu}</a>
     </div>
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
@@ -120,10 +120,8 @@
     </header>
 
     {if $headertype == "page"}
-        {include file="header/pageactions.tpl"}
         {include file="header/pageheader.tpl"}
     {elseif $headertype == "profile"}
-        {include file="header/profileactions.tpl"}
         {include file="header/profileheader.tpl"}
     {elseif $headertype == "matrix"}
         {include file="header/matrixheader.tpl"}

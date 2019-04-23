@@ -180,7 +180,8 @@ body.presentation-iframe {
 // Pages and collections page header
 
 .pageactions {
-    position: relative;
+    position: absolute;
+    top: 0px;
 
     .btn-group-vertical {
         position: fixed;
@@ -192,6 +193,7 @@ body.presentation-iframe {
 
 .pageheader {
     background: $pageheader-bg;
+    position: relative;
 
     .main {
         padding-top: 30px;
@@ -229,8 +231,8 @@ body.presentation-iframe {
 }
 
 // push in the right page margin to allow room for floating menu
-.pageactions ~ .pageheader .pageheader-content,
-.pageactions ~ .main-content {
+.pageheader-actions,
+.pageheader-actions + .main-content {
     padding-right: 50px;
 }
 

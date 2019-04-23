@@ -1,4 +1,4 @@
-<div class="pageheader">
+<div id="header-content" class="pageheader pageheader-actions">
     <div class="container pageheader-content">
         <div class="row">
             <div class="col-md-12 main">
@@ -42,6 +42,7 @@
                             {/if}
                         </h1>
                         {/if}
+
                         <div class="btn-group-top-below">
                             {if $toolbarhtml}
                                 {$toolbarhtml|safe}
@@ -64,6 +65,8 @@
                             </div>
                             {/if}
                         </div>
+
+                        {include file="header/pageactions.tpl"}
                     </div>
                 </div>
             </div>

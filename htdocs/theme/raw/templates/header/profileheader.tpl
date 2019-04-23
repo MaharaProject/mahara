@@ -1,4 +1,4 @@
-<div class="pageheader profileheader">
+<div class="pageheader profileheader pageheader-actions">
     <div class="container pageheader-content">
         <div class="row">
             <div class="{if $relationship == 'pending'}col-lg-6 {else}col-md-12{/if} main">
@@ -45,6 +45,7 @@
                     {/if}
                 {/if}
 
+                {include file="header/profileactions.tpl"}
             </div>
 
             {if $relationship == 'pending'}

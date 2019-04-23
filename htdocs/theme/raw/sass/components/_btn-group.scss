@@ -123,6 +123,10 @@
     z-index: 3;
     margin-left: 5px;
 }
+// except add pages to collections need no margin-left
+.pagesavailable .btn-group {
+    margin-left: 0;
+}
 
 // Chrome bug - flex container doesn't work on fieldset tag
 fieldset.btn-group {

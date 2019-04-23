@@ -703,7 +703,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
     <h2>{str tag=Collection section=collection}: Collection 1</h2>
     <p class="navlabel">{str tag=navtopage section=collection}</p>
     <nav class="custom-dropdown dropdown">
-        <ul class="d-none">
+        <ul id="pagelist" class="collapse">
             <li>
                 <a href="" data-index="0">Page 1</a>
             </li>
@@ -714,7 +714,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
                 <a href="" data-index="2">Page 3</a>
             </li>
         </ul>
-        <span class="picker form-control">{str tag=viewingpage section=collection}
+        <span class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag=viewingpage section=collection}
             <span id="currentindex" data-currentindex="1">2</span>
             /3
         </span>
