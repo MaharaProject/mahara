@@ -42,3 +42,9 @@
     border: 1px solid scale-color($gray-400, $lightness: 8%);
     color: $gray-500;
 }
+
+.alert-submitted {
+    background-color: $state-submitted-bg;
+    border: 1px solid $state-submitted-border;
+    color: $state-submitted-text;
+}
