@@ -253,7 +253,7 @@ jQuery(function($) {
                         "description": get_string('standardsdescription'),
                         "items": {
                             "title": get_string('standard'),
-                            "headerTemplate": "{{i1}} - {{self.shortname}}",
+                            "headerTemplate": "{{self.shortname}}",
                             "type": "object",
                             "id": "standard",
                             "options": {
@@ -338,7 +338,20 @@ jQuery(function($) {
                                     "type": "string",
                                     "title": get_string('elementid'),
                                     "default": '1.1',
-                                    "description": get_string('elementiddesc')
+                                    "description": get_string('elementiddesc'),
+                                    "options": {
+                                        "hidden": true,
+                                    },
+                                },
+                                "standardoptions": {
+                                    "title": get_string('standardid'),
+                                    "id": "standardoptions",
+                                    "type": "string",
+                                    "description": get_string('standardiddesc1'),
+                                    "enumSource": "source",
+                                    "watch": {
+                                        "source": "sid_array"
+                                    },
                                 },
                                 "parentid": {
                                     "title": get_string('parentelementid'),
@@ -352,18 +365,28 @@ jQuery(function($) {
                                 },
                                 "parentelementid": {
                                     "id": "parentelementid",
-                                    "type": "number",
+                                    "type": "string",
                                     "options": {
                                         "hidden": true,
                                     },
                                 },
                                 "standardid": {
-                                    "title": get_string('standardid'),
+                                    "id": "standardid",
                                     "type": "number",
-                                    "default": 1,
+                                    "default" : 1,
                                     "options": {
-                                        "hidden": true
-                                    }
+                                        "hidden": true,
+                                    },
+                                },
+                                "sid_array": {
+                                    "id": "hidden_sid_array",
+                                    "type": "array",
+                                    "items": {
+                                        "enum": standard_array,
+                                    },
+                                    "options": {
+                                        "hidden": true,
+                                    },
                                 },
                                 "pid_array": {
                                     "id": "hidden_pid_array",
@@ -405,7 +428,7 @@ jQuery(function($) {
         update_parent_array();
         update_standard_array();
 
-        set_parent_array();
+        set_standard_array();
         add_parent_event();
 
         update_delete_button_handler();
@@ -417,16 +440,19 @@ jQuery(function($) {
             std_index = standard_array.length;
             var sid_field = editor.getEditor("root.standards." + std_index + ".standardid");
             sid_field.setValue(standard_array.length + 1);
-            var se_sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
-            if (se_sid_field) {
-                se_sid_field.setValue(standard_array.length + 1);
-            }
+            // var se_sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
+            // if (se_sid_field) {
+            //     se_sid_field.setValue(standard_array.length + 1);
+            // }
             // Reset standard element count
             eid = 0;
+            update_standard_array();
             update_parent_array();
             update_standard_array();
 
-            set_parent_array();
+            //set_parent_array();
+            set_standard_array();
+
             textarea_init();
             set_editor_dirty();
         });
@@ -436,20 +462,23 @@ jQuery(function($) {
             se_index = parent_array.length - 1;
 
             var eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
-            var sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
+            var sid_field = editor.getEditor("root.standardelements." + se_index + ".standardoptions");
             var eid_val;
             if (standard_array.length == 0) {
                 eid_val = "1." + eid;
             }
             else {
                 eid ++;
-                eid_val = standard_array.length + "." + eid;
+                eid_val = standard_array[standard_array.length - 1] + "." + eid;
             }
             eid_field.setValue(eid_val);
             set_sid(eid_val, sid_field);
 
+            update_standard_in_standard_element(se_index, standard_array[standard_array.length - 1]);
+
             update_parent_array();
             update_standard_array();
+            set_standard_array();
 
             set_parent_array();
             add_parent_event();
@@ -588,6 +617,7 @@ jQuery(function($) {
                 }
             });
             update_standard_array();
+            var parent_nums = new Array();
             // First 'each' is all the standard elements associated with a standard
             $.each(data.data.standards.element, function (k, value) {
                 var se_array = value;
@@ -613,7 +643,7 @@ jQuery(function($) {
                         add_parent_event();
                     }
                     // Each value from a standard element
-                    $.each(value, function (k,value ) {
+                    $.each(value, function (k, value) {
                         // Set if exists - works for shortname, name and description
                         var se = editor.getEditor("root.standardelements." + se_index + "." + k);
                         if (se) {
@@ -621,10 +651,8 @@ jQuery(function($) {
                         }
                         // Standard is standardid in the editor
                         if (k === "standard") {
-                            var sid_field = editor.getEditor("root.standardelements." + se_index + "." + "standardid");
-                            if (sid_field && standard_array.length > 0) {
-                                sid_field.setValue(std_nums.indexOf(value));
-                            }
+                            var standardid = std_nums.indexOf(value);
+                            update_standard_in_standard_element(se_index, standardid);
                         }
                         // Priority is elementid in the editor - if there is no parentid, we just
                         // set the element id with the priority
@@ -659,14 +687,19 @@ jQuery(function($) {
                         }
                     });
                     // Since pid_val and eid_val depend on each other, we need to set them outside the loop.
-                    pid_field = editor.getEditor("root.standardelements." + se_index + ".parentid");
+                    pid_field = editor.getEditor("root.standardelements." + se_index + ".parentelementid");
                     eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
+                    var suffix;
                     if (pid_val && eid_field) {
-                        eid_field.setValue(std_nums.indexOf(value.standard) + "." + pid_val + "." + eid_val);
-                        pid_field.setValue(std_nums.indexOf(value.standard) + "." + pid_val);
+                        suffix = get_element_suffix(parent_nums, parent_nums[value.parent]);
+                        pid_field.setValue(parent_nums[value.parent]);
+                        eid_field.setValue(parent_nums[value.parent] + "." + suffix);
+                        parent_nums[value.id] = parent_nums[value.parent] + "." + suffix;
                     }
                     else if (eid_field) {
-                        eid_field.setValue(std_nums.indexOf(value.standard) + "." + eid_val);
+                        suffix = get_element_suffix(parent_nums, std_nums.indexOf(value.standard));
+                        eid_field.setValue(std_nums.indexOf(value.standard) + "." + suffix);
+                        parent_nums[value.id] = std_nums.indexOf(value.standard) + "." + suffix;
                     }
                     update_parent_array();
                     pid_val = null;
@@ -683,7 +716,13 @@ jQuery(function($) {
         });
     }
     // End of populate_editor()
-
+    function get_element_suffix(taken, parent) {
+        var i = 1;
+        while ($.inArray(parent + "." + i, taken) > -1) {
+            i++;
+        }
+        return (i);
+    }
     // Add textarea expand event to description fields
     function textarea_init() {
         // Creating ids for adding wysiwyg - not currently active: @TODO
@@ -742,6 +781,10 @@ jQuery(function($) {
         });
     }
 
+    function get_standard_array() {
+        return standard_array >= 1 ? standard_array : 1;
+    }
+
     function update_standard_array() {
         standard_array = [];
         $('[data-schemaid="standard"]').each(function() {
@@ -754,37 +797,78 @@ jQuery(function($) {
         });
     }
 
-    // Add the list of possible parent ids to the dropdown
+    /**
+    * Updates standard dropdown values for all standard elements
+    */
+    function set_standard_array() {
+        var field;
+        $('[data-schemaid="standardelement"]').each(function() {
+            // Populate the standard id options
+            var selectfield = $(this).find('[data-schemaid="standardoptions"]');
+
+            set_standard_array_field(selectfield);
+
+            // If standardid hidden field is set, then select the standardid in the dropdown
+            var standardid = $(this).find('[name$="[elementid]"]')[0].value.split('.')[0];
+            selectfield.find('select option[VALUE="' + standardid + '"]').prop('selected', true);
+        });
+    }
+
+    /**
+     * Updates standard dopdown values in select field given
+     * @param selectfield html select element
+     */
+    function set_standard_array_field(selectfield) {
+        var field;
+        field = selectfield.data("schemapath");
+        field = field.replace(/\./g, '\]\[');
+        field = field.replace(/^root\](.*)$/, 'root$1\]');
+        $("[name=\"" + field + "\"]").empty();
+        $("[name=\"" + field + "\"]").addClass("select");
+        $.each(standard_array, function (k, value) {
+            $("[name=\"" + field + "\"]").append($('<option>', {
+                value: value,
+                text: value
+            }));
+        });
+    }
+
+    /**
+      * Add the list of possible parent ids to the dropdown
+      */
     function set_parent_array() {
         var field;
-        var num = 0;
-        $("[data-schemaid=\"standardelement\"]").each(function() {
-            field = ($(this).data("schemapath") + ".parentid");
-            field = field.replace(/\./g, '\]\[');
-            field = field.replace(/^root\](.*)$/, 'root$1\]');
+        $('[data-schemaid="standardelement"]').each(function() {
+            //get index of standard element
+            var index = this.id.split('.');
+            index = index[index.length-1];
 
-            // Clear old element ids from the dropdown
-            $("[name=\"" + field + "\"]").empty();
-            $("[name=\"" + field + "\"]").addClass("select");
-            $("[name=\"" + field + "\"]").attr("id", "parent_select_" + num);
-            num++;
-            $.each(parent_array, function (k, value) {
-                $("[name=\"" + field + "\"]").append($('<option>', {
-                    value: value,
-                    text: value
-                }));
-            });
+            var sid_field = editor.getEditor("root.standardelements." + index + "." + "standardid");
+            var standardid = sid_field.input.value;
+            update_standard_in_standard_element(index, standardid);
+            field = $(this).find('[data-schemaid="standardoptions"] .form-control');
+            filter_parent_options(field[0], standardid);
         });
     }
 
     // Add an event to update the element id when the parent id is changed
     function add_parent_event() {
-        $("[data-schemaid=\"parentid\"] .form-control").each(function () {
+        $('[data-schemaid="parentid"] .form-control').each(function () {
             $(this).off('change');
-            $(this).on('change', function () {
+            $(this).on('change', function() {
                 update_eid(this);
             });
             update_eid(this);
+        });
+
+        $('[data-schemaid="standardoptions"] .form-control').each(function () {
+            $(this).off('change');
+            $(this).on('change', function (el) {
+                // get selected value
+                var standardid = el.target.selectedOptions[el.target.selectedIndex].value;
+                update_sid(this);
+                filter_parent_options(this, standardid);
+            });
         });
     }
 
@@ -794,41 +878,125 @@ jQuery(function($) {
             var index = element.name.replace(/.*\[(\d*)\].*/, '$1');
             var eid_field = editor.getEditor("root.standardelements." + index + ".elementid");
             if (eid_field) {
-                eid_field.setValue(element.value + "." + get_eid(element.value));
+                eid_field.setValue(element.value + "." + create_eid_number(element.value, 'parentid'));
             }
             // And set parentelementid in the editor
             var peid_field = editor.getEditor("root.standardelements." + index + ".parentelementid");
             if (peid_field) {
                 peid_field.setValue(element.value);
             }
-            // Also update the standard id to match the standard id of the parent
+            update_parent_array();
+            set_parent_array();
+        }
+    }
+
+    /**
+     * Update the standardid hidden field based on the value selected in the dropdown
+     * @param element: html select from standard element section
+     */
+    function update_sid(element) {
+        if (element.value) {
+            var index = element.name.replace(/.*\[(\d*)\].*/, '$1');
+            // update standard id hidden field
             var pid_field = editor.getEditor("root.standardelements." + index + ".standardid");
             if (pid_field) {
-                var parentid = element.value.split('.');
-                pid_field.setValue(parentid[0]);
+                pid_field.setValue(element.value);
+            }
+            // update element id hidden field
+            var eid_field = editor.getEditor("root.standardelements." + index + ".elementid");
+            if (eid_field) {
+                eid_field.setValue(element.value + "." + create_eid_number(element.value, 'standardid'));
             }
         }
     }
 
     /**
-     * Update the element id after the parent id has been changed
+    * Set the parent id dropdown of the element to have
+    * elements ids beloging to the standard in the standardid field
+    * @param element in the select html element that contains the standard id
+    * @param standardid standard id
+    */
+    function filter_parent_options(element, standardid) {
+        if (element) {
+            var index = element.name.replace(/.*\[(\d*)\].*/, '$1');
+            // get element id
+            var eid_field = editor.getEditor("root.standardelements." + index + ".elementid");
+            var elementid = eid_field.input.value;
+
+            // get parent element id dropdown field
+            var pid_field = editor.getEditor("root.standardelements." + index + ".parentid");
+            pid_field = $('[name="' + pid_field.formname + '"]');
+
+            // get the hidden parent id, to slect it from the dropdown
+            var parentid_field = editor.getEditor("root.standardelements." + index + ".parentelementid");
+
+            // Clear old element ids from the dropdown
+            pid_field.empty();
+            pid_field.addClass("select");
+            pid_field.attr("id", "parent_select_" + index);
+
+            pid_field.append($('<option>', {
+                value: '',
+                text: ''
+            }));
+
+            $.each(parent_array, function (k, value) {
+                if (value.startsWith(standardid) && elementid != value) {
+                    if (parseInt(parentid_field.input.value) && parentid_field.input.value == value) {
+                        pid_field.append($('<option>', {
+                          value: value,
+                          text: value,
+                          selected: true
+                        }));
+                    }
+                    else {
+                        pid_field.append($('<option>', {
+                          value: value,
+                          text: value,
+                        }));
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     *  Calculates the element id suffix after the parent id/standard id has been changed
      *  @param parent_id The parent id selected from the dropdown
+     *  @param source is 'standardid' or 'parentid' depending which dropdown was changed
+     *  @return number of elements that have the same parentid
      */
-    function get_eid(parent_id) {
+    function create_eid_number(parent_id, sourcefield) {
         var pel_array = [];
-        $("[data-schemaid=\"standardelement\"] .form-control[name$=\"parentid\]\"").each(function () {
+        $('[data-schemaid="standardelement"] .form-control[name$="' + sourcefield + ']"').each(function () {
             if (this.value) {
                 pel_array.push(this.value);
             }
         });
         count_subel = 0;
         $(pel_array).each(function(k, val) {
-
             if (val == parent_id) {
                 count_subel++
             }
         });
         return count_subel;
+    }
+
+    /**
+    * Sets the stadardid hidden field and select the standard id from the dropdown
+    * @param index of the standard element section
+    * @param standardid id to set
+    */
+    function update_standard_in_standard_element(index, standardid) {
+        // Set the standardid hidden field
+        var sid_field = editor.getEditor("root.standardelements." + index + "." + "standardid");
+        if (sid_field && standard_array.length > 0) {
+            sid_field.setValue(standardid);
+        }
+        // Select corresponding element in the dropdown
+        var sidoptions_field = editor.getEditor("root.standardelements." + index + "." + "standardoptions");
+        set_standard_array_field($(sidoptions_field.container));
+        sidoptions_field.input.selectedIndex = standardid - 1;
     }
 
     /**
@@ -893,6 +1061,7 @@ jQuery(function($) {
             eid--;
             se_index--;
             set_parent_array();
+            add_parent_event();
             update_delete_element_button_handlers();
             set_editor_dirty();
         });
