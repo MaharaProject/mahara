@@ -9,7 +9,8 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
-/*
+
+/**
  * Some wishlist functionality to be implemented later than 19.04:
  * 1 @TODO - Make preview button work
  *   It should show what current framework looks like as the left column of the SmartEvidence map -
@@ -23,7 +24,8 @@
  * - Maybe: Add third-level nav to management screen of a framework? But then what to call the nav item? Overview wouldn't work,
  *  would be better to then call it "Management".
  */
-/*
+
+/**
  * Functionality still to be implemented by 19.04:
  * @TODO - review:
  *  - make sub-sub elements work
@@ -33,49 +35,49 @@
  */
 
 jQuery(function($) {
-    //use bootstrap
+    // Use bootstrap
     JSONEditor.defaults.options.theme = 'bootstrap4';
-    //Hide edit json buttons. @TODO - main one will be needed for #2 wishlist item above
+    // Hide edit json buttons. @TODO - main one will be needed for #2 wishlist item above
     JSONEditor.defaults.options.disable_edit_json = 'true';
 
-    //Override default editor strings to allow translation by us
+    // Override default editor strings to allow translation by us
     // - fyi, not all editor strings are overridden, just the ones currently used.
     // - The original editor defaults in htdocs/js/jsoneditor/src/defaults.js
     JSONEditor.defaults.languages.en.button_collapse = get_string('collapse');
     JSONEditor.defaults.languages.en.button_expand = get_string('expand');
     JSONEditor.defaults.languages.en.button_add_row_title = get_string('add');
     JSONEditor.defaults.languages.en.button_delete_last_title = get_string('deletelast') + " {{0}}";
-    JSONEditor.defaults.languages.en.button_move_down_title = get_string('moveright');//Move right
+    JSONEditor.defaults.languages.en.button_move_down_title = get_string('moveright'); // Move right
     JSONEditor.defaults.languages.en.button_move_up_title = get_string('moveleft');
     JSONEditor.defaults.languages.en.button_delete_all_title = get_string('deleteall');
 
-    //enable select2
+    // Enable select2
     JSONEditor.plugins.select2.enable = true;
 
     var editor;
     var parent_array = [''];
     var standard_array = [];
 
-    //counts to increment standard and standardelement ids
+    // Counts to increment standard and standardelement ids
     var std_index = 0;
 
-    var eid = 1;//count of standard elements per standard
-    var se_index = 0; //index of total standard elements
+    var eid = 1;      // Count of standard elements per standard
+    var se_index = 0; // Index of total standard elements
 
-    var fw_id = null; //framework id if editing an existing framework
-    var edit = false; //flag for edit vs. copy
-    //constant identifiers for json schema
+    var fw_id = null; // Framework id if editing an existing framework
+    var edit = false; // Flag for edit vs. copy
+    // Constant identifiers for json schema
     var evidence_type = ['begun' ,'incomplete', 'partialcomplete', 'completed'];
 
     formchangemanager.add('editor_holder');
 
-    /*
-    * Jquery functionality outside the json-editor form:
-    * includes dropdowns for edit, copy and the cancel, save and preview buttons
-    * templated by theme/raw/plugintype/module/framework/templates/jsoneditor.tpl
-    */
+    /**
+     * Jquery functionality outside the json-editor form:
+     * includes dropdowns for edit, copy and the cancel, save and preview buttons
+     * templated by theme/raw/plugintype/module/framework/templates/jsoneditor.tpl
+     */
 
-    //edit dropdown
+    // Edit dropdown
     $('#edit').on('change',function() {
         var confirm = null;
         if (typeof formchangemanager !== 'undefined') {
@@ -83,8 +85,8 @@ jQuery(function($) {
         }
         if (confirm === null || confirm === true) {
 
-            //rebuild the form so that data doesn't get added to existing
-            $("#copy option:eq(0)").prop('selected', true);//reset copy
+            // Rebuild the form so that data doesn't get added to existing
+            $("#copy option:eq(0)").prop('selected', true); // Reset copy
             editor.destroy();
             refresh_editor();
             edit = true;
@@ -97,7 +99,7 @@ jQuery(function($) {
         }
     });
 
-    //copy dropdown.
+    // Copy dropdown.
     $("#copy").on('change', function() {
         var confirm = null;
         if (typeof formchangemanager !== 'undefined') {
@@ -105,11 +107,11 @@ jQuery(function($) {
         }
         if (confirm === null || confirm === true) {
 
-            //rebuild the form so that data doesn't get added to existing
+            // Rebuild the form so that data doesn't get added to existing
             if (formchangemanager.checkDirtyChanges()) {
                 formchangemanager.confirmLeavingForm();
             }
-            $("#edit option:eq(0)").prop('selected', true); //reset edit
+            $("#edit option:eq(0)").prop('selected', true); // Reset edit
             editor.destroy();
             refresh_editor();
             edit = false;
@@ -126,7 +128,7 @@ jQuery(function($) {
         window.location.href = config['wwwroot'] + 'module/framework/frameworks.php';
     });
 
-    // hide currently inactive preview button - @TODO - needed for #1 wishlist item above
+    // Hide currently inactive preview button - @TODO - needed for #1 wishlist item above
     $('#preview').hide();
 
     // Hook up the submit button to log to the console
@@ -135,25 +137,26 @@ jQuery(function($) {
         // Get all the form's values from the editor
         var json_form = editor.getValue();
         url = config['wwwroot'] + 'module/framework/framework.json.php';
-        //if framework id is set, we are editing an existing framework
+        // If framework id is set, we are editing an existing framework
         if (fw_id) {
             json_form.fw_id = fw_id;
         }
-        //save completed form data
+        // Save completed form data
         sendjsonrequest(url, json_form, 'POST', function(data) {
-            // get framework id for next save
+            // Get framework id for next save
             fw_id = data.data.id;
 
-            // place the name of the framework in the "Edit" dropdown
+            // Place the name of the framework in the "Edit" dropdown
             $('select#edit').append($('<option>', {value:data.data.id, text:data.data.name}));
             $('select#edit option').last().prop('selected', true);
             edit = true;
 
-            // reset the "Copy" dropdown
+            // Reset the "Copy" dropdown
             $("#copy option:eq(0)").prop('selected', true);
         });
         window.scrollTo(0,0);
-    });//end of functionality implemented outside the editor
+    });
+    // End of functionality implemented outside the editor
 
     refresh_editor();
 
@@ -164,235 +167,234 @@ jQuery(function($) {
      *  - call initialising functions
      */
     function refresh_editor() {
-
+        // The json-editor properties
         editor = new JSONEditor(document.getElementById('editor_holder'), {
-        //json-editor properties
-        ajax: true,
-        disable_properties : true,
-        show_errors: "always",
-        // The schema for the editor, info on https://github.com/json-editor/json-editor
-        schema: {
-            "title": get_string('Framework'),
-            "type": "object",
-            "properties": {
-                "institution": {
-                    "type" : "string",
-                    "title" : get_string('institution'),
-                    "description" : get_string('instdescription'),
-                    "id" : "inst_desc",
-                    "enum" : inst_names.split(','),
-                    "default" : get_string('all')
-                },
-                "name": {
-                    "type" : "string",
-                    "title" : get_string('name'),
-                    "description": get_string('titledesc'),
-                    "default" : get_string('frameworktitle'),
-                },
-                "description" : {
-                    "type" : "string",
-                    "title" : get_string('description'),
-                    "format" : "textarea",
-                    "default" : get_string('defaultdescription'),
-                    "description" : get_string('descriptioninfo')
-                },
-                "selfassess" : {
-                    "type" : "boolean",
-                    "title" : get_string('selfassessed'),
-                    "description" : get_string('selfassesseddescription'),
-                    "default" : false,
-                    "options" : {
-                        "enum_titles" : [get_string('yes'), get_string('no')]
-                    }
-                },
-                "evidencestatuses":{
-                "title": get_string('evidencestatuses'),
-                "id" : "evidencestatuses",
-                "type" : "object",
-                "options" : {
-                    "disable_array_reorder" : true,
-                    "disable_edit_json" : true,
-                    "disable_collapse" : true
-                },
-                "description": get_string('evidencedesc'),
+            ajax: true,
+            disable_properties: true,
+            show_errors: "always",
+            // The schema for the editor, info on https://github.com/json-editor/json-editor
+            schema: {
+                "title": get_string('Framework'),
+                "type": "object",
                 "properties": {
-                    "begun": {
-                        "title" : get_string('Begun'),
-                        "type" : "string",
-                        "default" : get_string('begun'),
-                        "propertyOrder" : 1
+                    "institution": {
+                        "type": "string",
+                        "title": get_string('institution'),
+                        "description": get_string('instdescription'),
+                        "id": "inst_desc",
+                        "enum": inst_names.split(','),
+                        "default": get_string('all')
                     },
-                    "incomplete": {
-                        "title" : get_string('Incomplete'),
-                        "type" : "string",
-                        "default" : get_string('incomplete'),
-                        "propertyOrder" : 2
+                    "name": {
+                        "type": "string",
+                        "title": get_string('name'),
+                        "description": get_string('titledesc'),
+                        "default": get_string('frameworktitle'),
                     },
-                    "partialcomplete": {
-                        "title" : get_string('Partialcomplete'),
-                        "type" : "string",
-                        "default" : get_string('partialcomplete'),
-                        "propertyOrder" : 3
+                    "description": {
+                        "type": "string",
+                        "title": get_string('description'),
+                        "format": "textarea",
+                        "default": get_string('defaultdescription'),
+                        "description": get_string('descriptioninfo')
                     },
-                    "completed": {
-                        "title" : get_string('Completed'),
-                        "type" : "string",
-                        "default" : get_string('completed'),
-                        "propertyOrder" : 4
-                    }
-                }
-                },
-                "standards" : {
-                    "title" : get_string('standards'),
-                    "type" : "array",
-                    "id" : "standards",
-                    "format" : "tabs-top",
-                    "minItems":1,
-                    "description" : get_string('standardsdescription'),
-                    "items" : {
-                        "title" : get_string('standard'),
-                        "headerTemplate" : "{{i1}} - {{self.shortname}}",
-                        "type" : "object",
-                        "id" : "standard",
-                        "options" : {
-                            "disable_collapse" : true
+                    "selfassess": {
+                        "type": "boolean",
+                        "title": get_string('selfassessed'),
+                        "description": get_string('selfassesseddescription'),
+                        "default": false,
+                        "options": {
+                            "enum_titles": [get_string('yes'), get_string('no')]
+                        }
+                    },
+                    "evidencestatuses": {
+                        "title": get_string('evidencestatuses'),
+                        "id": "evidencestatuses",
+                        "type": "object",
+                        "options": {
+                            "disable_array_reorder": true,
+                            "disable_edit_json": true,
+                            "disable_collapse": true
                         },
-                        "properties" : {
-                            "shortname" : {
-                                "type" : "string",
-                                "title" : get_string('Shortname'),
-                                "description" : get_string('shortnamestandard'),
-                                "default" : get_string('Shortname'),
-                                "maxLength" : 100
+                        "description": get_string('evidencedesc'),
+                        "properties": {
+                            "begun": {
+                                "title": get_string('Begun'),
+                                "type": "string",
+                                "default": get_string('begun'),
+                                "propertyOrder": 1
                             },
-                            "name" : {
-                                "type" : "string",
-                                "title" : get_string('name'),
-                                "description" : get_string('titlestandard'),
-                                "format" : "textarea",
-                                "maxLength" : 255
+                            "incomplete": {
+                                "title": get_string('Incomplete'),
+                                "type": "string",
+                                "default": get_string('incomplete'),
+                                "propertyOrder": 2
                             },
-                            "description" : {
-                                "type" : "string",
-                                "title" : get_string('description'),
-                                "format" : "textarea",
-                                "default" : get_string('descstandarddefault'),
-                                "description" : get_string('descstandard')
+                            "partialcomplete": {
+                                "title": get_string('Partialcomplete'),
+                                "type": "string",
+                                "default": get_string('partialcomplete'),
+                                "propertyOrder": 3
                             },
-                            "standardid" : {
-                                "type" : "number",
-                                "title" : get_string('standardid'),
-                                "default" : "1",
-                                "description" : get_string('standardiddesc')
+                            "completed": {
+                                "title": get_string('Completed'),
+                                "type": "string",
+                                "default": get_string('completed'),
+                                "propertyOrder": 4
+                            }
+                        }
+                    },
+                    "standards": {
+                        "title": get_string('standards'),
+                        "type": "array",
+                        "id": "standards",
+                        "format": "tabs-top",
+                        "minItems": 1,
+                        "description": get_string('standardsdescription'),
+                        "items": {
+                            "title": get_string('standard'),
+                            "headerTemplate": "{{i1}} - {{self.shortname}}",
+                            "type": "object",
+                            "id": "standard",
+                            "options": {
+                                "disable_collapse": true
                             },
-                            "uid" : {
-                                "type" : "number",
-                                "default" : null,
-                                "options" : {
-                                    "hidden" : true
+                            "properties": {
+                                "shortname": {
+                                    "type": "string",
+                                    "title": get_string('Shortname'),
+                                    "description": get_string('shortnamestandard'),
+                                    "default": get_string('Shortname'),
+                                    "maxLength": 100
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "title": get_string('name'),
+                                    "description": get_string('titlestandard'),
+                                    "format": "textarea",
+                                    "maxLength": 255
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "title": get_string('description'),
+                                    "format": "textarea",
+                                    "default": get_string('descstandarddefault'),
+                                    "description": get_string('descstandard')
+                                },
+                                "standardid": {
+                                    "type": "number",
+                                    "title": get_string('standardid'),
+                                    "default": "1",
+                                    "description": get_string('standardiddesc')
+                                },
+                                "uid": {
+                                    "type": "number",
+                                    "default": null,
+                                    "options": {
+                                        "hidden": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "standardelements": {
+                        "title": get_string('standardelements'),
+                        "id": "standardelements",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "minItems": 1,
+                        "format": "tabs-top",
+                        "description": get_string('standardelementsdescription', 'module.framework'),
+                        "items": {
+                            "title": get_string('standardelement'),
+                            "headerTemplate": "{{self.elementid}}",
+                            "type": "object",
+                            "id": "standardelement",
+                            "options": {
+                                "disable_collapse" : true
+                            },
+                            "properties": {
+                                "shortname": {
+                                    "type": "string",
+                                    "title": get_string('Shortname'),
+                                    "description": get_string('shortnamestandard'),
+                                    "maxLength": 100
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "title": get_string('name'),
+                                    "description": get_string('titlestandard'),
+                                    "format": "textarea",
+                                    "maxLength": 255
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "title": get_string('description'),
+                                    "format": "textarea",
+                                    "default": get_string('standardelementdefault'),
+                                    "description": get_string('standardelementdesc')
+                                },
+                                "elementid": {
+                                    "type": "string",
+                                    "title": get_string('elementid'),
+                                    "default": '1.1',
+                                    "description": get_string('elementiddesc')
+                                },
+                                "parentid": {
+                                    "title": get_string('parentelementid'),
+                                    "id": "parentid",
+                                    "type": "string",
+                                    "description": get_string('parentelementdesc'),
+                                    "enumSource": "source",
+                                    "watch": {
+                                        "source": "pid_array"
+                                    },
+                                },
+                                "parentelementid": {
+                                    "id": "parentelementid",
+                                    "type": "number",
+                                    "options": {
+                                        "hidden": true,
+                                    },
+                                },
+                                "standardid": {
+                                    "title": get_string('standardid'),
+                                    "type": "number",
+                                    "default": 1,
+                                    "options": {
+                                        "hidden": true
+                                    }
+                                },
+                                "pid_array": {
+                                    "id": "hidden_pid_array",
+                                    "type": "array",
+                                    "items": {
+                                        "enum": parent_array,
+                                    },
+                                    "options": {
+                                        "hidden": true,
+                                    },
+                                },
+                                "uid": {
+                                    "type": "number",
+                                    "default": null,
+                                    "options": {
+                                        "hidden": true
+                                    }
                                 }
                             }
                         }
                     }
-                },
-                "standardelements" : {
-                    "title" : get_string('standardelements'),
-                    "id" : "standardelements",
-                    "type" : "array",
-                    "uniqueItems" : true,
-                    "minItems":1,
-                    "format" : "tabs-top",
-                    "description" : get_string('standardelementsdescription', 'module.framework'),
-                    "items" : {
-                        "title" : get_string('standardelement'),
-                        "headerTemplate" : "{{self.elementid}}",
-                        "type" : "object",
-                        "id" : "standardelement",
-                        "options" : {
-                            "disable_collapse" : true
-                        },
-                        "properties" : {
-                            "shortname" : {
-                                "type" : "string",
-                                "title" : get_string('Shortname'),
-                                "description" : get_string('shortnamestandard'),
-                                "maxLength" : 100
-                            },
-                            "name" : {
-                                "type" : "string",
-                                "title" : get_string('name'),
-                                "description" : get_string('titlestandard'),
-                                "format" : "textarea",
-                                "maxLength" : 255
-                            },
-                            "description" : {
-                                "type" : "string",
-                                "title" : get_string('description'),
-                                "format" : "textarea",
-                                "default" : get_string('standardelementdefault'),
-                                "description" : get_string('standardelementdesc')
-                            },
-                            "elementid" : {
-                                "type" : "string",
-                                "title" : get_string('elementid'),
-                                "default" : '1.1',
-                                "description" : get_string('elementiddesc')
-                            },
-                            "parentid" : {
-                                "title" : get_string('parentelementid'),
-                                "id" : "parentid",
-                                "type" : "string",
-                                "description" : get_string('parentelementdesc'),
-                                "enumSource" : "source",
-                                "watch" : {
-                                    "source" : "pid_array"
-                                },
-                            },
-                            "parentelementid" : {
-                                "id" : "parentelementid",
-                                "type" : "number",
-                                "options" : {
-                                    "hidden" : true,
-                                },
-                            },
-                            "standardid" : {
-                                "title" : get_string('standardid'),
-                                "type" : "number",
-                                "default" : 1,
-                                "options" : {
-                                    "hidden" : true
-                                }
-                            },
-                            "pid_array" : {
-                                "id" : "hidden_pid_array",
-                                "type" : "array",
-                                "items" : {
-                                    "enum" : parent_array,
-                                },
-                                "options" : {
-                                    "hidden" : true,
-                                },
-                            },
-                            "uid" : {
-                                "type" : "number",
-                                "default" : null,
-                                "options" : {
-                                    "hidden" : true
-                                }
-                            }
-                        }
-                    }
                 }
-            }
-        },
+            },
         });
-        //add ids to things so we can call them more easily later.
+        // Add ids to things so we can call them more easily later.
         $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standard");
         $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standardelement");
-        //make text same as rest of site
+        // Make text same as rest of site
         $("div.form-group p.form-text").addClass("description");
         $("div.form-group form-control-label").addClass("label");
-        //add class for correct styling of help block text
+        // Add class for correct styling of help block text
         $('[data-schemaid="standards"] > p').addClass("help-block");
         $('[data-schemaid="evidencestatuses"] > p').addClass("help-block");
 
@@ -419,7 +421,7 @@ jQuery(function($) {
             if (se_sid_field) {
                 se_sid_field.setValue(standard_array.length + 1);
             }
-            //reset standard element count
+            // Reset standard element count
             eid = 0;
             update_parent_array();
             update_standard_array();
@@ -429,7 +431,7 @@ jQuery(function($) {
             set_editor_dirty();
         });
         $("#add_standardelement").click(function() {
-            // update delete button handlers
+            // Update delete button handlers
             update_delete_element_button_handlers();
             se_index = parent_array.length - 1;
 
@@ -455,30 +457,30 @@ jQuery(function($) {
             set_editor_dirty();
         });
 
-        // add checks to monitor if fields are changed
+        // Add checks to monitor if fields are changed
         editor.on('ready', function () {
             set_editor_clean();
-            $('#editor_holder textarea').each(function(el){
-              $(this).on('change', function() {
-                  set_editor_dirty();
-              });
+            $('#editor_holder textarea').each(function(el) {
+                $(this).on('change', function() {
+                    set_editor_dirty();
+                });
             });
-            $('#editor_holder input').each(function(el){
-              $(this).on('change', function() {
-                  set_editor_dirty()
-              });
+            $('#editor_holder input').each(function(el) {
+                $(this).on('change', function() {
+                    set_editor_dirty()
+                });
             });
-            $('#editor_holder select').each(function(el){
-              $(this).on('change', function() {
-                  set_editor_dirty()
-              });
+            $('#editor_holder select').each(function(el) {
+                $(this).on('change', function() {
+                    set_editor_dirty()
+                });
             });
         });
 
-        // validation indicator
+        // Validation indicator
         editor.off('change');
         editor.on('change',function() {
-            //@TODO, check functionality
+            // @TODO, check functionality
             // Get an array of errors from the validator
             var errors = editor.validate();
             // Not valid
@@ -491,7 +493,8 @@ jQuery(function($) {
             }
         });
 
-    }//end of refresh function
+    }
+    // End of refresh function
 
     /**
      * Populate the editor from database
@@ -502,12 +505,12 @@ jQuery(function($) {
     function populate_editor(framework_id, edit) {
         url = config['wwwroot'] + 'module/framework/getframework.json.php';
         upload = true;
-        //get data from existing framework
+        // Get data from existing framework
         sendjsonrequest(url, {'framework_id': framework_id} , 'POST', function(data) {
             if (edit) {
                 fw_id = data.data.title.id;
             }
-            //set the values for the first 'title' section
+            // Set the values for the first 'title' section
             $.each(data.data.title, function (k, value) {
                 if (k === 'selfassess') {
                     if (value == 1) {
@@ -516,65 +519,65 @@ jQuery(function($) {
                     else {
                         value = false;
                     }
-                var ed = editor.getEditor("root." + k);
-                ed.setValue(value);
+                    var ed = editor.getEditor("root." + k);
+                    ed.setValue(value);
                 }
                 var ed = editor.getEditor("root." + k);
                 if (ed) {
                     if (k === 'description') {
                         textarea_init();
                         ed.setValue(value)
-                        //@TODO wysiwyg editing of description fields
+                        // @TODO wysiwyg editing of description fields
                     }
                     else {
                         ed.setValue(value);
                     }
                 }
             });
-            //set the values for the evidence statuses
+            // Set the values for the evidence statuses
             $.each(data.data.evidencestatuses, function (k, value) {
                 var type = evidence_type[value.type];
                 var es = editor.getEditor("root.evidencestatuses." + type);
                 es.setValue(value.name);
             });
             var std_nums = new Array();
-            //set the values for the standards
+            // Set the values for the standards
             $.each(data.data.standards, function (k, value) {
-                //k is standard index or 'element'
+                // 'k' is standard index or 'element'
                 // 'element' contains the standard elements, managed by next $.each
                 if (k != 'element') {
                     std_index = parseInt(k);
 
-                    //if the standard doesn't already exist, we need to add it to the editor.
+                    // If the standard doesn't already exist, we need to add it to the editor.
                     if (std_index > 0 && !editor.getEditor("root.standards." + std_index)) {
                         var std_ed = editor.getEditor("root.standards");
                         std_ed.addRow();
                         update_standard_array();
                         textarea_init();
                     }
-                    //this makes an array with the 0 index empty and the db std ids matched with the index
-                    //of their standard number.
+                    // This makes an array with the 0 index empty and the db std ids matched with the index
+                    // of their standard number.
                     update_standard_array();
                     if (value.id) {
                         std_nums[standard_array.length] = value.id;
                     }
 
                     $.each(value, function(k, val) {
-                        //this works where the data field name is the same as the DOM's id
+                        // This works where the data field name is the same as the DOM's id
                         var field = editor.getEditor("root.standards." + std_index + "." + k );
                         if (field) {
                             field.setValue(val);
                         }
-                        //the standardid is called priority in the db
+                        // The standardid is called priority in the db
                         if (k === "priority") {
-                            //priority count for standards starts from 0
+                            // Priority count for standards starts from 0
                             val = parseInt(val) + 1;
                             field = editor.getEditor("root.standards." + std_index + "." + "standardid");
                             if (field) {
                                 field.setValue(val);
                             }
                         }
-                        //this is the db id, which we need to track if this is an edit
+                        // This is the db id, which we need to track if this is an edit
                         if (k === "id") {
                             field = editor.getEditor("root.standards." + std_index + "." + "uid");
                             if (field) {
@@ -585,11 +588,11 @@ jQuery(function($) {
                 }
             });
             update_standard_array();
-            //first 'each' is all the standard elements associated with a standard
+            // First 'each' is all the standard elements associated with a standard
             $.each(data.data.standards.element, function (k, value) {
                 var se_array = value;
-                //convert the absolute standard id from the db to the local standard id
-                //for this framework
+                // Convert the absolute standard id from the db to the local standard id
+                // for this framework
                 var std_id = value[0].standard;
                 var se_val = 0;
                 var subel_val = 0
@@ -598,56 +601,56 @@ jQuery(function($) {
                 var pid_field;
                 var eid_val;
                 update_parent_array();
-                //at first, parent array has ('', '1.1')
+                // At first, parent array has ('', '1.1')
                 se_index = parent_array.length == 2 ? 0 : parent_array.length - 1 ;
-                //each standard element
-                $.each(se_array, function (k, value){
-                    //add a row for each new standard element
+                // Each standard element
+                $.each(se_array, function (k, value) {
+                    // Add a row for each new standard element
                     var se = editor.getEditor("root.standardelements");
                     if (se_index > 0) {
                         se.addRow();
                         textarea_init();
                         add_parent_event();
                     }
-                    //each value from a standard element
+                    // Each value from a standard element
                     $.each(value, function (k,value ) {
-                        //set if exists - works for shortname, name and description
+                        // Set if exists - works for shortname, name and description
                         var se = editor.getEditor("root.standardelements." + se_index + "." + k);
                         if (se) {
                             se.setValue(value);
                         }
-                        //standard is standardid in the editor
+                        // Standard is standardid in the editor
                         if (k === "standard") {
                             var sid_field = editor.getEditor("root.standardelements." + se_index + "." + "standardid");
                             if (sid_field && standard_array.length > 0) {
                                 sid_field.setValue(std_nums.indexOf(value));
                             }
                         }
-                        //priority is elementid in the editor
-                        //if there is no parentid, we just set the element id with the priority
+                        // Priority is elementid in the editor - if there is no parentid, we just
+                        // set the element id with the priority
                         if (k === "priority") {
                             if (eid_field) {
-                            eid_val = value;
-                            eid++;
+                                eid_val = value;
+                                eid++;
                             }
                         }
                         if (k === "parent" ) {
                             if (value == null) {
-                                //anything after this will have a new parent, so increment parent value
+                                // Anything after this will have a new parent, so increment parent value
                                 se_val++;
-                                //this is also the element id if there is no parent
+                                // This is also the element id if there is no parent
                                 eid_val = se_val;
-                                //reset the count of element ids for sub elements of this standard element
+                                // Reset the count of element ids for sub elements of this standard element
                                 subel_val = 0;
                             }
-                            //there is a parent element, we need to handle it
                             else {
+                                // There is a parent element, we need to handle it
                                 subel_val++;
                                 eid_val = subel_val;
                                 pid_val = se_val;
                             }
                         }
-                            //this is the db id, which we need to track if this is an edit or if parentids are used
+                        // This is the db id, which we need to track if this is an edit or if parentids are used
                         if (k === "id") {
                             field = editor.getEditor("root.standardelements." + se_index + "." + "uid");
                             if (field) {
@@ -655,7 +658,7 @@ jQuery(function($) {
                             }
                         }
                     });
-                    //since pid_val and eid_val depend on each other, we need to set them outside the loop.
+                    // Since pid_val and eid_val depend on each other, we need to set them outside the loop.
                     pid_field = editor.getEditor("root.standardelements." + se_index + ".parentid");
                     eid_field = editor.getEditor("root.standardelements." + se_index + ".elementid");
                     if (pid_val && eid_field) {
@@ -677,41 +680,42 @@ jQuery(function($) {
 
             update_delete_element_button_handlers();
             update_delete_standard_button_handlers();
-          });
-    }//end of populate_editor()
+        });
+    }
+    // End of populate_editor()
 
-    //add textarea expand event to description fields
+    // Add textarea expand event to description fields
     function textarea_init() {
-        //creating ids for adding wysiwyg - not currently active: @TODO
-        $('div[data-schemaid="standards"] textarea[data-schemaformat="textarea"]').each(function(){
+        // Creating ids for adding wysiwyg - not currently active: @TODO
+        $('div[data-schemaid="standards"] textarea[data-schemaformat="textarea"]').each(function() {
             if (!$(this).attr('id')) {
                 var schemapath = $(this).closest('div[data-schemapath]').attr('data-schemapath').split('.');
                 var standardid = schemapath[2];
                 $(this).attr("id", "std_" +standardid + "_" + schemapath[3] + "_textarea");
             }
-        })
-        $('div[data-schemaid="standardelements"] textarea[data-schemaformat="textarea"]').each(function(){
+        });
+        $('div[data-schemaid="standardelements"] textarea[data-schemaformat="textarea"]').each(function() {
             if (!$(this).attr('id')) {
                 var schemapath = $(this).closest('div[data-schemapath]').attr('data-schemapath').split('.');
                 var standardelementid = schemapath[2];
                 $(this).attr("id", "std_element_" + standardelementid + "_" + schemapath[3] + "_textarea");
             }
-        })
-        //set min row height for desc fields to 6
+        });
+        // Set min row height for desc fields to 6
         $("textarea[id$='_description_textarea']").attr('rows', '6');
 
         $('div.form-group textarea[id$="_description_textarea"]').each(function() {
             $(this).off('click input');
             $(this).on('click input', function() {
                 textarea_autoexpand(this);
-                // scrollHeight is 0 for elements that are not visible
+                // ScrollHeight is 0 for elements that are not visible
                 this.style.height = (this.scrollHeight) + 'px';
-            })
+            });
             textarea_autoexpand(this);
         });
     }
 
-    //expand textareas
+    // Expand textareas
     function textarea_autoexpand(element) {
         element.setAttribute('style', 'overflow-y:hidden;');
         element.style.height = 'auto';
@@ -720,18 +724,16 @@ jQuery(function($) {
 
     function set_sid(eid_val, sid_field) {
         var sid = parseInt(eid_val.replace(/(\d.?)\..*/, "$1"));
-        console.log(sid);
         if (sid_field) {
             sid_field.setValue(sid);
         }
-
     }
 
-    //get a list of existing standard elements
+    // Get a list of existing standard elements
     function update_parent_array() {
         parent_array = [''];
         $("[data-schemaid=\"standardelement\"]").each(function() {
-            //number of std elements
+            // Number of std elements
             var num = parseInt($(this).data("schemapath").replace(/root\.standardelements\./, ''));
             var field = editor.getEditor("root.standardelements." + num + ".elementid");
             var el = field.getValue();
@@ -743,7 +745,7 @@ jQuery(function($) {
     function update_standard_array() {
         standard_array = [];
         $('[data-schemaid="standard"]').each(function() {
-            //number of std elements
+            // Number of std elements
             var num = parseInt($(this).data("schemapath").replace(/root\.standards\./, ''));
             var field = editor.getEditor("root.standards." + num + ".standardid");
             var el = field.getValue();
@@ -752,7 +754,7 @@ jQuery(function($) {
         });
     }
 
-    //add the list of possible parent ids to the dropdown
+    // Add the list of possible parent ids to the dropdown
     function set_parent_array() {
         var field;
         var num = 0;
@@ -761,9 +763,8 @@ jQuery(function($) {
             field = field.replace(/\./g, '\]\[');
             field = field.replace(/^root\](.*)$/, 'root$1\]');
 
-            // clear old element ids from the dropdown
+            // Clear old element ids from the dropdown
             $("[name=\"" + field + "\"]").empty();
-
             $("[name=\"" + field + "\"]").addClass("select");
             $("[name=\"" + field + "\"]").attr("id", "parent_select_" + num);
             num++;
@@ -776,18 +777,18 @@ jQuery(function($) {
         });
     }
 
-    //add an event to update the element id when the parent id is changed
+    // Add an event to update the element id when the parent id is changed
     function add_parent_event() {
         $("[data-schemaid=\"parentid\"] .form-control").each(function () {
             $(this).off('change');
             $(this).on('change', function () {
-            update_eid(this);
+                update_eid(this);
             });
             update_eid(this);
         });
     }
 
-    //update the element id for the passed in standard element
+    // Update the element id for the passed in standard element
     function update_eid(element) {
         if (element.value) {
             var index = element.name.replace(/.*\[(\d*)\].*/, '$1');
@@ -795,7 +796,7 @@ jQuery(function($) {
             if (eid_field) {
                 eid_field.setValue(element.value + "." + get_eid(element.value));
             }
-            //and set parentelementid in the editor
+            // And set parentelementid in the editor
             var peid_field = editor.getEditor("root.standardelements." + index + ".parentelementid");
             if (peid_field) {
                 peid_field.setValue(element.value);
@@ -809,7 +810,7 @@ jQuery(function($) {
         }
     }
 
-        /**
+    /**
      * Update the element id after the parent id has been changed
      *  @param parent_id The parent id selected from the dropdown
      */
@@ -830,11 +831,11 @@ jQuery(function($) {
         return count_subel;
     }
 
-    /*
-    * Manually add the handlers for the standard delete buttons
-    * needs to add it also after deleting one standards because
-    * the container is refreshed and the buttons recreated
-    */
+    /**
+     * Manually add the handlers for the standard delete buttons
+     * needs to add it also after deleting one standards because
+     * the container is refreshed and the buttons recreated
+     */
     function update_delete_standard_button_handlers() {
         $('[data-schemaid="standard"]>h3>div>button.json-editor-btn-delete').off('click');
         $('[data-schemaid="standard"]>h3>div>button.json-editor-btn-delete').on('click', function() {
@@ -845,70 +846,69 @@ jQuery(function($) {
         });
     }
 
-    /*
-    * Manually add the handlers for the standard elements delete buttons
-    * needs to add it also after deleting one standard element because
-    * the container is refreshed and the buttons recreated
-    */
+    /**
+     * Manually add the handlers for the standard elements delete buttons
+     * needs to add it also after deleting one standard element because
+     * the container is refreshed and the buttons recreated
+     */
     function update_delete_element_button_handlers() {
-      $('[data-schemaid="standardelement"]>h3>div>button.json-editor-btn-delete').off('click');
-      $('[data-schemaid="standardelement"]>h3>div>button.json-editor-btn-delete').on('click', function() {
-        update_parent_array();
-        se_index--;
-        //if it's the last element
-        if (parseInt(this.attributes['data-i'].value) == parent_array.length) {
-          eid--;
-        }
-        update_delete_element_button_handlers();
-        set_parent_array();
-        textarea_init();
-        set_editor_dirty();
-      });
+        $('[data-schemaid="standardelement"]>h3>div>button.json-editor-btn-delete').off('click');
+        $('[data-schemaid="standardelement"]>h3>div>button.json-editor-btn-delete').on('click', function() {
+            update_parent_array();
+            se_index--;
+            // If it's the last element
+            if (parseInt(this.attributes['data-i'].value) == parent_array.length) {
+                eid--;
+            }
+            update_delete_element_button_handlers();
+            set_parent_array();
+            textarea_init();
+            set_editor_dirty();
+        });
     }
 
-    /*
-    * Manually add the handlers for the standards/standard elements top delete buttons
-    * 'Delete last' and 'Delete all'
-    */
+    /**
+     * Manually add the handlers for the standards/standard elements top delete buttons
+     * 'Delete last' and 'Delete all'
+     */
     function update_delete_button_handler() {
         // Standards section
         // 'Delete last standard' button
-        $('div[data-schemaid="standards"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function (){
-          update_standard_array();
-          textarea_init();
-          set_editor_dirty();
+        $('div[data-schemaid="standards"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function () {
+            update_standard_array();
+            textarea_init();
+            set_editor_dirty();
         });
         // 'Delete all' button
-        $('div[data-schemaid="standards"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function (){
-          update_standard_array();
-          textarea_init();
-          set_editor_dirty();
+        $('div[data-schemaid="standards"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function () {
+            update_standard_array();
+            textarea_init();
+            set_editor_dirty();
         });
 
         // Standard element section
         // 'Delete last standard element' button
-        $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function (){
-          update_parent_array();
-          eid--;
-          se_index--;
-          set_parent_array();
-          update_delete_element_button_handlers();
-          set_editor_dirty();
+        $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function () {
+            update_parent_array();
+            eid--;
+            se_index--;
+            set_parent_array();
+            update_delete_element_button_handlers();
+            set_editor_dirty();
         });
         // 'Delete all' button
-        $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function (){
-          update_parent_array();
-          eid = 1;
-          se_index = 0;
-          update_delete_element_button_handlers();
-          set_editor_dirty();
+        $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function () {
+            update_parent_array();
+            eid = 1;
+            se_index = 0;
+            update_delete_element_button_handlers();
+            set_editor_dirty();
         });
     }
+});
+// End of jQuery wrapper
 
-
-});//end of jQuery wrapper
-
-// form change checker functions
+// Form change checker functions
 function set_editor_dirty() {
     if (typeof formchangemanager !== 'undefined') {
         formchangemanager.setFormStateById("editor_holder", FORM_CHANGED);
