@@ -98,6 +98,10 @@ $state-danger-text:                         scale-color($danger, $lightness: -30
 $state-danger-bg:                           scale-color($danger, $lightness: 70%) !default;
 $state-danger-border:                       scale-color($danger, $lightness: 50%) !default;
 
+$state-submitted-text:                      $theme-text-color !default;
+$state-submitted-bg:                        scale-color($yellow, $lightness: 90%) !default;
+$state-submitted-border:                    scale-color($yellow, $lightness: 50%) !default;
+
 // Buttons + Forms
 $btn-secondary-bg:                          #F9F9F9 !default;
 $btn-secondary-border:                      $secondary !default;
