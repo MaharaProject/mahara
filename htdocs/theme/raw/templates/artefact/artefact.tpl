@@ -49,9 +49,9 @@
 
         <div class="btn-top-right btn-group btn-group-top float-right">
             {if $LOGGEDIN && (!$userisowner || ($userisowner && $objectedpage))}
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" title="{str tag='moreoptions'}" aria-expanded="false">
                 <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag="more..."}</span>
+                <span class="sr-only">{str tag="moreoptions"}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 <li class="dropdown-item">
