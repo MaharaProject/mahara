@@ -144,10 +144,10 @@ else {
     $content->evidencestatuses = array();
     $count = 0;
     foreach ($evidencestatuses as $key => $es) {
-       $obj = new stdClass;
+        $obj = new stdClass;
         $obj->$key = $es;
-       $content->evidencestatuses[$count] = $obj;
-       $count ++;
+        $content->evidencestatuses[$count] = $obj;
+        $count ++;
     }
     if (empty($content->name) || empty($content->standards)) {
         $ok['error'] = true;
@@ -182,9 +182,9 @@ else {
 if ($fw_to_edit) {
     $framework = new Framework($fw_to_edit, $content);
     if ($ses_to_delete) {
-      foreach ($ses_to_delete as $se) {
-        delete_records('framework_standard_element', 'id', $se);
-      }
+        foreach ($ses_to_delete as $se) {
+            delete_records('framework_standard_element', 'id', $se);
+        }
     }
     if ($stds_to_delete) {
         foreach ($stds_to_delete as $std) {
