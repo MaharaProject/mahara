@@ -337,7 +337,9 @@ class Framework {
             }
         }
         $standardsvars = array('shortname','name','description');
+
         if (isset($this->standards) && is_array($this->standards)) {
+            $uniqueids = array();
             foreach ($this->standards['standards'] as $key => $standard) {
                 $sfordb = new stdClass();
                 $sfordb->framework = $this->id;
@@ -363,7 +365,7 @@ class Framework {
                     $standard->options = $standard->standardelement;
                 }
                 if ($sid && isset($standard->options) && is_array($standard->options)) {
-                    $uniqueids = array();
+
                     $priority = 0;
                     foreach ($standard->options as $option) {
                         $priority++;
@@ -389,6 +391,9 @@ class Framework {
                             $sofordb->ctime = db_format_timestamp(time());
                             if (isset($option->parentelementid) && ($index = array_search($option->parentelementid, $uniqueids)) !== false) {
                                 $option->parentelementid = $index;//db id for the parent
+                            }
+                            else if (isset($option->parentelementid) && $option->parentelementid == 'undefined') {
+                                $option->parentelementid = null;
                             }
                             $sofordb->parent = !empty($option->parentelementid) ? $option->parentelementid : null;
                             //where se record goes in
