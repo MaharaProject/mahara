@@ -55,12 +55,12 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 <li class="dropdown-item">
+                    {strip}
                     <a id="toggle_watchlist_link" class="watchlist" href="">
-
                         {if $viewbeingwatched}
-                            <span class="icon icon-eye-slash left" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-lg icon-eye-slash left" role="presentation" aria-hidden="true"></span>
                         {else}
-                            <span class="icon icon-eye left" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-lg icon-eye left" role="presentation" aria-hidden="true"></span>
                         {/if}
 
                         {if $artefact}
@@ -77,8 +77,10 @@
                             {/if}
                         {/if}
                     </a>
+                    {/strip}
                 </li>
                 <li class="dropdown-item">
+                    {strip}
                     {if $objector}
                     <span class="nolink">
                         <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
@@ -90,13 +92,16 @@
                         {str tag=reportobjectionablematerial}
                     </a>
                     {/if}
+                    {/strip}
                 </li>
                 {if $userisowner && $objectedpage}
                     <li>
+                    {strip}
                     <span class="nolink">
                         <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                         {str tag=objectionreviewonview}
                     </span>
+                    {/strip}
                     </li>
                 {/if}
             </ul>

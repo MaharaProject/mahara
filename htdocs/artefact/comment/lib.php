@@ -1843,7 +1843,8 @@ function add_feedback_form_submit(Pieform $form, $values) {
                                                            'view' => $view->get('id'),
                                                            'ctime' => db_format_timestamp(time()),
                                                            'unsubscribetoken' => get_random_key(24)));
-        $updatelink = ($artefact) ? get_string('removefromwatchlistartefact', 'view', $view->get('title')) : get_string('removefromwatchlist', 'view');
+        $updatelink = '<span class="icon icon-lg icon-eye-slash left" role="presentation" aria-hidden="true"></span>';
+        $updatelink .= ($artefact) ? get_string('removefromwatchlistartefact', 'view', hsc($view->get('title'))) : get_string('removefromwatchlist', 'view');
     }
 
     activity_occurred('feedback', $data, 'artefact', 'comment');
