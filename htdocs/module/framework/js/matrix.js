@@ -331,15 +331,11 @@ jQuery(function($) {
     carousel_matrix();
 
     // show / hide tooltips for standard elements
-    $('tr.standard div')
-        .on('mouseenter',
-        function() {
-            $(this).find('.popover').removeClass('d-none');
-        },
-        function() {
-            $(this).find('.popover').addClass('d-none');
-        }
-    );
+    $('tr.standard div').on('mouseenter', function() {
+        $(this).find('.popover').removeClass('d-none');
+    }).on('mouseleave', function() {
+        $(this).find('.popover').addClass('d-none');
+    });
 
     // Make each standard (row heading description) show when
     // clicking the name or pressing enter key
