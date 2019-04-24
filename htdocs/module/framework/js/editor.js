@@ -57,6 +57,7 @@ jQuery(function($) {
     var editor;
     var parent_array = [''];
     var standard_array = [];
+    var standard_names = [];
 
     // Counts to increment standard and standardelement ids
     var std_index = 0;
@@ -446,9 +447,9 @@ jQuery(function($) {
             // }
             // Reset standard element count
             eid = 0;
+            update_standard_shortname_handler();
             update_standard_array();
             update_parent_array();
-            update_standard_array();
 
             //set_parent_array();
             set_standard_array();
@@ -617,6 +618,7 @@ jQuery(function($) {
                 }
             });
             update_standard_array();
+            update_standard_shortname_handler();
             var parent_nums = new Array();
             // First 'each' is all the standard elements associated with a standard
             $.each(data.data.standards.element, function (k, value) {
@@ -787,13 +789,19 @@ jQuery(function($) {
 
     function update_standard_array() {
         standard_array = [];
+        standard_names = [];
         $('[data-schemaid="standard"]').each(function() {
             // Number of std elements
             var num = parseInt($(this).data("schemapath").replace(/root\.standards\./, ''));
             var field = editor.getEditor("root.standards." + num + ".standardid");
-            var el = field.getValue();
+            var id = field.getValue();
 
-            standard_array.push(el);
+            // Get standard name
+            field = editor.getEditor("root.standards." + num + ".shortname");
+            var name = field.getValue();
+
+            standard_array.push(id);
+            standard_names.push(name);
         });
     }
 
@@ -828,7 +836,7 @@ jQuery(function($) {
         $.each(standard_array, function (k, value) {
             $("[name=\"" + field + "\"]").append($('<option>', {
                 value: value,
-                text: value
+                text: value + ' - ' + standard_names[k]
             }));
         });
     }
@@ -865,7 +873,7 @@ jQuery(function($) {
             $(this).off('change');
             $(this).on('change', function (el) {
                 // get selected value
-                var standardid = el.target.selectedOptions[el.target.selectedIndex].value;
+                var standardid = el.target.selectedOptions[0].value;
                 update_sid(this);
                 filter_parent_options(this, standardid);
             });
@@ -999,14 +1007,27 @@ jQuery(function($) {
         sidoptions_field.input.selectedIndex = standardid - 1;
     }
 
+    function update_standard_shortname_handler() {
+        $('[data-schemaid="standard"] .form-control[name$="shortname]"').each( function () {
+            $(this).off('change');
+            $(this).on('change', function() {
+                // get all the shortnames and update the dropdowns
+                update_standard_array();
+                set_standard_array();
+                set_editor_dirty();
+            });
+        });
+    }
+
     /**
      * Manually add the handlers for the standard delete buttons
      * needs to add it also after deleting one standards because
      * the container is refreshed and the buttons recreated
      */
     function update_delete_standard_button_handlers() {
-        $('[data-schemaid="standard"]>h3>div>button.json-editor-btn-delete').off('click');
-        $('[data-schemaid="standard"]>h3>div>button.json-editor-btn-delete').on('click', function() {
+        $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').off('click');
+        $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').on('click', function() {
+            update_standard_shortname_handler();
             update_standard_array();
             update_delete_standard_button_handlers();
             textarea_init();
@@ -1020,8 +1041,8 @@ jQuery(function($) {
      * the container is refreshed and the buttons recreated
      */
     function update_delete_element_button_handlers() {
-        $('[data-schemaid="standardelement"]>h3>div>button.json-editor-btn-delete').off('click');
-        $('[data-schemaid="standardelement"]>h3>div>button.json-editor-btn-delete').on('click', function() {
+        $('[data-schemaid="standardelement"] > h3 > div > button.json-editor-btn-delete').off('click');
+        $('[data-schemaid="standardelement"] > h3 > div > button.json-editor-btn-delete').on('click', function() {
             update_parent_array();
             se_index--;
             // If it's the last element
@@ -1042,13 +1063,14 @@ jQuery(function($) {
     function update_delete_button_handler() {
         // Standards section
         // 'Delete last standard' button
-        $('div[data-schemaid="standards"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function () {
+        $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-delete').eq(0).on('click', function () {
+            update_standard_shortname_handler();
             update_standard_array();
             textarea_init();
             set_editor_dirty();
         });
         // 'Delete all' button
-        $('div[data-schemaid="standards"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function () {
+        $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-delete').eq(1).on('click', function () {
             update_standard_array();
             textarea_init();
             set_editor_dirty();
@@ -1056,7 +1078,7 @@ jQuery(function($) {
 
         // Standard element section
         // 'Delete last standard element' button
-        $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(0).on('click', function () {
+        $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-delete').eq(0).on('click', function () {
             update_parent_array();
             eid--;
             se_index--;
@@ -1066,7 +1088,7 @@ jQuery(function($) {
             set_editor_dirty();
         });
         // 'Delete all' button
-        $('div[data-schemaid="standardelements"]>h3>div>button.json-editor-btn-delete').eq(1).on('click', function () {
+        $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-delete').eq(1).on('click', function () {
             update_parent_array();
             eid = 1;
             se_index = 0;
