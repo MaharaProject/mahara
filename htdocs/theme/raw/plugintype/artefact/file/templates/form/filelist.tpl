@@ -92,7 +92,7 @@
                     <div class="tags filetags text-small">
                         {str tag=tags}:
                         <span>
-                            {list_tags tags=$file->tags owner=$showtags}
+                            {list_tags tags=$file->tags owner=$tagsowner showtags=$showtags}
                         </span>
                     </div>
                     {/if}
