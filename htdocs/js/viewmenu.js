@@ -50,7 +50,8 @@ function addFeedbackSuccess(form, data) {
 
     // need to change the watchlist link
     if (data.data.updatelink) {
-        jQuery('#toggle_watchlist_link').text(data.data.updatelink);
+        // we must make safe the update link on php side
+        jQuery('#toggle_watchlist_link').html(data.data.updatelink);
     }
     resetFeedbackReplyto();
     formSuccess(form, data);
