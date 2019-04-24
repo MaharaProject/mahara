@@ -70,7 +70,7 @@
             <div class="shortname-container">
                 <span class="sr-only">{str tag="standardbegin" section="module.framework"}</span>
                 <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
-                <h3>{$standard->name}</h3>
+                <h3>{$standard->shortname}</h3>
                 <span class="sr-only status">{if $standard->settingstate == 'closed'}{str tag="collapsedsection" section="module.framework"}{/if}</span>
                 <a href="#">
                   <span class="sr-only action">
