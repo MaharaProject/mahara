@@ -123,7 +123,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            <span class="icon icon-lg icon-flag text-success left" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=objectionreview}
                         </h4>
                     </div>
