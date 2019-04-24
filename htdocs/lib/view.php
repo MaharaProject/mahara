@@ -994,6 +994,8 @@ class View {
             $collection->remove_view($this->id);
         }
         delete_records('usr_watchlist_view','view',$this->id);
+        //remove lock blocks, if they exist for this page
+        set_field('view', 'lockblocks', 0, 'id', $this->id, 'lockblocks', 1);
         if ($blockinstanceids = get_column('block_instance', 'id', 'view', $this->id)) {
             require_once(get_config('docroot') . 'blocktype/lib.php');
             foreach ($blockinstanceids as $id) {
