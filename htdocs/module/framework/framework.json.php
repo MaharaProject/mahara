@@ -200,7 +200,9 @@ else {
 }
 
 $framework->commit();
-$framework->set_config_fields();
+if (!$fw_to_edit) {
+    $framework->set_config_fields();
+}
 
 $data['id'] = $framework->get('id');
 $data['institution'] = $form_data['institution'];
