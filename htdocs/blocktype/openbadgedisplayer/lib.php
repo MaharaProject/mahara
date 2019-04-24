@@ -87,6 +87,13 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
                 'weight' => 20,
                 'iconclass' => 'flag'
             ),
+            'apps' => array (
+                'path' => 'settings/apps',
+                'url' => '/account/apps.php',
+                'title' => get_string('overview'),
+                'weight' => 5,
+                'iconclass' => 'flag'
+            )
         );
     }
 
