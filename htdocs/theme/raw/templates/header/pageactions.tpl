@@ -70,7 +70,7 @@
                 {if $userisowner && $objectedpage}
                 <li class="dropdown-item">
                     <a id="review_link" href="#" data-toggle="modal" data-target="#review-form">
-                        <span class="icon icon-lg icon-flag text-success left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">{str tag=objectionreview}</span>
                     </a>
                 </li>

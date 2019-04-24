@@ -197,5 +197,10 @@
                 text-decoration: none;
             }
         }
+        > span.nolink {
+            padding: 5px 10px;
+            display: block;
+            white-space: nowrap;
+        }
     }
 }
