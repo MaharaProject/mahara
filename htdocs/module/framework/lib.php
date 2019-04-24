@@ -401,13 +401,11 @@ class Framework {
                             if (!empty($option->elementid)) {
                                 $uniqueids[$inserted] = $option->elementid;
                             }
-                            }
                         }
                     }
                 }
             }
-
-
+        }
         db_commit();
     }
 
@@ -1119,9 +1117,9 @@ class Framework {
         $warning = array();
         if ($disabled) {
             $warning['plugin_warning'] = array(
-                    'type' => 'markup',
-                    'value' =>  '<div class="admin-warning alert alert-warning">' .
-                              '<p>' .  get_string('upgradeplugin', 'module.framework') . '</p></div>',
+                    'type'  => 'markup',
+                    'value' => '<div class="admin-warning alert alert-warning">' .
+                               '<p>' .  get_string('upgradeplugin', 'module.framework') . '</p></div>',
             );
         }
 
@@ -1134,77 +1132,77 @@ class Framework {
                 'defaultvalue' => $this->config_option_enabled('active_framework'),
             ),
             'statusestitle' => array(
-                'type' => 'html',
+                'type'  => 'html',
                 'value' => "<h4>" . get_string('displaystatusestitle','module.framework') . "</h4>" .
-                          "<p>" . get_string('displaystatusestitledetail','module.framework') . "</p>",
+                           "<p>" . get_string('displaystatusestitledetail','module.framework') . "</p>",
             ),
             'readyforassesment_container' => array(
-              'type' => 'fieldset',
-              'class' => 'form-inline',
-              'elements' => array(
-                  'label' => array(
-                      'type'=> 'html',
-                      'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_BEGUN] . '</span>' .
-                                '<span class="' . $this->get_state_array(Framework::EVIDENCE_BEGUN)['begun']['classes'] . '"></span></div>',
-                  ),
-                  'readyforassesment_field_enabled' => array(
-                      'type'  => 'switchbox',
-                      'title' => '',
-                      'defaultvalue' => $this->config_option_enabled('readyforassesment_field_enabled'),
-                      'disabled' => $disabled,
-                  ),
-              ),
+                'type' => 'fieldset',
+                'class' => 'form-inline',
+                'elements' => array(
+                    'label' => array(
+                        'type'=> 'html',
+                        'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_BEGUN] . '</span>' .
+                                   '<span class="' . $this->get_state_array(Framework::EVIDENCE_BEGUN)['begun']['classes'] . '"></span></div>',
+                    ),
+                    'readyforassesment_field_enabled' => array(
+                        'type'  => 'switchbox',
+                        'title' => '',
+                        'defaultvalue' => $this->config_option_enabled('readyforassesment_field_enabled'),
+                        'disabled' => $disabled,
+                    ),
+                ),
             ),
             'dontmatch_container' => array(
-              'type' => 'fieldset',
-              'class' => 'form-inline',
-              'elements' => array(
-                  'label' => array(
-                      'type'=> 'html',
-                      'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_INCOMPLETE] . '</span>' .
-                                '<span class="' . $this->get_state_array(Framework::EVIDENCE_INCOMPLETE)['incomplete']['classes'] . '"></span></div>',
-                  ),
-                  'dontmatch_field_enabled' => array(
-                      'type'  => 'switchbox',
-                      'title' => '',
-                      'defaultvalue' => $this->config_option_enabled('dontmatch_field_enabled'),
-                      'disabled' => $disabled,
-                  ),
-              ),
+                'type' => 'fieldset',
+                'class' => 'form-inline',
+                'elements' => array(
+                    'label' => array(
+                        'type'=> 'html',
+                        'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_INCOMPLETE] . '</span>' .
+                                   '<span class="' . $this->get_state_array(Framework::EVIDENCE_INCOMPLETE)['incomplete']['classes'] . '"></span></div>',
+                    ),
+                    'dontmatch_field_enabled' => array(
+                        'type'  => 'switchbox',
+                        'title' => '',
+                        'defaultvalue' => $this->config_option_enabled('dontmatch_field_enabled'),
+                        'disabled' => $disabled,
+                    ),
+                ),
             ),
             'partiallycomplete_container' => array(
-              'type' => 'fieldset',
-              'class' => 'form-inline',
-              'elements' => array(
-                  'label' => array(
-                      'type'=> 'html',
-                      'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_PARTIALCOMPLETE] . '</span>' .
-                                '<span class="' . $this->get_state_array(Framework::EVIDENCE_PARTIALCOMPLETE)['partialcomplete']['classes'] . '"></span></div>',
-                  ),
-                  'partiallycomplete_field_enabled' => array(
-                      'type'  => 'switchbox',
-                      'title' => '',
-                      'defaultvalue' => $this->config_option_enabled('partiallycomplete_field_enabled'),
-                      'disabled' => $disabled,
-                  ),
-              ),
+                'type' => 'fieldset',
+                'class' => 'form-inline',
+                'elements' => array(
+                    'label' => array(
+                        'type'=> 'html',
+                        'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_PARTIALCOMPLETE] . '</span>' .
+                                   '<span class="' . $this->get_state_array(Framework::EVIDENCE_PARTIALCOMPLETE)['partialcomplete']['classes'] . '"></span></div>',
+                    ),
+                    'partiallycomplete_field_enabled' => array(
+                        'type'  => 'switchbox',
+                        'title' => '',
+                        'defaultvalue' => $this->config_option_enabled('partiallycomplete_field_enabled'),
+                        'disabled' => $disabled,
+                    ),
+                ),
             ),
             'completed_container' => array(
-              'type' => 'fieldset',
-              'class' => 'form-inline',
-              'elements' => array(
-                  'label' => array(
-                      'type'=> 'html',
-                      'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_COMPLETED] . '</span>' .
-                                '<span class="' . $this->get_state_array(Framework::EVIDENCE_COMPLETED)['completed']['classes'] . '"></span></div>',
-                  ),
-                  'completed_field_enabled' => array(
-                      'type'  => 'switchbox',
-                      'title' => '',
-                      'value' => $disabled || $this->config_option_enabled('completed_field_enabled'),
-                      'disabled' => true,
-                  ),
-              ),
+                'type' => 'fieldset',
+                'class' => 'form-inline',
+                'elements' => array(
+                    'label' => array(
+                        'type'=> 'html',
+                        'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_COMPLETED] . '</span>' .
+                                   '<span class="' . $this->get_state_array(Framework::EVIDENCE_COMPLETED)['completed']['classes'] . '"></span></div>',
+                    ),
+                    'completed_field_enabled' => array(
+                        'type'  => 'switchbox',
+                        'title' => '',
+                        'value' => $disabled || $this->config_option_enabled('completed_field_enabled'),
+                        'disabled' => true,
+                    ),
+                ),
             ),
         );
 

@@ -104,7 +104,8 @@ $smarty = smarty(
     $javascript,
     $headers,
     array('View' => 'view',
-          'Collection' => 'collection'),
+        'Collection' => 'collection'
+    ),
     array(
         'sidebars' => false,
         'skin' => $skin
