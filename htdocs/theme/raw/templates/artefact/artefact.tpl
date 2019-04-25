@@ -94,7 +94,7 @@
                 {if $userisowner && $objectedpage}
                     <li>
                     <span class="nolink">
-                        <span class="icon icon-lg icon-flag text-success left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                         {str tag=objectionreviewonview}
                     </span>
                     </li>
