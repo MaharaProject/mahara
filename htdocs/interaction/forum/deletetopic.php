@@ -27,7 +27,8 @@ $topicid = param_integer('id');
 $returnto = param_alpha('returnto', 'topic');
 
 $topic = get_record_sql(
-    'SELECT f.group, f.id AS forumid, f.title, g.name AS groupname, p.poster, p.subject, p.body, COUNT(p2.id), ' . db_format_tsfield('p.ctime', 'ctime') . ', t.closed, m.user AS moderator
+    'SELECT f.group, f.id AS forumid, f.title, g.name AS groupname,
+        p.poster, p.subject, p.body, p.approved, COUNT(p2.id), ' . db_format_tsfield('p.ctime', 'ctime') . ', t.closed, m.user AS moderator
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
@@ -42,7 +43,7 @@ $topic = get_record_sql(
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE t.id = ?
     AND t.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 9, 10, 11',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12',
     array(0, $topicid)
 );
 
@@ -75,7 +76,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type'  => 'submitcancel',
-            'class' => 'btn-primary',
+            'class' => 'btn-secondary',
             'value' => array(get_string('yes'), get_string('no')),
             'goto'  => get_config('wwwroot') . ($returnto == 'view' ? 'interaction/forum/view.php?id=' . $topic->forumid : 'interaction/forum/topic.php?id=' . $topicid),
         ),
