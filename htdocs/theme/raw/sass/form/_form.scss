@@ -295,3 +295,7 @@ textarea.resizable {
         }
     }
 }
+
+input:disabled[type="text"] {
+    color: $black;
+}
