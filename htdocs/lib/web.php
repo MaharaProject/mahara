@@ -4491,18 +4491,18 @@ function build_pagination_pagelink($class, $text, $title, $disabled=false, $url=
     }
 
 
-    $result = "<li class='$class'>";
+    $result = "<li class='page-item $class'>";
 
     if (!empty($title)) {
         $text .= '<span class="sr-only">' . $title . '</span>';
     }
 
     if ($disabled) {
-        $result .= '<span>';
+        $result .= '<span class="page-link">';
         $result .= $text;
         $result .= '</span>';
     } else {
-        $result .= '<a href="' . hsc($url) . '" title="' . $title . '">';
+        $result .= '<a class="page-link" href="' . hsc($url) . '" title="' . $title . '">';
         $result .= $text;
         $result .= '</a>';
     }
