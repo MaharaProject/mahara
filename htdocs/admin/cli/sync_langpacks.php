@@ -65,11 +65,9 @@ $languages = get_languages();
 $series = get_config('series');
 if (preg_match('/dev$/', get_config('release'))) {
     $series = 'master';
-    $seriesfilesuffix = $series . '.tar.gz';
 }
-else {
-    $seriesfilesuffix = $series . '_STABLE.tar.gz';
-}
+$seriesfilesuffix = $series . '.tar.gz';
+
 $cli->cli_print(get_string('cli_lang_branch', 'admin', $series));
 
 $tmpdir = get_config('dataroot') . 'temp';
@@ -125,7 +123,7 @@ foreach ($langpacks as $lang) {
         $cli->cli_print(get_string('cli_language_make_backup', 'admin', ($dobackup ? 'true' : 'false')));
 
         // fetch the lang packs we need and save them to tmp
-        $langpackurl = 'http://langpacks.mahara.org/';
+        $langpackurl = 'https://langpacks.mahara.org/';
         $filename = $lang . '-' . $seriesfilesuffix;
         $langurl = $langpackurl . $filename;
         $cli->cli_print(get_string('cli_langpack_url', 'admin', $langurl));
