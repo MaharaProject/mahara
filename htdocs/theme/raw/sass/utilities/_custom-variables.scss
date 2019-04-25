@@ -90,8 +90,8 @@ $state-info-text:                           scale-color($info, $lightness: -30%)
 $state-info-bg:                             scale-color($info, $lightness: 70%) !default;
 $state-info-border:                         scale-color($info, $lightness: 50%) !default;
 
-$state-warning-text:                        scale-color($warning, $lightness: -30%) !default;
-$state-warning-bg:                          scale-color($warning, $lightness: 70%) !default;
+$state-warning-text:                        scale-color($warning, $lightness: -40%) !default;
+$state-warning-bg:                          scale-color($warning, $lightness: 85%) !default;
 $state-warning-border:                      scale-color($warning, $lightness: 50%) !default;
 
 $state-danger-text:                         scale-color($danger, $lightness: -30%) !default;
