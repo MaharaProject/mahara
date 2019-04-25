@@ -136,4 +136,10 @@ h3 {
             }
         }
     }
+
+    &.text-weight-bold {
+        .card-header {
+            font-weight: bold;
+        }
+    }
 }
