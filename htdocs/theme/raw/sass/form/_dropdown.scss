@@ -204,3 +204,9 @@
         }
     }
 }
+
+// override bootstrap select2 default bg color "success"
+.select2-container--default .select2-dropdown .select2-results__option--highlighted[aria-selected] {
+    background-color: $dropdown-link-hover-bg !important;
+    color: $dropdown-link-hover-color !important;
+}
