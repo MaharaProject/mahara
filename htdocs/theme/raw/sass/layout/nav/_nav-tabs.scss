@@ -10,21 +10,33 @@
             border-bottom: 3px solid transparent;
             padding: 8px 10px;
             font-size: $font-size-base * 1.07142857;
-            &.inactive {
-                color: $theme-text-lighttone-color;
-                &:hover {
-                    color: $theme-text-lighttone-color;
-                    background: transparent;
-                    border-bottom: 3px solid transparent;
-                }
-            }
+            text-decoration: none;
+
             &:hover,
             &:focus {
                 color: scale-color($link-color, $lightness: -16%);
-                border: 1px solid transparent;
-                border-bottom: 3px solid $nav-tabs-link-hover-border-color;
+                border-bottom-color: $nav-tabs-link-hover-border-color;
                 background: scale-color($gray-100, $lightness: 45%);
                 text-decoration: none;
+            }
+
+            &.inactive {
+                color: $theme-text-lighttone-color;
+                &:hover,
+                &:focus {
+                    color: $theme-text-lighttone-color;
+                    background: transparent;
+                    border-bottom-color: transparent;
+                }
+            }
+
+            &.active {
+                color: $link-color;
+                border-bottom-color: $nav-tabs-link-hover-border-color;
+                &:hover,
+                &:focus {
+                    border-bottom-color: $nav-tabs-link-hover-border-color;
+                }
             }
         }
     }
@@ -37,15 +49,4 @@
 .nav-tabs + .submit,
 .tab-content legend {
     display: none;
-}
-
-.nav-tabs.nav>li>a.active {
-    color: $link-color;
-    border: 1px solid transparent;
-    border-bottom: 3px solid $nav-tabs-link-hover-border-color;
-    &:hover,
-    &:focus {
-        border: 1px solid transparent;
-        border-bottom: 3px solid $nav-tabs-link-hover-border-color;
-    }
 }
