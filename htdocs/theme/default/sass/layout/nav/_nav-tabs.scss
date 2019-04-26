@@ -1,5 +1,6 @@
 .nav-tabs {
     border-bottom: 2px solid $theme-accent-color;
+
     &.nav {
         li > a {
             font-weight: 400;
@@ -9,23 +10,31 @@
 
             &:focus,
             &:hover {
-                border: 0;
-                border-bottom: 1px solid $theme-accent-color;
+                border-bottom-color: $theme-accent-color;
                 background-color: scale-color($theme-accent-color, $lightness: 70%);
                 color: $theme-text-color;
             }
+
+            &.inactive {
+                color: $theme-text-lighttone-color;
+                &:hover,
+                &:focus {
+                    color: $theme-text-lighttone-color;
+                    background: transparent;
+                    border-bottom-color: transparent;
+                }
+            }
+
             &.active {
                 background-color: scale-color($theme-accent-color, $lightness: 60%);
                 color: $theme-text-color;
-                border: 0;
-                border-bottom: 1px solid $theme-accent-color;
+                border-bottom-color: $theme-accent-color;
 
                 &:focus,
                 &:hover {
                     background-color: scale-color($theme-accent-color, $lightness: 70%);
                     color: $theme-text-color;
-                    border: 0;
-                    border-bottom: 1px solid $theme-accent-color;
+                    border-bottom-color: $theme-accent-color;
                 }
             }
         }
