@@ -1,6 +1,6 @@
                 {foreach from=$views item=view name=loopidx}
                 <div class="card-quarter {if $view.collid}card-collection{else}card-view{/if}">
-                    <div class="card {if $view.submittedto} bg-warning {/if}
+                    <div class="card {if $view.submittedto} bg-submitted{/if}
                     {if $view.template == $sitetemplate} site-template{/if}">
                         <h3 class="card-header has-link">
                             <a class="title-link title"
@@ -141,13 +141,17 @@
                                     <br>
                                     {str tag=modified section=mahara} {format_date(strtotime($view.vmtime), 'strftimerecentyear')}
                                     <br>
-                                    {if $view.submittedto}
-                                        {$view.submittedto|clean_html|safe}
-                                    {/if}
-                                    {if $view.manageaccesssuspended}
-                                        {str tag=pending section=view}
-                                    {/if}
                                 </li>
+                                {if $view.submittedto}
+                                <li class="view-details dropdown-item">
+                                    {$view.submittedto|clean_html|safe}
+                                </li>
+                                {/if}
+                                {if $view.manageaccesssuspended}
+                                <li class="view-details dropdown-item">
+                                    {str tag=pending section=view}
+                                </li>
+                                {/if}
                                 </ul>{* hamburger buttons *}
                             </div>
 

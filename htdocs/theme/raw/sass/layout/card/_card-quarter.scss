@@ -29,6 +29,10 @@
         box-shadow: 0 1px 1px rgba(0,0,0,.05);
         .card-header {
             background-color: transparent;
+            border: none;
+            a:hover {
+                background-color: $card-cap-bg;
+            }
         }
     }
 
@@ -122,6 +126,11 @@
                 padding: 5px 10px;
                 font-size: $font-size-sm;
                 border-top: 1px solid $dropdown-border-color;
+
+                &:hover,
+                &:focus {
+                  background: transparent;
+                }
             }
         }
     }

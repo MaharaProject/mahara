@@ -92,17 +92,10 @@
             background-color: $state-warning-bg;
         }
         .card-footer {
-            background-color: scale-color($state-warning-bg, $lightness: 70%);
+            background-color: scale-color($state-info-bg, $lightness: 70%);
             color: $state-warning-text;
-            &:hover,
-            &:focus {
-                background-color: scale-color($state-warning-bg, $lightness: 80%);
-                .icon {
-                    color: $state-warning-text;
-                }
-            }
             .icon {
-                color: $state-warning-text;
+                color: $theme-text-color;
             }
         }
         .card-footer,
@@ -146,6 +139,35 @@
         .card-header,
         .card-header a {
             border-color: $state-danger-border;
+        }
+        .card-header a,
+        .card-body:not(.no-footer) {
+            border-bottom-width:0;
+        }
+    }
+
+    &.bg-submitted {
+        border-color: $state-submitted-border;
+        background-color: $card-bg !important;
+        .card-header {
+            background-color: $state-submitted-bg;
+            color: $state-submitted-text;
+        }
+        .card-body {
+            background-color: $state-submitted-bg;
+        }
+        .card-footer {
+            background-color: $card-footer-bg;
+            color: $state-submitted-text;
+            .icon {
+                color: $state-submitted-text;
+            }
+        }
+        .card-footer,
+        .card-body,
+        .card-header,
+        .card-header a {
+            border-color: $state-submitted-border;
         }
         .card-header a,
         .card-body:not(.no-footer) {

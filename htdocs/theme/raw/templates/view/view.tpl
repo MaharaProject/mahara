@@ -37,7 +37,7 @@
     </div>
     <div class="viewfooter view-container">
         {if $releaseform}
-        <div class="releaseviewform alert alert-warning clearfix">
+        <div class="releaseviewform alert alert-submitted clearfix">
             {$releaseform|safe}
         </div>
         {/if}
