@@ -116,6 +116,7 @@ jQuery(function($) {
             editor.destroy();
             refresh_editor();
             edit = false;
+            fw_id= null;
             var index = $('#copy').val();
             populate_editor(index);
             textarea_init();
@@ -148,8 +149,17 @@ jQuery(function($) {
             fw_id = data.data.id;
 
             // Place the name of the framework in the "Edit" dropdown
-            $('select#edit').append($('<option>', {value:data.data.id, text:data.data.name}));
-            $('select#edit option').last().prop('selected', true);
+            var addoption = true;
+            $.each($('select#edit')[0].options, function() {
+                if (this.value == data.data.id) {
+                    addoption = false;
+                    return false;
+                }
+            });
+            if (addoption) {
+                $('select#edit').append($('<option>', {value:data.data.id, text:data.data.name}));
+            }
+            $('select#edit option[value="' + data.data.id + '"]').prop('selected', true);
             edit = true;
 
             // Reset the "Copy" dropdown
