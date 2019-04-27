@@ -248,7 +248,7 @@ $string['closetopicsdescription1'] = 'Close all new topics by default. Only mode
 
 $string['approvalofposts'] = 'Approval of posts';
 $string['moderatenewposts'] = 'Moderate new posts';
-$string['moderatenewpostsdescription'] = 'New posts need to be approved by a group moderator or administrator.';
+$string['moderatenewpostsdescription1'] = 'New posts need to be approved by a forum moderator or administrator.';
 
 $string['activetopicsdescription'] = 'Recently updated topics in your groups.';
 
