@@ -124,7 +124,7 @@ class PluginInteractionForum extends PluginInteraction {
                                     'posts'    => get_string('posts'),
                                     'replies' => get_string('replies', 'interaction.forum'),
                                     'postsandreplies' => get_string('postsandreplies', 'interaction.forum')),
-            'description'  => get_string('moderatenewpostsdescription', 'interaction.forum'),
+            'description'  => get_string('moderatenewpostsdescription1', 'interaction.forum'),
             'defaultvalue' => empty($moderateposts) ? 'none' : $moderateposts,
         );
 
