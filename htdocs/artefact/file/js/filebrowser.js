@@ -347,7 +347,12 @@ var FileBrowser = (function($) {
             }
         }
         $('#' + self.id + '_edit_messages').empty();
-        $('#' + self.id + '_edit_uploadedby').text(self.filedata[id].uploadedby);
+        if (self.filedata[id].uploadedby) {
+            $('#' + self.id + '_edit_uploadedby').text(self.filedata[id].uploadedby);
+        }
+        else {
+            $('#' + self.id + '_edit_uploadedby').parent().hide();
+        }
         $('#' + self.id + '_edit_row input.permission').each(function () {
             var perm = $(this).prop('name').split(':');
             if (self.filedata[id].permissions[perm[1]] && self.filedata[id].permissions[perm[1]][perm[2]] == 1) {
