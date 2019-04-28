@@ -692,9 +692,11 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     if ($group && $item->author == $USER->get('id')) {
                         $item->can_edit = 1;    // This will show the delete, edit buttons in filelist, but doesn't change the actual permissions in the checkbox
                     }
-                    $userobj = new User();
-                    $userobj->find_by_id($item->author);
-                    $item->uploadedby = display_name($userobj, null, true);
+                    if ($group || $institution || ($USER->get('id') != $item->author)) {
+                        $userobj = new User();
+                        $userobj->find_by_id($item->author);
+                        $item->uploadedby = display_name($userobj, null, true);
+                    }
                 }
                 if ($item->artefacttype == 'folder') {
                     if ($item->childcount > 0 && defined('FOLDER_SIZE')) {
@@ -1385,7 +1387,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $filetype = $this->get('oldextension') . ' ' . get_string('file', 'artefact.file');
         }
 
-        if (!empty($this->author)) {
+        $uploadedby = null;
+        if ($this->group || $this->institution || ($USER->get('id') != $this->author)) {
             $uploader = new User();
             $uploader->find_by_id($this->author);
             $uploadedby = display_name($uploader, null, true);

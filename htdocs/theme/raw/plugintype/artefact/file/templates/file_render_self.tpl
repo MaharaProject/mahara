@@ -31,10 +31,12 @@
         <td>{$ownername}</td>
     </tr>
     {/if}
+    {if $uploadedby}
     <tr>
         <th>{str tag=uploadedby section=artefact.file}:</th>
         <td>{$uploadedby}</td>
     </tr>
+    {/if}
     <tr>
         <th>{str tag=Created section=artefact.file}:</th>
         <td>{$created}</td>
