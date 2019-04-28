@@ -23,6 +23,7 @@ define('APPS', 1);
 require('./../../init.php');
 safe_require('blocktype', 'openbadgedisplayer');
 define('TITLE', get_string('connectedapps'));
+define('SUBSECTIONHEADING', get_string('badgrtokentitle', 'blocktype.openbadgedisplayer'));
 
 // Users shouldn't be able to access this page if openbadgedisplayer blocktype is not active.
 if (!is_plugin_active('openbadgedisplayer','blocktype')) {
