@@ -18,6 +18,7 @@ define('APPS', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('connectedapps'));
+define('SUBSECTIONHEADING', get_string('overview'));
 
 $hasapps = apps_get_menu_tabs();
 
