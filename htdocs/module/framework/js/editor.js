@@ -653,8 +653,8 @@ jQuery(function($) {
                 var pid_field;
                 var eid_val;
                 update_parent_array();
-                // At first, parent array has ('', '1.1')
-                se_index = parent_array.length == 2 ? 0 : parent_array.length - 1 ;
+                // Have the actual standard element count
+                se_index = Object.keys(parent_nums).length;
                 // Each standard element
                 $.each(se_array, function (k, value) {
                     // Add a row for each new standard element

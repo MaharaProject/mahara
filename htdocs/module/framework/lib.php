@@ -383,7 +383,6 @@ class Framework {
                                 $uniqueids[$option->id] = $option->elementid;
                             }
                             if (($index = array_search($option->parentelementid, $uniqueids)) !== false) {
-                                $option->parentlementid = $index;
                                 $sofordb->parent = $index;
                             }
                             update_record('framework_standard_element', $sofordb, 'id');
