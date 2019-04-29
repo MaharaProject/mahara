@@ -284,9 +284,10 @@ jQuery(function($) {
                                 },
                                 "standardid": {
                                     "type": "number",
-                                    "title": get_string('standardid'),
                                     "default": "1",
-                                    "description": get_string('standardiddesc')
+                                    "options" : {
+                                        "hidden" : true,
+                                    }
                                 },
                                 "uid": {
                                     "type": "number",
