@@ -94,7 +94,7 @@
         {foreach from=$standard->options key=ok item=option}
         {if $option->children}
         <tr class="matrixlevel{$option->level} examplefor{$standard->id}{if $standard->settingstate == 'closed'} d-none{/if}">
-            <td colspan="{$viewcount + 2}" class="code">
+            <td colspan="{$viewcount + $colspan}" class="code">
                 <div class="shortname-container">
                     <span class="sr-only">{str tag="headerrow" section="module.framework"}</span>
                     {for name=foo from=0 to=$option->level step=1}
@@ -102,7 +102,7 @@
                         <span class="matrixindent"></span>
                         {/if}
                     {/for}
-                    {$option->name}
+                    {$option->shortname}
                     <span class="sr-only">{str tag="showelementdetails" section="module.framework"}</span>
                     <div class="matrixtooltip popover d-none">
                         <h3 class="popover-title">{$option->name}</h3>
