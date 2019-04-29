@@ -90,11 +90,18 @@ jQuery(function($) {
             $("#copy option:eq(0)").prop('selected', true); // Reset copy
             editor.destroy();
             refresh_editor();
-            edit = true;
             var index = $('#edit').val();
-            populate_editor(index, edit);
+            if (index != "0") {
+                 //we are selecting a framework from the dropdown
+                 edit = true;
+                 populate_editor(index, edit);
+            }
+            else {
+                // We are clearing the dropdown
+                fw_id= null;
+                edit = false;
+            }
 
-            upload = false;
             textarea_init();
             set_editor_clean();
         }
@@ -118,7 +125,9 @@ jQuery(function($) {
             edit = false;
             fw_id= null;
             var index = $('#copy').val();
-            populate_editor(index);
+            if (index != "0") {
+                populate_editor(index);
+            }
             textarea_init();
             set_editor_clean();
         }
@@ -545,7 +554,7 @@ jQuery(function($) {
 
     function populate_editor(framework_id, edit) {
         url = config['wwwroot'] + 'module/framework/getframework.json.php';
-        upload = true;
+
         // Get data from existing framework
         sendjsonrequest(url, {'framework_id': framework_id} , 'POST', function(data) {
             if (edit) {
