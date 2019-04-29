@@ -1161,7 +1161,8 @@ class BlockInstance {
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
         $displayforrole = call_static_method($classname, 'display_for_roles', $user_roles);
         $checkview = $this->get_view();
-        if ($USER->is_admin_for_user($checkview->get('owner')) && $checkview->is_objectionable()) {
+        if ($checkview->get('owner') == NULL ||
+            ($USER->is_admin_for_user($checkview->get('owner')) && $checkview->is_objectionable())) {
             $displayforrole = true;
         }
         if (!$displayforrole) {
