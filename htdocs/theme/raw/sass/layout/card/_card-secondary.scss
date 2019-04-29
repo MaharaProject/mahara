@@ -6,7 +6,10 @@
         border-color: transparent;
     }
     .admin & {
-        border-color: $card-border-color; // TODO: This might affect other things elsewhere
+        border-color: $card-border-color;
+    }
+    .admin .user-page-content & {
+        border-color: transparent;
     }
     > .card-header {
         font-family: $font-family-serif;
