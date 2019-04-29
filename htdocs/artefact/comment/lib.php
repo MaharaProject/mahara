@@ -1461,7 +1461,7 @@ function delete_comment_submit(Pieform $form, $values) {
     // If this page is being marked, make comments un-deletable until released
     // unless it is the last comment still with in the editable timeframe
     $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
-    $lastcomment = $comment::last_public_comment($viewid, null);
+    $lastcomment = ($artefact) ? $comment::last_public_comment($viewid, $artefact) : $comment::last_public_comment($viewid, null);
     if ($comment->get('id') == $lastcomment->id && $comment->get('mtime') > $editableafter) {
         $candelete = 1;
     }
