@@ -1,3 +1,34 @@
+18.04.4 (2019-04-30)
+- Bug 1777014: Inst admin cannot see profile completion
+- Bug 1794990: Can't export portfolio with french translation
+- Bug 1800315: Cookie Consent links to privacy.php instead of legal.php
+- Bug 1801993: Old Mochikit function still in views.js
+- Bug 1802046: Upgrade to 18.10 error on oAuth clean up
+- Bug 1803194: Error when creating automatic groups via LDAP
+- Bug 1804328: need to clean html tag classes in comments
+- Bug 1805492: Updating npm event-stream in Mahara package.json
+- Bug 1805517: Unable to update site template as expected
+- Bug 1811034: Upgrade ADODB to version 5.20.14
+- Bug 1811141: Upgrade cookie consent to 3.1.0
+- Bug 1811163: need to upgrade PHPMailer library from 5.2.22 to 6.0.6
+- Bug 1811282: upgrade simplesaml from 1.16.1 to 1.16.3
+- Bug 1811284: Equation editor will not load in HTTPS
+- Bug 1812910: count(): Parameter must be an array or an object that implements Countable in Importer
+- Bug 1812939: remove jquery-ui-timepicker library
+- Bug 1813200: Wall posts to other users not sending notification
+- Bug 1814078: Error sending message with mail notofication -> Class 'PHPMailer\PHPMailer\SMTP' not found
+- Bug 1816311: Adding comment to journal entry shows wrong poster
+- Bug 1817221: A site admin can access Mahara 'root' user and break the site
+- Bug 1819547: XSS in collection title when viewwing on matrix page
+- Bug 1820774: Resume 'introduction' submenu not working in clean urls site
+- Bug 1826474: langpack sync not working
+- Bug 1765264: Error when deleting a user relating to the group quota
+- Bug 1801843: Cleanurl prefix not displayed on the page edit setting form
+- Bug 1820912: HTML export dos not display retracted block content
+- Bug 1820927: Two $string['portfolio'] language strings in view.php lang file
+- Bug 1825894: Drop / ignore LTI parameters that Mahara doesn't need
+- Bug 1809494: Incorrect message for Collection submitted-to status
+
 18.04.3 (2018-10-25)
 - Bug 1774554: Need to throw correct error in Webservices user delete
 - Bug 1776364: External file system image infinite loop
