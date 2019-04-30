@@ -57,7 +57,7 @@ cleanssphp:
 	@echo "Cleaning out SimpleSAMLphp..."
 	rm -rf htdocs/auth/saml/extlib/simplesamlphp
 
-ssphp:
+ssphp: installcomposer
 ifdef simplesamlphp
 	@echo "SimpleSAMLphp already exists - doing nothing"
 else
