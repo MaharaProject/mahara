@@ -146,6 +146,9 @@
             padding: 3px 20px;
             color: $theme-text-color;
         }
+        &:active > a {
+            color: $dropdown-link-active-color;
+        }
     }
     > .active {
         background-color: $theme-primary-color;
