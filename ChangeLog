@@ -1,2 +1,228 @@
+19.04.0 (2019-04-30)
+- 1775103 	broken js in "general settings" from site options  
+- 1777014 	Inst admin cannot see profile completion  
+- 1794990 	Can't export portfolio with french translation  
+- 1799933 	Unable to upgrade to Mahara 18.10.0 on windows  
+- 1800098 	missing package php-mbstring - local psotinstall fails  
+- 1800321 	Institution tags can't be used on institution content  
+- 1800389 	Color contrast issues for navigation arrow bar  
+- 1801160 	Peer assessment block in timeline needs adjustments  
+- 1801993 	Old Mochikit function still in views.js  
+- 1802046 	Upgrade to 18.10 error on oAuth clean up  
+- 1803194 	Error when creating automatic groups via LDAP  
+- 1804328 	need to clean html tag classes in comments  
+- 1805492 	Updating npm event-stream in Mahara package.json  
+- 1805517 	Unable to update site template as expected  
+- 1808096 	"Edit file" panel doesn't go across entire width anymore  
+- 1808935 	Error Deleting External App - Foreign Key Constraint  
+- 1810862 	Peer assessment progress bar has some errors  
+- 1811034 	Upgrade ADODB to version 5.20.14  
+- 1811141 	Upgrade cookie consent to 3.1.0  
+- 1811144 	need to upgrade Marked library from 0.4.0 to 0.6.0  
+- 1811146 	Update Elasticsearch-PHP to 6.1.0  
+- 1811153 	Upgrade dropzone to 5.5.0  
+- 1811163 	need to upgrade PHPMailer library from 5.2.22 to 6.0.6  
+- 1811282 	upgrade simplesaml from 1.16.1 to 1.16.3  
+- 1811284 	Equation editor will not load in HTTPS  
+- 1811290 	User find by email is not checking duplicate emails correctly  
+- 1811912 	relation "tag" does not exist during upgrade from 18.04 -> master  
+- 1812120 	Slowness when upgrading to v18.10+ when using elasticsearch  
+- 1812260 	Problem copying institution pages with embedded institution image artefact  
+- 1812910 	count(): Parameter must be an array or an object that implements Countable in Importer  
+- 1812939 	remove jquery-ui-timepicker library  
+- 1813200 	Wall posts to other users not sending notification  
+- 1814078 	Error sending message with mail notofication -> Class 'PHPMailer\PHPMailer\SMTP' not found  
+- 1815953 	Undefined index "versioning" in blogpost block rendering  
+- 1816311 	Adding comment to journal entry shows wrong poster  
+- 1816840 	Dwoo unserialize problem  
+- 1817221 	A site admin can access Mahara 'root' user and break the site  
+- 1819547 	XSS in collection title when viewwing on matrix page  
+- 1819555 	calendar not displaying dates after bootstrap upgrade  
+- 1819787 	broken group menu on group pages  
+- 1820774 	Resume 'introduction' submenu not working in clean urls site  
+- 1820931 	Retractable image gallery displays images incorrectly  
+- 1821107 	Institution report pages graph not showing  
+- 1821489 	Filebrowser is not changing selected item  
+- 1821657 	Modern theme the success message and error message look too similar  
+- 1821859 	Remove "Add to friends" text on new page header button  
+- 1822224 	File extract zip page has 'quota' error  
+- 1822504 	Language string review for Mahara 19.04 
+- 1823065 	Site staff shouldn't be able to send message to members of other institutions when isolated institutions are on  
+- 1823108 	Image gallery functionality broken  
+- 1823253 	Plan block layout is broken on edit screen  
+- 1823498 	Submitted items not marked with submission color  
+- 1823783 	Can't set remoteusername anymore  
+- 1823864 	Incorrect error message on SmartEvidence upload page  
+- 1824044 	'skip to main content' link skips the new page header on collections  
+- 1824439 	Show the sign-off block content in the block rather than just below the page header  
+- 1824608 	Correct placement of "Accept" and "Deny" buttons for group invitations  
+- 1824674 	"User details" report throws error  
+- 1825599 	Paginator is missing styling in forum topic  
+- 1825611 	Tags on file list displaying with tag count when they shouldn't  
+- 1825683 	Lines around wall post shouldn't be there  
+- 1826076 	Mouseleave event missing from matrix.js  
+- 1826292 	"Share with ..." search menu item has wrong hover color in "Modern", "Ocean" and "Primary school" themes  
+- 1826462 	Unread messages shouldn't have background color  
+- 1826471 	The warning background color should be a bit lighter for accessibility  
+- 1826474 	langpack sync not working  
+- 1826476 	Annotation block title doesn't pass accessibility  
+- 1826683 	Forum post moderation description should say "forum moderators" 
+- 1826788 	Tags under institutions cause error  
+- 1826795 	group/institution page error when rendering a block  
+- 1826814 	Border around blocks on institution and site pages  
+- 1826948 	Comment text being saved with extra HTML tags  
+- 1826956 	Reading unread emails not marking them as read  
+- 634193 	post-max-size exceeding error is not tracked 
+- 1212095 	The content of text boxes should be reset when clicking 'cancel' button 
+- 1563641 	Rewrite "mixed content" URLs via an HTMLPurifier custom filter 
+- 1742590 	Text/Note/Annotation Maxlength rule is unnecessary 
+- 1749626 	Behat test for Edit file 4.3.4 in manual test suite 
+- 1756182 	delete icon not needed for primary email address 
+- 1768160 	resume tinyMCE keeps old text 
+- 1773600 	Correct capitalization of time registration expiry selector 
+- 1773609 	User export has column "remotename" instead of "remoteuser" 
+- 1778792 	PDF.js does not have the presentation mode option in Firefox and IE 
+- 1779020 	need to upgrade charts.js library to v2.7.3 
+- 1792250 	Remove the test/selenium/ directory 
+- 1794912 	Need to tidy up Mahara so that it better reflects the W3C standards 
+- 1796600 	Forms that use progress bar when saving now do not show progress bar 
+- 1798203 	Peer review role prevents site / institution admin from seeing all content on page during objectionable review  
+- 1798701 	Behat: Test for peer review functionality 
+- 1800317 	Timeline shows headings of page to peer when there is no peer block 
+- 1800421 	Page and peer instructions are not exported properly in HTML and Leap2A 
+- 1800422 	z-index issue with collection navigation drop-down 
+- 1800570 	SmartEvidence edit page needs name of framework 
+- 1800961 	reports page displays error message with an empty DB 
+- 1801843 	Cleanurl prefix not displayed on the page edit setting form 
+- 1802412 	Mahara webservice function get_groups_by_id_returns() fails if 'description' field has html tags 
+- 1803473 	Behat test for administrative forum bulk actions functionality 
+- 1803478 	Behat: Subscribe / Unsubscribe forum topics 
+- 1803908 	Behat: Objectionable content functionality 
+- 1804074 	Behat: Adding journal entry from Journal block on page 
+- 1804123 	Behat: Verify group info block is displayed 
+- 1804243 	Plan tasks are shown on timeline even when they didn't exist at the time 
+- 1804750 	Behat: User self delete requires current password 
+- 1804902 	Mahara webservice function get_groups_by_id_returns() fails if 'hidemembers' or 'hidemembersfrommembers' field is set to 'Hide tutors' 
+- 1804959 	Ldap sync_groups throws error if no admin members 
+- 1805238 	Behat: Privacy statements in logged out page should show latest version 
+- 1805528 	Behat: Group members sort by functionality 
+- 1805766 	Behat: Site admin includes special blocks for the "Profile" and"Dashboard" site templates 
+- 1806169 	starting youtubevideo at special timestamp does not work 
+- 1806302 	Behat: View approved pending users 
+- 1806518 	Behat: Looking for, requesting, accepting and denying; Friend request functionality 
+- 1808049 	Behat: User updates notifications and preferences account settings 
+- 1808245 	Make 'file' upload form field respect user quota better 
+- 1810356 	Behat: Online users side block functionality 
+- 1810427 	Bug in unit tests with constraints in mysql 
+- 1810437 	Behat: Profile completion side block functionality 
+- 1810850 	Old Plan task causes error 
+- 1810875 	Behat: Add tags to tasks 
+- 1811174 	Update clipbardjs to 2.0.4 
+- 1811175 	Updating fancybox3 to 3.5.6 
+- 1811176 	Updating mobile detect to 2.8.33 
+- 1811177 	Update ReCaptcha to 1.2.1 
+- 1811178 	Correct version number in Readme file for select2 
+- 1811278 	Behat: Group recommendations functionality 
+- 1811320 	need to upgrade pdfjs library from 1.9.426 to 2.0.943 
+- 1812779 	need to upgrade CSS Tidy library from 1.5.7 to 1.6.5 
+- 1812940 	need to upgrade Moment.js library from 2.22.2 to 2.24.0 
+- 1813096 	Objectionable content functionality not working when cancel pressed 
+- 1813098 	upgrade tinymce library from 4.8.2 to 4.9.2 
+- 1813101 	Default no-reply email address is not in valid email address syntax 
+- 1813242 	Wallpost supplying 2 opening <form> tags 
+- 1813519 	Translation issues for forum unsubscribe link 
+- 1813850 	need to upgrade video.js from v7.0.5 to 7.4.1 
+- 1814316 	18.10 memcached and couchbase empty getStats() return 
+- 1814476 	Unsuspend institution form button repeated twice 
+- 1814499 	Primary School font doesn't support Māori characters 
+- 1814954 	"aretefactid" is not defined error on db upgrade 
+- 1814979 	Behat: Script to check that folder size is displayed after uploading 3 images 
+- 1815979 	Blog block in page versioning only shows the first few posts 
+- 1816317 	Edit tag page not highlighting correct menu item 
+- 1817004 	broken styles on online users page 
+- 1818279 	Group - View group string not translate 
+- 1819386 	Behat: Group forum moderation 
+- 1820120 	Institution contacts page looks broken 
+- 1820912 	HTML export dos not display retracted block content 
+- 1820927 	Two $string['portfolio'] language strings in view.php lang file 
+- 1822022 	Dialog box close button not working  
+- 1822694 	The 'match all tags' option not displaying correctly 
+- 1822911 	User icons not appearing circular in some themes due to proportions of image uploaded 
+- 1823506 	Padding between profile image and name on friend request / denial / removal page 
+- 1823513 	Respect line breaks in account registration approval message 
+- 1823789 	The "Configure" and "Delete" icons don't have hover text in page "Edit" mode 
+- 1823791 	Change plural to singular in "Share with" menu on "Edit access" 
+- 1824045 	Tabbing through menus focuses on other menus before getting to menu content 
+- 1824054 	Pointless access keys used in the menus 
+- 1824613 	Text on group request groups is smaller than on invite groups 
+- 1824673 	Panels on report "Information overview" shouldn't be colorized 
+- 1824675 	"User details" report doesn't mention the quota column  
+- 1824684 	Tags not displayed in group, institution, and site file browser 
+- 1824731 	Allow site stats column options to respect enabled config options 
+- 1824885 	Collection manage pages layout problem 
+- 1825092 	Undefined index: institution 
+- 1825600 	Forum post deletion shows incorrect button color and post background 
+- 1825616 	Change "My applications" to "Connected applications"  
+- 1825619 	Submitted pages / collection overview needs color change 
+- 1825684 	Active page in collection navigation needs to stand out more 
+- 1825687 	"Objectionable material reported" option doesn't align in the menu 
+- 1825688 	"More options" button on artefact details page doesn't have title text  
+- 1825894 	Drop / ignore LTI parameters that Mahara doesn't need 
+- 1826048 	"Remove from watchlist" icon is missing 
+- 1826285 	Modern theme has input focus color 
+- 1826475 	Quotation mark icon in primary school theme on wall posts 
+- 1826484 	Remove the hover underline from Elasticsearch tabs 
+- 1826766 	The "Uploaded by" option should only be visible in the group file area but not others 
+- 1826937 	Deleting comment in artefact view causes undefined property error 
+- 1826954 	Pending friends card has extra white space under request message 
+- 1826960 	On import of a Leap2A file, some import questions out of alignment 
+- 1826961 	Edit group membership modal checkboxes out of alignment 
+- 1826974 	Deleting non-institutional tag from file produces a warning 
+- 1396897 	Remove / grey out the "Send now" button in forum post when editing post  
+- 1800917 	Make 'strftimedateshort' lang string actually have short month name  
+- 1803616 	javascript syntax error when editing forum topic  
+- 1806524 	edit page has duplicated "addblock" in html tags  
+- 1809494 	Incorrect message for Collection submitted-to status  
+- 1821995 	edit page has duplicated "view-wizard-controls" in html tags  
+- 1823277 	The jsoneditor and behat html-formatter look to have bootstrap3 files associated  
+- 1823577 	call to css file from dropzone library is not needed  
+- 717196  	Isolated institutions 
+- 975746  	Fields for "Shared page notifications" and "Group category" missing on "Add groups by CSV" 
+- 1261234 	A cron task to periodically clear the VERP bounce counts 
+- 1271618 	Create users by CSV - allow specification of end date 
+- 1440617 	Be able to send a message when approving new user account 
+- 1440916 	File attachments to forum posts 
+- 1530050 	Display portfolios and not pages on "My friends" 
+- 1635503 	Set up a SmartEvidence framework in the admin interface 
+- 1681591 	Move profile and profile images options to the user menu 
+- 1749339 	Add pre_loginpage_hooks 
+- 1758801 	Mahara to ask for password before self-deleting account 
+- 1765276 	Upgrade to Bootstrap 4  
+- 1771774 	Bypass externallogin 
+- 1783153 	Display tags in the file browser table under "Files"  
+- 1787507 	Make openbadgedisplayer compatible with badgr 
+- 1791544 	Make an easier way to decide which sideblocks are shown on which pages 
+- 1796525 	Portfolio access report should indicate portfolios that are under review  
+- 1798981 	View approved pending users 
+- 1800058 	Allow saml auth to rotate SP certificate 
+- 1801057 	Cascade navigation block in collection 
+- 1802180 	Have a simplified group update webservice function 
+- 1802205 	Make all external links in Mahara open in external tab/window by default 
+- 1802386 	Allow quota details in 'User details' report 
+- 1803912 	moderate forum posts 
+- 1804907 	Mahara webservice testclient needs to indicate what are the required fields 
+- 1805065 	Forum option to not allow members to unsubscribe 
+- 1805526 	Allow inlinejs on homepage 
+- 1810990 	Create Behat background steps to easily set up page content 
+- 1811548 	Site admin should be able to set up groups in any institution 
+- 1813500 	Consolidate "My groups" and "Find groups" screens 
+- 1814194 	Bootstrap 4 broken behat tests 
+- 1814621 	Consolidate "My friends" and "Find people" screens 
+- 1815807 	Show the person who uploaded a file to a group 
+- 1815829 	Change the page header area 
+- 1817809 	Add small logo to a theme 
+- 1821104 	Stop the logout link from being clicked multiple times 
+- 1825617 	The "Connected apps" arrow bar should not change title 
+
 19.04rc1 (2019-04-02)
 
