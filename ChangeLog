@@ -1,3 +1,6 @@
+17.10.9 (2019-04-30)
+- Bug 1827012: Security Release 17.10.8 Makefile
+
 17.10.8 (2019-04-30)
 - Bug 1777014: Inst admin cannot see profile completion
 - Bug 1794990: Can't export portfolio with french translation
