@@ -33,7 +33,7 @@
                 </div>
                 {/if}
             </div>
-            <div class="col-md4">
+            <div class="col-md-4">
             {foreach from=$displaydecisions key=opt item=displayopt}
                 {if !$blog.disabled[$opt]}
                 <label for="decision_{$blog.id}_{$opt}">
