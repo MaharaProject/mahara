@@ -1,3 +1,53 @@
+18.10.1 (2019-04-30)
+- Bug 1777014: Inst admin cannot see profile completion
+- Bug 1794990: Can't export portfolio with french translation
+- Bug 1799933: Unable to upgrade to Mahara 18.10.0 on windows
+- Bug 1800321: Institution tags can't be used on institution content
+- Bug 1800389: Color contrast issues for navigation arrow bar
+- Bug 1801993: Old Mochikit function still in views.js
+- Bug 1802046: Upgrade to 18.10 error on oAuth clean up
+- Bug 1803194: Error when creating automatic groups via LDAP
+- Bug 1804328: need to clean html tag classes in comments
+- Bug 1805492: Updating npm event-stream in Mahara package.json
+- Bug 1805517: Unable to update site template as expected
+- Bug 1808096: "Edit file" panel doesn't go across entire width anymore
+- Bug 1808935: Error Deleting External App - Foreign Key Constraint
+- Bug 1810862: Peer assessment progress bar has some errors
+- Bug 1811034: Upgrade ADODB to version 5.20.14
+- Bug 1811141: Upgrade cookie consent to 3.1.0
+- Bug 1811144: need to upgrade Marked library from 0.4.0 to 0.6.0
+- Bug 1811163: need to upgrade PHPMailer library from 5.2.22 to 6.0.6
+- Bug 1811282: upgrade simplesaml from 1.16.1 to 1.16.3
+- Bug 1811284: Equation editor will not load in HTTPS
+- Bug 1812120: Slowness when upgrading to v18.10+ when using elasticsearch
+- Bug 1812260: Problem copying institution pages with embedded institution image artefact
+- Bug 1812910: count(): Parameter must be an array or an object that implements Countable in Importer
+- Bug 1812939: remove jquery-ui-timepicker library
+- Bug 1813200: Wall posts to other users not sending notification
+- Bug 1814078: Error sending message with mail notofication -> Class 'PHPMailer\PHPMailer\SMTP' not found
+- Bug 1815953: Undefined index "versioning" in blogpost block rendering
+- Bug 1816311: Adding comment to journal entry shows wrong poster
+- Bug 1816840: Dwoo unserialize problem
+- Bug 1817221: A site admin can access Mahara 'root' user and break the site
+- Bug 1819547: XSS in collection title when viewwing on matrix page
+- Bug 1820774: Resume 'introduction' submenu not working in clean urls site
+- Bug 1823783: Can't set remoteusername anymore
+- Bug 1826474: langpack sync not working
+- Bug 1798203: Peer review role prevents site / institution admin from seeing all content on page during objectionable review
+- Bug 1800317: Timeline shows headings of page to peer when there is no peer block
+- Bug 1800421: Page and peer instructions are not exported properly in HTML and Leap2A
+- Bug 1800422: z-index issue with collection navigation drop-down
+- Bug 1800961: reports page displays error message with an empty DB
+- Bug 1801843: Cleanurl prefix not displayed on the page edit setting form
+- Bug 1804243: Plan tasks are shown on timeline even when they didn't exist at the time
+- Bug 1814316: 18.10 memcached and couchbase empty getStats() return
+- Bug 1815979: Blog block in page versioning only shows the first few posts
+- Bug 1820912: HTML export dos not display retracted block content
+- Bug 1820927: Two $string['portfolio'] language strings in view.php lang file
+- Bug 1825894: Drop / ignore LTI parameters that Mahara doesn't need
+- Bug 1803616: javascript syntax error when editing forum topic
+- Bug 1809494: Incorrect message for Collection submitted-to status
+
 18.10.0 (2018-10-25)
 - Bug 1794724: Can't upload images previously taken on Mobile device
 - Bug 1799802: Menu icons are doubled up for primary school theme
