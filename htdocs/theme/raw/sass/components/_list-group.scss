@@ -299,6 +299,11 @@
             border-bottom: 0;
         }
     }
+    .list-group-item {
+        .list-group-item-heading {
+            float: none;
+        }
+    }
 }
 
 .annotation-feedback {
