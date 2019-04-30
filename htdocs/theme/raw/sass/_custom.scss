@@ -842,3 +842,9 @@ div.form-group .form-control-label {
 .forumselectwrap {
     margin: 0 0 10px 10px;
 }
+
+.form-group.checkboxes .group-invite input[type="checkbox"] {
+    float: left;
+    top: 0;
+    margin-right: 5px;
+}

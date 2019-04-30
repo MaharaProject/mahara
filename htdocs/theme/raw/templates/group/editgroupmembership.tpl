@@ -17,7 +17,7 @@
                     <h4 class="heading">{if $addtype == 'add'}{str tag=addmembers section=group}{else}{str tag=invite section=group}{/if}</h4>
                     <div class="checkboxes form-group last {if count($groups) > 6}column-list{/if}">
                         {foreach from=$groups item=group}
-                            <div class="form-check">
+                            <div class="form-check group-invite">
                                 <input id="{$addtype}{$group->id}" type="checkbox" class="form-check" name="{$addtype}group_{$userid}" value="{$group->id}" {if $group->checked}checked{/if} {if $group->disabled} disabled{/if}>
                                 <label for="{$addtype}{$group->id}">{$group->name}</label>
                             </div>
