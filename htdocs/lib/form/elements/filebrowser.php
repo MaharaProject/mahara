@@ -1280,7 +1280,9 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     $updatetags = $oldtags != $newtags;
     if ($updatetags) {
         require_once(get_config('docroot') . 'lib/form/elements/tags.php');
-        $newtags = array_map('remove_prefix', $newtags);
+        if (!empty($newtags)) {
+            $newtags = array_map('remove_prefix', $newtags);
+        }
         $artefact->set('tags', $newtags);
     }
 
