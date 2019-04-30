@@ -89,13 +89,20 @@
             color: $state-warning-text;
         }
         .card-body {
-            background-color: $state-warning-bg;
+            background-color: $card-bg;
         }
         .card-footer {
-            background-color: scale-color($state-info-bg, $lightness: 70%);
+            background-color: scale-color($state-warning-bg, $lightness: 70%);
             color: $state-warning-text;
+            &:hover,
+            &:focus {
+                background-color: scale-color($state-warning-bg, $lightness: 80%);
+                .icon {
+                    color: $state-warning-text;
+                }
+            }
             .icon {
-                color: $theme-text-color;
+                color: $state-warning-text;
             }
         }
         .card-footer,
@@ -159,6 +166,13 @@
         .card-footer {
             background-color: $card-footer-bg;
             color: $state-submitted-text;
+            &:hover,
+            &:focus {
+                background-color: scale-color($state-submitted-bg, $lightness: 80%);
+                .icon {
+                    color: $state-submitted-text;
+                }
+            }
             .icon {
                 color: $state-submitted-text;
             }
