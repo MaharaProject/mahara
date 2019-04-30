@@ -171,8 +171,9 @@ jQuery(function($) {
             notificationList.html(data.data.html);
         }
         else if (self) {
-            $(self).removeClass('panel-primary js-panel-unread').addClass('card');
+            $(self).removeClass('text-weight-bold js-card-unread').addClass('card');
             $(self).find('.control').removeClass('control');
+            $(self).find('.unread').removeClass('unread'); // for inbox block
         }
         $('#selectall').attr('checked', false); // Need to uncheck bulk checkbox
     }
@@ -203,7 +204,7 @@ jQuery(function($) {
             }
         });
 
-        $('.js-panel-unread').on('show.bs.collapse', function(e) {
+        $('.js-card-unread').on('show.bs.collapse', function(e) {
             markthisread(e, this, paginatorData);
         });
     }
