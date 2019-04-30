@@ -1289,5 +1289,40 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2019031905) {
+        log_debug('remove extra html from comment artefact descriptions');
+        // Get all the comment artefacts with the issue
+        $sql = "SELECT * FROM {artefact}
+            WHERE artefacttype = 'comment'
+            AND description " . db_ilike() . " '<!DOCTYPE%'";
+
+        if ($artefacts = get_records_sql_array($sql)) {
+            $count = 0;
+            $limit = 1000;
+            $total = count($artefacts);
+            // Loop through all of them and update the description
+            $dom = new DOMDocument();
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            foreach ($artefacts as $artefact) {
+                $dom->loadHTML($artefact->description);
+                $xpath = new DOMXPath($dom);
+                $body = $xpath->query('/html/body');
+                $innerHtml = '';
+                foreach ($body->item(0)->childNodes as $child) {
+                    $innerHtml .= $dom->saveHTML($child);
+                }
+                $artefact->description = $innerHtml;
+                update_record('artefact', $artefact);
+
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
