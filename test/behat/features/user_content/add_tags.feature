@@ -85,18 +85,19 @@ Background:
    | Block title | Text Block 101 |
    And I fill in select2 input "instconf_tags" with "ébrown" and select "ébrown"
    And I press "Save"
-   # Creating an external video block with a tag
-   And I expand "External" node
-   And I follow "External media" in the "blocktype sidebar" property
-   And I press "Add"
-   And I fill in "URL or embed code" with "https://youtu.be/VeS1iqQ6VIc"
-   And I fill in select2 input "instconf_tags" with "ègreen" and select "ègreen"
-   And I press "Save"
    # Creating a resume field with a tag
    And I expand "Personal info" node
    And I follow "One résumé field" in the "blocktype sidebar" property
    And I press "Add"
    And I fill in select2 input "instconf_tags" with "êyellow" and select "êyellow"
+   And I press "Save"
+   # Creating an external video block with a tag
+   # need to do this one last as the loading of video effects takes focus away from the add block modal
+   And I expand "External" node
+   And I follow "External media" in the "blocktype sidebar" property
+   And I press "Add"
+   And I fill in "URL or embed code" with "https://www.youtube.com/embed/VeS1iqQ6VIc"
+   And I fill in select2 input "instconf_tags" with "ègreen" and select "ègreen"
    And I press "Save"
    And I choose "Pages and collections" in "Create" from main menu
    Then I follow "Tags" in the "#sb-tags" "css_element"
