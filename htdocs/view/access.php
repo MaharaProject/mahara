@@ -53,6 +53,9 @@ if (!$USER->can_edit_view($view)) {
 if ($group && !group_within_edit_window($group)) {
     throw new AccessDeniedException();
 }
+if ($view->get('template') == View::SITE_TEMPLATE) {
+    throw new AccessDeniedException();
+}
 
 
 $form = array(
