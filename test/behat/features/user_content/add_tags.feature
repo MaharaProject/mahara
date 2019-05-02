@@ -86,27 +86,20 @@ Background:
    | Block title | Text Block 101 |
    And I fill in select2 input "instconf_tags" with "ébrown" and select "ébrown"
    And I press "Save"
+   # Creating a resume field with a tag
+   And I expand "Personal info" node
+   And I follow "One résumé field" in the "blocktype sidebar" property
+   And I press "Add"
+   And I fill in select2 input "instconf_tags" with "êyellow" and select "êyellow"
+   And I press "Save"
    # Creating an external video block with a tag
+   # need to do this one last as the loading of video effects takes focus away from the add block modal
    And I expand "External" node
    And I follow "External media" in the "blocktype sidebar" property
    And I press "Add"
-   And I fill in "URL or embed code" with "https://youtu.be/VeS1iqQ6VIc"
+   And I fill in "URL or embed code" with "https://www.youtube.com/embed/VeS1iqQ6VIc"
    And I fill in select2 input "instconf_tags" with "ègreen" and select "ègreen"
    And I press "Save"
-   # Creating a resume field with a tag
-   # copying out test that fails with bootstrap 4 upgrade for now
-   # @TODO - fix. The problem is that the add dialog doesn't close after the
-   # add button is clicked, therefore the following step fails. I have been through
-   # all the events attached to the button and the only code I have come across related
-   # to Liam's patches is where he replaces 'hidden' with 'd-none' in dock.js, views.js
-   #6332dcecde583bc3f6d965ec4a2133f3d44dfd59 seems likely. But not tested as this problem
-   # does not occur manually, so we can afford to fix later. It also seems only to occur
-   # with the one block-type. (At least out of the ones we test).
-   #And I expand "Personal info" node
-   #And I follow "One résumé field" in the "blocktype sidebar" property
-   #And I press "Add"
-   #And I fill in select2 input "instconf_tags" with "êyellow" and select "êyellow"
-   #And I press "Save"
    And I choose "Pages and collections" in "Create" from main menu
    Then I follow "Tags" in the "#sb-tags" "css_element"
    # Verifying tags are saved
@@ -116,7 +109,7 @@ Background:
    And I should see "&red" in the "#results_container" element
    And I should see "ébrown" in the "#results_container" element
    And I should see "ègreen" in the "#results_container" element
-  # And I should see "êyellow" in the "#results_container" element
+   And I should see "êyellow" in the "#results_container" element
    #Check the repeated tags
    And I follow "blue"
    And I should see "Journal one"
