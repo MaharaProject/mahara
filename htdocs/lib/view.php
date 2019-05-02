@@ -1576,10 +1576,7 @@ class View {
 
                 if (array_search($accessrecord, $accessdata_added) === false) {
                     $accessrecord->view = $this->get('id');
-                    require_once('ddl.php');
-                    $table = new XMLDBTable('view_access');
-                    $field = new XMLDBField('id');
-                    if (field_exists($table, $field)) {
+                    if (db_column_exists('view_access', 'id')) {
                         $vaid = insert_record('view_access', $accessrecord, 'id', true);
                         handle_event('updateviewaccess', array(
                             'id' => $vaid,

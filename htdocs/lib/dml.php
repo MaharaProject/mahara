@@ -1970,3 +1970,17 @@ function get_db_version() {
     }
     return $version;
 }
+
+function db_column_exists($table, $field) {
+    global $DB_IGNORE_SQL_EXCEPTIONS;
+    // We will check to see if a column exists by seeing if it throws an error or not
+    try {
+        $DB_IGNORE_SQL_EXCEPTIONS = true;
+        get_column_sql("SELECT " . db_quote_identifier($field) . " FROM " . db_table_name($table) . " LIMIT 1");
+        $DB_IGNORE_SQL_EXCEPTIONS = false;
+        return true;
+    }
+    catch (SQLException $e) {
+        return false;
+    }
+}
