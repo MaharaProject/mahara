@@ -311,10 +311,7 @@ $string['blockchangedbackerror'] = "Changing block back to placeholder block fai
 
 $string['addblock'] = 'Add block: %s';
 $string['blockcell'] = 'Cell';
-$string['cellposition'] = 'Row %s Column %s';
 $string['blockorder'] = 'Position';
-$string['blockordertopcell'] = 'Top of cell';
-$string['blockorderafter'] = 'After "%s"';
 $string['rownr'] = 'Row %s';
 $string['nrrows'] = array(
     '%s row',
@@ -514,3 +511,7 @@ $string['versionnumber'] = 'Version %s';
 $string['gotonextversion'] = 'Go to the next version ';
 $string['gotopreviousversion'] = 'Go to the previous version';
 $string['loadingtimelinecontent'] = 'Loading timeline for "%s". If the page has many versions, this may take a while.';
+
+// layout
+$string['bottom'] = 'Bottom';
+$string['top'] = 'Top';

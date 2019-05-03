@@ -184,25 +184,10 @@ $addform = pieform(array(
     'autofocus' => false,
     'class' => 'cell-radios',
     'elements' => array(
-        'blocklegend' => array(
-            'type' => 'fieldset',
-            'elements' => array(
-                'celltitle' => array(
-                    'type' => 'markup',
-                    'value'=> '<legend>' . get_string('celltitle', 'view') . '</legend>',
-                ),
-                'cellchooser' => array(
-                    'type' => 'radio',
-                    'class' => 'fullwidth',
-                    'rowsize' => 2,
-                    'options' => array('R1C1', 'R1C2', 'R2C1'),
-                ),
-            ),
-        ),
         'position' => array(
             'type' => 'select',
             'title' => get_string('blockorder', 'view'),
-            'options' => array('Top', 'After 1', 'After 2'),
+            'options' => array(get_string('top', 'view'), get_string('bottom', 'view')),
         ),
         'submit' => array(
             'type' => 'submitcancel',
@@ -231,9 +216,6 @@ if ($placeholderblock) {
 $smarty = smarty($javascript, $stylesheets, array(
     'view' => array(
         'addnewblock',
-        'cellposition',
-        'blockordertopcell',
-        'blockorderafter',
         'moveblock',
     ),
 ), $extraconfig);

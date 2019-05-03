@@ -291,7 +291,7 @@
         });
 
         var serializeWidgetMap = function(items) {
-            // conseguir el id del bloque
+            // get the block id
             // json call to update new position and/or dimension
             var i;
             if (typeof(items) != 'undefined') {
@@ -470,54 +470,67 @@
             if (isHit(e) && !$('#addblock').hasClass('in')) {
                 e.stopPropagation();
                 e.preventDefault();
-                if (!addblockstarted) {
-                    addblockstarted = true;
-                    addNewBlock($(this).find('.blocktype-radio').val());
-                }
+                startAddBlock($(this));
             }
         });
     }
 
-    function cellChanged() {
+    var addblockstarted = false; // To stop the double clicking of add block button causing multiple saving problem
+    function startAddBlock(element) {
+            var addblockdialog = $('#addblock');
+            addblockdialog.modal('show');
+            if (!addblockstarted) {
+                addblockstarted = true;
+                addblockdialog.one('dialog.end', function(event, options) {
+                    if (options.saved) {
+                        addNewBlock(options.position, element.find('.blocktype-radio').val());
+                    }
+                    else {
+                        element.trigger("focus");
+                    }
+                });
 
-        $(this).closest('.js-cell-chooser').find('.active').removeClass('active');
-        $(this).parent().addClass('active');
+                addblockdialog.find('h4.modal-title').text(get_string('addnewblock', 'view', element.text()));
+                addblockdialog.find('.block-inner').removeClass('d-none');
 
-        var position = $(this).val().split('-'),
-            element = workspace.find('.js-col-row').eq(parseInt(position[0], 10) - 1).find('.column').eq(parseInt(position[1], 10) - 1),
-            options = [get_string('blockordertopcell')],
-            selectbox = $('#newblock_position');
+                addblockdialog.find('.deletebutton').trigger("focus");
+                keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
+            }
+        }
 
-        element.find('.column-content .blockinstance .blockinstance-header').each(function() {
-            options.push(get_string('blockorderafter', 'view', $(this).html()));
-        });
-
-
-        selectbox.html('<option>' + options.join('</option><option>') + '</option>');
-    }
-
-     var addblockstarted = false; // To stop the double clicking of add block button causing multiple saving problem
-    function addNewBlock(blocktype) {
+    function addNewBlock(whereTo, blocktype) {
+        addblockstarted = false;
         var pd = {
                 'id': $('#viewid').val(),
                 'change': 1,
-                'blocktype': blocktype
+                'blocktype': blocktype,
+                'positionx': 0,
+                'positiony': 0,
             };
 
         if (config.blockeditormaxwidth) {
             pd['cfheight'] = $(window).height() - 100;
         }
-        pd['action_addblocktype_positionx_0_positiony_0_width_3_height_3'] = true;// The default 3x3 block at position 0,0
-        sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
 
+        if (whereTo == 'bottom') {
+            var grid = $('.grid-stack').data('gridstack');
+            pd['positiony'] = grid.grid.getGridHeight();
+        }
+
+        pd['action_addblocktype_positionx_' + pd['positionx'] + '_positiony_' + pd['positiony'] + '_width_' + '3'+ '_height_' + '3'] = true;
+        sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
             var div = $('<div>').html(data.data.display.html),
                 blockinstance = div.find('div.grid-stack-item'),
-                configureButton = blockinstance.find('.configurebutton');
+                configureButton = blockinstance.find('.configurebutton'),
+                dimensions = {
+                    x: blockinstance[0].getAttribute('data-gs-x'),
+                    y: blockinstance[0].getAttribute('data-gs-y'),
+                }
 
             addBlockCss(data.css);
 
             var grid = $('.grid-stack').data('gridstack');
-            addNewWidget(blockinstance, grid);
+            addNewWidget(blockinstance, grid, dimensions);
 
             if (data.data.configure) {
                 showDock($('#configureblock'), true);
@@ -527,12 +540,10 @@
                 rewriteDeleteButton(blockinstance.find('.deletebutton'));
                 blockinstance.find('.deletebutton').trigger("focus");
             }
-            addblockstarted = false;
         },
         function() {
             // On error callback we need to reset the Dock
             hideDock();
-            addblockstarted = false;
         });
     }
 
@@ -635,71 +646,6 @@
         });
     }
 
-    function computeColumnInputs(dialog) {
-        var inputcontainer = dialog.find('.blockinstance-content #newblock_cellchooser_container'),
-            result = $('<div>').addClass('cell-chooser js-cell-chooser'),
-            firstcell,
-            rows = workspace.find('.js-col-row'),
-            i,
-            j,
-            row,
-            cols,
-            radios,
-            label,
-            value,
-            radio;
-
-
-        for(i = 0; i < rows.length; i = i + 1){
-
-            row = $('<div class="cell-row">');
-            cols = $(rows[i]).find('.column');
-            radios = [];
-
-            for(j = 0; j < cols.length; j = j + 1){
-
-                value = (i + 1) + '-' + (j + 1); //rowNumber-colNumber
-                radio = $('<input>').attr({
-                    'type': 'radio',
-                    'style': $(cols[j]).attr('style'),
-                    'id': 'cellchooser_' + value,
-                    'name': 'cellchooser',
-                    'value': value
-                });
-
-
-
-                label = $('<label>').addClass('cell').attr('for', 'cellchooser_' + value).attr('style', $(cols[j]).attr('style'));
-
-                label.append(radio)
-                    .append($('<span>').addClass('pseudolabel mll').html(get_string('cellposition', 'view', i + 1, j + 1)));
-
-                row.append(label);
-
-                radio.on('change', cellChanged);
-
-                radio.on('focus', function() {
-                    $(this).parent().addClass('focused');
-                });
-
-                radio.on('blur', function() {
-                    $(this).parent().removeClass('focused');
-                });
-
-            }
-
-            result.append(row);
-        }
-
-        dialog.find('.dock-loading').remove();
-        inputcontainer.html('').append(result);
-
-        firstcell = inputcontainer.find('input').first();
-        firstcell.prop('checked', true);
-        cellChanged.call(firstcell);
-    }
-
-
     function moveBlock(id, whereTo) {
         var pd = {
             'id': $('#viewid').val(),
@@ -759,26 +705,11 @@
 
         $('#newblock .submit').on('click keydown', function(e) {
             if (isHit(e)) {
-                var position = $('#newblock .cell-chooser input:checked').val().split('-'),
-                    order = $('#newblock_position').prop('selectedIndex') + 1;
+                var position = $('#newblock_position').prop('selectedIndex');
 
                 closePositionBlockDialog(e, {
                     'saved': true,
-                    'row': position[0], 'column': position[1], 'order': order
-                });
-            }
-        });
-
-        // To allow for pushing enter button when on selecting the 'cell' column line
-        $('#newblock').on('keydown', function(e) {
-            if (e.keyCode == 13) {
-
-                var position = $('#newblock .cell-chooser input:checked').val().split('-'),
-                    order = $('#newblock_position').prop('selectedIndex') + 1;
-
-                closePositionBlockDialog(e, {
-                    'saved': true,
-                    'row': position[0], 'column': position[1], 'order': order
+                    'position': (position == 0 ? 'top' : 'bottom'),
                 });
             }
         });
@@ -1053,10 +984,10 @@ function wire_blockoptions() {
 }
 
 /* GRIDSTACK functions */
-function addNewWidget(blockContent, grid) {
+function addNewWidget(blockContent, grid, dimensions) {
     var node = {
-                x: 0,
-                y: 0,
+                x: dimensions.x,
+                y: dimensions.y,
                 width: 3,
                 height: 3
             };
