@@ -262,7 +262,13 @@ function releaseview_submit() {
     redirect($view->get_url());
 }
 
-$javascript = array('paginator', 'viewmenu', 'js/collection-navigation.js', 'js/jquery/jquery-mobile/jquery.mobile.custom.min.js', 'js/jquery/jquery-ui/js/jquery-ui.min.js');
+$javascript = array('paginator', 'viewmenu', 'js/collection-navigation.js',
+        'js/jquery/jquery-mobile/jquery.mobile.custom.min.js',
+        'js/jquery/jquery-ui/js/jquery-ui.min.js',
+        'js/lodash/lodash.js',
+        'js/gridstack/gridstack.js',
+        'js/gridstack/gridstack.jQueryUI.js',
+      );
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 if (is_plugin_active('externalvideo', 'blocktype')) {
@@ -347,7 +353,40 @@ if ($owner && $owner == $USER->get('id')) {
 // if the view doesn't have a peer assessment block
 if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
     || ($USER->is_admin_for_user($view->get('owner')) && $view->is_objectionable())) {
-    $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+    if ($newlayout = $view->uses_new_layout()) {
+        $blocks = $view->get_blocks();
+        $blocks = json_encode($blocks);
+        $blocksjs =  <<<EOF
+$(function () {
+    var options = {
+        verticalMargin: 10,
+        float: true,
+        ddPlugin: false,
+    };
+    var grid = $('.grid-stack');
+    grid.gridstack(options);
+    grid = $('.grid-stack').data('gridstack');
+
+    // should add the blocks one by one
+    var blocks = {$blocks};
+    $.each(blocks, function(blockid, block) {
+        grid.addWidget(
+            $('<div id="block_' + blockid + '"><div class="grid-stack-item-content">'
+                + block.content +
+                '<div/><div/>'),
+            block.positionx,
+            block.positiony,
+            block.width,
+            block.height,
+            null, null, null, null, null,
+            blockid);
+    });
+});
+EOF;
+    }
+    else {
+        $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+    }
 }
 
 $smarty = smarty(
@@ -474,7 +513,7 @@ EOF;
 if ($showdetails = get_account_preference($USER->get('id'), 'view_details_active')) {
     $javascript .= <<<EOF
     jQuery(function($) {
-        var headers = $('#main-column-container').find('.block-header');
+        var headers = $('#column-container').find('.block-header');
         $('#details-btn').addClass('active');
         headers.removeClass('d-none');
     });
@@ -500,7 +539,7 @@ if (!empty($blocktype_toolbar['toolbarhtml'])) {
     $smarty->assign('toolbarhtml', join("\n", $blocktype_toolbar['toolbarhtml']));
 }
 $smarty->assign('canremove', $can_edit);
-$smarty->assign('INLINEJAVASCRIPT', $javascript . $inlinejs);
+$smarty->assign('INLINEJAVASCRIPT', $javascript . $inlinejs . $blocksjs);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
@@ -578,7 +617,13 @@ if ($showmnetlink) {
 
 $smarty->assign('viewdescription', ArtefactTypeFolder::append_view_url($view->get('description'), $view->get('id')));
 $smarty->assign('viewinstructions', ArtefactTypeFolder::append_view_url($view->get('instructions'), $view->get('id')));
-$smarty->assign('viewcontent', (isset($viewcontent) ? $viewcontent : null));
+$smarty->assign('newlayout', $newlayout);
+if ($newlayout) {
+    $smarty->assign('blocks', (isset($blocks) ? $blocks : null));
+}
+else {
+    $smarty->assign('viewcontent', (isset($viewcontent) ? $viewcontent : null));
+}
 $smarty->assign('releaseform', $releaseform);
 if (isset($ltisubmissionform)) {
     $smarty->assign('ltisubmissionform', $ltisubmissionform);

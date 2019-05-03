@@ -2180,7 +2180,11 @@ class View {
 
     }
 
-    public function get_grid_datastructure() {
+    /**
+    * Gets the view blocks in an array to be easily loaded in js gridstack
+    * @param boolean $editing    whether we are in the edit more or not
+    */
+    public function get_blocks($editing=false) {
         $sql = '
         SELECT bi.id, bi.view,positionx, positiony, width, height, blocktype, title, configdata
         FROM {block_instance_dimension} bd
@@ -2203,17 +2207,22 @@ class View {
             }
         }
 
-        $blockcontent = '';
+        $blockcontent = array();
         foreach($this->grid as $blockinstance) {
-            $result = $blockinstance->render_editing();
-            $smarty = smarty_core();
-            $smarty->assign('blockcontent', $result['html']);
-            $smarty->assign('id', $blockinstance->get('id'));
-            $smarty->assign('width', $blockinstance->get('width'));
-            $smarty->assign('height', $blockinstance->get('height'));
-            $smarty->assign('positionx', $blockinstance->get('positionx'));
-            $smarty->assign('positiony', $blockinstance->get('positiony'));
-            $blockcontent .= $smarty->fetch('view/gridcell.tpl');
+            if ($editing) {
+                $result = $blockinstance->render_editing();
+                $result = $result['html'];
+            }
+            else {
+                $result = $blockinstance->render_viewing();
+            }
+            $block = array();
+            $block['content'] = $result;
+            $block['width'] = $blockinstance->get('width');
+            $block['height'] = $blockinstance->get('height');
+            $block['positionx'] = $blockinstance->get('positionx');
+            $block['positiony'] = $blockinstance->get('positiony');
+            $blockcontent[$blockinstance->get('id')] = $block;
         }
         return $blockcontent;
     }
@@ -2264,18 +2273,34 @@ class View {
      * Returns the HTML for the rows of this view
      */
     public function build_rows($editing=false, $exporting=false, $versioning=false) {
-
-        if (get_config('new_layout')) {
-            $result = $this->get_grid_datastructure();
-        }
-        else {
-            $numrows = $this->get('numrows');
-            $result = '';
-            for ($i = 1; $i <= $numrows; $i++) {
-                $result .= $this->build_columns($i, $editing, $exporting, $versioning);
-            }
+        $numrows = $this->get('numrows');
+        $result = '';
+        for ($i = 1; $i <= $numrows; $i++) {
+            $result .= $this->build_columns($i, $editing, $exporting, $versioning);
         }
         return $result;
+    }
+
+    /**
+    * Checks if the view is using the new layout
+    * A view uses the new layout if has data on the new layout tables
+    * or if doesn't have any blocks
+    */
+    public function uses_new_layout() {
+        $viewid = $this->get('id');
+
+        $sql = "SELECT DISTINCT view FROM {block_instance} bi
+            INNER JOIN {block_instance_dimension} bd
+            ON bi.id = bd.block
+            WHERE bi.view = ?";
+
+        $usesnewlayout = get_field_sql($sql, array($viewid));
+
+        $sql = "SELECT DISTINCT view
+            FROM {block_instance}
+            WHERE view = ? ";
+        $hasblocks = get_field_sql($sql, array($viewid));
+        return ($usesnewlayout || !$hasblocks);
     }
 
     /**

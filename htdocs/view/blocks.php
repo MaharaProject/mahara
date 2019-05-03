@@ -161,19 +161,30 @@ require_once('pieforms/pieform/elements/select.php');
 $inlinejs .= pieform_element_select_get_inlinejs();
 $inlinejs .= "jQuery(window).on('pageupdated', {}, function() { dock.init(jQuery(document)); });";
 
-$inlinejs .="
-$(function () {
-    var options = {
-        verticalMargin: 10,
-        float: true, //to place a block in any part of the page and the position will remain fixed
-        resizable: false,
-    };
-    var grid = $('.grid-stack');
-    grid.gridstack(options);
-    grid = $('.grid-stack').data('gridstack');
-    grid.resizable('.grid-stack-item', true);
-});
-";
+if ($newlayout = $view->uses_new_layout()) {
+    $blocks = $view->get_blocks(true);
+    $blocksencode = json_encode($blocks);
+    $inlinejs .="
+    $(function () {
+        var options = {
+            verticalMargin: 10,
+            float: true, //to place a block in any part of the page and the position will remain fixed
+            resizable: false,
+        };
+        var grid = $('.grid-stack');
+        grid.gridstack(options);
+        grid = $('.grid-stack').data('gridstack');
+        grid.resizable('.grid-stack-item', true);
+        // should add the blocks one by one
+        var blocks = {$blocksencode};
+        init(grid, blocks);
+    });
+    ";
+}
+else {
+    // Build content before initialising smarty in case pieform elements define headers.
+    $viewcontent = $view->build_rows(true);
+}
 
 // The form for adding blocks via the keyboard
 $addform = pieform(array(
@@ -197,8 +208,6 @@ $addform = pieform(array(
     ),
 ));
 
-// Build content before initialising smarty in case pieform elements define headers.
-$viewcontent = $view->build_rows(true);
 
 // Get the placeholder block info
 $placeholderblock = PluginBlockType::get_blocktypes_for_category('shortcut', $view, 'placeholder');
@@ -280,9 +289,12 @@ if ($collection = $view->get('collection')) {
 }
 $smarty->assign('collectionid', $collectionid);
 
-// The HTML for the columns in the view
-$columns = $viewcontent;
-$smarty->assign('columns', $columns);
+$smarty->assign('newlayout', $newlayout);
+if (!$newlayout) {
+    // The HTML for the columns in the view
+    $columns = $viewcontent;
+    $smarty->assign('columns', $columns);
+}
 
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
 

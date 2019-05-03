@@ -257,9 +257,21 @@
         });
     }
 
-    //Private Methods
-    /////////////////
-    function init() {
+    ViewManager.init = function(grid, blocks) {
+
+        // load blocks for view in edit mode
+        $.each(blocks, function(blockid, block) {
+            grid.addWidget(
+                $('<div id="block_' + blockid + '"><div class="grid-stack-item-content">'
+                    + block.content +
+                    '<div/><div/>'),
+                block.positionx,
+                block.positiony,
+                block.width,
+                block.height,
+                null, null, null, null, null,
+                blockid);
+        });
 
         // Set private variables
         contentEditor = $('[data-role="content-toolbar"]');
@@ -323,6 +335,8 @@
 
     } // init
 
+    //Private Methods
+    /////////////////
     function equalHeights (){
 
         var rows = $('.js-col-row'),
@@ -342,7 +356,6 @@
             cols.height(height);
             }
     }
-
 
     function attachAccordion(){
         // Update the status of a collapsible block category by adding/removing class 'expanded'
@@ -939,7 +952,6 @@
      *
      */
     $(function() {
-        init();
         /**
          * changes the intructions so they are for ajax
          */
@@ -981,6 +993,10 @@ function blockConfigError(form, data) {
 
 function wire_blockoptions() {
     return ViewManager.blockOptions();
+}
+
+function init(grid, blocks) {
+    return ViewManager.init(grid, blocks);
 }
 
 /* GRIDSTACK functions */

@@ -364,7 +364,7 @@ function toggleDetailsBtn() {
     $('#details-btn').off('click');
     $('#details-btn').on('click', function(e) {
         var detailsActive = 0;
-        var headers = $('#main-column-container').find('.block-header');
+        var headers = $('#column-container').find('.block-header');
 
         if (!$('#details-btn').hasClass('active')) {
             $('#details-btn').addClass('active');

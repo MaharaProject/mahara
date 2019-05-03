@@ -45,9 +45,12 @@
         <div class="col">
             <div id="bottom-pane" data-role="workspace">
                 <div id="column-container" class="user-page-content">
+                    {if $newlayout}
                     <div class="grid-stack">
-                        {$columns|safe}
                     </div>
+                    {else}
+                      {$columns|safe}
+                    {/if}
                 </div>
             </div>
         </div>
