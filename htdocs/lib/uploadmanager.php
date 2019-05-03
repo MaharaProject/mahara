@@ -280,8 +280,7 @@ function clam_handle_infected_file($file) {
         $now = date('YmdHis');
         $newname = $quarantinedir .'/'. $now .'-user-'. $userid .'-infected';
         if (rename($file, $newname)) {
-            clam_log_infected($file, $newname);
-            return get_string('clammovedfile');
+            return clam_log_infected($file, $newname);
         }
     }
     if (unlink($file)) {
@@ -452,4 +451,5 @@ function clam_log_infected($oldfilepath='', $newfilepath='', $userid=0) {
         . ((empty($newfilepath)) ? '. The file has been deleted ' : '. The file has been moved to a quarantine directory and the new path is '. $newfilepath);
 
     log_debug($errorstr);
+    return $errorstr;
 }
