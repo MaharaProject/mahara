@@ -70,16 +70,16 @@ See https://github.com/adobe-type-tools/cmap-resources
         <div id="sidebarContent">
           <div id="thumbnailView">
           </div>
-          <div id="outlineView" class="d-none">
+          <div id="outlineView" class="hidden">
           </div>
-          <div id="attachmentsView" class="d-none">
+          <div id="attachmentsView" class="hidden">
           </div>
         </div>
         <div id="sidebarResizer" class="hidden"></div>
       </div>  <!-- sidebarContainer -->
 
       <div id="mainContainer">
-        <div class="findbar d-none doorHanger" id="findbar">
+        <div class="findbar hidden doorHanger" id="findbar">
           <div id="findbarInputContainer">
             <input id="findInput" class="toolbarField" title="Find" placeholder="Find in document…" tabindex="91" data-l10n-id="find_input">
             <div class="splitToolbarButton">
@@ -103,7 +103,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             <input type="checkbox" id="findEntireWord" class="toolbarField" tabindex="96">
             <label for="findEntireWord" class="toolbarLabel" data-l10n-id="find_entire_word_label">Whole words</label>
 
-            <span id="findResultsCount" class="toolbarLabel d-none"></span>
+            <span id="findResultsCount" class="toolbarLabel hidden"></span>
           </div>
 
           <div id="findbarMessageContainer">
@@ -111,7 +111,7 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>  <!-- findbar -->
 
-        <div id="secondaryToolbar" class="secondaryToolbar d-none doorHangerRight">
+        <div id="secondaryToolbar" class="secondaryToolbar hidden doorHangerRight">
           <div id="secondaryToolbarButtonContainer">
             <button id="secondaryPresentationMode" class="secondaryToolbarButton presentationMode visibleLargeView" title="Switch to Presentation Mode" tabindex="51" data-l10n-id="presentation_mode">
               <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
