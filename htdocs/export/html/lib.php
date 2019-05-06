@@ -732,6 +732,13 @@ class HtmlExportOutputFilter {
             $html
         );
 
+        // Links to pdf block files
+        $html = preg_replace_callback(
+            '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/blocktype/pdf/viewer\.php\?.*?file=(\d+)(?:&amp;|&|%26).*?(?=[\'"])#',
+            array($this, 'replace_pdf_link'),
+            $html
+        );
+
         // Thumbnails
         require_once('file.php');
         $html = preg_replace_callback(
@@ -826,6 +833,28 @@ class HtmlExportOutputFilter {
         }
 
         return $this->get_export_path_for_file($artefact, $options);
+    }
+
+    /**
+     * Callback to replace links to artefact/file/blocktype/pdf/viewer.php to point to the
+     * correct file in the HTML export
+     */
+    private function replace_pdf_link($matches) {
+        $artefactid = $matches[2];
+        try {
+            $artefact = artefact_instance_from_id($artefactid);
+        }
+        catch (ArtefactNotFoundException $e) {
+            return '';
+        }
+
+        // If artefact type not something that would be served by download.php,
+        // replace link with nothing
+        if ($artefact->get_plugin_name() != 'file') {
+            return '';
+        }
+
+        return $this->get_export_path_for_file($artefact, array());
     }
 
     /**
