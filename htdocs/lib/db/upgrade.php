@@ -1563,5 +1563,17 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_type($table, $field, true, true);
     }
 
+    if ($oldversion < 2019120600) {
+        // Save the SAML attributes in a db table when debugging
+        log_debug('Create "usr_login_saml" table');
+        $table = new XMLDBTable('usr_login_saml');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10);
+        $table->addFieldInfo('data', XMLDB_TYPE_TEXT, 'big', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        create_table($table);
+    }
+
     return $status;
 }

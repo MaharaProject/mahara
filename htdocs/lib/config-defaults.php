@@ -776,6 +776,14 @@ $cfg->sessionhandler = 'file';
 */
 
 /**
+ * Log SAML attributes
+ * To help diagnose authentication issues between Mahara and the IdP it is useful to see what attributes are being sent
+ * so we log what was sent to the usr_login_saml table when this flag is set to true.
+ * Note: This should be switched off once problems are diagnosed / fixed and the table cleared
+ */
+$cfg->saml_log_attributes = false;
+
+/**
  * @global array $cfg->externalfilesystem
  * A configuration data for an external file system
  */

@@ -129,6 +129,15 @@ class AuthSaml extends Auth {
     public function request_user_authorise($attributes) {
         global $USER, $SESSION;
         $this->must_be_ready();
+       /**
+         * Save the SAML attributes to "usr_login_attributes" to help with debugging
+         * Note: This should not be left on full time
+         */
+        if (get_config('saml_log_attributes')) {
+            $jsonattributes = json_encode($attributes);
+            $sla_id = insert_record('usr_login_saml', (object) array('ctime' => db_format_timestamp(time()),
+                                                                     'data' => $jsonattributes), 'id', true);
+        }
 
         if (empty($attributes) or !array_key_exists($this->config['user_attribute'], $attributes)
                                or !array_key_exists($this->config['institutionattribute'], $attributes)) {
@@ -293,6 +302,13 @@ class AuthSaml extends Auth {
         }
         $user->commit();
 
+        /**
+         * Save the SAML attributes to "usr_login_attributes" to help with debugging
+         * Note: This should not be left on full time
+         */
+        if (get_config('saml_log_attributes') && $sla_id) {
+            set_field('usr_login_saml', 'usr', $user->get('id'), 'id', $sla_id);
+        }
 
         /*******************************************/
 
