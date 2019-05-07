@@ -1647,6 +1647,10 @@ class BlockInstance {
 
         $this->rebuild_artefact_list();
 
+        // check the table exists in case we need to update a block in the upgrade before the creation of the table
+        if (db_table_exists('block_instance_dimension')) {
+            $this->set_block_dimensions($this->positionx, $this->positiony, $this->width, $this->height);
+        }
         // Tell stuff about this
         handle_event('blockinstancecommit', $this);
 
@@ -1942,6 +1946,10 @@ class BlockInstance {
             'row'        => $this->get('row'),
             'column'     => $this->get('column'),
             'order'      => $this->get('order'),
+            'positionx'  => $this->get('positionx'),
+            'positiony'  => $this->get('positiony'),
+            'width'      => $this->get('width'),
+            'height'     => $this->get('height'),
         ));
 
         if (($sameowner && $copytype != 'fullinclself') || $copytype == 'reference') {

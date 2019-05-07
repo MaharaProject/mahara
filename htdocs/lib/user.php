@@ -2813,20 +2813,25 @@ function install_system_profile_view() {
     $view->set_access(array(array(
         'type' => 'loggedin'
     )));
-    $blocktypes = array('profileinfo' => 1, 'myviews' => 1, 'mygroups' => 1, 'myfriends' => 2, 'wall' => 2);  // column ids
+    $blocktypes = array(
+        'profileinfo' => array(0,0),
+        'myviews'     => array(0,1),
+        'mygroups'    => array(0,2),
+        'myfriends'   => array(1,0),
+        'wall'        => array(1,1)
+    );  // block coordinates (x,y) in grid
     $installed = get_column_sql('SELECT name FROM {blocktype_installed} WHERE name IN (' . join(',', array_map('db_quote', array_keys($blocktypes))) . ')');
-    $weights = array(1 => 0, 2 => 0);
     foreach (array_keys($blocktypes) as $blocktype) {
         if (in_array($blocktype, $installed)) {
-            $weights[$blocktypes[$blocktype]]++;
             $title = ($blocktype == 'profileinfo') ? get_string('aboutme', 'blocktype.internal/profileinfo') : '';
             $newblock = new BlockInstance(0, array(
                 'blocktype'  => $blocktype,
                 'title'      => $title,
                 'view'       => $view->get('id'),
-                'row'        => 1,
-                'column'     => $blocktypes[$blocktype],
-                'order'      => $weights[$blocktypes[$blocktype]],
+                'positionx'  => $blocktypes[$blocktype][0] * 6,
+                'positiony'  => $blocktypes[$blocktype][1] * 3,
+                'height'     => 3,
+                'width'      => 6,
             ));
             $newblock->commit();
         }
@@ -2862,8 +2867,8 @@ function install_system_dashboard_view() {
         array(
             'blocktype' => 'newviews',
             'title' => '',
-            'row'   => 1,
-            'column' => 1,
+            'positionx' => 0,
+            'positiony' => 0,
             'config' => array(
                 'limit' => 5,
             ),
@@ -2871,15 +2876,15 @@ function install_system_dashboard_view() {
         array(
             'blocktype' => 'myviews',
             'title' => '',
-            'row'   => 1,
-            'column' => 1,
+            'positionx' => 0,
+            'positiony' => 3,
             'config' => null,
         ),
         array(
             'blocktype' => 'inbox',
             'title' => '',
-            'row'   => 1,
-            'column' => 2,
+            'positionx' => 6,
+            'positiony' => 0,
             'config' => array(
                 'feedback' => true,
                 'groupmessage' => true,
@@ -2895,8 +2900,8 @@ function install_system_dashboard_view() {
         array(
             'blocktype' => 'inbox',
             'title' => '',
-            'row'   => 1,
-            'column' => 2,
+            'positionx' => 6,
+            'positiony' => 3,
             'config' => array(
                 'newpost' => true,
                 'maxitems' => '5',
@@ -2905,25 +2910,24 @@ function install_system_dashboard_view() {
         array(
             'blocktype' => 'watchlist',
             'title' => '',
-            'row'   => 1,
-            'column' => 2,
+            'positionx' => 6,
+            'positiony' => 6,
             'config' => array(
                 'count' => '10',
             ),
         ),
     );
     $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
-    $weights = array(1 => 0, 2 => 0);
     foreach ($blocktypes as $blocktype) {
         if (in_array($blocktype['blocktype'], $installed)) {
-            $weights[$blocktype['column']]++;
             $newblock = new BlockInstance(0, array(
                 'blocktype'  => $blocktype['blocktype'],
                 'title'      => $blocktype['title'],
                 'view'       => $view->get('id'),
-                'row'        => $blocktype['row'],
-                'column'     => $blocktype['column'],
-                'order'      => $weights[$blocktype['column']],
+                'positionx'  => $blocktype['positionx'],
+                'positiony'  => $blocktype['positiony'],
+                'width'      => 6,
+                'height'     => 3,
                 'configdata' => $blocktype['config'],
             ));
             $newblock->commit();

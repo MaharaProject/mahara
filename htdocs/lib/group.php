@@ -2631,22 +2631,19 @@ function install_system_grouphomepage_view() {
         array(
             'blocktype' => 'groupinfo',
             'title' => '',
-            'row'    => 1,
-            'column' => 1,
+            'positiony' => 0,
             'config' => null,
         ),
         array(
             'blocktype' => 'recentforumposts',
             'title' => '',
-            'row'    => 1,
-            'column' => 1,
+            'positiony' => 3,
             'config' => null,
         ),
         array(
             'blocktype' => 'groupviews',
             'title' => '',
-            'row'    => 1,
-            'column' => 1,
+            'positiony' => 6,
             'config' => array(
                     'showgroupviews' => 1,
                     'showsharedviews' => 1,
@@ -2656,23 +2653,21 @@ function install_system_grouphomepage_view() {
         array(
             'blocktype' => 'groupmembers',
             'title' => '',
-            'row'    => 1,
-            'column' => 1,
+            'positiony' => 9,
             'config' => null,
         ),
     );
     $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
-    $weights = array(1 => 0);
     foreach ($blocktypes as $blocktype) {
         if (in_array($blocktype['blocktype'], $installed)) {
-            $weights[$blocktype['column']]++;
             $newblock = new BlockInstance(0, array(
                     'blocktype'  => $blocktype['blocktype'],
                     'title'      => $blocktype['title'],
                     'view'       => $view->get('id'),
-                    'row'        => $blocktype['row'],
-                    'column'     => $blocktype['column'],
-                    'order'      => $weights[$blocktype['column']],
+                    'positionx'  => 0,
+                    'positiony'  => $blocktype['positiony'],
+                    'width'      => 12,
+                    'height'     => 3,
                     'configdata' => $blocktype['config'],
             ));
             $newblock->commit();
