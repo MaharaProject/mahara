@@ -381,6 +381,7 @@ $(function () {
             null, null, null, null, null,
             blockid);
     });
+    jQuery(document).trigger('blocksloaded');
 });
 EOF;
     }
@@ -410,7 +411,7 @@ jQuery(function () {
     paginator = {$feedback->pagination_js}
 });
 
-jQuery(function($) {
+jQuery(window).on('blocksloaded', {}, function() {
 
     var deletebutton = $('#configureblock').find('.deletebutton');
     deletebutton.on('click', function(e) {
@@ -484,7 +485,7 @@ if ($modal = param_integer('modal', null)) {
 
     if ($block = param_integer('block', null)) {
         $javascript .= <<<EOF
-        jQuery(function($) {
+        jQuery(window).on('blocksloaded', {}, function() {
             $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-toggle="modal-docked" data-target="#configureblock" data-blockid="' + $block + '" data-artefactid="' + $artefact + '" ></a>');
             $('a#tmp_modal_link').off('click');
             $('a#tmp_modal_link').on('click', function(e) {
@@ -497,7 +498,7 @@ EOF;
     }
     else {
         $javascript .= <<<EOF
-        jQuery(function($) {
+        jQuery(window).on('blocksloaded', {}, function() {
             $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-toggle="modal-docked" data-target="#configureblock" data-artefactid="' + $artefact + '" ></a>');
             $('a#tmp_modal_link').off('click');
             $('a#tmp_modal_link').on('click', function(e) {
@@ -512,8 +513,8 @@ EOF;
 // Load the page with details content (block headers) displaying according to user preferences.
 if ($showdetails = get_account_preference($USER->get('id'), 'view_details_active')) {
     $javascript .= <<<EOF
-    jQuery(function($) {
-        var headers = $('#column-container').find('.block-header');
+    jQuery(window).on('blocksloaded', {}, function() {
+        var headers = $('#main-column-container').find('.block-header');
         $('#details-btn').addClass('active');
         headers.removeClass('d-none');
     });
