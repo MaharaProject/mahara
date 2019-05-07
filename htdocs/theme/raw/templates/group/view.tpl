@@ -6,7 +6,11 @@
     </div>
 {/if}
 <div class="grouphomepage">
-    {$viewcontent|safe}
+    <div class="grid-stack">
+    {if $viewcontent}
+        {$viewcontent|safe}
+    {/if}
+    </div>
 </div>
 <div class="metadata text-right">
     {$lastupdatedstr}{if $visitstring}; {$visitstring}{/if}

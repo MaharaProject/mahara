@@ -1,6 +1,6 @@
 /*jslint browser: true, nomen: true,  white: true */
 /* global jQuery, $ */
-jQuery(function($) {
+jQuery(window).on('blocksloaded', {}, function() {
 "use strict";
 
     function ajaxBlocks() {

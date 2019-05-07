@@ -6,9 +6,11 @@
             {if $restrictedview}
             <strong>{str tag=profilenotshared section=view}</strong>
             {else}
-
-            {$viewcontent|safe}
-
+            <div class="grid-stack">
+                {if !$newlayout}
+                    {$viewcontent|safe}
+                {/if}
+            </div>
             {/if}
         </div>
     </div>

@@ -387,6 +387,7 @@ EOF;
     }
     else {
         $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+        $blocksjs = "$(function () {jQuery(document).trigger('blocksloaded');});";
     }
 }
 
@@ -540,7 +541,7 @@ if (!empty($blocktype_toolbar['toolbarhtml'])) {
     $smarty->assign('toolbarhtml', join("\n", $blocktype_toolbar['toolbarhtml']));
 }
 $smarty->assign('canremove', $can_edit);
-$smarty->assign('INLINEJAVASCRIPT', $javascript . $inlinejs . $blocksjs);
+$smarty->assign('INLINEJAVASCRIPT', $blocksjs . $javascript . $inlinejs);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
