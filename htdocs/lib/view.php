@@ -2462,11 +2462,13 @@ class View {
                 'row'        => $values['positiony'],
                 'column'     => $values['positionx'],
                 'order'      => 1,
+                'positionx'  => $values['positionx'],
+                'positiony'  => $values['positiony'],
+                'width'      => $values['width'],
+                'height'     => $values['height'],
             )
         );
         $bi->commit();
-        // add the dimension of the block
-        $bi->set_block_dimensions($values['positionx'], $values['positiony'], $values['width'], $values['height']);
 
         if ($values['returndata'] === 'id') {
             return $bi->get('id');
