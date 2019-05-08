@@ -29,7 +29,7 @@
         <div class="btn-group btn-group-top comment-item-buttons">
             {if $item->canedit}
             <a href="{$WWWROOT}artefact/annotation/edit.php?id={$item->id}&amp;viewid={$viewid}" class="btn btn-secondary btn-sm">
-                <span class="icon icon-lg icon-pencil text-default" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-lg icon-pencil-alt text-default" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=edit}</span>
             </a>
             {/if}

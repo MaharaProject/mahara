@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 {if $tags}
     <div class="btn-top-right btn-group btn-group-top">
-        <a class="btn btn-secondary" href="{$WWWROOT}edittags.php"><span class="icon icon-lg icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=edittags}</a>
+        <a class="btn btn-secondary" href="{$WWWROOT}edittags.php"><span class="icon icon-lg icon-pencil-alt left" role="presentation" aria-hidden="true"></span>{str tag=edittags}</a>
     </div>
     <ul class="nav nav-tabs">
     {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
@@ -21,7 +21,7 @@
         </h2>
         {if $not_institution_tag}
         <div class="btn-top-right btn-group btn-group-top d-block">
-            <a class="btn btn-secondary edit-tag float-right{if !$tag} d-none{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
+            <a class="btn btn-secondary edit-tag float-right{if !$tag} d-none{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
         </div>
         {/if}
         <div class="tag-filters">

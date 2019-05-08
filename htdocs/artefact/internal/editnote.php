@@ -152,7 +152,7 @@ $smarty = smarty(array(), array(), array(), array(
         image_filebrowser: "editnote_filebrowser",
     '
 ));
-setpageicon($smarty, 'icon-pencil-square-o');
+setpageicon($smarty, 'icon-regular icon-edit');
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $artefact->get('title'));

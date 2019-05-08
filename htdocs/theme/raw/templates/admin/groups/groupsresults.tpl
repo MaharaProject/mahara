@@ -26,7 +26,7 @@
                 <span class="icon icon-clone icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}</span>
             </a>
             <a class="btn btn-secondary btn-sm" title="{str tag="delete"}" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">
-                <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
+                <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
             </a>
         </div>
     </td>

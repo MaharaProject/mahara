@@ -13,13 +13,13 @@
                 {if $n->exists}
                     <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                     {str tag=$n->artefacttype section='artefact.resume'}
-                    <span class="icon icon-pencil float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-pencil-alt float-right" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=edit}</span>
                     </a>
                 {else}
                     <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                           {str tag=$n->artefacttype section='artefact.resume'}
-                    <span class="icon icon-pencil float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-pencil-alt float-right" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=edit}</span>
                     </a>
                 {/if}

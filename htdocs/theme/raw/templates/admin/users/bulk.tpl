@@ -25,7 +25,7 @@
             {/if}
             <li id="delete-user-tab" class="" role="presentation" aria-hidden="true">
                 <a href="#delete-form" aria-controls="delete-form" role="tab" data-toggle="tab">
-                    <span class="icon icon-lg icon-trash left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-lg icon-trash-alt left" role="presentation" aria-hidden="true"></span>
                     {str tag=deleteusers section=admin}
                 </a>
             </li>

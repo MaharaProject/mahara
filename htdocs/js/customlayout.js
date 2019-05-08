@@ -30,7 +30,7 @@
             }
             else {
                 // warning: classes are modified above for any subsequent button instances
-                newrow.append('<button name="removerow" class="float-left btn btn-sm btn-secondary removecustomrow_' + (numrows + 1) + '" onclick="CustomLayoutManager.customlayout_remove_row(\'' + pieformname + '\', this)"><span class="icon icon-lg icon-trash text-danger"></span><span class="d-none d-md-inline-block"> ' + get_string('removethisrow', 'view') + '</span></button>');
+                newrow.append('<button name="removerow" class="float-left btn btn-sm btn-secondary removecustomrow_' + (numrows + 1) + '" onclick="CustomLayoutManager.customlayout_remove_row(\'' + pieformname + '\', this)"><span class="icon icon-lg icon-trash-alt text-danger"></span><span class="d-none d-md-inline-block"> ' + get_string('removethisrow', 'view') + '</span></button>');
             }
             $('#customrow_' + numrows).after(newrow);
             $('#' + pieformname + '_customlayoutnumrows').val(numrows + 1);

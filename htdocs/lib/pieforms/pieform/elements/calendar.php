@@ -99,7 +99,7 @@ function pieform_element_calendar(Pieform $form, $element) {
             previous: "icon icon-chevron-left",
             next: "icon icon-chevron-right",
             close: "icon icon-times",
-            clear: "icon icon-trash",
+            clear: "icon icon-trash-alt",
             today: "icon icon-crosshairs",
         },
     });

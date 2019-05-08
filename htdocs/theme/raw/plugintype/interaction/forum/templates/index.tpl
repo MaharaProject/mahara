@@ -85,12 +85,12 @@
                 <td class="right control-buttons">
                     <div class="btn-group">
                         <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index" class="btn btn-secondary btn-sm" title="{str tag=edit}">
-                            <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{str tag=editspecific arg1=$forum->title}</span>
                         </a>
 
                         <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index" class="btn btn-secondary btn-sm" title="{str tag=delete}">
-                            <span class="text-danger icon icon-trash icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="text-danger icon icon-trash-alt icon-lg" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{str tag=deletespecific arg1=$forum->title}</span>
                         </a>
                     </div>

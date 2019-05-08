@@ -86,7 +86,7 @@ This pair of buttons is used for editing or deleting a block item on a page.
         <span class="icon icon-cog icon-lg"></span>
     </button>
     <button class="deletebutton btn btn-inverse btn-sm">
-        <span class="icon icon-trash text-danger icon-lg"></span>
+        <span class="icon icon-trash-alt text-danger icon-lg"></span>
     </button>
 </span>
 </div>
@@ -748,7 +748,7 @@ This card is used to show a page.
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Edit content and layout">
-                        <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
                         <span class="sr-only">Edit "Dashboard page"</span>
                         </a>
@@ -791,13 +791,13 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
             <div class="page-access">
                 <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
-                    <span class="icon icon-unlock-alt close-indicator" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-unlock close-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">Access rules for "Unnamed page"</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-item">
                         <a class="seperator" href="">
-                            <span class="icon icon-unlock-alt left" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>
                             <span class="link-text">Manage access</span>
                             <span class="sr-only">Manage access for "Unnamed page"</span>
                         </a>
@@ -819,7 +819,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Edit content and layout">
-                        <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
                         <span class="sr-only">Edit "Unnamed page"</span>
                         </a>
@@ -863,13 +863,13 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
             <div class="page-access">
                 <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
-                <span class="icon icon-unlock-alt close-indicator" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-unlock close-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">Access rules for "collection"</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-item">
                         <a class="seperator" href="">
-                        <span class="icon icon-unlock-alt left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Manage access</span>
                         <span class="sr-only">Manage access for "collection"</span>
                         </a>
@@ -898,14 +898,14 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                     </li>
                     <li class="dropdown-item">
                         <a href="" title="Edit title and description">
-                        <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
                         <span class="sr-only">Edit "collection"</span>
                         </a>
                     </li>
                     <li class="dropdown-item">
                         <a href="" title="Delete collection">
-                        <span class="icon icon-trash text-danger left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Delete</span>
                         <span class="sr-only">Delete "collection"</span>
                         </a>
@@ -1119,7 +1119,7 @@ A striped table is most frequently found in the administration area where tables
                         <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 1'}</span>
                     </a>
                     <a class="btn btn-secondary btn-sm" title="{str tag=delete}" href="">
-                        <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 1'}</span>
+                        <span class="icon icon-trash-alt text-danger icon-lg"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 1'}</span>
                     </a>
                 </div>
             </td>
@@ -1136,7 +1136,7 @@ A striped table is most frequently found in the administration area where tables
                         <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 2'}</span>
                     </a>
                     <a class="btn btn-secondary btn-sm" title="{str tag=delete}" href="">
-                        <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 2'}</span>
+                        <span class="icon icon-trash-alt text-danger icon-lg"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 2'}</span>
                     </a>
                 </div>
             </td>
@@ -1522,7 +1522,7 @@ Used to show comments and used for the "Recent forum posts" block.
 ### Copy to clipboard
 As used on the secret URLs page.
 ```
-<i class="icon icon-files-o" role="presentation"></i>
+<i class="icon icon-regular icon-copy" role="presentation"></i>
 ```
 </section>
 
@@ -1602,7 +1602,7 @@ Used for the "File(s) to download" block.
 ### File image
 As seen on the "Site files" page in the administration area.
 ```
-<i class="icon icon-file-image-o" role="presentation"></i>
+<i class="icon icon-regular icon-file-image" role="presentation"></i>
 ```
 </section>
 
@@ -1610,7 +1610,7 @@ As seen on the "Site files" page in the administration area.
 ### File text
 As seen on the "Site pages" page.
 ```
-<i class="icon icon-file-text" role="presentation"></i>
+<i class="icon icon-file-alt" role="presentation"></i>
 ```
 </section>
 
@@ -1690,7 +1690,7 @@ Used as a help icon.
 ### Image
 Used for the "Image" block.
 ```
-<i class="icon icon-image" role="presentation"></i>
+<i class="icon icon-regular icon-image" role="presentation"></i>
 ```
 </section>
 
@@ -1834,7 +1834,7 @@ Used for the "PDF" block.
 ### Pencil
 Used on "Edit" buttons.
 ```
-<i class="icon icon-pencil" role="presentation"></i>
+<i class="icon icon-pencil-alt" role="presentation"></i>
 ```
 </section>
 
@@ -2025,7 +2025,7 @@ Used for the "Text" block.
 ### Trash
 Used on buttons to signify deleting an item. The class "text-danger" makes the icon red.
 ```
-<i class="icon icon-trash text-danger" role="presentation"></i>
+<i class="icon icon-trash-alt text-danger" role="presentation"></i>
 ```
 </section>
 
@@ -2049,7 +2049,7 @@ Used on the "Administer institutions" page in the administration area.
 ### Unlock
 
 ```
-<i class="icon icon-unlock-alt" role="presentation"></i>
+<i class="icon icon-unlock" role="presentation"></i>
 ```
 </section>
 
@@ -2119,7 +2119,7 @@ Used as icon for a system notification.
         // add copy button
         var codeElem = $j(elem).find('code');
         codeElem.attr('id', 'code-block-' + i);
-        codeElem.before('<button class="copy" role="presentation" data-clipboard-target="#code-block-' + i + '" title="{$copy}"><i class="icon icon-files-o"></i></button>');
+        codeElem.before('<button class="copy" role="presentation" data-clipboard-target="#code-block-' + i + '" title="{$copy}"><i class="icon icon-regular icon-copy"></i></button>');
 
         // add the category to the sections index
         var category = $j(elem).data('category');

@@ -118,7 +118,7 @@
                     {elseif !$file->isparent}
                         {if !isset($file->can_edit) || $file->can_edit !== 0}
                         <button name="{$prefix}_edit[{$file->id}]" class="btn btn-secondary btn-sm editable" title="{str tag=edit}">
-                            <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
                             {if $file->artefacttype == 'folder'}
                                 <span class="sr-only">{str tag=editfolderspecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
                             {else}
@@ -158,12 +158,12 @@
                         {/if}
 
                         <button name="{$prefix}_edit[{$file->id}]" class="btn btn-secondary btn-sm">
-                            <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{$edittext|escape:html|safe}</span>
                         </button>
 
                         <button name="{$prefix}_delete[{$file->id}]" class="btn btn-secondary btn-sm">
-                            <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{$deletetext|escape:html|safe}</span>
                         </button>
                     </div>

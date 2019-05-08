@@ -148,7 +148,7 @@
                         <p>{str tag=confirmcopydesc section=view}</p>
                         <div class="btn-group">
                             <button id="copy-collection-button" type="button" class="btn btn-secondary"><span class="icon icon-folder-open" role="presentation" aria-hidden="true"></span> {str tag=Collection section=collection}</button>
-                            <button id="copy-view-button" type="button" class="btn btn-secondary"><span class="icon icon-file-text " role="presentation" aria-hidden="true"></span> {str tag=view}</button>
+                            <button id="copy-view-button" type="button" class="btn btn-secondary"><span class="icon icon-regular icon-file-alt" role="presentation" aria-hidden="true"></span> {str tag=view}</button>
                         </div>
                     </div>
                 </div>

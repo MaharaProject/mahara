@@ -43,7 +43,7 @@
                                 {if $view.accesslist || $view.manageaccess}
                                     <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='manageaccess' section='view'}">
                                         <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
-                                        <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock-alt{/if} close-indicator" role="presentation" aria-hidden="true"></span>
+                                        <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock{/if} close-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
@@ -54,7 +54,7 @@
                                         <li class="dropdown-item">
                                             {if $manageitem->accesstype == 'managesharing'}
                                             <a class="seperator" href="{$WWWROOT}view/accessurl.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
-                                                <span class="icon {if $view.locked}icon-lock{else}icon-unlock-alt{/if} left" role="presentation" aria-hidden="true"></span>
+                                                <span class="icon {if $view.locked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{$manageitem->displayname}</span>
                                                 <span class="sr-only">{$manageitem->accessibilityname}</span>
                                             </a>
@@ -117,7 +117,7 @@
                                     {else}
                                         <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}">
                                     {/if}
-                                            <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
+                                            <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                                             <span class="link-text">{str tag="edit" section="mahara"}</span>
                                             <span class="sr-only">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
                                         </a>
@@ -130,7 +130,7 @@
                                     {else}
                                         <a href="{$WWWROOT}view/delete.php?id={$view.id}&{$querystring}" title="{str tag=deletethisview section=view}">
                                     {/if}
-                                             <span class="icon icon-trash text-danger left" role="presentation" aria-hidden="true"></span>
+                                             <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
                                              <span class="link-text">{str tag="delete" section="mahara"}</span>
                                              <span class="sr-only">{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}</span>
                                         </a>

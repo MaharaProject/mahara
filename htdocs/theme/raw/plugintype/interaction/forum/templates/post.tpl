@@ -51,14 +51,14 @@
 
                 {if $post->canedit}
                 <a href="{$WWWROOT}interaction/forum/editpost.php?id={$post->id}">
-                    <span class="icon icon-pencil" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                     {str tag="edit"}
                 </a>
                 {/if}
 
                 {if $moderator && $post->parent}
                 <a href="{$WWWROOT}interaction/forum/deletepost.php?id={$post->id}">
-                    <span class="icon icon-trash text-danger" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                     {str tag="delete"}
                 </a>
                 {/if}

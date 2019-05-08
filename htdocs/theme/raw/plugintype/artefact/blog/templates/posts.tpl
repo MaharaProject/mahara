@@ -31,7 +31,7 @@
                         <input type="hidden" name="id" value="{$post->id}">
                         <div class="first">
                             <button type="submit" class="submit btn btn-secondary btn-sm" title="{str(tag=edit)|escape:html|safe}">
-                                <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">{str tag=editspecific arg1=$post->title |escape:html|safe}</span>
                             </button>
                         </div>

@@ -12,7 +12,7 @@
     {else}
         <div id="{$category.name}">
             <div class="metadata hide-title-collapsed">
-                <span class="icon icon-spin icon-spinner icon left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pulse icon-spinner icon left" role="presentation" aria-hidden="true"></span>
                 <span class="title">{str tag=loading section=mahara}</span>
             </div>
         </div>

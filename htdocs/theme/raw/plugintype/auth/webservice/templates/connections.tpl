@@ -56,7 +56,7 @@
                 buttons += '<span class="emptybtnspace"></span>';
             }
         }
-        buttons += '<a class="btn btn-secondary btn-sm" href="" onclick="removeConnection(' + id + '); return false;"><span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' + get_string('deleteitem') + '</span></a>' + "\n";
+        buttons += '<a class="btn btn-secondary btn-sm" href="" onclick="removeConnection(' + id + '); return false;"><span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' + get_string('deleteitem') + '</span></a>' + "\n";
         return buttons;
     }
 
@@ -146,7 +146,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
                 <span class="emptybtnspace"></span>
             {{/if}}
             <a href="" class="btn btn-secondary btn-sm" onclick="removeConnection({{$instance->id}}); return false;">
-                <span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=deleteitem}}</span>
             </a>
         </span>

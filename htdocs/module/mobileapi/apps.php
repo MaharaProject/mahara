@@ -171,7 +171,7 @@ else {
                                 'type'  => 'button',
                                 'usebuttontag' => true,
                                 'class' => 'btn-secondary btn-sm',
-                                'value' => '<span class="icon icon-trash icon-lg text-danger left" role="presentation" aria-hidden="true"></span>' . get_string('delete'),
+                                'value' => '<span class="icon icon-trash-alt icon-lg text-danger left" role="presentation" aria-hidden="true"></span>' . get_string('delete'),
                                 'elementtitle' => get_string('deletespecific', 'mahara', $service->clientname),
                             ),
                     ),

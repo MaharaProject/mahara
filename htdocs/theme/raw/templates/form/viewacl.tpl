@@ -40,7 +40,7 @@
 <tr id="row-{%=o.id%}" data-id="{%=o.id%}">
     <td class="text-center with-icon tiny">
         <a class="{% if (o.presets.locked || o.presets.empty) { %}icon-placeholder{% } %} text-block" data-bind="remove-share" href="#" id="remove-share{%=o.id%}">
-            <span class="text-danger icon icon-lg icon-trash" role="presentation" aria-hidden="true"></span>
+            <span class="text-danger icon icon-lg icon-trash-alt" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{%={{jstr tag=remove section=view}}%}</span>
         </a>
     </td>
@@ -182,7 +182,7 @@ jQuery(function($) {
                         previous: "icon icon-chevron-left",
                         next: "icon icon-chevron-right",
                         close: "icon icon-times",
-                        clear: "icon icon-trash",
+                        clear: "icon icon-trash-alt",
                         today: "icon icon-crosshairs",
                     },
                 });

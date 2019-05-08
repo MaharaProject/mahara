@@ -14,7 +14,7 @@
                 {if $result->id == $result->current}
                     <div class="btn-group">
                         <a href="{$WWWROOT}{$link}{$result->id}" title="{str tag=editversion section='admin' arg1='$result->version'}" class="btn btn-secondary btn-sm">
-                            <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
                         </a>
                     </div>
                 {else}

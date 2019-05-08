@@ -2867,7 +2867,7 @@ function mahara_standard_nav() {
             'url' => null,
             'title' => get_string('share'),
             'weight' => 30,
-            'iconclass' => 'unlock-alt',
+            'iconclass' => 'unlock',
         ),
         'engage' => array(
             'path' => 'engage',

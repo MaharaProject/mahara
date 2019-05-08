@@ -38,7 +38,7 @@
                     ' ',
                     jQuery('<span>', {'class': 'pseudolabel'}).append(email),' ',
                     jQuery('<button>', {'class': 'btn btn-secondary btn-sm float-right', 'onclick': '{{$name}}_remove(this); return false'}).append(
-                      jQuery('<span>', {'class': 'icon icon-trash icon-lg text-danger', 'role': 'presentation'})
+                      jQuery('<span>', {'class': 'icon icon-trash-alt icon-lg text-danger', 'role': 'presentation'})
                     ),
                     jQuery('<div>', {'class': 'clearfix description'}).append({{$validationemailstr|safe}})
                 ));
@@ -109,7 +109,7 @@
         </label>
         {{if $email != $default}}
         <button class="btn btn-secondary btn-sm float-right" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
-            <span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span>
         </button>
         {{/if}}
     </div>
@@ -122,7 +122,7 @@
             {{$email}}
         </span>
         <button class="btn btn-secondary btn-sm float-right" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
-            <span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span>
         </button>
         <div class="description">{{str tag=validationemailsent section=artefact.internal}}</div>
     </div>

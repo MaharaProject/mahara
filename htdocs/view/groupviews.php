@@ -124,7 +124,7 @@ if (!empty($group->id)) {
 }
 
 $smarty = smarty(array('paginator'));
-setpageicon($smarty, 'icon-file-text-o');
+setpageicon($smarty, 'icon-regular icon-file-alt');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('headingclass', 'page-header');

@@ -2,7 +2,7 @@
     <div class="btn-group-vertical">
         {if $editurl}{strip}
             <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-secondary">
-                <span class="icon icon-pencil icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt icon-lg left" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=editthisview section=view}</span>
             </a>
         {/strip}{/if}
@@ -27,7 +27,7 @@
                     {else}
                         <a id="copyview-button" title="{str tag=copythisview section=view}" href="{$copyurl}">
                     {/if}
-                    <span class="icon icon-files-o icon-lg left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-regular icon-copy icon-lg left" role="presentation" aria-hidden="true"></span>
                     {str tag=copy section=mahara}
                     </a>
                 </li>
@@ -78,7 +78,7 @@
                 {if $userisowner || $canremove}
                 <li class="dropdown-item">
                     <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
-                        <span class="icon icon-lg icon-trash text-danger left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-lg icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">{str tag=deletethisview section=view}</span>
                         <span class="sr-only">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
                     </a>

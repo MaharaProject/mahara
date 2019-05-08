@@ -20,7 +20,7 @@
                             {str tag="setdefault" section=artefact.file}
                         </button>
                         <button id="settings_delete" type="submit" class="delete btn btn-secondary" name="delete">
-                             <span class="icon icon-trash icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
+                             <span class="icon icon-trash-alt icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
                              {str tag="deleteselectedicons" section=artefact.file}
                          </button>
                     </td>

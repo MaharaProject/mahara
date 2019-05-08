@@ -113,7 +113,7 @@
                 {$closeform|safe}
             </div>
         {else}
-            <h3 class="card-header">{str tag=closesite section=admin} <span class="icon icon-unlock-alt float-right" role="presentation" aria-hidden="true"></span></h3>
+            <h3 class="card-header">{str tag=closesite section=admin} <span class="icon icon-unlock float-right" role="presentation" aria-hidden="true"></span></h3>
             <div class="card-body">
                 <p>{str tag=closesitedetail section=admin}</p>
                 {$closeform|safe}

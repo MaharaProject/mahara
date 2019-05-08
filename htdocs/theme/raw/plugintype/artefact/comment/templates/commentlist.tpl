@@ -42,7 +42,7 @@
                 {if !$onview}
                     {if $item->canedit}
                     <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-secondary btn-group-item form-as-button float-left">
-                        <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag=edit}</span>
                     </a>
                     {/if}

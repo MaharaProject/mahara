@@ -167,7 +167,7 @@
                 {if $USER->get('admin') || $USER->is_institutional_admin()}
                 <form class="nojs-hidden-inline form-as-button float-left" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
                     <button action="{$WWWROOT}admin/users/bulk.php" type="submit" class="btn btn-secondary disabled" name="edit" id="editbtn" value="{str tag=edit}">
-                        <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         {str tag=withselectedusersedit section=admin}
                     </button>
 

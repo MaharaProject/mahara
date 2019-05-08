@@ -115,7 +115,7 @@ jQuery(function($) {
         'title':{$getstring['delete']},
         'alt':{$getstring['deletespecific']}.replace('%s', item.name)
       });
-      del.append($('<span>', {'class':'icon icon-trash text-danger icon-lg', 'role':'presentation'}));
+      del.append($('<span>', {'class':'icon icon-trash-alt text-danger icon-lg', 'role':'presentation'}));
       del.append($('<span class="sr-only">' + {$getstring['deletespecific']}.replace('%s', item.name) + '</span>'));
 
       del.on('click', function (e) { e.preventDefault(); delitem(item.id); });

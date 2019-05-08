@@ -3,8 +3,8 @@
         <div class="task-item plan_incomplete list-group-item {if $task->description || $task->tags}list-group-item-default{/if}">
             {if $editing}
             <div class="float-right btn-group">
-                <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil text-default"></span></a>
-                <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash text-danger"></span></a>
+                <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil-alt text-default"></span></a>
+                <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash-alt text-danger"></span></a>
             </div>
             {/if}
             {if $task->description || $task->tags} <a class="link-block collapsed" href="#expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">{/if}
@@ -42,8 +42,8 @@
         <div class="task-item list-group-item {if $task->description || $task->tags}list-group-item-default{/if}">
             {if $editing}
             <div class="float-right btn-group">
-                <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil text-default"></span></a>
-                <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash text-danger"></span></a>
+                <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil-alt text-default"></span></a>
+                <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash-alt text-danger"></span></a>
             </div>
             {/if}
             {if $task->description || $task->tags}<a class="link-block collapsed" href="#expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">{/if}

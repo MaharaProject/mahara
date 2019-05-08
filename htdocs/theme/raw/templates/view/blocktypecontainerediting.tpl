@@ -25,7 +25,7 @@
                 {/if}
                 {if !$lockblocks}
                 <button class="deletebutton btn btn-inverse btn-sm" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
-                    <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true" title="{$strremovetitletexttooltip}"></span>
+                    <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true" title="{$strremovetitletexttooltip}"></span>
                 </button>
                 {/if}
             </span>

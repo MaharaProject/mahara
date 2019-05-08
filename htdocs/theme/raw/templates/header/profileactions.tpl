@@ -2,7 +2,7 @@
     <div class="btn-group-vertical">
         {if $ownprofile}
             <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn btn-secondary">
-                <span class="icon-pencil icon icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="icon-pencil-alt icon icon-lg left" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=editthisview section=view}</span>
             </a>
         {/if}

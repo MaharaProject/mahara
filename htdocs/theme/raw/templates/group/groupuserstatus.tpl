@@ -26,7 +26,7 @@
         <div class="groupuserstatus btn-top-right btn-group btn-group-top">
             {if $viewid}
             <a href="{$WWWROOT}view/blocks.php?id={$viewid}&group={$group->id}" title="{str tag=editcontentandlayout section='view'}" class="btn btn-secondary">
-                <span class="icon icon-pencil text-default" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt text-default" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag=editthisview section='view'}</span>
             </a>
             {/if}
@@ -44,7 +44,7 @@
             </a>
             {/if}
             <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" class="btn btn-secondary">
-                <span class="icon icon-trash text-danger" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag=delete}</span>
                 <span class="sr-only">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
             </a>

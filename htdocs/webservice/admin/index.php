@@ -492,8 +492,8 @@ function webservice_provider_protocols_submit(Pieform $form, $values) {
 function webservice_function_groups_form() {
     global $THEME;
 
-    $editicon = 'icon icon-pencil left';
-    $deleteicon = 'icon icon-trash left text-danger';
+    $editicon = 'icon icon-pencil-alt left';
+    $deleteicon = 'icon icon-trash-alt left text-danger';
 
     $form = array(
         'name'            => 'webservices_function_groups',
@@ -729,8 +729,8 @@ function webservice_function_groups_submit(Pieform $form, $values) {
 function webservice_tokens_form() {
     global $THEME, $USER;
 
-    $editicon = 'icon icon-pencil left';
-    $deleteicon = 'icon icon-trash left text-danger';
+    $editicon = 'icon icon-pencil-alt left';
+    $deleteicon = 'icon icon-trash-alt left text-danger';
 
     $form = array(
         'name'            => 'webservices_tokens',
@@ -1002,8 +1002,8 @@ function webservice_token_submit(Pieform $form, $values) {
 function webservice_users_form() {
     global $THEME, $USER;
 
-    $editicon = 'icon icon-pencil left';
-    $deleteicon = 'icon icon-trash left text-danger';
+    $editicon = 'icon icon-pencil-alt left';
+    $deleteicon = 'icon icon-trash-alt left text-danger';
 
     $form = array(
         'name'            => 'webservices_users',

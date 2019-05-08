@@ -46,7 +46,7 @@
             <div class="skin-controls card-footer">
                 {if $skin.editable}
                 <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='editthisskin' section='skin'}" {if $skin.type == 'site'} onclick="return confirm('{str tag='editsiteskin?' section='skin'}');"{/if} class="btn btn-secondary btn-sm">
-                    <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=editspecific arg1=$skin.title}
                     </span>
@@ -63,7 +63,7 @@
                 </a>
 
                 <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='deletethisskin' section='skin'}" class="btn btn-secondary btn-sm">
-                    <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=deletespecific arg1=$skin.title}
                     </span>
