@@ -260,6 +260,8 @@ textarea.resizable {
     color: scale-color($theme-text-color, $lightness: 25%);
     position:relative;
     right: 25px;
+    pointer-events: none;
+    cursor: text;
 }
 .hasDatepickerwrapperacl:after {
     font-family: "FontAwesome";
