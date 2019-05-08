@@ -58,7 +58,7 @@ class Institution {
         'licensedefault' => null,
         'licensemandatory' => 0,
         'dropdownmenu' => 0,
-        'skins' => true
+        'skins' => 1,
     );
 
     // This institution's config settings
