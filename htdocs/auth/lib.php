@@ -426,7 +426,9 @@ function auth_setup () {
         $authinstance = $SESSION->get('authinstance');
         if ($authinstance) {
             $authobj = AuthFactory::create($authinstance);
-            $authobj->logout();
+            if ($authobj) {
+                $authobj->logout();
+            }
         }
         else {
             log_debug("Strange: user " . $USER->get('username') . " had no authinstance set in their session");
@@ -481,8 +483,9 @@ function auth_setup () {
                 // they're using the local login form
                 $mnetuser = $USER->get('id');
             }
-
-            $authobj->logout();
+            if ($authobj) {
+                $authobj->logout();
+            }
             $USER->logout();
 
             if ($mnetuser != 0) {
