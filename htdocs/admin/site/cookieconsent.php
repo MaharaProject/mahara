@@ -63,7 +63,7 @@ function cookieconsent_submit(Pieform $form, $values) {
 
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-shield');
+setpageicon($smarty, 'icon-shield-alt');
 
 $smarty->assign('form', $form);
 $smarty->assign('introtext1', get_string('cookieconsentintro1', 'cookieconsent'));

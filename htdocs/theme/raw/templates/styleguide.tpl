@@ -1362,7 +1362,7 @@ Shows that a card can be expanded or collapsed to the right.
 ### Area chart
 As seen on the "Statistics" page in the administration area.
 ```
-<i class="icon icon-area-chart" role="presentation"></i>
+<i class="icon icon-chart-area" role="presentation"></i>
 ```
 </section>
 
@@ -1882,7 +1882,7 @@ Used for the "Recent journal entries" block.
 ### Refresh
 As seen on the button on the "Networking" page.
 ```
-<i class="icon icon-refresh" role="presentation"></i>
+<i class="icon icon-sync-alt" role="presentation"></i>
 ```
 </section>
 
@@ -1937,7 +1937,7 @@ Used to signify searchable items
 ### Shield
 As used on the "Cookie consent" page in the administration area.
 ```
-<i class="icon icon-shield" role="presentation"></i>
+<i class="icon icon-shield-alt" role="presentation"></i>
 ```
 </section>
 

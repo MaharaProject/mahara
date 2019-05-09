@@ -2495,7 +2495,7 @@ function admin_nav() {
             'url'    => 'admin/users/statistics.php',
             'title'  => get_string('reports', 'statistics'),
             'weight' => 60,
-            'iconclass' => 'pie-chart',
+            'iconclass' => 'chart-pie',
         ),
         'configextensions' => array(
             'path'   => 'configextensions',
@@ -2736,7 +2736,7 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/statistics.php',
             'title'  => get_string('reports', 'statistics'),
             'weight' => 40,
-            'iconclass' => 'pie-chart',
+            'iconclass' => 'chart-pie',
         ),
     );
 
@@ -2787,7 +2787,7 @@ function staff_nav() {
             'url'    => 'admin/users/statistics.php',
             'title'  => get_string('reports', 'statistics'),
             'weight' => 30,
-            'iconclass' => 'pie-chart',
+            'iconclass' => 'chart-pie',
         ),
     );
 
@@ -2828,7 +2828,7 @@ function institutional_staff_nav() {
             'url'    => 'admin/users/statistics.php',
             'title'  => get_string('reports', 'statistics'),
             'weight' => 20,
-            'iconclass' => 'pie-chart',
+            'iconclass' => 'chart-pie',
         ),
     );
 }

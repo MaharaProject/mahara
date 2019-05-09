@@ -19,7 +19,7 @@
     {/if}
 {/foreach}
 <a id="blockshelp" class="text-left blocktypelink btn btn-help hide-title-collapsed btn-secondary btn-accordion" href="{$manualhelpblock}" target="_blank">
-    <span class="icon icon-question-circle-o block-icon" role="presentation" aria-hidden="true"></span>
+    <span class="icon icon-regular icon-question-circle block-icon" role="presentation" aria-hidden="true"></span>
     <span class="title">{str tag=blockhelp section=view}</span>
 </a>
 

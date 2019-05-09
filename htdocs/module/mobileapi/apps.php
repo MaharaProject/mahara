@@ -225,7 +225,7 @@ if (get_config_plugin('module', 'mobileapi', 'manualtokens')) {
                                     'type'  => 'button',
                                     'usebuttontag' => true,
                                     'class' => 'btn-secondary btn-sm',
-                                    'value'   => '<span class="icon icon-refresh"></span> ' . get_string('gen', 'auth.webservice'),
+                                    'value'   => '<span class="icon icon-sync-alt"></span> ' . get_string('gen', 'auth.webservice'),
                                     'elementtitle' => get_string('gen', 'auth.webservice')
                                 ),
                         ),

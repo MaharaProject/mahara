@@ -370,7 +370,7 @@ $siteoptionform = array(
             ),
         ),
         'accountsettings' => array(
-            'iconclass'=>'clock-o',
+            'iconclass'=>'regular icon-clock',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,

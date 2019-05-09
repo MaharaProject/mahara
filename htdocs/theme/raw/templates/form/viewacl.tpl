@@ -175,7 +175,7 @@ jQuery(function($) {
                     },
                     tooltips: {{$datepickertooltips|safe}},
                     icons: {
-                        time: "icon icon-clock-o",
+                        time: "icon icon-regular icon-clock",
                         date: "icon icon-calendar",
                         up: "icon icon-arrow-up",
                         down: "icon icon-arrow-down",

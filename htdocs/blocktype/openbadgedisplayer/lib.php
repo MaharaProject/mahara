@@ -50,7 +50,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
     }
 
     public static function get_css_icon($blocktypename) {
-        return 'shield';
+        return 'shield-alt';
     }
 
     public static function get_viewtypes() {
