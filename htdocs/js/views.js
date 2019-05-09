@@ -257,21 +257,8 @@
         });
     }
 
-    ViewManager.init = function(grid, blocks) {
 
-        // load blocks for view in edit mode
-        $.each(blocks, function(blockid, block) {
-            grid.addWidget(
-                $('<div id="block_' + blockid + '"><div class="grid-stack-item-content">'
-                    + block.content +
-                    '<div/><div/>'),
-                block.positionx,
-                block.positiony,
-                block.width,
-                block.height,
-                null, null, null, null, null,
-                blockid);
-        });
+    ViewManager.init = function() {
 
         // Set private variables
         contentEditor = $('[data-role="content-toolbar"]');
@@ -535,15 +522,18 @@
             var div = $('<div>').html(data.data.display.html),
                 blockinstance = div.find('div.grid-stack-item'),
                 configureButton = blockinstance.find('.configurebutton'),
+                blockId = blockinstance.attr('id').substr(6),
                 dimensions = {
-                    x: blockinstance[0].getAttribute('data-gs-x'),
-                    y: blockinstance[0].getAttribute('data-gs-y'),
+                    positionx: blockinstance[0].getAttribute('data-gs-x'),
+                    positiony: blockinstance[0].getAttribute('data-gs-y'),
                 }
 
             addBlockCss(data.css);
 
             var grid = $('.grid-stack').data('gridstack');
-            addNewWidget(blockinstance, grid, dimensions);
+            dimensions.width = 3;
+            dimensions.height = 3;
+            addNewWidget(blockinstance, blockId, dimensions, grid, null);
 
             if (data.data.configure) {
                 showDock($('#configureblock'), true);
@@ -657,17 +647,6 @@
                 self.prop('disabled', false);
             }
         });
-    }
-
-    function moveBlock(id, whereTo) {
-        var pd = {
-            'id': $('#viewid').val(),
-            'change': 1
-        };
-
-        pd['action_moveblockinstance_id_' + id + '_newx_' + whereTo['newx'] + '_newy_' + whereTo['newy'] + '_newheight_' + whereTo['newheight'] + '_newwidth_' + whereTo['newwidth']] = true;
-
-        sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST');
     }
 
     /**
@@ -981,6 +960,10 @@ function blockConfigSuccess(form, data) {
     return ViewManager.blockConfigSuccess(form, data);
 }
 
+function editViewInit() {
+    return ViewManager.init();
+}
+
 /**
  * Pieform callback method. Just a wrapper around the ViewManager function,
  * because Pieforms doesn't like periods in callback method names.
@@ -995,18 +978,4 @@ function wire_blockoptions() {
     return ViewManager.blockOptions();
 }
 
-function init(grid, blocks) {
-    return ViewManager.init(grid, blocks);
-}
-
 /* GRIDSTACK functions */
-function addNewWidget(blockContent, grid, dimensions) {
-    var node = {
-                x: dimensions.x,
-                y: dimensions.y,
-                width: 3,
-                height: 3
-            };
-    grid.addWidget(blockContent, node.x, node.y, node.width, node.height);
-    return false;
-}

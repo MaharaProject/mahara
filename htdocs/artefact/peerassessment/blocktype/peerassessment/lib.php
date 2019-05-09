@@ -173,4 +173,8 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         $artefacts = get_records_sql_array($sql, $values);
         return $artefacts;
     }
+
+    public static function has_static_content() {
+        return false;
+    }
 }

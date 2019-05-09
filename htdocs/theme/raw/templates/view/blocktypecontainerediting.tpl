@@ -1,4 +1,4 @@
-<div class="bt-{$blocktype}-editor js-blockinstance blockinstance card card-secondary clearfix {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
+<div class="bt-{$blocktype}-editor js-blockinstance blockinstance gridstackblock card card-secondary clearfix {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
     <h3 class="card-header js-heading drag-handle {if !$title}card-header-placeholder{/if}" title="{$strmovetitletexttooltip}">
         <span class="icon icon-arrows-alt move-indicator" role="presentation" aria-hidden="true"></span>
         <span class="blockinstance-header">

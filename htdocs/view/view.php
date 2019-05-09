@@ -268,7 +268,8 @@ $javascript = array('paginator', 'viewmenu', 'js/collection-navigation.js',
         'js/lodash/lodash.js',
         'js/gridstack/gridstack.js',
         'js/gridstack/gridstack.jQueryUI.js',
-      );
+        'js/gridlayout.js',
+    );
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 if (is_plugin_active('externalvideo', 'blocktype')) {
@@ -369,19 +370,7 @@ $(function () {
 
     // should add the blocks one by one
     var blocks = {$blocks};
-    $.each(blocks, function(blockid, block) {
-        grid.addWidget(
-            $('<div id="block_' + blockid + '"><div class="grid-stack-item-content">'
-                + block.content +
-                '<div/><div/>'),
-            block.positionx,
-            block.positiony,
-            block.width,
-            block.height,
-            null, null, null, null, null,
-            blockid);
-    });
-    jQuery(document).trigger('blocksloaded');
+    loadGrid(grid, blocks);
 });
 EOF;
     }

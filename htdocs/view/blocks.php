@@ -150,6 +150,7 @@ $javascript = array('views', 'tinymce', 'paginator', 'js/jquery/jquery-ui/js/jqu
                     'js/lodash/lodash.js',
                     'js/gridstack/gridstack.js',
                     'js/gridstack/gridstack.jQueryUI.js',
+                    'js/gridlayout.js',
                     );
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
@@ -177,7 +178,7 @@ if ($newlayout = $view->uses_new_layout()) {
         grid.resizable('.grid-stack-item', true);
         // should add the blocks one by one
         var blocks = {$blocksencode};
-        init(grid, blocks);
+        loadGrid(grid, blocks);
     });
     ";
 }

@@ -41,4 +41,8 @@ jQuery(window).on('blocksloaded', {}, function() {
 
     ajaxBlocks();
 
+    window.setTimeout(function(){
+       $(window).trigger('colresize');
+    }, 300);
+
 });

@@ -105,7 +105,7 @@ else if ($restrictedview) {
 
 if (!$restrictedview) {
     if ($newlayout = $view->uses_new_layout()) {
-        $layoutjs = array('js/lodash/lodash.js', 'js/gridstack/gridstack.js');
+        $layoutjs = array('js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js');
         $blocks = $view->get_blocks();
         $blocks = json_encode($blocks);
         $blocksjs = <<<EOF
@@ -121,19 +121,7 @@ if (!$restrictedview) {
 
                 // should add the blocks one by one
                 var blocks = {$blocks};
-                $.each(blocks, function(blockid, block) {
-                    grid.addWidget(
-                        $('<div id="block_' + blockid + '"><div class="grid-stack-item-content">'
-                            + block.content +
-                            '<div/><div/>'),
-                        block.positionx,
-                        block.positiony,
-                        block.width,
-                        block.height,
-                        null, null, null, null, null,
-                        blockid);
-                });
-                jQuery(document).trigger('blocksloaded');
+                loadGrid(grid, blocks);
             });
 EOF;
     }

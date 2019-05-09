@@ -778,6 +778,9 @@ EOF;
         return !(count($roles) == 1 && $roles[0] == 'peer');
     }
 
+    public static function has_static_content() {
+        return true;
+    }
 }
 
 

@@ -2209,14 +2209,17 @@ class View {
 
         $blockcontent = array();
         foreach($this->grid as $blockinstance) {
+            $block = array();
             if ($editing) {
                 $result = $blockinstance->render_editing();
                 $result = $result['html'];
             }
             else {
                 $result = $blockinstance->render_viewing();
+                if (call_static_method(generate_class_name('blocktype', $blockinstance->get('blocktype')), 'has_static_content')) {
+                    $block['class'] = 'staticblock';
+                }
             }
-            $block = array();
             $block['content'] = $result;
             $block['width'] = $blockinstance->get('width');
             $block['height'] = $blockinstance->get('height');
