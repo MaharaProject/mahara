@@ -38,7 +38,7 @@
             </a>
             {if $cancopy}
             <a href="{$WWWROOT}group/copy.php?id={$group->id}&return=mygroups" title="{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}" class="btn btn-secondary">
-                <span class="icon icon-clone text-default" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-regular icon-clone text-default" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag=copy}</span>
                 <span class="sr-only">{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}</span>
             </a>

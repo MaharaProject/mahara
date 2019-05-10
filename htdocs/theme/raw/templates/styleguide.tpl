@@ -367,7 +367,7 @@ section .navbar-form.navbar-collapse.search-form {
                 </li>
                 <li class="has-icon">
                     <a href="">
-                        <span class="icon icon-sign-out" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-sign-out-alt" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title">Link 4</span>
                     </a>
                 </li>
@@ -1570,7 +1570,7 @@ Used as "Inbox" icon.
 ### Exchange
 As seen on the "Networking" page.
 ```
-<i class="icon icon-exchange" role="presentation"></i>
+<i class="icon icon-exchange-alt" role="presentation"></i>
 ```
 </section>
 
@@ -1953,7 +1953,7 @@ Used to show the sign in button.
 ### Sign out
 Used to show the sign out button.
 ```
-<i class="icon icon-sign-out" role="presentation"></i>
+<i class="icon icon-sign-out-alt" role="presentation"></i>
 ```
 </section>
 

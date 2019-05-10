@@ -528,7 +528,7 @@ $siteoptionform = array(
         ),
         # TODO: this should become "Network Settings" at some point
         'proxysettings' => array(
-            'iconclass'=>'exchange',
+            'iconclass'=>'exchange-alt',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,

@@ -24,7 +24,7 @@ $form = pieform(ArtefactTypeFileBase::files_form(get_config('wwwroot') . 'artefa
 $js = ArtefactTypeFileBase::files_js();
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-file-image-o');
+setpageicon($smarty, 'icon-regular icon-file-image');
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:file:files.tpl');
