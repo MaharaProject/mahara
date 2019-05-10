@@ -12,7 +12,7 @@
                     {/if}
 
                     {if $item.accessibletitle}
-                    <span aria-hidden="true" role="presentation" aria-hidden="true">
+                    <span role="presentation" aria-hidden="true">
                         {/if}
                         {$item.title}
                         {if $item.accessibletitle}
