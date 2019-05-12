@@ -2462,9 +2462,9 @@ class View {
                 'title'      => $newtitle,
                 'view'       => $this->get('id'),
                 'view_obj'   => $this,
-                'row'        => $values['positiony'],
-                'column'     => $values['positionx'],
-                'order'      => 1,
+                'row'        => (isset($values['row']) ? $values['row'] : 0),
+                'column'     => (isset($values['column']) ? $values['column'] : 0),
+                'order'      => (isset($values['order']) ? $values['order'] : 0),
                 'positionx'  => $values['positionx'],
                 'positiony'  => $values['positiony'],
                 'width'      => $values['width'],
@@ -2697,8 +2697,10 @@ class View {
         if ($bi->get('view') != $this->get('id')) {
             throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
         }
-
-        $bi->set_block_dimensions($values['newx'], $values['newy'], $values['newwidth'], $values['newheight']);
+        $bi->set('positionx', $values['newx']);
+        $bi->set('positiony', $values['newy']);
+        $bi->set('width', $values['newwidth']);
+        $bi->set('height', $values['newheight']);
         $bi->commit();
 
         //TODO: check if code down here is still needed
