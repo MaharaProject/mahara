@@ -1426,5 +1426,16 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_notnull($table, $field);
     }
 
+    if ($oldversion < 2019080601) {
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        require_once(get_config('docroot') . 'lib/view.php');
+        require_once(get_config('docroot') . 'lib/gridstacklayout.php');
+        log_debug('Translating site templates to grisdtack layout');
+        $templates = View::get_site_template_views();
+        foreach ($templates as $template) {
+            save_blocks_in_new_layout($template['id']);
+        }
+    }
+
     return $status;
 }

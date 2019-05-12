@@ -1,0 +1,126 @@
+<?php
+/**
+ *
+ * @package    mahara
+ * @subpackage core
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
+
+defined('INTERNAL') || die();
+
+/*
+ * Saves blocks with new layut data into the database
+ */
+function save_blocks_in_new_layout($viewid) {
+    if ($viewid) {
+        // check the view hasn't been translated yet
+        $sql = " SELECT * FROM {block_instance} bi
+            INNER JOIN {block_instance_dimension} bd
+            ON bi.id = bd.block
+            WHERE bi.view = ? ";
+
+        if (!record_exists_sql($sql, array($viewid))) {
+
+            $oldlayoutcontent = get_blocks_in_old_layout($viewid);
+            $newlayoutcontent = translate_to_new_layout($oldlayoutcontent);
+
+            if ($newlayoutcontent) {
+                foreach ($newlayoutcontent as $block) {
+                    insert_record('block_instance_dimension', $block);
+                }
+            }
+        }
+        else {
+            log_debug('Grid dimensions already in DB');
+        }
+    }
+}
+
+
+/*
+ * This function will take the blocks in the old layout
+ * and create a structure with blocks in the new gridstack layout
+ */
+
+function translate_to_new_layout($blocks) {
+    $y = 0;
+    $gridblocks = array();
+    foreach ($blocks as $row) {
+        $x = 0;
+        $maxorder = 0;
+        foreach ($row as $column) {
+            if (isset($column['blocks'])) {
+                foreach ($column['blocks'] as $order => $block) {
+                    $gridblocks[] = (object) array(
+                        'block'     => $block,
+                        'positionx' => $x,
+                        'positiony' => $y + $order - 1,
+                        'width'     => $column['width'],
+                        'height'    => 1,
+                    );
+                    $maxorder = max($maxorder, $order);
+                }
+            }
+            $x += $column['width'];
+        }
+        $y += $maxorder;
+    }
+    return $gridblocks;
+}
+
+/* Helper function to translate the column widths*/
+function get_column_widths($viewid, $row) {
+
+    // get the view's layout
+    $view = new View($viewid);
+    $layout = $view->get_layout()->id;
+
+    $sql = "SELECT vlc.widths
+        FROM {view_layout_columns} vlc
+        INNER JOIN {view_layout_rows_columns} vlrc
+        ON vlc.id = vlrc.columns
+        WHERE vlrc.viewlayout = ?
+        AND vlrc.row = ?";
+    $values = array($layout, $row);
+    $widths = get_record_sql($sql, $values);
+    $widths = explode(",", $widths->widths);
+    return (array_map(function($col) { return round(12 * $col/100);}, $widths));
+}
+
+
+/*
+ * Creates a data structure to use when translating old layout to new gridstack layout
+ * data structure contains the blocks from a view that still uses old layout
+ */
+function get_blocks_in_old_layout($viewid) {
+
+    // get old layout structure
+    $sql = "SELECT row, columns
+        FROM {view_rows_columns}
+        WHERE view = ? ORDER BY row";
+    $oldlayout = get_records_sql_array($sql, array($viewid));
+
+    // get blocks in old layout
+    $sql = "SELECT id, row, " . db_quote_identifier('column') . ", " . db_quote_identifier('order') . "
+        FROM {block_instance}
+        WHERE view = ?
+        ORDER BY row, " . db_quote_identifier('column') . ", " . db_quote_identifier('order');
+    $oldblocks = get_records_sql_array($sql, array($viewid));
+
+    foreach ($oldlayout as $row) {
+        $columnwidths = get_column_widths($viewid, $row->row);
+        for ($i=1; $i <= $row->columns ; $i++) {
+            $content[$row->row][$i]['width'] = $columnwidths[$i-1];
+        }
+    }
+    if ($oldblocks) {
+        foreach ($oldblocks as $b) {
+            $content[$b->row][$b->column]['blocks'][$b->order] = $b->id;
+        }
+    }
+
+    return $content;
+}
