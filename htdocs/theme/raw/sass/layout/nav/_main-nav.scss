@@ -38,6 +38,9 @@
             top: $navbar-height - 2px;
             max-width: 300px;
 
+            .header.no-site-messages & {
+                max-height: calc(100vh - (#{$navbar-height} + 20px));
+            }
             z-index: 5;
             @for $i from 1 through 5 {
                 .header.message-count-#{$i} & {
