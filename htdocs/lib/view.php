@@ -1527,7 +1527,7 @@ class View {
                 case 'user':
                     $accessrecord->usr = $item['id'];
                     if (isset($item['role']) && strlen($item['role'])) {
-                        $roleinfo = get_column('usr_roles', 'role');
+                        $roleinfo = get_column('usr_access_roles', 'role');
                         foreach ($roleinfo as $key => $role) {
                             if ($role == $item['role']) {
                                 $accessrecord->role = $item['role'];
@@ -1790,7 +1790,7 @@ class View {
     }
 
     public static function  get_user_access_roles() {
-        $roles = get_records_array('usr_roles');
+        $roles = get_records_array('usr_access_roles');
         $data =  array();
         foreach ($roles as $r) {
             $data[] = array('name' => $r->role, 'display' => get_string($r->role, 'view'));

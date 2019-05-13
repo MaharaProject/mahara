@@ -570,7 +570,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
             return false;
         }
         $verifiable = get_field_sql("SELECT va.usr FROM {view_access} va
-                                     JOIN {usr_roles} ur ON ur.role = va.role
+                                     JOIN {usr_access_roles} ur ON ur.role = va.role
                                      WHERE ur.see_block_content = ?
                                      AND va.view = ? AND va.usr = ?
                                      LIMIT 1", array(1, $view->get('id'), $USER->get('id')));

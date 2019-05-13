@@ -1323,5 +1323,29 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019051300) {
+        log_debug('Moving peer, manager and peer&manager roles to new table');
+
+        $oldtable = new XMLDBTable('usr_roles');
+        $newtable = new XMLDBTable('usr_access_roles');
+        if (!table_exists($newtable)) {
+            $newtable->addFieldInfo('role', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+            $newtable->addFieldInfo('see_block_content', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+            $newtable->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('role'));
+            create_table($newtable);
+
+            $roles = array('peer' => 0, 'manager' => 1, 'peermanager' => 1);
+            foreach ($roles as $role => $state) {
+                $obj = new stdClass();
+                $obj->role              = $role;
+                $obj->see_block_content = $state;
+                insert_record('usr_access_roles', $obj);
+            }
+        }
+        if (table_exists($oldtable)) {
+            drop_table($oldtable);
+        }
+    }
+
     return $status;
 }
