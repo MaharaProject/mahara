@@ -1440,7 +1440,7 @@
                 <KEY NAME="editedbyfk" TYPE="foreign" FIELDS="editedby" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="usr_roles">
+        <TABLE NAME="usr_access_roles">
             <FIELDS>
                 <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="see_block_content" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />

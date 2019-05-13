@@ -862,15 +862,15 @@ function core_install_lastcoredata_defaults() {
     // the order of installation stuff.
     install_blocktype_extras();
 
-    // Setting user roles for content block access
-    $table = new XMLDBTable('usr_roles');
+    // Setting user access roles for content block access
+    $table = new XMLDBTable('usr_access_roles');
 
     $roles = array('peer' => 0, 'manager' => 1, 'peermanager' => 1);
     foreach ($roles as $role => $state) {
         $obj = new stdClass();
         $obj->role              = $role;
         $obj->see_block_content = $state;
-        insert_record('usr_roles', $obj);
+        insert_record('usr_access_roles', $obj);
     }
 }
 

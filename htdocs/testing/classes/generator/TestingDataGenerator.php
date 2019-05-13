@@ -1912,7 +1912,7 @@ EOD;
           }
           $id = $ids[0]->id;
           $type = 'user';
-          if (!empty($record['role']) && $userrole = get_field('usr_roles', 'role', 'role', $record['role'])) {
+          if (!empty($record['role']) && $userrole = get_field('usr_access_roles', 'role', 'role', $record['role'])) {
             $role = $userrole;
           }
           break;
