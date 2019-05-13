@@ -39,17 +39,17 @@
 
     function buttonOptions (id, length, i) {
         // Make the buttons a row should have
-        var buttons = '';        
+        var buttons = '';
         if (length > 1) {
             if (i + 1 != length) {
-                buttons += '<a class="btn btn-link text-midtone" href="" onclick="move_down(' + id + '); return false;"><span class="icon icon-long-arrow-down" role="presentation" aria-hidden="true"></span><span class="sr-only">' + get_string('moveitemdown') + '</span></a>'
+                buttons += '<a class="btn btn-link text-midtone" href="" onclick="move_down(' + id + '); return false;"><span class="icon icon-long-arrow-alt-down" role="presentation" aria-hidden="true"></span><span class="sr-only">' + get_string('moveitemdown') + '</span></a>'
             }
             else {
                 buttons += '<span class="emptybtnspace"></span>';
             }
 
             if (i != 0) {
-                buttons += '<a class="btn btn-link text-midtone" href="" onclick="move_up(' + id + '); return false;"><span class="icon icon-long-arrow-up" role="presentation" aria-hidden="true"></span><span class="sr-only">' + get_string('moveitemup') + '</span></a>';
+                buttons += '<a class="btn btn-link text-midtone" href="" onclick="move_up(' + id + '); return false;"><span class="icon icon-long-arrow-alt-up" role="presentation" aria-hidden="true"></span><span class="sr-only">' + get_string('moveitemup') + '</span></a>';
             }
             else {
 
@@ -131,7 +131,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
         <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}
             <a class="btn btn-link text-midtone" href="" onclick="move_down({{$instance->id}}); return false;">
-                <span class="icon icon-long-arrow-down" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-long-arrow-alt-down" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=moveitemdown}}</span>
             </a>
             {{else}}
@@ -139,7 +139,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
             {{/if}}
             {{if $instance->index != 0 }}
             <a class="btn btn-link text-midtone" href="" onclick="move_up({{$instance->id}}); return false;">
-                <span class="icon icon-long-arrow-up" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-long-arrow-alt-up" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=moveitemup}}</span>
             </a>
             {{else}}

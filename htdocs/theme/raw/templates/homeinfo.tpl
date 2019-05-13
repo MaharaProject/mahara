@@ -80,7 +80,7 @@
         {if $USER->is_logged_in()}
         <div id="hideinfo" class="nojs-hidden-block text-right hide-info">
             <a href="#" title="{str tag=Hide2}" class="remove-widgets">
-                <span class="icon icon-remove" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-times" role="presentation" aria-hidden="true"></span>
                 <span class="">{str tag=Hide2}</span>
             </a>
         </div>

@@ -1386,7 +1386,7 @@ Arrow pointing right. This usually means "next step".
 ### Arrows
 Shows that an object can be dragged and dropped.
 ```
-<i class="icon icon-arrows" role="presentation"></i>
+<i class="icon icon-arrows-alt" role="presentation"></i>
 ```
 </section>
 
@@ -1426,7 +1426,7 @@ As used on the "Journals" page.
 ### Calendar
 Usually used on buttons to signify a pop-up date selctor.
 ```
-<i class="icon icon-calendar" role="presentation"></i>
+<i class="icon icon-regular icon-calendar-alt" role="presentation"></i>
 ```
 </section>
 
@@ -1474,7 +1474,7 @@ Used to signify SmartEvidence item has been assessed as partially complete.
 ### Circle open
 Used to signify SmartEvidence has begun on the SmartEvidence martix table.
 ```
-<i class="icon icon-circle-o begun" role="presentation"></i>
+<i class="icon icon-regular icon-circle begun" role="presentation"></i>
 ```
 </section>
 
@@ -1674,7 +1674,7 @@ Shows that something has been favourited.
 ### Heart hollow
 Shows something can be favourited.
 ```
-<i class="icon icon-heart-o" role="presentation"></i>
+<i class="icon icon-regular icon-heart" role="presentation"></i>
 ```
 </section>
 
@@ -1722,7 +1722,7 @@ As seen on the "Share" page in the site administration area.
 ### Legal
 As used on the "Licences" page in the administration area.
 ```
-<i class="icon icon-legal" role="presentation"></i>
+<i class="icon icon-gavel" role="presentation"></i>
 ```
 </section>
 
@@ -1730,7 +1730,7 @@ As used on the "Licences" page in the administration area.
 ### Level up
 Used in the file browser to signify going up to the parent folder.
 ```
-<i class="icon icon-level-up" role="presentation"></i>
+<i class="icon icon-level-up-alt" role="presentation"></i>
 ```
 </section>
 
@@ -1746,7 +1746,7 @@ Used as a security icon, for example on the "Shared by me" page.
 ### Long arrow down
 Long arrow pointing down. It is used for sorting items vertically.
 ```
-<i class="icon icon-long-arrow-down" role="presentation"></i>
+<i class="icon icon-long-arrow-alt-down" role="presentation"></i>
 ```
 </section>
 
@@ -1754,7 +1754,7 @@ Long arrow pointing down. It is used for sorting items vertically.
 ### Long arrow left
 Long arrow pointing left. It is used for sorting items horizontally.
 ```
-<i class="icon icon-long-arrow-left" role="presentation"></i>
+<i class="icon icon-long-arrow-alt-left" role="presentation"></i>
 ```
 </section>
 
@@ -1762,7 +1762,7 @@ Long arrow pointing left. It is used for sorting items horizontally.
 ### Long arrow right
 Long arrow pointing right. It is used for sorting items horizontally.
 ```
-<i class="icon icon-long-arrow-right" role="presentation"></i>
+<i class="icon icon-long-arrow-alt-right" role="presentation"></i>
 ```
 </section>
 
@@ -1770,7 +1770,7 @@ Long arrow pointing right. It is used for sorting items horizontally.
 ### Long arrow up
 Long arrow pointing up. It is used for sorting items vertically.
 ```
-<i class="icon icon-long-arrow-up" role="presentation"></i>
+<i class="icon icon-long-arrow-alt-up" role="presentation"></i>
 ```
 </section>
 
@@ -1887,14 +1887,6 @@ As seen on the button on the "Networking" page.
 </section>
 
 <section data-markdown data-category="icons">
-### Remove
-Pretty much the same as the times icon. Should use the trash icon instead.
-```
-<i class="icon icon-remove" role="presentation"></i>
-```
-</section>
-
-<section data-markdown data-category="icons">
 ### Remove user
 Remove users.
 ```
@@ -1945,7 +1937,7 @@ As used on the "Cookie consent" page in the administration area.
 ### Sign in
 Used to show the sign in button.
 ```
-<i class="icon icon-sign-in" role="presentation"></i>
+<i class="icon icon-sign-in-alt" role="presentation"></i>
 ```
 </section>
 
@@ -1969,7 +1961,7 @@ Used to signify loading. The class "icon-pulse" makes it spin.
 ### Square
 Used as an un-checked check box, for example on an uncompleted task of a plan.
 ```
-<i class="icon icon-square-o" role="presentation"></i>
+<i class="icon icon-regular icon-square" role="presentation"></i>
 ```
 </section>
 
@@ -1977,7 +1969,7 @@ Used as an un-checked check box, for example on an uncompleted task of a plan.
 ### Square checked
 Used as a checked check box, for example on complete tasks of a plan.
 ```
-<i class="icon icon-check-square-o" role="presentation"></i>
+<i class="icon icon-regular icon-check-square role="presentation"></i>
 ```
 </section>
 

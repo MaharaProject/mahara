@@ -74,7 +74,7 @@
                     {if $skin.type == 'public' && $skin.owner != $user}
                         {if !$skin.favorite}
                         <a href="{$WWWROOT}skin/favorite.php?add={$skin.id}" title="{str tag='addtofavorites' section='skin'}" class="btn btn-secondary btn-sm">
-                            <span class="icon icon-heart-o icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-regular icon-heart icon-lg" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">
                                 {str tag=addtofavoritesspecific section=skin arg1=$skin.title}
                             </span>

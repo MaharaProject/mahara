@@ -50,10 +50,10 @@
                 <span class="complete-task">
                     <div class="collapse-inline">
                         {if $task->completed == 1}
-                            <span class="icon icon-check-square-o icon-lg text-success left task{$task->id}{if $editing || $canedit} plan-task-icon{/if}" role="presentation" aria-hidden="true" data-task="{$task->id}"></span>
+                            <span class="icon icon-regular icon-check-square icon-lg text-success left task{$task->id}{if $editing || $canedit} plan-task-icon{/if}" role="presentation" aria-hidden="true" data-task="{$task->id}"></span>
                             <span class="sr-only">{str tag=completed section=artefact.plans}</span>
                         {else}
-                            <span class="icon-square-o icon icon-lg text-midtone left task{$task->id}{if $editing || $canedit} plan-task-icon{/if}" role="presentation" aria-hidden="true" data-task="{$task->id}"></span>
+                            <span class="icon-regular icon-square icon icon-lg text-midtone left task{$task->id}{if $editing || $canedit} plan-task-icon{/if}" role="presentation" aria-hidden="true" data-task="{$task->id}"></span>
                             <span class="sr-only">{str tag=incomplete section=artefact.plans}</span>
                         {/if}
                         <span class="text-default">{$task->title}</span> -

@@ -40,7 +40,7 @@ $extralicenses = get_column_sql("
 ");
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-legal');
+setpageicon($smarty, 'icon-gavel');
 
 $smarty->assign('licenses', $licenses);
 $smarty->assign('extralicenses', $extralicenses);

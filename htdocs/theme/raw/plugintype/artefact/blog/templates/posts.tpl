@@ -42,14 +42,14 @@
             </div>
         </div>
         <div id="postdetails_{$post->id}" class="postdetails postdate">
-            <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
             <strong>
                 {str tag=postedon section=artefact.blog}:
             </strong>
             {$post->ctime}
             {if $post->lastupdated}
                 <br>
-                <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
                 <strong>
                     {str tag=updatedon section=artefact.blog}:
                 </strong>

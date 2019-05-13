@@ -18,15 +18,15 @@ function changeCheckBox(taskid, state) {
     if (state == 1) {
 
         $('.task' + taskid).next('span').removeClass('text-danger').addClass('text-success');
-        $('.task' + taskid).removeClass('text-midtone icon-square-o icon-times text-danger').addClass('icon-check-square-o text-success');
+        $('.task' + taskid).removeClass('text-midtone icon-regular icon-square icon-times text-danger').addClass('icon-regular icon-check-square text-success');
     }
     else if (state == -1) {
         $('.task' + taskid).next('span').removeClass('text-success').addClass('text-danger');
-        $('.task' + taskid).removeClass('icon-check-square-o icon-square-o text-success').addClass('icon-times text-danger');
+        $('.task' + taskid).removeClass('icon-check-square icon-regular icon-square text-success').addClass('icon-times text-danger');
     }
     else {
         $('.task' + taskid).next('span').removeClass('text-success text-danger');
-        $('.task' + taskid).removeClass('icon-check-square-o icon-times text-success text-danger').addClass('icon-square-o text-midtone');
+        $('.task' + taskid).removeClass('icon-check-square icon-times text-success text-danger').addClass('icon-regular icon-square text-midtone');
     }
 }
 

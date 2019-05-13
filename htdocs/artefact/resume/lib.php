@@ -1105,7 +1105,7 @@ EOF;
             if (row._rownumber > 1) {
                 var up =
                     jQuery('<a>', {'href': '', 'class': 'moveup'}).append(
-                        jQuery('<span>',{'class': 'icon icon-long-arrow-up','role':'presentation'}),
+                        jQuery('<span>',{'class': 'icon icon-long-arrow-alt-up','role':'presentation'}),
                         jQuery('<span>',{'class': 'sr-only', 'text': {$upjsstr}})
                     );
                     up.on('click', function (e) {
@@ -1117,7 +1117,7 @@ EOF;
             if (!row._last) {
                 var down =
                     jQuery('<a>', {'href': '', 'class':'movedown'}).append(
-                      jQuery('<span>',{'class': 'icon icon-long-arrow-down','role':'presentation'}),
+                      jQuery('<span>',{'class': 'icon icon-long-arrow-alt-down','role':'presentation'}),
                       jQuery('<span>',{'class': 'sr-only', 'text': {$downjsstr}})
                     );
                     down.on('click', function (e) {

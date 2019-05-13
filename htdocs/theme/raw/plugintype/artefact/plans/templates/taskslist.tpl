@@ -17,7 +17,7 @@
         <tr class="task complete">
             {if $task->completed == 1}
                 <td class="completed task-status">
-                    <span class="icon icon-check-square-o icon-lg text-success" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-regular icon-check-square icon-lg text-success" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=completed section=artefact.plans}</span>
                 </td>
             {else}

@@ -58,13 +58,13 @@
                 if (i + 1 != displayArray.length) {
                     jQuery(displayArray[i]).find('span.authIcons').first()
                         .append('<a class="btn btn-link text-midtone" href="" onclick="move_down('+outputArray[i]+'); ' +
-                            'return false;"><span class="icon icon-long-arrow-down" role="presentation" aria-hidden="true">' +
+                            'return false;"><span class="icon icon-long-arrow-alt-down" role="presentation" aria-hidden="true">' +
                             '</span><span class="sr-only">'+get_string('moveitemdown')+'</span></a>'+"\n");
                 }
                 if(i != 0) {
                     jQuery(displayArray[i]).find('span.authIcons').first()
                         .append('<a class="btn btn-link text-midtone" href="" onclick="move_up('+outputArray[i]+'); ' +
-                            'return false;"><span class="icon icon-long-arrow-up" role="presentation" aria-hidden="true">' +
+                            'return false;"><span class="icon icon-long-arrow-alt-up" role="presentation" aria-hidden="true">' +
                             '</span><span class="sr-only">'+get_string('moveitemup')+'</span></a>'+"\n");
                 }
             }
@@ -199,13 +199,13 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
         <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}
             <a class="btn btn-link text-midtone" href="" onclick="move_down({{$instance->id}}); return false;">
-                <span class="icon icon-long-arrow-down" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-long-arrow-alt-down" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=moveitemdown}}</span>
             </a>
             {{/if}}
             {{if $instance->index != 0 }}
             <a class="btn btn-link text-midtone" href="" onclick="move_up({{$instance->id}}); return false;">
-                <span class="icon icon-long-arrow-up" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-long-arrow-alt-up" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=moveitemup}}</span>
             </a>
             {{/if}}

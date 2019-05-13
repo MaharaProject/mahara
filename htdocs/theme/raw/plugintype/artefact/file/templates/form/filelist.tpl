@@ -39,7 +39,7 @@
                 {if $file->isparent}
                     {if $file->artefacttype == 'folder'}
                         <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder-icon:{$file->id}" class="changefolder">
-                            <span class="icon-level-up icon icon-lg text-default" role="presentation" aria-hidden="true">
+                            <span class="icon-level-up-alt icon icon-lg text-default" role="presentation" aria-hidden="true">
                             </span>
                             <span class="sr-only">
                                 {str tag=folder section=artefact.file}:{$displaytitle}

@@ -575,7 +575,7 @@ class Framework {
         $states = array(
             'begun' => array(
                 'state' => (int) $state === self::EVIDENCE_BEGUN ? 1 : 0,
-                'classes' => 'icon icon-circle-o begun',
+                'classes' => 'icon icon-regular icon-circle begun',
             ),
             'incomplete' => array(
                 'state' => (int) $state === self::EVIDENCE_INCOMPLETE ? 1 : 0,

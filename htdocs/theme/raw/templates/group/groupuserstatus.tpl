@@ -3,7 +3,7 @@
     <div class="groupuserstatus btn-top-right btn-group btn-group-top">
         {if $group->canleave}
             <a href ="{$WWWROOT}group/leave.php?id={$group->id}" class="btn btn-secondary">
-                <span class="icon icon-long-arrow-right icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-long-arrow-alt-right icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="leavegroup" section="group"}</span>
             </a>
         {/if}

@@ -93,7 +93,7 @@ function pieform_element_calendar(Pieform $form, $element) {
         tooltips: ' . $tooltips . ',
         icons: {
             time: "icon icon-regular icon-clock",
-            date: "icon icon-calendar",
+            date: "icon icon-regular icon-calendar-alt",
             up: "icon icon-arrow-up",
             down: "icon icon-arrow-down",
             previous: "icon icon-chevron-left",

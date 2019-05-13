@@ -20,7 +20,7 @@
 
     {if $editwindow}
     <p>
-        <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
         <span>{str tag=editable section=group}:</span>
         {$editwindow}
     </p>

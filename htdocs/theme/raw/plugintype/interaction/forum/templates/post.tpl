@@ -22,7 +22,7 @@
                   {str tag="approve" section=group}
               </a>
                 <a href="{$WWWROOT}interaction/forum/rejectpost.php?id={$post->id}">
-                  <span class="icon icon-remove text-danger" role="presentation" aria-hidden="true"></span>
+                  <span class="icon icon-times text-danger" role="presentation" aria-hidden="true"></span>
                   {str tag="reject" section=group}
                 </a>
             </div>

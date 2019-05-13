@@ -76,7 +76,7 @@ if ($action == 'update') {
         $message = get_string('matrixpointinserted', 'module.framework');
     }
 
-    $class = 'icon icon-circle-o begun';
+    $class = 'icon icon-regular icon-circle begun';
     $choices = Framework::get_evidence_statuses($framework);
     $data = (object) array('id' => $id,
                            'class' => $class,

@@ -3,7 +3,7 @@
         <div class="btn-header btn-group {if $column == 1}btn-three{else}btn-two{/if}">
         {if $column == 1}
             <button name="action_addcolumn_row_{$row}_before_1" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}" data-action="addcolumn" class="js-add-column-left addcolumn btn btn-secondary btn-sm text-left">
-                <span class="icon-long-arrow-left icon-rotate-45 icon" role="presentation"></span>
+                <span class="icon-long-arrow-alt-left icon-rotate-45 icon" role="presentation"></span>
                 <span class="icon-plus icon" role="presentation"></span>
             </button>
         {/if}
@@ -13,12 +13,12 @@
         {if $column == $numcolumns}
             <button name="action_addcolumn_row_{$row}_before_{$column+1}" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}"  data-action="addcolumn" class="js-add-column-right addcolumn btn btn-secondary btn-sm text-right">
                  <span class="icon-plus icon" role="presentation"></span>
-                 <span class="icon-long-arrow-right icon-rotate-45 icon" role="presentation"></span>
+                 <span class="icon-long-arrow-alt-right icon-rotate-45 icon" role="presentation"></span>
             </button>
         {else}
             <button name="action_addcolumn_row_{$row}_before_{$column+1}" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}"  data-action="addcolumn" class="js-add-column-center addcolumn btn btn-secondary btn-sm text-right">
                  <span class="icon-plus icon" role="presentation"></span>
-                 <span class="icon-long-arrow-right icon-rotate-45 icon" role="presentation"></span>
+                 <span class="icon-long-arrow-alt-right icon-rotate-45 icon" role="presentation"></span>
             </button>
         {/if}
         </div>
