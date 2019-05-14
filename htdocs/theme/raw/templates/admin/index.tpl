@@ -98,7 +98,7 @@
     {if $sitedata}
 
         <div class="card bg-info site-stats">
-            <h3 class="card-header">{$sitedata.displayname}: {str tag=siteinformation section=admin} <span class="icon icon-chart-area float-right" role="presentation" aria-hidden="true"></span></h3>
+            <h3 class="card-header">{$sitedata.displayname}: {str tag=siteinformation section=admin} <span class="icon icon-info float-right" role="presentation" aria-hidden="true"></span></h3>
             {include file='admin/users/stats.tpl' institutiondata=$sitedata showall='_all' fromindex='1'}
             <a class="card-footer text-small" href="{$WWWROOT}admin/users/statistics.php?type=information&subtype=information">{str tag=viewfullsitestatistics section=admin} <span class="icon icon-arrow-circle-right float-right" role="presentation" aria-hidden="true"></span></a>
         </div>
@@ -378,7 +378,7 @@
     </div>
 
     <div class="card">
-        <h3 class="card-header">{str tag=reports section=statistics} <span class="icon icon-chart-area float-right" role="presentation" aria-hidden="true"></span></h3>
+        <h3 class="card-header">{str tag=reports section=statistics} <span class="icon icon-chart-pie float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/users/statistics.php">{str tag=reports section=statistics}</a>

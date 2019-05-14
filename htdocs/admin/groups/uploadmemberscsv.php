@@ -248,7 +248,7 @@ $form = pieform($form);
 set_progress_done('uploadgroupmemberscsv');
 
 $smarty = smarty(array('adminuploadcsv'));
-setpageicon($smarty, 'icon-users');
+setpageicon($smarty, 'icon-users-cog');
 
 $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
 $smarty->assign('uploadcsvform', $form);

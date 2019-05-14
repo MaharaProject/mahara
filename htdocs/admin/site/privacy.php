@@ -143,7 +143,7 @@ if ($versionid && $pageoptions) {
 else {
     $smarty = smarty(array('privacy'));
 }
-setpageicon($smarty, 'icon-umbrella');
+setpageicon($smarty, 'icon-gavel');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('results', $data);
 $smarty->assign('selectedtab', $selectedtab);

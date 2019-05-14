@@ -370,7 +370,7 @@ $siteoptionform = array(
             ),
         ),
         'accountsettings' => array(
-            'iconclass'=>'regular icon-clock',
+            'iconclass'=>'regular icon-user-cog',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -782,7 +782,7 @@ $siteoptionform = array(
             ),
         ),
         'loggingsettings' => array(
-            'iconclass'=>'exclamation-triangle',
+            'iconclass'=>'truck-loading',
             'class' => 'last',
             'type'         => 'fieldset',
             'collapsible'  => true,

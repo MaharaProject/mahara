@@ -40,7 +40,7 @@ $prefsform = pieform(array(
 ));
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-regular icon-envelope');
+setpageicon($smarty, 'icon-bell');
 $smarty->assign('pagedescription', get_string('prefsdescr', 'activity'));
 $smarty->assign('form', $prefsform);
 $dropdownmenu = get_config('dropdownmenu') && get_config('dropdownmenuenabled');

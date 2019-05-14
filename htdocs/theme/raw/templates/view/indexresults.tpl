@@ -185,7 +185,7 @@
                                         {if $view.framework}
                                         <li class="dropdown-item">
                                             <a href="{$view.framework->fullurl}">
-                                                <span class="icon icon-clipboard left" role="presentation" aria-hidden="true"></span>
+                                                <span class="icon icon-clipboard-check left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{$view.framework->title}</span>
                                             </a>
                                         </li>
@@ -193,7 +193,7 @@
                                         {foreach from=$view.collviews.views item=cview}
                                         <li class="dropdown-item">
                                             <a href="{$cview->fullurl}">
-                                                <span class="icon icon-file-o left" role="presentation" aria-hidden="true"></span>
+                                                <span class="icon icon-regular icon-file left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{$cview->title}</span>
                                             </a>
                                         </li>

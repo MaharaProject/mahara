@@ -232,7 +232,7 @@ jQuery(function($) {
 EOJS;
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-users');
+setpageicon($smarty, 'icon-users-cog');
 
 $smarty->assign('PAGEHEADING', hsc(get_string('groupcategories', 'admin')));
 $smarty->assign('INLINEJAVASCRIPT', $ijs);

@@ -30,7 +30,7 @@ $inlinejs = ArtefactTypeResumeComposite::get_js($compositetypes);
 $compositeforms = ArtefactTypeResumeComposite::get_forms($compositetypes);
 
 $smarty = smarty(array('tablerenderer'));
-setpageicon($smarty, 'icon-star');
+setpageicon($smarty, 'icon-regular icon-address-book');
 $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());

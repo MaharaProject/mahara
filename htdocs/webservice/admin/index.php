@@ -128,7 +128,7 @@ $inlinejs = <<<JS
 JS;
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-puzzle-piece');
+setpageicon($smarty, 'icon-project-diagram');
 
 $smarty->assign('form', $form);
 $smarty->assign('opened', param_alphanumext('open', ''));

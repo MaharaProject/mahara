@@ -2321,9 +2321,9 @@ function admin_nav() {
         'configusers' => array(
             'path'   => 'configusers',
             'url'    => 'admin/users/search.php',
-            'title'  => get_string('users'),
+            'title'  => get_string('people'),
             'weight' => 30,
-            'iconclass' => 'user',
+            'iconclass' => 'users',
         ),
         'configusers/usersearch' => array(
             'path'   => 'configusers/usersearch',
@@ -2373,7 +2373,7 @@ function admin_nav() {
             'title'  => get_string('groups', 'admin'),
             'accessibletitle' => get_string('administergroups', 'admin'),
             'weight' => 40,
-            'iconclass' => 'users',
+            'iconclass' => 'comments',
         ),
         'managegroups/groups' => array(
             'path'   => 'managegroups/groups',
@@ -2586,9 +2586,9 @@ function institutional_admin_nav() {
         'configusers' => array(
             'path'   => 'configusers',
             'url'    => 'admin/users/search.php',
-            'title'  => get_string('users'),
+            'title'  => get_string('people'),
             'weight' => 10,
-            'iconclass' => 'user',
+            'iconclass' => 'users',
         ),
         'configusers/usersearch' => array(
             'path'   => 'configusers/usersearch',
@@ -2853,7 +2853,7 @@ function mahara_standard_nav() {
             'url' => '',
             'title' => get_string('dashboard', 'view'),
             'weight' => 10,
-            'iconclass' => 'tachometer'
+            'iconclass' => 'tachometer-alt',
         ),
         'create' => array(
             'path' => 'create',
@@ -2919,7 +2919,7 @@ function mahara_standard_nav() {
             'url' => null,
             'title' => get_string('Manage'),
             'weight' => 40,
-            'iconclass' => 'wrench',
+            'iconclass' => 'briefcase',
         ),
         'engage/people' => array(
             'path' => 'engage/people',

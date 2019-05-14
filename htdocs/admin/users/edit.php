@@ -1016,6 +1016,7 @@ $smarty->assign('institutionform', $institutionform);
 $smarty->assign('loginas', $id != $USER->get('id') && is_null($USER->get('parentuser')));
 $smarty->assign('PAGEHEADING', display_name($user));
 $smarty->assign('SUBSECTIONHEADING', TITLE);
+setpageicon($smarty, 'icon-user-cog');
 
 # Only allow deletion and suspension of a user if the viewed user is not
 # the current user; or if they are the current user, they're not the only

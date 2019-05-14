@@ -35,7 +35,7 @@ $js = <<< EOF
 EOF;
 
 $smarty = smarty(array('privacy'));
-setpageicon($smarty, 'icon-umbrella');
+setpageicon($smarty, 'icon-gavel');
 
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);

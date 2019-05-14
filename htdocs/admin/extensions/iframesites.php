@@ -261,7 +261,7 @@ jQuery(function($) {
 EOF;
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-puzzle-piece');
+setpageicon($smarty, 'icon-regular icon-file-code');
 
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);

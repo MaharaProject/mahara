@@ -142,7 +142,7 @@
                     <div class="btn-group">
                         {if $file->artefacttype == 'archive'}
                         <a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}" title="{str tag=Decompress section=artefact.file}" class="btn btn-secondary btn-sm">
-                            <span class="icon icon-file-archive-o icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-regular icon-file-archive icon-lg" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">
                                 {str(tag=decompressspecific section=artefact.file arg1=$displaytitle)|escape:html|safe}
                             </span>

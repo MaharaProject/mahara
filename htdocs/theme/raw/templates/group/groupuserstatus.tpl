@@ -14,7 +14,7 @@
             </a>
         {elseif $group->suggestfriends && ($group->request || $group->jointype == 'open')}
             <a href ="{$WWWROOT}group/suggest.php?id={$group->id}" class="btn btn-secondary">
-                <span class="icon icon-lightbulb-o icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-regular icon-lightbulb icon-lg left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="suggesttofriends" section="group"}</span>
             </a>
         {/if}

@@ -28,7 +28,7 @@ $xmlrpcext  = extension_loaded('xmlrpc');
 
 if (!$opensslext || !$curlext || !$xmlrpcext) {
     $smarty = smarty();
-    setpageicon($smarty, 'icon-exchange-alt');
+    setpageicon($smarty, 'icon-network-wired');
 
     $missingextensions = array();
     !$opensslext && $missingextensions[] = 'openssl';
@@ -169,6 +169,6 @@ function networkingform_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-exchange-alt');
+setpageicon($smarty, 'icon-network-wired');
 $smarty->assign('networkingform', $networkingform);
 $smarty->display('admin/site/networking.tpl');

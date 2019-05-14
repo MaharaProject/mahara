@@ -100,6 +100,7 @@ ArtefactTypeBlog::build_blog_list_html($blogs);
 $smarty = smarty(array('paginator'));
 $smarty->assign('blogs', $blogs);
 $smarty->assign('institutionname', $institutionname);
+setpageicon($smarty, 'icon-book');
 $smarty->assign('group', $groupid);
 $smarty->assign('canedit', (!empty($group) ? $group->canedit : true));
 

@@ -172,7 +172,7 @@ $pieform = pieform_instance($form);
 $form = $pieform->build(false);
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-puzzle-piece');
+setpageicon($smarty, 'icon-external-link-alt');
 safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);

@@ -27,7 +27,7 @@
     {/if}
     <ul class="list-unstyled list-inline ">
         <li class="list-inline-item">
-            <span class="icon icon-chart-area" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chart-pie" role="presentation" aria-hidden="true"></span>
         </li>
         {if $group->membercount}
         <li class="list-inline-item">

@@ -16,7 +16,7 @@ Background:
 
  Scenario: Admin to add an user (Bug 1703721)
   Given I log in as "admin" with password "Kupuh1pa!"
-  And I choose "Add user" in "Users" from administration menu
+  And I choose "Add user" in "People" from administration menu
   And I set the following fields to these values:
   | First name | Bob |
   | Last name | One |
@@ -40,7 +40,7 @@ Background:
   And I follow "Log in as this user"
   And I should see "You are required to change your password before you can proceed."
   And I follow "log in anyway"
-  And I choose "Users" from administration menu
+  And I choose "People" from administration menu
   And I follow "Bob"
   And I wait "1" seconds
   And I should see "Administrator of Institution One"
@@ -63,14 +63,14 @@ Background:
 Scenario: Create users by csv (Bug 1426983)
   Given I log in as "admin" with password "Kupuh1pa!"
  #Adding 50 Users by csv
-  And I choose "Add users by CSV" in "Users" from administration menu
+  And I choose "Add users by CSV" in "People" from administration menu
   And I attach the file "50users_new.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
   And I press "Add users by CSV"
   Then I should see "Your CSV file was processed successfully"
   And I should see "New users added: 50."
  #Upload 20 users by csv by choosing the switch update users
-  And I choose "Add users by CSV" in "Users" from administration menu
+  And I choose "Add users by CSV" in "People" from administration menu
   And I attach the file "20users_update.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
   And I enable the switch "Update users"
@@ -96,7 +96,7 @@ Scenario: Create users by csv (Bug 1426983)
   And I log out
  #login back as admin
   Given I log in as "admin" with password "Kupuh1pa!"
-  And I choose "User search" in "Users" from administration menu
+  And I choose "User search" in "People" from administration menu
  # Check that we can delete a user after upload (Bug #1558864)
   And I follow "user0005"
   And I follow "Suspend or delete this user"

@@ -192,7 +192,7 @@ if (!$tags) {
 }
 
 $smarty = smarty(array('paginator'));
-setpageicon($smarty, 'icon-university');
+setpageicon($smarty, 'icon-tags');
 $smarty->assign('institutionselector', $institutionselector);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('canedit', $canedit);

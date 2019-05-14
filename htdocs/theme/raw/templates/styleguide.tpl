@@ -180,7 +180,7 @@ This button is used to show there are more options available. An example can be 
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
         <li class="dropdown-item">
             <a id="toggle_watchlist_link" class="watchlist" href="">
-                <span class="icon icon-eye left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-regular icon-eye left" role="presentation" aria-hidden="true"></span>
                 {str tag=addtowatchlist section=view}
             </a>
         </li>
@@ -928,7 +928,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-item">
                         <a href="">
-                        <span class="icon icon-file-o left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-regular icon-file left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Untitled page</span>
                         </a>
                     </li>
@@ -1362,7 +1362,7 @@ Shows that a card can be expanded or collapsed to the right.
 ### Area chart
 As seen on the "Statistics" page in the administration area.
 ```
-<i class="icon icon-chart-area" role="presentation"></i>
+<i class="icon icon-chart-pie" role="presentation"></i>
 ```
 </section>
 

@@ -477,7 +477,7 @@ $pieform = pieform_instance($form);
 $form = $pieform->build(false);
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-puzzle-piece');
+setpageicon($smarty, 'icon-project-diagram');
 safe_require('auth', 'webservice');
 
 $smarty->assign('form', $form);

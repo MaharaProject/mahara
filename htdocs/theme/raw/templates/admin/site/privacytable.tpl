@@ -20,7 +20,7 @@
                 {else}
                     <div class="btn-group">
                         <a href="{$WWWROOT}{$link}{$result->id}" title="{str tag=viewversion section='admin' arg1='$result->version'}" class="btn btn-secondary btn-sm">
-                            <span class="icon icon-eye icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-regular icon-eye icon-lg" role="presentation" aria-hidden="true"></span>
                         </a>
                     </div>
                 {/if}

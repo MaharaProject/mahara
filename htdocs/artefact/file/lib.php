@@ -57,7 +57,7 @@ class PluginArtefactFile extends PluginArtefact {
                 'url' => 'artefact/file/profileicons.php',
                 'title' => get_string('profileicons', 'artefact.file'),
                 'weight' => 15,
-                'iconclass' => 'regular icon-id-badge',
+                'iconclass' => 'regular icon-portrait',
             ),
         );
     }

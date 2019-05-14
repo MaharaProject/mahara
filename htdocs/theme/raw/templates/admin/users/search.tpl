@@ -176,7 +176,7 @@
                 <form class="nojs-hidden-inline form-as-button float-left" action="{$WWWROOT}admin/users/statistics.php" id="report" method="post">
 
                     <button action="{$WWWROOT}admin/users/statistics.php" type="submit" class="btn btn-secondary disabled" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
-                        <span class="icon icon-chart-area left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chart-pie left" role="presentation" aria-hidden="true"></span>
                         {str tag=withselectedusersreports section=admin}
                     </button>
                     <input type="hidden" name="type" value="users">

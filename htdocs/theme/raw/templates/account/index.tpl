@@ -14,7 +14,7 @@
         <span>{str tag=cancelrequest section=account}</span>
     </a>
     <a href="{$WWWROOT}account/resendnotification.php" class="btn btn-secondary">
-        <span class="icon icon-send icon-lg left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-paper-plane icon-lg left" role="presentation" aria-hidden="true"></span>
         <span>{str tag=resenddeletionnotification section=account}</span>
     </a>
 </div>
