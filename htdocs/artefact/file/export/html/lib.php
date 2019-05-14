@@ -201,11 +201,11 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
      */
     private function prepare_artefacts_for_smarty($parent, $folders) {
         $data = array();
-        $equality = ($folders) ? '==' : '!=';
-        $parent = (is_null($parent)) ? 'null': intval($parent);
+        $parent = (is_null($parent)) ? null : intval($parent);
         $this_owner = $this->owner;
-            $artefacts = array_filter($this->artefactdata, function($a)  use ($parent, $equality, $this_owner) {
-            if ($a->get("parent") == $parent && $a->get("artefacttype") . $equality . "folder" && $a->get("owner") == $this_owner) { return true; };
+        $artefacts = array_filter($this->artefactdata, function($a)  use ($parent, $folders, $this_owner) {
+            if (($folders && $a->get("parent") == $parent && $a->get("artefacttype") == "folder" && $a->get("owner") == $this_owner) ||
+                (!$folders && $a->get("parent") == $parent && $a->get("artefacttype") != "folder" && $a->get("owner") == $this_owner)) { return true; };
         });
 
         foreach ($artefacts as $artefact) {
