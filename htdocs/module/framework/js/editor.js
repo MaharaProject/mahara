@@ -33,7 +33,7 @@
  * check copy save
  * add inst default in the php. It's already there?
  */
-
+var editor;
 jQuery(function($) {
     // Use bootstrap
     JSONEditor.defaults.options.theme = 'bootstrap4';
@@ -57,7 +57,6 @@ jQuery(function($) {
     // Enable select2
     JSONEditor.plugins.select2.enable = true;
 
-    var editor;
     var parent_array = [''];
     var standard_array = [];
     var standard_names = [];

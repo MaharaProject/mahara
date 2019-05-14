@@ -1524,6 +1524,107 @@ EOF;
         }
     }
 
+    private function i_get_se_field($dv) {
+        // If we are not running javascript we can't test the form
+        if (!$this->running_javascript()) {
+            throw new DriverException('SE editor tests are disabled in scenarios without Javascript support');
+        }
+        // If we are looking at a "standards" or "standardelements" node we need to check that it is active
+        $checkactive = (preg_match('/\.standards\./', $dv) || preg_match('/\.standardelements\./', $dv)) ? "//div[contains(concat(' ', normalize-space(@class), ' '), ' active ')]" : '';
+        $exception = new Exception('The field at schemapath "' . $dv . '" ' . ($checkactive ? 'in active tab ' : '') . 'not found');
+        $xpath = $checkactive . "//div[contains(concat(' ', normalize-space(@data-schemapath), ' '), ' " . $dv . " ')]" .
+                 "//input" .
+                 " | " .
+                 $checkactive . "//div[contains(concat(' ', normalize-space(@data-schemapath), ' '), ' " . $dv . " ')]" .
+                 "//select" .
+                 " | " .
+                 $checkactive . "//div[contains(concat(' ', normalize-space(@data-schemapath), ' '), ' " . $dv . " ')]" .
+                 "//textarea";
+        // First check the node exists
+        $node = $this->find('xpath', $xpath, $exception);
+        return $xpath;
+    }
+
+    /**
+     * Investigate a Smart Evidence editor field via data schemepath attribute
+     *
+     * @Given the SE field :datavalue should contain :value
+     */
+    public function i_check_the_se_field($dv, $value) {
+        $xpath = $this->i_get_se_field($dv);
+        $textliteral = $this->escaper->escapeLiteral($value);
+        // Then check that is set to value
+        // We need to do this via JS
+        $js = "(function() {
+                   var fxpath = document.evaluate (
+                       \"" . $xpath . "\",
+                       document,
+                       null,
+                       XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+                       null
+                   );
+                   var hasValue = jQuery(fxpath.snapshotItem(0)).val();
+                   var hasMatch = hasValue.indexOf(" . $textliteral . ");
+                   // If not found in value check if a select field and if option text matches
+                   if (hasMatch == -1 && jQuery(fxpath.snapshotItem(0)).prop('tagName') == 'SELECT') {
+                      hasValue = jQuery(fxpath.snapshotItem(0)).find(':selected').text();
+                      hasMatch = hasValue.indexOf(" . $textliteral . ");
+                   }
+                   return (hasMatch != -1);
+               })()";
+        $result = $this->getSession()->evaluateScript("$js");
+        if ($result == false) {
+            throw new Exception('The field at schemapath "' . $dv . '" does not contain text "' . $textliteral . '"');
+        }
+    }
+
+    /**
+     * Investigate a Smart Evidence editor field via data schemepath attribute
+     *
+     * @Given the SE field :datavalue should not contain :value
+     */
+    public function i_check_the_se_field2($dv, $value) {
+        $xpath = $this->i_get_se_field($dv);
+        $textliteral = $this->escaper->escapeLiteral($value);
+        // Then check that is set to value
+        // We need to do this via JS
+        $js = "(function() {
+                   var fxpath = document.evaluate (
+                       \"" . $xpath . "\",
+                       document,
+                       null,
+                       XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+                       null
+                   );
+                   var hasValue = jQuery(fxpath.snapshotItem(0)).val();
+                   var hasMatch = hasValue.indexOf(" . $textliteral . ");
+                   // If not found in value check if a select field and if option text matches
+                   if (hasMatch == -1 && jQuery(fxpath.snapshotItem(0)).prop('tagName') == 'SELECT') {
+                      hasValue = jQuery(fxpath.snapshotItem(0)).find(':selected').text();
+                      hasMatch = hasValue.indexOf(" . $textliteral . ");
+                   }
+                   return (hasMatch == -1);
+               })()";
+        $result = $this->getSession()->evaluateScript("$js");
+        if ($result == false) {
+            throw new Exception('The field at schemapath "' . $dv . '" does contain text "' . $textliteral . '"');
+        }
+    }
+
+    /**
+     * Update a Smart Evidence editor field via data schemepath attribute
+     *
+     * @Given I set the SE field :datavalue to :value
+     */
+    public function i_set_the_se_field($dv, $value) {
+        $xpath = $this->i_get_se_field($dv);
+        $textliteral = $this->escaper->escapeLiteral($value);
+        // Then check that is set to value
+        // We need to do this via JS
+        $js = 'editor.getEditor("' . $dv . '").setValue(' . $textliteral . ');';
+        $result = $this->getSession()->evaluateScript("$js");
+    }
+
 /**
  * Display the editting page
  *

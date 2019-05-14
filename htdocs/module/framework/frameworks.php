@@ -174,6 +174,7 @@ $frameworks = Framework::get_frameworks('any');
 if ($frameworks) {
     foreach ($frameworks as $framework) {
         $fk = new Framework($framework->id);
+        $framework->institution_name = ($fk->get('institution_name')) ? $fk->get('institution_name') : '';
         if ($fk->get('active')) {
             $framework->active = array(
                 'title' => 'Enabled',
