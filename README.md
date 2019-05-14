@@ -6,13 +6,13 @@ web application that allows users to record and share evidence of lifelong learn
 For more information about Mahara and ePortfolios, see the Mahara user manual's
 introduction chapter:
 
- * http://manual.mahara.org/en/19.10/intro/introduction.html#what-is-mahara
+ * https://manual.mahara.org/en/19.10/intro/introduction.html#what-is-mahara
 
 # SUPPORT
 
 The best ways of obtaining support are:
 
- * http://manual.mahara.org - the Mahara online user manual
+ * https://manual.mahara.org - the Mahara online user manual
  * https://mahara.org/forums - the Mahara project community forums
  * https://wiki.mahara.org - the Mahara wiki
  * #mahara on freenode (IRC) - live chat with other users and developers
@@ -166,7 +166,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Additional permission under GNU GPL version 3 section 7:
 
