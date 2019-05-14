@@ -225,7 +225,7 @@ class AuthSaml extends Auth {
 
         if ($create) {
 
-            $user->passwordchange     = 1;
+            $user->passwordchange     = 0;
             $user->active             = 1;
             $user->deleted            = 0;
 

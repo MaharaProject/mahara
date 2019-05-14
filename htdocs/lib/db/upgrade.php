@@ -1361,5 +1361,16 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019062600) {
+        log_debug('Remove force password change for those using external auth');
+        execute_sql("UPDATE {usr} SET passwordchange = 0
+                     WHERE id IN (
+                         SELECT u.id FROM {usr} u
+                         JOIN {auth_instance} ui ON ui.id = u.authinstance
+                         WHERE ui.authname != 'internal' AND ui.active = 1
+                     )
+                     AND id != 0"); // Ignore the root user
+    }
+
     return $status;
 }
