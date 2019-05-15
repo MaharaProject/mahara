@@ -311,3 +311,36 @@ a.admin-site {
     background-color: {$data.background};
     color: {$data.backgroundfg};
 }
+
+.card.collapsible.collapsible-small legend h4 a,
+.pieform-fieldset.collapsible.collapsible-small legend h4 a {
+    color: {$data.link};
+}
+
+.form-group.multisubmit .cancel,
+.form-group.submitcancel .cancel {
+    color: {$data.link};
+}
+
+.page-item.active .page-link {
+    background-color: {$data.background};
+    border-color: {$data.background};
+}
+
+.footer .footer-nav .nav-link {
+    color: {$data.link};
+}
+
+.footer .metadata {
+    color: {$data.link};
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: {$data.background};
+}
+
+.dropdown-item.active a,
+.dropdown-item:active a {
+    color: #fff;
+}
