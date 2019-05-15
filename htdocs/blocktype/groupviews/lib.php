@@ -319,6 +319,9 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                                                     null, $limit, 0, true, $sort, null, false, null, null,
                                                     null, null, true);
             foreach ($data['groupviews']->data as &$view) {
+                if (empty($view['displaytitle'])) {
+                    $view['displaytitle'] = $view['title']; // add for collections
+                }
                 if (!$editing && isset($view['template']) && $view['template']) {
                     $collid = !empty($view['collid']) ? $view['collid'] : null;
                     $view['form'] = pieform(create_view_form(null, null, $view['viewid'], $collid, $collid));
