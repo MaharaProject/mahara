@@ -655,7 +655,7 @@ class PluginSearchElasticsearch extends PluginSearch {
             (object)array(
                 'callfunction' => 'cron',
                 'hour'         => '*',
-                'minute'       => '*/5',
+                'minute'       => '4-59/5',
             ),
         );
     }
