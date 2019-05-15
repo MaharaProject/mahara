@@ -427,7 +427,7 @@ EOF;
         return array(
             (object)array(
                 'callfunction' => 'interaction_forum_new_post',
-                'minute'       => '*/30',
+                'minute'       => '3-59/30',
             ),
             (object)array(
                 'callfunction' => 'clean_forum_notifications',

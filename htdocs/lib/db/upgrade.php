@@ -1324,5 +1324,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019031908) {
+        log_debug('offset some troublesome cron jobs');
+        execute_sql("UPDATE {cron} SET minute = ? WHERE callfunction = ?", array('2-59/5', 'user_login_tries_to_zero'));
+        execute_sql("UPDATE {interaction_cron} SET minute = ? WHERE plugin = ? AND callfunction = ?", array('3-59/30', 'forum', 'interaction_forum_new_post'));
+        execute_sql("UPDATE {search_cron} SET minute = ? WHERE plugin = ? AND callfunction = ?", array('4-59/5', 'elasticsearch', 'cron'));
+    }
+
     return $status;
 }
