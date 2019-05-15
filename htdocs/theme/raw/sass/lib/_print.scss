@@ -78,7 +78,7 @@
 
     @page {
         size: A4;
-        margin: 0;
+        margin: 1.5cm 1cm;
     }
 
     .page {
@@ -103,5 +103,26 @@
     .peerinstructions,
     .pageinstructions {
         display: none;
+    }
+
+    .pageactions {
+        display: none;
+    }
+
+    .pageheader {
+        margin: 0;
+
+        .main {
+            padding: 0;
+            margin: 0;
+
+            h1 {
+                margin: 0;
+            }
+        }
+    }
+
+    .row {
+        display: block;
     }
 }
