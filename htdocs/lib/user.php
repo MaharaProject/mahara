@@ -2541,8 +2541,8 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         }
         if (empty($user->quota)) {
             $quota = get_config_plugin('artefact', 'file', 'defaultquota');
-            if (!empty($institution) && !empty($institution->quota)) {
-                $quota = min($quota, $institution->quota);
+            if (!empty($institution) && $institution->defaultquota > 0) {
+                $quota = min($quota, $institution->defaultquota);
             }
             $user->quota = $quota;
         }
