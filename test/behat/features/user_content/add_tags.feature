@@ -8,13 +8,14 @@ Background:
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | test01@example.com | Angela | User | mahara | internal | member |
+     | UserB | Kupuh1pa! | test02@example.com | Albert | User | mahara | internal | member |
 
   And the following "pages" exist:
      | title | description | ownertype | ownername |
      | Page UserA_01 | Page 01 | user | UserA |
      | Page UserA_02 | Page 02 | user | UserA |
 
-  Scenario: Adding tags to files (Bug 1426983)
+ Scenario: Adding tags to files (Bug 1426983)
    # Log in as the UserA
    Given I log in as "UserA" with password "Kupuh1pa!"
    # Creating a folder with a  tag
@@ -29,8 +30,9 @@ Background:
    And I set the following fields to these values:
    | Description | This is a subdirectory |
    And I fill in select2 input "files_filebrowser_edit_tags" with "&red" and select "&red"
+   And I fill in select2 input "files_filebrowser_edit_tags" with "Tag" and select "Tag"
    And I press "Save changes"
-   #Creating a Journal with tag
+   # Creating a Journal with tag
    And I choose "Journals" in "Create" from main menu
    And I follow "New entry"
    And I set the following fields to these values:
@@ -61,12 +63,14 @@ Background:
    And I click on "Edit" in "Page UserA_01" card menu
    And I follow "Settings" in the "#toolbar-buttons" "css_element"
    And I fill in select2 input "settings_tags" with "blue" and select "blue"
+   And I fill in select2 input "settings_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Adding a tag to page 2
    And I choose "Pages and collections" in "Create" from main menu
    And I click on "Edit" in "Page UserA_02" card menu
    And I follow "Settings" in the "#toolbar-buttons" "css_element"
    And I fill in select2 input "settings_tags" with "#orange" and select "#orange"
+   And I fill in select2 input "settings_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a Note with a tag
    When I follow "Add a new block" in the "blocktype sidebar" property
@@ -78,6 +82,7 @@ Background:
    And I fill in the following:
    | Block title | Note Block 3304 |
    And I fill in select2 input "instconf_tags" with "@black" and select "@black"
+   And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a Text block with a tag
    When I follow "Add a new block" in the "blocktype sidebar" property
@@ -87,6 +92,7 @@ Background:
    And I fill in the following:
    | Block title | Text Block 101 |
    And I fill in select2 input "instconf_tags" with "ébrown" and select "ébrown"
+   And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a resume field with a tag
    When I follow "Add a new block" in the "blocktype sidebar" property
@@ -107,6 +113,7 @@ Background:
    And I click on "External media" in the "Content types" property
    And I fill in "URL or embed code" with "https://www.youtube.com/embed/VeS1iqQ6VIc"
    And I fill in select2 input "instconf_tags" with "ègreen" and select "ègreen"
+   And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    And I choose "Pages and collections" in "Create" from main menu
    Then I follow "Tags" in the "#sb-tags" "css_element"
@@ -118,16 +125,16 @@ Background:
    And I should see "ébrown" in the "#results_container" element
    And I should see "ègreen" in the "#results_container" element
    And I should see "êyellow" in the "#results_container" element
-   #Check the repeated tags
+   # Check the repeated tags
    And I follow "blue"
    And I should see "Journal one"
    And I should see "woooo"
    And I should see "task one"
-   #Check single tag
+   # Check single tag
    And I follow "#orange"
    And I should see "Page UserA_02"
    And I should not see "Text Block 101"
-   #Check tags can be deleted from a page - Bug 1715491
+   # Check tags can be deleted from a page - Bug 1715491
    Given I follow "Page UserA_02"
    And I follow "Edit"
    And I click on "Settings" in the "Toolbar buttons" property
@@ -137,24 +144,41 @@ Background:
    Then I should not see "#orange"
 
    # Create Portfolio page via tags = blue
-  Given I choose "Pages and collections" in "Create" from main menu
-  And I scroll to the base of id "addview-button"
-  And I follow "Add"
-  And I click on "Page" in the dialog
-  And I fill in the following:
-  | Page title | Create portfolio via tags feature |
-  And I fill in "Create portfolio via tags feature description" in first editor
-  # verify help text for "Create via tags" is displayed
-  And I should see "Search for or enter tags to pull content into your page automatically. If you enter more than one tag, only content that is tagged with all these tags will appear on the page. You can then re-arrange and delete blocks."
-  And I fill in select2 input "settings_createtags" with "blue" and select "blue"
-  When I press "Save"
-  Then I should see "Tagged journal entries"
-  And I should see "Plans"
-  When I follow "Settings" in the "Toolbar buttons" property
-  And I fill in select2 input "settings_createtags" with "@black" and select "@black"
-  And I press "Save"
-  Then I should see "Note Block 3304"
-  When I follow "Settings" in the "Toolbar buttons" property
-  And I fill in select2 input "settings_createtags" with "ébrown" and select "ébrown"
-  And I press "Save"
-  Then I should see "Text Block 101"
+   Given I choose "Pages and collections" in "Create" from main menu
+   And I scroll to the base of id "addview-button"
+   And I follow "Add"
+   And I click on "Page" in the dialog
+   And I fill in the following:
+   | Page title | Create portfolio via tags feature |
+   And I fill in "Create portfolio via tags feature description" in first editor
+   # verify help text for "Create via tags" is displayed
+   And I should see "Search for or enter tags to pull content into your page automatically. If you enter more than one tag, only content that is tagged with all these tags will appear on the page. You can then re-arrange and delete blocks."
+   And I fill in select2 input "settings_createtags" with "blue" and select "blue"
+   When I press "Save"
+   Then I should see "Tagged journal entries"
+   And I should see "Plans"
+   When I follow "Settings" in the "Toolbar buttons" property
+   And I fill in select2 input "settings_createtags" with "@black" and select "@black"
+   And I press "Save"
+   Then I should see "Note Block 3304"
+   When I follow "Settings" in the "Toolbar buttons" property
+   And I fill in select2 input "settings_createtags" with "ébrown" and select "ébrown"
+   And I press "Save"
+
+   When I choose "Shared by me" in "Share" from main menu
+   And I click on "Edit access" in "Page UserA_01" row
+   And I set the select2 value "Page UserA_01, Page UserA_02, Create portfolio via tags feature" for "editaccess_views"
+   And I select "Public" from "accesslist[0][searchtype]"
+   And I press "editaccess_submit"
+   And I log out
+
+   Given I log in as "UserB" with password "Kupuh1pa!"
+   And I wait "2" seconds
+   When I follow "Page UserA_02"
+   And I follow "Tag"
+   Then I should see "Tagged content of Angela User"
+   And I should see "External media"
+   Then I should see "Note Block 3304"
+   Then I should see "Page UserA_01"
+   Then I should see "Page UserA_02"
+   Then I should see "Text Block 101"
