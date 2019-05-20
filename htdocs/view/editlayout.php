@@ -382,6 +382,25 @@ function get_advanced_elements() {
             'defaultvalue' => $view->get('anonymise'),
         );
     }
+
+    // Theme dropdown
+    $theme = $view->set_user_theme();
+    $allowedthemes = get_user_accessible_themes();
+    if ($theme && !isset($allowedthemes[$theme])) {
+        // We have page set with an unknown theme
+        // So redirect it to the choose theme page first
+        redirect('/view/blocks.php?id=' . $view->get('id'));
+    }
+
+    if (get_config('userscanchooseviewthemes') && $view->is_themeable()) {
+        $elements['theme'] = array(
+            'type'          => 'select',
+            'title'         => get_string('theme', 'view'),
+            'description'   => get_string('choosethemedesc', 'view'),
+            'options'       => $allowedthemes,
+            'defaultvalue'  => $theme,
+        );
+    };
     return $elements;
 }
 
@@ -999,6 +1018,9 @@ function set_view_title_and_description(Pieform $form, $values) {
     }
     if (isset($values['lockblocks'])) {
         $view->set('lockblocks', (int)$values['lockblocks']);
+    }
+    if (isset($values['theme'])) {
+        $view->set('theme', $values['theme']);
     }
     if (isset($values['ownerformat']) && $view->get('owner')) {
         $view->set('ownerformat', $values['ownerformat']);

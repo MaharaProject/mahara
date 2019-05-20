@@ -5,7 +5,7 @@
     <form action="{$formurl}" method="post" class="pieform form-inline">
         <input type="hidden" id="viewid" name="id" value="{$view}">
         <input type="hidden" name="sesskey" value="{$SESSKEY}">
-        <div class="select form-group">
+        <div class="select">
             <label for="viewtheme-select">{str tag=theme}: </label>
             <span class="picker">
                 <select id="viewtheme-select" name="viewtheme" class="form-control select autofocus">
