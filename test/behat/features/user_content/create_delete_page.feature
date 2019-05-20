@@ -80,7 +80,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I display the page
     # Show last updated date and time when seeing a portfolio page (Bug 1634591)
     And I should see "Updated on" in the ".text-right" element
-    # actual date format displayed is 31 May 2018, 1:29 PM
+    # actual date format displayed is 31 May 2018, 13:29
     And I should see the date "today" in the ".text-right" element with the format "d F Y"
     # Verifying the page title and description changed
     Then I should see "This is the edited page title"

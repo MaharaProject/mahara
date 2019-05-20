@@ -233,7 +233,7 @@ $string['topicmovedsuccess'] = array(
 $string['today'] = 'Today';
 $string['yesterday'] = 'Yesterday';
 $string['strftimerecentrelative'] = '%%v, %%k:%%M';
-$string['strftimerecentfullrelative'] = '%%v, %%l:%%M %%p';
+$string['strftimerecentfullrelative'] = '%%v, %%k:%%M';
 
 $string['indentmode'] = 'Forum indent mode';
 $string['indentfullindent'] = 'Fully expand';
