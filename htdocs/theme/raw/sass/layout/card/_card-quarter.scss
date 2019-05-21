@@ -222,6 +222,28 @@
     }
 }
 
+.card-option {
+    width: 50%;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 30px;
+    height: 60px;
+    @include media-breakpoint-up(md) {
+        width: 25%;
+    }
+    .card {
+        padding: 10px;
+        cursor: pointer;
+        div {
+            text-align: center;
+            &.icon {
+                padding-bottom: 5px;
+            }
+        }
+    }
+}
+
 // Make collection list dropdown align right on the right most card
 .card-quarter {
     &:nth-child(even) .collection-list .dropdown-menu,

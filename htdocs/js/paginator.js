@@ -323,6 +323,10 @@ function pagination_showmore(btn) {
     sendjsonrequest(config['wwwroot'] + btn.data('jsonscript'), params, 'POST', function(data) {
         var btnid = btn.prop('id');
         btn.parent().replaceWith(data.data.tablerows);
+        // Run post 'show more' js function if needed
+        if (data.data.jscall) {
+            window[data.data.jscall]();
+        }
         // we have a new 'showmore' button so wire it up
         jQuery('#' + btnid).on('click', function(e) {
             e.preventDefault();

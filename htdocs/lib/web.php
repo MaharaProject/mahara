@@ -4464,6 +4464,9 @@ function build_showmore_pagination($params) {
         $js .= '        pagination_showmore(jQuery(this));';
         $js .= '    }';
         $js .= '});' . "\n";
+        if (isset($params['jscall']) && $params['jscall']) {
+            $js .= 'window[\'' . $params['jscall'] . '\']();' . "\n";
+        }
     }
 
     return array('html' => $output, 'javascript' => $js);

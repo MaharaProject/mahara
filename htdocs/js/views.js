@@ -172,6 +172,10 @@
 
     }
 
+    ViewManager.blockOptions = function() {
+        console.log('in block options');
+    }
+
     //Private Methods
     /////////////////
     function init() {
@@ -1401,4 +1405,8 @@ function blockConfigSuccess(form, data) {
  */
 function blockConfigError(form, data) {
     return ViewManager.blockConfigError(form, data);
+}
+
+function wire_blockoptions() {
+    return ViewManager.blockOptions();
 }
