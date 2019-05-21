@@ -848,3 +848,10 @@ div.form-group .form-control-label {
     top: 0;
     margin-right: 5px;
 }
+
+// Keep content chooser on side of page when scrolling
+#editcontent-sidebar-wrapper {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 200px;
+}

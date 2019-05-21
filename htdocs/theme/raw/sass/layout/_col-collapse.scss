@@ -5,13 +5,6 @@
     @extend .col-lg-2;
     @extend .col-sm-3;
 
-    @include media-breakpoint-down(md) {
-        .title,
-        .indicator {
-            font-size: 0.7em;
-        }
-    }
-
     .col-collapsed & {
         @extend .col-lg-1;
         @extend .col-sm-2;
