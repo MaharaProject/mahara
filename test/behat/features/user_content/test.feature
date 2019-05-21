@@ -10,6 +10,10 @@ Background:
     # extra tables not currently in this feature file: ...the following ~
     # institutions, group memberships, institution memberships, permissions, messages, ... exist
 
+    Given the following site settings are set:
+    | field | value |
+    | licensemetadata | 0 |
+
     Given the following "users" exist:
     # Available fields: username*, password*, email*, firstname*, lastname*, institution, role, authname, remoteusername, studentid, preferredname, town, country, occupation
     | username | password | email             | firstname | lastname | institution | authname | role |

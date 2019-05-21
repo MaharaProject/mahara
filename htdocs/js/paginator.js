@@ -311,22 +311,25 @@ var paginatorProxy = new PaginatorProxy();
 // 'Show more' pagination
 function pagination_showmore(btn) {
     var params = {};
-    params.offset = parseInt(btn.data('offset'), 10);
-    params.orderby = btn.data('orderby');
-    if (Number.isInteger(btn.data('group'))) {
-        params.group = btn.data('group');
-    }
-    if (btn.data('institution').length) {
-        params.institution = btn.data('institution');
-    }
+    var btndata = btn.data();
+    $.each(btndata, function(key, value) {
+        if (key != 'jsonscript' && value.length != 0) {
+            if ($.isNumeric(value)) {
+                value = parseInt(value, 10);
+            }
+            params[key] = value;
+        }
+    });
     sendjsonrequest(config['wwwroot'] + btn.data('jsonscript'), params, 'POST', function(data) {
         var btnid = btn.prop('id');
         btn.parent().replaceWith(data.data.tablerows);
         // we have a new 'showmore' button so wire it up
-        jQuery('#' + btnid).on('click', function() {
+        jQuery('#' + btnid).on('click', function(e) {
+            e.preventDefault();
             pagination_showmore(jQuery(this));
         });
         jQuery('#' + btnid).on('keydown', function(e) {
+            e.preventDefault();
             if (e.keyCode == $j.ui.keyCode.SPACE || e.keyCode == $j.ui.keyCode.ENTER) {
                 pagination_showmore(jQuery(this));
             }

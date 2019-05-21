@@ -4424,9 +4424,8 @@ function build_pagination($params) {
  * - orderby: What order the results will be returned in
  * - databutton: The ID of the 'Show more' button
  *
- * Optional include:
- * - group: Group id the pagination is for
- * - institution: Institution name the pagination is for
+ * Optional:
+ * - extra: An array of key / values that you want to add as data options
  */
 function build_showmore_pagination($params) {
     // Bail if the required attributes are not present
@@ -4440,22 +4439,27 @@ function build_showmore_pagination($params) {
     if ((int) $params['count'] > ((int) $params['offset'] + (int) $params['limit'])) {
         // Need to add 'showmore' button
         $output  = '<div class="showmore">' . "\n";
-        $output .= '    <div id="' . $params['databutton'] . '" class="btn btn-secondary"';
+        $output .= '    <button id="' . $params['databutton'] . '" class="btn btn-secondary"';
         $output .= ' data-orderby="' . $params['orderby'] . '"';
         $output .= ' data-offset="' . ((int) $params['offset'] + (int) $params['limit']) . '"';
-        $output .= ' data-group="' . (isset($params['group']) ? $params['group'] : '') . '"';
         $output .= ' data-jsonscript="' . $params['jsonscript'] . '"';
-        $output .= ' data-institution="' . (isset($params['institution']) ? $params['institution'] : '') . '"';
+        if (!empty($params['extra']) && is_array($params['extra'])) {
+            foreach ($params['extra'] as $key => $value) {
+                $output .= ' data-' . $key . '="' . $value . '"';
+            }
+        }
         $output .= ' tabindex="0">';
-        $output .= get_string('showmore', 'mahara') . '</div>' . "\n";
+        $output .= get_string('showmore', 'mahara') . '</button>' . "\n";
         $output .= '</div>';
 
-        $js  = 'jQuery("#' . $params['databutton'] . '").on("click", function() {';
+        $js  = 'jQuery("#' . $params['databutton'] . '").on("click", function(e) {';
+        $js .= '    e.preventDefault();';
         $js .= '    pagination_showmore(jQuery(this));';
         $js .= '});' . "\n";
 
         $js .= 'jQuery("#' . $params['databutton'] . '").on("keydown", function(e) {';
         $js .= '    if (e.keyCode == $j.ui.keyCode.SPACE || e.keyCode == $j.ui.keyCode.ENTER) {';
+        $js .= '        e.preventDefault();';
         $js .= '        pagination_showmore(jQuery(this));';
         $js .= '    }';
         $js .= '});' . "\n";
