@@ -18,7 +18,9 @@ require_once(get_config('libroot') . 'view.php');
 $fromdate  = param_variable('fromdate', null);
 $todate   = param_variable('todate', null);
 $viewid = param_integer('view', 0);
-
+if (!can_view_view($viewid)) {
+    json_reply('local', get_string('accessdenied', 'error'));
+}
 if ($fromdate || $todate ) {
     $versions = View::get_versions($viewid, $fromdate, $todate);
 }
