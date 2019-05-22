@@ -65,9 +65,11 @@ class PluginBlocktypePlaceholder extends MaharaCoreBlocktype {
             'databutton' => 'showmorebtn',
             'jscall' => 'wire_blockoptions',
             'jsonscript' => 'blocktype/placeholder/blockoptions.json.php',
-            'extra' => array('viewid' => $view->get('id')),
+            'extra' => array('viewid' => $view->get('id'),
+                             'blockid' => $instance->get('id')),
         ));
         $smarty = smarty_core();
+        $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('types', $types);
         $typeslist = $smarty->fetch('blocktype:placeholder:contenttypeslist.tpl');
         $smarty->assign('typeslist', $typeslist);

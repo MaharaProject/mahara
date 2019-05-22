@@ -19,6 +19,7 @@ safe_require('blocktype', 'placeholder');
 $offset = param_integer('offset', 0);
 $limit = param_integer('limit', 8);
 $viewid = param_integer('viewid');
+$blockid = param_integer('blockid');
 if (!can_view_view($viewid)) {
     json_reply('local', get_string('accessdenied', 'error'));
 }
@@ -35,10 +36,12 @@ $pagination = build_showmore_pagination(array(
     'databutton' => 'showmorebtn',
     'jscall' => 'wire_blockoptions',
     'jsonscript' => 'blocktype/placeholder/blockoptions.json.php',
-    'extra' => array('viewid' => $viewid),
+    'extra' => array('viewid' => $viewid,
+                     'blockid' => $blockid),
 ));
 
 $smarty = smarty_core();
+$smarty->assign('blockid', $blockid);
 $smarty->assign('types', $types);
 $typeslist = $smarty->fetch('blocktype:placeholder:contenttypeslist.tpl');
 $typeslist .= $pagination['html'];

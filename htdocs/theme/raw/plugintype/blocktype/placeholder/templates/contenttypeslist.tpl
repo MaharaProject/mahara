@@ -1,8 +1,8 @@
 {foreach from=$types item=type}
     <div class="card-option card-quarter">
-        <div class="card placeholder btn-secondary" data-option="{$type.name}" title="{$type.description}">
+        <button class="card placeholder btn-secondary" data-option="{$type.name}" title="{$type.description}" data-blockid="{$blockid}">
             <div class="icon icon-lg icon-{$type.cssicon}"></div>
             <div>{$type.title}</div>
-        </div>
+        </button>
     </div>
 {/foreach}

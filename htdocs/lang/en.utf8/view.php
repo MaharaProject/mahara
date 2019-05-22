@@ -304,6 +304,10 @@ $string['blockconfigurationrenderingerror'] = 'Configuration failed because the 
 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your page. You can position a block using the arrow buttons in its titlebar.';
 $string['blocksinstructionajaxlive'] = 'This area shows a preview of what your page looks like. Changes are saved automatically.<br>Drag blocks onto the page to add them. You can then also drag them around the page to change their position.';
+$string['blockchangedsuccess'] = "Changed placeholder block to a '%s' block successful";
+$string['blockchangederror'] = "Changing block to a '%s' block failed";
+$string['blockchangedbacksuccess'] = "Changed block back to placeholder block";
+$string['blockchangedbackerror'] = "Changing block back to placeholder block failed";
 
 $string['addblock'] = 'Add block: %s';
 $string['blockcell'] = 'Cell';

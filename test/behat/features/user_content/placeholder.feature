@@ -2,6 +2,7 @@
 Feature: Adding a placeholder block to a page
     As a student
     I need to be able to add a placeholder block to my portfolio
+    and then change it to be a block of my choosing
 
 Background:
 Given the following "users" exist:
@@ -23,5 +24,17 @@ Scenario:
     And I fill in the following:
     | Block title | Mahara placeholder block |
     And I press "Save"
-    And I display the page
     Then I should see "Please configure the block to choose what type of block this should be"
+
+    # Edit placeholder block and check we can see more options
+    And I configure the block "Mahara placeholder block"
+    And I click on "Show more"
+    Then I should see "Image gallery"
+    # Change placeholder block to a text block
+    And I fill in the following:
+    | Block title | Mahara text block title |
+    And I click on "Text" in the "Content types" property
+    And I set the field "Block content" to "Mahara text block content"
+    And I press "Save"
+    Then I should see "Mahara text block title"
+    Then I should see "Mahara text block content"

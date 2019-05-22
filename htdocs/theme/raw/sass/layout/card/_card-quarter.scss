@@ -232,9 +232,10 @@
     @include media-breakpoint-up(md) {
         width: 25%;
     }
-    .card {
+    .card.placeholder {
         padding: 10px;
         cursor: pointer;
+        width: 100%;
         div {
             text-align: center;
             &.icon {
