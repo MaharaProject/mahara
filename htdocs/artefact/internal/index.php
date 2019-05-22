@@ -266,7 +266,7 @@ function profileform_validate(Pieform $form, $values) {
                 $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal') . ': ' . hsc($email));
                 break;
             }
-            else if (record_exists('artefact_internal_profile_email', 'email', $email)) {
+            else if (check_email_exist($email)) {
                 $form->set_error('email', get_string('unvalidatedemailalreadytaken', 'artefact.internal'));
                 break;
             }

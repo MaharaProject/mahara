@@ -20,9 +20,7 @@ require_once('NoneSpamTrap.php');
 class SimpleSpamTrap extends NoneSpamTrap {
 
     protected function email_form($email) {
-        // pieforms does some email validation, but it's somewhat imperfect.
-        // it allows multiple @ characters, for example
-        if (preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i", $email)) {
+        if (sanitize_email($email)) {
             return true;
         }
         return false;
