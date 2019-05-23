@@ -45,8 +45,34 @@ Scenario: UserA sends friend requests to UserB, UserC, User E
     And I press "Request friendship"
     Then I should see "Sent a friendship request to Dave UserD"
 
-    # UserA sets Friends control so Nobody may add them as a friend
-    Given I select the radio "Nobody may add me as a friend"
+    # sending a friend request from a users profile page
+    When I select "Everyone" from "Filter"
+    And I press "Search"
+    Then I should see "Earl UserE"
+    When I follow "Earl UserE"
+    Then I should see "Earl UserE"
+    And I should see "Member of Institution Two"
+    When I click on "Request friendship"
+    Then I should see "Send Earl UserE a friendship request"
+    When I fill in "Would you like to be my friend Earl?" for "Message"
+    And I press "Request friendship"
+    Then I should see "Sent a friendship request to Earl UserE"
+    And I log out
+
+    # log in as Earl and view pending friend Requests and accept
+    Given I log in as "UserE" with password "Kupuh1pa!"
+    And I follow "pending friend"
+    Then I should see "Angela UserA (UserA)"
+    And I should see the date "today" in the ".pendingfriend" element with the format "l, d F Y"
+    And I should see "Member of Institution One"
+    When I press "Approve"
+    Then I should see "Accepted friend request"
+    And I log out
+
+    # Admin User sets Friends control so Nobody may add them as a friend
+    Given I log in as "admin" with password "Kupuh1pa!"
+    And I choose "People" in "Engage" from main menu
+    And I select the radio "Nobody may add me as a friend"
     And press "Save"
     Then I should see "Updated friends control"
     And I log out
@@ -72,10 +98,10 @@ Scenario: UserA sends friend requests to UserB, UserC, User E
     Then I should see "Rejected friend request"
     Then I log out
 
-# UserC logs in and tries to add UserA who has set their friends control to Nobody may add me as a friend
+    # UserC logs in and tries to add UserA who has set their friends control to Nobody may add me as a friend
     Given I log in as "UserE" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
     When I select "Everyone" from "Filter"
     And I press "Search"
-    Then I should see "This user does not want any new friends." in the "Angela UserA" row
+    Then I should see "This user does not want any new friends." in the "Admin User" row
     And I click on "Send friend request" in "Dave UserD" row
