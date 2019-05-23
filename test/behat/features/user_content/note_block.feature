@@ -19,18 +19,25 @@ Scenario: Adding and deleting a Note block (Bug 1424512)
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     # Configuring the block
-    And I expand "General" node
-    And I follow "Note" in the "blocktype sidebar" property
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Note" in the "Content types" property
     And I set the following fields to these values:
     | Block title | Note block 1 |
     | Block content | This is a test |
-    #Adding an attachment to a note and attaching a file to it.
+    # Adding an attachment to a note and attaching a file to it.
     And I attach the file "Image2.png" to "userfile[]"
     And I press "Save"
-    #Add a second note to the page
-    And I follow "Note" in the "blocktype sidebar" property
+    # Add a second note to the page
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Note" in the "Content types" property
     And I follow "Use content from another note"
     And I select the radio "Note block 1"
     # Set title after selection as selection updates the title with original one

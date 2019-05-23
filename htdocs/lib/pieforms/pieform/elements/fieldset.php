@@ -88,7 +88,12 @@ function pieform_element_fieldset(Pieform $form, $element) {
 
         // Help icon
         if (!empty($element['help'])) {
-            $function = $form->get_property('helpcallback');
+            if (!empty($element['helpcallback'])) {
+                $function = $element['helpcallback'];
+            }
+            else {
+                $function = $form->get_property('helpcallback');
+            }
             if (function_exists($function)) {
                 $fieldset .= $function($form, $element);
             }

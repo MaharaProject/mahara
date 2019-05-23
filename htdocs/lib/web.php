@@ -1425,7 +1425,7 @@ function jsstrings() {
         'views' => array(
             'view' => array(
                 'confirmdeleteblockinstance',
-                'blocksinstructionajaxlive',
+                'blocksinstructionajaxlive1',
             ),
         ),
     );
@@ -2213,6 +2213,14 @@ function pieform_get_help(Pieform $form, $element) {
     $formname = isset($element['helpformname']) ? $element['helpformname'] : $form->get_name();
     return get_help_icon($plugintype, $pluginname, $formname, $element['name'], '', '', (isset($element['title']) ? $element['title'] : null));
 }
+
+function get_block_help(Pieform $form, $element) {
+    $helplink = get_manual_help_link_array(array('blocktype', 'blocks'));
+    $manualhelplink = $helplink['prefix'] . '/' . $helplink['language'] . '/' . $helplink['version'] . '/' .  $helplink['suffix'];
+    $content = get_string('helpfor', 'mahara', $element['legend']);
+    return ' <span class="help"><a href="' . $manualhelplink . '" title="' . get_string('Help') . '" target="_blank"><span class="icon icon-info-circle" role="presentation"></span><span class="sr-only">'. $content . '</span></a></span>';
+}
+
 
 /**
  * Is this a page in the admin area?

@@ -2017,7 +2017,6 @@ class View {
     public function build_blocktype_list($category, $javascript=false) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $blocktypes = PluginBlockType::get_blocktypes_for_category($category, $this);
-
         $smarty = smarty_core();
         $smarty->assign('blocktypes', $blocktypes);
         $smarty->assign('javascript', $javascript);

@@ -1452,7 +1452,7 @@
         /**
          * changes the intructions so they are for ajax
          */
-        $('#blocksinstruction').html(strings['blocksinstructionajaxlive']);
+        $('#blocksinstruction').html(strings['blocksinstructionajaxlive1']);
         $('#viewinstructions-dropdown').on('hide.bs.collapse show.bs.collapse', function(event) {
             var pd = {
                 'viewid': $('#viewid').val(),

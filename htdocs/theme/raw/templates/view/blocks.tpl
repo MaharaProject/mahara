@@ -1,110 +1,92 @@
 {include file="header.tpl"}
 
 {include file="view/editviewtabs.tpl" selected='content' issiteview=$issiteview}
-{if $instructions}
-    <div id="viewinstructions" class="last form-group collapsible-group small-group">
-    <fieldset  class="pieform-fieldset collapsible collapsible-small">
-        <legend>
-            <h4>
-                <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
-                    {str tag='instructions' section='view'}
-                    <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
-                </a>
-            </h4>
-        </legend>
-        <div class="fieldset-body collapse viewinstructions {if !$instructionscollapsed} in {/if}" id="viewinstructions-dropdown">
-            {$instructions|clean_html|safe}
+<div class="view-instructions">
+    <form action="{$formurl}" method="post" class="row">
+        <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
+        <input type="hidden" id="viewid" name="id" value="{$view}">
+        <input type="hidden" name="change" value="1">
+        <input type="hidden" id="category" name="c" value="{$category}">
+        <input type="hidden" name="sesskey" value="{$SESSKEY}">
+
+        <div id="editcontent-sidebar-wrapper">
+            <div id="editcontent-sidebar">
+            {include file="view/contenteditor.tpl" selected='content'}
+            </div>
         </div>
-    </fieldset>
-    </div>
-{else}
-    <div id="blocksinstruction" class="lead view-description">
-        {str tag='blocksintructionnoajax' section='view'}
-    </div>
-{/if}
-
-<div class="view-container" selected='content' data-target="col-collapse">
-
-    {if $columns}
-        <form action="{$formurl}" method="post" class="row">
-            <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
-            <input type="hidden" id="viewid" name="id" value="{$view}">
-            <input type="hidden" name="change" value="1">
-            <input type="hidden" id="category" name="c" value="{$category}">
-            <input type="hidden" name="sesskey" value="{$SESSKEY}">
-
-            <div id="editcontent-sidebar-wrapper" class="col-collapse">
-                <div id="editcontent-sidebar" data-spy="affix" data-offset-top="420" data-offset-top="100" class="toolbar-affix">
-                {include file="view/contenteditor.tpl" selected='content'}
+        <div class="col-with-collapse">
+        {if $instructions}
+            <div id="viewinstructions" class="last form-group collapsible-group small-group">
+            <fieldset  class="pieform-fieldset collapsible collapsible-small">
+                <legend>
+                    <h4>
+                        <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
+                            {str tag='instructions' section='view'}
+                            <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
+                        </a>
+                    </h4>
+                </legend>
+                <div class="fieldset-body collapse viewinstructions {if !$instructionscollapsed} in {/if}" id="viewinstructions-dropdown">
+                    {$instructions|clean_html|safe}
                 </div>
+            </fieldset>
             </div>
-            <div class="col-with-collapse">
-                <div id="bottom-pane" data-role="workspace">
-                    <div id="column-container" class="user-page-content">
-                        {$columns|safe}
-                    </div>
-                </div>
+        {else}
+            <div id="blocksinstruction" class="lead view-description with-addblock">
+                {str tag='blocksintructionnoajax' section='view'}
             </div>
-        </form>
-
-        <div id="view-return-controls" class="col-collapse-offset col-with-collapse">
-            {if !$issitetemplate}
-            <a class="btn btn-secondary" href="{$displaylink}">
-                {str tag=displayview section=view}
-                <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
-            </a>
-            {/if}
-            {if !$groupid && !$institution}
-            <a class="btn btn-secondary" href="{$WWWROOT}view/index.php">
-                {str tag=returntoviews section=view}
-                <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
-            </a>
-            {/if}
-            {if $groupid}
-            <a class="btn btn-secondary" href="{$WWWROOT}view/groupviews.php?group={$groupid}">
-                {str tag=returntogroupportfolios section=group}
-                <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
-            </a>
-            {/if}
-            {if $institution}
-                {if $institution == 'mahara'}
-                    <a class="btn btn-secondary" href="{$WWWROOT}admin/site/views.php">
-                    {str tag=returntositeportfolios section=view}
-                {else}
-                    <a class="btn btn-secondary" href="{$WWWROOT}view/institutionviews.php?institution={$institution}">
-                    {str tag=returntoinstitutionportfolios section=view}
-                {/if}
-                <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
-            </a>
-            {/if}
+        {/if}
         </div>
+    </form>
+</div>
+<div class="view-container" selected='content'>
+    <form action="{$formurl}" method="post" class="row">
+        <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
+        <input type="hidden" id="viewid" name="id" value="{$view}">
+        <input type="hidden" name="change" value="1">
+        <input type="hidden" id="category" name="c" value="{$category}">
+        <input type="hidden" name="sesskey" value="{$SESSKEY}">
 
-    {elseif $block}
-        <form action="{$formurl}" method="post">
-            <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
-            <input type="hidden" id="viewid" name="id" value="{$view}">
-            <input type="hidden" name="change" value="1">
-            <input type="hidden" id="category" name="c" value="{$category}">
-            <input type="hidden" name="sesskey" value="{$SESSKEY}">
-
-            <div id="editcontent-sidebar-wrapper" class="col-collapse">
-                <div id="editcontent-sidebar">
-                    {include file="view/contenteditor.tpl" selected='content'}
+        <div class="fullwidth">
+            <div id="bottom-pane" data-role="workspace">
+                <div id="column-container" class="user-page-content">
+                    {$columns|safe}
                 </div>
             </div>
-            <div class="blockconfig-background">
-                <div class="blockconfig-container">
-                        {$block.html|safe}
-                </div>
-            </div>
-            {if $block.javascript}
-            <script>
-                    {$block.javascript|safe}
-            </script>
+        </div>
+    </form>
+
+    <div id="view-return-controls" class="col-collapse-offset col-with-collapse">
+        {if !$issitetemplate}
+        <a class="btn btn-secondary" href="{$displaylink}">
+            {str tag=displayview section=view}
+            <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
+        </a>
+        {/if}
+        {if !$groupid && !$institution}
+        <a class="btn btn-secondary" href="{$WWWROOT}view/index.php">
+            {str tag=returntoviews section=view}
+            <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
+        </a>
+        {/if}
+        {if $groupid}
+        <a class="btn btn-secondary" href="{$WWWROOT}view/groupviews.php?group={$groupid}">
+            {str tag=returntogroupportfolios section=group}
+            <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
+        </a>
+        {/if}
+        {if $institution}
+            {if $institution == 'mahara'}
+                <a class="btn btn-secondary" href="{$WWWROOT}admin/site/views.php">
+                {str tag=returntositeportfolios section=view}
+            {else}
+                <a class="btn btn-secondary" href="{$WWWROOT}view/institutionviews.php?institution={$institution}">
+                {str tag=returntoinstitutionportfolios section=view}
             {/if}
-        </form>
-    {/if}
-
+            <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
+        </a>
+        {/if}
+    </div>
 </div>
 
 <div class="modal" id="addblock" role="dialog">

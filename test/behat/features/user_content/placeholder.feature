@@ -19,7 +19,7 @@ Scenario:
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     # Add a placeholder block
-    And I follow "Placeholder" in the "blocktype sidebar" property
+    And I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I fill in the following:
     | Block title | Mahara placeholder block |

@@ -18,27 +18,25 @@ Scenario: Clicking ID's (Bug 1428456)
  And I follow "Edit"
 
  # Checking if we can add a block
- And I follow "Text"
+ When I follow "Add a new block" in the "blocktype sidebar" property
  And I press "Add"
+ And I click on "Text" in the "Content types" property
  And I set the following fields to these values:
  | Block title | Ulysses |
  | Block content | <p>Stately, plump Buck Mulligan came from the stairhead, bearing a bowl of lather on which a mirror and a razor lay crossed ...</p> |
  And I press "Save"
  Then I should see "Buck Mulligan"
- And I reload the page
- And I wait "1" seconds
- And I scroll to the top
- And I follow "Text"
+ When I follow "Add a new block" in the "blocktype sidebar" property
  And I press "Add"
+ And I click on "Text" in the "Content types" property
  And I set the following fields to these values:
  | Block title | The Sun Also Rises |
  | Block content | <p>Robert Cohn was once middleweight boxing champion of Princeton. Do not think that I am very much impressed by that as a boxing title, but it meant a lot to Cohn...</p> |
  And I press "Save"
  Then I should see "Robert Cohn"
-
- And I scroll to the base of id "content-editor-foldable"
- And I follow "Text"
+ When I follow "Add a new block" in the "blocktype sidebar" property
  And I press "Add"
+ And I click on "Text" in the "Content types" property
  And I set the following fields to these values:
  | Block title | 1984 |
  | Block content | <p>It was a bright cold day in April, and the clocks were striking thirteen. Winston Smith, his chin nuzzled into his breast in an effort to escape the vile wind...</p> |
@@ -65,8 +63,9 @@ Scenario: Clicking ID's (Bug 1428456)
 
  # Checking we can add a block, make config changes, then delete the block
  # without it causing 'unsaved changes' popup when navigating away
- And I follow "Text"
+ When I follow "Add a new block" in the "blocktype sidebar" property
  And I press "Add"
+ And I click on "Text" in the "Content types" property
  And I set the following fields to these values:
  | Block title | Crime and punishment |
  | Block content | <p>On an exceptionally hot evening early in July a young man came out of the garret in which he lodged in S. Place and walked slowly, as though in hesitation, towards K. bridge...</p> |

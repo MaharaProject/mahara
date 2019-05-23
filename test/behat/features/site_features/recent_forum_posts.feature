@@ -63,9 +63,11 @@ Scenario: Create forum and add block to group page
     And I log in as "UserC" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserC_01" card menu
-    And I expand "General" node
-    And I follow "Recent forum posts"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Recent forum posts" in the "Content types" property
     # TODO could test other options
     And I press "Save"
     And I display the page

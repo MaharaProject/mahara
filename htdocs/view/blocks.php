@@ -195,6 +195,19 @@ $addform = pieform(array(
 // Build content before initialising smarty in case pieform elements define headers.
 $viewcontent = $view->build_rows(true);
 
+// Get the placeholder block info
+$placeholderblock = PluginBlockType::get_blocktypes_for_category('shortcut', $view, 'placeholder');
+$placeholderbutton = '';
+if ($placeholderblock) {
+    // it's active so make the button with different display title
+    $placeholderblock[0]['title'] = get_string('addnewblock', 'view');
+    $placeholderblock[0]['cssicon'] = '_';
+    $smarty = smarty_core();
+    $smarty->assign('blocktypes', $placeholderblock);
+    $smarty->assign('javascript', false);
+    $placeholderbutton = $smarty->fetch('view/blocktypelist.tpl');
+}
+
 $smarty = smarty($javascript, $stylesheets, array(
     'view' => array(
         'addblock',
@@ -207,17 +220,10 @@ $smarty = smarty($javascript, $stylesheets, array(
 
 $smarty->assign('addform', $addform);
 
-// The list of categories for the tabbed interface
-$smarty->assign('category_list', $view->build_category_list($category, false));
-
-// The list of shortcut blocks
-$smarty->assign('shortcut_list', $view->build_blocktype_list('shortcut'));
-
-// The list of blocktypes for the default category
-$smarty->assign('blocktype_list', $view->build_blocktype_list($category));
-
 // Tell smarty we're editing rather than just rendering
 $smarty->assign('editing', true);
+
+$smarty->assign('placeholder_button', $placeholderbutton);
 
 // Work out what action is being performed. This is used to put a hidden submit
 // button right at the very start of the form, so that hitting enter in any
@@ -272,16 +278,10 @@ if ($collection = $view->get('collection')) {
 }
 $smarty->assign('collectionid', $collectionid);
 
-if ($blockid) {
-    // Configuring a single block
-    $bi = new BlockInstance($blockid);
-    $smarty->assign('block', $bi->render_editing(true));
-}
-else {
-    // The HTML for the columns in the view
-    $columns = $viewcontent;
-    $smarty->assign('columns', $columns);
-}
+// The HTML for the columns in the view
+$columns = $viewcontent;
+$smarty->assign('columns', $columns);
+
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
 
 $smarty->assign('issitetemplate', $view->is_site_template());

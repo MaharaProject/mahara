@@ -337,14 +337,19 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         return $description;
     }
 
-    public static function get_blocktypes_for_category($category, View $view) {
+    public static function get_blocktypes_for_category($category, View $view, $blocktype = null) {
         $sql = 'SELECT bti.name, bti.artefactplugin
             FROM {blocktype_installed} bti
             JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
             JOIN {blocktype_installed_viewtype} btiv ON btiv.blocktype = bti.name
-            WHERE btic.category = ? AND bti.active = 1 AND btiv.viewtype = ?
-            ORDER BY btic.sortorder, bti.name';
-        if (!$bts = get_records_sql_array($sql, array($category, $view->get('type')))) {
+            WHERE btic.category = ? AND bti.active = 1 AND btiv.viewtype = ?';
+        $where = array($category, $view->get('type'));
+        if ($blocktype) {
+            $sql .= ' AND bti.name = ?';
+            $where[] = $blocktype;
+        }
+        $sql .= ' ORDER BY btic.sortorder, bti.name';
+        if (!$bts = get_records_sql_array($sql, $where)) {
             return false;
         }
 

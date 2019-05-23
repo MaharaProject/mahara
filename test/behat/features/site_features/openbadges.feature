@@ -19,10 +19,13 @@ Scenario: Open badges block
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    And I expand "External" node
-    And I scroll to the base of id "content-editor-foldable"
-    And I follow "Open Badges"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Open Badges" in the "Content types" property
+    And I press "Save"
 
     # Need to add delays as Mahara needs to talk to external site.
     # unreliable connection to server produces errors

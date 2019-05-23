@@ -26,9 +26,11 @@ Scenario:
   And I choose "Pages and collections" in "Create" from main menu
   And I follow "Collection UserA_01"
   And I follow "Edit"
-  And I expand "General" node
-  And I follow "Navigation"
+  When I follow "Add a new block" in the "blocktype sidebar" property
   And I press "Add"
+  And I click on "Show more"
+  And I click on "Show more"
+  And I click on "Navigation" in the "Content types" property
   And I select "Collection UserA_02" from "Collection"
   And I click on "Set a block title"
   And I set the field "Block title" to "Nav for collection B"

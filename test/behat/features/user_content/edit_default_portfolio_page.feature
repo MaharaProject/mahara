@@ -16,10 +16,11 @@ I can create a new page from the site default portfolio page
     And I choose "Pages and collections" in "Configure site" from administration menu
     And I should see "Page template"
     And I click on "Edit" in "Page template" card menu
-    And I should see "Drag blocks onto the page to add them. You can then also drag them around the page to change their position."
+    And I should see "Drag 'Add a new block' onto the page to add one."
     # Add a text block
-    And I follow "Text"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Text" in the "Content types" property
     And I set the following fields to these values:
      | Block title | Sample text block |
      | Block content | <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p> |

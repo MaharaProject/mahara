@@ -83,9 +83,11 @@ Scenario: Creating a Journal entry
  And I choose "Pages and collections" in "Create" from main menu
  And I follow "Page admin_01"
  And I follow "Edit"
- And I expand "Journals" node in the "blocktype sidebar" property
- And I follow "Tagged journal entries" in the "blocktype sidebar" property
+ When I follow "Add a new block" in the "blocktype sidebar" property
  And I press "Add"
+ And I click on "Show more"
+ And I click on "Tagged journal entries" in the "Content types" property
+ And I set the field "Block title" to "Tagged journal entries"
  And I scroll to the base of id "instconf_tagselect_container"
  And I fill in select2 input "instconf_tagselect" with "one" and select "one"
  And I scroll to the base of id "instconf_tagselect_container"
@@ -96,8 +98,9 @@ Scenario: Creating a Journal entry
  And I wait "1" seconds
  And I clear value "one" from select2 field "instconf_tagselect"
  And I press "Save"
-
- And I follow "Recent journal entries" in the "blocktype sidebar" property
+ When I follow "Add a new block" in the "blocktype sidebar" property
  And I press "Add"
+ And I click on "Show more"
+ And I click on "Recent journal entries" in the "Content types" property
  And I check "Admin User's Journal"
  And I press "Save"

@@ -19,10 +19,13 @@ Scenario:
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     # Configuring the block
-    And I expand "Media" node
-    And I wait "1" seconds
-    And I follow "Some HTML" in the "blocktype sidebar" property
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Some HTML" in the "Content types" property
+    And I set the field "Block title" to "Some HTML"
     And I follow "File"
     And I attach the file "test_html.html" to "File"
     And I press "Save"

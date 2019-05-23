@@ -47,6 +47,8 @@ class PluginBlocktypePlaceholder extends MaharaCoreBlocktype {
         $elements['types'] = array(
             'type' => 'fieldset',
             'legend' => get_string('contenttypes', 'blocktype.placeholder'),
+            'help' => true,
+            'helpcallback' => 'get_block_help',
             'elements' => array(
                 'contenttypes' => array(
                     'type' => 'html',

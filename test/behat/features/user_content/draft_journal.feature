@@ -56,9 +56,10 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  # Display tagged journals in block
  And I choose "Pages and collections" in "Create" from main menu
  And I click on "Edit" in "Page UserA_01" card menu
- And I expand "Journals" node in the "blocktype sidebar" property
- And I follow "Tagged journal entries" in the "blocktype sidebar" property
+ When I follow "Add a new block" in the "blocktype sidebar" property
  And I press "Add"
+ And I click on "Show more"
+ And I click on "Tagged journal entries" in the "Content types" property
  And I fill in select2 input "instconf_tagselect" with "george" and select "george"
  And I press "Save"
  Then I should see "My diary entry two"
