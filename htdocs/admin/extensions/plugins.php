@@ -197,7 +197,7 @@ var installplugin = (function($) {
 }(jQuery));
 JAVASCRIPT;
 
-
+$plugins['blocktype']['configure'] = true;
 $smarty = smarty();
 setpageicon($smarty, 'icon-plug');
 

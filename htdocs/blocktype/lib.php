@@ -86,6 +86,127 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         return false;
     }
 
+    /**
+     * To define a pluginwide configuration
+     */
+    public static function has_base_config() {
+        return true;
+    }
+
+    /**
+     * To define a pluginwide configuration
+     */
+    public static function get_base_config_options() {
+        $type = array();
+        $blocks = get_records_sql_array("SELECT b.name, b.artefactplugin, bc.sortorder,
+                                   (SELECT COUNT(bi.*) FROM {block_instance} bi WHERE bi.blocktype = b.name) AS blockcount
+                                  FROM {blocktype_installed} b
+                                  JOIN {blocktype_installed_category} bc ON bc.blocktype = b.name
+                                  WHERE b.active = 1
+                                  AND b.name != ?
+                                  ORDER BY bc.sortorder", array('placeholder'));
+        foreach ($blocks as $block) {
+            $namespaced = blocktype_single_to_namespaced($block->name, $block->artefactplugin);
+            safe_require('blocktype', $namespaced);
+            $classname = generate_class_name('blocktype', $namespaced);
+            $types[] = array('name' => $block->name,
+                             'title' => call_static_method($classname, 'get_title'),
+                             'cssicon' => call_static_method($classname, 'get_css_icon', $block->name),
+                             'cssicontype' => call_static_method($classname, 'get_css_icon_type', $block->name),
+                             'count' => $block->blockcount,
+                             );
+        }
+        $form = array(
+            'elements' => array(
+                'types' => array(
+                    'type' => 'fieldset',
+                    'legend' => get_string('contenttypes', 'blocktype.placeholder'),
+                    'elements' => array(
+                        'contenttypes' => array(
+                            'type' => 'html',
+                            'value' => '',
+                        ),
+                    ),
+                ),
+            )
+        );
+        $smarty = smarty_core();
+        $smarty->assign('types', $types);
+        $typeslist = $smarty->fetch('blocktype:placeholder:contenttypeslist.tpl');
+        $smarty->assign('typeslist', $typeslist);
+        $typeshtml = $smarty->fetch('blocktype:placeholder:contenttypes.tpl');
+        $form['elements']['types']['elements']['contenttypes']['value'] = $typeshtml;
+        return $form;
+    }
+
+    /**
+     * To define a pluginwide configuration
+     */
+    public static function get_base_config_options_js() {
+        global $USER;
+
+        $sesskey = $USER->get('sesskey');
+        $js = <<<EOF
+$(function() {
+    $('#placeholderlist button').each(function() {
+        $(this).off('click');
+        $(this).on('click', function(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+        });
+    });
+
+    var updaterows = function(option) {
+        var sortorder = $('#placeholderlist').sortable('serialize');
+        $.post(config['wwwroot'] + "blocktype/config.json.php", { sesskey: '$sesskey', id: option, direction: sortorder })
+        .done(function(data) {
+            // update the page with the new list
+            if (data.returnCode == '0') {
+                $('#placeholderlist').replaceWith(data.message.html);
+                if (data.message.message) {
+                    var okmessage = $('<div id="changestatusline" class="alert alert-dismissible alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="' + get_string('Close') + '"><span aria-hidden="true">&times;</span></button><p>' + data.message.message + '</p></div>');
+                    $('#messages').empty().append(okmessage);
+                }
+                wiresortables();
+            }
+        });
+    };
+
+    var wiresortables = function() {
+        $('#placeholderlist > div').each(function() {
+            $(this).prepend('<div class="handle">&nbsp;</div>');
+            $('.handle').css('position', 'absolute');
+            $('.handle').css('z-index', '3');
+            $('.handle').css('width', $(this).find('button').css('width'));
+            $('.handle').css('height', $(this).find('button').css('height'));
+        });
+        $('#placeholderlist').sortable({
+            items: '> div',
+            appendTo: '#placeholderlist',
+            cursor: 'move',
+            opacity: 0.8,
+            helper: 'clone',
+            handle: '.handle',
+            stop: function(e, ui) {
+                var id = $(ui.item).find('button').data('option');
+                updaterows(id);
+            },
+        })
+        .disableSelection()
+        .on("mouseenter mouseleave", function() {
+            $(this).css('cursor', 'move');
+        });
+        // hide the 'save' button as this form works with drag / drop saving
+        $('#pluginconfig_save_container').hide();
+    };
+
+    // init
+    wiresortables();
+});
+EOF;
+        return $js;
+    }
+
     public static function get_theme_path($pluginname) {
         if (($artefactname = blocktype_artefactplugin($pluginname))) {
             // Path for block plugins that sit under an artefact
@@ -338,7 +459,7 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
     }
 
     public static function get_blocktypes_for_category($category, View $view, $blocktype = null) {
-        $sql = 'SELECT bti.name, bti.artefactplugin
+        $sql = 'SELECT bti.name, bti.artefactplugin, btic.sortorder
             FROM {blocktype_installed} bti
             JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
             JOIN {blocktype_installed_viewtype} btiv ON btiv.blocktype = bti.name
@@ -389,6 +510,7 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
                     'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name . ((!empty($bt->artefactplugin)) ? '&ap=' . $bt->artefactplugin : ''),
                     'cssicon'        => call_static_method($classname, 'get_css_icon', $bt->name),
                     'cssicontype'    => call_static_method($classname, 'get_css_icon_type', $bt->name),
+                    'sortorder'      => $bt->sortorder,
                 );
             }
         }

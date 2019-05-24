@@ -1,10 +1,19 @@
 {include file='header.tpl'}
 <p class="lead">{str tag='pluginexplainaddremove'} {str tag='pluginexplainartefactblocktypes'}</p>
 
-<div class="card-items js-masonry" data-masonry-options='{ "itemSelector": ".card" }'>
+<div class="card-items js-masonry extensions" data-masonry-options='{ "itemSelector": ".card" }'>
 {foreach from=$plugins key='plugintype' item='plugins'}
     <div class="card">
-        <h2 class="card-header">{str tag='plugintype'}: {$plugintype}</h2>
+        <h2 class="card-header">{str tag='plugintype'}: {$plugintype}
+        {if $plugins.configure}
+            <div class="btn-group btn-group-top">
+                <a class="btn btn-secondary float-left btn-group-item" title="{str tag='configfor'} {$plugintype}" href="plugintypeconfig.php?plugintype={$plugintype}">
+                    <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
+                    <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype}</span>
+                </a>
+            </div>
+        {/if}
+        </h2>
         {assign var="installed" value=$plugins.installed}
         {assign var="notinstalled" value=$plugins.notinstalled}
 

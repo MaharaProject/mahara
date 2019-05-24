@@ -110,6 +110,10 @@ class PluginBlocktypePlaceholder extends MaharaCoreBlocktype {
             $blocks = array_merge($blocks, $blocktypes);
         }
         $count = count($blocks);
+        // sort and return limit
+        usort($blocks, function ($a, $b) {
+            return $a['sortorder'] < $b['sortorder'] ? -1 : 1;
+        });
         $blocks = array_slice($blocks, $offset, $limit);
         return array($count, $blocks);
     }
