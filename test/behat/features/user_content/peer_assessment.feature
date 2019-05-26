@@ -21,126 +21,95 @@ Background:
     | Page UserA_00 | Page 01 | user | UserA |
     | Page UserA_01 | Page 01 | user | UserA |
     | Page UserA_02 | Page 02 | user | UserA |
+    | Page UserA_03 | Page 03 | user | UserA |
 
     And the following "permissions" exist:
-    | title | accesstype | accessname | role | multiplepermissions |
-    | Page UserA_00 | user | userB | peer | 0 |
-    | Page UserA_00 | user | userC | manager | 1 |
-    | Page UserA_00 | user | userD | | 1 |
-    | Page UserA_01 | user | userB | peer | 0 |
-    | Page UserA_01 | user | userC | manager | 1 |
-    | Page UserA_01 | user | userD | | 1 |
-    | Page UserA_02 | user | userB | peer | 0 |
-    | Page UserA_02 | user | userC | manager | 1 |
-    | Page UserA_02 | user | userD | | 1 |
+    | title         | accesstype | accessname | role    | multiplepermissions |
+    | Page UserA_00 | user       | userB      | peer    | 0                   |
+    | Page UserA_00 | user       | userC      | manager | 1                   |
+    | Page UserA_01 | user       | userB      | peer    | 0                   |
+    | Page UserA_01 | user       | userC      | manager | 1                   |
+    | Page UserA_02 | user       | userB      | peer    | 0                   |
+    | Page UserA_02 | user       | userC      | manager | 1                   |
 
-# Create Page UserA_00 with Image, text, peer assessment and signoff blocks
-    Given I log in as "UserA" with password "Kupuh1pa!"
-    And I go to portfolio page "Page UserA_00"
-    And I click on "Edit"
 
-    # User adds image block to page
-   And I follow "Image"
-   And I press "Add"
-   Then I should see "Image: Configure"
-   And I set the field "Block title" to "Image Block 1"
-   And I follow "Image"
-   And I attach the file "Image1.jpg" to "File"
-   Then I should see "Image - Image1.jpg"
-   And I enable the switch "Show description"
-   And I press "Save"
-   And I scroll to the top
-
-   # User adds a text block to page
-   And I follow "Text"
-   And I press "Add"
-   And I set the field "Block title" to "Text Block 1"
-   And I set the field "Block content" to "Here is a new block."
-   And I press "Save"
-
-   # user adds peer assessment block
-   And I expand "General" node in the "blocktype sidebar" property
-    And I follow "Peer assessment"
-    And I press "Add"
-    And I set the field "Instructions" to "This is the custom peer assessment instructions"
-    And I press "Save"
-
-    # user adds sign off block
-    And I follow "Sign-off"
-    And I press "Add"
-    And I enable the switch "Verify"
-    And I press "Save"
-    Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
-   And I follow "Return to pages and collections"
-
-# Create Page UserA_01 with Image, text, peer assessment and signoff blocks
-    And I go to portfolio page "Page UserA_01"
-    And I click on "Edit"
-
-    # User adds image block to page
-   And I follow "Image"
-   And I press "Add"
-   Then I should see "Image: Configure"
-   And I set the field "Block title" to "Image Block 1"
-   And I follow "Image"
-   And I attach the file "Image1.jpg" to "File"
-   Then I should see "Image - Image1.jpg"
-   And I enable the switch "Show description"
-   And I press "Save"
-   And I scroll to the top
-
-   # User adds a text block to page
-   And I follow "Text"
-   And I press "Add"
-   And I set the field "Block title" to "Text Block 1"
-   And I set the field "Block content" to "Here is a new block."
-   And I press "Save"
-
-   # user adds peer assessment block
-   And I expand "General" node in the "blocktype sidebar" property
-    And I follow "Peer assessment"
-    And I press "Add"
-    And I set the field "Instructions" to "This is the custom peer assessment instructions"
-    And I press "Save"
-
-    # user adds sign off block
-    And I follow "Sign-off"
-    And I press "Add"
-    And I enable the switch "Verify"
-    And I press "Save"
-    Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
-   And I follow "Return to pages and collections"
-
-    # Create Page UserA_02 with Image and text, blocks
-    And I go to portfolio page "Page UserA_02"
-    And I click on "Edit"
-
-    # User adds image block to page
-    And I follow "Image"
-    And I press "Add"
-    Then I should see "Image: Configure"
-    And I set the field "Block title" to "Image Block 1"
-    And I follow "Image"
-    And I attach the file "Image1.jpg" to "File"
-    Then I should see "Image - Image1.jpg"
-    And I enable the switch "Show description"
-    And I press "Save"
-    And I scroll to the top
-
-    # User adds a text block to page
-    And I follow "Text"
-    And I press "Add"
-    And I set the field "Block title" to "Text Block 1"
-    And I set the field "Block content" to "Here is a new block."
-    And I press "Save"
-    And I log out
+    And the following "blocks" exist:
+    | title        | type  | page          |retractable | data                             |
+    | My text A_00 | text  | Page UserA_00 | no         | textinput=This is some text      |
+    | image A_00   | image | Page UserA_00 | no         | attachment=Image1.jpg; width=100 |
+    | My text A_01 | text  | Page UserA_01 | no         | textinput=This is some text      |
+    | image A_01   | image | Page UserA_01 | no         | attachment=Image1.jpg; width=100 |
+    | My text A_02 | text  | Page UserA_02 | no         | textinput=This is some text      |
+    | image A_02   | image | Page UserA_02 | no         | attachment=Image1.jpg; width=100 |
+    | My text A_03 | text  | Page UserA_03 | no         | textinput=This is some text      |
+    | image A_03   | image | Page UserA_03 | no         | attachment=Image1.jpg; width=100 |
 
     Given the following "collections" exist:
     | title | description| ownertype | ownername | pages |
     | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_01, Page UserA_02 |
 
-Scenario: Interact with a peer assessment / signoff combo for a single page
-    # Add peer assessment
+# Add peer assessment and signoff blocks to Page Page UserA_00 and Page UserA_00
+    Given I log in as "UserA" with password "Kupuh1pa!"
+    And I go to portfolio page "Page UserA_00"
+    And I click on "Edit"
+    # user adds peer assessment block
+    And I expand "General" node in the "blocktype sidebar" property
+    And I follow "Peer assessment"
+    And I press "Add"
+    And I set the field "Instructions" to "This is the custom peer assessment instructions"
+    And I press "Save"
+    # user adds sign off block
+    And I follow "Sign-off"
+    And I press "Add"
+    And I enable the switch "Verify"
+    And I press "Save"
+    Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
+    And I follow "Return to pages and collections"
+    # Add peer assessment and signoff blocks to Page Page UserA_01
+    Given I go to portfolio page "Page UserA_01"
+    And I click on "Edit"
+    # user adds peer assessment block
+    And I expand "General" node in the "blocktype sidebar" property
+    And I follow "Peer assessment"
+    And I press "Add"
+    And I set the field "Instructions" to "This is the custom peer assessment instructions"
+    And I press "Save"
+    # user adds sign off block
+    And I follow "Sign-off"
+    And I press "Add"
+    And I enable the switch "Verify"
+    And I press "Save"
+    Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
+    And I follow "Return to pages and collections"
+
+    # Add peer assessment and signoff blocks to Page Page UserA_01
+    Given I go to portfolio page "Page UserA_03"
+    And I click on "Edit"
+    # user adds peer assessment block
+    And I expand "General" node in the "blocktype sidebar" property
+    And I follow "Peer assessment"
+    And I press "Add"
+    And I set the field "Instructions" to "This is the custom peer assessment instructions for Page UserA_03"
+    And I press "Save"
+    # user adds sign off block
+    And I follow "Sign-off"
+    And I press "Add"
+    And I enable the switch "Verify"
+    And I press "Save"
+    Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
+    And I follow "Return to pages and collections"
+    # share the page with Users and give a role
+    When I choose "Shared by me" in "Share" from main menu
+    And I follow "Pages"
+    And I click on "Edit access" in "Page UserA_03" row
+    And I select "User" from "accesslist[0][searchtype]"
+    And I select "UserD" from select2 search box in row number "1"
+    And I select "Peer and manager" from "accesslist[0][role]"
+    And I press "Save"
+    And I log out
+
+Scenario: Log in as UserB with role od Peer and Interact with a peer assessment / signoff combo for a single page
+    # Add peer assessmentimage jpg
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
     And I follow "Add peer assessment"
@@ -190,7 +159,22 @@ Scenario: Interact with a peer assessment / signoff combo for a single page
     Then I should see "Verification status updated"
     And I log out
 
-Scenario: Interact with a peer assessment / signoff combo on a collection
+# Log in as UserD with role of Peer and Manager verify user can see published content and make an assessment
+    Given I log in as "UserD" with password "Kupuh1pa!"
+    And I go to portfolio page "Page UserA_03"
+    And I should see "This is some text"
+    And I should see images within the block "image A_03"
+    And I follow "Add peer assessment"
+    And I expand "Instructions" node
+    Then I should see "This is the custom peer assessment instructions"
+    And I set the field "Assessment" to "UserB first assessment - draft"
+    And I press "Save draft"
+    And I follow "Add peer assessment"
+    And I set the field "Assessment" to "UserD second assessment - published"
+    And I press "Publish"
+    And I log out
+
+Scenario: Log in as UserB with the role of Peer and Interact with a peer assessment / signoff combo on a collection page that has no peer assessment block
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I wait "1" seconds
     And I follow "Collection UserA_01"
