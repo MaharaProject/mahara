@@ -1835,12 +1835,14 @@ function can_send_message($from, $to) {
         $cansend = true;
     }
     // Can send message if the 'isolatedinstitutions' is set and both users are from the same institution
-    try {
-        isolatedinstitution_access($to, $from->id);
-        $cansend = true;
-    }
-    catch (AccessDeniedException $e) {
-        $cansend = false;
+    if (is_isolated()) {
+        try {
+            isolatedinstitution_access($to, $from->id);
+            $cansend = true;
+        }
+        catch (AccessDeniedException $e) {
+            $cansend = false;
+        }
     }
 
     return $cansend;
