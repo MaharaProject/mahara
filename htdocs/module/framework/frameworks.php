@@ -137,6 +137,8 @@ else if ($upload) {
         'parentelementdesc' => 'module.framework',
         'standardelementsdescription' => 'module.framework',
         'all' => 'module.framework',
+        'copyexistingframework' => 'module.framework',
+        'editsavedframework' => 'module.framework'
     );
 
     //set up variables for correct selection of framework from dropdowns
