@@ -17,6 +17,11 @@
         @include media-breakpoint-up(sm) {
             float: left;
         }
+        .activity-buttons {
+            .btn {
+                text-align: left;
+            }
+        }
     }
     .form-select-filter {
         margin-top: 10px;
