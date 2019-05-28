@@ -1,21 +1,29 @@
 @javascript @core @core_artefact @core_portfolio
-Feature: Button to reliably copy secret URLs
-    In order to copy a secret URLs
-    As an admin I need to create page
-    So I can press secret URLs button and copy it
+Feature: Check Secret URL functionality
+    1) Log in and create seceret URL
+    2) Verify copy icon button is displayed
+    3) Verify that Secret URL was created
 
 Background:
     Given the following "pages" exist:
     | title | description| ownertype | ownername |
-    | Page admin_01 | Page | admin | admin |
+    | Page admin A | Page | admin | admin |
 
 Scenario: Create a page and secret URLs to copy (Bug 1426983)
-    # Log in as an Admin user
     Given I log in as "admin" with password "Kupuh1pa!"
-    # Navigating to shared by be to click button
     And I choose "Shared by me" in "Share" from main menu
-    And I click on "Edit secret URL access" in "Page admin_01" row
+    And I click on "Edit secret URL access" in "Page admin A" row
     And I press "New secret URL"
-    # Verifying Secret URLs was created
+    And I should see "Copy secret URL to the clipboard"
     And I choose "Shared by me" in "Share" from main menu
-    Then I should see "1" in the "Secret urls - table row 1" property
+    Then I should see "1" in the "Page admin A" row
+
+ """
+ ToDo
+ This script still needs the following steps:
+ 1) user to click the "Copy secret URL to the clipboard" icon button
+ 2) paste the copied URL into an address bar
+ 3) verify the page title is "Page admin_01"
+
+ NOTE - To write a function for the above will take a great deal of effort and is not feasible at this time
+ """
