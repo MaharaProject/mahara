@@ -23,7 +23,7 @@
             </button>
 
             <div class="activity-buttons dropdown-menu" role="menu">
-                <button class="dropdown-item btn btn-link btn-link-danger" data-action="deleteselected">
+                <button class="btn btn-link btn-link-danger" data-action="deleteselected">
                     {str tag='delete'}
                 </button>
 
