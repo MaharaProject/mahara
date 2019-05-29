@@ -361,7 +361,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                     $link = $src . '&maxwidth=' . get_config_plugin('blocktype', 'gallery', 'previewwidth');
                 }
                 else {
-                    $link = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $artefactid . '&view=' . $instance->get('view');
+                    $link = get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') . '&modal=1&block=' . $instance->get('id') .' &artefact=' . $artefactid;
                 }
 
                 // If the Thumbnails are Square or not...

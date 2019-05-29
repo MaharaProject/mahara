@@ -53,7 +53,6 @@ class PluginBlocktypeTextbox extends MaharaCoreBlocktype {
                     $f = artefact_instance_from_id($attachment->id);
                     $attachment->size = $f->describe_size();
                     $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
-                    $attachment->viewpath = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($viewid) ? $viewid : 0);
                     $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                     if (isset($viewid)) {
                         $attachment->downloadpath .= '&view=' . $viewid;

@@ -143,3 +143,7 @@ $pre-bg:                                    #f5f5f5 !default;
 // Header inbox message count background color
 $navbar-messages-count-color:               #000 !default;
 $navbar-messages-count-bg:                  #fc9f1a !default;
+
+// Block headers for comments and details links
+$theme-block-header-bg-color:               $black;
+$theme-block-header-color:                  $white;

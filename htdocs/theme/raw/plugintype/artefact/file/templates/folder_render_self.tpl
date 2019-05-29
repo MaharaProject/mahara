@@ -36,7 +36,7 @@
                     <span class="icon icon-{$child->artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
                 {/if}
                 <h4 class="title list-group-item-heading text-inline">
-                    <a class="inner-link" href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">
+                    <a class="modal_link inner-link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
                         {$child->title}
                     </a>
                     {if !$simpledisplay}

@@ -24,6 +24,7 @@ require_once('institution.php');
 require_once('group.php');
 safe_require('artefact', 'comment');
 safe_require('artefact', 'file');
+require_once(get_config('docroot') . 'blocktype/lib.php');
 
 // Used by the Mahara assignment submission plugin for Moodle, to indicate that a user
 // coming over from mnet should be able to view a certain page (i.e. a teacher viewing
@@ -115,7 +116,7 @@ if (param_exists('make_public_submit')) {
     pieform(ArtefactTypeComment::make_public_form(param_integer('comment')));
 }
 else if (param_exists('delete_comment_submit')) {
-    pieform(ArtefactTypeComment::delete_comment_form(param_integer('comment')));
+    pieform(ArtefactTypeComment::delete_comment_form(param_integer('comment'), param_integer('blockid', null), param_integer('artefactid', null), param_integer('threaded', null)));
 }
 
 $owner    = $view->get('owner');
@@ -123,6 +124,17 @@ $viewtype = $view->get('type');
 
 if ($viewtype == 'profile' || $viewtype == 'dashboard' || $viewtype == 'grouphomepage') {
     redirect($view->get_url());
+}
+
+//pass down the artefact id of the artefact that was just commented on via the modal pieform
+$commented_on_artefactid = param_integer('commented_on_artefactid', null);
+if ($commented_on_artefactid) {
+    $artefact = artefact_instance_from_id($commented_on_artefactid);
+}
+//pass down the blockid of the artefact that was just commented on via the modal pieform
+$commented_on_blockid = param_integer('commented_on_blockid', null);
+if ($commented_on_blockid) {
+    $block = new BlockInstance($commented_on_blockid);
 }
 
 define('TITLE', $view->get('title'));
@@ -250,7 +262,7 @@ function releaseview_submit() {
     redirect($view->get_url());
 }
 
-$javascript = array('paginator', 'viewmenu', 'js/collection-navigation.js', 'js/jquery/jquery-mobile/jquery.mobile.custom.min.js');
+$javascript = array('paginator', 'viewmenu', 'js/collection-navigation.js', 'js/jquery/jquery-mobile/jquery.mobile.custom.min.js', 'js/jquery/jquery-ui/js/jquery-ui.min.js');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 if (is_plugin_active('externalvideo', 'blocktype')) {
@@ -354,11 +366,61 @@ $smarty = smarty(
 $javascript = <<<EOF
 var viewid = {$viewid};
 var showmore = {$showmore};
+
 jQuery(function () {
     paginator = {$feedback->pagination_js}
 });
 
 jQuery(function($) {
+
+    var deletebutton = $('#configureblock').find('.deletebutton');
+    deletebutton.on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var modal_textarea_id = null;
+        $('#configureblock').find('textarea.wysiwyg').each(function() {
+            modal_textarea_id = $(this).attr('id');
+            //Remove any existing tinymce
+            tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+        });
+        clear();
+    });
+
+    function clear() {
+        var block = $('#configureblock');
+        $('.blockinstance-content').html('');
+        block.find('h4').html('');
+        dock.hide();
+    }
+
+    $('.commentlink').on('click', function(e) {
+        open_modal(e);
+        if ( $(this).closest('div[class*=block-header]').hasClass('bh-displayiconsonly') ) {
+            $(this).closest('a[class*=commentlink]').addClass('active-block');
+        }
+        else {
+            $(this).closest('div[class*=block-header]').addClass('active-block');
+        }
+
+    });
+
+    $('.modal_link').on('click', function (e) {
+        if ($(this).hasClass('no-modal')) {
+            e.stopPropagation();
+        }
+        else {
+            open_modal(e);
+            $(this).closest('div[class*=block-header]').addClass('active-block');
+        }
+    });
+
+    $('#feedback-form .submitcancel[name="cancel_submit"]').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        tinymce.EditorManager.execCommand('mceRemoveEditor', true, $('#configureblock').find('textarea.wysiwyg').attr('id'));
+        dock.hide();
+    });
+
     $('.moretags').on('click', function(e) {
         e.preventDefault();
         var params = {
@@ -374,8 +436,52 @@ jQuery(function($) {
 
 jQuery(window).on('pageupdated', {}, function() {
     dock.init(jQuery(document));
+
+    $('.commentlink').on('click', function(e) {
+        open_modal(e);
+        $(this).closest('div[class*=block-header]').addClass('active-block');
+    });
+
+    $('.modal_link').on('click', function (e) {
+        if ($(this).hasClass('no-modal')) {
+            e.stopPropagation();
+        }
+        else {
+            open_modal(e);
+            $(this).closest('div[class*=block-header]').addClass('active-block');
+        }
+    });
 });
 EOF;
+
+if ($modal = param_integer('modal', null)) {
+    $artefact = param_integer('artefact', null);
+
+    if ($block = param_integer('block', null)) {
+        $javascript .= <<<EOF
+        jQuery(function($) {
+            $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-toggle="modal-docked" data-target="#configureblock" data-blockid="' + $block + '" data-artefactid="' + $artefact + '" ></a>');
+            $('a#tmp_modal_link').on('click', function(e) {
+                open_modal(e);
+                $('#configureblock').addClass('active').removeClass('closed');
+            });
+            $('a#tmp_modal_link').click();
+        });
+EOF;
+    }
+    else {
+        $javascript .= <<<EOF
+        jQuery(function($) {
+            $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-toggle="modal-docked" data-target="#configureblock" data-artefactid="' + $artefact + '" ></a>');
+            $('a#tmp_modal_link').on('click', function(e) {
+                open_modal(e);
+                $('#configureblock').addClass('active').removeClass('closed');
+            });
+            $('a#tmp_modal_link').click();
+        });
+EOF;
+    }
+}
 
 // collection top navigation
 if ($collection) {

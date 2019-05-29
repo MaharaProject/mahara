@@ -1,4 +1,7 @@
 <div class="bt-{$blocktype} card card-secondary {$cardicontype} clearfix {if $retractable}collapsible{/if}" id="blockinstance_{$id}">
+    {if !$editing && $blockheader && !$versioning}
+        {include file='header/block-comments-details-header.tpl' artefactid=$artefactid blockid=$blockid commentcount=$commentcount}
+    {/if}
     {if $title}
         <h3 class="title card-header js-heading">
             {if $retractable}
@@ -33,15 +36,6 @@
             {$content|safe}
         {else}
             <div id="loadingicon{$id}"><span class="icon icon-spinner icon-pulse"></span> {str tag=loading}</div>
-        {/if}
-
-        {if !$versioning && ($link || $viewartefacturl)}
-
-            {if $link}
-                <a href="{$link}" class="detail-link link-blocktype"><span class="icon icon-link" role="presentation" aria-hidden="true"></span> {str tag=detailslinkalt section=view}</a>
-            {elseif $viewartefacturl}
-                <a href="{$viewartefacturl}" class="detail-link link-blocktype"><span class="icon icon-link" role="presentation" aria-hidden="true"></span> {str tag=detailslinkalt section=view}</a>
-            {/if}
         {/if}
     </div>
 </div>

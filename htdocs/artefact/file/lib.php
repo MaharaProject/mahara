@@ -2191,6 +2191,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             }
             $smarty->assign('children', $childrecords);
         }
+        $smarty->assign('blockid', $options['blockid']);
         return array('html' => $smarty->fetch('artefact:file:folder_render_self.tpl'),
                      'javascript' => null);
     }
@@ -2476,12 +2477,15 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public function render_self($options) {
         $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id;
-        $url = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $this->id;
         if (isset($options['viewid'])) {
             $downloadpath .= '&view=' . $options['viewid'];
-            $url .= '&view=' . $options['viewid'];
         }
-        $metadataurl = $url . '&details=1';
+        if (isset($options['viewid'])) {
+            $metadataurl = get_config('wwwroot') . 'view/view.php?id=' . $options['viewid'] . '&modal=1&artefact=' . $this->id;
+        }
+        else {
+            $metadataurl = null;
+        }
         if (empty($options['metadata'])) {
             $smarty = smarty_core();
             $smarty->assign('id', $this->id);

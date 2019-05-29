@@ -2,7 +2,9 @@
     <div class="post list-group-item clearfix flush">
         <div class="post-heading">
             <h4 class="title">
-                <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a>
+                <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$options.blockid}" data-artefactid="{$post->id}">
+                    {$post->title}
+                </a>
             </h4>
             <div class="postdetails metadata">
                 <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
@@ -70,44 +72,13 @@
 
         {if $options.viewid && $post->allowcomments}
             <div class="comments">
-                {if $post->commentcount > 0}
-                <a id="blockpost_{$post->id}" class="commentlink link-blocktype" data-toggle="modal-docked" data-target="#feedbacktable_0{$post->id}{$options.blockid}" href="#">
-                    <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
-                    {str tag=Comments section=artefact.comment} ({$post->commentcount})
-                </a>
-                {/if}
                 {if $post->allowcomments}
-                <a class="addcomment link-blocktype" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
-                    <span class="icon icon-arrow-circle-right" role="presentation" aria-hidden="true"></span>
-                    {str tag=addcomment section=artefact.comment}
-                </a>
+                    <a id="comment_link_{$post->id}" class="commentlink link-blocktype" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$options.blockid}" data-artefactid="{$post->id}">
+                        <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
+                        <span class="comment_count" role="presentation" aria-hidden="true"></span>
+                        {str tag=commentsanddetails section=artefact.comment arg1=$post->commentcount}
+                    </a>
                 {/if}
-            </div>
-            <div class="feedback modal modal-docked" id="feedbacktable_0{$post->id}{$options.blockid}">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header clearfix">
-                            <button class="close" data-dismiss="modal-docked">
-                                <span class="times">&times;</span>
-                                <span class="sr-only">{str tag=Close}</span>
-                            </button>
-                            <h4 class="modal-title float-left">
-                                <span class="icon icon-lg icon-comments" role="presentation" aria-hidden="true"></span>
-                                {str tag=Comments section=artefact.comment} |
-                                {$post->title}
-                            </h4>
-                            {if $post->allowcomments}
-                            <a class="addcomment float-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
-                                {str tag=addcomment section=artefact.comment}
-                                <span class="icon icon-arrow-right right" role="presentation" aria-hidden="true"></span>
-                            </a>
-                            {/if}
-                        </div>
-                        <div class="modal-body flush">
-                        {$post->comments->tablerows|safe}
-                        </div>
-                    </div>
-                </div>
             </div>
         {/if}
     </div>

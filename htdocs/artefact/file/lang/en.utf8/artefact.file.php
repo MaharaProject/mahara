@@ -13,6 +13,7 @@ defined('INTERNAL') || die();
 
 $string['pluginname'] = 'Files';
 
+$string['commentsanddetails'] = 'Comments (%d) and details';
 $string['sitefilesloaded'] = 'Site files loaded';
 $string['addafile'] = 'Add a file';
 $string['archive'] = 'Archive';

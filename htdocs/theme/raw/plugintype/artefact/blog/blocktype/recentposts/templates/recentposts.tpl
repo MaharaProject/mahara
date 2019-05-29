@@ -26,7 +26,7 @@
 <div class="recentblogpost list-group">
 {foreach from=$mostrecent item=post}
     <div class="list-group-item">
-        <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&amp;view={$view}" class="outer-link">
+        <a class="modal_link outer-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
             <span class="sr-only">{$post->title}</span>
         </a>
         <h4 class="list-group-item-heading text-inline">

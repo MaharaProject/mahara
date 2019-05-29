@@ -40,7 +40,7 @@
         {foreach from=$results item=post}
         <div class="post list-group-item">
             <h4 class="list-group-heading">
-                <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
+                <a class="modal_link list-group-heading" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                     {$post->title}
                 </a>
             </h4>
@@ -65,50 +65,14 @@
             {if !$editing}
                 {if $post->commentcount != null}
                 <div class="comments clearfix">
-                    {if $post->commentcount > 0}
-                    <a id="block_0{$post->id}{$blockid}" class="commentlink link-blocktype" data-toggle="modal-docked" data-target="#feedbacktable_0{$post->id}{$blockid}" href="#">
+                    <a id="comment_link_{$post->id}" class="commentlink link-blocktype" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                         <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
-                        {str tag=Comments section=artefact.comment} ({$post->commentcount})
+                        {str tag=commentsanddetails section=artefact.comment arg1=$post->commentcount}
                     </a>
-                    {/if}
-                    {if $post->allowcomments}
-                    <a class="addcomment link-blocktype" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
-                        <span class="icon icon-arrow-circle-right" role="presentation" aria-hidden="true"></span>
-                        {str tag=addcomment section=artefact.comment}
-                    </a>
-                    {/if}
                 </div>
                 {/if}
             {/if}
         </div>
-        {if !$editing}
-        <div id="feedbacktable_0{$post->id}{$blockid}" class="feedbacktable modal modal-docked">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header clearfix">
-                        <button class="close" data-dismiss="modal-docked">
-                            <span class="times">&times;</span>
-                            <span class="sr-only">{str tag=Close}</span>
-                        </button>
-                        <h4 class="modal-title float-left">
-                            <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
-                            {str tag=Comments section=artefact.comment} |
-                            {$post->title}
-                        </h4>
-                        {if $post->allowcomments}
-                        <a class="addcomment float-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
-                            {str tag=addcomment section=artefact.comment}
-                            <span class="icon icon-arrow-right right" role="presentation" aria-hidden="true"></span>
-                        </a>
-                        {/if}
-                    </div>
-                    <div class="modal-body flush">
-                    {$post->comments->tablerows|safe}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {/if}
         {/foreach}
     </div>
 </div>

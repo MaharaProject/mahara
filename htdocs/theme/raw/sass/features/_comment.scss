@@ -96,13 +96,6 @@
     }
 
     // Nested comments
-    // Hide reply to comment button for 15.10
-    .modal-body & {
-        .commentreplyto {
-            display: none;
-        }
-    }
-
     .commentreplyview & {
         border-top-width: 1px;
         width: 100%;

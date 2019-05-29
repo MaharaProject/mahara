@@ -53,7 +53,6 @@ if (!empty($extradata->artefact) && !artefact_in_view($extradata->artefact, $ext
 }
 
 if ($ispagination) {
-    // This is not really working yet. Need to do more work on artefact/artefact.php
     $options = ArtefactTypeAnnotationfeedback::get_annotation_feedback_options();
     $options->limit = $limit;
     $options->offset = $offset;

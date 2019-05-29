@@ -53,7 +53,7 @@
                     {$item->deleteform|safe}
                 {/if}
                 {if $item->canreply}
-                <button class="btn btn-secondary float-left commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}">
+                <button class="btn btn-secondary float-left commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}" {if $blockid}data-blockid="{$blockid}"{/if}>
                     <span class="icon icon-reply icon-lg" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=reply section=artefact.comment}</span>
                 </button>

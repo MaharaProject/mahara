@@ -27,6 +27,8 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
+        require_once(get_config('docroot') . 'artefact/comment/lib.php');
+
         $configdata = $instance->get('configdata');
 
         $viewid = $instance->get('view');
@@ -41,6 +43,8 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
                 catch (ArtefactNotFoundException $e) {
                     continue;
                 }
+                $view = new View($viewid);
+                list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
 
                 $file = array(
                     'id' => $artefactid,
@@ -55,6 +59,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
                         array('id' => $artefactid, 'viewid' => $viewid)
                     ),
                     'downloadurl' => $wwwroot,
+                    'commentcount' => $commentcount,
                 );
 
                 if ($artefact instanceof ArtefactTypeProfileIcon) {
@@ -70,7 +75,9 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
 
         $smarty = smarty_core();
         $smarty->assign('viewid', $instance->get('view'));
+        $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('files', $files);
+        $smarty->assign('editing', $editing);
         return $smarty->fetch('blocktype:filedownload:filedownload.tpl');
     }
 

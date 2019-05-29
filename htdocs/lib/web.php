@@ -1425,6 +1425,14 @@ function jsstrings() {
                 'blocksinstructionajaxlive1',
             ),
         ),
+        'viewmenu' => array(
+            'artefact.comment' => array(
+                'addcomment',
+                'Details',
+                'commentsanddetails',
+                'commentremoved',
+          )
+        )
     );
 }
 

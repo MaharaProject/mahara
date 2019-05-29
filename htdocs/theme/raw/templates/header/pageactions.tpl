@@ -1,5 +1,12 @@
 <div class="pageactions">
     <div class="btn-group-vertical">
+
+        {* Assess button that will show/ hide comments and details in block-comments-details-header.tpl *}
+        <button id="details-btn" type="button" class="btn btn-secondary" title="{str tag=detailslinkalt section=view}">
+            <span class="icon icon-lg icon-search-plus left" role="presentation" aria-hidden="true" ></span>
+            <span class="sr-only">{str tag=detailslinkalt section=view}</span>
+        </button>
+
         {if $editurl}{strip}
             <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-secondary">
                 <span class="icon icon-pencil-alt icon-lg left" role="presentation" aria-hidden="true"></span>

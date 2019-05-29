@@ -33,7 +33,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
     }
 
     public static function has_title_link() {
-        return false;  // true; // need to do more work on aretfact/artefact.php before this can be switched on.
+        return false;
     }
 
     public static function allowed_in_view(View $view) {

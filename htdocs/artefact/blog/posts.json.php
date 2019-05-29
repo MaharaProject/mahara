@@ -30,6 +30,7 @@ if ($blockid = param_integer('block', null)) {
     $configdata['countcomments'] = true;
     $configdata['versioning'] = false;
     $configdata['viewid'] = $bi->get('view');
+    $configdata['blockid'] = $blockid;
     $posts = ArtefactTypeBlogpost::get_posts($configdata['artefactid'], $limit, $offset, $configdata);
     $template = 'artefact:blog:viewposts.tpl';
     $baseurl = $bi->get_view()->get_url();

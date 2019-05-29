@@ -67,7 +67,7 @@
                         <!-- Profile artefact can only be displayed in views -->
                         {if $view->type != "profile"} |
                             <span class="viewartefact">
-                                <a href="{$WWWROOT}artefact/artefact.php?artefact={$result->id}&view={$id}">
+                                <a href="{$WWWROOT}view/view.php?id={$id}&modal=1&artefact={$result->id}">
                                     {str tag=viewartefact}
                                     {if $result->artefacttype == "blogpost"}
                                         {str tag=blogpost section=search.elasticsearch}

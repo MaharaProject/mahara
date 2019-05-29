@@ -1,42 +1,11 @@
 {if !$editing}
     <div class="comments float-left">
-        {if $commentcount > 0}
-        <a class="commentlink link-blocktype" id="block_{$blockid}" data-toggle="modal-docked" data-target="#feedbacktable_{$blockid}" href="#">
-            <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
-            {str tag=Comments section=artefact.comment} ({$commentcount})
-        </a>
-        {/if}
         {if $allowcomments}
-            <a class="addcomment link-blocktype" href="{$artefacturl}">
-                <span class="icon icon-arrow-circle-right" role="presentation" aria-hidden="true"></span>
-                {str tag=addcomment section=artefact.comment}
+            <a id="block_{$blockid}" class="commentlink link-blocktype" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$artefactid}">
+                <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
+                <span class="comment_count" role="presentation" aria-hidden="true"></span>
+                {str tag=commentsanddetails section=artefact.comment arg1=$commentcount}
             </a>
         {/if}
-    </div>
-
-    <div class="feedback modal modal-docked" id="feedbacktable_{$blockid}">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header clearfix">
-                    <button class="deletebutton close" data-dismiss="modal-docked">
-                        <span class="times">&times;</span>
-                        <span class="sr-only">{str tag=Close}</span>
-                    </button>
-                    <h4 class="modal-title float-left">
-                        <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
-                        {str tag=Comments section=artefact.comment} - {$artefacttitle}
-                    </h4>
-                    {if $allowcomments}
-                    <a class="addcomment float-right" href="{$artefacturl}">
-                        {str tag=addcomment section=artefact.comment}
-                        <span class="icon icon-arrow-right right" role="presentation" aria-hidden="true"></span>
-                    </a>
-                    {/if}
-                </div>
-                <div class="modal-body flush">
-                {$comments->tablerows|safe}
-                </div>
-            </div>
-        </div>
     </div>
 {/if}

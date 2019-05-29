@@ -93,7 +93,16 @@ if ($group->public) {
 $javascript = array('paginator');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
-$inlinejs = "jQuery( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
+$inlinejs = <<<JS
+jQuery(function($) {
+JS;
+$inlinejs .= join("\n", $blocktype_js['initjs']) . "\n";
+$inlinejs .= <<<JS
+    // Disable the modal_links for images etc... when page loads
+    $('a[class*=modal_link], a[class*=inner-link]').addClass('no-modal');
+    $('a[class*=modal_link], a[class*=inner-link]').css('cursor', 'default');
+});
+JS;
 
 $headers = array_merge($headers, $view->get_all_blocktype_css());
 

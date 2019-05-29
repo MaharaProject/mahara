@@ -44,6 +44,7 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
         if ($editing) {
             $smarty = smarty_core();
             $smarty->assign('editing', get_string('ineditordescription1', 'blocktype.comment/comment'));
+            $smarty->assign('blockid', $instance->get('id'));
             $html = $smarty->fetch('blocktype:comment:comment.tpl');
             return $html;
         }

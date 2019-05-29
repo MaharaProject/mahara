@@ -196,8 +196,8 @@ abstract class PluginSearch extends Plugin implements IPluginSearch {
                         $artefact = artefact_instance_from_id($result['id']);
                         if ($artefact->in_view_list() && $views = $artefact->get_views_instances()) {
                             foreach ($views as $view) {
-                                $result['views'][$view->get('title')] = get_config('wwwroot') . 'artefact/artefact.php?artefact='
-                                    . $result['id'] . '&view=' . $view->get('id');
+                                $result['views'][$view->get('title')] = get_config('wwwroot') . 'view/view.php?id=' .  $view->get('id') . '&modal=1&artefact='
+                                    . $result['id'];
                             }
                         }
                         if ($links = $artefact->get_links($result['id'])) {

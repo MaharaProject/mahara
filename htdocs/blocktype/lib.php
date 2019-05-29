@@ -1365,8 +1365,8 @@ class BlockInstance {
         $configdata = $this->get('configdata');
         if (!empty($configdata['artefactid']) && $displayforrole) {
             if (call_static_method($classname, 'has_title_link')) {
-                $smarty->assign('viewartefacturl', get_config('wwwroot') . 'artefact/artefact.php?artefact='
-                    . $configdata['artefactid'] . '&view=' . $this->get('view') . '&block=' . $this->get('id'));
+                $smarty->assign('blockid', $this->get('id'));
+                $smarty->assign('artefactid', $configdata['artefactid']);
             }
         }
 
@@ -1389,6 +1389,36 @@ class BlockInstance {
         $cardicontype = !empty($cssicontype) ? preg_replace('/^icon-/', 'card-', $cssicontype) : '';
         $smarty->assign('cardicontype', $cardicontype);
         $smarty->assign('versioning', $versioning);
+        /* Apply the comments and details header via template to these types of blocks only
+         * These blocks have one artefact per block, for blocks with multiple artefacts
+         * the header will be added elsewhere via their specific templates
+         */
+        $includetheseblocks = array('image', 'textbox');
+        $blockheader = (in_array($this->get('blocktype'), $includetheseblocks)) ? true : false;
+        $smarty->assign('blockheader', $blockheader);
+        //Set up template for the blocks that have the comments and details header
+        if ($blockheader) {
+            if (!empty($configdata['artefactid'])) {
+                $smarty->assign('artefactid', $configdata['artefactid']);
+                $artefact = $this->get_artefact_instance($configdata['artefactid']);
+                $smarty->assign('allowcomments', $artefact->get('allowcomments'));
+                if (!$artefact->get('allowcomments')) {
+                    $smarty->assign('allowdetails', (int)get_config('licensemetadata'));
+                }
+                else {
+                    $commentoptions = ArtefactTypeComment::get_comment_options();
+                    $commentoptions->limit = 0;
+                    $commentoptions->view = new View($this->get('view'));
+                    $commentoptions->artefact = $artefact;
+                    $commentoptions->onview = true;
+                    $commentoptions->blockid = $this->get('id');
+                    $comments = ArtefactTypeComment::get_comments($commentoptions);
+                    $commentcount = isset($comments->count) ? $comments->count : 0;
+                    $smarty->assign('commentcount', $commentcount);
+                }
+            }
+        }
+
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');
     }
 

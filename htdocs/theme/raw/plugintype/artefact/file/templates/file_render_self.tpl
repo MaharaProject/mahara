@@ -2,13 +2,14 @@
 <h2 class="title">
     {str tag=Preview section=artefact.file}
 </h2>
-<div class="filedata-icon">
-    <a href="{$downloadpath}">
-        <img src="{$downloadpath}&maxwidth=400&maxheight=180" alt="">
-    </a>
-</div>
+<div class="flexbox">
+    <div class="filedata-icon modal-segment-heading">
+        <a href="{$downloadpath}">
+            <img src="{$downloadpath}&maxwidth=400&maxheight=180" alt="">
+        </a>
+    </div>
 {/if}
-<table class="filedata table-sm">
+<table class="filedata table-sm modal-segment-heading">
     <tr>
         <th>{str tag=Type section=artefact.file}:</th>
         <td>{$filetype}</td>
@@ -62,3 +63,6 @@
         </td>
     </tr>
 </table>
+{if $artefacttype == 'image' || $artefacttype == 'profileicon'}
+</div>
+{/if}

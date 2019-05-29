@@ -30,16 +30,20 @@ $limit    = param_integer('limit', 10);
 $offset   = param_integer('offset');
 
 $artefact = null;
+$blockid = null;
 if (!empty($extradata->artefact)) {
     $artefact = artefact_instance_from_id($extradata->artefact);
 }
-
+if (!empty($extradata->blockid)) {
+    $blockid = $extradata->blockid;
+}
 $view = new View($extradata->view);
 $commentoptions = ArtefactTypeComment::get_comment_options();
 $commentoptions->limit = $limit;
 $commentoptions->offset = $offset;
 $commentoptions->view = $view;
 $commentoptions->artefact = $artefact;
+$commentoptions->blockid = $blockid;
 $data = ArtefactTypeComment::get_comments($commentoptions);
 
 json_reply(false, array('data' => $data));

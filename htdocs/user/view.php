@@ -113,7 +113,16 @@ $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 if (is_plugin_active('externalvideo', 'blocktype')) {
     $javascript = array_merge($javascript, array((is_https() ? 'https:' : 'http:') . '//cdn.embedly.com/widgets/platform.js'));
 }
-$inlinejs = "jQuery( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
+$inlinejs = <<<JS
+jQuery(function($) {
+JS;
+$inlinejs .= join("\n", $blocktype_js['initjs']) . "\n";
+$inlinejs .= <<<JS
+    // Disable the modal_links for images etc... when page loads
+    $('a[class*=modal_link], a[class*=inner-link]').addClass('no-modal');
+    $('a[class*=modal_link], a[class*=inner-link]').css('cursor', 'default');
+});
+JS;
 
 // Set up theme
 $viewtheme = $view->get('theme');

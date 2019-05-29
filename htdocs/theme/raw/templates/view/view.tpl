@@ -1,4 +1,5 @@
 {include file="header.tpl" headertype="page"}
+{include file='modal-details.tpl'}
 
 <div id="view-description" class="view-description {if $toolbarhtml}with-toolbar{/if}">
     {$viewdescription|clean_html|safe}
@@ -54,7 +55,7 @@
         </div>
         {/if}
 
-        {if $feedback->position eq 'base'}
+        {if $feedback->position eq 'base' && $feedback->baseplacement}
         <div class="comment-container">
             {if $feedback->count || $enablecomments}
             <h3 class="title">
@@ -64,7 +65,7 @@
             <hr />
             {/if}
             {* Do not change the id because it is used by paginator.js *}
-            <div id="feedbacktable" class="feedbacktable js-feedbackbase fullwidth">
+            <div id="feedbacktable{if $blockid}_{$blockid}{/if}" class="feedbacktable js-feedbackbase fullwidth">
                 {$feedback->tablerows|safe}
             </div>
             {$feedback->pagination|safe}
@@ -90,6 +91,8 @@
                             {str tag=addcomment section=artefact.comment}
                         </h4>
                     </div>
+
+                    <div id="comment_modal_messages"></div>
                     <div class="modal-body">
                         {$addfeedbackform|safe}
                     </div>

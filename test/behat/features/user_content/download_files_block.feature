@@ -30,7 +30,7 @@ Scenario: Add Files to download block
     And I click on "mahara_about.pdf" in the "File download heading 1" property
     Then I should see "PDF document"
     And I should see "Download"
-    And I follow "Page UserA_01"
+    And I close the dialog
     And I click on "Image1.jpg" in the "File download heading 2" property
     Then I should see "JPEG Image"
     And I should see "Download"

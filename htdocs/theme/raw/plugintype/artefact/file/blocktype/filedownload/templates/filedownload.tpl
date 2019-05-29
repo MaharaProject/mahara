@@ -14,12 +14,29 @@
         {/if}
 
         <h4 class="title list-group-item-heading text-inline">
-            <a href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}" class="inner-link">
+            {if !$editing}
+            <a class="modal_link inner-link"
+                data-toggle="modal-docked"
+                data-target="#configureblock"
+                href="#"
+                data-artefactid="{$file.id}"
+                data-blockid="{$blockid}"
+                {if $file.commentcount > 0}
+                    title="{str tag=commentsanddetails section=artefact.file arg1=$file.commentcount}">
+                {else}
+                    title={str tag=Details section=artefact.file}>
+                {/if}
                  {$file.title}
                  <span class="sr-only">
                     {str tag=Details section=artefact.file}
                 </span>
             </a>
+            {else}
+                {$file.title}
+                <span class="sr-only">
+                   {str tag=Details section=artefact.file}
+               </span>
+            {/if}
         </h4>
         <span class="text-small text-midtone"> -
             {$file.ctime|format_date:'strftimedaydate'}
@@ -39,4 +56,3 @@
     </li>
     {/foreach}
 </ul>
-

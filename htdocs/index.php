@@ -78,6 +78,10 @@ jQuery(function($) {
     if ($('#hideinfo').length) {
         $('#hideinfo').on('click', nevershow);
     }
+
+    // Disable the modal_links for images etc... when page loads
+    $('a[class*=modal_link], a[class*=inner-link]').addClass('no-modal');
+    $('a[class*=modal_link], a[class*=inner-link]').css('cursor', 'default');
 });
 JAVASCRIPT;
 

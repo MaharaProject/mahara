@@ -4,10 +4,17 @@
 </div>
 {elseif $feedback}
     {* Do not change the id because it is used by paginator.js *}
-    <div id="feedbacktable" class="feedbacktable js-feedbackblock fullwidth">
+    <div id="feedbacktable{if $blockid}_{$blockid}{/if}" class="feedbacktable js-feedbackblock fullwidth">
         {$feedback->tablerows|safe}
     </div>
-    {$feedback->pagination|safe}
+    <p>
+        {$feedback->pagination|safe}
+        {if $feedback->pagination_js}
+            <script>
+                {$feedback->pagination_js|safe}
+            </script>
+        {/if}
+    </p>
     {if $enablecomments}
     <a id="add_feedback_link" class="js-add-comment-modal feedback link-blocktype" href="#" data-toggle="modal-docked" data-target="#feedback-form">
         <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>

@@ -41,7 +41,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
     public static function get_link(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         if (!empty($configdata['artefactid'])) {
-            $data = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $configdata['artefactid'] . '&view=' . $instance->get('view');
+            $data = get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') . '&modal=1&block=' . $instance->get('id') . '&artefact=' . $configdata['artefactid'];
             return sanitize_url($data);
         }
     }
