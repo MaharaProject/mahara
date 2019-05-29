@@ -759,6 +759,7 @@ $string['emailnotsent']             = 'Failed to send contact email. Error messa
 
 // mahara.js
 $string['namedfieldempty'] = 'The required field "%s" is empty';
+$string['duplicatenamedfield'] = 'The value entered already exists';
 $string['processing']     = 'Processing';
 $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
 

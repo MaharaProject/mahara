@@ -1384,6 +1384,7 @@ function jsstrings() {
                 'processing',
                 'unknownerror',
                 'loading',
+                'duplicatenamedfield',
                 'showtags',
                 'couldnotgethelp',
                 'password',
