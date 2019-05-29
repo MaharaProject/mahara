@@ -146,8 +146,7 @@ Background:
   And I fill in select2 input "settings_createtags" with "@black" and select "@black"
   And I press "Save"
   Then I should see "Note Block 3304"
-  #@TODO, This breaks too.
- # When I follow "Settings" in the "Toolbar buttons" property
-  #And I fill in select2 input "settings_createtags" with "ébrown" and select "ébrown"
-  #And I press "Save"
-  #Then I should see "Text Block 101"
+  When I follow "Settings" in the "Toolbar buttons" property
+  And I fill in select2 input "settings_createtags" with "ébrown" and select "ébrown"
+  And I press "Save"
+  Then I should see "Text Block 101"
