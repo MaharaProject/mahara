@@ -143,6 +143,12 @@ h1 + div > .btn-top-left,
 }
 
 h1 ~ div > .btn-group-top,
+h2 ~ div > .btn-group-top,
+h3 ~ div > .btn-group-top,
+h4 ~ div > .btn-group-top,
+h5 ~ div > .btn-group-top,
+h6 ~ div > .btn-group-top,
+p ~ div > .btn-group-top,
 .page-header ~ div.btn-group-top,
 .page-header + .btn-action-list .btn-group-top,
 .nav-tabs +  div.btn-group-top {
