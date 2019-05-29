@@ -23,7 +23,7 @@ Scenario:Injecting sql in groups search field
     And I choose "Administer groups" in "Groups" from administration menu
     When I set the following fields to these values:
     | search_query | <script>alert(1);</script> |
-    And I press "search_submit"
+    And I press "search_search"
     And I follow "About"
     And I should see "About us"
     Then I go to "homepage"

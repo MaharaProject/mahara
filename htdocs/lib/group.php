@@ -956,8 +956,6 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
         }
         delete_records('lti_assessment', 'group', $group->id);
     }
-    // Delete any submission history
-    delete_records('module_assessmentreport_history', 'groupid', $group->id);
 
     if ($notifymembers) {
         require_once('activity.php');
@@ -1737,11 +1735,8 @@ function group_prepare_usergroups_for_display($groups) {
         else if ($group->membershiptype == 'invite') {
             $group->invite = group_get_accept_form('invite' . $i++, $group->id);
         }
-        // Only admin can create public groups when isolatedinstitutions is set.
-        // It's up to the admin to correctly set the jointype. Public should not affect the open status.
-        // So for isolatedinstitutions and open groups, people can join that group if it's in their
-        // institution.
-        else if ($group->jointype == 'open') {
+        // When 'isolatedinstitutions' is set, people cannot join public groups by themselves
+        else if ($group->jointype == 'open' && !(is_isolated() && $group->public == 1)) {
             $group->groupjoin = group_get_join_form('joingroup' . $i++, $group->id);
         }
 
@@ -1788,10 +1783,10 @@ function group_format_editwindow($group) {
 /*
  * Used by admin/groups/groups.php and admin/groups/groups.json.php for listing groups.
  */
-function build_grouplist_html($query, $limit, $offset, &$count=null, $institution) {
+function build_grouplist_html($query, $limit, $offset, &$count=null, $institution, $groupcategory='') {
     global $USER;
 
-    $groups = search_group($query, $limit, $offset, 'all', '', $institution);
+    $groups = search_group($query, $limit, $offset, 'all', $groupcategory, $institution);
     $count = $groups['count'];
 
     if ($ids = array_map(function($a) { return intval($a->id); }, $groups['data'])) {
