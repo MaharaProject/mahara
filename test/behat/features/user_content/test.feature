@@ -72,44 +72,43 @@ Background:
 
 
     And the following "blocks" exist:
-    | title             | type           | page          |retractable | data |
-    | Text              | text           | Page UserA_00 | yes        | This is some text |
-    | Image JPG         | image          | Page UserA_00 | no         | attachment=Image1.jpg; width=100 |
-    | Image PNG         | image          | Page UserA_00 | no         | attachment=Image2.png |
-    | Files to download | filedownload   | Page UserA_00 | auto       | attachments=mahara_about.pdf |
-    | Files to download | filedownload   | Page UserA_00 | no         | attachments=mahara_about.pdf,Image2.png |
-    | External Feed news| externalfeed   | Page UserA_00 | No         | source=http://rss.nzherald.co.nz/rss/xml/nzhtsrsscid_000000698.xml;count=5 |
-    | External Feed food| externalfeed   | Page UserA_00 | no         | source=http://www.thekitchenmaid.com/feed;count=3 |
+    | title                | type           | page          |retractable | data |
+    | Text                 | text           | Page UserA_00 | yes        | This is some text |
+    | Image JPG            | image          | Page UserA_00 | no         | attachment=Image1.jpg; width=100 |
+    | Image PNG            | image          | Page UserA_00 | no         | attachment=Image2.png |
+    | Files to download    | filedownload   | Page UserA_00 | auto       | attachments=mahara_about.pdf |
+    | Files to download    | filedownload   | Page UserA_00 | no         | attachments=mahara_about.pdf,Image2.png |
+    | External Feed - News | externalfeed   | Page UserA_00 | No         | source=http://rss.nzherald.co.nz/rss/xml/nzhtsrsscid_000000698.xml;count=5 |
+    | External Feed - Food | externalfeed   | Page UserA_00 | no         | source=http://www.thekitchenmaid.com/feed;count=3 |
 
     | Image             | image          | Page Grp1     | no         | attachment=Image3.png |
     | Files to download | filedownload   | Page Grp1     | no         | attachments=mahara_about.pdf,Image2.png,testvid3.mp4,mahara.mp3 |
     | External Video    | externalvideo  | Page Grp1     | no         | source=https://youtu.be/yRxFm70nOrY |
 
-    | Social Media      | socialprofile  | Page UserB_00 | no         | sns=instagram,twitter,facebook,tumblr,pinterest,mysocialmedia |
-    | Gallery style 1   | gallery        | Page UserB_00 | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png;imagesel=2;showdesc=yes;width=75;imagestyle=1;photoframe=1 |
-    | Gallery style 2   | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=2 |
-    | Gallery style 3   | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
-    | Folder            | folder         | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
-    | Some HTML         | html           | Page UserB_00 | yes        | attachment=test_html.html |
+    | Social Media         | socialprofile  | Page UserB_00 | no         | sns=instagram,twitter,facebook,tumblr,pinterest,mysocialmedia |
+    | Gallery - style 1    | gallery        | Page UserB_00 | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png;imagesel=2;showdesc=yes;width=75;imagestyle=1;photoframe=1 |
+    | Gallery - style 2    | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=2 |
+    | Gallery - style 3    | gallery        | Page UserB_00 | yes        | attachments=Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
+    | Folder               | folder         | Page UserB_00 | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
+    | Some HTML            | html           | Page UserB_00 | yes        | attachment=test_html.html |
 
-    | my blog           | blog           | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
-    | my blogpost       | blogpost       | Page One      | no         | copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
-    | Comments          | comment        | Page One      |            | no configdata |
-    | Peer Assessment   | peerassessment | Page One      | auto       | no configdata |
-    | creativecoms      | creativecommons| Page One      | no         | commercialuse=yes;license=3.0;allowmods=no |
+    | Blog/Journal         | blog           | Page One      | no         | copytype=nocopy;count=5;journaltitle=journal1 |
+    | Blogpost/JournalEntry| blogpost       | Page One      | no         | copytype=nocopy;journaltitle=journal1;entrytitle=Entry Two |
+    | Comments             | comment        | Page One      |            | no configdata |
+    | Peer Assessment      | peerassessment | Page One      | auto       | no configdata |
+    | Creative Commons     | creativecommons| Page One      | no         | commercialuse=yes;license=3.0;allowmods=no |
 
-    | my nav            | navigation     | Page Two      | no         | collection=collection one;copytoall=yes |
-    | my plan           | plans          | Page Two      | no         | plans=Plan One,Plan Two;tasksdisplaycount=10 |
+    | Navigation           | navigation     | Page Two      | no         | collection=collection one;copytoall=yes |
+    | Plans                | plans          | Page Two      | no         | plans=Plan One,Plan Two;tasksdisplaycount=10 |
 
-    | internalm v       | internalmedia  | Page Three    | no         | attachment=testvid3.mp4 |
-    | internalm a       | internalmedia  | Page Three    | no         | attachment=mahara.mp3 |
-    | my pdf            | pdf            | Page Three    | no         | attachment=mahara_about.pdf |
-    | recentposts       |recentforumposts| Page Three   | no         | groupname=Group1;maxposts=3 |
-    | ExternalVideo     | externalvideo  | Page Three    | no         | source=https://youtu.be/yRxFm70nOrY |
-    | note/textbox  1   | textbox        | Page Three    | no         | notetitle=testnote;text=ma ha ha ha ra!;tags=mahara,araham;attachments=Image3.png,Image2.png,Image1.jpg;allowcomments=yes |
-    | note/textbox ref:1 | textbox        | Page Three    | no         | existingnote=testnote |
-    | note/textbox copy | textbox        | Page Three    | no         | existingnote=testnote;allowcomments=yes;copynote=true;notetitle=newtestnote |
-
+    | Internal Media: Video| internalmedia  | Page Three    | no         | attachment=testvid3.mp4 |
+    | Internal Media: Audio| internalmedia  | Page Three    | no         | attachment=mahara.mp3 |
+    | Pdf                  | pdf            | Page Three    | no         | attachment=mahara_about.pdf |
+    | Recent Forum Posts   |recentforumposts| Page Three    | no         | groupname=Group1;maxposts=3 |
+    | External Video       | externalvideo  | Page Three    | no         | source=https://youtu.be/yRxFm70nOrY |
+    | Note/Textbox 1       | textbox        | Page Three    | no         | notetitle=secretnote;text=ma ha ha ha ra!;tags=mahara,araham;attachments=Image3.png,Image2.png,Image1.jpg;allowcomments=yes |
+    | Note/textbox ref:1   | textbox        | Page Three    | no         | existingnote=secretnote |
+    | Note/Textbox copy:1  | textbox        | Page Three    | no         | existingnote=secretnote;allowcomments=yes;copynote=true;notetitle=newsecretnote |
 
 
 Scenario: Login as admin to change upload settings
