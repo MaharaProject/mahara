@@ -2036,18 +2036,19 @@ function handle_event($event, $data, $ignorefields = array()) {
         insert_record('event_log', $logentry);
         // If we are adding a comment to a page that is shared to a group
         // we need to add a 'sharedcommenttogroup' event
-        if ($reftype == 'comment' && empty($logdata['group'])) {
+        if (is_event_comment_shared_with_group($reftype, $logdata)) {
+            $wheresql = '';
             if (!empty($logdata['onartefact'])) {
                 $commenttype = 'artefact';
                 $commenttypeid = $logdata['onartefact'];
                 $wheresql = " IN (SELECT view FROM {view_artefact} WHERE " . $commenttype . " = ?) ";
             }
-            else {
+            else if (!empty($logdata['onview'])) {
                 $commenttype = 'view';
                 $commenttypeid = $logdata['onview'];
                 $wheresql = " = ? ";
             }
-            if ($groupids = get_records_sql_array("SELECT \"group\" FROM {view_access}
+            if ($wheresql != '' && $groupids = get_records_sql_array("SELECT \"group\" FROM {view_access}
                                                 WHERE view " . $wheresql . "
                                                 AND \"group\" IS NOT NULL", array($commenttypeid))) {
                 foreach ($groupids as $groupid) {
@@ -2111,6 +2112,26 @@ function handle_event($event, $data, $ignorefields = array()) {
             }
         }
     }
+}
+
+/**
+ * Find out if the event relates to a comment
+ * and if the page the comment is on is shared
+ * with a group.
+ *
+ * @param string $reftype event reference type
+ * @param array $logdata the data that makes up the event
+ *
+ * @return boolean
+ */
+function is_event_comment_shared_with_group($reftype, $logdata) {
+    $result = false;
+    if ($reftype == 'comment' && empty($logdata['group'])) {
+        if (!empty($logdata['onartefact']) || !empty($logdata['onview'])) {
+            $result = true;
+        }
+    }
+    return $result;
 }
 
 /**
