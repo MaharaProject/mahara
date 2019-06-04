@@ -759,7 +759,7 @@ EOD;
             throw new SystemException("Invalid block type '" . $record['type'] . "'. The block type is either not installed or not active.");
         }
         $title = trim($record['title']);
-        $functionname = 'generate_configdata_'.$record['type'];
+        $functionname = 'generate_configdata_' . $record['type'];
         $classname = 'TestingDataGenerator';
 
         // build configdata
