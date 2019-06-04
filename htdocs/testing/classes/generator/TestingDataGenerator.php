@@ -724,15 +724,16 @@ EOD;
             throw new SystemException("Invalid block type '" . $record['type'] . "'. The block type is either not installed or not active.");
         }
         $title = trim($record['title']);
+        $functionname = 'generate_configdata_'.$record['type'];
+        $classname = 'TestingDataGenerator';
 
         // build configdata
         $configdata = $this->setup_retractable($record['retractable']);
         $data = trim($record['data']);
-        $functionname = 'generate_configdata_'.$record['type'];
-        $classname = 'TestingDataGenerator';
+        $sortedfields = $this->setup_configdata($data);
 
-        if (is_callable($classname . '::'.$functionname)) {
-            $result = call_static_method($classname, $functionname, $data, $ownertype, $ownerid, $title, $view);
+        if (is_callable($classname . '::' . $functionname)) {
+            $result = call_static_method($classname, $functionname, $sortedfields, $ownertype, $ownerid, $title, $view);
             $configdata = array_merge($configdata, (array)$result);
         }
         else {
@@ -773,19 +774,13 @@ EOD;
      * displaying the blogs that were created using the function create_blog
      * given a matching blog title
      *
-     * @param string $data inside data column in behat test
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_blog($data) {
-        if (!$data) return;
+    public static function generate_configdata_blog($sortedfields) {
+
         $configdata = array();
-
-        $fields = explode(';',$data);
-        foreach($fields as $field) {
-            list($key, $value) = explode('=', $field);
-            $key = trim($key);
-            $value = trim($value);
-
+        foreach($sortedfields as $key => $value) {
             if ($key == 'journaltitle') {
                 if (!$blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype', 'blog')) {
                     throw new SystemException("A blog/journal with the name " . $value . " doesn't exist!");
@@ -807,22 +802,16 @@ EOD;
      * displaying the blogposts that were created using the function create_blogpost
      * matching a given blog and entry title
      *
-     * @param string $data inside data column in behat test
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_blogpost($data) {
-        if (!$data) return;
-        $configdata = array();
+    public static function generate_configdata_blogpost($sortedfields) {
 
+        $configdata = array();
         $blogpostid;
         $blogid;
 
-        $fields = explode(';',$data);
-        foreach($fields as $field) {
-            list($key, $value) = explode('=', $field);
-            $key = trim($key);
-            $value = trim($value);
-
+        foreach($sortedfields as $key => $value) {
             if ($key == 'journaltitle') {
                 if (!$blogid = get_field('artefact', 'id', 'title', $value, 'artefacttype','blog')) {
                     throw new SystemException("A blog/journal named " . $value . " doesn't exist!");
@@ -843,7 +832,7 @@ EOD;
 
     /**
      * generate a comment blocktype.
-     * @param string data inside the columm for data in behat table
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @return array with redundant information as there is no specific artefact connected to it.
      */
     public static function generate_configdata_comment($data) {
@@ -852,18 +841,13 @@ EOD;
 
     /**
      * generate configdata and instance for blocktype: creativecommons
-     * @param string data inside the columm for data in behat table
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_creativecommons($data) {
+    public static function generate_configdata_creativecommons($sortedfields) {
         $configdata = array();
 
-        $fields = explode(';', $data);
-
-        foreach( $fields as $field) {
-            list($key, $value) = explode('=', $field);
-            $value = trim(strtolower($value));
-
+        foreach ($sortedfields as $key => $value) {
             switch ($key) {
                 case 'commercialuse':
                     //yes=0, no=1
@@ -891,19 +875,38 @@ EOD;
     }
 
     /**
+     * generate configdata for the blocktype: entireresume
+     *
+     * doesn't work in group pages
+     *
+     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_entireresume($sortedfields, $ownertype, $ownerid) {
+        foreach ($sortedfields as $key => $value) {
+            if ($key == 'tags') {
+                $tags =  explode(',', $value);
+                $tagstring = array();
+                foreach($tags as $tag) {
+                    $tagstring[] = trim($tag);
+                }
+                $artefactdata['tags'] = $tagstring;
+            }
+        }
+    }
+
+    /**
      * generate configdata for the blocktype: rss feeds/external feeds
-     * @param string $data inside data column in behat test
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
     */
-    public static function generate_configdata_externalfeed($data) {
-        if (!$data) return;
-        $configdata = array();
-        $fields = explode(';', $data);
-        foreach ($fields as $field) {
-            list($key, $value) = explode('=', $field);
-            $key = trim($key);
-            $value = trim($value);
+    public static function generate_configdata_externalfeed($sortedfields) {
 
+        $configdata = array();
+        $configdata['full'] = 1;
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'source') {
                 $wheredata = array('url' => $value);
                 $feeddata = PluginBlocktypeExternalfeed::parse_feed($value);
@@ -921,37 +924,28 @@ EOD;
 
     /**
      * generate configdata for the blocktype: external video
-     * @param string $data inside data column in behat test
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_externalvideo($data) {
-        if (!$data) return;
-
-        list($key, $value) = explode('=', $data);
-        if ($key == 'source') {
-            $sourceinfo = PluginBlocktypeExternalvideo::process_url($value);
-            return $sourceinfo;
+    public static function generate_configdata_externalvideo($sortedfields) {
+        foreach ($sortedfields as $key => $value) {
+            if ($key == 'source') {
+              $sourceinfo = PluginBlocktypeExternalvideo::process_url($value);
+              return $sourceinfo;
+            }
         }
     }
 
     /**
      * generate configdata for the blocktype: filedownload
-     * @param string $data inside data column in behat test
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_filedownload($data, $ownertype, $ownerid) {
-        if (!$data) return;
-
-        $fields = explode(';', $data);
+    public static function generate_configdata_filedownload($sortedfields, $ownertype, $ownerid) {
         $configdata = array();
-
-        foreach ($fields as $field) {
-            list($key, $value) = explode('=', $field);
-            $key=trim($key);
-            $value=trim($value);
-
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'attachments') {
                 $fileattachments = explode(',',$value);
                 foreach ($fileattachments as $file) {
@@ -969,17 +963,12 @@ EOD;
      * @param $owenerid of the user
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_folder($data, $ownertype, $ownerid) {
-        if (!$data) return;
-
+    public static function generate_configdata_folder($sortedfields, $ownertype, $ownerid) {
         $folderfiles = array();
         $configdata = array();
-        $fields = explode(';', $data);
         $foldername = -1;
 
-        foreach ($fields as $field) {
-            list($key, $value) = explode('=', $field);
-
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'dirname') {
                 $foldername = $value;
             }
@@ -1007,24 +996,16 @@ EOD;
 
     /**
      * generate configdata for blocktype: gallery
-     * @param string $data inside data column in behat test
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_gallery($data, $ownertype, $ownerid) {
-        if (!$data) return;
-
+    public static function generate_configdata_gallery($sortedfields, $ownertype, $ownerid) {
         $configdata = array();
 
         //separate gallery_images, select, width, style etc.
-        $fields = explode(';', $data);
-        foreach ($fields as $field) {
-
-            list($key, $value) = explode('=', $field);
-            $key = trim($key);
-            $value = trim($value);
-
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'attachments') {
                 $galleryimagefiles = explode(',', $value);
                 $value = array();
@@ -1035,7 +1016,7 @@ EOD;
             }
             if ($key == 'imagesel' || $key == 'width' || $key == 'showdesc' || $key == 'imagestyle' || $key == 'photoframe' ) {
 
-                //imageselection options are 0,1,2 in the table, changed for tester -_-
+                //imageselection options are 0,1,2 in the table
                 if ($key == 'imagesel') {
                     $value -= 1;
                     $configdata['select'] = $value;
@@ -1058,21 +1039,15 @@ EOD;
 
     /**
      * generate configdata for blocktype: html
-     * @param string $data inside data column in blocktype tables
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_html($data, $ownertype, $ownerid) {
-        if (!$data) return;
-
-        $fields = explode(';', $data);
+    public static function generate_configdata_html($sortedfields, $ownertype, $ownerid) {
         $configdata = array();
 
-        foreach ($fields as $field) {
-            list($key, $value) = explode('=', $field);
-            $key = trim($key);
-            $value = trim($value);
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'attachment') {
                 $configdata['artefactid'] = self::process_attachment($value, $ownertype, $ownerid);
             }
@@ -1082,19 +1057,14 @@ EOD;
 
     /**
      * generate configdata for the blocktype: image
-     * @param string $data inside data column in blocktype tables
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_image($data, $ownertype, $ownerid) {
-        if (!$data) return;
-
-        $fields = explode(';', $data);
+    public static function generate_configdata_image($sortedfields, $ownertype, $ownerid) {
         $configdata = array();
-
-        foreach ($fields as $field) {
-            list($key, $value) = explode('=', $field);
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'attachment') {
                 $configdata = array('artefactid' => self::process_attachment($value, $ownertype, $ownerid));
             }
@@ -1107,30 +1077,23 @@ EOD;
 
     /**
      * generate configdata for the blocktype: internalmedia aka 'embeddedmedia
-     * @param string $data inside data column in blocktype tables
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values of db table
      */
-    public static function generate_configdata_internalmedia($data, $ownertype, $ownerid) {
-        if (!$data) return;
+    public static function generate_configdata_internalmedia($sortedfields, $ownertype, $ownerid) {
         $mediatype;
         $configdata = array();
-
-        $fields = explode(';', $data);
-        foreach ($fields as $field) {
-
-            list($key,$value) = explode('=', $field);
-            $key=trim($key);
-            $value=trim($value);
-
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'attachment') {
                 $filename = $value;
                 $filenameparts = explode('.', $filename);
                 $ext = end($filenameparts);
 
                 // we need to find the id of the item we are trying to attach and save it as artefactid
-                if (!$artefactid = get_field('artefact', 'id', 'title', $filename)) {
+                if (!$artefactid = get_field('artefact', 'id', 'title', $filename, 'owner', $ownerid)) {
+
                     if ($ext == 'wmv' || $ext == 'webm' || $ext == 'mov'|| $ext == 'ogv' || $ext == 'mpeg' || $ext == 'mp4' || $ext == 'flv' || $ext == 'avi' || $ext == '3gp') {
                         $artefactid = TestingDataGenerator::create_artefact($filename, $ownertype, $ownerid, 'video');
                         TestingDataGenerator::file_creation($artefactid, $filename, $ownertype, $ownerid);
@@ -1149,24 +1112,19 @@ EOD;
     /**
      * generate configdata for the blocktype: navigation and create navblocks*
      * **when copytoall is true**
-     * @param string $data inside data column in blocktype tables
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @param string $title of block to be created* (when copytoall is true)
      * @param object the current view to create block on
      * @return array $configdata of key and values of db table
      */
-    public static function generate_configdata_navigation($data, $ownertype, $ownerid, $title, $view) {
-        if (!$data) return;
-
+    public static function generate_configdata_navigation($sortedfields, $ownertype, $ownerid, $title, $view) {
         $configdata = array();
         $copytoall = true;
         $collectionid;
 
-        $fields = explode(';', $data);
-        foreach($fields as $field) {
-            $field = trim(strtolower($field));
-            list($key, $value) = explode('=', $field);
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'collection') {
                 $configdata[$key] = $collectionid =  get_field('collection', 'id', 'name', $value);
             }
@@ -1207,53 +1165,45 @@ EOD;
 
     /**
      * generate configdata for the bloctype: peerassessment
-     * @param string $data inside data column in blocktype tables
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @return array redundant info as there is no data directly connected in this case
      */
-    public static function generate_configdata_peerassessment($data) {
+    public static function generate_configdata_peerassessment($fields) {
         return array();
     }
 
     /**
      * generate configdata for the blocktype: pdf
-     * @param string $data inside data column in blocktype tables
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values of db table
      */
-    public static function generate_configdata_pdf($data, $ownertype, $ownerid) {
-        if (!$data) return;
+    public static function generate_configdata_pdf($sortedfields, $ownertype, $ownerid) {
+        foreach ($sortedfields as $key => $value) {
 
-        list($key, $value) = explode('=', $data);
-        $key=trim($key);
-        $value=trim($value);
-
-        if ($key == 'attachment') {
-            $configdata['artefactid'] = self::process_attachment($value, $ownertype, $ownerid);
+            if ($key == 'attachment') {
+                $configdata['artefactid'] = self::process_attachment($value, $ownertype, $ownerid);
+            }
         }
         return $configdata;
     }
 
     /**
-     * generate configdata for the blocktype: plans
-     * @param string $data inside data column in blocktype tables
-     * @return array $configdata of key and values of db table
+    * generate configdata for the blocktype: plans
+    *
+    * @param array $fields holding each chunk of data between the ; in the behat data column
+    * @param string $ownertype of user
+    * @param string $ownerid of the user
+    * @return array $configdata of key and values of db table
      */
-    public static function generate_configdata_plans($data) {
-        if (!$data) return;
+    public static function generate_configdata_plans($sortedfields, $ownertype, $ownerid) {
         $configdata = array();
-
-        $fields = explode(';', $data);
-        foreach($fields as $field) {
-            $field = trim($field);
-            list($key,$value) = explode('=', $field);
-            $key = trim($key);
-            $value = trim($value);
-
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'plans') {
                 $plans = explode(',',$value);
                 foreach ($plans as $plan) {
-                    if (!$planid = get_field('artefact', 'id', 'title', $plan, 'artefacttype', 'plan')) {
+                    if (!$planid = get_field('artefact', 'id', 'title', $plan, 'artefacttype', 'plan', 'owner', $ownerid)) {
                         throw new SystemException("Invalid Plan '" . $plan . "'");
                     }
                     $configdata['artefactids'][] = $planid;
@@ -1267,21 +1217,70 @@ EOD;
     }
 
     /**
-     * generate configdata for blocktype: recentforumposts
+     * generate configdata for the blocktype: profileinformation
      *
-     * @param string $data inside data column in blocktype tables
+     * As well as going thorugh the general fields in the data column of the table,
+     * an ArtefactTypeProfileIcon is created as there are none created in bulk.
+     *
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values of db table
      */
-    public static function generate_configdata_recentforumposts($data, $ownertype, $ownerid) {
-        if (!$data) return;
+    public static function generate_configdata_profileinfo($sortedfields, $ownertype, $ownerid) {
         $configdata = array();
 
-        $fields = explode(';',$data);
-        foreach ($fields as $field) {
-            $field = trim($field);
-            list($key, $value) = explode('=',$field);
+        foreach ($sortedfields as $key => $value) {
+            if ($key == 'introtext') {
+                require_once('embeddedimage.php');
+                $newtext = EmbeddedImage::prepare_embedded_images($value, 'introtext', 0);
+                $configdata['introtext'] = $newtext;
+            }
+            if ($key == 'profileicon') {
+                if (!$artefactprofileiconid = get_field('artefact', 'id', 'title', $value, 'owner', $ownerid, 'artefacttype', 'profileicon')) {
+                    $folderartefactid = ArtefactTypeFolder::get_folder_id(get_string('imagesdir', 'artefact.file'), get_string('imagesdirdesc', 'artefact.file'), null, true, $ownerid);
+                    $artefactprofileiconid = self::create_artefact($value, $ownertype, $ownerid, 'profileicon', $folderartefactid);
+                    self::file_creation($artefactprofileiconid, $value, $ownertype, $ownerid, true);
+
+                    execute_sql("UPDATE {usr}
+                        SET profileicon = $artefactprofileiconid
+                        WHERE id = $ownerid");
+                }
+                $configdata['profileicon'] = $artefactprofileiconid;
+            }
+        }
+        // gather the user's social profiles data
+        safe_require('artefact', 'internal');
+        $element_list = ArtefactTypeProfile::get_all_fields();
+
+        foreach ($element_list as $element=>$type) {
+            if ($artefactid = get_field('artefact', 'id', 'artefacttype', $element, 'owner', $ownerid)) {
+                $configdata['artefactids'][] = $artefactid;
+            }
+            else if ($element == 'socialprofile') {
+                $artefacttypes = ArtefactTypeSocialprofile::$socialnetworks;
+                foreach ($artefacttypes as $type) {
+                    if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'socialprofile', 'owner', $ownerid, 'note', $type)) {
+                        $configdata['artefactids'][] = $artefactid;
+                    }
+                }
+            }
+        }
+        return $configdata;
+    }
+
+    /**
+     * generate configdata for blocktype: recentforumposts
+     *
+     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values of db table
+     */
+    public static function generate_configdata_recentforumposts($sortedfields, $ownertype, $ownerid) {
+        $configdata = array();
+
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'groupname') {
                 $groupid;
                 //make sure the group exists
@@ -1297,39 +1296,54 @@ EOD;
                 $configdata[$key] = $value > 0 ? $value : 5;
             }
         }
-        $configdata[] = $data;
         return $configdata;
     }
 
     /**
-     * generate configdata for the blocktype: social profile
-     * @param string $data inside data column in behat test
+     * generate configdata for the blocktype: resumefield
+     * @param array $fields holding each chunk of data between the ; in the behat data column
      * @param string $ownertype of user
      * @param string $ownerid of the user
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_socialprofile($data, $ownertype, $ownerid) {
-        if (!$data) return;
-
-        list($key, $value) = explode('=', $data);
-        $key = trim($key);
-        $value = trim($value);
-
-        if ($key == 'sns') {
-            //split the values for multiple social profile creation
-            $medialist = explode(',', $value);
-            $value = array();
-            foreach($medialist as $media) {
-                $newprofile = new ArtefactTypeSocialprofile();
-                $newprofile->set('owner', $ownerid);
-                $newprofile->set('author',$ownerid);
-                $newprofile->set('title', $media);
-                $newprofile->set('description', $media);
-                $newprofile->set('note', $media);
-                $id = $newprofile->commit(); //update the contents of the artefact table only
-                $artefactid[] = $newprofile->get('id');
+    public static function generate_configdata_resumefield($sortedfields, $ownertype, $ownerid) {
+        foreach ($sortedfields as $key => $value) {
+            if ($key == 'artefacttype') {
+                if ($artefactid = get_field('artefact', 'id', 'owner', $ownerid, 'artefacttype', $value)) {
+                    return array('artefactid' => $artefactid);
+                }
+                else {
+                    throw new SystemException('The user ' . find_by_id($ownerid) . ' does not have a ' . $key);
+                }
             }
-            return $configdata = array('artefactids' => $artefactid);
+        }
+    }
+
+    /**
+     * generate configdata for the blocktype: social profile
+     * @param array $fields holding each chunk of data between the ; in the behat data column
+     * @param string $ownertype of user
+     * @param string $ownerid of the user
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_socialprofile($sortedfields, $ownertype, $ownerid) {
+        foreach ($sortedfields as $key => $value) {
+            if ($key == 'sns') {
+                //split the values for multiple social profile creation
+                $medialist = explode(',', $value);
+                $value = array();
+                foreach($medialist as $media) {
+                    $newprofile = new ArtefactTypeSocialprofile();
+                    $newprofile->set('owner', $ownerid);
+                    $newprofile->set('author',$ownerid);
+                    $newprofile->set('title', $media);
+                    $newprofile->set('description', $media);
+                    $newprofile->set('note', $media);
+                    $id = $newprofile->commit(); //update the contents of the artefact table only
+                    $artefactid[] = $newprofile->get('id');
+                }
+                return $configdata = array('artefactids' => $artefactid);
+            }
         }
     }
 
@@ -1338,9 +1352,14 @@ EOD;
      * @param string inside data column in behat test
      * @return array $configdata of key and values for db table
      */
-    public static function generate_configdata_text($data) {
-        if (!$data) return;
-        return $configdata = array('text' => $data);
+    public static function generate_configdata_text($sortedfields) {
+        $configdata = array();
+        foreach ($sortedfields as $key => $value) {
+            if ($key == 'textinput') {
+                $configdata['text'] = $value;
+            }
+        }
+        return $configdata;
     }
 
     /**
@@ -1350,15 +1369,14 @@ EOD;
     * holding an html artefact
     * NOTE:the title of a textbox block is the same as the html artefact the textbox it is associated with; not the title of a block instance
     *
-    * @param string $data inside data column in blocktype tables
+    * @param array $fields holding each chunk of data between the ; in the behat data column
     * @param string $ownertype of user
     * @param string $ownerid of the user
     * @param string $title of block to be created* (when copytoall is true)
     * @param object the current view to create block on
     * @return array $configdata of key and values of db table
     */
-    public static function generate_configdata_textbox($data, $ownertype, $ownerid, $title, $view) {
-        if (!$data) return;
+    public static function generate_configdata_textbox($sortedfields, $ownertype, $ownerid, $title, $view) {
         $configdata = array();
         $artefactdata = array();
         $bi = null;
@@ -1367,9 +1385,7 @@ EOD;
         $existingtextboxfound = false;
         $htmlartefactid = null;
 
-        $fields = explode(';', $data);
-        foreach ($fields as $field) {
-            list($key, $value) = explode('=', $field, 2);
+        foreach ($sortedfields as $key => $value) {
             if ($key == 'notetitle') {
                 $artefactdata['title'] = trim($value);
             }
@@ -1387,7 +1403,6 @@ EOD;
                     $tagstring[] = trim($tag);
                 }
                 $artefactdata['tags'] = $tagstring;
-
             }
             if ($key == 'attachments') {
                 $attachmentfiles = explode(',', $value);
@@ -1482,7 +1497,7 @@ EOD;
     * @param int $ownertype of the user
     * @param int $ownerid of the user
     **/
-    public static function file_creation($artefactid, $file, $ownertype, $ownerid, $foldername='upload_files') {
+    public static function file_creation($artefactid, $file, $ownertype, $ownerid, $profilepic=false) {
         // get the path of the file artefact from given artefactid
         $filedir = get_config('dataroot') . ArtefactTypeFile::get_file_directory($artefactid);
 
@@ -1495,10 +1510,44 @@ EOD;
             $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
             copy($path, $filepath);
             chmod($filepath, get_config('filepermissions'));
+
+            if ($profilepic) {
+              // Move the profile file into the correct place.
+              $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($artefactid % 256) . '/';
+              if (!check_dir_exists($directory, true, true)) {
+                  throw new SystemException("Unable to create folder $directory");
+              }
+              $result2 = copy($path, $directory . $artefactid);
+            }
         }
         if (!$artefactid) {
             throw new SystemException("Invalid attachment '" . $file . "'. No attachment by that name owned by " . $ownertype . " with id " . $ownerid);
         }
+    }
+
+    /**
+     * tidying up and organising the table data into an array
+     * @param string $data text from data columm
+     * @return array $sortedfields array of $key $value pairs containing fields their entries
+     */
+    public function setup_configdata($data) {
+        $fields = explode(';', $data);
+        $sortedfields = array();
+        if (!empty($fields)) {
+            foreach($fields as $field) {
+                if (empty($field)) break;
+                list($key, $value) = explode('=', $field, 2);
+                if (isset($key) && isset($value)) {
+                    $key = trim(strtolower($key));
+                    $value = trim($value);
+                    $sortedfields[$key]=$value;
+                }
+            }
+        }
+        else {
+            throw new SystemException("Empty fields!");
+        }
+        return $sortedfields;
     }
 
     /**
@@ -1510,7 +1559,6 @@ EOD;
         $configdata = array();
         $configdata['retractable'] = strtolower($setting) =='no' ? 0 : 1;
         $configdata['retractedonload'] = strtolower($setting) =='auto' ? 1 : 0;
-
         return $configdata;
     }
 
@@ -1524,22 +1572,31 @@ EOD;
     * @return int artefactid
     **/
     public static function create_artefact($file, $ownertype, $ownerid, $filetype, $parentfolderid=null) {
-        $ext = explode('.', $file);
-        $now = date("Y-m-d H:i:s");
+        $artefactid = null;
         $artefact = new stdClass();
-        $artefact->title = $file;
+        $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
+
+        $ext = explode('.', $file);
         $artefact->oldextension = end($ext);
+
+        $artefact->title = $file;
         $artefact->$ownertype = $ownerid;
         $artefact->author = $ownerid;
-        $artefact->atime = $now;
-        $artefact->ctime = $now;
-        $artefact->mtime = $now;
+        // table artefact_file_files needs this information
+        $artefact->contenthash = ArtefactTypeFile::generate_content_hash($path);
+        $artefact->filetype = mime_content_type($path);
+
+        $now = date("Y-m-d H:i:s");
+        $artefact->atime = $artefact->ctime = $artefact->mtime =$now;
+
+        $imagefilesize = filesize($path);
+        $filesize = get_real_size($imagefilesize);
+        $artefact->size = $filesize;
+
+        // if file belongs inside a folder
         if ($parentfolderid) {
             $artefact->parent = $parentfolderid;
         }
-
-        $artefactid = null;
-        $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $file;
 
         if ($filetype == 'image') {
 
@@ -1553,20 +1610,48 @@ EOD;
         }
 
         if ($filetype == 'attachment') {
+
             $artobj = new ArtefactTypeFile(0, $artefact);
             $artobj->commit();
             $artefactid = $artobj->get('id');
         }
 
         if ($filetype == 'audio') {
-            $artefact->filetype = 'audio';
             $artobj = ArtefactTypeFile::new_file($path, $artefact);
             $artobj->commit();
             $artefactid = $artobj->get('id');
         }
 
+        if ($filetype == 'profileicon') {
+            $imageinfo = getimagesize($path);
+            $artefact->width  = $imageinfo[0];
+            $artefact->height = $imageinfo[1];
+
+            $artefact->description = get_string('uploadedprofileicon', 'artefact.file');
+            $artefact->note = $file;
+
+            // validate the upload as done in Pieform (profileicons.php)
+            if (!$imageinfo || !is_image_type($imageinfo[2])) {
+                throw new SystemException(get_string('filenotimage'));
+            }
+            // maximum of five profile pics per user
+            if (get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $ownerid) >= 5) {
+                throw new SystemException(get_string('onlyfiveprofileicons', 'artefact.file'));
+            }
+
+            // by adding new pic, quota isn't exceeded
+            $user = new User();
+            $user->find_by_id($ownerid);
+            if (!$user->quota_allowed($artefact->size)) {
+                throw new SystemException(get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot')));
+            }
+
+            $profileiconartefact = new ArtefactTypeProfileIcon(0, $artefact);
+            $profileiconartefact->commit();
+            $artefactid = $profileiconartefact->get('id');
+        }
+
         if ($filetype == 'video') {
-            //this function from artefact/file/lib.php creates the specific ArtefactType[]
             $artobj = ArtefactTypeFile::new_file($path, $artefact);
             $artobj->commit();
             $artefactid = $artobj->get('id');
@@ -2078,6 +2163,28 @@ EOD;
     }
 
     /**
+     * A fixture to set up RESUME - personalinformation artefacts in bulk
+     *
+     * Example:
+     * And the following "personalinformation" exist:
+     * | user  | dateofbirth | placeofbirth | citizenship | visastatus | gender | maritalstatus |
+     * | UserA | 01/01/2000  | Italy        | New Zealand |            |        |               |
+     * | UserB | 01/01/2018  | Germany      | New Zealand |            |        |               |
+     */
+    public function create_personalinformation($record) {
+        $artefact = new ArtefactTypePersonalinformation();
+        $artefact->set('owner', $this->get_user_id($record['user']));
+        $artefact->commit();
+
+        $composites = ArtefactTypePersonalinformation::get_composite_fields();
+        foreach ($composites as $composite => $value) {
+            if (isset($record[$composite])) {
+                $artefact->set_composite($composite, $record[$composite]);
+            }
+        }
+    }
+
+    /**
      * A fixture to set up plans in bulk.
      * Currently it only supports adding title / description / tags for a plan
      *
@@ -2086,7 +2193,7 @@ EOD;
      * | owner   | ownertype | title      | description           | tags      |
      * | userA   | user      | Plan One   | This is my new plan   | cats,dogs |
      * | Group B | group     | Group Plan | This is my group plan | unicorn   |
-      */
+     */
     public function create_plan($record) {
         $owner = null;
         $this->set_owner($record, $owner);
@@ -2101,6 +2208,344 @@ EOD;
             $artefact->set('tags', (!empty($tags) ? $tags : null));
         }
         $artefact->commit();
+    }
+
+    /**
+     * A fixture to set up  RESUME - CERTIFICATIONS AND ACCREDITATIONS in bulk.
+     *
+     * Example:
+     * Given the following "certifications and accreditations" exist:
+     * | user  | date     | title          | description |
+     * | UserA | 02/02/80 | example title  | acceditation description |
+     * | UserB | 02/02/80 | example title  | certification description |
+      */
+    public function create_certification($record) {
+        $itemdata = array();
+        $userid = $this->get_user_id($record['user']);
+
+        // create artefact
+        $artefact = new ArtefactTypeCertification();
+        $artefact->set('owner', $this->get_user_id($record['user']));
+        $artefact->commit();
+        $itemdata['artefact'] = $artefact->get('id');
+
+        $formelements = ArtefactTypeCertification::get_addform_elements();
+        foreach ($formelements as $element => $value) {
+            if (isset($record[$element])) {
+                 $itemdata[$element] = $record[$element];
+            }
+        }
+        //default to prevent db error
+        $itemdata['displayorder'] = 1;
+        $table = 'artefact_resume_certification';
+        $itemid = insert_record($table, (object)$itemdata, 'id', true);
+    }
+
+    /**
+     * A fixture to set up  RESUME - BOOKS AND PUBLICATION in bulk.
+     *
+     * Example:
+     * Given the following "books and publications" exist:
+     * | user  | date     | title                                     | contribution | description          |
+     * | UserA | 05/05/50 | The Life-Changing Magic of not Tidying Up | co-author    | seven million copies |
+     * | UserB | 05/05/50 | The Life-Changing Magic of not Tidying Up | co-author    | seven million copies |
+      */
+    public function create_book($record) {
+        $itemdata = array();
+        $userid = $this->get_user_id($record['user']);
+
+        // create artefact
+        $artefact = new ArtefactTypeBook();
+        $artefact->set('owner', $this->get_user_id($record['user']));
+        $artefact->commit();
+        $itemdata['artefact'] = $artefact->get('id');
+
+        require_once('embeddedimage.php');
+        $description = EmbeddedImage::prepare_embedded_images('<p>'.$record['description'].'</p>', 'book', $userid);
+        $record['description'] = $description;
+
+        $formelements = ArtefactTypeBook::get_addform_elements();
+        foreach ($formelements as $element => $value) {
+            if (isset($record[$element])) {
+                 $itemdata[$element] = $record[$element];
+            }
+        }
+        //default to prevent db error
+        $itemdata['displayorder'] = 1;
+        $table = 'artefact_resume_book';
+        $itemid = insert_record($table, (object)$itemdata, 'id', true);
+    }
+
+    /**
+     * A fixture to set up  RESUME - PROFESSIONAL MEMEBERSHIPS in bulk.
+     *
+     * Example:
+     * And the following "professionalmemberships" exist:
+     * | user  | startdate   | title                       | description        |
+     * | UserA | 20/02/2008  | cat art company coordinator | catch up with cats |
+     * | UserB | 20/02/2008  | cat art company catcher     | catch fish for cats|
+     */
+    public function create_membership($record) {
+        $itemdata = array();
+        $userid = $this->get_user_id($record['user']);
+
+        // create artefact
+        $artefact = new ArtefactTypeMembership();
+        $artefact->set('owner', $this->get_user_id($record['user']));
+        $artefact->commit();
+        $itemdata['artefact'] = $artefact->get('id');
+
+        require_once('embeddedimage.php');
+        $description = EmbeddedImage::prepare_embedded_images('<p>'.$record['description'].'</p>', 'membership', $userid);
+        $record['description'] = $description;
+
+        $formelements = ArtefactTypeMembership::get_addform_elements();
+        foreach ($formelements as $element => $value) {
+            if (isset($record[$element])) {
+                 $itemdata[$element] = $record[$element];
+            }
+        }
+        //default to prevent db error
+        $itemdata['displayorder'] = 1;
+        $table = 'artefact_resume_membership';
+        $itemid = insert_record($table, (object)$itemdata, 'id', true);
+    }
+
+    /**
+     * A fixture to set up  RESUME - GOALS in bulk.
+     *
+     * Example:
+     * And the following "goals and skills" exist:
+     * | user  | goaltype/skilltype  | title        | description           |
+     * | UserA | academicgoal        | fix lateness | pack bag night before |
+     * | UserA | careergoal          | meow         | cat a lyst            |
+     * | UserA | personalgoal        | gym shark    | do do do              |
+     * | UserA | academicskill       | alphabet     | abc                   |
+     * | UserA | personalskill       | whistle      | *inset whistle noise  |
+     * | UserA | workskill           | team work    | axe throwing?         |
+     */
+    public function create_goals_and_skills($record) {
+        $artefact = null;
+        $userid = $this->get_user_id($record['user']);
+
+        $goalsandskills = array(
+          'personalgoal',
+          'academicgoal',
+          'careergoal',
+          'personalskill',
+          'academicskill',
+          'workskill',
+          'personalgoal',
+          'academicgoal',
+          'careergoal',
+          'personalskill',
+          'academicskill',
+          'workskill'
+        );
+
+        $artefacttype = $record['goaltype/skilltype'];
+        if (in_array($artefacttype,  $goalsandskills)) {
+              $classname = generate_artefact_class_name($artefacttype);
+
+              // if there exists multiple entires of interest in the table for same user,
+              // merge with the pre-existing artefact content
+              $artefactid = get_field('artefact','id','artefacttype',$artefacttype,'owner',$userid);
+              $goalskill = null;
+              if ($artefactid) {
+                  $goalskill = get_field('artefact','description','id',$artefactid);
+                  execute_sql("DELETE FROM {artefact} WHERE id=$artefactid AND owner=$userid");
+              }
+              $artefact = new $classname(0, array(
+                  'owner' => $userid,
+                  'title' => get_string("$artefacttype", 'artefact.resume'),
+              ));
+
+              require_once('embeddedimage.php');
+              $goalskill .= EmbeddedImage::prepare_embedded_images('<p><strong>'.$record['title'].'&nbsp;</strong>'.$record['description'].'</p>', $artefacttype, $userid);
+              $artefact->set('description', $goalskill);
+              $artefact->commit();
+        }
+    }
+
+    /**
+     * A fixture to set up  RESUME - INTERESTS in bulk.
+     *
+     * Example:
+     * And the following "interests" exist:
+     * | user  | interest  | description                 |
+     * | UserA | FOSS      | exciting open source stuff! |
+     * | UserA | Mahara    | awesome e-portfolio system  |
+     * | UserA | Coding and Coffee |  |
+     */
+    public function create_interests($record) {
+        $interests = null;
+        $userid = $this->get_user_id($record['user']);
+
+        // if there exists multiple entires of interest in the table for same user,
+        // merge with the pre-existing interest artefact content
+        $interestid = get_field('artefact','id','artefacttype','interest','owner',$userid);
+        if ($interestid) {
+            $interests = get_field('artefact','description','id',$interestid);
+            execute_sql("DELETE FROM {artefact} WHERE id=$interestid AND owner=$userid");
+        }
+
+        // create new artefact
+        $userid = $this->get_user_id($record['user']);
+        $classname = generate_artefact_class_name('interest');
+        require_once('embeddedimage.php');
+        $interests .= EmbeddedImage::prepare_embedded_images('<p><strong>'.$record['interest'].'&nbsp;</strong>'.$record['description'].'</p>', 'resumeinterest', $userid);
+
+        $artefact = new $classname(0, array(
+            'owner' => $userid,
+            'title' => get_string('interests', 'artefact.resume'),
+        ));
+        $artefact->set('description', $interests);
+        $artefact->commit();
+    }
+
+    /**
+     * A fixture to set up  RESUME - COVER LETTER in bulk.
+     *
+     * Example:
+     * And the following "coverletters" exist:
+     * | user  | content |
+     * | UserA |UserA In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |
+     * | UserB |UserB In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |
+     */
+    public function create_coverletter($record) {
+        $userid = $this->get_user_id($record['user']);
+        $coverletter = null;
+
+        // if there already exists a coverletter for the same user, throw exception as can only have one
+        if (get_field('artefact','id','artefacttype','coverletter','owner',$userid)) {
+            throw new SystemException("There already exists a coverletter for" . $record['user']);
+        }
+
+        // create artefact
+        $classname = generate_artefact_class_name('coverletter');
+        require_once('embeddedimage.php');
+        $coverletter = EmbeddedImage::prepare_embedded_images('<p>'.$record['content'].'</p>', 'resumecoverletter', $userid );
+
+        $coverletterartefact = new $classname(0, array(
+            'owner' => $userid,
+            'title' => get_string('coverletter', 'artefact.resume'),
+        ));
+        $coverletterartefact->set('description', $coverletter);
+        $coverletterartefact->commit();
+    }
+
+    /**
+     * A fixture to set up  RESUME - EDUCATION HISTORY in bulk.
+     *
+     * Example:
+     * And the following "educationhistory" exist:
+     * | user  | institution         | startdate | enddate  | qualdescription |
+     * | UserA | example institution | 12/12/12  | 12/12/21 | school          |
+     * | UserB | example institution | 21/10/21  | 10/12/26 | school          |
+     * | UserA | example institution | 12/12/20  | 12/12/21 | school          |
+     * | UserB | example institution | 21/10/20  | 10/12/26 | school          |
+     */
+    public function create_educationhistory($record) {
+        $itemdata = array();
+        $userid = $this->get_user_id($record['user']);
+
+        // create artefact
+        $artefact = new ArtefactTypeEducationhistory();
+        $artefact->set('owner', $this->get_user_id($record['user']));
+        $artefact->commit();
+        $itemdata['artefact'] = $artefact->get('id');
+
+        $formelements = ArtefactTypeEducationhistory::get_addform_elements();
+        foreach ($formelements as $element => $value) {
+            if (isset($record[$element])) {
+                 $itemdata[$element] = $record[$element];
+            }
+        }
+        //default to prevent db error
+        $itemdata['displayorder'] = 1;
+        $table = 'artefact_resume_educationhistory';
+        $itemid = insert_record($table, (object)$itemdata, 'id', true);
+    }
+
+    /**
+     * A fixture to set up  RESUME - EMPLOYMENT HISTORY in bulk.
+     *
+     * Example:
+     * And the following "employmenthistory" exist:
+     * | user  | employer  | startdate | enddate | jobtitle   | positiondescription    |
+     * | UserA | employer1 | 01/02/03  |         | crystal dr | locating magic crystals|
+     * | UserB | employer2 | 02/02/00  |         | Cat sitter | pat kittens            |
+     */
+    public function create_employmenthistory($record) {
+        $itemdata = array();
+        $userid = $this->get_user_id($record['user']);
+
+        //create artefact
+        $artefact = new ArtefactTypeEmploymenthistory();
+        $artefact->set('owner', $this->get_user_id($record['user']));
+        $artefact->commit();
+        $itemdata['artefact'] = $artefact->get('id');
+
+        $formelements = ArtefactTypeEmploymenthistory::get_addform_elements();
+        foreach ($formelements as $element => $value) {
+            if (isset($record[$element])) {
+                 $itemdata[$element] = $record[$element];
+            }
+        }
+        //default to prevent db error
+        $itemdata['displayorder'] = 1;
+        $table = 'artefact_resume_employmenthistory';
+        $itemid = insert_record($table, (object)$itemdata, 'id', true);
+    }
+
+    /**
+     * A fixture to set up  RESUME - CONTACT INFORMATION in bulk.
+     * does not work in group pages
+     * Example:
+     * And the following "contactinformation" exist:
+     * | user  | email            | mobilenumber |
+     * | UserA | userA@mahara.com | 01234567890  |
+     */
+    public function create_contactinformation($record) {
+        $itemdata = array();
+        $userid = $this->get_user_id($record['user']);
+
+        $contactfields = array(
+          'email',
+          'maildisabled',
+          'officialwebsite',
+          'personalwebsite',
+          'blogaddress',
+          'address',
+          'town',
+          'city',
+          'country',
+          'homenumber',
+          'businessnumber',
+          'mobilenumber',
+          'faxnumber'
+        );
+
+        foreach ($contactfields as $field) {
+            if (isset($record[$field])) {
+                $itemdata[$field] = $record[$field];
+            }
+        }
+
+        // the contactinformation artefact is separate from the inner artefacts within
+        // such asw the officialwebsite, homenumber, email artefacts etc. In the db
+        // the description field is left empty, and the $values are in the title field
+        // with not embedded text, unlike other artefacts.
+        $artefact = ArtefactTypeContactinformation::setup_new($userid);
+        foreach ($itemdata as $artefacttype => $title) {
+            $classname = generate_artefact_class_name($artefacttype);
+            $artefactid = get_field('artefact','id','artefacttype',$artefacttype,'owner',$userid);
+            $artefact = new $classname(0, array(
+              'owner' => $userid,
+              'title' => $title,
+            ));
+            $artefact->commit();
+        }
     }
 
     /**
