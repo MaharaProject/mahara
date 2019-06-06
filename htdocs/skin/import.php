@@ -58,7 +58,7 @@ $form = pieform(array(
             'type' => 'submitcancel',
             'class' => 'btn-primary',
             'value' => array(get_string('import', 'skin'), get_string('cancel', 'mahara')),
-            'goto' => ($importsiteskins ? get_config('wwwroot') . 'admin/site/skins.php' : get_config('wwwroot') . 'skin/'),
+            'goto' => ($importsiteskins ? get_config('wwwroot') . 'admin/site/skins.php' : get_config('wwwroot') . 'skin/index.php'),
         ),
     ),
 ));
@@ -262,8 +262,11 @@ function importskinform_submit(Pieform $form, $values) {
                     fwrite($fp, $contents);
                     fclose($fp);
                     // We can keep going, but the skin will be missing one of its files
-                    if ($clamerror = mahara_clam_scan_file($imagepath)) {
-                        $SESSION->add_error_msg($clamerror);
+                    if (get_config('viruschecking')) {
+                        if ($clamerror = mahara_clam_scan_file($imagepath)) {
+                            $SESSION->add_error_msg($clamerror);
+                            clam_handle_infected_file($imagepath);
+                        }
                     }
                     chmod($imagepath, get_config('filepermissions'));
                 }
@@ -324,8 +327,11 @@ function importskinform_submit(Pieform $form, $values) {
                             fwrite($fp, $contents);
                             fclose($fp);
                             // We can keep going, but the skin will be missing one of its files
-                            if ($clamerror = mahara_clam_scan_file($fontpath . $filename)) {
-                                $SESSION->add_error_msg($clamerror);
+                            if (get_config('viruschecking')) {
+                                if ($clamerror = mahara_clam_scan_file($fontpath . $filename)) {
+                                    $SESSION->add_error_msg($clamerror);
+                                    clam_handle_infected_file($fontpath . $filename);
+                                }
                             }
                             chmod($fontpath . $filename, get_config('filepermissions'));
                         }
