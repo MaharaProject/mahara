@@ -201,7 +201,7 @@ $placeholderbutton = '';
 if ($placeholderblock) {
     // it's active so make the button with different display title
     $placeholderblock[0]['title'] = get_string('addnewblock', 'view');
-    $placeholderblock[0]['cssicon'] = '_';
+    $placeholderblock[0]['cssicon'] = 'plus';
     $smarty = smarty_core();
     $smarty->assign('blocktypes', $placeholderblock);
     $smarty->assign('javascript', false);

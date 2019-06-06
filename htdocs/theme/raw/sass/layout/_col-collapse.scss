@@ -19,13 +19,8 @@
 }
 
 .col-with-collapse {
-    @extend .col-lg-10;
-    @extend .col-sm-9;
-
-    .col-collapsed & {
-        @extend .col-lg-11;
-        @extend .col-sm-10;
-    }
+    @extend .col-lg-11;
+    @extend .col-sm-10;
 }
 
 .col-collapse-offset {

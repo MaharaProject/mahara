@@ -191,6 +191,9 @@ body.presentation-iframe {
         right: -1px;
         margin-top: 30px;
         z-index: $zindex-fixed;
+        .btn.first-of-group {
+            border-top-left-radius: $border-radius;
+        }
     }
 }
 

@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-{include file="view/editviewtabs.tpl" selected='content' issiteview=$issiteview}
+{include file="view/editviewtabs.tpl" issiteview=$issiteview}
 <div class="view-instructions">
     <form action="{$formurl}" method="post" class="row">
         <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
@@ -9,11 +9,6 @@
         <input type="hidden" id="category" name="c" value="{$category}">
         <input type="hidden" name="sesskey" value="{$SESSKEY}">
 
-        <div id="editcontent-sidebar-wrapper">
-            <div id="editcontent-sidebar">
-            {include file="view/contenteditor.tpl" selected='content'}
-            </div>
-        </div>
         <div class="col-with-collapse">
         {if $instructions}
             <div id="viewinstructions" class="last form-group collapsible-group small-group">
@@ -37,6 +32,7 @@
             </div>
         {/if}
         </div>
+        {include file="view/editviewpageactions.tpl" selected='content' ineditor=true}
     </form>
 </div>
 <div class="view-container" selected='content'>
@@ -47,7 +43,7 @@
         <input type="hidden" id="category" name="c" value="{$category}">
         <input type="hidden" name="sesskey" value="{$SESSKEY}">
 
-        <div class="fullwidth">
+        <div class="col">
             <div id="bottom-pane" data-role="workspace">
                 <div id="column-container" class="user-page-content">
                     {$columns|safe}
@@ -56,7 +52,7 @@
         </div>
     </form>
 
-    <div id="view-return-controls" class="col-collapse-offset col-with-collapse">
+    <div id="view-return-controls">
         {if !$issitetemplate}
         <a class="btn btn-secondary" href="{$displaylink}">
             {str tag=displayview section=view}

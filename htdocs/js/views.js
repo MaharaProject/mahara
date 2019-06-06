@@ -448,7 +448,7 @@
             helper: function(event) {
                 var original = $(this),
                     helper = $("<div />").append(original.clone());
-
+                helper.find('label span').removeClass('hidden');
                 helper.children().each(function(index) {
                     // Set helper cell sizes to match at least the original sizes
                     $(this).css('min-width', '200px');
