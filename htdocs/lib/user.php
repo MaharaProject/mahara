@@ -1822,6 +1822,13 @@ function can_send_message($from, $to) {
     if (is_object($to)) {
         $to = $to->id;
     }
+
+    // Site admins can send to any user in the system
+    // regardless of the user's notification settings.
+    if ($from->admin) {
+        return true;
+    }
+
     $messagepref = get_account_preference($to, 'messages');
 
     $cansend = false;
