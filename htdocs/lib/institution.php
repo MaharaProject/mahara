@@ -291,7 +291,7 @@ class Institution {
         $this->verifyReady();
     }
 
-    public function addUserAsMember($user) {
+    public function addUserAsMember($user, $staff=null, $admin=null) {
         global $USER;
         if ($this->isFull()) {
             $this->send_admin_institution_is_full_message();
@@ -326,6 +326,12 @@ class Institution {
         $userinst->usr = $user->id;
         $now = time();
         $userinst->ctime = db_format_timestamp($now);
+        if ($staff) {
+            $userinst->staff = true;
+        }
+        if ($admin) {
+            $userinst->admin = true;
+        }
         $defaultexpiry = $this->defaultmembershipperiod;
         if (!empty($defaultexpiry)) {
             $userinst->expiry = db_format_timestamp($now + $defaultexpiry);
@@ -363,6 +369,16 @@ class Institution {
         }
 
         db_commit();
+    }
+
+    public function addUserAsStaff($user) {
+        // Only to be used to add a member to an institution and bump ther permissions to staff
+        $this->addUserAsMember($user, true);
+    }
+
+    public function addUserAsAdmin($user) {
+        // Only to be used to add a member to an institution and bump ther permissions to admin
+        $this->addUserAsMember($user, null, true);
     }
 
     public function add_members($userids) {
