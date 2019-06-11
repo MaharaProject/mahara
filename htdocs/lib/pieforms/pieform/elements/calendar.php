@@ -333,7 +333,12 @@ function pieform_element_calendar_convert_to_epoch($date) {
     // (See http://php.net/manual/en/function.strtotime.php#refsect1-function.strtotime-notes)
     $dateformat = get_string('pieform_calendar_dateformat', 'langconfig');
     if (preg_match('/%[ed].*%[m].*%[yY]/', $dateformat)) {
-         $value = strtotime(preg_replace('/[^0-9]/', '.', $date));
+        $timesuffix = preg_match('/(am|pm)$/i', $date, $match);
+        $fixdate = preg_replace('/[^0-9]/', '.', $date);
+        if ($timesuffix) {
+            $fixdate = preg_replace('/[^\d](\.+)$/', $match[1], $fixdate);
+        }
+        $value = strtotime($fixdate);
     }
 
     // If that didn't work, then just try doing strtotime on the plain value
