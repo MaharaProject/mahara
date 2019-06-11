@@ -159,43 +159,39 @@ jQuery(function($) {
 
         function setDatePicker(target) {
             var loc = '{{strstr(current_language(), '.', true)}}'; // Get current langauge to use for locale
-            target.datetimepicker({
-                useCurrent: false,
-                format: "{{str(tag='pieform_calendar_dateformat' section='langconfig')|pieform_element_calendar_convert_dateformat}} {{str(tag='pieform_calendar_timeformat' section='langconfig')|pieform_element_calendar_convert_timeformat}}",
-                locale: loc,
-                buttons: {
-                    showClear: true,
-                    showToday: true,
-                },
-                tooltips: {{$datepickertooltips|safe}},
-                icons: {
-                    time: "icon icon-clock-o",
-                    date: "icon icon-calendar",
-                    up: "icon icon-arrow-up",
-                    down: "icon icon-arrow-down",
-                    previous: "icon icon-chevron-left",
-                    next: "icon icon-chevron-right",
-                    close: "icon icon-times",
-                    clear: "icon icon-trash",
-                    today: "icon icon-crosshairs",
-                },
-            });
-
-            target.on('hide.datetimepicker', function(selectedDate) {
-                if (selectedDate !== "") {
-                    formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
-                }
-            });
-
-            // ugly fix for open issue in tempusdominus bootstrap lib not getting the value from html tag
-            // https://github.com/tempusdominus/bootstrap-4/issues/126
             target.each(function() {
+                // ugly fix for open issue in tempusdominus bootstrap lib not getting the value from html tag
+                // https://github.com/tempusdominus/bootstrap-4/issues/126
                 var value = $(this).attr('value');
+                value = value == '' ? null : value;
                 $(this).datetimepicker({
                     format: "{{str(tag='pieform_calendar_dateformat' section='langconfig')|pieform_element_calendar_convert_dateformat}} {{str(tag='pieform_calendar_timeformat' section='langconfig')|pieform_element_calendar_convert_timeformat}}",
-                    date: value
+                    date: value,
+                    useCurrent: false,
+                    locale: loc,
+                    buttons: {
+                        showClear: true,
+                        showToday: true,
+                    },
+                    tooltips: {{$datepickertooltips|safe}},
+                    icons: {
+                        time: "icon icon-clock-o",
+                        date: "icon icon-calendar",
+                        up: "icon icon-arrow-up",
+                        down: "icon icon-arrow-down",
+                        previous: "icon icon-chevron-left",
+                        next: "icon icon-chevron-right",
+                        close: "icon icon-times",
+                        clear: "icon icon-trash",
+                        today: "icon icon-crosshairs",
+                    },
                 });
                 $(this).val(value);
+                $(this).on('hide.datetimepicker', function(selectedDate) {
+                    if (selectedDate !== "") {
+                        formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
+                    }
+                });
             });
         }
 
