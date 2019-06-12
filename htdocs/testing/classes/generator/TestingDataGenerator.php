@@ -229,9 +229,17 @@ EOD;
      */
     public static function get_mimetype($filename) {
         $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $filename;
-        $mimetype = mime_content_type($path);
+        $mimetype = file_mime_type($path);
         list($media, $ext) = explode('/', $mimetype);
-        $mediatype = ($media == 'application' || $media == 'text') ? 'attachment' : $media;
+        if ($media == 'application') {
+            $mediatype = 'archive';
+        }
+        else if ($media == 'text') {
+            $mediatype = 'attachment';
+        }
+        else {
+            $mediatype = $media;
+        }
 
         return $mediatype;
     }
@@ -264,7 +272,7 @@ EOD;
      * @return int $artefactid of the newly created artefact
      */
     public static function process_attachment($filename, $ownertype, $ownerid, $parentid=null) {
-        $mediatype = self:: get_mimetype($filename);
+        $mediatype = self::get_mimetype($filename);
         // we need to find the id of the item we are trying to attach and save it as artefactid
         if (!isset($parentid)) {
             $dbownertype = $ownertype == 'user' ? 'owner' : $ownertype;
@@ -1789,7 +1797,6 @@ EOD;
         $artefact->title = $file;
         switch ($ownertype) {
           case 'user':
-              $artefact->user = 1;
               $artefact->owner = $ownerid;
               break;
           case 'institution':
@@ -1805,7 +1812,7 @@ EOD;
         $artefact->author = $ownerid;
         // table artefact_file_files needs this information
         $artefact->contenthash = ArtefactTypeFile::generate_content_hash($path);
-        $artefact->filetype = mime_content_type($path);
+        $artefact->filetype = file_mime_type($path);
 
         $now = date("Y-m-d H:i:s");
         $artefact->atime = $artefact->ctime = $artefact->mtime =$now;
@@ -1833,6 +1840,12 @@ EOD;
         if ($filetype == 'attachment') {
 
             $artobj = new ArtefactTypeFile(0, $artefact);
+            $artobj->commit();
+            $artefactid = $artobj->get('id');
+        }
+
+        if ($filetype == 'archive') {
+            $artobj = ArtefactTypeFile::new_file($path, $artefact);
             $artobj->commit();
             $artefactid = $artobj->get('id');
         }

@@ -1,7 +1,7 @@
 @javascript @core @blocktype
-Feature: Creating a page with blocks
+Feature: Creating pages with blocks
     As a user
-    I want to add a page with blocks as a background step
+    I want to add multiple pages with a selection of blocks as a background step
     As a group admin
     I want to add a page with blocks as a background step
 
@@ -33,19 +33,19 @@ Background:
     | UserB | 01/01/2018  | Germany      | New Zealand |            |        |               |
 
     And the following "goals and skills" exist:
-    | user  | goaltype/skilltype  | title        | description           | attachment |
-    | UserA | academicgoal        | fix lateness | pack bag night before | Image1.jpg |
-    | UserA | careergoal          | meow         | cat a lyst            | users.csv  |
-    | UserA | personalgoal        | gym shark    | do do do              | Image2.png |
-    | UserA | academicskill       | alphabet     | abc                   | groups.csv |
-    | UserA | personalskill       | whistle      | *inset whistle noise  | Image1.jpg |
-    | UserA | workskill           | team work    | axe throwing?         | users.csv  |
-    | UserB | academicgoal        | academi doooo| description goal/skill| Image2.png |
-    | UserB | careergoal          | careerg doooo| description goal/skill| groups.csv |
-    | UserB | personalgoal        | persona doooo| description goal/skill| Image1.jpg |
-    | UserB | academicskill       | academi doooo| description goal/skill| users.csv  |
-    | UserB | personalskill       | persona doooo| description goal/skill| Image2.png |
-    | UserB | workskill           | workski doooo| description goal/skill| groups.csv |
+    | user  | goaltype/skilltype  | title        | description           | attachment  |
+    | UserA | academicgoal        | fix lateness | pack bag night before | Image1.jpg  |
+    | UserA | careergoal          | meow         | cat a lyst            | users.csv   |
+    | UserA | personalgoal        | gym shark    | do do do              | Image2.png  |
+    | UserA | academicskill       | alphabet     | abc                   | 3images.zip |
+    | UserA | personalskill       | whistle      | *inset whistle noise  | Image1.jpg  |
+    | UserA | workskill           | team work    | axe throwing?         | users.csv   |
+    | UserB | academicgoal        | academi doooo| description goal/skill| Image2.png  |
+    | UserB | careergoal          | careerg doooo| description goal/skill| groups.csv  |
+    | UserB | personalgoal        | persona doooo| description goal/skill| Image1.jpg  |
+    | UserB | academicskill       | academi doooo| description goal/skill| users.csv   |
+    | UserB | personalskill       | persona doooo| description goal/skill| Image2.png  |
+    | UserB | workskill           | workski doooo| description goal/skill| groups.csv  |
 
     And the following "interests" exist:
     # Available fields: user*, interest*, description
