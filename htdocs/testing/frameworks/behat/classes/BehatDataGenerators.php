@@ -126,10 +126,7 @@ class BehatDataGenerators extends BehatBase {
                 'type'             => 'text',
                 'data'             => 'text',
                 'page'             => 'text',
-                /*'row'              => 'text',
-                'column'           => 'text',
-                'order'            => 'text',*/
-                'retractable'      => 'text',
+                'retractable'      => 'text'
             ),
             'required' => array('title', 'type', 'page')
         ),
@@ -226,7 +223,7 @@ class BehatDataGenerators extends BehatBase {
             'completed'            => 'bool',
             'tags'                 => 'text'
           ),
-          'required' => array('owner', 'ownertype', 'plan', 'title', 'completiondate')
+          'required' => array('owner', 'ownertype', 'plan', 'title', 'completiondate', 'completed')
         ),
         'forums' => array(
           'datagenerator' => 'forum',

@@ -209,6 +209,18 @@ EOD;
         return false;
     }
 
+    /**
+    * Gets the username from given userid
+    * @param int $userid
+    * @return string $username
+    */
+    public static function get_user_username($userid) {
+      if (!$username = get_field('usr', 'username', 'id', $userid)) {
+        throw new SystemException("No such user with id $userid");
+      }
+      return $username;
+    }
+
     public static function get_mimetype($filename) {
         $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $filename;
         $mimetype = mime_content_type($path);
@@ -1418,11 +1430,11 @@ EOD;
     public static function generate_configdata_resumefield($sortedfields, $ownertype, $ownerid) {
         foreach ($sortedfields as $key => $value) {
             if ($key == 'artefacttype') {
-                if ($artefactid = get_field('artefact', 'id', 'owner', $ownerid, 'artefacttype', $value)) {
-                    return array('artefactid' => $artefactid);
+                if (!$artefactid = get_field('artefact', 'id', 'owner', $ownerid, 'artefacttype', $value)) {
+                    throw new SystemException('The user ' . self::get_user_username($ownerid) . ' does not have a ' . $value);
                 }
                 else {
-                    throw new SystemException('The user ' . find_by_id($ownerid) . ' does not have a ' . $key);
+                  return array('artefactid' => $artefactid);
                 }
             }
         }
@@ -2348,37 +2360,6 @@ EOD;
     }
 
     /**
-     * A fixture to set up  RESUME - CERTIFICATIONS AND ACCREDITATIONS in bulk.
-     *
-     * Example:
-     * Given the following "certifications and accreditations" exist:
-     * | user  | date     | title          | description |
-     * | UserA | 02/02/80 | example title  | acceditation description |
-     * | UserB | 02/02/80 | example title  | certification description |
-      */
-    public function create_certification($record) {
-        $itemdata = array();
-        $userid = $this->get_user_id($record['user']);
-
-        // create artefact
-        $artefact = new ArtefactTypeCertification();
-        $artefact->set('owner', $this->get_user_id($record['user']));
-        $artefact->commit();
-        $itemdata['artefact'] = $artefact->get('id');
-
-        $formelements = ArtefactTypeCertification::get_addform_elements();
-        foreach ($formelements as $element => $value) {
-            if (isset($record[$element])) {
-                 $itemdata[$element] = $record[$element];
-            }
-        }
-        //default to prevent db error
-        $itemdata['displayorder'] = 1;
-        $table = 'artefact_resume_certification';
-        $itemid = insert_record($table, (object)$itemdata, 'id', true);
-    }
-
-    /**
      * A fixture to set up  RESUME - BOOKS AND PUBLICATION in bulk.
      *
      * Example:
@@ -2390,12 +2371,20 @@ EOD;
     public function create_book($record) {
         $itemdata = array();
         $userid = $this->get_user_id($record['user']);
+        $artefact = null;
 
         // create artefact
-        $artefact = new ArtefactTypeBook();
-        $artefact->set('owner', $this->get_user_id($record['user']));
-        $artefact->commit();
-        $itemdata['artefact'] = $artefact->get('id');
+        if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'book')) {
+            $artefact = new ArtefactTypeBook($artefactid, null);
+            $itemdata['artefact'] =  $artefact->get('id');
+        }
+        else {
+          // create artefact
+          $artefact = new ArtefactTypeBook();
+          $artefact->set('owner', $this->get_user_id($record['user']));
+          $artefact->commit();
+          $itemdata['artefact'] = $artefact->get('id');
+        }
 
         require_once('embeddedimage.php');
         $description = EmbeddedImage::prepare_embedded_images('<p>'.$record['description'].'</p>', 'book', $userid);
@@ -2411,7 +2400,53 @@ EOD;
         $itemdata['displayorder'] = 1;
         $table = 'artefact_resume_book';
         $itemid = insert_record($table, (object)$itemdata, 'id', true);
+
+        if (!empty($record['attachment'])) {
+            $file = trim($record['attachment']);
+            $artefactfileid = self::process_attachment($file, 'user', $userid);
+            $artefact->attach($artefactfileid, $itemid);
+        }
     }
+
+    /**
+     * A fixture to set up  RESUME - CERTIFICATIONS AND ACCREDITATIONS in bulk.
+     *
+     * Example:
+     * Given the following "certifications and accreditations" exist:
+     * | user  | date     | title          | description |
+     * | UserA | 02/02/80 | example title  | acceditation description |
+     * | UserB | 02/02/80 | example title  | certification description |
+      */
+    public function create_certification($record) {
+        $itemdata = array();
+        $userid = $this->get_user_id($record['user']);
+        $artefact = null;
+
+        // create artefact
+        if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'certification')) {
+            $artefact = new ArtefactTypeCertification($artefactid, null);
+            $itemdata['artefact'] =  $artefact->get('id');
+        }
+        else {
+          // create artefact
+          $artefact = new ArtefactTypeCertification();
+          $artefact->set('owner', $this->get_user_id($record['user']));
+          $artefact->commit();
+          $itemdata['artefact'] = $artefact->get('id');
+        }
+
+        $formelements = ArtefactTypeCertification::get_addform_elements();
+        foreach ($formelements as $element => $value) {
+            if (isset($record[$element])) {
+                 $itemdata[$element] = $record[$element];
+            }
+        }
+        //default to prevent db error
+        $itemdata['displayorder'] = 1;
+        $table = 'artefact_resume_certification';
+        $itemid = insert_record($table, (object)$itemdata, 'id', true);
+    }
+
 
     /**
      * A fixture to set up  RESUME - PROFESSIONAL MEMEBERSHIPS in bulk.
@@ -2425,12 +2460,20 @@ EOD;
     public function create_membership($record) {
         $itemdata = array();
         $userid = $this->get_user_id($record['user']);
+        $artefact = null;
 
-        // create artefact
-        $artefact = new ArtefactTypeMembership();
-        $artefact->set('owner', $this->get_user_id($record['user']));
-        $artefact->commit();
-        $itemdata['artefact'] = $artefact->get('id');
+        if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'membership')) {
+            $artefact = new ArtefactTypeMembership($artefactid, null);
+            $itemdata['artefact'] =  $artefact->get('id');
+        }
+        else {
+          // create artefact
+          $artefact = new ArtefactTypeMembership();
+          $artefact->set('owner', $this->get_user_id($record['user']));
+          $artefact->commit();
+          $itemdata['artefact'] = $artefact->get('id');
+        }
+
 
         require_once('embeddedimage.php');
         $description = EmbeddedImage::prepare_embedded_images('<p>'.$record['description'].'</p>', 'membership', $userid);
@@ -2622,12 +2665,19 @@ EOD;
     public function create_employmenthistory($record) {
         $itemdata = array();
         $userid = $this->get_user_id($record['user']);
+        $artefact = null;
 
-        //create artefact
-        $artefact = new ArtefactTypeEmploymenthistory();
-        $artefact->set('owner', $this->get_user_id($record['user']));
-        $artefact->commit();
-        $itemdata['artefact'] = $artefact->get('id');
+        if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'employmenthistory')) {
+            $artefact = new ArtefactTypeEmploymenthistory($artefactid, null);
+            $itemdata['artefact'] =  $artefact->get('id');
+        }
+        else {
+          //create artefact
+          $artefact = new ArtefactTypeEmploymenthistory();
+          $artefact->set('owner', $this->get_user_id($record['user']));
+          $artefact->commit();
+          $itemdata['artefact'] = $artefact->get('id');
+        }
 
         $formelements = ArtefactTypeEmploymenthistory::get_addform_elements();
         foreach ($formelements as $element => $value) {

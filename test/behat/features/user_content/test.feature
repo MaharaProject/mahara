@@ -6,12 +6,24 @@ Feature: Creating a page with blocks
     I want to add a page with blocks as a background step
 
 Background:
+    # The * in available fields are compulsory
+    # extra tables not currently in this feature file: ...the following ~
+    # institutions, group memberships, institution memberships, permissions, messages, ... exist
+
     Given the following "users" exist:
+    # Available fields: username*, password*, email*, firstname*, lastname*, institution, role, authname, remoteusername, studentid, preferredname, town, country, occupation
     | username | password | email             | firstname | lastname | institution | authname | role |
     | UserA    | Kupuh1pa!| UserA@example.org | Painterio | Mahara   | mahara      | internal | member |
     | UserB    | Kupuh1pa!| UserB@example.org | Mechania  | Mahara   | mahara      | internal | member |
 
+    And the following "groups" exist:
+    # Availble fields: name*, owner*, description, grouptype, open, controlled, request, invitefriends, suggestfriends, submittableto, allowarchives,
+    #                 editwindowstart, editwindowstart, editwindowend, members, staff, admins, institution, public
+    | name   | owner | description           | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
+    | Group1 | UserB | Group1 owned by UserB | standard  | ON   | OFF           | all       | ON            | OFF           | UserA   |       |
+
     And the following "personalinformation" exist:
+    # Available fields: username*, password*, email, firstname, lastname, institution, authname, role
     | user  | dateofbirth | placeofbirth | citizenship | visastatus | gender | maritalstatus |
     | UserA | 01/01/2000  | Italy        | New Zealand |            |        |               |
     | UserB | 01/01/2018  | Germany      | New Zealand |            |        |               |
@@ -32,12 +44,14 @@ Background:
     | UserB | workskill           | workski doooo| de sc ri p t i o n nn |
 
     And the following "interests" exist:
-    | user  | interest  | description                 |
-    | UserA | FOSS      | exciting open source stuff! |
-    | UserA | Mahara    | awesome e-portfolio system  |
-    | UserA | Coding and Coffee |  |
+    # Available fields: user*, interest*, description
+    | user  | interest          | description                 |
+    | UserA | FOSS              | exciting open source stuff! |
+    | UserA | Mahara            | awesome e-portfolio system  |
+    | UserA | Coffee and Coding |  |
 
     And the following "coverletters" exist:
+    # Availble fields: user*, content*
     | user  | content |
     | UserA |UserA In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |
     | UserB |UserB In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |
@@ -55,6 +69,8 @@ Background:
     | UserB | Cat      | 02/02/00  |         | Cat sitter | pat kittens            |
 
     And the following "contactinformation" exist:
+    # Available fields: user*, email*, officialwebsite, personalwebsite, blogaddress, town, city/region, country, homenumber,
+    #                   businessnumber, mobilenumber, faxnumber
     | user  | email            | mobilenumber |
     | UserA | userA@mahara.com | 01234567890  |
 
@@ -73,15 +89,14 @@ Background:
     | UserA | 20/02/2008  | cat art company coordinator | catch up with cats |
     | UserB | 20/02/2008  | cat art company catcher     | catch fish for cats|
 
-    And the following "groups" exist:
-    | name   | owner | description           | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-    | Group1 | UserB | Group1 owned by UserB | standard  | ON   | OFF           | all       | ON            | OFF           | UserA   |       |
 
     And the following "forums" exist:
+    # Available fields: title*, description*, group*, creator*
     | group  | title     | description          | creator |
     | Group1 | unicorns! | magic mahara unicorns| UserB   |
 
     And the following "forumposts" exist:
+    # Available fields: group*, forum, topic, subject, message*, user*
     | group  | forum      | topic     | subject    | message                     | user  |
     | Group1 | unicorns!  | topic one |            | mahara unicorns unite!      | UserB |
     | Group1 | unicorns!  | topic one |            | yay! mahara unicorns unite! | UserB |
@@ -89,8 +104,10 @@ Background:
     | Group1 |            | topic one | cheer on   | 10 papercranes, let's go!   | UserB |
     | Group1 | unicorns!  | topic one | extra subj | 100 papercranes, let's go!  | UserB |
     | Group1 | unicorns!  |           | origami    | 1000 papercranes, let's go! | UserB |
+    | Group1 |            |           |            | 1000 papercranes, let's go! | UserB |
 
     And the following "pages" exist:
+    # Available fields: title*, description, ownertype*, ownername*, layout, tags
     | title         | description | ownertype | ownername |
     | Page UserA    | Page 01     | user      | UserA     |
     | Page UserB    | Page 01     | user      | UserB     |
@@ -99,40 +116,49 @@ Background:
     | Page Two      | test 01     | user      | UserA     |
 
     And the following "collections" exist:
+    # Available fields: title*, description, ownertype*, ownername*, pages
     | title          | ownertype | ownername | description | pages             |
     | collection one | user      | UserA     | desc of col |Page One,Page Two  |
 
 
     And the following "journals" exist:
+    # Available fields: owner*, ownertype*, title*, description, tags
     | owner | ownertype | title   | description      | tags               |
     | UserA | user      | journal1| this is journal1 | amber,brown,cobalt |
     | Group1| group     | journal2| this is journal1 | amber,brown,cobalt |
 
     And the following "journalentries" exist:
+    # Available fields: owner*, ownertype*, title*, entry*, blog, tags, draft
     | owner   | ownertype | title       | entry                  | blog     | tags      | draft |
     | UserA   | user      | Entry One   | This is my entry  One  | journal1 | cats,dogs | 0     |
     | UserA   | user      | Entry Two   | This is my entry Two   | journal1 | cats,dogs | 0     |
     | UserA   | user      | Entry Three | This is my entry Three | journal1 | cats,dogs | 0     |
     | UserA   | user      | Entry Four  | This is my entry Four  | journal1 | cats,dogs | 0     |
     | UserA   | user      | Entry Five  | This is my entry Five  | journal1 | cats,dogs | 0     |
+    | UserA   | user      | Entry Mini  | This is my min fields  |          |           | 0     |
     | Group1  | group     | Group e1    | This is my group entry | journal2 |           | 0     |
 
     And the following "plans" exist:
+    # Available fields: owner*, ownertype*, title*, description, tags
     | owner   | ownertype | title      | description           | tags      |
     | UserA   | user      | Plan One   | This is my plan one   | cats,dogs |
     | UserA   | user      | Plan Two   | This is my plan two   | cats,dogs |
+    | UserA   | user      | Plan Mini  |                       |           |
     | Group1 | group      | Group Plan | This is my group plan | unicorn   |
 
     And the following "tasks" exist:
+    # Available fields: owner*, ownertype*, plan*, title*, completed*, completiondate*, description, tags
     | owner | ownertype | plan     | title      | description         | completiondate | completed | tags      |
     | UserA | user      | Plan One | Task One a | Task 1a Description | 12/12/19       | false     | cats,dogs |
     | UserA | user      | Plan One | Task One b | Task 1b Description | 12/01/19       | true      | cats,dogs |
     | UserA | user      | Plan Two | Task Two a | Task 2a Description | 12/10/19       | true      | cats,dogs |
     | UserA | user      | Plan Two | Task Two b | Task 2b Description | 11/01/19       | true      | cats,dogs |
     | UserA | user      | Plan Two | Task Two c | Task 2c Description | 22/02/19       | true      | cats,dogs |
+    | UserA | user      | Plan Two | Task Min a |                     | 22/02/19       | false     |           |
 
 
     And the following "blocks" exist:
+    # Available fields: title*, type*, data*, page*, retractable*
     | title                | type           | page          |retractable | data |
     | Text                 | text           | Page UserA    | yes        | textinput=This is some text |
     | Image JPG            | image          | Page UserA    | no         | attachment=Image1.jpg; width=100 |
