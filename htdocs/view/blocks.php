@@ -265,11 +265,6 @@ if (isset($groupurl)) {
 }
 $smarty->assign('institution', $institution);
 
-if (get_config('userscanchooseviewthemes') && $view->is_themeable()) {
-    $smarty->assign('viewtheme', $viewtheme);
-    $smarty->assign('viewthemes', $allowedthemes);
-}
-
 $smarty->assign('viewid', $view->get('id'));
 $collectionid = false;
 if ($collection = $view->get('collection')) {

@@ -521,9 +521,10 @@ $string['textbox1'] = 'Note';
 $string['image'] = 'Image';
 $string['addcontent'] = 'Add Content';
 $string['theme'] = 'Theme';
+$string['choosethemedesc'] = 'Choose a theme for the page.';
 
 $string['lockblocks'] = "Lock blocks";
-$string['lockblocksdescription'] = "You can lock the blocks on the page and prevent that they are removed when people copy the page.";
+$string['lockblocksdescription'] = "You can lock the blocks on the page and prevent them from being removed when people copy the page.";
 $string['instructions'] = 'Instructions';
 $string['advanced']     = 'Advanced';
 

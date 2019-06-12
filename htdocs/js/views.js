@@ -208,8 +208,6 @@
 
         showColumnBackgroundsOnSort();
 
-        rewriteViewThemeSelector();
-
         makeNewBlocksDraggable();
         makeExistingBlocksSortable();
 
@@ -1139,21 +1137,6 @@
         if (config.mathjax && MathJax !== undefined) {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
-    }
-
-    /**
-     * Wire up the view theme selector
-     */
-    function rewriteViewThemeSelector() {
-        if (!viewThemeSelect) {
-            return;
-        }
-        var currentTheme = $('option:selected', viewThemeSelect).val();
-        viewThemeSelect.on('change', function() {
-                if ($('option:selected', viewThemeSelect).val() != currentTheme) {
-                    $(viewThemeSelect).closest('form').trigger('submit');
-                }
-        });
     }
 
     function addConfigureBlock(oldblock, configblock, removeoncancel) {
