@@ -221,6 +221,12 @@ EOD;
       return $username;
     }
 
+    /**
+     * Gets the media type of an file
+     *
+     * @param string $filename
+     * @return string media type
+     */
     public static function get_mimetype($filename) {
         $path = get_mahararoot_dir() . '/test/behat/upload_files/' . $filename;
         $mimetype = mime_content_type($path);
@@ -228,6 +234,22 @@ EOD;
         $mediatype = ($media == 'application' || $media == 'text') ? 'attachment' : $media;
 
         return $mediatype;
+    }
+
+    /**
+    * Sort out the list of tags for to be saved for block tags in the config array
+    * @param string of tags(s) in a comma separated string
+    * @return array $list of tag(s)
+    */
+    public static function sort_tags($list) {
+        $tagsarray = array();
+        $tags = explode(',', $list);
+
+        foreach ($tags as $tag) {
+           $tag = trim(strtolower($tag));
+           $tagsarray[] = $tag;
+        }
+        return $tagsarray;
     }
 
     /**
@@ -245,7 +267,8 @@ EOD;
         $mediatype = self:: get_mimetype($filename);
         // we need to find the id of the item we are trying to attach and save it as artefactid
         if (!isset($parentid)) {
-            $artefactid = get_field('artefact', 'id', 'title', $filename, $ownertype, $ownerid);
+            $dbownertype = $ownertype == 'user' ? 'owner' : $ownertype;
+            $artefactid = get_field('artefact', 'id', 'title', $filename, $dbownertype, $ownerid);
         }
         else {
             $artefactid = get_field('artefact', 'id', 'title', $filename, 'parent', $parentid);
@@ -722,7 +745,7 @@ EOD;
                 $ownerid = $view->get('group');
             }
             else {
-                $ownertype = 'owner';
+                $ownertype = 'user';
                 $ownerid = $view->get('owner');
             }
         }
@@ -962,14 +985,14 @@ EOD;
      * @return array $configdata of key and values for db table
      */
     public static function generate_configdata_entireresume($sortedfields, $ownertype, $ownerid) {
+        $configdata = array();
         foreach ($sortedfields as $key => $value) {
             if ($key == 'tags') {
-                $tags =  explode(',', $value);
-                $tagstring = array();
-                foreach($tags as $tag) {
-                    $tagstring[] = trim($tag);
+                $tags = explode(',', $value);
+                foreach ($tags as $tag) {
+                   $tag = trim(strtolower($tag));
+                   $configdata['tags'][] = $tag;
                 }
-                $artefactdata['tags'] = $tagstring;
             }
         }
     }
@@ -996,11 +1019,8 @@ EOD;
                 $configdata[$key] = $value;
             }
             if ($key == 'tags') {
-                $tags = explode(',', $value);
-                foreach ($tags as $tag) {
-                   $tag = trim(strtolower($tag));
-                   $configdata['tags'][] = $tag;
-                }
+                $configdata['tags'] = self::sort_tags($value);
+
             }
         }
         return $configdata;
@@ -1015,11 +1035,7 @@ EOD;
         $configdata = array();
         foreach ($sortedfields as $key => $value) {
             if ($key == 'tags') {
-                $tags = explode(',', $value);
-                foreach ($tags as $tag) {
-                   $tag = trim(strtolower($tag));
-                   $configdata['tags'][] = $tag;
-                }
+                $configdata['tags'] = self::sort_tags($value);
             }
             if ($key == 'source') {
                 $configdata = PluginBlocktypeExternalvideo::process_url($value);
@@ -1548,11 +1564,7 @@ EOD;
                 $configdata['text'] = $value;
             }
             if ($key == 'tags') {
-                $tags = explode(',', $value);
-                foreach ($tags as $tag) {
-                   $tag = trim(strtolower($tag));
-                   $configdata['tags'][] = $tag;
-                }
+                $configdata['tags'] = self::sort_tags($value);
             }
         }
         return $configdata;
@@ -1593,12 +1605,7 @@ EOD;
             }
             if ($key == 'tags') {
                 // noteblock expects tags in csv form (separated by commas)
-                $tags =  explode(',', $value);
-                $tagstring = array();
-                foreach($tags as $tag) {
-                    $tagstring[] = trim($tag);
-                }
-                $artefactdata['tags'] = $tagstring;
+                $artefactdata['tags'] = $value;
             }
             if ($key == 'attachments') {
                 $attachmentfiles = explode(',', $value);
@@ -1761,7 +1768,7 @@ EOD;
     /**
     * Create artefacts
     * @param string $file name
-    * @param string $ownertype i.e. institution, group, onwer
+    * @param string $ownertype i.e. institution, group, user
     * @param int $ownerid
     * @param string $filetype of the upload file
     * @param string $foldername to upload the file into
@@ -1776,7 +1783,21 @@ EOD;
         $artefact->oldextension = end($ext);
 
         $artefact->title = $file;
-        $artefact->$ownertype = $ownerid;
+        switch ($ownertype) {
+          case 'user':
+              $artefact->user = 1;
+              $artefact->owner = $ownerid;
+              break;
+          case 'institution':
+              $artefact->institution = 1;
+              break;
+          case 'group':
+              $artefact->group = 1;
+              break;
+          default:
+              break;
+        }
+        // $artefact->ownertype = $ownerid;
         $artefact->author = $ownerid;
         // table artefact_file_files needs this information
         $artefact->contenthash = ArtefactTypeFile::generate_content_hash($path);
@@ -2359,28 +2380,6 @@ EOD;
     }
 
     /**
-     * A fixture to set up RESUME - personalinformation artefacts in bulk
-     *
-     * Example:
-     * And the following "personalinformation" exist:
-     * | user  | dateofbirth | placeofbirth | citizenship | visastatus | gender | maritalstatus |
-     * | UserA | 01/01/2000  | Italy        | New Zealand |            |        |               |
-     * | UserB | 01/01/2018  | Germany      | New Zealand |            |        |               |
-     */
-    public function create_personalinformation($record) {
-        $artefact = new ArtefactTypePersonalinformation();
-        $artefact->set('owner', $this->get_user_id($record['user']));
-        $artefact->commit();
-
-        $composites = ArtefactTypePersonalinformation::get_composite_fields();
-        foreach ($composites as $composite => $value) {
-            if (isset($record[$composite])) {
-                $artefact->set_composite($composite, $record[$composite]);
-            }
-        }
-    }
-
-    /**
      * A fixture to set up plans in bulk.
      * Currently it only supports adding title / description / tags for a plan
      *
@@ -2415,23 +2414,15 @@ EOD;
      * | UserA | 05/05/50 | The Life-Changing Magic of not Tidying Up | co-author    | seven million copies |
      * | UserB | 05/05/50 | The Life-Changing Magic of not Tidying Up | co-author    | seven million copies |
       */
-    public function create_book($record) {
+    public function create_resume_book($record) {
         $itemdata = array();
         $userid = $this->get_user_id($record['user']);
-        $artefact = null;
 
         // create artefact
-        if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'book')) {
-            $artefact = new ArtefactTypeBook($artefactid, null);
-            $itemdata['artefact'] =  $artefact->get('id');
-        }
-        else {
-          // create artefact
-          $artefact = new ArtefactTypeBook();
-          $artefact->set('owner', $this->get_user_id($record['user']));
-          $artefact->commit();
-          $itemdata['artefact'] = $artefact->get('id');
-        }
+        $artefact = new ArtefactTypeBook();
+        $artefact->set('owner', $this->get_user_id($record['user']));
+        $artefact->commit();
+        $itemdata['artefact'] = $artefact->get('id');
 
         require_once('embeddedimage.php');
         $description = EmbeddedImage::prepare_embedded_images('<p>'.$record['description'].'</p>', 'book', $userid);
@@ -2464,170 +2455,84 @@ EOD;
      * | UserA | 02/02/80 | example title  | acceditation description |
      * | UserB | 02/02/80 | example title  | certification description |
       */
-    public function create_certification($record) {
+    public function create_resume_certification($record) {
         $itemdata = array();
         $userid = $this->get_user_id($record['user']);
         $artefact = null;
 
         // create artefact
-        if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'certification')) {
-            $artefact = new ArtefactTypeCertification($artefactid, null);
-            $itemdata['artefact'] =  $artefact->get('id');
-        }
-        else {
-          // create artefact
-          $artefact = new ArtefactTypeCertification();
-          $artefact->set('owner', $this->get_user_id($record['user']));
-          $artefact->commit();
-          $itemdata['artefact'] = $artefact->get('id');
-        }
+        $artefact = new ArtefactTypeCertification();
+        $artefact->set('owner', $this->get_user_id($record['user']));
+        $artefact->commit();
+        $artefactid = $artefact->get('id');
+        $itemdata['artefact'] = $artefactid;
 
         $formelements = ArtefactTypeCertification::get_addform_elements();
         foreach ($formelements as $element => $value) {
-            if (isset($record[$element])) {
-                 $itemdata[$element] = $record[$element];
-            }
+          if (isset($record[$element])) {
+            $itemdata[$element] = $record[$element];
+          }
         }
         //default to prevent db error
         $itemdata['displayorder'] = 1;
         $table = 'artefact_resume_certification';
         $itemid = insert_record($table, (object)$itemdata, 'id', true);
+
+        if (!empty($record['attachment'])) {
+            $file = trim($record['attachment']);
+            $artefactfileid = self::process_attachment($file, 'user', $userid);
+            $artefact->attach($artefactfileid, $itemid);
+        }
     }
 
-
     /**
-     * A fixture to set up  RESUME - PROFESSIONAL MEMEBERSHIPS in bulk.
-     *
+     * A fixture to set up  RESUME - CONTACT INFORMATION in bulk.
+     * does not work in group pages
      * Example:
-     * And the following "professionalmemberships" exist:
-     * | user  | startdate   | title                       | description        |
-     * | UserA | 20/02/2008  | cat art company coordinator | catch up with cats |
-     * | UserB | 20/02/2008  | cat art company catcher     | catch fish for cats|
+     * And the following "contactinformation" exist:
+     * | user  | email            | mobilenumber |
+     * | UserA | userA@mahara.com | 01234567890  |
      */
-    public function create_membership($record) {
+    public function create_resume_contactinformation($record) {
         $itemdata = array();
         $userid = $this->get_user_id($record['user']);
-        $artefact = null;
 
-        if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'membership')) {
-            $artefact = new ArtefactTypeMembership($artefactid, null);
-            $itemdata['artefact'] =  $artefact->get('id');
-        }
-        else {
-          // create artefact
-          $artefact = new ArtefactTypeMembership();
-          $artefact->set('owner', $this->get_user_id($record['user']));
-          $artefact->commit();
-          $itemdata['artefact'] = $artefact->get('id');
-        }
-
-
-        require_once('embeddedimage.php');
-        $description = EmbeddedImage::prepare_embedded_images('<p>'.$record['description'].'</p>', 'membership', $userid);
-        $record['description'] = $description;
-
-        $formelements = ArtefactTypeMembership::get_addform_elements();
-        foreach ($formelements as $element => $value) {
-            if (isset($record[$element])) {
-                 $itemdata[$element] = $record[$element];
-            }
-        }
-        //default to prevent db error
-        $itemdata['displayorder'] = 1;
-        $table = 'artefact_resume_membership';
-        $itemid = insert_record($table, (object)$itemdata, 'id', true);
-    }
-
-    /**
-     * A fixture to set up  RESUME - GOALS in bulk.
-     *
-     * Example:
-     * And the following "goals and skills" exist:
-     * | user  | goaltype/skilltype  | title        | description           |
-     * | UserA | academicgoal        | fix lateness | pack bag night before |
-     * | UserA | careergoal          | meow         | cat a lyst            |
-     * | UserA | personalgoal        | gym shark    | do do do              |
-     * | UserA | academicskill       | alphabet     | abc                   |
-     * | UserA | personalskill       | whistle      | *inset whistle noise  |
-     * | UserA | workskill           | team work    | axe throwing?         |
-     */
-    public function create_goals_and_skills($record) {
-        $artefact = null;
-        $userid = $this->get_user_id($record['user']);
-
-        $goalsandskills = array(
-          'personalgoal',
-          'academicgoal',
-          'careergoal',
-          'personalskill',
-          'academicskill',
-          'workskill',
-          'personalgoal',
-          'academicgoal',
-          'careergoal',
-          'personalskill',
-          'academicskill',
-          'workskill'
+        $contactfields = array(
+          'email',
+          'maildisabled',
+          'officialwebsite',
+          'personalwebsite',
+          'blogaddress',
+          'address',
+          'town',
+          'city',
+          'country',
+          'homenumber',
+          'businessnumber',
+          'mobilenumber',
+          'faxnumber'
         );
 
-        $artefacttype = $record['goaltype/skilltype'];
-        if (in_array($artefacttype,  $goalsandskills)) {
-              $classname = generate_artefact_class_name($artefacttype);
-
-              // if there exists multiple entires of interest in the table for same user,
-              // merge with the pre-existing artefact content
-              $artefactid = get_field('artefact','id','artefacttype',$artefacttype,'owner',$userid);
-              $goalskill = null;
-              if ($artefactid) {
-                  $goalskill = get_field('artefact','description','id',$artefactid);
-                  execute_sql("DELETE FROM {artefact} WHERE id=$artefactid AND owner=$userid");
-              }
-              $artefact = new $classname(0, array(
-                  'owner' => $userid,
-                  'title' => get_string("$artefacttype", 'artefact.resume'),
-              ));
-
-              require_once('embeddedimage.php');
-              $goalskill .= EmbeddedImage::prepare_embedded_images('<p><strong>'.$record['title'].'&nbsp;</strong>'.$record['description'].'</p>', $artefacttype, $userid);
-              $artefact->set('description', $goalskill);
-              $artefact->commit();
-        }
-    }
-
-    /**
-     * A fixture to set up  RESUME - INTERESTS in bulk.
-     *
-     * Example:
-     * And the following "interests" exist:
-     * | user  | interest  | description                 |
-     * | UserA | FOSS      | exciting open source stuff! |
-     * | UserA | Mahara    | awesome e-portfolio system  |
-     * | UserA | Coding and Coffee |  |
-     */
-    public function create_interests($record) {
-        $interests = null;
-        $userid = $this->get_user_id($record['user']);
-
-        // if there exists multiple entires of interest in the table for same user,
-        // merge with the pre-existing interest artefact content
-        $interestid = get_field('artefact','id','artefacttype','interest','owner',$userid);
-        if ($interestid) {
-            $interests = get_field('artefact','description','id',$interestid);
-            execute_sql("DELETE FROM {artefact} WHERE id=$interestid AND owner=$userid");
+        foreach ($contactfields as $field) {
+            if (isset($record[$field])) {
+                $itemdata[$field] = $record[$field];
+            }
         }
 
-        // create new artefact
-        $userid = $this->get_user_id($record['user']);
-        $classname = generate_artefact_class_name('interest');
-        require_once('embeddedimage.php');
-        $interests .= EmbeddedImage::prepare_embedded_images('<p><strong>'.$record['interest'].'&nbsp;</strong>'.$record['description'].'</p>', 'resumeinterest', $userid);
-
-        $artefact = new $classname(0, array(
-            'owner' => $userid,
-            'title' => get_string('interests', 'artefact.resume'),
-        ));
-        $artefact->set('description', $interests);
-        $artefact->commit();
+        // the contactinformation artefact is separate from the inner artefacts within
+        // such as the officialwebsite, homenumber, email artefacts etc. In the db
+        // the description field is left empty, and the $values are in the title field
+        // with not embedded text, unlike other artefacts.
+        $artefact = ArtefactTypeContactinformation::setup_new($userid);
+        foreach ($itemdata as $artefacttype => $title) {
+            $classname = generate_artefact_class_name($artefacttype);
+            $artefactid = get_field('artefact','id','artefacttype',$artefacttype,'owner',$userid);
+            $artefact = new $classname(0, array(
+              'owner' => $userid,
+              'title' => $title,
+            ));
+            $artefact->commit();
+        }
     }
 
     /**
@@ -2639,7 +2544,7 @@ EOD;
      * | UserA |UserA In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |
      * | UserB |UserB In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |
      */
-    public function create_coverletter($record) {
+    public function create_resume_coverletter($record) {
         $userid = $this->get_user_id($record['user']);
         $coverletter = null;
 
@@ -2672,33 +2577,34 @@ EOD;
      * | UserA | example institution | 12/12/20  | 12/12/21 | school          |
      * | UserB | example institution | 21/10/20  | 10/12/26 | school          |
      */
-    public function create_educationhistory($record) {
-        $itemdata = array();
-        $userid = $this->get_user_id($record['user']);
-        $artefact = null;
+     public function create_resume_educationhistory($record) {
+         $itemdata = array();
+         $userid = $this->get_user_id($record['user']);
+         $artefact = null;
 
-        if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'educationhistory')) {
-            $artefact = new ArtefactTypeEducationhistory($artefactid, null);
-            $itemdata['artefact'] =  $artefact->get('id');
-        }
-        else {
-          $artefact = new ArtefactTypeEducationhistory();
-          $artefact->set('owner', $this->get_user_id($record['user']));
-          $artefact->commit();
-          $itemdata['artefact'] = $artefact->get('id');
-        }
+         if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'educationhistory')) {
+             $artefact = new ArtefactTypeEducationhistory($artefactid, null);
+             $itemdata['artefact'] =  $artefact->get('id');
+         }
+         else {
+           $artefact = new ArtefactTypeEducationhistory();
+           $artefact->set('owner', $this->get_user_id($record['user']));
+           $artefact->commit();
+           $itemdata['artefact'] = $artefact->get('id');
+         }
 
-        $formelements = ArtefactTypeEducationhistory::get_addform_elements();
-        foreach ($formelements as $element => $value) {
-            if (isset($record[$element])) {
-                 $itemdata[$element] = $record[$element];
-            }
-        }
-        //default to prevent db error
-        $itemdata['displayorder'] = 1;
-        $table = 'artefact_resume_educationhistory';
-        $itemid = insert_record($table, (object)$itemdata, 'id', true);
-    }
+         $formelements = ArtefactTypeEducationhistory::get_addform_elements();
+         foreach ($formelements as $element => $value) {
+             if (isset($record[$element])) {
+                  $itemdata[$element] = $record[$element];
+             }
+         }
+         //default to prevent db error
+         $itemdata['displayorder'] = 1;
+         $table = 'artefact_resume_educationhistory';
+         $itemid = insert_record($table, (object)$itemdata, 'id', true);
+     }
+
 
     /**
      * A fixture to set up  RESUME - EMPLOYMENT HISTORY in bulk.
@@ -2709,24 +2615,167 @@ EOD;
      * | UserA | employer1 | 01/02/03  |         | crystal dr | locating magic crystals|
      * | UserB | employer2 | 02/02/00  |         | Cat sitter | pat kittens            |
      */
-    public function create_employmenthistory($record) {
+     public function create_resume_employmenthistory($record) {
+         $itemdata = array();
+         $userid = $this->get_user_id($record['user']);
+         $artefact = null;
+
+         if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'employmenthistory')) {
+             $artefact = new ArtefactTypeEmploymenthistory($artefactid, null);
+             $itemdata['artefact'] =  $artefact->get('id');
+         }
+         else {
+           $artefact = new ArtefactTypeEmploymenthistory();
+           $artefact->set('owner', $this->get_user_id($record['user']));
+           $artefact->commit();
+           $itemdata['artefact'] = $artefact->get('id');
+         }
+
+         $formelements = ArtefactTypeEmploymenthistory::get_addform_elements();
+         foreach ($formelements as $element => $value) {
+             if (isset($record[$element])) {
+                  $itemdata[$element] = $record[$element];
+             }
+         }
+         //default to prevent db error
+         $itemdata['displayorder'] = 1;
+         $table = 'artefact_resume_employmenthistory';
+         $itemid = insert_record($table, (object)$itemdata, 'id', true);
+
+         if (!empty($record['attachment'])) {
+             $file = trim($record['attachment']);
+             $artefactfileid = self::process_attachment($file, 'user', $userid);
+             $artefact->attach($artefactfileid, $itemid);
+         }
+     }
+
+    /**
+     * A fixture to set up  RESUME - GOALS in bulk.
+     *
+     * Attachments added, will not relate to a specific goal/skill
+     * but are connected to the entire set.
+     *
+     * Example:
+     * And the following "goals and skills" exist:
+     * | user  | goaltype/skilltype  | title        | description           |
+     * | UserA | academicgoal        | fix lateness | pack bag night before |
+     * | UserA | careergoal          | meow         | cat a lyst            |
+     * | UserA | personalgoal        | gym shark    | do do do              |
+     * | UserA | academicskill       | alphabet     | abc                   |
+     * | UserA | personalskill       | whistle      | *inset whistle noise  |
+     * | UserA | workskill           | team work    | axe throwing?         |
+     */
+    public function create_resume_goalsandskills($record) {
+        $artefact = null;
+        $userid = $this->get_user_id($record['user']);
+
+        $goalsandskills = array(
+          'personalgoal',
+          'academicgoal',
+          'careergoal',
+          'personalskill',
+          'academicskill',
+          'workskill',
+          'personalgoal',
+          'academicgoal',
+          'careergoal',
+          'personalskill',
+          'academicskill',
+          'workskill'
+        );
+
+        $artefacttype = $record['goaltype/skilltype'];
+        if (in_array($artefacttype,  $goalsandskills)) {
+            $classname = generate_artefact_class_name($artefacttype);
+
+            // if there exists multiple entires of interest in the table for same user,
+            // merge with the pre-existing artefact content
+            $artefactid = get_field('artefact','id','artefacttype',$artefacttype,'owner',$userid);
+            $goalskill = null;
+            if ($artefactid) {
+                $goalskill = get_field('artefact','description','id',$artefactid);
+                execute_sql("DELETE FROM {artefact} WHERE id=$artefactid AND owner=$userid");
+            }
+            $artefact = new $classname(0, array(
+                'owner' => $userid,
+                'title' => get_string("$artefacttype", 'artefact.resume'),
+            ));
+
+            require_once('embeddedimage.php');
+            $goalskill .= EmbeddedImage::prepare_embedded_images('<p><strong>'.$record['title'].'&nbsp;</strong>'.$record['description'].'</p>', $artefacttype, $userid);
+            $artefact->set('description', $goalskill);
+            $artefact->commit();
+
+            // Attachments
+            if (!empty($record['attachment'])) {
+                $file = trim($record['attachment']);
+                $artefactid = self::process_attachment($file, 'user', $userid);
+                $artefact->attach($artefactid);
+            }
+        }
+    }
+
+    /**
+     * A fixture to set up  RESUME - INTERESTS in bulk.
+     *
+     * Example:
+     * And the following "interests" exist:
+     * | user  | interest  | description                 |
+     * | UserA | FOSS      | exciting open source stuff! |
+     * | UserA | Mahara    | awesome e-portfolio system  |
+     * | UserA | Coding and Coffee |  |
+     */
+    public function create_resume_interests($record) {
+        $interests = null;
+        $userid = $this->get_user_id($record['user']);
+
+        // if there exists multiple entires of interest in the table for same user,
+        // merge with the pre-existing interest artefact content
+        $interestid = get_field('artefact','id','artefacttype','interest','owner',$userid);
+        if ($interestid) {
+            $interests = get_field('artefact','description','id',$interestid);
+            execute_sql("DELETE FROM {artefact} WHERE id=$interestid AND owner=$userid");
+        }
+
+        // create new artefact
+        $userid = $this->get_user_id($record['user']);
+        $classname = generate_artefact_class_name('interest');
+        require_once('embeddedimage.php');
+        $interests .= EmbeddedImage::prepare_embedded_images('<p><strong>'.$record['interest'].'&nbsp;</strong>'.$record['description'].'</p>', 'resumeinterest', $userid);
+
+        $artefact = new $classname(0, array(
+            'owner' => $userid,
+            'title' => get_string('interests', 'artefact.resume'),
+        ));
+        $artefact->set('description', $interests);
+        $artefact->commit();
+    }
+
+    /**
+     * A fixture to set up  RESUME - PROFESSIONAL MEMEBERSHIPS in bulk.
+     *
+     * Example:
+     * And the following "professionalmemberships" exist:
+     * | user  | startdate   | title                       | description        |
+     * | UserA | 20/02/2008  | cat art company coordinator | catch up with cats |
+     * | UserB | 20/02/2008  | cat art company catcher     | catch fish for cats|
+     */
+    public function create_resume_membership($record) {
         $itemdata = array();
         $userid = $this->get_user_id($record['user']);
         $artefact = null;
 
-        if ($artefactid = get_field('artefact', 'id', 'artefacttype', 'employmenthistory')) {
-            $artefact = new ArtefactTypeEmploymenthistory($artefactid, null);
-            $itemdata['artefact'] =  $artefact->get('id');
-        }
-        else {
-          //create artefact
-          $artefact = new ArtefactTypeEmploymenthistory();
-          $artefact->set('owner', $this->get_user_id($record['user']));
-          $artefact->commit();
-          $itemdata['artefact'] = $artefact->get('id');
-        }
+        // create artefact
+        $artefact = new ArtefactTypeMembership();
+        $artefact->set('owner', $this->get_user_id($record['user']));
+        $artefact->commit();
+        $itemdata['artefact'] = $artefact->get('id');
 
-        $formelements = ArtefactTypeEmploymenthistory::get_addform_elements();
+        require_once('embeddedimage.php');
+        $description = EmbeddedImage::prepare_embedded_images('<p>'.$record['description'].'</p>', 'membership', $userid);
+        $record['description'] = $description;
+
+        $formelements = ArtefactTypeMembership::get_addform_elements();
         foreach ($formelements as $element => $value) {
             if (isset($record[$element])) {
                  $itemdata[$element] = $record[$element];
@@ -2734,57 +2783,35 @@ EOD;
         }
         //default to prevent db error
         $itemdata['displayorder'] = 1;
-        $table = 'artefact_resume_employmenthistory';
+        $table = 'artefact_resume_membership';
         $itemid = insert_record($table, (object)$itemdata, 'id', true);
+
+        if (!empty($record['attachment'])) {
+            $file = trim($record['attachment']);
+            $artefactfileid = self::process_attachment($file, 'user', $userid);
+            $artefact->attach($artefactfileid, $itemid);
+        }
     }
 
     /**
-     * A fixture to set up  RESUME - CONTACT INFORMATION in bulk.
-     * does not work in group pages
+     * A fixture to set up RESUME - personalinformation artefacts in bulk
+     *
      * Example:
-     * And the following "contactinformation" exist:
-     * | user  | email            | mobilenumber |
-     * | UserA | userA@mahara.com | 01234567890  |
+     * And the following "personalinformation" exist:
+     * | user  | dateofbirth | placeofbirth | citizenship | visastatus | gender | maritalstatus |
+     * | UserA | 01/01/2000  | Italy        | New Zealand |            |        |               |
+     * | UserB | 01/01/2018  | Germany      | New Zealand |            |        |               |
      */
-    public function create_contactinformation($record) {
-        $itemdata = array();
-        $userid = $this->get_user_id($record['user']);
+    public function create_resume_personalinformation($record) {
+        $artefact = new ArtefactTypePersonalinformation();
+        $artefact->set('owner', $this->get_user_id($record['user']));
+        $artefact->commit();
 
-        $contactfields = array(
-          'email',
-          'maildisabled',
-          'officialwebsite',
-          'personalwebsite',
-          'blogaddress',
-          'address',
-          'town',
-          'city',
-          'country',
-          'homenumber',
-          'businessnumber',
-          'mobilenumber',
-          'faxnumber'
-        );
-
-        foreach ($contactfields as $field) {
-            if (isset($record[$field])) {
-                $itemdata[$field] = $record[$field];
+        $composites = ArtefactTypePersonalinformation::get_composite_fields();
+        foreach ($composites as $composite => $value) {
+            if (isset($record[$composite])) {
+                $artefact->set_composite($composite, $record[$composite]);
             }
-        }
-
-        // the contactinformation artefact is separate from the inner artefacts within
-        // such asw the officialwebsite, homenumber, email artefacts etc. In the db
-        // the description field is left empty, and the $values are in the title field
-        // with not embedded text, unlike other artefacts.
-        $artefact = ArtefactTypeContactinformation::setup_new($userid);
-        foreach ($itemdata as $artefacttype => $title) {
-            $classname = generate_artefact_class_name($artefacttype);
-            $artefactid = get_field('artefact','id','artefacttype',$artefacttype,'owner',$userid);
-            $artefact = new $classname(0, array(
-              'owner' => $userid,
-              'title' => $title,
-            ));
-            $artefact->commit();
         }
     }
 

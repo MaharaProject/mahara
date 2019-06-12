@@ -248,7 +248,7 @@ class BehatDataGenerators extends BehatBase {
           'required' => array('group', 'message', 'user')
         ),
         'personalinformation' => array(
-          'datagenerator' => 'personalinformation',
+          'datagenerator' => 'resume_personalinformation',
           'available' => array(
             'user'                 => 'text',
             'dateofbirth'          => 'text',
@@ -261,17 +261,18 @@ class BehatDataGenerators extends BehatBase {
           'required' => array('user', 'dateofbirth')
         ),
         'goals and skills' => array(
-          'datagenerator' => 'goals_and_skills',
+          'datagenerator' => 'resume_goalsandskills',
           'available' => array(
             'user'                 => 'text',
             'goaltype/skilltype'   => 'text',
             'title'                => 'text',
             'description'          => 'text',
+            'attachment'           => 'text'
           ),
           'required' => array('user','goaltype/skilltype','title')
         ),
         'interests' => array(
-          'datagenerator' => 'interests',
+          'datagenerator' => 'resume_interests',
           'available' => array(
             'user'                 => 'text',
             'interest'             => 'text',
@@ -280,7 +281,7 @@ class BehatDataGenerators extends BehatBase {
           'required' => array('user','interest','description')
         ),
         'coverletters' => array(
-          'datagenerator' => 'coverletter',
+          'datagenerator' => 'resume_coverletter',
           'available' => array(
             'user'                 => 'text',
             'content'              => 'text'
@@ -288,7 +289,7 @@ class BehatDataGenerators extends BehatBase {
           'required' => array('user','content')
         ),
         'educationhistory' => array(
-          'datagenerator' => 'educationhistory',
+          'datagenerator' => 'resume_educationhistory',
           'available' => array(
             'user'                   => 'text',
             'startdate'              => 'text',
@@ -297,12 +298,13 @@ class BehatDataGenerators extends BehatBase {
             'institutionaddress'     => 'text',
             'qualtype'               => 'text',
             'qualname'               => 'text',
-            'qualdescription'        => 'text'
+            'qualdescription'        => 'text',
+            'attachment'             => 'text'
           ),
           'required' => array('user','startdate','institution')
         ),
         'employmenthistory' => array(
-          'datagenerator' => 'employmenthistory',
+          'datagenerator' => 'resume_employmenthistory',
           'available' => array(
             'user'                   => 'text',
             'startdate'              => 'text',
@@ -310,12 +312,13 @@ class BehatDataGenerators extends BehatBase {
             'employer'               => 'text',
             'employeraddress'        => 'text',
             'jobtitle'               => 'text',
-            'positiondescription'    => 'text'
+            'positiondescription'    => 'text',
+            'attachment'             => 'text'
           ),
           'required' => array ('user','startdate','employer','jobtitle')
         ),
         'contactinformation' => array(
-          'datagenerator' => 'contactinformation',
+          'datagenerator' => 'resume_contactinformation',
           'available' => array(
             'user'                     => 'text',
             'email'                    => 'text',
@@ -332,36 +335,39 @@ class BehatDataGenerators extends BehatBase {
           ),
           'required' => array('user','email')
         ),
-        'certifications and accreditations' => array(
-          'datagenerator' => 'certification',
+        'achievements' => array(
+          'datagenerator' => 'resume_certification',
           'available' => array(
             'user'                    => 'text',
             'date'                    => 'text',
             'title'                   => 'text',
-            'description'             => 'text'
+            'description'             => 'text',
+            'attachment'              => 'text'
           ),
           'required' => array('user','title')
         ),
         'books and publications' => array(
-          'datagenerator' => 'book',
+          'datagenerator' => 'resume_book',
           'available' => array(
             'user'                     => 'text',
             'date'                     => 'text',
             'title'                    => 'text',
             'contribution'             => 'text',
             'description'              => 'text',
-            'url'                      => 'text'
+            'url'                      => 'text',
+            'attachment'               => 'text'
           ),
           'required' => array('user','date','title','contribution')
         ),
         'professionalmemberships' => array(
-          'datagenerator' => 'membership',
+          'datagenerator' => 'resume_membership',
           'available' => array(
             'user'                     => 'text',
             'startdate'                => 'text',
             'enddate'                  => 'text',
             'title'                    => 'text',
-            'description'              => 'text'
+            'description'              => 'text',
+            'attachment'               => 'text'
           ),
           'required' => array('user','startdate','title')
         )
