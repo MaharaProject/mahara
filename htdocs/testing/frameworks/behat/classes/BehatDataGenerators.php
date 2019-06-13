@@ -93,7 +93,7 @@ class BehatDataGenerators extends BehatBase {
                 'skins'            => 'bool',
                 'licensemandatory' => 'bool',
                 'licensedefault'   => 'text',
-                'defaultquota'     => 'number',
+                'defaultquota'     => 'text',
                 'defaultmembershipperiod' => 'number',
                 'maxuseraccounts'  => 'number',
                 'expiry'           => 'text',

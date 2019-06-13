@@ -373,7 +373,7 @@ EOD;
                 $profiles[$field] = $record[$field];
             }
         }
-        $user->id = create_user($user, $profiles, $record['institution'], $remoteauth, $record['remoteusername'], $record);
+        $user->id = create_user($user, $profiles, $institution, $remoteauth, $record['remoteusername'], $record);
 
         if (isset($user->admin) && $user->admin) {
             require_once('activity.php');
@@ -592,6 +592,10 @@ EOD;
             $newinstitution->licensedefault = (isset($record['licensedefault'])) ? $record['licensedefault'] : '';
         }
 
+        if (!empty($record['defaultquota'])) {
+            // make sure that it is bytes
+            $record['defaultquota'] = get_real_size($record['defaultquota']);
+        }
         $newinstitution->defaultquota = empty($record['defaultquota']) ? get_config_plugin('artefact', 'file', 'defaultquota') : $record['defaultquota'];
 
         $newinstitution->defaultmembershipperiod  = !empty($record['defaultmembershipperiod']) ? intval($record['defaultmembershipperiod']) : null;
