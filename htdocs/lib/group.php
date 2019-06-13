@@ -1714,8 +1714,11 @@ function group_prepare_usergroups_for_display($groups) {
         else if ($group->membershiptype == 'invite') {
             $group->invite = group_get_accept_form('invite' . $i++, $group->id);
         }
-        // When 'isolatedinstitutions' is set, people cannot join public groups by themselves
-        else if ($group->jointype == 'open' && !(is_isolated() && $group->public == 1)) {
+        // Only admin can create public groups when isolatedinstitutions is set.
+        // It's up to the admin to correctly set the jointype. Public should not affect the open status.
+        // So for isolatedinstitutions and open groups, people can join that group if it's in their
+        // institution.
+        else if ($group->jointype == 'open') {
             $group->groupjoin = group_get_join_form('joingroup' . $i++, $group->id);
         }
 
