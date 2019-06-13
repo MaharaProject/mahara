@@ -97,17 +97,23 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I click on the matrix point "2,21"
     And I fill in "Staff annotation description" in first editor
     And I click on "Place feedback"
+    And I fill in "Another annotation description" in first editor
+    And I disable the switch "Make public"
+    And I click on "Place feedback"
+    And I should see "This feedback is private."
     And I select "Partially meets the standard" from "Assessment"
     And I click on "Save"
     And I click on the matrix point "3,21"
     And I fill in "Staff annotation description" in first editor
     And I click on "Place feedback"
-    And I select "Partially meets the standard" from "Assessment"
+    And I select "Meets the standard" from "Assessment"
     And I click on "Save"
     And I click on the matrix point "4,21"
     And I fill in "Staff annotation description" in first editor
     And I click on "Place feedback"
-    And I select "Partially meets the standard" from "Assessment"
+    And I fill in "Another Staff annotation description" in first editor
+    And I disable the switch "Make public"
+    And I select "Doesn't meet the standard" from "Assessment"
     And I click on "Save"
     And I log out
 
@@ -123,12 +129,13 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I press "Place feedback"
     # Mahara member follows "Feedback (3)"
     And I wait "1" seconds
-    When I follow "Feedback (3)"
+    When I follow "Feedback (4)"
     # Mahara member should see 3 feedback annotations
     Then I should see "Staff annotation description"
     And I should see "Assessment: Partially meets the standard "
     And I should see "Mahara member placing feedback"
+    And I should see "Make public"
     # Mahara member should see edit and delete for their own annotation feedback comment
-    And I should see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[3]/div[1]/div" "xpath_element"
+    And I should see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[4]/div[1]/div" "xpath_element"
     # verify that user cannot delete Other user's annotations.
     And I should not see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[2]/div[1]/div" "xpath_element"
