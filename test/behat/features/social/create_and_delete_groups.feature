@@ -30,7 +30,7 @@ Scenario: Creating groups and deleting them (Selenium)
     And I should see "Members" in the ".bt-groupinfo" "css_element"
     And I should see "Group administrators:" in the ".bt-groupinfo" "css_element"
     And I should see "Editable" in the ".bt-groupinfo" "css_element"
-    And I should see "Between 15 June 2015, 3:00 AM and 15 June 2015, 3:30 AM"
+    And I should see "Between 15 June 2015, 3:00 and 15 June 2015, 3:30"
     # Create Open group
     And I choose "Groups" in "Engage" from main menu
     And I follow "Create group"
