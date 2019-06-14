@@ -1157,12 +1157,15 @@ class ArtefactTypeComment extends ArtefactType {
 
 
     /*
-     * Removes the classes from the text of the comment thst could interfere
+     * Removes the classes from the text of the comment that could interfere
      * with the comment display
      * @param string $comment the text content of the comment
      */
     public static function remove_comments_classes($comment) {
 
+        if (empty($comment)) {
+            return "";
+        }
         $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
