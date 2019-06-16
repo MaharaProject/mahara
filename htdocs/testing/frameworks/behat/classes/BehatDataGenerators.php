@@ -380,15 +380,17 @@ class BehatDataGenerators extends BehatBase {
      * @param array ('field' => 'values', ...) $record
      * @return $record
      */
-     public function normalise(&$record) {
-         foreach ($record as &$value) {
-             $value = trim($value);
-             // Normalise boolean values
-             if (strtolower($value) == 'on' || $value == '1' || $value == 'true') {
-                 $value = true;
-             }
-             else if (strtolower($value) == 'off' || $value == '0' || $value == 'false') {
-                 $value = false;
+     public function normalise($availablefields, &$record) {
+         foreach ($record as $fieldname => &$value) {
+             if ($availablefields[$fieldname] == 'bool') {
+                 $value = trim($value);
+                 // Normalise boolean values
+                 if (strtolower($value) == 'on' || $value == '1' || $value == 'yes' || $value == 'true') {
+                     $value = true;
+                 }
+                 else if (strtolower($value) == 'off' || $value == '0' || $value == 'no' || $value == 'false') {
+                     $value = false;
+                 }
              }
          }
      }
@@ -447,7 +449,7 @@ class BehatDataGenerators extends BehatBase {
         foreach ($data->getHash() as $elementdata) {
 
             // Normalise field values
-            $this->normalise($elementdata);
+            $this->normalise($availablefields, $elementdata);
             // Validate available fields for given element
             $this->validate_fields($availablefields, $elementdata);
             // Check if all the required fields are there.
