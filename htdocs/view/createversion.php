@@ -16,12 +16,19 @@ $viewid = param_integer('view');
 
 $view = new View($viewid, null);
 
-if (!$view || !$USER->can_edit_view($view) || $view->is_submitted()) {
-    throw new AccessDeniedException(get_string('cantversionview', 'view'));
+if (!$view ) {
+    throw new AccessDeniedException(get_string('cantversionviewinvalid', 'view'));
 }
+if (!$USER->can_edit_view($view)) {
+    throw new AccessDeniedException(get_string('cantversionvieweditpermissions', 'view'));
+}
+if ($view->is_submitted()) {
+    throw new AccessDeniedException(get_string('cantversionviewsubmitted', 'view'));
+}
+
 $groupid = $view->get('group');
 if ($groupid && !group_within_edit_window($groupid)) {
-    throw new AccessDeniedException(get_string('cantversionview', 'view'));
+    throw new AccessDeniedException(get_string('cantversionviewgroupeditwindow', 'view'));
 }
 
 $version = new stdClass();

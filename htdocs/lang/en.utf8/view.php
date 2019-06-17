@@ -264,6 +264,11 @@ $string['updatedaccessfornumviews1'] = array(
     'Access rules were updated for %d pages.',
 );
 
+$string['cantversionviewinvalid'] = 'The supplied page identifier is invalid.';
+$string['cantversionvieweditpermissions'] = 'You do not permission to edit this page.';
+$string['cantversionviewsubmitted'] = 'You cannot edit this page because it has been submitted for assessment. You will have to wait until it is released.';
+$string['cantversionviewgroupeditwindow'] = 'You cannot edit this page. It is outside of the group editable date window.';
+
 $string['invalidcolumn'] = 'Column %s out of range';
 
 $string['confirmcancelcreatingview'] = 'This page has not been completed. Do you really want to cancel?';
