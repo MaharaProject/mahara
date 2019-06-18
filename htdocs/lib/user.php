@@ -2516,15 +2516,17 @@ function addfriend_submit(Pieform $form, $values) {
 /**
  * Create user
  *
- * @param object $user stdclass or User object for the usr table
- * @param array  $profile profile field/values to set
- * @param string|object $institution Institution the user should joined to (name or Institution object)
- * @param bool $remoteauth authinstance record for a remote authinstance
- * @param string $remotename username on the remote site
- * @param array $accountprefs user account preferences to set
+ * @param object         $user             stdclass or User object for the usr table
+ * @param array          $profile          profile field/values to set
+ * @param string|object  $institution      Institution the user should joined to (name or Institution object)
+ * @param bool           $remoteauth       authinstance record for a remote authinstance
+ * @param string         $remotename       username on the remote site
+ * @param array          $accountprefs     user account preferences to set
+ * @param boolean        $quickhash        use quickhash when resetting password
+ * @param string         $institutionrole  creating user in institution with higher than member role (used with $institution);
  * @return integer id of the new user
  */
-function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null, $accountprefs=array(), $quickhash=false) {
+function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null, $accountprefs=array(), $quickhash=false, $institutionrole='member') {
     db_begin();
 
     if (!empty($institution)) {
@@ -2582,7 +2584,14 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
 
     if (!empty($institution)) {
         if ($institution->name != 'mahara') {
-            $institution->addUserAsMember($user); // uses $user->newuser
+            $institutionstaff = $institutionadmin = null;
+            if ($institutionrole == 'admin') {
+                $institutionadmin = true;
+            }
+            if ($institutionrole == 'staff') {
+                $institutionstaff = true;
+            }
+            $institution->addUserAsMember($user, $institutionstaff, $institutionadmin); // uses $user->newuser
             if (empty($accountprefs['licensedefault'])) {
                 $accountprefs['licensedefault'] = LICENSE_INSTITUTION_DEFAULT;
             }
