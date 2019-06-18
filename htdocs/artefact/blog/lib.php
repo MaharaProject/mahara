@@ -1082,6 +1082,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     require_once(get_config('docroot') . 'lib/view.php');
                     $view = new View($viewoptions['viewid']);
                     $artefact = artefact_instance_from_id($post->id);
+                    if (!isset ($viewoptions['versioning'])) {
+                        $viewoptions['versioning'] = false;
+                    }
                     list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, null, false, false, $viewoptions['versioning']);
                     $post->commentcount = $commentcount;
                     $post->comments = $comments;
