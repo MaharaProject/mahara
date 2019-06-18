@@ -53,7 +53,7 @@ if ($uploadmatrix) {
 else if ($upload) {
     //jsoneditor page:
     //get existing frameworks.
-    define('MENUITEM-SUBPAGE', 'editor');
+    define('SUBSECTIONHEADING', get_string('editor', 'module.framework'));
     $active_tab = 'editor';
     $fw = array();
     array_push($fw, get_string('copyframework', 'module.framework'));
@@ -168,6 +168,7 @@ else {
     $active_tab = 'overview';
 }
 
+define('SUBSECTIONHEADING', get_string('Management', 'module.framework'));
 $frameworks = Framework::get_frameworks('any');
 if ($frameworks) {
     foreach ($frameworks as $framework) {
