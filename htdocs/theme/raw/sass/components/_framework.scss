@@ -128,10 +128,16 @@
             }
         }
     }
-    span.matrixindent {
+    .matrixindent {
         display: inline-block;
-        width: 5px;
     }
+    $matrix-slug: matrixlevel !default
+    @for $i from 1 through 5 {
+        .#{$matrix-slug}#{$i} .matrixindent {
+            padding-left: 5px * $i
+        }
+    }
+
 }
 .assessment {
     color: $gray-700;
