@@ -83,7 +83,7 @@ if (!empty($groupid)) {
             'limit' => $limit,
             'offset' => $offset,
             'orderby' => 'atoz',
-            'group' => $groupid,
+            'extra' => array('group' => $groupid),
             'databutton' => 'showmorebtn',
             'jsonscript' => 'json/viewlist.php',
         ));

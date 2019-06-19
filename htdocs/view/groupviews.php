@@ -81,7 +81,7 @@ if (!$can_edit) {
         'count' => $data->count,
         'limit' => $limit,
         'offset' => $offset,
-        'group' => $group->id,
+        'extra' => array('group' => $group->id),
         'databutton' => 'showmorebtn',
         'jsonscript' => 'json/viewlist.php',
         'orderby' => 'atoz',

@@ -4472,8 +4472,8 @@ class View {
             'limit'  => $limit,
             'offset' => $offset,
             'orderby' => $orderby,
-            'group' => $group,
-            'institution' => $institution,
+            'extra' => array('group' => $group,
+                             'institution' => $institution),
             'databutton' => 'showmorebtn',
             'jsonscript' => 'json/viewlist.php',
         ));
