@@ -192,6 +192,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'confirmdeletefile',
                     'confirmdeletefolder',
                     'confirmdeletefolderandcontents',
+                    'createfoldersuccess',
                     'defaultprofileicon',
                     'editfile',
                     'editfolder',
