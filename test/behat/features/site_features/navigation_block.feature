@@ -30,12 +30,17 @@ Scenario:
   And I follow "Navigation"
   And I press "Add"
   And I select "Collection UserA_02" from "Collection"
+  And I click on "Set a block title"
+  And I set the field "Block title" to "Nav for collection B"
+  And I enable the switch "Add to all pages"
   And I select "Automatically retract" from "Retractable"
   And I press "Save"
   And I display the page
   # test retractable setting
-  Then I should not see "Page UserA_04"
-  When I expand "Collection UserA_02" node
+  Then I should see "Nav for collection B"
+  And I press "Next page"
+  And I should not see "Page UserA_04"
+  When I expand "Nav for collection B" node
   # test link works
   And I follow "Page UserA_04"
   And I should see "Page 04"

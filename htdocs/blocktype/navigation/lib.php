@@ -156,7 +156,7 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
                             $bi = new BlockInstance(0,
                                 array(
                                     'blocktype'  => 'navigation',
-                                    'title'      => '',
+                                    'title'      => $values['title'],
                                     'row'        => $instance->get('row'),
                                     'column'     => $instance->get('column'),
                                     'order'      => 1,
