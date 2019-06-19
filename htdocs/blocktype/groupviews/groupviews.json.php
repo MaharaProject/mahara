@@ -58,6 +58,9 @@ $groupviews = (array)View::view_search(null, null, (object) array('group' => $gr
                                       null, $limit, $offset, true, $sort, null,
                                       false, null, null, null, null, true);
 foreach ($groupviews['data'] as &$view) {
+    if (empty($view['displaytitle'])) {
+        $view['displaytitle'] = $view['title']; // add for collections
+    }
     if (isset($view['template']) && $view['template']) {
         $collid = !empty($view['collid']) ? $view['collid'] : null;
         $view['form'] = pieform(create_view_form(null, null, $view['id'], $collid, $collid));
