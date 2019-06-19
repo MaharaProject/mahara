@@ -179,7 +179,9 @@
     .select {
         margin-bottom: 15px;
     }
+    span.pseudolabel,
     label {
+        display: table-cell;
         font-weight: bold;
     }
     @include media-breakpoint-up(md) {
