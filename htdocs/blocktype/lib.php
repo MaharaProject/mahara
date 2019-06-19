@@ -1374,8 +1374,6 @@ class BlockInstance {
             if (method_exists($classname, 'feed_url')) {
                 $smarty->assign('feedlink', call_static_method($classname, 'feed_url', $this));
             }
-
-            $smarty->assign('link', call_static_method($classname, 'get_link', $this));
         }
 
         $smarty->assign('content', $content);

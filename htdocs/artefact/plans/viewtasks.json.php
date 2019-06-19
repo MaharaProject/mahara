@@ -47,25 +47,7 @@ if ($blockid && !$artefactid) {
         'jsonscript' => 'artefact/plans/viewtasks.json.php',
     );
 }
-else {
-    $planid = param_integer('artefact');
-    $viewid = param_integer('view');
-    if (!can_view_view($viewid)) {
-        json_reply(true, get_string('accessdenied', 'error'));
-    }
-    $options = array('viewid' => $viewid);
-    $tasks = ArtefactTypeTask::get_tasks($planid, $offset, $limit);
 
-    $template = 'artefact:plans:taskrows.tpl';
-    $baseurl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $planid . '&view=' . $options['viewid'];
-    $pagination = array(
-        'baseurl' => $baseurl,
-        'id' => 'task_pagination',
-        'datatable' => 'tasklist',
-        'jsonscript' => 'artefact/plans/viewtasks.json.php',
-    );
-
-}
 ArtefactTypeTask::render_tasks($tasks, $template, $options, $pagination, $editing);
 
 json_reply(false, (object) array('message' => false, 'data' => $tasks));

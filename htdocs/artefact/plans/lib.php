@@ -289,12 +289,7 @@ class ArtefactTypePlan extends ArtefactType {
 
         $template = 'artefact:plans:taskrows.tpl';
 
-        $baseurl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $this->id;
-        if (!empty($options['viewid'])) {
-            $baseurl .= '&view=' . $options['viewid'];
-        }
-        $baseurl .= '&planid=' . $this->id;
-
+        $baseurl = ''; //will set in the jsonscript
         $pagination = array(
             'baseurl' => $baseurl,
             'id' => 'task_pagination',

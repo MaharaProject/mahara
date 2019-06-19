@@ -125,8 +125,6 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                     }
                     $plans[$planid]['id'] = $planid;
                     $plans[$planid]['view'] = $instance->get('view');
-                    $plans[$planid]['details'] = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $planid . '&view=' .
-                            $instance->get_view()->get('id') . '&block=' . $blockid;
 
                     $plans[$planid]['numtasks'] = $tasks['count'];
                     $tasks['planid'] = $planid;
@@ -146,6 +144,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
         $smarty->assign('editing', $editing);
         $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('versioning', $versioning);
+
         return $smarty->fetch('blocktype:plans:content.tpl');
     }
 
