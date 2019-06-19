@@ -1103,6 +1103,7 @@ function auth_check_required_fields() {
         // Display a message if there is only 1 required field and this field is email whose validation has been sent
         $elements['submit'] = array(
                 'type' => 'submit',
+                'class' => 'btn-primary',
                 'value' => get_string('continue', 'admin')
         );
         $form = pieform(array(
