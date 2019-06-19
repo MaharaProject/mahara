@@ -54,7 +54,7 @@ if (!empty($ancestors)) {
             $pathitem = artefact_instance_from_id($ancestor);
             if (artefact_in_view($pathitem, $viewid)) {
                 $artefactpath[] = array(
-                    'url'   => get_config('wwwroot') . 'view/view.php?id=' . $viewid,
+                    'url'   => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $pathitem->get('id') ,
                     'title' => $pathitem->display_title(),
                 );
                 $artefactok = true;

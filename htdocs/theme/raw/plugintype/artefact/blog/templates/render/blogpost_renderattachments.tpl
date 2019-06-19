@@ -26,9 +26,9 @@
                         {/if}
 
                         <span class="title list-group-item-heading inline">
-                            <a href="{$item->viewpath}" class="inner-link">
+                            <span class="inner-link">
                                 {$item->title}
-                            </a>
+                            </span>
                             <span class="metadata"> -
                                 [{$item->size|display_size}]
                             </span>

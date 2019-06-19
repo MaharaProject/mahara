@@ -1403,7 +1403,7 @@ class BlockInstance {
                 $artefact = $this->get_artefact_instance($configdata['artefactid']);
                 $smarty->assign('allowcomments', $artefact->get('allowcomments'));
                 if (!$artefact->get('allowcomments')) {
-                    $smarty->assign('allowdetails', (int)get_config('licensemetadata'));
+                    $smarty->assign('justdetails', (int)get_config('licensemetadata'));
                 }
                 else {
                     $commentoptions = ArtefactTypeComment::get_comment_options();

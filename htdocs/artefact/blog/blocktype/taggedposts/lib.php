@@ -184,6 +184,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
 
         $smarty = smarty_core();
         $smarty->assign('view', $view);
+        $smarty->assign('licensemetadata', get_config('licensemetadata') ? true : false);
         $viewownerdisplay = null;
         // Display all posts, from all blogs, owned by this user
         $tagsin = $tagsout = array();
@@ -234,6 +235,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
                 // get comments for this post
                 $result->commentcount = count_records_select('artefact_comment_comment', "onartefact = {$result->id} AND private = 0 AND deletedby IS NULL AND hidden=0");
                 $allowcomments = $artefact->get('allowcomments');
+                $smarty->assign('allowcomments', $allowcomments);
                 if (empty($result->commentcount) && empty($allowcomments)) {
                     $result->commentcount = null;
                 }

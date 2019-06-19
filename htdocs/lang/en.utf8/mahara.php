@@ -881,6 +881,7 @@ $string['more...'] = 'More...';
 $string['moreoptions'] = 'More options';
 $string['moreoptionsfor'] = 'More options for "%s"';
 $string['details'] = 'details';
+$string['Details'] = 'Details';
 $string['nohelpfound'] = 'There was no help found for this item.';
 $string['nohelpfoundpage'] = 'There was no help found for this page.';
 $string['couldnotgethelp'] = 'An error occurred trying to retrieve the help page.';

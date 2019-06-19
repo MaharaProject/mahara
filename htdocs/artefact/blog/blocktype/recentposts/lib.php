@@ -90,7 +90,7 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
             $blogids = $configdata['artefactids'];
             $artefactids = implode(', ', array_map('db_quote', $blogids));
             $mostrecent = get_records_sql_array(
-                'SELECT a.title, ' . db_format_tsfield('a.ctime', 'ctime') . ', p.title AS parenttitle, a.id, a.parent, ' . db_format_tsfield('a.mtime', 'mtime') . '
+                'SELECT a.title, a.description, a.allowcomments, ' . db_format_tsfield('a.ctime', 'ctime') . ', p.title AS parenttitle, a.id, a.parent, ' . db_format_tsfield('a.mtime', 'mtime') . '
                     FROM {artefact} a
                     JOIN {artefact} p ON a.parent = p.id
                     JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
@@ -122,6 +122,11 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
                 }
                 $blog = new ArtefactTypeBlog($data->parent);
                 $data->parenttitle = $blog->display_title();
+                $data->commentcount = count_records_select('artefact_comment_comment', "onartefact = ? AND private = ? AND deletedby IS NULL AND hidden= ?", array($data->id, 0, 0));
+                if ($tags = ArtefactType::artefact_get_tags($data->id)) {
+                    $data->tags = $tags;
+                }
+                $data->owner = $blog->get('owner');
             }
 
             $smarty = smarty_core();
@@ -129,6 +134,9 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
             $smarty->assign('view', $instance->get('view'));
             $smarty->assign('blockid', $instance->get('id'));
             $smarty->assign('editing', $editing);
+            $smarty->assign('licensemetadata', get_config('licensemetadata') ? true : false);
+            $smarty->assign('canviewblog', $data->owner == $USER->get('id'));
+
             if ($editing) {
                 // Get id and title of configued blogs
                 $recentpostconfigdata = $instance->get('configdata');

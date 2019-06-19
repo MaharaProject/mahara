@@ -5,9 +5,9 @@
 <div id="blogpost-{$postid}" class="card-body flush">
 
     {if $artefacttitle && $simpledisplay}
-    <h2 class="title">
-        {$artefacttitle|safe}
-    </h2>
+        <h2 class="title">
+            {$artefacttitle|safe}
+        </h2>
     {/if}
 
     <div class="postdetails metadata">
@@ -21,29 +21,31 @@
     </div>
 
     {if $artefacttags}
-    <div class="tags metadata">
-        <span class="icon icon-tags" role="presentation" aria-hidden="true"></span>
-        <strong>{str tag=tags}:</strong>
-        {list_tags owner=$artefactowner tags=$artefacttags view=$artefactview}
-    </div>
+        <div class="tags metadata">
+            <span class="icon icon-tags" role="presentation" aria-hidden="true"></span>
+            <strong>{str tag=tags}:</strong>
+            {list_tags owner=$artefactowner tags=$artefacttags view=$artefactview}
+        </div>
     {/if}
 
     <div class="postcontent">
-    {$artefactdescription|clean_html|safe}
+        {$artefactdescription|clean_html|safe}
     </div>
 
     {if $license}
-    <div class="license">
-        {$license|safe}
-    </div>
+        <div class="license">
+            {$license|safe}
+        </div>
     {/if}
 
-    {if isset($attachments)}
+    {if isset($attachments) && !$modal}
         {include file="artefact:blog:render/blogpost_renderattachments.tpl" attachments=$attachments postid=$postid}
     {/if}
+
 </div>
+
 {else}
-<div>
-{$notpublishedblogpost|safe}
-</div>
+    <div>
+    {$notpublishedblogpost|safe}
+    </div>
 {/if}

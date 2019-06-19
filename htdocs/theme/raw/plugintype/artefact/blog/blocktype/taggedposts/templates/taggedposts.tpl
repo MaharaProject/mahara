@@ -40,9 +40,7 @@
         {foreach from=$results item=post}
         <div class="post list-group-item">
             <h4 class="list-group-heading">
-                <a class="modal_link list-group-heading" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
-                    {$post->title}
-                </a>
+                {$post->title}
             </h4>
             <div class="postdetails metadata">
                 <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
@@ -57,20 +55,8 @@
             <div class="detail list-group-item-detail">
                 {$post->description|clean_html|safe}
             </div>
-
             {if $post->attachments}
                 {$post->attachments|safe}
-            {/if}
-
-            {if !$editing}
-                {if $post->commentcount != null}
-                <div class="comments clearfix">
-                    <a id="comment_link_{$post->id}" class="commentlink link-blocktype" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
-                        <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
-                        {str tag=commentsanddetails section=artefact.comment arg1=$post->commentcount}
-                    </a>
-                </div>
-                {/if}
             {/if}
         </div>
         {/foreach}
@@ -80,10 +66,27 @@
 <div class="taggedposts list-group">
     {foreach from=$results item=post}
     <div class="list-group-item">
-        <h4 class="list-group-item-heading">
-            <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&amp;view={$view}">
+        <a class="outer-link collapsed" data-toggle="collapse" href="#tagged_post_{$post->id}" aria-expanded="false">
+            <span class="sr-only">{$post->title}</span>
+        </a>
+        <h4 class={if !($editing)}"list-group-item-heading text-inline"{else}"title"{/if}>
+            {if !($editing)}
+                <a class="modal_link inner-link list-group-heading" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
+                    {$post->title}
+                </a>
+            {else}
                 {$post->title}
-            </a>
+            {/if}
+        </h4>
+        <span class="comments-details d-none comments-details-mg-left comment-count-preview" data-artefactid="{$post->id}">
+            {if $post->commentcount > 0}
+                <span class="comment_count" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
+                ({$post->commentcount})
+            {/if}
+        </span>
+        <span class="comments-details d-none icon icon-search-plus bh-margin-left" role="presentation" aria-hidden="true"></span>
+        <div>
             <span class="metadata">
                 {str tag='postedon' section='blocktype.blog/taggedposts'}
                 {$post->displaydate}
@@ -93,7 +96,11 @@
                     {$post->updateddate}
                 {/if}
             </span>
-        </h4>
+        </div>
+        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+    </div>
+    <div  id="tagged_post_{$post->id}" class="collapse content-text">
+        <span>{$post->description|safe}</span>
     </div>
     {/foreach}
 </div>

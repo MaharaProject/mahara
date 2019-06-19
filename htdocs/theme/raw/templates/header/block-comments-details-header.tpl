@@ -9,14 +9,14 @@
             <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
             {str tag=addcomment section=artefact.comment}
             <span class="bh-margin-left icon icon-link" role="presentation" aria-hidden="true"></span>
-            {str tag=Details section=artefact.comment}
+            {str tag=Details section=mahara}
         {/if}
         </a>
     {/if}
-    {if $allowdetails}
+    {if $justdetails}
         <a class="modal_link list-group-heading" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$artefactid}">
             <span class="icon icon-link" role="presentation" aria-hidden="true"></span>
-            {str tag=Details section=artefact.comment}
+            {str tag=Details section=mahara}
         </a>
     {/if}
 </div>

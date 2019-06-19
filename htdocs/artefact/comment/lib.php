@@ -1608,7 +1608,7 @@ function delete_comment_submit(Pieform $form, $values) {
     $commentoptions->artefact = $artefact;
     $commentoptions->blockid = $blockid;
     if (isset($values['threaded'])) {
-           $commentoptions->threaded = $values['threaded'];
+       $commentoptions->threaded = $values['threaded'];
     }
     $newlist = ArtefactTypeComment::get_comments($commentoptions);
 

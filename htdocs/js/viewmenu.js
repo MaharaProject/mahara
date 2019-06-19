@@ -84,6 +84,9 @@ function addFeedbackSuccess(form, data) {
     var commentlink = ' ' + get_string('commentsanddetails', 'artefact.comment', data.data.count);
     $('.commentlink').filter('[data-artefactid=' + data.data.artefact + ']').html('<span class="icon icon-comments" role="presentation" aria-hidden="true"></span>' + commentlink);
 
+    //For brief comments and details previews when there is no block comments and details header
+    $('.comment-count-preview').filter('[data-artefactid=' + data.data.artefact + ']').html('<span class="icon icon-comments" role="presentation" aria-hidden="true"></span> (' + data.data.count + ')');
+
     resetFeedbackReplyto();
     formSuccess(form, data);
 
@@ -240,11 +243,18 @@ function delete_comment_from_modal_submit(form, data) {
         newlink += '<span class="bh-margin-left icon icon-link" role="presentation" aria-hidden="true"></span>';
         newlink += ' ' + get_string('Details', 'artefact.comment');
         $('.commentlink').filter('[data-artefactid=' + data.data.artefact + ']').html(newlink);
+
+        //For brief comments and details previews when there is no block comments and details header
+        $('.comment-count-preview').filter('[data-artefactid=' + data.data.artefact + ']').html('');
     }
     else {
         var commentlink = ' ' + get_string('commentsanddetails', 'artefact.comment', data.data.count);
         $('.commentlink').filter('[data-artefactid=' + data.data.artefact + ']').html('<span class="icon icon-comments" role="presentation" aria-hidden="true"></span>' + commentlink);
+
+        //For brief comments and details previews when there is no block comments and details header
+        $('.comment-count-preview').filter('[data-artefactid=' + data.data.artefact + ']').html('<span class="icon icon-comments" role="presentation" aria-hidden="true"></span> (' + data.data.count + ')');
     }
+
     if ($('#configureblock').hasClass('closed')) {
         formSuccess(form, data);
     }
@@ -314,10 +324,12 @@ jQuery(function($) {
         if (!$('#details-btn').hasClass('active')) {
             $('#details-btn').addClass('active');
             headers.removeClass('d-none');
+            $('.comments-details').removeClass('d-none');
         }
         else {
             $('#details-btn').removeClass('active');
             headers.addClass('d-none');
+            $('.comments-details').addClass('d-none');
         }
     });
 

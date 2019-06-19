@@ -98,8 +98,7 @@ else {
         'name' => implode(' ', array($owner[0]->firstname, $owner[0]->lastname)),
         'uri' => sanitize_url($personal_site),
     );
-    $link = get_config('wwwroot') . 'artefact/artefact.php?artefact=' .
-        $artefactid . '&view=' . $viewid;
+    $link = get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $artefactid;
     $selflink = get_config('wwwroot') . 'artefact/blog/atom.php?artefact=' .
         $artefactid . '&view=' . $viewid;
 
@@ -176,8 +175,7 @@ else {
             }
             $posts[] = array(
                 'title' => $post->get('title'),
-                'link' => get_config('wwwroot') . 'artefact/artefact.php?artefact=' .
-                    $post->get('id') . '&view=' . $viewid,
+                'link' => get_config('wwwroot') . 'view/view.php?id=' . $viewid . '&modal=1&artefact=' . $post->get('id'),
                 'id' => implode(',', array(get_config('wwwroot'), $post->get('id'), $viewid)),
                 'description' => $post->get('description'),
                 'mtime' => atom_date($postid->mtime),

@@ -101,7 +101,9 @@ $string['postbodydesc'] = ' ';
 $string['postedon'] = 'Posted on';
 $string['updatedon'] = 'Last updated';
 $string['postedbyon'] = 'Posted by %s on %s';
+$string['postedby'] = 'Posted by';
 $string['posttitle'] = 'Title';
+$string['createdin'] = 'Created in';
 $string['posts'] = 'entries';
 $string['nposts'] = array(
     '1 entry',

@@ -1,10 +1,26 @@
 {foreach from=$posts item=post}
+{if !$options.editing}
+    {if !$post->allowcomments}
+        {assign var="justdetails" value=true}
+    {/if}
+    {include
+        file='header/block-comments-details-header.tpl'
+        artefactid=$post->id
+        blockid=$options.blockid
+        commentcount=$post->commentcount
+        allowcomments=$post->allowcomments
+        justdetails=$justdetails}
+{/if}
     <div class="post list-group-item clearfix flush">
         <div class="post-heading">
             <h4 class="title">
-                <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$options.blockid}" data-artefactid="{$post->id}">
+                {if !$options.editing}
+                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$options.blockid}" data-artefactid="{$post->id}">
+                        {$post->title}
+                    </a>
+                {else}
                     {$post->title}
-                </a>
+                {/if}
             </h4>
             <div class="postdetails metadata">
                 <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
@@ -55,12 +71,10 @@
                         <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
                         {/if}
                         <span class="title">
-                            <a href="{$WWWROOT}artefact/artefact.php?artefact={$file->attachment}&view={$options.viewid}" class="inner-link">
-                                {$file->title}
-                                <span class="metadata"> -
-                                    [{$file->size|display_size}]
-                                </span>
-                            </a>
+                            {$file->title}
+                            <span class="metadata"> -
+                                [{$file->size|display_size}]
+                            </span>
                         </span>
                         <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                     </li>
@@ -68,18 +82,6 @@
                 </ul>
             </div>
         </div>
-        {/if}
-
-        {if $options.viewid && $post->allowcomments}
-            <div class="comments">
-                {if $post->allowcomments}
-                    <a id="comment_link_{$post->id}" class="commentlink link-blocktype" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$options.blockid}" data-artefactid="{$post->id}">
-                        <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
-                        <span class="comment_count" role="presentation" aria-hidden="true"></span>
-                        {str tag=commentsanddetails section=artefact.comment arg1=$post->commentcount}
-                    </a>
-                {/if}
-            </div>
         {/if}
     </div>
 {/foreach}
