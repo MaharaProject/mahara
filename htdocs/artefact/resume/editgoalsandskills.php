@@ -124,6 +124,15 @@ $javascript = <<<EOF
 function editgoalsandskills_callback(form, data) {
     editgoalsandskills_filebrowser.callback(form, data);
 };
+
+$(function($) {
+    $('#page-modal').on('hidden.bs.modal', function (e) {
+        // check if the upload file modal is still visible and if so put the body class back to allow scrolling
+        if ($('#editgoalsandskills_filebrowser_upload_browse').hasClass('show')) {
+            $('body').addClass('modal-open');
+        }
+    });
+});
 EOF;
 
 $smarty = smarty(array(), array(), array(), array(
