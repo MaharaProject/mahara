@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="2013010705" COMMENT="XMLDB file for Assessmentreport mahara tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+<TABLES>
+    <TABLE NAME="module_assessmentreport_history" COMMENT="Keep a history of assessments submitted">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary Key"/>
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="The userid"/>
+            <FIELD NAME="event" TYPE="text" NOTNULL="false" COMMENT="The Event was for a collection or page"/>
+            <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Page or Collection id"/>
+            <FIELD NAME="datesubmitted" TYPE="datetime" NOTNULL="false" COMMENT="Date the item was submitted for marking"/>
+            <FIELD NAME="datereleased" TYPE="datetime"  NOTNULL="false" COMMENT="Date the item was released form marking"/>
+            <FIELD NAME="markerid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="The person who Released the assessment"/>
+            <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="The group it was submitted to"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="userfk" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id"/>
+            <KEY NAME="markerfk" TYPE="foreign" FIELDS="markerid" REFTABLE="usr" REFFIELDS="id"/>
+            <KEY NAME="groupfk" TYPE="foreign" FIELDS="groupid" REFTABLE="group" REFFIELDS="id"/>
+        </KEYS>
+    </TABLE>
+</TABLES>
+</XMLDB>

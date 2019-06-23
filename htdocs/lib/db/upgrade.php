@@ -1354,5 +1354,12 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {search_cron} SET minute = ? WHERE plugin = ? AND callfunction = ?", array('4-59/5', 'elasticsearch', 'cron'));
     }
 
+    if ($oldversion < 2019062000) {
+        log_debug('Force install of assessmentreport module plugin');
+        if ($data = check_upgrades('module.assessmentreport')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }

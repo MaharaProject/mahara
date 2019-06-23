@@ -954,6 +954,8 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
         }
         delete_records('lti_assessment', 'group', $group->id);
     }
+    // Delete any submission history
+    delete_records('module_assessmentreport_history', 'groupid', $group->id);
 
     if ($notifymembers) {
         require_once('activity.php');
